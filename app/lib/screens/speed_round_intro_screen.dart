@@ -18,11 +18,21 @@ class _SpeedRoundIntroScreenState extends State<SpeedRoundIntroScreen> {
   final StorageService _storage = StorageService();
   bool _isLoading = false;
   String? _error;
+  bool _isUnlocked = false;
+  int _classicQuizCount = 0;
 
   @override
   void initState() {
     super.initState();
+    _checkUnlockStatus();
     _checkActiveSession();
+  }
+
+  void _checkUnlockStatus() {
+    setState(() {
+      _isUnlocked = _quizService.isSpeedRoundUnlocked();
+      _classicQuizCount = _quizService.getCompletedClassicQuizzesCount();
+    });
   }
 
   void _checkActiveSession() {
@@ -67,6 +77,13 @@ class _SpeedRoundIntroScreenState extends State<SpeedRoundIntroScreen> {
   }
 
   Future<void> _startSpeedRound() async {
+    if (!_isUnlocked) {
+      setState(() {
+        _error = 'Complete ${5 - _classicQuizCount} more Classic Quiz${5 - _classicQuizCount == 1 ? "" : "zes"} to unlock Speed Round';
+      });
+      return;
+    }
+
     setState(() {
       _isLoading = true;
       _error = null;
@@ -176,8 +193,70 @@ class _SpeedRoundIntroScreenState extends State<SpeedRoundIntroScreen> {
 
               const SizedBox(height: 16),
 
-              // Stats Card
-              if (speedRoundCount > 0)
+              // Unlock Progress Card (if not unlocked)
+              if (!_isUnlocked)
+                Card(
+                  elevation: 2,
+                  color: Colors.orange.shade50,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(20.0),
+                    child: Column(
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(Icons.lock, color: Colors.orange.shade700, size: 32),
+                            const SizedBox(width: 12),
+                            Text(
+                              'Locked',
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.orange.shade700,
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 16),
+                        Text(
+                          'Complete 5 Classic Quizzes to unlock',
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: Colors.grey.shade700,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                        const SizedBox(height: 12),
+                        // Progress bar
+                        Column(
+                          children: [
+                            LinearProgressIndicator(
+                              value: _classicQuizCount / 5,
+                              backgroundColor: Colors.grey.shade300,
+                              valueColor: AlwaysStoppedAnimation<Color>(Colors.orange.shade700),
+                              minHeight: 8,
+                            ),
+                            const SizedBox(height: 8),
+                            Text(
+                              '$_classicQuizCount / 5 Classic Quizzes completed',
+                              style: TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.w600,
+                                color: Colors.orange.shade700,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+
+              // Stats Card (if unlocked and has completed Speed Rounds)
+              if (_isUnlocked && speedRoundCount > 0)
                 Card(
                   elevation: 2,
                   color: Colors.blue.shade50,
@@ -238,12 +317,13 @@ class _SpeedRoundIntroScreenState extends State<SpeedRoundIntroScreen> {
 
               // Start Button
               FilledButton(
-                onPressed: _isLoading ? null : _startSpeedRound,
+                onPressed: (_isLoading || !_isUnlocked) ? null : _startSpeedRound,
                 style: FilledButton.styleFrom(
                   padding: const EdgeInsets.symmetric(vertical: 16),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),
+                  backgroundColor: !_isUnlocked ? Colors.grey.shade400 : null,
                 ),
                 child: _isLoading
                     ? const SizedBox(
@@ -254,14 +334,14 @@ class _SpeedRoundIntroScreenState extends State<SpeedRoundIntroScreen> {
                           valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
                         ),
                       )
-                    : const Row(
+                    : Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Icon(Icons.bolt),
-                          SizedBox(width: 8),
+                          Icon(!_isUnlocked ? Icons.lock : Icons.bolt),
+                          const SizedBox(width: 8),
                           Text(
-                            'Start Speed Round',
-                            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                            !_isUnlocked ? 'Locked - Complete Classic Quizzes' : 'Start Speed Round',
+                            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                           ),
                         ],
                       ),

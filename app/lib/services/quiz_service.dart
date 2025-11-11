@@ -335,6 +335,18 @@ class QuizService {
     return total / completed.length;
   }
 
+  /// Get count of completed Classic Quizzes
+  int getCompletedClassicQuizzesCount() {
+    return getCompletedSessions()
+        .where((s) => s.formatType == 'classic')
+        .length;
+  }
+
+  /// Check if Speed Round is unlocked (requires 5 Classic Quizzes completed)
+  bool isSpeedRoundUnlocked() {
+    return getCompletedClassicQuizzesCount() >= 5;
+  }
+
   /// Sync quiz session to RTDB (dev mode only)
   Future<void> _syncSessionToRTDB(QuizSession session) async {
     // Only sync in debug mode on simulators

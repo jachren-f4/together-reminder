@@ -792,8 +792,19 @@ class QuizQuestion extends HiveObject {
   - Level 2: Challenge questions
   - Level 3: Expert/nuanced questions
   - Model already supports difficulty field
-- [ ] Build unlock system (quiz count based)
-- [ ] Add Speed Round format
+- [x] Build unlock system (quiz count based) - **COMPLETED 2025-11-11**
+  - Speed Round unlocks after 5 Classic Quizzes completed
+  - Added `getCompletedClassicQuizzesCount()` and `isSpeedRoundUnlocked()` methods to QuizService
+  - Intro screen shows lock progress with visual progress bar (e.g., "3/5 Classic Quizzes completed")
+  - Start button disabled with lock icon when locked
+- [x] Add Speed Round format - **COMPLETED 2025-11-11**
+  - 10 rapid-fire questions with 10-second timer per question
+  - Visual countdown with color change at ≤3 seconds (blue → red)
+  - Auto-advance on selection or timeout
+  - Streak bonus system: +5 LP per 3 consecutive correct answers
+  - LP rewards: 20-40 base (based on match %) + streak bonuses
+  - Results screen with detailed breakdown and confetti celebration
+  - Question distribution: 3 Favorites, 2 Memories, 2 Preferences, 2 Future, 1 Daily Habits
 - [ ] Build Quiz History Screen with progress tracking
 
 **P1 (High-Value):**
@@ -841,4 +852,4 @@ The magic is making couples feel like they're **learning each other deeply** thr
 
 ---
 
-**Last Updated:** 2025-11-11 (Added "Other" option to all questions for honest answers; Clarified knowledge test flow for all formats)
+**Last Updated:** 2025-11-11 (Added Speed Round unlock system; Completed Speed Round format with 10-second timer and streak bonuses)

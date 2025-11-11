@@ -13,6 +13,7 @@ import 'daily_pulse_screen.dart';
 import 'daily_pulse_results_screen.dart';
 import 'word_ladder_hub_screen.dart';
 import 'memory_flip_game_screen.dart';
+import 'speed_round_intro_screen.dart';
 
 class ActivitiesScreen extends StatefulWidget {
   const ActivitiesScreen({super.key});
@@ -161,7 +162,7 @@ class _ActivitiesScreenState extends State<ActivitiesScreen> {
               _buildActivityCard(
                 context,
                 emoji: '🧩',
-                title: 'Couple Quiz',
+                title: 'Classic Quiz',
                 description: 'Test how well you know each other',
                 lpRange: '10-50 LP',
                 isActive: activeSession == null,
@@ -170,6 +171,27 @@ class _ActivitiesScreenState extends State<ActivitiesScreen> {
                     context,
                     MaterialPageRoute(
                       builder: (context) => const QuizIntroScreen(),
+                    ),
+                  ).then((_) => setState(() {}));
+                },
+                theme: theme,
+              ),
+
+              const SizedBox(height: 16),
+
+              // Speed Round
+              _buildActivityCard(
+                context,
+                emoji: '⚡',
+                title: 'Speed Round',
+                description: '10 rapid-fire questions with 10-second timer',
+                lpRange: '20-40 LP + Streak Bonuses',
+                isActive: true,
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const SpeedRoundIntroScreen(),
                     ),
                   ).then((_) => setState(() {}));
                 },

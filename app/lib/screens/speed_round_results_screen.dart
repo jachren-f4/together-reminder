@@ -24,7 +24,6 @@ class SpeedRoundResultsScreen extends StatefulWidget {
 class _SpeedRoundResultsScreenState extends State<SpeedRoundResultsScreen> with SingleTickerProviderStateMixin {
   final QuizService _quizService = QuizService();
   final StorageService _storage = StorageService();
-  final LovePointService _lpService = LovePointService();
 
   late ConfettiController _confettiController;
   late AnimationController _animationController;
@@ -108,10 +107,11 @@ class _SpeedRoundResultsScreenState extends State<SpeedRoundResultsScreen> with 
         _baseLp = 20 + ((_matchPercentage / 100) * 20).round();
         _totalLp = _baseLp + _totalStreakBonus;
 
-        // Award LP
-        _lpService.awardLovePoints(
-          _totalLp,
-          'Speed Round: $_matchPercentage% match',
+        // Award LP (fire and forget)
+        LovePointService.awardPoints(
+          amount: _totalLp,
+          reason: 'speed_round',
+          relatedId: widget.session.id,
         );
 
         // Show confetti for good performance

@@ -802,6 +802,59 @@ flutter run -d chrome          # Bob (Web)
 - FCM service workers NOT supported → blank screen crash if called directly
 - Uses fake push tokens: `web_token_${timestamp}`
 
+**CRITICAL: Chrome Testing Best Practices**
+
+When testing new code changes on Chrome, hot reload often fails to pick up changes properly. **ALWAYS** follow this process:
+
+```bash
+# 1. Kill any existing Flutter Chrome instances
+# Find running Flutter processes
+ps aux | grep flutter
+
+# Kill all Flutter processes (or kill specific PIDs)
+pkill -f "flutter run"
+
+# OR kill Chrome instances
+pkill -f "chrome"
+
+# 2. Clean build (optional but recommended for major changes)
+cd app && flutter clean
+flutter pub get
+
+# 3. Start fresh Flutter instance
+flutter run -d chrome
+```
+
+**Why this is necessary:**
+- Hot reload (`r`) often doesn't update UI changes on Chrome
+- Hot restart (`R`) sometimes maintains stale state
+- Multiple Chrome tabs can interfere with each other
+- State persists in Hive/IndexedDB between sessions
+
+**Quick restart (without clean):**
+```bash
+# Kill existing instance
+pkill -f "flutter run"
+
+# Start fresh
+cd app && flutter run -d chrome
+```
+
+**When to use full clean:**
+- After updating dependencies
+- After modifying data models (Hive types)
+- After major UI restructuring
+- When hot reload repeatedly fails
+- When seeing inexplicable errors
+
+**Testing Checklist:**
+- [ ] Kill existing Flutter Chrome instances
+- [ ] Start fresh `flutter run -d chrome`
+- [ ] Verify 160 questions loaded (check console)
+- [ ] Navigate to Activities screen
+- [ ] Verify all cards visible (including Speed Round)
+- [ ] Test feature functionality
+
 ---
 
 ## Common Patterns
@@ -998,4 +1051,4 @@ Without the `---` delimiters and description field, commands are invisible to Cl
 
 ---
 
-**Last Updated:** 2025-11-11
+**Last Updated:** 2025-11-11 (Added Chrome testing best practices)
