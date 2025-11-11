@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Link-3 - TogetherRemind</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .game-container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 600px;
+            width: 100%;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .game-icon {
+            font-size: 3em;
+            margin-bottom: 10px;
+        }
+
+        h1 {
+            color: #667eea;
+            font-size: 1.8em;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: #666;
+            font-size: 0.95em;
+        }
+
+        .instruction {
+            background: #f0f4ff;
+            border-left: 4px solid #667eea;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+            font-size: 0.95em;
+            color: #333;
+        }
+
+        .word-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin: 30px 0;
+        }
+
+        .word-tile {
+            background: #f9fafb;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 20px 10px;
+            text-align: center;
+            font-weight: 600;
+            font-size: 1em;
+            cursor: pointer;
+            transition: all 0.3s;
+            user-select: none;
+        }
+
+        .word-tile:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .word-tile.selected-fruits {
+            background: #fef3c7;
+            border-color: #f59e0b;
+            color: #92400e;
+        }
+
+        .word-tile.selected-emotions {
+            background: #fce7f3;
+            border-color: #ec4899;
+            color: #831843;
+        }
+
+        .word-tile.locked-fruits {
+            background: #fef3c7;
+            border-color: #f59e0b;
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .word-tile.locked-emotions {
+            background: #fce7f3;
+            border-color: #ec4899;
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .found-groups {
+            margin: 30px 0;
+        }
+
+        .group-title {
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 15px;
+        }
+
+        .found-group {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 12px;
+            box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
+        }
+
+        .group-category {
+            font-size: 0.85em;
+            opacity: 0.9;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .group-words {
+            font-size: 1.1em;
+            font-weight: 600;
+        }
+
+        .partner-selection {
+            background: #f0fdf4;
+            border: 2px dashed #10b981;
+            border-radius: 12px;
+            padding: 15px;
+            margin: 15px 0;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .partner-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #10b981;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2em;
+        }
+
+        .partner-info {
+            flex-grow: 1;
+        }
+
+        .partner-name {
+            font-weight: 600;
+            color: #059669;
+            font-size: 0.9em;
+        }
+
+        .partner-words {
+            color: #10b981;
+            font-size: 0.85em;
+        }
+
+        .action-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin: 20px 0;
+        }
+
+        .button {
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .button-primary {
+            background: #667eea;
+            color: white;
+        }
+
+        .button-primary:hover {
+            background: #5568d3;
+        }
+
+        .button-secondary {
+            background: #f3f4f6;
+            color: #666;
+        }
+
+        .button-secondary:hover {
+            background: #e5e7eb;
+        }
+
+        .button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 2px solid #e5e7eb;
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .stat-label {
+            font-size: 0.85em;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 20px;
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <div class="header">
+            <div class="game-icon">🔗</div>
+            <h1>Link-3</h1>
+            <p class="subtitle">Find hidden groups of 3 connected words</p>
+        </div>
+
+        <div class="instruction">
+            <strong>How to play:</strong> Tap 3 words that share a connection.
+            Find all 4 groups to win! Your partner's selections sync automatically.
+        </div>
+
+        <div class="found-groups">
+            <div class="group-title">✅ Found Groups (1/4)</div>
+            <div class="found-group">
+                <div class="group-category">🍎 Sweet Fruits</div>
+                <div class="group-words">Apple • Banana • Cherry</div>
+            </div>
+        </div>
+
+        <div class="partner-selection">
+            <div class="partner-avatar">❤️</div>
+            <div class="partner-info">
+                <div class="partner-name">Partner is selecting...</div>
+                <div class="partner-words">Joy • Peace</div>
+            </div>
+        </div>
+
+        <div class="word-grid">
+            <div class="word-tile locked-fruits">Apple</div>
+            <div class="word-tile">Dog</div>
+            <div class="word-tile selected-emotions">Joy</div>
+            <div class="word-tile locked-fruits">Banana</div>
+            <div class="word-tile">Cat</div>
+            <div class="word-tile selected-emotions">Peace</div>
+            <div class="word-tile locked-fruits">Cherry</div>
+            <div class="word-tile">Mouse</div>
+            <div class="word-tile">Love</div>
+            <div class="word-tile">Red</div>
+            <div class="word-tile">Blue</div>
+            <div class="word-tile">Green</div>
+        </div>
+
+        <div class="action-buttons">
+            <button class="button button-primary" disabled>
+                Submit Group (0/3)
+            </button>
+            <button class="button button-secondary">
+                Clear Selection
+            </button>
+        </div>
+
+        <div class="stats">
+            <div class="stat">
+                <div class="stat-value">1/4</div>
+                <div class="stat-label">Groups Found</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value">3</div>
+                <div class="stat-label">Attempts</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value">+25</div>
+                <div class="stat-label">Love Points</div>
+            </div>
+        </div>
+
+        <a href="index.html" class="back-link">← Back to All Games</a>
+    </div>
+
+    <script>
+        // Interactive demo
+        const tiles = document.querySelectorAll('.word-tile:not([class*="locked"])');
+        const submitBtn = document.querySelector('.button-primary');
+        let selected = new Set();
+
+        tiles.forEach(tile => {
+            tile.addEventListener('click', () => {
+                if (tile.classList.contains('selected-emotions')) {
+                    tile.classList.remove('selected-emotions');
+                    selected.delete(tile.textContent);
+                } else if (selected.size < 3) {
+                    tile.classList.add('selected-emotions');
+                    selected.add(tile.textContent);
+                }
+
+                submitBtn.disabled = selected.size !== 3;
+                submitBtn.textContent = `Submit Group (${selected.size}/3)`;
+            });
+        });
+    </script>
+</body>
+</html>

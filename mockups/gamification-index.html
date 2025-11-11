@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TogetherRemind - Gamification System Mockups</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #FF6B9D 0%, #FEA47F 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        header {
+            text-align: center;
+            color: white;
+            margin-bottom: 60px;
+        }
+        header h1 {
+            font-size: 52px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            letter-spacing: -1px;
+        }
+        header p {
+            font-size: 22px;
+            opacity: 0.95;
+            margin-bottom: 12px;
+        }
+        .subtitle {
+            font-size: 16px;
+            opacity: 0.85;
+            max-width: 700px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        /* System Overview */
+        .system-overview {
+            background: white;
+            border-radius: 24px;
+            padding: 40px;
+            margin-bottom: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+        }
+        .system-overview h2 {
+            font-size: 28px;
+            font-weight: 600;
+            color: #FF6B9D;
+            margin-bottom: 24px;
+            text-align: center;
+        }
+        .overview-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 24px;
+            margin-top: 32px;
+        }
+        .overview-card {
+            background: linear-gradient(135deg, #FFF5F8 0%, #FFF9F0 100%);
+            padding: 24px;
+            border-radius: 16px;
+            border: 2px solid #FFE5EC;
+        }
+        .overview-card h3 {
+            font-size: 18px;
+            font-weight: 600;
+            color: #FF6B9D;
+            margin-bottom: 12px;
+        }
+        .overview-card p {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.6;
+        }
+        .overview-card .emoji {
+            font-size: 32px;
+            margin-bottom: 12px;
+            display: block;
+        }
+
+        /* Mockup Grid */
+        .section-title {
+            color: white;
+            font-size: 32px;
+            font-weight: 700;
+            margin: 60px 0 30px;
+            text-align: center;
+        }
+        .mockup-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        .mockup-card {
+            background: white;
+            border-radius: 20px;
+            padding: 24px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            transition: transform 0.3s, box-shadow 0.3s;
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+        .mockup-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        .mockup-badge {
+            display: inline-block;
+            padding: 8px 16px;
+            background: linear-gradient(135deg, #FF6B9D 0%, #FEA47F 100%);
+            color: white;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .mockup-card h3 {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: #333;
+        }
+        .mockup-card p {
+            font-size: 15px;
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+        .mockup-features {
+            list-style: none;
+            margin-bottom: 20px;
+        }
+        .mockup-features li {
+            font-size: 14px;
+            color: #555;
+            padding: 8px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        .mockup-features li:last-child {
+            border-bottom: none;
+        }
+        .mockup-features li::before {
+            content: "✓";
+            color: #22c55e;
+            font-weight: bold;
+            margin-right: 8px;
+        }
+        .view-button {
+            display: block;
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #FF6B9D 0%, #FEA47F 100%);
+            color: white;
+            text-align: center;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 15px;
+            transition: opacity 0.3s;
+        }
+        .view-button:hover {
+            opacity: 0.9;
+        }
+
+        /* Design Principles */
+        .principles {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 32px;
+            margin-bottom: 40px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+        .principles h2 {
+            color: white;
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .principles ul {
+            list-style: none;
+            color: white;
+            font-size: 16px;
+            line-height: 2;
+        }
+        .principles li::before {
+            content: "💡";
+            margin-right: 12px;
+        }
+
+        footer {
+            text-align: center;
+            color: white;
+            margin-top: 60px;
+            padding: 20px;
+            opacity: 0.9;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>💞 TogetherRemind Gamification</h1>
+            <p>Transform everyday interactions into meaningful cooperative challenges</p>
+            <p class="subtitle">Earn Love Points, rise on the leaderboard, and strengthen your bond through verified, authentic activities</p>
+        </header>
+
+        <div class="system-overview">
+            <h2>🎯 System Overview</h2>
+            <p style="text-align: center; color: #666; margin-bottom: 32px; max-width: 800px; margin-left: auto; margin-right: auto;">
+                The gamification layer adds meaningful progression, cooperative challenges, and healthy competition while maintaining the app's core values of authenticity and connection.
+            </p>
+
+            <div class="overview-grid">
+                <div class="overview-card">
+                    <span class="emoji">🪙</span>
+                    <h3>Love Points System</h3>
+                    <p>Permanent accumulation with milestone floors (1K, 2K, 3.5K, 5K). Elastic progression with soft decay for inactivity. Points earned through verified, cooperative activities.</p>
+                </div>
+                <div class="overview-card">
+                    <span class="emoji">🏆</span>
+                    <h3>Global Leaderboard</h3>
+                    <p>Dynamic ranking updated every 6 hours. Shows rise/fall arrows, 4-week chart, and tier progression. Global and Friends views available.</p>
+                </div>
+                <div class="overview-card">
+                    <span class="emoji">🏟️</span>
+                    <h3>Arena Tiers</h3>
+                    <p>5 visual tiers from "New Sparks" to "Soul Sync Masters". Each tier has unique colors, icons, and rewards. Progress is protected by milestone floors.</p>
+                </div>
+                <div class="overview-card">
+                    <span class="emoji">🎮</span>
+                    <h3>8 Core Activities</h3>
+                    <p>Couple Quiz, Health Integration, Crossword, Weekly Challenge, Enhanced Poke, Timed Trivia, Weekly Recap, and Profile Leveling.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="principles">
+            <h2>💡 Design Principles</h2>
+            <ul>
+                <li>Accountability over automation — effort must be measurable</li>
+                <li>Cooperative goals — both partners contribute for success</li>
+                <li>No streaks — time-boxed challenges instead</li>
+                <li>Verifiable data — Apple Health / Google Fit integration</li>
+                <li>Healthy competition — leaderboard reflects growth over time</li>
+                <li>Emotional reward first — visual praise over points inflation</li>
+            </ul>
+        </div>
+
+        <h2 class="section-title">📱 Core Screens</h2>
+        <div class="mockup-grid">
+            <div class="mockup-card">
+                <span class="mockup-badge">Modified Core</span>
+                <h3>🏠 Home Screen+</h3>
+                <p>Enhanced home screen with gamification elements integrated into the existing UI.</p>
+                <ul class="mockup-features">
+                    <li>Love Points counter at top</li>
+                    <li>Current arena tier badge</li>
+                    <li>Quick stats widget</li>
+                    <li>Active challenge banner</li>
+                    <li>Enhanced poke button (3/day limit)</li>
+                </ul>
+                <a href="gamification-home.html" class="view-button">View Mockup →</a>
+            </div>
+
+            <div class="mockup-card">
+                <span class="mockup-badge">New Feature</span>
+                <h3>🏆 Leaderboard</h3>
+                <p>Global and friends ranking with elastic progression model and dynamic updates.</p>
+                <ul class="mockup-features">
+                    <li>Current rank with delta arrows</li>
+                    <li>Love Points with floor protection</li>
+                    <li>4-week progress chart</li>
+                    <li>Arena tier visualization</li>
+                    <li>Global vs Friends toggle</li>
+                </ul>
+                <a href="gamification-leaderboard.html" class="view-button">View Mockup →</a>
+            </div>
+
+            <div class="mockup-card">
+                <span class="mockup-badge">New Feature</span>
+                <h3>💎 Couple Profile & Arenas</h3>
+                <p>Visual representation of couple's progression through 5 arena tiers with stats and achievements.</p>
+                <ul class="mockup-features">
+                    <li>Arena tier with custom visuals</li>
+                    <li>Total Love Points + floor</li>
+                    <li>Achievement badges showcase</li>
+                    <li>Activity statistics</li>
+                    <li>Next tier progress bar</li>
+                </ul>
+                <a href="gamification-profile.html" class="view-button">View Mockup →</a>
+            </div>
+        </div>
+
+        <h2 class="section-title">🎮 Activity Screens</h2>
+        <div class="mockup-grid">
+            <div class="mockup-card">
+                <span class="mockup-badge">Activity</span>
+                <h3>🧠 Couple Quiz</h3>
+                <p>"How Well Do You Know Me?" - Both answer 3-5 questions privately, scored on accuracy.</p>
+                <ul class="mockup-features">
+                    <li>Private simultaneous answering</li>
+                    <li>Timed 3-hour window</li>
+                    <li>Accuracy-based scoring (50%-100%)</li>
+                    <li>Reveal results screen</li>
+                    <li>5-20 LP reward + badges</li>
+                </ul>
+                <a href="gamification-quiz.html" class="view-button">View Mockup →</a>
+            </div>
+
+            <div class="mockup-card">
+                <span class="mockup-badge">Activity</span>
+                <h3>💪 Health Challenge</h3>
+                <p>Apple Health / Google Fit integration - both must hit daily goals together.</p>
+                <ul class="mockup-features">
+                    <li>Daily step goal (6,000+ steps)</li>
+                    <li>Sleep tracking (7+ hours)</li>
+                    <li>Both must complete for reward</li>
+                    <li>Verified data only</li>
+                    <li>"Active Duo" badges</li>
+                </ul>
+                <a href="gamification-health.html" class="view-button">View Mockup →</a>
+            </div>
+
+            <div class="mockup-card">
+                <span class="mockup-badge">Activity</span>
+                <h3>🎯 Weekly Challenge</h3>
+                <p>Time-boxed cooperative goals with themes and 2x LP multipliers.</p>
+                <ul class="mockup-features">
+                    <li>Weekly themes ("Teamwork Week")</li>
+                    <li>Progress tracking for both</li>
+                    <li>Action counter (e.g., "40 actions")</li>
+                    <li>2x LP multiplier when active</li>
+                    <li>Tier upgrade potential</li>
+                </ul>
+                <a href="gamification-weekly.html" class="view-button">View Mockup →</a>
+            </div>
+
+            <div class="mockup-card">
+                <span class="mockup-badge">Activity</span>
+                <h3>🧩 Crossword Challenge</h3>
+                <p>Shared puzzle filled in turns with time limit for cooperative completion.</p>
+                <ul class="mockup-features">
+                    <li>Turn-based puzzle solving</li>
+                    <li>Time limit pressure</li>
+                    <li>Server-validated actions</li>
+                    <li>"Mind Meld" badge</li>
+                    <li>Difficulty scaling</li>
+                </ul>
+                <a href="gamification-crossword.html" class="view-button">View Mockup →</a>
+            </div>
+
+            <div class="mockup-card">
+                <span class="mockup-badge">Activity</span>
+                <h3>⚡ Timed Trivia</h3>
+                <p>30-second simultaneous trivia with speed-based LP multipliers.</p>
+                <ul class="mockup-features">
+                    <li>30-second answer window</li>
+                    <li>Simultaneous answering</li>
+                    <li>Speed affects LP multiplier</li>
+                    <li>"Quick Thinkers" badge</li>
+                    <li>Random categories</li>
+                </ul>
+                <a href="gamification-trivia.html" class="view-button">View Mockup →</a>
+            </div>
+
+            <div class="mockup-card">
+                <span class="mockup-badge">Activity</span>
+                <h3>📊 Weekly Recap</h3>
+                <p>AI-generated summary with praise ceremony and shareable card.</p>
+                <ul class="mockup-features">
+                    <li>AI-generated weekly summary</li>
+                    <li>Activity highlights</li>
+                    <li>Confetti animation</li>
+                    <li>"Golden Heart" badge</li>
+                    <li>Shareable recap card</li>
+                </ul>
+                <a href="gamification-recap.html" class="view-button">View Mockup →</a>
+            </div>
+        </div>
+
+        <footer>
+            <p><strong>TogetherRemind Gamification System</strong></p>
+            <p>MVP Specification v1.1 • November 2025</p>
+            <p style="margin-top: 12px; font-size: 14px; opacity: 0.8;">
+                These mockups demonstrate the integration of gamification features<br>
+                while maintaining the app's core values of authenticity and meaningful connection.
+            </p>
+        </footer>
+    </div>
+</body>
+</html>

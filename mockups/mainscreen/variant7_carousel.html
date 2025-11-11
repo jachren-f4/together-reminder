@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Variant 7: Carousel Focus - TogetherRemind</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #FAFAFA;
+            color: #1A1A1A;
+            padding: 0;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+        .header {
+            padding: 20px;
+            background: #FFFEFD;
+            border-bottom: 1px solid #F0F0F0;
+        }
+        .header-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 4px;
+            letter-spacing: -0.4px;
+        }
+        .header-subtitle {
+            font-size: 14px;
+            color: #6E6E6E;
+        }
+        .carousel-section {
+            padding: 24px 0;
+        }
+        .carousel-title {
+            font-size: 17px;
+            font-weight: 600;
+            padding: 0 20px;
+            margin-bottom: 16px;
+        }
+        .carousel {
+            display: flex;
+            gap: 16px;
+            overflow-x: auto;
+            padding: 0 20px;
+            scrollbar-width: none;
+        }
+        .carousel::-webkit-scrollbar {
+            display: none;
+        }
+        .carousel-card {
+            background: #FFFEFD;
+            border: 2px solid #F0F0F0;
+            border-radius: 20px;
+            padding: 28px 24px;
+            min-width: 280px;
+            flex-shrink: 0;
+            text-align: center;
+        }
+        .carousel-card.featured {
+            background: #1A1A1A;
+            color: #FFFEFD;
+            border-color: #1A1A1A;
+            min-width: 320px;
+        }
+        .carousel-emoji {
+            font-size: 56px;
+            margin-bottom: 16px;
+        }
+        .carousel-badge {
+            display: inline-block;
+            padding: 6px 12px;
+            background: rgba(255, 254, 253, 0.2);
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+        .carousel-card:not(.featured) .carousel-badge {
+            background: #F0F0F0;
+            color: #1A1A1A;
+        }
+        .carousel-title-text {
+            font-family: 'Playfair Display', serif;
+            font-size: 22px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            letter-spacing: -0.3px;
+        }
+        .carousel-subtitle {
+            font-size: 15px;
+            margin-bottom: 20px;
+            opacity: 0.8;
+        }
+        .carousel-button {
+            background: #FFFEFD;
+            color: #1A1A1A;
+            border: none;
+            border-radius: 16px;
+            padding: 14px 28px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+        }
+        .carousel-card.featured .carousel-button {
+            background: #FFFEFD;
+            color: #1A1A1A;
+        }
+        .carousel-card:not(.featured) .carousel-button {
+            background: #1A1A1A;
+            color: #FFFEFD;
+        }
+        .quick-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            padding: 0 20px;
+            margin-bottom: 24px;
+        }
+        .quick-item {
+            background: #FFFEFD;
+            border: 2px solid #F0F0F0;
+            border-radius: 12px;
+            padding: 16px 8px;
+            text-align: center;
+        }
+        .quick-emoji {
+            font-size: 32px;
+            margin-bottom: 6px;
+        }
+        .quick-label {
+            font-size: 12px;
+            font-weight: 500;
+        }
+        .dots {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 16px;
+        }
+        .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #F0F0F0;
+        }
+        .dot.active {
+            background: #1A1A1A;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-title">Together</div>
+        <div class="header-subtitle">Keep your connection strong</div>
+    </div>
+
+    <div class="carousel-section">
+        <div class="carousel-title">For You Today</div>
+        <div class="carousel">
+            <div class="carousel-card featured">
+                <div class="carousel-badge">🔥 3 day streak</div>
+                <div class="carousel-emoji">🧩</div>
+                <div class="carousel-title-text">Daily Pulse</div>
+                <div class="carousel-subtitle">Your turn to answer</div>
+                <button class="carousel-button">Answer Now</button>
+            </div>
+
+            <div class="carousel-card">
+                <div class="carousel-badge">Your turn</div>
+                <div class="carousel-emoji">🪜</div>
+                <div class="carousel-title-text">Word Ladder</div>
+                <div class="carousel-subtitle">2 puzzles waiting</div>
+                <button class="carousel-button">Play Turn</button>
+            </div>
+
+            <div class="carousel-card">
+                <div class="carousel-badge">6/8 pairs</div>
+                <div class="carousel-emoji">🃏</div>
+                <div class="carousel-title-text">Memory Flip</div>
+                <div class="carousel-subtitle">Almost complete!</div>
+                <button class="carousel-button">Continue</button>
+            </div>
+        </div>
+        <div class="dots">
+            <div class="dot active"></div>
+            <div class="dot"></div>
+            <div class="dot"></div>
+        </div>
+    </div>
+
+    <div class="carousel-section">
+        <div class="carousel-title">Quick Actions</div>
+        <div class="quick-grid">
+            <div class="quick-item">
+                <div class="quick-emoji">💫</div>
+                <div class="quick-label">Poke</div>
+            </div>
+            <div class="quick-item">
+                <div class="quick-emoji">💕</div>
+                <div class="quick-label">Remind</div>
+            </div>
+            <div class="quick-item">
+                <div class="quick-emoji">🎯</div>
+                <div class="quick-label">Quiz</div>
+            </div>
+            <div class="quick-item">
+                <div class="quick-emoji">📝</div>
+                <div class="quick-label">Inbox</div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Variant 1: Game First - TogetherRemind</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #FAFAFA;
+            color: #1A1A1A;
+            padding: 20px;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+        .header {
+            font-family: 'Playfair Display', serif;
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            letter-spacing: -0.4px;
+        }
+        .subtitle {
+            font-size: 15px;
+            color: #6E6E6E;
+            margin-bottom: 32px;
+        }
+        .section-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            letter-spacing: -0.2px;
+        }
+        .card {
+            background: #FFFEFD;
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 16px;
+            border: 2px solid #F0F0F0;
+        }
+        .card-horizontal {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        .emoji-box {
+            width: 60px;
+            height: 60px;
+            background: #F0F0F0;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            flex-shrink: 0;
+        }
+        .card-content {
+            flex: 1;
+        }
+        .card-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        .card-desc {
+            font-size: 14px;
+            color: #6E6E6E;
+            margin-bottom: 8px;
+        }
+        .badge {
+            display: inline-block;
+            padding: 4px 8px;
+            background: #F0F0F0;
+            border-radius: 8px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+        .quick-actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 32px;
+        }
+        .quick-action-btn {
+            background: #1A1A1A;
+            color: #FFFEFD;
+            border-radius: 16px;
+            padding: 20px 16px;
+            text-align: center;
+            border: none;
+            cursor: pointer;
+        }
+        .quick-action-emoji {
+            font-size: 32px;
+            display: block;
+            margin-bottom: 8px;
+        }
+        .quick-action-text {
+            font-size: 15px;
+            font-weight: 600;
+        }
+        .divider {
+            height: 1px;
+            background: #F0F0F0;
+            margin: 32px 0;
+        }
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: #FFFEFD;
+            border-top: 1px solid #F0F0F0;
+            padding: 12px 20px 8px;
+            display: flex;
+            justify-content: space-around;
+        }
+        .nav-item {
+            text-align: center;
+            font-size: 11px;
+            color: #AAAAAA;
+        }
+        .nav-item.active {
+            color: #1A1A1A;
+        }
+        .nav-emoji {
+            font-size: 24px;
+            display: block;
+            margin-bottom: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">Together Today</div>
+    <div class="subtitle">Play, connect, grow stronger</div>
+
+    <div class="section-title">Quick Actions</div>
+    <div class="quick-actions">
+        <button class="quick-action-btn">
+            <span class="quick-action-emoji">💫</span>
+            <span class="quick-action-text">Send Poke</span>
+        </button>
+        <button class="quick-action-btn">
+            <span class="quick-action-emoji">💕</span>
+            <span class="quick-action-text">Send Reminder</span>
+        </button>
+    </div>
+
+    <div class="section-title">Play Together</div>
+
+    <div class="card card-horizontal">
+        <div class="emoji-box">🧩</div>
+        <div class="card-content">
+            <div class="card-title">Daily Pulse</div>
+            <div class="card-desc">Your turn to answer</div>
+            <span class="badge">3 day streak 🔥</span>
+        </div>
+    </div>
+
+    <div class="card card-horizontal">
+        <div class="emoji-box">🪜</div>
+        <div class="card-content">
+            <div class="card-title">Word Ladder Duet</div>
+            <div class="card-desc">2 active puzzles</div>
+            <span class="badge">Your turn</span>
+        </div>
+    </div>
+
+    <div class="card card-horizontal">
+        <div class="emoji-box">🃏</div>
+        <div class="card-content">
+            <div class="card-title">Memory Flip Co-op</div>
+            <div class="card-desc">6/8 pairs found</div>
+            <span class="badge">10-130 LP</span>
+        </div>
+    </div>
+
+    <div class="card card-horizontal">
+        <div class="emoji-box">🎯</div>
+        <div class="card-content">
+            <div class="card-title">Couple Quiz</div>
+            <div class="card-desc">Test your connection</div>
+            <span class="badge">10-50 LP</span>
+        </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="section-title">Recent Activity</div>
+    <div class="card card-horizontal">
+        <div class="emoji-box">📝</div>
+        <div class="card-content">
+            <div class="card-title">Reminder from Sarah</div>
+            <div class="card-desc">2 hours ago</div>
+        </div>
+    </div>
+
+    <div style="height: 80px;"></div>
+
+    <div class="bottom-nav">
+        <div class="nav-item active">
+            <span class="nav-emoji">🏠</span>
+            Home
+        </div>
+        <div class="nav-item">
+            <span class="nav-emoji">📝</span>
+            Inbox
+        </div>
+        <div class="nav-item">
+            <span class="nav-emoji">💎</span>
+            Profile
+        </div>
+        <div class="nav-item">
+            <span class="nav-emoji">⚙️</span>
+            Settings
+        </div>
+    </div>
+</body>
+</html>

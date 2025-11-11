@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Variant 17: Arena Subtle - TogetherRemind</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #FAFAFA;
+            color: #1A1A1A;
+            padding: 0;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+        .top-section {
+            background: #FFFEFD;
+            border-bottom: 2px solid #F0F0F0;
+            padding: 20px;
+        }
+        .arena-indicator {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 12px;
+            background: linear-gradient(135deg, #87CEEB 0%, #FFD700 100%);
+            border-radius: 12px;
+            margin-bottom: 16px;
+        }
+        .arena-icon {
+            font-size: 20px;
+        }
+        .arena-info {
+            flex: 1;
+        }
+        .arena-name {
+            font-size: 13px;
+            font-weight: 600;
+            color: white;
+            margin-bottom: 2px;
+        }
+        .arena-progress {
+            font-size: 10px;
+            color: rgba(255, 255, 255, 0.9);
+        }
+        .profile-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+        .avatar-pair {
+            display: flex;
+            align-items: center;
+        }
+        .avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: #F0F0F0;
+            border: 2px solid #FFFEFD;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+        }
+        .avatar:last-child {
+            margin-left: -12px;
+        }
+        .greeting-text {
+            flex: 1;
+        }
+        .greeting-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 2px;
+        }
+        .greeting-subtitle {
+            font-size: 13px;
+            color: #6E6E6E;
+        }
+        .stats-row {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+        .stat-mini {
+            flex: 1;
+            background: #F0F0F0;
+            border-radius: 10px;
+            padding: 12px;
+            text-align: center;
+        }
+        .stat-mini-value {
+            font-family: 'Playfair Display', serif;
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 2px;
+        }
+        .stat-mini-label {
+            font-size: 10px;
+            color: #6E6E6E;
+            font-weight: 500;
+        }
+        .action-row {
+            display: flex;
+            gap: 10px;
+        }
+        .action-button {
+            flex: 1;
+            background: #1A1A1A;
+            color: #FFFEFD;
+            border: none;
+            border-radius: 12px;
+            padding: 12px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+        .action-icon {
+            font-size: 20px;
+        }
+        .content-area {
+            padding: 20px;
+        }
+        .quest-section-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+        .carousel {
+            display: flex;
+            gap: 12px;
+            overflow-x: auto;
+            padding-bottom: 8px;
+            margin-bottom: 24px;
+            scrollbar-width: none;
+        }
+        .carousel::-webkit-scrollbar {
+            display: none;
+        }
+        .main-quest-card {
+            background: #FFFEFD;
+            border: 2px solid #F0F0F0;
+            border-radius: 16px;
+            padding: 20px;
+            min-width: 260px;
+            flex-shrink: 0;
+            text-align: center;
+        }
+        .main-quest-card.active {
+            border-color: #1A1A1A;
+            border-width: 3px;
+        }
+        .quest-icon {
+            font-size: 52px;
+            margin-bottom: 12px;
+        }
+        .quest-name {
+            font-size: 17px;
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+        .quest-status {
+            font-size: 13px;
+            color: #6E6E6E;
+            margin-bottom: 12px;
+        }
+        .quest-reward-row {
+            display: flex;
+            gap: 6px;
+            justify-content: center;
+        }
+        .reward-chip {
+            background: #F0F0F0;
+            padding: 4px 10px;
+            border-radius: 8px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+        .main-quest-card.active .reward-chip {
+            background: #1A1A1A;
+            color: #FFFEFD;
+        }
+        .side-quest-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+        .side-quest-item {
+            background: #FFFEFD;
+            border: 2px solid #F0F0F0;
+            border-radius: 12px;
+            padding: 16px 12px;
+            text-align: center;
+        }
+        .side-quest-icon {
+            font-size: 32px;
+            margin-bottom: 8px;
+        }
+        .side-quest-label {
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 2px;
+        }
+        .side-quest-info {
+            font-size: 10px;
+            color: #6E6E6E;
+        }
+    </style>
+</head>
+<body>
+    <div class="top-section">
+        <div class="arena-indicator">
+            <span class="arena-icon">🏖️</span>
+            <div class="arena-info">
+                <div class="arena-name">Beach Villa</div>
+                <div class="arena-progress">1,280 / 2,500 LP • Next: Yacht Getaway ⛵</div>
+            </div>
+        </div>
+
+        <div class="profile-row">
+            <div class="avatar-pair">
+                <div class="avatar">💕</div>
+                <div class="avatar">💎</div>
+            </div>
+            <div class="greeting-text">
+                <div class="greeting-title">Good Morning!</div>
+                <div class="greeting-subtitle">You & Sarah • Day 8</div>
+            </div>
+        </div>
+
+        <div class="stats-row">
+            <div class="stat-mini">
+                <div class="stat-mini-value">127</div>
+                <div class="stat-mini-label">Love Points</div>
+            </div>
+            <div class="stat-mini">
+                <div class="stat-mini-value">3</div>
+                <div class="stat-mini-label">Streak</div>
+            </div>
+            <div class="stat-mini">
+                <div class="stat-mini-value">85%</div>
+                <div class="stat-mini-label">Match</div>
+            </div>
+        </div>
+
+        <div class="action-row">
+            <button class="action-button">
+                <span class="action-icon">💫</span>
+                Poke
+            </button>
+            <button class="action-button">
+                <span class="action-icon">💕</span>
+                Remind
+            </button>
+        </div>
+    </div>
+
+    <div class="content-area">
+        <div class="quest-section-title">Main Quests</div>
+        <div class="carousel">
+            <div class="main-quest-card active">
+                <div class="quest-icon">🧩</div>
+                <div class="quest-name">Daily Pulse</div>
+                <div class="quest-status">Your turn today</div>
+                <div class="quest-reward-row">
+                    <span class="reward-chip">+20 LP</span>
+                    <span class="reward-chip">🔥</span>
+                </div>
+            </div>
+
+            <div class="main-quest-card">
+                <div class="quest-icon">🪜</div>
+                <div class="quest-name">Word Ladder</div>
+                <div class="quest-status">2 puzzles waiting</div>
+                <div class="quest-reward-row">
+                    <span class="reward-chip">+15 LP</span>
+                </div>
+            </div>
+
+            <div class="main-quest-card">
+                <div class="quest-icon">🃏</div>
+                <div class="quest-name">Memory Flip</div>
+                <div class="quest-status">6/8 pairs found</div>
+                <div class="quest-reward-row">
+                    <span class="reward-chip">+40 LP</span>
+                </div>
+            </div>
+
+            <div class="main-quest-card">
+                <div class="quest-icon">🎯</div>
+                <div class="quest-name">Couple Quiz</div>
+                <div class="quest-status">Start new session</div>
+                <div class="quest-reward-row">
+                    <span class="reward-chip">+30 LP</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="quest-section-title">Side Quests</div>
+        <div class="side-quest-grid">
+            <div class="side-quest-item">
+                <div class="side-quest-icon">📝</div>
+                <div class="side-quest-label">Inbox</div>
+                <div class="side-quest-info">2 new</div>
+            </div>
+            <div class="side-quest-item">
+                <div class="side-quest-icon">💭</div>
+                <div class="side-quest-label">Would You</div>
+                <div class="side-quest-info">Soon</div>
+            </div>
+            <div class="side-quest-item">
+                <div class="side-quest-icon">🎭</div>
+                <div class="side-quest-label">Challenge</div>
+                <div class="side-quest-info">Daily</div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

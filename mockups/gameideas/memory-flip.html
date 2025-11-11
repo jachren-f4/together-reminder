@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Memory Flip Co-op - TogetherRemind</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .game-container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 550px;
+            width: 100%;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .game-icon {
+            font-size: 3em;
+            margin-bottom: 10px;
+        }
+
+        h1 {
+            color: #667eea;
+            font-size: 1.8em;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: #666;
+            font-size: 0.95em;
+        }
+
+        .flips-remaining {
+            background: #f0f4ff;
+            border-left: 4px solid #667eea;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .flip-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .flip-icon {
+            font-size: 1.5em;
+        }
+
+        .flip-count {
+            font-size: 1.8em;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .flip-label {
+            font-size: 0.9em;
+            color: #666;
+        }
+
+        .memory-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            margin: 30px 0;
+        }
+
+        .memory-card {
+            aspect-ratio: 1;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2em;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .memory-card:hover {
+            transform: scale(1.05);
+        }
+
+        .memory-card.flipped {
+            background: white;
+            border: 3px solid #e5e7eb;
+        }
+
+        .memory-card.matched {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            cursor: default;
+            animation: match-pulse 0.5s ease;
+        }
+
+        .memory-card.matched:hover {
+            transform: none;
+        }
+
+        .memory-card.partner-revealed {
+            background: white;
+            border: 3px solid #ec4899;
+            position: relative;
+        }
+
+        .memory-card.you-revealed {
+            background: white;
+            border: 3px solid #667eea;
+            position: relative;
+        }
+
+        .reveal-badge {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background: rgba(0,0,0,0.7);
+            color: white;
+            padding: 3px 8px;
+            border-radius: 10px;
+            font-size: 0.5em;
+            font-weight: bold;
+        }
+
+        .memory-card.partner-revealed .card-front,
+        .memory-card.you-revealed .card-front {
+            display: block;
+        }
+
+        .memory-card.partner-revealed .card-back,
+        .memory-card.you-revealed .card-back {
+            display: none;
+        }
+
+        @keyframes match-pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .card-back {
+            color: white;
+            font-size: 1.5em;
+        }
+
+        .card-front {
+            display: none;
+        }
+
+        .memory-card.flipped .card-back {
+            display: none;
+        }
+
+        .memory-card.flipped .card-front,
+        .memory-card.matched .card-front {
+            display: block;
+        }
+
+        .match-reveal {
+            background: #f0fdf4;
+            border: 2px solid #10b981;
+            border-radius: 12px;
+            padding: 15px;
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .reveal-title {
+            font-weight: 600;
+            color: #059669;
+            margin-bottom: 8px;
+        }
+
+        .reveal-quote {
+            font-style: italic;
+            color: #666;
+            font-size: 0.95em;
+        }
+
+        .partner-activity {
+            background: #fffbeb;
+            border: 2px solid #f59e0b;
+            border-radius: 12px;
+            padding: 12px;
+            margin: 15px 0;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .partner-avatar {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            background: #f59e0b;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .partner-text {
+            color: #d97706;
+            font-size: 0.9em;
+            font-weight: 500;
+        }
+
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 2px solid #e5e7eb;
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .stat-label {
+            font-size: 0.85em;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 20px;
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <div class="header">
+            <div class="game-icon">🃏</div>
+            <h1>Memory Flip Co-op</h1>
+            <p class="subtitle">Find matching pairs with your partner</p>
+        </div>
+
+        <div class="flips-remaining">
+            <div class="flip-info">
+                <div class="flip-icon">🔄</div>
+                <div>
+                    <div class="flip-count">3</div>
+                    <div class="flip-label">Flips left today</div>
+                </div>
+            </div>
+            <div style="font-size: 0.85em; color: #666;">
+                Resets in 8 hours
+            </div>
+        </div>
+
+        <div class="partner-activity">
+            <div class="partner-avatar">❤️</div>
+            <div class="partner-text">
+                Your partner found a match! ☕ Coffee • 2 hours ago
+            </div>
+        </div>
+
+        <div style="background: #f0f4ff; padding: 12px; border-radius: 10px; margin: 15px 0; font-size: 0.85em; color: #667eea; text-align: center;">
+            💡 <strong>Tip:</strong> Cards stay revealed between sessions. Your partner can match cards you flipped days ago!
+        </div>
+
+        <div class="memory-grid">
+            <div class="memory-card matched">
+                <div class="card-back">❤️</div>
+                <div class="card-front">🌸</div>
+            </div>
+            <div class="memory-card">
+                <div class="card-back">❤️</div>
+                <div class="card-front">🎵</div>
+            </div>
+            <div class="memory-card partner-revealed">
+                <div class="card-back">❤️</div>
+                <div class="card-front">☕</div>
+                <div class="reveal-badge">❤️</div>
+            </div>
+            <div class="memory-card">
+                <div class="card-back">❤️</div>
+                <div class="card-front">🎨</div>
+            </div>
+
+            <div class="memory-card you-revealed">
+                <div class="card-back">❤️</div>
+                <div class="card-front">🌙</div>
+                <div class="reveal-badge">You</div>
+            </div>
+            <div class="memory-card matched">
+                <div class="card-back">❤️</div>
+                <div class="card-front">🌸</div>
+            </div>
+            <div class="memory-card">
+                <div class="card-back">❤️</div>
+                <div class="card-front">🎵</div>
+            </div>
+            <div class="memory-card matched">
+                <div class="card-back">❤️</div>
+                <div class="card-front">☕</div>
+            </div>
+
+            <div class="memory-card">
+                <div class="card-back">❤️</div>
+                <div class="card-front">📚</div>
+            </div>
+            <div class="memory-card">
+                <div class="card-back">❤️</div>
+                <div class="card-front">🎨</div>
+            </div>
+            <div class="memory-card you-revealed">
+                <div class="card-back">❤️</div>
+                <div class="card-front">🌙</div>
+                <div class="reveal-badge">You</div>
+            </div>
+            <div class="memory-card">
+                <div class="card-back">❤️</div>
+                <div class="card-front">📚</div>
+            </div>
+        </div>
+
+        <div class="match-reveal">
+            <div class="reveal-title">✨ Match Found: Coffee</div>
+            <div class="reveal-quote">
+                "Every morning with you starts with warmth"
+            </div>
+        </div>
+
+        <div class="stats">
+            <div class="stat">
+                <div class="stat-value">3/6</div>
+                <div class="stat-label">Pairs Found</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value">50%</div>
+                <div class="stat-label">Complete</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value">+45</div>
+                <div class="stat-label">Love Points</div>
+            </div>
+        </div>
+
+        <a href="index.html" class="back-link">← Back to All Games</a>
+    </div>
+
+    <script>
+        // Interactive demo
+        const cards = document.querySelectorAll('.memory-card:not(.matched)');
+        let flipped = [];
+        let flipsLeft = 3;
+
+        cards.forEach(card => {
+            card.addEventListener('click', () => {
+                if (flipsLeft > 0 && !card.classList.contains('flipped') && flipped.length < 2) {
+                    card.classList.add('flipped');
+                    flipped.push(card);
+                    flipsLeft--;
+                    document.querySelector('.flip-count').textContent = flipsLeft;
+
+                    if (flipped.length === 2) {
+                        setTimeout(() => {
+                            flipped.forEach(c => c.classList.remove('flipped'));
+                            flipped = [];
+                        }, 1500);
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>

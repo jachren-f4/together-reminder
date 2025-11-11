@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Couple Profile & Arena - TogetherRemind</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #FAFAFA;
+            min-height: 100vh;
+        }
+
+        /* Phone Container */
+        .phone-container {
+            max-width: 390px;
+            margin: 40px auto;
+            background: white;
+            border-radius: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+            border: 12px solid #1A1A1A;
+        }
+
+        /* Status Bar */
+        .status-bar {
+            height: 44px;
+            background: #FFFEFA;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+            font-size: 15px;
+            font-weight: 600;
+        }
+
+        /* Screen Content */
+        .screen {
+            background: #FAFAFA;
+            min-height: 700px;
+            overflow-y: auto;
+            padding-bottom: 80px;
+        }
+
+        /* Arena Header */
+        .arena-header {
+            background: linear-gradient(135deg, #FF6B9D 0%, #FEA47F 100%);
+            padding: 20px;
+            color: white;
+            text-align: center;
+        }
+        .back-button {
+            text-align: left;
+            font-size: 28px;
+            margin-bottom: 12px;
+        }
+        .arena-tier-display {
+            margin: 20px 0;
+        }
+        .tier-icon {
+            font-size: 80px;
+            margin-bottom: 12px;
+            animation: pulse 2s ease-in-out infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        .tier-name {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+        .tier-subtitle {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        /* Love Points Card */
+        .love-points-card {
+            background: white;
+            margin: -30px 16px 20px;
+            border-radius: 20px;
+            padding: 24px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        .points-number {
+            font-size: 48px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #FF6B9D 0%, #FEA47F 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 8px;
+        }
+        .points-label {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 16px;
+        }
+        .floor-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 16px;
+            background: #E8F5E9;
+            border-radius: 12px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #2E7D32;
+        }
+
+        /* Progress to Next Tier */
+        .next-tier-progress {
+            background: white;
+            margin: 0 16px 20px;
+            border-radius: 16px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        .progress-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #666;
+        }
+        .progress-value {
+            font-size: 13px;
+            color: #999;
+        }
+        .progress-bar-container {
+            background: #F0F0F0;
+            height: 12px;
+            border-radius: 6px;
+            overflow: hidden;
+            margin-bottom: 8px;
+        }
+        .progress-bar-fill {
+            background: linear-gradient(90deg, #FF6B9D 0%, #FEA47F 100%);
+            height: 100%;
+            width: 65%;
+            border-radius: 6px;
+            transition: width 0.5s ease;
+        }
+        .next-tier-name {
+            font-size: 13px;
+            color: #999;
+            text-align: center;
+        }
+
+        /* Stats Grid */
+        .stats-section {
+            padding: 0 16px;
+            margin-bottom: 20px;
+        }
+        .section-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1A1A1A;
+            margin-bottom: 12px;
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+        .stat-card {
+            background: white;
+            padding: 16px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        .stat-icon {
+            font-size: 32px;
+            margin-bottom: 8px;
+        }
+        .stat-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: #FF6B9D;
+            margin-bottom: 4px;
+        }
+        .stat-label {
+            font-size: 12px;
+            color: #666;
+        }
+
+        /* Achievements */
+        .achievements-section {
+            padding: 0 16px;
+            margin-bottom: 20px;
+        }
+        .achievements-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+        .achievement-card {
+            background: white;
+            padding: 16px;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        .achievement-card.locked {
+            opacity: 0.4;
+        }
+        .achievement-icon {
+            font-size: 36px;
+            margin-bottom: 8px;
+        }
+        .achievement-name {
+            font-size: 11px;
+            font-weight: 600;
+            color: #666;
+        }
+
+        /* Recent Activity */
+        .activity-section {
+            padding: 0 16px;
+            margin-bottom: 20px;
+        }
+        .activity-item {
+            background: white;
+            padding: 16px;
+            border-radius: 12px;
+            margin-bottom: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .activity-icon {
+            font-size: 32px;
+        }
+        .activity-content {
+            flex: 1;
+        }
+        .activity-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #1A1A1A;
+            margin-bottom: 2px;
+        }
+        .activity-time {
+            font-size: 12px;
+            color: #999;
+        }
+        .activity-points {
+            font-size: 16px;
+            font-weight: 700;
+            color: #22c55e;
+        }
+
+        /* Arena Tiers Info */
+        .tiers-info {
+            padding: 0 16px;
+            margin-bottom: 20px;
+        }
+        .tier-info-card {
+            background: white;
+            padding: 16px;
+            border-radius: 12px;
+            margin-bottom: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .tier-info-card.current {
+            border: 2px solid #FF6B9D;
+            background: #FFF5F8;
+        }
+        .tier-info-icon {
+            font-size: 36px;
+        }
+        .tier-info-content {
+            flex: 1;
+        }
+        .tier-info-name {
+            font-size: 15px;
+            font-weight: 600;
+            color: #1A1A1A;
+            margin-bottom: 2px;
+        }
+        .tier-info-requirement {
+            font-size: 12px;
+            color: #666;
+        }
+        .tier-status {
+            font-size: 12px;
+            font-weight: 600;
+            color: #22c55e;
+        }
+
+        /* Bottom Nav */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            max-width: 390px;
+            width: 100%;
+            background: white;
+            border-top: 1px solid #F0F0F0;
+            display: flex;
+            justify-content: space-around;
+            padding: 12px 0 24px;
+        }
+        .nav-item {
+            text-align: center;
+            font-size: 24px;
+            color: #999;
+            padding: 8px;
+        }
+        .nav-item.active {
+            color: #FF6B9D;
+        }
+    </style>
+</head>
+<body>
+    <div class="phone-container">
+        <!-- Status Bar -->
+        <div class="status-bar">
+            <span class="time">9:41</span>
+            <span class="status-icons">📶 🔋</span>
+        </div>
+
+        <!-- Screen Content -->
+        <div class="screen">
+            <!-- Arena Header -->
+            <div class="arena-header">
+                <div class="back-button">←</div>
+                <div class="arena-tier-display">
+                    <div class="tier-icon">🔥</div>
+                    <div class="tier-name">Connected Hearts</div>
+                    <div class="tier-subtitle">Arena Tier 3</div>
+                </div>
+            </div>
+
+            <!-- Love Points Card -->
+            <div class="love-points-card">
+                <div class="points-number">3,280</div>
+                <div class="points-label">Total Love Points</div>
+                <div class="floor-badge">
+                    🛡️ Floor: 2,000 LP
+                </div>
+            </div>
+
+            <!-- Progress to Next Tier -->
+            <div class="next-tier-progress">
+                <div class="progress-header">
+                    <div class="progress-title">Next Tier Progress</div>
+                    <div class="progress-value">1,280 / 2,000</div>
+                </div>
+                <div class="progress-bar-container">
+                    <div class="progress-bar-fill"></div>
+                </div>
+                <div class="next-tier-name">💎 Power Duo (5,000 LP)</div>
+            </div>
+
+            <!-- Stats -->
+            <div class="stats-section">
+                <div class="section-title">This Week's Stats</div>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon">✅</div>
+                        <div class="stat-value">28</div>
+                        <div class="stat-label">Activities Completed</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">🪙</div>
+                        <div class="stat-value">+420</div>
+                        <div class="stat-label">LP Earned</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">🔥</div>
+                        <div class="stat-value">7</div>
+                        <div class="stat-label">Day Streak</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">🏆</div>
+                        <div class="stat-value">#42</div>
+                        <div class="stat-label">Global Rank</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Achievements -->
+            <div class="achievements-section">
+                <div class="section-title">Achievements (12/24)</div>
+                <div class="achievements-grid">
+                    <div class="achievement-card">
+                        <div class="achievement-icon">🎯</div>
+                        <div class="achievement-name">Perfect Sync</div>
+                    </div>
+                    <div class="achievement-card">
+                        <div class="achievement-icon">💪</div>
+                        <div class="achievement-name">Active Duo</div>
+                    </div>
+                    <div class="achievement-card">
+                        <div class="achievement-icon">🧠</div>
+                        <div class="achievement-name">Mind Meld</div>
+                    </div>
+                    <div class="achievement-card">
+                        <div class="achievement-icon">⚡</div>
+                        <div class="achievement-name">Quick Thinkers</div>
+                    </div>
+                    <div class="achievement-card">
+                        <div class="achievement-icon">💛</div>
+                        <div class="achievement-name">Golden Heart</div>
+                    </div>
+                    <div class="achievement-card">
+                        <div class="achievement-icon">🌟</div>
+                        <div class="achievement-name">First Steps</div>
+                    </div>
+                    <div class="achievement-card locked">
+                        <div class="achievement-icon">🎨</div>
+                        <div class="achievement-name">Creative Minds</div>
+                    </div>
+                    <div class="achievement-card locked">
+                        <div class="achievement-icon">🌙</div>
+                        <div class="achievement-name">Night Owls</div>
+                    </div>
+                    <div class="achievement-card locked">
+                        <div class="achievement-icon">🌅</div>
+                        <div class="achievement-name">Early Birds</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Activity -->
+            <div class="activity-section">
+                <div class="section-title">Recent Activity</div>
+
+                <div class="activity-item">
+                    <div class="activity-icon">🧠</div>
+                    <div class="activity-content">
+                        <div class="activity-title">Couple Quiz Completed</div>
+                        <div class="activity-time">2 hours ago</div>
+                    </div>
+                    <div class="activity-points">+20</div>
+                </div>
+
+                <div class="activity-item">
+                    <div class="activity-icon">💪</div>
+                    <div class="activity-content">
+                        <div class="activity-title">Both Hit Step Goal</div>
+                        <div class="activity-time">5 hours ago</div>
+                    </div>
+                    <div class="activity-points">+15</div>
+                </div>
+
+                <div class="activity-item">
+                    <div class="activity-icon">💕</div>
+                    <div class="activity-content">
+                        <div class="activity-title">Mutual Poke</div>
+                        <div class="activity-time">8 hours ago</div>
+                    </div>
+                    <div class="activity-points">+5</div>
+                </div>
+
+                <div class="activity-item">
+                    <div class="activity-icon">🎯</div>
+                    <div class="activity-content">
+                        <div class="activity-title">Weekly Challenge Progress</div>
+                        <div class="activity-time">Yesterday</div>
+                    </div>
+                    <div class="activity-points">+30</div>
+                </div>
+            </div>
+
+            <!-- All Arena Tiers -->
+            <div class="tiers-info">
+                <div class="section-title">All Arena Tiers</div>
+
+                <div class="tier-info-card">
+                    <div class="tier-info-icon">🌱</div>
+                    <div class="tier-info-content">
+                        <div class="tier-info-name">New Sparks</div>
+                        <div class="tier-info-requirement">0 - 1,000 LP</div>
+                    </div>
+                    <div class="tier-status">✓</div>
+                </div>
+
+                <div class="tier-info-card">
+                    <div class="tier-info-icon">💫</div>
+                    <div class="tier-info-content">
+                        <div class="tier-info-name">Growing Bond</div>
+                        <div class="tier-info-requirement">1,000 - 2,000 LP</div>
+                    </div>
+                    <div class="tier-status">✓</div>
+                </div>
+
+                <div class="tier-info-card current">
+                    <div class="tier-info-icon">🔥</div>
+                    <div class="tier-info-content">
+                        <div class="tier-info-name">Connected Hearts</div>
+                        <div class="tier-info-requirement">2,000 - 5,000 LP</div>
+                    </div>
+                    <div class="tier-status" style="color: #FF6B9D;">Current</div>
+                </div>
+
+                <div class="tier-info-card">
+                    <div class="tier-info-icon">💎</div>
+                    <div class="tier-info-content">
+                        <div class="tier-info-name">Power Duo</div>
+                        <div class="tier-info-requirement">5,000 - 10,000 LP</div>
+                    </div>
+                    <div class="tier-status" style="color: #999;">Locked</div>
+                </div>
+
+                <div class="tier-info-card">
+                    <div class="tier-info-icon">🌌</div>
+                    <div class="tier-info-content">
+                        <div class="tier-info-name">Soul Sync Masters</div>
+                        <div class="tier-info-requirement">10,000+ LP</div>
+                    </div>
+                    <div class="tier-status" style="color: #999;">Locked</div>
+                </div>
+            </div>
+
+            <!-- Bottom Navigation -->
+            <div class="bottom-nav">
+                <div class="nav-item">🏠</div>
+                <div class="nav-item">🏆</div>
+                <div class="nav-item active">💎</div>
+                <div class="nav-item">⚙️</div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

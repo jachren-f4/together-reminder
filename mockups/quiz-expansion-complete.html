@@ -1,0 +1,1961 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz System - TogetherRemind Interactive Mockup</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #FAFAFA;
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        /* Header */
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 32px;
+            background: white;
+            border-radius: 24px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        }
+
+        header h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 48px;
+            font-weight: 700;
+            color: #1A1A1A;
+            margin-bottom: 12px;
+            letter-spacing: -0.5px;
+        }
+
+        header p {
+            font-size: 18px;
+            color: #6E6E6E;
+            margin-bottom: 24px;
+        }
+
+        .nav-tabs {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .nav-tab {
+            padding: 12px 24px;
+            background: #FAFAFA;
+            border: 2px solid #F0F0F0;
+            border-radius: 24px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+            color: #6E6E6E;
+            transition: all 0.3s;
+        }
+
+        .nav-tab:hover {
+            border-color: #1A1A1A;
+            color: #1A1A1A;
+        }
+
+        .nav-tab.active {
+            background: #1A1A1A;
+            color: #FFFEFA;
+            border-color: #1A1A1A;
+        }
+
+        /* Screens Grid */
+        .screens-section {
+            display: none;
+        }
+
+        .screens-section.active {
+            display: block;
+        }
+
+        .screens-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 32px;
+            margin-bottom: 40px;
+        }
+
+        .screen-wrapper {
+            position: relative;
+        }
+
+        .screen-label {
+            background: white;
+            padding: 16px;
+            text-align: center;
+            font-weight: 600;
+            font-size: 15px;
+            color: #1A1A1A;
+            margin-bottom: 16px;
+            border-radius: 16px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        }
+
+        /* Phone Container */
+        .phone {
+            background: white;
+            border-radius: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+            overflow: hidden;
+            border: 12px solid #1A1A1A;
+            position: relative;
+        }
+
+        /* Status Bar */
+        .status-bar {
+            height: 44px;
+            background: #FFFEFA;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+            font-size: 15px;
+            font-weight: 600;
+            color: #1A1A1A;
+        }
+
+        /* Screen */
+        .screen {
+            background: #FAFAFA;
+            min-height: 700px;
+            max-height: 700px;
+            overflow-y: auto;
+            position: relative;
+            padding-bottom: 20px;
+        }
+
+        /* App Bar */
+        .app-bar {
+            background: #FFFEFA;
+            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-bottom: 2px solid #F0F0F0;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .back-btn {
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        .app-bar-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 22px;
+            font-weight: 600;
+            color: #1A1A1A;
+            flex: 1;
+        }
+
+        /* Content Padding */
+        .content {
+            padding: 24px 20px;
+            padding-bottom: 40px;
+        }
+
+        /* Cards */
+        .card {
+            background: white;
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 16px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        }
+
+        /* Section Headers */
+        .section-header {
+            font-family: 'Playfair Display', serif;
+            font-size: 24px;
+            font-weight: 600;
+            color: #1A1A1A;
+            margin-bottom: 16px;
+        }
+
+        .section-subtitle {
+            font-size: 14px;
+            color: #6E6E6E;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        /* Format Cards */
+        .format-card {
+            background: white;
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 16px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 2px solid transparent;
+        }
+
+        .format-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .format-card.locked {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .format-card.locked:hover {
+            transform: none;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        }
+
+        .format-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 12px;
+        }
+
+        .format-icon {
+            font-size: 32px;
+            margin-bottom: 8px;
+        }
+
+        .format-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 20px;
+            font-weight: 600;
+            color: #1A1A1A;
+            margin-bottom: 4px;
+        }
+
+        .format-meta {
+            font-size: 13px;
+            color: #6E6E6E;
+            margin-bottom: 8px;
+        }
+
+        .format-description {
+            font-size: 14px;
+            color: #6E6E6E;
+            line-height: 1.5;
+            margin-bottom: 12px;
+        }
+
+        .format-reward {
+            display: inline-block;
+            padding: 6px 12px;
+            background: #FAFAFA;
+            border-radius: 12px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #1A1A1A;
+        }
+
+        .lock-badge {
+            background: #F0F0F0;
+            padding: 6px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+            color: #6E6E6E;
+            display: inline-block;
+        }
+
+        /* Daily Pulse Widget */
+        .daily-pulse-widget {
+            background: linear-gradient(135deg, #1A1A1A 0%, #2A2A2A 100%);
+            border-radius: 20px;
+            padding: 24px;
+            color: white;
+            margin-bottom: 24px;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .daily-pulse-widget:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+        }
+
+        .daily-pulse-widget:active {
+            transform: translateY(0);
+        }
+
+        .pulse-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .pulse-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        .pulse-streak {
+            background: rgba(255,255,255,0.2);
+            padding: 6px 12px;
+            border-radius: 12px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .pulse-role-badge {
+            background: rgba(255,255,255,0.15);
+            padding: 8px 16px;
+            border-radius: 12px;
+            font-size: 14px;
+            margin-bottom: 16px;
+            display: inline-block;
+        }
+
+        .pulse-question {
+            font-size: 16px;
+            margin-bottom: 16px;
+            line-height: 1.5;
+        }
+
+        .pulse-options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+        }
+
+        .pulse-option {
+            padding: 12px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 12px;
+            text-align: center;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: all 0.3s;
+            font-size: 14px;
+        }
+
+        .pulse-option:hover {
+            background: rgba(255,255,255,0.2);
+        }
+
+        .pulse-option.selected {
+            background: white;
+            color: #1A1A1A;
+            border-color: white;
+        }
+
+        .pulse-cta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid rgba(255,255,255,0.2);
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .pulse-cta-arrow {
+            font-size: 18px;
+            transition: transform 0.3s;
+        }
+
+        .daily-pulse-widget:hover .pulse-cta-arrow {
+            transform: translateX(4px);
+        }
+
+        /* Question Card */
+        .question-card {
+            background: white;
+            border-radius: 20px;
+            padding: 28px;
+            margin-bottom: 24px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+
+        .question-number {
+            font-size: 13px;
+            font-weight: 600;
+            color: #6E6E6E;
+            margin-bottom: 12px;
+        }
+
+        .question-text {
+            font-family: 'Playfair Display', serif;
+            font-size: 22px;
+            font-weight: 600;
+            color: #1A1A1A;
+            margin-bottom: 24px;
+            line-height: 1.4;
+        }
+
+        .options-grid {
+            display: grid;
+            gap: 12px;
+        }
+
+        .option-btn {
+            padding: 16px 20px;
+            background: #FAFAFA;
+            border: 2px solid #F0F0F0;
+            border-radius: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 15px;
+            text-align: left;
+            color: #1A1A1A;
+            font-weight: 500;
+        }
+
+        .option-btn:hover {
+            border-color: #1A1A1A;
+            background: white;
+        }
+
+        .option-btn.selected {
+            background: #1A1A1A;
+            color: white;
+            border-color: #1A1A1A;
+        }
+
+        /* Progress Bar */
+        .progress-container {
+            margin-bottom: 24px;
+        }
+
+        .progress-bar {
+            height: 8px;
+            background: #F0F0F0;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: #1A1A1A;
+            border-radius: 8px;
+            transition: width 0.3s;
+        }
+
+        .progress-text {
+            font-size: 13px;
+            color: #6E6E6E;
+            margin-top: 8px;
+            text-align: center;
+        }
+
+        /* Results Screen */
+        .results-header {
+            text-align: center;
+            padding: 32px 20px;
+            background: linear-gradient(135deg, #1A1A1A 0%, #2A2A2A 100%);
+            color: white;
+            margin: -24px -20px 24px -20px;
+        }
+
+        .results-icon {
+            font-size: 64px;
+            margin-bottom: 16px;
+        }
+
+        .results-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .results-score {
+            font-size: 48px;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        .results-subtitle {
+            font-size: 15px;
+            opacity: 0.9;
+        }
+
+        .lp-earned {
+            background: rgba(255,255,255,0.2);
+            padding: 12px 24px;
+            border-radius: 16px;
+            display: inline-block;
+            margin-top: 16px;
+            font-weight: 600;
+        }
+
+        .results-breakdown {
+            margin-top: 24px;
+        }
+
+        .result-item {
+            background: white;
+            border-radius: 16px;
+            padding: 16px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+
+        .result-icon {
+            font-size: 24px;
+        }
+
+        .result-content {
+            flex: 1;
+        }
+
+        .result-question {
+            font-weight: 600;
+            color: #1A1A1A;
+            margin-bottom: 8px;
+            font-size: 15px;
+        }
+
+        .result-answers {
+            font-size: 14px;
+            color: #6E6E6E;
+            line-height: 1.6;
+        }
+
+        /* History Screen */
+        .history-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 16px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-family: 'Playfair Display', serif;
+            font-size: 32px;
+            font-weight: 600;
+            color: #1A1A1A;
+            margin-bottom: 4px;
+        }
+
+        .stat-label {
+            font-size: 13px;
+            color: #6E6E6E;
+        }
+
+        .history-timeline {
+            margin-top: 24px;
+        }
+
+        .timeline-item {
+            background: white;
+            border-radius: 16px;
+            padding: 16px;
+            margin-bottom: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .timeline-item:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .timeline-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 8px;
+        }
+
+        .timeline-format {
+            font-weight: 600;
+            color: #1A1A1A;
+            font-size: 15px;
+        }
+
+        .timeline-score {
+            font-family: 'Playfair Display', serif;
+            font-size: 20px;
+            font-weight: 600;
+            color: #1A1A1A;
+        }
+
+        .timeline-meta {
+            font-size: 13px;
+            color: #6E6E6E;
+            margin-bottom: 8px;
+        }
+
+        .timeline-tags {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .tag {
+            padding: 4px 10px;
+            background: #FAFAFA;
+            border-radius: 8px;
+            font-size: 12px;
+            color: #6E6E6E;
+        }
+
+        /* Category Grid */
+        .category-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+
+        .category-card {
+            background: white;
+            border-radius: 16px;
+            padding: 16px;
+            text-align: center;
+            position: relative;
+        }
+
+        .category-card.locked {
+            opacity: 0.5;
+        }
+
+        .category-emoji {
+            font-size: 32px;
+            margin-bottom: 8px;
+        }
+
+        .category-name {
+            font-weight: 600;
+            color: #1A1A1A;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .category-progress {
+            height: 4px;
+            background: #F0F0F0;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .category-progress-fill {
+            height: 100%;
+            background: #1A1A1A;
+            border-radius: 4px;
+        }
+
+        .category-count {
+            font-size: 11px;
+            color: #6E6E6E;
+            margin-top: 4px;
+        }
+
+        /* Buttons */
+        .btn-primary {
+            width: 100%;
+            padding: 18px;
+            background: #1A1A1A;
+            color: white;
+            border: none;
+            border-radius: 24px;
+            font-size: 17px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .btn-primary:hover {
+            background: #2A2A2A;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            width: 100%;
+            padding: 14px;
+            background: #FAFAFA;
+            color: #1A1A1A;
+            border: 2px solid #F0F0F0;
+            border-radius: 16px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .btn-secondary:hover {
+            border-color: #1A1A1A;
+        }
+
+        /* Bottom Nav */
+        .bottom-nav {
+            background: white;
+            border-top: 2px solid #F0F0F0;
+            padding: 16px 20px;
+            margin-top: 24px;
+        }
+
+        /* Insights */
+        .insight-card {
+            background: white;
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 16px;
+            border-left: 4px solid #1A1A1A;
+        }
+
+        .insight-title {
+            font-weight: 600;
+            color: #1A1A1A;
+            margin-bottom: 8px;
+            font-size: 15px;
+        }
+
+        .insight-text {
+            font-size: 14px;
+            color: #6E6E6E;
+            line-height: 1.6;
+        }
+
+        /* Streak Calendar */
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 6px;
+            margin-top: 16px;
+        }
+
+        .calendar-day {
+            aspect-ratio: 1;
+            background: #F0F0F0;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 600;
+            color: #6E6E6E;
+        }
+
+        .calendar-day.completed {
+            background: #1A1A1A;
+            color: white;
+        }
+
+        .calendar-day.today {
+            border: 2px solid #1A1A1A;
+        }
+
+        /* Filter Tabs */
+        .filter-tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 20px;
+            overflow-x: auto;
+            padding-bottom: 4px;
+        }
+
+        .filter-tab {
+            padding: 8px 16px;
+            background: #FAFAFA;
+            border: 2px solid #F0F0F0;
+            border-radius: 16px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+            white-space: nowrap;
+            color: #6E6E6E;
+        }
+
+        .filter-tab.active {
+            background: #1A1A1A;
+            color: white;
+            border-color: #1A1A1A;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .card, .format-card, .timeline-item {
+            animation: fadeIn 0.3s ease-out;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Quiz System Mockups</h1>
+            <p>Interactive walkthrough of the expanded quiz system</p>
+            <div class="nav-tabs">
+                <div class="nav-tab active" onclick="showSection('hub')">Quiz Hub</div>
+                <div class="nav-tab" onclick="showSection('daily-pulse')">Daily Pulse</div>
+                <div class="nav-tab" onclick="showSection('classic')">Classic Quiz</div>
+                <div class="nav-tab" onclick="showSection('results')">Results</div>
+                <div class="nav-tab" onclick="showSection('history')">History</div>
+                <div class="nav-tab" onclick="showSection('formats')">All Formats</div>
+            </div>
+        </header>
+
+        <!-- QUIZ HUB SECTION -->
+        <div class="screens-section active" id="hub">
+            <div class="screens-grid">
+                <!-- Quiz Hub Screen -->
+                <div class="screen-wrapper">
+                    <div class="screen-label">Quiz Hub - Main Entry Point</div>
+                    <div class="phone">
+                        <div class="status-bar">
+                            <span>9:41</span>
+                            <span>100%</span>
+                        </div>
+                        <div class="screen">
+                            <div class="app-bar">
+                                <span class="back-btn">←</span>
+                                <h2 class="app-bar-title">Together Quizzes</h2>
+                            </div>
+                            <div class="content">
+                                <!-- Daily Pulse Widget -->
+                                <div class="daily-pulse-widget" onclick="alert('Navigate to Daily Pulse screen')">
+                                    <div class="pulse-header">
+                                        <div class="pulse-title">📅 Today's Pulse</div>
+                                        <div class="pulse-streak">🔥 7 days</div>
+                                    </div>
+                                    <div class="pulse-role-badge">You're SUBJECT today - Answer about yourself!</div>
+                                    <div class="pulse-question">What's your ideal way to spend a Sunday morning?</div>
+                                    <div class="pulse-cta">
+                                        <span>Tap to answer</span>
+                                        <span class="pulse-cta-arrow">→</span>
+                                    </div>
+                                </div>
+
+                                <!-- Quiz Formats -->
+                                <div class="section-header">Quiz Formats</div>
+                                <div class="section-subtitle">Choose how you want to connect today</div>
+
+                                <div class="format-card">
+                                    <div class="format-icon">🎯</div>
+                                    <div class="format-title">Classic Match</div>
+                                    <div class="format-meta">5 questions • 5-10 min</div>
+                                    <div class="format-description">Test how well you know your partner with our signature quiz format</div>
+                                    <div class="format-reward">10-50 LP</div>
+                                </div>
+
+                                <div class="format-card">
+                                    <div class="format-icon">⚡</div>
+                                    <div class="format-title">Speed Round</div>
+                                    <div class="format-meta">10 questions • 3-5 min</div>
+                                    <div class="format-description">Fast-paced predictions with 10-second time limits</div>
+                                    <div class="format-reward">20-40 LP</div>
+                                </div>
+
+                                <div class="format-card locked">
+                                    <div class="format-header">
+                                        <div>
+                                            <div class="format-icon">🤿</div>
+                                            <div class="format-title">Deep Dive</div>
+                                        </div>
+                                        <div class="lock-badge">🔒 Tier 2</div>
+                                    </div>
+                                    <div class="format-meta">15 questions • 15-20 min</div>
+                                    <div class="format-description">Intensive deep-dive into one category</div>
+                                    <div class="format-reward">60-120 LP</div>
+                                </div>
+
+                                <div class="format-card locked">
+                                    <div class="format-header">
+                                        <div>
+                                            <div class="format-icon">🎁</div>
+                                            <div class="format-title">Mystery Box</div>
+                                        </div>
+                                        <div class="lock-badge">🔒 10 quizzes</div>
+                                    </div>
+                                    <div class="format-meta">7 questions • 8-12 min</div>
+                                    <div class="format-description">Surprise mix of categories and difficulty levels</div>
+                                    <div class="format-reward">30-80 LP</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Categories Browser -->
+                <div class="screen-wrapper">
+                    <div class="screen-label">Category Browser</div>
+                    <div class="phone">
+                        <div class="status-bar">
+                            <span>9:41</span>
+                            <span>100%</span>
+                        </div>
+                        <div class="screen">
+                            <div class="app-bar">
+                                <span class="back-btn">←</span>
+                                <h2 class="app-bar-title">Categories</h2>
+                            </div>
+                            <div class="content">
+                                <div class="section-header">Tier 1: Starter</div>
+                                <div class="section-subtitle">Available now</div>
+
+                                <div class="category-grid">
+                                    <div class="category-card">
+                                        <div class="category-emoji">🍕</div>
+                                        <div class="category-name">Favorites</div>
+                                        <div class="category-progress">
+                                            <div class="category-progress-fill" style="width: 60%"></div>
+                                        </div>
+                                        <div class="category-count">24/40 answered</div>
+                                    </div>
+
+                                    <div class="category-card">
+                                        <div class="category-emoji">⚙️</div>
+                                        <div class="category-name">Preferences</div>
+                                        <div class="category-progress">
+                                            <div class="category-progress-fill" style="width: 40%"></div>
+                                        </div>
+                                        <div class="category-count">16/40 answered</div>
+                                    </div>
+
+                                    <div class="category-card">
+                                        <div class="category-emoji">☀️</div>
+                                        <div class="category-name">Daily Habits</div>
+                                        <div class="category-progress">
+                                            <div class="category-progress-fill" style="width: 25%"></div>
+                                        </div>
+                                        <div class="category-count">8/30 answered</div>
+                                    </div>
+                                </div>
+
+                                <div class="section-header" style="margin-top: 32px;">Tier 2: Relationship</div>
+                                <div class="section-subtitle">Unlocked after 3 quizzes</div>
+
+                                <div class="category-grid">
+                                    <div class="category-card locked">
+                                        <div class="category-emoji">📸</div>
+                                        <div class="category-name">Memories</div>
+                                        <div class="lock-badge">🔒 1 more quiz</div>
+                                    </div>
+
+                                    <div class="category-card locked">
+                                        <div class="category-emoji">🚀</div>
+                                        <div class="category-name">Future Dreams</div>
+                                        <div class="lock-badge">🔒 1 more quiz</div>
+                                    </div>
+
+                                    <div class="category-card locked">
+                                        <div class="category-emoji">❤️</div>
+                                        <div class="category-name">Love Languages</div>
+                                        <div class="lock-badge">🔒 1 more quiz</div>
+                                    </div>
+
+                                    <div class="category-card locked">
+                                        <div class="category-emoji">🎉</div>
+                                        <div class="category-name">Our Traditions</div>
+                                        <div class="lock-badge">🔒 1 more quiz</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- DAILY PULSE SECTION -->
+        <div class="screens-section" id="daily-pulse">
+            <div class="screens-grid">
+                <!-- Daily Pulse - Subject View -->
+                <div class="screen-wrapper">
+                    <div class="screen-label">Daily Pulse - You're SUBJECT (Monday)</div>
+                    <div class="phone">
+                        <div class="status-bar">
+                            <span>9:41</span>
+                            <span>100%</span>
+                        </div>
+                        <div class="screen">
+                            <div class="app-bar">
+                                <span class="back-btn">←</span>
+                                <h2 class="app-bar-title">Daily Pulse</h2>
+                            </div>
+                            <div class="content">
+                                <div class="card" style="text-align: center; padding: 32px;">
+                                    <div style="font-size: 64px; margin-bottom: 16px;">👤</div>
+                                    <div style="font-family: 'Playfair Display', serif; font-size: 24px; font-weight: 600; margin-bottom: 8px;">
+                                        You're the Subject Today
+                                    </div>
+                                    <div style="font-size: 14px; color: #6E6E6E; margin-bottom: 24px;">
+                                        Answer this question about yourself. Your partner will try to predict your answer!
+                                    </div>
+                                    <div class="pulse-streak" style="background: #FAFAFA; color: #1A1A1A;">
+                                        Current streak: 🔥 7 days
+                                    </div>
+                                </div>
+
+                                <div class="question-card">
+                                    <div class="question-number">QUESTION OF THE DAY</div>
+                                    <div class="question-text">What's YOUR ideal breakfast?</div>
+
+                                    <div class="options-grid">
+                                        <div class="option-btn">Pancakes & syrup</div>
+                                        <div class="option-btn selected">Avocado toast</div>
+                                        <div class="option-btn">Traditional breakfast</div>
+                                        <div class="option-btn">Just coffee</div>
+                                        <div class="option-btn">Other / Something else</div>
+                                    </div>
+                                </div>
+
+                                <div class="bottom-nav">
+                                    <button class="btn-primary">Submit Answer</button>
+                                    <div style="text-align: center; margin-top: 12px; font-size: 13px; color: #6E6E6E;">
+                                        Tomorrow it's your partner's turn
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Daily Pulse - Predictor View -->
+                <div class="screen-wrapper">
+                    <div class="screen-label">Daily Pulse - You're PREDICTOR (Tuesday)</div>
+                    <div class="phone">
+                        <div class="status-bar">
+                            <span>9:41</span>
+                            <span>100%</span>
+                        </div>
+                        <div class="screen">
+                            <div class="app-bar">
+                                <span class="back-btn">←</span>
+                                <h2 class="app-bar-title">Daily Pulse</h2>
+                            </div>
+                            <div class="content">
+                                <div class="card" style="text-align: center; padding: 32px;">
+                                    <div style="font-size: 64px; margin-bottom: 16px;">🔮</div>
+                                    <div style="font-family: 'Playfair Display', serif; font-size: 24px; font-weight: 600; margin-bottom: 8px;">
+                                        Predict Emma's Answer
+                                    </div>
+                                    <div style="font-size: 14px; color: #6E6E6E; margin-bottom: 24px;">
+                                        Emma already answered. What do you think she chose?
+                                    </div>
+                                    <div class="pulse-streak" style="background: #FAFAFA; color: #1A1A1A;">
+                                        Current streak: 🔥 8 days
+                                    </div>
+                                </div>
+
+                                <div class="question-card">
+                                    <div class="question-number">GUESS EMMA'S ANSWER</div>
+                                    <div class="question-text">What's EMMA's ideal weekend activity?</div>
+
+                                    <div class="options-grid">
+                                        <div class="option-btn selected">Netflix marathon</div>
+                                        <div class="option-btn">Outdoor adventure</div>
+                                        <div class="option-btn">Social gathering</div>
+                                        <div class="option-btn">Productive chores</div>
+                                        <div class="option-btn">Other / Something else</div>
+                                    </div>
+                                </div>
+
+                                <div class="bottom-nav">
+                                    <button class="btn-primary">Submit Prediction</button>
+                                    <div style="text-align: center; margin-top: 12px; font-size: 13px; color: #6E6E6E;">
+                                        Results revealed when you both complete
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Daily Pulse Results -->
+                <div class="screen-wrapper">
+                    <div class="screen-label">Daily Pulse - Results</div>
+                    <div class="phone">
+                        <div class="status-bar">
+                            <span>9:41</span>
+                            <span>100%</span>
+                        </div>
+                        <div class="screen">
+                            <div class="app-bar">
+                                <span class="back-btn">←</span>
+                                <h2 class="app-bar-title">Daily Pulse</h2>
+                            </div>
+                            <div class="content">
+                                <div class="card" style="background: linear-gradient(135deg, #1A1A1A 0%, #2A2A2A 100%); color: white; text-align: center; padding: 40px;">
+                                    <div style="font-size: 64px; margin-bottom: 16px;">✅</div>
+                                    <div style="font-family: 'Playfair Display', serif; font-size: 28px; font-weight: 600; margin-bottom: 12px;">
+                                        Perfect Match!
+                                    </div>
+                                    <div style="font-size: 15px; opacity: 0.9; margin-bottom: 20px;">
+                                        You knew Emma would pick "Netflix marathon"
+                                    </div>
+                                    <div class="lp-earned">+15 LP earned</div>
+                                    <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.2);">
+                                        <div style="font-size: 15px; opacity: 0.9;">New streak:</div>
+                                        <div style="font-size: 24px; font-weight: 700; margin-top: 4px;">🔥 9 days</div>
+                                    </div>
+                                </div>
+
+                                <div class="card">
+                                    <div style="font-weight: 600; margin-bottom: 12px;">Question:</div>
+                                    <div style="color: #6E6E6E; margin-bottom: 16px; line-height: 1.6;">
+                                        What's EMMA's ideal weekend activity?
+                                    </div>
+                                    <div style="font-weight: 600; margin-bottom: 8px;">Emma answered:</div>
+                                    <div style="background: #FAFAFA; padding: 12px; border-radius: 12px; margin-bottom: 12px;">
+                                        Netflix marathon
+                                    </div>
+                                    <div style="font-weight: 600; margin-bottom: 8px;">You predicted:</div>
+                                    <div style="background: #1A1A1A; color: white; padding: 12px; border-radius: 12px;">
+                                        Netflix marathon ✓
+                                    </div>
+                                </div>
+
+                                <div class="bottom-nav">
+                                    <button class="btn-primary">Continue</button>
+                                    <div style="text-align: center; margin-top: 12px; font-size: 13px; color: #6E6E6E;">
+                                        Next pulse in 23 hours
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CLASSIC QUIZ SECTION -->
+        <div class="screens-section" id="classic">
+            <div class="screens-grid">
+                <!-- Quiz Intro -->
+                <div class="screen-wrapper">
+                    <div class="screen-label">Classic Quiz - Intro</div>
+                    <div class="phone">
+                        <div class="status-bar">
+                            <span>9:41</span>
+                            <span>100%</span>
+                        </div>
+                        <div class="screen">
+                            <div class="app-bar">
+                                <span class="back-btn">←</span>
+                                <h2 class="app-bar-title">Classic Match</h2>
+                            </div>
+                            <div class="content">
+                                <div class="card" style="text-align: center; padding: 40px;">
+                                    <div style="font-size: 80px; margin-bottom: 20px;">🎯</div>
+                                    <div style="font-family: 'Playfair Display', serif; font-size: 28px; font-weight: 600; margin-bottom: 12px;">
+                                        Ready to Start?
+                                    </div>
+                                    <div style="font-size: 15px; color: #6E6E6E; line-height: 1.6; margin-bottom: 24px;">
+                                        You'll answer 5 questions about yourself. Then Emma will try to predict your answers!
+                                    </div>
+
+                                    <div style="background: #FAFAFA; border-radius: 16px; padding: 20px; text-align: left; margin-bottom: 24px;">
+                                        <div style="font-weight: 600; margin-bottom: 12px;">How it works:</div>
+                                        <div style="font-size: 14px; color: #6E6E6E; line-height: 1.8;">
+                                            • Answer honestly about yourself<br>
+                                            • Emma sees your questions later<br>
+                                            • She tries to predict your answers<br>
+                                            • See how well she knows you!
+                                        </div>
+                                    </div>
+
+                                    <div style="background: linear-gradient(135deg, #1A1A1A 0%, #2A2A2A 100%); color: white; border-radius: 16px; padding: 20px;">
+                                        <div style="font-size: 13px; opacity: 0.9; margin-bottom: 4px;">Potential reward</div>
+                                        <div style="font-size: 24px; font-weight: 700;">10-50 LP</div>
+                                    </div>
+                                </div>
+
+                                <div class="bottom-nav">
+                                    <button class="btn-primary">Start Quiz</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Question 1 -->
+                <div class="screen-wrapper">
+                    <div class="screen-label">Classic Quiz - Question 1/5 (Subject)</div>
+                    <div class="phone">
+                        <div class="status-bar">
+                            <span>9:41</span>
+                            <span>100%</span>
+                        </div>
+                        <div class="screen">
+                            <div class="app-bar">
+                                <span class="back-btn">←</span>
+                                <h2 class="app-bar-title">Classic Match</h2>
+                            </div>
+                            <div class="content">
+                                <div class="progress-container">
+                                    <div class="progress-bar">
+                                        <div class="progress-fill" style="width: 20%"></div>
+                                    </div>
+                                    <div class="progress-text">Question 1 of 5</div>
+                                </div>
+
+                                <div class="question-card">
+                                    <div class="question-number">FAVORITES</div>
+                                    <div class="question-text">What's YOUR favorite type of food?</div>
+
+                                    <div class="options-grid">
+                                        <div class="option-btn">Italian</div>
+                                        <div class="option-btn selected">Asian</div>
+                                        <div class="option-btn">Mexican</div>
+                                        <div class="option-btn">Mediterranean</div>
+                                        <div class="option-btn">Other / Something else</div>
+                                    </div>
+                                </div>
+
+                                <div class="card" style="background: #FAFAFA; border-left: 4px solid #1A1A1A;">
+                                    <div style="font-size: 13px; color: #6E6E6E;">
+                                        💡 Answer honestly - Emma will try to guess this later!
+                                    </div>
+                                </div>
+
+                                <div class="bottom-nav">
+                                    <button class="btn-primary">Next Question</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Waiting for Partner -->
+                <div class="screen-wrapper">
+                    <div class="screen-label">Waiting for Partner to Predict</div>
+                    <div class="phone">
+                        <div class="status-bar">
+                            <span>9:41</span>
+                            <span>100%</span>
+                        </div>
+                        <div class="screen">
+                            <div class="app-bar">
+                                <span class="back-btn">←</span>
+                                <h2 class="app-bar-title">Classic Match</h2>
+                            </div>
+                            <div class="content">
+                                <div class="card" style="text-align: center; padding: 60px 40px;">
+                                    <div style="font-size: 80px; margin-bottom: 24px;">⏳</div>
+                                    <div style="font-family: 'Playfair Display', serif; font-size: 28px; font-weight: 600; margin-bottom: 12px;">
+                                        Answers Submitted!
+                                    </div>
+                                    <div style="font-size: 15px; color: #6E6E6E; line-height: 1.6; margin-bottom: 32px;">
+                                        We've notified Emma. She'll see your questions and try to predict your answers.
+                                    </div>
+
+                                    <div style="background: #FAFAFA; border-radius: 16px; padding: 24px; margin-bottom: 24px;">
+                                        <div style="font-size: 13px; color: #6E6E6E; margin-bottom: 8px;">Quiz created</div>
+                                        <div style="font-size: 15px; font-weight: 600; color: #1A1A1A;">Just now</div>
+                                    </div>
+
+                                    <div style="font-size: 14px; color: #6E6E6E;">
+                                        We'll notify you when Emma completes her predictions!
+                                    </div>
+                                </div>
+
+                                <div class="bottom-nav">
+                                    <button class="btn-primary">Back to Hub</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- RESULTS SECTION -->
+        <div class="screens-section" id="results">
+            <div class="screens-grid">
+                <!-- Results Screen -->
+                <div class="screen-wrapper">
+                    <div class="screen-label">Quiz Results - Perfect Score</div>
+                    <div class="phone">
+                        <div class="status-bar">
+                            <span>9:41</span>
+                            <span>100%</span>
+                        </div>
+                        <div class="screen">
+                            <div class="results-header">
+                                <div class="results-icon">🎉</div>
+                                <div class="results-title">Emma knows you perfectly!</div>
+                                <div class="results-score">100%</div>
+                                <div class="results-subtitle">She predicted all 5 answers correctly</div>
+                                <div class="lp-earned">+50 LP earned</div>
+                            </div>
+                            <div class="content">
+                                <div class="results-breakdown">
+                                    <div class="section-header">Question Breakdown</div>
+
+                                    <div class="result-item">
+                                        <div class="result-icon">✅</div>
+                                        <div class="result-content">
+                                            <div class="result-question">What's YOUR favorite type of food?</div>
+                                            <div class="result-answers">
+                                                <strong>You answered:</strong> Asian<br>
+                                                <strong>Emma predicted:</strong> Asian ✓
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="result-item">
+                                        <div class="result-icon">✅</div>
+                                        <div class="result-content">
+                                            <div class="result-question">What's YOUR ideal vacation?</div>
+                                            <div class="result-answers">
+                                                <strong>You answered:</strong> Beach resort<br>
+                                                <strong>Emma predicted:</strong> Beach resort ✓
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="result-item">
+                                        <div class="result-icon">✅</div>
+                                        <div class="result-content">
+                                            <div class="result-question">What's YOUR morning routine?</div>
+                                            <div class="result-answers">
+                                                <strong>You answered:</strong> Coffee first<br>
+                                                <strong>Emma predicted:</strong> Coffee first ✓
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="card" style="background: linear-gradient(135deg, #1A1A1A 0%, #2A2A2A 100%); color: white; margin-top: 24px;">
+                                    <div style="font-size: 15px; opacity: 0.9; margin-bottom: 8px;">Next quiz suggestion</div>
+                                    <div style="font-size: 18px; font-weight: 600;">Want to test Emma? You start the next quiz!</div>
+                                </div>
+
+                                <div class="bottom-nav">
+                                    <button class="btn-primary">Back to Hub</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Results with Mismatches -->
+                <div class="screen-wrapper">
+                    <div class="screen-label">Quiz Results - 80% Match</div>
+                    <div class="phone">
+                        <div class="status-bar">
+                            <span>9:41</span>
+                            <span>100%</span>
+                        </div>
+                        <div class="screen">
+                            <div class="results-header">
+                                <div class="results-icon">👍</div>
+                                <div class="results-title">Great job, Emma!</div>
+                                <div class="results-score">80%</div>
+                                <div class="results-subtitle">4 out of 5 correct predictions</div>
+                                <div class="lp-earned">+30 LP earned</div>
+                            </div>
+                            <div class="content">
+                                <div class="results-breakdown">
+                                    <div class="section-header">Question Breakdown</div>
+
+                                    <div class="result-item">
+                                        <div class="result-icon">✅</div>
+                                        <div class="result-content">
+                                            <div class="result-question">What's YOUR favorite type of food?</div>
+                                            <div class="result-answers">
+                                                <strong>You answered:</strong> Asian<br>
+                                                <strong>Emma predicted:</strong> Asian ✓
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="result-item" style="background: #FFF5F5;">
+                                        <div class="result-icon">❌</div>
+                                        <div class="result-content">
+                                            <div class="result-question">What's YOUR ideal vacation?</div>
+                                            <div class="result-answers">
+                                                <strong>You answered:</strong> Mountain cabin<br>
+                                                <strong>Emma predicted:</strong> Beach resort ✗
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="result-item">
+                                        <div class="result-icon">✅</div>
+                                        <div class="result-content">
+                                            <div class="result-question">What's YOUR morning routine?</div>
+                                            <div class="result-answers">
+                                                <strong>You answered:</strong> Coffee first<br>
+                                                <strong>Emma predicted:</strong> Coffee first ✓
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="insight-card">
+                                    <div class="insight-title">💬 Conversation Starter</div>
+                                    <div class="insight-text">
+                                        You disagreed on ideal vacation - try this: "Let's plan a trip that combines both!"
+                                    </div>
+                                </div>
+
+                                <div class="bottom-nav">
+                                    <button class="btn-primary">Back to Hub</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- HISTORY SECTION -->
+        <div class="screens-section" id="history">
+            <div class="screens-grid">
+                <!-- History Overview -->
+                <div class="screen-wrapper">
+                    <div class="screen-label">Quiz History - Overview</div>
+                    <div class="phone">
+                        <div class="status-bar">
+                            <span>9:41</span>
+                            <span>100%</span>
+                        </div>
+                        <div class="screen">
+                            <div class="app-bar">
+                                <span class="back-btn">←</span>
+                                <h2 class="app-bar-title">Quiz History</h2>
+                            </div>
+                            <div class="content">
+                                <div class="history-stats">
+                                    <div class="stat-card">
+                                        <div class="stat-value">12</div>
+                                        <div class="stat-label">Quizzes completed</div>
+                                    </div>
+                                    <div class="stat-card">
+                                        <div class="stat-value">9🔥</div>
+                                        <div class="stat-label">Current streak</div>
+                                    </div>
+                                    <div class="stat-card">
+                                        <div class="stat-value">84%</div>
+                                        <div class="stat-label">Avg. match</div>
+                                    </div>
+                                    <div class="stat-card">
+                                        <div class="stat-value">380</div>
+                                        <div class="stat-label">LP earned</div>
+                                    </div>
+                                </div>
+
+                                <div class="filter-tabs">
+                                    <div class="filter-tab active">All</div>
+                                    <div class="filter-tab">As Subject</div>
+                                    <div class="filter-tab">As Predictor</div>
+                                    <div class="filter-tab">By Format</div>
+                                </div>
+
+                                <div class="history-timeline">
+                                    <div class="timeline-item">
+                                        <div class="timeline-header">
+                                            <div class="timeline-format">Classic Match</div>
+                                            <div class="timeline-score">100%</div>
+                                        </div>
+                                        <div class="timeline-meta">Today • You as subject • Emma predicted</div>
+                                        <div class="timeline-tags">
+                                            <div class="tag">Favorites</div>
+                                            <div class="tag">+50 LP</div>
+                                            <div class="tag">Perfect match</div>
+                                        </div>
+                                    </div>
+
+                                    <div class="timeline-item">
+                                        <div class="timeline-header">
+                                            <div class="timeline-format">Daily Pulse</div>
+                                            <div class="timeline-score">100%</div>
+                                        </div>
+                                        <div class="timeline-meta">Yesterday • Emma as subject • You predicted</div>
+                                        <div class="timeline-tags">
+                                            <div class="tag">Preferences</div>
+                                            <div class="tag">+15 LP</div>
+                                        </div>
+                                    </div>
+
+                                    <div class="timeline-item">
+                                        <div class="timeline-header">
+                                            <div class="timeline-format">Speed Round</div>
+                                            <div class="timeline-score">70%</div>
+                                        </div>
+                                        <div class="timeline-meta">2 days ago • You as subject • Emma predicted</div>
+                                        <div class="timeline-tags">
+                                            <div class="tag">Mixed</div>
+                                            <div class="tag">+28 LP</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Knowledge Insights -->
+                <div class="screen-wrapper">
+                    <div class="screen-label">Knowledge Insights</div>
+                    <div class="phone">
+                        <div class="status-bar">
+                            <span>9:41</span>
+                            <span>100%</span>
+                        </div>
+                        <div class="screen">
+                            <div class="app-bar">
+                                <span class="back-btn">←</span>
+                                <h2 class="app-bar-title">Insights</h2>
+                            </div>
+                            <div class="content">
+                                <div class="section-header">Your Knowledge of Emma</div>
+
+                                <div class="insight-card">
+                                    <div class="insight-title">🎯 Best Category</div>
+                                    <div class="insight-text">
+                                        You know Emma best in: <strong>Favorites (92% average)</strong>
+                                    </div>
+                                </div>
+
+                                <div class="insight-card">
+                                    <div class="insight-title">📈 Improvement</div>
+                                    <div class="insight-text">
+                                        Your match percentage has improved <strong>15%</strong> over the last month!
+                                    </div>
+                                </div>
+
+                                <div class="insight-card">
+                                    <div class="insight-title">🔍 Areas to Explore</div>
+                                    <div class="insight-text">
+                                        Philosophy & Life (only 2 quizzes) - try a Deep Dive in this category!
+                                    </div>
+                                </div>
+
+                                <div class="card">
+                                    <div style="font-weight: 600; margin-bottom: 12px;">Role Balance</div>
+                                    <div style="background: #FAFAFA; border-radius: 12px; padding: 16px;">
+                                        <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                                            <span style="font-size: 14px; color: #6E6E6E;">You as subject</span>
+                                            <span style="font-weight: 600;">47%</span>
+                                        </div>
+                                        <div style="height: 8px; background: #F0F0F0; border-radius: 8px; overflow: hidden;">
+                                            <div style="width: 47%; height: 100%; background: #1A1A1A; border-radius: 8px;"></div>
+                                        </div>
+                                    </div>
+                                    <div style="background: #FAFAFA; border-radius: 12px; padding: 16px; margin-top: 8px;">
+                                        <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                                            <span style="font-size: 14px; color: #6E6E6E;">Emma as subject</span>
+                                            <span style="font-weight: 600;">53%</span>
+                                        </div>
+                                        <div style="height: 8px; background: #F0F0F0; border-radius: 8px; overflow: hidden;">
+                                            <div style="width: 53%; height: 100%; background: #1A1A1A; border-radius: 8px;"></div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="section-header" style="margin-top: 32px;">Streak Calendar</div>
+                                <div class="calendar-grid">
+                                    <div class="calendar-day">M</div>
+                                    <div class="calendar-day">T</div>
+                                    <div class="calendar-day">W</div>
+                                    <div class="calendar-day">T</div>
+                                    <div class="calendar-day">F</div>
+                                    <div class="calendar-day">S</div>
+                                    <div class="calendar-day">S</div>
+                                    <div class="calendar-day completed">1</div>
+                                    <div class="calendar-day completed">2</div>
+                                    <div class="calendar-day completed">3</div>
+                                    <div class="calendar-day completed">4</div>
+                                    <div class="calendar-day completed">5</div>
+                                    <div class="calendar-day completed">6</div>
+                                    <div class="calendar-day completed">7</div>
+                                    <div class="calendar-day completed">8</div>
+                                    <div class="calendar-day completed today">9</div>
+                                    <div class="calendar-day">10</div>
+                                    <div class="calendar-day">11</div>
+                                    <div class="calendar-day">12</div>
+                                    <div class="calendar-day">13</div>
+                                    <div class="calendar-day">14</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Category Progress -->
+                <div class="screen-wrapper">
+                    <div class="screen-label">Category Progress</div>
+                    <div class="phone">
+                        <div class="status-bar">
+                            <span>9:41</span>
+                            <span>100%</span>
+                        </div>
+                        <div class="screen">
+                            <div class="app-bar">
+                                <span class="back-btn">←</span>
+                                <h2 class="app-bar-title">Category Progress</h2>
+                            </div>
+                            <div class="content">
+                                <div class="section-header">Tier 1: Starter</div>
+
+                                <div class="card">
+                                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                                        <div style="display: flex; align-items: center; gap: 12px;">
+                                            <div style="font-size: 32px;">🍕</div>
+                                            <div>
+                                                <div style="font-weight: 600; margin-bottom: 4px;">Favorites</div>
+                                                <div style="font-size: 13px; color: #6E6E6E;">24/40 questions</div>
+                                            </div>
+                                        </div>
+                                        <div style="font-family: 'Playfair Display', serif; font-size: 24px; font-weight: 600; color: #1A1A1A;">92%</div>
+                                    </div>
+                                    <div style="height: 8px; background: #F0F0F0; border-radius: 8px; overflow: hidden;">
+                                        <div style="width: 60%; height: 100%; background: #1A1A1A; border-radius: 8px;"></div>
+                                    </div>
+                                </div>
+
+                                <div class="card">
+                                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                                        <div style="display: flex; align-items: center; gap: 12px;">
+                                            <div style="font-size: 32px;">⚙️</div>
+                                            <div>
+                                                <div style="font-weight: 600; margin-bottom: 4px;">Preferences</div>
+                                                <div style="font-size: 13px; color: #6E6E6E;">16/40 questions</div>
+                                            </div>
+                                        </div>
+                                        <div style="font-family: 'Playfair Display', serif; font-size: 24px; font-weight: 600; color: #1A1A1A;">78%</div>
+                                    </div>
+                                    <div style="height: 8px; background: #F0F0F0; border-radius: 8px; overflow: hidden;">
+                                        <div style="width: 40%; height: 100%; background: #1A1A1A; border-radius: 8px;"></div>
+                                    </div>
+                                </div>
+
+                                <div class="card">
+                                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                                        <div style="display: flex; align-items: center; gap: 12px;">
+                                            <div style="font-size: 32px;">☀️</div>
+                                            <div>
+                                                <div style="font-weight: 600; margin-bottom: 4px;">Daily Habits</div>
+                                                <div style="font-size: 13px; color: #6E6E6E;">8/30 questions</div>
+                                            </div>
+                                        </div>
+                                        <div style="font-family: 'Playfair Display', serif; font-size: 24px; font-weight: 600; color: #1A1A1A;">85%</div>
+                                    </div>
+                                    <div style="height: 8px; background: #F0F0F0; border-radius: 8px; overflow: hidden;">
+                                        <div style="width: 25%; height: 100%; background: #1A1A1A; border-radius: 8px;"></div>
+                                    </div>
+                                </div>
+
+                                <div class="insight-card">
+                                    <div class="insight-title">🎯 Next Unlock</div>
+                                    <div class="insight-text">
+                                        Complete 1 more quiz to unlock <strong>Tier 2 categories</strong>: Memories, Future Dreams, Love Languages, Our Traditions
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ALL FORMATS SECTION -->
+        <div class="screens-section" id="formats">
+            <div class="screens-grid">
+                <!-- Would You Rather -->
+                <div class="screen-wrapper">
+                    <div class="screen-label">Would You Rather - Hybrid Format</div>
+                    <div class="phone">
+                        <div class="status-bar">
+                            <span>9:41</span>
+                            <span>100%</span>
+                        </div>
+                        <div class="screen">
+                            <div class="app-bar">
+                                <span class="back-btn">←</span>
+                                <h2 class="app-bar-title">Would You Rather</h2>
+                            </div>
+                            <div class="content">
+                                <div class="progress-container">
+                                    <div class="progress-bar">
+                                        <div class="progress-fill" style="width: 40%"></div>
+                                    </div>
+                                    <div class="progress-text">Question 2 of 5</div>
+                                </div>
+
+                                <div class="card" style="background: linear-gradient(135deg, #1A1A1A 0%, #2A2A2A 100%); color: white; padding: 24px; margin-bottom: 24px;">
+                                    <div style="font-size: 15px; opacity: 0.9; margin-bottom: 8px;">Step 1: Choose YOUR preference</div>
+                                    <div style="font-size: 18px; font-weight: 600;">Then predict Emma's choice!</div>
+                                </div>
+
+                                <div class="question-card">
+                                    <div class="question-number">SCENARIO</div>
+                                    <div class="question-text">Would you rather...</div>
+
+                                    <div class="options-grid">
+                                        <div class="option-btn selected">
+                                            <div style="font-weight: 600; margin-bottom: 4px;">Beach Vacation</div>
+                                            <div style="font-size: 13px; color: #6E6E6E;">Sun, sand, relaxation</div>
+                                        </div>
+                                        <div class="option-btn">
+                                            <div style="font-weight: 600; margin-bottom: 4px;">Mountain Retreat</div>
+                                            <div style="font-size: 13px; color: #6E6E6E;">Fresh air, hiking, nature</div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="card" style="border-left: 4px solid #1A1A1A;">
+                                    <div style="font-weight: 600; margin-bottom: 8px;">Now predict Emma's choice:</div>
+                                    <div class="options-grid">
+                                        <div class="option-btn">Beach Vacation</div>
+                                        <div class="option-btn selected">Mountain Retreat</div>
+                                    </div>
+                                </div>
+
+                                <div class="bottom-nav">
+                                    <button class="btn-primary">Next Question</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Timeline Challenge -->
+                <div class="screen-wrapper">
+                    <div class="screen-label">Timeline Challenge - Collaborative</div>
+                    <div class="phone">
+                        <div class="status-bar">
+                            <span>9:41</span>
+                            <span>100%</span>
+                        </div>
+                        <div class="screen">
+                            <div class="app-bar">
+                                <span class="back-btn">←</span>
+                                <h2 class="app-bar-title">Timeline Challenge</h2>
+                            </div>
+                            <div class="content">
+                                <div class="card" style="background: linear-gradient(135deg, #1A1A1A 0%, #2A2A2A 100%); color: white; text-align: center; padding: 32px; margin-bottom: 24px;">
+                                    <div style="font-size: 48px; margin-bottom: 16px;">📅</div>
+                                    <div style="font-family: 'Playfair Display', serif; font-size: 24px; font-weight: 600; margin-bottom: 12px;">
+                                        Test Your Shared Memory
+                                    </div>
+                                    <div style="font-size: 15px; opacity: 0.9; line-height: 1.6;">
+                                        Both answer independently. You must match to earn points!
+                                    </div>
+                                </div>
+
+                                <div class="question-card">
+                                    <div class="question-number">MEMORY QUESTION 1/5</div>
+                                    <div class="question-text">Where was our first date?</div>
+
+                                    <div class="options-grid">
+                                        <div class="option-btn selected">Coffee shop</div>
+                                        <div class="option-btn">Restaurant</div>
+                                        <div class="option-btn">Park</div>
+                                        <div class="option-btn">Movies</div>
+                                        <div class="option-btn">Other place</div>
+                                    </div>
+                                </div>
+
+                                <div class="card" style="background: #FFF9E6; border-left: 4px solid #F59E0B;">
+                                    <div style="font-size: 13px; color: #92400E;">
+                                        💡 Only exact matches earn points - choose carefully!
+                                    </div>
+                                </div>
+
+                                <div class="bottom-nav">
+                                    <button class="btn-primary">Submit Answer</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Speed Round -->
+                <div class="screen-wrapper">
+                    <div class="screen-label">Speed Round - 10 Second Timer</div>
+                    <div class="phone">
+                        <div class="status-bar">
+                            <span>9:41</span>
+                            <span>100%</span>
+                        </div>
+                        <div class="screen">
+                            <div class="app-bar">
+                                <span class="back-btn">←</span>
+                                <h2 class="app-bar-title">Speed Round</h2>
+                            </div>
+                            <div class="content">
+                                <div class="card" style="background: linear-gradient(135deg, #1A1A1A 0%, #2A2A2A 100%); color: white; text-align: center; padding: 24px; margin-bottom: 24px;">
+                                    <div style="font-size: 15px; opacity: 0.9; margin-bottom: 8px;">Time remaining</div>
+                                    <div style="font-size: 48px; font-weight: 700; margin-bottom: 4px;">0:07</div>
+                                    <div style="font-size: 13px; opacity: 0.8;">Question 3 of 10</div>
+                                </div>
+
+                                <div class="question-card">
+                                    <div class="question-number">QUICK! PREDICT EMMA'S ANSWER</div>
+                                    <div class="question-text">Emma's favorite season?</div>
+
+                                    <div class="options-grid">
+                                        <div class="option-btn">Spring</div>
+                                        <div class="option-btn">Summer</div>
+                                        <div class="option-btn selected">Fall</div>
+                                        <div class="option-btn">Winter</div>
+                                        <div class="option-btn">Other / Varies</div>
+                                    </div>
+                                </div>
+
+                                <div class="card" style="background: #FAFAFA; text-align: center;">
+                                    <div style="font-size: 13px; color: #6E6E6E; margin-bottom: 8px;">Current streak</div>
+                                    <div style="font-size: 20px; font-weight: 700; color: #1A1A1A;">2 in a row 🔥</div>
+                                </div>
+
+                                <div class="bottom-nav">
+                                    <button class="btn-primary">Submit (Auto-submits in 7s)</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Mystery Box -->
+                <div class="screen-wrapper">
+                    <div class="screen-label">Mystery Box - Surprise Categories</div>
+                    <div class="phone">
+                        <div class="status-bar">
+                            <span>9:41</span>
+                            <span>100%</span>
+                        </div>
+                        <div class="screen">
+                            <div class="app-bar">
+                                <span class="back-btn">←</span>
+                                <h2 class="app-bar-title">Mystery Box</h2>
+                            </div>
+                            <div class="content">
+                                <div class="card" style="background: linear-gradient(135deg, #1A1A1A 0%, #2A2A2A 100%); color: white; text-align: center; padding: 32px; margin-bottom: 24px;">
+                                    <div style="font-size: 64px; margin-bottom: 16px;">🎁</div>
+                                    <div style="font-family: 'Playfair Display', serif; font-size: 24px; font-weight: 600; margin-bottom: 12px;">
+                                        Surprise!
+                                    </div>
+                                    <div style="font-size: 15px; opacity: 0.9;">
+                                        You won't know which categories appear until after
+                                    </div>
+                                </div>
+
+                                <div class="progress-container">
+                                    <div class="progress-bar">
+                                        <div class="progress-fill" style="width: 28%"></div>
+                                    </div>
+                                    <div class="progress-text">Question 2 of 7 • Category revealed after</div>
+                                </div>
+
+                                <div class="question-card">
+                                    <div class="question-number">MYSTERY QUESTION</div>
+                                    <div class="question-text">How do YOU handle stress?</div>
+
+                                    <div class="options-grid">
+                                        <div class="option-btn">Talk it out</div>
+                                        <div class="option-btn selected">Need alone time</div>
+                                        <div class="option-btn">Exercise</div>
+                                        <div class="option-btn">Sleep it off</div>
+                                        <div class="option-btn">Other / It depends</div>
+                                    </div>
+                                </div>
+
+                                <div class="card" style="background: #FAFAFA; border-left: 4px solid #F59E0B;">
+                                    <div style="font-size: 13px; color: #92400E;">
+                                        💎 Bonus LP for Expert difficulty questions!
+                                    </div>
+                                </div>
+
+                                <div class="bottom-nav">
+                                    <button class="btn-primary">Next Mystery</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showSection(sectionId) {
+            // Hide all sections
+            document.querySelectorAll('.screens-section').forEach(section => {
+                section.classList.remove('active');
+            });
+
+            // Show selected section
+            document.getElementById(sectionId).classList.add('active');
+
+            // Update nav tabs
+            document.querySelectorAll('.nav-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            event.target.classList.add('active');
+
+            // Scroll to top
+            window.scrollTo(0, 0);
+        }
+
+        // Add click handlers for interactive elements
+        document.addEventListener('DOMContentLoaded', function() {
+            // Option buttons
+            document.querySelectorAll('.option-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    // Remove selected from siblings
+                    this.parentElement.querySelectorAll('.option-btn').forEach(sibling => {
+                        sibling.classList.remove('selected');
+                    });
+                    // Add selected to clicked
+                    this.classList.add('selected');
+                });
+            });
+
+            // Pulse options
+            document.querySelectorAll('.pulse-option').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    this.parentElement.querySelectorAll('.pulse-option').forEach(sibling => {
+                        sibling.classList.remove('selected');
+                    });
+                    this.classList.add('selected');
+                });
+            });
+
+            // Filter tabs
+            document.querySelectorAll('.filter-tab').forEach(tab => {
+                tab.addEventListener('click', function() {
+                    this.parentElement.querySelectorAll('.filter-tab').forEach(sibling => {
+                        sibling.classList.remove('active');
+                    });
+                    this.classList.add('active');
+                });
+            });
+        });
+    </script>
+</body>
+</html>

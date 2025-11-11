@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Poke Variant 2 - Playful</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Rounded Mplus 1c', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .phone-frame {
+            width: 375px;
+            height: 812px;
+            background: linear-gradient(180deg, #FFE5E5 0%, #FFF5E1 100%);
+            border-radius: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+            position: relative;
+        }
+        .status-bar {
+            height: 44px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+            font-size: 12px;
+        }
+        .app-content {
+            padding: 20px;
+            height: calc(100% - 44px - 90px);
+            display: flex;
+            flex-direction: column;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .header-emoji {
+            font-size: 60px;
+            animation: bounce 1s ease-in-out infinite;
+        }
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        .header h1 {
+            font-size: 32px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #FF6B9D 0%, #FEA47F 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin: 10px 0;
+        }
+        .partner-badge {
+            display: inline-block;
+            padding: 8px 20px;
+            background: white;
+            border-radius: 20px;
+            font-size: 15px;
+            color: #FF6B9D;
+            font-weight: 600;
+            box-shadow: 0 4px 12px rgba(255,107,157,0.2);
+        }
+        .poke-card {
+            background: white;
+            border-radius: 32px;
+            padding: 40px;
+            box-shadow: 0 12px 32px rgba(0,0,0,0.1);
+            text-align: center;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .sparkles {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            font-size: 24px;
+            animation: twinkle 1.5s ease-in-out infinite;
+        }
+        .sparkles:nth-child(2) {
+            top: auto;
+            bottom: 20px;
+            left: auto;
+            right: 20px;
+            animation-delay: 0.5s;
+        }
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; transform: scale(0.8); }
+            50% { opacity: 1; transform: scale(1.2); }
+        }
+        .poke-button {
+            width: 180px;
+            height: 180px;
+            margin: 0 auto 30px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #FF6B9D 0%, #FEA47F 100%);
+            border: none;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 16px 32px rgba(255,107,157,0.4);
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+        }
+        .poke-button::before {
+            content: '';
+            position: absolute;
+            inset: -4px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #FF6B9D 0%, #FEA47F 100%);
+            opacity: 0.5;
+            filter: blur(10px);
+            z-index: -1;
+        }
+        .poke-button:hover {
+            transform: scale(1.08);
+            box-shadow: 0 20px 40px rgba(255,107,157,0.5);
+        }
+        .poke-button:active {
+            transform: scale(0.92);
+        }
+        .poke-emoji {
+            font-size: 70px;
+            animation: wiggle 0.5s ease-in-out;
+        }
+        @keyframes wiggle {
+            0%, 100% { transform: rotate(0deg); }
+            25% { transform: rotate(-10deg); }
+            75% { transform: rotate(10deg); }
+        }
+        .poke-label {
+            color: white;
+            font-size: 22px;
+            font-weight: 700;
+            margin-top: 8px;
+        }
+        .poke-description {
+            font-size: 16px;
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+        .quick-emojis {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            margin-top: 20px;
+        }
+        .emoji-option {
+            width: 60px;
+            height: 60px;
+            background: #FFF5E1;
+            border: 2px solid #FFE0E9;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .emoji-option:hover {
+            transform: scale(1.1);
+            border-color: #FF6B9D;
+            background: white;
+        }
+        .haptic-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 13px;
+            color: #999;
+            margin-top: 20px;
+        }
+        .haptic-indicator::before {
+            content: '📳';
+            font-size: 16px;
+        }
+        .bottom-nav {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 90px;
+            background: linear-gradient(180deg, rgba(255,229,229,0.8) 0%, rgba(255,245,225,1) 100%);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid rgba(255,107,157,0.1);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 20px;
+        }
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-size: 24px;
+            opacity: 0.5;
+            transition: opacity 0.3s;
+        }
+        .nav-item.active {
+            opacity: 1;
+        }
+        .nav-label {
+            font-size: 11px;
+            margin-top: 4px;
+            font-weight: 600;
+            color: #FF6B9D;
+        }
+    </style>
+</head>
+<body>
+    <div class="phone-frame">
+        <div class="status-bar">
+            <span>9:41</span>
+            <span>📶 🔋</span>
+        </div>
+
+        <div class="app-content">
+            <div class="header">
+                <div class="header-emoji">💫</div>
+                <h1>Send a Poke!</h1>
+                <div class="partner-badge">💕 Alex</div>
+            </div>
+
+            <div class="poke-card">
+                <div class="sparkles">✨</div>
+                <div class="sparkles">✨</div>
+
+                <button class="poke-button">
+                    <div class="poke-emoji">🫱</div>
+                    <div class="poke-label">Poke</div>
+                </button>
+
+                <div class="poke-description">
+                    Send an instant "thinking of you" ❤️
+                </div>
+
+                <div class="quick-emojis">
+                    <div class="emoji-option">💫</div>
+                    <div class="emoji-option">❤️</div>
+                    <div class="emoji-option">👋</div>
+                    <div class="emoji-option">🫶</div>
+                </div>
+
+                <div class="haptic-indicator">
+                    Tap for vibration + animation
+                </div>
+            </div>
+        </div>
+
+        <div class="bottom-nav">
+            <div class="nav-item active">
+                <span>💫</span>
+                <span class="nav-label">Poke</span>
+            </div>
+            <div class="nav-item">
+                <span>💕</span>
+                <span class="nav-label">Send</span>
+            </div>
+            <div class="nav-item">
+                <span>📝</span>
+                <span class="nav-label">Inbox</span>
+            </div>
+            <div class="nav-item">
+                <span>⚙️</span>
+                <span class="nav-label">Settings</span>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

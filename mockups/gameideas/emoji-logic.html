@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emoji Logic - TogetherRemind</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .game-container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 500px;
+            width: 100%;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .game-icon {
+            font-size: 3em;
+            margin-bottom: 10px;
+        }
+
+        h1 {
+            color: #667eea;
+            font-size: 1.8em;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: #666;
+            font-size: 0.95em;
+        }
+
+        .role-banner {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            color: white;
+            padding: 15px;
+            border-radius: 12px;
+            text-align: center;
+            margin: 20px 0;
+            font-weight: 600;
+        }
+
+        .secret-code {
+            background: #f9fafb;
+            border: 3px dashed #cbd5e1;
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            margin: 25px 0;
+        }
+
+        .code-label {
+            font-size: 0.9em;
+            color: #666;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .code-display {
+            font-size: 3em;
+            letter-spacing: 15px;
+            margin: 10px 0;
+        }
+
+        .guess-history {
+            margin: 30px 0;
+        }
+
+        .history-title {
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 1.1em;
+        }
+
+        .guess-row {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px;
+            background: #f9fafb;
+            border-radius: 12px;
+            margin-bottom: 10px;
+            border: 2px solid #e5e7eb;
+        }
+
+        .guess-number {
+            background: #667eea;
+            color: white;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 0.9em;
+            flex-shrink: 0;
+        }
+
+        .guess-emojis {
+            font-size: 1.8em;
+            letter-spacing: 8px;
+            flex-grow: 1;
+        }
+
+        .guess-feedback {
+            display: flex;
+            gap: 5px;
+            flex-shrink: 0;
+        }
+
+        .feedback-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .dot-correct {
+            background: #10b981;
+        }
+
+        .dot-position {
+            background: #f59e0b;
+        }
+
+        .emoji-picker {
+            background: #f0f4ff;
+            border-radius: 15px;
+            padding: 20px;
+            margin: 25px 0;
+        }
+
+        .picker-label {
+            font-weight: 600;
+            color: #667eea;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .current-guess {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .emoji-slot {
+            width: 60px;
+            height: 60px;
+            background: white;
+            border: 2px solid #cbd5e1;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2em;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .emoji-slot:hover {
+            border-color: #667eea;
+            transform: scale(1.05);
+        }
+
+        .emoji-slot.active {
+            border-color: #667eea;
+            border-width: 3px;
+            background: #f0f4ff;
+        }
+
+        .emoji-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 8px;
+        }
+
+        .emoji-option {
+            padding: 12px;
+            background: white;
+            border: 2px solid #e5e7eb;
+            border-radius: 10px;
+            font-size: 1.8em;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .emoji-option:hover {
+            transform: scale(1.1);
+            border-color: #667eea;
+        }
+
+        .button {
+            width: 100%;
+            padding: 15px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .button:hover {
+            background: #5568d3;
+        }
+
+        .button:disabled {
+            background: #cbd5e1;
+            cursor: not-allowed;
+        }
+
+        .legend {
+            background: #fffbeb;
+            border-left: 4px solid #f59e0b;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+            font-size: 0.85em;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 8px 0;
+        }
+
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 2px solid #e5e7eb;
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .stat-label {
+            font-size: 0.85em;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 20px;
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <div class="header">
+            <div class="game-icon">😊</div>
+            <h1>Emoji Logic</h1>
+            <p class="subtitle">Crack your partner's emoji code!</p>
+        </div>
+
+        <div class="role-banner">
+            🔍 You're the Code Breaker
+        </div>
+
+        <div class="secret-code">
+            <div class="code-label">Your partner's secret code:</div>
+            <div class="code-display">❓❓❓</div>
+            <div style="font-size: 0.85em; color: #666; margin-top: 10px;">
+                3 different emojis to guess
+            </div>
+        </div>
+
+        <div class="guess-history">
+            <div class="history-title">📊 Your Guesses</div>
+
+            <div class="guess-row">
+                <div class="guess-number">1</div>
+                <div class="guess-emojis">❤️🌟🎵</div>
+                <div class="guess-feedback">
+                    <div class="feedback-dot dot-correct"></div>
+                    <div class="feedback-dot dot-position"></div>
+                </div>
+            </div>
+
+            <div class="guess-row">
+                <div class="guess-number">2</div>
+                <div class="guess-emojis">❤️🐱🎵</div>
+                <div class="guess-feedback">
+                    <div class="feedback-dot dot-correct"></div>
+                    <div class="feedback-dot dot-correct"></div>
+                    <div class="feedback-dot dot-position"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="legend">
+            <strong>Feedback Guide:</strong>
+            <div class="legend-item">
+                <div class="feedback-dot dot-correct"></div>
+                <span>Green = Correct emoji, correct position</span>
+            </div>
+            <div class="legend-item">
+                <div class="feedback-dot dot-position"></div>
+                <span>Orange = Correct emoji, wrong position</span>
+            </div>
+        </div>
+
+        <div class="emoji-picker">
+            <div class="picker-label">Make Your Next Guess</div>
+
+            <div class="current-guess">
+                <div class="emoji-slot active">❤️</div>
+                <div class="emoji-slot">🐱</div>
+                <div class="emoji-slot">🌙</div>
+            </div>
+
+            <div class="emoji-grid">
+                <div class="emoji-option">❤️</div>
+                <div class="emoji-option">🐱</div>
+                <div class="emoji-option">🌙</div>
+                <div class="emoji-option">🌟</div>
+                <div class="emoji-option">🎵</div>
+                <div class="emoji-option">🌸</div>
+                <div class="emoji-option">🎨</div>
+                <div class="emoji-option">☕</div>
+                <div class="emoji-option">🍕</div>
+                <div class="emoji-option">🎮</div>
+            </div>
+
+            <button class="button" style="margin-top: 15px;">Submit Guess</button>
+        </div>
+
+        <div class="stats">
+            <div class="stat">
+                <div class="stat-value">3</div>
+                <div class="stat-label">Guesses Left</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value">2/3</div>
+                <div class="stat-label">Close!</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value">+30</div>
+                <div class="stat-label">Love Points</div>
+            </div>
+        </div>
+
+        <a href="index.html" class="back-link">← Back to All Games</a>
+    </div>
+
+    <script>
+        // Interactive demo
+        let currentSlot = 0;
+        const slots = document.querySelectorAll('.emoji-slot');
+        const options = document.querySelectorAll('.emoji-option');
+
+        slots.forEach((slot, index) => {
+            slot.addEventListener('click', () => {
+                slots.forEach(s => s.classList.remove('active'));
+                slot.classList.add('active');
+                currentSlot = index;
+            });
+        });
+
+        options.forEach(option => {
+            option.addEventListener('click', () => {
+                slots[currentSlot].textContent = option.textContent;
+                currentSlot = (currentSlot + 1) % slots.length;
+                slots.forEach(s => s.classList.remove('active'));
+                slots[currentSlot].classList.add('active');
+            });
+        });
+    </script>
+</body>
+</html>

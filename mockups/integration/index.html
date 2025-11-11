@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Design Integration - Current App + Gamification</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #FAFAFA;
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+        h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 52px;
+            font-weight: 700;
+            color: #1A1A1A;
+            margin-bottom: 16px;
+            letter-spacing: -1px;
+        }
+        .subtitle {
+            font-size: 18px;
+            color: #6E6E6E;
+            margin-bottom: 12px;
+        }
+        .description {
+            font-size: 15px;
+            color: #AAAAAA;
+            max-width: 800px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        /* Design Comparison */
+        .comparison-section {
+            background: white;
+            border-radius: 24px;
+            padding: 40px;
+            margin-bottom: 60px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        .comparison-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 28px;
+            font-weight: 600;
+            color: #1A1A1A;
+            margin-bottom: 24px;
+            text-align: center;
+        }
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 32px;
+            margin-bottom: 32px;
+        }
+        .design-column {
+            background: #FAFAFA;
+            border-radius: 16px;
+            padding: 24px;
+        }
+        .column-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1A1A1A;
+            margin-bottom: 16px;
+            text-align: center;
+        }
+        .design-features {
+            list-style: none;
+        }
+        .design-features li {
+            font-size: 14px;
+            color: #6E6E6E;
+            padding: 8px 0;
+            border-bottom: 1px solid #F0F0F0;
+        }
+        .design-features li:last-child {
+            border-bottom: none;
+        }
+        .design-features li::before {
+            content: "•";
+            color: #1A1A1A;
+            font-weight: bold;
+            margin-right: 12px;
+        }
+
+        /* Mockup Grid */
+        .mockup-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        .mockup-card {
+            background: white;
+            border-radius: 20px;
+            padding: 24px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            border: 2px solid #F0F0F0;
+            transition: all 0.3s;
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+        .mockup-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+            border-color: #1A1A1A;
+        }
+        .mockup-badge {
+            display: inline-block;
+            padding: 6px 12px;
+            background: #1A1A1A;
+            color: white;
+            border-radius: 8px;
+            font-size: 11px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .mockup-card h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: #1A1A1A;
+        }
+        .mockup-card p {
+            font-size: 14px;
+            color: #6E6E6E;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+        .mockup-features {
+            list-style: none;
+            margin-bottom: 20px;
+        }
+        .mockup-features li {
+            font-size: 13px;
+            color: #1A1A1A;
+            padding: 8px 0;
+            border-bottom: 1px solid #F0F0F0;
+        }
+        .mockup-features li:last-child {
+            border-bottom: none;
+        }
+        .mockup-features li::before {
+            content: "→";
+            color: #1A1A1A;
+            font-weight: bold;
+            margin-right: 8px;
+        }
+        .view-button {
+            display: block;
+            width: 100%;
+            padding: 14px;
+            background: #1A1A1A;
+            color: white;
+            text-align: center;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 15px;
+            transition: opacity 0.3s;
+        }
+        .view-button:hover {
+            opacity: 0.85;
+        }
+
+        footer {
+            text-align: center;
+            color: #AAAAAA;
+            margin-top: 60px;
+            padding: 20px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Design Integration</h1>
+            <p class="subtitle">Minimal Black & White + Gamification Elements</p>
+            <p class="description">
+                These mockups show how to integrate gamification features into the existing minimalist design system, maintaining the black & white aesthetic while adding meaningful progression elements.
+            </p>
+        </header>
+
+        <div class="comparison-section">
+            <h2 class="comparison-title">Design System Comparison</h2>
+            <div class="comparison-grid">
+                <div class="design-column">
+                    <div class="column-title">Current App Design</div>
+                    <ul class="design-features">
+                        <li>Minimal black & white palette</li>
+                        <li>Playfair Display headlines</li>
+                        <li>Inter body text</li>
+                        <li>No gradients, solid colors only</li>
+                        <li>Light gray backgrounds (#FAFAFA)</li>
+                        <li>Subtle shadows (2-8px blur)</li>
+                        <li>16px border radius</li>
+                        <li>Clean, spacious layouts</li>
+                    </ul>
+                </div>
+                <div class="design-column">
+                    <div class="column-title">Integration Approach</div>
+                    <ul class="design-features">
+                        <li>Maintain black & white foundation</li>
+                        <li>Add subtle accent colors (green for success)</li>
+                        <li>Keep existing typography system</li>
+                        <li>Integrate LP counters naturally</li>
+                        <li>Use badges for status indicators</li>
+                        <li>Minimal visual hierarchy changes</li>
+                        <li>Progressive disclosure for gamification</li>
+                        <li>Optional visibility (can hide/minimize)</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="mockup-grid">
+            <div class="mockup-card">
+                <span class="mockup-badge">Core Integration</span>
+                <h3>Home Screen</h3>
+                <p>Existing home screen with subtle gamification integration - LP counter in header, optional challenge banner.</p>
+                <ul class="mockup-features">
+                    <li>Small LP counter (top right)</li>
+                    <li>Collapsible challenge banner</li>
+                    <li>Existing poke button unchanged</li>
+                    <li>Send reminder flow intact</li>
+                    <li>Minimalist aesthetic maintained</li>
+                </ul>
+                <a href="integrated-home.html" class="view-button">View Mockup</a>
+            </div>
+
+            <div class="mockup-card">
+                <span class="mockup-badge">Core Integration</span>
+                <h3>Inbox Screen</h3>
+                <p>Reminder inbox with optional LP indicators on completed items, maintaining current card-based design.</p>
+                <ul class="mockup-features">
+                    <li>Existing reminder cards</li>
+                    <li>Small +LP badges when completed</li>
+                    <li>Filter tabs unchanged</li>
+                    <li>Poke history integrated</li>
+                    <li>Clean, minimal layout</li>
+                </ul>
+                <a href="integrated-inbox.html" class="view-button">View Mockup</a>
+            </div>
+
+            <div class="mockup-card">
+                <span class="mockup-badge">Core Integration</span>
+                <h3>Send Reminder</h3>
+                <p>Send reminder screen with optional LP preview, showing what you'll earn when they complete it.</p>
+                <ul class="mockup-features">
+                    <li>Existing time picker chips</li>
+                    <li>Message input unchanged</li>
+                    <li>Small "Earn +10 LP" preview</li>
+                    <li>Black button design</li>
+                    <li>Simple and clean</li>
+                </ul>
+                <a href="integrated-send.html" class="view-button">View Mockup</a>
+            </div>
+
+            <div class="mockup-card">
+                <span class="mockup-badge">Core Integration</span>
+                <h3>Poke Feature</h3>
+                <p>Enhanced poke modal with rate limiting (3/day) and LP rewards, maintaining playful simplicity.</p>
+                <ul class="mockup-features">
+                    <li>Existing emoji selector</li>
+                    <li>Poke limit indicator (3/3)</li>
+                    <li>Small +5 LP on mutual poke</li>
+                    <li>Black & white design</li>
+                    <li>Simple animations</li>
+                </ul>
+                <a href="integrated-poke.html" class="view-button">View Mockup</a>
+            </div>
+
+            <div class="mockup-card">
+                <span class="mockup-badge">New Feature</span>
+                <h3>Settings + Progress</h3>
+                <p>Settings screen with new "Progress" section - view LP, rank, and tier in minimal design.</p>
+                <ul class="mockup-features">
+                    <li>Existing settings options</li>
+                    <li>New "Progress" section</li>
+                    <li>LP total, rank, tier shown</li>
+                    <li>Optional: can hide gamification</li>
+                    <li>Black & white cards</li>
+                </ul>
+                <a href="integrated-settings.html" class="view-button">View Mockup</a>
+            </div>
+
+            <div class="mockup-card">
+                <span class="mockup-badge">New Feature</span>
+                <h3>Activities Hub</h3>
+                <p>Optional new tab for gamification activities - quiz, trivia, challenges in minimal grid.</p>
+                <ul class="mockup-features">
+                    <li>Clean activity grid</li>
+                    <li>Black & white cards</li>
+                    <li>LP rewards shown</li>
+                    <li>Optional tab (can skip)</li>
+                    <li>Simple icons</li>
+                </ul>
+                <a href="integrated-activities.html" class="view-button">View Mockup</a>
+            </div>
+        </div>
+
+        <footer>
+            <p><strong>TogetherRemind - Design Integration Study</strong></p>
+            <p>Maintaining minimal black & white aesthetic while adding meaningful gamification</p>
+        </footer>
+    </div>
+</body>
+</html>

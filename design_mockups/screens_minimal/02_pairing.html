@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TogetherRemind - Pairing</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #FAFAFA;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 420px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 30px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .step-label {
+            font-family: 'Inter', sans-serif;
+            font-size: 11px;
+            font-weight: 600;
+            color: #6E6E6E;
+            letter-spacing: 1.2px;
+            text-transform: uppercase;
+            margin-bottom: 12px;
+        }
+
+        h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 28px;
+            font-weight: 600;
+            color: #1A1A1A;
+            margin-bottom: 8px;
+            letter-spacing: -0.3px;
+        }
+
+        .subtitle {
+            font-family: 'Inter', sans-serif;
+            font-size: 15px;
+            color: #6E6E6E;
+            line-height: 1.5;
+        }
+
+        .qr-card {
+            background: #FFFEFD;
+            border-radius: 20px;
+            padding: 32px 24px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+            margin-bottom: 24px;
+            text-align: center;
+        }
+
+        .qr-card h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 20px;
+            font-weight: 600;
+            color: #1A1A1A;
+            margin-bottom: 24px;
+            letter-spacing: -0.2px;
+        }
+
+        .qr-code {
+            width: 200px;
+            height: 200px;
+            margin: 0 auto 20px;
+            padding: 16px;
+            background: #FFFEFD;
+            border: 2px solid #F0F0F0;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .qr-placeholder {
+            width: 168px;
+            height: 168px;
+            background: linear-gradient(45deg, #f0f0f0 25%, transparent 25%, transparent 75%, #f0f0f0 75%, #f0f0f0),
+                        linear-gradient(45deg, #f0f0f0 25%, transparent 25%, transparent 75%, #f0f0f0 75%, #f0f0f0);
+            background-size: 20px 20px;
+            background-position: 0 0, 10px 10px;
+        }
+
+        .qr-instruction {
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            color: #6E6E6E;
+            line-height: 1.4;
+        }
+
+        .divider {
+            text-align: center;
+            margin: 24px 0;
+            font-family: 'Inter', sans-serif;
+            font-size: 13px;
+            font-weight: 500;
+            color: #AAAAAA;
+        }
+
+        .scan-card {
+            background: #FFFEFD;
+            border-radius: 20px;
+            padding: 32px 24px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .scan-card:active {
+            transform: scale(0.98);
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+        }
+
+        .scan-card h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 20px;
+            font-weight: 600;
+            color: #1A1A1A;
+            margin-bottom: 8px;
+            letter-spacing: -0.2px;
+        }
+
+        .scan-card p {
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            color: #6E6E6E;
+            line-height: 1.4;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="step-label">Step 2 of 2</div>
+            <h1>Pair with Partner</h1>
+            <p class="subtitle">Share your code or scan theirs</p>
+        </div>
+
+        <div class="qr-card">
+            <h2>Your QR Code</h2>
+            <div class="qr-code">
+                <div class="qr-placeholder"></div>
+            </div>
+            <p class="qr-instruction">Have your partner scan this code</p>
+        </div>
+
+        <div class="divider">or</div>
+
+        <div class="scan-card">
+            <h2>Scan Partner's Code</h2>
+            <p>Tap to open camera</p>
+        </div>
+    </div>
+</body>
+</html>

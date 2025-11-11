@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TogetherRemind - Poke Modal</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #FAFAFA;
+            min-height: 100vh;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+        }
+
+        /* Backdrop overlay */
+        .backdrop {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(26, 26, 26, 0.4);
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        /* Bottom sheet container */
+        .bottom-sheet {
+            position: relative;
+            max-width: 420px;
+            width: 100%;
+            background: #FFFEFD;
+            border-radius: 24px 24px 0 0;
+            box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.12);
+            animation: slideUp 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            z-index: 10;
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(100%);
+            }
+            to {
+                transform: translateY(0);
+            }
+        }
+
+        /* Drag handle */
+        .drag-handle {
+            width: 40px;
+            height: 4px;
+            background: #E0E0E0;
+            border-radius: 2px;
+            margin: 12px auto 20px;
+        }
+
+        .content {
+            padding: 0 24px 32px;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .emoji-large {
+            font-size: 64px;
+            margin-bottom: 16px;
+            animation: bounce 0.6s ease;
+        }
+
+        @keyframes bounce {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-12px);
+            }
+        }
+
+        h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 28px;
+            font-weight: 600;
+            color: #1A1A1A;
+            margin-bottom: 8px;
+            letter-spacing: -0.4px;
+        }
+
+        .subtitle {
+            font-family: 'Inter', sans-serif;
+            font-size: 15px;
+            color: #6E6E6E;
+            line-height: 1.5;
+        }
+
+        /* Partner info */
+        .partner-info {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 28px;
+            padding: 16px;
+            background: #FAFAFA;
+            border-radius: 16px;
+        }
+
+        .partner-avatar {
+            width: 48px;
+            height: 48px;
+            background: #1A1A1A;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            margin-right: 12px;
+        }
+
+        .partner-name {
+            font-family: 'Playfair Display', serif;
+            font-size: 20px;
+            font-weight: 600;
+            color: #1A1A1A;
+            letter-spacing: -0.2px;
+        }
+
+        /* Action buttons */
+        .actions {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .action-button {
+            width: 100%;
+            padding: 18px 24px;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: all 0.2s ease;
+        }
+
+        .action-button:active {
+            transform: scale(0.98);
+        }
+
+        .action-button.primary {
+            background: #1A1A1A;
+            box-shadow: 0 4px 12px rgba(26, 26, 26, 0.15);
+        }
+
+        .action-button.primary:active {
+            box-shadow: 0 2px 8px rgba(26, 26, 26, 0.2);
+        }
+
+        .action-button.secondary {
+            background: #FAFAFA;
+            border: 2px solid #F0F0F0;
+        }
+
+        .button-content {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .button-emoji {
+            font-size: 24px;
+        }
+
+        .button-text {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .button-label {
+            font-family: 'Inter', sans-serif;
+            font-size: 17px;
+            font-weight: 600;
+            color: #FFFEFD;
+        }
+
+        .action-button.secondary .button-label {
+            color: #1A1A1A;
+        }
+
+        .button-description {
+            font-family: 'Inter', sans-serif;
+            font-size: 13px;
+            color: rgba(255, 254, 253, 0.7);
+        }
+
+        .action-button.secondary .button-description {
+            color: #6E6E6E;
+        }
+
+        .button-arrow {
+            font-size: 20px;
+            color: rgba(255, 254, 253, 0.5);
+            transition: transform 0.2s ease;
+        }
+
+        .action-button.secondary .button-arrow {
+            color: #AAAAAA;
+        }
+
+        .action-button:active .button-arrow {
+            transform: translateX(2px);
+        }
+
+        /* Cancel button */
+        .cancel-button {
+            width: 100%;
+            padding: 14px;
+            margin-top: 8px;
+            background: transparent;
+            border: none;
+            font-family: 'Inter', sans-serif;
+            font-size: 15px;
+            font-weight: 500;
+            color: #6E6E6E;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .cancel-button:active {
+            color: #1A1A1A;
+        }
+
+        /* Cooldown message */
+        .cooldown-message {
+            text-align: center;
+            padding: 16px;
+            background: #FAFAFA;
+            border-radius: 12px;
+            margin-bottom: 20px;
+        }
+
+        .cooldown-text {
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            color: #6E6E6E;
+            line-height: 1.5;
+        }
+
+        .cooldown-emoji {
+            font-size: 20px;
+            margin-right: 6px;
+        }
+    </style>
+</head>
+<body>
+    <div class="backdrop"></div>
+
+    <div class="bottom-sheet">
+        <div class="drag-handle"></div>
+
+        <div class="content">
+            <div class="header">
+                <div class="emoji-large">👋</div>
+                <h2>Send a poke</h2>
+                <p class="subtitle">A gentle nudge to let them know<br>you're thinking of them</p>
+            </div>
+
+            <div class="partner-info">
+                <div class="partner-avatar">💜</div>
+                <span class="partner-name">Sarah</span>
+            </div>
+
+            <div class="actions">
+                <button class="action-button primary">
+                    <div class="button-content">
+                        <span class="button-emoji">💫</span>
+                        <div class="button-text">
+                            <span class="button-label">Send Poke</span>
+                            <span class="button-description">They'll get notified right away</span>
+                        </div>
+                    </div>
+                    <span class="button-arrow">→</span>
+                </button>
+
+                <button class="action-button secondary">
+                    <div class="button-content">
+                        <span class="button-emoji">💬</span>
+                        <div class="button-text">
+                            <span class="button-label">Poke with Message</span>
+                            <span class="button-description">Add a quick note</span>
+                        </div>
+                    </div>
+                    <span class="button-arrow">→</span>
+                </button>
+            </div>
+
+            <button class="cancel-button">Cancel</button>
+        </div>
+    </div>
+</body>
+</html>

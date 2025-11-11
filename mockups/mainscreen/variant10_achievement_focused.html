@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Variant 10: Achievement Focused - TogetherRemind</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #FAFAFA;
+            color: #1A1A1A;
+            padding: 0;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+        .header-banner {
+            background: linear-gradient(180deg, #1A1A1A 0%, #2A2A2A 100%);
+            color: #FFFEFD;
+            padding: 32px 20px 24px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .header-banner::before {
+            content: '✨';
+            position: absolute;
+            top: 20px;
+            left: 30px;
+            font-size: 24px;
+            opacity: 0.3;
+        }
+        .header-banner::after {
+            content: '💫';
+            position: absolute;
+            bottom: 20px;
+            right: 30px;
+            font-size: 24px;
+            opacity: 0.3;
+        }
+        .day-counter {
+            font-size: 13px;
+            opacity: 0.7;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .main-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 32px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            letter-spacing: -0.5px;
+        }
+        .achievement-row {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .achievement-badge {
+            background: rgba(255, 254, 253, 0.15);
+            border: 2px solid rgba(255, 254, 253, 0.3);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .content-area {
+            padding: 24px 20px;
+        }
+        .score-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+        .score-card {
+            background: #FFFEFD;
+            border: 2px solid #F0F0F0;
+            border-radius: 16px;
+            padding: 20px 16px;
+            text-align: center;
+        }
+        .score-emoji {
+            font-size: 28px;
+            margin-bottom: 8px;
+        }
+        .score-value {
+            font-family: 'Playfair Display', serif;
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 4px;
+            line-height: 1;
+        }
+        .score-label {
+            font-size: 11px;
+            color: #6E6E6E;
+            font-weight: 500;
+        }
+        .section-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 22px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .challenge-card {
+            background: #FFFEFD;
+            border: 2px solid #F0F0F0;
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            position: relative;
+        }
+        .challenge-card.featured {
+            background: #1A1A1A;
+            color: #FFFEFD;
+            border-color: #1A1A1A;
+        }
+        .challenge-icon-box {
+            width: 64px;
+            height: 64px;
+            background: #F0F0F0;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            flex-shrink: 0;
+            position: relative;
+        }
+        .challenge-card.featured .challenge-icon-box {
+            background: rgba(255, 254, 253, 0.15);
+        }
+        .new-badge {
+            position: absolute;
+            top: -6px;
+            right: -6px;
+            background: #1A1A1A;
+            color: #FFFEFD;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            font-weight: 600;
+            border: 2px solid #FFFEFD;
+        }
+        .challenge-card.featured .new-badge {
+            background: #FFFEFD;
+            color: #1A1A1A;
+            border-color: #1A1A1A;
+        }
+        .challenge-info {
+            flex: 1;
+        }
+        .challenge-name {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        .challenge-desc {
+            font-size: 13px;
+            color: #6E6E6E;
+            margin-bottom: 8px;
+        }
+        .challenge-card.featured .challenge-desc {
+            color: rgba(255, 254, 253, 0.7);
+        }
+        .reward-row {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+        .reward-chip {
+            background: #F0F0F0;
+            padding: 4px 10px;
+            border-radius: 8px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+        .challenge-card.featured .reward-chip {
+            background: rgba(255, 254, 253, 0.2);
+            color: #FFFEFD;
+        }
+        .completion-bar {
+            margin-top: 8px;
+            height: 4px;
+            background: #F0F0F0;
+            border-radius: 2px;
+            overflow: hidden;
+        }
+        .challenge-card.featured .completion-bar {
+            background: rgba(255, 254, 253, 0.2);
+        }
+        .completion-fill {
+            height: 100%;
+            background: #1A1A1A;
+            border-radius: 2px;
+        }
+        .challenge-card.featured .completion-fill {
+            background: #FFFEFD;
+        }
+        .action-bar {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-top: 24px;
+        }
+        .action-button {
+            background: #1A1A1A;
+            color: #FFFEFD;
+            border: none;
+            border-radius: 16px;
+            padding: 18px 20px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+        }
+        .action-emoji {
+            font-size: 28px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header-banner">
+        <div class="day-counter">Day 8 Together</div>
+        <div class="main-title">Love Fortress</div>
+        <div class="achievement-row">
+            <div class="achievement-badge">
+                <span>🔥</span>
+                <span>3 Day Streak</span>
+            </div>
+            <div class="achievement-badge">
+                <span>🏆</span>
+                <span>Level 8</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="content-area">
+        <div class="score-grid">
+            <div class="score-card">
+                <div class="score-emoji">💎</div>
+                <div class="score-value">127</div>
+                <div class="score-label">Love Points</div>
+            </div>
+            <div class="score-card">
+                <div class="score-emoji">🎯</div>
+                <div class="score-value">85%</div>
+                <div class="score-label">Match Rate</div>
+            </div>
+            <div class="score-card">
+                <div class="score-emoji">⭐</div>
+                <div class="score-value">12</div>
+                <div class="score-label">Completed</div>
+            </div>
+        </div>
+
+        <div class="section-title">
+            <span>⚡</span>
+            <span>Active Challenges</span>
+        </div>
+
+        <div class="challenge-card featured">
+            <div class="challenge-icon-box">
+                <span>🧩</span>
+                <div class="new-badge">!</div>
+            </div>
+            <div class="challenge-info">
+                <div class="challenge-name">Daily Pulse</div>
+                <div class="challenge-desc">Answer today's question</div>
+                <div class="reward-row">
+                    <span class="reward-chip">+20 LP</span>
+                    <span class="reward-chip">🔥 Streak</span>
+                </div>
+                <div class="completion-bar">
+                    <div class="completion-fill" style="width: 43%"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="challenge-card">
+            <div class="challenge-icon-box">
+                <span>🪜</span>
+            </div>
+            <div class="challenge-info">
+                <div class="challenge-name">Word Ladder Duet</div>
+                <div class="challenge-desc">Your turn • 2 puzzles</div>
+                <div class="reward-row">
+                    <span class="reward-chip">+15 LP</span>
+                </div>
+                <div class="completion-bar">
+                    <div class="completion-fill" style="width: 40%"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="challenge-card">
+            <div class="challenge-icon-box">
+                <span>🃏</span>
+            </div>
+            <div class="challenge-info">
+                <div class="challenge-name">Memory Flip Co-op</div>
+                <div class="challenge-desc">6 of 8 pairs found</div>
+                <div class="reward-row">
+                    <span class="reward-chip">+40 LP</span>
+                </div>
+                <div class="completion-bar">
+                    <div class="completion-fill" style="width: 75%"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="challenge-card">
+            <div class="challenge-icon-box">
+                <span>🎯</span>
+            </div>
+            <div class="challenge-info">
+                <div class="challenge-name">Couple Quiz</div>
+                <div class="challenge-desc">Test your connection</div>
+                <div class="reward-row">
+                    <span class="reward-chip">+30 LP</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="action-bar">
+            <button class="action-button">
+                <span class="action-emoji">💫</span>
+                <span>Quick Poke</span>
+            </button>
+            <button class="action-button">
+                <span class="action-emoji">💕</span>
+                <span>Send Reminder</span>
+            </button>
+        </div>
+    </div>
+</body>
+</html>

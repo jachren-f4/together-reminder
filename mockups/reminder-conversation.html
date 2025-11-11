@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TogetherRemind - Conversation View</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Rounded Mplus 1c', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .phone-frame {
+            width: 375px;
+            height: 812px;
+            background: linear-gradient(180deg, #FFE5E5 0%, #FFF5E1 100%);
+            border-radius: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+            position: relative;
+        }
+        .status-bar {
+            height: 44px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+            font-size: 12px;
+        }
+        .app-content {
+            padding: 0;
+            height: calc(100% - 44px);
+            display: flex;
+            flex-direction: column;
+        }
+        .header {
+            padding: 16px 20px;
+            background: white;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .back-button {
+            width: 36px;
+            height: 36px;
+            background: #f8f8f8;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            cursor: pointer;
+        }
+        .partner-info {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .partner-avatar {
+            width: 44px;
+            height: 44px;
+            background: linear-gradient(135deg, #FF6B9D 0%, #FEA47F 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+        .partner-details h2 {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+        }
+        .partner-details p {
+            font-size: 12px;
+            color: #999;
+        }
+        .conversation-area {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        .date-separator {
+            text-align: center;
+            margin: 16px 0;
+        }
+        .date-badge {
+            display: inline-block;
+            padding: 6px 16px;
+            background: white;
+            border-radius: 16px;
+            font-size: 12px;
+            color: #666;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+        .message-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .message {
+            display: flex;
+            gap: 8px;
+            align-items: flex-end;
+        }
+        .message.sent {
+            flex-direction: row-reverse;
+        }
+        .message-bubble {
+            max-width: 75%;
+            padding: 12px 16px;
+            border-radius: 18px;
+            position: relative;
+        }
+        .message.received .message-bubble {
+            background: white;
+            border-bottom-left-radius: 4px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+        .message.sent .message-bubble {
+            background: linear-gradient(135deg, #FFC3A0 0%, #FFAFBD 100%);
+            color: white;
+            border-bottom-right-radius: 4px;
+        }
+        .message-text {
+            font-size: 15px;
+            line-height: 1.4;
+            margin-bottom: 4px;
+        }
+        .message-meta {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 11px;
+            opacity: 0.7;
+        }
+        .message.received .message-meta {
+            color: #666;
+        }
+        .message.sent .message-meta {
+            color: white;
+            justify-content: flex-end;
+        }
+        .status-icon {
+            font-size: 14px;
+        }
+        .message-actions {
+            margin-top: 8px;
+            display: flex;
+            gap: 8px;
+        }
+        .action-chip {
+            padding: 6px 12px;
+            background: #f8f8f8;
+            border: 1px solid #e0e0e0;
+            border-radius: 12px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .action-chip:hover {
+            background: #FFE0E9;
+            border-color: #FFB6C1;
+        }
+        .action-chip.done {
+            background: #dcfce7;
+            border-color: #86efac;
+            color: #166534;
+        }
+        .bottom-nav {
+            display: flex;
+            justify-content: space-around;
+            padding: 16px 0;
+            border-top: 1px solid #FFE0E9;
+            background: linear-gradient(180deg, #FFE5E5 0%, #FFF5E1 100%);
+        }
+        .nav-item {
+            text-align: center;
+            font-size: 24px;
+            opacity: 0.5;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+        .nav-item.active {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+    <div class="phone-frame">
+        <div class="status-bar">
+            <span>9:41</span>
+            <span>⚡ 85%</span>
+        </div>
+        <div class="app-content">
+            <div class="header">
+                <div class="back-button">‹</div>
+                <div class="partner-info">
+                    <div class="partner-avatar">💕</div>
+                    <div class="partner-details">
+                        <h2>Alex</h2>
+                        <p>Your partner</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="conversation-area">
+                <div class="date-separator">
+                    <span class="date-badge">Today</span>
+                </div>
+
+                <div class="message-group">
+                    <div class="message received">
+                        <div class="message-bubble">
+                            <div class="message-text">Don't forget your umbrella ☔</div>
+                            <div class="message-meta">
+                                <span>10:41 AM</span>
+                            </div>
+                            <div class="message-actions">
+                                <button class="action-chip">✓ Done</button>
+                                <button class="action-chip">💤 Snooze 10m</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="message-group">
+                    <div class="message sent">
+                        <div class="message-bubble">
+                            <div class="message-text">Can you pick up milk on the way home? 🥛</div>
+                            <div class="message-meta">
+                                <span>9:15 AM</span>
+                                <span class="status-icon">✓✓</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="date-separator">
+                    <span class="date-badge">Yesterday</span>
+                </div>
+
+                <div class="message-group">
+                    <div class="message received">
+                        <div class="message-bubble">
+                            <div class="message-text">Meeting with dentist at 4 PM 🦷</div>
+                            <div class="message-meta">
+                                <span>3:30 PM</span>
+                                <span class="status-icon">✓</span>
+                            </div>
+                            <div class="message-actions">
+                                <button class="action-chip done">✓ Done</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="message-group">
+                    <div class="message sent">
+                        <div class="message-bubble">
+                            <div class="message-text">Love you! Have a great day ❤️</div>
+                            <div class="message-meta">
+                                <span>11:00 AM</span>
+                                <span class="status-icon">✓✓</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="message-group">
+                    <div class="message received">
+                        <div class="message-bubble">
+                            <div class="message-text">Don't forget your keys! 🔑</div>
+                            <div class="message-meta">
+                                <span>9:00 AM</span>
+                                <span class="status-icon">✓</span>
+                            </div>
+                            <div class="message-actions">
+                                <button class="action-chip done">✓ Done</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="date-separator">
+                    <span class="date-badge">Monday</span>
+                </div>
+
+                <div class="message-group">
+                    <div class="message sent">
+                        <div class="message-bubble">
+                            <div class="message-text">Call mom for her birthday 🎂</div>
+                            <div class="message-meta">
+                                <span>2:15 PM</span>
+                                <span class="status-icon">✓✓</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="message-group">
+                    <div class="message received">
+                        <div class="message-bubble">
+                            <div class="message-text">Thinking of you 💭✨</div>
+                            <div class="message-meta">
+                                <span>10:30 AM</span>
+                                <span class="status-icon">✓</span>
+                            </div>
+                            <div class="message-actions">
+                                <button class="action-chip done">✓ Done</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bottom-nav">
+                <div class="nav-item">💕</div>
+                <div class="nav-item active">📝</div>
+                <div class="nav-item">⚙️</div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

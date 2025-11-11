@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Poke Variant 3 - Integrated with Reminders</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Rounded Mplus 1c', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .phone-frame {
+            width: 375px;
+            height: 812px;
+            background: linear-gradient(180deg, #FFE5E5 0%, #FFF5E1 100%);
+            border-radius: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+            position: relative;
+        }
+        .status-bar {
+            height: 44px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+            font-size: 12px;
+        }
+        .app-content {
+            padding: 20px;
+            height: calc(100% - 44px - 90px);
+            overflow-y: auto;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .emoji-icon {
+            font-size: 50px;
+            margin-bottom: 8px;
+        }
+        .header h1 {
+            font-size: 24px;
+            font-weight: 700;
+            color: #FF6B9D;
+        }
+        .partner-badge {
+            display: inline-block;
+            padding: 6px 16px;
+            background: white;
+            border-radius: 20px;
+            font-size: 14px;
+            color: #FF6B9D;
+            font-weight: 500;
+            box-shadow: 0 2px 8px rgba(255,107,157,0.2);
+            margin-top: 8px;
+        }
+
+        /* Poke Section */
+        .poke-section {
+            background: white;
+            border-radius: 24px;
+            padding: 24px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .section-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #999;
+            margin-bottom: 16px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .poke-button {
+            width: 140px;
+            height: 140px;
+            margin: 0 auto;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #FF6B9D 0%, #FEA47F 100%);
+            border: none;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 12px 24px rgba(255,107,157,0.35);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .poke-button:hover {
+            transform: scale(1.05);
+        }
+        .poke-emoji {
+            font-size: 56px;
+        }
+        .poke-label {
+            color: white;
+            font-size: 18px;
+            font-weight: 700;
+            margin-top: 4px;
+        }
+        .poke-hint {
+            font-size: 13px;
+            color: #999;
+            margin-top: 16px;
+        }
+
+        /* Divider */
+        .divider {
+            display: flex;
+            align-items: center;
+            margin: 24px 0;
+            color: #ccc;
+            font-size: 13px;
+            font-weight: 600;
+        }
+        .divider::before,
+        .divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: #E0E0E0;
+        }
+        .divider::before {
+            margin-right: 12px;
+        }
+        .divider::after {
+            margin-left: 12px;
+        }
+
+        /* Reminder Section */
+        .reminder-card {
+            background: white;
+            border-radius: 24px;
+            padding: 24px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+        }
+        .input-label {
+            font-size: 13px;
+            font-weight: 600;
+            color: #FF6B9D;
+            margin-bottom: 10px;
+            display: block;
+        }
+        .input-field {
+            width: 100%;
+            padding: 14px;
+            border: 2px solid #FFE0E9;
+            border-radius: 16px;
+            font-size: 15px;
+            font-family: inherit;
+            margin-bottom: 16px;
+        }
+        .time-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .time-chip {
+            padding: 12px;
+            background: #FFF5E1;
+            border: 2px solid #FFE0E9;
+            border-radius: 14px;
+            text-align: center;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .time-chip:hover {
+            background: white;
+            border-color: #FF6B9D;
+        }
+        .send-button {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #FF6B9D 0%, #FEA47F 100%);
+            color: white;
+            border: none;
+            border-radius: 16px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .send-button:hover {
+            transform: translateY(-2px);
+        }
+        .bottom-nav {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 90px;
+            background: linear-gradient(180deg, rgba(255,229,229,0.8) 0%, rgba(255,245,225,1) 100%);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid rgba(255,107,157,0.1);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 20px;
+        }
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-size: 24px;
+            opacity: 0.5;
+        }
+        .nav-item.active {
+            opacity: 1;
+        }
+        .nav-label {
+            font-size: 11px;
+            margin-top: 4px;
+            font-weight: 600;
+            color: #FF6B9D;
+        }
+    </style>
+</head>
+<body>
+    <div class="phone-frame">
+        <div class="status-bar">
+            <span>9:41</span>
+            <span>📶 🔋</span>
+        </div>
+
+        <div class="app-content">
+            <div class="header">
+                <div class="emoji-icon">💕</div>
+                <h1>Send to Partner</h1>
+                <div class="partner-badge">Alex</div>
+            </div>
+
+            <!-- Poke Section -->
+            <div class="poke-section">
+                <div class="section-title">✨ Quick Poke</div>
+                <button class="poke-button">
+                    <div class="poke-emoji">💫</div>
+                    <div class="poke-label">Poke</div>
+                </button>
+                <div class="poke-hint">Instant "thinking of you" signal</div>
+            </div>
+
+            <div class="divider">OR SEND A REMINDER</div>
+
+            <!-- Reminder Section -->
+            <div class="reminder-card">
+                <label class="input-label">Message</label>
+                <input
+                    type="text"
+                    class="input-field"
+                    placeholder="Don't forget your keys! 🔑"
+                />
+
+                <label class="input-label">When?</label>
+                <div class="time-grid">
+                    <div class="time-chip">⏰ 15 min</div>
+                    <div class="time-chip">⏰ 1 hour</div>
+                    <div class="time-chip">🌙 Tonight</div>
+                    <div class="time-chip">☀️ Tomorrow</div>
+                </div>
+
+                <button class="send-button">Send Reminder →</button>
+            </div>
+        </div>
+
+        <div class="bottom-nav">
+            <div class="nav-item active">
+                <span>💕</span>
+                <span class="nav-label">Send</span>
+            </div>
+            <div class="nav-item">
+                <span>📝</span>
+                <span class="nav-label">Inbox</span>
+            </div>
+            <div class="nav-item">
+                <span>⚙️</span>
+                <span class="nav-label">Settings</span>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Integrated Inbox - TogetherRemind</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Inter', sans-serif; background: #FAFAFA; min-height: 100vh; display: flex; justify-content: center; align-items: center; padding: 40px 20px; }
+.phone-container { max-width: 390px; width: 100%; background: white; border-radius: 40px; box-shadow: 0 20px 60px rgba(0,0,0,0.15); overflow: hidden; border: 12px solid #1A1A1A; }
+.status-bar { height: 44px; background: #FFFEFA; display: flex; justify-content: space-between; align-items: center; padding: 0 20px; font-size: 15px; font-weight: 600; color: #1A1A1A; }
+.screen { background: #FAFAFA; min-height: 700px; overflow-y: auto; padding-bottom: 100px; }
+.header { background: white; padding: 20px; border-bottom: 1px solid #F0F0F0; }
+.header-title { font-family: 'Playfair Display', serif; font-size: 28px; font-weight: 600; color: #1A1A1A; margin-bottom: 16px; }
+.filter-tabs { display: flex; gap: 8px; overflow-x: auto; }
+.tab { padding: 8px 16px; background: #FAFAFA; border: 1px solid #F0F0F0; border-radius: 12px; font-size: 13px; font-weight: 600; color: #6E6E6E; white-space: nowrap; cursor: pointer; }
+.tab.active { background: #1A1A1A; color: white; border-color: #1A1A1A; }
+.reminder-list { padding: 16px; }
+.date-divider { font-size: 11px; font-weight: 600; color: #AAAAAA; text-transform: uppercase; letter-spacing: 0.5px; margin: 16px 0 12px; }
+.reminder-card { background: white; border-radius: 16px; padding: 16px; margin-bottom: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); border: 1px solid #F0F0F0; position: relative; }
+.reminder-header { display: flex; justify-content: space-between; align-items: start; margin-bottom: 8px; }
+.reminder-from { font-size: 12px; font-weight: 600; color: #6E6E6E; }
+.reminder-status { font-size: 11px; padding: 4px 8px; background: #E8F5E9; color: #2E7D32; border-radius: 6px; font-weight: 600; }
+.reminder-text { font-size: 15px; color: #1A1A1A; margin-bottom: 8px; line-height: 1.5; }
+.reminder-footer { display: flex; justify-content: space-between; align-items: center; }
+.reminder-time { font-size: 12px; color: #AAAAAA; }
+.lp-badge { font-size: 11px; padding: 4px 8px; background: #FAFAFA; border: 1px solid #F0F0F0; border-radius: 6px; font-weight: 600; color: #1A1A1A; }
+.bottom-nav { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); max-width: 390px; width: 100%; background: white; border-top: 1px solid #F0F0F0; display: flex; justify-content: space-around; padding: 12px 0 24px; }
+.nav-item { text-align: center; font-size: 24px; color: #AAAAAA; padding: 8px; }
+.nav-item.active { color: #1A1A1A; }
+</style>
+</head>
+<body>
+<div class="phone-container">
+<div class="status-bar"><span>9:41</span><span>📶 🔋</span></div>
+<div class="screen">
+<div class="header">
+<div class="header-title">Inbox</div>
+<div class="filter-tabs">
+<div class="tab active">All</div>
+<div class="tab">Received</div>
+<div class="tab">Sent</div>
+<div class="tab">Pokes</div>
+</div>
+</div>
+<div class="reminder-list">
+<div class="date-divider">Today</div>
+<div class="reminder-card">
+<div class="reminder-header">
+<div class="reminder-from">From Alex</div>
+<div class="reminder-status">Done</div>
+</div>
+<div class="reminder-text">Don't forget to pick up groceries on your way home! 🥬</div>
+<div class="reminder-footer">
+<div class="reminder-time">2 hours ago</div>
+<div class="lp-badge">+10 LP</div>
+</div>
+</div>
+<div class="reminder-card">
+<div class="reminder-header">
+<div class="reminder-from">From Alex</div>
+<div class="reminder-status">Done</div>
+</div>
+<div class="reminder-text">Take your vitamins 💊</div>
+<div class="reminder-footer">
+<div class="reminder-time">5 hours ago</div>
+<div class="lp-badge">+5 LP</div>
+</div>
+</div>
+<div class="reminder-card" style="border-color: #1A1A1A;">
+<div class="reminder-header">
+<div class="reminder-from">Mutual Poke</div>
+<div class="reminder-status" style="background: #FFF5F8; color: #FF6B9D;">💕</div>
+</div>
+<div class="reminder-text">You both poked each other! 💞</div>
+<div class="reminder-footer">
+<div class="reminder-time">8 hours ago</div>
+<div class="lp-badge">+5 LP</div>
+</div>
+</div>
+<div class="date-divider">Yesterday</div>
+<div class="reminder-card">
+<div class="reminder-header">
+<div class="reminder-from">To Alex</div>
+<div class="reminder-status">Completed</div>
+</div>
+<div class="reminder-text">Reminder to stretch and take a break from work</div>
+<div class="reminder-footer">
+<div class="reminder-time">Yesterday, 3:00 PM</div>
+<div class="lp-badge">+8 LP</div>
+</div>
+</div>
+</div>
+<div class="bottom-nav">
+<div class="nav-item">🏠</div>
+<div class="nav-item active">📥</div>
+<div class="nav-item">💎</div>
+<div class="nav-item">⚙️</div>
+</div>
+</div>
+</div>
+</body>
+</html>

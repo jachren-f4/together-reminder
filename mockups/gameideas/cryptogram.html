@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cryptogram Notes - TogetherRemind</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .game-container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 600px;
+            width: 100%;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .game-icon {
+            font-size: 3em;
+            margin-bottom: 10px;
+        }
+
+        h1 {
+            color: #667eea;
+            font-size: 1.8em;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: #666;
+            font-size: 0.95em;
+        }
+
+        .cryptogram-area {
+            background: #f9fafb;
+            border-radius: 15px;
+            padding: 25px;
+            margin: 20px 0;
+            border: 2px solid #e5e7eb;
+        }
+
+        .cipher-text {
+            font-family: 'Courier New', monospace;
+            font-size: 1.2em;
+            line-height: 2.5;
+            color: #333;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .cipher-char {
+            display: inline-block;
+            position: relative;
+            margin: 0 2px;
+        }
+
+        .cipher-char.space {
+            width: 15px;
+        }
+
+        .solved {
+            color: #10b981;
+            font-weight: bold;
+        }
+
+        .decoded-text {
+            font-size: 1.1em;
+            line-height: 2.5;
+            color: #10b981;
+            text-align: center;
+            font-weight: 500;
+            min-height: 30px;
+        }
+
+        .substitution-key {
+            margin: 30px 0;
+        }
+
+        .key-title {
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .key-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
+            gap: 10px;
+        }
+
+        .key-pair {
+            background: white;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 8px;
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .key-pair.solved {
+            border-color: #10b981;
+            background: #f0fdf4;
+        }
+
+        .key-pair.active {
+            border-color: #667eea;
+            background: #f0f4ff;
+        }
+
+        .cipher-letter {
+            font-family: 'Courier New', monospace;
+            font-size: 1.1em;
+            color: #666;
+            font-weight: bold;
+        }
+
+        .arrow-down {
+            color: #cbd5e1;
+            font-size: 0.8em;
+            margin: 2px 0;
+        }
+
+        .plain-letter {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #10b981;
+            min-height: 20px;
+        }
+
+        .plain-letter.empty {
+            color: #cbd5e1;
+        }
+
+        .hint-section {
+            background: #fffbeb;
+            border-left: 4px solid #f59e0b;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+
+        .hint-label {
+            font-weight: bold;
+            color: #f59e0b;
+            font-size: 0.9em;
+            margin-bottom: 5px;
+        }
+
+        .progress {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 20px 0;
+            padding: 15px;
+            background: #f0f4ff;
+            border-radius: 10px;
+        }
+
+        .progress-label {
+            font-size: 0.9em;
+            color: #666;
+        }
+
+        .progress-value {
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .partner-activity {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px;
+            background: #f0fdf4;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+
+        .partner-avatar {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            background: #10b981;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .partner-text {
+            color: #059669;
+            font-size: 0.9em;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 20px;
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 2px solid #e5e7eb;
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .stat-label {
+            font-size: 0.85em;
+            color: #666;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <div class="header">
+            <div class="game-icon">🔐</div>
+            <h1>Cryptogram Notes</h1>
+            <p class="subtitle">Decode romantic quotes together</p>
+        </div>
+
+        <div class="progress">
+            <span class="progress-label">Decoding Progress</span>
+            <span class="progress-value">8 / 12 letters</span>
+        </div>
+
+        <div class="cryptogram-area">
+            <div class="cipher-text">
+                <span class="cipher-char solved">L</span>
+                <span class="cipher-char space"></span>
+                <span class="cipher-char solved">X</span>
+                <span class="cipher-char solved">L</span>
+                <span class="cipher-char solved">M</span>
+                <span class="cipher-char solved">W</span>
+                <span class="cipher-char space"></span>
+                <span class="cipher-char">G</span>
+                <span class="cipher-char">H</span>
+                <span class="cipher-char space"></span>
+                <span class="cipher-char">M</span>
+                <span class="cipher-char">I</span>
+                <span class="cipher-char">R</span>
+                <span class="cipher-char">...</span>
+            </div>
+
+            <div class="decoded-text">
+                I LOVE __ ___ ...
+            </div>
+        </div>
+
+        <div class="partner-activity">
+            <div class="partner-avatar">❤️</div>
+            <div class="partner-text">Your partner just solved: L → I</div>
+        </div>
+
+        <div class="substitution-key">
+            <div class="key-title">🔤 Substitution Key (Shared)</div>
+            <div class="key-grid">
+                <div class="key-pair solved">
+                    <div class="cipher-letter">L</div>
+                    <div class="arrow-down">↓</div>
+                    <div class="plain-letter">I</div>
+                </div>
+                <div class="key-pair solved">
+                    <div class="cipher-letter">X</div>
+                    <div class="arrow-down">↓</div>
+                    <div class="plain-letter">L</div>
+                </div>
+                <div class="key-pair solved">
+                    <div class="cipher-letter">M</div>
+                    <div class="arrow-down">↓</div>
+                    <div class="plain-letter">O</div>
+                </div>
+                <div class="key-pair solved">
+                    <div class="cipher-letter">W</div>
+                    <div class="arrow-down">↓</div>
+                    <div class="plain-letter">E</div>
+                </div>
+                <div class="key-pair active">
+                    <div class="cipher-letter">G</div>
+                    <div class="arrow-down">↓</div>
+                    <div class="plain-letter empty">?</div>
+                </div>
+                <div class="key-pair">
+                    <div class="cipher-letter">H</div>
+                    <div class="arrow-down">↓</div>
+                    <div class="plain-letter empty">?</div>
+                </div>
+                <div class="key-pair">
+                    <div class="cipher-letter">I</div>
+                    <div class="arrow-down">↓</div>
+                    <div class="plain-letter empty">?</div>
+                </div>
+                <div class="key-pair">
+                    <div class="cipher-letter">R</div>
+                    <div class="arrow-down">↓</div>
+                    <div class="plain-letter empty">?</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="hint-section">
+            <div class="hint-label">💡 HINT</div>
+            <div>Common two-letter words: OF, TO, US, IN</div>
+        </div>
+
+        <div class="stats">
+            <div class="stat">
+                <div class="stat-value">67%</div>
+                <div class="stat-label">Complete</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value">12m</div>
+                <div class="stat-label">Time Spent</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value">+40</div>
+                <div class="stat-label">Love Points</div>
+            </div>
+        </div>
+
+        <a href="index.html" class="back-link">← Back to All Games</a>
+    </div>
+</body>
+</html>

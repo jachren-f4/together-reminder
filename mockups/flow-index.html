@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TogetherRemind - User Flow Mockups</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #FF6B9D 0%, #FEA47F 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        header {
+            text-align: center;
+            color: white;
+            margin-bottom: 60px;
+        }
+        header h1 {
+            font-size: 48px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            letter-spacing: -1px;
+        }
+        header p {
+            font-size: 20px;
+            opacity: 0.9;
+            margin-bottom: 8px;
+        }
+        .subtitle {
+            font-size: 16px;
+            opacity: 0.8;
+        }
+        .flow-diagram {
+            background: white;
+            border-radius: 24px;
+            padding: 40px;
+            margin-bottom: 60px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+        }
+        .flow-title {
+            font-size: 24px;
+            font-weight: 600;
+            color: #FF6B9D;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        .flow-steps {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        .flow-step {
+            flex: 1;
+            min-width: 200px;
+            text-align: center;
+        }
+        .step-number {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #FF6B9D 0%, #FEA47F 100%);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: 700;
+            margin: 0 auto 16px;
+        }
+        .step-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 8px;
+        }
+        .step-desc {
+            font-size: 13px;
+            color: #666;
+            line-height: 1.5;
+        }
+        .flow-arrow {
+            font-size: 30px;
+            color: #FFB6C1;
+            margin: 0 10px;
+        }
+        .mockup-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        .mockup-card {
+            background: white;
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            transition: transform 0.3s, box-shadow 0.3s;
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+        .mockup-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        .mockup-preview {
+            width: 100%;
+            height: 500px;
+            background: #f5f5f5;
+            border-radius: 16px;
+            margin-bottom: 16px;
+            overflow: hidden;
+            position: relative;
+        }
+        .mockup-preview iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            pointer-events: none;
+            transform: scale(0.9);
+            transform-origin: top center;
+        }
+        .step-badge {
+            display: inline-block;
+            padding: 6px 12px;
+            background: linear-gradient(135deg, #FF6B9D 0%, #FEA47F 100%);
+            color: white;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+        .mockup-info h2 {
+            font-size: 22px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #333;
+        }
+        .mockup-info p {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 16px;
+        }
+        .view-button {
+            display: inline-block;
+            padding: 10px 20px;
+            background: linear-gradient(135deg, #FF6B9D 0%, #FEA47F 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 14px;
+            transition: transform 0.2s;
+        }
+        .view-button:hover {
+            transform: scale(1.05);
+        }
+        .key-features {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 40px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+        .features-title {
+            font-size: 24px;
+            font-weight: 600;
+            color: #FF6B9D;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .features-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        .feature-item {
+            display: flex;
+            gap: 16px;
+            align-items: start;
+        }
+        .feature-emoji {
+            font-size: 32px;
+        }
+        .feature-content h3 {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 6px;
+        }
+        .feature-content p {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.5;
+        }
+        footer {
+            text-align: center;
+            color: white;
+            padding: 40px 20px;
+        }
+        .back-link {
+            display: inline-block;
+            padding: 12px 24px;
+            background: white;
+            color: #FF6B9D;
+            text-decoration: none;
+            border-radius: 12px;
+            font-weight: 600;
+            margin-top: 20px;
+            transition: transform 0.2s;
+        }
+        .back-link:hover {
+            transform: scale(1.05);
+        }
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 32px;
+            }
+            .flow-steps {
+                flex-direction: column;
+            }
+            .flow-arrow {
+                transform: rotate(90deg);
+                margin: 10px 0;
+            }
+            .mockup-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>TogetherRemind User Flow</h1>
+            <p>Core Experience Mockups - Playful Style</p>
+            <p class="subtitle">From first launch to sending your first reminder</p>
+        </header>
+
+        <div class="flow-diagram">
+            <div class="flow-title">Complete User Journey</div>
+            <div class="flow-steps">
+                <div class="flow-step">
+                    <div class="step-number">1</div>
+                    <div class="step-title">Onboarding</div>
+                    <div class="step-desc">Welcome screen introducing the app's value proposition</div>
+                </div>
+                <div class="flow-arrow">→</div>
+                <div class="flow-step">
+                    <div class="step-number">2</div>
+                    <div class="step-title">Pairing</div>
+                    <div class="step-desc">Connect with partner via QR code or invite code</div>
+                </div>
+                <div class="flow-arrow">→</div>
+                <div class="flow-step">
+                    <div class="step-number">3</div>
+                    <div class="step-title">Send Reminder</div>
+                    <div class="step-desc">Create and schedule a reminder for your partner</div>
+                </div>
+                <div class="flow-arrow">→</div>
+                <div class="flow-step">
+                    <div class="step-number">4</div>
+                    <div class="step-title">Notification</div>
+                    <div class="step-desc">Partner receives push notification with actions</div>
+                </div>
+                <div class="flow-arrow">→</div>
+                <div class="flow-step">
+                    <div class="step-number">5</div>
+                    <div class="step-title">Inbox</div>
+                    <div class="step-desc">View and manage all reminders</div>
+                </div>
+                <div class="flow-arrow">→</div>
+                <div class="flow-step">
+                    <div class="step-number">6</div>
+                    <div class="step-title">Settings</div>
+                    <div class="step-desc">Customize app preferences</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="key-features">
+            <div class="features-title">Design Highlights</div>
+            <div class="features-list">
+                <div class="feature-item">
+                    <div class="feature-emoji">🎨</div>
+                    <div class="feature-content">
+                        <h3>Playful & Warm</h3>
+                        <p>Colorful gradients and emoji-rich design creates an emotional, approachable experience</p>
+                    </div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-emoji">⚡</div>
+                    <div class="feature-content">
+                        <h3>Quick Actions</h3>
+                        <p>One-tap quick messages and time chips make sending reminders effortless</p>
+                    </div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-emoji">💕</div>
+                    <div class="feature-content">
+                        <h3>Couple-Focused</h3>
+                        <p>Every screen emphasizes the connection between partners</p>
+                    </div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-emoji">🔔</div>
+                    <div class="feature-content">
+                        <h3>Rich Notifications</h3>
+                        <p>Actionable notifications with Done/Snooze buttons right from lock screen</p>
+                    </div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-emoji">📋</div>
+                    <div class="feature-content">
+                        <h3>Complete History</h3>
+                        <p>Inbox view with filters for sent/received reminders and status tracking</p>
+                    </div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-emoji">⚙️</div>
+                    <div class="feature-content">
+                        <h3>Customizable</h3>
+                        <p>Extensive settings for notifications, sounds, themes, and personalization</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="mockup-grid">
+            <a href="flow-1-onboarding.html" class="mockup-card">
+                <div class="mockup-preview">
+                    <iframe src="flow-1-onboarding.html"></iframe>
+                </div>
+                <span class="step-badge">STEP 1</span>
+                <div class="mockup-info">
+                    <h2>Onboarding</h2>
+                    <p>First-time user experience with feature highlights, value proposition, and call-to-action. Uses floating heart animation and pagination dots.</p>
+                    <span class="view-button">View Full Screen →</span>
+                </div>
+            </a>
+
+            <a href="flow-2-pairing.html" class="mockup-card">
+                <div class="mockup-preview">
+                    <iframe src="flow-2-pairing.html"></iframe>
+                </div>
+                <span class="step-badge">STEP 2</span>
+                <div class="mockup-info">
+                    <h2>Partner Pairing</h2>
+                    <p>QR code and invite code sharing interface with animated hearts showing the connection. Multiple pairing options for flexibility.</p>
+                    <span class="view-button">View Full Screen →</span>
+                </div>
+            </a>
+
+            <a href="flow-3-send-reminder.html" class="mockup-card">
+                <div class="mockup-preview">
+                    <iframe src="flow-3-send-reminder.html"></iframe>
+                </div>
+                <span class="step-badge">STEP 3</span>
+                <div class="mockup-info">
+                    <h2>Send Reminder</h2>
+                    <p>Main app screen with quick message chips, custom input field, time selection grid, and prominent send button. Includes success confirmation overlay.</p>
+                    <span class="view-button">View Full Screen →</span>
+                </div>
+            </a>
+
+            <a href="flow-4-notification.html" class="mockup-card">
+                <div class="mockup-preview">
+                    <iframe src="flow-4-notification.html"></iframe>
+                </div>
+                <span class="step-badge">STEP 4</span>
+                <div class="mockup-info">
+                    <h2>Partner Notification</h2>
+                    <p>Lock screen notification with glassmorphic design, partner name, reminder message, and actionable buttons (Done/Snooze). Interactive demo included.</p>
+                    <span class="view-button">View Full Screen →</span>
+                </div>
+            </a>
+
+            <a href="reminder-inbox.html" class="mockup-card">
+                <div class="mockup-preview">
+                    <iframe src="reminder-inbox.html"></iframe>
+                </div>
+                <span class="step-badge">STEP 5</span>
+                <div class="mockup-info">
+                    <h2>Reminder Inbox</h2>
+                    <p>Complete history of sent and received reminders with filter tabs, status indicators, and inline actions. Shows chronological feed grouped by date.</p>
+                    <span class="view-button">View Full Screen →</span>
+                </div>
+            </a>
+
+            <a href="settings.html" class="mockup-card">
+                <div class="mockup-preview">
+                    <iframe src="settings.html"></iframe>
+                </div>
+                <span class="step-badge">STEP 6</span>
+                <div class="mockup-info">
+                    <h2>Settings</h2>
+                    <p>Comprehensive settings screen with partner info, notification preferences, personalization options, data management, and account controls.</p>
+                    <span class="view-button">View Full Screen →</span>
+                </div>
+            </a>
+        </div>
+
+        <footer>
+            <p style="font-size: 18px; margin-bottom: 12px;">Ready to bring couples closer together 💕</p>
+            <p style="font-size: 14px; opacity: 0.8;">TogetherRemind - User Flow Mockups</p>
+            <a href="index.html" class="back-link">← View All Design Variants</a>
+        </footer>
+    </div>
+</body>
+</html>

@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TogetherRemind - Reminder Inbox</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Rounded Mplus 1c', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .phone-frame {
+            width: 375px;
+            height: 812px;
+            background: linear-gradient(180deg, #FFE5E5 0%, #FFF5E1 100%);
+            border-radius: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+            position: relative;
+        }
+        .status-bar {
+            height: 44px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+            font-size: 12px;
+        }
+        .app-content {
+            padding: 0;
+            height: calc(100% - 44px);
+            display: flex;
+            flex-direction: column;
+        }
+        .header {
+            padding: 20px 20px 16px 20px;
+            text-align: center;
+        }
+        .header h1 {
+            font-size: 28px;
+            font-weight: 700;
+            color: #FF6B9D;
+            margin-bottom: 8px;
+        }
+        .partner-badge {
+            display: inline-block;
+            padding: 6px 16px;
+            background: white;
+            border-radius: 20px;
+            font-size: 14px;
+            color: #FF6B9D;
+            font-weight: 500;
+            box-shadow: 0 2px 8px rgba(255,107,157,0.2);
+        }
+        .filter-tabs {
+            display: flex;
+            gap: 8px;
+            padding: 0 20px 16px 20px;
+        }
+        .tab {
+            flex: 1;
+            padding: 10px;
+            background: white;
+            border: 2px solid #FFE0E9;
+            border-radius: 12px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #666;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+        }
+        .tab.active {
+            background: linear-gradient(135deg, #FF6B9D 0%, #FEA47F 100%);
+            color: white;
+            border-color: transparent;
+        }
+        .reminder-list {
+            flex: 1;
+            overflow-y: auto;
+            padding: 0 20px 20px 20px;
+        }
+        .date-divider {
+            font-size: 12px;
+            font-weight: 600;
+            color: #999;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin: 16px 0 12px 0;
+        }
+        .reminder-item {
+            background: white;
+            border-radius: 16px;
+            padding: 16px;
+            margin-bottom: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            cursor: pointer;
+            transition: all 0.2s;
+            position: relative;
+        }
+        .reminder-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+        }
+        .reminder-item.received {
+            border-left: 4px solid #FF6B9D;
+        }
+        .reminder-item.sent {
+            border-left: 4px solid #A78BFA;
+        }
+        .item-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+        .item-from {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #FF6B9D;
+        }
+        .item-time {
+            font-size: 12px;
+            color: #999;
+        }
+        .item-text {
+            font-size: 15px;
+            color: #333;
+            margin-bottom: 8px;
+            line-height: 1.4;
+        }
+        .item-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .item-status {
+            font-size: 12px;
+            color: #666;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+        .status-dot.done {
+            background: #22c55e;
+        }
+        .status-dot.pending {
+            background: #f59e0b;
+        }
+        .status-dot.snoozed {
+            background: #a78bfa;
+        }
+        .quick-actions {
+            display: flex;
+            gap: 8px;
+        }
+        .quick-action {
+            padding: 4px 12px;
+            background: #f8f8f8;
+            border: none;
+            border-radius: 12px;
+            font-size: 11px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .quick-action:hover {
+            background: #FFE0E9;
+        }
+        .bottom-nav {
+            display: flex;
+            justify-content: space-around;
+            padding: 12px 0 20px 0;
+            border-top: 1px solid #FFE0E9;
+            background: linear-gradient(180deg, #FFE5E5 0%, #FFF5E1 100%);
+        }
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            cursor: pointer;
+            transition: all 0.2s;
+            flex: 1;
+        }
+        .nav-icon {
+            font-size: 24px;
+            opacity: 0.5;
+            transition: all 0.2s;
+        }
+        .nav-label {
+            font-size: 11px;
+            color: #999;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+        .nav-item.active .nav-icon {
+            opacity: 1;
+        }
+        .nav-item.active .nav-label {
+            color: #FF6B9D;
+        }
+        .nav-item:hover .nav-icon {
+            opacity: 0.8;
+        }
+        .empty-state {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #999;
+        }
+        .empty-emoji {
+            font-size: 60px;
+            margin-bottom: 16px;
+            opacity: 0.5;
+        }
+        .empty-text {
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+    <div class="phone-frame">
+        <div class="status-bar">
+            <span>9:41</span>
+            <span>⚡ 85%</span>
+        </div>
+        <div class="app-content">
+            <div class="header">
+                <h1>Reminders</h1>
+                <div class="partner-badge">👤 Alex</div>
+            </div>
+
+            <div class="filter-tabs">
+                <button class="tab active">All</button>
+                <button class="tab">Received</button>
+                <button class="tab">Sent</button>
+            </div>
+
+            <div class="reminder-list">
+                <div class="date-divider">Today</div>
+
+                <div class="reminder-item received">
+                    <div class="item-header">
+                        <div class="item-from">
+                            <span>💕</span>
+                            <span>From Alex</span>
+                        </div>
+                        <div class="item-time">10:41 AM</div>
+                    </div>
+                    <div class="item-text">Don't forget your umbrella ☔</div>
+                    <div class="item-footer">
+                        <div class="item-status">
+                            <span class="status-dot pending"></span>
+                            <span>Pending</span>
+                        </div>
+                        <div class="quick-actions">
+                            <button class="quick-action">✓ Done</button>
+                            <button class="quick-action">💤 Snooze</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="reminder-item sent">
+                    <div class="item-header">
+                        <div class="item-from" style="color: #A78BFA;">
+                            <span>📤</span>
+                            <span>To Alex</span>
+                        </div>
+                        <div class="item-time">9:15 AM</div>
+                    </div>
+                    <div class="item-text">Can you pick up milk on the way home? 🥛</div>
+                    <div class="item-footer">
+                        <div class="item-status">
+                            <span class="status-dot done"></span>
+                            <span>Done</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="date-divider">Yesterday</div>
+
+                <div class="reminder-item received">
+                    <div class="item-header">
+                        <div class="item-from">
+                            <span>💕</span>
+                            <span>From Alex</span>
+                        </div>
+                        <div class="item-time">3:30 PM</div>
+                    </div>
+                    <div class="item-text">Meeting with dentist at 4 PM 🦷</div>
+                    <div class="item-footer">
+                        <div class="item-status">
+                            <span class="status-dot done"></span>
+                            <span>Done</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="reminder-item sent">
+                    <div class="item-header">
+                        <div class="item-from" style="color: #A78BFA;">
+                            <span>📤</span>
+                            <span>To Alex</span>
+                        </div>
+                        <div class="item-time">11:00 AM</div>
+                    </div>
+                    <div class="item-text">Love you! Have a great day ❤️</div>
+                    <div class="item-footer">
+                        <div class="item-status">
+                            <span class="status-dot done"></span>
+                            <span>Seen</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="reminder-item received">
+                    <div class="item-header">
+                        <div class="item-from">
+                            <span>💕</span>
+                            <span>From Alex</span>
+                        </div>
+                        <div class="item-time">9:00 AM</div>
+                    </div>
+                    <div class="item-text">Don't forget your keys! 🔑</div>
+                    <div class="item-footer">
+                        <div class="item-status">
+                            <span class="status-dot done"></span>
+                            <span>Done</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="date-divider">This Week</div>
+
+                <div class="reminder-item sent">
+                    <div class="item-header">
+                        <div class="item-from" style="color: #A78BFA;">
+                            <span>📤</span>
+                            <span>To Alex</span>
+                        </div>
+                        <div class="item-time">Mon 2:15 PM</div>
+                    </div>
+                    <div class="item-text">Call mom for her birthday 🎂</div>
+                    <div class="item-footer">
+                        <div class="item-status">
+                            <span class="status-dot done"></span>
+                            <span>Done</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bottom-nav">
+                <div class="nav-item">
+                    <div class="nav-icon">💕</div>
+                    <div class="nav-label">Send</div>
+                </div>
+                <div class="nav-item active">
+                    <div class="nav-icon">📝</div>
+                    <div class="nav-label">Inbox</div>
+                </div>
+                <div class="nav-item">
+                    <div class="nav-icon">⚙️</div>
+                    <div class="nav-label">Settings</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

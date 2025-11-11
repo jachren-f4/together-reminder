@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Variant 16: Hybrid Refined - TogetherRemind</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #FAFAFA;
+            color: #1A1A1A;
+            padding: 0;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+        .app-header {
+            background: #FFFEFD;
+            border-bottom: 2px solid #F0F0F0;
+            padding: 24px 20px;
+        }
+        .user-section {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+        .avatar-stack {
+            display: flex;
+            align-items: center;
+        }
+        .avatar-item {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: #F0F0F0;
+            border: 3px solid #FFFEFD;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+        }
+        .avatar-item:last-child {
+            margin-left: -16px;
+        }
+        .user-greeting {
+            flex: 1;
+        }
+        .greeting-main {
+            font-family: 'Playfair Display', serif;
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        .greeting-sub {
+            font-size: 14px;
+            color: #6E6E6E;
+        }
+        .metric-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+        .metric-card {
+            background: #F0F0F0;
+            border-radius: 12px;
+            padding: 14px;
+            text-align: center;
+        }
+        .metric-value {
+            font-family: 'Playfair Display', serif;
+            font-size: 22px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        .metric-label {
+            font-size: 11px;
+            color: #6E6E6E;
+            font-weight: 500;
+        }
+        .primary-actions {
+            padding: 20px;
+            display: flex;
+            gap: 12px;
+        }
+        .primary-btn {
+            flex: 1;
+            background: #1A1A1A;
+            color: #FFFEFD;
+            border: none;
+            border-radius: 16px;
+            padding: 18px 16px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .btn-emoji {
+            font-size: 24px;
+        }
+        .quests-area {
+            padding: 0 20px 24px;
+        }
+        .quest-header {
+            font-family: 'Playfair Display', serif;
+            font-size: 22px;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+        .quest-scroll {
+            display: flex;
+            gap: 16px;
+            overflow-x: auto;
+            padding-bottom: 8px;
+            margin-bottom: 32px;
+            scrollbar-width: none;
+        }
+        .quest-scroll::-webkit-scrollbar {
+            display: none;
+        }
+        .main-quest-item {
+            background: #FFFEFD;
+            border: 2px solid #F0F0F0;
+            border-radius: 18px;
+            padding: 28px 24px;
+            min-width: 280px;
+            flex-shrink: 0;
+            text-align: center;
+        }
+        .main-quest-item.featured {
+            border-color: #1A1A1A;
+            border-width: 3px;
+        }
+        .main-quest-emoji {
+            font-size: 64px;
+            margin-bottom: 16px;
+        }
+        .main-quest-name {
+            font-family: 'Playfair Display', serif;
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        .main-quest-desc {
+            font-size: 14px;
+            color: #6E6E6E;
+            margin-bottom: 16px;
+        }
+        .reward-tags {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .reward-tag {
+            background: #F0F0F0;
+            padding: 6px 12px;
+            border-radius: 10px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        .main-quest-item.featured .reward-tag {
+            background: #1A1A1A;
+            color: #FFFEFD;
+        }
+        .side-area {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+        .side-quest-item {
+            background: #FFFEFD;
+            border: 2px solid #F0F0F0;
+            border-radius: 14px;
+            padding: 24px 16px;
+            text-align: center;
+        }
+        .side-emoji {
+            font-size: 44px;
+            margin-bottom: 12px;
+        }
+        .side-name {
+            font-size: 15px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        .side-info {
+            font-size: 12px;
+            color: #6E6E6E;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-header">
+        <div class="user-section">
+            <div class="avatar-stack">
+                <div class="avatar-item">💕</div>
+                <div class="avatar-item">💎</div>
+            </div>
+            <div class="user-greeting">
+                <div class="greeting-main">Good Morning!</div>
+                <div class="greeting-sub">You & Sarah • Day 8</div>
+            </div>
+        </div>
+
+        <div class="metric-grid">
+            <div class="metric-card">
+                <div class="metric-value">127</div>
+                <div class="metric-label">Love Points</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-value">3</div>
+                <div class="metric-label">Day Streak</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-value">85%</div>
+                <div class="metric-label">Quiz Match</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="primary-actions">
+        <button class="primary-btn">
+            <span class="btn-emoji">💫</span>
+            Poke
+        </button>
+        <button class="primary-btn">
+            <span class="btn-emoji">💕</span>
+            Remind
+        </button>
+    </div>
+
+    <div class="quests-area">
+        <div class="quest-header">Main Quests</div>
+        <div class="quest-scroll">
+            <div class="main-quest-item featured">
+                <div class="main-quest-emoji">🧩</div>
+                <div class="main-quest-name">Daily Pulse</div>
+                <div class="main-quest-desc">Your turn to answer</div>
+                <div class="reward-tags">
+                    <span class="reward-tag">+20 LP</span>
+                    <span class="reward-tag">🔥 Streak</span>
+                </div>
+            </div>
+
+            <div class="main-quest-item">
+                <div class="main-quest-emoji">🪜</div>
+                <div class="main-quest-name">Word Ladder Duet</div>
+                <div class="main-quest-desc">2 puzzles waiting</div>
+                <div class="reward-tags">
+                    <span class="reward-tag">+15 LP</span>
+                    <span class="reward-tag">Your turn</span>
+                </div>
+            </div>
+
+            <div class="main-quest-item">
+                <div class="main-quest-emoji">🃏</div>
+                <div class="main-quest-name">Memory Flip Co-op</div>
+                <div class="main-quest-desc">6 of 8 pairs found</div>
+                <div class="reward-tags">
+                    <span class="reward-tag">+40 LP</span>
+                </div>
+            </div>
+
+            <div class="main-quest-item">
+                <div class="main-quest-emoji">🎯</div>
+                <div class="main-quest-name">Couple Quiz</div>
+                <div class="main-quest-desc">Start new session</div>
+                <div class="reward-tags">
+                    <span class="reward-tag">+30 LP</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="quest-header">Side Quests</div>
+        <div class="side-area">
+            <div class="side-quest-item">
+                <div class="side-emoji">📝</div>
+                <div class="side-name">Inbox</div>
+                <div class="side-info">2 new messages</div>
+            </div>
+
+            <div class="side-quest-item">
+                <div class="side-emoji">💭</div>
+                <div class="side-name">Would You Rather</div>
+                <div class="side-info">Coming soon</div>
+            </div>
+
+            <div class="side-quest-item">
+                <div class="side-emoji">🎭</div>
+                <div class="side-name">Daily Challenge</div>
+                <div class="side-info">New today</div>
+            </div>
+
+            <div class="side-quest-item">
+                <div class="side-emoji">🏆</div>
+                <div class="side-name">Achievements</div>
+                <div class="side-info">View all</div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

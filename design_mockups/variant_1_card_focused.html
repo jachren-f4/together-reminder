@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TogetherRemind - Variant 1: Card-Focused</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro', 'Inter', 'Poppins', sans-serif;
+            background: #FAFAFA;
+            color: #1A1A1A;
+            padding: 20px;
+            max-width: 420px;
+            margin: 0 auto;
+        }
+
+        .header {
+            margin-bottom: 32px;
+        }
+
+        .greeting {
+            font-size: 28px;
+            font-weight: 600;
+            color: #1A1A1A;
+            margin-bottom: 8px;
+        }
+
+        .subtext {
+            font-size: 16px;
+            color: #6E6E6E;
+            font-weight: 400;
+        }
+
+        .partner-card {
+            background: white;
+            border-radius: 20px;
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+            transition: transform 0.2s ease;
+        }
+
+        .partner-card:active {
+            transform: scale(0.98);
+        }
+
+        .partner-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .avatar {
+            width: 64px;
+            height: 64px;
+            background: linear-gradient(135deg, #6C4AB6 0%, #8B6FBF 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            margin-right: 16px;
+        }
+
+        .partner-info h2 {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .partner-info p {
+            font-size: 14px;
+            color: #6E6E6E;
+        }
+
+        .stats-row {
+            display: flex;
+            gap: 16px;
+            padding-top: 16px;
+            border-top: 1px solid #F0F0F0;
+        }
+
+        .stat {
+            flex: 1;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 20px;
+            font-weight: 600;
+            color: #6C4AB6;
+            margin-bottom: 4px;
+        }
+
+        .stat-label {
+            font-size: 13px;
+            color: #6E6E6E;
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: #1A1A1A;
+        }
+
+        .reminder-card {
+            background: white;
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 12px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+            transition: all 0.2s ease;
+        }
+
+        .reminder-card:active {
+            transform: scale(0.98);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+        }
+
+        .reminder-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 12px;
+        }
+
+        .reminder-from {
+            font-size: 14px;
+            color: #6C4AB6;
+            font-weight: 500;
+        }
+
+        .reminder-time {
+            font-size: 13px;
+            color: #6E6E6E;
+        }
+
+        .reminder-text {
+            font-size: 16px;
+            color: #1A1A1A;
+            line-height: 1.4;
+            margin-bottom: 12px;
+        }
+
+        .reminder-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .action-btn {
+            flex: 1;
+            padding: 10px;
+            border-radius: 12px;
+            border: none;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .action-btn.primary {
+            background: #6C4AB6;
+            color: white;
+        }
+
+        .action-btn.primary:active {
+            background: #5A3C9A;
+        }
+
+        .action-btn.secondary {
+            background: #F5F5F5;
+            color: #1A1A1A;
+        }
+
+        .action-btn.secondary:active {
+            background: #EBEBEB;
+        }
+
+        .fab {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            width: 64px;
+            height: 64px;
+            background: #6C4AB6;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 12px rgba(108, 74, 182, 0.3);
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .fab:active {
+            transform: scale(0.95);
+        }
+
+        .fab::before {
+            content: '+';
+            color: white;
+            font-size: 32px;
+            font-weight: 300;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 48px 20px;
+        }
+
+        .empty-state-icon {
+            font-size: 48px;
+            margin-bottom: 16px;
+            opacity: 0.5;
+        }
+
+        .empty-state-text {
+            font-size: 16px;
+            color: #6E6E6E;
+            line-height: 1.5;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1 class="greeting">Good evening</h1>
+        <p class="subtext">Your reminders are all up to date</p>
+    </div>
+
+    <div class="partner-card">
+        <div class="partner-header">
+            <div class="avatar">💜</div>
+            <div class="partner-info">
+                <h2>Sarah</h2>
+                <p>Connected 42 days ago</p>
+            </div>
+        </div>
+        <div class="stats-row">
+            <div class="stat">
+                <div class="stat-value">18</div>
+                <div class="stat-label">Sent</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value">23</div>
+                <div class="stat-label">Received</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value">41</div>
+                <div class="stat-label">Together</div>
+            </div>
+        </div>
+    </div>
+
+    <h3 class="section-title">Recent reminders</h3>
+
+    <div class="reminder-card">
+        <div class="reminder-header">
+            <span class="reminder-from">From Sarah</span>
+            <span class="reminder-time">2 hours ago</span>
+        </div>
+        <div class="reminder-text">Don't forget to pick up milk on your way home 🥛</div>
+        <div class="reminder-actions">
+            <button class="action-btn primary">Done</button>
+            <button class="action-btn secondary">Snooze</button>
+        </div>
+    </div>
+
+    <div class="reminder-card">
+        <div class="reminder-header">
+            <span class="reminder-from">To Sarah</span>
+            <span class="reminder-time">Yesterday</span>
+        </div>
+        <div class="reminder-text">Meeting with Lisa at 3pm tomorrow ☕</div>
+        <div class="reminder-actions">
+            <button class="action-btn secondary">View</button>
+        </div>
+    </div>
+
+    <div class="reminder-card">
+        <div class="reminder-header">
+            <span class="reminder-from">From Sarah</span>
+            <span class="reminder-time">2 days ago</span>
+        </div>
+        <div class="reminder-text">Love you! Have a great presentation today 💪</div>
+        <div class="reminder-actions">
+            <button class="action-btn primary">Done</button>
+        </div>
+    </div>
+
+    <button class="fab"></button>
+</body>
+</html>

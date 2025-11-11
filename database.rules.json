@@ -1,0 +1,11 @@
+{
+  "rules": {
+    "pairing_codes": {
+      "$code": {
+        ".read": true,
+        ".write": "!data.exists()",
+        ".validate": "newData.hasChildren(['userId', 'pushToken', 'name', 'createdAt', 'expiresAt'])"
+      }
+    }
+  }
+}

@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TogetherRemind User Flow Chart</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #FAFAFA;
+            padding: 40px 20px;
+            overflow-x: auto;
+        }
+        .container {
+            min-width: 1600px;
+            margin: 0 auto;
+            padding: 40px;
+        }
+        header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+        h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 48px;
+            font-weight: 700;
+            color: #1A1A1A;
+            margin-bottom: 12px;
+        }
+        .subtitle {
+            font-size: 18px;
+            color: #6E6E6E;
+        }
+
+        /* Legend */
+        .legend {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 40px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            display: flex;
+            gap: 32px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .legend-box {
+            width: 60px;
+            height: 40px;
+            border-radius: 8px;
+            border: 2px solid;
+        }
+        .legend-box.core { background: #1A1A1A; border-color: #1A1A1A; }
+        .legend-box.activity { background: white; border-color: #22c55e; }
+        .legend-box.gamification { background: white; border-color: #FF6B9D; }
+        .legend-box.modal { background: rgba(0,0,0,0.1); border-color: #6E6E6E; border-style: dashed; }
+        .legend-label {
+            font-size: 14px;
+            color: #1A1A1A;
+            font-weight: 600;
+        }
+
+        /* Flow Chart */
+        .flow-chart {
+            position: relative;
+            background: white;
+            border-radius: 24px;
+            padding: 60px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+        }
+
+        /* Screen Node */
+        .screen-node {
+            position: absolute;
+            width: 200px;
+            background: white;
+            border-radius: 16px;
+            padding: 20px 16px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            border: 3px solid;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .screen-node:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+        }
+        .screen-node.core { border-color: #1A1A1A; background: #1A1A1A; color: white; }
+        .screen-node.activity { border-color: #22c55e; }
+        .screen-node.gamification { border-color: #FF6B9D; }
+        .screen-node.modal { border-color: #6E6E6E; border-style: dashed; background: rgba(0,0,0,0.02); }
+
+        .screen-icon {
+            font-size: 32px;
+            margin-bottom: 8px;
+            text-align: center;
+        }
+        .screen-name {
+            font-size: 14px;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 4px;
+        }
+        .screen-desc {
+            font-size: 11px;
+            text-align: center;
+            opacity: 0.8;
+        }
+        .screen-node.core .screen-desc {
+            opacity: 0.9;
+        }
+
+        /* Action Buttons */
+        .actions {
+            margin-top: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        .action-btn {
+            font-size: 10px;
+            padding: 6px 8px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 6px;
+            text-align: center;
+            border: 1px solid rgba(0,0,0,0.1);
+        }
+        .screen-node.core .action-btn {
+            background: rgba(255,255,255,0.15);
+            border-color: rgba(255,255,255,0.2);
+        }
+
+        /* Connections */
+        svg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+        .connection {
+            stroke: #E0E0E0;
+            stroke-width: 2;
+            fill: none;
+            marker-end: url(#arrowhead);
+        }
+        .connection.primary {
+            stroke: #1A1A1A;
+            stroke-width: 3;
+        }
+        .connection.activity {
+            stroke: #22c55e;
+            stroke-width: 2;
+        }
+        .connection.gamification {
+            stroke: #FF6B9D;
+            stroke-width: 2;
+        }
+
+        /* Zones */
+        .zone {
+            position: absolute;
+            border: 2px dashed #E0E0E0;
+            border-radius: 24px;
+            background: rgba(0,0,0,0.01);
+            z-index: -2;
+        }
+        .zone-label {
+            position: absolute;
+            top: 12px;
+            left: 20px;
+            font-size: 12px;
+            font-weight: 700;
+            color: #AAAAAA;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Positioning */
+        /* Bottom Nav */
+        .nav-home { top: 500px; left: 100px; }
+        .nav-inbox { top: 500px; left: 350px; }
+        .nav-activities { top: 500px; left: 600px; }
+        .nav-settings { top: 500px; left: 850px; }
+
+        /* Home Flow */
+        .home-send { top: 100px; left: 100px; }
+        .home-poke { top: 100px; left: 350px; }
+
+        /* Inbox Flow */
+        .inbox-detail { top: 100px; left: 600px; }
+
+        /* Activities */
+        .activity-quiz { top: 100px; left: 1100px; }
+        .activity-trivia { top: 100px; left: 1350px; }
+        .activity-health { top: 280px; left: 1100px; }
+        .activity-crossword { top: 280px; left: 1350px; }
+        .activity-weekly { top: 280px; left: 850px; }
+
+        /* Gamification */
+        .gam-leaderboard { top: 700px; left: 100px; }
+        .gam-profile { top: 700px; left: 350px; }
+        .gam-recap { top: 700px; left: 600px; }
+
+        /* Modals */
+        .modal-poke-send { top: 280px; left: 350px; }
+        .modal-reminder-confirm { top: 280px; left: 100px; }
+
+        /* Settings Flow */
+        .settings-progress { top: 700px; left: 850px; }
+        .settings-notif { top: 700px; left: 1100px; }
+
+        /* Zones */
+        .zone-core { top: 450px; left: 50px; width: 950px; height: 180px; }
+        .zone-activities { top: 50px; left: 1050px; width: 450px; height: 350px; }
+        .zone-gamification { top: 650px; left: 50px; width: 700px; height: 180px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📱 User Flow Chart</h1>
+            <p class="subtitle">Complete navigation map with all screens and actions</p>
+        </header>
+
+        <div class="legend">
+            <div class="legend-item">
+                <div class="legend-box core"></div>
+                <div class="legend-label">Core Screens</div>
+            </div>
+            <div class="legend-item">
+                <div class="legend-box activity"></div>
+                <div class="legend-label">Activity Screens</div>
+            </div>
+            <div class="legend-item">
+                <div class="legend-box gamification"></div>
+                <div class="legend-label">Gamification Screens</div>
+            </div>
+            <div class="legend-item">
+                <div class="legend-box modal"></div>
+                <div class="legend-label">Modals/Overlays</div>
+            </div>
+        </div>
+
+        <div class="flow-chart">
+            <!-- SVG for connections -->
+            <svg>
+                <defs>
+                    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                        <polygon points="0 0, 10 3.5, 0 7" fill="#E0E0E0" />
+                    </marker>
+                </defs>
+
+                <!-- Primary nav connections -->
+                <path class="connection primary" d="M 200,600 L 200,560" />
+                <path class="connection primary" d="M 450,600 L 450,560" />
+                <path class="connection primary" d="M 700,600 L 700,560" />
+                <path class="connection primary" d="M 950,600 L 950,560" />
+
+                <!-- Home to actions -->
+                <path class="connection primary" d="M 200,560 L 200,220" />
+                <path class="connection" d="M 200,560 L 450,280" />
+
+                <!-- Inbox to detail -->
+                <path class="connection primary" d="M 450,560 L 700,220" />
+
+                <!-- Activities nav to activities -->
+                <path class="connection activity" d="M 700,560 L 1200,220" />
+                <path class="connection activity" d="M 700,560 L 1450,220" />
+                <path class="connection activity" d="M 700,560 L 1200,400" />
+                <path class="connection activity" d="M 700,560 L 1450,400" />
+                <path class="connection activity" d="M 700,560 L 950,400" />
+
+                <!-- Settings to sub-screens -->
+                <path class="connection" d="M 950,560 L 950,800" />
+                <path class="connection" d="M 950,560 L 1200,800" />
+
+                <!-- Bottom nav to gamification -->
+                <path class="connection gamification" d="M 200,650 L 200,800" />
+                <path class="connection gamification" d="M 450,650 L 450,800" />
+                <path class="connection gamification" d="M 700,650 L 700,800" />
+            </svg>
+
+            <!-- Zones -->
+            <div class="zone zone-core">
+                <div class="zone-label">Bottom Navigation</div>
+            </div>
+            <div class="zone zone-activities">
+                <div class="zone-label">Activities Hub</div>
+            </div>
+            <div class="zone zone-gamification">
+                <div class="zone-label">Gamification</div>
+            </div>
+
+            <!-- TOP ROW: Action Screens -->
+            <!-- Send Reminder -->
+            <div class="screen-node core home-send">
+                <div class="screen-icon">💌</div>
+                <div class="screen-name">Send Reminder</div>
+                <div class="screen-desc">Compose & schedule</div>
+                <div class="actions">
+                    <div class="action-btn">Type message</div>
+                    <div class="action-btn">Select time</div>
+                    <div class="action-btn">Send → Confirm</div>
+                </div>
+            </div>
+
+            <!-- Send Poke -->
+            <div class="screen-node core home-poke">
+                <div class="screen-icon">💕</div>
+                <div class="screen-name">Poke Button</div>
+                <div class="screen-desc">Quick connection</div>
+                <div class="actions">
+                    <div class="action-btn">Tap FAB</div>
+                    <div class="action-btn">Select emoji</div>
+                    <div class="action-btn">Send poke</div>
+                </div>
+            </div>
+
+            <!-- Inbox Detail -->
+            <div class="screen-node core inbox-detail">
+                <div class="screen-icon">📝</div>
+                <div class="screen-name">Reminder Detail</div>
+                <div class="screen-desc">View & act</div>
+                <div class="actions">
+                    <div class="action-btn">Mark Done</div>
+                    <div class="action-btn">Snooze</div>
+                    <div class="action-btn">Delete</div>
+                </div>
+            </div>
+
+            <!-- Activities -->
+            <div class="screen-node activity activity-quiz">
+                <div class="screen-icon">🧠</div>
+                <div class="screen-name">Couple Quiz</div>
+                <div class="screen-desc">5-20 LP</div>
+                <div class="actions">
+                    <div class="action-btn">Start quiz</div>
+                    <div class="action-btn">Answer questions</div>
+                    <div class="action-btn">View results</div>
+                </div>
+            </div>
+
+            <div class="screen-node activity activity-trivia">
+                <div class="screen-icon">⚡</div>
+                <div class="screen-name">Timed Trivia</div>
+                <div class="screen-desc">8-15 LP</div>
+                <div class="actions">
+                    <div class="action-btn">Join game</div>
+                    <div class="action-btn">Answer (30s)</div>
+                    <div class="action-btn">See score</div>
+                </div>
+            </div>
+
+            <!-- MIDDLE ROW: Modals & More Activities -->
+            <!-- Poke Modal -->
+            <div class="screen-node modal modal-poke-send">
+                <div class="screen-icon">💕</div>
+                <div class="screen-name">Poke Modal</div>
+                <div class="screen-desc">Choose emoji</div>
+                <div class="actions">
+                    <div class="action-btn">Select 💕💖💗</div>
+                    <div class="action-btn">Confirm/Cancel</div>
+                </div>
+            </div>
+
+            <!-- Reminder Confirm Modal -->
+            <div class="screen-node modal modal-reminder-confirm">
+                <div class="screen-icon">✓</div>
+                <div class="screen-name">Sent Confirmation</div>
+                <div class="screen-desc">Success feedback</div>
+                <div class="actions">
+                    <div class="action-btn">View +LP</div>
+                    <div class="action-btn">Return home</div>
+                </div>
+            </div>
+
+            <div class="screen-node activity activity-health">
+                <div class="screen-icon">💪</div>
+                <div class="screen-name">Health Challenge</div>
+                <div class="screen-desc">15 LP daily</div>
+                <div class="actions">
+                    <div class="action-btn">Sync Health app</div>
+                    <div class="action-btn">View progress</div>
+                    <div class="action-btn">Claim reward</div>
+                </div>
+            </div>
+
+            <div class="screen-node activity activity-crossword">
+                <div class="screen-icon">🧩</div>
+                <div class="screen-name">Crossword</div>
+                <div class="screen-desc">10-25 LP</div>
+                <div class="actions">
+                    <div class="action-btn">Start puzzle</div>
+                    <div class="action-btn">Take turns</div>
+                    <div class="action-btn">Complete</div>
+                </div>
+            </div>
+
+            <div class="screen-node activity activity-weekly">
+                <div class="screen-icon">🎯</div>
+                <div class="screen-name">Weekly Challenge</div>
+                <div class="screen-desc">2x LP active</div>
+                <div class="actions">
+                    <div class="action-btn">View progress</div>
+                    <div class="action-btn">See activities</div>
+                    <div class="action-btn">Claim rewards</div>
+                </div>
+            </div>
+
+            <!-- BOTTOM NAV ROW -->
+            <div class="screen-node core nav-home">
+                <div class="screen-icon">🏠</div>
+                <div class="screen-name">Home</div>
+                <div class="screen-desc">Main hub</div>
+                <div class="actions">
+                    <div class="action-btn">Send Reminder</div>
+                    <div class="action-btn">Send Poke</div>
+                    <div class="action-btn">Quick activities</div>
+                </div>
+            </div>
+
+            <div class="screen-node core nav-inbox">
+                <div class="screen-icon">📥</div>
+                <div class="screen-name">Inbox</div>
+                <div class="screen-desc">All reminders</div>
+                <div class="actions">
+                    <div class="action-btn">Filter (All/Sent/Received)</div>
+                    <div class="action-btn">Tap to open detail</div>
+                    <div class="action-btn">Mark done/snooze</div>
+                </div>
+            </div>
+
+            <div class="screen-node core nav-activities">
+                <div class="screen-icon">💎</div>
+                <div class="screen-name">Activities</div>
+                <div class="screen-desc">Games hub</div>
+                <div class="actions">
+                    <div class="action-btn">Browse activities</div>
+                    <div class="action-btn">See weekly challenge</div>
+                    <div class="action-btn">Launch games</div>
+                </div>
+            </div>
+
+            <div class="screen-node core nav-settings">
+                <div class="screen-icon">⚙️</div>
+                <div class="screen-name">Settings</div>
+                <div class="screen-desc">Preferences</div>
+                <div class="actions">
+                    <div class="action-btn">View progress</div>
+                    <div class="action-btn">Manage notifications</div>
+                    <div class="action-btn">Unpair device</div>
+                </div>
+            </div>
+
+            <!-- BOTTOM ROW: Gamification Screens -->
+            <div class="screen-node gamification gam-leaderboard">
+                <div class="screen-icon">🏆</div>
+                <div class="screen-name">Leaderboard</div>
+                <div class="screen-desc">Global ranks</div>
+                <div class="actions">
+                    <div class="action-btn">View rank</div>
+                    <div class="action-btn">Toggle Global/Friends</div>
+                    <div class="action-btn">See 4-week chart</div>
+                </div>
+            </div>
+
+            <div class="screen-node gamification gam-profile">
+                <div class="screen-icon">🏖️</div>
+                <div class="screen-name">Couple Profile</div>
+                <div class="screen-desc">Your arena</div>
+                <div class="actions">
+                    <div class="action-btn">View vacation tier</div>
+                    <div class="action-btn">See achievements</div>
+                    <div class="action-btn">Check stats</div>
+                </div>
+            </div>
+
+            <div class="screen-node gamification gam-recap">
+                <div class="screen-icon">💛</div>
+                <div class="screen-name">Weekly Recap</div>
+                <div class="screen-desc">AI summary</div>
+                <div class="actions">
+                    <div class="action-btn">Read summary</div>
+                    <div class="action-btn">React with love</div>
+                    <div class="action-btn">Share recap</div>
+                </div>
+            </div>
+
+            <div class="screen-node core settings-progress">
+                <div class="screen-icon">📊</div>
+                <div class="screen-name">Progress View</div>
+                <div class="screen-desc">LP & stats</div>
+                <div class="actions">
+                    <div class="action-btn">View LP total</div>
+                    <div class="action-btn">See rank</div>
+                    <div class="action-btn">Check tier</div>
+                </div>
+            </div>
+
+            <div class="screen-node core settings-notif">
+                <div class="screen-icon">🔔</div>
+                <div class="screen-name">Notifications</div>
+                <div class="screen-desc">Preferences</div>
+                <div class="actions">
+                    <div class="action-btn">Toggle push</div>
+                    <div class="action-btn">Sound/vibration</div>
+                    <div class="action-btn">Gamification toggle</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TogetherRemind - Onboarding</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Rounded Mplus 1c', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .phone-frame {
+            width: 375px;
+            height: 812px;
+            background: linear-gradient(180deg, #FFE5E5 0%, #FFF5E1 100%);
+            border-radius: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+            position: relative;
+        }
+        .status-bar {
+            height: 44px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+            font-size: 12px;
+        }
+        .app-content {
+            padding: 40px 30px;
+            height: calc(100% - 44px);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            text-align: center;
+        }
+        .onboarding-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        .hero-emoji {
+            font-size: 120px;
+            margin-bottom: 30px;
+            animation: float 3s ease-in-out infinite;
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+        .app-name {
+            font-size: 36px;
+            font-weight: 700;
+            color: #FF6B9D;
+            margin-bottom: 16px;
+            letter-spacing: -0.5px;
+        }
+        .tagline {
+            font-size: 18px;
+            color: #FF6B9D;
+            margin-bottom: 40px;
+            line-height: 1.5;
+            opacity: 0.8;
+        }
+        .features-list {
+            text-align: left;
+            margin-bottom: 40px;
+        }
+        .feature-item {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 20px;
+            padding: 16px;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 12px rgba(255,107,157,0.15);
+        }
+        .feature-icon {
+            font-size: 32px;
+            min-width: 40px;
+        }
+        .feature-text {
+            flex: 1;
+        }
+        .feature-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #FF6B9D;
+            margin-bottom: 4px;
+        }
+        .feature-desc {
+            font-size: 13px;
+            color: #666;
+            line-height: 1.4;
+        }
+        .cta-section {
+            width: 100%;
+        }
+        .get-started-btn {
+            width: 100%;
+            padding: 20px;
+            background: linear-gradient(135deg, #FF6B9D 0%, #FEA47F 100%);
+            color: #fff;
+            border: none;
+            border-radius: 16px;
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: transform 0.2s;
+            box-shadow: 0 6px 20px rgba(255,107,157,0.4);
+            margin-bottom: 12px;
+        }
+        .get-started-btn:hover {
+            transform: translateY(-2px);
+        }
+        .pagination-dots {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        .dot {
+            width: 8px;
+            height: 8px;
+            background: #FFB6C1;
+            border-radius: 50%;
+        }
+        .dot.active {
+            background: #FF6B9D;
+            width: 24px;
+            border-radius: 4px;
+        }
+        .skip-link {
+            color: #FF6B9D;
+            font-size: 14px;
+            margin-top: 12px;
+            opacity: 0.7;
+        }
+    </style>
+</head>
+<body>
+    <div class="phone-frame">
+        <div class="status-bar">
+            <span>9:41</span>
+            <span>⚡ 85%</span>
+        </div>
+        <div class="app-content">
+            <div class="onboarding-content">
+                <div class="hero-emoji">💕</div>
+                <h1 class="app-name">TogetherRemind</h1>
+                <p class="tagline">Send quick reminders to your partner with love</p>
+
+                <div class="features-list">
+                    <div class="feature-item">
+                        <div class="feature-icon">⚡</div>
+                        <div class="feature-text">
+                            <div class="feature-title">Quick & Easy</div>
+                            <div class="feature-desc">Send reminders in seconds</div>
+                        </div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">🔔</div>
+                        <div class="feature-text">
+                            <div class="feature-title">Smart Notifications</div>
+                            <div class="feature-desc">Custom alerts just for you two</div>
+                        </div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">🔒</div>
+                        <div class="feature-text">
+                            <div class="feature-title">Private & Secure</div>
+                            <div class="feature-desc">Just between you and your partner</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="cta-section">
+                <button class="get-started-btn">Get Started 💌</button>
+                <div class="pagination-dots">
+                    <div class="dot active"></div>
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                </div>
+                <div class="skip-link">Skip intro</div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

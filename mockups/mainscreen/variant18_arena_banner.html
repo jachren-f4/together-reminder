@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Variant 18: Arena Banner - TogetherRemind</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #FAFAFA;
+            color: #1A1A1A;
+            padding: 0;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+        .arena-header {
+            background: linear-gradient(135deg, #87CEEB 0%, #FFD700 100%);
+            padding: 24px 20px 20px;
+            position: relative;
+            overflow: hidden;
+        }
+        .arena-header::before {
+            content: '🌴';
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 48px;
+            opacity: 0.3;
+        }
+        .arena-title-section {
+            margin-bottom: 16px;
+        }
+        .arena-location {
+            font-family: 'Playfair Display', serif;
+            font-size: 24px;
+            font-weight: 600;
+            color: white;
+            margin-bottom: 4px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .arena-subtitle {
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.95);
+        }
+        .arena-progress-bar {
+            background: rgba(255, 255, 255, 0.3);
+            height: 8px;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 8px;
+        }
+        .arena-progress-fill {
+            background: white;
+            height: 100%;
+            width: 51.2%;
+            border-radius: 4px;
+        }
+        .arena-progress-text {
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.9);
+            font-weight: 500;
+        }
+        .white-section {
+            background: #FFFEFD;
+            border-bottom: 2px solid #F0F0F0;
+            padding: 16px 20px;
+        }
+        .profile-compact {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+        .avatars-mini {
+            display: flex;
+            align-items: center;
+        }
+        .avatar-mini {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: #F0F0F0;
+            border: 2px solid #FFFEFD;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+        .avatar-mini:last-child {
+            margin-left: -10px;
+        }
+        .greeting-compact {
+            flex: 1;
+        }
+        .greeting-title-compact {
+            font-family: 'Playfair Display', serif;
+            font-size: 17px;
+            font-weight: 600;
+            margin-bottom: 2px;
+        }
+        .greeting-subtitle-compact {
+            font-size: 12px;
+            color: #6E6E6E;
+        }
+        .stats-compact {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+        .stat-compact {
+            flex: 1;
+            background: #F0F0F0;
+            border-radius: 10px;
+            padding: 10px;
+            text-align: center;
+        }
+        .stat-value-compact {
+            font-family: 'Playfair Display', serif;
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 2px;
+        }
+        .stat-label-compact {
+            font-size: 9px;
+            color: #6E6E6E;
+            font-weight: 500;
+        }
+        .actions-compact {
+            display: flex;
+            gap: 10px;
+        }
+        .action-btn-compact {
+            flex: 1;
+            background: #1A1A1A;
+            color: #FFFEFD;
+            border: none;
+            border-radius: 12px;
+            padding: 11px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+        .action-emoji-compact {
+            font-size: 18px;
+        }
+        .content-area {
+            padding: 20px;
+        }
+        .section-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+        .carousel {
+            display: flex;
+            gap: 12px;
+            overflow-x: auto;
+            padding-bottom: 8px;
+            margin-bottom: 24px;
+            scrollbar-width: none;
+        }
+        .carousel::-webkit-scrollbar {
+            display: none;
+        }
+        .quest-card {
+            background: #FFFEFD;
+            border: 2px solid #F0F0F0;
+            border-radius: 16px;
+            padding: 20px;
+            min-width: 260px;
+            flex-shrink: 0;
+            text-align: center;
+        }
+        .quest-card.active {
+            border-color: #1A1A1A;
+            border-width: 3px;
+        }
+        .quest-emoji {
+            font-size: 52px;
+            margin-bottom: 12px;
+        }
+        .quest-title {
+            font-size: 17px;
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+        .quest-desc {
+            font-size: 13px;
+            color: #6E6E6E;
+            margin-bottom: 12px;
+        }
+        .quest-rewards {
+            display: flex;
+            gap: 6px;
+            justify-content: center;
+        }
+        .reward-badge {
+            background: #F0F0F0;
+            padding: 4px 10px;
+            border-radius: 8px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+        .quest-card.active .reward-badge {
+            background: #1A1A1A;
+            color: #FFFEFD;
+        }
+        .side-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+        .side-card {
+            background: #FFFEFD;
+            border: 2px solid #F0F0F0;
+            border-radius: 12px;
+            padding: 16px 12px;
+            text-align: center;
+        }
+        .side-emoji {
+            font-size: 32px;
+            margin-bottom: 8px;
+        }
+        .side-title {
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 2px;
+        }
+        .side-detail {
+            font-size: 10px;
+            color: #6E6E6E;
+        }
+    </style>
+</head>
+<body>
+    <div class="arena-header">
+        <div class="arena-title-section">
+            <div class="arena-location">🏖️ Beach Villa</div>
+            <div class="arena-subtitle">Your vacation destination</div>
+        </div>
+        <div class="arena-progress-bar">
+            <div class="arena-progress-fill"></div>
+        </div>
+        <div class="arena-progress-text">1,280 / 2,500 LP • 1,220 until Yacht Getaway ⛵</div>
+    </div>
+
+    <div class="white-section">
+        <div class="profile-compact">
+            <div class="avatars-mini">
+                <div class="avatar-mini">💕</div>
+                <div class="avatar-mini">💎</div>
+            </div>
+            <div class="greeting-compact">
+                <div class="greeting-title-compact">Good Morning!</div>
+                <div class="greeting-subtitle-compact">You & Sarah • Day 8</div>
+            </div>
+        </div>
+
+        <div class="stats-compact">
+            <div class="stat-compact">
+                <div class="stat-value-compact">127</div>
+                <div class="stat-label-compact">Love Points</div>
+            </div>
+            <div class="stat-compact">
+                <div class="stat-value-compact">3</div>
+                <div class="stat-label-compact">Streak</div>
+            </div>
+            <div class="stat-compact">
+                <div class="stat-value-compact">85%</div>
+                <div class="stat-label-compact">Match</div>
+            </div>
+        </div>
+
+        <div class="actions-compact">
+            <button class="action-btn-compact">
+                <span class="action-emoji-compact">💫</span>
+                Poke
+            </button>
+            <button class="action-btn-compact">
+                <span class="action-emoji-compact">💕</span>
+                Remind
+            </button>
+        </div>
+    </div>
+
+    <div class="content-area">
+        <div class="section-title">Main Quests</div>
+        <div class="carousel">
+            <div class="quest-card active">
+                <div class="quest-emoji">🧩</div>
+                <div class="quest-title">Daily Pulse</div>
+                <div class="quest-desc">Your turn today</div>
+                <div class="quest-rewards">
+                    <span class="reward-badge">+20 LP</span>
+                    <span class="reward-badge">🔥</span>
+                </div>
+            </div>
+
+            <div class="quest-card">
+                <div class="quest-emoji">🪜</div>
+                <div class="quest-title">Word Ladder</div>
+                <div class="quest-desc">2 puzzles waiting</div>
+                <div class="quest-rewards">
+                    <span class="reward-badge">+15 LP</span>
+                </div>
+            </div>
+
+            <div class="quest-card">
+                <div class="quest-emoji">🃏</div>
+                <div class="quest-title">Memory Flip</div>
+                <div class="quest-desc">6/8 pairs found</div>
+                <div class="quest-rewards">
+                    <span class="reward-badge">+40 LP</span>
+                </div>
+            </div>
+
+            <div class="quest-card">
+                <div class="quest-emoji">🎯</div>
+                <div class="quest-title">Couple Quiz</div>
+                <div class="quest-desc">Start new session</div>
+                <div class="quest-rewards">
+                    <span class="reward-badge">+30 LP</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="section-title">Side Quests</div>
+        <div class="side-grid">
+            <div class="side-card">
+                <div class="side-emoji">📝</div>
+                <div class="side-title">Inbox</div>
+                <div class="side-detail">2 new</div>
+            </div>
+            <div class="side-card">
+                <div class="side-emoji">💭</div>
+                <div class="side-title">Would You</div>
+                <div class="side-detail">Soon</div>
+            </div>
+            <div class="side-card">
+                <div class="side-emoji">🎭</div>
+                <div class="side-title">Challenge</div>
+                <div class="side-detail">Daily</div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

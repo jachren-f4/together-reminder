@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TogetherRemind - Onboarding</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #FAFAFA;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            max-width: 420px;
+            width: 100%;
+            padding: 40px 30px;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            justify-content: space-between;
+        }
+
+        .content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px 0;
+        }
+
+        .hero-emoji {
+            font-size: 100px;
+            margin-bottom: 24px;
+            animation: scaleIn 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        @keyframes scaleIn {
+            from {
+                transform: scale(0);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 36px;
+            font-weight: 600;
+            color: #1A1A1A;
+            margin-bottom: 12px;
+            letter-spacing: -0.5px;
+            text-align: center;
+        }
+
+        .tagline {
+            font-family: 'Inter', sans-serif;
+            font-size: 18px;
+            color: #6E6E6E;
+            text-align: center;
+            line-height: 1.5;
+            margin-bottom: 40px;
+        }
+
+        .features {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .feature-card {
+            background: #FFFEFD;
+            border-radius: 16px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+            display: flex;
+            align-items: center;
+            transition: all 0.2s ease;
+        }
+
+        .feature-card:active {
+            transform: scale(0.98);
+        }
+
+        .feature-icon {
+            font-size: 32px;
+            margin-right: 16px;
+        }
+
+        .feature-content h3 {
+            font-family: 'Inter', sans-serif;
+            font-size: 16px;
+            font-weight: 600;
+            color: #1A1A1A;
+            margin-bottom: 4px;
+        }
+
+        .feature-content p {
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            color: #6E6E6E;
+            line-height: 1.4;
+        }
+
+        .cta-button {
+            width: 100%;
+            padding: 18px;
+            background: #1A1A1A;
+            border: none;
+            border-radius: 24px;
+            box-shadow: 0 4px 12px rgba(26, 26, 26, 0.15);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.2s ease;
+        }
+
+        .cta-button:active {
+            transform: scale(0.98);
+            box-shadow: 0 2px 8px rgba(26, 26, 26, 0.2);
+        }
+
+        .cta-button span {
+            font-family: 'Inter', sans-serif;
+            font-size: 17px;
+            font-weight: 600;
+            color: #FFFEFD;
+        }
+
+        .cta-button .emoji {
+            font-size: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="content">
+            <div class="hero-emoji">💕</div>
+            <h1>TogetherRemind</h1>
+            <p class="tagline">Send caring reminders<br>to your partner</p>
+
+            <div class="features">
+                <div class="feature-card">
+                    <div class="feature-icon">⚡</div>
+                    <div class="feature-content">
+                        <h3>Quick & Simple</h3>
+                        <p>Send reminders in seconds</p>
+                    </div>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">💌</div>
+                    <div class="feature-content">
+                        <h3>Direct to Phone</h3>
+                        <p>No email, no calendar, no fuss</p>
+                    </div>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">🔒</div>
+                    <div class="feature-content">
+                        <h3>Private & Secure</h3>
+                        <p>Just between you two</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <button class="cta-button">
+            <span>Get Started</span>
+            <span class="emoji">💕</span>
+        </button>
+    </div>
+</body>
+</html>

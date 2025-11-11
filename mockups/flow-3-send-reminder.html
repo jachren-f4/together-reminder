@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TogetherRemind - Send Reminder</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Rounded Mplus 1c', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .phone-frame {
+            width: 375px;
+            height: 812px;
+            background: linear-gradient(180deg, #FFE5E5 0%, #FFF5E1 100%);
+            border-radius: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+            position: relative;
+        }
+        .status-bar {
+            height: 44px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+            font-size: 12px;
+        }
+        .app-content {
+            padding: 20px;
+            height: calc(100% - 44px);
+            display: flex;
+            flex-direction: column;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .emoji-icon {
+            font-size: 60px;
+            margin-bottom: 10px;
+        }
+        .header h1 {
+            font-size: 28px;
+            font-weight: 700;
+            color: #FF6B9D;
+            margin-bottom: 8px;
+        }
+        .partner-badge {
+            display: inline-block;
+            padding: 6px 16px;
+            background: white;
+            border-radius: 20px;
+            font-size: 14px;
+            color: #FF6B9D;
+            font-weight: 500;
+            box-shadow: 0 2px 8px rgba(255,107,157,0.2);
+        }
+        .reminder-card {
+            background: white;
+            border-radius: 24px;
+            padding: 24px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        .input-label {
+            font-size: 13px;
+            font-weight: 600;
+            color: #FF6B9D;
+            margin-bottom: 10px;
+            display: block;
+        }
+        .input-field {
+            width: 100%;
+            padding: 16px;
+            border: 2px solid #FFE0E9;
+            border-radius: 16px;
+            font-size: 16px;
+            font-family: inherit;
+            margin-bottom: 20px;
+            transition: border-color 0.3s;
+        }
+        .input-field:focus {
+            outline: none;
+            border-color: #FF6B9D;
+        }
+        .time-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+        .time-button {
+            padding: 16px;
+            background: linear-gradient(135deg, #FFC3A0 0%, #FFAFBD 100%);
+            border: none;
+            border-radius: 16px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s;
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+        }
+        .time-button:hover {
+            transform: scale(1.05);
+        }
+        .time-button.selected {
+            background: linear-gradient(135deg, #FF6B9D 0%, #FEA47F 100%);
+            box-shadow: 0 4px 16px rgba(255,107,157,0.4);
+        }
+        .time-emoji {
+            font-size: 20px;
+        }
+        .send-button {
+            width: 100%;
+            padding: 20px;
+            background: linear-gradient(135deg, #FF6B9D 0%, #FEA47F 100%);
+            color: #fff;
+            border: none;
+            border-radius: 16px;
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: transform 0.2s;
+            box-shadow: 0 6px 20px rgba(255,107,157,0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .send-button:hover {
+            transform: translateY(-2px);
+        }
+        .send-button:active {
+            transform: scale(0.98);
+        }
+        .quick-messages {
+            margin-bottom: 20px;
+        }
+        .quick-msg-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: #999;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .quick-msg-chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .quick-chip {
+            padding: 10px 16px;
+            background: white;
+            border: 2px solid #FFE0E9;
+            border-radius: 20px;
+            font-size: 13px;
+            color: #666;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .quick-chip:hover {
+            border-color: #FF6B9D;
+            color: #FF6B9D;
+            background: #FFF5F8;
+        }
+        .bottom-nav {
+            display: flex;
+            justify-content: space-around;
+            padding: 12px 0 20px 0;
+            margin-top: auto;
+            border-top: 1px solid #FFE0E9;
+            background: linear-gradient(180deg, #FFE5E5 0%, #FFF5E1 100%);
+        }
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            cursor: pointer;
+            transition: all 0.2s;
+            flex: 1;
+        }
+        .nav-icon {
+            font-size: 24px;
+            opacity: 0.5;
+            transition: all 0.2s;
+        }
+        .nav-label {
+            font-size: 11px;
+            color: #999;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+        .nav-item.active .nav-icon {
+            opacity: 1;
+        }
+        .nav-item.active .nav-label {
+            color: #FF6B9D;
+        }
+        .nav-item:hover .nav-icon {
+            opacity: 0.8;
+        }
+        .success-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255,107,157,0.95);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            animation: fadeIn 0.3s;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .success-icon {
+            font-size: 100px;
+            margin-bottom: 20px;
+            animation: popIn 0.5s ease-out;
+        }
+        @keyframes popIn {
+            0% { transform: scale(0); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+        .success-text {
+            font-size: 24px;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 8px;
+        }
+        .success-subtext {
+            font-size: 16px;
+            color: white;
+            opacity: 0.9;
+        }
+    </style>
+</head>
+<body>
+    <div class="phone-frame">
+        <div class="status-bar">
+            <span>9:41</span>
+            <span>⚡ 85%</span>
+        </div>
+        <div class="app-content">
+            <div class="header">
+                <div class="emoji-icon">💕</div>
+                <h1>Together</h1>
+                <div class="partner-badge">👤 Sarah</div>
+            </div>
+
+            <div class="quick-messages">
+                <div class="quick-msg-title">Quick Messages</div>
+                <div class="quick-msg-chips">
+                    <button class="quick-chip">💕 Love you!</button>
+                    <button class="quick-chip">🏠 I'm home</button>
+                    <button class="quick-chip">☕ Coffee?</button>
+                    <button class="quick-chip">🛒 Pick up milk</button>
+                </div>
+            </div>
+
+            <div class="reminder-card">
+                <label class="input-label">What to remind?</label>
+                <input type="text" class="input-field" placeholder="Type your reminder..." value="Don't forget your umbrella ☔">
+
+                <label class="input-label">When?</label>
+                <div class="time-grid">
+                    <button class="time-button">
+                        <span class="time-emoji">⏰</span>
+                        <span>15 min</span>
+                    </button>
+                    <button class="time-button selected">
+                        <span class="time-emoji">☕</span>
+                        <span>1 hour</span>
+                    </button>
+                    <button class="time-button">
+                        <span class="time-emoji">🌙</span>
+                        <span>Tonight</span>
+                    </button>
+                    <button class="time-button">
+                        <span class="time-emoji">☀️</span>
+                        <span>Tomorrow</span>
+                    </button>
+                </div>
+
+                <button class="send-button">
+                    <span>Send Reminder</span>
+                    <span>💌</span>
+                </button>
+            </div>
+
+            <div class="bottom-nav">
+                <div class="nav-item active">
+                    <div class="nav-icon">💕</div>
+                    <div class="nav-label">Send</div>
+                </div>
+                <div class="nav-item">
+                    <div class="nav-icon">📝</div>
+                    <div class="nav-label">Inbox</div>
+                </div>
+                <div class="nav-item">
+                    <div class="nav-icon">⚙️</div>
+                    <div class="nav-label">Settings</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="success-overlay">
+            <div class="success-icon">✨</div>
+            <div class="success-text">Reminder Sent!</div>
+            <div class="success-subtext">Sarah will be notified in 1 hour</div>
+        </div>
+    </div>
+</body>
+</html>

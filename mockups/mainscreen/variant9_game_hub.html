@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Variant 9: Game Hub - TogetherRemind</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #FAFAFA;
+            color: #1A1A1A;
+            padding: 0;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+        .game-header {
+            background: #1A1A1A;
+            color: #FFFEFD;
+            padding: 24px 20px 20px;
+        }
+        .level-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+        .level-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .level-icon {
+            width: 48px;
+            height: 48px;
+            background: rgba(255, 254, 253, 0.15);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+        }
+        .level-text {
+            flex: 1;
+        }
+        .level-label {
+            font-size: 12px;
+            opacity: 0.7;
+            margin-bottom: 2px;
+        }
+        .level-number {
+            font-family: 'Playfair Display', serif;
+            font-size: 20px;
+            font-weight: 600;
+        }
+        .xp-badge {
+            background: rgba(255, 254, 253, 0.15);
+            padding: 8px 14px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+        .progress-section {
+            background: rgba(255, 254, 253, 0.1);
+            border-radius: 12px;
+            padding: 12px 16px;
+        }
+        .progress-label {
+            font-size: 11px;
+            opacity: 0.7;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .progress-bar {
+            height: 8px;
+            background: rgba(255, 254, 253, 0.2);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 8px;
+        }
+        .progress-fill {
+            height: 100%;
+            background: #FFFEFD;
+            width: 65%;
+            border-radius: 4px;
+        }
+        .progress-text {
+            font-size: 12px;
+            opacity: 0.9;
+        }
+        .missions-section {
+            padding: 20px;
+        }
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+        .section-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 20px;
+            font-weight: 600;
+        }
+        .view-all {
+            font-size: 14px;
+            color: #6E6E6E;
+            text-decoration: none;
+        }
+        .mission-card {
+            background: #FFFEFD;
+            border: 2px solid #F0F0F0;
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 12px;
+            position: relative;
+            overflow: hidden;
+        }
+        .mission-card.active {
+            border-color: #1A1A1A;
+            border-width: 3px;
+        }
+        .mission-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+            margin-bottom: 12px;
+        }
+        .mission-emoji {
+            font-size: 48px;
+            line-height: 1;
+        }
+        .mission-info {
+            flex: 1;
+        }
+        .mission-title {
+            font-size: 17px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        .mission-subtitle {
+            font-size: 14px;
+            color: #6E6E6E;
+            margin-bottom: 8px;
+        }
+        .mission-rewards {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .reward-badge {
+            background: #F0F0F0;
+            padding: 4px 10px;
+            border-radius: 8px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+        .mission-card.active .reward-badge {
+            background: #1A1A1A;
+            color: #FFFEFD;
+        }
+        .mission-progress {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-top: 12px;
+        }
+        .mini-progress-bar {
+            flex: 1;
+            height: 6px;
+            background: #F0F0F0;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+        .mini-progress-fill {
+            height: 100%;
+            background: #1A1A1A;
+            border-radius: 3px;
+        }
+        .progress-label-text {
+            font-size: 12px;
+            color: #6E6E6E;
+            font-weight: 500;
+        }
+        .pulse-indicator {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            width: 12px;
+            height: 12px;
+            background: #1A1A1A;
+            border-radius: 50%;
+            animation: pulse 2s ease-in-out infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(1.2); }
+        }
+        .quick-play-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+        .quick-play-card {
+            background: #FFFEFD;
+            border: 2px solid #F0F0F0;
+            border-radius: 12px;
+            padding: 16px 12px;
+            text-align: center;
+        }
+        .quick-play-emoji {
+            font-size: 32px;
+            margin-bottom: 8px;
+        }
+        .quick-play-title {
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 2px;
+        }
+        .quick-play-subtitle {
+            font-size: 10px;
+            color: #6E6E6E;
+        }
+    </style>
+</head>
+<body>
+    <div class="game-header">
+        <div class="level-bar">
+            <div class="level-info">
+                <div class="level-icon">💕</div>
+                <div class="level-text">
+                    <div class="level-label">Connection Level</div>
+                    <div class="level-number">Level 8</div>
+                </div>
+            </div>
+            <div class="xp-badge">127 LP</div>
+        </div>
+        <div class="progress-section">
+            <div class="progress-label">Progress to Level 9</div>
+            <div class="progress-bar">
+                <div class="progress-fill"></div>
+            </div>
+            <div class="progress-text">65 / 100 LP earned</div>
+        </div>
+    </div>
+
+    <div class="missions-section">
+        <div class="section-header">
+            <div class="section-title">Daily Missions</div>
+            <a href="#" class="view-all">View All →</a>
+        </div>
+
+        <div class="mission-card active">
+            <div class="pulse-indicator"></div>
+            <div class="mission-header">
+                <div class="mission-emoji">🧩</div>
+                <div class="mission-info">
+                    <div class="mission-title">Daily Pulse</div>
+                    <div class="mission-subtitle">Your turn to answer</div>
+                    <div class="mission-rewards">
+                        <span class="reward-badge">+20 LP</span>
+                        <span class="reward-badge">🔥 Streak</span>
+                    </div>
+                </div>
+            </div>
+            <div class="mission-progress">
+                <div class="mini-progress-bar">
+                    <div class="mini-progress-fill" style="width: 50%"></div>
+                </div>
+                <div class="progress-label-text">Day 3/7</div>
+            </div>
+        </div>
+
+        <div class="mission-card">
+            <div class="mission-header">
+                <div class="mission-emoji">🪜</div>
+                <div class="mission-info">
+                    <div class="mission-title">Word Ladder Duet</div>
+                    <div class="mission-subtitle">2 puzzles waiting</div>
+                    <div class="mission-rewards">
+                        <span class="reward-badge">+15 LP</span>
+                        <span class="reward-badge">Your turn</span>
+                    </div>
+                </div>
+            </div>
+            <div class="mission-progress">
+                <div class="mini-progress-bar">
+                    <div class="mini-progress-fill" style="width: 40%"></div>
+                </div>
+                <div class="progress-label-text">4/10 steps</div>
+            </div>
+        </div>
+
+        <div class="mission-card">
+            <div class="mission-header">
+                <div class="mission-emoji">🃏</div>
+                <div class="mission-info">
+                    <div class="mission-title">Memory Flip Co-op</div>
+                    <div class="mission-subtitle">Almost complete</div>
+                    <div class="mission-rewards">
+                        <span class="reward-badge">+40 LP</span>
+                    </div>
+                </div>
+            </div>
+            <div class="mission-progress">
+                <div class="mini-progress-bar">
+                    <div class="mini-progress-fill" style="width: 75%"></div>
+                </div>
+                <div class="progress-label-text">6/8 pairs</div>
+            </div>
+        </div>
+
+        <div class="section-header" style="margin-top: 32px;">
+            <div class="section-title">Quick Play</div>
+        </div>
+
+        <div class="quick-play-grid">
+            <div class="quick-play-card">
+                <div class="quick-play-emoji">🎯</div>
+                <div class="quick-play-title">Quiz</div>
+                <div class="quick-play-subtitle">Start new</div>
+            </div>
+            <div class="quick-play-card">
+                <div class="quick-play-emoji">💫</div>
+                <div class="quick-play-title">Poke</div>
+                <div class="quick-play-subtitle">Send now</div>
+            </div>
+            <div class="quick-play-card">
+                <div class="quick-play-emoji">💕</div>
+                <div class="quick-play-title">Remind</div>
+                <div class="quick-play-subtitle">Schedule</div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

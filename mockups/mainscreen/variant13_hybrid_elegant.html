@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Variant 13: Hybrid Elegant - TogetherRemind</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #FAFAFA;
+            color: #1A1A1A;
+            padding: 0;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+        .profile-header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 24px 20px 16px;
+        }
+        .avatar-group {
+            display: flex;
+            align-items: center;
+        }
+        .avatar {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: #F0F0F0;
+            border: 3px solid #FFFEFD;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+        }
+        .avatar:last-child {
+            margin-left: -16px;
+        }
+        .greeting {
+            flex: 1;
+        }
+        .greeting-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        .greeting-subtitle {
+            font-size: 14px;
+            color: #6E6E6E;
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            padding: 0 20px 20px;
+        }
+        .stat-card {
+            background: #FFFEFD;
+            border: 2px solid #F0F0F0;
+            border-radius: 12px;
+            padding: 16px;
+            text-align: center;
+        }
+        .stat-value {
+            font-family: 'Playfair Display', serif;
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        .stat-label {
+            font-size: 11px;
+            color: #6E6E6E;
+            font-weight: 500;
+        }
+        .action-buttons {
+            display: flex;
+            gap: 12px;
+            padding: 0 20px 24px;
+        }
+        .action-btn {
+            flex: 1;
+            background: #1A1A1A;
+            color: #FFFEFD;
+            border: none;
+            border-radius: 16px;
+            padding: 16px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .action-emoji {
+            font-size: 24px;
+        }
+        .section {
+            padding: 0 20px 24px;
+        }
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+        .section-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 22px;
+            font-weight: 600;
+        }
+        .see-all {
+            font-size: 14px;
+            color: #6E6E6E;
+            text-decoration: none;
+        }
+        .horizontal-scroll {
+            display: flex;
+            gap: 12px;
+            overflow-x: auto;
+            padding-bottom: 8px;
+            scrollbar-width: none;
+        }
+        .horizontal-scroll::-webkit-scrollbar {
+            display: none;
+        }
+        .quest-card-horizontal {
+            background: #FFFEFD;
+            border: 2px solid #F0F0F0;
+            border-radius: 16px;
+            padding: 20px;
+            min-width: 280px;
+            flex-shrink: 0;
+        }
+        .quest-card-horizontal.featured {
+            border-color: #1A1A1A;
+            border-width: 3px;
+        }
+        .quest-emoji-large {
+            font-size: 48px;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+        .quest-title {
+            font-size: 17px;
+            font-weight: 600;
+            margin-bottom: 4px;
+            text-align: center;
+        }
+        .quest-subtitle {
+            font-size: 14px;
+            color: #6E6E6E;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+        .quest-rewards {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+            margin-bottom: 12px;
+        }
+        .reward-badge {
+            background: #F0F0F0;
+            padding: 4px 10px;
+            border-radius: 8px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+        .quest-card-horizontal.featured .reward-badge {
+            background: #1A1A1A;
+            color: #FFFEFD;
+        }
+        .side-quests-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+        .side-quest-card {
+            background: #FFFEFD;
+            border: 2px solid #F0F0F0;
+            border-radius: 12px;
+            padding: 20px 16px;
+            text-align: center;
+        }
+        .side-quest-emoji {
+            font-size: 36px;
+            margin-bottom: 8px;
+        }
+        .side-quest-name {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        .side-quest-desc {
+            font-size: 11px;
+            color: #6E6E6E;
+        }
+    </style>
+</head>
+<body>
+    <div class="profile-header">
+        <div class="avatar-group">
+            <div class="avatar">💕</div>
+            <div class="avatar">💎</div>
+        </div>
+        <div class="greeting">
+            <div class="greeting-title">Good Morning!</div>
+            <div class="greeting-subtitle">You & Sarah • Day 8</div>
+        </div>
+    </div>
+
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-value">127</div>
+            <div class="stat-label">Love Points</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-value">3</div>
+            <div class="stat-label">Day Streak</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-value">85%</div>
+            <div class="stat-label">Quiz Match</div>
+        </div>
+    </div>
+
+    <div class="action-buttons">
+        <button class="action-btn">
+            <span class="action-emoji">💫</span>
+            Poke
+        </button>
+        <button class="action-btn">
+            <span class="action-emoji">💕</span>
+            Remind
+        </button>
+    </div>
+
+    <div class="section">
+        <div class="section-header">
+            <div class="section-title">Main Quests</div>
+            <a href="#" class="see-all">View all →</a>
+        </div>
+        <div class="horizontal-scroll">
+            <div class="quest-card-horizontal featured">
+                <div class="quest-emoji-large">🧩</div>
+                <div class="quest-title">Daily Pulse</div>
+                <div class="quest-subtitle">Your turn to answer</div>
+                <div class="quest-rewards">
+                    <span class="reward-badge">+20 LP</span>
+                    <span class="reward-badge">🔥 Streak</span>
+                </div>
+            </div>
+
+            <div class="quest-card-horizontal">
+                <div class="quest-emoji-large">🪜</div>
+                <div class="quest-title">Word Ladder</div>
+                <div class="quest-subtitle">2 puzzles waiting</div>
+                <div class="quest-rewards">
+                    <span class="reward-badge">+15 LP</span>
+                </div>
+            </div>
+
+            <div class="quest-card-horizontal">
+                <div class="quest-emoji-large">🃏</div>
+                <div class="quest-title">Memory Flip</div>
+                <div class="quest-subtitle">6 of 8 pairs</div>
+                <div class="quest-rewards">
+                    <span class="reward-badge">+40 LP</span>
+                </div>
+            </div>
+
+            <div class="quest-card-horizontal">
+                <div class="quest-emoji-large">🎯</div>
+                <div class="quest-title">Couple Quiz</div>
+                <div class="quest-subtitle">Start new</div>
+                <div class="quest-rewards">
+                    <span class="reward-badge">+30 LP</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <div class="section-header">
+            <div class="section-title">Side Quests</div>
+        </div>
+        <div class="side-quests-grid">
+            <div class="side-quest-card">
+                <div class="side-quest-emoji">📝</div>
+                <div class="side-quest-name">Inbox</div>
+                <div class="side-quest-desc">2 new messages</div>
+            </div>
+            <div class="side-quest-card">
+                <div class="side-quest-emoji">💭</div>
+                <div class="side-quest-name">Would You Rather</div>
+                <div class="side-quest-desc">Coming soon</div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

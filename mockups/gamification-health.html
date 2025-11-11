@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Health Challenge - TogetherRemind</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #FAFAFA;
+            min-height: 100vh;
+        }
+        .phone-container {
+            max-width: 390px;
+            margin: 40px auto;
+            background: white;
+            border-radius: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+            border: 12px solid #1A1A1A;
+        }
+        .status-bar {
+            height: 44px;
+            background: #FFFEFA;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+            font-size: 15px;
+            font-weight: 600;
+        }
+        .screen {
+            background: #FAFAFA;
+            min-height: 700px;
+            overflow-y: auto;
+            padding-bottom: 100px;
+        }
+        .header {
+            background: linear-gradient(135deg, #22c55e 0%, #10b981 100%);
+            padding: 20px;
+            color: white;
+        }
+        .back-button {
+            font-size: 28px;
+            margin-bottom: 12px;
+        }
+        .header h2 {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+        .header-subtitle {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        .integration-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            font-size: 13px;
+            font-weight: 600;
+            margin-top: 12px;
+        }
+        .today-card {
+            background: white;
+            margin: -20px 16px 20px;
+            border-radius: 20px;
+            padding: 24px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        .today-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1A1A1A;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .goals-grid {
+            display: grid;
+            gap: 16px;
+        }
+        .goal-item {
+            background: #F5F5F5;
+            border-radius: 16px;
+            padding: 20px;
+            border-left: 4px solid #E0E0E0;
+        }
+        .goal-item.completed {
+            border-left-color: #22c55e;
+            background: #E8F5E9;
+        }
+        .goal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        .goal-name {
+            font-size: 15px;
+            font-weight: 600;
+            color: #1A1A1A;
+        }
+        .goal-status {
+            font-size: 20px;
+        }
+        .goal-progress {
+            margin-bottom: 8px;
+        }
+        .progress-text {
+            font-size: 13px;
+            color: #666;
+            margin-bottom: 8px;
+        }
+        .progress-bar {
+            background: #E0E0E0;
+            height: 8px;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        .progress-fill {
+            background: linear-gradient(90deg, #22c55e 0%, #10b981 100%);
+            height: 100%;
+            transition: width 0.5s ease;
+        }
+        .partner-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            margin-top: 12px;
+        }
+        .partner-stat {
+            background: white;
+            padding: 12px;
+            border-radius: 12px;
+            text-align: center;
+        }
+        .partner-stat.completed {
+            background: #E8F5E9;
+        }
+        .partner-name {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 6px;
+        }
+        .partner-value {
+            font-size: 20px;
+            font-weight: 700;
+            color: #22c55e;
+        }
+        .partner-label {
+            font-size: 10px;
+            color: #999;
+        }
+        .section {
+            padding: 0 16px;
+            margin-bottom: 24px;
+        }
+        .section-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1A1A1A;
+            margin-bottom: 12px;
+        }
+        .reward-card {
+            background: linear-gradient(135deg, #FFF5F8 0%, #E8F5E9 100%);
+            border: 2px solid #FFE5EC;
+            border-radius: 16px;
+            padding: 20px;
+            text-align: center;
+        }
+        .reward-icon {
+            font-size: 48px;
+            margin-bottom: 12px;
+        }
+        .reward-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1A1A1A;
+            margin-bottom: 8px;
+        }
+        .reward-description {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 16px;
+        }
+        .reward-points {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 10px 20px;
+            background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+            border-radius: 12px;
+            font-size: 15px;
+            font-weight: 700;
+            color: white;
+        }
+        .week-calendar {
+            background: white;
+            border-radius: 16px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        .calendar-days {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 8px;
+        }
+        .day-cell {
+            aspect-ratio: 1;
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 8px;
+            background: #F5F5F5;
+        }
+        .day-cell.completed {
+            background: #E8F5E9;
+        }
+        .day-cell.today {
+            border: 2px solid #FF6B9D;
+        }
+        .day-name {
+            font-size: 10px;
+            color: #999;
+            margin-bottom: 4px;
+        }
+        .day-icon {
+            font-size: 20px;
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+        .stat-card {
+            background: white;
+            padding: 16px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            text-align: center;
+        }
+        .stat-icon {
+            font-size: 32px;
+            margin-bottom: 8px;
+        }
+        .stat-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: #22c55e;
+            margin-bottom: 4px;
+        }
+        .stat-label {
+            font-size: 12px;
+            color: #666;
+        }
+        .sync-button {
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(135deg, #22c55e 0%, #10b981 100%);
+            color: white;
+            border: none;
+            border-radius: 16px;
+            font-size: 17px;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(34, 197, 94, 0.3);
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="phone-container">
+        <div class="status-bar">
+            <span class="time">9:41</span>
+            <span class="status-icons">📶 🔋</span>
+        </div>
+
+        <div class="screen">
+            <div class="header">
+                <div class="back-button">←</div>
+                <h2>💪 Health Challenge</h2>
+                <p class="header-subtitle">Verified activity tracking</p>
+                <div class="integration-badge">
+                     Health Connected
+                </div>
+            </div>
+
+            <!-- Today's Goals -->
+            <div class="today-card">
+                <div class="today-title">Today's Goals (Nov 10)</div>
+
+                <div class="goals-grid">
+                    <!-- Steps Goal -->
+                    <div class="goal-item completed">
+                        <div class="goal-header">
+                            <div class="goal-name">👟 Daily Steps</div>
+                            <div class="goal-status">✓</div>
+                        </div>
+                        <div class="goal-progress">
+                            <div class="progress-text">8,432 / 6,000 steps</div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 100%;"></div>
+                            </div>
+                        </div>
+                        <div class="partner-stats">
+                            <div class="partner-stat completed">
+                                <div class="partner-name">You</div>
+                                <div class="partner-value">8.4K</div>
+                                <div class="partner-label">steps</div>
+                            </div>
+                            <div class="partner-stat completed">
+                                <div class="partner-name">Alex</div>
+                                <div class="partner-value">7.2K</div>
+                                <div class="partner-label">steps</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Sleep Goal -->
+                    <div class="goal-item">
+                        <div class="goal-header">
+                            <div class="goal-name">😴 Sleep Goal</div>
+                            <div class="goal-status">⏳</div>
+                        </div>
+                        <div class="goal-progress">
+                            <div class="progress-text">Tracking tonight's sleep...</div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 0%;"></div>
+                            </div>
+                        </div>
+                        <div class="partner-stats">
+                            <div class="partner-stat">
+                                <div class="partner-name">You</div>
+                                <div class="partner-value">—</div>
+                                <div class="partner-label">pending</div>
+                            </div>
+                            <div class="partner-stat">
+                                <div class="partner-name">Alex</div>
+                                <div class="partner-value">—</div>
+                                <div class="partner-label">pending</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Reward Info -->
+            <div class="section">
+                <div class="section-title">Daily Reward</div>
+                <div class="reward-card">
+                    <div class="reward-icon">🏆</div>
+                    <div class="reward-title">Both Complete = Reward</div>
+                    <div class="reward-description">
+                        You'll both earn Love Points when you both hit today's goals
+                    </div>
+                    <div class="reward-points">
+                        🪙 +15 Love Points
+                    </div>
+                </div>
+            </div>
+
+            <!-- Week View -->
+            <div class="section">
+                <div class="section-title">This Week's Progress</div>
+                <div class="week-calendar">
+                    <div class="calendar-days">
+                        <div class="day-cell completed">
+                            <div class="day-name">Mon</div>
+                            <div class="day-icon">✓</div>
+                        </div>
+                        <div class="day-cell completed">
+                            <div class="day-name">Tue</div>
+                            <div class="day-icon">✓</div>
+                        </div>
+                        <div class="day-cell completed">
+                            <div class="day-name">Wed</div>
+                            <div class="day-icon">✓</div>
+                        </div>
+                        <div class="day-cell completed">
+                            <div class="day-name">Thu</div>
+                            <div class="day-icon">✓</div>
+                        </div>
+                        <div class="day-cell completed">
+                            <div class="day-name">Fri</div>
+                            <div class="day-icon">✓</div>
+                        </div>
+                        <div class="day-cell">
+                            <div class="day-name">Sat</div>
+                            <div class="day-icon">—</div>
+                        </div>
+                        <div class="day-cell today">
+                            <div class="day-name">Sun</div>
+                            <div class="day-icon">⏳</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stats -->
+            <div class="section">
+                <div class="section-title">Weekly Stats</div>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon">🔥</div>
+                        <div class="stat-value">5</div>
+                        <div class="stat-label">Days Both Completed</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">🪙</div>
+                        <div class="stat-value">+75</div>
+                        <div class="stat-label">LP Earned This Week</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">👟</div>
+                        <div class="stat-value">48.2K</div>
+                        <div class="stat-label">Combined Steps</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">😴</div>
+                        <div class="stat-value">7.3h</div>
+                        <div class="stat-label">Avg Sleep (Both)</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sync Button -->
+            <div class="section">
+                <button class="sync-button">🔄 Sync Health Data</button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

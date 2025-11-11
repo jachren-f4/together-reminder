@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Integrated Home Screen - TogetherRemind</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #FAFAFA;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 40px 20px;
+        }
+        .phone-container {
+            max-width: 390px;
+            width: 100%;
+            background: white;
+            border-radius: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+            overflow: hidden;
+            border: 12px solid #1A1A1A;
+        }
+        .status-bar {
+            height: 44px;
+            background: #FFFEFA;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+            font-size: 15px;
+            font-weight: 600;
+            color: #1A1A1A;
+        }
+        .screen {
+            background: #FAFAFA;
+            min-height: 700px;
+            overflow-y: auto;
+            padding-bottom: 100px;
+        }
+
+        /* Header */
+        .header {
+            background: white;
+            padding: 20px;
+            border-bottom: 1px solid #F0F0F0;
+        }
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+        .greeting {
+            font-family: 'Playfair Display', serif;
+            font-size: 28px;
+            font-weight: 600;
+            color: #1A1A1A;
+        }
+        .lp-counter {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 14px;
+            background: #FAFAFA;
+            border: 1px solid #F0F0F0;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 600;
+            color: #1A1A1A;
+        }
+        .partner-info {
+            font-size: 14px;
+            color: #6E6E6E;
+        }
+        .partner-name {
+            font-weight: 600;
+            color: #1A1A1A;
+        }
+
+        /* Challenge Banner (Collapsible) */
+        .challenge-banner {
+            background: white;
+            margin: 16px;
+            border-radius: 16px;
+            padding: 16px;
+            border-left: 3px solid #1A1A1A;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        .challenge-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        .challenge-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #1A1A1A;
+        }
+        .challenge-timer {
+            font-size: 12px;
+            color: #6E6E6E;
+        }
+        .challenge-progress-text {
+            font-size: 12px;
+            color: #6E6E6E;
+            margin-bottom: 8px;
+        }
+        .progress-bar {
+            background: #F0F0F0;
+            height: 4px;
+            border-radius: 2px;
+            overflow: hidden;
+        }
+        .progress-fill {
+            background: #1A1A1A;
+            height: 100%;
+            width: 70%;
+        }
+
+        /* Main Actions */
+        .main-actions {
+            padding: 24px 16px;
+        }
+        .action-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+        .action-card {
+            background: white;
+            padding: 24px 16px;
+            border-radius: 16px;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            border: 2px solid #F0F0F0;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+        .action-card:hover {
+            border-color: #1A1A1A;
+            transform: translateY(-2px);
+        }
+        .action-icon {
+            font-size: 40px;
+            margin-bottom: 12px;
+        }
+        .action-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: #1A1A1A;
+            margin-bottom: 4px;
+        }
+        .action-subtitle {
+            font-size: 12px;
+            color: #6E6E6E;
+        }
+
+        /* Quick Stats (Optional) */
+        .quick-stats {
+            padding: 0 16px 24px;
+        }
+        .stats-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #AAAAAA;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+        }
+        .stat-chip {
+            background: white;
+            padding: 12px 8px;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            border: 1px solid #F0F0F0;
+        }
+        .stat-value {
+            font-size: 20px;
+            font-weight: 700;
+            color: #1A1A1A;
+            margin-bottom: 2px;
+        }
+        .stat-label {
+            font-size: 10px;
+            color: #6E6E6E;
+        }
+
+        /* FAB - Poke Button */
+        .fab {
+            position: fixed;
+            bottom: 90px;
+            right: calc(50% - 175px);
+            width: 60px;
+            height: 60px;
+            background: #1A1A1A;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            cursor: pointer;
+        }
+        .fab-badge {
+            position: absolute;
+            top: -4px;
+            right: -4px;
+            background: white;
+            color: #1A1A1A;
+            font-size: 11px;
+            font-weight: 700;
+            padding: 4px 8px;
+            border-radius: 10px;
+            border: 2px solid #1A1A1A;
+        }
+
+        /* Bottom Nav */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            max-width: 390px;
+            width: 100%;
+            background: white;
+            border-top: 1px solid #F0F0F0;
+            display: flex;
+            justify-content: space-around;
+            padding: 12px 0 24px;
+        }
+        .nav-item {
+            text-align: center;
+            font-size: 24px;
+            color: #AAAAAA;
+            padding: 8px;
+        }
+        .nav-item.active {
+            color: #1A1A1A;
+        }
+    </style>
+</head>
+<body>
+    <div class="phone-container">
+        <div class="status-bar">
+            <span class="time">9:41</span>
+            <span class="status-icons">📶 🔋</span>
+        </div>
+
+        <div class="screen">
+            <!-- Header -->
+            <div class="header">
+                <div class="header-top">
+                    <div class="greeting">Good morning</div>
+                    <div class="lp-counter">
+                        🪙 3,280
+                    </div>
+                </div>
+                <div class="partner-info">
+                    Connected with <span class="partner-name">Alex</span>
+                </div>
+            </div>
+
+            <!-- Optional Challenge Banner -->
+            <div class="challenge-banner">
+                <div class="challenge-header">
+                    <div class="challenge-title">Teamwork Week</div>
+                    <div class="challenge-timer">3d left</div>
+                </div>
+                <div class="challenge-progress-text">28/40 activities • 2x points active</div>
+                <div class="progress-bar">
+                    <div class="progress-fill"></div>
+                </div>
+            </div>
+
+            <!-- Main Actions -->
+            <div class="main-actions">
+                <div class="action-grid">
+                    <div class="action-card">
+                        <div class="action-icon">💌</div>
+                        <div class="action-title">Send Reminder</div>
+                        <div class="action-subtitle">Quick message</div>
+                    </div>
+                    <div class="action-card">
+                        <div class="action-icon">📥</div>
+                        <div class="action-title">Inbox</div>
+                        <div class="action-subtitle">12 reminders</div>
+                    </div>
+                    <div class="action-card">
+                        <div class="action-icon">🧠</div>
+                        <div class="action-title">Couple Quiz</div>
+                        <div class="action-subtitle">+5-20 LP</div>
+                    </div>
+                    <div class="action-card">
+                        <div class="action-icon">💪</div>
+                        <div class="action-title">Health</div>
+                        <div class="action-subtitle">4.2k steps</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Stats (Optional) -->
+            <div class="quick-stats">
+                <div class="stats-title">This Week</div>
+                <div class="stats-grid">
+                    <div class="stat-chip">
+                        <div class="stat-value">#42</div>
+                        <div class="stat-label">Rank</div>
+                    </div>
+                    <div class="stat-chip">
+                        <div class="stat-value">7</div>
+                        <div class="stat-label">Day Streak</div>
+                    </div>
+                    <div class="stat-chip">
+                        <div class="stat-value">+420</div>
+                        <div class="stat-label">LP Earned</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- FAB (Poke Button) -->
+            <div class="fab">
+                💕
+                <span class="fab-badge">3</span>
+            </div>
+
+            <!-- Bottom Navigation -->
+            <div class="bottom-nav">
+                <div class="nav-item active">🏠</div>
+                <div class="nav-item">📥</div>
+                <div class="nav-item">💎</div>
+                <div class="nav-item">⚙️</div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

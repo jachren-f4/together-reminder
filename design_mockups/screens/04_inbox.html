@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TogetherRemind - Inbox</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #FFF5F7 0%, #FFE8EF 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 420px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            margin-bottom: 16px;
+        }
+
+        .title-row {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .title-row .emoji {
+            font-size: 40px;
+        }
+
+        h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 32px;
+            font-weight: 700;
+            color: #FF4D8D;
+            letter-spacing: -0.5px;
+        }
+
+        .filter-tabs {
+            background: white;
+            border-radius: 12px;
+            padding: 4px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            display: flex;
+        }
+
+        .filter-tab {
+            flex: 1;
+            padding: 8px;
+            border: none;
+            background: transparent;
+            border-radius: 8px;
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            font-weight: 600;
+            color: #6E6E6E;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .filter-tab.active {
+            background: linear-gradient(135deg, #FF4D8D 0%, #FF8A6B 100%);
+            color: white;
+        }
+
+        .reminders-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .reminder-card {
+            background: white;
+            border-radius: 16px;
+            padding: 16px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        .reminder-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 4px 8px;
+            border-radius: 8px;
+            font-family: 'Inter', sans-serif;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .badge.from {
+            background: rgba(147, 112, 219, 0.2);
+            color: #9370DB;
+        }
+
+        .badge.to {
+            background: rgba(255, 77, 141, 0.2);
+            color: #FF4D8D;
+        }
+
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .status-dot {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+        }
+
+        .status-dot.pending {
+            background: rgba(255, 77, 141, 0.2);
+            color: #FF4D8D;
+        }
+
+        .status-dot.done {
+            background: rgba(76, 175, 80, 0.2);
+            color: #4CAF50;
+        }
+
+        .reminder-text {
+            font-family: 'Inter', sans-serif;
+            font-size: 16px;
+            font-weight: 500;
+            color: #1A1A1A;
+            line-height: 1.4;
+            margin-bottom: 8px;
+        }
+
+        .reminder-time {
+            font-family: 'Inter', sans-serif;
+            font-size: 12px;
+            color: #AAAAAA;
+            margin-bottom: 12px;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+        }
+
+        .action-button {
+            flex: 1;
+            padding: 8px;
+            border: none;
+            border-radius: 8px;
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .action-button.primary {
+            background: #4CAF50;
+            color: white;
+        }
+
+        .action-button.secondary {
+            background: #F5F5F5;
+            color: #1A1A1A;
+            border: 1px solid #E0E0E0;
+        }
+
+        .action-button:active {
+            transform: scale(0.97);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="title-row">
+                <span class="emoji">📝</span>
+                <h1>Inbox</h1>
+            </div>
+
+            <div class="filter-tabs">
+                <button class="filter-tab active">All</button>
+                <button class="filter-tab">Received</button>
+                <button class="filter-tab">Sent</button>
+                <button class="filter-tab">💫 Pokes</button>
+            </div>
+        </div>
+
+        <div class="reminders-list">
+            <div class="reminder-card">
+                <div class="reminder-header">
+                    <span class="badge from">From Sarah</span>
+                    <div class="status-indicator">
+                        <div class="status-dot pending">!</div>
+                    </div>
+                </div>
+                <div class="reminder-text">Don't forget to pick up milk on your way home 🥛</div>
+                <div class="reminder-time">Nov 7, 2:30 PM</div>
+                <div class="action-buttons">
+                    <button class="action-button primary">Done</button>
+                    <button class="action-button secondary">Snooze</button>
+                </div>
+            </div>
+
+            <div class="reminder-card">
+                <div class="reminder-header">
+                    <span class="badge to">To Sarah</span>
+                    <div class="status-indicator">
+                        <div class="status-dot done">✓</div>
+                    </div>
+                </div>
+                <div class="reminder-text">Meeting with Lisa at 3pm tomorrow ☕</div>
+                <div class="reminder-time">Nov 6, 5:15 PM</div>
+            </div>
+
+            <div class="reminder-card">
+                <div class="reminder-header">
+                    <span class="badge from">From Sarah</span>
+                    <div class="status-indicator">
+                        <div class="status-dot done">✓</div>
+                    </div>
+                </div>
+                <div class="reminder-text">Love you! Have a great presentation today 💪</div>
+                <div class="reminder-time">Nov 5, 8:00 AM</div>
+            </div>
+
+            <div class="reminder-card">
+                <div class="reminder-header">
+                    <span class="badge from">From Sarah</span>
+                    <div class="status-indicator">
+                        <div class="status-dot done">✓</div>
+                    </div>
+                </div>
+                <div class="reminder-text">Can you water the plants? I forgot this morning 🌱</div>
+                <div class="reminder-time">Nov 4, 7:30 AM</div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Variant 8: Split View - TogetherRemind</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #FAFAFA;
+            color: #1A1A1A;
+            padding: 0;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+        .hero-section {
+            background: #1A1A1A;
+            color: #FFFEFD;
+            padding: 32px 24px;
+            text-align: center;
+        }
+        .hero-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 32px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            letter-spacing: -0.5px;
+        }
+        .hero-subtitle {
+            font-size: 15px;
+            opacity: 0.7;
+            margin-bottom: 24px;
+        }
+        .hero-game {
+            background: rgba(255, 254, 253, 0.1);
+            border: 2px solid rgba(255, 254, 253, 0.2);
+            border-radius: 20px;
+            padding: 28px;
+            margin-bottom: 16px;
+        }
+        .hero-game-emoji {
+            font-size: 56px;
+            margin-bottom: 12px;
+        }
+        .hero-game-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 22px;
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+        .hero-game-subtitle {
+            font-size: 14px;
+            opacity: 0.8;
+            margin-bottom: 16px;
+        }
+        .hero-button {
+            background: #FFFEFD;
+            color: #1A1A1A;
+            border: none;
+            border-radius: 16px;
+            padding: 14px 28px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+        }
+        .hero-badge {
+            display: inline-block;
+            padding: 6px 12px;
+            background: rgba(255, 254, 253, 0.2);
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+        .content-section {
+            padding: 24px;
+        }
+        .section-title {
+            font-size: 17px;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+        .games-list {
+            margin-bottom: 24px;
+        }
+        .game-item {
+            background: #FFFEFD;
+            border: 2px solid #F0F0F0;
+            border-radius: 16px;
+            padding: 16px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        .game-icon {
+            width: 56px;
+            height: 56px;
+            background: #F0F0F0;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            flex-shrink: 0;
+        }
+        .game-info {
+            flex: 1;
+        }
+        .game-name {
+            font-size: 15px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        .game-status {
+            font-size: 13px;
+            color: #6E6E6E;
+        }
+        .game-arrow {
+            font-size: 18px;
+            color: #AAAAAA;
+        }
+        .actions-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+        .action-card {
+            background: #FFFEFD;
+            border: 2px solid #F0F0F0;
+            border-radius: 16px;
+            padding: 24px 16px;
+            text-align: center;
+        }
+        .action-emoji {
+            font-size: 40px;
+            margin-bottom: 12px;
+        }
+        .action-title {
+            font-size: 15px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        .action-subtitle {
+            font-size: 12px;
+            color: #6E6E6E;
+        }
+        .divider {
+            height: 1px;
+            background: #F0F0F0;
+            margin: 24px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="hero-section">
+        <div class="hero-title">TogetherRemind</div>
+        <div class="hero-subtitle">Day 8 together</div>
+
+        <div class="hero-game">
+            <div class="hero-badge">🔥 3 day streak</div>
+            <div class="hero-game-emoji">🧩</div>
+            <div class="hero-game-title">Daily Pulse</div>
+            <div class="hero-game-subtitle">Your turn to answer today</div>
+            <button class="hero-button">Answer Now</button>
+        </div>
+    </div>
+
+    <div class="content-section">
+        <div class="section-title">Continue Playing</div>
+        <div class="games-list">
+            <div class="game-item">
+                <div class="game-icon">🪜</div>
+                <div class="game-info">
+                    <div class="game-name">Word Ladder Duet</div>
+                    <div class="game-status">Your turn • 2 active</div>
+                </div>
+                <div class="game-arrow">›</div>
+            </div>
+
+            <div class="game-item">
+                <div class="game-icon">🃏</div>
+                <div class="game-info">
+                    <div class="game-name">Memory Flip Co-op</div>
+                    <div class="game-status">6 out of 8 pairs found</div>
+                </div>
+                <div class="game-arrow">›</div>
+            </div>
+
+            <div class="game-item">
+                <div class="game-icon">🎯</div>
+                <div class="game-info">
+                    <div class="game-name">Couple Quiz</div>
+                    <div class="game-status">Start a new session</div>
+                </div>
+                <div class="game-arrow">›</div>
+            </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="section-title">Quick Actions</div>
+        <div class="actions-grid">
+            <div class="action-card">
+                <div class="action-emoji">💫</div>
+                <div class="action-title">Send Poke</div>
+                <div class="action-subtitle">Quick nudge</div>
+            </div>
+
+            <div class="action-card">
+                <div class="action-emoji">💕</div>
+                <div class="action-title">Reminder</div>
+                <div class="action-subtitle">Schedule it</div>
+            </div>
+
+            <div class="action-card">
+                <div class="action-emoji">📝</div>
+                <div class="action-title">Inbox</div>
+                <div class="action-subtitle">2 new</div>
+            </div>
+
+            <div class="action-card">
+                <div class="action-emoji">💎</div>
+                <div class="action-title">Profile</div>
+                <div class="action-subtitle">View stats</div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

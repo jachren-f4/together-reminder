@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weekly Challenge - TogetherRemind</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #FAFAFA;
+            min-height: 100vh;
+        }
+        .phone-container {
+            max-width: 390px;
+            margin: 40px auto;
+            background: white;
+            border-radius: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+            border: 12px solid #1A1A1A;
+        }
+        .status-bar {
+            height: 44px;
+            background: #FFFEFA;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+            font-size: 15px;
+            font-weight: 600;
+        }
+        .screen {
+            background: #FAFAFA;
+            min-height: 700px;
+            overflow-y: auto;
+            padding-bottom: 100px;
+        }
+        .header {
+            background: linear-gradient(135deg, #FF6B9D 0%, #FEA47F 100%);
+            padding: 20px;
+            color: white;
+        }
+        .back-button {
+            font-size: 28px;
+            margin-bottom: 12px;
+        }
+        .header h2 {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+        .header-subtitle {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        .challenge-banner {
+            background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+            margin: -20px 16px 20px;
+            border-radius: 20px;
+            padding: 24px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            color: white;
+            text-align: center;
+        }
+        .challenge-icon {
+            font-size: 60px;
+            margin-bottom: 12px;
+        }
+        .challenge-name {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+        .challenge-subtitle {
+            font-size: 14px;
+            opacity: 0.9;
+            margin-bottom: 16px;
+        }
+        .challenge-timer {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 16px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+        .progress-section {
+            padding: 0 16px;
+            margin-bottom: 24px;
+        }
+        .section-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1A1A1A;
+            margin-bottom: 16px;
+        }
+        .progress-card {
+            background: white;
+            border-radius: 16px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            margin-bottom: 16px;
+        }
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+        .progress-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1A1A1A;
+        }
+        .progress-count {
+            font-size: 24px;
+            font-weight: 700;
+            color: #FF6B9D;
+        }
+        .progress-bar-container {
+            background: #F0F0F0;
+            height: 12px;
+            border-radius: 6px;
+            overflow: hidden;
+            margin-bottom: 12px;
+        }
+        .progress-bar-fill {
+            background: linear-gradient(90deg, #FF6B9D 0%, #FEA47F 100%);
+            height: 100%;
+            border-radius: 6px;
+            transition: width 0.5s ease;
+        }
+        .progress-label {
+            font-size: 13px;
+            color: #666;
+            text-align: center;
+        }
+        .multiplier-badge {
+            background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 8px;
+        }
+        .partner-progress {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-top: 16px;
+        }
+        .partner-card {
+            background: #F5F5F5;
+            padding: 16px;
+            border-radius: 12px;
+            text-align: center;
+        }
+        .partner-name {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 8px;
+        }
+        .partner-count {
+            font-size: 28px;
+            font-weight: 700;
+            color: #FF6B9D;
+        }
+        .partner-label {
+            font-size: 12px;
+            color: #999;
+        }
+        .activities-list {
+            padding: 0 16px;
+            margin-bottom: 24px;
+        }
+        .activity-item {
+            background: white;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .activity-icon {
+            font-size: 32px;
+        }
+        .activity-content {
+            flex: 1;
+        }
+        .activity-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #1A1A1A;
+            margin-bottom: 2px;
+        }
+        .activity-progress {
+            font-size: 12px;
+            color: #666;
+        }
+        .activity-points {
+            font-size: 14px;
+            font-weight: 700;
+            color: #22c55e;
+        }
+        .rewards-section {
+            padding: 0 16px;
+            margin-bottom: 24px;
+        }
+        .rewards-card {
+            background: linear-gradient(135deg, #FFF5F8 0%, #FFF9F0 100%);
+            border: 2px solid #FFE5EC;
+            border-radius: 16px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        .rewards-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #FF6B9D;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+        .reward-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 0;
+            border-bottom: 1px solid #FFE5EC;
+        }
+        .reward-item:last-child {
+            border-bottom: none;
+        }
+        .reward-icon {
+            font-size: 24px;
+        }
+        .reward-text {
+            flex: 1;
+            font-size: 14px;
+            color: #666;
+        }
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            max-width: 390px;
+            width: 100%;
+            background: white;
+            border-top: 1px solid #F0F0F0;
+            display: flex;
+            justify-content: space-around;
+            padding: 12px 0 24px;
+        }
+        .nav-item {
+            text-align: center;
+            font-size: 24px;
+            color: #999;
+            padding: 8px;
+        }
+        .nav-item.active {
+            color: #FF6B9D;
+        }
+    </style>
+</head>
+<body>
+    <div class="phone-container">
+        <div class="status-bar">
+            <span class="time">9:41</span>
+            <span class="status-icons">📶 🔋</span>
+        </div>
+
+        <div class="screen">
+            <div class="header">
+                <div class="back-button">←</div>
+                <h2>🎯 Weekly Challenge</h2>
+                <p class="header-subtitle">Time-boxed cooperative goals</p>
+            </div>
+
+            <!-- Challenge Banner -->
+            <div class="challenge-banner">
+                <div class="challenge-icon">🔥</div>
+                <div class="challenge-name">Teamwork Week</div>
+                <div class="challenge-subtitle">Complete 40 activities together this week</div>
+                <div class="challenge-timer">
+                    ⏱️ 3 days 14h left
+                </div>
+            </div>
+
+            <!-- Overall Progress -->
+            <div class="progress-section">
+                <div class="section-title">Overall Progress</div>
+                <div class="progress-card">
+                    <div class="progress-header">
+                        <div class="progress-title">Combined Activities</div>
+                        <div class="progress-count">28/40</div>
+                    </div>
+                    <div class="progress-bar-container">
+                        <div class="progress-bar-fill" style="width: 70%;"></div>
+                    </div>
+                    <div class="progress-label">12 more to complete the challenge!</div>
+                    <div class="multiplier-badge">
+                        ⚡ 2x Love Points Active
+                    </div>
+                </div>
+
+                <div class="progress-card">
+                    <div class="progress-header">
+                        <div class="progress-title">Individual Contributions</div>
+                    </div>
+                    <div class="partner-progress">
+                        <div class="partner-card">
+                            <div class="partner-name">You</div>
+                            <div class="partner-count">16</div>
+                            <div class="partner-label">activities</div>
+                        </div>
+                        <div class="partner-card">
+                            <div class="partner-name">Alex</div>
+                            <div class="partner-count">12</div>
+                            <div class="partner-label">activities</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Qualifying Activities -->
+            <div class="activities-list">
+                <div class="section-title">Qualifying Activities</div>
+
+                <div class="activity-item">
+                    <div class="activity-icon">🧠</div>
+                    <div class="activity-content">
+                        <div class="activity-title">Couple Quizzes</div>
+                        <div class="activity-progress">3 completed this week</div>
+                    </div>
+                    <div class="activity-points">+12</div>
+                </div>
+
+                <div class="activity-item">
+                    <div class="activity-icon">💪</div>
+                    <div class="activity-content">
+                        <div class="activity-title">Health Goals Met</div>
+                        <div class="activity-progress">5 days both met goals</div>
+                    </div>
+                    <div class="activity-points">+10</div>
+                </div>
+
+                <div class="activity-item">
+                    <div class="activity-icon">💕</div>
+                    <div class="activity-content">
+                        <div class="activity-title">Mutual Pokes</div>
+                        <div class="activity-progress">4 mutual pokes</div>
+                    </div>
+                    <div class="activity-points">+4</div>
+                </div>
+
+                <div class="activity-item">
+                    <div class="activity-icon">📝</div>
+                    <div class="activity-content">
+                        <div class="activity-title">Reminders Sent</div>
+                        <div class="activity-progress">6 thoughtful reminders</div>
+                    </div>
+                    <div class="activity-points">+6</div>
+                </div>
+            </div>
+
+            <!-- Rewards -->
+            <div class="rewards-section">
+                <div class="section-title">Challenge Rewards</div>
+                <div class="rewards-card">
+                    <div class="rewards-title">Complete to Unlock:</div>
+                    <div class="reward-item">
+                        <div class="reward-icon">🪙</div>
+                        <div class="reward-text">800+ Love Points (with 2x multiplier)</div>
+                    </div>
+                    <div class="reward-item">
+                        <div class="reward-icon">🏆</div>
+                        <div class="reward-text">"Teamwork Champions" badge</div>
+                    </div>
+                    <div class="reward-item">
+                        <div class="reward-icon">⬆️</div>
+                        <div class="reward-text">Potential tier upgrade</div>
+                    </div>
+                    <div class="reward-item">
+                        <div class="reward-icon">✨</div>
+                        <div class="reward-text">Special confetti animation</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bottom Nav -->
+            <div class="bottom-nav">
+                <div class="nav-item">🏠</div>
+                <div class="nav-item">🏆</div>
+                <div class="nav-item">💎</div>
+                <div class="nav-item active">⚙️</div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

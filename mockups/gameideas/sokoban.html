@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tiny Sokoban Rooms - TogetherRemind</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .game-container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 500px;
+            width: 100%;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .game-icon {
+            font-size: 3em;
+            margin-bottom: 10px;
+        }
+
+        h1 {
+            color: #667eea;
+            font-size: 1.8em;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: #666;
+            font-size: 0.95em;
+        }
+
+        .level-info {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            color: white;
+            padding: 15px;
+            border-radius: 12px;
+            text-align: center;
+            margin: 20px 0;
+            font-weight: 600;
+        }
+
+        .level-name {
+            font-size: 1.1em;
+            margin-bottom: 5px;
+        }
+
+        .level-meta {
+            font-size: 0.85em;
+            opacity: 0.9;
+        }
+
+        .game-board {
+            background: #f9fafb;
+            border: 3px solid #e5e7eb;
+            border-radius: 15px;
+            padding: 20px;
+            margin: 25px 0;
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 5px;
+            max-width: 350px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .tile {
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2em;
+            border-radius: 6px;
+            transition: all 0.3s;
+        }
+
+        .tile-floor {
+            background: #e5e7eb;
+        }
+
+        .tile-wall {
+            background: #475569;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .tile-target {
+            background: #fef3c7;
+            position: relative;
+        }
+
+        .tile-target::before {
+            content: '✕';
+            position: absolute;
+            color: #f59e0b;
+            font-size: 0.5em;
+            opacity: 0.5;
+        }
+
+        .tile-box {
+            background: #cbd5e1;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .tile-box-on-target {
+            background: #10b981;
+            animation: success-pulse 0.5s ease;
+        }
+
+        @keyframes success-pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .player-you {
+            position: relative;
+            z-index: 2;
+        }
+
+        .player-partner {
+            position: relative;
+            z-index: 2;
+        }
+
+        .controls {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            max-width: 250px;
+            margin: 20px auto;
+        }
+
+        .control-btn {
+            padding: 15px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.5em;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: bold;
+        }
+
+        .control-btn:hover {
+            background: #5568d3;
+            transform: scale(1.05);
+        }
+
+        .control-btn:active {
+            transform: scale(0.95);
+        }
+
+        .control-btn.empty {
+            visibility: hidden;
+        }
+
+        .move-history {
+            background: #f0f4ff;
+            border-radius: 12px;
+            padding: 15px;
+            margin: 20px 0;
+        }
+
+        .history-title {
+            font-weight: 600;
+            color: #667eea;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .history-moves {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            justify-content: center;
+        }
+
+        .move-chip {
+            background: white;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 5px 12px;
+            font-size: 0.85em;
+            font-weight: 600;
+        }
+
+        .move-you {
+            border-color: #667eea;
+            color: #667eea;
+        }
+
+        .move-partner {
+            border-color: #ec4899;
+            color: #ec4899;
+        }
+
+        .partner-activity {
+            background: #fce7f3;
+            border: 2px solid #ec4899;
+            border-radius: 12px;
+            padding: 12px;
+            margin: 15px 0;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .partner-avatar {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            background: #ec4899;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .partner-text {
+            color: #be185d;
+            font-size: 0.9em;
+            font-weight: 500;
+        }
+
+        .action-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin: 20px 0;
+        }
+
+        .btn {
+            padding: 12px;
+            border: 2px solid #e5e7eb;
+            background: white;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn:hover {
+            border-color: #667eea;
+            background: #f0f4ff;
+        }
+
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 2px solid #e5e7eb;
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .stat-label {
+            font-size: 0.85em;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 20px;
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <div class="header">
+            <div class="game-icon">📦</div>
+            <h1>Tiny Sokoban Rooms</h1>
+            <p class="subtitle">Push boxes to targets together</p>
+        </div>
+
+        <div class="level-info">
+            <div class="level-name">🎯 Level 3: "Dance Floor"</div>
+            <div class="level-meta">Take turns • Watch moves replay</div>
+        </div>
+
+        <div class="partner-activity">
+            <div class="partner-avatar">❤️</div>
+            <div class="partner-text">
+                Your partner moved UP • Watch the replay!
+            </div>
+        </div>
+
+        <div class="game-board">
+            <!-- Row 1 -->
+            <div class="tile tile-wall"></div>
+            <div class="tile tile-wall"></div>
+            <div class="tile tile-wall"></div>
+            <div class="tile tile-wall"></div>
+            <div class="tile tile-wall"></div>
+            <div class="tile tile-wall"></div>
+
+            <!-- Row 2 -->
+            <div class="tile tile-wall"></div>
+            <div class="tile tile-floor"></div>
+            <div class="tile tile-target"></div>
+            <div class="tile tile-floor"></div>
+            <div class="tile tile-floor"></div>
+            <div class="tile tile-wall"></div>
+
+            <!-- Row 3 -->
+            <div class="tile tile-wall"></div>
+            <div class="tile tile-floor"></div>
+            <div class="tile tile-box">📦</div>
+            <div class="tile tile-floor player-you">🧑</div>
+            <div class="tile tile-floor"></div>
+            <div class="tile tile-wall"></div>
+
+            <!-- Row 4 -->
+            <div class="tile tile-wall"></div>
+            <div class="tile tile-floor"></div>
+            <div class="tile tile-floor"></div>
+            <div class="tile tile-target"></div>
+            <div class="tile tile-box-on-target">✓</div>
+            <div class="tile tile-wall"></div>
+
+            <!-- Row 5 -->
+            <div class="tile tile-wall"></div>
+            <div class="tile tile-floor"></div>
+            <div class="tile tile-floor player-partner">❤️</div>
+            <div class="tile tile-floor"></div>
+            <div class="tile tile-floor"></div>
+            <div class="tile tile-wall"></div>
+
+            <!-- Row 6 -->
+            <div class="tile tile-wall"></div>
+            <div class="tile tile-wall"></div>
+            <div class="tile tile-wall"></div>
+            <div class="tile tile-wall"></div>
+            <div class="tile tile-wall"></div>
+            <div class="tile tile-wall"></div>
+        </div>
+
+        <div style="text-align: center; color: #059669; font-weight: 600; margin: 15px 0;">
+            ✨ 1 of 2 boxes on target!
+        </div>
+
+        <div class="controls">
+            <div class="control-btn empty"></div>
+            <div class="control-btn">↑</div>
+            <div class="control-btn empty"></div>
+            <div class="control-btn">←</div>
+            <div class="control-btn" style="background: #e5e7eb; color: #666;">●</div>
+            <div class="control-btn">→</div>
+            <div class="control-btn empty"></div>
+            <div class="control-btn">↓</div>
+            <div class="control-btn empty"></div>
+        </div>
+
+        <div class="move-history">
+            <div class="history-title">📜 Move History</div>
+            <div class="history-moves">
+                <div class="move-chip move-partner">❤️ UP</div>
+                <div class="move-chip move-you">🧑 RIGHT</div>
+                <div class="move-chip move-partner">❤️ RIGHT</div>
+                <div class="move-chip move-you">🧑 UP</div>
+                <div class="move-chip move-partner">❤️ LEFT</div>
+            </div>
+        </div>
+
+        <div class="action-buttons">
+            <button class="btn">↶ Undo Move</button>
+            <button class="btn">🔄 Restart Level</button>
+        </div>
+
+        <div class="stats">
+            <div class="stat">
+                <div class="stat-value">5</div>
+                <div class="stat-label">Moves</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value">3/8</div>
+                <div class="stat-label">Levels Done</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value">+45</div>
+                <div class="stat-label">Love Points</div>
+            </div>
+        </div>
+
+        <a href="index.html" class="back-link">← Back to All Games</a>
+    </div>
+
+    <script>
+        // Interactive demo
+        const controlBtns = document.querySelectorAll('.control-btn:not(.empty)');
+
+        controlBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                btn.style.transform = 'scale(0.9)';
+                setTimeout(() => {
+                    btn.style.transform = '';
+                }, 100);
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cipher Wheel Messages - TogetherRemind</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .game-container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 500px;
+            width: 100%;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .game-icon {
+            font-size: 3em;
+            margin-bottom: 10px;
+        }
+
+        h1 {
+            color: #667eea;
+            font-size: 1.8em;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: #666;
+            font-size: 0.95em;
+        }
+
+        .instruction {
+            background: #f0f4ff;
+            border-left: 4px solid #667eea;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+            font-size: 0.9em;
+            color: #333;
+        }
+
+        .cipher-wheels {
+            position: relative;
+            margin: 40px auto;
+            width: 320px;
+            height: 320px;
+        }
+
+        .wheel {
+            position: absolute;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.3s ease;
+        }
+
+        .outer-wheel {
+            width: 320px;
+            height: 320px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            top: 0;
+            left: 0;
+            box-shadow: 0 8px 24px rgba(102, 126, 234, 0.4);
+            cursor: grab;
+        }
+
+        .outer-wheel:active {
+            cursor: grabbing;
+        }
+
+        .inner-wheel {
+            width: 220px;
+            height: 220px;
+            background: linear-gradient(135deg, #ec4899 0%, #be185d 100%);
+            top: 50px;
+            left: 50px;
+            box-shadow: 0 4px 16px rgba(236, 72, 153, 0.4);
+            cursor: grab;
+            z-index: 2;
+        }
+
+        .inner-wheel:active {
+            cursor: grabbing;
+        }
+
+        .wheel-center {
+            position: absolute;
+            width: 80px;
+            height: 80px;
+            background: white;
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2em;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            z-index: 3;
+        }
+
+        .wheel-letters {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            font-weight: bold;
+            color: white;
+        }
+
+        .letter {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform-origin: 0 0;
+            font-size: 1.1em;
+        }
+
+        .sync-indicator {
+            text-align: center;
+            margin: 30px 0;
+            padding: 15px;
+            background: #f0fdf4;
+            border-radius: 12px;
+            border: 2px solid #10b981;
+        }
+
+        .sync-status {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 10px;
+        }
+
+        .sync-dot {
+            width: 12px;
+            height: 12px;
+            background: #10b981;
+            border-radius: 50%;
+            animation: sync-pulse 1.5s ease-in-out infinite;
+        }
+
+        @keyframes sync-pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+
+        .sync-text {
+            font-weight: 600;
+            color: #059669;
+        }
+
+        .partner-position {
+            font-size: 0.85em;
+            color: #666;
+        }
+
+        .encoded-message {
+            background: #f9fafb;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 25px 0;
+        }
+
+        .message-label {
+            font-size: 0.85em;
+            color: #666;
+            font-weight: 600;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .encoded-text {
+            font-family: 'Courier New', monospace;
+            font-size: 1.1em;
+            color: #333;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        .decoded-text {
+            font-size: 1.1em;
+            color: #10b981;
+            font-weight: 600;
+            line-height: 1.6;
+            min-height: 24px;
+        }
+
+        .progress-indicator {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .progress-bar {
+            flex-grow: 1;
+            height: 8px;
+            background: #e5e7eb;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            width: 65%;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            transition: width 0.5s ease;
+        }
+
+        .progress-percent {
+            font-size: 0.9em;
+            font-weight: 600;
+            color: #667eea;
+        }
+
+        .hint {
+            background: #fffbeb;
+            border-left: 4px solid #f59e0b;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+            font-size: 0.85em;
+            color: #92400e;
+        }
+
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 2px solid #e5e7eb;
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .stat-label {
+            font-size: 0.85em;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 20px;
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <div class="header">
+            <div class="game-icon">⚙️</div>
+            <h1>Cipher Wheel Messages</h1>
+            <p class="subtitle">Synchronize to decode secret notes</p>
+        </div>
+
+        <div class="instruction">
+            <strong>How to play:</strong> You control the outer ring, your partner controls the inner ring. Align both wheels to the same key to unlock the message!
+        </div>
+
+        <div class="cipher-wheels">
+            <div class="wheel outer-wheel" id="outerWheel">
+                <div class="wheel-letters">
+                    <div class="letter" style="transform: rotate(0deg) translate(140px) rotate(0deg);">A</div>
+                    <div class="letter" style="transform: rotate(30deg) translate(140px) rotate(-30deg);">B</div>
+                    <div class="letter" style="transform: rotate(60deg) translate(140px) rotate(-60deg);">C</div>
+                    <div class="letter" style="transform: rotate(90deg) translate(140px) rotate(-90deg);">D</div>
+                    <div class="letter" style="transform: rotate(120deg) translate(140px) rotate(-120deg);">E</div>
+                    <div class="letter" style="transform: rotate(150deg) translate(140px) rotate(-150deg);">F</div>
+                </div>
+            </div>
+            <div class="wheel inner-wheel" id="innerWheel">
+                <div class="wheel-letters">
+                    <div class="letter" style="transform: rotate(0deg) translate(90px) rotate(0deg); font-size: 0.95em;">1</div>
+                    <div class="letter" style="transform: rotate(45deg) translate(90px) rotate(-45deg); font-size: 0.95em;">2</div>
+                    <div class="letter" style="transform: rotate(90deg) translate(90px) rotate(-90deg); font-size: 0.95em;">3</div>
+                    <div class="letter" style="transform: rotate(135deg) translate(90px) rotate(-135deg); font-size: 0.95em;">4</div>
+                    <div class="letter" style="transform: rotate(180deg) translate(90px) rotate(-180deg); font-size: 0.95em;">5</div>
+                    <div class="letter" style="transform: rotate(225deg) translate(90px) rotate(-225deg); font-size: 0.95em;">6</div>
+                    <div class="letter" style="transform: rotate(270deg) translate(90px) rotate(-270deg); font-size: 0.95em;">7</div>
+                    <div class="letter" style="transform: rotate(315deg) translate(90px) rotate(-315deg); font-size: 0.95em;">8</div>
+                </div>
+            </div>
+            <div class="wheel-center">🔐</div>
+        </div>
+
+        <div class="sync-indicator">
+            <div class="sync-status">
+                <div class="sync-dot"></div>
+                <div class="sync-text">Almost aligned...</div>
+                <div class="sync-dot"></div>
+            </div>
+            <div class="partner-position">Your partner set inner ring to position 3</div>
+        </div>
+
+        <div class="encoded-message">
+            <div class="message-label">🎁 Encoded Anniversary Note</div>
+            <div class="encoded-text">
+                MRRW XZ XKVI FIIT PRKVMKRMT...
+            </div>
+            <div class="message-label" style="color: #10b981;">✨ Decoded So Far:</div>
+            <div class="decoded-text">
+                MEET ME THIS EVEN ________...
+            </div>
+            <div class="progress-indicator">
+                <div class="progress-bar">
+                    <div class="progress-fill"></div>
+                </div>
+                <div class="progress-percent">65%</div>
+            </div>
+        </div>
+
+        <div class="hint">
+            💡 <strong>Hint:</strong> Drag the outer wheel clockwise. When both wheels align perfectly, the lock opens!
+        </div>
+
+        <div class="stats">
+            <div class="stat">
+                <div class="stat-value">2°</div>
+                <div class="stat-label">Off Sync</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value">5m</div>
+                <div class="stat-label">Time Spent</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value">+55</div>
+                <div class="stat-label">Love Points</div>
+            </div>
+        </div>
+
+        <a href="index.html" class="back-link">← Back to All Games</a>
+    </div>
+
+    <script>
+        // Interactive demo
+        let outerRotation = 0;
+        let innerRotation = 45;
+        let isDragging = false;
+        let currentWheel = null;
+        let startAngle = 0;
+
+        const outerWheel = document.getElementById('outerWheel');
+        const innerWheel = document.getElementById('innerWheel');
+
+        function getAngle(e, element) {
+            const rect = element.getBoundingClientRect();
+            const centerX = rect.left + rect.width / 2;
+            const centerY = rect.top + rect.height / 2;
+            return Math.atan2(e.clientY - centerY, e.clientX - centerX) * 180 / Math.PI;
+        }
+
+        function handleStart(e, wheel, isOuter) {
+            isDragging = true;
+            currentWheel = { element: wheel, isOuter };
+            startAngle = getAngle(e, wheel);
+        }
+
+        function handleMove(e) {
+            if (!isDragging || !currentWheel) return;
+
+            const currentAngle = getAngle(e, currentWheel.element);
+            const delta = currentAngle - startAngle;
+
+            if (currentWheel.isOuter) {
+                outerRotation += delta;
+                outerWheel.style.transform = `rotate(${outerRotation}deg)`;
+            } else {
+                innerRotation += delta;
+                innerWheel.style.transform = `rotate(${innerRotation}deg)`;
+            }
+
+            startAngle = currentAngle;
+        }
+
+        function handleEnd() {
+            isDragging = false;
+            currentWheel = null;
+        }
+
+        outerWheel.addEventListener('mousedown', (e) => handleStart(e, outerWheel, true));
+        innerWheel.addEventListener('mousedown', (e) => handleStart(e, innerWheel, false));
+        document.addEventListener('mousemove', handleMove);
+        document.addEventListener('mouseup', handleEnd);
+
+        // Touch support
+        outerWheel.addEventListener('touchstart', (e) => handleStart(e.touches[0], outerWheel, true));
+        innerWheel.addEventListener('touchstart', (e) => handleStart(e.touches[0], innerWheel, false));
+        document.addEventListener('touchmove', (e) => handleMove(e.touches[0]));
+        document.addEventListener('touchend', handleEnd);
+    </script>
+</body>
+</html>

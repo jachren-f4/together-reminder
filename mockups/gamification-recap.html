@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weekly Recap - TogetherRemind</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #FAFAFA;
+            min-height: 100vh;
+        }
+        .phone-container {
+            max-width: 390px;
+            margin: 40px auto;
+            background: white;
+            border-radius: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+            border: 12px solid #1A1A1A;
+        }
+        .status-bar {
+            height: 44px;
+            background: #FFFEFA;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+            font-size: 15px;
+            font-weight: 600;
+        }
+        .screen {
+            background: #FAFAFA;
+            min-height: 700px;
+            overflow-y: auto;
+            padding-bottom: 100px;
+        }
+        .header {
+            background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+            padding: 20px;
+            color: white;
+            text-align: center;
+        }
+        .back-button {
+            text-align: left;
+            font-size: 28px;
+            margin-bottom: 12px;
+        }
+        .header-icon {
+            font-size: 60px;
+            margin-bottom: 12px;
+            animation: bounce 2s ease-in-out infinite;
+        }
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        .header h2 {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+        .header-subtitle {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        .date-range {
+            font-size: 13px;
+            opacity: 0.85;
+            margin-top: 8px;
+        }
+        .recap-card {
+            background: white;
+            margin: -20px 16px 20px;
+            border-radius: 20px;
+            padding: 24px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        .ai-message {
+            font-size: 18px;
+            line-height: 1.8;
+            color: #1A1A1A;
+            margin-bottom: 24px;
+            text-align: center;
+        }
+        .ai-message em {
+            color: #FF6B9D;
+            font-style: normal;
+            font-weight: 600;
+        }
+        .highlight-number {
+            font-size: 32px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #FF6B9D 0%, #FEA47F 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+        .stat-box {
+            background: linear-gradient(135deg, #FFF5F8 0%, #FFF9F0 100%);
+            padding: 20px;
+            border-radius: 16px;
+            text-align: center;
+            border: 2px solid #FFE5EC;
+        }
+        .stat-icon {
+            font-size: 36px;
+            margin-bottom: 8px;
+        }
+        .stat-value {
+            font-size: 32px;
+            font-weight: 700;
+            color: #FF6B9D;
+            margin-bottom: 4px;
+        }
+        .stat-label {
+            font-size: 12px;
+            color: #666;
+        }
+        .highlights-section {
+            padding: 0 16px;
+            margin-bottom: 24px;
+        }
+        .section-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1A1A1A;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+        .highlight-item {
+            background: white;
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        .highlight-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+        .highlight-icon {
+            font-size: 36px;
+        }
+        .highlight-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1A1A1A;
+        }
+        .highlight-description {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.6;
+        }
+        .celebration-section {
+            padding: 0 16px;
+            margin-bottom: 24px;
+        }
+        .celebration-card {
+            background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+            border-radius: 20px;
+            padding: 32px 24px;
+            text-align: center;
+            box-shadow: 0 8px 24px rgba(255, 165, 0, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+        .confetti {
+            position: absolute;
+            font-size: 24px;
+            animation: fall 3s linear infinite;
+        }
+        @keyframes fall {
+            0% { transform: translateY(-50px) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(600px) rotate(360deg); opacity: 0; }
+        }
+        .confetti:nth-child(1) { left: 10%; animation-delay: 0s; }
+        .confetti:nth-child(2) { left: 30%; animation-delay: 0.5s; }
+        .confetti:nth-child(3) { left: 50%; animation-delay: 1s; }
+        .confetti:nth-child(4) { left: 70%; animation-delay: 1.5s; }
+        .confetti:nth-child(5) { left: 90%; animation-delay: 2s; }
+        .celebration-icon {
+            font-size: 80px;
+            margin-bottom: 16px;
+        }
+        .celebration-title {
+            font-size: 28px;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 8px;
+        }
+        .celebration-text {
+            font-size: 16px;
+            color: white;
+            opacity: 0.95;
+            margin-bottom: 20px;
+        }
+        .badge-earned {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 24px;
+            background: white;
+            border-radius: 16px;
+            font-size: 16px;
+            font-weight: 600;
+            color: #FFA500;
+        }
+        .action-buttons {
+            padding: 0 16px;
+            margin-bottom: 24px;
+        }
+        .primary-button {
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(135deg, #FF6B9D 0%, #FEA47F 100%);
+            color: white;
+            border: none;
+            border-radius: 16px;
+            font-size: 17px;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(255, 107, 157, 0.3);
+            margin-bottom: 12px;
+        }
+        .secondary-button {
+            width: 100%;
+            padding: 18px;
+            background: white;
+            color: #FF6B9D;
+            border: 2px solid #FF6B9D;
+            border-radius: 16px;
+            font-size: 17px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            max-width: 390px;
+            width: 100%;
+            background: white;
+            border-top: 1px solid #F0F0F0;
+            display: flex;
+            justify-content: space-around;
+            padding: 12px 0 24px;
+        }
+        .nav-item {
+            text-align: center;
+            font-size: 24px;
+            color: #999;
+            padding: 8px;
+        }
+        .nav-item.active {
+            color: #FF6B9D;
+        }
+    </style>
+</head>
+<body>
+    <div class="phone-container">
+        <div class="status-bar">
+            <span class="time">9:41</span>
+            <span class="status-icons">📶 🔋</span>
+        </div>
+
+        <div class="screen">
+            <div class="header">
+                <div class="back-button">←</div>
+                <div class="header-icon">💛</div>
+                <h2>Weekly Recap</h2>
+                <p class="header-subtitle">Your week together</p>
+                <p class="date-range">Nov 3 - Nov 10, 2025</p>
+            </div>
+
+            <!-- AI Message Card -->
+            <div class="recap-card">
+                <p class="ai-message">
+                    "This week, <em>you and Alex</em> showed incredible <em>teamwork</em>! You completed <span class="highlight-number">28</span> activities together, earned <span class="highlight-number">420</span> Love Points, and maintained a <span class="highlight-number">7-day streak</span>. Your connection is <em>stronger than ever</em>! 💕"
+                </p>
+
+                <div class="stats-grid">
+                    <div class="stat-box">
+                        <div class="stat-icon">✅</div>
+                        <div class="stat-value">28</div>
+                        <div class="stat-label">Activities</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-icon">🪙</div>
+                        <div class="stat-value">+420</div>
+                        <div class="stat-label">Love Points</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-icon">🔥</div>
+                        <div class="stat-value">7</div>
+                        <div class="stat-label">Day Streak</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-icon">📈</div>
+                        <div class="stat-value">+12</div>
+                        <div class="stat-label">Rank Jump</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Highlights -->
+            <div class="highlights-section">
+                <div class="section-title">✨ This Week's Highlights</div>
+
+                <div class="highlight-item">
+                    <div class="highlight-header">
+                        <div class="highlight-icon">🧠</div>
+                        <div class="highlight-title">Perfect Quiz Sync</div>
+                    </div>
+                    <p class="highlight-description">
+                        You both scored 80% on the Couple Quiz! Your answers matched on 4 out of 5 questions. You really know each other well!
+                    </p>
+                </div>
+
+                <div class="highlight-item">
+                    <div class="highlight-header">
+                        <div class="highlight-icon">💪</div>
+                        <div class="highlight-title">Health Champions</div>
+                    </div>
+                    <p class="highlight-description">
+                        Both of you hit your daily step and sleep goals for 5 days straight. Your healthy habits are inspiring!
+                    </p>
+                </div>
+
+                <div class="highlight-item">
+                    <div class="highlight-header">
+                        <div class="highlight-icon">💕</div>
+                        <div class="highlight-title">Constant Connection</div>
+                    </div>
+                    <p class="highlight-description">
+                        You exchanged 4 mutual pokes and sent 6 thoughtful reminders. Your little gestures mean the world!
+                    </p>
+                </div>
+            </div>
+
+            <!-- Celebration -->
+            <div class="celebration-section">
+                <div class="celebration-card">
+                    <span class="confetti">🎉</span>
+                    <span class="confetti">✨</span>
+                    <span class="confetti">💫</span>
+                    <span class="confetti">⭐</span>
+                    <span class="confetti">🌟</span>
+
+                    <div class="celebration-icon">🏆</div>
+                    <div class="celebration-title">Achievement Unlocked!</div>
+                    <p class="celebration-text">
+                        Your dedication this week earned you a special badge
+                    </p>
+                    <div class="badge-earned">
+                        💛 Golden Heart
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="action-buttons">
+                <button class="primary-button">💕 React with Love</button>
+                <button class="secondary-button">📤 Share Recap</button>
+            </div>
+
+            <!-- Bottom Nav -->
+            <div class="bottom-nav">
+                <div class="nav-item active">🏠</div>
+                <div class="nav-item">🏆</div>
+                <div class="nav-item">💎</div>
+                <div class="nav-item">⚙️</div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Variant 11: Quest Board - TogetherRemind</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #FAFAFA;
+            color: #1A1A1A;
+            padding: 0;
+            max-width: 400px;
+            margin: 0 auto;
+            min-height: 100vh;
+        }
+        .tavern-header {
+            background: #1A1A1A;
+            color: #FFFEFD;
+            padding: 24px 20px;
+            text-align: center;
+        }
+        .tavern-sign {
+            font-size: 48px;
+            margin-bottom: 12px;
+        }
+        .tavern-name {
+            font-family: 'Playfair Display', serif;
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            letter-spacing: -0.4px;
+        }
+        .tavern-subtitle {
+            font-size: 14px;
+            opacity: 0.7;
+        }
+        .player-stats {
+            background: #FFFEFD;
+            border-bottom: 2px solid #F0F0F0;
+            padding: 16px 20px;
+            display: flex;
+            justify-content: space-around;
+        }
+        .stat-item {
+            text-align: center;
+        }
+        .stat-icon {
+            font-size: 20px;
+            margin-bottom: 4px;
+        }
+        .stat-value {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 2px;
+        }
+        .stat-label {
+            font-size: 10px;
+            color: #6E6E6E;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .quest-board {
+            padding: 20px;
+        }
+        .board-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 22px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .board-subtitle {
+            font-size: 14px;
+            color: #6E6E6E;
+            margin-bottom: 20px;
+        }
+        .quest-card {
+            background: #FFFEFD;
+            border: 3px solid #F0F0F0;
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 16px;
+            position: relative;
+        }
+        .quest-card.legendary {
+            border-color: #1A1A1A;
+            background: linear-gradient(135deg, #FFFEFD 0%, #F5F5F5 100%);
+        }
+        .rarity-badge {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            background: #F0F0F0;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .quest-card.legendary .rarity-badge {
+            background: #1A1A1A;
+            color: #FFFEFD;
+        }
+        .quest-header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 12px;
+        }
+        .quest-icon {
+            width: 72px;
+            height: 72px;
+            background: #F0F0F0;
+            border: 3px solid #E0E0E0;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 44px;
+            flex-shrink: 0;
+        }
+        .quest-card.legendary .quest-icon {
+            border-color: #1A1A1A;
+            background: #FFFEFD;
+        }
+        .quest-info {
+            flex: 1;
+        }
+        .quest-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        .quest-description {
+            font-size: 13px;
+            color: #6E6E6E;
+            line-height: 1.4;
+        }
+        .quest-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 2px solid #F0F0F0;
+        }
+        .quest-rewards {
+            display: flex;
+            gap: 8px;
+        }
+        .reward-badge {
+            background: #1A1A1A;
+            color: #FFFEFD;
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        .accept-button {
+            background: #1A1A1A;
+            color: #FFFEFD;
+            border: none;
+            border-radius: 12px;
+            padding: 10px 20px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        .quest-card.legendary .accept-button {
+            background: #1A1A1A;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+        .progress-indicator {
+            margin-top: 12px;
+        }
+        .progress-label {
+            font-size: 11px;
+            color: #6E6E6E;
+            margin-bottom: 6px;
+            font-weight: 500;
+        }
+        .progress-bar-wrapper {
+            height: 8px;
+            background: #F0F0F0;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        .progress-bar-fill {
+            height: 100%;
+            background: #1A1A1A;
+            border-radius: 4px;
+            transition: width 0.3s ease;
+        }
+        .side-quests {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-top: 24px;
+        }
+        .side-quest-card {
+            background: #FFFEFD;
+            border: 2px solid #F0F0F0;
+            border-radius: 12px;
+            padding: 16px;
+            text-align: center;
+        }
+        .side-quest-emoji {
+            font-size: 36px;
+            margin-bottom: 8px;
+        }
+        .side-quest-name {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        .side-quest-reward {
+            font-size: 11px;
+            color: #6E6E6E;
+        }
+    </style>
+</head>
+<body>
+    <div class="tavern-header">
+        <div class="tavern-sign">🏰</div>
+        <div class="tavern-name">Quest Board</div>
+        <div class="tavern-subtitle">Available adventures for you two</div>
+    </div>
+
+    <div class="player-stats">
+        <div class="stat-item">
+            <div class="stat-icon">💎</div>
+            <div class="stat-value">127</div>
+            <div class="stat-label">Love Points</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-icon">⚔️</div>
+            <div class="stat-value">8</div>
+            <div class="stat-label">Level</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-icon">🔥</div>
+            <div class="stat-value">3</div>
+            <div class="stat-label">Streak</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-icon">🏆</div>
+            <div class="stat-value">12</div>
+            <div class="stat-label">Completed</div>
+        </div>
+    </div>
+
+    <div class="quest-board">
+        <div class="board-title">
+            <span>⭐</span>
+            <span>Main Quests</span>
+        </div>
+        <div class="board-subtitle">Complete daily for bonus rewards</div>
+
+        <div class="quest-card legendary">
+            <div class="rarity-badge">Daily</div>
+            <div class="quest-header">
+                <div class="quest-icon">🧩</div>
+                <div class="quest-info">
+                    <div class="quest-title">Daily Pulse</div>
+                    <div class="quest-description">Answer today's question and see if your partner can predict your answer</div>
+                </div>
+            </div>
+            <div class="progress-indicator">
+                <div class="progress-label">Quest Chain: Day 3 of 7</div>
+                <div class="progress-bar-wrapper">
+                    <div class="progress-bar-fill" style="width: 43%"></div>
+                </div>
+            </div>
+            <div class="quest-footer">
+                <div class="quest-rewards">
+                    <span class="reward-badge">+20 LP</span>
+                    <span class="reward-badge">🔥 Streak</span>
+                </div>
+                <button class="accept-button">Start Quest</button>
+            </div>
+        </div>
+
+        <div class="quest-card">
+            <div class="rarity-badge">Active</div>
+            <div class="quest-header">
+                <div class="quest-icon">🪜</div>
+                <div class="quest-info">
+                    <div class="quest-title">Word Ladder Duet</div>
+                    <div class="quest-description">Work together to transform one word into another</div>
+                </div>
+            </div>
+            <div class="progress-indicator">
+                <div class="progress-label">Progress: 4 of 10 steps taken</div>
+                <div class="progress-bar-wrapper">
+                    <div class="progress-bar-fill" style="width: 40%"></div>
+                </div>
+            </div>
+            <div class="quest-footer">
+                <div class="quest-rewards">
+                    <span class="reward-badge">+15 LP</span>
+                </div>
+                <button class="accept-button">Your Turn</button>
+            </div>
+        </div>
+
+        <div class="quest-card">
+            <div class="rarity-badge">Active</div>
+            <div class="quest-header">
+                <div class="quest-icon">🃏</div>
+                <div class="quest-info">
+                    <div class="quest-title">Memory Flip Co-op</div>
+                    <div class="quest-description">Find all matching emoji pairs together</div>
+                </div>
+            </div>
+            <div class="progress-indicator">
+                <div class="progress-label">Progress: 6 of 8 pairs matched</div>
+                <div class="progress-bar-wrapper">
+                    <div class="progress-bar-fill" style="width: 75%"></div>
+                </div>
+            </div>
+            <div class="quest-footer">
+                <div class="quest-rewards">
+                    <span class="reward-badge">+40 LP</span>
+                </div>
+                <button class="accept-button">Continue</button>
+            </div>
+        </div>
+
+        <div class="board-title" style="margin-top: 32px;">
+            <span>🎯</span>
+            <span>Side Quests</span>
+        </div>
+        <div class="board-subtitle">Quick actions and bonuses</div>
+
+        <div class="side-quests">
+            <div class="side-quest-card">
+                <div class="side-quest-emoji">🎯</div>
+                <div class="side-quest-name">Couple Quiz</div>
+                <div class="side-quest-reward">+30 LP</div>
+            </div>
+            <div class="side-quest-card">
+                <div class="side-quest-emoji">💫</div>
+                <div class="side-quest-name">Send Poke</div>
+                <div class="side-quest-reward">+5 LP</div>
+            </div>
+            <div class="side-quest-card">
+                <div class="side-quest-emoji">💕</div>
+                <div class="side-quest-name">Reminder</div>
+                <div class="side-quest-reward">Quick</div>
+            </div>
+            <div class="side-quest-card">
+                <div class="side-quest-emoji">📝</div>
+                <div class="side-quest-name">View Inbox</div>
+                <div class="side-quest-reward">2 new</div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

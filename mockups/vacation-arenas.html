@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vacation Arenas - TogetherRemind</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #FF6B9D 0%, #FEA47F 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        header {
+            text-align: center;
+            color: white;
+            margin-bottom: 60px;
+        }
+        h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 52px;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+        .subtitle {
+            font-size: 20px;
+            opacity: 0.95;
+            margin-bottom: 12px;
+        }
+        .description {
+            font-size: 16px;
+            opacity: 0.85;
+            max-width: 700px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        /* Arenas Grid */
+        .arenas-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .arena-card {
+            background: white;
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .arena-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+
+        .arena-image {
+            height: 200px;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+        }
+        .arena-tier-badge {
+            position: absolute;
+            top: 16px;
+            left: 16px;
+            background: white;
+            color: #1A1A1A;
+            padding: 8px 16px;
+            border-radius: 12px;
+            font-size: 13px;
+            font-weight: 600;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+
+        .arena-content {
+            padding: 24px;
+        }
+        .arena-icon {
+            font-size: 48px;
+            margin-bottom: 12px;
+        }
+        .arena-name {
+            font-family: 'Playfair Display', serif;
+            font-size: 28px;
+            font-weight: 700;
+            color: #1A1A1A;
+            margin-bottom: 8px;
+        }
+        .arena-tagline {
+            font-size: 14px;
+            color: #6E6E6E;
+            font-style: italic;
+            margin-bottom: 16px;
+        }
+        .arena-requirement {
+            font-size: 15px;
+            color: #1A1A1A;
+            font-weight: 600;
+            padding: 12px 16px;
+            background: #FAFAFA;
+            border-radius: 12px;
+            margin-bottom: 16px;
+            text-align: center;
+        }
+        .arena-features {
+            list-style: none;
+            margin-bottom: 16px;
+        }
+        .arena-features li {
+            font-size: 13px;
+            color: #6E6E6E;
+            padding: 8px 0;
+            border-bottom: 1px solid #F0F0F0;
+        }
+        .arena-features li:last-child {
+            border-bottom: none;
+        }
+        .arena-features li::before {
+            content: "✓";
+            color: #22c55e;
+            font-weight: bold;
+            margin-right: 8px;
+        }
+
+        /* Current Arena Highlight */
+        .arena-card.current {
+            border: 3px solid #FFD700;
+            position: relative;
+        }
+        .current-label {
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #FFD700;
+            color: #1A1A1A;
+            padding: 6px 20px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            box-shadow: 0 4px 12px rgba(255, 215, 0, 0.4);
+        }
+
+        /* Locked State */
+        .arena-card.locked {
+            opacity: 0.6;
+        }
+        .arena-card.locked .arena-image {
+            filter: grayscale(100%);
+        }
+
+        /* Color Themes */
+        .cabin { background: linear-gradient(135deg, #8B4513 0%, #D2691E 100%); }
+        .beach { background: linear-gradient(135deg, #87CEEB 0%, #FFD700 100%); }
+        .yacht { background: linear-gradient(135deg, #1E3A8A 0%, #60A5FA 100%); }
+        .penthouse { background: linear-gradient(135deg, #6B7280 0%, #E5E7EB 100%); }
+        .castle { background: linear-gradient(135deg, #7C3AED 0%, #C084FC 100%); }
+
+        footer {
+            text-align: center;
+            color: white;
+            margin-top: 60px;
+            padding: 20px;
+            opacity: 0.9;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🏖️ Vacation Arenas</h1>
+            <p class="subtitle">Progress through romantic getaway destinations</p>
+            <p class="description">
+                As you and your partner earn Love Points together, you'll unlock beautiful vacation-themed arenas. Each destination represents a new milestone in your journey together.
+            </p>
+        </header>
+
+        <div class="arenas-grid">
+            <!-- Tier 1: Cozy Cabin -->
+            <div class="arena-card">
+                <div class="arena-image cabin">
+                    <div class="arena-tier-badge">Tier 1</div>
+                </div>
+                <div class="arena-content">
+                    <div class="arena-icon">🏕️</div>
+                    <div class="arena-name">Cozy Cabin</div>
+                    <div class="arena-tagline">"Starting your journey together"</div>
+                    <div class="arena-requirement">0 - 1,000 Love Points</div>
+                    <ul class="arena-features">
+                        <li>Warm fireplace ambiance</li>
+                        <li>Forest sounds & birdsong</li>
+                        <li>Pine tree icon theme</li>
+                        <li>Rustic wooden badge frames</li>
+                        <li>Floor protection at 0 LP</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Tier 2: Beach Villa -->
+            <div class="arena-card current">
+                <div class="current-label">Your Current Arena</div>
+                <div class="arena-image beach">
+                    <div class="arena-tier-badge">Tier 2</div>
+                </div>
+                <div class="arena-content">
+                    <div class="arena-icon">🏖️</div>
+                    <div class="arena-name">Beach Villa</div>
+                    <div class="arena-tagline">"Building memories"</div>
+                    <div class="arena-requirement">1,000 - 2,500 Love Points</div>
+                    <ul class="arena-features">
+                        <li>Ocean wave sounds</li>
+                        <li>Sunset color palette</li>
+                        <li>Palm tree & shell icons</li>
+                        <li>Sandy gradient backgrounds</li>
+                        <li>Floor protection at 1,000 LP</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Tier 3: Yacht Getaway -->
+            <div class="arena-card">
+                <div class="arena-image yacht">
+                    <div class="arena-tier-badge">Tier 3</div>
+                </div>
+                <div class="arena-content">
+                    <div class="arena-icon">⛵</div>
+                    <div class="arena-name">Yacht Getaway</div>
+                    <div class="arena-tagline">"Sailing smoothly"</div>
+                    <div class="arena-requirement">2,500 - 5,000 Love Points</div>
+                    <ul class="arena-features">
+                        <li>Gentle ocean sailing sounds</li>
+                        <li>Nautical blue theme</li>
+                        <li>Compass & anchor icons</li>
+                        <li>Smooth water animations</li>
+                        <li>Floor protection at 2,500 LP</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Tier 4: Mountain Penthouse -->
+            <div class="arena-card locked">
+                <div class="arena-image penthouse">
+                    <div class="arena-tier-badge">Tier 4</div>
+                </div>
+                <div class="arena-content">
+                    <div class="arena-icon">🏔️</div>
+                    <div class="arena-name">Mountain Penthouse</div>
+                    <div class="arena-tagline">"Reaching new heights"</div>
+                    <div class="arena-requirement">5,000 - 10,000 Love Points</div>
+                    <ul class="arena-features">
+                        <li>Alpine wind & snow sounds</li>
+                        <li>Elegant silver & white theme</li>
+                        <li>Mountain peak icons</li>
+                        <li>Skyline city views</li>
+                        <li>Floor protection at 5,000 LP</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Tier 5: Castle Retreat -->
+            <div class="arena-card locked">
+                <div class="arena-image castle">
+                    <div class="arena-tier-badge">Tier 5</div>
+                </div>
+                <div class="arena-content">
+                    <div class="arena-icon">🏰</div>
+                    <div class="arena-name">Castle Retreat</div>
+                    <div class="arena-tagline">"Living the dream together"</div>
+                    <div class="arena-requirement">10,000+ Love Points</div>
+                    <ul class="arena-features">
+                        <li>Royal orchestral ambiance</li>
+                        <li>Regal purple & gold theme</li>
+                        <li>Crown & throne icons</li>
+                        <li>Majestic animations</li>
+                        <li>Floor protection at 10,000 LP</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p><strong>Your Progress: 1,280 / 2,500 LP</strong></p>
+            <p>1,220 Love Points until Yacht Getaway! ⛵</p>
+            <p style="margin-top: 20px; font-size: 14px; opacity: 0.8;">
+                Each arena unlocks unique visual themes, ambient sounds, and exclusive badges.<br>
+                Your floor protection ensures you never fall below your highest achieved tier.
+            </p>
+        </footer>
+    </div>
+</body>
+</html>

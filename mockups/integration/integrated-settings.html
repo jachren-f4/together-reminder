@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Integrated Settings - TogetherRemind</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: #FAFAFA; min-height: 100vh; display: flex; justify-content: center; align-items: center; padding: 40px 20px; }
+        .phone-container { max-width: 390px; width: 100%; background: white; border-radius: 40px; box-shadow: 0 20px 60px rgba(0,0,0,0.15); overflow: hidden; border: 12px solid #1A1A1A; }
+        .status-bar { height: 44px; background: #FFFEFA; display: flex; justify-content: space-between; align-items: center; padding: 0 20px; font-size: 15px; font-weight: 600; color: #1A1A1A; }
+        .screen { background: #FAFAFA; min-height: 700px; overflow-y: auto; padding-bottom: 100px; }
+        .header { background: white; padding: 20px; border-bottom: 1px solid #F0F0F0; }
+        .header-title { font-family: 'Playfair Display', serif; font-size: 28px; font-weight: 600; color: #1A1A1A; }
+        .section { padding: 0 16px; margin-top: 24px; }
+        .section-title { font-size: 13px; font-weight: 600; color: #6E6E6E; margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .card { background: white; border-radius: 16px; padding: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); border: 1px solid #F0F0F0; margin-bottom: 12px; }
+        .progress-card { background: white; border-radius: 16px; padding: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); border: 2px solid #1A1A1A; margin-bottom: 16px; }
+        .progress-header { text-align: center; margin-bottom: 20px; }
+        .lp-count { font-family: 'Playfair Display', serif; font-size: 48px; font-weight: 700; color: #1A1A1A; margin-bottom: 4px; }
+        .lp-label { font-size: 14px; color: #6E6E6E; }
+        .stats-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+        .stat-box { background: #FAFAFA; padding: 16px; border-radius: 12px; text-align: center; }
+        .stat-value { font-size: 24px; font-weight: 700; color: #1A1A1A; margin-bottom: 4px; }
+        .stat-label { font-size: 12px; color: #6E6E6E; }
+        .tier-badge { display: inline-block; padding: 8px 16px; background: #1A1A1A; color: white; border-radius: 12px; font-size: 13px; font-weight: 600; margin-top: 12px; }
+        .setting-item { display: flex; justify-content: space-between; align-items: center; padding: 16px 0; border-bottom: 1px solid #F0F0F0; }
+        .setting-item:last-child { border-bottom: none; }
+        .setting-label { font-size: 15px; color: #1A1A1A; }
+        .setting-value { font-size: 14px; color: #6E6E6E; }
+        .toggle { width: 48px; height: 28px; background: #F0F0F0; border-radius: 14px; position: relative; cursor: pointer; }
+        .toggle.on { background: #1A1A1A; }
+        .toggle-knob { width: 24px; height: 24px; background: white; border-radius: 50%; position: absolute; top: 2px; left: 2px; transition: all 0.2s; }
+        .toggle.on .toggle-knob { left: 22px; }
+        .bottom-nav { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); max-width: 390px; width: 100%; background: white; border-top: 1px solid #F0F0F0; display: flex; justify-content: space-around; padding: 12px 0 24px; }
+        .nav-item { text-align: center; font-size: 24px; color: #AAAAAA; padding: 8px; }
+        .nav-item.active { color: #1A1A1A; }
+    </style>
+</head>
+<body>
+    <div class="phone-container">
+        <div class="status-bar"><span>9:41</span><span>📶 🔋</span></div>
+        <div class="screen">
+            <div class="header">
+                <div class="header-title">Settings</div>
+            </div>
+
+            <div class="section">
+                <div class="section-title">Your Progress</div>
+                <div class="progress-card">
+                    <div class="progress-header">
+                        <div class="lp-count">3,280</div>
+                        <div class="lp-label">Love Points</div>
+                        <div class="tier-badge">🔥 Tier 3</div>
+                    </div>
+                    <div class="stats-grid">
+                        <div class="stat-box">
+                            <div class="stat-value">#42</div>
+                            <div class="stat-label">Global Rank</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-value">7</div>
+                            <div class="stat-label">Day Streak</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-title">Partner</div>
+                <div class="card">
+                    <div class="setting-item">
+                        <div class="setting-label">Connected with</div>
+                        <div class="setting-value">Alex 🧑‍💻</div>
+                    </div>
+                    <div class="setting-item">
+                        <div class="setting-label">Paired since</div>
+                        <div class="setting-value">Oct 15, 2025</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-title">Notifications</div>
+                <div class="card">
+                    <div class="setting-item">
+                        <div class="setting-label">Push Notifications</div>
+                        <div class="toggle on"><div class="toggle-knob"></div></div>
+                    </div>
+                    <div class="setting-item">
+                        <div class="setting-label">Sound</div>
+                        <div class="toggle on"><div class="toggle-knob"></div></div>
+                    </div>
+                    <div class="setting-item">
+                        <div class="setting-label">Vibration</div>
+                        <div class="toggle on"><div class="toggle-knob"></div></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-title">Gamification</div>
+                <div class="card">
+                    <div class="setting-item">
+                        <div class="setting-label">Show Love Points</div>
+                        <div class="toggle on"><div class="toggle-knob"></div></div>
+                    </div>
+                    <div class="setting-item">
+                        <div class="setting-label">Challenge Banners</div>
+                        <div class="toggle on"><div class="toggle-knob"></div></div>
+                    </div>
+                    <div class="setting-item">
+                        <div class="setting-label">Leaderboard</div>
+                        <div class="setting-value">View →</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-title">Account</div>
+                <div class="card">
+                    <div class="setting-item">
+                        <div class="setting-label" style="color: #ef4444;">Unpair Device</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="bottom-nav">
+            <div class="nav-item">🏠</div>
+            <div class="nav-item">📥</div>
+            <div class="nav-item">💎</div>
+            <div class="nav-item active">⚙️</div>
+        </div>
+    </div>
+</body>
+</html>

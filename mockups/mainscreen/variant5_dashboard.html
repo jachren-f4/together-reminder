@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Variant 5: Dashboard - TogetherRemind</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #FAFAFA;
+            color: #1A1A1A;
+            padding: 20px;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+        .profile-header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+        .avatar-group {
+            display: flex;
+            align-items: center;
+        }
+        .avatar {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: #F0F0F0;
+            border: 3px solid #FFFEFD;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+        }
+        .avatar:last-child {
+            margin-left: -16px;
+        }
+        .greeting {
+            flex: 1;
+        }
+        .greeting-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        .greeting-subtitle {
+            font-size: 14px;
+            color: #6E6E6E;
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+        .stat-card {
+            background: #FFFEFD;
+            border: 2px solid #F0F0F0;
+            border-radius: 12px;
+            padding: 16px;
+            text-align: center;
+        }
+        .stat-value {
+            font-family: 'Playfair Display', serif;
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        .stat-label {
+            font-size: 11px;
+            color: #6E6E6E;
+            font-weight: 500;
+        }
+        .section {
+            margin-bottom: 24px;
+        }
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        .section-title {
+            font-size: 17px;
+            font-weight: 600;
+        }
+        .see-all {
+            font-size: 14px;
+            color: #6E6E6E;
+            text-decoration: none;
+        }
+        .horizontal-scroll {
+            display: flex;
+            gap: 12px;
+            overflow-x: auto;
+            padding-bottom: 8px;
+            scrollbar-width: none;
+        }
+        .horizontal-scroll::-webkit-scrollbar {
+            display: none;
+        }
+        .game-card {
+            background: #FFFEFD;
+            border: 2px solid #F0F0F0;
+            border-radius: 16px;
+            padding: 20px;
+            min-width: 160px;
+            flex-shrink: 0;
+            text-align: center;
+        }
+        .game-emoji {
+            font-size: 48px;
+            margin-bottom: 12px;
+        }
+        .game-title {
+            font-size: 15px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        .game-subtitle {
+            font-size: 12px;
+            color: #6E6E6E;
+        }
+        .action-buttons {
+            display: flex;
+            gap: 12px;
+        }
+        .action-btn {
+            flex: 1;
+            background: #1A1A1A;
+            color: #FFFEFD;
+            border: none;
+            border-radius: 16px;
+            padding: 16px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .action-emoji {
+            font-size: 24px;
+        }
+        .activity-item {
+            background: #FFFEFD;
+            border: 2px solid #F0F0F0;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .activity-emoji {
+            font-size: 24px;
+            width: 40px;
+            height: 40px;
+            background: #F0F0F0;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .activity-content {
+            flex: 1;
+        }
+        .activity-title {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 2px;
+        }
+        .activity-time {
+            font-size: 12px;
+            color: #6E6E6E;
+        }
+    </style>
+</head>
+<body>
+    <div class="profile-header">
+        <div class="avatar-group">
+            <div class="avatar">💕</div>
+            <div class="avatar">💎</div>
+        </div>
+        <div class="greeting">
+            <div class="greeting-title">Good Morning!</div>
+            <div class="greeting-subtitle">You & Sarah • Day 8</div>
+        </div>
+    </div>
+
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-value">127</div>
+            <div class="stat-label">Love Points</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-value">3</div>
+            <div class="stat-label">Day Streak</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-value">85%</div>
+            <div class="stat-label">Quiz Match</div>
+        </div>
+    </div>
+
+    <div class="section">
+        <div class="section-header">
+            <div class="section-title">Active Games</div>
+            <a href="#" class="see-all">See all →</a>
+        </div>
+        <div class="horizontal-scroll">
+            <div class="game-card">
+                <div class="game-emoji">🧩</div>
+                <div class="game-title">Daily Pulse</div>
+                <div class="game-subtitle">Your turn</div>
+            </div>
+            <div class="game-card">
+                <div class="game-emoji">🪜</div>
+                <div class="game-title">Word Ladder</div>
+                <div class="game-subtitle">2 active</div>
+            </div>
+            <div class="game-card">
+                <div class="game-emoji">🃏</div>
+                <div class="game-title">Memory Flip</div>
+                <div class="game-subtitle">6/8 pairs</div>
+            </div>
+            <div class="game-card">
+                <div class="game-emoji">🎯</div>
+                <div class="game-title">Couple Quiz</div>
+                <div class="game-subtitle">Start new</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <div class="action-buttons">
+            <button class="action-btn">
+                <span class="action-emoji">💫</span>
+                Poke
+            </button>
+            <button class="action-btn">
+                <span class="action-emoji">💕</span>
+                Remind
+            </button>
+        </div>
+    </div>
+
+    <div class="section">
+        <div class="section-header">
+            <div class="section-title">Recent Activity</div>
+        </div>
+        <div class="activity-item">
+            <div class="activity-emoji">💕</div>
+            <div class="activity-content">
+                <div class="activity-title">Reminder from Sarah</div>
+                <div class="activity-time">2 hours ago</div>
+            </div>
+        </div>
+        <div class="activity-item">
+            <div class="activity-emoji">💫</div>
+            <div class="activity-content">
+                <div class="activity-title">Poke from Sarah</div>
+                <div class="activity-time">Yesterday</div>
+            </div>
+        </div>
+        <div class="activity-item">
+            <div class="activity-emoji">🎯</div>
+            <div class="activity-content">
+                <div class="activity-title">Completed Quiz • 85% match</div>
+                <div class="activity-time">2 days ago</div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

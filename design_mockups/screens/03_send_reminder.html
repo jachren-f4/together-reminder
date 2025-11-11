@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TogetherRemind - Send Reminder</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #FFF5F7 0%, #FFE8EF 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 420px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .emoji-large {
+            font-size: 60px;
+            margin-bottom: 10px;
+        }
+
+        h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 32px;
+            font-weight: 700;
+            color: #FF4D8D;
+            margin-bottom: 8px;
+            letter-spacing: -0.5px;
+        }
+
+        .partner-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 16px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 2px 8px rgba(255, 77, 141, 0.2);
+        }
+
+        .partner-badge .emoji {
+            font-size: 16px;
+        }
+
+        .partner-badge span {
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            font-weight: 500;
+            color: #FF4D8D;
+        }
+
+        .card {
+            background: white;
+            border-radius: 24px;
+            padding: 24px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+        }
+
+        .section-label {
+            font-family: 'Inter', sans-serif;
+            font-size: 13px;
+            font-weight: 600;
+            color: #FF4D8D;
+            margin-bottom: 10px;
+        }
+
+        textarea {
+            width: 100%;
+            padding: 16px;
+            border: 2px solid #FFE8EF;
+            border-radius: 16px;
+            font-family: 'Inter', sans-serif;
+            font-size: 16px;
+            color: #1A1A1A;
+            resize: none;
+            margin-bottom: 20px;
+            transition: border-color 0.2s ease;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: #FF4D8D;
+        }
+
+        textarea::placeholder {
+            color: #AAAAAA;
+        }
+
+        .time-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .time-option {
+            padding: 16px 12px;
+            background: linear-gradient(135deg, #FFE8EF 0%, #FFF0F5 100%);
+            border: none;
+            border-radius: 16px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: center;
+        }
+
+        .time-option:active {
+            transform: scale(0.97);
+        }
+
+        .time-option.selected {
+            background: linear-gradient(135deg, #FF4D8D 0%, #FF8A6B 100%);
+            box-shadow: 0 4px 16px rgba(255, 77, 141, 0.4);
+        }
+
+        .time-option .emoji {
+            font-size: 20px;
+            margin-bottom: 4px;
+        }
+
+        .time-option span {
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            font-weight: 600;
+            color: white;
+            display: block;
+        }
+
+        .time-option:not(.selected) span {
+            color: #FF4D8D;
+        }
+
+        .send-button {
+            width: 100%;
+            padding: 20px;
+            background: linear-gradient(135deg, #FF4D8D 0%, #FF8A6B 100%);
+            border: none;
+            border-radius: 16px;
+            box-shadow: 0 6px 20px rgba(255, 77, 141, 0.4);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.2s ease;
+        }
+
+        .send-button:active {
+            transform: scale(0.98);
+        }
+
+        .send-button span {
+            font-family: 'Inter', sans-serif;
+            font-size: 18px;
+            font-weight: 700;
+            color: white;
+        }
+
+        .send-button .emoji {
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="emoji-large">💕</div>
+            <h1>Together</h1>
+            <div style="margin-top: 8px;">
+                <div class="partner-badge">
+                    <span class="emoji">👤</span>
+                    <span>Sarah</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="section-label">What to remind?</div>
+            <textarea rows="3" placeholder="Type your reminder..."></textarea>
+
+            <div class="section-label">When?</div>
+            <div class="time-grid">
+                <button class="time-option">
+                    <div class="emoji">⚡</div>
+                    <span>In 1 sec</span>
+                </button>
+                <button class="time-option selected">
+                    <div class="emoji">☕</div>
+                    <span>1 hour</span>
+                </button>
+                <button class="time-option">
+                    <div class="emoji">🌙</div>
+                    <span>Tonight</span>
+                </button>
+                <button class="time-option">
+                    <div class="emoji">☀️</div>
+                    <span>Tomorrow</span>
+                </button>
+            </div>
+
+            <button class="send-button">
+                <span>Send Reminder</span>
+                <span class="emoji">💌</span>
+            </button>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leaderboard - TogetherRemind Gamification</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #FAFAFA;
+            min-height: 100vh;
+        }
+
+        /* Phone Container */
+        .phone-container {
+            max-width: 390px;
+            margin: 40px auto;
+            background: white;
+            border-radius: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+            border: 12px solid #1A1A1A;
+        }
+
+        /* Status Bar */
+        .status-bar {
+            height: 44px;
+            background: #FFFEFA;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+            font-size: 15px;
+            font-weight: 600;
+        }
+        .time { color: #1A1A1A; }
+        .status-icons { color: #1A1A1A; }
+
+        /* Screen Content */
+        .screen {
+            background: #FAFAFA;
+            min-height: 700px;
+            overflow-y: auto;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, #FF6B9D 0%, #FEA47F 100%);
+            padding: 20px 20px 30px;
+            color: white;
+        }
+        .back-button {
+            font-size: 28px;
+            margin-bottom: 12px;
+        }
+        .header h1 {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+        .header-subtitle {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        /* Toggle */
+        .view-toggle {
+            display: flex;
+            gap: 8px;
+            margin-top: 16px;
+        }
+        .toggle-btn {
+            flex: 1;
+            padding: 10px;
+            background: rgba(255,255,255,0.2);
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 12px;
+            color: white;
+            font-weight: 600;
+            font-size: 14px;
+            text-align: center;
+            transition: all 0.3s;
+        }
+        .toggle-btn.active {
+            background: white;
+            color: #FF6B9D;
+        }
+
+        /* Your Rank Card */
+        .your-rank-card {
+            margin: -20px 16px 20px;
+            background: white;
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            border: 3px solid #FFD700;
+        }
+        .rank-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+        .rank-number {
+            font-size: 36px;
+            font-weight: 700;
+            color: #FF6B9D;
+        }
+        .rank-change {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 16px;
+            font-weight: 600;
+            color: #22c55e;
+        }
+        .rank-change.down {
+            color: #ef4444;
+        }
+        .couple-names {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1A1A1A;
+            margin-bottom: 12px;
+        }
+        .love-points {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 8px;
+        }
+        .love-points .number {
+            font-size: 28px;
+            font-weight: 700;
+            color: #FF6B9D;
+        }
+        .arena-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 16px;
+            background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 600;
+            color: #1A1A1A;
+            margin-bottom: 16px;
+        }
+        .floor-info {
+            font-size: 13px;
+            color: #666;
+            background: #F5F5F5;
+            padding: 8px 12px;
+            border-radius: 8px;
+        }
+
+        /* Progress Chart */
+        .progress-chart {
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid #F0F0F0;
+        }
+        .chart-title {
+            font-size: 13px;
+            color: #666;
+            margin-bottom: 12px;
+        }
+        .chart-bars {
+            display: flex;
+            gap: 8px;
+            align-items: flex-end;
+            height: 60px;
+        }
+        .chart-bar {
+            flex: 1;
+            background: linear-gradient(to top, #FF6B9D, #FEA47F);
+            border-radius: 4px 4px 0 0;
+            min-height: 8px;
+            position: relative;
+        }
+        .bar-label {
+            position: absolute;
+            bottom: -18px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 10px;
+            color: #999;
+            white-space: nowrap;
+        }
+
+        /* Leaderboard List */
+        .leaderboard-section {
+            padding: 0 16px 100px;
+        }
+        .section-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1A1A1A;
+            margin: 24px 0 12px;
+        }
+        .rank-card {
+            background: white;
+            border-radius: 16px;
+            padding: 16px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        .rank-position {
+            font-size: 20px;
+            font-weight: 700;
+            color: #999;
+            min-width: 32px;
+            text-align: center;
+        }
+        .rank-position.top3 {
+            color: #FFD700;
+        }
+        .couple-info {
+            flex: 1;
+        }
+        .couple-name {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1A1A1A;
+            margin-bottom: 4px;
+        }
+        .couple-points {
+            font-size: 14px;
+            color: #666;
+        }
+        .couple-tier {
+            font-size: 12px;
+            color: #999;
+        }
+        .rank-delta {
+            font-size: 18px;
+            font-weight: 600;
+        }
+        .rank-delta.up {
+            color: #22c55e;
+        }
+        .rank-delta.down {
+            color: #ef4444;
+        }
+
+        /* Arena Tier Colors */
+        .tier-badge {
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 600;
+            display: inline-block;
+        }
+        .tier-1 { background: #E8F5E9; color: #2E7D32; } /* New Sparks */
+        .tier-2 { background: #E3F2FD; color: #1565C0; } /* Growing Bond */
+        .tier-3 { background: #FCE4EC; color: #C2185B; } /* Connected Hearts */
+        .tier-4 { background: #F3E5F5; color: #7B1FA2; } /* Power Duo */
+        .tier-5 { background: #FFF9C4; color: #F57F17; } /* Soul Sync Masters */
+
+        /* Bottom Nav */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            max-width: 390px;
+            width: 100%;
+            background: white;
+            border-top: 1px solid #F0F0F0;
+            display: flex;
+            justify-content: space-around;
+            padding: 12px 0 24px;
+        }
+        .nav-item {
+            text-align: center;
+            font-size: 24px;
+            color: #999;
+            padding: 8px;
+        }
+        .nav-item.active {
+            color: #FF6B9D;
+        }
+
+        /* Update Timestamp */
+        .update-time {
+            text-align: center;
+            font-size: 12px;
+            color: #999;
+            margin: 16px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="phone-container">
+        <!-- Status Bar -->
+        <div class="status-bar">
+            <span class="time">9:41</span>
+            <span class="status-icons">📶 🔋</span>
+        </div>
+
+        <!-- Screen Content -->
+        <div class="screen">
+            <!-- Header -->
+            <div class="header">
+                <div class="back-button">←</div>
+                <h1>🏆 Leaderboard</h1>
+                <p class="header-subtitle">Ranked by Love Points & Growth</p>
+
+                <div class="view-toggle">
+                    <div class="toggle-btn active">🌍 Global</div>
+                    <div class="toggle-btn">👥 Friends</div>
+                </div>
+            </div>
+
+            <!-- Your Rank Card -->
+            <div class="your-rank-card">
+                <div class="rank-header">
+                    <div class="rank-number">#42</div>
+                    <div class="rank-change">
+                        <span>↑</span>
+                        <span>+12</span>
+                    </div>
+                </div>
+
+                <div class="couple-names">You & Alex 💕</div>
+
+                <div class="love-points">
+                    <span class="number">3,280</span> Love Points
+                </div>
+
+                <div class="arena-badge">
+                    🔥 Connected Hearts
+                </div>
+
+                <div class="floor-info">
+                    🛡️ Protected Floor: 2,000 LP
+                </div>
+
+                <!-- Progress Chart -->
+                <div class="progress-chart">
+                    <div class="chart-title">Last 4 Weeks</div>
+                    <div class="chart-bars">
+                        <div class="chart-bar" style="height: 45%;">
+                            <span class="bar-label">Wk 1</span>
+                        </div>
+                        <div class="chart-bar" style="height: 60%;">
+                            <span class="bar-label">Wk 2</span>
+                        </div>
+                        <div class="chart-bar" style="height: 55%;">
+                            <span class="bar-label">Wk 3</span>
+                        </div>
+                        <div class="chart-bar" style="height: 85%;">
+                            <span class="bar-label">Wk 4</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Update Time -->
+            <div class="update-time">
+                Updated 2 hours ago • Next update in 4h
+            </div>
+
+            <!-- Leaderboard List -->
+            <div class="leaderboard-section">
+                <div class="section-title">Top Couples</div>
+
+                <!-- Rank 1 -->
+                <div class="rank-card">
+                    <div class="rank-position top3">🥇</div>
+                    <div class="couple-info">
+                        <div class="couple-name">Emma & Ryan</div>
+                        <div class="couple-points">12,450 LP</div>
+                        <span class="tier-badge tier-5">🌌 Soul Sync Masters</span>
+                    </div>
+                    <div class="rank-delta up">—</div>
+                </div>
+
+                <!-- Rank 2 -->
+                <div class="rank-card">
+                    <div class="rank-position top3">🥈</div>
+                    <div class="couple-info">
+                        <div class="couple-name">Sofia & Marcus</div>
+                        <div class="couple-points">10,890 LP</div>
+                        <span class="tier-badge tier-5">🌌 Soul Sync Masters</span>
+                    </div>
+                    <div class="rank-delta up">↑2</div>
+                </div>
+
+                <!-- Rank 3 -->
+                <div class="rank-card">
+                    <div class="rank-position top3">🥉</div>
+                    <div class="couple-info">
+                        <div class="couple-name">Lily & James</div>
+                        <div class="couple-points">9,320 LP</div>
+                        <span class="tier-badge tier-4">💎 Power Duo</span>
+                    </div>
+                    <div class="rank-delta down">↓1</div>
+                </div>
+
+                <!-- Rank 4 -->
+                <div class="rank-card">
+                    <div class="rank-position">4</div>
+                    <div class="couple-info">
+                        <div class="couple-name">Zoe & Alex K.</div>
+                        <div class="couple-points">8,560 LP</div>
+                        <span class="tier-badge tier-4">💎 Power Duo</span>
+                    </div>
+                    <div class="rank-delta up">↑3</div>
+                </div>
+
+                <!-- Rank 5 -->
+                <div class="rank-card">
+                    <div class="rank-position">5</div>
+                    <div class="couple-info">
+                        <div class="couple-name">Maya & Chris</div>
+                        <div class="couple-points">7,890 LP</div>
+                        <span class="tier-badge tier-4">💎 Power Duo</span>
+                    </div>
+                    <div class="rank-delta down">↓2</div>
+                </div>
+
+                <div class="section-title" style="text-align: center; color: #999; margin: 32px 0;">
+                    ... 36 more couples ...
+                </div>
+
+                <!-- Ranks around you -->
+                <div class="section-title">Around Your Rank</div>
+
+                <!-- Rank 41 -->
+                <div class="rank-card">
+                    <div class="rank-position">41</div>
+                    <div class="couple-info">
+                        <div class="couple-name">Nina & Tom</div>
+                        <div class="couple-points">3,310 LP</div>
+                        <span class="tier-badge tier-3">🔥 Connected Hearts</span>
+                    </div>
+                    <div class="rank-delta up">↑1</div>
+                </div>
+
+                <!-- Your Rank (highlighted) -->
+                <div class="rank-card" style="border: 2px solid #FFD700; background: #FFFEF0;">
+                    <div class="rank-position" style="color: #FF6B9D;">42</div>
+                    <div class="couple-info">
+                        <div class="couple-name">You & Alex 💕</div>
+                        <div class="couple-points">3,280 LP</div>
+                        <span class="tier-badge tier-3">🔥 Connected Hearts</span>
+                    </div>
+                    <div class="rank-delta up">↑12</div>
+                </div>
+
+                <!-- Rank 43 -->
+                <div class="rank-card">
+                    <div class="rank-position">43</div>
+                    <div class="couple-info">
+                        <div class="couple-name">Sara & Ben</div>
+                        <div class="couple-points">3,150 LP</div>
+                        <span class="tier-badge tier-3">🔥 Connected Hearts</span>
+                    </div>
+                    <div class="rank-delta down">↓5</div>
+                </div>
+
+                <!-- Rank 44 -->
+                <div class="rank-card">
+                    <div class="rank-position">44</div>
+                    <div class="couple-info">
+                        <div class="couple-name">Mia & Lucas</div>
+                        <div class="couple-points">3,020 LP</div>
+                        <span class="tier-badge tier-2">💫 Growing Bond</span>
+                    </div>
+                    <div class="rank-delta">—</div>
+                </div>
+            </div>
+
+            <!-- Bottom Navigation -->
+            <div class="bottom-nav">
+                <div class="nav-item">🏠</div>
+                <div class="nav-item active">🏆</div>
+                <div class="nav-item">💎</div>
+                <div class="nav-item">⚙️</div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

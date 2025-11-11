@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TogetherRemind User Flow Chart</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #F5F5F5;
+            padding: 40px 20px;
+            overflow: auto;
+        }
+        .container {
+            max-width: 1800px;
+            margin: 0 auto;
+        }
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            background: white;
+            padding: 32px;
+            border-radius: 16px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 42px;
+            font-weight: 700;
+            color: #1A1A1A;
+            margin-bottom: 12px;
+        }
+        .subtitle {
+            font-size: 16px;
+            color: #6E6E6E;
+        }
+
+        /* Legend */
+        .legend {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 32px;
+            display: flex;
+            gap: 24px;
+            justify-content: center;
+            flex-wrap: wrap;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .legend-dot {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+        }
+        .legend-label {
+            font-size: 13px;
+            font-weight: 600;
+            color: #1A1A1A;
+        }
+        .dot-core { background: #1A1A1A; }
+        .dot-activity { background: #22c55e; }
+        .dot-gamification { background: #FF6B9D; }
+        .dot-modal { background: #6E6E6E; }
+
+        /* Flow Layout */
+        .flow-container {
+            background: white;
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .flow-section {
+            margin-bottom: 48px;
+        }
+        .section-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: #AAAAAA;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 24px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid #F0F0F0;
+        }
+
+        .cards-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        /* Card Styles */
+        .screen-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            border: 3px solid;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            transition: all 0.3s;
+            position: relative;
+        }
+        .screen-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.12);
+        }
+
+        .screen-card.core { border-color: #1A1A1A; background: #1A1A1A; color: white; }
+        .screen-card.activity { border-color: #22c55e; }
+        .screen-card.gamification { border-color: #FF6B9D; }
+        .screen-card.modal { border-color: #6E6E6E; background: #FAFAFA; }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid rgba(0,0,0,0.1);
+        }
+        .screen-card.core .card-header {
+            border-bottom-color: rgba(255,255,255,0.2);
+        }
+
+        .card-icon {
+            font-size: 32px;
+        }
+        .card-info {
+            flex: 1;
+        }
+        .card-name {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 2px;
+        }
+        .card-desc {
+            font-size: 12px;
+            opacity: 0.7;
+        }
+
+        .card-actions {
+            list-style: none;
+        }
+        .card-actions li {
+            font-size: 13px;
+            padding: 6px 0;
+            padding-left: 16px;
+            position: relative;
+        }
+        .card-actions li::before {
+            content: "→";
+            position: absolute;
+            left: 0;
+            font-weight: bold;
+        }
+        .screen-card.core .card-actions li {
+            opacity: 0.9;
+        }
+
+        /* Navigation Flow Arrows */
+        .nav-arrows {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            margin: 32px 0;
+            padding: 20px;
+            background: linear-gradient(90deg, rgba(26,26,26,0.05) 0%, rgba(26,26,26,0.02) 100%);
+            border-radius: 12px;
+        }
+        .arrow {
+            font-size: 32px;
+            color: #1A1A1A;
+            opacity: 0.3;
+        }
+        .arrow-label {
+            font-size: 12px;
+            color: #6E6E6E;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        /* Connection Notes */
+        .connection-note {
+            background: #FFF5F8;
+            border-left: 4px solid #FF6B9D;
+            padding: 16px;
+            border-radius: 8px;
+            margin: 24px 0;
+            font-size: 13px;
+            color: #6E6E6E;
+        }
+        .connection-note strong {
+            color: #1A1A1A;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📱 Complete User Flow</h1>
+            <p class="subtitle">All screens, actions, and navigation paths in TogetherRemind</p>
+        </header>
+
+        <div class="legend">
+            <div class="legend-item">
+                <div class="legend-dot dot-core"></div>
+                <div class="legend-label">Core Screens</div>
+            </div>
+            <div class="legend-item">
+                <div class="legend-dot dot-activity"></div>
+                <div class="legend-label">Activity Screens</div>
+            </div>
+            <div class="legend-item">
+                <div class="legend-dot dot-gamification"></div>
+                <div class="legend-label">Gamification</div>
+            </div>
+            <div class="legend-item">
+                <div class="legend-dot dot-modal"></div>
+                <div class="legend-label">Modals/Overlays</div>
+            </div>
+        </div>
+
+        <div class="flow-container">
+            <!-- Bottom Navigation (Entry Points) -->
+            <div class="flow-section">
+                <div class="section-title">🧭 Main Navigation (Bottom Nav)</div>
+                <div class="cards-row">
+                    <div class="screen-card core">
+                        <div class="card-header">
+                            <div class="card-icon">🏠</div>
+                            <div class="card-info">
+                                <div class="card-name">Home</div>
+                                <div class="card-desc">Main hub</div>
+                            </div>
+                        </div>
+                        <ul class="card-actions">
+                            <li>View LP counter & arena badge</li>
+                            <li>See active challenge banner</li>
+                            <li>Tap "Send Reminder" button</li>
+                            <li>Tap Poke FAB (💕)</li>
+                            <li>Browse quick activity cards</li>
+                        </ul>
+                    </div>
+
+                    <div class="screen-card core">
+                        <div class="card-header">
+                            <div class="card-icon">📥</div>
+                            <div class="card-info">
+                                <div class="card-name">Inbox</div>
+                                <div class="card-desc">All reminders & pokes</div>
+                            </div>
+                        </div>
+                        <ul class="card-actions">
+                            <li>Filter: All / Received / Sent / Pokes</li>
+                            <li>Tap reminder card to open detail</li>
+                            <li>View +LP badges on completed items</li>
+                            <li>Swipe actions (mark done, snooze)</li>
+                        </ul>
+                    </div>
+
+                    <div class="screen-card core">
+                        <div class="card-header">
+                            <div class="card-icon">💎</div>
+                            <div class="card-info">
+                                <div class="card-name">Activities Hub</div>
+                                <div class="card-desc">Games & challenges</div>
+                            </div>
+                        </div>
+                        <ul class="card-actions">
+                            <li>Browse activity grid (Quiz, Trivia, etc.)</li>
+                            <li>View active weekly challenge</li>
+                            <li>See LP rewards for each activity</li>
+                            <li>Tap to launch activity</li>
+                        </ul>
+                    </div>
+
+                    <div class="screen-card core">
+                        <div class="card-header">
+                            <div class="card-icon">⚙️</div>
+                            <div class="card-info">
+                                <div class="card-name">Settings</div>
+                                <div class="card-desc">Preferences & progress</div>
+                            </div>
+                        </div>
+                        <ul class="card-actions">
+                            <li>View "Your Progress" card (LP/rank/tier)</li>
+                            <li>Manage notifications & sounds</li>
+                            <li>Toggle gamification visibility</li>
+                            <li>View partner info</li>
+                            <li>Unpair device</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="nav-arrows">
+                <div>
+                    <div class="arrow">↓</div>
+                    <div class="arrow-label">Tap to navigate</div>
+                </div>
+            </div>
+
+            <!-- Core Actions (From Home) -->
+            <div class="flow-section">
+                <div class="section-title">💌 Core Actions (From Home/Inbox)</div>
+                <div class="cards-row">
+                    <div class="screen-card core">
+                        <div class="card-header">
+                            <div class="card-icon">💌</div>
+                            <div class="card-info">
+                                <div class="card-name">Send Reminder</div>
+                                <div class="card-desc">Compose message</div>
+                            </div>
+                        </div>
+                        <ul class="card-actions">
+                            <li>Type custom message or pick quick chip</li>
+                            <li>Select time (15 min, 1 hour, tonight, custom)</li>
+                            <li>See LP reward preview (+10 LP)</li>
+                            <li>Tap "Send Reminder" → Shows confirmation</li>
+                        </ul>
+                    </div>
+
+                    <div class="screen-card modal">
+                        <div class="card-header">
+                            <div class="card-icon">💕</div>
+                            <div class="card-info">
+                                <div class="card-name">Poke Modal</div>
+                                <div class="card-desc">Quick poke overlay</div>
+                            </div>
+                        </div>
+                        <ul class="card-actions">
+                            <li>Select emoji from grid (💕💖💗💓...)</li>
+                            <li>See poke limit (3/3 today)</li>
+                            <li>View mutual poke reward (+5 LP)</li>
+                            <li>Send or cancel</li>
+                        </ul>
+                    </div>
+
+                    <div class="screen-card core">
+                        <div class="card-header">
+                            <div class="card-icon">📝</div>
+                            <div class="card-info">
+                                <div class="card-name">Reminder Detail</div>
+                                <div class="card-desc">View & act on reminder</div>
+                            </div>
+                        </div>
+                        <ul class="card-actions">
+                            <li>Read full message & time</li>
+                            <li>Mark as Done (earn +LP)</li>
+                            <li>Snooze (15min, 1hr, custom)</li>
+                            <li>Delete reminder</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="connection-note">
+                <strong>Navigation:</strong> Users reach these screens by tapping buttons on Home (Send Reminder, Poke FAB) or tapping reminder cards in Inbox (opens Reminder Detail).
+            </div>
+
+            <!-- Activities (From Activities Hub) -->
+            <div class="flow-section">
+                <div class="section-title">🎮 Activities (From Activities Hub)</div>
+                <div class="cards-row">
+                    <div class="screen-card activity">
+                        <div class="card-header">
+                            <div class="card-icon">🧠</div>
+                            <div class="card-info">
+                                <div class="card-name">Couple Quiz</div>
+                                <div class="card-desc">5-20 LP reward</div>
+                            </div>
+                        </div>
+                        <ul class="card-actions">
+                            <li>Start quiz (both answer same questions)</li>
+                            <li>Answer 5 questions privately</li>
+                            <li>Wait for partner to finish</li>
+                            <li>View results & match percentage</li>
+                            <li>Earn LP based on accuracy</li>
+                        </ul>
+                    </div>
+
+                    <div class="screen-card activity">
+                        <div class="card-header">
+                            <div class="card-icon">⚡</div>
+                            <div class="card-info">
+                                <div class="card-name">Timed Trivia</div>
+                                <div class="card-desc">8-15 LP reward</div>
+                            </div>
+                        </div>
+                        <ul class="card-actions">
+                            <li>Join game (wait for partner)</li>
+                            <li>Answer 5 questions in 30 seconds each</li>
+                            <li>Speed affects LP multiplier</li>
+                            <li>View combined score</li>
+                            <li>Earn LP + speed bonus</li>
+                        </ul>
+                    </div>
+
+                    <div class="screen-card activity">
+                        <div class="card-header">
+                            <div class="card-icon">💪</div>
+                            <div class="card-info">
+                                <div class="card-name">Health Challenge</div>
+                                <div class="card-desc">15 LP daily</div>
+                            </div>
+                        </div>
+                        <ul class="card-actions">
+                            <li>Connect Apple Health / Google Fit</li>
+                            <li>View daily goals (6k steps, 7h sleep)</li>
+                            <li>See both partners' progress</li>
+                            <li>Claim reward when both complete</li>
+                        </ul>
+                    </div>
+
+                    <div class="screen-card activity">
+                        <div class="card-header">
+                            <div class="card-icon">🧩</div>
+                            <div class="card-info">
+                                <div class="card-name">Crossword</div>
+                                <div class="card-desc">10-25 LP reward</div>
+                            </div>
+                        </div>
+                        <ul class="card-actions">
+                            <li>Start shared puzzle</li>
+                            <li>Take turns filling in words</li>
+                            <li>15-minute time limit</li>
+                            <li>Complete puzzle together</li>
+                            <li>Earn LP based on completion</li>
+                        </ul>
+                    </div>
+
+                    <div class="screen-card activity">
+                        <div class="card-header">
+                            <div class="card-icon">🎯</div>
+                            <div class="card-info">
+                                <div class="card-name">Weekly Challenge</div>
+                                <div class="card-desc">2x LP multiplier</div>
+                            </div>
+                        </div>
+                        <ul class="card-actions">
+                            <li>View challenge goal (e.g., 40 activities)</li>
+                            <li>See combined progress (28/40)</li>
+                            <li>Check individual contributions</li>
+                            <li>Monitor time remaining</li>
+                            <li>Claim rewards when complete</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="connection-note">
+                <strong>Navigation:</strong> Users access these by tapping activity cards in the Activities Hub (💎 tab). Some activities like Health and Weekly Challenge may also show banners on Home screen.
+            </div>
+
+            <!-- Gamification Screens -->
+            <div class="flow-section">
+                <div class="section-title">🏆 Gamification Screens (Accessible from multiple places)</div>
+                <div class="cards-row">
+                    <div class="screen-card gamification">
+                        <div class="card-header">
+                            <div class="card-icon">🏆</div>
+                            <div class="card-info">
+                                <div class="card-name">Leaderboard</div>
+                                <div class="card-desc">Global rankings</div>
+                            </div>
+                        </div>
+                        <ul class="card-actions">
+                            <li>View your rank (#42) with delta (↑+12)</li>
+                            <li>See 4-week progress chart</li>
+                            <li>Toggle Global vs Friends view</li>
+                            <li>View top couples and nearby ranks</li>
+                            <li>Check arena tiers of other couples</li>
+                        </ul>
+                    </div>
+
+                    <div class="screen-card gamification">
+                        <div class="card-header">
+                            <div class="card-icon">🏖️</div>
+                            <div class="card-info">
+                                <div class="card-name">Couple Profile</div>
+                                <div class="card-desc">Your vacation arena</div>
+                            </div>
+                        </div>
+                        <ul class="card-actions">
+                            <li>View current vacation tier (e.g., Beach Villa)</li>
+                            <li>See total LP & floor protection</li>
+                            <li>Progress bar to next tier</li>
+                            <li>Browse achievement badges (12/24)</li>
+                            <li>Check weekly stats & recent activity</li>
+                        </ul>
+                    </div>
+
+                    <div class="screen-card gamification">
+                        <div class="card-header">
+                            <div class="card-icon">💛</div>
+                            <div class="card-info">
+                                <div class="card-name">Weekly Recap</div>
+                                <div class="card-desc">AI-generated summary</div>
+                            </div>
+                        </div>
+                        <ul class="card-actions">
+                            <li>Read AI-generated love message</li>
+                            <li>View week stats (28 activities, +420 LP)</li>
+                            <li>See highlights (perfect sync, health goals)</li>
+                            <li>React with love (💕)</li>
+                            <li>Share recap card</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="connection-note">
+                <strong>Navigation:</strong>
+                • Leaderboard: From Home (tap rank badge), Settings (Progress section), or challenge completion screens<br>
+                • Couple Profile: From Settings (Progress section), Home (tap arena badge), or leaderboard<br>
+                • Weekly Recap: Automatically shown on Sundays, or access from Settings/Profile
+            </div>
+
+            <!-- Key User Journeys -->
+            <div class="flow-section">
+                <div class="section-title">🗺️ Common User Journeys</div>
+                <div style="background: #FAFAFA; border-radius: 12px; padding: 24px; font-size: 14px; line-height: 1.8; color: #1A1A1A;">
+                    <strong style="display: block; margin-bottom: 12px; font-size: 16px;">Journey 1: Send a Reminder</strong>
+                    Home 🏠 → Tap "Send Reminder" → Type message → Select time → Send → See confirmation (+10 LP) → Return to Home
+
+                    <strong style="display: block; margin: 20px 0 12px; font-size: 16px;">Journey 2: Complete a Quiz</strong>
+                    Home 🏠 → Tap Activities 💎 → Select "Couple Quiz" → Answer 5 questions → Wait for partner → View 80% match → Earn +16 LP → Return to Activities
+
+                    <strong style="display: block; margin: 20px 0 12px; font-size: 16px;">Journey 3: Send a Poke</strong>
+                    Home 🏠 → Tap Poke FAB 💕 → Select emoji from modal → Confirm → See "Poke sent!" → (If mutual) Earn +5 LP
+
+                    <strong style="display: block; margin: 20px 0 12px; font-size: 16px;">Journey 4: Check Progress</strong>
+                    Settings ⚙️ → View "Your Progress" card → See LP (3,280), Rank (#42), Tier (Beach Villa 🏖️) → Tap tier → View Couple Profile with full stats
+
+                    <strong style="display: block; margin: 20px 0 12px; font-size: 16px;">Journey 5: Complete Weekly Challenge</strong>
+                    Home 🏠 → See challenge banner → Tap to expand → Do various activities throughout week → Hit 40/40 goal → Claim rewards (800+ LP with 2x) → View tier upgrade
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

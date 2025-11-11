@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Word Ladder Mockups - TogetherRemind</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            color: white;
+            font-size: 48px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            text-align: center;
+        }
+
+        .subtitle {
+            color: rgba(255,255,255,0.9);
+            font-size: 20px;
+            text-align: center;
+            margin-bottom: 48px;
+        }
+
+        .mockups-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 32px;
+            margin-bottom: 48px;
+        }
+
+        .mockup-card {
+            background: white;
+            border-radius: 20px;
+            padding: 32px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .mockup-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 24px 80px rgba(0,0,0,0.4);
+        }
+
+        .mockup-number {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            font-size: 14px;
+            font-weight: 700;
+            padding: 6px 12px;
+            border-radius: 20px;
+            margin-bottom: 16px;
+        }
+
+        .mockup-title {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .mockup-description {
+            color: #666;
+            font-size: 15px;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .view-button {
+            display: inline-block;
+            background: #1C1C1E;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .view-button:hover {
+            background: #2C2C2E;
+        }
+
+        .journey-flow {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            margin-top: 48px;
+        }
+
+        .journey-flow h2 {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 32px;
+            text-align: center;
+        }
+
+        .flow-step {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+            margin-bottom: 24px;
+        }
+
+        .step-number {
+            width: 40px;
+            height: 40px;
+            background: #667eea;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        .step-content {
+            flex: 1;
+        }
+
+        .step-title {
+            font-weight: 600;
+            font-size: 18px;
+            margin-bottom: 4px;
+        }
+
+        .step-description {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .arrow {
+            text-align: center;
+            font-size: 24px;
+            color: #667eea;
+            margin: 8px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🪜 Word Ladder Mockups</h1>
+        <div class="subtitle">Interactive journey through the Word Ladder feature</div>
+
+        <div class="mockups-grid">
+            <div class="mockup-card" onclick="location.href='1-activities-screen.html'">
+                <div class="mockup-number">STEP 1</div>
+                <div class="mockup-title">Activities Screen</div>
+                <div class="mockup-description">
+                    Shows how Word Ladder appears in the Activities tab, highlighted as a new feature alongside existing activities like Couple Quiz and Pokes.
+                </div>
+                <a href="1-activities-screen.html" class="view-button">View Mockup →</a>
+            </div>
+
+            <div class="mockup-card" onclick="location.href='2-word-ladder-hub.html'">
+                <div class="mockup-number">STEP 2</div>
+                <div class="mockup-title">Word Ladder Hub</div>
+                <div class="mockup-description">
+                    The main hub showing exactly 3 active ladders with progress rings, turn indicators, and yield status. The system always maintains 3 ladders - when you complete one, a new one auto-generates.
+                </div>
+                <a href="2-word-ladder-hub.html" class="view-button">View Mockup →</a>
+            </div>
+
+            <div class="mockup-card" onclick="location.href='3-word-ladder-game.html'">
+                <div class="mockup-number">STEP 3</div>
+                <div class="mockup-title">Gameplay Screen</div>
+                <div class="mockup-description">
+                    The active gameplay screen with word chain, input validation, and yield feature. Players can submit moves or yield to their partner if stuck. Includes interactive yield confirmation dialog.
+                </div>
+                <a href="3-word-ladder-game.html" class="view-button">View Mockup →</a>
+            </div>
+
+            <div class="mockup-card" onclick="location.href='3b-word-ladder-yielded.html'">
+                <div class="mockup-number">STEP 3B</div>
+                <div class="mockup-title">Yielded Ladder Screen</div>
+                <div class="mockup-description">
+                    Shows how a ladder looks when your partner yields it to you for help. Features a yellow context banner explaining the situation and options to help or yield back.
+                </div>
+                <a href="3b-word-ladder-yielded.html" class="view-button">View Mockup →</a>
+            </div>
+
+            <div class="mockup-card" onclick="location.href='4-word-ladder-completion.html'">
+                <div class="mockup-number">STEP 4</div>
+                <div class="mockup-title">Completion Screen</div>
+                <div class="mockup-description">
+                    Celebratory screen when a ladder is completed, showing total steps, Love Points earned, bonus badges, and an inspiring quote. Includes confetti animation.
+                </div>
+                <a href="4-word-ladder-completion.html" class="view-button">View Mockup →</a>
+            </div>
+        </div>
+
+        <div class="journey-flow">
+            <h2>User Journey Flow</h2>
+
+            <div class="flow-step">
+                <div class="step-number">1</div>
+                <div class="step-content">
+                    <div class="step-title">Discovery</div>
+                    <div class="step-description">User navigates to Activities tab and sees Word Ladder as a new feature</div>
+                </div>
+            </div>
+
+            <div class="arrow">↓</div>
+
+            <div class="flow-step">
+                <div class="step-number">2</div>
+                <div class="step-content">
+                    <div class="step-title">Hub View (Always 3 Ladders)</div>
+                    <div class="step-description">System shows exactly 3 active ladders with alternating first turns. When one completes, a new one auto-generates. Yellow highlights show yielded ladders.</div>
+                </div>
+            </div>
+
+            <div class="arrow">↓</div>
+
+            <div class="flow-step">
+                <div class="step-number">3</div>
+                <div class="step-content">
+                    <div class="step-title">Gameplay & Yielding</div>
+                    <div class="step-description">User makes moves by changing one letter at a time. If stuck, they can yield to partner for help. Turn switches back after yield or valid move.</div>
+                </div>
+            </div>
+
+            <div class="arrow">↓</div>
+
+            <div class="flow-step">
+                <div class="step-number">4</div>
+                <div class="step-content">
+                    <div class="step-title">Completion</div>
+                    <div class="step-description">Celebratory screen with stats, LP earned, and option to return to hub</div>
+                </div>
+            </div>
+
+            <div class="arrow">↓</div>
+
+            <div class="flow-step">
+                <div class="step-number">5</div>
+                <div class="step-content">
+                    <div class="step-title">Continue Playing</div>
+                    <div class="step-description">User returns to hub to play other active ladders or start a new one</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

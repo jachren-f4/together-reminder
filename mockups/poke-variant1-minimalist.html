@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Poke Variant 1 - Minimalist</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Rounded Mplus 1c', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .phone-frame {
+            width: 375px;
+            height: 812px;
+            background: white;
+            border-radius: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+            position: relative;
+        }
+        .status-bar {
+            height: 44px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+            font-size: 12px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        .app-content {
+            padding: 40px 30px;
+            height: calc(100% - 44px - 90px);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        .partner-name {
+            font-size: 16px;
+            color: #999;
+            margin-bottom: 40px;
+            text-align: center;
+        }
+        .partner-name strong {
+            color: #FF6B9D;
+            font-weight: 600;
+        }
+        .poke-button-container {
+            position: relative;
+            margin-bottom: 40px;
+        }
+        .poke-button {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #FF6B9D 0%, #FEA47F 100%);
+            border: none;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 20px 40px rgba(255,107,157,0.4);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .poke-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 25px 50px rgba(255,107,157,0.5);
+        }
+        .poke-button:active {
+            transform: scale(0.95);
+        }
+        .poke-emoji {
+            font-size: 80px;
+            margin-bottom: 8px;
+            animation: pulse 2s ease-in-out infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+        .poke-label {
+            color: white;
+            font-size: 20px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+        .poke-hint {
+            text-align: center;
+            color: #999;
+            font-size: 15px;
+            line-height: 1.6;
+            max-width: 280px;
+        }
+        .stats-bar {
+            display: flex;
+            justify-content: space-around;
+            padding: 20px;
+            background: #f9f9f9;
+            border-radius: 20px;
+            margin-top: 40px;
+        }
+        .stat-item {
+            text-align: center;
+        }
+        .stat-number {
+            font-size: 24px;
+            font-weight: 700;
+            color: #FF6B9D;
+        }
+        .stat-label {
+            font-size: 12px;
+            color: #999;
+            margin-top: 4px;
+        }
+        .bottom-nav {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 90px;
+            background: white;
+            border-top: 1px solid #f0f0f0;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 20px;
+        }
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: #ccc;
+            font-size: 24px;
+        }
+        .nav-item.active {
+            color: #FF6B9D;
+        }
+        .nav-label {
+            font-size: 11px;
+            margin-top: 4px;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+    <div class="phone-frame">
+        <div class="status-bar">
+            <span>9:41</span>
+            <span>📶 🔋</span>
+        </div>
+
+        <div class="app-content">
+            <div class="partner-name">
+                Connected to <strong>Alex</strong>
+            </div>
+
+            <div class="poke-button-container">
+                <button class="poke-button">
+                    <div class="poke-emoji">💫</div>
+                    <div class="poke-label">Poke</div>
+                </button>
+            </div>
+
+            <div class="poke-hint">
+                Send a quick "thinking of you" signal to your partner
+            </div>
+
+            <div class="stats-bar">
+                <div class="stat-item">
+                    <div class="stat-number">12</div>
+                    <div class="stat-label">Today</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">47</div>
+                    <div class="stat-label">This Week</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">8</div>
+                    <div class="stat-label">Mutual</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="bottom-nav">
+            <div class="nav-item active">
+                <span>💫</span>
+                <span class="nav-label">Poke</span>
+            </div>
+            <div class="nav-item">
+                <span>💕</span>
+                <span class="nav-label">Send</span>
+            </div>
+            <div class="nav-item">
+                <span>📝</span>
+                <span class="nav-label">Inbox</span>
+            </div>
+            <div class="nav-item">
+                <span>⚙️</span>
+                <span class="nav-label">Settings</span>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

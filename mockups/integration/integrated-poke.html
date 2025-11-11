@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Integrated Poke - TogetherRemind</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: rgba(0,0,0,0.5); min-height: 100vh; display: flex; justify-content: center; align-items: center; padding: 40px 20px; }
+        .phone-container { max-width: 390px; width: 100%; background: #FAFAFA; border-radius: 40px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); overflow: hidden; border: 12px solid #1A1A1A; position: relative; }
+        .screen { min-height: 700px; display: flex; align-items: flex-end; padding: 20px; }
+        .modal { background: white; border-radius: 24px; padding: 32px 24px; width: 100%; box-shadow: 0 -4px 24px rgba(0,0,0,0.1); }
+        .modal-header { text-align: center; margin-bottom: 24px; }
+        .modal-icon { font-size: 60px; margin-bottom: 16px; }
+        .modal-title { font-family: 'Playfair Display', serif; font-size: 24px; font-weight: 600; color: #1A1A1A; margin-bottom: 8px; }
+        .modal-subtitle { font-size: 14px; color: #6E6E6E; }
+        .poke-limit { display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; background: #FAFAFA; border: 1px solid #F0F0F0; border-radius: 8px; font-size: 12px; font-weight: 600; color: #1A1A1A; margin-top: 12px; }
+        .emoji-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 24px; }
+        .emoji-btn { background: #FAFAFA; border: 2px solid #F0F0F0; border-radius: 16px; padding: 16px; font-size: 32px; text-align: center; cursor: pointer; transition: all 0.2s; }
+        .emoji-btn:hover { border-color: #1A1A1A; transform: scale(1.05); }
+        .emoji-btn.selected { border-color: #1A1A1A; background: white; }
+        .reward-note { text-align: center; font-size: 12px; color: #6E6E6E; margin-bottom: 20px; }
+        .reward-note strong { color: #1A1A1A; }
+        .button-group { display: flex; gap: 12px; }
+        .send-btn { flex: 1; padding: 16px; background: #1A1A1A; color: white; border: none; border-radius: 14px; font-size: 16px; font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif; }
+        .cancel-btn { flex: 1; padding: 16px; background: white; color: #1A1A1A; border: 2px solid #F0F0F0; border-radius: 14px; font-size: 16px; font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif; }
+    </style>
+</head>
+<body>
+    <div class="phone-container">
+        <div class="screen">
+            <div class="modal">
+                <div class="modal-header">
+                    <div class="modal-icon">💕</div>
+                    <div class="modal-title">Send a Poke</div>
+                    <div class="modal-subtitle">Quick way to say you're thinking of them</div>
+                    <div class="poke-limit">3/3 pokes today</div>
+                </div>
+
+                <div class="emoji-grid">
+                    <div class="emoji-btn selected">💕</div>
+                    <div class="emoji-btn">💖</div>
+                    <div class="emoji-btn">💗</div>
+                    <div class="emoji-btn">💓</div>
+                    <div class="emoji-btn">💝</div>
+                    <div class="emoji-btn">❤️</div>
+                    <div class="emoji-btn">🫶</div>
+                    <div class="emoji-btn">😘</div>
+                </div>
+
+                <div class="reward-note">
+                    Mutual poke = <strong>+5 LP</strong> for both
+                </div>
+
+                <div class="button-group">
+                    <button class="send-btn">Send Poke</button>
+                    <button class="cancel-btn">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

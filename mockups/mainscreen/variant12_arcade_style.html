@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Variant 12: Arcade Style - TogetherRemind</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #1A1A1A;
+            color: #FFFEFD;
+            padding: 0;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+        .arcade-header {
+            padding: 24px 20px;
+            text-align: center;
+            border-bottom: 3px solid #2A2A2A;
+            background: #1A1A1A;
+        }
+        .game-logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 36px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            letter-spacing: -0.5px;
+            text-shadow: 2px 2px 0px rgba(255, 254, 253, 0.1);
+        }
+        .insert-coin {
+            font-size: 12px;
+            opacity: 0.5;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            animation: blink 2s ease-in-out infinite;
+        }
+        @keyframes blink {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
+        .scoreboard {
+            background: #0A0A0A;
+            padding: 16px 20px;
+            display: flex;
+            justify-content: space-around;
+            border-bottom: 3px solid #2A2A2A;
+        }
+        .score-display {
+            text-align: center;
+        }
+        .score-label {
+            font-size: 9px;
+            opacity: 0.6;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 4px;
+        }
+        .score-number {
+            font-family: 'Courier New', monospace;
+            font-size: 24px;
+            font-weight: 700;
+            color: #FFFEFD;
+            text-shadow: 0 0 10px rgba(255, 254, 253, 0.5);
+        }
+        .game-select {
+            padding: 24px 20px;
+            background: #1A1A1A;
+        }
+        .select-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        .game-slot {
+            background: #0A0A0A;
+            border: 3px solid #2A2A2A;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 16px;
+            position: relative;
+            transition: all 0.2s ease;
+        }
+        .game-slot:hover {
+            border-color: #FFFEFD;
+            box-shadow: 0 0 20px rgba(255, 254, 253, 0.2);
+        }
+        .game-slot.featured {
+            border-color: #FFFEFD;
+            background: linear-gradient(135deg, #1A1A1A 0%, #2A2A2A 100%);
+        }
+        .slot-header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 12px;
+        }
+        .game-screen {
+            width: 80px;
+            height: 80px;
+            background: #0A0A0A;
+            border: 3px solid #2A2A2A;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+            flex-shrink: 0;
+        }
+        .game-slot.featured .game-screen {
+            border-color: #FFFEFD;
+            box-shadow: 0 0 15px rgba(255, 254, 253, 0.3);
+        }
+        .game-details {
+            flex: 1;
+        }
+        .game-name {
+            font-family: 'Playfair Display', serif;
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        .game-status {
+            font-size: 12px;
+            opacity: 0.7;
+            margin-bottom: 8px;
+        }
+        .difficulty-bar {
+            display: flex;
+            gap: 4px;
+            margin-bottom: 8px;
+        }
+        .difficulty-pip {
+            width: 20px;
+            height: 4px;
+            background: #2A2A2A;
+            border-radius: 2px;
+        }
+        .difficulty-pip.active {
+            background: #FFFEFD;
+        }
+        .slot-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 2px solid #2A2A2A;
+        }
+        .points-display {
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .play-button {
+            background: #FFFEFD;
+            color: #1A1A1A;
+            border: none;
+            border-radius: 8px;
+            padding: 10px 24px;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 0 #CCCCCC;
+            transition: all 0.1s ease;
+        }
+        .play-button:active {
+            box-shadow: 0 2px 0 #CCCCCC;
+            transform: translateY(2px);
+        }
+        .status-badge {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: #FFFEFD;
+            color: #1A1A1A;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .quick-actions {
+            padding: 0 20px 24px;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+        }
+        .quick-button {
+            background: #0A0A0A;
+            border: 2px solid #2A2A2A;
+            border-radius: 8px;
+            padding: 16px 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .quick-button:hover {
+            border-color: #FFFEFD;
+        }
+        .quick-emoji {
+            font-size: 32px;
+            margin-bottom: 6px;
+        }
+        .quick-label {
+            font-size: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+    </style>
+</head>
+<body>
+    <div class="arcade-header">
+        <div class="game-logo">TogetherRemind</div>
+        <div class="insert-coin">⚡ Player Ready ⚡</div>
+    </div>
+
+    <div class="scoreboard">
+        <div class="score-display">
+            <div class="score-label">Level</div>
+            <div class="score-number">08</div>
+        </div>
+        <div class="score-display">
+            <div class="score-label">Score</div>
+            <div class="score-number">00127</div>
+        </div>
+        <div class="score-display">
+            <div class="score-label">Streak</div>
+            <div class="score-number">03</div>
+        </div>
+    </div>
+
+    <div class="game-select">
+        <div class="select-title">▶ Select Game ◀</div>
+
+        <div class="game-slot featured">
+            <div class="status-badge">New Turn!</div>
+            <div class="slot-header">
+                <div class="game-screen">🧩</div>
+                <div class="game-details">
+                    <div class="game-name">Daily Pulse</div>
+                    <div class="game-status">Your turn to answer</div>
+                    <div class="difficulty-bar">
+                        <div class="difficulty-pip active"></div>
+                        <div class="difficulty-pip active"></div>
+                        <div class="difficulty-pip"></div>
+                        <div class="difficulty-pip"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="slot-footer">
+                <div class="points-display">
+                    <span>💎</span>
+                    <span>+20 LP</span>
+                    <span>🔥</span>
+                </div>
+                <button class="play-button">Play</button>
+            </div>
+        </div>
+
+        <div class="game-slot">
+            <div class="status-badge">Active</div>
+            <div class="slot-header">
+                <div class="game-screen">🪜</div>
+                <div class="game-details">
+                    <div class="game-name">Word Ladder Duet</div>
+                    <div class="game-status">2 puzzles waiting</div>
+                    <div class="difficulty-bar">
+                        <div class="difficulty-pip active"></div>
+                        <div class="difficulty-pip active"></div>
+                        <div class="difficulty-pip active"></div>
+                        <div class="difficulty-pip"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="slot-footer">
+                <div class="points-display">
+                    <span>💎</span>
+                    <span>+15 LP</span>
+                </div>
+                <button class="play-button">Play</button>
+            </div>
+        </div>
+
+        <div class="game-slot">
+            <div class="status-badge">75% Done</div>
+            <div class="slot-header">
+                <div class="game-screen">🃏</div>
+                <div class="game-details">
+                    <div class="game-name">Memory Flip Co-op</div>
+                    <div class="game-status">6 of 8 pairs found</div>
+                    <div class="difficulty-bar">
+                        <div class="difficulty-pip active"></div>
+                        <div class="difficulty-pip active"></div>
+                        <div class="difficulty-pip"></div>
+                        <div class="difficulty-pip"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="slot-footer">
+                <div class="points-display">
+                    <span>💎</span>
+                    <span>+40 LP</span>
+                </div>
+                <button class="play-button">Play</button>
+            </div>
+        </div>
+
+        <div class="game-slot">
+            <div class="slot-header">
+                <div class="game-screen">🎯</div>
+                <div class="game-details">
+                    <div class="game-name">Couple Quiz</div>
+                    <div class="game-status">Start new session</div>
+                    <div class="difficulty-bar">
+                        <div class="difficulty-pip active"></div>
+                        <div class="difficulty-pip active"></div>
+                        <div class="difficulty-pip active"></div>
+                        <div class="difficulty-pip active"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="slot-footer">
+                <div class="points-display">
+                    <span>💎</span>
+                    <span>+30 LP</span>
+                </div>
+                <button class="play-button">Play</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="quick-actions">
+        <div class="quick-button">
+            <div class="quick-emoji">💫</div>
+            <div class="quick-label">Poke</div>
+        </div>
+        <div class="quick-button">
+            <div class="quick-emoji">💕</div>
+            <div class="quick-label">Remind</div>
+        </div>
+        <div class="quick-button">
+            <div class="quick-emoji">📝</div>
+            <div class="quick-label">Inbox</div>
+        </div>
+        <div class="quick-button">
+            <div class="quick-emoji">💎</div>
+            <div class="quick-label">Profile</div>
+        </div>
+    </div>
+</body>
+</html>

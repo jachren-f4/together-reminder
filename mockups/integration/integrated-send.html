@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Integrated Send Reminder - TogetherRemind</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: #FAFAFA; min-height: 100vh; display: flex; justify-content: center; align-items: center; padding: 40px 20px; }
+        .phone-container { max-width: 390px; width: 100%; background: white; border-radius: 40px; box-shadow: 0 20px 60px rgba(0,0,0,0.15); overflow: hidden; border: 12px solid #1A1A1A; }
+        .status-bar { height: 44px; background: #FFFEFA; display: flex; justify-content: space-between; align-items: center; padding: 0 20px; font-size: 15px; font-weight: 600; color: #1A1A1A; }
+        .screen { background: #FAFAFA; min-height: 700px; overflow-y: auto; padding-bottom: 120px; }
+        .header { background: white; padding: 20px; border-bottom: 1px solid #F0F0F0; display: flex; align-items: center; gap: 16px; }
+        .back-btn { font-size: 24px; cursor: pointer; }
+        .header-title { font-family: 'Playfair Display', serif; font-size: 24px; font-weight: 600; color: #1A1A1A; }
+        .content { padding: 24px 16px; }
+        .input-label { font-size: 13px; font-weight: 600; color: #6E6E6E; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .message-input { width: 100%; background: white; border: 2px solid #F0F0F0; border-radius: 16px; padding: 16px; font-family: 'Inter', sans-serif; font-size: 15px; color: #1A1A1A; margin-bottom: 24px; min-height: 100px; resize: vertical; }
+        .message-input:focus { outline: none; border-color: #1A1A1A; }
+        .quick-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 24px; }
+        .chip { padding: 8px 14px; background: white; border: 1px solid #F0F0F0; border-radius: 12px; font-size: 13px; color: #6E6E6E; cursor: pointer; transition: all 0.2s; }
+        .chip:hover { border-color: #1A1A1A; color: #1A1A1A; }
+        .time-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 24px; }
+        .time-chip { background: white; border: 2px solid #F0F0F0; border-radius: 16px; padding: 16px 12px; text-align: center; cursor: pointer; transition: all 0.2s; }
+        .time-chip:hover { border-color: #1A1A1A; transform: translateY(-2px); }
+        .time-chip.selected { border-color: #1A1A1A; background: #FAFAFA; }
+        .time-emoji { font-size: 24px; margin-bottom: 8px; }
+        .time-label { font-size: 13px; font-weight: 600; color: #1A1A1A; }
+        .reward-preview { background: white; border: 1px solid #F0F0F0; border-radius: 16px; padding: 16px; text-align: center; margin-bottom: 24px; }
+        .reward-text { font-size: 13px; color: #6E6E6E; margin-bottom: 4px; }
+        .reward-amount { font-size: 20px; font-weight: 700; color: #1A1A1A; }
+        .send-button { width: 100%; padding: 18px; background: #1A1A1A; color: white; border: none; border-radius: 16px; font-size: 17px; font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif; }
+        .send-button:hover { opacity: 0.9; }
+    </style>
+</head>
+<body>
+    <div class="phone-container">
+        <div class="status-bar"><span>9:41</span><span>📶 🔋</span></div>
+        <div class="screen">
+            <div class="header">
+                <div class="back-btn">←</div>
+                <div class="header-title">Send Reminder</div>
+            </div>
+            <div class="content">
+                <div class="input-label">Message</div>
+                <textarea class="message-input" placeholder="Type your reminder...">Don't forget to take a break and stretch! 🧘</textarea>
+
+                <div class="input-label">Quick Messages</div>
+                <div class="quick-chips">
+                    <div class="chip">💧 Drink water</div>
+                    <div class="chip">🧘 Take a break</div>
+                    <div class="chip">💊 Take vitamins</div>
+                    <div class="chip">☀️ Go outside</div>
+                </div>
+
+                <div class="input-label">When to send</div>
+                <div class="time-grid">
+                    <div class="time-chip selected">
+                        <div class="time-emoji">⏰</div>
+                        <div class="time-label">15 min</div>
+                    </div>
+                    <div class="time-chip">
+                        <div class="time-emoji">🕐</div>
+                        <div class="time-label">1 hour</div>
+                    </div>
+                    <div class="time-chip">
+                        <div class="time-emoji">🌙</div>
+                        <div class="time-label">Tonight</div>
+                    </div>
+                    <div class="time-chip">
+                        <div class="time-emoji">☀️</div>
+                        <div class="time-label">Tomorrow</div>
+                    </div>
+                    <div class="time-chip">
+                        <div class="time-emoji">📅</div>
+                        <div class="time-label">Custom</div>
+                    </div>
+                </div>
+
+                <div class="reward-preview">
+                    <div class="reward-text">You'll earn when completed</div>
+                    <div class="reward-amount">+10 LP</div>
+                </div>
+
+                <button class="send-button">Send Reminder</button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,1282 @@
+[
+  {
+    "id": "q1",
+    "question": "What's my favorite food?",
+    "options": ["Pizza", "Sushi", "Pasta", "Tacos", "Other / Something else"],
+    "category": "favorites",
+    "difficulty": 1,
+    "tier": 1
+  },
+  {
+    "id": "q2",
+    "question": "What's my favorite color?",
+    "options": ["Blue", "Red", "Green", "Purple", "Other / Something else"],
+    "category": "favorites",
+    "difficulty": 1,
+    "tier": 1
+  },
+  {
+    "id": "q3",
+    "question": "What's my favorite movie genre?",
+    "options": ["Action", "Comedy", "Romance", "Horror", "Other / Something else"],
+    "category": "favorites",
+    "difficulty": 1,
+    "tier": 1
+  },
+  {
+    "id": "q4",
+    "question": "What's my favorite season?",
+    "options": ["Spring", "Summer", "Fall", "Winter", "Other / It varies"],
+    "category": "favorites",
+    "difficulty": 1,
+    "tier": 1
+  },
+  {
+    "id": "q5",
+    "question": "What's my favorite type of music?",
+    "options": ["Pop", "Rock", "Hip-Hop", "Classical", "Other / Something else"],
+    "category": "favorites",
+    "difficulty": 1,
+    "tier": 1
+  },
+  {
+    "id": "q6",
+    "question": "What's my favorite way to exercise?",
+    "options": ["Running", "Yoga", "Gym", "Swimming", "Other / Something else"],
+    "category": "favorites",
+    "difficulty": 1,
+    "tier": 1
+  },
+  {
+    "id": "q7",
+    "question": "What's my favorite dessert?",
+    "options": ["Ice cream", "Cake", "Cookies", "Brownies", "Other / Something else"],
+    "category": "favorites",
+    "difficulty": 1,
+    "tier": 1
+  },
+  {
+    "id": "q8",
+    "question": "What's my favorite drink?",
+    "options": ["Coffee", "Tea", "Juice", "Soda", "Other / Something else"],
+    "category": "favorites",
+    "difficulty": 1,
+    "tier": 1
+  },
+  {
+    "id": "q9",
+    "question": "What's my favorite holiday?",
+    "options": ["Christmas", "Halloween", "Birthday", "New Year", "Other / Something else"],
+    "category": "favorites",
+    "difficulty": 1,
+    "tier": 1
+  },
+  {
+    "id": "q10",
+    "question": "What's my favorite animal?",
+    "options": ["Dog", "Cat", "Bird", "Fish", "Other / Something else"],
+    "category": "favorites",
+    "difficulty": 1,
+    "tier": 1
+  },
+  {
+    "id": "q11",
+    "question": "What's my favorite type of book?",
+    "options": ["Fiction", "Mystery", "Biography", "Self-help", "Other / Something else"],
+    "category": "favorites",
+    "difficulty": 1,
+    "tier": 1
+  },
+  {
+    "id": "q12",
+    "question": "What's my favorite weather?",
+    "options": ["Sunny", "Rainy", "Snowy", "Cloudy", "Other / It varies"],
+    "category": "favorites",
+    "difficulty": 1,
+    "tier": 1
+  },
+  {
+    "id": "q13",
+    "question": "What's my favorite way to relax?",
+    "options": ["Reading", "Watching TV", "Napping", "Listening to music", "Other / Something else"],
+    "category": "favorites",
+    "difficulty": 1,
+    "tier": 1
+  },
+  {
+    "id": "q14",
+    "question": "What's my favorite type of cuisine?",
+    "options": ["Italian", "Mexican", "Asian", "American", "Other / Something else"],
+    "category": "favorites",
+    "difficulty": 1,
+    "tier": 1
+  },
+  {
+    "id": "q15",
+    "question": "What's my favorite social media?",
+    "options": ["Instagram", "TikTok", "Twitter", "Facebook", "Other / Something else"],
+    "category": "favorites",
+    "difficulty": 1,
+    "tier": 1
+  },
+  {
+    "id": "q51",
+    "question": "What's my favorite time of day?",
+    "options": ["Early morning", "Mid-morning", "Afternoon", "Evening", "Other / It varies"],
+    "category": "favorites",
+    "difficulty": 1,
+    "tier": 1
+  },
+  {
+    "id": "q52",
+    "question": "What's my favorite sport to watch?",
+    "options": ["Football", "Basketball", "Soccer", "Baseball", "Other / Something else"],
+    "category": "favorites",
+    "difficulty": 1,
+    "tier": 1
+  },
+  {
+    "id": "q53",
+    "question": "What's my favorite pizza topping?",
+    "options": ["Pepperoni", "Mushrooms", "Olives", "Extra cheese", "Other / Something else"],
+    "category": "favorites",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q54",
+    "question": "What's my favorite board game or card game?",
+    "options": ["Monopoly", "Uno", "Chess", "Scrabble", "Other / Something else"],
+    "category": "favorites",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q55",
+    "question": "What's my favorite flower?",
+    "options": ["Rose", "Tulip", "Sunflower", "Lily", "Other / Something else"],
+    "category": "favorites",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q56",
+    "question": "What's my favorite candy or chocolate?",
+    "options": ["Dark chocolate", "Milk chocolate", "Gummy bears", "Sour candy", "Other / Something else"],
+    "category": "favorites",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q57",
+    "question": "What's my favorite TV show genre?",
+    "options": ["Drama", "Comedy", "Reality", "Documentary", "Other / Something else"],
+    "category": "favorites",
+    "difficulty": 1,
+    "tier": 1
+  },
+  {
+    "id": "q58",
+    "question": "What's my favorite breakfast food?",
+    "options": ["Pancakes", "Eggs", "Cereal", "Toast", "Other / Something else"],
+    "category": "favorites",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q59",
+    "question": "What's my favorite fruit?",
+    "options": ["Apple", "Banana", "Strawberry", "Orange", "Other / Something else"],
+    "category": "favorites",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q60",
+    "question": "What's my favorite way to spend a rainy day?",
+    "options": ["Reading", "Movies", "Cooking", "Sleeping", "Other / Something else"],
+    "category": "favorites",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q61",
+    "question": "What's my favorite type of art?",
+    "options": ["Painting", "Photography", "Sculpture", "Digital art", "Other / Something else"],
+    "category": "favorites",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q62",
+    "question": "What's my favorite ice cream flavor?",
+    "options": ["Vanilla", "Chocolate", "Strawberry", "Cookie dough", "Other / Something else"],
+    "category": "favorites",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q63",
+    "question": "What's my favorite scent or perfume type?",
+    "options": ["Floral", "Citrus", "Woody", "Sweet", "Other / Something else"],
+    "category": "favorites",
+    "difficulty": 3,
+    "tier": 1
+  },
+  {
+    "id": "q64",
+    "question": "What's my favorite podcast or YouTube genre?",
+    "options": ["True crime", "Comedy", "Educational", "Vlogs", "Other / Something else"],
+    "category": "favorites",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q65",
+    "question": "What's my favorite way to celebrate my birthday?",
+    "options": ["Big party", "Dinner with close friends", "Quiet day at home", "Adventure/trip", "Other / Something else"],
+    "category": "favorites",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q66",
+    "question": "What's my favorite comfort food?",
+    "options": ["Mac and cheese", "Soup", "Pizza", "Ice cream", "Other / Something else"],
+    "category": "favorites",
+    "difficulty": 3,
+    "tier": 1
+  },
+  {
+    "id": "q67",
+    "question": "What's my favorite childhood memory type?",
+    "options": ["Family vacations", "Playing with friends", "School events", "Home activities", "Other / Something else"],
+    "category": "favorites",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q68",
+    "question": "What's my favorite type of phone app?",
+    "options": ["Social media", "Games", "Productivity", "Entertainment", "Other / Something else"],
+    "category": "favorites",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q69",
+    "question": "What's my favorite way to learn new things?",
+    "options": ["Reading", "Videos", "Hands-on practice", "Classes", "Other / Something else"],
+    "category": "favorites",
+    "difficulty": 3,
+    "tier": 1
+  },
+  {
+    "id": "q70",
+    "question": "What's my favorite superhero or fictional character?",
+    "options": ["Marvel hero", "DC hero", "Book character", "Movie character", "Other / Someone else"],
+    "category": "favorites",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q71",
+    "question": "What's my favorite style of clothing?",
+    "options": ["Casual", "Sporty", "Elegant", "Trendy", "Other / Something else"],
+    "category": "favorites",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q72",
+    "question": "What's my favorite type of sandwich?",
+    "options": ["Turkey", "BLT", "Grilled cheese", "Veggie", "Other / Something else"],
+    "category": "favorites",
+    "difficulty": 3,
+    "tier": 1
+  },
+  {
+    "id": "q73",
+    "question": "What's my favorite childhood cartoon or show?",
+    "options": ["Disney", "Nickelodeon", "Cartoon Network", "Anime", "Other / Something else"],
+    "category": "favorites",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q74",
+    "question": "What's my favorite type of vacation activity?",
+    "options": ["Sightseeing", "Beach relaxing", "Adventure sports", "Cultural experiences", "Other / Something else"],
+    "category": "favorites",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q75",
+    "question": "What's my secret guilty pleasure?",
+    "options": ["Reality TV", "Junk food", "Video games", "Romance novels", "Other / Something else"],
+    "category": "favorites",
+    "difficulty": 3,
+    "tier": 1
+  },
+  {
+    "id": "q16",
+    "question": "Where did we have our first date?",
+    "options": ["Restaurant", "Coffee shop", "Park", "Movies", "Other place"],
+    "category": "memories",
+    "difficulty": 1,
+    "tier": 1
+  },
+  {
+    "id": "q17",
+    "question": "What was our first trip together?",
+    "options": ["Beach", "Mountains", "City", "Road trip", "Other place"],
+    "category": "memories",
+    "difficulty": 1,
+    "tier": 1
+  },
+  {
+    "id": "q18",
+    "question": "What was the first movie we watched together?",
+    "options": ["Action", "Comedy", "Romance", "Horror", "Other genre"],
+    "category": "memories",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q19",
+    "question": "Where did we first say 'I love you'?",
+    "options": ["At home", "On a date", "Over text", "On the phone", "Other place"],
+    "category": "memories",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q20",
+    "question": "What's our favorite shared memory?",
+    "options": ["Vacation", "First date", "Holiday", "Random moment", "Other / Something else"],
+    "category": "memories",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q21",
+    "question": "What song reminds you of us?",
+    "options": ["Love song", "Dance song", "Slow song", "Pop song", "Other / Something else"],
+    "category": "memories",
+    "difficulty": 3,
+    "tier": 1
+  },
+  {
+    "id": "q22",
+    "question": "What's our favorite restaurant?",
+    "options": ["Italian place", "Sushi spot", "Casual dining", "Fast food", "Other place"],
+    "category": "memories",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q23",
+    "question": "What's our favorite thing to do together?",
+    "options": ["Watch movies", "Go out to eat", "Stay home", "Travel", "Other / Something else"],
+    "category": "memories",
+    "difficulty": 1,
+    "tier": 1
+  },
+  {
+    "id": "q24",
+    "question": "What was the first gift I gave you?",
+    "options": ["Flowers", "Jewelry", "Book", "Something homemade", "Other / Something else"],
+    "category": "memories",
+    "difficulty": 3,
+    "tier": 1
+  },
+  {
+    "id": "q25",
+    "question": "What's our inside joke?",
+    "options": ["Something silly", "A funny moment", "A phrase", "A memory", "Other / Something else"],
+    "category": "memories",
+    "difficulty": 3,
+    "tier": 1
+  },
+  {
+    "id": "q26",
+    "question": "Am I more of a morning person or night owl?",
+    "options": ["Morning person", "Night owl", "Both", "Neither", "Other / It depends"],
+    "category": "preferences",
+    "difficulty": 1,
+    "tier": 1
+  },
+  {
+    "id": "q27",
+    "question": "What time do I usually wake up?",
+    "options": ["Before 7am", "7-8am", "8-9am", "After 9am", "Other / It varies"],
+    "category": "preferences",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q28",
+    "question": "How do I prefer to spend my weekend?",
+    "options": ["Outdoor activities", "Relaxing at home", "Social events", "Exploring new places", "Other / It depends"],
+    "category": "preferences",
+    "difficulty": 1,
+    "tier": 1
+  },
+  {
+    "id": "q29",
+    "question": "What's my ideal vacation?",
+    "options": ["Beach resort", "Mountain cabin", "City exploration", "Adventure travel", "Other / Something else"],
+    "category": "preferences",
+    "difficulty": 1,
+    "tier": 1
+  },
+  {
+    "id": "q30",
+    "question": "Do I prefer texting or calling?",
+    "options": ["Texting", "Calling", "Video calls", "In person only", "Other / It depends"],
+    "category": "preferences",
+    "difficulty": 1,
+    "tier": 1
+  },
+  {
+    "id": "q31",
+    "question": "What's my favorite way to celebrate?",
+    "options": ["Big party", "Intimate dinner", "Quiet night in", "Adventure activity", "Other / Something else"],
+    "category": "preferences",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q32",
+    "question": "How do I handle stress?",
+    "options": ["Talk it out", "Need alone time", "Exercise", "Sleep it off", "Other / It depends"],
+    "category": "preferences",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q33",
+    "question": "What's my love language?",
+    "options": ["Words of affirmation", "Quality time", "Physical touch", "Acts of service", "Other / Something else"],
+    "category": "preferences",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q34",
+    "question": "Do I prefer planning or spontaneity?",
+    "options": ["Always plan ahead", "Mostly plan", "Mostly spontaneous", "Fully spontaneous", "Other / It depends"],
+    "category": "preferences",
+    "difficulty": 1,
+    "tier": 1
+  },
+  {
+    "id": "q35",
+    "question": "What's my ideal date night?",
+    "options": ["Fancy restaurant", "Cozy home dinner", "Fun activity", "Adventure outing", "Other / Something else"],
+    "category": "preferences",
+    "difficulty": 1,
+    "tier": 1
+  },
+  {
+    "id": "q36",
+    "question": "How do I like to be cheered up?",
+    "options": ["Humor", "Affection", "Alone time", "Distraction", "Other / It depends"],
+    "category": "preferences",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q37",
+    "question": "What's my communication style?",
+    "options": ["Direct", "Gentle", "Humorous", "Thoughtful", "Other / Something else"],
+    "category": "preferences",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q38",
+    "question": "Do I prefer hot or cold weather?",
+    "options": ["Hot", "Cold", "Mild", "Varies", "Other / No preference"],
+    "category": "preferences",
+    "difficulty": 1,
+    "tier": 1
+  },
+  {
+    "id": "q39",
+    "question": "What's my ideal Friday night?",
+    "options": ["Going out", "Staying in", "Dinner with friends", "Quiet evening", "Other / It depends"],
+    "category": "preferences",
+    "difficulty": 1,
+    "tier": 1
+  },
+  {
+    "id": "q40",
+    "question": "How do I show love?",
+    "options": ["Words", "Actions", "Gifts", "Time together", "Other / Something else"],
+    "category": "preferences",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q76",
+    "question": "What's my favorite way to start the day?",
+    "options": ["Coffee", "Exercise", "Shower", "Breakfast", "Other / Something else"],
+    "category": "preferences",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q77",
+    "question": "Do I prefer cats or dogs?",
+    "options": ["Cats", "Dogs", "Both", "Neither", "Other / Something else"],
+    "category": "preferences",
+    "difficulty": 1,
+    "tier": 1
+  },
+  {
+    "id": "q78",
+    "question": "What's my ideal work environment?",
+    "options": ["Office", "Remote", "Hybrid", "Co-working space", "Other / Something else"],
+    "category": "preferences",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q79",
+    "question": "How do I prefer to receive news?",
+    "options": ["Social media", "News apps", "TV", "Word of mouth", "Other / Something else"],
+    "category": "preferences",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q80",
+    "question": "What's my preferred learning style?",
+    "options": ["Visual", "Auditory", "Hands-on", "Reading", "Other / It depends"],
+    "category": "preferences",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q81",
+    "question": "Do I prefer sweet or savory snacks?",
+    "options": ["Sweet", "Savory", "Both", "Neither", "Other / It depends"],
+    "category": "preferences",
+    "difficulty": 1,
+    "tier": 1
+  },
+  {
+    "id": "q82",
+    "question": "What's my ideal room temperature?",
+    "options": ["Cool (65-68°F)", "Comfortable (68-72°F)", "Warm (72-75°F)", "Hot (75°F+)", "Other / It varies"],
+    "category": "preferences",
+    "difficulty": 3,
+    "tier": 1
+  },
+  {
+    "id": "q83",
+    "question": "How do I prefer to shop?",
+    "options": ["Online", "In-store", "Mix of both", "I don't like shopping", "Other / It depends"],
+    "category": "preferences",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q84",
+    "question": "What's my ideal bedtime?",
+    "options": ["Before 10pm", "10-11pm", "11pm-midnight", "After midnight", "Other / It varies"],
+    "category": "preferences",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q85",
+    "question": "Do I prefer email or instant messaging?",
+    "options": ["Email", "Instant messaging", "Both", "Neither", "Other / It depends"],
+    "category": "preferences",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q86",
+    "question": "What's my conflict resolution style?",
+    "options": ["Talk immediately", "Need time to think", "Avoid conflict", "Seek compromise", "Other / It depends"],
+    "category": "preferences",
+    "difficulty": 3,
+    "tier": 1
+  },
+  {
+    "id": "q87",
+    "question": "How do I prefer to spend alone time?",
+    "options": ["Hobby", "Relaxing", "Productive tasks", "Social media", "Other / Something else"],
+    "category": "preferences",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q88",
+    "question": "What's my preferred social group size?",
+    "options": ["One-on-one", "Small group (3-5)", "Medium group (6-10)", "Large party", "Other / It varies"],
+    "category": "preferences",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q89",
+    "question": "Do I prefer routine or variety?",
+    "options": ["Strict routine", "Mostly routine", "Mostly variety", "Constant change", "Other / It depends"],
+    "category": "preferences",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q90",
+    "question": "What's my decision-making style?",
+    "options": ["Quick/intuitive", "Analytical", "Ask others", "Sleep on it", "Other / It depends"],
+    "category": "preferences",
+    "difficulty": 3,
+    "tier": 1
+  },
+  {
+    "id": "q91",
+    "question": "How do I recharge my energy?",
+    "options": ["Alone time", "With people", "Nature", "Sleep", "Other / Something else"],
+    "category": "preferences",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q92",
+    "question": "What's my preferred gift type?",
+    "options": ["Practical", "Sentimental", "Experience", "Surprise me", "Other / It depends"],
+    "category": "preferences",
+    "difficulty": 3,
+    "tier": 1
+  },
+  {
+    "id": "q93",
+    "question": "Do I prefer saving or spending money?",
+    "options": ["Strict saver", "Mostly save", "Balanced", "Enjoy spending", "Other / It depends"],
+    "category": "preferences",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q94",
+    "question": "What's my ideal humidity level?",
+    "options": ["Dry", "Low humidity", "Moderate", "Humid", "Other / I don't notice"],
+    "category": "preferences",
+    "difficulty": 3,
+    "tier": 1
+  },
+  {
+    "id": "q95",
+    "question": "How do I express gratitude?",
+    "options": ["Words", "Actions", "Gifts", "Quality time", "Other / Something else"],
+    "category": "preferences",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q96",
+    "question": "What's my preferred meeting style?",
+    "options": ["In person", "Video call", "Phone call", "Email/async", "Other / It depends"],
+    "category": "preferences",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q97",
+    "question": "Do I prefer fiction or non-fiction?",
+    "options": ["Fiction", "Non-fiction", "Both equally", "Neither", "Other / It depends"],
+    "category": "preferences",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q98",
+    "question": "What's my risk tolerance?",
+    "options": ["Very cautious", "Somewhat cautious", "Balanced", "Risk-taker", "Other / It depends"],
+    "category": "preferences",
+    "difficulty": 3,
+    "tier": 1
+  },
+  {
+    "id": "q99",
+    "question": "How do I prefer to celebrate achievements?",
+    "options": ["Share with others", "Private satisfaction", "Treat myself", "Move on to next goal", "Other / It depends"],
+    "category": "preferences",
+    "difficulty": 3,
+    "tier": 1
+  },
+  {
+    "id": "q100",
+    "question": "What's my ideal noise level at home?",
+    "options": ["Complete silence", "Background noise", "Music/TV on", "Doesn't matter", "Other / It varies"],
+    "category": "preferences",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q101",
+    "question": "What time do I usually go to bed on weekdays?",
+    "options": ["Before 10pm", "10-11pm", "11pm-midnight", "After midnight", "Other / It varies"],
+    "category": "daily_habits",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q102",
+    "question": "Do I make my bed every morning?",
+    "options": ["Always", "Usually", "Sometimes", "Rarely/Never", "Other / It depends"],
+    "category": "daily_habits",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q103",
+    "question": "What's my typical breakfast routine?",
+    "options": ["Full breakfast", "Quick bite", "Just coffee", "Skip breakfast", "Other / It varies"],
+    "category": "daily_habits",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q104",
+    "question": "How often do I check my phone in the morning?",
+    "options": ["First thing", "After getting ready", "After breakfast", "Later in morning", "Other / It varies"],
+    "category": "daily_habits",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q105",
+    "question": "What time do I typically eat lunch?",
+    "options": ["11am-noon", "Noon-1pm", "1-2pm", "After 2pm", "Other / It varies"],
+    "category": "daily_habits",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q106",
+    "question": "Do I prefer to shower in the morning or evening?",
+    "options": ["Morning", "Evening", "Both", "It varies", "Other / Sometimes"],
+    "category": "daily_habits",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q107",
+    "question": "How do I typically commute or start my work day?",
+    "options": ["Drive", "Public transit", "Walk/bike", "Work from home", "Other / Something else"],
+    "category": "daily_habits",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q108",
+    "question": "What's my evening routine?",
+    "options": ["Cook dinner", "Order food", "Eat out", "Meal prep", "Other / It varies"],
+    "category": "daily_habits",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q109",
+    "question": "Do I exercise regularly?",
+    "options": ["Daily", "Few times a week", "Once a week", "Rarely", "Other / It varies"],
+    "category": "daily_habits",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q110",
+    "question": "What's my before-bed routine?",
+    "options": ["Reading", "Screen time", "Skincare/hygiene", "Meditation", "Other / Something else"],
+    "category": "daily_habits",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q111",
+    "question": "How often do I check social media?",
+    "options": ["Constantly", "Multiple times/day", "Once a day", "Rarely", "Other / It varies"],
+    "category": "daily_habits",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q112",
+    "question": "Do I keep my space tidy?",
+    "options": ["Very organized", "Mostly tidy", "Somewhat messy", "Chaotic", "Other / It depends"],
+    "category": "daily_habits",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q113",
+    "question": "How do I typically spend my lunch break?",
+    "options": ["Eat quickly", "Full break", "Work through it", "Social time", "Other / It varies"],
+    "category": "daily_habits",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q114",
+    "question": "What's my typical water intake?",
+    "options": ["Very hydrated", "Adequate", "Could drink more", "Rarely drink water", "Other / It varies"],
+    "category": "daily_habits",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q115",
+    "question": "Do I meal prep or cook daily?",
+    "options": ["Meal prep", "Cook daily", "Mix of both", "Mostly takeout", "Other / It varies"],
+    "category": "daily_habits",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q116",
+    "question": "How many hours do I typically sleep?",
+    "options": ["Less than 6", "6-7 hours", "7-8 hours", "More than 8", "Other / It varies"],
+    "category": "daily_habits",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q117",
+    "question": "Do I hit snooze in the morning?",
+    "options": ["Never", "Sometimes", "Usually", "Always", "Other / It depends"],
+    "category": "daily_habits",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q118",
+    "question": "What's my typical caffeine consumption?",
+    "options": ["None", "1 cup", "2-3 cups", "More than 3", "Other / It varies"],
+    "category": "daily_habits",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q119",
+    "question": "How often do I take breaks during work?",
+    "options": ["Frequent short breaks", "Few longer breaks", "Rarely", "Only lunch", "Other / It varies"],
+    "category": "daily_habits",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q120",
+    "question": "Do I follow a skincare routine?",
+    "options": ["Detailed routine", "Basic routine", "Minimal", "None", "Other / It varies"],
+    "category": "daily_habits",
+    "difficulty": 3,
+    "tier": 1
+  },
+  {
+    "id": "q121",
+    "question": "What's my typical screen time before bed?",
+    "options": ["None", "Under 30 min", "30-60 min", "Over an hour", "Other / It varies"],
+    "category": "daily_habits",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q122",
+    "question": "How often do I do laundry?",
+    "options": ["Weekly", "Bi-weekly", "When needed", "Rarely", "Other / It varies"],
+    "category": "daily_habits",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q123",
+    "question": "Do I listen to music while working?",
+    "options": ["Always", "Sometimes", "Rarely", "Never", "Other / It depends"],
+    "category": "daily_habits",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q124",
+    "question": "What's my typical weekend wake-up time?",
+    "options": ["Same as weekdays", "1-2 hours later", "Sleep in (3+ hours)", "It varies", "Other / No schedule"],
+    "category": "daily_habits",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q125",
+    "question": "How do I organize my tasks?",
+    "options": ["To-do lists", "Calendar", "Mental notes", "Digital apps", "Other / Something else"],
+    "category": "daily_habits",
+    "difficulty": 3,
+    "tier": 1
+  },
+  {
+    "id": "q126",
+    "question": "Do I take vitamins or supplements?",
+    "options": ["Daily", "Sometimes", "Rarely", "Never", "Other / It varies"],
+    "category": "daily_habits",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q127",
+    "question": "What's my typical grocery shopping frequency?",
+    "options": ["Weekly", "Bi-weekly", "Monthly", "As needed", "Other / It varies"],
+    "category": "daily_habits",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q128",
+    "question": "How often do I clean my living space?",
+    "options": ["Daily", "Weekly", "Bi-weekly", "When it's messy", "Other / It varies"],
+    "category": "daily_habits",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q129",
+    "question": "Do I have a morning meditation or mindfulness practice?",
+    "options": ["Yes, daily", "Sometimes", "Rarely", "Never", "Other / It varies"],
+    "category": "daily_habits",
+    "difficulty": 3,
+    "tier": 1
+  },
+  {
+    "id": "q130",
+    "question": "What's my typical TV/streaming time?",
+    "options": ["None", "Under 1 hour", "1-3 hours", "Over 3 hours", "Other / It varies"],
+    "category": "daily_habits",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q41",
+    "question": "Where do I want to travel next?",
+    "options": ["Europe", "Asia", "Beach destination", "Mountains", "Other place"],
+    "category": "future",
+    "difficulty": 1,
+    "tier": 1
+  },
+  {
+    "id": "q42",
+    "question": "What's on my bucket list?",
+    "options": ["Travel the world", "Learn new skill", "Big adventure", "Life milestone", "Other / Something else"],
+    "category": "future",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q43",
+    "question": "What's my dream job?",
+    "options": ["Creative field", "Business", "Helping others", "Entrepreneurship", "Other / Something else"],
+    "category": "future",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q44",
+    "question": "Where do I see us in 5 years?",
+    "options": ["Same place, growing", "New city", "Big changes", "Building together", "Other / Something else"],
+    "category": "future",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q45",
+    "question": "What's my biggest dream?",
+    "options": ["Career success", "Family", "Travel", "Personal growth", "Other / Something else"],
+    "category": "future",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q46",
+    "question": "What do I want to learn?",
+    "options": ["New language", "Musical instrument", "Sport", "Creative skill", "Other / Something else"],
+    "category": "future",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q47",
+    "question": "What's my retirement dream?",
+    "options": ["Beach house", "Mountain cabin", "Travel the world", "Stay close to family", "Other / Something else"],
+    "category": "future",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q48",
+    "question": "What's important to me in our future?",
+    "options": ["Financial stability", "Adventure", "Family", "Personal growth", "Other / Something else"],
+    "category": "future",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q49",
+    "question": "What's my idea of success?",
+    "options": ["Career achievement", "Happy relationship", "Personal fulfillment", "Making a difference", "Other / Something else"],
+    "category": "future",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q50",
+    "question": "What do I want our legacy to be?",
+    "options": ["Strong family", "Adventures together", "Impact on others", "Living fully", "Other / Something else"],
+    "category": "future",
+    "difficulty": 3,
+    "tier": 1
+  },
+  {
+    "id": "q131",
+    "question": "What's my biggest career goal?",
+    "options": ["Promotion", "Start business", "Career change", "Master my craft", "Other / Something else"],
+    "category": "future",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q132",
+    "question": "Do I want to own a home someday?",
+    "options": ["Yes, definitely", "Probably", "Maybe", "Prefer renting", "Other / Undecided"],
+    "category": "future",
+    "difficulty": 1,
+    "tier": 1
+  },
+  {
+    "id": "q133",
+    "question": "What's my dream car?",
+    "options": ["Luxury", "Sports", "SUV", "Electric", "Other / Something else"],
+    "category": "future",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q134",
+    "question": "What kind of lifestyle do I envision in 10 years?",
+    "options": ["Urban professional", "Suburban family", "Rural peaceful", "Nomadic traveler", "Other / Something else"],
+    "category": "future",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q135",
+    "question": "What's a skill I want to master?",
+    "options": ["Cooking", "Art/craft", "Technology", "Physical skill", "Other / Something else"],
+    "category": "future",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q136",
+    "question": "Do I want pets in the future?",
+    "options": ["Yes, dogs", "Yes, cats", "Other pets", "No pets", "Other / Undecided"],
+    "category": "future",
+    "difficulty": 1,
+    "tier": 1
+  },
+  {
+    "id": "q137",
+    "question": "What's my ideal work-life balance in the future?",
+    "options": ["Career-focused", "Balanced", "Life-focused", "Flexible/remote", "Other / It depends"],
+    "category": "future",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q138",
+    "question": "What's my dream vacation destination?",
+    "options": ["Tropical island", "European cities", "Asian adventure", "African safari", "Other place"],
+    "category": "future",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q139",
+    "question": "Do I want to learn another language?",
+    "options": ["Spanish", "French", "Mandarin", "Other language", "No / Undecided"],
+    "category": "future",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q140",
+    "question": "What's my biggest fear about the future?",
+    "options": ["Financial insecurity", "Health issues", "Losing loved ones", "Not achieving goals", "Other / Something else"],
+    "category": "future",
+    "difficulty": 3,
+    "tier": 1
+  },
+  {
+    "id": "q141",
+    "question": "What's my ideal age to retire?",
+    "options": ["Early (50s)", "Standard (60s)", "Late (70s)", "Never retire", "Other / Undecided"],
+    "category": "future",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q142",
+    "question": "Do I want to write a book someday?",
+    "options": ["Yes, definitely", "Maybe", "Probably not", "Never", "Other / Undecided"],
+    "category": "future",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q143",
+    "question": "What cause or charity matters most to me?",
+    "options": ["Environment", "Education", "Health", "Animal welfare", "Other / Something else"],
+    "category": "future",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q144",
+    "question": "What's my dream hobby to pursue?",
+    "options": ["Art/creative", "Sports/fitness", "Music", "Collecting", "Other / Something else"],
+    "category": "future",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q145",
+    "question": "Do I want to live abroad someday?",
+    "options": ["Yes, definitely", "Maybe temporarily", "Probably not", "Never", "Other / Undecided"],
+    "category": "future",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q146",
+    "question": "What's my biggest personal growth goal?",
+    "options": ["Confidence", "Health", "Skills", "Relationships", "Other / Something else"],
+    "category": "future",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q147",
+    "question": "What's my dream adventure?",
+    "options": ["Skydiving", "Scuba diving", "Mountain climbing", "Road trip", "Other / Something else"],
+    "category": "future",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q148",
+    "question": "Do I want to mentor or teach others?",
+    "options": ["Yes, definitely", "Maybe", "Probably not", "Never", "Other / Undecided"],
+    "category": "future",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q149",
+    "question": "What's my biggest hope for our relationship?",
+    "options": ["Grow together", "Adventure together", "Build a family", "Support each other", "Other / Something else"],
+    "category": "future",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q150",
+    "question": "What would I do if I won the lottery?",
+    "options": ["Travel", "Invest", "Help others", "Buy a dream home", "Other / Something else"],
+    "category": "future",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q151",
+    "question": "What's my dream side hustle or passion project?",
+    "options": ["Creative venture", "Online business", "Consulting", "Non-profit", "Other / Something else"],
+    "category": "future",
+    "difficulty": 3,
+    "tier": 1
+  },
+  {
+    "id": "q152",
+    "question": "Do I want a minimalist or abundant lifestyle?",
+    "options": ["Very minimalist", "Somewhat minimal", "Balanced", "Abundant/collector", "Other / It depends"],
+    "category": "future",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q153",
+    "question": "What's most important in choosing where to live?",
+    "options": ["Career opportunities", "Family proximity", "Climate", "Cost of living", "Other / Something else"],
+    "category": "future",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q154",
+    "question": "Do I want to be famous or influential?",
+    "options": ["Yes, in my field", "Maybe", "Prefer privacy", "Never", "Other / Undecided"],
+    "category": "future",
+    "difficulty": 3,
+    "tier": 1
+  },
+  {
+    "id": "q155",
+    "question": "What's my ideal way to give back?",
+    "options": ["Volunteering", "Donations", "Mentoring", "Activism", "Other / Something else"],
+    "category": "future",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q156",
+    "question": "What do I want to be remembered for?",
+    "options": ["Kindness", "Achievements", "Adventures", "Relationships", "Other / Something else"],
+    "category": "future",
+    "difficulty": 3,
+    "tier": 1
+  },
+  {
+    "id": "q157",
+    "question": "Do I want to continue learning throughout life?",
+    "options": ["Yes, constantly", "Occasionally", "Specific interests", "Not really", "Other / It depends"],
+    "category": "future",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q158",
+    "question": "What's my dream celebration for a major milestone?",
+    "options": ["Big party", "Intimate gathering", "Special trip", "Quiet reflection", "Other / Something else"],
+    "category": "future",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q159",
+    "question": "What technology advancement am I most excited about?",
+    "options": ["AI/automation", "Space exploration", "Medical breakthroughs", "Sustainability tech", "Other / Something else"],
+    "category": "future",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q160",
+    "question": "What's my ideal Friday 20 years from now?",
+    "options": ["Still working passionately", "Retired and relaxed", "Traveling", "Family time", "Other / Something else"],
+    "category": "future",
+    "difficulty": 3,
+    "tier": 1
+  }
+]

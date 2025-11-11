@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Timed Trivia - TogetherRemind</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #FF6B9D 0%, #FEA47F 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+        }
+        header h1 {
+            font-size: 42px;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+        header p {
+            font-size: 18px;
+            opacity: 0.95;
+        }
+        .screens-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        .screen-label {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            text-align: center;
+            padding: 12px;
+            font-weight: 600;
+            font-size: 14px;
+            margin-bottom: 16px;
+            border-radius: 12px;
+            backdrop-filter: blur(10px);
+        }
+        .phone-container {
+            background: white;
+            border-radius: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+            border: 12px solid #1A1A1A;
+        }
+        .status-bar {
+            height: 44px;
+            background: #FFFEFA;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+            font-size: 15px;
+            font-weight: 600;
+        }
+        .screen {
+            background: #FAFAFA;
+            min-height: 700px;
+            overflow-y: auto;
+            padding-bottom: 100px;
+        }
+        .header {
+            background: linear-gradient(135deg, #FF6B9D 0%, #FEA47F 100%);
+            padding: 20px;
+            color: white;
+        }
+        .back-button {
+            font-size: 28px;
+            margin-bottom: 12px;
+        }
+        .header h2 {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+        .header-subtitle {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        /* Timer Circle */
+        .timer-circle {
+            width: 120px;
+            height: 120px;
+            margin: 40px auto 24px;
+            background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 8px 24px rgba(255, 215, 0, 0.4);
+            position: relative;
+        }
+        .timer-value {
+            font-size: 48px;
+            font-weight: 700;
+            color: white;
+        }
+        .timer-label {
+            font-size: 12px;
+            color: white;
+            text-align: center;
+            margin-top: -8px;
+        }
+        /* Question Card */
+        .question-container {
+            padding: 24px;
+        }
+        .category-badge {
+            display: inline-block;
+            padding: 8px 16px;
+            background: linear-gradient(135deg, #E3F2FD 0%, #FFF9C4 100%);
+            border-radius: 12px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #1A1A1A;
+            margin-bottom: 20px;
+        }
+        .question-card {
+            background: white;
+            border-radius: 20px;
+            padding: 28px 24px;
+            margin-bottom: 24px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        .question-number {
+            font-size: 13px;
+            font-weight: 600;
+            color: #999;
+            margin-bottom: 16px;
+        }
+        .question-text {
+            font-size: 22px;
+            font-weight: 600;
+            color: #1A1A1A;
+            line-height: 1.5;
+            margin-bottom: 24px;
+        }
+        .answer-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+        .answer-option {
+            background: #F5F5F5;
+            border: 3px solid #F5F5F5;
+            border-radius: 16px;
+            padding: 20px 16px;
+            font-size: 15px;
+            font-weight: 600;
+            color: #1A1A1A;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            min-height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .answer-option:hover {
+            border-color: #FF6B9D;
+            background: #FFF5F8;
+            transform: scale(1.02);
+        }
+        .answer-option.selected {
+            border-color: #FF6B9D;
+            background: linear-gradient(135deg, #FFF5F8 0%, #FFF9F0 100%);
+        }
+        .answer-option.correct {
+            border-color: #22c55e;
+            background: #E8F5E9;
+        }
+        .answer-option.incorrect {
+            border-color: #ef4444;
+            background: #FFEBEE;
+        }
+        /* Waiting State */
+        .waiting-container {
+            padding: 40px 24px;
+            text-align: center;
+        }
+        .waiting-icon {
+            font-size: 80px;
+            margin-bottom: 24px;
+            animation: pulse 2s ease-in-out infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+        .waiting-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: #1A1A1A;
+            margin-bottom: 12px;
+        }
+        .waiting-subtitle {
+            font-size: 15px;
+            color: #666;
+            margin-bottom: 24px;
+        }
+        .partner-status {
+            background: white;
+            border-radius: 16px;
+            padding: 20px;
+            margin: 24px 0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        .status-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid #F0F0F0;
+        }
+        .status-row:last-child {
+            border-bottom: none;
+        }
+        .status-value.ready {
+            color: #22c55e;
+            font-weight: 600;
+        }
+        /* Results */
+        .results-container {
+            padding: 24px;
+            text-align: center;
+        }
+        .results-icon {
+            font-size: 80px;
+            margin-bottom: 20px;
+        }
+        .results-title {
+            font-size: 28px;
+            font-weight: 700;
+            color: #1A1A1A;
+            margin-bottom: 12px;
+        }
+        .results-subtitle {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 32px;
+        }
+        .results-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 32px;
+        }
+        .result-card {
+            background: white;
+            border-radius: 16px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        .result-label {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 8px;
+        }
+        .result-value {
+            font-size: 32px;
+            font-weight: 700;
+            color: #FF6B9D;
+        }
+        .result-subtext {
+            font-size: 11px;
+            color: #999;
+            margin-top: 4px;
+        }
+        .multiplier-display {
+            background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 24px;
+            color: white;
+            text-align: center;
+        }
+        .multiplier-label {
+            font-size: 14px;
+            opacity: 0.9;
+            margin-bottom: 8px;
+        }
+        .multiplier-value {
+            font-size: 36px;
+            font-weight: 700;
+        }
+        .primary-button {
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(135deg, #FF6B9D 0%, #FEA47F 100%);
+            color: white;
+            border: none;
+            border-radius: 16px;
+            font-size: 17px;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(255, 107, 157, 0.3);
+        }
+        .secondary-button {
+            width: 100%;
+            padding: 18px;
+            background: white;
+            color: #FF6B9D;
+            border: 2px solid #FF6B9D;
+            border-radius: 16px;
+            font-size: 17px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>⚡ Timed Trivia</h1>
+            <p>30-second quick challenges with speed bonuses!</p>
+        </header>
+
+        <div class="screens-grid">
+            <!-- Screen 1: Waiting to Start -->
+            <div>
+                <div class="screen-label">1. Pre-Game Lobby</div>
+                <div class="phone-container">
+                    <div class="status-bar">
+                        <span class="time">9:41</span>
+                        <span class="status-icons">📶 🔋</span>
+                    </div>
+                    <div class="screen">
+                        <div class="header">
+                            <div class="back-button">←</div>
+                            <h2>⚡ Timed Trivia</h2>
+                            <p class="header-subtitle">Quick thinking challenge</p>
+                        </div>
+
+                        <div class="waiting-container">
+                            <div class="waiting-icon">⚡</div>
+                            <h3 class="waiting-title">Ready to Play?</h3>
+                            <p class="waiting-subtitle">
+                                5 rapid-fire questions. Both answer simultaneously. Speed matters!
+                            </p>
+
+                            <div class="partner-status">
+                                <div class="status-row">
+                                    <span class="status-label">Your Status</span>
+                                    <span class="status-value ready">✓ Ready</span>
+                                </div>
+                                <div class="status-row">
+                                    <span class="status-label">Alex's Status</span>
+                                    <span class="status-value ready">✓ Ready</span>
+                                </div>
+                                <div class="status-row">
+                                    <span class="status-label">Category</span>
+                                    <span class="status-value">🎬 Movies</span>
+                                </div>
+                                <div class="status-row">
+                                    <span class="status-label">Reward</span>
+                                    <span class="status-value">8-15 LP</span>
+                                </div>
+                            </div>
+
+                            <button class="primary-button">Start Game</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Screen 2: Active Question -->
+            <div>
+                <div class="screen-label">2. Answering Question</div>
+                <div class="phone-container">
+                    <div class="status-bar">
+                        <span class="time">9:42</span>
+                        <span class="status-icons">📶 🔋</span>
+                    </div>
+                    <div class="screen">
+                        <div class="header">
+                            <div class="back-button">←</div>
+                            <h2>⚡ Timed Trivia</h2>
+                            <p class="header-subtitle">Answer fast for bonuses!</p>
+                        </div>
+
+                        <div class="timer-circle">
+                            <div class="timer-value">18</div>
+                        </div>
+                        <div class="timer-label">seconds left</div>
+
+                        <div class="question-container">
+                            <div class="category-badge">🎬 Movies</div>
+
+                            <div class="question-card">
+                                <div class="question-number">QUESTION 3 OF 5</div>
+                                <div class="question-text">
+                                    Which movie won Best Picture at the 2024 Oscars?
+                                </div>
+
+                                <div class="answer-grid">
+                                    <div class="answer-option">
+                                        Oppenheimer
+                                    </div>
+                                    <div class="answer-option">
+                                        Barbie
+                                    </div>
+                                    <div class="answer-option selected">
+                                        Everything Everywhere
+                                    </div>
+                                    <div class="answer-option">
+                                        The Holdovers
+                                    </div>
+                                </div>
+                            </div>
+
+                            <button class="primary-button">Submit Answer</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Screen 3: Results -->
+            <div>
+                <div class="screen-label">3. Game Results</div>
+                <div class="phone-container">
+                    <div class="status-bar">
+                        <span class="time">9:45</span>
+                        <span class="status-icons">📶 🔋</span>
+                    </div>
+                    <div class="screen">
+                        <div class="header">
+                            <div class="back-button">←</div>
+                            <h2>⚡ Game Results</h2>
+                            <p class="header-subtitle">See how you did!</p>
+                        </div>
+
+                        <div class="results-container">
+                            <div class="results-icon">🎉</div>
+                            <h3 class="results-title">Quick Thinkers!</h3>
+                            <p class="results-subtitle">
+                                Both of you answered correctly and fast
+                            </p>
+
+                            <div class="results-grid">
+                                <div class="result-card">
+                                    <div class="result-label">Your Score</div>
+                                    <div class="result-value">4/5</div>
+                                    <div class="result-subtext">Avg: 12.4s</div>
+                                </div>
+                                <div class="result-card">
+                                    <div class="result-label">Alex's Score</div>
+                                    <div class="result-value">5/5</div>
+                                    <div class="result-subtext">Avg: 9.8s</div>
+                                </div>
+                            </div>
+
+                            <div class="multiplier-display">
+                                <div class="multiplier-label">Speed Bonus Applied</div>
+                                <div class="multiplier-value">1.5x</div>
+                            </div>
+
+                            <div class="result-card" style="margin-bottom: 24px;">
+                                <div class="result-label">Total Love Points Earned</div>
+                                <div class="result-value" style="font-size: 48px;">+18</div>
+                                <div class="result-subtext">Base: 12 LP + Speed Bonus: 6 LP</div>
+                            </div>
+
+                            <button class="primary-button">Play Again</button>
+                            <button class="secondary-button">Back to Home</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

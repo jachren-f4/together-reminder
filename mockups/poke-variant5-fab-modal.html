@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Poke Variant 5 - FAB with Bottom Sheet Modal</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Rounded Mplus 1c', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .phone-frame {
+            width: 375px;
+            height: 812px;
+            background: linear-gradient(180deg, #FFE5E5 0%, #FFF5E1 100%);
+            border-radius: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+            position: relative;
+        }
+        .status-bar {
+            height: 44px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+            font-size: 12px;
+        }
+        .app-content {
+            padding: 20px;
+            height: calc(100% - 44px - 90px);
+            overflow-y: auto;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+        .emoji-icon {
+            font-size: 50px;
+            margin-bottom: 8px;
+        }
+        .header h1 {
+            font-size: 24px;
+            font-weight: 700;
+            color: #FF6B9D;
+        }
+        .partner-badge {
+            display: inline-block;
+            padding: 6px 16px;
+            background: white;
+            border-radius: 20px;
+            font-size: 14px;
+            color: #FF6B9D;
+            font-weight: 500;
+            box-shadow: 0 2px 8px rgba(255,107,157,0.2);
+            margin-top: 8px;
+        }
+
+        /* Main Content - Reminder Form */
+        .reminder-card {
+            background: white;
+            border-radius: 24px;
+            padding: 24px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+        }
+        .input-label {
+            font-size: 13px;
+            font-weight: 600;
+            color: #FF6B9D;
+            margin-bottom: 10px;
+            display: block;
+        }
+        .input-field {
+            width: 100%;
+            padding: 14px;
+            border: 2px solid #FFE0E9;
+            border-radius: 16px;
+            font-size: 15px;
+            font-family: inherit;
+            margin-bottom: 16px;
+        }
+        .quick-messages {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+        .quick-chip {
+            padding: 8px 14px;
+            background: #FFF5E1;
+            border: 2px solid #FFE0E9;
+            border-radius: 20px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .quick-chip:hover {
+            background: white;
+            border-color: #FF6B9D;
+        }
+        .time-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .time-chip {
+            padding: 12px;
+            background: #FFF5E1;
+            border: 2px solid #FFE0E9;
+            border-radius: 14px;
+            text-align: center;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .time-chip:hover {
+            background: white;
+            border-color: #FF6B9D;
+        }
+        .send-button {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #FF6B9D 0%, #FEA47F 100%);
+            color: white;
+            border: none;
+            border-radius: 16px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        /* Floating Action Button */
+        .fab-container {
+            position: absolute;
+            bottom: 120px;
+            right: 20px;
+            z-index: 100;
+        }
+        .fab {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #FF6B9D 0%, #FEA47F 100%);
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 36px;
+            box-shadow: 0 8px 20px rgba(255,107,157,0.5);
+            cursor: pointer;
+            transition: all 0.3s;
+            animation: pulse-fab 2s ease-in-out infinite;
+        }
+        @keyframes pulse-fab {
+            0%, 100% {
+                transform: scale(1);
+                box-shadow: 0 8px 20px rgba(255,107,157,0.5);
+            }
+            50% {
+                transform: scale(1.05);
+                box-shadow: 0 12px 28px rgba(255,107,157,0.6);
+            }
+        }
+        .fab:hover {
+            transform: scale(1.1);
+        }
+        .fab:active {
+            transform: scale(0.9);
+        }
+
+        /* Bottom Sheet Modal Overlay */
+        .modal-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0);
+            pointer-events: none;
+            transition: background 0.3s ease;
+            z-index: 200;
+        }
+        .modal-overlay.active {
+            background: rgba(0, 0, 0, 0.5);
+            pointer-events: all;
+        }
+
+        /* Bottom Sheet Modal */
+        .bottom-sheet {
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(180deg, #FFE5E5 0%, #FFF5E1 100%);
+            border-radius: 32px 32px 0 0;
+            padding: 24px;
+            transform: translateY(100%);
+            transition: transform 0.4s cubic-bezier(0.32, 0.72, 0, 1);
+            z-index: 201;
+            max-height: 85%;
+            box-shadow: 0 -10px 40px rgba(0,0,0,0.3);
+        }
+        .bottom-sheet.active {
+            transform: translateY(0);
+        }
+
+        /* Handle Bar */
+        .sheet-handle {
+            width: 40px;
+            height: 4px;
+            background: rgba(0,0,0,0.2);
+            border-radius: 2px;
+            margin: 0 auto 20px;
+            cursor: grab;
+        }
+
+        /* Sheet Header */
+        .sheet-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .sheet-header-emoji {
+            font-size: 60px;
+            animation: bounce 1s ease-in-out infinite;
+        }
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        .sheet-header h2 {
+            font-size: 32px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #FF6B9D 0%, #FEA47F 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin: 10px 0;
+        }
+        .sheet-partner-badge {
+            display: inline-block;
+            padding: 8px 20px;
+            background: white;
+            border-radius: 20px;
+            font-size: 15px;
+            color: #FF6B9D;
+            font-weight: 600;
+            box-shadow: 0 4px 12px rgba(255,107,157,0.2);
+        }
+
+        /* Poke Card Inside Sheet */
+        .poke-card {
+            background: white;
+            border-radius: 32px;
+            padding: 40px;
+            box-shadow: 0 12px 32px rgba(0,0,0,0.1);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .sparkles {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            font-size: 24px;
+            animation: twinkle 1.5s ease-in-out infinite;
+        }
+        .sparkles:nth-child(2) {
+            top: auto;
+            bottom: 20px;
+            left: auto;
+            right: 20px;
+            animation-delay: 0.5s;
+        }
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; transform: scale(0.8); }
+            50% { opacity: 1; transform: scale(1.2); }
+        }
+        .poke-button {
+            width: 180px;
+            height: 180px;
+            margin: 0 auto 30px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #FF6B9D 0%, #FEA47F 100%);
+            border: none;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 16px 32px rgba(255,107,157,0.4);
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+        }
+        .poke-button::before {
+            content: '';
+            position: absolute;
+            inset: -4px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #FF6B9D 0%, #FEA47F 100%);
+            opacity: 0.5;
+            filter: blur(10px);
+            z-index: -1;
+        }
+        .poke-button:hover {
+            transform: scale(1.08);
+            box-shadow: 0 20px 40px rgba(255,107,157,0.5);
+        }
+        .poke-button:active {
+            transform: scale(0.92);
+        }
+        .poke-emoji {
+            font-size: 70px;
+            animation: wiggle 0.5s ease-in-out;
+        }
+        @keyframes wiggle {
+            0%, 100% { transform: rotate(0deg); }
+            25% { transform: rotate(-10deg); }
+            75% { transform: rotate(10deg); }
+        }
+        .poke-label {
+            color: white;
+            font-size: 22px;
+            font-weight: 700;
+            margin-top: 8px;
+        }
+        .poke-description {
+            font-size: 16px;
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+        .quick-emojis {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            margin-top: 20px;
+        }
+        .emoji-option {
+            width: 60px;
+            height: 60px;
+            background: #FFF5E1;
+            border: 2px solid #FFE0E9;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .emoji-option:hover {
+            transform: scale(1.1);
+            border-color: #FF6B9D;
+            background: white;
+        }
+        .haptic-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 13px;
+            color: #999;
+            margin-top: 20px;
+        }
+        .haptic-indicator::before {
+            content: '📳';
+            font-size: 16px;
+        }
+
+        .bottom-nav {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 90px;
+            background: linear-gradient(180deg, rgba(255,229,229,0.8) 0%, rgba(255,245,225,1) 100%);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid rgba(255,107,157,0.1);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 20px;
+        }
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-size: 24px;
+            opacity: 0.5;
+            transition: opacity 0.3s;
+        }
+        .nav-item.active {
+            opacity: 1;
+        }
+        .nav-label {
+            font-size: 11px;
+            margin-top: 4px;
+            font-weight: 600;
+            color: #FF6B9D;
+        }
+
+        /* Close Button */
+        .close-button {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.9);
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 18px;
+            color: #999;
+            transition: all 0.2s;
+            z-index: 10;
+        }
+        .close-button:hover {
+            background: white;
+            color: #FF6B9D;
+            transform: scale(1.1);
+        }
+
+        /* Instruction Badge */
+        .instruction-badge {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(255,107,157,0.9);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            z-index: 150;
+            animation: fade-in-out 4s ease-in-out;
+            pointer-events: none;
+        }
+        @keyframes fade-in-out {
+            0%, 100% { opacity: 0; }
+            10%, 90% { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <div class="phone-frame">
+        <div class="status-bar">
+            <span>9:41</span>
+            <span>📶 🔋</span>
+        </div>
+
+        <div class="app-content">
+            <div class="header">
+                <div class="emoji-icon">💕</div>
+                <h1>Send Reminder</h1>
+                <div class="partner-badge">Alex</div>
+            </div>
+
+            <div class="reminder-card">
+                <label class="input-label">Quick Messages</label>
+                <div class="quick-messages">
+                    <div class="quick-chip">🔑 Don't forget keys</div>
+                    <div class="quick-chip">☂️ Bring umbrella</div>
+                    <div class="quick-chip">💊 Take meds</div>
+                    <div class="quick-chip">🏃 Leave now</div>
+                </div>
+
+                <label class="input-label">Or type your own</label>
+                <input
+                    type="text"
+                    class="input-field"
+                    placeholder="Type reminder message..."
+                />
+
+                <label class="input-label">When?</label>
+                <div class="time-grid">
+                    <div class="time-chip">⏰ 15 min</div>
+                    <div class="time-chip">⏰ 1 hour</div>
+                    <div class="time-chip">🌙 Tonight</div>
+                    <div class="time-chip">☀️ Tomorrow</div>
+                </div>
+
+                <button class="send-button">Send Reminder →</button>
+            </div>
+        </div>
+
+        <!-- Floating Action Button -->
+        <div class="fab-container">
+            <button class="fab" onclick="openPokeModal()">💫</button>
+        </div>
+
+        <!-- Instruction Badge -->
+        <div class="instruction-badge">
+            Tap the 💫 button to open Poke!
+        </div>
+
+        <!-- Modal Overlay -->
+        <div class="modal-overlay" id="modalOverlay" onclick="closePokeModal()"></div>
+
+        <!-- Bottom Sheet Modal -->
+        <div class="bottom-sheet" id="bottomSheet">
+            <button class="close-button" onclick="closePokeModal()">✕</button>
+            <div class="sheet-handle"></div>
+
+            <div class="sheet-header">
+                <div class="sheet-header-emoji">💫</div>
+                <h2>Send a Poke!</h2>
+                <div class="sheet-partner-badge">💕 Alex</div>
+            </div>
+
+            <div class="poke-card">
+                <div class="sparkles">✨</div>
+                <div class="sparkles">✨</div>
+
+                <button class="poke-button" onclick="sendPoke()">
+                    <div class="poke-emoji">🫱</div>
+                    <div class="poke-label">Poke</div>
+                </button>
+
+                <div class="poke-description">
+                    Send an instant "thinking of you" ❤️
+                </div>
+
+                <div class="quick-emojis">
+                    <div class="emoji-option" onclick="selectEmoji('💫')">💫</div>
+                    <div class="emoji-option" onclick="selectEmoji('❤️')">❤️</div>
+                    <div class="emoji-option" onclick="selectEmoji('👋')">👋</div>
+                    <div class="emoji-option" onclick="selectEmoji('🫶')">🫶</div>
+                </div>
+
+                <div class="haptic-indicator">
+                    Tap for vibration + animation
+                </div>
+            </div>
+        </div>
+
+        <div class="bottom-nav">
+            <div class="nav-item active">
+                <span>💕</span>
+                <span class="nav-label">Send</span>
+            </div>
+            <div class="nav-item">
+                <span>📝</span>
+                <span class="nav-label">Inbox</span>
+            </div>
+            <div class="nav-item">
+                <span>⚙️</span>
+                <span class="nav-label">Settings</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function openPokeModal() {
+            const overlay = document.getElementById('modalOverlay');
+            const sheet = document.getElementById('bottomSheet');
+
+            overlay.classList.add('active');
+            sheet.classList.add('active');
+        }
+
+        function closePokeModal() {
+            const overlay = document.getElementById('modalOverlay');
+            const sheet = document.getElementById('bottomSheet');
+
+            overlay.classList.remove('active');
+            sheet.classList.remove('active');
+        }
+
+        function sendPoke() {
+            // Simulate haptic feedback (would be actual vibration in Flutter)
+            console.log('💫 Poke sent!');
+
+            // Show success feedback
+            const button = document.querySelector('.poke-button');
+            button.style.transform = 'scale(0.9)';
+
+            setTimeout(() => {
+                button.style.transform = 'scale(1)';
+                closePokeModal();
+
+                // Show success message
+                alert('💫 Poke sent to Alex!');
+            }, 200);
+        }
+
+        function selectEmoji(emoji) {
+            console.log('Selected emoji:', emoji);
+            const pokeEmoji = document.querySelector('.poke-emoji');
+            pokeEmoji.textContent = emoji;
+        }
+
+        // Close modal on Escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closePokeModal();
+            }
+        });
+
+        // Optional: Swipe down to close (simplified version)
+        let startY = 0;
+        const sheet = document.getElementById('bottomSheet');
+        const handle = document.querySelector('.sheet-handle');
+
+        handle.addEventListener('touchstart', (e) => {
+            startY = e.touches[0].clientY;
+        });
+
+        handle.addEventListener('touchmove', (e) => {
+            const currentY = e.touches[0].clientY;
+            const diff = currentY - startY;
+
+            if (diff > 0) {
+                sheet.style.transform = `translateY(${diff}px)`;
+            }
+        });
+
+        handle.addEventListener('touchend', (e) => {
+            const currentY = e.changedTouches[0].clientY;
+            const diff = currentY - startY;
+
+            if (diff > 100) {
+                closePokeModal();
+            } else {
+                sheet.style.transform = 'translateY(0)';
+            }
+        });
+    </script>
+</body>
+</html>

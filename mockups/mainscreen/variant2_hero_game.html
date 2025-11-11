@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Variant 2: Hero Game Card - TogetherRemind</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #FAFAFA;
+            color: #1A1A1A;
+            padding: 20px;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+        .header {
+            font-family: 'Playfair Display', serif;
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 24px;
+            letter-spacing: -0.4px;
+        }
+        .hero-card {
+            background: linear-gradient(135deg, #1A1A1A 0%, #3A3A3A 100%);
+            color: #FFFEFD;
+            border-radius: 20px;
+            padding: 32px 24px;
+            margin-bottom: 24px;
+            text-align: center;
+        }
+        .hero-emoji {
+            font-size: 64px;
+            margin-bottom: 16px;
+        }
+        .hero-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        .hero-desc {
+            font-size: 15px;
+            opacity: 0.8;
+            margin-bottom: 20px;
+        }
+        .hero-button {
+            background: #FFFEFD;
+            color: #1A1A1A;
+            border: none;
+            border-radius: 24px;
+            padding: 14px 32px;
+            font-size: 17px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        .section-title {
+            font-size: 17px;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+        .mini-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+        .mini-card {
+            background: #FFFEFD;
+            border: 2px solid #F0F0F0;
+            border-radius: 16px;
+            padding: 20px;
+            text-align: center;
+        }
+        .mini-emoji {
+            font-size: 40px;
+            margin-bottom: 8px;
+        }
+        .mini-title {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        .mini-subtitle {
+            font-size: 12px;
+            color: #6E6E6E;
+        }
+        .list-card {
+            background: #FFFEFD;
+            border: 2px solid #F0F0F0;
+            border-radius: 16px;
+            padding: 16px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .list-emoji {
+            font-size: 32px;
+            width: 48px;
+            height: 48px;
+            background: #F0F0F0;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .list-content {
+            flex: 1;
+        }
+        .list-title {
+            font-size: 15px;
+            font-weight: 600;
+            margin-bottom: 2px;
+        }
+        .list-subtitle {
+            font-size: 13px;
+            color: #6E6E6E;
+        }
+        .badge {
+            font-size: 11px;
+            font-weight: 600;
+            padding: 4px 8px;
+            background: #F0F0F0;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">TogetherRemind</div>
+
+    <div class="hero-card">
+        <div class="hero-emoji">🧩</div>
+        <div class="hero-title">Daily Pulse</div>
+        <div class="hero-desc">Your turn to answer today's question</div>
+        <button class="hero-button">Answer Now</button>
+    </div>
+
+    <div class="section-title">Other Games</div>
+    <div class="mini-grid">
+        <div class="mini-card">
+            <div class="mini-emoji">🪜</div>
+            <div class="mini-title">Word Ladder</div>
+            <div class="mini-subtitle">Your turn</div>
+        </div>
+        <div class="mini-card">
+            <div class="mini-emoji">🃏</div>
+            <div class="mini-title">Memory Flip</div>
+            <div class="mini-subtitle">6/8 pairs</div>
+        </div>
+        <div class="mini-card">
+            <div class="mini-emoji">🎯</div>
+            <div class="mini-title">Couple Quiz</div>
+            <div class="mini-subtitle">Start new</div>
+        </div>
+        <div class="mini-card">
+            <div class="mini-emoji">💭</div>
+            <div class="mini-title">Would You Rather</div>
+            <div class="mini-subtitle">Coming soon</div>
+        </div>
+    </div>
+
+    <div class="section-title">Quick Actions</div>
+    <div class="list-card">
+        <div class="list-emoji">💫</div>
+        <div class="list-content">
+            <div class="list-title">Send a Poke</div>
+            <div class="list-subtitle">Get their attention</div>
+        </div>
+    </div>
+
+    <div class="list-card">
+        <div class="list-emoji">💕</div>
+        <div class="list-content">
+            <div class="list-title">Send Reminder</div>
+            <div class="list-subtitle">Schedule a message</div>
+        </div>
+    </div>
+
+    <div class="list-card">
+        <div class="list-emoji">📝</div>
+        <div class="list-content">
+            <div class="list-title">View Inbox</div>
+            <div class="list-subtitle">2 new messages</div>
+        </div>
+        <span class="badge">2</span>
+    </div>
+</body>
+</html>

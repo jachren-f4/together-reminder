@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TogetherRemind - Poke Response</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: rgba(26, 26, 26, 0.5);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        /* Dialog card */
+        .dialog-card {
+            max-width: 360px;
+            width: 100%;
+            background: #FFFEFD;
+            border-radius: 24px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.16);
+            padding: 32px 24px 24px;
+            animation: scaleIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        @keyframes scaleIn {
+            from {
+                transform: scale(0.9);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 28px;
+        }
+
+        .emoji-large {
+            font-size: 72px;
+            margin-bottom: 16px;
+            animation: heartbeat 0.8s ease infinite;
+        }
+
+        @keyframes heartbeat {
+            0%, 100% {
+                transform: scale(1);
+            }
+            25% {
+                transform: scale(1.1);
+            }
+            50% {
+                transform: scale(1);
+            }
+        }
+
+        h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 26px;
+            font-weight: 600;
+            color: #1A1A1A;
+            margin-bottom: 8px;
+            letter-spacing: -0.3px;
+        }
+
+        .from-label {
+            font-family: 'Inter', sans-serif;
+            font-size: 15px;
+            color: #6E6E6E;
+        }
+
+        .partner-name {
+            font-family: 'Playfair Display', serif;
+            font-weight: 600;
+            color: #1A1A1A;
+        }
+
+        /* Message */
+        .message {
+            background: #FAFAFA;
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 24px;
+            text-align: center;
+        }
+
+        .message-text {
+            font-family: 'Inter', sans-serif;
+            font-size: 16px;
+            color: #1A1A1A;
+            line-height: 1.5;
+        }
+
+        /* Actions */
+        .actions {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .action-button {
+            width: 100%;
+            padding: 16px;
+            border: none;
+            border-radius: 16px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            font-family: 'Inter', sans-serif;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+
+        .action-button:active {
+            transform: scale(0.97);
+        }
+
+        .action-button.primary {
+            background: #1A1A1A;
+            color: #FFFEFD;
+            box-shadow: 0 4px 12px rgba(26, 26, 26, 0.15);
+        }
+
+        .action-button.primary:active {
+            box-shadow: 0 2px 8px rgba(26, 26, 26, 0.2);
+        }
+
+        .action-button.secondary {
+            background: #FAFAFA;
+            color: #1A1A1A;
+        }
+
+        .action-button.tertiary {
+            background: transparent;
+            color: #6E6E6E;
+            font-weight: 500;
+        }
+
+        .button-emoji {
+            font-size: 20px;
+        }
+
+        /* Time info */
+        .time-info {
+            text-align: center;
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid #F0F0F0;
+        }
+
+        .time-text {
+            font-family: 'Inter', sans-serif;
+            font-size: 13px;
+            color: #6E6E6E;
+        }
+    </style>
+</head>
+<body>
+    <div class="dialog-card">
+        <div class="header">
+            <div class="emoji-large">👋</div>
+            <h2>You got a poke!</h2>
+            <p class="from-label">from <span class="partner-name">Sarah</span></p>
+        </div>
+
+        <div class="message">
+            <p class="message-text">Hey! Just thinking about you 💭</p>
+        </div>
+
+        <div class="actions">
+            <button class="action-button primary">
+                <span class="button-emoji">👋</span>
+                <span>Poke Back</span>
+            </button>
+
+            <button class="action-button secondary">
+                <span class="button-emoji">😊</span>
+                <span>Smile</span>
+            </button>
+
+            <button class="action-button tertiary">
+                <span>Dismiss</span>
+            </button>
+        </div>
+
+        <div class="time-info">
+            <p class="time-text">Just now</p>
+        </div>
+    </div>
+</body>
+</html>

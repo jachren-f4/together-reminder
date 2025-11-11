@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Word Ladder Duet - TogetherRemind</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .game-container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 500px;
+            width: 100%;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .game-icon {
+            font-size: 3em;
+            margin-bottom: 10px;
+        }
+
+        h1 {
+            color: #667eea;
+            font-size: 1.8em;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: #666;
+            font-size: 0.95em;
+        }
+
+        .goal {
+            background: #f0f4ff;
+            border-left: 4px solid #667eea;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+
+        .goal-label {
+            font-weight: bold;
+            color: #667eea;
+            font-size: 0.9em;
+            margin-bottom: 5px;
+        }
+
+        .word-display {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 1.5em;
+            font-weight: bold;
+        }
+
+        .word-box {
+            background: white;
+            padding: 10px 20px;
+            border-radius: 10px;
+            border: 2px solid #667eea;
+        }
+
+        .arrow {
+            color: #667eea;
+            font-size: 1.2em;
+        }
+
+        .ladder {
+            margin: 30px 0;
+        }
+
+        .ladder-step {
+            display: flex;
+            align-items: center;
+            margin: 15px 0;
+            padding: 15px;
+            background: #f9fafb;
+            border-radius: 10px;
+            border: 2px solid #e5e7eb;
+        }
+
+        .step-number {
+            background: #667eea;
+            color: white;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+
+        .step-word {
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #333;
+            flex-grow: 1;
+        }
+
+        .step-player {
+            font-size: 0.85em;
+            color: #666;
+            padding: 5px 12px;
+            background: #e5e7eb;
+            border-radius: 15px;
+        }
+
+        .current-step {
+            border: 2px solid #667eea;
+            background: #f0f4ff;
+        }
+
+        .input-area {
+            margin-top: 20px;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 15px;
+            font-size: 1.2em;
+            border: 2px solid #e5e7eb;
+            border-radius: 10px;
+            text-transform: uppercase;
+            font-weight: bold;
+            text-align: center;
+            letter-spacing: 3px;
+        }
+
+        input[type="text"]:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .button {
+            width: 100%;
+            padding: 15px;
+            margin-top: 15px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .button:hover {
+            background: #5568d3;
+        }
+
+        .button:disabled {
+            background: #cbd5e1;
+            cursor: not-allowed;
+        }
+
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 2px solid #e5e7eb;
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 1.8em;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .stat-label {
+            font-size: 0.85em;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 20px;
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
+        .hint {
+            text-align: center;
+            color: #666;
+            font-size: 0.9em;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <div class="header">
+            <div class="game-icon">🪜</div>
+            <h1>Word Ladder Duet</h1>
+            <p class="subtitle">Change one letter at a time to reach the target</p>
+        </div>
+
+        <div class="goal">
+            <div class="goal-label">TODAY'S CHALLENGE</div>
+            <div class="word-display">
+                <div class="word-box">LOVE</div>
+                <div class="arrow">→</div>
+                <div class="word-box">LIFE</div>
+            </div>
+        </div>
+
+        <div class="ladder">
+            <div class="ladder-step">
+                <div class="step-number">1</div>
+                <div class="step-word">LOVE</div>
+                <div class="step-player">Start</div>
+            </div>
+
+            <div class="ladder-step">
+                <div class="step-number">2</div>
+                <div class="step-word">LIVE</div>
+                <div class="step-player">You</div>
+            </div>
+
+            <div class="ladder-step current-step">
+                <div class="step-number">3</div>
+                <div class="step-word">LIFE</div>
+                <div class="step-player">Partner</div>
+            </div>
+        </div>
+
+        <div class="input-area">
+            <input type="text" placeholder="TYPE YOUR WORD" maxlength="4" value="LIFE" disabled>
+            <button class="button" disabled>🎉 Puzzle Complete!</button>
+            <div class="hint">Completed in 3 steps - Amazing teamwork!</div>
+        </div>
+
+        <div class="stats">
+            <div class="stat">
+                <div class="stat-value">3</div>
+                <div class="stat-label">Steps Used</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value">2/2</div>
+                <div class="stat-label">Partners</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value">+50</div>
+                <div class="stat-label">Love Points</div>
+            </div>
+        </div>
+
+        <a href="index.html" class="back-link">← Back to All Games</a>
+    </div>
+
+    <script>
+        // Interactive demo - in real implementation would connect to game state
+        const input = document.querySelector('input[type="text"]');
+        const button = document.querySelector('.button');
+
+        input.addEventListener('input', (e) => {
+            e.target.value = e.target.value.toUpperCase();
+        });
+    </script>
+</body>
+</html>

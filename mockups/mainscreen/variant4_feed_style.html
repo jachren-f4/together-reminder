@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Variant 4: Feed Style - TogetherRemind</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #FAFAFA;
+            color: #1A1A1A;
+            padding: 0;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+        .top-bar {
+            background: #FFFEFD;
+            border-bottom: 1px solid #F0F0F0;
+            padding: 20px;
+            position: sticky;
+            top: 0;
+        }
+        .top-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 24px;
+            font-weight: 600;
+            letter-spacing: -0.3px;
+        }
+        .feed {
+            padding: 16px;
+        }
+        .feed-item {
+            background: #FFFEFD;
+            border: 2px solid #F0F0F0;
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 16px;
+        }
+        .feed-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+        .feed-emoji {
+            font-size: 32px;
+            width: 48px;
+            height: 48px;
+            background: #F0F0F0;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .feed-header-text {
+            flex: 1;
+        }
+        .feed-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 2px;
+        }
+        .feed-meta {
+            font-size: 13px;
+            color: #6E6E6E;
+        }
+        .feed-body {
+            font-size: 15px;
+            color: #1A1A1A;
+            margin-bottom: 12px;
+            line-height: 1.5;
+        }
+        .feed-action {
+            background: #1A1A1A;
+            color: #FFFEFD;
+            border: none;
+            border-radius: 12px;
+            padding: 12px 20px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+        }
+        .feed-item.highlight {
+            border-color: #1A1A1A;
+            border-width: 3px;
+        }
+        .badge-inline {
+            display: inline-block;
+            background: #1A1A1A;
+            color: #FFFEFD;
+            padding: 4px 8px;
+            border-radius: 8px;
+            font-size: 11px;
+            font-weight: 600;
+            margin-left: 8px;
+        }
+        .quick-actions-floating {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            display: flex;
+            gap: 12px;
+        }
+        .floating-btn {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: #1A1A1A;
+            border: none;
+            font-size: 28px;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+    </style>
+</head>
+<body>
+    <div class="top-bar">
+        <div class="top-title">Your Feed</div>
+    </div>
+
+    <div class="feed">
+        <div class="feed-item highlight">
+            <div class="feed-header">
+                <div class="feed-emoji">🧩</div>
+                <div class="feed-header-text">
+                    <div class="feed-title">Daily Pulse <span class="badge-inline">🔥 3 days</span></div>
+                    <div class="feed-meta">Answer today's question</div>
+                </div>
+            </div>
+            <div class="feed-body">
+                "How adventurous do you feel today on a scale from 1-10?"
+            </div>
+            <button class="feed-action">Answer Now</button>
+        </div>
+
+        <div class="feed-item">
+            <div class="feed-header">
+                <div class="feed-emoji">🪜</div>
+                <div class="feed-header-text">
+                    <div class="feed-title">Word Ladder Duet</div>
+                    <div class="feed-meta">Your turn • 2 active puzzles</div>
+                </div>
+            </div>
+            <div class="feed-body">
+                Transform LOVE → LIFE
+            </div>
+            <button class="feed-action">Play Your Turn</button>
+        </div>
+
+        <div class="feed-item">
+            <div class="feed-header">
+                <div class="feed-emoji">🃏</div>
+                <div class="feed-header-text">
+                    <div class="feed-title">Memory Flip Co-op</div>
+                    <div class="feed-meta">6 out of 8 pairs found</div>
+                </div>
+            </div>
+            <div class="feed-body">
+                You're so close! Find the last 2 matching pairs together.
+            </div>
+            <button class="feed-action">Continue Game</button>
+        </div>
+
+        <div class="feed-item">
+            <div class="feed-header">
+                <div class="feed-emoji">💕</div>
+                <div class="feed-header-text">
+                    <div class="feed-title">Reminder from Sarah</div>
+                    <div class="feed-meta">2 hours ago</div>
+                </div>
+            </div>
+            <div class="feed-body">
+                "Don't forget to pick up milk on your way home!"
+            </div>
+        </div>
+
+        <div class="feed-item">
+            <div class="feed-header">
+                <div class="feed-emoji">🎯</div>
+                <div class="feed-header-text">
+                    <div class="feed-title">Start a Couple Quiz</div>
+                    <div class="feed-meta">Test how well you know each other</div>
+                </div>
+            </div>
+            <button class="feed-action">Start Quiz</button>
+        </div>
+    </div>
+
+    <div class="quick-actions-floating">
+        <button class="floating-btn">💕</button>
+        <button class="floating-btn">💫</button>
+    </div>
+</body>
+</html>

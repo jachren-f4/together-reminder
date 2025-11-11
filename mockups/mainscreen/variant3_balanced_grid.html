@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Variant 3: Balanced Grid - TogetherRemind</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #FAFAFA;
+            color: #1A1A1A;
+            padding: 20px;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+        .header-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 32px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            letter-spacing: -0.5px;
+        }
+        .header-subtitle {
+            font-size: 15px;
+            color: #6E6E6E;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+        .grid-card {
+            background: #FFFEFD;
+            border: 2px solid #F0F0F0;
+            border-radius: 16px;
+            padding: 24px 16px;
+            text-align: center;
+            position: relative;
+            min-height: 160px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .grid-card.featured {
+            grid-column: span 2;
+            background: #1A1A1A;
+            color: #FFFEFD;
+            border-color: #1A1A1A;
+        }
+        .grid-emoji {
+            font-size: 48px;
+            margin-bottom: 12px;
+        }
+        .grid-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        .grid-subtitle {
+            font-size: 13px;
+            color: #6E6E6E;
+        }
+        .grid-card.featured .grid-subtitle {
+            color: rgba(255, 254, 253, 0.7);
+        }
+        .badge-top {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: #F0F0F0;
+            padding: 4px 8px;
+            border-radius: 8px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+        .grid-card.featured .badge-top {
+            background: rgba(255, 254, 253, 0.2);
+            color: #FFFEFD;
+        }
+        .stats-bar {
+            background: #FFFEFD;
+            border: 2px solid #F0F0F0;
+            border-radius: 16px;
+            padding: 20px;
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 24px;
+        }
+        .stat {
+            text-align: center;
+        }
+        .stat-value {
+            font-family: 'Playfair Display', serif;
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        .stat-label {
+            font-size: 12px;
+            color: #6E6E6E;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-title">Together</div>
+        <div class="header-subtitle">Your shared moments</div>
+    </div>
+
+    <div class="grid">
+        <div class="grid-card featured">
+            <div class="badge-top">🔥 3 days</div>
+            <div class="grid-emoji">🧩</div>
+            <div class="grid-title">Daily Pulse</div>
+            <div class="grid-subtitle">Your turn today</div>
+        </div>
+
+        <div class="grid-card">
+            <div class="badge-top">Your turn</div>
+            <div class="grid-emoji">🪜</div>
+            <div class="grid-title">Word Ladder</div>
+            <div class="grid-subtitle">2 active</div>
+        </div>
+
+        <div class="grid-card">
+            <div class="badge-top">6/8</div>
+            <div class="grid-emoji">🃏</div>
+            <div class="grid-title">Memory Flip</div>
+            <div class="grid-subtitle">In progress</div>
+        </div>
+
+        <div class="grid-card">
+            <div class="grid-emoji">🎯</div>
+            <div class="grid-title">Couple Quiz</div>
+            <div class="grid-subtitle">Start new</div>
+        </div>
+
+        <div class="grid-card">
+            <div class="grid-emoji">💫</div>
+            <div class="grid-title">Send Poke</div>
+            <div class="grid-subtitle">Quick tap</div>
+        </div>
+
+        <div class="grid-card">
+            <div class="grid-emoji">💕</div>
+            <div class="grid-title">Reminder</div>
+            <div class="grid-subtitle">Schedule</div>
+        </div>
+
+        <div class="grid-card">
+            <div class="badge-top">2</div>
+            <div class="grid-emoji">📝</div>
+            <div class="grid-title">Inbox</div>
+            <div class="grid-subtitle">Messages</div>
+        </div>
+    </div>
+
+    <div class="stats-bar">
+        <div class="stat">
+            <div class="stat-value">127</div>
+            <div class="stat-label">Love Points</div>
+        </div>
+        <div class="stat">
+            <div class="stat-value">8</div>
+            <div class="stat-label">Days Together</div>
+        </div>
+        <div class="stat">
+            <div class="stat-value">3</div>
+            <div class="stat-label">Streak</div>
+        </div>
+    </div>
+</body>
+</html>

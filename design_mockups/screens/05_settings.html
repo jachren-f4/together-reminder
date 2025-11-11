@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TogetherRemind - Settings</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #FFF5F7 0%, #FFE8EF 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 420px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .title-row {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        .title-row .emoji {
+            font-size: 40px;
+        }
+
+        h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 32px;
+            font-weight: 700;
+            color: #FF4D8D;
+            letter-spacing: -0.5px;
+        }
+
+        .section-card {
+            background: white;
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+            margin-bottom: 20px;
+        }
+
+        .section-label {
+            font-family: 'Inter', sans-serif;
+            font-size: 12px;
+            font-weight: 600;
+            color: #AAAAAA;
+            letter-spacing: 0.5px;
+            margin-bottom: 12px;
+        }
+
+        .partner-info {
+            display: flex;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .partner-avatar {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #FF4D8D 0%, #FF8A6B 100%);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            margin-right: 16px;
+        }
+
+        .partner-details h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 22px;
+            font-weight: 700;
+            color: #1A1A1A;
+            margin-bottom: 4px;
+            letter-spacing: -0.3px;
+        }
+
+        .partner-details p {
+            font-family: 'Inter', sans-serif;
+            font-size: 13px;
+            color: #6E6E6E;
+        }
+
+        .divider {
+            height: 1px;
+            background: #F0F0F0;
+            margin: 16px 0 12px;
+        }
+
+        .stats-row {
+            display: flex;
+            justify-content: space-around;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-item .emoji {
+            font-size: 24px;
+            margin-bottom: 4px;
+        }
+
+        .stat-item .value {
+            font-family: 'Inter', sans-serif;
+            font-size: 20px;
+            font-weight: 700;
+            color: #FF4D8D;
+            margin-bottom: 2px;
+        }
+
+        .stat-item .label {
+            font-family: 'Inter', sans-serif;
+            font-size: 12px;
+            color: #6E6E6E;
+        }
+
+        .setting-row {
+            display: flex;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .setting-row:last-child {
+            margin-bottom: 0;
+        }
+
+        .setting-row .emoji {
+            font-size: 24px;
+            margin-right: 12px;
+        }
+
+        .setting-content {
+            flex: 1;
+        }
+
+        .setting-content .label {
+            font-family: 'Inter', sans-serif;
+            font-size: 15px;
+            font-weight: 500;
+            color: #1A1A1A;
+            margin-bottom: 2px;
+        }
+
+        .setting-content .value {
+            font-family: 'Inter', sans-serif;
+            font-size: 13px;
+            color: #6E6E6E;
+        }
+
+        .chevron {
+            color: #AAAAAA;
+            font-size: 20px;
+        }
+
+        .unpair-button {
+            width: 100%;
+            padding: 16px;
+            background: transparent;
+            border: 2px solid #FF4757;
+            border-radius: 12px;
+            font-family: 'Inter', sans-serif;
+            font-size: 16px;
+            font-weight: 600;
+            color: #FF4757;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.2s ease;
+        }
+
+        .unpair-button:active {
+            transform: scale(0.98);
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .footer-text {
+            font-family: 'Inter', sans-serif;
+            font-size: 12px;
+            color: #AAAAAA;
+            line-height: 1.5;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="title-row">
+                <span class="emoji">⚙️</span>
+                <h1>Settings</h1>
+            </div>
+        </div>
+
+        <div class="section-card">
+            <div class="section-label">PARTNER</div>
+            <div class="partner-info">
+                <div class="partner-avatar">👤</div>
+                <div class="partner-details">
+                    <h2>Sarah</h2>
+                    <p>Paired Nov 5, 2024</p>
+                </div>
+            </div>
+            <div class="divider"></div>
+            <div class="stats-row">
+                <div class="stat-item">
+                    <div class="emoji">💌</div>
+                    <div class="value">18</div>
+                    <div class="label">Sent</div>
+                </div>
+                <div class="stat-item">
+                    <div class="emoji">📬</div>
+                    <div class="value">23</div>
+                    <div class="label">Received</div>
+                </div>
+                <div class="stat-item">
+                    <div class="emoji">📊</div>
+                    <div class="value">41</div>
+                    <div class="label">Total</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section-card">
+            <div class="section-label">YOUR INFO</div>
+            <div class="setting-row">
+                <span class="emoji">👤</span>
+                <div class="setting-content">
+                    <div class="label">Name</div>
+                    <div class="value">Alex</div>
+                </div>
+            </div>
+            <div class="setting-row">
+                <span class="emoji">📱</span>
+                <div class="setting-content">
+                    <div class="label">User ID</div>
+                    <div class="value">a1b2c3d4...</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section-card">
+            <div class="section-label">PREFERENCES</div>
+            <div class="setting-row">
+                <span class="emoji">🔔</span>
+                <div class="setting-content">
+                    <div class="label">Notifications</div>
+                    <div class="value">Enabled</div>
+                </div>
+                <span class="chevron">›</span>
+            </div>
+            <div class="setting-row">
+                <span class="emoji">🌙</span>
+                <div class="setting-content">
+                    <div class="label">Do Not Disturb</div>
+                    <div class="value">Off</div>
+                </div>
+                <span class="chevron">›</span>
+            </div>
+        </div>
+
+        <div class="section-card">
+            <div class="section-label">DATA</div>
+            <div class="setting-row">
+                <span class="emoji">💾</span>
+                <div class="setting-content">
+                    <div class="label">Export Data</div>
+                </div>
+                <span class="chevron">›</span>
+            </div>
+            <div class="setting-row">
+                <span class="emoji">🗑️</span>
+                <div class="setting-content">
+                    <div class="label">Clear History</div>
+                </div>
+                <span class="chevron">›</span>
+            </div>
+        </div>
+
+        <button class="unpair-button">
+            <span>🔗</span>
+            <span>Unpair Partner</span>
+        </button>
+
+        <div class="footer">
+            <p class="footer-text">TogetherRemind v1.0.0<br>Made with 💕</p>
+        </div>
+    </div>
+</body>
+</html>
