@@ -122,59 +122,6 @@ class _QuizIntroScreenState extends State<QuizIntroScreen> {
 
               const SizedBox(height: 32),
 
-              // Role explanation card
-              Container(
-                padding: const EdgeInsets.all(20),
-                decoration: BoxDecoration(
-                  color: theme.colorScheme.surfaceContainerHighest,
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.all(8),
-                          decoration: BoxDecoration(
-                            color: theme.colorScheme.primary,
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          child: Icon(
-                            Icons.person,
-                            color: theme.colorScheme.onPrimary,
-                            size: 20,
-                          ),
-                        ),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: Text(
-                            'You are the SUBJECT',
-                            style: theme.textTheme.titleMedium?.copyWith(
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 12),
-                    Text(
-                      'How it works:',
-                      style: theme.textTheme.labelLarge?.copyWith(
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                    _buildBulletPoint('Answer honestly about yourself'),
-                    _buildBulletPoint('${_storage.getPartner()?.name ?? 'Your partner'} sees your questions later'),
-                    _buildBulletPoint('They try to predict your answers'),
-                    _buildBulletPoint('See how well they know you!'),
-                  ],
-                ),
-              ),
-
-              const SizedBox(height: 24),
-
               // Info cards
               Container(
                 padding: const EdgeInsets.all(20),
@@ -331,35 +278,6 @@ class _QuizIntroScreenState extends State<QuizIntroScreen> {
             ],
           ),
         ),
-      ),
-    );
-  }
-
-  Widget _buildBulletPoint(String text) {
-    final theme = Theme.of(context);
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 8),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            '• ',
-            style: TextStyle(
-              fontSize: 18,
-              height: 1.8,
-              color: theme.colorScheme.onSurfaceVariant,
-            ),
-          ),
-          Expanded(
-            child: Text(
-              text,
-              style: theme.textTheme.bodyMedium?.copyWith(
-                color: theme.colorScheme.onSurfaceVariant,
-                height: 1.6,
-              ),
-            ),
-          ),
-        ],
       ),
     );
   }

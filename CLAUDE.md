@@ -767,6 +767,39 @@ See `REMOTE_PAIRING_TEST_RESULTS.md` for:
 
 ---
 
+## Speed Round Quiz
+
+### Files
+- `lib/screens/speed_round_intro_screen.dart` - Unlock check, intro UI
+- `lib/screens/speed_round_screen.dart` - 10-second timer, auto-advance
+- `lib/screens/speed_round_results_screen.dart` - Streak bonus breakdown
+
+### Key Rules
+- **Unlock:** `QuizService.isSpeedRoundUnlocked()` requires 5 completed Classic Quizzes
+- **Format type:** `formatType: 'speed_round'` (vs. `'classic'`)
+- **Timer:** 10 seconds per question, auto-advances on timeout
+- **Streak bonus:** +5 LP per 3 consecutive correct answers (resets on incorrect)
+- **LP rewards:** 20-40 base (match %) + streak bonuses
+
+### LovePointService Integration
+
+**CRITICAL:** Use static method, not instance method:
+
+```dart
+// ✅ CORRECT - use static method
+LovePointService.awardPoints(
+  amount: totalLp,
+  reason: 'speed_round',
+  relatedId: sessionId,
+);
+
+// ❌ WRONG - no instance method exists
+final service = LovePointService();
+service.awardLovePoints(...); // Does not exist
+```
+
+---
+
 ## Development Mode & Testing
 
 ### Mock Data Control
@@ -807,14 +840,8 @@ flutter run -d chrome          # Bob (Web)
 When testing new code changes on Chrome, hot reload often fails to pick up changes properly. **ALWAYS** follow this process:
 
 ```bash
-# 1. Kill any existing Flutter Chrome instances
-# Find running Flutter processes
-ps aux | grep flutter
-
-# Kill all Flutter processes (or kill specific PIDs)
+# 1. Kill BOTH Flutter processes AND Chrome instances
 pkill -f "flutter run"
-
-# OR kill Chrome instances
 pkill -f "chrome"
 
 # 2. Clean build (optional but recommended for major changes)
@@ -828,13 +855,14 @@ flutter run -d chrome
 **Why this is necessary:**
 - Hot reload (`r`) often doesn't update UI changes on Chrome
 - Hot restart (`R`) sometimes maintains stale state
+- Chrome instances maintain Hive/IndexedDB state even after Flutter process dies
 - Multiple Chrome tabs can interfere with each other
-- State persists in Hive/IndexedDB between sessions
+- Killing only Flutter leaves Chrome with stale connections and cached state
 
 **Quick restart (without clean):**
 ```bash
-# Kill existing instance
-pkill -f "flutter run"
+# Kill BOTH Flutter and Chrome
+pkill -f "flutter run" && pkill -f "chrome"
 
 # Start fresh
 cd app && flutter run -d chrome
@@ -848,7 +876,7 @@ cd app && flutter run -d chrome
 - When seeing inexplicable errors
 
 **Testing Checklist:**
-- [ ] Kill existing Flutter Chrome instances
+- [ ] Kill BOTH Flutter processes AND Chrome instances
 - [ ] Start fresh `flutter run -d chrome`
 - [ ] Verify 160 questions loaded (check console)
 - [ ] Navigate to Activities screen
@@ -1051,4 +1079,4 @@ Without the `---` delimiters and description field, commands are invisible to Cl
 
 ---
 
-**Last Updated:** 2025-11-11 (Added Chrome testing best practices)
+**Last Updated:** 2025-11-11 (Added Speed Round quiz mode and Chrome testing best practices)

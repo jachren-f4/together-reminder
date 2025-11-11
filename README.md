@@ -54,6 +54,8 @@ flutter run -d <device-id>
 - 📲 **Push Notifications** - FCM/APNs with action buttons (Done/Snooze)
 - 💬 **Quick Reminders** - Pre-set chips + custom text + time selection
 - 💫 **Pokes** - Instant "thinking of you" with mutual detection
+- 🧩 **Classic Quiz** - Knowledge-based questions about your partner (160 questions, 5 categories)
+- ⚡ **Speed Round** - Fast-paced quiz with 10-second timer and streak bonuses (unlocks after 5 Classic Quizzes)
 - 🪜 **Word Ladder Duet** - Collaborative word puzzle with turn-based gameplay
 - 📥 **Inbox** - Filterable history (All/Received/Sent/Pokes)
 - ⚙️ **Settings** - Notification prefs, partner info, unpair
@@ -140,6 +142,29 @@ Turn-based collaborative word puzzle game where partners transform a start word 
 **Language Support:**
 - Finnish word validation with 135-word dictionary
 - Expanded word list supports common Finnish nouns, verbs, and nature words
+
+### Speed Round Quiz
+
+Fast-paced quiz mode with time pressure and streak bonuses.
+
+**Features:**
+- 10 rapid-fire questions with 10-second timer per question
+- Auto-advance on timeout
+- Streak bonus: +5 LP per 3 consecutive correct answers
+- Base reward: 20-40 LP (based on match percentage) + streak bonuses
+- **Unlock requirement:** Complete 5 Classic Quizzes
+
+**Scoring:**
+- 90-100% match: 38-40 LP base
+- 70-89% match: 30-37 LP base
+- 50-69% match: 26-29 LP base
+- 0-49% match: 20-25 LP base
+- Streak bonus: +5 LP per 3 consecutive correct answers
+
+**Files:**
+- `app/lib/screens/speed_round_intro_screen.dart` - Unlock status and intro
+- `app/lib/screens/speed_round_screen.dart` - Timer and question flow
+- `app/lib/screens/speed_round_results_screen.dart` - Streak breakdown
 
 ---
 
@@ -331,7 +356,7 @@ togetherremind/
 ## Current Status
 
 **Stage:** MVP Complete, Pre-Launch Testing
-**Last Updated:** 2025-11-11
+**Last Updated:** 2025-11-11 (Added Speed Round quiz mode)
 
 ### Production Ready
 - ✅ Core features implemented and tested

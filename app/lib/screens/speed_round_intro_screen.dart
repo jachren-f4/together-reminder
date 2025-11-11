@@ -128,7 +128,7 @@ class _SpeedRoundIntroScreenState extends State<SpeedRoundIntroScreen> {
         centerTitle: true,
       ),
       body: SafeArea(
-        child: Padding(
+        child: SingleChildScrollView(
           padding: const EdgeInsets.all(24.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -295,7 +295,7 @@ class _SpeedRoundIntroScreenState extends State<SpeedRoundIntroScreen> {
                   ),
                 ),
 
-              const Spacer(),
+              const SizedBox(height: 24),
 
               // Error message
               if (_error != null) ...[
