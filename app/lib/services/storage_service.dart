@@ -10,6 +10,8 @@ import '../models/word_pair.dart';
 import '../models/ladder_session.dart';
 import '../models/memory_flip.dart';
 import '../models/quiz_expansion.dart';
+import '../models/daily_quest.dart';
+import '../models/quiz_progression_state.dart';
 
 class StorageService {
   static const String _remindersBox = 'reminders';
@@ -26,6 +28,10 @@ class StorageService {
   static const String _quizCategoriesBox = 'quiz_categories';
   static const String _quizStreaksBox = 'quiz_streaks';
   static const String _dailyPulsesBox = 'daily_pulses';
+  static const String _dailyQuestsBox = 'daily_quests';
+  static const String _dailyQuestCompletionsBox = 'daily_quest_completions';
+  static const String _quizProgressionStatesBox = 'quiz_progression_states';
+  static const String _appMetadataBox = 'app_metadata';  // Untyped box for metadata
 
   static Future<void> init() async {
     await Hive.initFlutter();
@@ -47,6 +53,9 @@ class StorageService {
     if (!Hive.isAdapterRegistered(14)) Hive.registerAdapter(QuizCategoryAdapter());
     if (!Hive.isAdapterRegistered(15)) Hive.registerAdapter(QuizStreakAdapter());
     if (!Hive.isAdapterRegistered(16)) Hive.registerAdapter(QuizDailyPulseAdapter());
+    if (!Hive.isAdapterRegistered(17)) Hive.registerAdapter(DailyQuestAdapter());
+    if (!Hive.isAdapterRegistered(18)) Hive.registerAdapter(DailyQuestCompletionAdapter());
+    if (!Hive.isAdapterRegistered(19)) Hive.registerAdapter(QuizProgressionStateAdapter());
 
     // Open boxes
     await Hive.openBox<Reminder>(_remindersBox);
@@ -63,6 +72,10 @@ class StorageService {
     await Hive.openBox<QuizCategory>(_quizCategoriesBox);
     await Hive.openBox<QuizStreak>(_quizStreaksBox);
     await Hive.openBox<QuizDailyPulse>(_dailyPulsesBox);
+    await Hive.openBox<DailyQuest>(_dailyQuestsBox);
+    await Hive.openBox<DailyQuestCompletion>(_dailyQuestCompletionsBox);
+    await Hive.openBox<QuizProgressionState>(_quizProgressionStatesBox);
+    await Hive.openBox(_appMetadataBox);  // Untyped box for app metadata
   }
 
   // Reminder operations
@@ -202,6 +215,12 @@ class StorageService {
     return quizSessionsBox.get(id);
   }
 
+  List<QuizSession> getAllQuizSessions() {
+    final sessions = quizSessionsBox.values.toList();
+    sessions.sort((a, b) => b.createdAt.compareTo(a.createdAt));
+    return sessions;
+  }
+
   List<QuizSession> getCompletedQuizSessions() {
     final sessions = quizSessionsBox.values
         .where((s) => s.status == 'completed')
@@ -233,6 +252,12 @@ class StorageService {
 
   Future<void> saveLadderSession(LadderSession session) async {
     await ladderSessionsBox.put(session.id, session);
+  }
+
+  List<LadderSession> getAllLadderSessions() {
+    final sessions = ladderSessionsBox.values.toList();
+    sessions.sort((a, b) => b.createdAt.compareTo(a.createdAt));
+    return sessions;
   }
 
   List<LadderSession> getActiveLadders() {
@@ -276,6 +301,12 @@ class StorageService {
 
   MemoryPuzzle? getMemoryPuzzle(String id) {
     return memoryPuzzlesBox.get(id);
+  }
+
+  List<MemoryPuzzle> getAllMemoryPuzzles() {
+    final puzzles = memoryPuzzlesBox.values.toList();
+    puzzles.sort((a, b) => b.createdAt.compareTo(a.createdAt));
+    return puzzles;
   }
 
   MemoryPuzzle? getActivePuzzle() {
@@ -342,5 +373,101 @@ class StorageService {
 
   Future<void> updateStreak(QuizStreak streak) async {
     await streak.save();
+  }
+
+  // Daily Quest operations
+  Box<DailyQuest> get dailyQuestsBox => Hive.box<DailyQuest>(_dailyQuestsBox);
+
+  Future<void> saveDailyQuest(DailyQuest quest) async {
+    await dailyQuestsBox.put(quest.id, quest);
+  }
+
+  DailyQuest? getDailyQuest(String id) {
+    return dailyQuestsBox.get(id);
+  }
+
+  List<DailyQuest> getDailyQuestsForDate(String dateKey) {
+    return dailyQuestsBox.values
+        .where((q) => q.dateKey == dateKey)
+        .toList()
+      ..sort((a, b) => a.sortOrder.compareTo(b.sortOrder));
+  }
+
+  List<DailyQuest> getTodayQuests() {
+    final today = DateTime.now();
+    final dateKey = '${today.year}-${today.month.toString().padLeft(2, '0')}-${today.day.toString().padLeft(2, '0')}';
+    return getDailyQuestsForDate(dateKey);
+  }
+
+  List<DailyQuest> getActiveDailyQuests() {
+    return dailyQuestsBox.values
+        .where((q) => !q.isExpired && !q.isCompleted)
+        .toList()
+      ..sort((a, b) => a.sortOrder.compareTo(b.sortOrder));
+  }
+
+  Future<void> updateDailyQuest(DailyQuest quest) async {
+    await quest.save();
+  }
+
+  // Daily Quest Completion operations
+  Box<DailyQuestCompletion> get dailyQuestCompletionsBox =>
+      Hive.box<DailyQuestCompletion>(_dailyQuestCompletionsBox);
+
+  Future<void> saveDailyQuestCompletion(DailyQuestCompletion completion) async {
+    await dailyQuestCompletionsBox.put(completion.dateKey, completion);
+  }
+
+  DailyQuestCompletion? getDailyQuestCompletion(String dateKey) {
+    return dailyQuestCompletionsBox.get(dateKey);
+  }
+
+  DailyQuestCompletion? getTodayCompletion() {
+    final today = DateTime.now();
+    final dateKey = '${today.year}-${today.month.toString().padLeft(2, '0')}-${today.day.toString().padLeft(2, '0')}';
+    return getDailyQuestCompletion(dateKey);
+  }
+
+  List<DailyQuestCompletion> getAllDailyQuestCompletions() {
+    final completions = dailyQuestCompletionsBox.values.toList();
+    completions.sort((a, b) => b.completedAt.compareTo(a.completedAt));
+    return completions;
+  }
+
+  Future<void> updateDailyQuestCompletion(DailyQuestCompletion completion) async {
+    await completion.save();
+  }
+
+  // Quiz Progression State operations
+  Box<QuizProgressionState> get quizProgressionStatesBox =>
+      Hive.box<QuizProgressionState>(_quizProgressionStatesBox);
+
+  Future<void> saveQuizProgressionState(QuizProgressionState state) async {
+    await quizProgressionStatesBox.put(state.coupleId, state);
+  }
+
+  QuizProgressionState? getQuizProgressionState(String coupleId) {
+    return quizProgressionStatesBox.get(coupleId);
+  }
+
+  Future<void> updateQuizProgressionState(QuizProgressionState state) async {
+    await state.save();
+  }
+
+  // LP Award tracking operations (prevent duplicate awards)
+  static const String _appliedLPAwardsKey = 'applied_lp_awards';
+
+  Set<String> getAppliedLPAwards() {
+    final box = Hive.box(_appMetadataBox);  // Use untyped metadata box
+    final List<dynamic>? awards = box.get(_appliedLPAwardsKey);
+    if (awards == null) return {};
+    return Set<String>.from(awards);
+  }
+
+  Future<void> markLPAwardAsApplied(String awardId) async {
+    final box = Hive.box(_appMetadataBox);  // Use untyped metadata box
+    final awards = getAppliedLPAwards();
+    awards.add(awardId);
+    await box.put(_appliedLPAwardsKey, awards.toList());
   }
 }

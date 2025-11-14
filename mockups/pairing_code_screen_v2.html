@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pair with Partner - TogetherRemind</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #FAFAFA;
+            color: #1A1A1A;
+            min-height: 100vh;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 420px;
+            margin: 0 auto;
+            min-height: 100vh;
+            background: #FAFAFA;
+        }
+
+        /* Header */
+        .header {
+            padding: 30px 30px 0;
+        }
+
+        .step-label {
+            font-size: 11px;
+            font-weight: 600;
+            color: #6E6E6E;
+            letter-spacing: 1.2px;
+            text-align: center;
+            margin-bottom: 12px;
+        }
+
+        .title {
+            font-family: 'Playfair Display', serif;
+            font-size: 28px;
+            font-weight: 600;
+            color: #1A1A1A;
+            text-align: center;
+            letter-spacing: -0.3px;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            font-size: 15px;
+            color: #6E6E6E;
+            text-align: center;
+            line-height: 1.5;
+            margin-bottom: 30px;
+        }
+
+        /* Tab Bar */
+        .tab-bar-container {
+            margin: 0 30px 24px;
+            padding: 4px;
+            background: #F0F0F0;
+            border-radius: 12px;
+        }
+
+        .tab-bar {
+            display: flex;
+            gap: 0;
+        }
+
+        .tab {
+            flex: 1;
+            padding: 12px;
+            background: transparent;
+            border: none;
+            font-size: 15px;
+            font-weight: 600;
+            color: #6E6E6E;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: all 0.2s;
+        }
+
+        .tab.active {
+            background: #FFFEFE;
+            color: #1A1A1A;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        /* Tab Content */
+        .tab-content {
+            display: none;
+            padding: 0 30px 40px;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Section Cards */
+        .card {
+            background: #FFFEFE;
+            border-radius: 20px;
+            padding: 32px 24px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+            margin-bottom: 24px;
+        }
+
+        .card-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 20px;
+            font-weight: 600;
+            color: #1A1A1A;
+            text-align: center;
+            letter-spacing: -0.2px;
+            margin-bottom: 20px;
+        }
+
+        /* Code Display Section */
+        .code-label-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .code-label {
+            font-size: 15px;
+            color: #6E6E6E;
+        }
+
+        .copy-hint {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 14px;
+            color: #AAAAAA;
+            font-weight: 500;
+        }
+
+        .copy-hint::before {
+            content: '📋';
+            font-size: 16px;
+        }
+
+        .code-display {
+            background: #F0F0F0;
+            border: 2px solid rgba(170, 170, 170, 0.3);
+            border-radius: 16px;
+            padding: 24px 32px;
+            margin-bottom: 16px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .code-display:hover {
+            border-color: #1A1A1A;
+        }
+
+        .code-text {
+            font-family: 'Courier', monospace;
+            font-size: 48px;
+            font-weight: 700;
+            letter-spacing: 8px;
+            color: #1A1A1A;
+        }
+
+        /* Buttons */
+        .btn-primary {
+            width: 100%;
+            background: #1A1A1A;
+            color: #FFFEFE;
+            border: none;
+            border-radius: 12px;
+            padding: 16px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: opacity 0.2s;
+            margin-bottom: 12px;
+        }
+
+        .btn-primary:hover {
+            opacity: 0.9;
+        }
+
+        .btn-secondary {
+            width: 100%;
+            background: #FAFAFA;
+            color: #1A1A1A;
+            border: 2px solid #1A1A1A;
+            border-radius: 12px;
+            padding: 16px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-secondary:hover {
+            background: #F0F0F0;
+        }
+
+        /* Divider */
+        .divider {
+            position: relative;
+            text-align: center;
+            margin: -12px 0 24px;
+        }
+
+        .divider-circle {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 48px;
+            height: 48px;
+            background: #FAFAFA;
+            border: 2px solid #F0F0F0;
+            border-radius: 50%;
+            font-size: 14px;
+            font-weight: 600;
+            color: #6E6E6E;
+        }
+
+        /* Code Input Section */
+        .section-label {
+            font-size: 15px;
+            font-weight: 600;
+            color: #1A1A1A;
+            margin-bottom: 12px;
+        }
+
+        .code-input-container {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 24px;
+        }
+
+        .code-input {
+            width: 48px;
+            height: 56px;
+            background: #F0F0F0;
+            border: 2px solid #F0F0F0;
+            border-radius: 12px;
+            text-align: center;
+            font-family: 'Courier', monospace;
+            font-size: 28px;
+            font-weight: 700;
+            color: #1A1A1A;
+            outline: none;
+            transition: all 0.2s;
+        }
+
+        .code-input:focus {
+            border-color: #1A1A1A;
+            background: #FFFEFE;
+        }
+
+        .code-separator {
+            width: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: 600;
+            color: #AAAAAA;
+        }
+
+        /* QR Code Placeholder */
+        .qr-container {
+            padding: 16px;
+            background: #FFFEFE;
+            border-radius: 16px;
+            border: 2px solid #F0F0F0;
+            margin-bottom: 20px;
+        }
+
+        .qr-placeholder {
+            width: 200px;
+            height: 200px;
+            background:
+                repeating-linear-gradient(0deg, #1A1A1A 0px, #1A1A1A 10px, transparent 10px, transparent 20px),
+                repeating-linear-gradient(90deg, #1A1A1A 0px, #1A1A1A 10px, transparent 10px, transparent 20px);
+            margin: 0 auto;
+        }
+
+        .qr-instruction {
+            font-size: 14px;
+            color: #6E6E6E;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        /* Scan Button */
+        .scan-card {
+            background: #FFFEFE;
+            border: 2px solid #1A1A1A;
+            border-radius: 20px;
+            padding: 32px 24px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .scan-card:hover {
+            background: #F0F0F0;
+        }
+
+        /* Mobile responsive */
+        @media (max-width: 480px) {
+            .code-input {
+                width: 42px;
+                height: 52px;
+                font-size: 24px;
+            }
+
+            .code-text {
+                font-size: 40px;
+                letter-spacing: 6px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="step-label">STEP 2 OF 2</div>
+            <h1 class="title">Pair with Partner</h1>
+            <p class="subtitle">Share your code or scan theirs</p>
+        </div>
+
+        <!-- Tab Bar -->
+        <div class="tab-bar-container">
+            <div class="tab-bar">
+                <button class="tab" onclick="switchTab('qr-code')">QR Code</button>
+                <button class="tab active" onclick="switchTab('letter-code')">Letter Code</button>
+            </div>
+        </div>
+
+        <!-- QR Code Tab -->
+        <div class="tab-content" id="qr-code">
+            <!-- QR Code Card -->
+            <div class="card">
+                <h2 class="card-title">Your QR Code</h2>
+                <div class="qr-container">
+                    <div class="qr-placeholder"></div>
+                </div>
+                <p class="qr-instruction">Have your partner scan this code</p>
+            </div>
+
+            <!-- Scan Button -->
+            <div class="scan-card" onclick="alert('Open camera scanner')">
+                <h2 class="card-title" style="margin-bottom: 8px;">Scan Partner's Code</h2>
+                <p class="qr-instruction" style="margin-top: 0;">Tap to open camera</p>
+            </div>
+        </div>
+
+        <!-- Letter Code Tab (Default) -->
+        <div class="tab-content active" id="letter-code">
+            <!-- Your Code Card -->
+            <div class="card">
+                <h2 class="card-title">I want to invite Taija</h2>
+
+                <div class="code-label-row">
+                    <span class="code-label">Your code:</span>
+                    <span class="copy-hint">Tap to copy</span>
+                </div>
+
+                <div class="code-display" onclick="copyCode()">
+                    <div class="code-text">WKR-8BK</div>
+                </div>
+            </div>
+
+            <button class="btn-primary" onclick="shareCode()">Share your invite code</button>
+
+            <!-- Divider -->
+            <div class="divider">
+                <div class="divider-circle">or</div>
+            </div>
+
+            <!-- Enter Code Card -->
+            <div class="card">
+                <h2 class="card-title">I have a code from Taija</h2>
+
+                <p class="section-label">Partner's code</p>
+
+                <div class="code-input-container">
+                    <input type="text" class="code-input" maxlength="1" id="input1">
+                    <input type="text" class="code-input" maxlength="1" id="input2">
+                    <input type="text" class="code-input" maxlength="1" id="input3">
+                    <div class="code-separator">-</div>
+                    <input type="text" class="code-input" maxlength="1" id="input4">
+                    <input type="text" class="code-input" maxlength="1" id="input5">
+                    <input type="text" class="code-input" maxlength="1" id="input6">
+                </div>
+
+                <button class="btn-primary" onclick="pairNow()">Pair now</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Tab switching
+        function switchTab(tabName) {
+            // Update tab buttons
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            event.target.classList.add('active');
+
+            // Update tab content
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            document.getElementById(tabName).classList.add('active');
+        }
+
+        // Copy code
+        function copyCode() {
+            const code = 'WKR-8BK';
+            navigator.clipboard.writeText(code).then(() => {
+                const codeDisplay = document.querySelector('.code-display');
+                const originalBg = codeDisplay.style.background;
+                codeDisplay.style.background = '#1A1A1A';
+                codeDisplay.querySelector('.code-text').style.color = '#FFFEFE';
+                setTimeout(() => {
+                    codeDisplay.style.background = originalBg;
+                    codeDisplay.querySelector('.code-text').style.color = '#1A1A1A';
+                }, 200);
+                alert('Code copied to clipboard!');
+            });
+        }
+
+        // Share code
+        function shareCode() {
+            const code = 'WKR-8BK';
+            if (navigator.share) {
+                navigator.share({
+                    title: 'TogetherRemind Pairing Code',
+                    text: `My TogetherRemind pairing code: ${code}`
+                }).catch(err => console.log('Error sharing:', err));
+            } else {
+                alert('Share your code: ' + code);
+            }
+        }
+
+        // Pair now
+        function pairNow() {
+            const inputs = [
+                document.getElementById('input1'),
+                document.getElementById('input2'),
+                document.getElementById('input3'),
+                document.getElementById('input4'),
+                document.getElementById('input5'),
+                document.getElementById('input6')
+            ];
+
+            const code = inputs.map(input => input.value.toUpperCase()).join('');
+
+            if (code.length === 6) {
+                alert('Pairing with code: ' + code.substring(0, 3) + '-' + code.substring(3));
+            } else {
+                alert('Please enter all 6 characters');
+            }
+        }
+
+        // Auto-advance and backspace handling
+        document.querySelectorAll('.code-input').forEach((input, index, inputs) => {
+            input.addEventListener('input', (e) => {
+                e.target.value = e.target.value.toUpperCase();
+                if (e.target.value.length === 1 && index < inputs.length - 1) {
+                    inputs[index + 1].focus();
+                }
+            });
+
+            input.addEventListener('keydown', (e) => {
+                if (e.key === 'Backspace' && e.target.value === '' && index > 0) {
+                    inputs[index - 1].focus();
+                }
+            });
+
+            // Click to focus and select
+            input.addEventListener('click', (e) => {
+                e.target.select();
+            });
+        });
+    </script>
+</body>
+</html>

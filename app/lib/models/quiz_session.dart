@@ -40,6 +40,15 @@ class QuizSession extends HiveObject {
   @HiveField(11)
   String? formatType; // 'classic', 'speed', 'deep_dive', 'mystery_box', 'would_you_rather', 'timeline', 'daily_pulse'
 
+  @HiveField(12)
+  Map<String, List<int>>? predictions; // For "Would You Rather": userId -> [predicted partner answers]
+
+  @HiveField(13, defaultValue: 0)
+  int alignmentMatches; // For "Would You Rather": count of questions where both chose same answer
+
+  @HiveField(14)
+  Map<String, int>? predictionScores; // For "Would You Rather": userId -> number of correct predictions
+
   QuizSession({
     required this.id,
     required this.questionIds,
@@ -50,6 +59,9 @@ class QuizSession extends HiveObject {
     this.subjectUserId = '',
     this.formatType,
     this.answers,
+    this.predictions,
+    this.alignmentMatches = 0,
+    this.predictionScores,
     this.matchPercentage,
     this.lpEarned,
     this.completedAt,

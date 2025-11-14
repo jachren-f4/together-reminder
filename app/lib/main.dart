@@ -8,9 +8,12 @@ import 'package:togetherremind/services/mock_data_service.dart';
 import 'package:togetherremind/services/dev_pairing_service.dart';
 import 'package:togetherremind/services/notification_service.dart';
 import 'package:togetherremind/services/quiz_question_bank.dart';
-import 'package:togetherremind/services/quiz_service.dart';
-import 'package:togetherremind/services/daily_pulse_service.dart';
 import 'package:togetherremind/services/word_validation_service.dart';
+import 'package:togetherremind/services/quest_sync_service.dart';
+import 'package:togetherremind/services/daily_quest_service.dart';
+import 'package:togetherremind/services/quest_type_manager.dart';
+import 'package:togetherremind/services/love_point_service.dart';
+import 'package:togetherremind/models/daily_quest.dart';
 import 'package:togetherremind/config/dev_config.dart';
 import 'package:togetherremind/theme/app_theme.dart';
 import 'firebase_options.dart';
@@ -58,12 +61,101 @@ void main() async {
   // 🔗 Start auto-pairing for dual-emulator setup (dev mode only)
   if (isSimulator && kDebugMode) {
     await DevPairingService().startAutoPairing();
-    // Start listening for partner's quiz sessions and Daily Pulses
-    await QuizService().startListeningForPartnerSessions();
-    await DailyPulseService().startListeningForPartnerPulses();
   }
 
+  // 🎯 Generate daily quests if paired
+  // Clear old mock quests first (dev mode only)
+  if (kDebugMode) {
+    await _clearOldMockQuests();
+  }
+  await _initializeDailyQuests();
+
   runApp(const TogetherRemindApp());
+}
+
+/// Clear old quests from previous test runs (dev mode only)
+Future<void> _clearOldMockQuests() async {
+  try {
+    print('🧹 Clearing old quests...');
+    final storage = StorageService();
+    final today = DateTime.now();
+    final dateKey = '${today.year}-${today.month.toString().padLeft(2, '0')}-${today.day.toString().padLeft(2, '0')}';
+    print('🧹 Date key: $dateKey');
+
+    // Get all quests for today
+    final quests = storage.getDailyQuestsForDate(dateKey);
+    print('🧹 Found ${quests.length} quests for $dateKey');
+
+    // Delete ALL quests for today (for testing quest generation)
+    int deletedCount = 0;
+    for (final quest in quests) {
+      print('🧹 Deleting quest: ${quest.id} (${quest.type.name})');
+      await quest.delete();
+      deletedCount++;
+    }
+
+    print('🧹 Cleared $deletedCount old quests for testing');
+  } catch (e) {
+    print('⚠️  Error clearing quests: $e');
+  }
+}
+
+/// Initialize daily quests for today if needed
+Future<void> _initializeDailyQuests() async {
+  try {
+    final storage = StorageService();
+    final user = storage.getUser();
+    final partner = storage.getPartner();
+
+    // Only generate quests if user has a partner
+    if (!storage.hasPartner() || user == null || partner == null) {
+      print('ℹ️  Skipping quest generation - no partner yet');
+      return;
+    }
+
+    // 💰 Start listening for LP awards from partner
+    LovePointService.startListeningForLPAwards(
+      currentUserId: user.id,
+      partnerUserId: partner.pushToken,
+    );
+    print('💰 LP listener initialized');
+
+    // Initialize services
+    final questService = DailyQuestService(storage: storage);
+    final syncService = QuestSyncService(
+      storage: storage,
+    );
+    final questTypeManager = QuestTypeManager(
+      storage: storage,
+      questService: questService,
+      syncService: syncService,
+    );
+
+    // Sync or generate today's quests
+    // First try to load from Firebase
+    final synced = await syncService.syncTodayQuests(
+      currentUserId: user.id,
+      partnerUserId: partner.pushToken, // Using pushToken as partner ID
+    );
+
+    List<DailyQuest> quests;
+    if (synced) {
+      // Loaded from Firebase or already exist locally
+      quests = questService.getTodayQuests();
+      print('✅ Daily quests loaded: ${quests.length} quests');
+    } else {
+      // No quests in Firebase - generate new ones
+      quests = await questTypeManager.generateDailyQuests(
+        currentUserId: user.id,
+        partnerUserId: partner.pushToken,
+      );
+      print('✅ Daily quests generated: ${quests.length} quests');
+    }
+  } catch (e, stackTrace) {
+    print('❌ Error generating daily quests: $e');
+    print(stackTrace);
+    // Don't block app startup on quest generation errors
+  }
 }
 
 class TogetherRemindApp extends StatefulWidget {
@@ -88,9 +180,10 @@ class _TogetherRemindAppState extends State<TogetherRemindApp> {
       debugShowCheckedModeBanner: false,
       home: Builder(
         builder: (context) {
-          // Set the app context for NotificationService
+          // Set the app context for NotificationService and LovePointService
           WidgetsBinding.instance.addPostFrameCallback((_) {
             NotificationService.setAppContext(context);
+            LovePointService.setAppContext(context);
           });
           return hasPartner ? const HomeScreen() : const OnboardingScreen();
         },

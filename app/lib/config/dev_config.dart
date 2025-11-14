@@ -191,4 +191,12 @@ class DevConfig {
       'partnerEmoji': '👩'
     },
   ];
+
+  /// Deterministic user IDs for dual-emulator testing
+  /// These MUST be stable across app restarts for couple ID consistency
+  /// Index 0 = Alice's user ID, Index 1 = Bob's user ID
+  static const List<String> dualPartnerUserIds = [
+    'alice-dev-user-00000000-0000-0000-0000-000000000001',
+    'bob-dev-user-00000000-0000-0000-0000-000000000002',
+  ];
 }

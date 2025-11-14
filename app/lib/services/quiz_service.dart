@@ -4,11 +4,11 @@ import 'package:firebase_database/firebase_database.dart';
 import '../models/quiz_session.dart';
 import '../models/quiz_question.dart';
 import '../models/badge.dart';
-import '../models/user.dart';
-import '../models/partner.dart';
 import 'storage_service.dart';
 import 'quiz_question_bank.dart';
 import 'love_point_service.dart';
+import 'daily_quest_service.dart';
+import 'quest_sync_service.dart';
 import '../config/dev_config.dart';
 
 class QuizService {
@@ -20,7 +20,6 @@ class QuizService {
   final QuizQuestionBank _questionBank = QuizQuestionBank();
   final FirebaseFunctions _functions = FirebaseFunctions.instance;
   final DatabaseReference _rtdb = FirebaseDatabase.instance.ref();
-  bool _isListening = false;
 
   /// Start a new quiz session
   /// The initiator becomes the SUBJECT - quiz is ABOUT them
@@ -29,11 +28,14 @@ class QuizService {
     String formatType = 'classic',
     String? categoryFilter,
     int? difficulty,
+    bool skipActiveCheck = false, // Allow generating multiple daily quests
   }) async {
-    // Check for active session
-    final activeSession = _storage.getActiveQuizSession();
-    if (activeSession != null) {
-      throw Exception('A quiz is already in progress. Complete it first.');
+    // Check for active session (skip for daily quest generation)
+    if (!skipActiveCheck) {
+      final activeSession = _storage.getActiveQuizSession();
+      if (activeSession != null) {
+        throw Exception('A quiz is already in progress. Complete it first.');
+      }
     }
 
     // Ensure question bank is loaded
@@ -46,6 +48,9 @@ class QuizService {
     if (formatType == 'speed_round') {
       questions = _questionBank.getRandomQuestionsForSpeedRound();
       requiredQuestions = 10;
+    } else if (formatType == 'would_you_rather') {
+      questions = _questionBank.getRandomQuestionsForWouldYouRather();
+      requiredQuestions = 7;
     } else {
       questions = _questionBank.getRandomQuestionsForSession();
       requiredQuestions = 5;
@@ -87,7 +92,7 @@ class QuizService {
 
   /// Submit answers for a quiz session
   Future<void> submitAnswers(String sessionId, String userId, List<int> answers) async {
-    final session = _storage.getQuizSession(sessionId);
+    final session = await getSession(sessionId);
     if (session == null) {
       throw Exception('Quiz session not found');
     }
@@ -112,6 +117,9 @@ class QuizService {
 
     print('✅ Answers submitted for user $userId');
 
+    // Mark quest as completed for this user
+    await _markQuestCompletedForUser(sessionId, userId);
+
     // Check if both partners have answered
     final user = _storage.getUser();
     final partner = _storage.getPartner();
@@ -122,6 +130,65 @@ class QuizService {
       if (bothAnswered) {
         // Calculate results and award LP
         await _calculateAndCompleteSession(session);
+        // Sync completed session to RTDB so partner receives the update
+        await _syncSessionToRTDB(session);
+      } else {
+        // Notify partner if they haven't answered yet
+        await _sendQuizReminderNotification(session, userId);
+      }
+    }
+  }
+
+  /// Submit Would You Rather answers and predictions
+  /// Hybrid format: user answers about self AND predicts partner's answers
+  Future<void> submitWouldYouRatherAnswers(
+    String sessionId,
+    String userId,
+    List<int> myAnswers,
+    List<int> myPredictions,
+  ) async {
+    final session = await getSession(sessionId);
+    if (session == null) {
+      throw Exception('Quiz session not found');
+    }
+
+    if (session.isExpired) {
+      session.status = 'expired';
+      await session.save();
+      throw Exception('Quiz session has expired');
+    }
+
+    if (session.hasUserAnswered(userId)) {
+      throw Exception('You have already answered this quiz');
+    }
+
+    // Save both answers and predictions
+    session.answers ??= {};
+    session.answers![userId] = myAnswers;
+
+    session.predictions ??= {};
+    session.predictions![userId] = myPredictions;
+
+    await session.save();
+
+    // Sync updated session to RTDB
+    await _syncSessionToRTDB(session);
+
+    print('✅ Would You Rather answers and predictions submitted for user $userId');
+
+    // Mark quest as completed for this user
+    await _markQuestCompletedForUser(sessionId, userId);
+
+    // Check if both partners have answered
+    final user = _storage.getUser();
+    final partner = _storage.getPartner();
+
+    if (user != null && partner != null) {
+      final bothAnswered = session.answers!.length >= 2 && session.predictions!.length >= 2;
+
+      if (bothAnswered) {
+        // Calculate results and award LP
+        await _calculateWouldYouRatherResults(session);
       } else {
         // Notify partner if they haven't answered yet
         await _sendQuizReminderNotification(session, userId);
@@ -168,17 +235,12 @@ class QuizService {
 
     final matchPercentage = ((matches / subjectAnswers.length) * 100).round();
 
-    // Award LP based on match percentage
-    int lpEarned = 0;
+    // Award fixed 30 LP for completing quiz together (regardless of match percentage)
+    const int lpEarned = 30;
+
+    // Award Perfect Sync badge for 100% matches
     if (matchPercentage == 100) {
-      lpEarned = 50; // Perfect match
       await _awardPerfectSyncBadge();
-    } else if (matchPercentage >= 80) {
-      lpEarned = 30; // Great match
-    } else if (matchPercentage >= 60) {
-      lpEarned = 20; // Good match
-    } else {
-      lpEarned = 10; // Participation
     }
 
     // Update session
@@ -188,13 +250,20 @@ class QuizService {
     session.completedAt = DateTime.now();
     await session.save();
 
-    // Award LP to current user
+    // Award LP to BOTH users
     if (lpEarned > 0) {
-      await LovePointService.awardPoints(
-        amount: lpEarned,
-        reason: 'quiz_completed',
-        relatedId: session.id,
-      );
+      final user = _storage.getUser();
+      final partner = _storage.getPartner();
+
+      if (user != null && partner != null) {
+        await LovePointService.awardPointsToBothUsers(
+          userId1: user.id,
+          userId2: partner.pushToken,
+          amount: lpEarned,
+          reason: 'quiz_completed',
+          relatedId: session.id,
+        );
+      }
     }
 
     // Send completion notification to both users
@@ -224,6 +293,99 @@ class QuizService {
 
     await _storage.saveBadge(badge);
     print('🏆 Badge earned: $badgeName');
+  }
+
+  /// Calculate Would You Rather results
+  /// Scores based on prediction accuracy + alignment bonuses
+  Future<void> _calculateWouldYouRatherResults(QuizSession session) async {
+    final answers = session.answers!;
+    final predictions = session.predictions!;
+
+    if (answers.length < 2 || predictions.length < 2) return;
+
+    // Get both users' answers and predictions
+    final userIds = answers.keys.toList();
+    final user1Id = userIds[0];
+    final user2Id = userIds[1];
+
+    final user1Answers = answers[user1Id]!;
+    final user2Answers = answers[user2Id]!;
+
+    final user1Predictions = predictions[user1Id]!;
+    final user2Predictions = predictions[user2Id]!;
+
+    // Calculate User 1's prediction accuracy (how well they predicted User 2)
+    int user1Correct = 0;
+    for (int i = 0; i < user1Predictions.length && i < user2Answers.length; i++) {
+      if (user1Predictions[i] == user2Answers[i]) {
+        user1Correct++;
+      }
+    }
+
+    // Calculate User 2's prediction accuracy (how well they predicted User 1)
+    int user2Correct = 0;
+    for (int i = 0; i < user2Predictions.length && i < user1Answers.length; i++) {
+      if (user2Predictions[i] == user1Answers[i]) {
+        user2Correct++;
+      }
+    }
+
+    // Calculate alignment matches (questions where both chose same answer)
+    int alignmentMatches = 0;
+    for (int i = 0; i < user1Answers.length && i < user2Answers.length; i++) {
+      if (user1Answers[i] == user2Answers[i]) {
+        alignmentMatches++;
+      }
+    }
+
+    // Average prediction accuracy
+    final totalCorrect = user1Correct + user2Correct;
+    final totalQuestions = user1Answers.length + user2Answers.length;
+    final overallAccuracy = ((totalCorrect / totalQuestions) * 100).round();
+
+    // Award LP based on prediction accuracy
+    int baseLp = 0;
+    if (overallAccuracy >= 90) {
+      baseLp = 50;
+    } else if (overallAccuracy >= 70) {
+      baseLp = 40;
+    } else if (overallAccuracy >= 50) {
+      baseLp = 30;
+    } else {
+      baseLp = 25;
+    }
+
+    // Bonus LP for alignment matches (5 LP per shared preference)
+    final alignmentBonus = alignmentMatches * 5;
+
+    final totalLp = baseLp + alignmentBonus;
+
+    // Save results
+    session.matchPercentage = overallAccuracy;
+    session.alignmentMatches = alignmentMatches;
+    session.predictionScores = {
+      user1Id: user1Correct,
+      user2Id: user2Correct,
+    };
+    session.lpEarned = totalLp;
+    session.status = 'completed';
+    session.completedAt = DateTime.now();
+    await session.save();
+
+    // Award LP to both users
+    final user = _storage.getUser();
+    if (user != null) {
+      await LovePointService.awardPoints(
+        amount: totalLp,
+        reason: 'Would You Rather quiz completed',
+        relatedId: session.id,
+      );
+    }
+
+    // Sync to RTDB
+    await _syncSessionToRTDB(session);
+
+    print('✅ Would You Rather completed: $overallAccuracy% prediction accuracy, $alignmentMatches alignments, +$totalLp LP');
   }
 
   /// Send quiz invite notification to partner
@@ -343,11 +505,33 @@ class QuizService {
   }
 
   /// Check if Speed Round is unlocked (requires 5 Classic Quizzes completed)
+  /// In debug mode, always unlocked for testing
   bool isSpeedRoundUnlocked() {
+    // Debug bypass: Always unlock Speed Round in debug mode for testing
+    if (DevConfig.isSimulatorSync) {
+      return true;
+    }
     return getCompletedClassicQuizzesCount() >= 5;
   }
 
-  /// Sync quiz session to RTDB (dev mode only)
+  /// Get count of completed "Would You Rather" quizzes
+  int getCompletedWouldYouRatherCount() {
+    return getCompletedSessions()
+        .where((s) => s.formatType == 'would_you_rather')
+        .length;
+  }
+
+  /// Check if Would You Rather is unlocked (requires 15 total quizzes completed)
+  /// In debug mode, always unlocked for testing
+  bool isWouldYouRatherUnlocked() {
+    // Debug bypass: Always unlock in debug mode for testing
+    if (DevConfig.isSimulatorSync) {
+      return true;
+    }
+    return getCompletedSessions().length >= 15;
+  }
+
+  /// Sync quiz session to RTDB using shared couple path
   Future<void> _syncSessionToRTDB(QuizSession session) async {
     // Only sync in debug mode on simulators
     if (!DevConfig.isSimulatorSync) {
@@ -355,92 +539,84 @@ class QuizService {
     }
 
     try {
-      final emulatorId = await DevConfig.emulatorId;
-      if (emulatorId == null) return;
+      final user = _storage.getUser();
+      final partner = _storage.getPartner();
+      if (user == null || partner == null) {
+        print('⚠️  Cannot sync: user or partner not found');
+        return;
+      }
 
-      await _rtdb.child('quiz_sessions').child(emulatorId).child(session.id).set({
+      final coupleId = _generateCoupleId(user.id, partner.pushToken);
+      final sessionRef = _rtdb
+          .child('quiz_sessions')
+          .child(coupleId)
+          .child(session.id);
+
+      final sessionData = {
         'id': session.id,
         'questionIds': session.questionIds,
         'createdAt': session.createdAt.millisecondsSinceEpoch,
         'expiresAt': session.expiresAt.millisecondsSinceEpoch,
         'status': session.status,
         'initiatedBy': session.initiatedBy,
+        'subjectUserId': session.subjectUserId,
+        'formatType': session.formatType,
         'answers': session.answers,
+        'predictions': session.predictions,
         'matchPercentage': session.matchPercentage,
         'lpEarned': session.lpEarned,
         'completedAt': session.completedAt?.millisecondsSinceEpoch,
-      });
+        'alignmentMatches': session.alignmentMatches,
+        'predictionScores': session.predictionScores,
+      };
 
-      print('✅ Quiz session synced to RTDB: ${session.id}');
+      await sessionRef.set(sessionData);
+      print('✅ Session synced to Firebase: ${session.id} at /quiz_sessions/$coupleId/${session.id}');
     } catch (e) {
-      print('❌ Error syncing quiz session to RTDB: $e');
+      print('❌ Error syncing session to Firebase: $e');
+      rethrow;
     }
   }
 
-  /// Start listening for partner's quiz sessions
-  Future<void> startListeningForPartnerSessions() async {
-    if (_isListening) return;
-    if (!DevConfig.isSimulatorSync) return;
-
-    _isListening = true;
-
-    try {
-      final myIndex = await DevConfig.partnerIndex;
-      // For now, hardcode: Alice (index 0) listens for Bob (web-bob), Bob (index 1) listens for Alice (emulator-5554)
-      final partnerEmulatorId = myIndex == 0 ? 'web-bob' : 'emulator-5554';
-
-      print('👂 Listening for partner quiz sessions: $partnerEmulatorId');
-
-      _rtdb.child('quiz_sessions').child(partnerEmulatorId).onChildAdded.listen((event) {
-        if (event.snapshot.value != null) {
-          _handlePartnerQuizSession(event.snapshot);
-        }
-      });
-
-      _rtdb.child('quiz_sessions').child(partnerEmulatorId).onChildChanged.listen((event) {
-        if (event.snapshot.value != null) {
-          _handlePartnerQuizSession(event.snapshot);
-        }
-      });
-    } catch (e) {
-      print('❌ Error listening for partner quiz sessions: $e');
+  /// Get quiz session with Firebase fallback (simplified 2-tier)
+  /// 1. Try local Hive storage first (fast path)
+  /// 2. Check shared Firebase path (couple-based)
+  Future<QuizSession?> getSession(String sessionId) async {
+    // 1. Try local storage first (fast path)
+    var session = _storage.getQuizSession(sessionId);
+    if (session != null) {
+      print('✅ Session found in local cache: $sessionId');
+      return session;
     }
-  }
 
-  /// Handle partner's quiz session from RTDB
-  void _handlePartnerQuizSession(DataSnapshot snapshot) {
+    // 2. Check shared Firebase path
     try {
-      final data = snapshot.value as Map<dynamic, dynamic>;
-      final sessionId = data['id'] as String;
+      final user = _storage.getUser();
+      final partner = _storage.getPartner();
+      if (user == null || partner == null) {
+        print('⚠️  Cannot load session: user or partner not found');
+        return null;
+      }
 
-      // Check if we already have this session
-      final existingSession = _storage.getQuizSession(sessionId);
-      if (existingSession != null) {
-        // Update existing session
-        existingSession.status = data['status'] as String;
-        existingSession.answers = data['answers'] != null
-            ? Map<String, List<int>>.from(
-                (data['answers'] as Map).map(
-                  (k, v) => MapEntry(k.toString(), List<int>.from(v)),
-                ),
-              )
-            : {};
-        existingSession.matchPercentage = data['matchPercentage'] as int?;
-        existingSession.lpEarned = data['lpEarned'] as int?;
-        existingSession.completedAt = data['completedAt'] != null
-            ? DateTime.fromMillisecondsSinceEpoch(data['completedAt'] as int)
-            : null;
-        existingSession.save();
-        print('🔄 Updated existing quiz session from partner: $sessionId');
-      } else {
-        // Create new session
-        final session = QuizSession(
-          id: sessionId,
+      final coupleId = _generateCoupleId(user.id, partner.pushToken);
+      final sessionRef = _rtdb
+          .child('quiz_sessions')
+          .child(coupleId)
+          .child(sessionId);
+
+      final snapshot = await sessionRef.get();
+
+      if (snapshot.exists && snapshot.value != null) {
+        final data = snapshot.value as Map<dynamic, dynamic>;
+        session = QuizSession(
+          id: data['id'] as String,
           questionIds: List<String>.from(data['questionIds'] ?? []),
           createdAt: DateTime.fromMillisecondsSinceEpoch(data['createdAt'] as int),
           expiresAt: DateTime.fromMillisecondsSinceEpoch(data['expiresAt'] as int),
           status: data['status'] as String,
           initiatedBy: data['initiatedBy'] as String,
+          subjectUserId: data['subjectUserId'] as String? ?? data['initiatedBy'] as String,
+          formatType: data['formatType'] as String? ?? 'classic',
           answers: data['answers'] != null
               ? Map<String, List<int>>.from(
                   (data['answers'] as Map).map(
@@ -449,17 +625,83 @@ class QuizService {
                 )
               : {},
         );
+
         session.matchPercentage = data['matchPercentage'] as int?;
         session.lpEarned = data['lpEarned'] as int?;
         session.completedAt = data['completedAt'] != null
             ? DateTime.fromMillisecondsSinceEpoch(data['completedAt'] as int)
             : null;
 
-        _storage.saveQuizSession(session);
-        print('✅ Received new quiz session from partner: $sessionId');
+        // Handle predictions for Would You Rather
+        if (data.containsKey('predictions') && data['predictions'] != null) {
+          session.predictions = Map<String, List<int>>.from(
+            (data['predictions'] as Map).map(
+              (k, v) => MapEntry(k.toString(), List<int>.from(v)),
+            ),
+          );
+        }
+
+        // Cache locally
+        await _storage.saveQuizSession(session);
+
+        print('✅ Session loaded from Firebase: $sessionId (couple path: /quiz_sessions/$coupleId/$sessionId)');
+        return session;
       }
     } catch (e) {
-      print('❌ Error handling partner quiz session: $e');
+      print('❌ Error loading session from Firebase: $e');
+    }
+
+    print('⚠️  Session not found: $sessionId');
+    return null;
+  }
+
+  /// Generate deterministic couple ID by sorting user IDs alphabetically
+  /// Ensures both partners use the same Firebase path
+  String _generateCoupleId(String userId1, String userId2) {
+    final sortedIds = [userId1, userId2]..sort();
+    return '${sortedIds[0]}_${sortedIds[1]}';
+  }
+
+  /// Mark daily quest as completed for the user who submitted answers
+  Future<void> _markQuestCompletedForUser(String sessionId, String userId) async {
+    try {
+      // Find the quest that corresponds to this session
+      final quests = _storage.getTodayQuests();
+      final quest = quests.firstWhere(
+        (q) => q.contentId == sessionId,
+        orElse: () => throw Exception('Quest not found for session: $sessionId'),
+      );
+
+      // Get partner info for Firebase sync
+      final partner = _storage.getPartner();
+
+      // Create services
+      final dailyQuestService = DailyQuestService(storage: _storage);
+
+      // Create sync service if partner exists
+      QuestSyncService? questSyncService;
+      if (partner != null) {
+        questSyncService = QuestSyncService(
+          storage: _storage,
+        );
+      }
+
+      // Mark quest as completed for this user via DailyQuestService
+      final updatedDailyQuestService = DailyQuestService(
+        storage: _storage,
+        questSyncService: questSyncService,
+      );
+
+      await updatedDailyQuestService.completeQuestForUser(
+        questId: quest.id,
+        userId: userId,
+        partnerUserId: partner?.pushToken,
+      );
+
+      print('✅ Quest marked completed for user $userId');
+    } catch (e) {
+      print('⚠️  Could not mark quest completed: $e');
+      // Don't throw - this is a non-critical operation
     }
   }
 

@@ -26,19 +26,37 @@ class MockDataService {
     final enableMockPairing = await DevConfig.enableMockPairing;
     if (!enableMockPairing) return;
 
-    // Only inject if no partner exists (idempotent)
-    if (_storage.hasPartner()) {
-      print('ℹ️  Mock data already exists, skipping injection');
-      return;
-    }
-
     final isSimulator = await DevConfig.isSimulator;
 
     if (isSimulator) {
-      // DUAL-EMULATOR MODE: Create partner-specific data
-      await _injectDualEmulatorData();
+      // DUAL-EMULATOR MODE: Always update to deterministic IDs
+      // Check if existing data uses old random IDs
+      final user = _storage.getUser();
+      final partner = _storage.getPartner();
+
+      final partnerIndex = await DevConfig.partnerIndex;
+      final expectedUserId = DevConfig.dualPartnerUserIds[partnerIndex];
+
+      if (user != null && user.id != expectedUserId) {
+        print('⚠️  Detected old user ID, replacing with deterministic ID...');
+        await _storage.clearAllData();
+      } else if (partner != null && !partner.pushToken.contains('dev-user')) {
+        print('⚠️  Detected old partner ID, replacing with deterministic ID...');
+        await _storage.clearAllData();
+      }
+
+      // Create partner-specific data with deterministic IDs
+      if (!_storage.hasPartner()) {
+        await _injectDualEmulatorData();
+      } else {
+        print('ℹ️  Deterministic mock data already exists');
+      }
     } else {
       // SINGLE-DEVICE MODE: Use old mock data approach
+      if (_storage.hasPartner()) {
+        print('ℹ️  Mock data already exists, skipping injection');
+        return;
+      }
       await _injectSingleDeviceMockData();
     }
   }
@@ -52,28 +70,37 @@ class MockDataService {
     final config = DevConfig.dualPartnerConfig[partnerIndex];
     final emulatorId = await DevConfig.emulatorId;
 
+    // Get deterministic user IDs for this user and their partner
+    final myUserId = DevConfig.dualPartnerUserIds[partnerIndex];
+    final partnerUserId = DevConfig.dualPartnerUserIds[(partnerIndex + 1) % 2];
+
     print('   Emulator ID: $emulatorId');
     print('   This partner: ${config['name']} ${config['emoji']}');
+    print('   My user ID: $myUserId');
     print('   Other partner: ${config['partnerName']} ${config['partnerEmoji']}');
+    print('   Partner user ID: $partnerUserId');
 
-    // Create THIS user with REAL FCM token
+    // Create THIS user with DETERMINISTIC user ID and REAL FCM token
     if (_storage.getUser() == null) {
       await _createMockUserWithRealToken(
+        userId: myUserId,
         name: config['name']!,
         emoji: config['emoji']!,
       );
     }
 
-    // Create partner placeholder (token will be updated by DevPairingService)
+    // Create partner with DETERMINISTIC user ID as pushToken
+    // This ensures couple ID generation works correctly
     await _createPartnerPlaceholder(
       name: config['partnerName']!,
       emoji: config['partnerEmoji']!,
+      pushToken: partnerUserId,  // Use partner's user ID for couple ID generation
     );
 
     print('✅ Dual-emulator setup complete!');
-    print('   User: ${config['name']} with real FCM token');
-    print('   Partner: ${config['partnerName']} (awaiting auto-pairing)');
-    print('   Next: Start other emulator for auto-pairing');
+    print('   User: ${config['name']} with deterministic ID and real FCM token');
+    print('   Partner: ${config['partnerName']} with deterministic ID');
+    print('   Couple ID will be consistent across both devices');
   }
 
   /// Inject old-style mock data for single device testing
@@ -430,6 +457,7 @@ class MockDataService {
 
   /// Create a mock user with REAL FCM token (for dual-emulator testing)
   static Future<void> _createMockUserWithRealToken({
+    required String userId,
     required String name,
     required String emoji,
   }) async {
@@ -440,7 +468,7 @@ class MockDataService {
     }
 
     final user = User(
-      id: _uuid.v4(),
+      id: userId,  // Use deterministic user ID from DevConfig
       pushToken: fcmToken ?? 'placeholder_token_${_uuid.v4().substring(0, 8)}',
       createdAt: DateTime.now().subtract(const Duration(days: 30)),
       name: name,
@@ -451,23 +479,28 @@ class MockDataService {
     );
 
     await _storage.saveUser(user);
-    print('   Created user: $name $emoji (token: ${fcmToken?.substring(0, 20)}...)');
+    print('   Created user: $name $emoji (ID: ${userId.substring(0, 30)}...)');
+    print('   FCM token: ${fcmToken?.substring(0, 20)}...');
   }
 
-  /// Create partner placeholder (token will be updated by DevPairingService)
+  /// Create partner placeholder
+  /// Uses partner's deterministic user ID for couple ID generation
+  /// DevPairingService will update with real FCM token for notifications
   static Future<void> _createPartnerPlaceholder({
     required String name,
     required String emoji,
+    required String pushToken,
   }) async {
     final partner = Partner(
       name: name,
-      pushToken: 'awaiting_pairing', // Will be replaced by DevPairingService
+      pushToken: pushToken,  // Use partner's deterministic user ID
       pairedAt: DateTime.now(),
       avatarEmoji: emoji,
     );
 
     await _storage.savePartner(partner);
-    print('   Created partner placeholder: $name $emoji (awaiting auto-pairing)');
+    print('   Created partner: $name $emoji');
+    print('   Partner token (user ID): ${pushToken.substring(0, 30)}...');
   }
 
   /// Clear all mock data (useful for dev menu in Phase 2)

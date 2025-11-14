@@ -578,6 +578,76 @@ Future<void> markLPAwardAsApplied(String awardId) async {
 - Cannot use as untyped `Box` for metadata
 - `app_metadata` is untyped `Box` for flexible storage
 
+### Foreground Notification Banner (Added: 2025-11-14)
+
+**Problem**: LP awards were syncing correctly via Firebase real-time listeners, but users had no visual feedback when LP was awarded. The LP counter in the header only updated when the screen rebuilt (navigation away/back, app restart).
+
+**Solution**: Added foreground notification banner that displays "+30 LP" overlay when LP is awarded, providing immediate user feedback without requiring screen rebuilds.
+
+**Implementation**:
+
+**1. Context Initialization** (`lib/main.dart:186`):
+```dart
+// Set the app context for NotificationService and LovePointService
+WidgetsBinding.instance.addPostFrameCallback((_) {
+  NotificationService.setAppContext(context);
+  LovePointService.setAppContext(context);  // Added for notification banner
+});
+```
+
+**2. LovePointService Changes** (`lib/services/love_point_service.dart`):
+
+- Added imports (lines 7-8):
+```dart
+import 'package:flutter/material.dart';
+import '../widgets/foreground_notification_banner.dart';
+```
+
+- Added static context variable (lines 14-15):
+```dart
+static BuildContext? _appContext;
+```
+
+- Added `setAppContext()` method (lines 182-185):
+```dart
+/// Set app context for showing foreground notifications
+static void setAppContext(BuildContext context) {
+  _appContext = context;
+}
+```
+
+- Modified `_handleLPAward()` to show notification (lines 280-288):
+```dart
+// Show foreground notification banner
+if (_appContext != null && _appContext!.mounted) {
+  ForegroundNotificationBanner.show(
+    _appContext!,
+    title: 'Love Points Earned!',
+    message: '+$amount LP',
+    emoji: '💰',
+  );
+}
+```
+
+**User Experience**:
+- When both users complete a quest, LP is awarded via Firebase
+- Real-time listener detects the LP award
+- Notification banner appears immediately showing "+30 LP"
+- Banner auto-dismisses after 3 seconds
+- LP counter in header updates on next screen rebuild (navigation, app restart)
+
+**Design Decision**:
+The LP counter in the header intentionally does NOT update automatically. This avoids the complexity of reactive UI updates (ValueListenableBuilder) throughout the app. The notification banner provides sufficient immediate feedback, and the counter updates naturally during normal app usage.
+
+**Related Components**:
+- `lib/widgets/foreground_notification_banner.dart` - Overlay notification widget
+- `lib/widgets/daily_quests_widget.dart:86-102` - Partner completion listener that triggers LP awards
+- `lib/screens/quiz_results_screen.dart:103-110` - Quiz completion that triggers LP awards
+
+**Cross-References**:
+- See [quest_system_refactoring.md Phase 3](./quest_system/quest_system_refactoring.md#phase-3-fix-quiz-quest-lp-awards-completed-2025-11-14) for detailed implementation history
+- See [daily_quests_widget.dart](../app/lib/widgets/daily_quests_widget.dart) for partner completion listener implementation
+
 ---
 
 ## Technical Implementation Details

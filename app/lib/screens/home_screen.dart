@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:togetherremind/screens/new_home_screen.dart';
-import 'package:togetherremind/screens/inbox_screen.dart';
+import 'package:togetherremind/screens/activity_hub_screen.dart';
 import 'package:togetherremind/screens/activities_screen.dart';
 import 'package:togetherremind/screens/profile_screen.dart';
 import 'package:togetherremind/screens/settings_screen.dart';
@@ -18,7 +18,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   final List<Widget> _screens = const [
     NewHomeScreen(),
-    InboxScreen(),
+    ActivityHubScreen(),
     ActivitiesScreen(),
     ProfileScreen(),
     SettingsScreen(),

@@ -2,8 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:confetti/confetti.dart';
 import '../models/quiz_session.dart';
 import '../models/quiz_question.dart';
+import '../models/daily_quest.dart';
 import '../services/quiz_service.dart';
 import '../services/storage_service.dart';
+import '../services/daily_quest_service.dart';
+import '../services/quest_sync_service.dart';
+import '../services/love_point_service.dart';
+import '../services/quest_utilities.dart';
 
 class QuizResultsScreen extends StatefulWidget {
   final QuizSession session;
@@ -32,6 +37,138 @@ class _QuizResultsScreenState extends State<QuizResultsScreen> {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         _confettiController.play();
       });
+    }
+
+    // Check and complete associated daily quest
+    _checkQuestCompletion();
+  }
+
+  /// Check if this quiz session is linked to a daily quest and mark it as completed
+  Future<void> _checkQuestCompletion() async {
+    try {
+      final user = _storage.getUser();
+      final partner = _storage.getPartner();
+
+      if (user == null || partner == null) return;
+
+      // Check if there's a daily quest for this quiz session
+      final questService = DailyQuestService(storage: _storage);
+      final todayQuests = questService.getTodayQuests();
+
+      print('🔍 Checking quest completion for session: ${widget.session.id}');
+      print('🔍 Found ${todayQuests.length} today quests');
+      for (final q in todayQuests) {
+        print('🔍 Quest ${q.id}: type=${q.type}, contentId=${q.contentId}');
+      }
+
+      // Find quest with matching contentId (quiz session ID)
+      final matchingQuest = todayQuests.where((q) =>
+        q.type == QuestType.quiz && q.contentId == widget.session.id
+      ).firstOrNull;
+
+      if (matchingQuest == null) {
+        print('❌ No matching quest found for session ${widget.session.id}');
+        // Not a daily quest quiz - just a regular quiz
+        return;
+      }
+
+      print('✅ Found matching quest: ${matchingQuest.id}');
+
+      // Check if current user has completed all questions
+      final userAnswers = widget.session.answers?[user.id];
+      if (userAnswers == null || userAnswers.length < widget.session.questionIds.length) {
+        return; // User hasn't completed the quiz yet
+      }
+
+      // Mark quest as completed for this user
+      final bothCompleted = await questService.completeQuestForUser(
+        questId: matchingQuest.id,
+        userId: user.id,
+      );
+
+      // Sync with Firebase
+      final syncService = QuestSyncService(
+        storage: _storage,
+      );
+
+      await syncService.markQuestCompleted(
+        questId: matchingQuest.id,
+        currentUserId: user.id,
+        partnerUserId: partner.pushToken,
+      );
+
+      if (bothCompleted) {
+        print('✅ Daily quest completed by both users! Awarding 30 LP...');
+
+        // Award Love Points to BOTH users via Firebase (real-time sync)
+        await LovePointService.awardPointsToBothUsers(
+          userId1: user.id,
+          userId2: partner.pushToken,
+          amount: 30,
+          reason: 'daily_quest_quiz',
+          relatedId: matchingQuest.id,
+        );
+
+        // Check if all 3 daily quests are completed
+        await _checkDailyQuestsCompletion(questService, user.id, partner.pushToken);
+      } else {
+        print('✅ Quest progress saved - waiting for partner to complete');
+      }
+    } catch (e) {
+      print('❌ Error checking quest completion: $e');
+      // Don't block results screen on quest errors
+    }
+  }
+
+  /// Check if all daily quests are completed and advance progression if so
+  Future<void> _checkDailyQuestsCompletion(
+    DailyQuestService questService,
+    String currentUserId,
+    String partnerUserId,
+  ) async {
+    try {
+      // Check if all main daily quests are completed by both users
+      if (questService.areAllMainQuestsCompleted()) {
+        print('🎯 All daily quests completed! Advancing progression...');
+
+        // Get the couple ID using QuestUtilities
+        final coupleId = QuestUtilities.generateCoupleId(currentUserId, partnerUserId);
+
+        // Get current progression state
+        var progressionState = _storage.getQuizProgressionState(coupleId);
+        if (progressionState == null) {
+          print('⚠️  No progression state found');
+          return;
+        }
+
+        // Advance progression by 3 positions (for the 3 completed quests)
+        for (int i = 0; i < 3; i++) {
+          progressionState.currentPosition++;
+          if (progressionState.currentPosition >= 4) {
+            progressionState.currentTrack++;
+            progressionState.currentPosition = 0;
+            if (progressionState.currentTrack >= 3) {
+              progressionState.hasCompletedAllTracks = true;
+              progressionState.currentTrack = 2;
+              progressionState.currentPosition = 3;
+              break; // Max progression reached
+            }
+          }
+        }
+
+        // Save updated progression
+        await _storage.updateQuizProgressionState(progressionState);
+        print('📈 Progression advanced to Track ${progressionState.currentTrack}, Position ${progressionState.currentPosition}');
+
+        // Save to Firebase
+        final syncService = QuestSyncService(
+          storage: _storage,
+        );
+        await syncService.saveProgressionState(progressionState);
+        print('✅ Progression state saved to Firebase');
+      }
+    } catch (e) {
+      print('❌ Error checking daily quests completion: $e');
     }
   }
 

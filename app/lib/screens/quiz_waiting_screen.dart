@@ -1,6 +1,4 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import '../models/quiz_session.dart';
 import '../services/quiz_service.dart';
 import '../services/storage_service.dart';
@@ -18,51 +16,81 @@ class QuizWaitingScreen extends StatefulWidget {
 class _QuizWaitingScreenState extends State<QuizWaitingScreen> {
   final QuizService _quizService = QuizService();
   final StorageService _storage = StorageService();
-  Timer? _pollTimer;
   late QuizSession _session;
+  bool _isChecking = false;
 
   @override
   void initState() {
     super.initState();
     _session = widget.session;
-    _startPolling();
   }
 
-  @override
-  void dispose() {
-    _pollTimer?.cancel();
-    super.dispose();
-  }
+  Future<void> _checkSessionStatus() async {
+    setState(() => _isChecking = true);
 
-  void _startPolling() {
-    // Poll every 3 seconds to check if partner answered
-    _pollTimer = Timer.periodic(const Duration(seconds: 3), (timer) {
-      _checkSessionStatus();
-    });
-  }
+    try {
+      // CRITICAL: Check Firebase for updates, not just local storage
+      // This ensures we see partner's answers immediately when they submit
+      final updatedSession = await _quizService.getSession(_session.id);
+      if (updatedSession == null) {
+        print('⚠️  Session not found: ${_session.id}');
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Session not found')),
+          );
+        }
+        return;
+      }
 
-  void _checkSessionStatus() {
-    final updatedSession = _storage.getQuizSession(_session.id);
-    if (updatedSession == null) return;
+      if (!mounted) return;
 
-    setState(() {
-      _session = updatedSession;
-    });
+      setState(() {
+        _session = updatedSession;
+      });
 
-    // If completed, navigate to results
-    if (_session.isCompleted) {
-      _pollTimer?.cancel();
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(
-          builder: (context) => QuizResultsScreen(session: _session),
-        ),
-      );
-    }
+      // If completed, navigate to results
+      if (_session.isCompleted) {
+        print('✅ Session completed! Navigating to results...');
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(
+            builder: (context) => QuizResultsScreen(session: _session),
+          ),
+        );
+        return;
+      }
 
-    // If expired, show error and return home
-    if (_session.isExpired && !_session.isCompleted) {
-      _pollTimer?.cancel();
-      _showExpiredDialog();
+      // Check if both users have answered (waiting for completion calculation)
+      final bothAnswered = _session.answers != null && _session.answers!.length >= 2;
+      if (bothAnswered && !_session.isCompleted) {
+        // Both users answered! Completion calculation should be running.
+        print('⏳ Both users answered (${_session.answers!.length} answers) - waiting for completion calculation...');
+        // Don't navigate yet - wait for lpEarned to be calculated
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Both answered! Results calculating...')),
+          );
+        }
+        return;
+      }
+
+      // Log current answer count for debugging
+      final answerCount = _session.answers?.length ?? 0;
+      print('🔍 Manual check: $answerCount/2 answers, completed: ${_session.isCompleted}');
+
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Updated! $answerCount/2 partners answered')),
+        );
+      }
+
+      // If expired, show error and return home
+      if (_session.isExpired && !_session.isCompleted) {
+        _showExpiredDialog();
+      }
+    } finally {
+      if (mounted) {
+        setState(() => _isChecking = false);
+      }
     }
   }
 
@@ -244,6 +272,21 @@ class _QuizWaitingScreenState extends State<QuizWaitingScreen> {
               ),
 
               const SizedBox(height: 16),
+
+              // Check for Updates button
+              ElevatedButton.icon(
+                onPressed: _isChecking ? null : _checkSessionStatus,
+                icon: Icon(_isChecking ? Icons.hourglass_empty : Icons.refresh),
+                label: Text(_isChecking ? 'Checking...' : 'Check for Updates'),
+                style: ElevatedButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 32,
+                    vertical: 12,
+                  ),
+                ),
+              ),
+
+              const SizedBox(height: 12),
 
               // Close button
               OutlinedButton(

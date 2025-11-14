@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>You or Me? Character Traits - TogetherRemind</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #FAFAFA;
+            color: #1A1A1A;
+            max-width: 430px;
+            margin: 0 auto;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header */
+        .status-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 20px;
+            font-size: 15px;
+            font-weight: 500;
+            color: #1A1A1A;
+        }
+
+        .status-right {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            padding: 8px 20px;
+        }
+
+        .back-button {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: #FFFEFD;
+            border: 2px solid #F0F0F0;
+            color: #1A1A1A;
+            font-size: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+
+        .back-button:hover {
+            background: #F0F0F0;
+        }
+
+        /* Progress Bar */
+        .progress-container {
+            padding: 16px 20px;
+        }
+
+        .progress-bar-bg {
+            width: 100%;
+            height: 6px;
+            background: #F0F0F0;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            width: 10%;
+            background: #1A1A1A;
+            border-radius: 3px;
+            transition: width 0.4s ease;
+        }
+
+        /* Main Content */
+        .content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .question-prompt {
+            font-family: 'Playfair Display', serif;
+            font-size: 36px;
+            font-weight: 700;
+            text-align: center;
+            letter-spacing: -1px;
+            color: #1A1A1A;
+        }
+
+        /* Card Stack */
+        .card-stack {
+            position: relative;
+            width: 100%;
+            height: 320px;
+        }
+
+        .card {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            background: #FFFEFD;
+            border: 2px solid #F0F0F0;
+            border-radius: 24px;
+            padding: 40px 30px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .card:nth-child(1) {
+            top: 0;
+            z-index: 3;
+            opacity: 1;
+        }
+
+        .card:nth-child(2) {
+            top: -12px;
+            z-index: 2;
+            opacity: 0.6;
+            width: 96%;
+            border-color: #E0E0E0;
+        }
+
+        .card:nth-child(3) {
+            top: -24px;
+            z-index: 1;
+            opacity: 0.3;
+            width: 92%;
+            border-color: #E0E0E0;
+        }
+
+        .question-number {
+            font-family: 'Inter', sans-serif;
+            font-size: 15px;
+            font-weight: 500;
+            color: #6E6E6E;
+            margin-bottom: 24px;
+        }
+
+        .trait {
+            font-family: 'Playfair Display', serif;
+            font-size: 42px;
+            font-weight: 700;
+            line-height: 1.2;
+            color: #1A1A1A;
+            letter-spacing: -1.2px;
+        }
+
+        /* Answer Section */
+        .answer-section {
+            width: 100%;
+            background: #FFFEFD;
+            border: 2px solid #F0F0F0;
+            border-radius: 32px;
+            padding: 32px 20px 28px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .answer-buttons {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            width: 100%;
+            justify-content: center;
+        }
+
+        .answer-button {
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            border: 3px solid #1A1A1A;
+            background: #FFFEFD;
+            color: #1A1A1A;
+            font-family: 'Inter', sans-serif;
+            font-size: 42px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .answer-button:hover {
+            background: #1A1A1A;
+            color: #FFFEFD;
+            transform: scale(1.05);
+        }
+
+        .answer-button:active {
+            transform: scale(0.97);
+        }
+
+        .answer-button.right {
+            font-size: 18px;
+            font-weight: 600;
+            flex-direction: column;
+            line-height: 1.3;
+            gap: 2px;
+        }
+
+        .or-divider {
+            font-family: 'Inter', sans-serif;
+            font-size: 15px;
+            font-weight: 500;
+            color: #AAAAAA;
+            text-transform: lowercase;
+        }
+
+        .more-options {
+            font-family: 'Inter', sans-serif;
+            font-size: 16px;
+            font-weight: 500;
+            color: #6E6E6E;
+            text-decoration: underline;
+            cursor: pointer;
+            background: none;
+            border: none;
+            padding: 8px;
+        }
+
+        .more-options:hover {
+            color: #1A1A1A;
+        }
+
+        /* Bottom Sheet Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.4);
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+            z-index: 100;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .bottom-sheet {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%) translateY(100%);
+            width: 100%;
+            max-width: 430px;
+            background: #FFFEFD;
+            border-radius: 32px 32px 0 0;
+            padding: 24px 20px 32px;
+            box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.15);
+            transition: transform 0.3s ease;
+            z-index: 101;
+        }
+
+        .bottom-sheet.active {
+            transform: translateX(-50%) translateY(0);
+        }
+
+        .sheet-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .sheet-handle {
+            width: 40px;
+            height: 4px;
+            background: #E0E0E0;
+            border-radius: 2px;
+            margin: 0 auto 20px;
+        }
+
+        .sheet-title {
+            font-family: 'Inter', sans-serif;
+            font-size: 18px;
+            font-weight: 600;
+            color: #1A1A1A;
+        }
+
+        .sheet-options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .sheet-option {
+            width: 100%;
+            padding: 18px;
+            background: #FAFAFA;
+            border: 2px solid #F0F0F0;
+            border-radius: 16px;
+            font-family: 'Inter', sans-serif;
+            font-size: 16px;
+            font-weight: 500;
+            color: #1A1A1A;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .sheet-option:hover {
+            background: #F0F0F0;
+            border-color: #1A1A1A;
+        }
+
+        .sheet-option:active {
+            transform: scale(0.98);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 400px) {
+            .question-prompt {
+                font-size: 30px;
+            }
+
+            .trait {
+                font-size: 36px;
+            }
+
+            .answer-button {
+                width: 120px;
+                height: 120px;
+                font-size: 36px;
+            }
+
+            .answer-button.right {
+                font-size: 16px;
+            }
+
+            .card-stack {
+                height: 280px;
+            }
+
+            .card {
+                padding: 40px 24px;
+            }
+        }
+
+        @media (max-width: 350px) {
+            .question-prompt {
+                font-size: 26px;
+            }
+
+            .trait {
+                font-size: 32px;
+            }
+
+            .answer-button {
+                width: 100px;
+                height: 100px;
+                font-size: 30px;
+            }
+
+            .answer-button.right {
+                font-size: 14px;
+            }
+
+            .card-stack {
+                height: 260px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Status Bar -->
+    <div class="status-bar">
+        <div class="status-left">14.40</div>
+        <div class="status-right">
+            <span>5G</span>
+            <span>79%</span>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <div class="header">
+        <button class="back-button" onclick="history.back()">‹</button>
+    </div>
+
+    <!-- Progress Bar -->
+    <div class="progress-container">
+        <div class="progress-bar-bg">
+            <div class="progress-bar"></div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="content">
+        <div class="question-prompt">Who's more...</div>
+
+        <div class="card-stack">
+            <div class="card">
+                <div class="question-number">Question 1 of 10</div>
+                <div class="trait">Creative</div>
+            </div>
+            <div class="card"></div>
+            <div class="card"></div>
+        </div>
+
+        <div class="answer-section">
+            <div class="answer-buttons">
+                <button class="answer-button left" onclick="selectAnswer('me')">J</button>
+                <div class="or-divider">or</div>
+                <button class="answer-button right" onclick="selectAnswer('partner')">
+                    <span>Your</span>
+                    <span>partner</span>
+                </button>
+            </div>
+            <button class="more-options" onclick="showMoreOptions()">More options</button>
+        </div>
+    </div>
+
+    <!-- Bottom Sheet Modal -->
+    <div class="modal-overlay" id="modalOverlay" onclick="hideBottomSheet()"></div>
+    <div class="bottom-sheet" id="bottomSheet">
+        <div class="sheet-header">
+            <div class="sheet-handle"></div>
+            <div class="sheet-title">Select an option</div>
+        </div>
+        <div class="sheet-options">
+            <button class="sheet-option" onclick="selectSpecialOption('neither')">Neither</button>
+            <button class="sheet-option" onclick="selectSpecialOption('both')">Both</button>
+        </div>
+    </div>
+
+    <script>
+        let currentQuestion = 1;
+        const totalQuestions = 10;
+
+        // Diverse question types
+        const questions = [
+            { prompt: "Who's more...", text: "Creative" },
+            { prompt: "Who would...", text: "Plan the perfect date" },
+            { prompt: "Who's more likely to...", text: "Start a spontaneous adventure" },
+            { prompt: "Who's more...", text: "Organized" },
+            { prompt: "Who would...", text: "Cook dinner tonight" },
+            { prompt: "Which of you...", text: "Is the better dancer" },
+            { prompt: "Who's more likely to...", text: "Forget an anniversary" },
+            { prompt: "Who would...", text: "Win an argument" },
+            { prompt: "Who's more...", text: "Romantic" },
+            { prompt: "Who's more likely to...", text: "Fall asleep during a movie" }
+        ];
+
+        function selectAnswer(choice) {
+            console.log(`Selected: ${choice} for question: ${questions[currentQuestion - 1].text}`);
+
+            // Animate card exit
+            const currentCard = document.querySelector('.card:nth-child(1)');
+            currentCard.style.transition = 'transform 0.3s ease, opacity 0.3s ease';
+            currentCard.style.transform = 'translateX(150%) rotate(20deg)';
+            currentCard.style.opacity = '0';
+
+            setTimeout(() => {
+                if (currentQuestion < totalQuestions) {
+                    nextQuestion();
+                } else {
+                    showResults();
+                }
+            }, 300);
+        }
+
+        function nextQuestion() {
+            currentQuestion++;
+
+            // Update progress bar
+            const progressBar = document.querySelector('.progress-bar');
+            progressBar.style.width = `${(currentQuestion / totalQuestions) * 100}%`;
+
+            // Update card content
+            const card = document.querySelector('.card:nth-child(1)');
+            card.style.transition = 'none';
+            card.style.transform = 'translateX(-50%)';
+            card.style.opacity = '1';
+
+            card.querySelector('.question-number').textContent = `Question ${currentQuestion} of ${totalQuestions}`;
+            card.querySelector('.trait').textContent = questions[currentQuestion - 1].text;
+
+            // Update prompt
+            document.querySelector('.question-prompt').textContent = questions[currentQuestion - 1].prompt;
+        }
+
+        function showMoreOptions() {
+            const overlay = document.getElementById('modalOverlay');
+            const sheet = document.getElementById('bottomSheet');
+            overlay.classList.add('active');
+            sheet.classList.add('active');
+        }
+
+        function hideBottomSheet() {
+            const overlay = document.getElementById('modalOverlay');
+            const sheet = document.getElementById('bottomSheet');
+            overlay.classList.remove('active');
+            sheet.classList.remove('active');
+        }
+
+        function selectSpecialOption(option) {
+            console.log(`Selected special option: ${option} for question: ${questions[currentQuestion - 1].text}`);
+            hideBottomSheet();
+
+            // Same animation as regular answer
+            const currentCard = document.querySelector('.card:nth-child(1)');
+            currentCard.style.transition = 'transform 0.3s ease, opacity 0.3s ease';
+            currentCard.style.transform = 'translateX(150%) rotate(20deg)';
+            currentCard.style.opacity = '0';
+
+            setTimeout(() => {
+                if (currentQuestion < totalQuestions) {
+                    nextQuestion();
+                } else {
+                    showResults();
+                }
+            }, 300);
+        }
+
+        function showResults() {
+            alert('Game complete! Showing results...');
+            // Navigate to results screen
+        }
+    </script>
+</body>
+</html>

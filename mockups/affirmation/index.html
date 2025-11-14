@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Affirmation Quiz Flow - TogetherRemind</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #FAFAFA;
+            color: #1A1A1A;
+            padding: 40px 20px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 48px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            letter-spacing: -1.5px;
+        }
+
+        .subtitle {
+            font-size: 18px;
+            color: #6E6E6E;
+            margin-bottom: 40px;
+        }
+
+        .flow-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 16px;
+            margin-bottom: 40px;
+        }
+
+        .screen-card {
+            background: #FFFEFD;
+            border: 2px solid #F0F0F0;
+            border-radius: 16px;
+            padding: 24px;
+            text-decoration: none;
+            color: #1A1A1A;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+
+        .screen-card:hover {
+            border-color: #1A1A1A;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        .screen-number {
+            display: inline-block;
+            background: #1A1A1A;
+            color: #FFFEFD;
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        .screen-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            letter-spacing: -0.3px;
+        }
+
+        .screen-desc {
+            font-size: 14px;
+            color: #6E6E6E;
+            line-height: 1.5;
+        }
+
+        .section-header {
+            font-family: 'Playfair Display', serif;
+            font-size: 28px;
+            font-weight: 700;
+            margin: 40px 0 20px;
+            letter-spacing: -0.5px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Affirmation Quiz Flow</h1>
+    <p class="subtitle">Based on "Do You Keep Secrets?" quiz from video documentation</p>
+
+    <div class="flow-grid">
+        <a href="01-home.html" class="screen-card">
+            <div class="screen-number">Screen 1</div>
+            <div class="screen-title">Home</div>
+            <p class="screen-desc">Daily Activities hub with streak counter and quick actions</p>
+        </a>
+
+        <a href="02-quiz-intro.html" class="screen-card">
+            <div class="screen-number">Screen 2</div>
+            <div class="screen-title">Quiz Introduction</div>
+            <p class="screen-desc">Goal, research context, and how it works explanation</p>
+        </a>
+
+        <a href="03-quiz-advice.html" class="screen-card">
+            <div class="screen-number">Screen 3</div>
+            <div class="screen-title">Quiz Advice</div>
+            <p class="screen-desc">Best practices reminder before starting</p>
+        </a>
+
+        <a href="04-question-1.html" class="screen-card">
+            <div class="screen-number">Screen 4</div>
+            <div class="screen-title">Question 1 of 6</div>
+            <p class="screen-desc">5-point heart scale response: normal to have secrets</p>
+        </a>
+
+        <a href="05-question-2.html" class="screen-card">
+            <div class="screen-number">Screen 5</div>
+            <div class="screen-title">Question 2 of 6</div>
+            <p class="screen-desc">Know partner's expectations around secrecy</p>
+        </a>
+
+        <a href="06-question-3.html" class="screen-card">
+            <div class="screen-number">Screen 6</div>
+            <div class="screen-title">Question 3 of 6</div>
+            <p class="screen-desc">Don't keep secrets out of fear</p>
+        </a>
+
+        <a href="07-question-4.html" class="screen-card">
+            <div class="screen-number">Screen 7</div>
+            <div class="screen-title">Question 4 of 6</div>
+            <p class="screen-desc">Trust partner to share important information</p>
+        </a>
+
+        <a href="08-question-5.html" class="screen-card">
+            <div class="screen-number">Screen 8</div>
+            <div class="screen-title">Question 5 of 6</div>
+            <p class="screen-desc">Partner trusts me to share information</p>
+        </a>
+
+        <a href="09-question-6.html" class="screen-card">
+            <div class="screen-number">Screen 9</div>
+            <div class="screen-title">Question 6 of 6</div>
+            <p class="screen-desc">Relationship built on mutual trust</p>
+        </a>
+
+        <a href="10-streak.html" class="screen-card">
+            <div class="screen-number">Screen 10</div>
+            <div class="screen-title">Streak Celebration</div>
+            <p class="screen-desc">3-day streak milestone with weekly tracker</p>
+        </a>
+
+        <a href="11-results-ready.html" class="screen-card">
+            <div class="screen-number">Screen 11</div>
+            <div class="screen-title">Results Ready</div>
+            <p class="screen-desc">Green checkmark confirmation screen</p>
+        </a>
+
+        <a href="12-results-awaiting.html" class="screen-card">
+            <div class="screen-number">Screen 12</div>
+            <div class="screen-title">Results - Awaiting Partner</div>
+            <p class="screen-desc">Individual results with partner pending indicator</p>
+        </a>
+
+        <a href="13-home-complete.html" class="screen-card">
+            <div class="screen-number">Screen 13</div>
+            <div class="screen-title">Home - Quiz Complete</div>
+            <p class="screen-desc">Return to home with quiz marked complete</p>
+        </a>
+    </div>
+
+    <div class="section-header">Flow Navigation</div>
+    <p style="color: #6E6E6E; margin-bottom: 20px;">
+        Each screen includes navigation links at the bottom to move through the complete flow.
+        The mockups maintain the black and white serif design style used throughout the TogetherRemind app.
+    </p>
+</body>
+</html>

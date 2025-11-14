@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pair with your partner - TogetherRemind</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(180deg, #2B2D42 0%, #1F2133 100%);
+            color: #FFFFFF;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 420px;
+            margin: 0 auto;
+        }
+
+        /* Header */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+            padding-top: 10px;
+        }
+
+        .back-button {
+            color: #FFFFFF;
+            text-decoration: none;
+            font-size: 15px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .next-button {
+            color: #B8A4E8;
+            text-decoration: underline;
+            font-size: 17px;
+            font-weight: 600;
+            background: none;
+            border: none;
+            cursor: pointer;
+        }
+
+        /* Title Section */
+        .title-section {
+            text-align: left;
+            margin-bottom: 40px;
+        }
+
+        .title {
+            font-family: 'Playfair Display', serif;
+            font-size: 32px;
+            font-weight: 700;
+            color: #FFFFFF;
+            margin-bottom: 12px;
+            letter-spacing: -0.5px;
+        }
+
+        .subtitle {
+            font-size: 16px;
+            color: #B8B8C8;
+            line-height: 1.5;
+        }
+
+        /* Invite Section (Purple) */
+        .invite-section {
+            background: linear-gradient(135deg, #D4C5F9 0%, #C5B3F0 100%);
+            border-radius: 24px;
+            padding: 28px 24px;
+            margin-bottom: 30px;
+            position: relative;
+        }
+
+        .section-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 24px;
+            font-weight: 700;
+            color: #2B2D42;
+            margin-bottom: 20px;
+            letter-spacing: -0.3px;
+        }
+
+        .code-label-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .code-label {
+            font-size: 15px;
+            font-weight: 600;
+            color: #2B2D42;
+        }
+
+        .tap-copy-button {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(255, 255, 255, 0.8);
+            border: 1.5px solid #2B2D42;
+            border-radius: 20px;
+            padding: 6px 16px;
+            font-size: 14px;
+            font-weight: 500;
+            color: #2B2D42;
+            cursor: pointer;
+        }
+
+        .tap-copy-button::before {
+            content: '📋';
+            font-size: 16px;
+        }
+
+        .code-display {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+
+        .code-char {
+            background: #2B2D42;
+            color: #FFFFFF;
+            width: 48px;
+            height: 56px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Inter', monospace;
+            font-size: 28px;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+
+        .code-separator {
+            width: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: 600;
+            color: #2B2D42;
+        }
+
+        .share-button {
+            width: 100%;
+            background: #9D7FEA;
+            color: #FFFFFF;
+            border: none;
+            border-radius: 16px;
+            padding: 16px;
+            font-size: 17px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .share-button:hover {
+            background: #8B6DD8;
+        }
+
+        /* OR Divider */
+        .or-divider {
+            position: relative;
+            text-align: center;
+            margin: -15px 0;
+            z-index: 10;
+        }
+
+        .or-circle {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 60px;
+            height: 60px;
+            background: #2B2D42;
+            border-radius: 50%;
+            font-size: 18px;
+            font-weight: 600;
+            color: #FFFFFF;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Enter Code Section (Pink) */
+        .enter-code-section {
+            background: linear-gradient(135deg, #FFB5B5 0%, #FFAA9F 100%);
+            border-radius: 24px;
+            padding: 28px 24px;
+        }
+
+        .partner-code-label {
+            font-size: 15px;
+            font-weight: 600;
+            color: #2B2D42;
+            margin-bottom: 12px;
+        }
+
+        .code-input-container {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 24px;
+        }
+
+        .code-input-box {
+            background: #2B2D42;
+            width: 48px;
+            height: 56px;
+            border-radius: 16px;
+            border: none;
+            text-align: center;
+            font-family: 'Inter', monospace;
+            font-size: 28px;
+            font-weight: 700;
+            color: #FFFFFF;
+            cursor: pointer;
+        }
+
+        .code-input-box:focus {
+            outline: 2px solid #FFFFFF;
+            outline-offset: 2px;
+        }
+
+        .pair-button {
+            width: 100%;
+            background: #2B2D42;
+            color: #FFFFFF;
+            border: none;
+            border-radius: 16px;
+            padding: 18px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .pair-button:hover {
+            background: #1F2133;
+        }
+
+        /* Mobile responsive */
+        @media (max-width: 480px) {
+            .code-char, .code-input-box {
+                width: 42px;
+                height: 52px;
+                font-size: 24px;
+            }
+
+            .title {
+                font-size: 28px;
+            }
+
+            .section-title {
+                font-size: 22px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <a href="#" class="back-button">◀ App Store</a>
+            <button class="next-button">Next</button>
+        </div>
+
+        <!-- Title Section -->
+        <div class="title-section">
+            <h1 class="title">Pair with your partner</h1>
+            <p class="subtitle">Pair with Taija and swap answers to questions, quizzes, games and more.</p>
+        </div>
+
+        <!-- Invite Section -->
+        <div class="invite-section">
+            <h2 class="section-title">I want to invite Taija</h2>
+
+            <div class="code-label-row">
+                <span class="code-label">Your code:</span>
+                <button class="tap-copy-button" onclick="copyCode()">Tap to copy</button>
+            </div>
+
+            <div class="code-display">
+                <div class="code-char">W</div>
+                <div class="code-char">K</div>
+                <div class="code-char">R</div>
+                <div class="code-separator">-</div>
+                <div class="code-char">8</div>
+                <div class="code-char">B</div>
+                <div class="code-char">K</div>
+            </div>
+
+            <button class="share-button" onclick="shareCode()">Share your invite code</button>
+        </div>
+
+        <!-- OR Divider -->
+        <div class="or-divider">
+            <div class="or-circle">or</div>
+        </div>
+
+        <!-- Enter Code Section -->
+        <div class="enter-code-section">
+            <h2 class="section-title">I have a code from Taija</h2>
+
+            <p class="partner-code-label">Partner's code</p>
+
+            <div class="code-input-container">
+                <input type="text" class="code-input-box" maxlength="1" id="input1" onclick="focusInput(this)">
+                <input type="text" class="code-input-box" maxlength="1" id="input2" onclick="focusInput(this)">
+                <input type="text" class="code-input-box" maxlength="1" id="input3" onclick="focusInput(this)">
+                <div class="code-separator">-</div>
+                <input type="text" class="code-input-box" maxlength="1" id="input4" onclick="focusInput(this)">
+                <input type="text" class="code-input-box" maxlength="1" id="input5" onclick="focusInput(this)">
+                <input type="text" class="code-input-box" maxlength="1" id="input6" onclick="focusInput(this)">
+            </div>
+
+            <button class="pair-button" onclick="pairNow()">Pair now</button>
+        </div>
+    </div>
+
+    <script>
+        function copyCode() {
+            const code = 'WKR-8BK';
+            navigator.clipboard.writeText(code).then(() => {
+                alert('Code copied to clipboard: ' + code);
+            });
+        }
+
+        function shareCode() {
+            const code = 'WKR-8BK';
+            if (navigator.share) {
+                navigator.share({
+                    title: 'TogetherRemind Pairing Code',
+                    text: `My TogetherRemind pairing code is: ${code}`
+                }).catch(err => console.log('Error sharing:', err));
+            } else {
+                alert('Share functionality:\nCode: ' + code + '\n\nOn mobile, this would open the native share sheet.');
+            }
+        }
+
+        function focusInput(input) {
+            input.focus();
+        }
+
+        function pairNow() {
+            const inputs = [
+                document.getElementById('input1'),
+                document.getElementById('input2'),
+                document.getElementById('input3'),
+                document.getElementById('input4'),
+                document.getElementById('input5'),
+                document.getElementById('input6')
+            ];
+
+            const code = inputs.map(input => input.value).join('');
+
+            if (code.length === 6) {
+                alert('Pairing with code: ' + code.substring(0, 3) + '-' + code.substring(3));
+            } else {
+                alert('Please enter all 6 characters of the code');
+            }
+        }
+
+        // Auto-advance to next input
+        document.querySelectorAll('.code-input-box').forEach((input, index, inputs) => {
+            input.addEventListener('input', (e) => {
+                if (e.target.value.length === 1 && index < inputs.length - 1) {
+                    inputs[index + 1].focus();
+                }
+            });
+
+            input.addEventListener('keydown', (e) => {
+                if (e.key === 'Backspace' && e.target.value === '' && index > 0) {
+                    inputs[index - 1].focus();
+                }
+            });
+        });
+    </script>
+</body>
+</html>

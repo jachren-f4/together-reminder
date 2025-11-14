@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Discuss - TogetherRemind</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: #2a1f4d;
+            color: white;
+            max-width: 430px;
+            margin: 0 auto;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Status Bar */
+        .status-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 20px;
+            font-size: 17px;
+            font-weight: 600;
+        }
+
+        .status-right {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Header */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 20px 24px;
+        }
+
+        .header h1 {
+            font-size: 48px;
+            font-weight: 700;
+        }
+
+        .bookmark-btn {
+            background: rgba(255, 255, 255, 0.15);
+            border: none;
+            border-radius: 24px;
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: white;
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .bookmark-icon {
+            font-size: 24px;
+        }
+
+        /* Filter Chips */
+        .filter-chips {
+            display: flex;
+            gap: 12px;
+            padding: 0 20px 20px;
+            overflow-x: auto;
+            scrollbar-width: none;
+        }
+
+        .filter-chips::-webkit-scrollbar {
+            display: none;
+        }
+
+        .chip {
+            background: rgba(255, 255, 255, 0.15);
+            border: none;
+            border-radius: 24px;
+            padding: 12px 24px;
+            color: white;
+            font-size: 16px;
+            font-weight: 600;
+            white-space: nowrap;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .chip.active {
+            background: #9b7ee8;
+        }
+
+        /* Content List */
+        .content-list {
+            flex: 1;
+            overflow-y: auto;
+            padding: 0 20px;
+        }
+
+        .list-item {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 16px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .item-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 20px;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            position: relative;
+        }
+
+        .item-icon.quiz { background: #f5e6d3; }
+        .item-icon.game { background: #e6ddf5; }
+        .item-icon.question { background: #dde6f5; }
+
+        .item-content {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .item-label {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            padding: 4px 12px;
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+
+        .item-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 4px;
+            line-height: 1.3;
+        }
+
+        .item-subtitle {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .item-meta {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 8px;
+            flex-shrink: 0;
+        }
+
+        .item-time {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .item-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: #9b7ee8;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            font-weight: 600;
+            position: relative;
+        }
+
+        .online-indicator {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 12px;
+            height: 12px;
+            background: #4ade80;
+            border: 2px solid #2a1f4d;
+            border-radius: 50%;
+        }
+
+        /* Bottom Navigation */
+        .bottom-nav {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 12px 20px;
+            background: rgba(42, 31, 77, 0.95);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            color: rgba(255, 255, 255, 0.5);
+            text-decoration: none;
+            font-size: 11px;
+            font-weight: 600;
+            transition: color 0.2s;
+        }
+
+        .nav-item.active {
+            color: #9b7ee8;
+        }
+
+        .nav-icon {
+            font-size: 24px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Status Bar -->
+    <div class="status-bar">
+        <div>17.58</div>
+        <div class="status-right">
+            <span>⋮⋮⋮⋮</span>
+            <span>5G</span>
+            <span>62%</span>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <div class="header">
+        <h1>Discuss</h1>
+        <button class="bookmark-btn">
+            <span class="bookmark-icon">🔖</span>
+            <span>0</span>
+        </button>
+    </div>
+
+    <!-- Filter Chips -->
+    <div class="filter-chips">
+        <button class="chip active">All</button>
+        <button class="chip">Your turn</button>
+        <button class="chip">Unread</button>
+        <button class="chip">Chat</button>
+        <button class="chip">Tasks</button>
+    </div>
+
+    <!-- Content List -->
+    <div class="content-list">
+        <div class="list-item">
+            <div class="item-icon quiz">
+                <div style="font-size: 48px;">💗✓</div>
+            </div>
+            <div class="item-content">
+                <div class="item-label">Quiz</div>
+                <div class="item-title">Relationship Checkup</div>
+                <div class="item-subtitle">You answered this quiz</div>
+            </div>
+            <div class="item-meta">
+                <div class="item-time">17:55</div>
+                <div class="item-avatar">
+                    J
+                    <div class="online-indicator"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="list-item">
+            <div class="item-icon game">
+                <div style="font-size: 40px;">🎨📖</div>
+            </div>
+            <div class="item-content">
+                <div class="item-label">Game</div>
+                <div class="item-title">You or Me? Character Traits</div>
+                <div class="item-subtitle">You answered this game</div>
+            </div>
+            <div class="item-meta">
+                <div class="item-time">14:41</div>
+                <div class="item-avatar">
+                    J
+                    <div class="online-indicator"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="list-item">
+            <div class="item-icon question">
+                <div style="font-size: 40px;">👫</div>
+            </div>
+            <div class="item-content">
+                <div class="item-label">Question</div>
+                <div class="item-title">What do you remember about the first time you me...</div>
+                <div class="item-subtitle">You answered this question</div>
+            </div>
+            <div class="item-meta">
+                <div class="item-time">14:39</div>
+                <div class="item-avatar">
+                    J
+                    <div class="online-indicator"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="list-item">
+            <div class="item-icon game">
+                <div style="font-size: 36px;">🗓️💗</div>
+            </div>
+            <div class="item-content">
+                <div class="item-label">Game</div>
+                <div class="item-title">You or Me? Weekday Sex</div>
+                <div class="item-subtitle">You answered this game</div>
+            </div>
+            <div class="item-meta">
+                <div class="item-time">07:44</div>
+                <div class="item-avatar">
+                    J
+                    <div class="online-indicator"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="list-item">
+            <div class="item-icon game">
+                <div style="font-size: 36px;">💗🎨</div>
+            </div>
+            <div class="item-content">
+                <div class="item-label">Game</div>
+                <div class="item-title">Magic Hour</div>
+                <div class="item-subtitle">You answered this game</div>
+            </div>
+            <div class="item-meta">
+                <div class="item-time">07:43</div>
+                <div class="item-avatar">
+                    J
+                    <div class="online-indicator"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="list-item">
+            <div class="item-icon quiz">
+                <div style="font-size: 40px;">💑</div>
+            </div>
+            <div class="item-content">
+                <div class="item-label">Quiz</div>
+                <div class="item-title">Action Fortells</div>
+                <div class="item-subtitle">You answered this quiz</div>
+            </div>
+            <div class="item-meta">
+                <div class="item-time">07:37</div>
+                <div class="item-avatar">
+                    J
+                    <div class="online-indicator"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bottom Navigation -->
+    <nav class="bottom-nav">
+        <a href="#" class="nav-item">
+            <div class="nav-icon">🏠</div>
+            <div>Home</div>
+        </a>
+        <a href="#" class="nav-item">
+            <div class="nav-icon">🔍</div>
+            <div>Explore</div>
+        </a>
+        <a href="#" class="nav-item active">
+            <div class="nav-icon">💬</div>
+            <div>Discuss</div>
+        </a>
+        <a href="#" class="nav-item">
+            <div class="nav-icon">📅</div>
+            <div>Timeline</div>
+        </a>
+        <a href="#" class="nav-item">
+            <div class="nav-icon">💕</div>
+            <div>Us</div>
+        </a>
+    </nav>
+</body>
+</html>

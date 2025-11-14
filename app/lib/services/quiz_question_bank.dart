@@ -131,6 +131,24 @@ class QuizQuestionBank {
     return selectedQuestions.take(10).toList();
   }
 
+  /// Get random questions for Would You Rather (7 scenario questions)
+  List<QuizQuestion> getRandomQuestionsForWouldYouRather() {
+    final random = Random();
+    final wouldYouRatherQuestions = getQuestionsByCategory('would_you_rather');
+
+    if (wouldYouRatherQuestions.isEmpty) {
+      throw Exception('No "Would You Rather" questions available.');
+    }
+
+    if (wouldYouRatherQuestions.length < 7) {
+      throw Exception('Not enough "Would You Rather" questions. Need at least 7.');
+    }
+
+    // Shuffle and select 7 random questions
+    wouldYouRatherQuestions.shuffle(random);
+    return wouldYouRatherQuestions.take(7).toList();
+  }
+
   /// Get category distribution stats
   Map<String, int> getCategoryStats() {
     final allQuestions = getAllQuestions();

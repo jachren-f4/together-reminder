@@ -1278,5 +1278,165 @@
     "category": "future",
     "difficulty": 3,
     "tier": 1
+  },
+  {
+    "id": "q161",
+    "question": "Would I rather: Beach vacation or Mountain retreat?",
+    "options": ["Beach vacation", "Mountain retreat"],
+    "category": "would_you_rather",
+    "difficulty": 1,
+    "tier": 1
+  },
+  {
+    "id": "q162",
+    "question": "Would I rather: Cook at home or Dine out?",
+    "options": ["Cook at home", "Dine out"],
+    "category": "would_you_rather",
+    "difficulty": 1,
+    "tier": 1
+  },
+  {
+    "id": "q163",
+    "question": "Would I rather: Early morning or Late night?",
+    "options": ["Early morning", "Late night"],
+    "category": "would_you_rather",
+    "difficulty": 1,
+    "tier": 1
+  },
+  {
+    "id": "q164",
+    "question": "Would I rather: Summer heat or Winter cold?",
+    "options": ["Summer heat", "Winter cold"],
+    "category": "would_you_rather",
+    "difficulty": 1,
+    "tier": 1
+  },
+  {
+    "id": "q165",
+    "question": "Would I rather: Road trip or Flight?",
+    "options": ["Road trip", "Flight"],
+    "category": "would_you_rather",
+    "difficulty": 1,
+    "tier": 1
+  },
+  {
+    "id": "q166",
+    "question": "Would I rather: Movie night or Game night?",
+    "options": ["Movie night", "Game night"],
+    "category": "would_you_rather",
+    "difficulty": 1,
+    "tier": 1
+  },
+  {
+    "id": "q167",
+    "question": "Would I rather: Text messaging or Phone calls?",
+    "options": ["Text messaging", "Phone calls"],
+    "category": "would_you_rather",
+    "difficulty": 1,
+    "tier": 1
+  },
+  {
+    "id": "q168",
+    "question": "Would I rather: Save money or Spend on experiences?",
+    "options": ["Save money", "Spend on experiences"],
+    "category": "would_you_rather",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q169",
+    "question": "Would I rather: Big city life or Quiet countryside?",
+    "options": ["Big city life", "Quiet countryside"],
+    "category": "would_you_rather",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q170",
+    "question": "Would I rather: Read a book or Watch a movie?",
+    "options": ["Read a book", "Watch a movie"],
+    "category": "would_you_rather",
+    "difficulty": 1,
+    "tier": 1
+  },
+  {
+    "id": "q171",
+    "question": "Would I rather: Plan everything or Be spontaneous?",
+    "options": ["Plan everything", "Be spontaneous"],
+    "category": "would_you_rather",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q172",
+    "question": "Would I rather: Work from home or Office?",
+    "options": ["Work from home", "Office"],
+    "category": "would_you_rather",
+    "difficulty": 1,
+    "tier": 1
+  },
+  {
+    "id": "q173",
+    "question": "Would I rather: Dogs or Cats?",
+    "options": ["Dogs", "Cats"],
+    "category": "would_you_rather",
+    "difficulty": 1,
+    "tier": 1
+  },
+  {
+    "id": "q174",
+    "question": "Would I rather: Coffee or Tea?",
+    "options": ["Coffee", "Tea"],
+    "category": "would_you_rather",
+    "difficulty": 1,
+    "tier": 1
+  },
+  {
+    "id": "q175",
+    "question": "Would I rather: Live without internet or Live without TV?",
+    "options": ["Without internet", "Without TV"],
+    "category": "would_you_rather",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q176",
+    "question": "Would I rather: Give a gift or Receive a gift?",
+    "options": ["Give a gift", "Receive a gift"],
+    "category": "would_you_rather",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q177",
+    "question": "Would I rather: Lead or Follow?",
+    "options": ["Lead", "Follow"],
+    "category": "would_you_rather",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q178",
+    "question": "Would I rather: Be too hot or Too cold?",
+    "options": ["Too hot", "Too cold"],
+    "category": "would_you_rather",
+    "difficulty": 1,
+    "tier": 1
+  },
+  {
+    "id": "q179",
+    "question": "Would I rather: Time with many friends or Quality time with one?",
+    "options": ["Many friends", "Quality time with one"],
+    "category": "would_you_rather",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q180",
+    "question": "Would I rather: Listen to music or Podcasts?",
+    "options": ["Music", "Podcasts"],
+    "category": "would_you_rather",
+    "difficulty": 1,
+    "tier": 1
   }
 ]

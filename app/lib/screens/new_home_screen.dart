@@ -5,10 +5,14 @@ import '../services/daily_pulse_service.dart';
 import '../services/ladder_service.dart';
 import '../services/memory_flip_service.dart';
 import '../services/quiz_service.dart';
+import '../services/daily_quest_service.dart';
+import '../services/quest_sync_service.dart';
 import '../theme/app_theme.dart';
 import '../widgets/poke_bottom_sheet.dart';
 import '../widgets/remind_bottom_sheet.dart';
 import '../widgets/daily_pulse_widget.dart';
+import '../widgets/daily_quests_widget.dart';
+import '../widgets/debug_quest_dialog.dart';
 import 'daily_pulse_screen.dart';
 import 'word_ladder_hub_screen.dart';
 import 'memory_flip_game_screen.dart';
@@ -30,23 +34,89 @@ class _NewHomeScreenState extends State<NewHomeScreen> {
   final MemoryFlipService _memoryService = MemoryFlipService();
   final QuizService _quizService = QuizService();
 
+  bool _isRefreshing = false;
+  DateTime? _lastSyncTime;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppTheme.backgroundGray,
       body: SafeArea(
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              _buildTopSection(),
-              _buildArenaProgressSection(),
-              _buildMainContent(),
-            ],
+        child: RefreshIndicator(
+          onRefresh: _refreshFromFirebase,
+          child: SingleChildScrollView(
+            physics: const AlwaysScrollableScrollPhysics(),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                _buildTopSection(),
+                // LP Progress bar removed per user request
+                // _buildArenaProgressSection(),
+                _buildMainContent(),
+              ],
+            ),
           ),
         ),
       ),
     );
+  }
+
+  Future<void> _refreshFromFirebase() async {
+    setState(() => _isRefreshing = true);
+
+    try {
+      final user = _storage.getUser();
+      final partner = _storage.getPartner();
+
+      if (user != null && partner != null) {
+        // Sync quests from Firebase
+        final questService = DailyQuestService(storage: _storage);
+        final syncService = QuestSyncService(
+          storage: _storage,
+        );
+
+        await syncService.syncTodayQuests(
+          currentUserId: user.id,
+          partnerUserId: partner.pushToken,
+        );
+
+        setState(() {
+          _lastSyncTime = DateTime.now();
+        });
+
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Updated from Firebase!'),
+              duration: Duration(seconds: 2),
+            ),
+          );
+        }
+      }
+    } catch (e) {
+      print('Error refreshing: $e');
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error refreshing: $e'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() => _isRefreshing = false);
+      }
+    }
+  }
+
+  String _formatTimeSince(DateTime time) {
+    final diff = DateTime.now().difference(time);
+
+    if (diff.inMinutes < 1) return 'Just now';
+    if (diff.inMinutes < 60) return '${diff.inMinutes} min ago';
+    if (diff.inHours < 24) return '${diff.inHours} hr ago';
+    return '${diff.inDays} days ago';
   }
 
   Widget _buildTopSection() {
@@ -77,7 +147,7 @@ class _NewHomeScreenState extends State<NewHomeScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          // User row with avatars
+          // User row with avatars and refresh button
           Row(
             children: [
               // Avatars
@@ -118,11 +188,19 @@ class _NewHomeScreenState extends State<NewHomeScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      _getGreeting(),
-                      style: AppTheme.headlineFont.copyWith(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w600,
+                    GestureDetector(
+                      onDoubleTap: () {
+                        showDialog(
+                          context: context,
+                          builder: (context) => const DebugQuestDialog(),
+                        );
+                      },
+                      child: Text(
+                        _getGreeting(),
+                        style: AppTheme.headlineFont.copyWith(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
                     ),
                     const SizedBox(height: 2),
@@ -154,6 +232,15 @@ class _NewHomeScreenState extends State<NewHomeScreen> {
                     ),
                   ],
                 ),
+              ),
+              // Refresh button
+              IconButton(
+                icon: Icon(
+                  _isRefreshing ? Icons.hourglass_empty : Icons.refresh,
+                  color: AppTheme.textSecondary,
+                ),
+                tooltip: 'Refresh from Firebase',
+                onPressed: _isRefreshing ? null : _refreshFromFirebase,
               ),
             ],
           ),
@@ -396,35 +483,47 @@ class _NewHomeScreenState extends State<NewHomeScreen> {
   }
 
   Widget _buildMainContent() {
-    return Padding(
-      padding: const EdgeInsets.all(20),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          // Main Quests
-          Text(
-            'Main Quests',
-            style: AppTheme.headlineFont.copyWith(
-              fontSize: 20,
-              fontWeight: FontWeight.w600,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        // Daily Quests
+        const DailyQuestsWidget(),
+
+        // Last sync timestamp
+        if (_lastSyncTime != null)
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+            child: Text(
+              'Last updated: ${_formatTimeSince(_lastSyncTime!)}',
+              style: AppTheme.bodyFont.copyWith(
+                fontSize: 12,
+                color: AppTheme.textTertiary,
+              ),
+              textAlign: TextAlign.center,
             ),
           ),
-          const SizedBox(height: 16),
-          _buildMainQuestsCarousel(),
-          const SizedBox(height: 32),
 
-          // Side Quests
-          Text(
+        const SizedBox(height: 16),
+
+        // Main Quests section removed per user request
+
+        // Side Quests
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: Text(
             'Side Quests',
             style: AppTheme.headlineFont.copyWith(
               fontSize: 20,
               fontWeight: FontWeight.w600,
             ),
           ),
-          const SizedBox(height: 16),
-          _buildSideQuestsGrid(),
-        ],
-      ),
+        ),
+        const SizedBox(height: 16),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: _buildSideQuestsGrid(),
+        ),
+      ],
     );
   }
 
@@ -634,10 +733,11 @@ class _NewHomeScreenState extends State<NewHomeScreen> {
           borderRadius: BorderRadius.circular(12),
         ),
         child: Column(
+          mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(emoji, style: const TextStyle(fontSize: 32)),
-            const SizedBox(height: 8),
+            Text(emoji, style: const TextStyle(fontSize: 30)),
+            const SizedBox(height: 6),
             Text(
               title,
               style: AppTheme.bodyFont.copyWith(
@@ -656,6 +756,8 @@ class _NewHomeScreenState extends State<NewHomeScreen> {
                 color: AppTheme.textSecondary,
               ),
               textAlign: TextAlign.center,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
             ),
           ],
         ),

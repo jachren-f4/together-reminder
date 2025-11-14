@@ -772,12 +772,13 @@ class QuizQuestion extends HiveObject {
 ## **📋 Implementation Checklist (Priority Order)**
 
 **P0 (Must-Have for Launch):**
-- [x] Expand to 200 questions (4 starter categories) - **COMPLETED 2025-11-11**
-  - Added 110 new questions (50 → 160 total)
+- [x] Expand to 200 questions (4 starter categories) - **COMPLETED 2025-11-11 (Updated 2025-11-12)**
+  - Added 130 new questions (50 → 180 total)
   - Expanded Favorites: 15 → 40 questions
   - Expanded Preferences: 15 → 40 questions
   - Expanded Future: 10 → 30 questions
   - Added NEW Daily Habits category: 30 questions
+  - Added Would You Rather category: 20 questions (2025-11-12)
   - All questions have 5 options (4 specific + 1 "Other" variant)
 - [x] Implement Daily Pulse system with alternating subject logic - **COMPLETED 2025-11-11**
   - DailyPulseService implemented
@@ -808,6 +809,23 @@ class QuizQuestion extends HiveObject {
 - [ ] Build Quiz History Screen with progress tracking
 
 **P1 (High-Value):**
+- [x] Add Would You Rather format - **COMPLETED 2025-11-12**
+  - Two-phase hybrid format: Phase 1 (answer about yourself) → Phase 2 (predict partner)
+  - 5 scenario-based questions per quiz
+  - Phase transition screen with celebration and explanation
+  - Dual scoring: Prediction accuracy (how well you know partner) + Alignment bonuses (shared preferences)
+  - Individual prediction scores tracked and displayed
+  - Enhanced results screen with:
+    - Combined accuracy percentage (average of both users' prediction accuracy)
+    - Detailed prediction breakdown with progress bars for each user
+    - Alignment section showing shared preferences count
+    - LP breakdown with tier labels (Exceptional/Great/Good/Learning)
+    - Expandable question-by-question review showing all answers and predictions
+  - LP rewards: 25-50 base (based on accuracy tier) + alignment bonus (5 LP per shared preference)
+  - Waiting screen for when only one partner completes
+  - DEBUG mock completion button for testing
+  - predictionScores field added to QuizSession model to track individual accuracies
+  - 20 Would You Rather questions added to question bank
 - [ ] Add 4 Tier 2 categories (100 more questions)
 - [ ] Implement Weekly Challenge
 - [ ] Add Deep Dive + Mystery Box formats
@@ -852,4 +870,4 @@ The magic is making couples feel like they're **learning each other deeply** thr
 
 ---
 
-**Last Updated:** 2025-11-11 (Added Speed Round unlock system; Completed Speed Round format with 10-second timer and streak bonuses)
+**Last Updated:** 2025-11-12 (Completed Would You Rather format with two-phase gameplay, dual scoring system, and enhanced results screen with detailed breakdowns)

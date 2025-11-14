@@ -6,6 +6,47 @@
         ".write": "!data.exists()",
         ".validate": "newData.hasChildren(['userId', 'pushToken', 'name', 'createdAt', 'expiresAt'])"
       }
+    },
+    "dev_emulators": {
+      "$emulatorId": {
+        ".read": true,
+        ".write": true
+      }
+    },
+    "daily_quests": {
+      "$coupleId": {
+        ".read": true,
+        ".write": true,
+        "$dateKey": {
+          ".read": true,
+          ".write": true
+        }
+      }
+    },
+    "quiz_progression": {
+      "$coupleId": {
+        ".read": true,
+        ".write": true
+      }
+    },
+    "quiz_sessions": {
+      "$coupleId": {
+        ".read": true,
+        ".write": true,
+        ".indexOn": ["createdAt", "status"]
+      }
+    },
+    "daily_pulses": {
+      "$emulatorId": {
+        ".read": true,
+        ".write": true
+      }
+    },
+    "lp_awards": {
+      "$coupleId": {
+        ".read": true,
+        ".write": true
+      }
     }
   }
 }

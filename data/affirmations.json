@@ -1,0 +1,39 @@
+{
+  "quizzes": [
+    {
+      "name": "Gentle Beginnings",
+      "difficulty_stage": 1,
+      "tags": ["light", "playful", "early-connection"],
+      "items": [
+        "I enjoy learning small new things about my partner every day.",
+        "We find simple ways to have fun together.",
+        "I feel comfortable being myself around my partner.",
+        "We laugh together without effort.",
+        "Being with my partner feels natural and relaxed."
+      ]
+    },
+    {
+      "name": "Warm Vibes",
+      "difficulty_stage": 1,
+      "tags": ["positivity", "warmth", "beginner"],
+      "items": [
+        "My partner helps create a warm atmosphere in our daily life.",
+        "I often feel uplifted when we spend time together.",
+        "We greet each other in a pleasant, affectionate way.",
+        "Being around my partner usually puts me in a good mood.",
+        "We share positive emotions regularly."
+      ]
+    },
+    {
+      "name": "Simple Joys",
+      "difficulty_stage": 1,
+      "tags": ["light", "positivity"],
+      "items": [
+        "We appreciate small joyful moments together.",
+        "Simple activities feel meaningful with my partner.",
+        "We have small routines that bring us joy.",
+        "I feel happy sharing everyday experiences with my partner.",
+        "Small joys help strengthen our bond."
+      ]
+    }]
+}    

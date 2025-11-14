@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home - Daily Activities</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #FAFAFA;
+            color: #1A1A1A;
+            max-width: 430px;
+            margin: 0 auto;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .status-bar {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 20px;
+            font-size: 15px;
+            font-weight: 500;
+        }
+
+        .header {
+            padding: 20px 20px 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 48px;
+            font-weight: 700;
+            letter-spacing: -1.5px;
+        }
+
+        .user-avatar {
+            width: 44px;
+            height: 44px;
+            background: #1A1A1A;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            font-weight: 700;
+            color: #FFFEFD;
+        }
+
+        .streak-badge {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: #FFFEFD;
+            border: 2px solid #F0F0F0;
+            border-radius: 20px;
+            padding: 8px 16px;
+            position: absolute;
+            top: 24px;
+            right: 20px;
+        }
+
+        .streak-badge .flame {
+            font-size: 20px;
+        }
+
+        .streak-badge .count {
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .quick-actions {
+            display: flex;
+            gap: 12px;
+            padding: 0 20px 24px;
+        }
+
+        .action-card {
+            flex: 1;
+            background: #FFFEFD;
+            border: 2px solid #F0F0F0;
+            border-radius: 16px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            min-height: 90px;
+            position: relative;
+        }
+
+        .action-icon {
+            font-size: 36px;
+        }
+
+        .action-plus {
+            position: absolute;
+            bottom: 14px;
+            right: 14px;
+            width: 20px;
+            height: 20px;
+            background: #1A1A1A;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: bold;
+            color: #FFFEFD;
+        }
+
+        .partner-badge {
+            position: absolute;
+            bottom: 14px;
+            right: 14px;
+            width: 32px;
+            height: 32px;
+            background: #1A1A1A;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 700;
+            color: #FFFEFD;
+            border: 2px solid #FFFEFD;
+        }
+
+        .section-header {
+            font-family: 'Playfair Display', serif;
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            padding: 0 20px;
+            letter-spacing: -0.5px;
+        }
+
+        .activities-list {
+            padding: 0 20px 100px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .activity-card {
+            background: #FFFEFD;
+            border: 2px solid #F0F0F0;
+            border-radius: 16px;
+            padding: 24px;
+            position: relative;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .activity-card:hover {
+            border-color: #1A1A1A;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        .activity-icon {
+            font-size: 48px;
+            margin-bottom: 16px;
+        }
+
+        .activity-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            letter-spacing: -0.3px;
+        }
+
+        .activity-subtitle {
+            font-size: 14px;
+            color: #6E6E6E;
+            line-height: 1.5;
+        }
+
+        .activity-type {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: #1A1A1A;
+            color: #FFFEFD;
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 430px;
+            display: flex;
+            justify-content: space-around;
+            padding: 12px 20px 8px;
+            background: #FFFEFD;
+            border-top: 1px solid #F0F0F0;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            color: #AAAAAA;
+            text-decoration: none;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .nav-item.active {
+            color: #1A1A1A;
+        }
+
+        .nav-icon {
+            font-size: 24px;
+        }
+
+        .flow-nav {
+            position: fixed;
+            bottom: 60px;
+            right: 20px;
+            display: flex;
+            gap: 12px;
+            z-index: 100;
+        }
+
+        .flow-btn {
+            background: #1A1A1A;
+            color: #FFFEFD;
+            padding: 12px 20px;
+            border-radius: 24px;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 600;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+    </style>
+</head>
+<body>
+    <div class="status-bar">
+        <div>9:41</div>
+        <div>📶 🔋 95%</div>
+    </div>
+
+    <div class="header">
+        <h1>Home</h1>
+        <div class="streak-badge">
+            <span class="flame">🔥</span>
+            <span class="count">2</span>
+        </div>
+    </div>
+
+    <div class="quick-actions">
+        <div class="action-card">
+            <div class="action-icon">✈️</div>
+            <div class="action-plus">+</div>
+        </div>
+        <div class="action-card">
+            <div class="action-icon">📝</div>
+            <div class="partner-badge">J</div>
+        </div>
+    </div>
+
+    <h2 class="section-header">Daily Activities</h2>
+
+    <div class="activities-list">
+        <div class="activity-card">
+            <div class="activity-type">Question</div>
+            <div class="activity-icon">💑</div>
+            <div class="activity-title">What does an honest relationship look like to you?</div>
+        </div>
+
+        <a href="02-quiz-intro.html" class="activity-card">
+            <div class="activity-type">Quiz</div>
+            <div class="activity-icon">🔗</div>
+            <div class="activity-title">Do You Keep Secrets?</div>
+        </a>
+
+        <div class="activity-card">
+            <div class="activity-type">Game</div>
+            <div class="activity-icon">❤️😊🍑👀</div>
+            <div class="activity-title">The Emoji Game</div>
+        </div>
+    </div>
+
+    <nav class="bottom-nav">
+        <a href="#" class="nav-item active">
+            <div class="nav-icon">🏠</div>
+            <div>Home</div>
+        </a>
+        <a href="#" class="nav-item">
+            <div class="nav-icon">📥</div>
+            <div>Inbox</div>
+        </a>
+        <a href="#" class="nav-item">
+            <div class="nav-icon">🎯</div>
+            <div>Activities</div>
+        </a>
+        <a href="#" class="nav-item">
+            <div class="nav-icon">💕</div>
+            <div>Us</div>
+        </a>
+    </nav>
+
+    <div class="flow-nav">
+        <a href="index.html" class="flow-btn">Index</a>
+        <a href="02-quiz-intro.html" class="flow-btn">Next →</a>
+    </div>
+</body>
+</html>

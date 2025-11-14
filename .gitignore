@@ -2,6 +2,9 @@
 app/ios/Runner/GoogleService-Info.plist
 app/android/app/google-services.json
 
+# Assets (raw/unprocessed images)
+assets/raw_images/
+
 # Miscellaneous
 *.class
 *.log

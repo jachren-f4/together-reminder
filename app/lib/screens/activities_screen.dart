@@ -14,6 +14,7 @@ import 'daily_pulse_results_screen.dart';
 import 'word_ladder_hub_screen.dart';
 import 'memory_flip_game_screen.dart';
 import 'speed_round_intro_screen.dart';
+import 'would_you_rather_intro_screen.dart';
 
 class ActivitiesScreen extends StatefulWidget {
   const ActivitiesScreen({super.key});
@@ -215,12 +216,33 @@ class _ActivitiesScreenState extends State<ActivitiesScreen> {
 
               const SizedBox(height: 16),
 
-              // Coming soon activities
+              // Would You Rather
               _buildActivityCard(
                 context,
                 emoji: '💭',
                 title: 'Would You Rather',
-                description: 'Fun questions to spark conversation',
+                description: 'Answer for yourself, predict your partner',
+                lpRange: '25-50 LP + Alignment Bonuses',
+                isActive: true,
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const WouldYouRatherIntroScreen(),
+                    ),
+                  ).then((_) => setState(() {}));
+                },
+                theme: theme,
+              ),
+
+              const SizedBox(height: 16),
+
+              // Coming soon activities
+              _buildActivityCard(
+                context,
+                emoji: '🎯',
+                title: 'Timeline Challenge',
+                description: 'Test your shared memories',
                 lpRange: 'Coming Soon',
                 isActive: false,
                 onTap: null,

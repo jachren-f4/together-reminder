@@ -2,9 +2,17 @@ import '../models/user.dart';
 import '../models/love_point_transaction.dart';
 import 'storage_service.dart';
 import 'package:uuid/uuid.dart';
+import 'package:firebase_database/firebase_database.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import '../widgets/foreground_notification_banner.dart';
 
 class LovePointService {
   static final StorageService _storage = StorageService();
+  static final DatabaseReference _database = FirebaseDatabase.instance.ref();
+
+  // BuildContext for showing foreground notifications
+  static BuildContext? _appContext;
 
   // Vacation Arena Thresholds
   static const Map<int, Map<String, dynamic>> arenas = {
@@ -46,46 +54,53 @@ class LovePointService {
     String? relatedId,
     int multiplier = 1,
   }) async {
-    final user = _storage.getUser();
-    if (user == null) {
-      print('❌ No user found, cannot award points');
-      return;
+    try {
+      final user = _storage.getUser();
+      if (user == null) {
+        debugPrint('❌ No user found, cannot award points');
+        return;
+      }
+
+      final actualAmount = amount * multiplier;
+
+      // Create transaction record
+      final transaction = LovePointTransaction(
+        id: const Uuid().v4(),
+        amount: actualAmount,
+        reason: reason,
+        timestamp: DateTime.now(),
+        relatedId: relatedId,
+        multiplier: multiplier,
+      );
+
+      await _storage.saveTransaction(transaction);
+
+      // Update user's total LP
+      final newTotal = user.lovePoints + actualAmount;
+      user.lovePoints = newTotal;
+      user.lastActivityDate = DateTime.now();
+
+      // Check for tier upgrade
+      final newTier = _calculateTier(newTotal);
+      final previousTier = user.arenaTier;
+
+      if (newTier > previousTier) {
+        user.arenaTier = newTier;
+        user.floor = arenas[newTier]!['floor'] as int;
+        debugPrint('🎉 Tier upgraded to ${arenas[newTier]!['name']}!');
+        // TODO: Show tier upgrade animation/notification in Phase 2
+      }
+
+      // Save using the storage service to properly handle Hive transactions
+      await _storage.saveUser(user);
+
+      debugPrint(
+          '💰 Awarded $actualAmount LP for $reason (Total: ${user.lovePoints})');
+    } catch (e, stackTrace) {
+      debugPrint('❌ Error awarding points: $e');
+      debugPrint('Stack trace: $stackTrace');
+      rethrow;
     }
-
-    final actualAmount = amount * multiplier;
-
-    // Create transaction record
-    final transaction = LovePointTransaction(
-      id: const Uuid().v4(),
-      amount: actualAmount,
-      reason: reason,
-      timestamp: DateTime.now(),
-      relatedId: relatedId,
-      multiplier: multiplier,
-    );
-
-    await _storage.saveTransaction(transaction);
-
-    // Update user's total LP
-    final newTotal = user.lovePoints + actualAmount;
-    user.lovePoints = newTotal;
-    user.lastActivityDate = DateTime.now();
-
-    // Check for tier upgrade
-    final newTier = _calculateTier(newTotal);
-    final previousTier = user.arenaTier;
-
-    if (newTier > previousTier) {
-      user.arenaTier = newTier;
-      user.floor = arenas[newTier]!['floor'] as int;
-      print('🎉 Tier upgraded to ${arenas[newTier]!['name']}!');
-      // TODO: Show tier upgrade animation/notification in Phase 2
-    }
-
-    await user.save();
-
-    print(
-        '💰 Awarded $actualAmount LP for $reason (Total: ${user.lovePoints})');
   }
 
   /// Calculate tier based on LP total
@@ -162,5 +177,118 @@ class LovePointService {
       'currentArena': getCurrentTierInfo(),
       'nextArena': getNextTierInfo(),
     };
+  }
+
+  /// Set app context for showing foreground notifications
+  static void setAppContext(BuildContext context) {
+    _appContext = context;
+  }
+
+  /// Award Love Points to BOTH users in a couple (for shared activities)
+  /// This syncs the award to Firebase so both apps can apply it
+  static Future<void> awardPointsToBothUsers({
+    required String userId1,
+    required String userId2,
+    required int amount,
+    required String reason,
+    String? relatedId,
+    int multiplier = 1,
+  }) async {
+    try {
+      final actualAmount = amount * multiplier;
+      final awardId = const Uuid().v4();
+
+      // Generate couple ID (sorted for consistency)
+      final sortedIds = [userId1, userId2]..sort();
+      final coupleId = '${sortedIds[0]}_${sortedIds[1]}';
+
+      // Write LP award to Firebase for BOTH users
+      await _database.child('lp_awards/$coupleId/$awardId').set({
+        'users': [userId1, userId2],
+        'amount': actualAmount,
+        'reason': reason,
+        'relatedId': relatedId,
+        'multiplier': multiplier,
+        'timestamp': DateTime.now().millisecondsSinceEpoch,
+      });
+
+      debugPrint('💰 LP award synced to Firebase: $actualAmount LP for both users ($reason)');
+    } catch (e) {
+      debugPrint('❌ Error syncing LP award to Firebase: $e');
+    }
+  }
+
+  /// Start listening for LP awards from Firebase
+  /// Call this once on app start
+  static void startListeningForLPAwards({
+    required String currentUserId,
+    required String partnerUserId,
+  }) {
+    try {
+      // Generate couple ID
+      final sortedIds = [currentUserId, partnerUserId]..sort();
+      final coupleId = '${sortedIds[0]}_${sortedIds[1]}';
+
+      // Listen for new LP awards
+      _database.child('lp_awards/$coupleId').onChildAdded.listen((event) {
+        if (event.snapshot.value != null) {
+          _handleLPAward(event.snapshot, currentUserId);
+        }
+      });
+
+      debugPrint('👂 Listening for LP awards for couple: $coupleId');
+    } catch (e) {
+      debugPrint('❌ Error setting up LP award listener: $e');
+    }
+  }
+
+  /// Handle LP award from Firebase
+  static Future<void> _handleLPAward(DataSnapshot snapshot, String currentUserId) async {
+    try {
+      final data = snapshot.value as Map<dynamic, dynamic>;
+      final users = List<String>.from(data['users'] ?? []);
+
+      // Check if this award is for the current user
+      if (!users.contains(currentUserId)) return;
+
+      final awardId = snapshot.key;
+      final amount = data['amount'] as int;
+      final reason = data['reason'] as String;
+      final relatedId = data['relatedId'] as String?;
+      final multiplier = data['multiplier'] as int? ?? 1;
+
+      // Check if we've already applied this award (prevent duplicates)
+      final appliedAwards = _storage.getAppliedLPAwards();
+      if (appliedAwards.contains(awardId)) {
+        debugPrint('⏭️  LP award $awardId already applied, skipping');
+        return;
+      }
+
+      // Apply the LP award locally (await the future)
+      await awardPoints(
+        amount: amount,
+        reason: reason,
+        relatedId: relatedId,
+        multiplier: multiplier,
+      );
+
+      // Mark as applied
+      _storage.markLPAwardAsApplied(awardId!);
+
+      debugPrint('💰 Applied LP award from Firebase: +$amount LP ($reason)');
+
+      // Show foreground notification banner
+      if (_appContext != null && _appContext!.mounted) {
+        ForegroundNotificationBanner.show(
+          _appContext!,
+          title: 'Love Points Earned!',
+          message: '+$amount LP',
+          emoji: '💰',
+        );
+      }
+    } catch (e, stackTrace) {
+      debugPrint('❌ Error handling LP award: $e');
+      debugPrint('Stack trace: $stackTrace');
+    }
   }
 }

@@ -44,7 +44,7 @@ class ReminderService {
 
       // Award LP for sending reminder
       await LovePointService.awardPoints(
-        amount: 8,
+        amount: 5,
         reason: 'reminder_sent',
         relatedId: reminder.id,
       );
@@ -78,11 +78,11 @@ class ReminderService {
 
     // Award LP for completing a reminder
     await LovePointService.awardPoints(
-      amount: 10,
+      amount: 5,
       reason: 'reminder_done',
       relatedId: reminderId,
     );
 
-    print('✅ Reminder marked as done, awarded 10 LP');
+    print('✅ Reminder marked as done, awarded 5 LP');
   }
 }

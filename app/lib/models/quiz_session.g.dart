@@ -27,6 +27,10 @@ class QuizSessionAdapter extends TypeAdapter<QuizSession> {
       formatType: fields[11] as String?,
       answers: (fields[5] as Map?)?.map((dynamic k, dynamic v) =>
           MapEntry(k as String, (v as List).cast<int>())),
+      predictions: (fields[12] as Map?)?.map((dynamic k, dynamic v) =>
+          MapEntry(k as String, (v as List).cast<int>())),
+      alignmentMatches: fields[13] == null ? 0 : fields[13] as int,
+      predictionScores: (fields[14] as Map?)?.cast<String, int>(),
       matchPercentage: fields[6] as int?,
       lpEarned: fields[7] as int?,
       completedAt: fields[8] as DateTime?,
@@ -36,7 +40,7 @@ class QuizSessionAdapter extends TypeAdapter<QuizSession> {
   @override
   void write(BinaryWriter writer, QuizSession obj) {
     writer
-      ..writeByte(12)
+      ..writeByte(15)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -60,7 +64,13 @@ class QuizSessionAdapter extends TypeAdapter<QuizSession> {
       ..writeByte(10)
       ..write(obj.subjectUserId)
       ..writeByte(11)
-      ..write(obj.formatType);
+      ..write(obj.formatType)
+      ..writeByte(12)
+      ..write(obj.predictions)
+      ..writeByte(13)
+      ..write(obj.alignmentMatches)
+      ..writeByte(14)
+      ..write(obj.predictionScores);
   }
 
   @override
