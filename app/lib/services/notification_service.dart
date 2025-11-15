@@ -1,3 +1,6 @@
+import 'dart:async';
+import '../utils/logger.dart';
+
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:cloud_functions/cloud_functions.dart';
@@ -9,15 +12,18 @@ import 'package:togetherremind/models/reminder.dart';
 import 'package:togetherremind/models/partner.dart';
 import 'package:togetherremind/widgets/foreground_notification_banner.dart';
 import 'package:uuid/uuid.dart';
+import '../utils/logger.dart';
 
 // Top-level function for background messages
 @pragma('vm:entry-point')
 Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  print('📨 Background message: ${message.messageId}');
+  // Removed verbose logging
+  // print('📨 Background message: ${message.messageId}');
 
   // Check if this is a pairing confirmation
   if (message.data['type'] == 'pairing') {
-    print('🔗 Background pairing confirmation received');
+    // Removed verbose logging
+    // print('🔗 Background pairing confirmation received');
     final partnerName = message.data['partnerName'] ?? 'Partner';
     final partnerToken = message.data['partnerToken'] ?? '';
 
@@ -31,13 +37,15 @@ Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
       avatarEmoji: '👤',
     );
     await storage.savePartner(partner);
-    print('💾 Saved partner from background pairing: $partnerName');
+    // Removed verbose logging
+    // print('💾 Saved partner from background pairing: $partnerName');
     return;
   }
 
   // Check if this is a poke
   if (message.data['type'] == 'poke') {
-    print('💫 Background poke received');
+    // Removed verbose logging
+    // print('💫 Background poke received');
     await PokeService.handleReceivedPoke(
       pokeId: message.data['pokeId'] ?? '',
       fromName: message.data['fromName'] ?? 'Partner',
@@ -65,22 +73,35 @@ class NotificationService {
   static Future<void> initialize() async {
     // On web, skip FCM initialization (service workers not supported in debug mode)
     if (kIsWeb) {
-      print('🌐 Web platform: Skipping FCM initialization (not supported in browser)');
-      print('✅ NotificationService initialized (web mode)');
+      // Removed verbose logging
+      // print('🌐 Web platform: Skipping FCM initialization (not supported in browser)');
+      // Logger.success('NotificationService initialized (web mode)', service: 'notification');
       return;
     }
 
     // Request permissions
-    NotificationSettings settings = await _fcm.requestPermission(
-      alert: true,
-      badge: true,
-      sound: true,
-    );
+    NotificationSettings? settings;
+    try {
+      settings = await _fcm.requestPermission(
+        alert: true,
+        badge: true,
+        sound: true,
+      ).timeout(
+        const Duration(seconds: 5),
+        onTimeout: () {
+          Logger.warn('FCM permission request timed out (network issue)', service: 'notification');
+          throw TimeoutException('FCM permission request timed out');
+        },
+      );
 
-    if (settings.authorizationStatus == AuthorizationStatus.authorized) {
-      print('✅ User granted notification permission');
-    } else {
-      print('⚠️ User declined notification permission');
+      if (settings.authorizationStatus == AuthorizationStatus.authorized) {
+        Logger.success('User granted notification permission', service: 'notification');
+      } else {
+        Logger.warn('User declined notification permission', service: 'notification');
+      }
+    } catch (e) {
+      Logger.warn('Failed to request FCM permissions: $e', service: 'notification');
+      Logger.success('Continuing without FCM (using local notifications only)', service: 'notification');
     }
 
     // Initialize local notifications
@@ -132,19 +153,27 @@ class NotificationService {
     // Setup background handler
     FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
 
-    print('✅ NotificationService initialized');
+    // Removed verbose logging
+    // Logger.success('NotificationService initialized', service: 'notification');
   }
 
   static Future<String?> getToken() async {
     if (kIsWeb) {
       // Web doesn't support FCM tokens - return a fake token for testing
       final webToken = 'web_token_${DateTime.now().millisecondsSinceEpoch}';
-      print('🌐 Web platform: Using fake token for testing');
+      // Removed verbose logging
+      // print('🌐 Web platform: Using fake token for testing');
       return webToken;
     }
-    final token = await _fcm.getToken();
-    print('📱 FCM Token: $token');
-    return token;
+    try {
+      final token = await _fcm.getToken();
+      // Removed verbose logging
+      // print('📱 FCM Token: $token');
+      return token;
+    } catch (e) {
+      Logger.warn('Failed to get FCM token: $e', service: 'notification');
+      return null;
+    }
   }
 
   static void setAppContext(BuildContext context) {
@@ -152,11 +181,13 @@ class NotificationService {
   }
 
   static Future<void> _handleForegroundMessage(RemoteMessage message) async {
-    print('📨 Foreground message: ${message.notification?.title}');
+    // Removed verbose logging
+    // print('📨 Foreground message: ${message.notification?.title}');
 
     // Check if this is a pairing confirmation
     if (message.data['type'] == 'pairing') {
-      print('🔗 Received pairing confirmation');
+      // Removed verbose logging
+      // print('🔗 Received pairing confirmation');
       final partnerName = message.data['partnerName'] ?? 'Partner';
       final partnerToken = message.data['partnerToken'] ?? '';
 
@@ -168,7 +199,8 @@ class NotificationService {
 
     // Check if this is a poke
     if (message.data['type'] == 'poke') {
-      print('💫 Received poke');
+      // Removed verbose logging
+      // print('💫 Received poke');
       await PokeService.handleReceivedPoke(
         pokeId: message.data['pokeId'] ?? '',
         fromName: message.data['fromName'] ?? 'Partner',
@@ -216,7 +248,8 @@ class NotificationService {
     );
 
     await _storage.saveReminder(reminder);
-    print('💾 Saved received reminder: ${reminder.text}');
+    // Removed verbose logging
+    // print('💾 Saved received reminder: ${reminder.text}');
   }
 
   static Future<void> _showLocalNotification(RemoteMessage message) async {
@@ -257,11 +290,12 @@ class NotificationService {
   }
 
   static void _onNotificationTapped(NotificationResponse response) {
-    print('🔔 Notification tapped: ${response.actionId}');
+    // Removed verbose logging
+    // print('🔔 Notification tapped: ${response.actionId}');
 
     if (response.actionId == 'done') {
       _storage.updateReminderStatus(response.payload ?? '', 'done');
-      print('✅ Marked reminder as done');
+      Logger.success('Marked reminder as done', service: 'notification');
     } else if (response.actionId == 'snooze') {
       _storage.updateReminderStatus(
         response.payload ?? '',
@@ -290,10 +324,11 @@ class NotificationService {
     required String myPushToken,
   }) async {
     try {
-      print('🔗 Calling Cloud Function with:');
-      print('   partnerToken: $partnerToken');
-      print('   myName: $myName');
-      print('   myPushToken: $myPushToken');
+      // Removed verbose logging
+      // print('🔗 Calling Cloud Function with:');
+      // print('   partnerToken: $partnerToken');
+      // print('   myName: $myName');
+      // print('   myPushToken: $myPushToken');
 
       final functions = FirebaseFunctions.instance;
       final callable = functions.httpsCallable('sendPairingConfirmation');
@@ -304,9 +339,10 @@ class NotificationService {
         'myPushToken': myPushToken,
       });
 
-      print('🔗 Sent pairing confirmation to partner, result: $result');
+      // Removed verbose logging
+      // print('🔗 Sent pairing confirmation to partner, result: $result');
     } catch (e) {
-      print('❌ Error sending pairing confirmation: $e');
+      Logger.error('Error sending pairing confirmation', error: e, service: 'notification');
       rethrow;
     }
   }

@@ -1,7 +1,11 @@
+import 'dart:async';
+import '../utils/logger.dart';
+
 import 'package:firebase_database/firebase_database.dart';
 import 'package:togetherremind/config/dev_config.dart';
 import 'package:togetherremind/services/storage_service.dart';
 import 'package:togetherremind/models/partner.dart';
+import '../utils/logger.dart';
 
 /// Development service for auto-pairing emulators via Firebase RTDB
 /// Only active in debug mode on simulators
@@ -25,35 +29,37 @@ class DevPairingService {
   Future<void> startAutoPairing() async {
     // Only run in debug mode on simulators
     if (!DevConfig.isSimulatorSync) {
-      print('ℹ️  DevPairingService: Not a simulator, skipping auto-pairing');
+      Logger.info('DevPairingService: Not a simulator, skipping auto-pairing', service: 'pairing');
       return;
     }
 
     final user = _storage.getUser();
     if (user == null) {
-      print('⚠️ DevPairingService: No user found, cannot start pairing');
+      Logger.warn('DevPairingService: No user found, cannot start pairing', service: 'pairing');
       return;
     }
 
     final emulatorId = await DevConfig.emulatorId;
     if (emulatorId == null) {
-      print('⚠️ DevPairingService: Could not determine emulator ID');
+      Logger.warn('DevPairingService: Could not determine emulator ID', service: 'pairing');
       return;
     }
 
     final partnerIndex = await DevConfig.partnerIndex;
     final config = DevConfig.dualPartnerConfig[partnerIndex];
 
-    print('🔗 DevPairingService: Pairing with deterministic IDs...');
-    print('   Emulator: $emulatorId');
-    print('   My name: ${config['name']}');
-    print('   Partner: ${config['partnerName']}');
-    print('   ℹ️  Using deterministic user IDs - couple ID is automatic!');
+    // Removed verbose logging
+    // print('🔗 DevPairingService: Pairing with deterministic IDs...');
+    // print('   Emulator: $emulatorId');
+    // print('   My name: ${config['name']}');
+    // print('   Partner: ${config['partnerName']}');
+    // print('   ℹ️  Using deterministic user IDs - couple ID is automatic!');
 
     // Register this emulator's FCM token in RTDB (for future push notification testing)
     await _registerEmulator(emulatorId, user.pushToken, config['name']!);
 
-    print('✅ Pairing complete! Both devices will use the same couple ID.');
+    // Removed verbose logging
+    // Logger.success('Pairing complete! Both devices will use the same couple ID.', service: 'pairing');
   }
 
   /// Register this emulator's FCM token in RTDB
@@ -64,10 +70,17 @@ class DevPairingService {
         'fcmToken': fcmToken,
         'name': name,
         'timestamp': ServerValue.timestamp,
-      });
-      print('   Registered FCM token in RTDB: $name ($emulatorId)');
+      }).timeout(
+        const Duration(seconds: 5),
+        onTimeout: () {
+          Logger.warn('RTDB registration timed out (network issue)', service: 'pairing');
+          throw TimeoutException('Firebase RTDB write timed out');
+        },
+      );
+      // Removed verbose logging
+      // print('   Registered FCM token in RTDB: $name ($emulatorId)');
     } catch (e) {
-      print('❌ Error registering emulator: $e');
+      Logger.error('Error registering emulator', error: e, service: 'pairing');
     }
   }
 

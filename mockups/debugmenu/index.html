@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debug Menu Mockups - Index</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #FFFEFD;
+            padding: 40px 20px;
+            color: #1A1A1A;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            font-size: 36px;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        .subtitle {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 40px;
+        }
+
+        .section {
+            margin-bottom: 40px;
+        }
+
+        .section h2 {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #E0E0E0;
+        }
+
+        .mockup-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 16px;
+        }
+
+        .mockup-card {
+            border: 2px solid #1A1A1A;
+            border-radius: 8px;
+            padding: 20px;
+            text-decoration: none;
+            color: #1A1A1A;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .mockup-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .mockup-card h3 {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .mockup-card p {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.5;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 8px;
+            background: #1A1A1A;
+            color: #FFFEFD;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            border-radius: 4px;
+            margin-top: 8px;
+        }
+
+        .badge.overview { background: #2196F3; }
+        .badge.quests { background: #4CAF50; }
+        .badge.sessions { background: #FF9800; }
+        .badge.lp { background: #9C27B0; }
+        .badge.actions { background: #F44336; }
+
+        .implementation-notes {
+            background: #FFF9E6;
+            border-left: 4px solid #FFC107;
+            padding: 20px;
+            margin-top: 40px;
+            border-radius: 4px;
+        }
+
+        .implementation-notes h3 {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        .implementation-notes ul {
+            margin-left: 20px;
+            line-height: 1.8;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🐛 Enhanced Debug Menu Mockups</h1>
+        <p class="subtitle">Tab-based debug interface for TogetherRemind daily quest system</p>
+
+        <div class="section">
+            <h2>Tab Mockups</h2>
+            <div class="mockup-grid">
+                <a href="01-overview-tab.html" class="mockup-card">
+                    <h3>Tab 1: Overview</h3>
+                    <p>System health dashboard with device info, quest system status, storage stats, and quick actions.</p>
+                    <span class="badge overview">Tab 1</span>
+                </a>
+
+                <a href="02-quests-tab.html" class="mockup-card">
+                    <h3>Tab 2: Quests</h3>
+                    <p>Daily quests deep dive with comparison table, per-quest details, and validation checks.</p>
+                    <span class="badge quests">Tab 2</span>
+                </a>
+
+                <a href="03-sessions-tab.html" class="mockup-card">
+                    <h3>Tab 3: Sessions</h3>
+                    <p>Quiz/game sessions inspector with question viewer and fallback loading tests.</p>
+                    <span class="badge sessions">Tab 3</span>
+                </a>
+
+                <a href="04-lp-sync-tab.html" class="mockup-card">
+                    <h3>Tab 4: LP & Sync</h3>
+                    <p>Love points transactions, applied awards tracking, Firebase sync status, and real-time listener log.</p>
+                    <span class="badge lp">Tab 4</span>
+                </a>
+
+                <a href="05-actions-tab.html" class="mockup-card">
+                    <h3>Tab 5: Actions</h3>
+                    <p>Testing tools: simulate scenarios, data cleanup, validation checks, and export options.</p>
+                    <span class="badge actions">Tab 5</span>
+                </a>
+            </div>
+        </div>
+
+        <div class="implementation-notes">
+            <h3>📋 Implementation Notes</h3>
+            <ul>
+                <li><strong>Tab Navigation:</strong> Use TabBar with 5 tabs for easy switching</li>
+                <li><strong>Real-time Updates:</strong> Tabs should refresh when debug menu is opened</li>
+                <li><strong>Mobile-Friendly:</strong> All tabs should be scrollable and work on small screens</li>
+                <li><strong>Status Icons:</strong> Use ✅ (green), ⚠️ (yellow), ❌ (red) for clear visual feedback</li>
+                <li><strong>Copy Actions:</strong> Allow copying individual sections, not just full JSON dump</li>
+                <li><strong>Validation:</strong> Run automatic checks on load and display warnings prominently</li>
+                <li><strong>Color Coding:</strong> Green = good, Yellow = warning, Red = error, Blue = info</li>
+                <li><strong>Expandable Sections:</strong> Use ExpansionTile for detailed quest/session data</li>
+            </ul>
+        </div>
+
+        <div class="section" style="margin-top: 40px;">
+            <h2>Design System</h2>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-top: 16px;">
+                <div style="border: 2px solid #E0E0E0; border-radius: 8px; padding: 16px;">
+                    <div style="font-weight: 600; margin-bottom: 8px;">Colors</div>
+                    <div style="font-size: 13px; color: #666;">
+                        <div style="margin: 4px 0;">✅ Success: #4CAF50</div>
+                        <div style="margin: 4px 0;">⚠️ Warning: #FFC107</div>
+                        <div style="margin: 4px 0;">❌ Error: #F44336</div>
+                        <div style="margin: 4px 0;">ℹ️ Info: #2196F3</div>
+                    </div>
+                </div>
+
+                <div style="border: 2px solid #E0E0E0; border-radius: 8px; padding: 16px;">
+                    <div style="font-weight: 600; margin-bottom: 8px;">Typography</div>
+                    <div style="font-size: 13px; color: #666;">
+                        <div style="margin: 4px 0;">Headers: 16-20px, Bold</div>
+                        <div style="margin: 4px 0;">Body: 13-14px, Regular</div>
+                        <div style="margin: 4px 0;">Monospace: 12px, Courier</div>
+                    </div>
+                </div>
+
+                <div style="border: 2px solid #E0E0E0; border-radius: 8px; padding: 16px;">
+                    <div style="font-weight: 600; margin-bottom: 8px;">Spacing</div>
+                    <div style="font-size: 13px; color: #666;">
+                        <div style="margin: 4px 0;">Section gaps: 24px</div>
+                        <div style="margin: 4px 0;">Card padding: 16px</div>
+                        <div style="margin: 4px 0;">List items: 12px</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

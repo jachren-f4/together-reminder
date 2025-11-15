@@ -37,6 +37,9 @@ class QuizQuestion extends HiveObject {
   @HiveField(10, defaultValue: 0.0)
   double avgMatchRate; // Performance tracking
 
+  @HiveField(11, defaultValue: 'multiple_choice')
+  String questionType; // 'multiple_choice' | 'scale'
+
   QuizQuestion({
     required this.id,
     required this.question,
@@ -49,5 +52,6 @@ class QuizQuestion extends HiveObject {
     this.seasonalTheme,
     this.timesAsked = 0,
     this.avgMatchRate = 0.0,
+    this.questionType = 'multiple_choice',
   });
 }

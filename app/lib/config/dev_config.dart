@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:device_info_plus/device_info_plus.dart';
+import '../utils/logger.dart';
 
 /// Development configuration for testing and debugging
 class DevConfig {
@@ -17,7 +18,8 @@ class DevConfig {
     // Web is always treated as a "simulator" for development purposes
     if (kIsWeb) {
       _cachedIsSimulator = true;
-      print('🌐 Web Platform: Treated as simulator for dev mode');
+      // Removed verbose logging
+      // print('🌐 Web Platform: Treated as simulator for dev mode');
       return true;
     }
 
@@ -32,7 +34,7 @@ class DevConfig {
         // isPhysicalDevice is false for simulators, true for real devices
         _cachedIsSimulator = !iosInfo.isPhysicalDevice;
 
-        print('🔍 iOS Device Detection:');
+        Logger.debug('iOS Device Detection:', service: 'debug');
         print('   Device: ${iosInfo.name}');
         print('   Model: ${iosInfo.model}');
         print('   isPhysicalDevice: ${iosInfo.isPhysicalDevice}');
@@ -48,7 +50,7 @@ class DevConfig {
         // isPhysicalDevice is false for emulators, true for real devices
         _cachedIsSimulator = !androidInfo.isPhysicalDevice;
 
-        print('🔍 Android Device Detection:');
+        Logger.debug('Android Device Detection:', service: 'debug');
         print('   Device: ${androidInfo.device}');
         print('   Model: ${androidInfo.model}');
         print('   isPhysicalDevice: ${androidInfo.isPhysicalDevice}');
@@ -57,7 +59,7 @@ class DevConfig {
         return _cachedIsSimulator!;
       }
     } catch (e) {
-      print('⚠️ Error detecting device type: $e');
+      Logger.warn('Error detecting device type: $e', service: 'debug');
       // If detection fails, assume real device (safer default)
       _cachedIsSimulator = false;
       return false;
@@ -97,7 +99,8 @@ class DevConfig {
   static Future<String?> get emulatorId async {
     // Web: Always return web-bob (dual Chrome not feasible with single origin)
     if (kIsWeb) {
-      print('🌐 Platform: Web (Bob)');
+      // Removed verbose logging
+      // print('🌐 Platform: Web (Bob)');
       return 'web-bob';
     }
 
@@ -112,36 +115,43 @@ class DevConfig {
           final result = await Process.run('getprop', ['ro.kernel.qemu.avd_name']);
           if (result.exitCode == 0) {
             final avdName = result.stdout.toString().trim();
-            print('🔍 AVD Name: $avdName');
+            // Removed verbose logging
+            // Logger.debug('AVD Name: $avdName', service: 'debug');
 
             // Pixel_5 = Alice (emulator-5554)
             // Pixel_5_Partner2 = Bob (emulator-5556)
             if (avdName == 'Pixel_5_Partner2') {
-              print('🔍 Emulator ID (AVD): emulator-5556');
+              // Removed verbose logging
+              // Logger.debug('Emulator ID (AVD): emulator-5556', service: 'debug');
               return 'emulator-5556';
             } else if (avdName == 'Pixel_5') {
-              print('🔍 Emulator ID (AVD): emulator-5554');
+              // Removed verbose logging
+              // Logger.debug('Emulator ID (AVD): emulator-5554', service: 'debug');
               return 'emulator-5554';
             }
           }
         } catch (e) {
-          print('⚠️ Could not get AVD name: $e');
+          // Removed verbose logging
+          // Logger.warn('Could not get AVD name: $e', service: 'debug');
         }
 
         // Method 2: Use serialNumber (works on older Android)
         if (androidInfo.serialNumber != null &&
             androidInfo.serialNumber != 'unknown' &&
             androidInfo.serialNumber.startsWith('emulator-')) {
-          print('🔍 Emulator ID (serial): ${androidInfo.serialNumber}');
+          // Removed verbose logging
+          // Logger.debug('Emulator ID (serial): ${androidInfo.serialNumber}', service: 'debug');
           return androidInfo.serialNumber;
         }
 
         // Method 3: Default to first emulator if we can't detect
-        print('⚠️ Could not detect emulator ID, defaulting to emulator-5554');
+        // Removed verbose logging
+        // Logger.warn('Could not detect emulator ID, defaulting to emulator-5554', service: 'debug');
         return 'emulator-5554';
       }
     } catch (e) {
-      print('⚠️ Error getting emulator ID: $e');
+      // Removed verbose logging
+      // Logger.warn('Error getting emulator ID: $e', service: 'debug');
     }
     return null;
   }
@@ -155,10 +165,12 @@ class DevConfig {
     // Web: Check emulator ID
     if (kIsWeb) {
       if (id == 'web-alice') {
-        print('🔍 Partner Index: 0 (Web = Alice)');
+        // Removed verbose logging
+        // Logger.debug('Partner Index: 0 (Web = Alice)', service: 'debug');
         return 0;
       } else {
-        print('🔍 Partner Index: 1 (Web = Bob)');
+        // Removed verbose logging
+        // Logger.debug('Partner Index: 1 (Web = Bob)', service: 'debug');
         return 1;
       }
     }
@@ -169,7 +181,8 @@ class DevConfig {
       final port = int.parse(match.group(1)!);
       // 5554 = Partner A (0), 5556 = Partner B (1), 5558 = Partner C (2)...
       final index = (port - 5554) ~/ 2;
-      print('🔍 Partner Index: $index (port: $port)');
+      // Removed verbose logging
+      // Logger.debug('Partner Index: $index (port: $port)', service: 'debug');
       return index;
     }
     return 0;

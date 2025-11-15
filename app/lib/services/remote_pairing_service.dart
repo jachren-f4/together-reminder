@@ -1,9 +1,11 @@
 import 'package:cloud_functions/cloud_functions.dart';
+import '../utils/logger.dart';
 // import 'package:cloud_firestore/cloud_firestore.dart'; // TODO: Add cloud_firestore to pubspec.yaml
 import '../models/partner.dart';
 import '../models/pairing_code.dart';
 import 'storage_service.dart';
 import 'notification_service.dart';
+import '../utils/logger.dart';
 
 /// Service for remote pairing using temporary codes
 /// Enables long-distance couples to pair without QR scanning
@@ -43,17 +45,17 @@ class RemotePairingService {
       final expiresAt =
           DateTime.fromMillisecondsSinceEpoch(result.data['expiresAt'] as int);
 
-      print('✅ Generated pairing code: $code');
+      Logger.success('Generated pairing code: $code', service: 'pairing');
 
       return PairingCode(
         code: code,
         expiresAt: expiresAt,
       );
     } on FirebaseFunctionsException catch (e) {
-      print('❌ Error generating pairing code: ${e.code} - ${e.message}');
+      Logger.error('Error generating pairing code: ${e.code} - ${e.message}', service: 'pairing');
       throw Exception('Failed to generate code: ${e.message}');
     } catch (e) {
-      print('❌ Error generating pairing code: $e');
+      Logger.error('Error generating pairing code', error: e, service: 'pairing');
       rethrow;
     }
   }
@@ -93,11 +95,11 @@ class RemotePairingService {
         );
       }
 
-      print('✅ Paired with: ${partner.name}');
+      Logger.success('Paired with: ${partner.name}', service: 'pairing');
 
       return partner;
     } on FirebaseFunctionsException catch (e) {
-      print('❌ Error pairing with code: ${e.code} - ${e.message}');
+      Logger.error('Error pairing with code: ${e.code} - ${e.message}', service: 'pairing');
 
       if (e.code == 'not-found') {
         throw Exception('Invalid or expired code');
@@ -109,7 +111,7 @@ class RemotePairingService {
         throw Exception('Pairing failed: ${e.message}');
       }
     } catch (e) {
-      print('❌ Error pairing with code: $e');
+      Logger.error('Error pairing with code', error: e, service: 'pairing');
       rethrow;
     }
   }

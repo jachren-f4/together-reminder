@@ -35,6 +35,20 @@ class _ActivityHubScreenState extends State<ActivityHubScreen> {
     return _activityService.getFilteredActivities(_filter);
   }
 
+  String _getHeaderSubtitle() {
+    switch (_filter) {
+      case 'yourTurn':
+        return 'Things that need your attention';
+      case 'completed':
+        return 'Your completed activities';
+      case 'unread':
+        return 'Unread activities';
+      case 'all':
+      default:
+        return 'Track all your activities together';
+    }
+  }
+
   Future<void> _handleActivityTap(ActivityItem activity) async {
     switch (activity.type) {
       case ActivityType.reminder:
@@ -48,22 +62,45 @@ class _ActivityHubScreenState extends State<ActivityHubScreen> {
         // Pokes are handled inline, no navigation needed
         break;
 
+      case ActivityType.question:
+        // Daily questions are handled via home screen widget
+        // Navigate back to home screen (user can access from there)
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Return to home screen to answer the daily question'),
+            duration: Duration(seconds: 2),
+          ),
+        );
+        break;
+
+      case ActivityType.affirmation:
       case ActivityType.quiz:
-        final session = activity.sourceData as QuizSession;
-        if (session.isCompleted) {
-          // Navigate to results
-          await Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => QuizResultsScreen(session: session),
-            ),
-          );
+        // Check if this is a daily quest or standalone quiz
+        if (activity.sourceData is QuizSession) {
+          final session = activity.sourceData as QuizSession;
+          if (session.isCompleted) {
+            // Navigate to results
+            await Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => QuizResultsScreen(session: session),
+              ),
+            );
+          } else {
+            // Navigate to intro/quiz
+            await Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const QuizIntroScreen(),
+              ),
+            );
+          }
         } else {
-          // Navigate to intro/quiz
-          await Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => const QuizIntroScreen(),
+          // This is a daily quest - navigate back to home where they can complete it
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Return to home screen to complete this quest'),
+              duration: Duration(seconds: 2),
             ),
           );
         }
@@ -161,63 +198,56 @@ class _ActivityHubScreenState extends State<ActivityHubScreen> {
           children: [
             // Header
             Padding(
-              padding: const EdgeInsets.all(20),
+              padding: const EdgeInsets.fromLTRB(20, 20, 20, 8),
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Activity Hub',
+                    'Inbox',
                     style: AppTheme.headlineFont.copyWith(
-                      fontSize: 32,
-                      fontWeight: FontWeight.w600,
+                      fontSize: 48,
+                      fontWeight: FontWeight.w700,
                       color: AppTheme.textPrimary,
-                      letterSpacing: -0.5,
+                      letterSpacing: -1.5,
                     ),
                   ),
-                  const SizedBox(height: 16),
+                  const SizedBox(height: 8),
+                  Text(
+                    _getHeaderSubtitle(),
+                    style: AppTheme.bodyFont.copyWith(
+                      fontSize: 15,
+                      color: AppTheme.textSecondary,
+                    ),
+                  ),
+                  const SizedBox(height: 12),
 
                   // Filter tabs
-                  Container(
-                    padding: const EdgeInsets.all(4),
-                    decoration: BoxDecoration(
-                      color: AppTheme.primaryWhite,
-                      borderRadius: BorderRadius.circular(12),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withAlpha((0.06 * 255).round()),
-                          blurRadius: 6,
-                          offset: const Offset(0, 2),
-                        ),
-                      ],
-                    ),
+                  SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
                     child: Row(
                       children: [
-                        Expanded(
-                          child: _FilterTab(
-                            label: 'All',
-                            isSelected: _filter == 'all',
-                            onTap: () => setState(() => _filter = 'all'),
-                          ),
+                        _FilterTab(
+                          label: 'All',
+                          isSelected: _filter == 'all',
+                          onTap: () => setState(() => _filter = 'all'),
                         ),
-                        Expanded(
-                          child: _FilterTab(
-                            label: 'Your Turn',
-                            isSelected: _filter == 'yourTurn',
-                            onTap: () => setState(() => _filter = 'yourTurn'),
-                          ),
+                        const SizedBox(width: 8),
+                        _FilterTab(
+                          label: 'Your Turn',
+                          isSelected: _filter == 'yourTurn',
+                          onTap: () => setState(() => _filter = 'yourTurn'),
                         ),
-                        Expanded(
-                          child: _FilterTab(
-                            label: 'Unread',
-                            isSelected: _filter == 'unread',
-                            onTap: () => setState(() => _filter = 'unread'),
-                          ),
+                        const SizedBox(width: 8),
+                        _FilterTab(
+                          label: 'Completed',
+                          isSelected: _filter == 'completed',
+                          onTap: () => setState(() => _filter = 'completed'),
                         ),
-                        Expanded(
-                          child: _FilterTab(
-                            label: 'Completed',
-                            isSelected: _filter == 'completed',
-                            onTap: () => setState(() => _filter = 'completed'),
-                          ),
+                        const SizedBox(width: 8),
+                        _FilterTab(
+                          label: 'Pokes',
+                          isSelected: _filter == 'pokes',
+                          onTap: () => setState(() => _filter = 'pokes'),
                         ),
                       ],
                     ),
@@ -294,16 +324,19 @@ class _FilterTab extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 10),
+        padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
         decoration: BoxDecoration(
-          color: isSelected ? AppTheme.primaryBlack : null,
-          borderRadius: BorderRadius.circular(8),
+          color: isSelected ? AppTheme.primaryBlack : AppTheme.primaryWhite,
+          border: Border.all(
+            color: isSelected ? AppTheme.primaryBlack : const Color(0xFFE0E0E0),
+            width: 2,
+          ),
+          borderRadius: BorderRadius.circular(12),
         ),
         child: Text(
           label,
-          textAlign: TextAlign.center,
           style: AppTheme.bodyFont.copyWith(
-            fontSize: 12,
+            fontSize: 14,
             fontWeight: FontWeight.w600,
             color: isSelected ? AppTheme.primaryWhite : AppTheme.textSecondary,
           ),
@@ -322,30 +355,14 @@ class _ActivityCard extends StatelessWidget {
     required this.onTap,
   });
 
-  Color _getTypeColor() {
-    switch (activity.type) {
-      case ActivityType.quiz:
-      case ActivityType.wouldYouRather:
-      case ActivityType.dailyPulse:
-        return const Color(0xFFF5E6D3); // Beige
-      case ActivityType.wordLadder:
-      case ActivityType.memoryFlip:
-        return const Color(0xFFE6DDF5); // Light purple
-      case ActivityType.poke:
-        return const Color(0xFFFFE6F0); // Light pink
-      case ActivityType.reminder:
-        return const Color(0xFFE6F3FF); // Light blue
-    }
-  }
-
   Color _getStatusBadgeColor() {
     switch (activity.status) {
       case ActivityStatus.yourTurn:
-        return AppTheme.accentOrange;
+        return const Color(0xFFE0E0E0); // Gray background
       case ActivityStatus.waitingForPartner:
-        return AppTheme.textTertiary;
+        return const Color(0xFFE0E0E0); // Gray background
       case ActivityStatus.completed:
-        return AppTheme.accentGreen;
+        return AppTheme.primaryBlack; // Black background
       case ActivityStatus.mutual:
         return AppTheme.primaryBlack;
       case ActivityStatus.expired:
@@ -355,140 +372,151 @@ class _ActivityCard extends StatelessWidget {
     }
   }
 
+  Color _getStatusBadgeTextColor() {
+    switch (activity.status) {
+      case ActivityStatus.yourTurn:
+        return AppTheme.primaryBlack; // Black text on gray
+      case ActivityStatus.waitingForPartner:
+        return AppTheme.primaryBlack; // Black text on gray
+      case ActivityStatus.completed:
+        return AppTheme.primaryWhite; // White text on black
+      case ActivityStatus.mutual:
+        return AppTheme.primaryWhite;
+      case ActivityStatus.expired:
+        return Colors.white;
+      case ActivityStatus.pending:
+        return AppTheme.primaryWhite;
+    }
+  }
+
+  String _getFormattedTime() {
+    final now = DateTime.now();
+    final diff = now.difference(activity.timestamp);
+
+    if (diff.inDays == 0) {
+      return 'Today ${DateFormat('h:mm a').format(activity.timestamp)}';
+    } else if (diff.inDays == 1) {
+      return 'Yesterday';
+    } else if (diff.inDays < 7) {
+      return '${diff.inDays} days ago';
+    } else {
+      return DateFormat('MMM d').format(activity.timestamp);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    final timeFormat = DateFormat('HH:mm');
-
     return GestureDetector(
       onTap: onTap,
       child: Container(
         margin: const EdgeInsets.only(bottom: 12),
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(18),
         decoration: BoxDecoration(
           color: AppTheme.primaryWhite,
+          border: Border.all(
+            color: const Color(0xFFF0F0F0),
+            width: 2,
+          ),
           borderRadius: BorderRadius.circular(16),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withAlpha((0.06 * 255).round()),
-              blurRadius: 6,
-              offset: const Offset(0, 2),
-            ),
-          ],
         ),
-        child: Row(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Icon/Emoji
-            Container(
-              width: 60,
-              height: 60,
-              decoration: BoxDecoration(
-                color: _getTypeColor(),
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Center(
-                child: Text(
-                  activity.displayEmoji,
-                  style: const TextStyle(fontSize: 30),
+            // Header: Type badge and timestamp
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 10,
+                    vertical: 5,
+                  ),
+                  decoration: BoxDecoration(
+                    color: AppTheme.primaryBlack,
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Text(
+                    activity.typeLabel.toUpperCase(),
+                    style: AppTheme.bodyFont.copyWith(
+                      fontSize: 11,
+                      fontWeight: FontWeight.w600,
+                      color: AppTheme.primaryWhite,
+                      letterSpacing: 0.5,
+                    ),
+                  ),
                 ),
-              ),
+                Text(
+                  _getFormattedTime(),
+                  style: AppTheme.bodyFont.copyWith(
+                    fontSize: 13,
+                    color: const Color(0xFFAAAAAA),
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ],
             ),
-            const SizedBox(width: 16),
+            const SizedBox(height: 10),
 
-            // Content
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Type label
+            // Title (Playfair Display)
+            Text(
+              activity.title,
+              style: AppTheme.headlineFont.copyWith(
+                fontSize: 18,
+                fontWeight: FontWeight.w700,
+                color: AppTheme.textPrimary,
+                letterSpacing: -0.3,
+                height: 1.3,
+              ),
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+            ),
+            const SizedBox(height: 8),
+
+            // Subtitle
+            Text(
+              activity.subtitle,
+              style: AppTheme.bodyFont.copyWith(
+                fontSize: 14,
+                color: AppTheme.textSecondary,
+                height: 1.4,
+              ),
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+            ),
+            const SizedBox(height: 14),
+
+            // Footer: Status badge (left) and avatars (right)
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                // Status badge
+                if (activity.statusBadge != null)
                   Container(
                     padding: const EdgeInsets.symmetric(
-                      horizontal: 8,
-                      vertical: 4,
+                      horizontal: 12,
+                      vertical: 6,
                     ),
                     decoration: BoxDecoration(
-                      color: AppTheme.backgroundGray,
-                      borderRadius: BorderRadius.circular(6),
+                      color: _getStatusBadgeColor(),
+                      borderRadius: BorderRadius.circular(8),
                     ),
                     child: Text(
-                      activity.typeLabel,
-                      style: AppTheme.bodyFont.copyWith(
-                        fontSize: 11,
+                      activity.statusBadge!,
+                      style: TextStyle(
+                        fontSize: 12,
                         fontWeight: FontWeight.w600,
-                        color: AppTheme.textPrimary,
+                        color: _getStatusBadgeTextColor(),
                       ),
                     ),
-                  ),
-                  const SizedBox(height: 8),
-
-                  // Title
-                  Text(
-                    activity.title,
-                    style: AppTheme.bodyFont.copyWith(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                      color: AppTheme.textPrimary,
-                    ),
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  const SizedBox(height: 4),
-
-                  // Subtitle
-                  Text(
-                    activity.subtitle,
-                    style: AppTheme.bodyFont.copyWith(
-                      fontSize: 13,
-                      color: AppTheme.textSecondary,
-                    ),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ],
-              ),
-            ),
-
-            // Right side: Time and avatars
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                // Time
-                Text(
-                  timeFormat.format(activity.timestamp),
-                  style: AppTheme.bodyFont.copyWith(
-                    fontSize: 12,
-                    color: AppTheme.textTertiary,
-                  ),
-                ),
-                const SizedBox(height: 8),
+                  )
+                else
+                  const SizedBox.shrink(),
 
                 // Participant avatars
                 ParticipantAvatars(
                   participants: activity.participants,
                   size: 32,
                 ),
-
-                // Status badge (if any)
-                if (activity.statusBadge != null) ...[
-                  const SizedBox(height: 8),
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 8,
-                      vertical: 4,
-                    ),
-                    decoration: BoxDecoration(
-                      color: _getStatusBadgeColor().withAlpha((0.2 * 255).round()),
-                      borderRadius: BorderRadius.circular(6),
-                    ),
-                    child: Text(
-                      activity.statusBadge!,
-                      style: TextStyle(
-                        fontSize: 10,
-                        fontWeight: FontWeight.w600,
-                        color: _getStatusBadgeColor(),
-                      ),
-                    ),
-                  ),
-                ],
               ],
             ),
           ],

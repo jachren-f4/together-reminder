@@ -1,7 +1,7 @@
 # Affirmation Quiz Integration Plan
 
-**Last Updated:** 2025-11-14 (Modified: Daily Affirmations)
-**Status:** Planning Phase - Ready for Implementation
+**Last Updated:** 2025-11-14 (Bug Fix: Question Loading Fallback)
+**Status:** Sprint 4 Testing - Question Loading Verified ✅
 
 ---
 
@@ -19,7 +19,7 @@ This document outlines the plan to integrate affirmation-style quizzes (self-ass
 
 ### Critical Implementation Notes
 
-⚠️ **Session Loading Fallback Required** - QuizService must implement Firebase fallback for second device session loading
+✅ **Session Loading Fallback IMPLEMENTED** (2025-11-14) - QuizService extracts quiz ID from question IDs and uses AffirmationQuizBank fallback
 ⚠️ **Version Compatibility** - Add defensive checks for mixed-version deployments (one partner updated, other not)
 ⚠️ **Answer Validation** - Bounds checking (1-5) required in FivePointScaleWidget
 
@@ -689,7 +689,6 @@ void _onQuestTap(BuildContext context, DailyQuest quest) {
 
 3. **Launch Bob** (Chrome):
    ```bash
-   sleep 10
    flutter run -d chrome &
    ```
    - Verify Bob loads the same quests from Firebase
@@ -866,38 +865,85 @@ Within each track, positions 1 and 3 are affirmations, positions 0 and 2 are cla
 
 ## Implementation Timeline
 
-### Sprint 1: Data Layer (2 days)
-- [ ] Add `questionType` field to QuizQuestion model
-- [ ] Add 6 affirmation quizzes to quiz_questions.json:
-  - [ ] Relationship satisfaction (Track 0, Position 1)
-  - [ ] Shared values (Track 0, Position 3)
-  - [ ] Trust - "Do You Keep Secrets?" (Track 1, Position 1)
-  - [ ] Emotional support (Track 1, Position 3)
-  - [ ] Commitment (Track 2, Position 1)
-  - [ ] Intimacy (Track 2, Position 3)
-- [ ] Regenerate Hive adapters
-- [ ] Verify data loads correctly
+### Sprint 1: Data Layer ✅ COMPLETED (2025-11-14)
+- [x] Add `questionType` field to QuizQuestion model (HiveField 11)
+- [x] Create affirmation_quizzes.json with 6 quizzes (30 questions total):
+  - [x] Gentle Beginnings (trust)
+  - [x] Warm Vibes (trust)
+  - [x] Simple Joys (emotional_support)
+  - [x] Getting Comfortable (trust)
+  - [x] Playful Moments (trust)
+  - [x] Feel-Good Foundations (trust)
+- [x] Regenerate Hive adapters
+- [x] Verify data loads correctly
 
-### Sprint 2: UI Components (2 days)
-- [ ] Create `FivePointScaleWidget`
-- [ ] Create `AffirmationIntroScreen`
-- [ ] Create `AffirmationResultsScreen`
-- [ ] Update `QuizScreen` to detect question type
+**Notes:**
+- Created separate `affirmation_quizzes.json` file (cleaner than merging into quiz_questions.json)
+- All 6 affirmation quizzes ready to use (5 questions each)
+- Used HiveField 11 for `questionType` (HiveField 8 was already taken)
 
-### Sprint 3: Service Logic (1 day)
-- [ ] Extend `_getTrackConfig()` with affirmation mappings
-- [ ] Extend `QuizService.submitAnswers()` with affirmation scoring
-- [ ] Update quest tap routing logic
+### Sprint 2: UI Components ✅ COMPLETED (2025-11-14)
+- [x] Create `FivePointScaleWidget` (heart-based 1-5 rating)
+- [x] Create `AffirmationIntroScreen` (goal, research, how it works)
+- [x] Create `AffirmationResultsScreen` (individual score display)
+- [x] Update `QuizQuestionScreen` to detect question type
+- [x] Add `quizName` and `category` fields to QuizSession model (HiveFields 15-16)
+- [x] Regenerate Hive adapters for QuizSession updates
 
-### Sprint 4: Integration & Testing (1 day)
+**Notes:**
+- Conditional rendering based on `questionType == 'scale'`
+- Affirmation questions skip role transformation (first-person statements)
+- Role indicator badge hidden for affirmations
+- All files compile successfully
+
+### Sprint 3: Service Logic ✅ COMPLETED (2025-11-14)
+- [x] Create affirmation quiz loading service (AffirmationQuizBank)
+- [x] Extend QuizService.startQuizSession() to support affirmation format
+- [x] Add affirmation scoring logic (_calculateAffirmationScores)
+- [x] Extend _getTrackConfig() with affirmation mappings (50% distribution)
+- [x] Update quest tap routing logic to detect affirmation format
+
+**Notes:**
+- AffirmationQuizBank loads 6 quizzes (30 questions) from affirmation_quizzes.json
+- Affirmations appear at positions 1 and 3 in each track
+- Individual scoring (1-5 scale → 0-100%) instead of match percentage
+- Routes to AffirmationIntroScreen → QuizQuestionScreen → AffirmationResultsScreen
+- All files compile successfully with no errors
+
+### Sprint 4: Integration & Testing 🟡 IN PROGRESS (2025-11-14)
+- [x] Verify app compiles without errors
+- [x] Check asset declaration (assets/data/ includes affirmation_quizzes.json)
+- [x] Create comprehensive testing checklist (AFFIRMATION_TESTING_CHECKLIST.md)
+- [x] **BUG FIX:** Implement question loading fallback for second device (2025-11-14)
+  - Issue: Alice couldn't load Bob's completed affirmation quiz ("Failed to load questions")
+  - Root cause: Questions not in local storage, session.category was null
+  - Solution: Extract quiz ID from question IDs, use AffirmationQuizBank.getQuizById()
+  - Files modified:
+    - `app/lib/services/quiz_service.dart:125-157` - Added fallback logic
+    - `app/lib/screens/quiz_question_screen.dart:47-48` - Fixed substring bounds checking
+- [x] Test end-to-end quiz flow (intro → questions → results) - ✅ PARTIAL PASS
+  - Intro screen verified
+  - Question loading verified (with AffirmationQuizBank fallback)
+  - 5-point scale rendering verified
+  - Results screen pending full verification
+- [x] Test Firebase sync across devices - ✅ PARTIAL PASS
+  - Bob can load Alice's quiz session from Firebase
+  - Questions load correctly when not in local storage
+  - Completion sync pending verification
+- [ ] **USER ACTION REQUIRED:** Complete remaining manual tests per checklist
 - [ ] Test affirmation quest generation (Positions 1 and 3 in each track)
-- [ ] Test end-to-end quiz flow (intro → questions → results)
-- [ ] Test Firebase sync across devices
 - [ ] Verify LP awards (30 LP)
 - [ ] Test with clean storage (no stale data)
 - [ ] Verify at least 1 affirmation appears every day
 
-**Total Estimated Effort:** 6 days
+**Notes:**
+- All code implementation complete and compiles successfully
+- Testing checklist created with 7 comprehensive test cases
+- Asset file verified at: `app/assets/data/affirmation_quizzes.json`
+- **Bug fix deployed and verified:** Question loading fallback working correctly
+- See `docs/AFFIRMATION_TESTING_CHECKLIST.md` for detailed test procedures
+
+**Total Estimated Effort:** 6 days (4 days implementation ✅ + 2 days testing ⏳)
 
 ---
 
@@ -983,34 +1029,57 @@ Widget _buildAnswerOptions() {
 3. Attempt to open same quest on non-updated device
 4. Verify graceful fallback (no crash)
 
-### Risk 6: Session Loading Fallback Missing
+### Risk 6: Session Loading Fallback Missing ✅ IMPLEMENTED (2025-11-14)
 
-**Risk:** Second device taps affirmation quest, but session not found in local Hive storage → "Quiz Session Not Found" error (documented in QUEST_SYSTEM.md:1076-1096).
+**Risk:** Second device taps affirmation quest, but questions not found in local Hive storage → "Failed to load questions" error.
 
-**Mitigation:** Implement Firebase fallback in `QuizService.getSession()`:
+**Mitigation:** ✅ **IMPLEMENTED** - Added AffirmationQuizBank fallback in `QuizService.getSessionQuestions()`:
 
 ```dart
-Future<QuizSession?> getSession(String sessionId) async {
-  // Try local first
-  var session = _storage.getQuizSession(sessionId);
+/// Get questions for a session
+List<QuizQuestion> getSessionQuestions(QuizSession session) {
+  // Try to load from local storage first
+  final questions = session.questionIds
+      .map((id) => _storage.getQuizQuestion(id))
+      .where((q) => q != null)
+      .cast<QuizQuestion>()
+      .toList();
 
-  if (session == null) {
-    // Firebase fallback for affirmations
-    session = await _fetchSessionFromFirebase(sessionId);
-    if (session != null) {
-      await _storage.saveQuizSession(session);
+  // If not found and it's an affirmation quiz, look up from AffirmationQuizBank
+  if (questions.isEmpty && session.formatType == 'affirmation') {
+    // Extract quiz ID from question IDs (format: "getting_comfortable_0")
+    String? quizId;
+    if (session.questionIds.isNotEmpty) {
+      final firstQuestionId = session.questionIds.first;
+      final lastUnderscoreIndex = firstQuestionId.lastIndexOf('_');
+      if (lastUnderscoreIndex > 0) {
+        quizId = firstQuestionId.substring(0, lastUnderscoreIndex);
+      }
+    }
+
+    if (quizId != null) {
+      final affirmationQuiz = _affirmationBank.getQuizById(quizId);
+      if (affirmationQuiz != null) {
+        return affirmationQuiz.questions;
+      }
     }
   }
 
-  return session;
+  return questions;
 }
 ```
 
-**Verification:**
-1. Clear Device B's local storage (not Firebase)
-2. Device A generates affirmation quest
-3. Device B taps quest → should load from Firebase
-4. Verify no "Session not found" error
+**Implementation Details:**
+- **File:** `app/lib/services/quiz_service.dart:125-157`
+- **Approach:** Extract quiz ID from question IDs, not category (question IDs format: `{quiz_id}_{index}`)
+- **Fallback:** Use `AffirmationQuizBank.getQuizById()` to retrieve quiz and questions
+- **Additional fix:** Substring bounds checking in `quiz_question_screen.dart:47-48`
+
+**Verification:** ✅ VERIFIED (2025-11-14)
+1. Bob's device had quiz session from Firebase but questions not in local storage
+2. Alice successfully loaded questions via AffirmationQuizBank fallback
+3. All 5 questions displayed correctly with 5-point heart scale
+4. No "Failed to load questions" error
 
 ---
 

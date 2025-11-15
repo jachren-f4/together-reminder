@@ -3,6 +3,7 @@ import '../models/quiz_session.dart';
 import '../models/quiz_question.dart';
 import '../services/quiz_service.dart';
 import '../services/storage_service.dart';
+import '../widgets/five_point_scale.dart';
 import 'quiz_waiting_screen.dart';
 
 class QuizQuestionScreen extends StatefulWidget {
@@ -32,10 +33,25 @@ class _QuizQuestionScreenState extends State<QuizQuestionScreen> {
   }
 
   void _loadQuestions() {
+    print('🔍 [QuizQuestionScreen] Loading questions...');
+    print('   Session ID: ${widget.session.id}');
+    print('   Session category: ${widget.session.category}');
+    print('   Session formatType: ${widget.session.formatType}');
+    print('   Session questionIds: ${widget.session.questionIds}');
+
     _questions = _quizService.getSessionQuestions(widget.session);
+
+    print('   Loaded ${_questions.length} questions');
+    if (_questions.isNotEmpty) {
+      for (var i = 0; i < _questions.length; i++) {
+        final previewLength = _questions[i].question.length > 50 ? 50 : _questions[i].question.length;
+        print('   Question $i: ${_questions[i].id} - ${_questions[i].question.substring(0, previewLength)}...');
+      }
+    }
+
     if (_questions.isEmpty) {
       setState(() {
-        _error = 'Failed to load questions';
+        _error = 'Failed to load questions (formatType: ${widget.session.formatType}, category: ${widget.session.category}, ${widget.session.questionIds.length} question IDs)';
       });
     }
   }
@@ -48,7 +64,12 @@ class _QuizQuestionScreenState extends State<QuizQuestionScreen> {
   }
 
   // Format question based on role
-  String _formatQuestion(String question) {
+  String _formatQuestion(String question, String questionType) {
+    // Affirmation questions are always first-person (no role transformation)
+    if (questionType == 'scale') {
+      return question;
+    }
+
     final partner = _storage.getPartner();
     final partnerName = partner?.name ?? 'your partner';
 
@@ -199,54 +220,56 @@ class _QuizQuestionScreenState extends State<QuizQuestionScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    // Role indicator badge
-                    Center(
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 20,
-                          vertical: 12,
-                        ),
-                        decoration: BoxDecoration(
-                          color: _isSubject
-                              ? theme.colorScheme.primaryContainer
-                              : theme.colorScheme.secondaryContainer,
-                          borderRadius: BorderRadius.circular(16),
-                          border: Border.all(
-                            color: _isSubject
-                                ? theme.colorScheme.primary
-                                : theme.colorScheme.secondary,
-                            width: 2,
+                    // Role indicator badge (hide for affirmation quizzes)
+                    if (currentQuestion.questionType != 'scale')
+                      Center(
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 20,
+                            vertical: 12,
                           ),
-                        ),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Icon(
-                              _isSubject ? Icons.person : Icons.psychology,
-                              size: 20,
+                          decoration: BoxDecoration(
+                            color: _isSubject
+                                ? theme.colorScheme.primaryContainer
+                                : theme.colorScheme.secondaryContainer,
+                            borderRadius: BorderRadius.circular(16),
+                            border: Border.all(
                               color: _isSubject
-                                  ? theme.colorScheme.onPrimaryContainer
-                                  : theme.colorScheme.onSecondaryContainer,
+                                  ? theme.colorScheme.primary
+                                  : theme.colorScheme.secondary,
+                              width: 2,
                             ),
-                            const SizedBox(width: 8),
-                            Text(
-                              _isSubject
-                                  ? 'You\'re answering as yourself'
-                                  : 'You\'re guessing ${_storage.getPartner()?.name ?? 'partner'}\'s answer',
-                              style: TextStyle(
-                                fontSize: 13,
-                                fontWeight: FontWeight.bold,
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(
+                                _isSubject ? Icons.person : Icons.psychology,
+                                size: 20,
                                 color: _isSubject
                                     ? theme.colorScheme.onPrimaryContainer
                                     : theme.colorScheme.onSecondaryContainer,
                               ),
-                            ),
-                          ],
+                              const SizedBox(width: 8),
+                              Text(
+                                _isSubject
+                                    ? 'You\'re answering as yourself'
+                                    : 'You\'re guessing ${_storage.getPartner()?.name ?? 'partner'}\'s answer',
+                                style: TextStyle(
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.bold,
+                                  color: _isSubject
+                                      ? theme.colorScheme.onPrimaryContainer
+                                      : theme.colorScheme.onSecondaryContainer,
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
-                    ),
 
-                    const SizedBox(height: 24),
+                    if (currentQuestion.questionType != 'scale')
+                      const SizedBox(height: 24),
 
                     // Category badge
                     Center(
@@ -282,9 +305,9 @@ class _QuizQuestionScreenState extends State<QuizQuestionScreen> {
 
                     const SizedBox(height: 32),
 
-                    // Question text (role-aware formatting)
+                    // Question text (role-aware formatting for classic, first-person for affirmation)
                     Text(
-                      _formatQuestion(currentQuestion.question),
+                      _formatQuestion(currentQuestion.question, currentQuestion.questionType),
                       textAlign: TextAlign.center,
                       style: theme.textTheme.headlineSmall?.copyWith(
                         fontWeight: FontWeight.bold,
@@ -295,18 +318,30 @@ class _QuizQuestionScreenState extends State<QuizQuestionScreen> {
 
                     const SizedBox(height: 40),
 
-                    // Answer options
-                    ...List.generate(
-                      currentQuestion.options.length,
-                      (index) => Padding(
-                        padding: const EdgeInsets.only(bottom: 12),
-                        child: _buildOptionButton(
-                          currentQuestion.options[index],
-                          index,
-                          theme,
+                    // Answer options - conditional based on question type
+                    if (currentQuestion.questionType == 'scale')
+                      // Affirmation: 5-point scale widget
+                      FivePointScaleWidget(
+                        selectedValue: _tempSelectedAnswer != null
+                            ? _tempSelectedAnswer! + 1 // Convert 0-4 index to 1-5 value
+                            : null,
+                        onChanged: (value) {
+                          _selectAnswer(value - 1); // Convert 1-5 value to 0-4 index
+                        },
+                      )
+                    else
+                      // Classic: Multiple choice buttons
+                      ...List.generate(
+                        currentQuestion.options.length,
+                        (index) => Padding(
+                          padding: const EdgeInsets.only(bottom: 12),
+                          child: _buildOptionButton(
+                            currentQuestion.options[index],
+                            index,
+                            theme,
+                          ),
                         ),
                       ),
-                    ),
 
                     const SizedBox(height: 24),
 

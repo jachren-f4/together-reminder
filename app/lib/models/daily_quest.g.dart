@@ -29,13 +29,15 @@ class DailyQuestAdapter extends TypeAdapter<DailyQuest> {
       completedAt: fields[9] as DateTime?,
       isSideQuest: fields[10] == null ? false : fields[10] as bool,
       sortOrder: fields[11] == null ? 0 : fields[11] as int,
+      formatType: fields[12] == null ? 'classic' : fields[12] as String,
+      quizName: fields[13] as String?,
     );
   }
 
   @override
   void write(BinaryWriter writer, DailyQuest obj) {
     writer
-      ..writeByte(12)
+      ..writeByte(14)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -59,7 +61,11 @@ class DailyQuestAdapter extends TypeAdapter<DailyQuest> {
       ..writeByte(10)
       ..write(obj.isSideQuest)
       ..writeByte(11)
-      ..write(obj.sortOrder);
+      ..write(obj.sortOrder)
+      ..writeByte(12)
+      ..write(obj.formatType)
+      ..writeByte(13)
+      ..write(obj.quizName);
   }
 
   @override

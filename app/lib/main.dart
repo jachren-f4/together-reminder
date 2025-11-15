@@ -8,6 +8,7 @@ import 'package:togetherremind/services/mock_data_service.dart';
 import 'package:togetherremind/services/dev_pairing_service.dart';
 import 'package:togetherremind/services/notification_service.dart';
 import 'package:togetherremind/services/quiz_question_bank.dart';
+import 'package:togetherremind/services/affirmation_quiz_bank.dart';
 import 'package:togetherremind/services/word_validation_service.dart';
 import 'package:togetherremind/services/quest_sync_service.dart';
 import 'package:togetherremind/services/daily_quest_service.dart';
@@ -16,6 +17,7 @@ import 'package:togetherremind/services/love_point_service.dart';
 import 'package:togetherremind/models/daily_quest.dart';
 import 'package:togetherremind/config/dev_config.dart';
 import 'package:togetherremind/theme/app_theme.dart';
+import 'package:togetherremind/utils/logger.dart';
 import 'firebase_options.dart';
 
 void main() async {
@@ -28,11 +30,11 @@ void main() async {
         options: DefaultFirebaseOptions.currentPlatform,
       );
     } else {
-      print('ℹ️  Firebase already initialized (Dart side)');
+      Logger.info('Firebase already initialized (Dart side)');
     }
   } catch (e) {
     if (e.toString().contains('duplicate-app')) {
-      print('ℹ️  Firebase already initialized (native side)');
+      Logger.info('Firebase already initialized (native side)');
     } else {
       rethrow;
     }
@@ -47,15 +49,18 @@ void main() async {
   // Initialize Quiz Question Bank
   await QuizQuestionBank().initialize();
 
+  // Initialize Affirmation Quiz Bank
+  await AffirmationQuizBank().initialize();
+
   // Initialize Word Validation Service
   await WordValidationService.instance.initialize();
 
   // 🚀 Auto-inject mock data in debug mode (only on simulators)
-  print('🔍 Debug Mode: $kDebugMode');
+  Logger.debug('Debug Mode: $kDebugMode');
   final isSimulator = await DevConfig.isSimulator;
   final enableMockPairing = await DevConfig.enableMockPairing;
-  print('🔍 Is Simulator: $isSimulator');
-  print('🔍 Enable Mock Pairing: $enableMockPairing');
+  Logger.debug('Is Simulator: $isSimulator');
+  Logger.debug('Enable Mock Pairing: $enableMockPairing');
   await MockDataService.injectMockDataIfNeeded();
 
   // 🔗 Start auto-pairing for dual-emulator setup (dev mode only)
@@ -76,27 +81,28 @@ void main() async {
 /// Clear old quests from previous test runs (dev mode only)
 Future<void> _clearOldMockQuests() async {
   try {
-    print('🧹 Clearing old quests...');
+    // Removed verbose logging
+    // print('🧹 Clearing old quests...');
     final storage = StorageService();
     final today = DateTime.now();
     final dateKey = '${today.year}-${today.month.toString().padLeft(2, '0')}-${today.day.toString().padLeft(2, '0')}';
-    print('🧹 Date key: $dateKey');
+    // print('🧹 Date key: $dateKey');
 
     // Get all quests for today
     final quests = storage.getDailyQuestsForDate(dateKey);
-    print('🧹 Found ${quests.length} quests for $dateKey');
+    // print('🧹 Found ${quests.length} quests for $dateKey');
 
     // Delete ALL quests for today (for testing quest generation)
-    int deletedCount = 0;
+    // int deletedCount = 0;
     for (final quest in quests) {
-      print('🧹 Deleting quest: ${quest.id} (${quest.type.name})');
+      // print('🧹 Deleting quest: ${quest.id} (${quest.type.name})');
       await quest.delete();
-      deletedCount++;
+      // deletedCount++;
     }
 
-    print('🧹 Cleared $deletedCount old quests for testing');
+    // print('🧹 Cleared $deletedCount old quests for testing');
   } catch (e) {
-    print('⚠️  Error clearing quests: $e');
+    Logger.error('Error clearing quests', error: e);
   }
 }
 
@@ -109,7 +115,8 @@ Future<void> _initializeDailyQuests() async {
 
     // Only generate quests if user has a partner
     if (!storage.hasPartner() || user == null || partner == null) {
-      print('ℹ️  Skipping quest generation - no partner yet');
+      // Removed verbose logging
+      // print('ℹ️  Skipping quest generation - no partner yet');
       return;
     }
 
@@ -118,7 +125,8 @@ Future<void> _initializeDailyQuests() async {
       currentUserId: user.id,
       partnerUserId: partner.pushToken,
     );
-    print('💰 LP listener initialized');
+    // Removed verbose logging
+    // print('💰 LP listener initialized');
 
     // Initialize services
     final questService = DailyQuestService(storage: storage);
@@ -142,18 +150,19 @@ Future<void> _initializeDailyQuests() async {
     if (synced) {
       // Loaded from Firebase or already exist locally
       quests = questService.getTodayQuests();
-      print('✅ Daily quests loaded: ${quests.length} quests');
+      // Removed verbose logging
+      // print('✅ Daily quests loaded: ${quests.length} quests');
     } else {
       // No quests in Firebase - generate new ones
       quests = await questTypeManager.generateDailyQuests(
         currentUserId: user.id,
         partnerUserId: partner.pushToken,
       );
-      print('✅ Daily quests generated: ${quests.length} quests');
+      // Removed verbose logging
+      // print('✅ Daily quests generated: ${quests.length} quests');
     }
   } catch (e, stackTrace) {
-    print('❌ Error generating daily quests: $e');
-    print(stackTrace);
+    Logger.error('Error generating daily quests', error: e, stackTrace: stackTrace);
     // Don't block app startup on quest generation errors
   }
 }

@@ -9,6 +9,8 @@ import '../services/quiz_service.dart';
 import '../widgets/quest_card.dart';
 import '../screens/quiz_question_screen.dart';
 import '../screens/quiz_results_screen.dart';
+import '../screens/affirmation_intro_screen.dart';
+import '../screens/affirmation_results_screen.dart';
 
 /// Widget displaying daily quests with completion tracking
 ///
@@ -61,18 +63,19 @@ class _DailyQuestsWidgetState extends State<DailyQuestsWidget> {
       // partnerCompletions is a map of {questId: true} for completed quests
       if (partnerCompletions.isEmpty) return;
 
-      print('📥 Received partner quest completions: ${partnerCompletions.keys.join(", ")}');
+      // Removed verbose logging
+      // print('📥 Received partner quest completions: ${partnerCompletions.keys.join(", ")}');
 
       // Update local storage with partner's completions
       for (final questId in partnerCompletions.keys) {
         final quest = _storage.getDailyQuest(questId);
-        print('🔍 Looking for quest: $questId');
-        print('🔍 Found quest: ${quest != null ? quest.id : "NULL"}');
-        if (quest != null) {
-          print('🔍 Partner already completed? ${quest.hasUserCompleted(partner.pushToken)}');
-          print('🔍 Partner user ID: ${partner.pushToken}');
-          print('🔍 Quest completions: ${quest.userCompletions}');
-        }
+        // print('🔍 Looking for quest: $questId');
+        // print('🔍 Found quest: ${quest != null ? quest.id : "NULL"}');
+        // if (quest != null) {
+        //   print('🔍 Partner already completed? ${quest.hasUserCompleted(partner.pushToken)}');
+        //   print('🔍 Partner user ID: ${partner.pushToken}');
+        //   print('🔍 Quest completions: ${quest.userCompletions}');
+        // }
         if (quest != null && !quest.hasUserCompleted(partner.pushToken)) {
           quest.userCompletions ??= {};
           quest.userCompletions![partner.pushToken] = true;
@@ -86,7 +89,8 @@ class _DailyQuestsWidgetState extends State<DailyQuestsWidget> {
             if (quest.lpAwarded == null || quest.lpAwarded == 0) {
               quest.lpAwarded = 30;
 
-              print('💰 Auto-awarding 30 LP for completed quest: ${quest.type.name}');
+              // Removed verbose logging
+              // print('💰 Auto-awarding 30 LP for completed quest: ${quest.type.name}');
 
               LovePointService.awardPointsToBothUsers(
                 userId1: user.id,
@@ -95,7 +99,8 @@ class _DailyQuestsWidgetState extends State<DailyQuestsWidget> {
                 reason: 'daily_quest_${quest.type.name}',
                 relatedId: quest.id,
               ).then((_) {
-                print('✅ LP awarded automatically via partner completion listener');
+                // Removed verbose logging
+                // print('✅ LP awarded automatically via partner completion listener');
               }).catchError((error) {
                 print('❌ Error awarding LP: $error');
               });
@@ -105,7 +110,8 @@ class _DailyQuestsWidgetState extends State<DailyQuestsWidget> {
           }
 
           _storage.updateDailyQuest(quest);
-          print('✅ Updated quest ${quest.type.name} with partner completion');
+          // Removed verbose logging
+          // print('✅ Updated quest ${quest.type.name} with partner completion');
         }
       }
 
@@ -356,23 +362,52 @@ class _DailyQuestsWidgetState extends State<DailyQuestsWidget> {
                                  quest.hasUserCompleted(user.id) &&
                                  quest.hasUserCompleted(partner.pushToken));
 
-    // Navigate based on completion status
+    // Determine if this is an affirmation quiz
+    // Use quest.formatType (always available from Firebase) with session fallback
+    final isAffirmation = quest.formatType == 'affirmation' || session.formatType == 'affirmation';
+
+    // Navigate based on completion status and format type
     if (session.isCompleted || bothCompletedQuest) {
-      // Navigate to results
+      // Navigate to results screen (affirmation or classic)
       await Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => QuizResultsScreen(session: session),
+          builder: (context) => isAffirmation
+              ? AffirmationResultsScreen(session: session)
+              : QuizResultsScreen(session: session),
         ),
       );
     } else {
-      // Navigate to quiz
-      await Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => QuizQuestionScreen(session: session),
-        ),
-      );
+      // Navigate to intro/question screen (affirmation or classic)
+      if (isAffirmation) {
+        // Check if user has already answered
+        final hasAnswered = user != null && session.hasUserAnswered(user.id);
+        if (hasAnswered) {
+          // User already answered, show results (waiting for partner)
+          await Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => AffirmationResultsScreen(session: session),
+            ),
+          );
+        } else {
+          // User hasn't answered, show intro screen
+          await Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => AffirmationIntroScreen(session: session),
+            ),
+          );
+        }
+      } else {
+        // Classic quiz: go directly to questions
+        await Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => QuizQuestionScreen(session: session),
+          ),
+        );
+      }
     }
   }
 

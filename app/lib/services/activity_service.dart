@@ -1,4 +1,5 @@
 import '../models/activity_item.dart';
+import '../models/daily_quest.dart';
 import '../services/storage_service.dart';
 import '../services/poke_service.dart';
 
@@ -34,6 +35,9 @@ class ActivityService {
     // Add pokes
     activities.addAll(_getPokes());
 
+    // Add daily quests
+    activities.addAll(_getDailyQuests());
+
     // Add quizzes
     activities.addAll(_getQuizzes());
 
@@ -55,7 +59,14 @@ class ActivityService {
 
     switch (filter) {
       case 'yourTurn':
-        return all.where((a) => a.status == ActivityStatus.yourTurn).toList();
+        return all.where((activity) {
+          // Exclude expired quests from "Your Turn"
+          if (activity.sourceData is DailyQuest) {
+            final quest = activity.sourceData as DailyQuest;
+            if (quest.isExpired) return false;
+          }
+          return activity.status == ActivityStatus.yourTurn;
+        }).toList();
 
       case 'unread':
         return all.where((a) => a.isUnread).toList();
@@ -65,6 +76,9 @@ class ActivityService {
           a.status == ActivityStatus.completed ||
           a.status == ActivityStatus.mutual
         ).toList();
+
+      case 'pokes':
+        return all.where((a) => a.type == ActivityType.poke).toList();
 
       case 'all':
       default:
@@ -205,7 +219,10 @@ class ActivityService {
     final userName = _getUserName();
     final partnerName = _getPartnerName();
 
-    return sessions.map((session) {
+    // Filter out quiz sessions created from daily quests to prevent duplication
+    final standaloneQuizzes = sessions.where((session) => !session.isDailyQuest).toList();
+
+    return standaloneQuizzes.map((session) {
       final userAnswered = session.hasUserAnswered(userId);
       final partnerAnswered = session.answers != null &&
                              session.answers!.keys.any((k) => k != userId);
@@ -405,5 +422,151 @@ class ActivityService {
     return getAllActivities()
         .where((a) => a.isUnread)
         .length;
+  }
+
+  /// Convert daily quests to activity items
+  List<ActivityItem> _getDailyQuests() {
+    final quests = _storage.getTodayQuests();
+    final userId = _getCurrentUserId();
+
+    return quests.map((quest) {
+      final userCompleted = quest.hasUserCompleted(userId);
+      final bothCompleted = quest.isCompleted;
+
+      // Map quest status to activity status
+      ActivityStatus status;
+      if (bothCompleted) {
+        status = ActivityStatus.completed;
+      } else if (userCompleted) {
+        status = ActivityStatus.waitingForPartner;
+      } else {
+        status = ActivityStatus.yourTurn;
+      }
+
+      return ActivityItem(
+        id: quest.id,
+        type: _mapQuestTypeToActivityType(quest.questType, quest.contentId),
+        title: _getQuestTitle(quest),
+        subtitle: _getQuestSubtitle(quest, userCompleted, bothCompleted),
+        timestamp: quest.createdAt,
+        status: status,
+        participants: _getQuestParticipants(quest, userId),
+        sourceData: quest,
+        isUnread: !userCompleted && !quest.isExpired,
+      );
+    }).toList();
+  }
+
+  /// Map quest type to activity type
+  ActivityType _mapQuestTypeToActivityType(int questType, String? contentId) {
+    switch (questType) {
+      case 0: // QuestType.question
+        return ActivityType.question;
+      case 1: // QuestType.quiz
+        // Check if this is an affirmation quiz
+        if (contentId != null) {
+          final session = _storage.getQuizSession(contentId);
+          if (session != null && session.formatType == 'affirmation') {
+            return ActivityType.affirmation;
+          }
+        }
+        return ActivityType.quiz;
+      case 2: // QuestType.game
+        return ActivityType.quiz; // Generic game maps to quiz for now
+      case 3: // QuestType.wordLadder
+        return ActivityType.wordLadder;
+      case 4: // QuestType.memoryFlip
+        return ActivityType.memoryFlip;
+      default:
+        return ActivityType.quiz;
+    }
+  }
+
+  /// Get quest title based on type and sort order
+  String _getQuestTitle(DailyQuest quest) {
+    switch (quest.questType) {
+      case 0: // QuestType.question
+        return 'Daily Question';
+      case 1: // QuestType.quiz
+        // Check quest formatType first (always available from Firebase)
+        if (quest.formatType == 'affirmation') {
+          // Use quest.quizName (synced from Firebase) or fallback
+          return quest.quizName ?? 'Affirmation Quiz';
+        }
+        // Use sort order to generate distinct titles for classic quizzes
+        const titles = [
+          'Getting to Know You',
+          'Deeper Connection',
+          'Understanding Each Other',
+        ];
+        if (quest.sortOrder >= 0 && quest.sortOrder < titles.length) {
+          return titles[quest.sortOrder];
+        }
+        return 'Relationship Quiz #${quest.sortOrder + 1}';
+      case 2: // QuestType.game
+        return 'Fun Game';
+      case 3: // QuestType.wordLadder
+        return 'Word Ladder Challenge';
+      case 4: // QuestType.memoryFlip
+        return 'Memory Match Game';
+      default:
+        return 'Daily Quest';
+    }
+  }
+
+  /// Get quest subtitle based on completion status
+  String _getQuestSubtitle(DailyQuest quest, bool userCompleted, bool bothCompleted) {
+    if (bothCompleted) {
+      return 'Both completed';
+    } else if (userCompleted) {
+      final partnerName = _getPartnerName();
+      return 'Waiting for $partnerName to complete';
+    } else {
+      return 'Complete together to earn Love Points';
+    }
+  }
+
+  /// Get participants for quest
+  List<ParticipantStatus> _getQuestParticipants(DailyQuest quest, String userId) {
+    final user = _storage.getUser();
+    final partner = _storage.getPartner();
+    final userName = user?.name ?? 'You';
+    final partnerName = partner?.name ?? 'Partner';
+
+    List<ParticipantStatus> participants = [];
+
+    // Only add avatars for users who have completed
+    if (quest.hasUserCompleted(userId)) {
+      participants.add(ParticipantStatus(
+        userId: userId,
+        displayName: userName,
+        hasCompleted: true,
+        completedAt: quest.completedAt,
+      ));
+    }
+
+    if (partner != null && _hasPartnerCompleted(quest, userId)) {
+      participants.add(ParticipantStatus(
+        userId: 'partner', // Partner doesn't have id field, use generic identifier
+        displayName: partnerName,
+        hasCompleted: true,
+        completedAt: quest.completedAt,
+      ));
+    }
+
+    return participants;
+  }
+
+  /// Check if partner has completed quest
+  bool _hasPartnerCompleted(DailyQuest quest, String userId) {
+    if (quest.userCompletions == null) return false;
+
+    // Find partner's completion status (any completion that's not the current user)
+    for (var entry in quest.userCompletions!.entries) {
+      if (entry.key != userId && entry.value == true) {
+        return true;
+      }
+    }
+    return false;
   }
 }

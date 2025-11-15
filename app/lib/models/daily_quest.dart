@@ -48,6 +48,12 @@ class DailyQuest extends HiveObject {
   @HiveField(11, defaultValue: 0)
   int sortOrder; // 0-2 for daily quests, 3+ for side quests
 
+  @HiveField(12, defaultValue: 'classic')
+  String formatType; // 'classic', 'affirmation', 'speed_round', etc.
+
+  @HiveField(13)
+  String? quizName; // Quiz name for display (e.g., "Warm Vibes")
+
   DailyQuest({
     required this.id,
     required this.dateKey,
@@ -61,6 +67,8 @@ class DailyQuest extends HiveObject {
     this.completedAt,
     this.isSideQuest = false,
     this.sortOrder = 0,
+    this.formatType = 'classic',
+    this.quizName,
   });
 
   // Helper getters
@@ -88,6 +96,8 @@ class DailyQuest extends HiveObject {
     required String contentId,
     int sortOrder = 0,
     bool isSideQuest = false,
+    String formatType = 'classic',
+    String? quizName,
   }) {
     final now = DateTime.now();
     final endOfDay = DateTime(now.year, now.month, now.day, 23, 59, 59);
@@ -102,6 +112,8 @@ class DailyQuest extends HiveObject {
       status: 'pending',
       sortOrder: sortOrder,
       isSideQuest: isSideQuest,
+      formatType: formatType,
+      quizName: quizName,
     );
   }
 }

@@ -5,6 +5,7 @@ import 'package:togetherremind/models/user.dart';
 import 'package:togetherremind/services/storage_service.dart';
 import 'package:togetherremind/services/love_point_service.dart';
 import 'package:uuid/uuid.dart';
+import '../utils/logger.dart';
 
 class PokeService {
   static final FirebaseFunctions _functions = FirebaseFunctions.instance;
@@ -46,22 +47,23 @@ class PokeService {
       final user = _storage.getUser();
 
       if (partner == null) {
-        print('❌ No partner found, cannot send poke');
+        Logger.error('No partner found, cannot send poke', service: 'poke');
         return false;
       }
 
       if (user == null) {
-        print('❌ No user found, cannot send poke');
+        Logger.error('No user found, cannot send poke', service: 'poke');
         return false;
       }
 
       final pokeId = const Uuid().v4();
       final now = DateTime.now();
 
-      print('💫 Sending poke to partner...');
-      print('   Partner token: ${partner.pushToken}');
-      print('   Sender: ${user.name ?? 'You'}');
-      print('   Emoji: $emoji');
+      // Removed verbose logging
+      // print('💫 Sending poke to partner...');
+      // print('   Partner token: ${partner.pushToken}');
+      // print('   Sender: ${user.name ?? 'You'}');
+      // print('   Emoji: $emoji');
 
       // Create poke record (as Reminder with category='poke')
       final poke = Reminder(
@@ -89,7 +91,8 @@ class PokeService {
         'emoji': emoji,
       });
 
-      print('✅ Cloud Function response: ${result.data}');
+      // Removed verbose logging
+      // Logger.success('Cloud Function response: ${result.data}', service: 'poke');
 
       // Update rate limit timestamp
       _lastPokeTime = now;
@@ -101,12 +104,13 @@ class PokeService {
           reason: 'mutual_poke',
           relatedId: pokeId,
         );
-        print('🎉 Mutual poke! Awarded 5 LP');
+        // Removed verbose logging
+        // print('🎉 Mutual poke! Awarded 5 LP');
       }
 
       return true;
     } catch (e) {
-      print('❌ Error sending poke: $e');
+      Logger.error('Error sending poke', error: e, service: 'poke');
       return false;
     }
   }
@@ -135,9 +139,10 @@ class PokeService {
       );
 
       await _storage.saveReminder(poke);
-      print('💾 Saved received poke from $fromName');
+      // Removed verbose logging
+      // print('💾 Saved received poke from $fromName');
     } catch (e) {
-      print('❌ Error handling received poke: $e');
+      Logger.error('Error handling received poke', error: e, service: 'poke');
     }
   }
 
@@ -166,12 +171,13 @@ class PokeService {
           reason: 'poke_back',
           relatedId: originalPokeId,
         );
-        print('💕 Poke back! Awarded 3 LP');
+        // Removed verbose logging
+        // print('💕 Poke back! Awarded 3 LP');
       }
 
       return success;
     } catch (e) {
-      print('❌ Error sending poke back: $e');
+      Logger.error('Error sending poke back', error: e, service: 'poke');
       return false;
     }
   }

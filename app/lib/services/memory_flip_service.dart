@@ -4,6 +4,7 @@ import 'package:cloud_functions/cloud_functions.dart';
 import '../models/memory_flip.dart';
 import '../services/storage_service.dart';
 import '../services/memory_content_bank.dart';
+import '../utils/logger.dart';
 
 /// Result of checking for matches after flipping cards
 class MatchResult {

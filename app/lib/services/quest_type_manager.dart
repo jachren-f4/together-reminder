@@ -65,46 +65,74 @@ class QuizQuestProvider implements QuestProvider {
   QuestType get questType => QuestType.quiz;
 
   /// Map track/position to quiz configuration
+  /// Positions 1 and 3 in each track are affirmations (50% distribution)
   TrackConfig _getTrackConfig(int track, int position) {
-    // Track 0: Relationship Foundation (tier 1, basic categories)
+    // Track 0: Relationship Foundation (tier 1, lighter topics)
+    // Pattern: Classic, Affirmation, Classic, Affirmation
     if (track == 0) {
       switch (position) {
         case 0:
           return TrackConfig(categoryFilter: 'favorites', difficulty: 1);
         case 1:
-          return TrackConfig(categoryFilter: 'values', difficulty: 1);
+          // Affirmation: Trust and early connection
+          return TrackConfig(
+            categoryFilter: 'trust',
+            formatType: 'affirmation',
+          );
         case 2:
           return TrackConfig(categoryFilter: 'personality', difficulty: 1);
         case 3:
-          return TrackConfig(categoryFilter: 'values', difficulty: 2);
+          // Affirmation: Emotional support and shared moments
+          return TrackConfig(
+            categoryFilter: 'emotional_support',
+            formatType: 'affirmation',
+          );
       }
     }
 
     // Track 1: Communication & Conflict (tier 2-3, deeper categories)
+    // Pattern: Classic, Affirmation, Classic, Affirmation
     if (track == 1) {
       switch (position) {
         case 0:
           return TrackConfig(categoryFilter: 'communication', difficulty: 2);
         case 1:
-          return TrackConfig(categoryFilter: 'conflict', difficulty: 2);
+          // Affirmation: Trust (already progressed from Track 0)
+          return TrackConfig(
+            categoryFilter: 'trust',
+            formatType: 'affirmation',
+          );
         case 2:
-          return TrackConfig(categoryFilter: 'emotions', difficulty: 2);
+          return TrackConfig(categoryFilter: 'preferences', difficulty: 2);
         case 3:
-          return TrackConfig(categoryFilter: 'support', difficulty: 3);
+          // Affirmation: Emotional support (deeper questions)
+          return TrackConfig(
+            categoryFilter: 'emotional_support',
+            formatType: 'affirmation',
+          );
       }
     }
 
     // Track 2: Future & Growth (tier 3-4, advanced categories)
+    // Pattern: Classic, Affirmation, Classic, Affirmation
     if (track == 2) {
       switch (position) {
         case 0:
           return TrackConfig(categoryFilter: 'future', difficulty: 3);
         case 1:
-          return TrackConfig(categoryFilter: 'goals', difficulty: 3);
+          // Affirmation: Trust (most advanced)
+          return TrackConfig(
+            categoryFilter: 'trust',
+            formatType: 'affirmation',
+          );
         case 2:
           return TrackConfig(categoryFilter: 'growth', difficulty: 3);
         case 3:
-          return TrackConfig(categoryFilter: 'commitment', difficulty: 4);
+          // Affirmation: Emotional support (most advanced)
+          return TrackConfig(
+            categoryFilter: 'emotional_support',
+            formatType: 'affirmation',
+          );
       }
     }
 
@@ -143,6 +171,7 @@ class QuizQuestProvider implements QuestProvider {
         categoryFilter: config.categoryFilter,
         difficulty: config.difficulty,
         skipActiveCheck: true, // Allow generating 3 daily quests
+        isDailyQuest: true, // Mark as daily quest to prevent duplication in inbox
       );
 
       debugPrint('Created quiz session: ${session.id}');
@@ -292,12 +321,25 @@ class QuestTypeManager {
         if (contentId != null) {
           debugPrint('✅ Quest ${i + 1} content created: $contentId');
 
+          // Get format type and quiz name from quiz session
+          String formatType = 'classic';
+          String? quizName;
+          final session = _storage.getQuizSession(contentId);
+          if (session != null) {
+            if (session.formatType != null) {
+              formatType = session.formatType!;
+            }
+            quizName = session.quizName; // Extract quiz name for display
+          }
+
           final quest = DailyQuest.create(
             dateKey: dateKey,
             type: QuestType.quiz,
             contentId: contentId,
             sortOrder: i,
             isSideQuest: false,
+            formatType: formatType,
+            quizName: quizName,
           );
 
           await _storage.saveDailyQuest(quest);

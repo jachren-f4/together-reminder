@@ -6,10 +6,12 @@ import '../models/quiz_question.dart';
 import '../models/badge.dart';
 import 'storage_service.dart';
 import 'quiz_question_bank.dart';
+import 'affirmation_quiz_bank.dart';
 import 'love_point_service.dart';
 import 'daily_quest_service.dart';
 import 'quest_sync_service.dart';
 import '../config/dev_config.dart';
+import '../utils/logger.dart';
 
 class QuizService {
   static final QuizService _instance = QuizService._internal();
@@ -18,17 +20,21 @@ class QuizService {
 
   final StorageService _storage = StorageService();
   final QuizQuestionBank _questionBank = QuizQuestionBank();
+  final AffirmationQuizBank _affirmationBank = AffirmationQuizBank();
   final FirebaseFunctions _functions = FirebaseFunctions.instance;
   final DatabaseReference _rtdb = FirebaseDatabase.instance.ref();
 
   /// Start a new quiz session
   /// The initiator becomes the SUBJECT - quiz is ABOUT them
   /// Partner becomes the PREDICTOR - tries to guess subject's answers
+  /// For affirmations: both users answer as themselves (no subject/predictor)
   Future<QuizSession> startQuizSession({
     String formatType = 'classic',
     String? categoryFilter,
     int? difficulty,
     bool skipActiveCheck = false, // Allow generating multiple daily quests
+    bool isDailyQuest = false, // Mark if this quiz was created from a daily quest
+    String dailyQuestId = '', // Link back to the DailyQuest that created this
   }) async {
     // Check for active session (skip for daily quest generation)
     if (!skipActiveCheck) {
@@ -38,14 +44,33 @@ class QuizService {
       }
     }
 
-    // Ensure question bank is loaded
+    // Ensure question banks are loaded
     await _questionBank.initialize();
+    await _affirmationBank.initialize();
 
-    // Get random questions based on format type
+    // Get questions and metadata based on format type
     final List<QuizQuestion> questions;
     final int requiredQuestions;
+    String? quizName;
+    String? category;
 
-    if (formatType == 'speed_round') {
+    if (formatType == 'affirmation') {
+      // Affirmation: Get pre-packaged quiz by category
+      if (categoryFilter == null) {
+        throw Exception('Category filter required for affirmation quizzes');
+      }
+
+      final affirmationQuiz = _affirmationBank.getRandomQuizForCategory(categoryFilter);
+      if (affirmationQuiz == null) {
+        throw Exception('No affirmation quizzes found for category: $categoryFilter');
+      }
+
+      questions = affirmationQuiz.questions;
+      requiredQuestions = questions.length;
+      quizName = affirmationQuiz.name;
+      category = affirmationQuiz.category;
+
+    } else if (formatType == 'speed_round') {
       questions = _questionBank.getRandomQuestionsForSpeedRound();
       requiredQuestions = 10;
     } else if (formatType == 'would_you_rather') {
@@ -75,10 +100,22 @@ class QuizService {
       initiatedBy: user.id,
       subjectUserId: user.id, // CRITICAL: Quiz is ABOUT the initiator
       formatType: formatType,
+      quizName: quizName, // Set for affirmations
+      category: category, // Set for affirmations
+      isDailyQuest: isDailyQuest,
+      dailyQuestId: dailyQuestId,
       answers: {},
     );
 
     await _storage.saveQuizSession(session);
+
+    // Save questions to storage (needed for affirmations since questions aren't in QuizQuestionBank)
+    if (formatType == 'affirmation') {
+      Logger.info('Creating affirmation quiz: $quizName (category: $category)', service: 'affirmation');
+      for (final question in questions) {
+        await _storage.saveQuizQuestion(question);
+      }
+    }
 
     // Sync to RTDB for partner to receive (backup to push notifications)
     await _syncSessionToRTDB(session);
@@ -86,7 +123,6 @@ class QuizService {
     // Send notification to partner
     await _sendQuizInviteNotification(session);
 
-    print('✅ Quiz session started: ${session.id} (Subject: ${user.name}, Format: $formatType)');
     return session;
   }
 
@@ -115,7 +151,8 @@ class QuizService {
     // Sync updated session to RTDB
     await _syncSessionToRTDB(session);
 
-    print('✅ Answers submitted for user $userId');
+    // Removed verbose logging
+    // print('✅ Answers submitted for user $userId');
 
     // Mark quest as completed for this user
     await _markQuestCompletedForUser(sessionId, userId);
@@ -174,7 +211,8 @@ class QuizService {
     // Sync updated session to RTDB
     await _syncSessionToRTDB(session);
 
-    print('✅ Would You Rather answers and predictions submitted for user $userId');
+    // Removed verbose logging
+    // print('✅ Would You Rather answers and predictions submitted for user $userId');
 
     // Mark quest as completed for this user
     await _markQuestCompletedForUser(sessionId, userId);
@@ -198,14 +236,22 @@ class QuizService {
 
   /// Calculate match percentage and complete session
   /// NEW LOGIC: Compare SUBJECT's self-answers vs. PREDICTOR's guesses
+  /// For affirmations: Calculate individual scores instead of match percentage
   Future<void> _calculateAndCompleteSession(QuizSession session) async {
     final answers = session.answers!;
     if (answers.length < 2) return;
 
+    // Check if this is an affirmation quiz
+    if (session.formatType == 'affirmation') {
+      await _calculateAffirmationScores(session);
+      return;
+    }
+
+    // Classic quiz logic: Calculate match percentage
     // Identify subject and predictor
     final subjectAnswers = answers[session.subjectUserId];
     if (subjectAnswers == null) {
-      print('❌ Error: Subject has not answered yet');
+      Logger.error('Subject has not answered yet', service: 'quiz');
       return;
     }
 
@@ -215,13 +261,13 @@ class QuizService {
       orElse: () => '',
     );
     if (predictorId.isEmpty) {
-      print('❌ Error: Predictor not found');
+      Logger.error('Predictor not found', service: 'quiz');
       return;
     }
 
     final predictorGuesses = answers[predictorId];
     if (predictorGuesses == null) {
-      print('❌ Error: Predictor has not answered yet');
+      Logger.error('Predictor has not answered yet', service: 'quiz');
       return;
     }
 
@@ -269,7 +315,58 @@ class QuizService {
     // Send completion notification to both users
     await _sendQuizCompletedNotification(session, matchPercentage, lpEarned);
 
-    print('✅ Quiz completed: $matchPercentage% match, +$lpEarned LP earned');
+    // Removed verbose logging
+    // print('✅ Quiz completed: $matchPercentage% match, +$lpEarned LP earned');
+  }
+
+  /// Calculate individual scores for affirmation quizzes
+  /// No match percentage - each user gets their own score based on 1-5 ratings
+  Future<void> _calculateAffirmationScores(QuizSession session) async {
+    final answers = session.answers!;
+    if (answers.length < 2) return;
+
+    // Calculate individual scores (convert answers to 1-5 scale values)
+    // Note: Answers are stored as 0-4 indices in storage, but represent 1-5 values
+    final scores = <String, int>{};
+    for (final entry in answers.entries) {
+      final userId = entry.key;
+      final userAnswers = entry.value;
+
+      // Convert 0-4 indices to 1-5 values
+      final scaleValues = userAnswers.map((index) => index + 1).toList();
+      final average = scaleValues.reduce((a, b) => a + b) / scaleValues.length;
+      final percentage = ((average / 5.0) * 100).round();
+      scores[userId] = percentage;
+      Logger.debug('User $userId affirmation score: $percentage%', service: 'affirmation');
+    }
+
+    // Award fixed 30 LP for completing affirmation together
+    const int lpEarned = 30;
+
+    // Update session
+    session.status = 'completed';
+    session.completedAt = DateTime.now();
+    session.lpEarned = lpEarned;
+    // Store individual scores in predictionScores field (repurposing for affirmations)
+    session.predictionScores = scores;
+    await session.save();
+
+    // Award LP to BOTH users
+    if (lpEarned > 0) {
+      final user = _storage.getUser();
+      final partner = _storage.getPartner();
+
+      if (user != null && partner != null) {
+        await LovePointService.awardPointsToBothUsers(
+          userId1: user.id,
+          userId2: partner.pushToken,
+          amount: lpEarned,
+          reason: 'affirmation_completed',
+          relatedId: session.id,
+        );
+        Logger.success('Affirmation quiz "${session.quizName}" completed - Scores: ${scores.values.join(', ')}%, +$lpEarned LP awarded', service: 'affirmation');
+      }
+    }
   }
 
   /// Award Perfect Sync badge if not already earned
@@ -278,7 +375,7 @@ class QuizService {
 
     // Check if badge already exists
     if (_storage.hasBadge(badgeName)) {
-      print('Badge "$badgeName" already earned');
+      Logger.info('Badge "$badgeName" already earned', service: 'quiz');
       return;
     }
 
@@ -292,7 +389,8 @@ class QuizService {
     );
 
     await _storage.saveBadge(badge);
-    print('🏆 Badge earned: $badgeName');
+    // Removed verbose logging
+    // print('🏆 Badge earned: $badgeName');
   }
 
   /// Calculate Would You Rather results
@@ -385,7 +483,8 @@ class QuizService {
     // Sync to RTDB
     await _syncSessionToRTDB(session);
 
-    print('✅ Would You Rather completed: $overallAccuracy% prediction accuracy, $alignmentMatches alignments, +$totalLp LP');
+    // Removed verbose logging
+    // print('✅ Would You Rather completed: $overallAccuracy% prediction accuracy, $alignmentMatches alignments, +$totalLp LP');
   }
 
   /// Send quiz invite notification to partner
@@ -408,9 +507,10 @@ class QuizService {
         'formatType': session.formatType,
       });
 
-      print('✅ Quiz invite sent to partner: $message');
+      // Removed verbose logging
+      // print('✅ Quiz invite sent to partner: $message');
     } catch (e) {
-      print('❌ Error sending quiz invite: $e');
+      Logger.error('Error sending quiz invite', error: e, service: 'quiz');
     }
   }
 
@@ -429,9 +529,10 @@ class QuizService {
         'sessionId': session.id,
       });
 
-      print('✅ Quiz reminder sent to partner');
+      // Removed verbose logging
+      // print('✅ Quiz reminder sent to partner');
     } catch (e) {
-      print('❌ Error sending quiz reminder: $e');
+      Logger.error('Error sending quiz reminder', error: e, service: 'quiz');
     }
   }
 
@@ -452,9 +553,10 @@ class QuizService {
         'lpEarned': lpEarned,
       });
 
-      print('✅ Quiz completion notification sent');
+      // Removed verbose logging
+      // print('✅ Quiz completion notification sent');
     } catch (e) {
-      print('❌ Error sending completion notification: $e');
+      Logger.error('Error sending completion notification', error: e, service: 'quiz');
     }
   }
 
@@ -470,11 +572,48 @@ class QuizService {
 
   /// Get questions for a session
   List<QuizQuestion> getSessionQuestions(QuizSession session) {
-    return session.questionIds
+    // Try to load from local storage first
+    final questions = session.questionIds
         .map((id) => _storage.getQuizQuestion(id))
         .where((q) => q != null)
         .cast<QuizQuestion>()
         .toList();
+
+    // If not found and it's an affirmation quiz, look up from AffirmationQuizBank
+    if (questions.isEmpty && session.formatType == 'affirmation') {
+      // Extract quiz ID from question IDs (not category!)
+      // Question IDs format: "getting_comfortable_0", "getting_comfortable_1", etc.
+      // The quiz ID is everything before the last underscore
+      String? quizId;
+      if (session.questionIds.isNotEmpty) {
+        final firstQuestionId = session.questionIds.first;
+        // Extract everything before the last underscore and number
+        final lastUnderscoreIndex = firstQuestionId.lastIndexOf('_');
+        if (lastUnderscoreIndex > 0) {
+          quizId = firstQuestionId.substring(0, lastUnderscoreIndex);
+        }
+      }
+
+      if (quizId != null) {
+        // Ensure affirmation bank is initialized
+        if (!_affirmationBank.isInitialized) {
+          // This is a synchronous call, which is not ideal but necessary here
+          // In practice, the bank should already be initialized during app startup
+        }
+
+        // Look up quiz by ID (not category!)
+        final affirmationQuiz = _affirmationBank.getQuizById(quizId);
+        if (affirmationQuiz != null) {
+          return affirmationQuiz.questions;
+        } else {
+          Logger.error('Could not find affirmation quiz with ID: $quizId', service: 'quiz');
+        }
+      } else {
+        Logger.error('Could not extract quiz ID from question IDs', service: 'quiz');
+      }
+    }
+
+    return questions;
   }
 
   /// Check if user has answered current session
@@ -542,7 +681,7 @@ class QuizService {
       final user = _storage.getUser();
       final partner = _storage.getPartner();
       if (user == null || partner == null) {
-        print('⚠️  Cannot sync: user or partner not found');
+        Logger.warn('Cannot sync: user or partner not found', service: 'quiz');
         return;
       }
 
@@ -561,6 +700,8 @@ class QuizService {
         'initiatedBy': session.initiatedBy,
         'subjectUserId': session.subjectUserId,
         'formatType': session.formatType,
+        'isDailyQuest': session.isDailyQuest,
+        'dailyQuestId': session.dailyQuestId,
         'answers': session.answers,
         'predictions': session.predictions,
         'matchPercentage': session.matchPercentage,
@@ -571,9 +712,10 @@ class QuizService {
       };
 
       await sessionRef.set(sessionData);
-      print('✅ Session synced to Firebase: ${session.id} at /quiz_sessions/$coupleId/${session.id}');
+      // Removed verbose logging
+      // print('✅ Session synced to Firebase: ${session.id} at /quiz_sessions/$coupleId/${session.id}');
     } catch (e) {
-      print('❌ Error syncing session to Firebase: $e');
+      Logger.error('Error syncing session to Firebase', error: e, service: 'quiz');
       rethrow;
     }
   }
@@ -585,7 +727,8 @@ class QuizService {
     // 1. Try local storage first (fast path)
     var session = _storage.getQuizSession(sessionId);
     if (session != null) {
-      print('✅ Session found in local cache: $sessionId');
+      // Removed verbose logging
+      // print('✅ Session found in local cache: $sessionId');
       return session;
     }
 
@@ -594,7 +737,7 @@ class QuizService {
       final user = _storage.getUser();
       final partner = _storage.getPartner();
       if (user == null || partner == null) {
-        print('⚠️  Cannot load session: user or partner not found');
+        Logger.warn('Cannot load session: user or partner not found', service: 'quiz');
         return null;
       }
 
@@ -617,6 +760,8 @@ class QuizService {
           initiatedBy: data['initiatedBy'] as String,
           subjectUserId: data['subjectUserId'] as String? ?? data['initiatedBy'] as String,
           formatType: data['formatType'] as String? ?? 'classic',
+          isDailyQuest: data['isDailyQuest'] as bool? ?? false,
+          dailyQuestId: data['dailyQuestId'] as String? ?? '',
           answers: data['answers'] != null
               ? Map<String, List<int>>.from(
                   (data['answers'] as Map).map(
@@ -644,14 +789,15 @@ class QuizService {
         // Cache locally
         await _storage.saveQuizSession(session);
 
-        print('✅ Session loaded from Firebase: $sessionId (couple path: /quiz_sessions/$coupleId/$sessionId)');
+        // Removed verbose logging
+        // print('✅ Session loaded from Firebase: $sessionId (couple path: /quiz_sessions/$coupleId/$sessionId)');
         return session;
       }
     } catch (e) {
-      print('❌ Error loading session from Firebase: $e');
+      Logger.error('Error loading session from Firebase', error: e, service: 'quiz');
     }
 
-    print('⚠️  Session not found: $sessionId');
+    Logger.warn('Session not found: $sessionId', service: 'quiz');
     return null;
   }
 
@@ -698,9 +844,10 @@ class QuizService {
         partnerUserId: partner?.pushToken,
       );
 
-      print('✅ Quest marked completed for user $userId');
+      // Removed verbose logging
+      // print('✅ Quest marked completed for user $userId');
     } catch (e) {
-      print('⚠️  Could not mark quest completed: $e');
+      Logger.error('Could not mark quest completed', error: e, service: 'quiz');
       // Don't throw - this is a non-critical operation
     }
   }

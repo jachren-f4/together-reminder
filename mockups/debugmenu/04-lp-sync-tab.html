@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debug Menu - LP & Sync Tab</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #F5F5F5;
+            padding: 20px;
+            color: #1A1A1A;
+        }
+
+        .phone-frame {
+            max-width: 390px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .status-bar {
+            background: white;
+            padding: 8px 20px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        .dialog-header {
+            background: white;
+            padding: 16px 20px;
+            border-bottom: 2px solid #E0E0E0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .dialog-title {
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .copy-all-btn {
+            padding: 8px 12px;
+            background: #2196F3;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .close-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: 16px;
+            border: 2px solid #1A1A1A;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            cursor: pointer;
+        }
+
+        .copy-btn {
+            background: #F0F0F0;
+            border: none;
+            color: #666;
+            font-size: 11px;
+            cursor: pointer;
+            padding: 6px 10px;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+
+        .copy-btn:hover {
+            background: #E0E0E0;
+        }
+
+        .tabs {
+            background: white;
+            display: flex;
+            border-bottom: 2px solid #E0E0E0;
+            overflow-x: auto;
+        }
+
+        .tab {
+            padding: 12px 16px;
+            font-size: 13px;
+            font-weight: 600;
+            white-space: nowrap;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            margin-bottom: -2px;
+        }
+
+        .tab.active {
+            border-bottom-color: #9C27B0;
+            color: #9C27B0;
+        }
+
+        .content {
+            background: #FFFEFD;
+            padding: 16px;
+            max-height: 600px;
+            overflow-y: auto;
+        }
+
+        .section {
+            background: white;
+            border: 2px solid #E0E0E0;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 16px;
+        }
+
+        .section-header {
+            font-size: 12px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .transaction-table {
+            font-size: 11px;
+        }
+
+        .transaction-row {
+            display: grid;
+            grid-template-columns: 50px 40px 60px 1fr 30px;
+            gap: 6px;
+            padding: 8px 0;
+            border-bottom: 1px solid #F0F0F0;
+            align-items: center;
+        }
+
+        .transaction-row:last-child {
+            border-bottom: none;
+        }
+
+        .timestamp {
+            color: #666;
+            font-size: 10px;
+        }
+
+        .user-badge {
+            padding: 3px 6px;
+            background: #E0E0E0;
+            border-radius: 3px;
+            font-weight: 600;
+            font-size: 10px;
+            text-align: center;
+        }
+
+        .amount {
+            font-weight: 700;
+            color: #4CAF50;
+        }
+
+        .reason {
+            font-family: 'Courier New', monospace;
+            font-size: 9px;
+            color: #666;
+        }
+
+        .status-icon {
+            text-align: center;
+        }
+
+        .total-lp {
+            background: #F8F8F8;
+            padding: 12px;
+            border-radius: 6px;
+            margin-top: 12px;
+            display: flex;
+            justify-content: space-around;
+        }
+
+        .lp-item {
+            text-align: center;
+        }
+
+        .lp-label {
+            font-size: 10px;
+            color: #666;
+            margin-bottom: 4px;
+        }
+
+        .lp-value {
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .award-list {
+            max-height: 150px;
+            overflow-y: auto;
+        }
+
+        .award-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 6px 0;
+            border-bottom: 1px solid #F0F0F0;
+            font-size: 11px;
+        }
+
+        .award-id {
+            font-family: 'Courier New', monospace;
+            font-size: 10px;
+            color: #666;
+        }
+
+        .warning-box {
+            background: #FFF3E0;
+            border-left: 4px solid #FF9800;
+            padding: 10px;
+            border-radius: 4px;
+            margin-top: 12px;
+            font-size: 11px;
+        }
+
+        .apply-btn {
+            margin-top: 8px;
+            padding: 8px;
+            background: #FF9800;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        .sync-status {
+            font-size: 11px;
+            margin-bottom: 12px;
+        }
+
+        .status-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 6px 0;
+            border-bottom: 1px solid #F0F0F0;
+        }
+
+        .status-label {
+            color: #666;
+        }
+
+        .status-value {
+            font-weight: 600;
+        }
+
+        .firebase-path {
+            font-family: 'Courier New', monospace;
+            font-size: 10px;
+            color: #2196F3;
+            margin-bottom: 8px;
+        }
+
+        .listener-badge {
+            display: inline-block;
+            padding: 3px 8px;
+            background: #4CAF50;
+            color: white;
+            font-size: 10px;
+            font-weight: 700;
+            border-radius: 3px;
+        }
+
+        .event-log {
+            background: #F8F8F8;
+            padding: 10px;
+            border-radius: 6px;
+            max-height: 150px;
+            overflow-y: auto;
+        }
+
+        .event-item {
+            font-size: 10px;
+            padding: 4px 0;
+            font-family: 'Courier New', monospace;
+            color: #333;
+        }
+
+        .event-time {
+            color: #666;
+            margin-right: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="phone-frame">
+        <div class="status-bar">
+            <span>9:41</span>
+            <span>📶 🔋 85%</span>
+        </div>
+
+        <div class="dialog-header">
+            <div class="dialog-title">🐛 Debug Menu</div>
+            <div class="header-actions">
+                <button class="copy-all-btn">📋 Copy All</button>
+                <div class="close-btn">×</div>
+            </div>
+        </div>
+
+        <div class="tabs">
+            <div class="tab">Overview</div>
+            <div class="tab">Quests</div>
+            <div class="tab">Sessions</div>
+            <div class="tab active">LP & Sync</div>
+            <div class="tab">Actions</div>
+        </div>
+
+        <div class="content">
+            <!-- Love Point Transactions -->
+            <div class="section">
+                <div class="section-header">
+                    <span>💰 Love Point Transactions (Last 20)</span>
+                    <button class="copy-btn">📋</button>
+                </div>
+                <div class="transaction-table">
+                    <div class="transaction-row">
+                        <span class="timestamp">2h ago</span>
+                        <span class="user-badge">Alice</span>
+                        <span class="amount">+30 LP</span>
+                        <span class="reason">quiz_abc...</span>
+                        <span class="status-icon">✅</span>
+                    </div>
+                    <div class="transaction-row">
+                        <span class="timestamp">2h ago</span>
+                        <span class="user-badge">Bob</span>
+                        <span class="amount">+30 LP</span>
+                        <span class="reason">quiz_abc...</span>
+                        <span class="status-icon">✅</span>
+                    </div>
+                    <div class="transaction-row">
+                        <span class="timestamp">1d ago</span>
+                        <span class="user-badge">Alice</span>
+                        <span class="amount">+30 LP</span>
+                        <span class="reason">affirm_...</span>
+                        <span class="status-icon">✅</span>
+                    </div>
+                    <div class="transaction-row">
+                        <span class="timestamp">1d ago</span>
+                        <span class="user-badge">Bob</span>
+                        <span class="amount">+30 LP</span>
+                        <span class="reason">affirm_...</span>
+                        <span class="status-icon">⏳</span>
+                    </div>
+                    <div class="transaction-row">
+                        <span class="timestamp">2d ago</span>
+                        <span class="user-badge">Alice</span>
+                        <span class="amount">+30 LP</span>
+                        <span class="reason">quiz_def...</span>
+                        <span class="status-icon">✅</span>
+                    </div>
+                    <div class="transaction-row">
+                        <span class="timestamp">2d ago</span>
+                        <span class="user-badge">Bob</span>
+                        <span class="amount">+30 LP</span>
+                        <span class="reason">quiz_def...</span>
+                        <span class="status-icon">✅</span>
+                    </div>
+                </div>
+
+                <div class="total-lp">
+                    <div class="lp-item">
+                        <div class="lp-label">Alice Total</div>
+                        <div class="lp-value">420 LP</div>
+                    </div>
+                    <div class="lp-item">
+                        <div class="lp-label">Bob Total</div>
+                        <div class="lp-value">390 LP</div>
+                        <div style="font-size: 10px; color: #FF9800; margin-top: 4px;">30 LP pending</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Applied LP Awards -->
+            <div class="section">
+                <div class="section-header">
+                    <span>📋 Applied LP Awards (app_metadata)</span>
+                    <button class="copy-btn">📋</button>
+                </div>
+                <div style="font-size: 11px; color: #666; margin-bottom: 8px;">
+                    Tracked Awards: 12
+                </div>
+                <div class="award-list">
+                    <div class="award-item">
+                        <span class="award-id">award_abc123</span>
+                        <span style="color: #4CAF50;">✅</span>
+                    </div>
+                    <div class="award-item">
+                        <span class="award-id">award_def456</span>
+                        <span style="color: #4CAF50;">✅</span>
+                    </div>
+                    <div class="award-item">
+                        <span class="award-id">award_ghi789</span>
+                        <span style="color: #FF9800;">⏳ Pending</span>
+                    </div>
+                    <div class="award-item">
+                        <span class="award-id">award_jkl012</span>
+                        <span style="color: #4CAF50;">✅</span>
+                    </div>
+                    <div class="award-item">
+                        <span class="award-id">award_mno345</span>
+                        <span style="color: #4CAF50;">✅</span>
+                    </div>
+                </div>
+
+                <div class="warning-box">
+                    ⚠️ Found 1 unapplied award in Firebase
+                    <button class="apply-btn">Apply Now</button>
+                </div>
+            </div>
+
+            <!-- Firebase Sync Status -->
+            <div class="section">
+                <div class="section-header">
+                    <span>🔥 Firebase Sync Status</span>
+                    <button class="copy-btn">📋</button>
+                </div>
+
+                <div class="firebase-path">/daily_quests/{coupleId}/{dateKey}</div>
+                <div class="sync-status">
+                    <div class="status-row">
+                        <span class="status-label">Last Synced</span>
+                        <span class="status-value">5 seconds ago</span>
+                    </div>
+                    <div class="status-row">
+                        <span class="status-label">Listener</span>
+                        <span class="listener-badge">✅ Active</span>
+                    </div>
+                    <div class="status-row">
+                        <span class="status-label">Events Received</span>
+                        <span class="status-value">3 in last hour</span>
+                    </div>
+                </div>
+
+                <div class="firebase-path" style="margin-top: 12px;">/quiz_progression/{coupleId}</div>
+                <div class="sync-status">
+                    <div class="status-row">
+                        <span class="status-label">Current Track</span>
+                        <span class="status-value">0 (Tier 1 - Easy)</span>
+                    </div>
+                    <div class="status-row">
+                        <span class="status-label">Current Position</span>
+                        <span class="status-value">3</span>
+                    </div>
+                    <div class="status-row">
+                        <span class="status-label">Total Completed</span>
+                        <span class="status-value">5 quizzes</span>
+                    </div>
+                    <div class="status-row">
+                        <span class="status-label">Last Updated</span>
+                        <span class="status-value">1d ago</span>
+                    </div>
+                </div>
+
+                <div class="firebase-path" style="margin-top: 12px;">/lp_awards/{coupleId}</div>
+                <div class="sync-status">
+                    <div class="status-row">
+                        <span class="status-label">Total Awards</span>
+                        <span class="status-value">5</span>
+                    </div>
+                    <div class="status-row">
+                        <span class="status-label">Pending Application</span>
+                        <span class="status-value" style="color: #FF9800;">1</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Real-time Listener Log -->
+            <div class="section">
+                <div class="section-header">
+                    <span>📡 Real-time Listener Log (Last 10)</span>
+                    <button class="copy-btn">📋</button>
+                </div>
+                <div class="event-log">
+                    <div class="event-item">
+                        <span class="event-time">14:23:05</span> Partner completed quest_123
+                    </div>
+                    <div class="event-item">
+                        <span class="event-time">14:18:32</span> LP award received (award_xyz, 30 LP)
+                    </div>
+                    <div class="event-item">
+                        <span class="event-time">14:15:10</span> Quest sync: 3 quests loaded from Firebase
+                    </div>
+                    <div class="event-item">
+                        <span class="event-time">12:45:22</span> Partner started quiz session_abc
+                    </div>
+                    <div class="event-item">
+                        <span class="event-time">12:30:15</span> Progression advanced to position 3
+                    </div>
+                    <div class="event-item">
+                        <span class="event-time">11:20:08</span> Partner completed quest_456
+                    </div>
+                    <div class="event-item">
+                        <span class="event-time">10:15:42</span> Quest sync: IDs match ✅
+                    </div>
+                    <div class="event-item">
+                        <span class="event-time">09:00:00</span> New quests generated
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

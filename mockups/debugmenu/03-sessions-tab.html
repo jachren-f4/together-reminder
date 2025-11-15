@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debug Menu - Sessions Tab</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #F5F5F5;
+            padding: 20px;
+            color: #1A1A1A;
+        }
+
+        .phone-frame {
+            max-width: 390px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .status-bar {
+            background: white;
+            padding: 8px 20px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        .dialog-header {
+            background: white;
+            padding: 16px 20px;
+            border-bottom: 2px solid #E0E0E0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .dialog-title {
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .copy-all-btn {
+            padding: 8px 12px;
+            background: #2196F3;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .close-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: 16px;
+            border: 2px solid #1A1A1A;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            cursor: pointer;
+        }
+
+        .copy-btn {
+            background: #F0F0F0;
+            border: none;
+            color: #666;
+            font-size: 11px;
+            cursor: pointer;
+            padding: 6px 10px;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+
+        .copy-btn:hover {
+            background: #E0E0E0;
+        }
+
+        .tabs {
+            background: white;
+            display: flex;
+            border-bottom: 2px solid #E0E0E0;
+            overflow-x: auto;
+        }
+
+        .tab {
+            padding: 12px 16px;
+            font-size: 13px;
+            font-weight: 600;
+            white-space: nowrap;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            margin-bottom: -2px;
+        }
+
+        .tab.active {
+            border-bottom-color: #FF9800;
+            color: #FF9800;
+        }
+
+        .content {
+            background: #FFFEFD;
+            padding: 16px;
+            max-height: 600px;
+            overflow-y: auto;
+        }
+
+        .filter-chips {
+            display: flex;
+            gap: 6px;
+            margin-bottom: 16px;
+            overflow-x: auto;
+            padding-bottom: 8px;
+        }
+
+        .chip {
+            padding: 6px 12px;
+            border: 2px solid #E0E0E0;
+            border-radius: 16px;
+            font-size: 11px;
+            font-weight: 600;
+            white-space: nowrap;
+            cursor: pointer;
+        }
+
+        .chip.active {
+            background: #1A1A1A;
+            color: white;
+            border-color: #1A1A1A;
+        }
+
+        .session-card {
+            background: white;
+            border: 2px solid #E0E0E0;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 16px;
+        }
+
+        .session-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 12px;
+        }
+
+        .session-title {
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        .session-id {
+            font-size: 10px;
+            font-family: 'Courier New', monospace;
+            color: #666;
+        }
+
+        .session-type-badge {
+            padding: 4px 8px;
+            background: #E91E63;
+            color: white;
+            font-size: 10px;
+            font-weight: 700;
+            border-radius: 4px;
+        }
+
+        .session-meta {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .meta-item {
+            font-size: 11px;
+        }
+
+        .meta-label {
+            color: #666;
+            margin-bottom: 2px;
+        }
+
+        .meta-value {
+            font-weight: 600;
+        }
+
+        .scores {
+            background: #F8F8F8;
+            padding: 10px;
+            border-radius: 6px;
+            margin-bottom: 12px;
+        }
+
+        .scores-header {
+            font-size: 11px;
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+
+        .score-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 4px 0;
+            font-size: 12px;
+        }
+
+        .score-bar {
+            flex: 1;
+            margin-left: 12px;
+            height: 8px;
+            background: #E0E0E0;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .score-fill {
+            height: 100%;
+            background: #4CAF50;
+        }
+
+        .action-btns {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 6px;
+        }
+
+        .mini-btn {
+            padding: 8px;
+            background: white;
+            border: 2px solid #1A1A1A;
+            border-radius: 6px;
+            font-size: 10px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .question-viewer {
+            background: #FFF9E6;
+            border: 2px solid #FFC107;
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 16px;
+        }
+
+        .question-header {
+            font-size: 11px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: #F57C00;
+        }
+
+        .question-text {
+            font-size: 12px;
+            margin-bottom: 8px;
+            line-height: 1.4;
+        }
+
+        .question-meta {
+            font-size: 10px;
+            color: #666;
+            margin-bottom: 8px;
+        }
+
+        .answers-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 6px;
+        }
+
+        .answer-item {
+            background: white;
+            padding: 6px;
+            border-radius: 4px;
+            font-size: 11px;
+        }
+
+        .hearts {
+            color: #E91E63;
+            font-size: 14px;
+            margin-top: 2px;
+        }
+
+        .fallback-test {
+            background: #E8F5E9;
+            border-left: 4px solid #4CAF50;
+            padding: 12px;
+            border-radius: 4px;
+        }
+
+        .fallback-header {
+            font-size: 11px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .fallback-step {
+            font-size: 11px;
+            padding: 4px 0;
+            display: flex;
+            align-items: flex-start;
+            gap: 6px;
+        }
+    </style>
+</head>
+<body>
+    <div class="phone-frame">
+        <div class="status-bar">
+            <span>9:41</span>
+            <span>📶 🔋 85%</span>
+        </div>
+
+        <div class="dialog-header">
+            <div class="dialog-title">🐛 Debug Menu</div>
+            <div class="header-actions">
+                <button class="copy-all-btn">📋 Copy All</button>
+                <div class="close-btn">×</div>
+            </div>
+        </div>
+
+        <div class="tabs">
+            <div class="tab">Overview</div>
+            <div class="tab">Quests</div>
+            <div class="tab active">Sessions</div>
+            <div class="tab">LP & Sync</div>
+            <div class="tab">Actions</div>
+        </div>
+
+        <div class="content">
+            <!-- Filter Chips -->
+            <div class="filter-chips">
+                <div class="chip active">All</div>
+                <div class="chip">Affirmations</div>
+                <div class="chip">Classic Quiz</div>
+                <div class="chip">Word Ladder</div>
+                <div class="chip">Memory</div>
+            </div>
+
+            <!-- Session Card 1 (Expanded) -->
+            <div class="session-card">
+                <div class="session-header">
+                    <div>
+                        <div class="session-title">📝 Gentle Beginnings</div>
+                        <div class="session-id">session_abc123</div>
+                    </div>
+                    <div style="display: flex; gap: 6px; align-items: center;">
+                        <div class="session-type-badge">Affirmation</div>
+                        <button class="copy-btn">📋</button>
+                    </div>
+                </div>
+
+                <div class="session-meta">
+                    <div class="meta-item">
+                        <div class="meta-label">Created</div>
+                        <div class="meta-value">2h ago</div>
+                    </div>
+                    <div class="meta-item">
+                        <div class="meta-label">Status</div>
+                        <div class="meta-value">completed</div>
+                    </div>
+                    <div class="meta-item">
+                        <div class="meta-label">Questions</div>
+                        <div class="meta-value">5 (all 'scale')</div>
+                    </div>
+                    <div class="meta-item">
+                        <div class="meta-label">Category</div>
+                        <div class="meta-value">trust</div>
+                    </div>
+                </div>
+
+                <div class="scores">
+                    <div class="scores-header">📊 Individual Scores</div>
+                    <div class="score-row">
+                        <span style="width: 60px;">Alice:</span>
+                        <div class="score-bar">
+                            <div class="score-fill" style="width: 72%;"></div>
+                        </div>
+                        <span style="width: 50px; text-align: right; font-weight: 700;">72%</span>
+                    </div>
+                    <div class="score-row">
+                        <span style="width: 60px;">Bob:</span>
+                        <div class="score-bar">
+                            <div class="score-fill" style="width: 84%;"></div>
+                        </div>
+                        <span style="width: 50px; text-align: right; font-weight: 700;">84%</span>
+                    </div>
+                    <div style="font-size: 10px; color: #666; margin-top: 6px;">
+                        Alice avg: 3.6/5 • Bob avg: 4.2/5
+                    </div>
+                </div>
+
+                <div class="action-btns">
+                    <button class="mini-btn">View Questions</button>
+                    <button class="mini-btn">View Answers</button>
+                    <button class="mini-btn">View Raw</button>
+                </div>
+            </div>
+
+            <!-- Question Viewer (Expanded) -->
+            <div class="question-viewer">
+                <div class="question-header">Question 1/5</div>
+                <div class="question-text">
+                    "I feel comfortable sharing my vulnerabilities with my partner"
+                </div>
+                <div class="question-meta">
+                    ID: trust_gentle_q1<br>
+                    Type: scale ✅
+                </div>
+                <div class="answers-grid">
+                    <div class="answer-item">
+                        <div style="font-weight: 600; margin-bottom: 4px;">Alice</div>
+                        <div class="hearts">♥♥♥♥♡</div>
+                        <div style="font-size: 10px; color: #666; margin-top: 2px;">4/5 (Agree)</div>
+                    </div>
+                    <div class="answer-item">
+                        <div style="font-weight: 600; margin-bottom: 4px;">Bob</div>
+                        <div class="hearts">♥♥♥♥♥</div>
+                        <div style="font-size: 10px; color: #666; margin-top: 2px;">5/5 (Strongly Agree)</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Fallback Loading Test -->
+            <div class="fallback-test">
+                <div class="fallback-header">🧪 Fallback Loading Test</div>
+                <div style="font-size: 10px; color: #666; margin-bottom: 8px;">
+                    Session ID: session_abc123
+                </div>
+                <div class="fallback-step">
+                    <span>1.</span>
+                    <div>
+                        Extract Quiz ID from Question IDs:<br>
+                        <span style="font-family: 'Courier New', monospace; font-size: 10px;">trust_gentle_q1 → "trust_gentle" ✅</span>
+                    </div>
+                </div>
+                <div class="fallback-step">
+                    <span>2.</span>
+                    <div>
+                        Load from AffirmationQuizBank:<br>
+                        <span style="font-size: 10px;">Found quiz: "Gentle Beginnings" ✅<br>Questions: 5 ✅</span>
+                    </div>
+                </div>
+                <div class="fallback-step">
+                    <span>3.</span>
+                    <div>
+                        <strong>Fallback would succeed ✅</strong>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Session Card 2 (Collapsed) -->
+            <div class="session-card">
+                <div class="session-header">
+                    <div>
+                        <div class="session-title">🎯 Getting to Know You</div>
+                        <div class="session-id">session_def456</div>
+                    </div>
+                    <div style="display: flex; gap: 6px; align-items: center;">
+                        <div class="session-type-badge" style="background: #2196F3;">Classic Quiz</div>
+                        <button class="copy-btn">📋</button>
+                    </div>
+                </div>
+
+                <div class="session-meta">
+                    <div class="meta-item">
+                        <div class="meta-label">Created</div>
+                        <div class="meta-value">1d ago</div>
+                    </div>
+                    <div class="meta-item">
+                        <div class="meta-label">Status</div>
+                        <div class="meta-value">completed</div>
+                    </div>
+                    <div class="meta-item">
+                        <div class="meta-label">Questions</div>
+                        <div class="meta-value">6</div>
+                    </div>
+                    <div class="meta-item">
+                        <div class="meta-label">Match</div>
+                        <div class="meta-value">83%</div>
+                    </div>
+                </div>
+
+                <div class="action-btns">
+                    <button class="mini-btn">View Questions</button>
+                    <button class="mini-btn">View Answers</button>
+                    <button class="mini-btn">View Raw</button>
+                </div>
+            </div>
+
+            <!-- Session Card 3 (Word Ladder) -->
+            <div class="session-card">
+                <div class="session-header">
+                    <div>
+                        <div class="session-title">🪜 LOVE → WARM</div>
+                        <div class="session-id">session_ghi789</div>
+                    </div>
+                    <div style="display: flex; gap: 6px; align-items: center;">
+                        <div class="session-type-badge" style="background: #4CAF50;">Word Ladder</div>
+                        <button class="copy-btn">📋</button>
+                    </div>
+                </div>
+
+                <div class="session-meta">
+                    <div class="meta-item">
+                        <div class="meta-label">Created</div>
+                        <div class="meta-value">3h ago</div>
+                    </div>
+                    <div class="meta-item">
+                        <div class="meta-label">Status</div>
+                        <div class="meta-value">in_progress</div>
+                    </div>
+                    <div class="meta-item">
+                        <div class="meta-label">Steps</div>
+                        <div class="meta-value">3 / 6</div>
+                    </div>
+                    <div class="meta-item">
+                        <div class="meta-label">Current Turn</div>
+                        <div class="meta-value">Bob</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -28,13 +28,15 @@ class QuizQuestionAdapter extends TypeAdapter<QuizQuestion> {
       seasonalTheme: fields[8] as String?,
       timesAsked: fields[9] == null ? 0 : fields[9] as int,
       avgMatchRate: fields[10] == null ? 0.0 : fields[10] as double,
+      questionType:
+          fields[11] == null ? 'multiple_choice' : fields[11] as String,
     );
   }
 
   @override
   void write(BinaryWriter writer, QuizQuestion obj) {
     writer
-      ..writeByte(11)
+      ..writeByte(12)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -56,7 +58,9 @@ class QuizQuestionAdapter extends TypeAdapter<QuizQuestion> {
       ..writeByte(9)
       ..write(obj.timesAsked)
       ..writeByte(10)
-      ..write(obj.avgMatchRate);
+      ..write(obj.avgMatchRate)
+      ..writeByte(11)
+      ..write(obj.questionType);
   }
 
   @override

@@ -232,6 +232,10 @@ class QuestCard extends StatelessWidget {
       case QuestType.question:
         return 'QUESTION';
       case QuestType.quiz:
+        // Check quest formatType (always available from Firebase sync)
+        if (quest.formatType == 'affirmation') {
+          return 'AFFIRMATION';
+        }
         return 'QUIZ';
       case QuestType.game:
         return 'GAME';
@@ -247,7 +251,12 @@ class QuestCard extends StatelessWidget {
       case QuestType.question:
         return 'Daily Question';
       case QuestType.quiz:
-        // Use sort order to generate distinct titles
+        // Check quest formatType first (always available from Firebase)
+        if (quest.formatType == 'affirmation') {
+          // Use quest.quizName (synced from Firebase) or fallback
+          return quest.quizName ?? 'Affirmation Quiz';
+        }
+        // Use sort order to generate distinct titles for classic quizzes
         return _getQuizTitle(quest.sortOrder);
       case QuestType.game:
         return 'Fun Game';

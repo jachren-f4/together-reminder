@@ -168,6 +168,49 @@ All paths require security rules in `database.rules.json`:
 - `lib/widgets/foreground_notification_banner.dart`
 - `lib/widgets/daily_quests_widget.dart:86-102`
 
+### 9. Logger Service (Centralized Logging)
+
+**CRITICAL:** Use `Logger` instead of `print()` for all logging.
+
+**Usage:**
+```dart
+import '../utils/logger.dart';
+
+Logger.debug('Processing data', service: 'quiz');      // Only in debug mode
+Logger.info('User logged in', service: 'auth');        // Only in debug mode
+Logger.warn('Slow network', service: 'network');       // Only in debug mode
+Logger.error('Failed to load', error: e, service: 'quiz');  // Always logs
+Logger.success('Quest completed', service: 'quest');   // Only in debug mode
+```
+
+**Benefits:**
+- ✅ Automatic debug/production filtering (respects `kDebugMode`)
+- ✅ Per-service verbosity control (disable noisy services)
+- ✅ Timestamps for timing analysis (HH:MM:SS format)
+- ✅ Error object and stack trace support
+- ✅ Ready for future Crashlytics integration
+
+**Per-Service Verbosity:**
+Edit `lib/utils/logger.dart` to disable specific services:
+```dart
+static const Map<String, bool> _serviceVerbosity = {
+  'quiz': true,
+  'notification': true,
+  'mock': false,  // Suppresses mock data logs
+};
+```
+
+**When to use each level:**
+- `debug()` - Detailed flow tracking, development debugging
+- `info()` - Important state changes, non-errors
+- `warn()` - Recoverable issues, unexpected situations
+- `error()` - Failures, exceptions (always logs, even in production)
+- `success()` - Operation confirmations (only when needed)
+
+**Related files:**
+- `lib/utils/logger.dart` - Logger implementation
+- See `lib/services/quiz_service.dart` for usage examples
+
 ---
 
 ## Testing & Debugging
@@ -176,40 +219,51 @@ All paths require security rules in `database.rules.json`:
 
 Use when testing quest sync, Firebase RTDB sync, Love Point awards, or cross-device synchronization.
 
-#### Quick Reference
+#### Quick Reference (Optimized with Parallel Builds)
 
 ```bash
-# 1. Uninstall Android app (clears Hive local storage)
-~/Library/Android/sdk/platform-tools/adb uninstall com.togetherremind.togetherremind2
-
-# 2. Kill Flutter processes
+# 1. Kill existing Flutter processes
 pkill -9 -f "flutter"
 
-# 3. Clean Firebase RTDB
+# 2. Start builds in parallel (background)
+cd /Users/joakimachren/Desktop/togetherremind/app
+flutter build apk --debug &
+ANDROID_BUILD_PID=$!
+flutter build web --debug &
+WEB_BUILD_PID=$!
+
+# 3. While builds run, do cleanup
+~/Library/Android/sdk/platform-tools/adb uninstall com.togetherremind.togetherremind
+
 cd /Users/joakimachren/Desktop/togetherremind
 firebase database:remove /daily_quests --force
 firebase database:remove /quiz_sessions --force
 firebase database:remove /lp_awards --force
 firebase database:remove /quiz_progression --force
 
-# 4. Launch Alice (Android) - generates fresh quests
+# 4. Wait for builds to complete
+echo "⏳ Waiting for builds to complete..."
+wait $ANDROID_BUILD_PID && echo "✅ Android build complete"
+wait $WEB_BUILD_PID && echo "✅ Web build complete"
+
+# 5. Launch Alice (Android) - generates fresh quests
 cd /Users/joakimachren/Desktop/togetherremind/app
 flutter run -d emulator-5554 &
 
-# 5. Wait 10 seconds, then launch Bob (Chrome) - loads from Firebase
-sleep 10 && flutter run -d chrome &
+# 6. Launch Bob (Chrome) - loads from Firebase
+flutter run -d chrome &
 ```
 
 #### Detailed Steps
 
 **Step 1: Uninstall Android App**
 ```bash
-# Try new Bundle ID first
-~/Library/Android/sdk/platform-tools/adb uninstall com.togetherremind.togetherremind2
+# Try current Android Bundle ID first
+~/Library/Android/sdk/platform-tools/adb uninstall com.togetherremind.togetherremind
 
 # If DELETE_FAILED_INTERNAL_ERROR, check what's installed
 ~/Library/Android/sdk/platform-tools/adb shell pm list packages | grep togetherremind
-~/Library/Android/sdk/platform-tools/adb uninstall com.togetherremind.togetherremind
+~/Library/Android/sdk/platform-tools/adb uninstall com.togetherremind.togetherremind2
 ```
 - **Why:** Removes app and local Hive storage, ensuring fresh initialization
 - **Note:** MUST use full path `~/Library/Android/sdk/platform-tools/adb` (not in PATH)
@@ -253,7 +307,6 @@ flutter run -d emulator-5554 &
 
 **Step 6: Launch Bob (Chrome)**
 ```bash
-sleep 10  # Wait for Alice initialization
 cd /Users/joakimachren/Desktop/togetherremind/app
 flutter run -d chrome &
 ```
@@ -267,19 +320,31 @@ flutter run -d chrome &
 - Validates proper initialization sequence
 - Reproduces real user experience of clean launches and first-time pairing
 
+### Parallel Build Optimization
+
+The optimized procedure runs builds in parallel with cleanup tasks:
+- **Time savings:** ~10-15 seconds (builds run during cleanup)
+- **Android build:** ~12-15 seconds (runs in background)
+- **Web build:** ~15-18 seconds (runs in background)
+- **Cleanup tasks:** ~5-8 seconds (uninstall + Firebase clear)
+- **Result:** Builds complete by the time cleanup finishes, ready to launch immediately
+
 ### Debugging Tools
 
-#### In-App Debug Menu
+#### Enhanced Debug Menu
 
 **Access:** Double-tap greeting text ("Good morning" / "Good afternoon")
 
 **Features:**
-- View Firebase RTDB data for current couple's daily quests
-- View local Hive storage quest data
-- Copy to clipboard for sharing
-- **"Clear Local Storage & Reload"** button - Clears ONLY Hive boxes (local data), NOT Firebase
+- 5-tab interface (Overview, Quests, Sessions, LP & Sync, Actions)
+- Firebase vs Local comparison with validation
+- Copy to clipboard at page/section/card level
+- Pull-to-refresh on Overview, Quests, Sessions, LP tabs
+- Selective storage clearing (requires app restart)
 
-⚠️ **IMPORTANT:** Debug button does NOT clear Firebase - use external script
+⚠️ **IMPORTANT:**
+- Old `debug_quest_dialog.dart` still exists but not used (can be removed)
+- Clear storage does NOT clear Firebase - use external script
 
 #### Helper Scripts (in `/tmp/`)
 
@@ -328,6 +393,7 @@ flutter run -d chrome &
 |------|---------|
 | `lib/config/dev_config.dart` | Mock data control, simulator detection |
 | `lib/firebase_options.dart` | Auto-generated Firebase config |
+| `lib/utils/logger.dart` | Centralized logging service (replaces print) |
 | `functions/index.js` | Cloud Functions (sendReminder, sendPoke, etc.) |
 | `database.rules.json` | RTDB security rules |
 
@@ -354,6 +420,19 @@ flutter run -d chrome &
 | `lib/widgets/poke_response_dialog.dart` | Receive poke dialog |
 | `lib/widgets/match_reveal_dialog.dart` | Memory Flip match celebration |
 | `lib/widgets/foreground_notification_banner.dart` | In-app notification banner |
+
+### Debug Menu
+
+| File | Purpose |
+|------|---------|
+| `lib/widgets/debug/debug_menu.dart` | Main tab-based debug interface (5 tabs) |
+| `lib/widgets/debug/tabs/overview_tab.dart` | System health, device info, storage stats |
+| `lib/widgets/debug/tabs/quests_tab.dart` | Quest comparison, validation, detailed cards |
+| `lib/widgets/debug/tabs/sessions_tab.dart` | Quiz session inspector with filters |
+| `lib/widgets/debug/tabs/lp_sync_tab.dart` | LP transactions, Firebase sync monitoring |
+| `lib/widgets/debug/tabs/actions_tab.dart` | Data cleanup, clipboard operations |
+| `lib/widgets/debug/components/` | Shared components (copy button, section card, status indicator) |
+| `lib/services/clipboard_service.dart` | Clipboard operations with user feedback |
 
 ### Models
 

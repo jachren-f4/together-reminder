@@ -4,6 +4,7 @@ import 'package:togetherremind/models/partner.dart';
 import 'package:togetherremind/models/user.dart';
 import 'package:togetherremind/services/storage_service.dart';
 import 'package:togetherremind/services/love_point_service.dart';
+import '../utils/logger.dart';
 
 class ReminderService {
   static final FirebaseFunctions _functions = FirebaseFunctions.instance;
@@ -16,19 +17,20 @@ class ReminderService {
       final user = _storage.getUser();
 
       if (partner == null) {
-        print('❌ No partner found, cannot send reminder');
+        Logger.error('No partner found, cannot send reminder', service: 'reminder');
         return false;
       }
 
       if (user == null) {
-        print('❌ No user found, cannot send reminder');
+        Logger.error('No user found, cannot send reminder', service: 'reminder');
         return false;
       }
 
-      print('📤 Sending reminder to partner...');
-      print('   Partner token: ${partner.pushToken}');
-      print('   Sender: ${user.name ?? 'You'}');
-      print('   Text: ${reminder.text}');
+      // Removed verbose logging
+      // print('📤 Sending reminder to partner...');
+      // print('   Partner token: ${partner.pushToken}');
+      // print('   Sender: ${user.name ?? 'You'}');
+      // print('   Text: ${reminder.text}');
 
       // Call Cloud Function
       final callable = _functions.httpsCallable('sendReminder');
@@ -40,7 +42,8 @@ class ReminderService {
         'scheduledFor': reminder.scheduledFor.toIso8601String(),
       });
 
-      print('✅ Cloud Function response: ${result.data}');
+      // Removed verbose logging
+      // Logger.success('Cloud Function response: ${result.data}', service: 'reminder');
 
       // Award LP for sending reminder
       await LovePointService.awardPoints(
@@ -51,7 +54,7 @@ class ReminderService {
 
       return true;
     } catch (e) {
-      print('❌ Error sending reminder: $e');
+      Logger.error('Error sending reminder', error: e, service: 'reminder');
       // Save as pending_send for retry later
       reminder.status = 'pending_send';
       await _storage.saveReminder(reminder);
@@ -83,6 +86,7 @@ class ReminderService {
       relatedId: reminderId,
     );
 
-    print('✅ Reminder marked as done, awarded 5 LP');
+    // Removed verbose logging
+    // Logger.success('Reminder marked as done, awarded 5 LP', service: 'reminder');
   }
 }

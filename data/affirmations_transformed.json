@@ -116,6 +116,123 @@
           "correctAnswer": null
         }
       ]
+    },
+    {
+      "id": "getting_comfortable",
+      "name": "Getting Comfortable",
+      "category": "trust",
+      "difficulty": 1,
+      "formatType": "affirmation",
+      "questions": [
+        {
+          "question": "I feel at ease expressing basic preferences.",
+          "questionType": "scale",
+          "options": [],
+          "correctAnswer": null
+        },
+        {
+          "question": "We can relax in silence together.",
+          "questionType": "scale",
+          "options": [],
+          "correctAnswer": null
+        },
+        {
+          "question": "We're good at making each other comfortable.",
+          "questionType": "scale",
+          "options": [],
+          "correctAnswer": null
+        },
+        {
+          "question": "We navigate small decisions without difficulty.",
+          "questionType": "scale",
+          "options": [],
+          "correctAnswer": null
+        },
+        {
+          "question": "I feel accepted as I am.",
+          "questionType": "scale",
+          "options": [],
+          "correctAnswer": null
+        }
+      ]
+    },
+    {
+      "id": "playful_moments",
+      "name": "Playful Moments",
+      "category": "trust",
+      "difficulty": 1,
+      "formatType": "affirmation",
+      "questions": [
+        {
+          "question": "We enjoy light teasing or playful banter.",
+          "questionType": "scale",
+          "options": [],
+          "correctAnswer": null
+        },
+        {
+          "question": "Our relationship includes fun moments every week.",
+          "questionType": "scale",
+          "options": [],
+          "correctAnswer": null
+        },
+        {
+          "question": "We bring humor into everyday situations.",
+          "questionType": "scale",
+          "options": [],
+          "correctAnswer": null
+        },
+        {
+          "question": "We make each other smile without trying.",
+          "questionType": "scale",
+          "options": [],
+          "correctAnswer": null
+        },
+        {
+          "question": "Playfulness helps us stay close.",
+          "questionType": "scale",
+          "options": [],
+          "correctAnswer": null
+        }
+      ]
+    },
+    {
+      "id": "feelgood_foundations",
+      "name": "Feel-Good Foundations",
+      "category": "trust",
+      "difficulty": 1,
+      "formatType": "affirmation",
+      "questions": [
+        {
+          "question": "Our relationship feels grounded in positivity.",
+          "questionType": "scale",
+          "options": [],
+          "correctAnswer": null
+        },
+        {
+          "question": "I feel good about the way we interact.",
+          "questionType": "scale",
+          "options": [],
+          "correctAnswer": null
+        },
+        {
+          "question": "There's a sense of ease between us.",
+          "questionType": "scale",
+          "options": [],
+          "correctAnswer": null
+        },
+        {
+          "question": "We create a pleasant environment together.",
+          "questionType": "scale",
+          "options": [],
+          "correctAnswer": null
+        },
+        {
+          "question": "I feel emotionally steady when we spend time together.",
+          "questionType": "scale",
+          "options": [],
+          "correctAnswer": null
+        }
+      ]
     }
   ]
 }

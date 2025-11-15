@@ -49,6 +49,18 @@ class QuizSession extends HiveObject {
   @HiveField(14)
   Map<String, int>? predictionScores; // For "Would You Rather": userId -> number of correct predictions
 
+  @HiveField(15)
+  String? quizName; // For affirmation quizzes: display name
+
+  @HiveField(16)
+  String? category; // For affirmation quizzes: category (trust, emotional_support, etc.)
+
+  @HiveField(17, defaultValue: false)
+  bool isDailyQuest; // True if this quiz session was created from a daily quest
+
+  @HiveField(18, defaultValue: '')
+  String dailyQuestId; // Links back to the DailyQuest that created this session
+
   QuizSession({
     required this.id,
     required this.questionIds,
@@ -58,6 +70,10 @@ class QuizSession extends HiveObject {
     required this.initiatedBy,
     this.subjectUserId = '',
     this.formatType,
+    this.quizName,
+    this.category,
+    this.isDailyQuest = false,
+    this.dailyQuestId = '',
     this.answers,
     this.predictions,
     this.alignmentMatches = 0,

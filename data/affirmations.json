@@ -35,5 +35,41 @@
         "I feel happy sharing everyday experiences with my partner.",
         "Small joys help strengthen our bond."
       ]
+    },
+    {
+      "name": "Getting Comfortable",
+      "difficulty_stage": 1,
+      "tags": ["comfort", "early-stage", "connection"],
+      "items": [
+        "I feel at ease expressing basic preferences.",
+        "We can relax in silence together.",
+        "We're good at making each other comfortable.",
+        "We navigate small decisions without difficulty.",
+        "I feel accepted as I am."
+      ]
+    },
+    {
+      "name": "Playful Moments",
+      "difficulty_stage": 1,
+      "tags": ["playfulness", "fun"],
+      "items": [
+        "We enjoy light teasing or playful banter.",
+        "Our relationship includes fun moments every week.",
+        "We bring humor into everyday situations.",
+        "We make each other smile without trying.",
+        "Playfulness helps us stay close."
+      ]
+    },
+    {
+      "name": "Feel-Good Foundations",
+      "difficulty_stage": 1,
+      "tags": ["positive-foundation", "beginner"],
+      "items": [
+        "Our relationship feels grounded in positivity.",
+        "I feel good about the way we interact.",
+        "There's a sense of ease between us.",
+        "We create a pleasant environment together.",
+        "I feel emotionally steady when we spend time together."
+      ]
     }]
 }    

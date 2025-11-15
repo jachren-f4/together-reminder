@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inbox Mockups - TogetherRemind</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #FAFAFA;
+            color: #1A1A1A;
+            padding: 40px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 56px;
+            font-weight: 700;
+            letter-spacing: -2px;
+            margin-bottom: 12px;
+        }
+
+        .subtitle {
+            font-size: 18px;
+            color: #6E6E6E;
+            margin-bottom: 40px;
+        }
+
+        .mockups-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 32px;
+            margin-bottom: 60px;
+        }
+
+        .mockup-card {
+            background: #FFFEFD;
+            border: 2px solid #F0F0F0;
+            border-radius: 20px;
+            padding: 24px;
+            transition: all 0.3s;
+        }
+
+        .mockup-card:hover {
+            border-color: #1A1A1A;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+            transform: translateY(-2px);
+        }
+
+        .mockup-preview {
+            width: 100%;
+            height: 400px;
+            background: #FAFAFA;
+            border: 2px solid #E0E0E0;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 72px;
+        }
+
+        .mockup-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            letter-spacing: -0.5px;
+        }
+
+        .mockup-description {
+            font-size: 15px;
+            color: #6E6E6E;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .features-list {
+            list-style: none;
+            margin-bottom: 24px;
+        }
+
+        .features-list li {
+            padding: 8px 0;
+            font-size: 14px;
+            color: #1A1A1A;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .features-list li::before {
+            content: '✓';
+            font-weight: bold;
+        }
+
+        .view-button {
+            display: block;
+            width: 100%;
+            padding: 14px 24px;
+            background: #1A1A1A;
+            color: #FFFEFD;
+            border: none;
+            border-radius: 12px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            text-align: center;
+            transition: all 0.2s;
+        }
+
+        .view-button:hover {
+            background: #333333;
+            transform: scale(1.02);
+        }
+
+        .implementation-notes {
+            background: #FFFEFD;
+            border: 2px solid #1A1A1A;
+            border-radius: 20px;
+            padding: 32px;
+            margin-top: 40px;
+        }
+
+        .implementation-notes h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            letter-spacing: -0.5px;
+        }
+
+        .implementation-notes p {
+            font-size: 16px;
+            line-height: 1.7;
+            color: #1A1A1A;
+            margin-bottom: 20px;
+        }
+
+        .key-changes {
+            background: #FAFAFA;
+            border: 2px solid #E0E0E0;
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .key-changes h3 {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        .key-changes ul {
+            list-style-position: inside;
+            padding-left: 0;
+        }
+
+        .key-changes li {
+            padding: 6px 0;
+            font-size: 15px;
+            line-height: 1.5;
+        }
+    </style>
+</head>
+<body>
+    <h1>Inbox Mockups</h1>
+    <p class="subtitle">Proposed design for integrating Daily Quests into the Activity Feed</p>
+
+    <div class="mockups-grid">
+        <!-- All Activities View -->
+        <div class="mockup-card">
+            <div class="mockup-preview">📝</div>
+            <h2 class="mockup-title">All Activities</h2>
+            <p class="mockup-description">
+                The main inbox view showing all activities including daily quests, reminders, pokes, and games in chronological order.
+            </p>
+            <ul class="features-list">
+                <li>Daily quest progress indicator at top</li>
+                <li>Mixed activity feed (quests, reminders, games)</li>
+                <li>Status badges (Your Turn, Waiting, Completed)</li>
+                <li>Participant avatars with completion checkmarks</li>
+                <li>LP rewards shown for incomplete items</li>
+            </ul>
+            <a href="inbox_with_daily_quests_all.html" class="view-button">View Mockup →</a>
+        </div>
+
+        <!-- Your Turn Filter -->
+        <div class="mockup-card">
+            <div class="mockup-preview">⏳</div>
+            <h2 class="mockup-title">Your Turn Filter</h2>
+            <p class="mockup-description">
+                Filtered view showing only activities that need the user's attention, including incomplete daily quests.
+            </p>
+            <ul class="features-list">
+                <li>Shows daily quest progress (2/3 complete)</li>
+                <li>Only displays incomplete items</li>
+                <li>Highlights urgent daily quests</li>
+                <li>Clear "Your Turn" status badges</li>
+                <li>Count of items needing attention</li>
+            </ul>
+            <a href="inbox_your_turn_filter.html" class="view-button">View Mockup →</a>
+        </div>
+
+        <!-- Completed Filter -->
+        <div class="mockup-card">
+            <div class="mockup-preview">✅</div>
+            <h2 class="mockup-title">Completed Filter</h2>
+            <p class="mockup-description">
+                Shows all completed activities with earned LP, grouped by date for easy review of accomplishments.
+            </p>
+            <ul class="features-list">
+                <li>Completion summary with total LP earned</li>
+                <li>Completed daily quests included</li>
+                <li>Grouped by date (Today, Yesterday, etc.)</li>
+                <li>Shows LP earned for each item</li>
+                <li>Both users' completion status visible</li>
+            </ul>
+            <a href="inbox_completed_filter.html" class="view-button">View Mockup →</a>
+        </div>
+    </div>
+
+    <!-- Implementation Notes -->
+    <div class="implementation-notes">
+        <h2>Implementation Notes</h2>
+        <p>
+            These mockups demonstrate how daily quests can be integrated into the Activity Hub/Inbox to create a unified activity monitoring system. The key principle is that the inbox becomes the single source of truth for "what needs my attention" and "what have we accomplished together."
+        </p>
+
+        <div class="key-changes">
+            <h3>Key Design Elements</h3>
+            <ul>
+                <li><strong>Quest Progress Indicator:</strong> Prominent banner at the top showing daily quest completion (2/3 complete, 67%)</li>
+                <li><strong>Unified Activity Cards:</strong> Consistent design across all activity types with type badge, title, subtitle, and status</li>
+                <li><strong>Status Badges:</strong> Color-coded badges (Orange = Your Turn, Gray = Waiting, Black = Completed)</li>
+                <li><strong>Participant Avatars:</strong> Visual indication of who has completed each activity with checkmarks</li>
+                <li><strong>LP Rewards:</strong> Shows potential rewards (💰 +30) for incomplete items, earned rewards after completion</li>
+                <li><strong>Filter System:</strong> All, Your Turn, Completed, Pokes tabs for easy navigation</li>
+                <li><strong>Chronological Order:</strong> Most recent activities first, grouped by date in completed view</li>
+            </ul>
+        </div>
+
+        <div class="key-changes" style="margin-top: 20px;">
+            <h3>Design Rationale</h3>
+            <ul>
+                <li><strong>Home Screen vs Inbox:</strong> Home remains the dashboard with quick glance at quests; Inbox is for detailed monitoring</li>
+                <li><strong>Daily Quest Integration:</strong> Quests appear alongside other activities, not in separate section</li>
+                <li><strong>Visual Hierarchy:</strong> Type badges help distinguish quest types at a glance</li>
+                <li><strong>Partner Awareness:</strong> Always shows who's completed what, fostering collaboration</li>
+                <li><strong>Motivation:</strong> Visible LP rewards encourage completion</li>
+            </ul>
+        </div>
+
+        <p style="margin-top: 24px; font-size: 14px; color: #6E6E6E;">
+            <strong>Next Steps:</strong> Review mockups, gather feedback, then proceed with implementation following the plan in <code>docs/INBOX_ACTIVITY_FEED_INTEGRATION.md</code>
+        </p>
+    </div>
+</body>
+</html>

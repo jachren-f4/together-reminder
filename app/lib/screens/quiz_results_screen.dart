@@ -55,11 +55,12 @@ class _QuizResultsScreenState extends State<QuizResultsScreen> {
       final questService = DailyQuestService(storage: _storage);
       final todayQuests = questService.getTodayQuests();
 
-      print('🔍 Checking quest completion for session: ${widget.session.id}');
-      print('🔍 Found ${todayQuests.length} today quests');
-      for (final q in todayQuests) {
-        print('🔍 Quest ${q.id}: type=${q.type}, contentId=${q.contentId}');
-      }
+      // Removed verbose logging
+      // print('🔍 Checking quest completion for session: ${widget.session.id}');
+      // print('🔍 Found ${todayQuests.length} today quests');
+      // for (final q in todayQuests) {
+      //   print('🔍 Quest ${q.id}: type=${q.type}, contentId=${q.contentId}');
+      // }
 
       // Find quest with matching contentId (quiz session ID)
       final matchingQuest = todayQuests.where((q) =>
@@ -67,12 +68,14 @@ class _QuizResultsScreenState extends State<QuizResultsScreen> {
       ).firstOrNull;
 
       if (matchingQuest == null) {
-        print('❌ No matching quest found for session ${widget.session.id}');
+        // Removed verbose logging
+        // print('❌ No matching quest found for session ${widget.session.id}');
         // Not a daily quest quiz - just a regular quiz
         return;
       }
 
-      print('✅ Found matching quest: ${matchingQuest.id}');
+      // Removed verbose logging
+      // print('✅ Found matching quest: ${matchingQuest.id}');
 
       // Check if current user has completed all questions
       final userAnswers = widget.session.answers?[user.id];
@@ -98,7 +101,8 @@ class _QuizResultsScreenState extends State<QuizResultsScreen> {
       );
 
       if (bothCompleted) {
-        print('✅ Daily quest completed by both users! Awarding 30 LP...');
+        // Removed verbose logging
+        // print('✅ Daily quest completed by both users! Awarding 30 LP...');
 
         // Award Love Points to BOTH users via Firebase (real-time sync)
         await LovePointService.awardPointsToBothUsers(
@@ -112,7 +116,8 @@ class _QuizResultsScreenState extends State<QuizResultsScreen> {
         // Check if all 3 daily quests are completed
         await _checkDailyQuestsCompletion(questService, user.id, partner.pushToken);
       } else {
-        print('✅ Quest progress saved - waiting for partner to complete');
+        // Removed verbose logging
+        // print('✅ Quest progress saved - waiting for partner to complete');
       }
     } catch (e) {
       print('❌ Error checking quest completion: $e');
@@ -129,7 +134,8 @@ class _QuizResultsScreenState extends State<QuizResultsScreen> {
     try {
       // Check if all main daily quests are completed by both users
       if (questService.areAllMainQuestsCompleted()) {
-        print('🎯 All daily quests completed! Advancing progression...');
+        // Removed verbose logging
+        // print('🎯 All daily quests completed! Advancing progression...');
 
         // Get the couple ID using QuestUtilities
         final coupleId = QuestUtilities.generateCoupleId(currentUserId, partnerUserId);
@@ -137,7 +143,8 @@ class _QuizResultsScreenState extends State<QuizResultsScreen> {
         // Get current progression state
         var progressionState = _storage.getQuizProgressionState(coupleId);
         if (progressionState == null) {
-          print('⚠️  No progression state found');
+          // Removed verbose logging
+          // print('⚠️  No progression state found');
           return;
         }
 
@@ -158,14 +165,16 @@ class _QuizResultsScreenState extends State<QuizResultsScreen> {
 
         // Save updated progression
         await _storage.updateQuizProgressionState(progressionState);
-        print('📈 Progression advanced to Track ${progressionState.currentTrack}, Position ${progressionState.currentPosition}');
+        // Removed verbose logging
+        // print('📈 Progression advanced to Track ${progressionState.currentTrack}, Position ${progressionState.currentPosition}');
 
         // Save to Firebase
         final syncService = QuestSyncService(
           storage: _storage,
         );
         await syncService.saveProgressionState(progressionState);
-        print('✅ Progression state saved to Firebase');
+        // Removed verbose logging
+        // print('✅ Progression state saved to Firebase');
       }
     } catch (e) {
       print('❌ Error checking daily quests completion: $e');

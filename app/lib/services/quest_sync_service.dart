@@ -126,6 +126,8 @@ class QuestSyncService {
         'contentId': q.contentId,
         'sortOrder': q.sortOrder,
         'isSideQuest': q.isSideQuest,
+        'formatType': q.formatType,
+        'quizName': q.quizName,
       }).toList();
 
       // Save to Firebase
@@ -201,6 +203,8 @@ class QuestSyncService {
           status: status,
           sortOrder: questMap['sortOrder'] as int,
           isSideQuest: questMap['isSideQuest'] as bool? ?? false,
+          formatType: questMap['formatType'] as String? ?? 'classic',
+          quizName: questMap['quizName'] as String?,
           userCompletions: userCompletions,
         );
 

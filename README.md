@@ -58,6 +58,16 @@ flutter run -d <device-id>
 ### Settings
 - ⚙️ **Settings** - Notification preferences, partner info, unpair option
 
+### Development Tools
+- 🐛 **Enhanced Debug Menu** - 5-tab interface for system inspection and testing
+  - **Access:** Double-tap greeting text on home screen
+  - **Overview:** Device info, system health checks, storage statistics
+  - **Quests:** Daily quest comparison (Firebase vs Local), validation checks
+  - **Sessions:** Quiz/game session inspector with filters
+  - **LP & Sync:** Love Point transactions, Firebase sync monitoring
+  - **Actions:** Clear local storage, copy debug data to clipboard
+  - **Features:** Visual comparison, automated validation, granular copy buttons, pull-to-refresh
+
 ---
 
 ## Project Structure

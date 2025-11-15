@@ -7,6 +7,7 @@ import '../models/love_point_transaction.dart';
 import 'storage_service.dart';
 import 'word_validation_service.dart';
 import 'word_pair_bank.dart';
+import '../utils/logger.dart';
 
 class LadderService {
   static const _uuid = Uuid();
@@ -360,10 +361,11 @@ class LadderService {
 
       if (user == null || partner == null) return;
 
-      print('🪜 Sending Word Ladder notification');
-      print('   Type: $type');
-      print('   Session ID: ${session.id}');
-      print('   Partner token: ${partner.pushToken}');
+      // Removed verbose logging
+      // print('🪜 Sending Word Ladder notification');
+      // print('   Type: $type');
+      // print('   Session ID: ${session.id}');
+      // print('   Partner token: ${partner.pushToken}');
 
       final callable = _functions.httpsCallable('sendWordLadderNotification');
       await callable.call({
@@ -377,9 +379,10 @@ class LadderService {
         'lpEarned': session.lpEarned,
       });
 
-      print('✅ Word Ladder notification sent successfully');
+      // Removed verbose logging
+      // Logger.success('Word Ladder notification sent successfully', service: 'ladder');
     } catch (e) {
-      print('❌ Error sending Word Ladder notification: $e');
+      Logger.error('Error sending Word Ladder notification', error: e, service: 'ladder');
       // Don't throw - notifications are not critical for gameplay
     }
   }
@@ -403,11 +406,13 @@ class LadderService {
   bool isMyTurn(LadderSession session) {
     final user = _storage.getUser();
     if (user == null) {
-      print('🪜 isMyTurn: user is null');
+      // Removed verbose logging
+      // print('🪜 isMyTurn: user is null');
       return false;
     }
     final result = session.currentTurn == user.id;
-    print('🪜 isMyTurn check: currentTurn=${session.currentTurn}, user.id=${user.id}, result=$result');
+    // Removed verbose logging
+    // print('🪜 isMyTurn check: currentTurn=${session.currentTurn}, user.id=${user.id}, result=$result');
     return result;
   }
 }

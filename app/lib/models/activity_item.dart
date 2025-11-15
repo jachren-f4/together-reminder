@@ -4,7 +4,9 @@
 enum ActivityType {
   reminder,
   poke,
+  question,
   quiz,
+  affirmation,
   wordLadder,
   memoryFlip,
   wouldYouRather,
@@ -71,8 +73,12 @@ class ActivityItem {
         return 'Reminder';
       case ActivityType.poke:
         return 'Poke';
+      case ActivityType.question:
+        return 'Question';
       case ActivityType.quiz:
         return 'Quiz';
+      case ActivityType.affirmation:
+        return 'Affirmation';
       case ActivityType.wordLadder:
         return 'Game';
       case ActivityType.memoryFlip:
@@ -93,8 +99,12 @@ class ActivityItem {
         return '📝';
       case ActivityType.poke:
         return '💫';
+      case ActivityType.question:
+        return '💭';
       case ActivityType.quiz:
         return '🎯';
+      case ActivityType.affirmation:
+        return '💗';
       case ActivityType.wordLadder:
         return '🪜';
       case ActivityType.memoryFlip:

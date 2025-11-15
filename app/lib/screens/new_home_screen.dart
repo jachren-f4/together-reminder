@@ -12,7 +12,7 @@ import '../widgets/poke_bottom_sheet.dart';
 import '../widgets/remind_bottom_sheet.dart';
 import '../widgets/daily_pulse_widget.dart';
 import '../widgets/daily_quests_widget.dart';
-import '../widgets/debug_quest_dialog.dart';
+import '../widgets/debug/debug_menu.dart';
 import 'daily_pulse_screen.dart';
 import 'word_ladder_hub_screen.dart';
 import 'memory_flip_game_screen.dart';
@@ -192,7 +192,7 @@ class _NewHomeScreenState extends State<NewHomeScreen> {
                       onDoubleTap: () {
                         showDialog(
                           context: context,
-                          builder: (context) => const DebugQuestDialog(),
+                          builder: (context) => const DebugMenu(),
                         );
                       },
                       child: Text(
