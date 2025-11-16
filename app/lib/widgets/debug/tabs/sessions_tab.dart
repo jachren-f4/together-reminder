@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import '../../../services/storage_service.dart';
 import '../../../models/quiz_session.dart';
+import '../../../models/you_or_me.dart';
 import '../components/debug_section_card.dart';
 import '../components/debug_copy_button.dart';
 
@@ -17,14 +18,16 @@ class _SessionsTabState extends State<SessionsTab> {
   final StorageService _storage = StorageService();
 
   bool _isLoading = true;
-  List<QuizSession> _allSessions = [];
-  List<QuizSession> _filteredSessions = [];
+  List<QuizSession> _allQuizSessions = [];
+  List<YouOrMeSession> _allYouOrMeSessions = [];
+  List<dynamic> _filteredSessions = []; // Can hold both QuizSession and YouOrMeSession
   String _selectedFilter = 'All';
 
   final List<String> _filters = [
     'All',
     'Affirmations',
     'Classic Quiz',
+    'You or Me',
     'Completed',
     'In Progress',
   ];
@@ -39,8 +42,8 @@ class _SessionsTabState extends State<SessionsTab> {
     setState(() => _isLoading = true);
 
     try {
-      _allSessions = _storage.quizSessionsBox.values.toList();
-      _allSessions.sort((a, b) => b.createdAt.compareTo(a.createdAt)); // Most recent first
+      _allQuizSessions = _storage.quizSessionsBox.values.toList();
+      _allYouOrMeSessions = _storage.youOrMeSessionsBox.values.toList();
       _applyFilter();
 
       setState(() => _isLoading = false);
@@ -51,27 +54,47 @@ class _SessionsTabState extends State<SessionsTab> {
   }
 
   void _applyFilter() {
+    List<dynamic> combined = [];
+
     switch (_selectedFilter) {
       case 'All':
-        _filteredSessions = _allSessions;
+        combined = [..._allQuizSessions, ..._allYouOrMeSessions];
         break;
       case 'Affirmations':
-        _filteredSessions = _allSessions.where((s) =>
+        combined = _allQuizSessions.where((s) =>
           s.formatType == 'affirmation' || s.quizName != null
         ).toList();
         break;
       case 'Classic Quiz':
-        _filteredSessions = _allSessions.where((s) =>
+        combined = _allQuizSessions.where((s) =>
           s.formatType == 'classic' || (s.formatType == null && s.quizName == null)
         ).toList();
         break;
+      case 'You or Me':
+        combined = _allYouOrMeSessions.toList();
+        break;
       case 'Completed':
-        _filteredSessions = _allSessions.where((s) => s.status == 'completed').toList();
+        combined = [
+          ..._allQuizSessions.where((s) => s.status == 'completed'),
+          ..._allYouOrMeSessions.where((s) => s.areBothUsersAnswered()),
+        ];
         break;
       case 'In Progress':
-        _filteredSessions = _allSessions.where((s) => s.status != 'completed').toList();
+        combined = [
+          ..._allQuizSessions.where((s) => s.status != 'completed'),
+          ..._allYouOrMeSessions.where((s) => !s.areBothUsersAnswered()),
+        ];
         break;
     }
+
+    // Sort by creation date (most recent first)
+    combined.sort((a, b) {
+      final aDate = a is QuizSession ? a.createdAt : (a as YouOrMeSession).createdAt;
+      final bDate = b is QuizSession ? b.createdAt : (b as YouOrMeSession).createdAt;
+      return bDate.compareTo(aDate);
+    });
+
+    _filteredSessions = combined;
   }
 
   String _getSessionData(QuizSession session) {
@@ -85,6 +108,26 @@ class _SessionsTabState extends State<SessionsTab> {
       'category': session.category,
       'answers': session.answers?.map((k, v) => MapEntry(k, v.toString())),
       'matchPercentage': session.matchPercentage,
+    });
+  }
+
+  String _getYouOrMeSessionData(YouOrMeSession session) {
+    return JsonEncoder.withIndent('  ').convert({
+      'id': session.id,
+      'createdAt': session.createdAt.toIso8601String(),
+      'questions': session.questions.map((q) => {
+        'id': q.id,
+        'prompt': q.prompt,
+        'content': q.content,
+      }).toList(),
+      'answers': session.answers?.map((userId, answersList) {
+        return MapEntry(userId, answersList.map((a) => {
+          'questionId': a.questionId,
+          'answerValue': a.answerValue,
+          'answeredAt': a.answeredAt.toIso8601String(),
+        }).toList());
+      }),
+      'bothUsersAnswered': session.areBothUsersAnswered(),
     });
   }
 
@@ -155,7 +198,13 @@ class _SessionsTabState extends State<SessionsTab> {
                     padding: const EdgeInsets.symmetric(horizontal: 16),
                     itemCount: _filteredSessions.length,
                     itemBuilder: (context, index) {
-                      return _buildSessionCard(_filteredSessions[index]);
+                      final session = _filteredSessions[index];
+                      if (session is QuizSession) {
+                        return _buildQuizSessionCard(session);
+                      } else if (session is YouOrMeSession) {
+                        return _buildYouOrMeSessionCard(session);
+                      }
+                      return const SizedBox.shrink();
                     },
                   ),
           ),
@@ -164,7 +213,7 @@ class _SessionsTabState extends State<SessionsTab> {
     );
   }
 
-  Widget _buildSessionCard(QuizSession session) {
+  Widget _buildQuizSessionCard(QuizSession session) {
     final isAffirmation = session.formatType == 'affirmation' || session.quizName != null;
     final questionCount = session.questionIds.length;
     final createdAgo = _getTimeAgo(session.createdAt);
@@ -272,6 +321,124 @@ class _SessionsTabState extends State<SessionsTab> {
                 const SizedBox(height: 8),
                 Text(
                   'Answers received: ${session.answers?.length ?? 0} users',
+                  style: TextStyle(
+                    fontSize: 11,
+                    color: Colors.grey.shade600,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildYouOrMeSessionCard(YouOrMeSession session) {
+    final questionCount = session.questions.length;
+    final createdAgo = _getTimeAgo(session.createdAt);
+    final bothAnswered = session.areBothUsersAnswered();
+    final answerCount = session.answers?.length ?? 0;
+
+    return Container(
+      margin: const EdgeInsets.only(bottom: 16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        border: Border.all(color: Colors.grey.shade300, width: 2),
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          // Card Header
+          Container(
+            padding: const EdgeInsets.all(12),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        '🎮 You or Me',
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                      Text(
+                        session.id,
+                        style: const TextStyle(
+                          fontFamily: 'monospace',
+                          fontSize: 10,
+                          color: Colors.grey,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                      decoration: BoxDecoration(
+                        color: Colors.purple,
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                      child: const Text(
+                        'YOU OR ME',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 10,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    DebugCopyButton(
+                      data: _getYouOrMeSessionData(session),
+                      message: 'Session data copied',
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+
+          // Card Content
+          Container(
+            padding: const EdgeInsets.all(12),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                _buildInfoRow('Created', createdAgo),
+                _buildInfoRow('Status', bothAnswered ? 'Completed' : 'In Progress'),
+                _buildInfoRow('Questions', '$questionCount questions'),
+
+                // Question Prompts Summary
+                const SizedBox(height: 8),
+                Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: Colors.grey.shade100,
+                    borderRadius: BorderRadius.circular(6),
+                  ),
+                  child: Text(
+                    'Prompts: ${session.questions.take(2).map((q) => q.prompt).join(", ")}${session.questions.length > 2 ? "..." : ""}',
+                    style: const TextStyle(
+                      fontFamily: 'monospace',
+                      fontSize: 10,
+                    ),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+
+                // Answer Count
+                const SizedBox(height: 8),
+                Text(
+                  'Answers received: $answerCount user${answerCount == 1 ? '' : 's'}',
                   style: TextStyle(
                     fontSize: 11,
                     color: Colors.grey.shade600,

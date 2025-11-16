@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Couple Combat Arena - Fighting Game</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #ee0979 0%, #ff6a00 100%);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .game-container {
+            max-width: 900px;
+            width: 100%;
+            background: white;
+            border-radius: 24px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        .header {
+            background: linear-gradient(135deg, #ee0979 0%, #ff6a00 100%);
+            padding: 24px;
+            text-align: center;
+            color: white;
+            position: relative;
+        }
+        .pvp-badge {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            background: rgba(255,255,255,0.2);
+            padding: 6px 14px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 700;
+        }
+        h1 { font-family: 'Playfair Display', serif; font-size: 32px; margin-bottom: 8px; }
+        .subtitle { opacity: 0.9; font-size: 14px; }
+        .game-screen { padding: 32px; min-height: 500px; }
+
+        .battle-field {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            margin-bottom: 24px;
+        }
+        .fighter {
+            background: #f8f9fa;
+            border-radius: 16px;
+            padding: 24px;
+            text-align: center;
+        }
+        .fighter.you { border: 3px solid #ee0979; }
+        .fighter.opponent { border: 3px solid #ff6a00; }
+        .fighter-emoji { font-size: 72px; margin-bottom: 12px; }
+        .fighter-name { font-size: 20px; font-weight: 700; margin-bottom: 16px; }
+        .hp-bar {
+            background: #dee2e6;
+            height: 20px;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 8px;
+        }
+        .hp-fill {
+            background: linear-gradient(90deg, #51cf66 0%, #37b24d 100%);
+            height: 100%;
+            transition: width 0.5s ease;
+            text-align: center;
+            font-size: 11px;
+            font-weight: 700;
+            color: white;
+            line-height: 20px;
+        }
+        .hp-fill.low { background: linear-gradient(90deg, #ff6b6b 0%, #c92a2a 100%); }
+        .combo-meter {
+            margin-top: 12px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #ee0979;
+        }
+
+        .moves-section {
+            background: #f8f9fa;
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .moves-title {
+            font-weight: 700;
+            margin-bottom: 16px;
+            text-align: center;
+        }
+        .moves-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+        }
+        .move-btn {
+            background: white;
+            border: 2px solid #e9ecef;
+            border-radius: 12px;
+            padding: 16px 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+        }
+        .move-btn:hover:not(:disabled) { border-color: #ee0979; background: #fff0f6; transform: translateY(-2px); }
+        .move-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+        .move-emoji { font-size: 32px; margin-bottom: 6px; }
+        .move-name { font-size: 12px; font-weight: 700; color: #333; }
+        .move-dmg { font-size: 10px; color: #ff6a00; }
+
+        .battle-log {
+            background: #343a40;
+            color: white;
+            padding: 16px;
+            border-radius: 12px;
+            max-height: 120px;
+            overflow-y: auto;
+            font-family: monospace;
+            font-size: 13px;
+        }
+
+        .result-screen {
+            display: none;
+            text-align: center;
+        }
+        .result-screen.active { display: block; }
+        .result-emoji { font-size: 120px; margin-bottom: 24px; }
+        .result-title { font-family: 'Playfair Display', serif; font-size: 42px; margin-bottom: 16px; }
+        .result-title.victory { color: #2b8a3e; }
+        .result-title.defeat { color: #c92a2a; }
+
+        .btn {
+            display: inline-block;
+            padding: 16px 32px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: none;
+            background: linear-gradient(135deg, #ee0979 0%, #ff6a00 100%);
+            color: white;
+        }
+
+        .back-link {
+            display: block;
+            text-align: center;
+            color: #ee0979;
+            text-decoration: none;
+            margin-top: 16px;
+            font-size: 14px;
+        }
+
+        @media (max-width: 768px) {
+            .battle-field { grid-template-columns: 1fr; }
+            .moves-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <div class="header">
+            <div class="pvp-badge">⚔️ PVP</div>
+            <h1>🥊 Couple Combat Arena 💫</h1>
+            <p class="subtitle">Fighting Game Style Battle</p>
+        </div>
+
+        <div class="game-screen">
+            <div id="battleScreen">
+                <div class="battle-field">
+                    <div class="fighter you">
+                        <div class="fighter-emoji">👩</div>
+                        <div class="fighter-name">Alice</div>
+                        <div class="hp-bar">
+                            <div class="hp-fill" id="yourHp" style="width: 100%">100/100</div>
+                        </div>
+                        <div class="combo-meter" id="yourCombo">Combo: 0x</div>
+                    </div>
+                    <div class="fighter opponent">
+                        <div class="fighter-emoji">👨</div>
+                        <div class="fighter-name">Bob</div>
+                        <div class="hp-bar">
+                            <div class="hp-fill" id="bobHp" style="width: 100%">100/100</div>
+                        </div>
+                        <div class="combo-meter" id="bobCombo">Combo: 0x</div>
+                    </div>
+                </div>
+
+                <div class="moves-section">
+                    <div class="moves-title">🎮 Choose Your Move</div>
+                    <div class="moves-grid">
+                        <button class="move-btn" onclick="useMove('light')">
+                            <div class="move-emoji">👊</div>
+                            <div class="move-name">Light</div>
+                            <div class="move-dmg">15 DMG</div>
+                        </button>
+                        <button class="move-btn" onclick="useMove('heavy')">
+                            <div class="move-emoji">💥</div>
+                            <div class="move-name">Heavy</div>
+                            <div class="move-dmg">25 DMG</div>
+                        </button>
+                        <button class="move-btn" onclick="useMove('block')">
+                            <div class="move-emoji">🛡️</div>
+                            <div class="move-name">Block</div>
+                            <div class="move-dmg">-50% DMG</div>
+                        </button>
+                        <button class="move-btn" onclick="useMove('special')" id="specialBtn">
+                            <div class="move-emoji">✨</div>
+                            <div class="move-name">Special</div>
+                            <div class="move-dmg">40 DMG</div>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="battle-log" id="battleLog">
+                    <div>> Fight! Choose your move!</div>
+                </div>
+            </div>
+
+            <div class="result-screen" id="resultScreen">
+                <div class="result-emoji" id="resultEmoji">🎉</div>
+                <h2 class="result-title" id="resultTitle">Victory!</h2>
+                <p id="resultMsg" style="color: #666; margin-bottom: 24px;">You dominated the arena!</p>
+                <button class="btn" onclick="location.reload()">🥊 Fight Again</button>
+                <a href="index.html" class="back-link">← Back to Games</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let state = { yourHp: 100, bobHp: 100, yourCombo: 0, bobCombo: 0, blocking: false };
+
+        function useMove(move) {
+            // Disable buttons temporarily
+            document.querySelectorAll('.move-btn').forEach(btn => btn.disabled = true);
+
+            // Bob chooses random move
+            const bobMove = ['light', 'heavy', 'block', 'special'][Math.floor(Math.random() * 4)];
+
+            // Calculate damage
+            let yourDmg = 0, bobDmg = 0;
+
+            switch (move) {
+                case 'light': yourDmg = 15; state.yourCombo++; break;
+                case 'heavy': yourDmg = 25; state.yourCombo += 2; break;
+                case 'block': state.blocking = true; state.yourCombo = 0; break;
+                case 'special': yourDmg = 40; state.yourCombo = 0; break;
+            }
+
+            switch (bobMove) {
+                case 'light': bobDmg = 15; state.bobCombo++; break;
+                case 'heavy': bobDmg = 25; state.bobCombo += 2; break;
+                case 'block': bobDmg = 0; state.bobCombo = 0; break;
+                case 'special': bobDmg = 40; state.bobCombo = 0; break;
+            }
+
+            // Apply blocking
+            if (state.blocking) bobDmg = Math.floor(bobDmg / 2);
+
+            // Apply combo multiplier
+            if (state.yourCombo > 2) yourDmg = Math.floor(yourDmg * 1.5);
+            if (state.bobCombo > 2) bobDmg = Math.floor(bobDmg * 1.5);
+
+            // Apply damage
+            state.bobHp = Math.max(0, state.bobHp - yourDmg);
+            state.yourHp = Math.max(0, state.yourHp - bobDmg);
+
+            addLog(`You used ${move}! ${yourDmg > 0 ? 'Dealt ' + yourDmg + ' damage!' : 'Blocking!'}`);
+            addLog(`Bob used ${bobMove}! ${bobDmg > 0 ? 'You took ' + bobDmg + ' damage!' : 'Bob is blocking!'}`);
+
+            // Update UI
+            updateBattle();
+
+            // Check winner
+            if (state.yourHp <= 0 || state.bobHp <= 0) {
+                setTimeout(showResults, 1500);
+            } else {
+                setTimeout(() => {
+                    state.blocking = false;
+                    document.querySelectorAll('.move-btn').forEach(btn => btn.disabled = false);
+                }, 1500);
+            }
+        }
+
+        function updateBattle() {
+            document.getElementById('yourHp').style.width = state.yourHp + '%';
+            document.getElementById('yourHp').textContent = state.yourHp + '/100';
+            document.getElementById('bobHp').style.width = state.bobHp + '%';
+            document.getElementById('bobHp').textContent = state.bobHp + '/100';
+
+            if (state.yourHp < 30) document.getElementById('yourHp').classList.add('low');
+            if (state.bobHp < 30) document.getElementById('bobHp').classList.add('low');
+
+            document.getElementById('yourCombo').textContent = `Combo: ${state.yourCombo}x` + (state.yourCombo > 2 ? ' 🔥' : '');
+            document.getElementById('bobCombo').textContent = `Combo: ${state.bobCombo}x` + (state.bobCombo > 2 ? ' 🔥' : '');
+        }
+
+        function addLog(msg) {
+            const log = document.getElementById('battleLog');
+            const entry = document.createElement('div');
+            entry.textContent = '> ' + msg;
+            log.appendChild(entry);
+            log.scrollTop = log.scrollHeight;
+        }
+
+        function showResults() {
+            document.getElementById('battleScreen').style.display = 'none';
+            document.getElementById('resultScreen').classList.add('active');
+
+            if (state.yourHp > state.bobHp) {
+                document.getElementById('resultEmoji').textContent = '🎉';
+                document.getElementById('resultTitle').textContent = 'K.O. Victory!';
+                document.getElementById('resultTitle').className = 'result-title victory';
+                document.getElementById('resultMsg').textContent = 'You knocked out Bob!';
+            } else {
+                document.getElementById('resultEmoji').textContent = '💔';
+                document.getElementById('resultTitle').textContent = 'K.O. Defeat';
+                document.getElementById('resultTitle').className = 'result-title defeat';
+                document.getElementById('resultMsg').textContent = 'Bob knocked you out!';
+            }
+        }
+    </script>
+</body>
+</html>

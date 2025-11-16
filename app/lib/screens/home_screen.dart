@@ -42,31 +42,36 @@ class _HomeScreenState extends State<HomeScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 _NavItem(
-                  icon: '🏠',
+                  iconOutline: 'assets/gfx/home.png',
+                  iconFilled: 'assets/gfx/home_filled.png',
                   label: 'Home',
                   isActive: _currentIndex == 0,
                   onTap: () => setState(() => _currentIndex = 0),
                 ),
                 _NavItem(
-                  icon: '📝',
+                  iconOutline: 'assets/gfx/inbox.png',
+                  iconFilled: 'assets/gfx/inbox_filled.png',
                   label: 'Inbox',
                   isActive: _currentIndex == 1,
                   onTap: () => setState(() => _currentIndex = 1),
                 ),
                 _NavItem(
-                  icon: '🧩',
+                  iconOutline: 'assets/gfx/activities.png',
+                  iconFilled: 'assets/gfx/activities_filled.png',
                   label: 'Activities',
                   isActive: _currentIndex == 2,
                   onTap: () => setState(() => _currentIndex = 2),
                 ),
                 _NavItem(
-                  icon: '💎',
+                  iconOutline: 'assets/gfx/profile.png',
+                  iconFilled: 'assets/gfx/profile_filled.png',
                   label: 'Profile',
                   isActive: _currentIndex == 3,
                   onTap: () => setState(() => _currentIndex = 3),
                 ),
                 _NavItem(
-                  icon: '⚙️',
+                  iconOutline: 'assets/gfx/settings.png',
+                  iconFilled: 'assets/gfx/settings_filled.png',
                   label: 'Settings',
                   isActive: _currentIndex == 4,
                   onTap: () => setState(() => _currentIndex = 4),
@@ -81,13 +86,15 @@ class _HomeScreenState extends State<HomeScreen> {
 }
 
 class _NavItem extends StatelessWidget {
-  final String icon;
+  final String iconOutline;
+  final String iconFilled;
   final String label;
   final bool isActive;
   final VoidCallback onTap;
 
   const _NavItem({
-    required this.icon,
+    required this.iconOutline,
+    required this.iconFilled,
     required this.label,
     required this.isActive,
     required this.onTap,
@@ -102,13 +109,15 @@ class _NavItem extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            AnimatedDefaultTextStyle(
+            AnimatedSwitcher(
               duration: const Duration(milliseconds: 200),
-              style: TextStyle(
-                fontSize: 24,
-                color: Colors.black.withAlpha(isActive ? 255 : (0.5 * 255).round()),
+              child: Image.asset(
+                isActive ? iconFilled : iconOutline,
+                key: ValueKey(isActive),
+                width: 24,
+                height: 24,
+                fit: BoxFit.contain,
               ),
-              child: Text(icon),
             ),
             const SizedBox(height: 4),
             AnimatedDefaultTextStyle(

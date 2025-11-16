@@ -367,6 +367,8 @@ class _QuestsTabState extends State<QuestsTab> {
         return Colors.green;
       case QuestType.memoryFlip:
         return Colors.pink;
+      case QuestType.youOrMe:
+        return Colors.teal;
     }
   }
 }

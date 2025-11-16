@@ -42,10 +42,30 @@ class QuestSyncService {
       debugPrint('   Date Key: $dateKey');
       debugPrint('   Firebase Path: /daily_quests/$coupleId/$dateKey');
 
-      // ALWAYS check Firebase first
+      // Determine device priority to prevent race condition
+      // Device with alphabetically first user ID is device 0 (generates)
+      // Device with alphabetically second user ID is device 1 (loads)
+      final sortedIds = [currentUserId, partnerUserId]..sort();
+      final isSecondDevice = currentUserId == sortedIds[1];
+
+      if (isSecondDevice) {
+        // Second device waits 3 seconds to allow first device to generate and sync
+        debugPrint('   ⏱️  Second device detected - waiting 3 seconds for first device to generate quests...');
+        await Future.delayed(const Duration(seconds: 3));
+      }
+
+      // ALWAYS check Firebase first (with retry for second device)
       debugPrint('   📡 Checking Firebase for existing quests...');
       final questsRef = _database.child('daily_quests/$coupleId/$dateKey');
-      final snapshot = await questsRef.get();
+
+      DataSnapshot snapshot = await questsRef.get();
+
+      // If second device and Firebase is still empty, retry once after 2 more seconds
+      if (isSecondDevice && (!snapshot.exists || snapshot.value == null)) {
+        debugPrint('   ⏱️  Firebase still empty - retrying in 2 seconds...');
+        await Future.delayed(const Duration(seconds: 2));
+        snapshot = await questsRef.get();
+      }
 
       if (snapshot.exists && snapshot.value != null) {
         // Firebase has quests - validate local quests match

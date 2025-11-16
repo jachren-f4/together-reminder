@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PvP JRPG Concepts - TogetherRemind</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            color: white;
+        }
+
+        h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 56px;
+            margin-bottom: 16px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .subtitle {
+            font-size: 22px;
+            opacity: 0.95;
+            margin-bottom: 12px;
+        }
+
+        .pvp-badge {
+            display: inline-block;
+            background: rgba(255,255,255,0.2);
+            backdrop-filter: blur(10px);
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            border: 2px solid rgba(255,255,255,0.3);
+        }
+
+        .game-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 28px;
+            margin-bottom: 40px;
+        }
+
+        .game-card {
+            background: white;
+            border-radius: 24px;
+            padding: 32px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            text-decoration: none;
+            color: inherit;
+            display: block;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .game-card:before {
+            content: "⚔️ PVP";
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        .game-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+        }
+
+        .game-emoji {
+            font-size: 72px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .game-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 28px;
+            margin-bottom: 8px;
+            color: #333;
+        }
+
+        .game-subtitle {
+            font-size: 14px;
+            color: #f5576c;
+            margin-bottom: 16px;
+            font-weight: 600;
+        }
+
+        .game-description {
+            font-size: 15px;
+            line-height: 1.7;
+            color: #555;
+            margin-bottom: 20px;
+        }
+
+        .pvp-mechanic {
+            background: #fef3f2;
+            border-left: 3px solid #f5576c;
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-bottom: 16px;
+            font-size: 14px;
+            color: #333;
+        }
+
+        .pvp-mechanic strong {
+            color: #f5576c;
+        }
+
+        .game-features {
+            list-style: none;
+            padding: 0;
+            margin-bottom: 16px;
+        }
+
+        .game-features li {
+            font-size: 13px;
+            color: #777;
+            padding: 6px 0;
+            padding-left: 24px;
+            position: relative;
+        }
+
+        .game-features li:before {
+            content: "⚡";
+            position: absolute;
+            left: 0;
+        }
+
+        .play-button {
+            display: inline-block;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            padding: 14px 28px;
+            border-radius: 12px;
+            font-weight: 600;
+            margin-top: 12px;
+            text-align: center;
+            transition: opacity 0.2s;
+            font-size: 15px;
+        }
+
+        .play-button:hover {
+            opacity: 0.9;
+        }
+
+        .recommendation {
+            border: 3px solid #fbbf24;
+        }
+
+        .recommendation:before {
+            content: "⭐ TOP PICK";
+            background: #fbbf24;
+            color: #78350f;
+        }
+
+        .footer {
+            text-align: center;
+            color: white;
+            opacity: 0.9;
+            font-size: 14px;
+            padding: 20px 0;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 42px;
+            }
+
+            .game-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>⚔️ Alice vs Bob ⚔️</h1>
+            <p class="subtitle">Competitive JRPG Battle Concepts</p>
+            <div class="pvp-badge">🎮 Player vs Player Focused</div>
+        </div>
+
+        <div class="game-grid">
+            <!-- Game 1: Love Duel Arena -->
+            <a href="1_love_duel_arena.html" class="game-card recommendation">
+                <div class="game-emoji">⚔️💕</div>
+                <h2 class="game-title">Love Duel Arena</h2>
+                <p class="game-subtitle">Turn-Based Battle Royale</p>
+                <p class="game-description">
+                    Alice and Bob face off in turn-based combat! Choose attacks based on relationship strengths. First to reduce opponent's HP to 0 wins!
+                </p>
+                <div class="pvp-mechanic">
+                    <strong>PvP Mechanic:</strong> Take turns choosing attacks (Communication Strike, Trust Shield, Adventure Blast). Rock-paper-scissors style counters!
+                </div>
+                <ul class="game-features">
+                    <li>Direct Alice vs Bob combat</li>
+                    <li>5 attack types with counters</li>
+                    <li>Best of 3 rounds</li>
+                    <li>Winner gets 100 LP, loser gets 30 LP</li>
+                </ul>
+                <div class="play-button">▶️ Play Demo</div>
+            </a>
+
+            <!-- Game 2: Memory Monster Battle -->
+            <a href="2_memory_monster_battle.html" class="game-card">
+                <div class="game-emoji">👾⚡</div>
+                <h2 class="game-title">Memory Monster Battle</h2>
+                <p class="game-subtitle">Pokemon-Style PvP Combat</p>
+                <p class="game-description">
+                    Each partner has 3 Memory Monsters based on shared experiences. Choose your fighter and battle! Type advantages matter!
+                </p>
+                <div class="pvp-mechanic">
+                    <strong>PvP Mechanic:</strong> Both select a monster from their team. Auto-battle determines winner based on stats + type matchups!
+                </div>
+                <ul class="game-features">
+                    <li>3v3 monster team battles</li>
+                    <li>Type advantages (Trust > Doubt, etc.)</li>
+                    <li>Level up your monsters</li>
+                    <li>Best of 5 matches</li>
+                </ul>
+                <div class="play-button">▶️ Play Demo</div>
+            </a>
+
+            <!-- Game 3: Quiz Showdown -->
+            <a href="3_quiz_showdown.html" class="game-card recommendation">
+                <div class="game-emoji">🎯💥</div>
+                <h2 class="game-title">Quiz Showdown</h2>
+                <p class="game-subtitle">Competitive Trivia Battle</p>
+                <p class="game-description">
+                    Answer questions about each other! Correct answers deal damage. Wrong answers heal your opponent. Fast-paced knowledge battle!
+                </p>
+                <div class="pvp-mechanic">
+                    <strong>PvP Mechanic:</strong> Simultaneous quiz rounds. Correct = 20 damage to opponent. Wrong = opponent heals 10 HP!
+                </div>
+                <ul class="game-features">
+                    <li>10 questions about your partner</li>
+                    <li>Simultaneous answer submission</li>
+                    <li>Combo system for streaks</li>
+                    <li>30-second time limit per question</li>
+                </ul>
+                <div class="play-button">▶️ Play Demo</div>
+            </a>
+
+            <!-- Game 4: Attribute Clash -->
+            <a href="4_attribute_clash.html" class="game-card">
+                <div class="game-emoji">🔥💎</div>
+                <h2 class="game-title">Attribute Clash</h2>
+                <p class="game-subtitle">Strategic Stat Showdown</p>
+                <p class="game-description">
+                    Both secretly choose a relationship attribute (Communication, Trust, Adventure, etc.). Reveal simultaneously! Type matchups determine winner.
+                </p>
+                <div class="pvp-mechanic">
+                    <strong>PvP Mechanic:</strong> Blind pick → Reveal → Battle! Like rock-paper-scissors but with 6 attributes and complex matchups.
+                </div>
+                <ul class="game-features">
+                    <li>6 relationship attributes to master</li>
+                    <li>Blind pick strategy</li>
+                    <li>Best of 7 rounds</li>
+                    <li>Learn opponent's patterns</li>
+                </ul>
+                <div class="play-button">▶️ Play Demo</div>
+            </a>
+
+            <!-- Game 5: Power Level Showdown -->
+            <a href="5_power_level_showdown.html" class="game-card">
+                <div class="game-emoji">⚡💪</div>
+                <h2 class="game-title">Power Level Showdown</h2>
+                <p class="game-subtitle">Dragon Ball Z-Style Power Clash</p>
+                <p class="game-description">
+                    Charge up your power by answering relationship questions! After charging, your powers clash in an epic beam struggle!
+                </p>
+                <div class="pvp-mechanic">
+                    <strong>PvP Mechanic:</strong> Phase 1: Both charge power (0-1000). Phase 2: Powers clash! Higher power wins with epic animation!
+                </div>
+                <ul class="game-features">
+                    <li>Charging phase (5 questions each)</li>
+                    <li>Beam struggle animation</li>
+                    <li>Power multipliers for perfect answers</li>
+                    <li>Best of 3 clashes</li>
+                </ul>
+                <div class="play-button">▶️ Play Demo</div>
+            </a>
+
+            <!-- Game 5B: Power Level Showdown - Memory Challenge -->
+            <a href="5b_power_level_memory.html" class="game-card recommendation">
+                <div class="game-emoji">⚡🧠</div>
+                <h2 class="game-title">Power Level Showdown: Memory Challenge</h2>
+                <p class="game-subtitle">DBZ-Style Battle Using Quiz History</p>
+                <p class="game-description">
+                    "What do you remember about me?" Questions pulled from your ACTUAL quiz history! Alice answers what Bob said, Bob answers what Alice said. Correct memories charge power!
+                </p>
+                <div class="pvp-mechanic">
+                    <strong>PvP Mechanic:</strong> Historical questions from past quizzes! Remember your partner's answers to charge up. Higher memory accuracy = more power!
+                </div>
+                <ul class="game-features">
+                    <li>Uses real quiz data from app history</li>
+                    <li>5 memory questions per player</li>
+                    <li>Power charged by accurate recall</li>
+                    <li>Beam struggle with memory stats</li>
+                </ul>
+                <div class="play-button">▶️ Play Demo</div>
+            </a>
+
+            <!-- Game 6: Couple Combat Arena -->
+            <a href="6_couple_combat_arena.html" class="game-card recommendation">
+                <div class="game-emoji">🥊💫</div>
+                <h2 class="game-title">Couple Combat Arena</h2>
+                <p class="game-subtitle">Fighting Game Style Battle</p>
+                <p class="game-description">
+                    Choose your fighter archetype (The Communicator, The Adventurer, etc.). Execute combos and special moves in turn-based combat!
+                </p>
+                <div class="pvp-mechanic">
+                    <strong>PvP Mechanic:</strong> Turn-based fighting with light/heavy attacks, blocks, and special moves. Build combo meter for super attacks!
+                </div>
+                <ul class="game-features">
+                    <li>6 fighter archetypes to choose</li>
+                    <li>Combo system (light → heavy → special)</li>
+                    <li>Block and counter mechanics</li>
+                    <li>Super move finishers</li>
+                </ul>
+                <div class="play-button">▶️ Play Demo</div>
+            </a>
+        </div>
+
+        <div class="footer">
+            <p>🎯 Top Picks: Love Duel Arena, Quiz Showdown, Couple Combat Arena</p>
+            <p style="margin-top: 8px; font-size: 12px;">
+                All demos feature Alice vs Bob competitive gameplay | No AI opponents!
+            </p>
+        </div>
+    </div>
+</body>
+</html>

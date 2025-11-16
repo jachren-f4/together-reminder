@@ -1,0 +1,822 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Love Duel Arena - Alice vs Bob</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .game-container {
+            max-width: 900px;
+            width: 100%;
+            background: white;
+            border-radius: 24px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            padding: 24px;
+            text-align: center;
+            color: white;
+            position: relative;
+        }
+
+        .pvp-badge {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            background: rgba(255,255,255,0.2);
+            padding: 6px 14px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 32px;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            opacity: 0.9;
+            font-size: 14px;
+        }
+
+        .game-screen {
+            padding: 32px;
+            min-height: 500px;
+        }
+
+        /* Intro */
+        .intro-screen .intro-emoji {
+            font-size: 120px;
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .intro-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 36px;
+            color: #333;
+            margin-bottom: 16px;
+            text-align: center;
+        }
+
+        .intro-description {
+            font-size: 16px;
+            line-height: 1.8;
+            color: #666;
+            margin-bottom: 24px;
+            text-align: center;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .player-select {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin: 32px 0;
+        }
+
+        .player-card {
+            background: white;
+            border: 3px solid #e9ecef;
+            border-radius: 20px;
+            padding: 28px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+            min-width: 200px;
+        }
+
+        .player-card:hover {
+            border-color: #f093fb;
+            transform: translateY(-4px);
+            box-shadow: 0 8px 20px rgba(240, 147, 251, 0.3);
+        }
+
+        .player-emoji {
+            font-size: 64px;
+            margin-bottom: 12px;
+        }
+
+        .player-name {
+            font-size: 24px;
+            font-weight: 700;
+            color: #333;
+        }
+
+        /* Battle Arena */
+        .battle-arena {
+            display: none;
+        }
+
+        .battle-arena.active {
+            display: block;
+        }
+
+        .round-indicator {
+            text-align: center;
+            font-size: 18px;
+            font-weight: 700;
+            color: #f5576c;
+            margin-bottom: 24px;
+            padding: 12px;
+            background: #fef3f2;
+            border-radius: 12px;
+        }
+
+        .battle-field {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            margin-bottom: 28px;
+        }
+
+        .fighter {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 16px;
+            padding: 24px;
+            text-align: center;
+        }
+
+        .fighter.you {
+            border: 3px solid #f093fb;
+        }
+
+        .fighter.opponent {
+            border: 3px solid #ff6b6b;
+        }
+
+        .fighter-label {
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            margin-bottom: 12px;
+        }
+
+        .fighter.you .fighter-label {
+            color: #f093fb;
+        }
+
+        .fighter.opponent .fighter-label {
+            color: #ff6b6b;
+        }
+
+        .fighter-emoji {
+            font-size: 72px;
+            margin-bottom: 12px;
+        }
+
+        .fighter-name {
+            font-size: 22px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 16px;
+        }
+
+        .hp-container {
+            margin-bottom: 12px;
+        }
+
+        .hp-label {
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .hp-bar {
+            background: #dee2e6;
+            height: 20px;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .hp-fill {
+            background: linear-gradient(90deg, #51cf66 0%, #37b24d 100%);
+            height: 100%;
+            transition: width 0.5s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: 700;
+            color: white;
+        }
+
+        .hp-fill.low {
+            background: linear-gradient(90deg, #ff6b6b 0%, #c92a2a 100%);
+        }
+
+        .hp-fill.medium {
+            background: linear-gradient(90deg, #ffd43b 0%, #fab005 100%);
+        }
+
+        .turn-indicator {
+            font-size: 14px;
+            font-weight: 600;
+            padding: 8px;
+            border-radius: 8px;
+            margin-top: 12px;
+        }
+
+        .fighter.you .turn-indicator {
+            background: #e7f5ff;
+            color: #1971c2;
+        }
+
+        .fighter.opponent .turn-indicator {
+            background: #ffe3e3;
+            color: #c92a2a;
+        }
+
+        /* Attacks */
+        .attack-selection {
+            margin-bottom: 24px;
+        }
+
+        .selection-title {
+            font-size: 18px;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 16px;
+            color: #333;
+        }
+
+        .attacks-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 12px;
+        }
+
+        .attack-card {
+            background: white;
+            border: 2px solid #e9ecef;
+            border-radius: 14px;
+            padding: 16px;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+        }
+
+        .attack-card:hover:not(:disabled) {
+            border-color: #f093fb;
+            background: #fdf4ff;
+            transform: translateY(-2px);
+        }
+
+        .attack-card:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .attack-emoji {
+            font-size: 36px;
+            margin-bottom: 8px;
+        }
+
+        .attack-name {
+            font-weight: 700;
+            font-size: 15px;
+            color: #333;
+            margin-bottom: 4px;
+        }
+
+        .attack-damage {
+            font-size: 12px;
+            color: #ff6b6b;
+            font-weight: 600;
+        }
+
+        .attack-counter {
+            font-size: 11px;
+            color: #37b24d;
+            margin-top: 4px;
+        }
+
+        /* Battle Log */
+        .battle-log {
+            background: #343a40;
+            color: white;
+            padding: 16px;
+            border-radius: 12px;
+            max-height: 150px;
+            overflow-y: auto;
+            font-family: monospace;
+            font-size: 13px;
+            line-height: 1.8;
+        }
+
+        .log-entry {
+            margin-bottom: 4px;
+        }
+
+        .log-entry.you {
+            color: #a5d8ff;
+        }
+
+        .log-entry.opponent {
+            color: #ffa8a8;
+        }
+
+        .log-entry.system {
+            color: #ffe066;
+        }
+
+        /* Results */
+        .results-screen {
+            display: none;
+            text-align: center;
+        }
+
+        .results-screen.active {
+            display: block;
+        }
+
+        .result-emoji {
+            font-size: 120px;
+            margin-bottom: 24px;
+        }
+
+        .result-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 42px;
+            margin-bottom: 16px;
+        }
+
+        .result-title.victory {
+            color: #2b8a3e;
+        }
+
+        .result-title.defeat {
+            color: #c92a2a;
+        }
+
+        .result-message {
+            font-size: 18px;
+            color: #666;
+            margin-bottom: 24px;
+        }
+
+        .score-board {
+            background: #f8f9fa;
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 24px;
+            max-width: 400px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .score-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            font-size: 16px;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        .score-row:last-child {
+            border-bottom: none;
+        }
+
+        .score-label {
+            font-weight: 600;
+            color: #555;
+        }
+
+        .score-value {
+            font-weight: 700;
+            color: #f5576c;
+        }
+
+        .lp-reward {
+            background: linear-gradient(135deg, #ffd43b 0%, #fab005 100%);
+            color: #78350f;
+            padding: 20px;
+            border-radius: 16px;
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 24px;
+            display: inline-block;
+            min-width: 200px;
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-block;
+            padding: 16px 32px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: none;
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(240, 147, 251, 0.4);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: #f093fb;
+            border: 2px solid #f093fb;
+        }
+
+        .btn-secondary:hover {
+            background: #f8f9fa;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .back-link {
+            display: block;
+            text-align: center;
+            color: #f093fb;
+            text-decoration: none;
+            margin-top: 16px;
+            font-size: 14px;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 768px) {
+            .battle-field {
+                grid-template-columns: 1fr;
+            }
+
+            .player-select {
+                flex-direction: column;
+            }
+
+            .game-screen {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <div class="header">
+            <div class="pvp-badge">⚔️ PVP</div>
+            <h1>⚔️ Love Duel Arena 💕</h1>
+            <p class="subtitle">Alice vs Bob Turn-Based Battle</p>
+        </div>
+
+        <div class="game-screen">
+            <!-- Intro & Player Select -->
+            <div class="intro-screen" id="introScreen">
+                <div class="intro-emoji">⚔️💕</div>
+                <h2 class="intro-title">Love Duel Arena</h2>
+                <p class="intro-description">
+                    Alice and Bob face off in playful combat! Choose your attacks wisely - each has counters.
+                    First to reduce opponent's HP to 0 wins the round. Best of 3 rounds!
+                </p>
+
+                <div class="selection-title">Choose Your Fighter</div>
+                <div class="player-select">
+                    <div class="player-card" onclick="selectPlayer('alice')">
+                        <div class="player-emoji">👩</div>
+                        <div class="player-name">Alice</div>
+                    </div>
+                    <div class="player-card" onclick="selectPlayer('bob')">
+                        <div class="player-emoji">👨</div>
+                        <div class="player-name">Bob</div>
+                    </div>
+                </div>
+
+                <a href="index.html" class="back-link">← Back to Game List</a>
+            </div>
+
+            <!-- Battle Arena -->
+            <div class="battle-arena" id="battleArena">
+                <div class="round-indicator" id="roundIndicator">Round 1 of 3</div>
+
+                <div class="battle-field">
+                    <div class="fighter you" id="yourFighter">
+                        <div class="fighter-label">YOU</div>
+                        <div class="fighter-emoji" id="yourEmoji">👩</div>
+                        <div class="fighter-name" id="yourName">Alice</div>
+                        <div class="hp-container">
+                            <div class="hp-label">
+                                <span>HP</span>
+                                <span id="yourHpText">100/100</span>
+                            </div>
+                            <div class="hp-bar">
+                                <div class="hp-fill" id="yourHpBar" style="width: 100%">100%</div>
+                            </div>
+                        </div>
+                        <div class="turn-indicator" id="yourTurnIndicator">Your Turn!</div>
+                    </div>
+
+                    <div class="fighter opponent" id="opponentFighter">
+                        <div class="fighter-label">OPPONENT</div>
+                        <div class="fighter-emoji" id="opponentEmoji">👨</div>
+                        <div class="fighter-name" id="opponentName">Bob</div>
+                        <div class="hp-container">
+                            <div class="hp-label">
+                                <span>HP</span>
+                                <span id="opponentHpText">100/100</span>
+                            </div>
+                            <div class="hp-bar">
+                                <div class="hp-fill" id="opponentHpBar" style="width: 100%">100%</div>
+                            </div>
+                        </div>
+                        <div class="turn-indicator" id="opponentTurnIndicator">Waiting...</div>
+                    </div>
+                </div>
+
+                <div class="attack-selection" id="attackSelection">
+                    <div class="selection-title">Choose Your Attack</div>
+                    <div class="attacks-grid" id="attacksGrid">
+                        <!-- Attacks will be generated here -->
+                    </div>
+                </div>
+
+                <div class="battle-log" id="battleLog">
+                    <div class="log-entry system">Battle Start! Choose your attack!</div>
+                </div>
+            </div>
+
+            <!-- Results Screen -->
+            <div class="results-screen" id="resultsScreen">
+                <div class="result-emoji" id="resultEmoji">🎉</div>
+                <h2 class="result-title" id="resultTitle">Victory!</h2>
+                <p class="result-message" id="resultMessage">
+                    You defeated your partner in 3 intense rounds!
+                </p>
+
+                <div class="score-board">
+                    <div class="score-row">
+                        <span class="score-label">Rounds Won:</span>
+                        <span class="score-value" id="roundsWon">2</span>
+                    </div>
+                    <div class="score-row">
+                        <span class="score-label">Damage Dealt:</span>
+                        <span class="score-value" id="damageDealt">150</span>
+                    </div>
+                    <div class="score-row">
+                        <span class="score-label">Perfect Counters:</span>
+                        <span class="score-value" id="perfectCounters">3</span>
+                    </div>
+                </div>
+
+                <div class="lp-reward" id="lpReward">+100 LP 💰</div>
+
+                <div class="button-group">
+                    <button class="btn btn-primary" onclick="location.reload()">⚔️ Rematch</button>
+                    <a href="index.html" class="btn btn-secondary">← Back to Games</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Game State
+        const gameState = {
+            player: null,
+            opponent: null,
+            yourHp: 100,
+            opponentHp: 100,
+            currentRound: 1,
+            roundsWon: 0,
+            roundsLost: 0,
+            damageDealt: 0,
+            perfectCounters: 0
+        };
+
+        // Attack Types
+        const attacks = {
+            communication: { emoji: "💬", name: "Communication Strike", damage: 30, counters: "adventure" },
+            trust: { emoji: "🛡️", name: "Trust Shield", damage: 25, counters: "communication" },
+            adventure: { emoji: "✨", name: "Adventure Blast", damage: 35, counters: "affection" },
+            affection: { emoji: "❤️", name: "Affection Beam", damage: 28, counters: "trust" },
+            quality: { emoji: "⏰", name: "Quality Time Wave", damage: 32, counters: "" }
+        };
+
+        function selectPlayer(player) {
+            gameState.player = player;
+            gameState.opponent = player === 'alice' ? 'bob' : 'alice';
+
+            // Hide intro
+            document.getElementById('introScreen').style.display = 'none';
+            document.getElementById('battleArena').classList.add('active');
+
+            // Set fighter info
+            const yourEmoji = player === 'alice' ? '👩' : '👨';
+            const opponentEmoji = player === 'alice' ? '👨' : '👩';
+            const yourName = player === 'alice' ? 'Alice' : 'Bob';
+            const opponentName = player === 'alice' ? 'Bob' : 'Alice';
+
+            document.getElementById('yourEmoji').textContent = yourEmoji;
+            document.getElementById('opponentEmoji').textContent = opponentEmoji;
+            document.getElementById('yourName').textContent = yourName;
+            document.getElementById('opponentName').textContent = opponentName;
+
+            // Render attacks
+            renderAttacks();
+        }
+
+        function renderAttacks() {
+            const grid = document.getElementById('attacksGrid');
+            grid.innerHTML = '';
+
+            Object.keys(attacks).forEach(key => {
+                const attack = attacks[key];
+                const button = document.createElement('button');
+                button.className = 'attack-card';
+                button.onclick = () => useAttack(key);
+
+                button.innerHTML = `
+                    <div class="attack-emoji">${attack.emoji}</div>
+                    <div class="attack-name">${attack.name}</div>
+                    <div class="attack-damage">${attack.damage} DMG</div>
+                    ${attack.counters ? `<div class="attack-counter">Counters: ${attacks[attack.counters]?.name || attack.counters}</div>` : ''}
+                `;
+
+                grid.appendChild(button);
+            });
+        }
+
+        function useAttack(attackKey) {
+            const yourAttack = attacks[attackKey];
+
+            // Opponent chooses random attack
+            const opponentAttackKey = Object.keys(attacks)[Math.floor(Math.random() * Object.keys(attacks).length)];
+            const opponentAttack = attacks[opponentAttackKey];
+
+            // Disable attack buttons
+            document.querySelectorAll('.attack-card').forEach(btn => btn.disabled = true);
+
+            // Calculate damage
+            let yourDamage = yourAttack.damage;
+            let opponentDamage = opponentAttack.damage;
+
+            // Check counters
+            if (yourAttack.counters === opponentAttackKey) {
+                yourDamage = Math.floor(yourDamage * 1.5); // 50% bonus
+                addLog(`You used ${yourAttack.name}! COUNTER HIT! +50% damage!`, 'you');
+                gameState.perfectCounters++;
+            } else {
+                addLog(`You used ${yourAttack.name}!`, 'you');
+            }
+
+            if (opponentAttack.counters === attackKey) {
+                opponentDamage = Math.floor(opponentDamage * 1.5);
+                addLog(`${gameState.opponent === 'bob' ? 'Bob' : 'Alice'} used ${opponentAttack.name}! COUNTER HIT!`, 'opponent');
+            } else {
+                addLog(`${gameState.opponent === 'bob' ? 'Bob' : 'Alice'} used ${opponentAttack.name}!`, 'opponent');
+            }
+
+            // Apply damage
+            gameState.opponentHp = Math.max(0, gameState.opponentHp - yourDamage);
+            gameState.yourHp = Math.max(0, gameState.yourHp - opponentDamage);
+            gameState.damageDealt += yourDamage;
+
+            addLog(`You dealt ${yourDamage} damage! Took ${opponentDamage} damage!`, 'system');
+
+            updateHpBars();
+
+            // Check round end
+            setTimeout(() => {
+                if (gameState.yourHp <= 0 || gameState.opponentHp <= 0) {
+                    endRound();
+                } else {
+                    // Re-enable buttons
+                    document.querySelectorAll('.attack-card').forEach(btn => btn.disabled = false);
+                }
+            }, 1500);
+        }
+
+        function updateHpBars() {
+            // Your HP
+            const yourPercent = gameState.yourHp;
+            const yourHpBar = document.getElementById('yourHpBar');
+            yourHpBar.style.width = yourPercent + '%';
+            yourHpBar.textContent = yourPercent + '%';
+            document.getElementById('yourHpText').textContent = gameState.yourHp + '/100';
+
+            if (yourPercent < 30) {
+                yourHpBar.classList.add('low');
+            } else if (yourPercent < 60) {
+                yourHpBar.classList.add('medium');
+            }
+
+            // Opponent HP
+            const opponentPercent = gameState.opponentHp;
+            const opponentHpBar = document.getElementById('opponentHpBar');
+            opponentHpBar.style.width = opponentPercent + '%';
+            opponentHpBar.textContent = opponentPercent + '%';
+            document.getElementById('opponentHpText').textContent = gameState.opponentHp + '/100';
+
+            if (opponentPercent < 30) {
+                opponentHpBar.classList.add('low');
+            } else if (opponentPercent < 60) {
+                opponentHpBar.classList.add('medium');
+            }
+        }
+
+        function endRound() {
+            const youWon = gameState.yourHp > gameState.opponentHp;
+
+            if (youWon) {
+                gameState.roundsWon++;
+                addLog('🎉 You won this round!', 'system');
+            } else {
+                gameState.roundsLost++;
+                addLog('💔 You lost this round!', 'system');
+            }
+
+            if (gameState.roundsWon >= 2 || gameState.roundsLost >= 2) {
+                // Match over
+                setTimeout(() => showResults(), 2000);
+            } else {
+                // Next round
+                gameState.currentRound++;
+                setTimeout(() => {
+                    gameState.yourHp = 100;
+                    gameState.opponentHp = 100;
+                    updateHpBars();
+                    document.getElementById('roundIndicator').textContent = `Round ${gameState.currentRound} of 3`;
+                    addLog(`--- Round ${gameState.currentRound} Start! ---`, 'system');
+                    document.querySelectorAll('.attack-card').forEach(btn => btn.disabled = false);
+                }, 2000);
+            }
+        }
+
+        function showResults() {
+            document.getElementById('battleArena').classList.remove('active');
+            document.getElementById('resultsScreen').classList.add('active');
+
+            const victory = gameState.roundsWon > gameState.roundsLost;
+
+            if (victory) {
+                document.getElementById('resultEmoji').textContent = '🎉';
+                document.getElementById('resultTitle').textContent = 'Victory!';
+                document.getElementById('resultTitle').className = 'result-title victory';
+                document.getElementById('resultMessage').textContent =
+                    `You defeated ${gameState.opponent === 'bob' ? 'Bob' : 'Alice'} in battle!`;
+                document.getElementById('lpReward').textContent = '+100 LP 💰';
+            } else {
+                document.getElementById('resultEmoji').textContent = '💔';
+                document.getElementById('resultTitle').textContent = 'Defeat';
+                document.getElementById('resultTitle').className = 'result-title defeat';
+                document.getElementById('resultMessage').textContent =
+                    `${gameState.opponent === 'bob' ? 'Bob' : 'Alice'} was victorious this time!`;
+                document.getElementById('lpReward').textContent = '+30 LP 💰';
+            }
+
+            document.getElementById('roundsWon').textContent = gameState.roundsWon;
+            document.getElementById('damageDealt').textContent = gameState.damageDealt;
+            document.getElementById('perfectCounters').textContent = gameState.perfectCounters;
+        }
+
+        function addLog(message, type = 'system') {
+            const battleLog = document.getElementById('battleLog');
+            const entry = document.createElement('div');
+            entry.className = 'log-entry ' + type;
+            entry.textContent = '> ' + message;
+            battleLog.appendChild(entry);
+            battleLog.scrollTop = battleLog.scrollHeight;
+        }
+    </script>
+</body>
+</html>

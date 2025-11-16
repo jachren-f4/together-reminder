@@ -6,11 +6,15 @@ import '../services/daily_quest_service.dart';
 import '../services/quest_sync_service.dart';
 import '../services/love_point_service.dart';
 import '../services/quiz_service.dart';
+import '../services/you_or_me_service.dart';
 import '../widgets/quest_card.dart';
 import '../screens/quiz_question_screen.dart';
 import '../screens/quiz_results_screen.dart';
 import '../screens/affirmation_intro_screen.dart';
 import '../screens/affirmation_results_screen.dart';
+import '../screens/you_or_me_intro_screen.dart';
+import '../screens/you_or_me_results_screen.dart';
+import '../screens/you_or_me_waiting_screen.dart';
 
 /// Widget displaying daily quests with completion tracking
 ///
@@ -27,6 +31,7 @@ class _DailyQuestsWidgetState extends State<DailyQuestsWidget> {
   late DailyQuestService _questService;
   late QuestSyncService _questSyncService;
   final QuizService _quizService = QuizService();
+  final YouOrMeService _youOrMeService = YouOrMeService();
   StreamSubscription? _partnerCompletionSubscription;
 
   @override
@@ -329,6 +334,10 @@ class _DailyQuestsWidgetState extends State<DailyQuestsWidget> {
         // TODO: Navigate to Memory Flip screen
         break;
 
+      case QuestType.youOrMe:
+        await _handleYouOrMeQuestTap(quest);
+        break;
+
       case QuestType.question:
         // TODO: Navigate to Question screen
         break;
@@ -408,6 +417,56 @@ class _DailyQuestsWidgetState extends State<DailyQuestsWidget> {
           ),
         );
       }
+    }
+  }
+
+  Future<void> _handleYouOrMeQuestTap(DailyQuest quest) async {
+    // Get user and partner
+    final user = _storage.getUser();
+    final partner = _storage.getPartner();
+
+    if (user == null || partner == null) {
+      _showError('User or partner not found');
+      return;
+    }
+
+    // The quest contentId points to the creator's session.
+    // Find the current user's own session from the paired session.
+    final session = await _youOrMeService.getUserSessionFromPaired(
+      quest.contentId,
+      user.id,
+    );
+
+    if (session == null) {
+      _showError('You or Me session not found');
+      return;
+    }
+
+    // Check if both users have completed
+    if (session.areBothUsersAnswered()) {
+      // Both answered - show results
+      await Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => YouOrMeResultsScreen(session: session),
+        ),
+      );
+    } else if (session.hasUserAnswered(user.id)) {
+      // User answered, waiting for partner
+      await Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => YouOrMeWaitingScreen(session: session),
+        ),
+      );
+    } else {
+      // User hasn't answered - show intro screen
+      await Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => YouOrMeIntroScreen(session: session),
+        ),
+      );
     }
   }
 

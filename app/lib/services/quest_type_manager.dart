@@ -7,6 +7,7 @@ import '../services/daily_quest_service.dart';
 import '../services/quest_sync_service.dart';
 import '../services/quest_utilities.dart';
 import '../services/quiz_service.dart';
+import '../services/you_or_me_service.dart';
 
 /// Interface for quest providers
 ///
@@ -219,6 +220,67 @@ class QuizQuestProvider implements QuestProvider {
   }
 }
 
+/// Quest provider for You or Me game quests
+class YouOrMeQuestProvider implements QuestProvider {
+  final YouOrMeService _youOrMeService;
+
+  YouOrMeQuestProvider({YouOrMeService? youOrMeService})
+      : _youOrMeService = youOrMeService ?? YouOrMeService();
+
+  @override
+  QuestType get questType => QuestType.youOrMe;
+
+  @override
+  Future<String?> generateQuest({
+    required String dateKey,
+    required String currentUserId,
+    required String partnerUserId,
+    QuizProgressionState? progressionState,
+  }) async {
+    try {
+      // Create TWO You or Me sessions (one per user) with same questions
+      final sessions = await _youOrMeService.generateDualSessions(
+        userId: currentUserId,
+        partnerId: partnerUserId,
+        questId: null, // Will be set by DailyQuest
+      );
+
+      // Return current user's session ID (quest points to their own session)
+      final userSession = sessions[currentUserId];
+      if (userSession == null) {
+        debugPrint('Error: User session not found in dual sessions');
+        return null;
+      }
+
+      debugPrint('Generated You or Me dual sessions: ${userSession.id} (user), ${sessions[partnerUserId]?.id} (partner)');
+      return userSession.id;
+    } catch (e) {
+      debugPrint('Error generating You or Me quest: $e');
+      return null;
+    }
+  }
+
+  @override
+  Future<bool> validateCompletion({
+    required String contentId,
+    required String userId,
+  }) async {
+    try {
+      final session = await _youOrMeService.getSession(contentId);
+      if (session == null) {
+        debugPrint('You or Me session not found: $contentId');
+        return false;
+      }
+
+      // Check if user has answered all 10 questions
+      return session.hasUserAnswered(userId);
+    } catch (e) {
+      debugPrint('Error validating You or Me completion: $e');
+      return false;
+    }
+  }
+}
+
 /// Manager for coordinating quest generation across different quest types
 ///
 /// Uses the provider pattern to support multiple quest types
@@ -237,6 +299,7 @@ class QuestTypeManager {
         _syncService = syncService {
     // Register default providers
     registerProvider(QuizQuestProvider(storage: storage));
+    registerProvider(YouOrMeQuestProvider());
   }
 
   /// Register a quest provider
@@ -289,30 +352,35 @@ class QuestTypeManager {
         }
       }
 
-      // Generate 3 quiz-based daily quests
+      // Generate 4 daily quests: 3 quiz-based + 1 You or Me
       // Use local variables for iteration - don't modify progression until completion
       int track = progressionState.currentTrack;
       int position = progressionState.currentPosition;
 
       final quests = <DailyQuest>[];
 
-      for (int i = 0; i < 3; i++) {
-        debugPrint('🎯 Generating quest ${i + 1}/3... (Track $track, Position $position)');
+      for (int i = 0; i < 4; i++) {
+        debugPrint('🎯 Generating quest ${i + 1}/4... (Track $track, Position $position)');
 
-        // Create a temporary progression state for this quest
-        final tempState = QuizProgressionState(
-          coupleId: progressionState.coupleId,
-          currentTrack: track,
-          currentPosition: position,
-          completedQuizzes: progressionState.completedQuizzes,
-          createdAt: progressionState.createdAt,
-          lastCompletedAt: progressionState.lastCompletedAt,
-          totalQuizzesCompleted: progressionState.totalQuizzesCompleted,
-          hasCompletedAllTracks: progressionState.hasCompletedAllTracks,
-        );
+        // Quest 4 is always You or Me, quests 1-3 follow quiz progression
+        final questType = i == 3 ? QuestType.youOrMe : QuestType.quiz;
+
+        // Create a temporary progression state for quiz quests
+        final tempState = questType == QuestType.quiz
+            ? QuizProgressionState(
+                coupleId: progressionState.coupleId,
+                currentTrack: track,
+                currentPosition: position,
+                completedQuizzes: progressionState.completedQuizzes,
+                createdAt: progressionState.createdAt,
+                lastCompletedAt: progressionState.lastCompletedAt,
+                totalQuizzesCompleted: progressionState.totalQuizzesCompleted,
+                hasCompletedAllTracks: progressionState.hasCompletedAllTracks,
+              )
+            : null;
 
         final contentId = await _generateQuestContent(
-          questType: QuestType.quiz,
+          questType: questType,
           currentUserId: currentUserId,
           partnerUserId: partnerUserId,
           progressionState: tempState,
@@ -321,20 +389,22 @@ class QuestTypeManager {
         if (contentId != null) {
           debugPrint('✅ Quest ${i + 1} content created: $contentId');
 
-          // Get format type and quiz name from quiz session
-          String formatType = 'classic';
+          // Get format type and quiz name from quiz session (for quiz quests only)
+          String formatType = 'classic'; // Default for all quest types
           String? quizName;
-          final session = _storage.getQuizSession(contentId);
-          if (session != null) {
-            if (session.formatType != null) {
-              formatType = session.formatType!;
+          if (questType == QuestType.quiz) {
+            final session = _storage.getQuizSession(contentId);
+            if (session != null) {
+              if (session.formatType != null) {
+                formatType = session.formatType!;
+              }
+              quizName = session.quizName; // Extract quiz name for display
             }
-            quizName = session.quizName; // Extract quiz name for display
           }
 
           final quest = DailyQuest.create(
             dateKey: dateKey,
-            type: QuestType.quiz,
+            type: questType,
             contentId: contentId,
             sortOrder: i,
             isSideQuest: false,
@@ -346,8 +416,8 @@ class QuestTypeManager {
           quests.add(quest);
           debugPrint('💾 Quest ${i + 1} saved to storage');
 
-          // Advance local variables for next quest generation
-          if (i < 2) {
+          // Advance local variables for next quiz quest generation (skip for You or Me)
+          if (questType == QuestType.quiz && i < 3) {
             position++;
             if (position >= 4) {
               track++;

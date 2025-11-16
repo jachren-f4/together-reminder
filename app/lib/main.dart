@@ -9,6 +9,7 @@ import 'package:togetherremind/services/dev_pairing_service.dart';
 import 'package:togetherremind/services/notification_service.dart';
 import 'package:togetherremind/services/quiz_question_bank.dart';
 import 'package:togetherremind/services/affirmation_quiz_bank.dart';
+import 'package:togetherremind/services/you_or_me_service.dart';
 import 'package:togetherremind/services/word_validation_service.dart';
 import 'package:togetherremind/services/quest_sync_service.dart';
 import 'package:togetherremind/services/daily_quest_service.dart';
@@ -51,6 +52,9 @@ void main() async {
 
   // Initialize Affirmation Quiz Bank
   await AffirmationQuizBank().initialize();
+
+  // Initialize You or Me Service (load questions)
+  await YouOrMeService().loadQuestions();
 
   // Initialize Word Validation Service
   await WordValidationService.instance.initialize();

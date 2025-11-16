@@ -243,6 +243,8 @@ class QuestCard extends StatelessWidget {
         return 'WORD LADDER';
       case QuestType.memoryFlip:
         return 'MEMORY FLIP';
+      case QuestType.youOrMe:
+        return 'YOU OR ME';
     }
   }
 
@@ -264,6 +266,8 @@ class QuestCard extends StatelessWidget {
         return 'Word Ladder Challenge';
       case QuestType.memoryFlip:
         return 'Memory Match Game';
+      case QuestType.youOrMe:
+        return 'You or Me?';
     }
   }
 

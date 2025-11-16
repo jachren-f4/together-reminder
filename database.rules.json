@@ -36,6 +36,12 @@
         ".indexOn": ["createdAt", "status"]
       }
     },
+    "you_or_me_sessions": {
+      "$coupleId": {
+        ".read": true,
+        ".write": true
+      }
+    },
     "daily_pulses": {
       "$emulatorId": {
         ".read": true,

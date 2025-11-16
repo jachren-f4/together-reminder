@@ -12,6 +12,8 @@ import '../models/memory_flip.dart';
 import '../models/quiz_expansion.dart';
 import '../models/daily_quest.dart';
 import '../models/quiz_progression_state.dart';
+import '../models/you_or_me.dart';
+import '../utils/logger.dart';
 
 class StorageService {
   static const String _remindersBox = 'reminders';
@@ -31,58 +33,81 @@ class StorageService {
   static const String _dailyQuestsBox = 'daily_quests';
   static const String _dailyQuestCompletionsBox = 'daily_quest_completions';
   static const String _quizProgressionStatesBox = 'quiz_progression_states';
+  static const String _youOrMeSessionsBox = 'you_or_me_sessions';
+  static const String _youOrMeProgressionBox = 'you_or_me_progression';
   static const String _appMetadataBox = 'app_metadata';  // Untyped box for metadata
 
   static Future<void> init() async {
-    await Hive.initFlutter();
+    try {
+      Logger.debug('Initializing Hive storage...', service: 'storage');
+      await Hive.initFlutter();
 
-    // Register adapters (only if not already registered)
-    if (!Hive.isAdapterRegistered(0)) Hive.registerAdapter(ReminderAdapter());
-    if (!Hive.isAdapterRegistered(1)) Hive.registerAdapter(PartnerAdapter());
-    if (!Hive.isAdapterRegistered(2)) Hive.registerAdapter(UserAdapter());
-    if (!Hive.isAdapterRegistered(3)) Hive.registerAdapter(LovePointTransactionAdapter());
-    if (!Hive.isAdapterRegistered(4)) Hive.registerAdapter(QuizQuestionAdapter());
-    if (!Hive.isAdapterRegistered(5)) Hive.registerAdapter(QuizSessionAdapter());
-    if (!Hive.isAdapterRegistered(6)) Hive.registerAdapter(BadgeAdapter());
-    if (!Hive.isAdapterRegistered(8)) Hive.registerAdapter(WordPairAdapter());
-    if (!Hive.isAdapterRegistered(9)) Hive.registerAdapter(LadderSessionAdapter());
-    if (!Hive.isAdapterRegistered(10)) Hive.registerAdapter(MemoryPuzzleAdapter());
-    if (!Hive.isAdapterRegistered(11)) Hive.registerAdapter(MemoryCardAdapter());
-    if (!Hive.isAdapterRegistered(12)) Hive.registerAdapter(MemoryFlipAllowanceAdapter());
-    if (!Hive.isAdapterRegistered(13)) Hive.registerAdapter(QuizFormatAdapter());
-    if (!Hive.isAdapterRegistered(14)) Hive.registerAdapter(QuizCategoryAdapter());
-    if (!Hive.isAdapterRegistered(15)) Hive.registerAdapter(QuizStreakAdapter());
-    if (!Hive.isAdapterRegistered(16)) Hive.registerAdapter(QuizDailyPulseAdapter());
-    if (!Hive.isAdapterRegistered(17)) Hive.registerAdapter(DailyQuestAdapter());
-    if (!Hive.isAdapterRegistered(18)) Hive.registerAdapter(DailyQuestCompletionAdapter());
-    if (!Hive.isAdapterRegistered(19)) Hive.registerAdapter(QuizProgressionStateAdapter());
+      // Register adapters (only if not already registered)
+      Logger.debug('Registering Hive adapters...', service: 'storage');
+      if (!Hive.isAdapterRegistered(0)) Hive.registerAdapter(ReminderAdapter());
+      if (!Hive.isAdapterRegistered(1)) Hive.registerAdapter(PartnerAdapter());
+      if (!Hive.isAdapterRegistered(2)) Hive.registerAdapter(UserAdapter());
+      if (!Hive.isAdapterRegistered(3)) Hive.registerAdapter(LovePointTransactionAdapter());
+      if (!Hive.isAdapterRegistered(4)) Hive.registerAdapter(QuizQuestionAdapter());
+      if (!Hive.isAdapterRegistered(5)) Hive.registerAdapter(QuizSessionAdapter());
+      if (!Hive.isAdapterRegistered(6)) Hive.registerAdapter(BadgeAdapter());
+      if (!Hive.isAdapterRegistered(8)) Hive.registerAdapter(WordPairAdapter());
+      if (!Hive.isAdapterRegistered(9)) Hive.registerAdapter(LadderSessionAdapter());
+      if (!Hive.isAdapterRegistered(10)) Hive.registerAdapter(MemoryPuzzleAdapter());
+      if (!Hive.isAdapterRegistered(11)) Hive.registerAdapter(MemoryCardAdapter());
+      if (!Hive.isAdapterRegistered(12)) Hive.registerAdapter(MemoryFlipAllowanceAdapter());
+      if (!Hive.isAdapterRegistered(13)) Hive.registerAdapter(QuizFormatAdapter());
+      if (!Hive.isAdapterRegistered(14)) Hive.registerAdapter(QuizCategoryAdapter());
+      if (!Hive.isAdapterRegistered(15)) Hive.registerAdapter(QuizStreakAdapter());
+      if (!Hive.isAdapterRegistered(16)) Hive.registerAdapter(QuizDailyPulseAdapter());
+      if (!Hive.isAdapterRegistered(17)) Hive.registerAdapter(DailyQuestAdapter());
+      if (!Hive.isAdapterRegistered(18)) Hive.registerAdapter(DailyQuestCompletionAdapter());
+      if (!Hive.isAdapterRegistered(19)) Hive.registerAdapter(QuizProgressionStateAdapter());
+      if (!Hive.isAdapterRegistered(20)) Hive.registerAdapter(YouOrMeQuestionAdapter());
+      if (!Hive.isAdapterRegistered(21)) Hive.registerAdapter(YouOrMeAnswerAdapter());
+      if (!Hive.isAdapterRegistered(22)) Hive.registerAdapter(YouOrMeSessionAdapter());
 
-    // Open boxes
-    await Hive.openBox<Reminder>(_remindersBox);
-    await Hive.openBox<Partner>(_partnerBox);
-    await Hive.openBox<User>(_userBox);
-    await Hive.openBox<LovePointTransaction>(_transactionsBox);
-    await Hive.openBox<QuizQuestion>(_quizQuestionsBox);
-    await Hive.openBox<QuizSession>(_quizSessionsBox);
-    await Hive.openBox<Badge>(_badgesBox);
-    await Hive.openBox<LadderSession>(_ladderSessionsBox);
-    await Hive.openBox<MemoryPuzzle>(_memoryPuzzlesBox);
-    await Hive.openBox<MemoryFlipAllowance>(_memoryAllowancesBox);
-    await Hive.openBox<QuizFormat>(_quizFormatsBox);
-    await Hive.openBox<QuizCategory>(_quizCategoriesBox);
-    await Hive.openBox<QuizStreak>(_quizStreaksBox);
-    await Hive.openBox<QuizDailyPulse>(_dailyPulsesBox);
-    await Hive.openBox<DailyQuest>(_dailyQuestsBox);
-    await Hive.openBox<DailyQuestCompletion>(_dailyQuestCompletionsBox);
-    await Hive.openBox<QuizProgressionState>(_quizProgressionStatesBox);
-    await Hive.openBox(_appMetadataBox);  // Untyped box for app metadata
+      // Open boxes
+      Logger.debug('Opening Hive boxes...', service: 'storage');
+      await Hive.openBox<Reminder>(_remindersBox);
+      await Hive.openBox<Partner>(_partnerBox);
+      await Hive.openBox<User>(_userBox);
+      await Hive.openBox<LovePointTransaction>(_transactionsBox);
+      await Hive.openBox<QuizQuestion>(_quizQuestionsBox);
+      await Hive.openBox<QuizSession>(_quizSessionsBox);
+      await Hive.openBox<Badge>(_badgesBox);
+      await Hive.openBox<LadderSession>(_ladderSessionsBox);
+      await Hive.openBox<MemoryPuzzle>(_memoryPuzzlesBox);
+      await Hive.openBox<MemoryFlipAllowance>(_memoryAllowancesBox);
+      await Hive.openBox<QuizFormat>(_quizFormatsBox);
+      await Hive.openBox<QuizCategory>(_quizCategoriesBox);
+      await Hive.openBox<QuizStreak>(_quizStreaksBox);
+      await Hive.openBox<QuizDailyPulse>(_dailyPulsesBox);
+      await Hive.openBox<DailyQuest>(_dailyQuestsBox);
+      await Hive.openBox<DailyQuestCompletion>(_dailyQuestCompletionsBox);
+      await Hive.openBox<QuizProgressionState>(_quizProgressionStatesBox);
+      await Hive.openBox<YouOrMeSession>(_youOrMeSessionsBox);
+      await Hive.openBox(_youOrMeProgressionBox);  // Untyped box for question tracking
+      await Hive.openBox(_appMetadataBox);  // Untyped box for app metadata
+
+      Logger.info('Hive storage initialized successfully (20 boxes opened)', service: 'storage');
+    } catch (e, stackTrace) {
+      Logger.error('Failed to initialize Hive storage', error: e, stackTrace: stackTrace, service: 'storage');
+      rethrow;
+    }
   }
 
   // Reminder operations
   Box<Reminder> get remindersBox => Hive.box<Reminder>(_remindersBox);
 
   Future<void> saveReminder(Reminder reminder) async {
-    await remindersBox.put(reminder.id, reminder);
+    try {
+      await remindersBox.put(reminder.id, reminder);
+      Logger.debug('Saved reminder: ${reminder.id} (${reminder.type})', service: 'storage');
+    } catch (e, stackTrace) {
+      Logger.error('Failed to save reminder ${reminder.id}', error: e, stackTrace: stackTrace, service: 'storage');
+      rethrow;
+    }
   }
 
   List<Reminder> getAllReminders() {
@@ -115,18 +140,37 @@ class StorageService {
   }
 
   Future<void> deleteReminder(String id) async {
-    await remindersBox.delete(id);
+    try {
+      await remindersBox.delete(id);
+      Logger.debug('Deleted reminder: $id', service: 'storage');
+    } catch (e, stackTrace) {
+      Logger.error('Failed to delete reminder $id', error: e, stackTrace: stackTrace, service: 'storage');
+      rethrow;
+    }
   }
 
   Future<void> clearAllReminders() async {
-    await remindersBox.clear();
+    try {
+      final count = remindersBox.length;
+      await remindersBox.clear();
+      Logger.info('Cleared $count reminders from storage', service: 'storage');
+    } catch (e, stackTrace) {
+      Logger.error('Failed to clear reminders', error: e, stackTrace: stackTrace, service: 'storage');
+      rethrow;
+    }
   }
 
   // Partner operations
   Box<Partner> get partnerBox => Hive.box<Partner>(_partnerBox);
 
   Future<void> savePartner(Partner partner) async {
-    await partnerBox.put('partner', partner);
+    try {
+      await partnerBox.put('partner', partner);
+      Logger.info('Saved partner: ${partner.name} (${partner.pushToken.substring(0, 8)}...)', service: 'storage');
+    } catch (e, stackTrace) {
+      Logger.error('Failed to save partner', error: e, stackTrace: stackTrace, service: 'storage');
+      rethrow;
+    }
   }
 
   Partner? getPartner() {
@@ -138,7 +182,13 @@ class StorageService {
   }
 
   Future<void> deletePartner() async {
-    await partnerBox.delete('partner');
+    try {
+      await partnerBox.delete('partner');
+      Logger.info('Deleted partner from storage', service: 'storage');
+    } catch (e, stackTrace) {
+      Logger.error('Failed to delete partner', error: e, stackTrace: stackTrace, service: 'storage');
+      rethrow;
+    }
   }
 
   // User operations
@@ -158,9 +208,16 @@ class StorageService {
 
   // Clear all data (unpair)
   Future<void> clearAllData() async {
-    await clearAllReminders();
-    await deletePartner();
-    // Keep user data for potential re-pairing
+    try {
+      Logger.info('Clearing all data (unpair operation)...', service: 'storage');
+      await clearAllReminders();
+      await deletePartner();
+      // Keep user data for potential re-pairing
+      Logger.success('Successfully cleared all data (user data preserved)', service: 'storage');
+    } catch (e, stackTrace) {
+      Logger.error('Failed to clear all data', error: e, stackTrace: stackTrace, service: 'storage');
+      rethrow;
+    }
   }
 
   // Love Point Transaction operations
@@ -168,7 +225,13 @@ class StorageService {
       Hive.box<LovePointTransaction>(_transactionsBox);
 
   Future<void> saveTransaction(LovePointTransaction transaction) async {
-    await transactionsBox.put(transaction.id, transaction);
+    try {
+      await transactionsBox.put(transaction.id, transaction);
+      Logger.debug('Saved LP transaction: ${transaction.id} (+${transaction.amount} pts, ${transaction.reason})', service: 'storage');
+    } catch (e, stackTrace) {
+      Logger.error('Failed to save LP transaction ${transaction.id}', error: e, stackTrace: stackTrace, service: 'storage');
+      rethrow;
+    }
   }
 
   List<LovePointTransaction> getAllTransactions() {
@@ -470,4 +533,33 @@ class StorageService {
     awards.add(awardId);
     await box.put(_appliedLPAwardsKey, awards.toList());
   }
+
+  // You or Me Session operations
+  Box<YouOrMeSession> get youOrMeSessionsBox =>
+      Hive.box<YouOrMeSession>(_youOrMeSessionsBox);
+
+  Future<void> saveYouOrMeSession(YouOrMeSession session) async {
+    await youOrMeSessionsBox.put(session.id, session);
+  }
+
+  YouOrMeSession? getYouOrMeSession(String sessionId) {
+    return youOrMeSessionsBox.get(sessionId);
+  }
+
+  List<YouOrMeSession> getAllYouOrMeSessions() {
+    final sessions = youOrMeSessionsBox.values.toList();
+    sessions.sort((a, b) => b.createdAt.compareTo(a.createdAt));
+    return sessions;
+  }
+
+  Future<void> updateYouOrMeSession(YouOrMeSession session) async {
+    await session.save();
+  }
+
+  Future<void> deleteYouOrMeSession(String sessionId) async {
+    await youOrMeSessionsBox.delete(sessionId);
+  }
+
+  // You or Me Progression operations (untyped box for question tracking)
+  Box get youOrMeProgressionBox => Hive.box(_youOrMeProgressionBox);
 }

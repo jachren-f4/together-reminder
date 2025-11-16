@@ -168,7 +168,44 @@ All paths require security rules in `database.rules.json`:
 - `lib/widgets/foreground_notification_banner.dart`
 - `lib/widgets/daily_quests_widget.dart:86-102`
 
-### 9. Logger Service (Centralized Logging)
+### 9. Quest Title Display Rules
+
+**CRITICAL:** Quest title display must use denormalized metadata, NOT session lookups.
+
+**Why this matters:**
+- Alice creates daily quests → writes to Firebase → has local sessions
+- Bob loads quests from Firebase → has quests but NO local sessions
+- Session lookup fails on Bob's device → displays wrong titles
+
+**Design pattern:**
+```dart
+// ❌ WRONG - session lookup fails on partner's device
+final session = StorageService().getQuizSession(quest.contentId);
+if (session != null && session.formatType == 'affirmation') {
+  return session.quizName!;
+}
+
+// ✅ CORRECT - uses Firebase-synced metadata
+if (quest.formatType == 'affirmation') {
+  return quest.quizName ?? 'Affirmation Quiz';
+}
+```
+
+**Affected components:**
+- `lib/widgets/quest_card.dart` - Main screen quest titles
+- `lib/services/activity_service.dart` - Inbox quest titles
+- `lib/widgets/daily_quests_widget.dart` - Format type detection
+
+**Data flow:**
+1. Alice: QuizSession created → `formatType`, `quizName` extracted
+2. Alice: DailyQuest created with metadata from session
+3. Alice: Quest synced to Firebase with `formatType`, `quizName`
+4. Bob: Quest loaded from Firebase with all metadata intact
+5. Bob: UI uses `quest.formatType` and `quest.quizName` directly
+
+See `docs/QUEST_TITLE_SYNC_ISSUE.md` for full technical analysis.
+
+### 10. Logger Service (Centralized Logging)
 
 **CRITICAL:** Use `Logger` instead of `print()` for all logging.
 
@@ -383,6 +420,7 @@ The optimized procedure runs builds in parallel with cleanup tasks:
 | `lib/services/poke_service.dart` | Poke logic, rate limiting (30s), mutual detection (2min) |
 | `lib/services/poke_animation_service.dart` | Lottie animations + haptic |
 | `lib/services/quiz_service.dart` | Quiz logic, question rotation, scoring |
+| `lib/services/affirmation_quiz_bank.dart` | Affirmation quiz loader (6 quizzes, 30 questions) |
 | `lib/services/word_ladder_service.dart` | Word ladder game logic |
 | `lib/services/memory_flip_service.dart` | Memory Flip game logic |
 | `lib/services/love_point_service.dart` | Love Points tracking and rewards |
@@ -407,6 +445,9 @@ The optimized procedure runs builds in parallel with cleanup tasks:
 | `lib/screens/activities_screen.dart` | Activities hub with game cards |
 | `lib/screens/quiz_intro_screen.dart` | Classic quiz intro |
 | `lib/screens/quiz_screen.dart` | Classic quiz gameplay |
+| `lib/screens/affirmation_intro_screen.dart` | Affirmation quiz intro |
+| `lib/screens/affirmation_question_screen.dart` | Affirmation quiz 5-point scale questions |
+| `lib/screens/affirmation_results_screen.dart` | Affirmation quiz results with progress visualization |
 | `lib/screens/speed_round_intro_screen.dart` | Speed round intro |
 | `lib/screens/speed_round_screen.dart` | Speed round gameplay |
 | `lib/screens/word_ladder_game_screen.dart` | Word ladder gameplay |
@@ -420,6 +461,9 @@ The optimized procedure runs builds in parallel with cleanup tasks:
 | `lib/widgets/poke_response_dialog.dart` | Receive poke dialog |
 | `lib/widgets/match_reveal_dialog.dart` | Memory Flip match celebration |
 | `lib/widgets/foreground_notification_banner.dart` | In-app notification banner |
+| `lib/widgets/five_point_scale.dart` | 5-point Likert scale for affirmation quizzes |
+| `lib/widgets/quest_card.dart` | Daily quest card (uses quest.quizName for display) |
+| `lib/widgets/daily_quests_widget.dart` | Daily quests container (formatType detection) |
 
 ### Debug Menu
 
@@ -451,6 +495,7 @@ The optimized procedure runs builds in parallel with cleanup tasks:
 
 | Document | Contents |
 |----------|----------|
+| **[docs/QUEST_SYSTEM_V2.md](docs/QUEST_SYSTEM_V2.md)** | Quest system architecture, dual vs single session patterns, common pitfalls when adding new quest types, denormalization rules |
 | **[docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)** | Data models, push notification flow, device pairing architecture, feature specifications |
 | **[docs/SETUP.md](docs/SETUP.md)** | Firebase configuration, development setup, two-device testing, deployment |
 | **[docs/TROUBLESHOOTING.md](docs/TROUBLESHOOTING.md)** | Common issues, debugging strategies, error handling patterns, Chrome testing best practices |

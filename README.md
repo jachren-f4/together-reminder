@@ -54,6 +54,7 @@ flutter run -d <device-id>
 - ⚡ **Speed Round** - Fast-paced quiz with 10-second timer and streak bonuses (unlocks after 5 Classic Quizzes)
 - 🪜 **Word Ladder Duet** - Collaborative word puzzle with turn-based gameplay
 - 🎴 **Memory Flip** - Daily memory card matching game (4x4 grid, shared progress)
+- 💭 **Affirmation Quizzes** - Self-assessment with 5-point Likert scale across 6 themed quizzes (Trust, Emotional Support); integrated into daily quests (50% distribution)
 
 ### Settings
 - ⚙️ **Settings** - Notification preferences, partner info, unpair option
@@ -96,6 +97,18 @@ togetherremind/
 ├── CLAUDE.md               # Technical development guide (AI assistant reference)
 └── PRD.md                  # Product Requirements Document
 ```
+
+---
+
+## Technical Architecture
+
+### Quest Title Synchronization
+
+Quest metadata (titles, format types) is denormalized into the `DailyQuest` model to ensure cross-device consistency. The `quizName` field syncs via Firebase RTDB, eliminating session lookup dependencies that fail on devices that didn't create the content.
+
+**Why this matters:** When Alice creates daily quests, Bob loads them from Firebase. Bob doesn't have quiz sessions in local storage (Alice does), so UI components must use quest metadata directly instead of session lookups.
+
+See [docs/QUEST_TITLE_SYNC_ISSUE.md](./docs/QUEST_TITLE_SYNC_ISSUE.md) for detailed technical analysis.
 
 ---
 

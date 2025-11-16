@@ -6,6 +6,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import '../widgets/foreground_notification_banner.dart';
+import '../utils/logger.dart';
 
 class LovePointService {
   static final StorageService _storage = StorageService();
@@ -57,7 +58,7 @@ class LovePointService {
     try {
       final user = _storage.getUser();
       if (user == null) {
-        debugPrint('❌ No user found, cannot award points');
+        Logger.warn('No user found, cannot award points', service: 'lovepoint');
         return;
       }
 
@@ -87,18 +88,16 @@ class LovePointService {
       if (newTier > previousTier) {
         user.arenaTier = newTier;
         user.floor = arenas[newTier]!['floor'] as int;
-        debugPrint('🎉 Tier upgraded to ${arenas[newTier]!['name']}!');
+        Logger.success('Tier upgraded to ${arenas[newTier]!['name']}!', service: 'lovepoint');
         // TODO: Show tier upgrade animation/notification in Phase 2
       }
 
       // Save using the storage service to properly handle Hive transactions
       await _storage.saveUser(user);
 
-      debugPrint(
-          '💰 Awarded $actualAmount LP for $reason (Total: ${user.lovePoints})');
+      Logger.info('Awarded $actualAmount LP for $reason (Total: ${user.lovePoints})', service: 'lovepoint');
     } catch (e, stackTrace) {
-      debugPrint('❌ Error awarding points: $e');
-      debugPrint('Stack trace: $stackTrace');
+      Logger.error('Error awarding points', error: e, stackTrace: stackTrace, service: 'lovepoint');
       rethrow;
     }
   }
@@ -212,9 +211,9 @@ class LovePointService {
         'timestamp': DateTime.now().millisecondsSinceEpoch,
       });
 
-      debugPrint('💰 LP award synced to Firebase: $actualAmount LP for both users ($reason)');
+      Logger.info('LP award synced to Firebase: $actualAmount LP for both users ($reason)', service: 'lovepoint');
     } catch (e) {
-      debugPrint('❌ Error syncing LP award to Firebase: $e');
+      Logger.error('Error syncing LP award to Firebase', error: e, service: 'lovepoint');
     }
   }
 
@@ -236,9 +235,9 @@ class LovePointService {
         }
       });
 
-      debugPrint('👂 Listening for LP awards for couple: $coupleId');
+      Logger.info('Listening for LP awards for couple: $coupleId', service: 'lovepoint');
     } catch (e) {
-      debugPrint('❌ Error setting up LP award listener: $e');
+      Logger.error('Error setting up LP award listener', error: e, service: 'lovepoint');
     }
   }
 
@@ -260,7 +259,7 @@ class LovePointService {
       // Check if we've already applied this award (prevent duplicates)
       final appliedAwards = _storage.getAppliedLPAwards();
       if (appliedAwards.contains(awardId)) {
-        debugPrint('⏭️  LP award $awardId already applied, skipping');
+        Logger.debug('LP award $awardId already applied, skipping', service: 'lovepoint');
         return;
       }
 
@@ -275,7 +274,7 @@ class LovePointService {
       // Mark as applied
       _storage.markLPAwardAsApplied(awardId!);
 
-      debugPrint('💰 Applied LP award from Firebase: +$amount LP ($reason)');
+      Logger.success('Applied LP award from Firebase: +$amount LP ($reason)', service: 'lovepoint');
 
       // Show foreground notification banner
       if (_appContext != null && _appContext!.mounted) {
@@ -287,8 +286,7 @@ class LovePointService {
         );
       }
     } catch (e, stackTrace) {
-      debugPrint('❌ Error handling LP award: $e');
-      debugPrint('Stack trace: $stackTrace');
+      Logger.error('Error handling LP award', error: e, stackTrace: stackTrace, service: 'lovepoint');
     }
   }
 }

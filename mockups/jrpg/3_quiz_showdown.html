@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Showdown - Competitive Trivia</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #ffa500 0%, #ff6347 100%);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .game-container {
+            max-width: 800px;
+            width: 100%;
+            background: white;
+            border-radius: 24px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        .header {
+            background: linear-gradient(135deg, #ffa500 0%, #ff6347 100%);
+            padding: 24px;
+            text-align: center;
+            color: white;
+            position: relative;
+        }
+        .pvp-badge {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            background: rgba(255,255,255,0.2);
+            padding: 6px 14px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 700;
+        }
+        h1 { font-family: 'Playfair Display', serif; font-size: 32px; margin-bottom: 8px; }
+        .subtitle { opacity: 0.9; font-size: 14px; }
+        .game-screen { padding: 32px; min-height: 500px; }
+
+        .score-display {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 28px;
+        }
+        .player-score {
+            flex: 1;
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 16px;
+            text-align: center;
+        }
+        .player-score.you { border: 3px solid #ffa500; }
+        .player-score.opponent { border: 3px solid #ff6347; }
+        .score-hp { font-size: 36px; font-weight: 700; color: #333; margin-bottom: 8px; }
+        .score-label { font-size: 14px; color: #666; }
+
+        .question-card {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 16px;
+            padding: 28px;
+            margin-bottom: 24px;
+            text-align: center;
+        }
+        .question-number { font-size: 13px; color: #ff6347; font-weight: 700; margin-bottom: 12px; }
+        .question-text { font-size: 20px; font-weight: 600; color: #333; margin-bottom: 24px; line-height: 1.6; }
+        .answers-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+        .answer-btn {
+            background: white;
+            border: 2px solid #e9ecef;
+            border-radius: 12px;
+            padding: 16px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 15px;
+            font-weight: 600;
+        }
+        .answer-btn:hover { border-color: #ffa500; background: #fff5e6; }
+        .answer-btn.correct { border-color: #37b24d; background: #d3f9d8; }
+        .answer-btn.wrong { border-color: #ff6b6b; background: #ffe3e3; }
+
+        .result-message {
+            background: #e7f5ff;
+            border-left: 4px solid #339af0;
+            padding: 16px;
+            border-radius: 8px;
+            margin-top: 16px;
+            font-size: 14px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 16px 32px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: none;
+            background: linear-gradient(135deg, #ffa500 0%, #ff6347 100%);
+            color: white;
+        }
+
+        .result-screen {
+            display: none;
+            text-align: center;
+        }
+        .result-screen.active { display: block; }
+        .result-emoji { font-size: 120px; margin-bottom: 24px; }
+        .result-title { font-family: 'Playfair Display', serif; font-size: 42px; margin-bottom: 16px; }
+        .result-title.victory { color: #2b8a3e; }
+        .result-title.defeat { color: #c92a2a; }
+
+        .back-link {
+            display: block;
+            text-align: center;
+            color: #ffa500;
+            text-decoration: none;
+            margin-top: 16px;
+            font-size: 14px;
+        }
+
+        @media (max-width: 768px) {
+            .answers-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <div class="header">
+            <div class="pvp-badge">⚔️ PVP</div>
+            <h1>🎯 Quiz Showdown 💥</h1>
+            <p class="subtitle">Competitive Trivia Battle</p>
+        </div>
+
+        <div class="game-screen">
+            <div id="quizScreen">
+                <div class="score-display">
+                    <div class="player-score you">
+                        <div class="score-hp" id="yourHp">100</div>
+                        <div class="score-label">👩 Alice (You)</div>
+                    </div>
+                    <div style="width: 24px"></div>
+                    <div class="player-score opponent">
+                        <div class="score-hp" id="opponentHp">100</div>
+                        <div class="score-label">👨 Bob</div>
+                    </div>
+                </div>
+
+                <div class="question-card">
+                    <div class="question-number" id="questionNumber">Question 1 of 5</div>
+                    <div class="question-text" id="questionText">What is Bob's favorite food?</div>
+                    <div class="answers-grid" id="answersGrid"></div>
+                    <div class="result-message" id="resultMessage" style="display: none;"></div>
+                </div>
+            </div>
+
+            <div class="result-screen" id="resultScreen">
+                <div class="result-emoji" id="resultEmoji">🎉</div>
+                <h2 class="result-title" id="resultTitle">Victory!</h2>
+                <p id="resultMsg" style="color: #666; margin-bottom: 24px;">You won the quiz battle!</p>
+                <button class="btn" onclick="location.reload()">🎯 Play Again</button>
+                <a href="index.html" class="back-link">← Back to Games</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const questions = [
+            { q: "What is Bob's favorite food?", answers: ["Pizza", "Sushi", "Tacos", "Burgers"], correct: 0 },
+            { q: "What does Alice do on weekends?", answers: ["Hiking", "Reading", "Gaming", "Cooking"], correct: 1 },
+            { q: "Bob's dream vacation destination?", answers: ["Japan", "Italy", "Hawaii", "Iceland"], correct: 0 },
+            { q: "Alice's favorite movie genre?", answers: ["Action", "Comedy", "Romance", "Sci-Fi"], correct: 2 },
+            { q: "What time does Bob usually wake up?", answers: ["6 AM", "7 AM", "8 AM", "9 AM"], correct: 1 }
+        ];
+
+        let state = { questionIndex: 0, yourHp: 100, opponentHp: 100 };
+
+        function showQuestion() {
+            const q = questions[state.questionIndex];
+            document.getElementById('questionNumber').textContent = `Question ${state.questionIndex + 1} of ${questions.length}`;
+            document.getElementById('questionText').textContent = q.q;
+            document.getElementById('resultMessage').style.display = 'none';
+
+            const grid = document.getElementById('answersGrid');
+            grid.innerHTML = '';
+            q.answers.forEach((ans, i) => {
+                const btn = document.createElement('button');
+                btn.className = 'answer-btn';
+                btn.textContent = ans;
+                btn.onclick = () => answerQuestion(i, q.correct);
+                grid.appendChild(btn);
+            });
+        }
+
+        function answerQuestion(selected, correct) {
+            const opponentAnswer = Math.random() > 0.5 ? correct : Math.floor(Math.random() * 4);
+
+            const yourCorrect = selected === correct;
+            const opponentCorrect = opponentAnswer === correct;
+
+            // Disable buttons
+            document.querySelectorAll('.answer-btn').forEach((btn, i) => {
+                btn.disabled = true;
+                if (i === correct) btn.classList.add('correct');
+                else if (i === selected) btn.classList.add('wrong');
+            });
+
+            // Update HP
+            if (yourCorrect && !opponentCorrect) {
+                state.opponentHp -= 20;
+                showResult('🎉 Correct! Bob took 20 damage!');
+            } else if (!yourCorrect && opponentCorrect) {
+                state.yourHp -= 20;
+                showResult('💔 Wrong! You took 20 damage!');
+            } else if (yourCorrect && opponentCorrect) {
+                showResult('Both correct! No damage dealt.');
+            } else {
+                showResult('Both wrong! No damage dealt.');
+            }
+
+            document.getElementById('yourHp').textContent = Math.max(0, state.yourHp);
+            document.getElementById('opponentHp').textContent = Math.max(0, state.opponentHp);
+
+            state.questionIndex++;
+            if (state.questionIndex < questions.length && state.yourHp > 0 && state.opponentHp > 0) {
+                setTimeout(showQuestion, 2500);
+            } else {
+                setTimeout(showResults, 2500);
+            }
+        }
+
+        function showResult(msg) {
+            const resultDiv = document.getElementById('resultMessage');
+            resultDiv.textContent = msg;
+            resultDiv.style.display = 'block';
+        }
+
+        function showResults() {
+            document.getElementById('quizScreen').style.display = 'none';
+            document.getElementById('resultScreen').classList.add('active');
+
+            if (state.yourHp > state.opponentHp) {
+                document.getElementById('resultEmoji').textContent = '🎉';
+                document.getElementById('resultTitle').textContent = 'Victory!';
+                document.getElementById('resultTitle').className = 'result-title victory';
+                document.getElementById('resultMsg').textContent = 'You outsmarted Bob in the quiz battle!';
+            } else {
+                document.getElementById('resultEmoji').textContent = '💔';
+                document.getElementById('resultTitle').textContent = 'Defeat';
+                document.getElementById('resultTitle').className = 'result-title defeat';
+                document.getElementById('resultMsg').textContent = 'Bob knew you better this time!';
+            }
+        }
+
+        showQuestion();
+    </script>
+</body>
+</html>
