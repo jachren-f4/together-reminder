@@ -55,6 +55,12 @@ class DailyQuest extends HiveObject {
   @HiveField(13)
   String? quizName; // Quiz name for display (e.g., "Warm Vibes")
 
+  @HiveField(14, defaultValue: null)
+  String? imagePath; // Path to quest image asset (e.g., "assets/images/quests/trust-basics.png")
+
+  @HiveField(15, defaultValue: null)
+  String? description; // Quest description (e.g., "Answer ten questions together")
+
   DailyQuest({
     required this.id,
     required this.dateKey,
@@ -70,6 +76,8 @@ class DailyQuest extends HiveObject {
     this.sortOrder = 0,
     this.formatType = 'classic',
     this.quizName,
+    this.imagePath,
+    this.description,
   });
 
   // Helper getters
@@ -99,6 +107,8 @@ class DailyQuest extends HiveObject {
     bool isSideQuest = false,
     String formatType = 'classic',
     String? quizName,
+    String? imagePath,
+    String? description,
   }) {
     final now = DateTime.now();
     final endOfDay = DateTime(now.year, now.month, now.day, 23, 59, 59);
@@ -115,6 +125,8 @@ class DailyQuest extends HiveObject {
       isSideQuest: isSideQuest,
       formatType: formatType,
       quizName: quizName,
+      imagePath: imagePath,
+      description: description,
     );
   }
 }

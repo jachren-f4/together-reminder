@@ -7,7 +7,9 @@ import '../services/quest_sync_service.dart';
 import '../services/love_point_service.dart';
 import '../services/quiz_service.dart';
 import '../services/you_or_me_service.dart';
+import '../utils/logger.dart';
 import '../widgets/quest_card.dart';
+import '../widgets/quest_carousel.dart';
 import '../screens/quiz_question_screen.dart';
 import '../screens/quiz_results_screen.dart';
 import '../screens/affirmation_intro_screen.dart';
@@ -107,7 +109,7 @@ class _DailyQuestsWidgetState extends State<DailyQuestsWidget> {
                 // Removed verbose logging
                 // print('✅ LP awarded automatically via partner completion listener');
               }).catchError((error) {
-                print('❌ Error awarding LP: $error');
+                Logger.error('Error awarding LP', error: error, service: 'quest');
               });
             }
           } else {
@@ -142,102 +144,56 @@ class _DailyQuestsWidgetState extends State<DailyQuestsWidget> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Section header
-        const Padding(
-          padding: EdgeInsets.symmetric(horizontal: 20),
-          child: Text(
-            'Daily Quests',
-            style: TextStyle(
-              fontFamily: 'Playfair Display',
-              fontSize: 28,
-              fontWeight: FontWeight.w700,
-              letterSpacing: -0.5,
-              color: Colors.black,
-            ),
+        // Section header with swipe hint
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Text(
+                'Daily Quests',
+                style: TextStyle(
+                  fontFamily: 'Playfair Display',
+                  fontSize: 28,
+                  fontWeight: FontWeight.w700,
+                  letterSpacing: -0.5,
+                  color: Colors.black,
+                ),
+              ),
+              Text(
+                // RTL support for swipe hint
+                Directionality.of(context) == TextDirection.rtl
+                    ? '→ Swipe ←'
+                    : '← Swipe →',
+                style: const TextStyle(
+                  fontSize: 11,
+                  color: Color(0xFF999999),
+                  fontWeight: FontWeight.w600,
+                  letterSpacing: 1,
+                ),
+              ),
+            ],
           ),
         ),
         const SizedBox(height: 20),
 
-        // Quests list with progress tracker
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: quests.isEmpty
-              ? _buildEmptyState()
-              : Column(
-                  children: [
-                    for (int i = 0; i < quests.length; i++)
-                      Padding(
-                        padding: EdgeInsets.only(bottom: i < quests.length - 1 ? 14 : 0),
-                        child: _buildQuestItem(quests[i], i, user?.id),
-                      ),
-                  ],
-                ),
-        ),
+        // Carousel (replaces vertical list)
+        if (quests.isEmpty)
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: _buildEmptyState(),
+          )
+        else
+          QuestCarousel(
+            quests: quests,
+            currentUserId: user?.id,
+            onQuestTap: _handleQuestTap,
+          ),
 
         // Completion banner
         if (allCompleted) _buildCompletionBanner(),
 
         const SizedBox(height: 24),
-      ],
-    );
-  }
-
-  Widget _buildQuestItem(DailyQuest quest, int index, String? userId) {
-    final isCompleted = quest.isCompleted;
-    final userCompleted = userId != null && quest.hasUserCompleted(userId);
-
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        // Completion tracker
-        Column(
-          children: [
-            // Check circle
-            Container(
-              width: 30,
-              height: 30,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: isCompleted ? Colors.black : Colors.white,
-                border: Border.all(
-                  color: isCompleted ? Colors.black : const Color(0xFFE0E0E0),
-                  width: 2,
-                ),
-              ),
-              child: Center(
-                child: isCompleted
-                    ? const Icon(Icons.check, color: Colors.white, size: 14)
-                    : const Text(
-                        '○',
-                        style: TextStyle(
-                          color: Color(0xFFAAAAAA),
-                          fontSize: 16,
-                        ),
-                      ),
-              ),
-            ),
-
-            // Track line (only if not last item)
-            if (index < 2)
-              Container(
-                width: 2,
-                height: 70,
-                margin: const EdgeInsets.symmetric(vertical: 5),
-                color: isCompleted ? Colors.black : const Color(0xFFE0E0E0),
-              ),
-          ],
-        ),
-
-        const SizedBox(width: 14),
-
-        // Quest card
-        Expanded(
-          child: QuestCard(
-            quest: quest,
-            currentUserId: userId,
-            onTap: () => _handleQuestTap(quest),
-          ),
-        ),
       ],
     );
   }

@@ -53,6 +53,8 @@ class QuizService {
     final int requiredQuestions;
     String? quizName;
     String? category;
+    String? imagePath;
+    String? description;
 
     if (formatType == 'affirmation') {
       // Affirmation: Get pre-packaged quiz by category
@@ -69,6 +71,8 @@ class QuizService {
       requiredQuestions = questions.length;
       quizName = affirmationQuiz.name;
       category = affirmationQuiz.category;
+      imagePath = affirmationQuiz.imagePath; // Extract for carousel display
+      description = affirmationQuiz.description; // Extract for carousel display
 
     } else if (formatType == 'speed_round') {
       questions = _questionBank.getRandomQuestionsForSpeedRound();
@@ -102,6 +106,8 @@ class QuizService {
       formatType: formatType,
       quizName: quizName, // Set for affirmations
       category: category, // Set for affirmations
+      imagePath: imagePath, // Set for carousel display
+      description: description, // Set for carousel display
       isDailyQuest: isDailyQuest,
       dailyQuestId: dailyQuestId,
       answers: {},

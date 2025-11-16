@@ -61,6 +61,12 @@ class QuizSession extends HiveObject {
   @HiveField(18, defaultValue: '')
   String dailyQuestId; // Links back to the DailyQuest that created this session
 
+  @HiveField(19, defaultValue: null)
+  String? imagePath; // Path to quest image asset (for carousel display)
+
+  @HiveField(20, defaultValue: null)
+  String? description; // Quest description (for carousel display)
+
   QuizSession({
     required this.id,
     required this.questionIds,
@@ -74,6 +80,8 @@ class QuizSession extends HiveObject {
     this.category,
     this.isDailyQuest = false,
     this.dailyQuestId = '',
+    this.imagePath,
+    this.description,
     this.answers,
     this.predictions,
     this.alignmentMatches = 0,

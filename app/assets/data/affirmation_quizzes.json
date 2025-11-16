@@ -6,6 +6,8 @@
       "category": "trust",
       "difficulty": 1,
       "formatType": "affirmation",
+      "imagePath": "assets/images/quests/feel-good-foundations.png",
+      "description": "Rate your feelings together",
       "questions": [
         {
           "question": "I enjoy learning small new things about my partner every day.",
@@ -45,6 +47,8 @@
       "category": "trust",
       "difficulty": 1,
       "formatType": "affirmation",
+      "imagePath": "assets/images/quests/feel-good-foundations.png",
+      "description": "Rate your feelings together",
       "questions": [
         {
           "question": "My partner helps create a warm atmosphere in our daily life.",
@@ -84,6 +88,8 @@
       "category": "emotional_support",
       "difficulty": 1,
       "formatType": "affirmation",
+      "imagePath": "assets/images/quests/feel-good-foundations.png",
+      "description": "Rate your feelings together",
       "questions": [
         {
           "question": "We appreciate small joyful moments together.",
@@ -123,6 +129,8 @@
       "category": "trust",
       "difficulty": 1,
       "formatType": "affirmation",
+      "imagePath": "assets/images/quests/getting-comfortable.png",
+      "description": "Rate your feelings together",
       "questions": [
         {
           "question": "I feel at ease expressing basic preferences.",
@@ -162,6 +170,8 @@
       "category": "trust",
       "difficulty": 1,
       "formatType": "affirmation",
+      "imagePath": "assets/images/quests/playful-moments.png",
+      "description": "Rate your feelings together",
       "questions": [
         {
           "question": "We enjoy light teasing or playful banter.",
@@ -201,6 +211,8 @@
       "category": "trust",
       "difficulty": 1,
       "formatType": "affirmation",
+      "imagePath": "assets/images/quests/feel-good-foundations.png",
+      "description": "Rate your feelings together",
       "questions": [
         {
           "question": "Our relationship feels grounded in positivity.",

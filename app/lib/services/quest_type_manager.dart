@@ -392,6 +392,8 @@ class QuestTypeManager {
           // Get format type and quiz name from quiz session (for quiz quests only)
           String formatType = 'classic'; // Default for all quest types
           String? quizName;
+          String? imagePath;
+          String? description;
           if (questType == QuestType.quiz) {
             final session = _storage.getQuizSession(contentId);
             if (session != null) {
@@ -399,6 +401,8 @@ class QuestTypeManager {
                 formatType = session.formatType!;
               }
               quizName = session.quizName; // Extract quiz name for display
+              imagePath = session.imagePath; // Extract image path for carousel
+              description = session.description; // Extract description for carousel
             }
           }
 
@@ -410,6 +414,8 @@ class QuestTypeManager {
             isSideQuest: false,
             formatType: formatType,
             quizName: quizName,
+            imagePath: imagePath,
+            description: description,
           );
 
           await _storage.saveDailyQuest(quest);

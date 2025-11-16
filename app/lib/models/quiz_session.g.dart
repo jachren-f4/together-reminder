@@ -29,6 +29,8 @@ class QuizSessionAdapter extends TypeAdapter<QuizSession> {
       category: fields[16] as String?,
       isDailyQuest: fields[17] == null ? false : fields[17] as bool,
       dailyQuestId: fields[18] == null ? '' : fields[18] as String,
+      imagePath: fields[19] as String?,
+      description: fields[20] as String?,
       answers: (fields[5] as Map?)?.map((dynamic k, dynamic v) =>
           MapEntry(k as String, (v as List).cast<int>())),
       predictions: (fields[12] as Map?)?.map((dynamic k, dynamic v) =>
@@ -44,7 +46,7 @@ class QuizSessionAdapter extends TypeAdapter<QuizSession> {
   @override
   void write(BinaryWriter writer, QuizSession obj) {
     writer
-      ..writeByte(19)
+      ..writeByte(21)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -82,7 +84,11 @@ class QuizSessionAdapter extends TypeAdapter<QuizSession> {
       ..writeByte(17)
       ..write(obj.isDailyQuest)
       ..writeByte(18)
-      ..write(obj.dailyQuestId);
+      ..write(obj.dailyQuestId)
+      ..writeByte(19)
+      ..write(obj.imagePath)
+      ..writeByte(20)
+      ..write(obj.description);
   }
 
   @override
