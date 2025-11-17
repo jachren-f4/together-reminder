@@ -6,7 +6,9 @@ import 'quiz_question_screen.dart';
 import 'quiz_waiting_screen.dart';
 
 class QuizIntroScreen extends StatefulWidget {
-  const QuizIntroScreen({super.key});
+  final QuizSession? session; // Optional - provided for daily quests
+
+  const QuizIntroScreen({super.key, this.session});
 
   @override
   State<QuizIntroScreen> createState() => _QuizIntroScreenState();
@@ -25,7 +27,8 @@ class _QuizIntroScreenState extends State<QuizIntroScreen> {
   }
 
   void _checkActiveSession() {
-    final activeSession = _quizService.getActiveSession();
+    // Use provided session (from daily quest) or check for active session
+    final activeSession = widget.session ?? _quizService.getActiveSession();
     if (activeSession != null) {
       // Navigate to appropriate screen
       WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -56,7 +59,8 @@ class _QuizIntroScreenState extends State<QuizIntroScreen> {
     });
 
     try {
-      final session = await _quizService.startQuizSession();
+      // Use provided session or create new one
+      final session = widget.session ?? await _quizService.startQuizSession();
 
       if (!mounted) return;
 

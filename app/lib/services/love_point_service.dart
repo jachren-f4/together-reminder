@@ -185,6 +185,9 @@ class LovePointService {
 
   /// Award Love Points to BOTH users in a couple (for shared activities)
   /// This syncs the award to Firebase so both apps can apply it
+  /// Uses relatedId as the Firebase key for atomic deduplication:
+  /// - onChildAdded listener only fires ONCE per unique child path
+  /// - Even if both devices write to same path, listener triggers only once
   static Future<void> awardPointsToBothUsers({
     required String userId1,
     required String userId2,
@@ -195,14 +198,18 @@ class LovePointService {
   }) async {
     try {
       final actualAmount = amount * multiplier;
-      final awardId = const Uuid().v4();
 
       // Generate couple ID (sorted for consistency)
       final sortedIds = [userId1, userId2]..sort();
       final coupleId = '${sortedIds[0]}_${sortedIds[1]}';
 
-      // Write LP award to Firebase for BOTH users
-      await _database.child('lp_awards/$coupleId/$awardId').set({
+      // Use relatedId as the Firebase key for automatic deduplication
+      // If relatedId is null, generate a random key (no deduplication)
+      final awardKey = relatedId ?? const Uuid().v4();
+
+      // Write LP award to Firebase
+      // If both devices write to same key, Firebase onChildAdded only fires once
+      await _database.child('lp_awards/$coupleId/$awardKey').set({
         'users': [userId1, userId2],
         'amount': actualAmount,
         'reason': reason,

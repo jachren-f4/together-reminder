@@ -302,21 +302,9 @@ class QuizService {
     session.completedAt = DateTime.now();
     await session.save();
 
-    // Award LP to BOTH users
-    if (lpEarned > 0) {
-      final user = _storage.getUser();
-      final partner = _storage.getPartner();
-
-      if (user != null && partner != null) {
-        await LovePointService.awardPointsToBothUsers(
-          userId1: user.id,
-          userId2: partner.pushToken,
-          amount: lpEarned,
-          reason: 'quiz_completed',
-          relatedId: session.id,
-        );
-      }
-    }
+    // NOTE: LP awarding is now handled by UnifiedResultsScreen for daily quests
+    // This prevents duplicate LP awards (once from QuizService, once from UnifiedResultsScreen)
+    // Standalone quizzes (non-daily-quests) currently don't award LP - will be added in future if needed
 
     // Send completion notification to both users
     await _sendQuizCompletedNotification(session, matchPercentage, lpEarned);

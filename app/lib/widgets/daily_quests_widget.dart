@@ -7,11 +7,10 @@ import '../services/quest_sync_service.dart';
 import '../services/love_point_service.dart';
 import '../services/quiz_service.dart';
 import '../services/you_or_me_service.dart';
+import '../services/quest_navigation_service.dart';
 import '../utils/logger.dart';
-import '../widgets/quest_card.dart';
+import '../theme/app_theme.dart';
 import '../widgets/quest_carousel.dart';
-import '../screens/quiz_question_screen.dart';
-import '../screens/quiz_results_screen.dart';
 import '../screens/affirmation_intro_screen.dart';
 import '../screens/affirmation_results_screen.dart';
 import '../screens/you_or_me_intro_screen.dart';
@@ -34,6 +33,7 @@ class _DailyQuestsWidgetState extends State<DailyQuestsWidget> {
   late QuestSyncService _questSyncService;
   final QuizService _quizService = QuizService();
   final YouOrMeService _youOrMeService = YouOrMeService();
+  late QuestNavigationService _navigationService;
   StreamSubscription? _partnerCompletionSubscription;
 
   @override
@@ -45,6 +45,7 @@ class _DailyQuestsWidgetState extends State<DailyQuestsWidget> {
     _questSyncService = QuestSyncService(
       storage: _storage,
     );
+    _navigationService = QuestNavigationService(storage: _storage);
 
     // Listen for partner quest completions
     _listenForPartnerCompletions();
@@ -141,33 +142,36 @@ class _DailyQuestsWidgetState extends State<DailyQuestsWidget> {
     final quests = _questService.getMainDailyQuests();
     final allCompleted = _questService.areAllMainQuestsCompleted();
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        // Section header with swipe hint
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const Text(
-                'Daily Quests',
-                style: TextStyle(
-                  fontFamily: 'Playfair Display',
-                  fontSize: 28,
-                  fontWeight: FontWeight.w700,
-                  letterSpacing: -0.5,
-                  color: Colors.black,
+    return Container(
+      decoration: const BoxDecoration(
+        border: Border(
+          top: BorderSide(color: Colors.black, width: 1),
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const SizedBox(height: 20),
+          // Section header with swipe hint
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'DAILY QUESTS',
+                  style: AppTheme.headlineFont.copyWith(
+                    fontSize: 28,
+                    fontWeight: FontWeight.w700,
+                    letterSpacing: -0.5,
+                    color: Colors.black,
+                  ),
                 ),
-              ),
               Text(
-                // RTL support for swipe hint
-                Directionality.of(context) == TextDirection.rtl
-                    ? '→ Swipe ←'
-                    : '← Swipe →',
-                style: const TextStyle(
-                  fontSize: 11,
-                  color: Color(0xFF999999),
+                '← SWIPE →', // Match HTML mockup exactly (always LTR, uppercase)
+                style: AppTheme.headlineFont.copyWith( // Use serif font like HTML mockup
+                  fontSize: 13, // Increased from 11 to match visual size of HTML mockup
+                  color: const Color(0xFF999999),
                   fontWeight: FontWeight.w600,
                   letterSpacing: 1,
                 ),
@@ -194,7 +198,8 @@ class _DailyQuestsWidgetState extends State<DailyQuestsWidget> {
         if (allCompleted) _buildCompletionBanner(),
 
         const SizedBox(height: 24),
-      ],
+        ],
+      ),
     );
   }
 
@@ -310,41 +315,34 @@ class _DailyQuestsWidgetState extends State<DailyQuestsWidget> {
   }
 
   Future<void> _handleQuizQuestTap(DailyQuest quest) async {
-    // Get quiz session - try local storage first, then fetch from Firebase
-    final session = await _quizService.getSession(quest.contentId);
+    // Determine if this is an affirmation quiz using quest.formatType
+    final isAffirmation = quest.formatType == 'affirmation';
 
-    if (session == null) {
-      _showError('Quiz session not found');
-      return;
-    }
+    if (isAffirmation) {
+      // Affirmation Quiz: Keep existing manual navigation (will migrate in Phase 4)
+      final session = await _quizService.getSession(quest.contentId);
 
-    // Check if quest is completed by both users (regardless of session status)
-    // This handles cases where quest completion is synced but session status isn't
-    final user = _storage.getUser();
-    final partner = _storage.getPartner();
-    final bothCompletedQuest = quest.isCompleted ||
-                                (user != null && partner != null &&
-                                 quest.hasUserCompleted(user.id) &&
-                                 quest.hasUserCompleted(partner.pushToken));
+      if (session == null) {
+        _showError('Quiz session not found');
+        return;
+      }
 
-    // Determine if this is an affirmation quiz
-    // Use quest.formatType (always available from Firebase) with session fallback
-    final isAffirmation = quest.formatType == 'affirmation' || session.formatType == 'affirmation';
+      final user = _storage.getUser();
+      final partner = _storage.getPartner();
+      final bothCompletedQuest = quest.isCompleted ||
+                                  (user != null && partner != null &&
+                                   quest.hasUserCompleted(user.id) &&
+                                   quest.hasUserCompleted(partner.pushToken));
 
-    // Navigate based on completion status and format type
-    if (session.isCompleted || bothCompletedQuest) {
-      // Navigate to results screen (affirmation or classic)
-      await Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => isAffirmation
-              ? AffirmationResultsScreen(session: session)
-              : QuizResultsScreen(session: session),
-        ),
-      );
-    } else {
-      // Navigate to intro/question screen (affirmation or classic)
-      if (isAffirmation) {
+      if (session.isCompleted || bothCompletedQuest) {
+        // Navigate to results screen
+        await Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => AffirmationResultsScreen(session: session),
+          ),
+        );
+      } else {
         // Check if user has already answered
         final hasAnswered = user != null && session.hasUserAnswered(user.id);
         if (hasAnswered) {
@@ -364,14 +362,13 @@ class _DailyQuestsWidgetState extends State<DailyQuestsWidget> {
             ),
           );
         }
-      } else {
-        // Classic quiz: go directly to questions
-        await Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => QuizQuestionScreen(session: session),
-          ),
-        );
+      }
+    } else {
+      // Classic Quiz: Use unified navigation service (Phase 3)
+      try {
+        await _navigationService.launchQuest(context, quest);
+      } catch (e) {
+        _showError('Failed to launch quiz: ${e.toString().replaceAll('Exception: ', '')}');
       }
     }
   }
