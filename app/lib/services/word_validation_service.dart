@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/services.dart';
+import '../utils/logger.dart';
 
 class WordValidationService {
   static WordValidationService? _instance;
@@ -34,9 +35,9 @@ class WordValidationService {
       _loadWordsFromJson(finnishData, 'fi');
 
       _isInitialized = true;
-      print('✅ WordValidationService initialized: ${_dictionaries['en']!.length} English words, ${_dictionaries['fi']!.length} Finnish words');
+      Logger.success('WordValidationService initialized: ${_dictionaries['en']!.length} English words, ${_dictionaries['fi']!.length} Finnish words', service: 'word_validation');
     } catch (e) {
-      print('❌ Error initializing WordValidationService: $e');
+      Logger.error('Error initializing WordValidationService', error: e, service: 'word_validation');
       rethrow;
     }
   }

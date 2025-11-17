@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TogetherRemind - Liquid Glass Grayscale</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            background: linear-gradient(135deg, #f5f5f5 0%, #e8e8e8 50%, #f0f0f0 100%);
+            min-height: 100vh;
+            padding: 20px;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background:
+                radial-gradient(circle at 20% 20%, rgba(0, 0, 0, 0.03) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(0, 0, 0, 0.05) 0%, transparent 50%);
+            pointer-events: none;
+        }
+
+        .glass-container {
+            max-width: 420px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(40px) saturate(180%);
+            -webkit-backdrop-filter: blur(40px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            border-radius: 24px;
+            box-shadow:
+                0 20px 60px rgba(0, 0, 0, 0.08),
+                inset 0 1px 0 rgba(255, 255, 255, 0.9),
+                0 0 0 0.5px rgba(0, 0, 0, 0.05);
+        }
+
+        .header {
+            padding: 32px 24px;
+            text-align: center;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+            background: linear-gradient(180deg,
+                rgba(255, 255, 255, 0.5) 0%,
+                rgba(255, 255, 255, 0) 100%);
+            border-radius: 24px 24px 0 0;
+        }
+
+        .title {
+            font-size: 32px;
+            font-weight: 400;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+            color: #1a1a1a;
+        }
+
+        .subtitle {
+            font-size: 14px;
+            color: #666;
+            font-style: italic;
+        }
+
+        .stats-section {
+            padding: 20px 24px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+        }
+
+        .stat-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .stat-label {
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #666;
+        }
+
+        .stat-value {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1a1a1a;
+        }
+
+        .progress-glass {
+            height: 6px;
+            background: rgba(0, 0, 0, 0.06);
+            border-radius: 3px;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #333, #000);
+            border-radius: 3px;
+            box-shadow: 0 0 8px rgba(0, 0, 0, 0.2);
+            transition: width 0.3s ease;
+        }
+
+        .section {
+            padding: 24px;
+        }
+
+        .section-heading {
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 20px;
+            color: #1a1a1a;
+            font-weight: 600;
+        }
+
+        .quest-glass {
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.9);
+            border-radius: 16px;
+            padding: 18px;
+            margin-bottom: 16px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow:
+                0 4px 16px rgba(0, 0, 0, 0.04),
+                inset 0 1px 0 rgba(255, 255, 255, 1);
+        }
+
+        .quest-glass:hover {
+            background: rgba(255, 255, 255, 0.8);
+            transform: translateY(-2px);
+            box-shadow:
+                0 8px 24px rgba(0, 0, 0, 0.08),
+                inset 0 1px 0 rgba(255, 255, 255, 1);
+        }
+
+        .quest-header {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 12px;
+        }
+
+        .quest-icon {
+            font-size: 36px;
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+        }
+
+        .quest-info {
+            flex: 1;
+        }
+
+        .quest-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 4px;
+        }
+
+        .quest-subtitle {
+            font-size: 13px;
+            color: #666;
+            font-style: italic;
+        }
+
+        .reward-glass {
+            background: rgba(0, 0, 0, 0.08);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(0, 0, 0, 0.15);
+            color: #1a1a1a;
+            padding: 6px 14px;
+            border-radius: 12px;
+            font-size: 13px;
+            font-weight: 700;
+            white-space: nowrap;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .quest-footer {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding-top: 12px;
+            border-top: 1px solid rgba(0, 0, 0, 0.06);
+        }
+
+        .turn-badge {
+            background: rgba(0, 0, 0, 0.08);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(0, 0, 0, 0.15);
+            color: #1a1a1a;
+            padding: 6px 12px;
+            border-radius: 10px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .partner-badge {
+            background: rgba(0, 0, 0, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            color: #4a4a4a;
+            padding: 6px 12px;
+            border-radius: 10px;
+            font-size: 11px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .initial-circle {
+            width: 20px;
+            height: 20px;
+            background: rgba(0, 0, 0, 0.15);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: 700;
+            color: #1a1a1a;
+        }
+
+        .completed-badge {
+            background: rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(0, 0, 0, 0.2);
+            color: #000;
+            padding: 6px 12px;
+            border-radius: 10px;
+            font-size: 11px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .actions {
+            padding: 24px;
+            padding-top: 0;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+
+        .action-glass {
+            background: rgba(255, 255, 255, 0.5);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            border-radius: 14px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow:
+                0 2px 8px rgba(0, 0, 0, 0.04),
+                inset 0 1px 0 rgba(255, 255, 255, 1);
+        }
+
+        .action-glass:hover {
+            background: rgba(255, 255, 255, 0.7);
+            transform: scale(1.05);
+            box-shadow:
+                0 4px 16px rgba(0, 0, 0, 0.08),
+                inset 0 1px 0 rgba(255, 255, 255, 1);
+        }
+
+        .action-icon {
+            font-size: 32px;
+            margin-bottom: 8px;
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+        }
+
+        .action-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #1a1a1a;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="glass-container">
+        <div class="glass-card">
+            <div class="header">
+                <div class="title">Love Quest</div>
+                <div class="subtitle">Day Forty-Two</div>
+            </div>
+
+            <div class="stats-section">
+                <div class="stat-row">
+                    <div class="stat-label">Party</div>
+                    <div class="stat-value">You & Emma</div>
+                </div>
+                <div class="stat-row">
+                    <div class="stat-label">Love Points</div>
+                    <div class="stat-value">2,450</div>
+                </div>
+                <div class="progress-glass">
+                    <div class="progress-fill" style="width: 65%"></div>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-heading">Daily Quests</div>
+
+                <div class="quest-glass">
+                    <div class="quest-header">
+                        <div class="quest-icon">💭</div>
+                        <div class="quest-info">
+                            <div class="quest-title">Trust & Honesty Quiz</div>
+                            <div class="quest-subtitle">Answer ten questions together</div>
+                        </div>
+                        <div class="reward-glass">+50</div>
+                    </div>
+                    <div class="quest-footer">
+                        <div class="turn-badge">Your Turn</div>
+                    </div>
+                </div>
+
+                <div class="quest-glass">
+                    <div class="quest-header">
+                        <div class="quest-icon">🎴</div>
+                        <div class="quest-info">
+                            <div class="quest-title">Memory Flip Challenge</div>
+                            <div class="quest-subtitle">Match all sixteen cards</div>
+                        </div>
+                        <div class="reward-glass">+30</div>
+                    </div>
+                    <div class="quest-footer">
+                        <div class="partner-badge">
+                            <div class="initial-circle">E</div>
+                            <span>Emma completed</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="quest-glass">
+                    <div class="quest-header">
+                        <div class="quest-icon">📚</div>
+                        <div class="quest-info">
+                            <div class="quest-title">Classic Knowledge Quest</div>
+                            <div class="quest-subtitle">Test what you know</div>
+                        </div>
+                        <div class="reward-glass">+40</div>
+                    </div>
+                    <div class="quest-footer">
+                        <div class="completed-badge">
+                            <span>✓</span>
+                            <span>Completed</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section-heading" style="margin-top: 32px;">Side Quests</div>
+
+                <div class="quest-glass">
+                    <div class="quest-header">
+                        <div class="quest-icon">🪜</div>
+                        <div class="quest-info">
+                            <div class="quest-title">Word Ladder Adventure</div>
+                            <div class="quest-subtitle">Collaborate to solve</div>
+                        </div>
+                        <div class="reward-glass">+20</div>
+                    </div>
+                    <div class="quest-footer">
+                        <div class="turn-badge">Available</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="actions">
+                <div class="action-glass">
+                    <div class="action-icon">💌</div>
+                    <div class="action-label">Send Reminder</div>
+                </div>
+                <div class="action-glass">
+                    <div class="action-icon">👆</div>
+                    <div class="action-label">Poke Partner</div>
+                </div>
+                <div class="action-glass">
+                    <div class="action-icon">📥</div>
+                    <div class="action-label">View Inbox</div>
+                </div>
+                <div class="action-glass">
+                    <div class="action-icon">🎮</div>
+                    <div class="action-label">All Activities</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

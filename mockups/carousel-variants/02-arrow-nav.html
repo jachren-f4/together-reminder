@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TogetherRemind - Arrow Navigation Carousel</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            background: #fafafa;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 420px;
+            margin: 0 auto;
+            background: #fff;
+            border: 2px solid #000;
+            box-shadow: 8px 8px 0 rgba(0, 0, 0, 0.1);
+        }
+
+        .header {
+            border-bottom: 2px solid #000;
+            padding: 24px 20px;
+            text-align: center;
+        }
+
+        .title {
+            font-size: 32px;
+            font-weight: 400;
+            letter-spacing: 2px;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+        }
+
+        .subtitle {
+            font-size: 14px;
+            color: #666;
+            font-style: italic;
+        }
+
+        .stats {
+            border-bottom: 1px solid #000;
+            padding: 20px;
+        }
+
+        .stat-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .stat-value {
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .progress-bg {
+            height: 2px;
+            background: #e0e0e0;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: #000;
+            width: 65%;
+        }
+
+        .section {
+            padding: 20px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .section-heading {
+            font-size: 16px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .quest-counter {
+            font-size: 13px;
+            color: #666;
+            font-weight: 600;
+        }
+
+        .carousel-wrapper {
+            position: relative;
+        }
+
+        .carousel-container {
+            position: relative;
+            margin: 0 -20px;
+            overflow: hidden;
+        }
+
+        .carousel {
+            display: flex;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            gap: 16px;
+            padding: 0 20px 16px;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+            scroll-behavior: smooth;
+        }
+
+        .carousel::-webkit-scrollbar {
+            display: none;
+        }
+
+        .quest-card {
+            flex: 0 0 calc(100% - 40px);
+            scroll-snap-align: start;
+            border: 1px solid #000;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            background: #fff;
+            overflow: hidden;
+        }
+
+        .quest-card:hover {
+            box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .quest-image {
+            width: 100%;
+            height: 160px;
+            object-fit: cover;
+            border-bottom: 1px solid #000;
+            display: block;
+        }
+
+        .quest-content {
+            padding: 16px;
+        }
+
+        .quest-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 12px;
+        }
+
+        .quest-info {
+            flex: 1;
+        }
+
+        .quest-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .quest-desc {
+            font-size: 12px;
+            color: #666;
+            font-style: italic;
+        }
+
+        .reward {
+            font-size: 14px;
+            font-weight: 700;
+            border: 1px solid #000;
+            padding: 4px 10px;
+            background: #000;
+            color: #fff;
+        }
+
+        .quest-footer {
+            padding-top: 12px;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .status-badge {
+            display: inline-block;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 6px 12px;
+            border: 1px solid #000;
+        }
+
+        .your-turn {
+            background: #fff;
+            color: #000;
+        }
+
+        .partner-done {
+            background: #f0f0f0;
+            color: #666;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .initial {
+            width: 18px;
+            height: 18px;
+            background: #000;
+            color: #fff;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            font-weight: 700;
+        }
+
+        .completed {
+            background: #000;
+            color: #fff;
+        }
+
+        .nav-arrows {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            padding: 16px 20px 0;
+        }
+
+        .nav-arrow {
+            width: 40px;
+            height: 40px;
+            border: 2px solid #000;
+            background: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .nav-arrow:hover:not(:disabled) {
+            background: #000;
+            color: #fff;
+        }
+
+        .nav-arrow:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        .carousel-indicator {
+            text-align: center;
+            padding: 12px 20px 0;
+            font-size: 12px;
+            color: #666;
+            letter-spacing: 1px;
+        }
+
+        .side-quest-card {
+            border: 1px solid #000;
+            margin-bottom: 16px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            background: #fff;
+            overflow: hidden;
+        }
+
+        .side-quest-card:hover {
+            box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.1);
+            transform: translate(-2px, -2px);
+        }
+
+        .actions {
+            padding: 20px;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+
+        .action {
+            border: 1px solid #000;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .action:hover {
+            background: #000;
+            color: #fff;
+        }
+
+        .action-icon {
+            font-size: 32px;
+            margin-bottom: 8px;
+        }
+
+        .action-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="title">Love Quest</div>
+            <div class="subtitle">Day Forty-Two</div>
+        </div>
+
+        <div class="stats">
+            <div class="stat-row">
+                <div class="stat-label">Party</div>
+                <div class="stat-value">You & Emma</div>
+            </div>
+            <div class="stat-row">
+                <div class="stat-label">Love Points</div>
+                <div class="stat-value">2,450</div>
+            </div>
+            <div class="progress-bg">
+                <div class="progress-bar"></div>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-heading">
+                <span>Daily Quests</span>
+                <span class="quest-counter" id="questCounter">1 / 3</span>
+            </div>
+
+            <div class="carousel-wrapper">
+                <div class="carousel-container">
+                    <div class="carousel" id="questCarousel">
+                        <div class="quest-card">
+                            <img src="Feel-Good Foundations.png" alt="Trust & Honesty" class="quest-image">
+                            <div class="quest-content">
+                                <div class="quest-header">
+                                    <div class="quest-info">
+                                        <div class="quest-title">Trust & Honesty Quiz</div>
+                                        <div class="quest-desc">Answer ten questions together</div>
+                                    </div>
+                                    <div class="reward">+50</div>
+                                </div>
+                                <div class="quest-footer">
+                                    <span class="status-badge your-turn">Your Turn</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="quest-card">
+                            <img src="Playful Moments.png" alt="Memory Flip" class="quest-image">
+                            <div class="quest-content">
+                                <div class="quest-header">
+                                    <div class="quest-info">
+                                        <div class="quest-title">Memory Flip Challenge</div>
+                                        <div class="quest-desc">Match all sixteen cards</div>
+                                    </div>
+                                    <div class="reward">+30</div>
+                                </div>
+                                <div class="quest-footer">
+                                    <span class="status-badge partner-done">
+                                        <span class="initial">E</span>
+                                        <span>Emma completed</span>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="quest-card">
+                            <img src="Getting Comfortable.png" alt="Classic Quiz" class="quest-image">
+                            <div class="quest-content">
+                                <div class="quest-header">
+                                    <div class="quest-info">
+                                        <div class="quest-title">Classic Knowledge Quest</div>
+                                        <div class="quest-desc">Test what you know</div>
+                                    </div>
+                                    <div class="reward">+40</div>
+                                </div>
+                                <div class="quest-footer">
+                                    <span class="status-badge completed">✓ Completed</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="nav-arrows">
+                    <button class="nav-arrow" id="prevBtn">←</button>
+                    <button class="nav-arrow" id="nextBtn">→</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="section" style="border-bottom: none;">
+            <div class="section-heading">
+                <span>Side Quests</span>
+                <span class="quest-counter">1 Quest</span>
+            </div>
+
+            <div class="side-quest-card">
+                <img src="Connection Basics.png" alt="Word Ladder" class="quest-image">
+                <div class="quest-content">
+                    <div class="quest-header">
+                        <div class="quest-info">
+                            <div class="quest-title">Word Ladder Adventure</div>
+                            <div class="quest-desc">Collaborate to solve</div>
+                        </div>
+                        <div class="reward">+20</div>
+                    </div>
+                    <div class="quest-footer">
+                        <span class="status-badge your-turn">Available</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="actions">
+            <div class="action">
+                <div class="action-icon">💌</div>
+                <div class="action-label">Send Reminder</div>
+            </div>
+            <div class="action">
+                <div class="action-icon">👆</div>
+                <div class="action-label">Poke Partner</div>
+            </div>
+            <div class="action">
+                <div class="action-icon">📥</div>
+                <div class="action-label">View Inbox</div>
+            </div>
+            <div class="action">
+                <div class="action-icon">🎮</div>
+                <div class="action-label">All Activities</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const carousel = document.getElementById('questCarousel');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const counter = document.getElementById('questCounter');
+        const totalCards = 3;
+        let currentIndex = 0;
+
+        function updateCarousel() {
+            const cardWidth = carousel.querySelector('.quest-card').offsetWidth + 16;
+            carousel.scrollTo({
+                left: cardWidth * currentIndex,
+                behavior: 'smooth'
+            });
+
+            // Update counter
+            counter.textContent = `${currentIndex + 1} / ${totalCards}`;
+
+            // Update button states
+            prevBtn.disabled = currentIndex === 0;
+            nextBtn.disabled = currentIndex === totalCards - 1;
+        }
+
+        prevBtn.addEventListener('click', () => {
+            if (currentIndex > 0) {
+                currentIndex--;
+                updateCarousel();
+            }
+        });
+
+        nextBtn.addEventListener('click', () => {
+            if (currentIndex < totalCards - 1) {
+                currentIndex++;
+                updateCarousel();
+            }
+        });
+
+        // Update on scroll
+        carousel.addEventListener('scroll', () => {
+            const scrollLeft = carousel.scrollLeft;
+            const cardWidth = carousel.querySelector('.quest-card').offsetWidth + 16;
+            const newIndex = Math.round(scrollLeft / cardWidth);
+
+            if (newIndex !== currentIndex) {
+                currentIndex = newIndex;
+                counter.textContent = `${currentIndex + 1} / ${totalCards}`;
+                prevBtn.disabled = currentIndex === 0;
+                nextBtn.disabled = currentIndex === totalCards - 1;
+            }
+        });
+
+        // Initialize
+        updateCarousel();
+    </script>
+</body>
+</html>

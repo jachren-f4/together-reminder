@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TogetherRemind - Pixel JRPG Style</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Courier New', monospace;
+            background: #000;
+            min-height: 100vh;
+            padding: 20px;
+            image-rendering: pixelated;
+        }
+
+        .game-screen {
+            max-width: 420px;
+            margin: 0 auto;
+            background: #1a1a2e;
+            border: 4px solid #0f3460;
+            box-shadow:
+                0 0 0 2px #16213e,
+                0 0 20px rgba(0, 212, 255, 0.3),
+                inset 0 0 20px rgba(0, 0, 0, 0.5);
+        }
+
+        .screen-border {
+            border: 2px solid #00d4ff;
+            padding: 2px;
+        }
+
+        .header-bar {
+            background: linear-gradient(180deg, #0f3460 0%, #16213e 100%);
+            padding: 12px 16px;
+            border-bottom: 2px solid #00d4ff;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .location-text {
+            color: #00d4ff;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .time-display {
+            color: #fff;
+            font-size: 12px;
+            background: #000;
+            padding: 4px 8px;
+            border: 1px solid #00d4ff;
+        }
+
+        .stats-window {
+            background: #16213e;
+            border-bottom: 2px solid #0f3460;
+            padding: 16px;
+            position: relative;
+        }
+
+        .stats-window::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg,
+                transparent 0%,
+                #00d4ff 20%,
+                #00d4ff 80%,
+                transparent 100%);
+        }
+
+        .party-member {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .avatar-pixel {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, #e91e63 0%, #f06292 100%);
+            border: 2px solid #00d4ff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            box-shadow: 0 0 10px rgba(0, 212, 255, 0.5);
+        }
+
+        .member-stats {
+            flex: 1;
+        }
+
+        .member-name {
+            color: #fff;
+            font-size: 14px;
+            margin-bottom: 4px;
+            text-shadow: 2px 2px 0 #000;
+        }
+
+        .stat-bar-container {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .stat-label {
+            color: #00d4ff;
+            font-size: 10px;
+            min-width: 40px;
+        }
+
+        .stat-bar {
+            flex: 1;
+            height: 8px;
+            background: #000;
+            border: 1px solid #0f3460;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #ffd700 0%, #ffed4e 50%, #ffd700 100%);
+            background-size: 200% 100%;
+            animation: shimmer 2s linear infinite;
+            box-shadow: 0 0 5px #ffd700;
+        }
+
+        @keyframes shimmer {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+
+        .stat-value {
+            color: #fff;
+            font-size: 10px;
+            min-width: 60px;
+            text-align: right;
+        }
+
+        .menu-window {
+            background: #1a1a2e;
+            margin: 2px;
+            padding: 16px;
+        }
+
+        .menu-header {
+            color: #00d4ff;
+            font-size: 14px;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #0f3460;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .cursor-icon {
+            color: #ffd700;
+            animation: blink 1s step-end infinite;
+        }
+
+        @keyframes blink {
+            50% { opacity: 0; }
+        }
+
+        .quest-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .quest-item {
+            background: rgba(15, 52, 96, 0.5);
+            border: 1px solid #0f3460;
+            padding: 12px;
+            cursor: pointer;
+            transition: all 0.1s ease;
+            position: relative;
+        }
+
+        .quest-item:hover {
+            background: rgba(0, 212, 255, 0.2);
+            border-color: #00d4ff;
+            transform: translateX(4px);
+        }
+
+        .quest-item::before {
+            content: '▶';
+            position: absolute;
+            left: 4px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #00d4ff;
+            opacity: 0;
+            transition: opacity 0.1s ease;
+        }
+
+        .quest-item:hover::before {
+            opacity: 1;
+        }
+
+        .quest-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 6px;
+        }
+
+        .quest-name {
+            color: #fff;
+            font-size: 13px;
+            flex: 1;
+            padding-left: 16px;
+        }
+
+        .quest-reward {
+            color: #ffd700;
+            font-size: 11px;
+            white-space: nowrap;
+            background: rgba(255, 215, 0, 0.1);
+            padding: 2px 6px;
+            border: 1px solid #ffd700;
+        }
+
+        .quest-desc {
+            color: #888;
+            font-size: 11px;
+            padding-left: 16px;
+        }
+
+        .quest-type {
+            display: inline-block;
+            padding: 2px 6px;
+            font-size: 9px;
+            margin-top: 4px;
+            margin-left: 16px;
+        }
+
+        .type-main {
+            background: #e91e63;
+            color: #fff;
+        }
+
+        .type-side {
+            background: #673ab7;
+            color: #fff;
+        }
+
+        .command-bar {
+            background: #0f3460;
+            padding: 12px 16px;
+            border-top: 2px solid #00d4ff;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+        }
+
+        .command-btn {
+            background: #1a1a2e;
+            border: 1px solid #00d4ff;
+            color: #fff;
+            padding: 10px;
+            font-family: 'Courier New', monospace;
+            font-size: 11px;
+            cursor: pointer;
+            transition: all 0.1s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .command-btn:hover {
+            background: #00d4ff;
+            color: #000;
+            box-shadow: 0 0 10px rgba(0, 212, 255, 0.5);
+        }
+
+        .command-btn:active {
+            transform: scale(0.95);
+        }
+    </style>
+</head>
+<body>
+    <div class="game-screen">
+        <div class="screen-border">
+            <div class="header-bar">
+                <div class="location-text">♥ Love Quest HQ ♥</div>
+                <div class="time-display">DAY 42</div>
+            </div>
+
+            <div class="stats-window">
+                <div class="party-member">
+                    <div class="avatar-pixel">👥</div>
+                    <div class="member-stats">
+                        <div class="member-name">YOU & EMMA</div>
+                        <div class="stat-bar-container">
+                            <div class="stat-label">LP:</div>
+                            <div class="stat-bar">
+                                <div class="stat-bar-fill" style="width: 65%"></div>
+                            </div>
+                            <div class="stat-value">2450/3800</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="menu-window">
+                <div class="menu-header">
+                    <span><span class="cursor-icon">►</span> DAILY QUESTS</span>
+                    <span style="color: #888; font-size: 11px;">3/3</span>
+                </div>
+
+                <div class="quest-list">
+                    <div class="quest-item">
+                        <div class="quest-top">
+                            <div class="quest-name">💭 Trust & Honesty Quiz</div>
+                            <div class="quest-reward">+50 LP</div>
+                        </div>
+                        <div class="quest-desc">Answer 10 questions together</div>
+                        <div class="quest-type type-main">MAIN QUEST</div>
+                    </div>
+
+                    <div class="quest-item">
+                        <div class="quest-top">
+                            <div class="quest-name">🎴 Memory Flip Challenge</div>
+                            <div class="quest-reward">+30 LP</div>
+                        </div>
+                        <div class="quest-desc">Match all 16 cards in the grid</div>
+                        <div class="quest-type type-main">MAIN QUEST</div>
+                    </div>
+
+                    <div class="quest-item">
+                        <div class="quest-top">
+                            <div class="quest-name">📚 Classic Knowledge Quest</div>
+                            <div class="quest-reward">+40 LP</div>
+                        </div>
+                        <div class="quest-desc">Test what you know about each other</div>
+                        <div class="quest-type type-main">MAIN QUEST</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="menu-window" style="padding-top: 0;">
+                <div class="menu-header">
+                    <span><span class="cursor-icon">►</span> SIDE QUESTS</span>
+                    <span style="color: #888; font-size: 11px;">1/∞</span>
+                </div>
+
+                <div class="quest-list">
+                    <div class="quest-item">
+                        <div class="quest-top">
+                            <div class="quest-name">🪜 Word Ladder Adventure</div>
+                            <div class="quest-reward">+20 LP</div>
+                        </div>
+                        <div class="quest-desc">Collaborate to build the ladder</div>
+                        <div class="quest-type type-side">SIDE QUEST</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="command-bar">
+                <button class="command-btn">💌 REMIND</button>
+                <button class="command-btn">👆 POKE</button>
+                <button class="command-btn">📥 INBOX</button>
+                <button class="command-btn">🎮 GAMES</button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,4 +1,5 @@
 import 'package:hive/hive.dart';
+import 'base_session.dart';
 
 part 'you_or_me.g.dart';
 
@@ -111,7 +112,8 @@ class YouOrMeAnswer {
 // ─────────────────────────────────────────────────────────────────────────────
 
 @HiveType(typeId: 22)
-class YouOrMeSession extends HiveObject {
+class YouOrMeSession extends HiveObject implements BaseSession {
+  @override
   @HiveField(0)
   String id; // Session identifier
 
@@ -133,6 +135,7 @@ class YouOrMeSession extends HiveObject {
   @HiveField(6)
   String status; // 'in_progress', 'completed'
 
+  @override
   @HiveField(7)
   DateTime createdAt;
 
@@ -168,7 +171,22 @@ class YouOrMeSession extends HiveObject {
   });
 
   /// Check if session is completed
+  @override
   bool get isCompleted => status == 'completed';
+
+  @override
+  bool get isExpired {
+    final now = DateTime.now();
+    final expiryTime = DateTime(
+      createdAt.year,
+      createdAt.month,
+      createdAt.day,
+      23,
+      59,
+      59,
+    );
+    return now.isAfter(expiryTime);
+  }
 
   /// Get count of users who have answered
   int getAnswerCount() {
@@ -177,6 +195,7 @@ class YouOrMeSession extends HiveObject {
   }
 
   /// Check if specific user has answered all 10 questions
+  @override
   bool hasUserAnswered(String userId) {
     return answers?.containsKey(userId) == true &&
         answers![userId]!.length == 10;
@@ -207,6 +226,9 @@ class YouOrMeSession extends HiveObject {
       'isCompleted': isCompleted,
     };
   }
+
+  @override
+  Map<String, dynamic> toFirebase() => toMap();
 
   /// Create from map (Firebase RTDB)
   factory YouOrMeSession.fromMap(Map<String, dynamic> map) {

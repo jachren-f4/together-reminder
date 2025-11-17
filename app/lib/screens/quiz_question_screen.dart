@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../utils/logger.dart';
 import '../models/quiz_session.dart';
 import '../models/quiz_question.dart';
 import '../services/quiz_service.dart';
@@ -33,19 +34,19 @@ class _QuizQuestionScreenState extends State<QuizQuestionScreen> {
   }
 
   void _loadQuestions() {
-    print('🔍 [QuizQuestionScreen] Loading questions...');
-    print('   Session ID: ${widget.session.id}');
-    print('   Session category: ${widget.session.category}');
-    print('   Session formatType: ${widget.session.formatType}');
-    print('   Session questionIds: ${widget.session.questionIds}');
+    Logger.debug('[QuizQuestionScreen] Loading questions...', service: 'quiz');
+    Logger.debug('Session ID: ${widget.session.id}', service: 'quiz');
+    Logger.debug('Session category: ${widget.session.category}', service: 'quiz');
+    Logger.debug('Session formatType: ${widget.session.formatType}', service: 'quiz');
+    Logger.debug('Session questionIds: ${widget.session.questionIds}', service: 'quiz');
 
     _questions = _quizService.getSessionQuestions(widget.session);
 
-    print('   Loaded ${_questions.length} questions');
+    Logger.debug('Loaded ${_questions.length} questions', service: 'quiz');
     if (_questions.isNotEmpty) {
       for (var i = 0; i < _questions.length; i++) {
         final previewLength = _questions[i].question.length > 50 ? 50 : _questions[i].question.length;
-        print('   Question $i: ${_questions[i].id} - ${_questions[i].question.substring(0, previewLength)}...');
+        Logger.debug('Question $i: ${_questions[i].id} - ${_questions[i].question.substring(0, previewLength)}...', service: 'quiz');
       }
     }
 

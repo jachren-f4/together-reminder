@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../models/ladder_session.dart';
 import '../services/ladder_service.dart';
 import 'word_ladder_completion_screen.dart';
+import '../utils/logger.dart';
 
 class WordLadderGameScreen extends StatefulWidget {
   final String sessionId;
@@ -156,16 +157,16 @@ class _WordLadderGameScreenState extends State<WordLadderGameScreen> {
     final theme = Theme.of(context);
 
     // DEBUG: Log turn information
-    print('🪜 Word Ladder Game Screen - isMyTurn: $isMyTurn');
-    print('   Session currentTurn: ${_session!.currentTurn}');
-    print('   Current word: ${_session!.currentWord}');
+    Logger.debug('Word Ladder Game Screen - isMyTurn: $isMyTurn', service: 'word_ladder');
+    Logger.debug('Session currentTurn: ${_session!.currentTurn}', service: 'word_ladder');
+    Logger.debug('Current word: ${_session!.currentWord}', service: 'word_ladder');
 
     // DEBUG: Log AppBar actions
-    print('🪜 Building AppBar - isMyTurn: $isMyTurn');
+    Logger.debug('Building AppBar - isMyTurn: $isMyTurn', service: 'word_ladder');
     if (isMyTurn) {
-      print('   ✅ Yield button SHOULD be visible');
+      Logger.debug('Yield button SHOULD be visible', service: 'word_ladder');
     } else {
-      print('   ❌ Yield button hidden (not user\'s turn)');
+      Logger.debug('Yield button hidden (not user\'s turn)', service: 'word_ladder');
     }
 
     return Scaffold(

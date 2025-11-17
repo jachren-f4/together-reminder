@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TogetherRemind - Shounen Anime Style</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Impact', 'Arial Black', sans-serif;
+            background: linear-gradient(135deg, #ff6b00 0%, #ff0080 50%, #6b00ff 100%);
+            min-height: 100vh;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image:
+                repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(255, 255, 255, 0.03) 10px, rgba(255, 255, 255, 0.03) 20px),
+                repeating-linear-gradient(-45deg, transparent, transparent 10px, rgba(0, 0, 0, 0.03) 10px, rgba(0, 0, 0, 0.03) 20px);
+            pointer-events: none;
+            animation: bgScroll 20s linear infinite;
+        }
+
+        @keyframes bgScroll {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(40px); }
+        }
+
+        .power-screen {
+            max-width: 420px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .energy-border {
+            background: linear-gradient(135deg, #fff, #ffed4e, #fff);
+            padding: 3px;
+            border-radius: 24px;
+            box-shadow:
+                0 0 30px rgba(255, 237, 78, 0.8),
+                0 0 60px rgba(255, 107, 0, 0.6),
+                0 20px 40px rgba(0, 0, 0, 0.4);
+            animation: energyPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes energyPulse {
+            0%, 100% {
+                box-shadow:
+                    0 0 30px rgba(255, 237, 78, 0.8),
+                    0 0 60px rgba(255, 107, 0, 0.6),
+                    0 20px 40px rgba(0, 0, 0, 0.4);
+            }
+            50% {
+                box-shadow:
+                    0 0 50px rgba(255, 237, 78, 1),
+                    0 0 80px rgba(255, 107, 0, 0.8),
+                    0 20px 40px rgba(0, 0, 0, 0.4);
+            }
+        }
+
+        .main-container {
+            background: linear-gradient(135deg, #000428 0%, #004e92 100%);
+            border-radius: 22px;
+            overflow: hidden;
+        }
+
+        .hero-banner {
+            background: linear-gradient(135deg, #ff6b00, #ff0080);
+            padding: 24px 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-banner::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: repeating-linear-gradient(
+                45deg,
+                transparent,
+                transparent 20px,
+                rgba(255, 255, 255, 0.1) 20px,
+                rgba(255, 255, 255, 0.1) 40px
+            );
+            animation: speedLines 1s linear infinite;
+        }
+
+        @keyframes speedLines {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(20px, 20px); }
+        }
+
+        .power-level {
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .power-label {
+            color: #ffed4e;
+            font-size: 14px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            text-shadow:
+                2px 2px 0 #000,
+                -1px -1px 0 #000,
+                1px -1px 0 #000,
+                -1px 1px 0 #000,
+                0 0 10px rgba(255, 237, 78, 0.8);
+            font-weight: 900;
+        }
+
+        .power-value {
+            color: #fff;
+            font-size: 48px;
+            font-weight: 900;
+            margin: 8px 0;
+            text-shadow:
+                3px 3px 0 #ff0080,
+                -2px -2px 0 #00d4ff,
+                0 0 20px rgba(255, 255, 255, 0.8);
+            letter-spacing: 2px;
+        }
+
+        .team-name {
+            color: #fff;
+            font-size: 24px;
+            font-weight: 900;
+            text-transform: uppercase;
+            text-shadow:
+                2px 2px 0 #000,
+                0 0 10px rgba(255, 255, 255, 0.5);
+        }
+
+        .power-meter {
+            margin-top: 16px;
+            height: 12px;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 6px;
+            overflow: hidden;
+            border: 2px solid #ffed4e;
+            position: relative;
+            box-shadow:
+                inset 0 2px 4px rgba(0, 0, 0, 0.5),
+                0 0 10px rgba(255, 237, 78, 0.5);
+        }
+
+        .power-meter-fill {
+            height: 100%;
+            background: linear-gradient(90deg,
+                #ff0000,
+                #ff6b00,
+                #ffed4e,
+                #00ff00,
+                #00d4ff,
+                #6b00ff);
+            background-size: 300% 100%;
+            animation: powerRainbow 3s linear infinite;
+            box-shadow: 0 0 15px rgba(255, 237, 78, 0.8);
+            position: relative;
+        }
+
+        .power-meter-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg,
+                transparent,
+                rgba(255, 255, 255, 0.8),
+                transparent);
+            animation: powerSurge 1.5s ease-in-out infinite;
+        }
+
+        @keyframes powerRainbow {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 300% 50%; }
+        }
+
+        @keyframes powerSurge {
+            0% { left: -100%; }
+            100% { left: 200%; }
+        }
+
+        .battle-zone {
+            padding: 20px;
+        }
+
+        .zone-divider {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin: 24px 0 16px;
+        }
+
+        .divider-line {
+            flex: 1;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, #ff0080, transparent);
+        }
+
+        .zone-stamp {
+            background: linear-gradient(135deg, #ff6b00, #ff0080);
+            color: #fff;
+            padding: 8px 20px;
+            font-size: 16px;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            border-radius: 20px;
+            box-shadow:
+                0 0 20px rgba(255, 0, 128, 0.6),
+                inset 0 2px 0 rgba(255, 255, 255, 0.3);
+            text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.3);
+            transform: rotate(-2deg);
+        }
+
+        .mission-card {
+            background: linear-gradient(135deg,
+                rgba(255, 107, 0, 0.2),
+                rgba(255, 0, 128, 0.2));
+            border: 3px solid #ff0080;
+            border-radius: 16px;
+            padding: 16px;
+            margin-bottom: 16px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 0 20px rgba(255, 0, 128, 0.4);
+        }
+
+        .mission-card::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg,
+                #ff6b00,
+                #ff0080,
+                #6b00ff,
+                #00d4ff,
+                #ff6b00);
+            background-size: 400% 400%;
+            border-radius: 16px;
+            z-index: -1;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            animation: borderGlow 3s linear infinite;
+        }
+
+        @keyframes borderGlow {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .mission-card:hover {
+            transform: scale(1.08) rotate(1deg);
+            border-color: #ffed4e;
+            box-shadow: 0 0 40px rgba(255, 237, 78, 0.8);
+        }
+
+        .mission-card:hover::before {
+            opacity: 1;
+        }
+
+        .mission-top {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .mission-icon {
+            font-size: 48px;
+            filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.5));
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
+        }
+
+        .mission-details {
+            flex: 1;
+        }
+
+        .mission-name {
+            color: #fff;
+            font-size: 18px;
+            font-weight: 900;
+            text-transform: uppercase;
+            text-shadow:
+                2px 2px 0 #000,
+                0 0 10px rgba(255, 255, 255, 0.5);
+            line-height: 1.2;
+            margin-bottom: 4px;
+        }
+
+        .mission-sub {
+            color: #ffed4e;
+            font-size: 12px;
+            font-weight: 700;
+            text-shadow: 1px 1px 0 #000;
+        }
+
+        .reward-burst {
+            background: linear-gradient(135deg, #ffed4e, #ffd700);
+            color: #000;
+            padding: 10px 16px;
+            border-radius: 20px;
+            font-size: 18px;
+            font-weight: 900;
+            box-shadow:
+                0 0 20px rgba(255, 237, 78, 0.8),
+                inset 0 2px 0 rgba(255, 255, 255, 0.5),
+                0 4px 0 #ff8c00;
+            text-shadow: 1px 1px 0 rgba(255, 255, 255, 0.5);
+            transform: rotate(-5deg);
+            border: 2px solid #fff;
+        }
+
+        .power-stars {
+            display: flex;
+            gap: 4px;
+            margin-top: 8px;
+        }
+
+        .star {
+            font-size: 20px;
+            filter: drop-shadow(0 0 5px currentColor);
+        }
+
+        .star.lit {
+            color: #ffed4e;
+            animation: starTwinkle 1s ease-in-out infinite;
+        }
+
+        .star.dim {
+            color: rgba(255, 255, 255, 0.2);
+        }
+
+        @keyframes starTwinkle {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+        }
+
+        .special-mission {
+            border-color: #6b00ff;
+            background: linear-gradient(135deg,
+                rgba(107, 0, 255, 0.3),
+                rgba(147, 51, 234, 0.3));
+        }
+
+        .action-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-top: 24px;
+            padding-bottom: 20px;
+        }
+
+        .action-button {
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            border: 2px solid #00d4ff;
+            border-radius: 16px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            box-shadow:
+                0 0 15px rgba(0, 212, 255, 0.3),
+                0 4px 0 #004e92;
+        }
+
+        .action-button:active {
+            transform: translateY(4px);
+            box-shadow:
+                0 0 15px rgba(0, 212, 255, 0.3),
+                0 0 0 #004e92;
+        }
+
+        .action-button:hover {
+            transform: scale(1.1) rotate(-2deg);
+            border-color: #ffed4e;
+            box-shadow:
+                0 0 30px rgba(255, 237, 78, 0.6),
+                0 4px 0 #004e92;
+        }
+
+        .action-emoji {
+            font-size: 40px;
+            margin-bottom: 8px;
+            filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.3));
+        }
+
+        .action-label {
+            color: #fff;
+            font-size: 12px;
+            font-weight: 900;
+            text-transform: uppercase;
+            text-shadow: 1px 1px 0 #000;
+        }
+    </style>
+</head>
+<body>
+    <div class="power-screen">
+        <div class="energy-border">
+            <div class="main-container">
+                <div class="hero-banner">
+                    <div class="power-level">
+                        <div class="power-label">♥ LOVE POWER ♥</div>
+                        <div class="power-value">2,450</div>
+                        <div class="team-name">YOU & EMMA</div>
+                        <div class="power-meter">
+                            <div class="power-meter-fill" style="width: 65%"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="battle-zone">
+                    <div class="zone-divider">
+                        <div class="divider-line"></div>
+                        <div class="zone-stamp">⚔️ DAILY MISSIONS ⚔️</div>
+                        <div class="divider-line"></div>
+                    </div>
+
+                    <div class="mission-card">
+                        <div class="mission-top">
+                            <div class="mission-icon">💭</div>
+                            <div class="mission-details">
+                                <div class="mission-name">Trust & Honesty</div>
+                                <div class="mission-sub">10 QUESTIONS • CO-OP</div>
+                            </div>
+                            <div class="reward-burst">+50</div>
+                        </div>
+                        <div class="power-stars">
+                            <span class="star lit">★</span>
+                            <span class="star lit">★</span>
+                            <span class="star dim">★</span>
+                            <span class="star dim">★</span>
+                            <span class="star dim">★</span>
+                        </div>
+                    </div>
+
+                    <div class="mission-card">
+                        <div class="mission-top">
+                            <div class="mission-icon">🎴</div>
+                            <div class="mission-details">
+                                <div class="mission-name">Memory Flip</div>
+                                <div class="mission-sub">16 CARDS • TIMED</div>
+                            </div>
+                            <div class="reward-burst">+30</div>
+                        </div>
+                        <div class="power-stars">
+                            <span class="star lit">★</span>
+                            <span class="star dim">★</span>
+                            <span class="star dim">★</span>
+                            <span class="star dim">★</span>
+                            <span class="star dim">★</span>
+                        </div>
+                    </div>
+
+                    <div class="mission-card">
+                        <div class="mission-top">
+                            <div class="mission-icon">📚</div>
+                            <div class="mission-details">
+                                <div class="mission-name">Classic Quiz</div>
+                                <div class="mission-sub">KNOWLEDGE TEST</div>
+                            </div>
+                            <div class="reward-burst">+40</div>
+                        </div>
+                        <div class="power-stars">
+                            <span class="star lit">★</span>
+                            <span class="star lit">★</span>
+                            <span class="star lit">★</span>
+                            <span class="star dim">★</span>
+                            <span class="star dim">★</span>
+                        </div>
+                    </div>
+
+                    <div class="zone-divider">
+                        <div class="divider-line" style="background: linear-gradient(90deg, transparent, #6b00ff, transparent);"></div>
+                        <div class="zone-stamp" style="background: linear-gradient(135deg, #6b00ff, #9333ea);">✨ SPECIAL ✨</div>
+                        <div class="divider-line" style="background: linear-gradient(90deg, transparent, #6b00ff, transparent);"></div>
+                    </div>
+
+                    <div class="mission-card special-mission">
+                        <div class="mission-top">
+                            <div class="mission-icon">🪜</div>
+                            <div class="mission-details">
+                                <div class="mission-name">Word Ladder</div>
+                                <div class="mission-sub">COOPERATIVE PUZZLE</div>
+                            </div>
+                            <div class="reward-burst">+20</div>
+                        </div>
+                    </div>
+
+                    <div class="action-grid">
+                        <div class="action-button">
+                            <div class="action-emoji">💌</div>
+                            <div class="action-label">Remind</div>
+                        </div>
+                        <div class="action-button">
+                            <div class="action-emoji">👆</div>
+                            <div class="action-label">Poke</div>
+                        </div>
+                        <div class="action-button">
+                            <div class="action-emoji">📥</div>
+                            <div class="action-label">Inbox</div>
+                        </div>
+                        <div class="action-button">
+                            <div class="action-emoji">🎮</div>
+                            <div class="action-label">Games</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

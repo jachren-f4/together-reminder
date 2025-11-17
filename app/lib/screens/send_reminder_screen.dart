@@ -83,10 +83,10 @@ class _SendReminderScreenState extends State<SendReminderScreen> {
     try {
       final success = await ReminderService.sendReminder(reminder);
       if (!success) {
-        print('⚠️ Reminder saved locally but failed to send push notification');
+        Logger.warn('Reminder saved locally but failed to send push notification', service: 'reminder');
       }
     } catch (e) {
-      print('❌ Error sending push notification: $e');
+      Logger.error('Error sending push notification', error: e, service: 'reminder');
     }
 
     // Show success overlay

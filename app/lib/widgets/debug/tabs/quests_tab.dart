@@ -5,6 +5,7 @@ import '../../../services/storage_service.dart';
 import '../../../services/daily_quest_service.dart';
 import '../../../services/quest_utilities.dart';
 import '../../../models/daily_quest.dart';
+import '../../../utils/logger.dart';
 import '../components/debug_section_card.dart';
 import '../components/debug_copy_button.dart';
 import '../components/debug_status_indicator.dart';
@@ -59,7 +60,7 @@ class _QuestsTabState extends State<QuestsTab> {
       setState(() => _isLoading = false);
     } catch (e) {
       setState(() => _isLoading = false);
-      print('Error loading quests data: $e');
+      Logger.error('Error loading quests data', error: e, service: 'debug');
     }
   }
 

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../services/storage_service.dart';
 import '../../../models/quiz_session.dart';
 import '../../../models/you_or_me.dart';
+import '../../../utils/logger.dart';
 import '../components/debug_section_card.dart';
 import '../components/debug_copy_button.dart';
 
@@ -49,7 +50,7 @@ class _SessionsTabState extends State<SessionsTab> {
       setState(() => _isLoading = false);
     } catch (e) {
       setState(() => _isLoading = false);
-      print('Error loading sessions: $e');
+      Logger.error('Error loading sessions', error: e, service: 'debug');
     }
   }
 
@@ -123,6 +124,8 @@ class _SessionsTabState extends State<SessionsTab> {
       'answers': session.answers?.map((userId, answersList) {
         return MapEntry(userId, answersList.map((a) => {
           'questionId': a.questionId,
+          'questionPrompt': a.questionPrompt,
+          'questionContent': a.questionContent,
           'answerValue': a.answerValue,
           'answeredAt': a.answeredAt.toIso8601String(),
         }).toList());

@@ -7,6 +7,7 @@ import '../services/storage_service.dart';
 import '../services/daily_quest_service.dart';
 import '../services/mock_data_service.dart';
 import '../services/quest_utilities.dart';
+import '../utils/logger.dart';
 import '../theme/app_theme.dart';
 
 /// Debug dialog for viewing quest data in Firebase and local storage
@@ -124,11 +125,10 @@ class _DebugQuestDialogState extends State<DebugQuestDialog> {
         _error = null;
       });
 
-      print('🗑️ Clearing local storage only...');
-      print('⚠️  NOTE: Firebase data is NOT cleared. Use external script for that.');
+      Logger.info('Clearing local storage only (Firebase data NOT cleared)', service: 'debug');
 
       // Clear all Hive boxes
-      print('🗑️ Clearing local Hive boxes...');
+      Logger.info('Clearing local Hive boxes', service: 'debug');
       await _storage.remindersBox.clear();
       await _storage.userBox.clear();
       await _storage.partnerBox.clear();
@@ -144,7 +144,7 @@ class _DebugQuestDialogState extends State<DebugQuestDialog> {
       await _storage.dailyQuestCompletionsBox.clear();
       await _storage.quizProgressionStatesBox.clear();
       await Hive.box('app_metadata').clear();  // Clear metadata box
-      print('✅ Local storage cleared');
+      Logger.success('Local storage cleared', service: 'debug');
 
       // Show restart dialog instead of trying to reload in-place
       // (Reloading causes crashes due to inconsistent app state)
@@ -173,7 +173,7 @@ class _DebugQuestDialogState extends State<DebugQuestDialog> {
         );
       }
     } catch (e) {
-      print('❌ Error clearing local storage: $e');
+      Logger.error('Error clearing local storage', error: e, service: 'debug');
       setState(() {
         _error = 'Error clearing local storage: $e';
         _isLoading = false;

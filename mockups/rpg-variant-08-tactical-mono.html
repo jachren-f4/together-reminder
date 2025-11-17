@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TogetherRemind - Tactical Monochrome</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Courier New', 'Consolas', monospace;
+            background: #000;
+            min-height: 100vh;
+            padding: 20px;
+            color: #fff;
+        }
+
+        .tactical-screen {
+            max-width: 420px;
+            margin: 0 auto;
+            background: #fff;
+            color: #000;
+            border: 4px solid #000;
+        }
+
+        .screen-frame {
+            background: repeating-linear-gradient(
+                0deg,
+                #fff,
+                #fff 2px,
+                #f0f0f0 2px,
+                #f0f0f0 4px
+            );
+        }
+
+        .command-bar {
+            background: #000;
+            color: #fff;
+            padding: 12px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 11px;
+            letter-spacing: 1px;
+            border-bottom: 4px solid #000;
+        }
+
+        .grid-ref {
+            font-weight: 700;
+        }
+
+        .time-code {
+            font-family: 'Georgia', serif;
+            font-style: italic;
+        }
+
+        .tactical-grid {
+            padding: 20px;
+            background: #fff;
+        }
+
+        .grid-header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 20px;
+            padding-bottom: 16px;
+            border-bottom: 2px solid #000;
+        }
+
+        .unit-marker {
+            width: 60px;
+            height: 60px;
+            background: #000;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            clip-path: polygon(30% 0%, 70% 0%, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0% 70%, 0% 30%);
+        }
+
+        .unit-stats {
+            flex: 1;
+        }
+
+        .unit-name {
+            font-size: 14px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 8px;
+        }
+
+        .stat-line {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 4px;
+        }
+
+        .stat-key {
+            font-size: 10px;
+            min-width: 40px;
+            font-weight: 700;
+        }
+
+        .stat-blocks {
+            display: flex;
+            gap: 2px;
+            flex: 1;
+        }
+
+        .block {
+            flex: 1;
+            height: 12px;
+            border: 1px solid #000;
+            background: #fff;
+        }
+
+        .block.filled {
+            background: #000;
+        }
+
+        .stat-number {
+            font-size: 10px;
+            font-weight: 700;
+            min-width: 60px;
+            text-align: right;
+        }
+
+        .operation-header {
+            background: #000;
+            color: #fff;
+            padding: 8px 12px;
+            margin-bottom: 16px;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .op-code {
+            font-size: 10px;
+            opacity: 0.7;
+        }
+
+        .mission-tile {
+            border: 2px solid #000;
+            margin-bottom: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .mission-tile::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: #000;
+        }
+
+        .mission-tile:hover {
+            background: #f5f5f5;
+        }
+
+        .mission-tile:hover::before {
+            width: 100%;
+            transition: width 0.3s ease;
+        }
+
+        .mission-tile:hover .mission-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .mission-content {
+            padding: 14px 14px 14px 20px;
+        }
+
+        .mission-header-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 10px;
+        }
+
+        .mission-designation {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .mission-icon {
+            width: 36px;
+            height: 36px;
+            border: 2px solid #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            background: #fff;
+        }
+
+        .mission-info {
+            flex: 1;
+        }
+
+        .mission-code {
+            font-size: 9px;
+            letter-spacing: 1px;
+            margin-bottom: 2px;
+        }
+
+        .mission-title {
+            font-size: 13px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .mission-objective {
+            font-size: 10px;
+            color: #666;
+            margin-top: 4px;
+            font-family: 'Georgia', serif;
+            font-style: italic;
+        }
+
+        .reward-chip {
+            background: #000;
+            color: #fff;
+            padding: 6px 12px;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            border: 2px solid #000;
+        }
+
+        .threat-level {
+            display: flex;
+            gap: 4px;
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .threat-box {
+            width: 20px;
+            height: 6px;
+            border: 1px solid #000;
+        }
+
+        .threat-box.active {
+            background: #000;
+        }
+
+        .secondary-ops {
+            border-top: 4px double #000;
+            padding-top: 16px;
+            margin-top: 16px;
+        }
+
+        .secondary-tile {
+            border-style: dashed;
+        }
+
+        .action-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0;
+            margin-top: 20px;
+            border: 2px solid #000;
+        }
+
+        .action-cell {
+            aspect-ratio: 1;
+            border: 1px solid #000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            background: #fff;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .action-cell::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: #000;
+            transform: translate(-50%, -50%);
+            transition: all 0.3s ease;
+        }
+
+        .action-cell:hover::before {
+            width: 200%;
+            height: 200%;
+        }
+
+        .action-cell:hover .action-symbol,
+        .action-cell:hover .action-name {
+            color: #fff;
+            position: relative;
+            z-index: 1;
+        }
+
+        .action-symbol {
+            font-size: 32px;
+            margin-bottom: 6px;
+            transition: color 0.2s ease;
+        }
+
+        .action-name {
+            font-size: 9px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: color 0.2s ease;
+        }
+
+        .status-footer {
+            background: #000;
+            color: #fff;
+            padding: 10px 16px;
+            text-align: center;
+            font-size: 9px;
+            letter-spacing: 2px;
+            border-top: 4px solid #000;
+        }
+    </style>
+</head>
+<body>
+    <div class="tactical-screen">
+        <div class="screen-frame">
+            <div class="command-bar">
+                <div class="grid-ref">SECTOR: LOVE-42</div>
+                <div class="time-code">Day 42</div>
+            </div>
+
+            <div class="tactical-grid">
+                <div class="grid-header">
+                    <div class="unit-marker">👥</div>
+                    <div class="unit-stats">
+                        <div class="unit-name">You & Emma</div>
+                        <div class="stat-line">
+                            <div class="stat-key">LP</div>
+                            <div class="stat-blocks">
+                                <div class="block filled"></div>
+                                <div class="block filled"></div>
+                                <div class="block filled"></div>
+                                <div class="block filled"></div>
+                                <div class="block filled"></div>
+                                <div class="block filled"></div>
+                                <div class="block filled"></div>
+                                <div class="block"></div>
+                                <div class="block"></div>
+                                <div class="block"></div>
+                            </div>
+                            <div class="stat-number">2,450</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="operation-header">
+                    <span>◆ PRIMARY OPERATIONS</span>
+                    <span class="op-code">3 ACTIVE</span>
+                </div>
+
+                <div class="mission-tile">
+                    <div class="mission-content">
+                        <div class="mission-header-row">
+                            <div class="mission-designation">
+                                <div class="mission-icon">💭</div>
+                                <div class="mission-info">
+                                    <div class="mission-code">QUEST-001-DAILY</div>
+                                    <div class="mission-title">Trust Protocol</div>
+                                    <div class="mission-objective">Answer 10 questions together</div>
+                                </div>
+                            </div>
+                            <div class="reward-chip">+50</div>
+                        </div>
+                        <div class="threat-level">
+                            <div class="threat-box active"></div>
+                            <div class="threat-box active"></div>
+                            <div class="threat-box"></div>
+                            <div class="threat-box"></div>
+                            <div class="threat-box"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mission-tile">
+                    <div class="mission-content">
+                        <div class="mission-header-row">
+                            <div class="mission-designation">
+                                <div class="mission-icon">🎴</div>
+                                <div class="mission-info">
+                                    <div class="mission-code">QUEST-002-DAILY</div>
+                                    <div class="mission-title">Memory Grid</div>
+                                    <div class="mission-objective">Match all 16 cards in sequence</div>
+                                </div>
+                            </div>
+                            <div class="reward-chip">+30</div>
+                        </div>
+                        <div class="threat-level">
+                            <div class="threat-box active"></div>
+                            <div class="threat-box"></div>
+                            <div class="threat-box"></div>
+                            <div class="threat-box"></div>
+                            <div class="threat-box"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mission-tile">
+                    <div class="mission-content">
+                        <div class="mission-header-row">
+                            <div class="mission-designation">
+                                <div class="mission-icon">📚</div>
+                                <div class="mission-info">
+                                    <div class="mission-code">QUEST-003-DAILY</div>
+                                    <div class="mission-title">Knowledge Test</div>
+                                    <div class="mission-objective">Demonstrate partner comprehension</div>
+                                </div>
+                            </div>
+                            <div class="reward-chip">+40</div>
+                        </div>
+                        <div class="threat-level">
+                            <div class="threat-box active"></div>
+                            <div class="threat-box active"></div>
+                            <div class="threat-box active"></div>
+                            <div class="threat-box"></div>
+                            <div class="threat-box"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="secondary-ops">
+                    <div class="operation-header">
+                        <span>◇ SECONDARY OPERATIONS</span>
+                        <span class="op-code">1 AVAILABLE</span>
+                    </div>
+
+                    <div class="mission-tile secondary-tile">
+                        <div class="mission-content">
+                            <div class="mission-header-row">
+                                <div class="mission-designation">
+                                    <div class="mission-icon">🪜</div>
+                                    <div class="mission-info">
+                                        <div class="mission-code">QUEST-S01-OPTIONAL</div>
+                                        <div class="mission-title">Word Ladder</div>
+                                        <div class="mission-objective">Cooperative puzzle operation</div>
+                                    </div>
+                                </div>
+                                <div class="reward-chip">+20</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="action-grid">
+                    <div class="action-cell">
+                        <div class="action-symbol">💌</div>
+                        <div class="action-name">Remind</div>
+                    </div>
+                    <div class="action-cell">
+                        <div class="action-symbol">👆</div>
+                        <div class="action-name">Poke</div>
+                    </div>
+                    <div class="action-cell">
+                        <div class="action-symbol">📥</div>
+                        <div class="action-name">Inbox</div>
+                    </div>
+                    <div class="action-cell">
+                        <div class="action-symbol">🎮</div>
+                        <div class="action-name">Games</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="status-footer">
+                MISSION STATUS: ACTIVE • COMM LINK: ESTABLISHED
+            </div>
+        </div>
+    </div>
+</body>
+</html>

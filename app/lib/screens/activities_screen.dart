@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../utils/logger.dart';
 import '../services/quiz_service.dart';
 import '../services/ladder_service.dart';
 import '../services/storage_service.dart';
@@ -870,7 +871,7 @@ class _ActivitiesScreenState extends State<ActivitiesScreen> {
         },
       );
     } catch (e) {
-      print('Error loading Daily Pulse: $e');
+      Logger.error('Error loading Daily Pulse', error: e, service: 'daily_pulse');
       // Return empty widget if there's an error
       return const SizedBox.shrink();
     }

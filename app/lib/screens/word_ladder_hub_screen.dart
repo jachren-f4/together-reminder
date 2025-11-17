@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../utils/logger.dart';
 import '../models/ladder_session.dart';
 import '../services/ladder_service.dart';
 import '../services/storage_service.dart';
@@ -39,7 +40,7 @@ class _WordLadderHubScreenState extends State<WordLadderHubScreen> {
         _isLoading = false;
       });
     } catch (e) {
-      print('❌ Error initializing ladders: $e');
+      Logger.error('Error initializing ladders', error: e, service: 'word_ladder');
       setState(() => _isLoading = false);
     }
   }

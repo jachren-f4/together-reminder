@@ -11,8 +11,6 @@ import '../services/quest_navigation_service.dart';
 import '../utils/logger.dart';
 import '../theme/app_theme.dart';
 import '../widgets/quest_carousel.dart';
-import '../screens/affirmation_intro_screen.dart';
-import '../screens/affirmation_results_screen.dart';
 import '../screens/you_or_me_intro_screen.dart';
 import '../screens/you_or_me_results_screen.dart';
 import '../screens/you_or_me_waiting_screen.dart';
@@ -93,26 +91,14 @@ class _DailyQuestsWidgetState extends State<DailyQuestsWidget> {
             quest.status = 'completed';
             quest.completedAt = DateTime.now();
 
-            // Award LP if not already awarded (prevent duplicates)
-            if (quest.lpAwarded == null || quest.lpAwarded == 0) {
-              quest.lpAwarded = 30;
-
-              // Removed verbose logging
-              // print('💰 Auto-awarding 30 LP for completed quest: ${quest.type.name}');
-
-              LovePointService.awardPointsToBothUsers(
-                userId1: user.id,
-                userId2: partner.pushToken,
-                amount: 30,
-                reason: 'daily_quest_${quest.type.name}',
-                relatedId: quest.id,
-              ).then((_) {
-                // Removed verbose logging
-                // print('✅ LP awarded automatically via partner completion listener');
-              }).catchError((error) {
-                Logger.error('Error awarding LP', error: error, service: 'quest');
-              });
-            }
+            // NOTE: LP awarding is now handled by UnifiedResultsScreen for quest types
+            // using the unified system (classic, affirmation). This prevents duplicate
+            // LP awards (once from partner listener, once from UnifiedResultsScreen).
+            //
+            // Quest types not yet migrated to unified system would award LP here,
+            // but as of Phase 4, all quiz types use UnifiedResultsScreen.
+            // Future quest types (You or Me, Word Ladder, etc.) will also use unified
+            // system and rely on UnifiedResultsScreen for LP awards.
           } else {
             quest.status = 'in_progress';
           }
@@ -315,61 +301,11 @@ class _DailyQuestsWidgetState extends State<DailyQuestsWidget> {
   }
 
   Future<void> _handleQuizQuestTap(DailyQuest quest) async {
-    // Determine if this is an affirmation quiz using quest.formatType
-    final isAffirmation = quest.formatType == 'affirmation';
-
-    if (isAffirmation) {
-      // Affirmation Quiz: Keep existing manual navigation (will migrate in Phase 4)
-      final session = await _quizService.getSession(quest.contentId);
-
-      if (session == null) {
-        _showError('Quiz session not found');
-        return;
-      }
-
-      final user = _storage.getUser();
-      final partner = _storage.getPartner();
-      final bothCompletedQuest = quest.isCompleted ||
-                                  (user != null && partner != null &&
-                                   quest.hasUserCompleted(user.id) &&
-                                   quest.hasUserCompleted(partner.pushToken));
-
-      if (session.isCompleted || bothCompletedQuest) {
-        // Navigate to results screen
-        await Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => AffirmationResultsScreen(session: session),
-          ),
-        );
-      } else {
-        // Check if user has already answered
-        final hasAnswered = user != null && session.hasUserAnswered(user.id);
-        if (hasAnswered) {
-          // User already answered, show results (waiting for partner)
-          await Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => AffirmationResultsScreen(session: session),
-            ),
-          );
-        } else {
-          // User hasn't answered, show intro screen
-          await Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => AffirmationIntroScreen(session: session),
-            ),
-          );
-        }
-      }
-    } else {
-      // Classic Quiz: Use unified navigation service (Phase 3)
-      try {
-        await _navigationService.launchQuest(context, quest);
-      } catch (e) {
-        _showError('Failed to launch quiz: ${e.toString().replaceAll('Exception: ', '')}');
-      }
+    // Both Classic and Affirmation quizzes now use unified navigation (Phases 3-4)
+    try {
+      await _navigationService.launchQuest(context, quest);
+    } catch (e) {
+      _showError('Failed to launch quiz: ${e.toString().replaceAll('Exception: ', '')}');
     }
   }
 

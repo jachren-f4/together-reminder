@@ -9,6 +9,7 @@ import 'storage_service.dart';
 import 'quiz_service.dart';
 import 'notification_service.dart';
 import '../config/dev_config.dart';
+import '../utils/logger.dart';
 
 /// Service for managing Daily Pulse feature
 /// - One question per day, alternating subject between partners
@@ -268,9 +269,9 @@ class DailyPulseService {
         'isMatch': pulse.isMatch,
       });
 
-      print('✅ Daily Pulse synced to RTDB: ${pulse.id}');
+      Logger.success('Daily Pulse synced to RTDB: ${pulse.id}', service: 'daily_pulse');
     } catch (e) {
-      print('❌ Error syncing Daily Pulse to RTDB: $e');
+      Logger.error('Error syncing Daily Pulse to RTDB', error: e, service: 'daily_pulse');
     }
   }
 
@@ -285,7 +286,7 @@ class DailyPulseService {
       final myIndex = await DevConfig.partnerIndex;
       final partnerEmulatorId = myIndex == 0 ? 'web-bob' : 'emulator-5554';
 
-      print('👂 Listening for partner Daily Pulses: $partnerEmulatorId');
+      Logger.info('Listening for partner Daily Pulses: $partnerEmulatorId', service: 'daily_pulse');
 
       _rtdb.child('daily_pulses').child(partnerEmulatorId).onChildAdded.listen((event) {
         if (event.snapshot.value != null) {
@@ -299,7 +300,7 @@ class DailyPulseService {
         }
       });
     } catch (e) {
-      print('❌ Error listening for partner Daily Pulses: $e');
+      Logger.error('Error listening for partner Daily Pulses', error: e, service: 'daily_pulse');
     }
   }
 
@@ -326,7 +327,7 @@ class DailyPulseService {
             : null;
         existingPulse.isMatch = data['isMatch'] as bool;
         _storage.saveDailyPulse(existingPulse);
-        print('🔄 Updated existing Daily Pulse from partner: $pulseId');
+        Logger.info('Updated existing Daily Pulse from partner: $pulseId', service: 'daily_pulse');
       } else {
         // Create new pulse from partner
         final pulse = QuizDailyPulse(
@@ -350,10 +351,10 @@ class DailyPulseService {
         );
 
         _storage.saveDailyPulse(pulse);
-        print('✅ Received new Daily Pulse from partner: $pulseId');
+        Logger.success('Received new Daily Pulse from partner: $pulseId', service: 'daily_pulse');
       }
     } catch (e) {
-      print('❌ Error handling partner Daily Pulse: $e');
+      Logger.error('Error handling partner Daily Pulse', error: e, service: 'daily_pulse');
     }
   }
 
@@ -376,9 +377,9 @@ class DailyPulseService {
         'pulseId': pulse.id,
       });
 
-      print('✅ Daily Pulse answer notification sent');
+      Logger.success('Daily Pulse answer notification sent', service: 'daily_pulse');
     } catch (e) {
-      print('❌ Error sending answer notification: $e');
+      Logger.error('Error sending answer notification', error: e, service: 'daily_pulse');
     }
   }
 
@@ -403,9 +404,9 @@ class DailyPulseService {
         'currentStreak': currentStreak,
       });
 
-      print('✅ Daily Pulse completion notification sent');
+      Logger.success('Daily Pulse completion notification sent', service: 'daily_pulse');
     } catch (e) {
-      print('❌ Error sending completion notification: $e');
+      Logger.error('Error sending completion notification', error: e, service: 'daily_pulse');
     }
   }
 
@@ -454,9 +455,9 @@ class DailyPulseService {
         'milestoneText': milestoneText,
       });
 
-      print('✅ Streak milestone notification sent for $streak days');
+      Logger.success('Streak milestone notification sent for $streak days', service: 'daily_pulse');
     } catch (e) {
-      print('❌ Error sending streak milestone notification: $e');
+      Logger.error('Error sending streak milestone notification', error: e, service: 'daily_pulse');
     }
   }
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../utils/logger.dart';
 import '../models/quiz_session.dart';
 import '../models/quiz_question.dart';
 import '../services/quiz_service.dart';
@@ -95,7 +96,7 @@ class _AffirmationResultsScreenState extends State<AffirmationResultsScreen> {
       );
 
       if (bothCompleted) {
-        print('✅ Daily affirmation quest completed by both users! Awarding 30 LP...');
+        Logger.success('Daily affirmation quest completed by both users! Awarding 30 LP...', service: 'quiz');
 
         // Award Love Points to BOTH users via Firebase (real-time sync)
         await LovePointService.awardPointsToBothUsers(
@@ -110,7 +111,7 @@ class _AffirmationResultsScreenState extends State<AffirmationResultsScreen> {
         await _checkDailyQuestsCompletion(questService, user.id, partner.pushToken);
       }
     } catch (e) {
-      print('❌ Error checking quest completion: $e');
+      Logger.error('Error checking quest completion', error: e, service: 'quiz');
       // Don't block results screen on quest errors
     }
   }
@@ -124,7 +125,7 @@ class _AffirmationResultsScreenState extends State<AffirmationResultsScreen> {
     try {
       // Check if all main daily quests are completed by both users
       if (questService.areAllMainQuestsCompleted()) {
-        print('🎯 All daily quests completed! Advancing progression...');
+        Logger.success('All daily quests completed! Advancing progression...', service: 'quiz');
 
         // Get the couple ID using QuestUtilities
         final coupleId = QuestUtilities.generateCoupleId(currentUserId, partnerUserId);
@@ -132,7 +133,7 @@ class _AffirmationResultsScreenState extends State<AffirmationResultsScreen> {
         // Get current progression state
         var progressionState = _storage.getQuizProgressionState(coupleId);
         if (progressionState == null) {
-          print('⚠️  No progression state found');
+          Logger.warn('No progression state found', service: 'quiz');
           return;
         }
 
@@ -161,7 +162,7 @@ class _AffirmationResultsScreenState extends State<AffirmationResultsScreen> {
         await syncService.saveProgressionState(progressionState);
       }
     } catch (e) {
-      print('❌ Error checking daily quests completion: $e');
+      Logger.error('Error checking daily quests completion', error: e, service: 'quiz');
     }
   }
 

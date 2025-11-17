@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Power Level Memory Challenge - Question</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --background: #FAFAFA;
+      --card-bg: #FFFEFB;
+      --text-primary: #1A1A1A;
+      --text-secondary: #6E6E6E;
+      --border: #F0F0F0;
+      --success-green: #22C55E;
+      --power-blue: #3B82F6;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--background);
+      color: var(--text-primary);
+      padding: 20px;
+      max-width: 768px;
+      margin: 0 auto;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .header {
+      margin-bottom: 24px;
+    }
+
+    .progress-bar {
+      display: flex;
+      gap: 4px;
+      margin-bottom: 12px;
+    }
+
+    .progress-segment {
+      flex: 1;
+      height: 4px;
+      background: var(--border);
+      border-radius: 2px;
+    }
+
+    .progress-segment.active {
+      background: var(--text-primary);
+    }
+
+    .question-counter {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-secondary);
+      text-align: center;
+    }
+
+    .power-meters {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+
+    .power-meter {
+      background: var(--card-bg);
+      border: 2px solid var(--border);
+      border-radius: 12px;
+      padding: 16px;
+    }
+
+    .power-meter.current {
+      border-color: var(--power-blue);
+      box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+    }
+
+    .player-name {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .power-value {
+      font-family: 'Playfair Display', serif;
+      font-size: 32px;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 4px;
+    }
+
+    .power-label {
+      font-size: 11px;
+      color: var(--text-secondary);
+    }
+
+    .question-card {
+      background: var(--card-bg);
+      border: 2px solid var(--border);
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 20px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+    }
+
+    .question-header {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-secondary);
+      margin-bottom: 8px;
+    }
+
+    .question-text {
+      font-family: 'Playfair Display', serif;
+      font-size: 20px;
+      font-weight: 600;
+      color: var(--text-primary);
+      line-height: 1.4;
+      margin-bottom: 16px;
+      letter-spacing: -0.2px;
+    }
+
+    .context-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--background);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 6px 12px;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text-secondary);
+    }
+
+    .context-badge .icon {
+      font-size: 14px;
+    }
+
+    .answers-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .answer-button {
+      background: var(--card-bg);
+      border: 2px solid var(--border);
+      border-radius: 12px;
+      padding: 16px;
+      font-family: 'Inter', sans-serif;
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text-primary);
+      cursor: pointer;
+      transition: all 0.2s;
+      text-align: left;
+    }
+
+    .answer-button:hover {
+      border-color: var(--text-primary);
+      transform: scale(1.02);
+    }
+
+    .answer-button.selected {
+      background: var(--text-primary);
+      color: white;
+      border-color: var(--text-primary);
+    }
+
+    .answer-letter {
+      display: inline-block;
+      width: 24px;
+      height: 24px;
+      background: var(--background);
+      border-radius: 6px;
+      text-align: center;
+      line-height: 24px;
+      font-size: 12px;
+      font-weight: 700;
+      margin-right: 8px;
+      color: var(--text-secondary);
+    }
+
+    .answer-button.selected .answer-letter {
+      background: rgba(255, 255, 255, 0.2);
+      color: white;
+    }
+
+    .submit-button {
+      width: 100%;
+      background: var(--text-primary);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      padding: 16px;
+      font-family: 'Inter', sans-serif;
+      font-size: 17px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: opacity 0.2s;
+    }
+
+    .submit-button:hover {
+      opacity: 0.9;
+    }
+
+    .submit-button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    /* Animation for power meter pulsing */
+    @keyframes pulse {
+      0%, 100% {
+        box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+      }
+      50% {
+        box-shadow: 0 0 0 8px rgba(59, 130, 246, 0.2);
+      }
+    }
+
+    .power-meter.current {
+      animation: pulse 2s infinite;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div class="progress-bar">
+      <div class="progress-segment active"></div>
+      <div class="progress-segment active"></div>
+      <div class="progress-segment"></div>
+      <div class="progress-segment"></div>
+      <div class="progress-segment"></div>
+    </div>
+    <div class="question-counter">Question 2 of 5</div>
+  </div>
+
+  <div class="power-meters">
+    <div class="power-meter current">
+      <div class="player-name">Alice (You)</div>
+      <div class="power-value">850</div>
+      <div class="power-label">Power Level</div>
+    </div>
+    <div class="power-meter">
+      <div class="player-name">Bob</div>
+      <div class="power-value">640</div>
+      <div class="power-label">Power Level</div>
+    </div>
+  </div>
+
+  <div class="question-card">
+    <div class="question-header">From "Understanding Each Other" quiz</div>
+    <div class="question-text">
+      In a past quiz, you answered: "What activity helps you feel most connected to your partner?"
+    </div>
+    <div class="context-badge">
+      <span class="icon">📅</span>
+      <span>Answered 3 days ago</span>
+    </div>
+  </div>
+
+  <div class="answers-grid">
+    <button class="answer-button">
+      <span class="answer-letter">A</span>
+      <span>Deep conversations</span>
+    </button>
+    <button class="answer-button selected">
+      <span class="answer-letter">B</span>
+      <span>Shared activities</span>
+    </button>
+    <button class="answer-button">
+      <span class="answer-letter">C</span>
+      <span>Physical touch</span>
+    </button>
+    <button class="answer-button">
+      <span class="answer-letter">D</span>
+      <span>Quality time together</span>
+    </button>
+  </div>
+
+  <button class="submit-button">Submit Answer</button>
+
+  <script>
+    // Simple interaction demo
+    document.querySelectorAll('.answer-button').forEach(button => {
+      button.addEventListener('click', () => {
+        document.querySelectorAll('.answer-button').forEach(b => b.classList.remove('selected'));
+        button.classList.add('selected');
+        document.querySelector('.submit-button').disabled = false;
+      });
+    });
+  </script>
+</body>
+</html>

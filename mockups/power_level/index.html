@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Power Level Memory Challenge - Mockups</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --background: #FAFAFA;
+      --card-bg: #FFFEFB;
+      --text-primary: #1A1A1A;
+      --text-secondary: #6E6E6E;
+      --border: #F0F0F0;
+      --success-green: #22C55E;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--background);
+      color: var(--text-primary);
+      padding: 40px 20px;
+      max-width: 1200px;
+      margin: 0 auto;
+      min-height: 100vh;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 48px;
+    }
+
+    .header h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 48px;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 12px;
+      letter-spacing: -0.5px;
+    }
+
+    .header p {
+      font-size: 17px;
+      color: var(--text-secondary);
+      line-height: 1.6;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .info-card {
+      background: var(--card-bg);
+      border: 2px solid var(--border);
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 32px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+    }
+
+    .info-card h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 12px;
+    }
+
+    .info-card p {
+      font-size: 15px;
+      color: var(--text-secondary);
+      line-height: 1.6;
+      margin-bottom: 8px;
+    }
+
+    .screens-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 20px;
+      margin-bottom: 32px;
+    }
+
+    .screen-card {
+      background: var(--card-bg);
+      border: 2px solid var(--border);
+      border-radius: 16px;
+      padding: 24px;
+      text-decoration: none;
+      color: var(--text-primary);
+      transition: all 0.2s;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+    }
+
+    .screen-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.08);
+      border-color: var(--text-primary);
+    }
+
+    .screen-icon {
+      font-size: 40px;
+      margin-bottom: 12px;
+      display: block;
+    }
+
+    .screen-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 8px;
+    }
+
+    .screen-description {
+      font-size: 14px;
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
+
+    .badge {
+      display: inline-block;
+      background: rgba(34, 197, 94, 0.1);
+      border: 1px solid rgba(34, 197, 94, 0.3);
+      border-radius: 8px;
+      padding: 4px 10px;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--success-green);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-top: 12px;
+    }
+
+    .design-notes {
+      background: var(--card-bg);
+      border: 2px solid var(--border);
+      border-radius: 16px;
+      padding: 24px;
+      margin-top: 32px;
+    }
+
+    .design-notes h3 {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 16px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .design-notes ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .design-notes li {
+      font-size: 14px;
+      color: var(--text-secondary);
+      line-height: 1.8;
+      padding-left: 20px;
+      position: relative;
+    }
+
+    .design-notes li:before {
+      content: "•";
+      position: absolute;
+      left: 0;
+      color: var(--text-primary);
+    }
+
+    .color-palette {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+      gap: 12px;
+      margin-top: 16px;
+    }
+
+    .color-swatch {
+      text-align: center;
+    }
+
+    .color-box {
+      height: 60px;
+      border-radius: 8px;
+      margin-bottom: 8px;
+      border: 2px solid var(--border);
+    }
+
+    .color-name {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>Power Level Memory Challenge</h1>
+    <p>HTML mockups designed to match TogetherRemind's minimalist black & white aesthetic with Playfair Display serif fonts and Inter sans-serif fonts.</p>
+  </div>
+
+  <div class="info-card">
+    <h2>About This Feature</h2>
+    <p><strong>Concept:</strong> A competitive memory challenge where couples test their recall of past quiz answers.</p>
+    <p><strong>Gameplay:</strong> Each player answers 5 questions about their previous quiz responses. Correct answers charge their "power level." The player with the highest power level wins!</p>
+    <p><strong>Rewards:</strong> Victory: 50 LP | Defeat: 20 LP</p>
+    <p><strong>Eligibility:</strong> Requires 10+ completed quizzes to unlock (builds question pool from quiz history)</p>
+  </div>
+
+  <h2 style="font-family: 'Playfair Display', serif; font-size: 28px; margin-bottom: 24px;">Screen Mockups</h2>
+
+  <div class="screens-grid">
+    <a href="intro.html" class="screen-card">
+      <span class="screen-icon">🔓</span>
+      <div class="screen-title">1. Intro Screen</div>
+      <div class="screen-description">Eligibility check showing quiz history count and unlock status</div>
+      <span class="badge">Entry Point</span>
+    </a>
+
+    <a href="question.html" class="screen-card">
+      <span class="screen-icon">❓</span>
+      <div class="screen-title">2. Question Screen</div>
+      <div class="screen-description">Memory question with power meters, historical context, and answer grid</div>
+      <span class="badge">Gameplay</span>
+    </a>
+
+    <a href="waiting.html" class="screen-card">
+      <span class="screen-icon">⏳</span>
+      <div class="screen-title">3. Waiting Screen</div>
+      <div class="screen-description">Loading state after player completes, showing performance stats</div>
+      <span class="badge">Transition</span>
+    </a>
+
+    <a href="clash.html" class="screen-card">
+      <span class="screen-icon">⚡</span>
+      <div class="screen-title">4. Clash Screen</div>
+      <div class="screen-description">Beam struggle animation with power comparison and result preview</div>
+      <span class="badge">Climax</span>
+    </a>
+
+    <a href="results.html" class="screen-card">
+      <span class="screen-icon">🏆</span>
+      <div class="screen-title">5. Results Screen</div>
+      <div class="screen-description">Victory/defeat layouts with LP rewards and detailed stats breakdown</div>
+      <span class="badge">Resolution</span>
+    </a>
+  </div>
+
+  <div class="design-notes">
+    <h3>Design System</h3>
+
+    <div style="margin-bottom: 24px;">
+      <strong style="font-size: 14px; color: var(--text-primary); display: block; margin-bottom: 12px;">Color Palette:</strong>
+      <div class="color-palette">
+        <div class="color-swatch">
+          <div class="color-box" style="background: #1A1A1A;"></div>
+          <div class="color-name">Primary Black<br>#1A1A1A</div>
+        </div>
+        <div class="color-swatch">
+          <div class="color-box" style="background: #FFFEFB;"></div>
+          <div class="color-name">Card White<br>#FFFEFB</div>
+        </div>
+        <div class="color-swatch">
+          <div class="color-box" style="background: #FAFAFA;"></div>
+          <div class="color-name">Background<br>#FAFAFA</div>
+        </div>
+        <div class="color-swatch">
+          <div class="color-box" style="background: #F0F0F0;"></div>
+          <div class="color-name">Border<br>#F0F0F0</div>
+        </div>
+        <div class="color-swatch">
+          <div class="color-box" style="background: #6E6E6E;"></div>
+          <div class="color-name">Secondary<br>#6E6E6E</div>
+        </div>
+        <div class="color-swatch">
+          <div class="color-box" style="background: #22C55E;"></div>
+          <div class="color-name">Success<br>#22C55E</div>
+        </div>
+      </div>
+    </div>
+
+    <strong style="font-size: 14px; color: var(--text-primary); display: block; margin-bottom: 12px;">Typography:</strong>
+    <ul style="margin-bottom: 24px;">
+      <li><strong>Playfair Display</strong> (serif): Headlines, 20-64px, weights 600-700</li>
+      <li><strong>Inter</strong> (sans-serif): Body text, 11-17px, weights 400-600</li>
+      <li>Letter spacing: -0.5px to -0.2px for large Playfair Display text</li>
+    </ul>
+
+    <strong style="font-size: 14px; color: var(--text-primary); display: block; margin-bottom: 12px;">Components:</strong>
+    <ul>
+      <li>Cards: 16-24px border-radius, 2px borders, minimal shadows</li>
+      <li>Buttons: 12px border-radius, black background, white text</li>
+      <li>Badges: 8px border-radius, uppercase 11px Inter</li>
+      <li>Spacing: 4px, 8px, 12px, 16px, 20px, 24px, 32px increments</li>
+    </ul>
+  </div>
+</body>
+</html>

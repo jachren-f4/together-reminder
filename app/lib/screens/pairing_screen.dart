@@ -13,6 +13,7 @@ import 'package:togetherremind/services/storage_service.dart';
 import 'package:togetherremind/services/notification_service.dart';
 import 'package:togetherremind/services/remote_pairing_service.dart';
 import 'package:togetherremind/theme/app_theme.dart';
+import '../utils/logger.dart';
 
 class PairingScreen extends StatefulWidget {
   const PairingScreen({super.key});
@@ -83,7 +84,7 @@ class _PairingScreenState extends State<PairingScreen>
     // Get real FCM token
     final pushToken = await NotificationService.getToken();
 
-    print('📱 Generating QR code with push token: $pushToken');
+    Logger.debug('Generating QR code with push token: $pushToken', service: 'pairing');
 
     final pairingData = {
       'userId': user.id,
@@ -93,7 +94,7 @@ class _PairingScreenState extends State<PairingScreen>
       'timestamp': DateTime.now().millisecondsSinceEpoch,
     };
 
-    print('📱 QR code data: $pairingData');
+    Logger.debug('QR code data: $pairingData', service: 'pairing');
 
     setState(() {
       _qrData = jsonEncode(pairingData);
@@ -110,7 +111,7 @@ class _PairingScreenState extends State<PairingScreen>
     try {
       final data = jsonDecode(rawValue);
 
-      print('📱 Scanned QR data: $data');
+      Logger.debug('Scanned QR data: $data', service: 'pairing');
 
       final partner = Partner(
         name: data['name'] ?? 'Partner',
@@ -125,9 +126,9 @@ class _PairingScreenState extends State<PairingScreen>
       final user = _storageService.getUser();
       final myPushToken = await NotificationService.getToken();
 
-      print('🔑 My push token: $myPushToken');
-      print('🔑 Partner push token: ${partner.pushToken}');
-      print('👤 My name: ${user?.name}');
+      Logger.debug('My push token: $myPushToken', service: 'pairing');
+      Logger.debug('Partner push token: ${partner.pushToken}', service: 'pairing');
+      Logger.debug('My name: ${user?.name}', service: 'pairing');
 
       if (user != null && myPushToken != null) {
         await NotificationService.sendPairingConfirmation(

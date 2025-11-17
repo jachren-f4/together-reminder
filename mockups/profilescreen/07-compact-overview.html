@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile - Compact Overview</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            background: #fafafa;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 420px;
+            margin: 0 auto;
+            background: #fff;
+            border: 2px solid #000;
+            box-shadow: 8px 8px 0 rgba(0, 0, 0, 0.1);
+        }
+
+        .header {
+            background: #000;
+            color: #fff;
+            padding: 24px 20px;
+            text-align: center;
+        }
+
+        .title {
+            font-size: 32px;
+            font-weight: 400;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            font-size: 14px;
+            opacity: 0.9;
+            font-style: italic;
+        }
+
+        .hero-stats {
+            padding: 24px 20px;
+            background: linear-gradient(135deg, #fafafa 0%, #f0f0f0 100%);
+            border-bottom: 2px solid #000;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 2px 1fr;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .stat-block {
+            text-align: center;
+        }
+
+        .stat-value-large {
+            font-size: 48px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #666;
+        }
+
+        .divider-vertical {
+            width: 2px;
+            height: 60px;
+            background: #000;
+        }
+
+        .arena-compact {
+            padding: 20px;
+            border-bottom: 1px solid #e0e0e0;
+            display: grid;
+            grid-template-columns: auto 1fr;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .arena-emoji-large {
+            font-size: 72px;
+        }
+
+        .arena-details {
+            flex: 1;
+        }
+
+        .arena-tier-badge {
+            display: inline-block;
+            background: #000;
+            color: #fff;
+            padding: 4px 10px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+
+        .arena-name-large {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .floor-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 10px;
+            background: #f0f0f0;
+            border: 1px solid #000;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .progress-compact {
+            padding: 20px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .progress-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .progress-label {
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .progress-stats {
+            font-size: 12px;
+            color: #666;
+            font-weight: 600;
+        }
+
+        .progress-visual {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .progress-bar-thick {
+            flex: 1;
+            height: 16px;
+            background: #e0e0e0;
+            border: 2px solid #000;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .progress-fill-thick {
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            background: #000;
+            width: 65%;
+        }
+
+        .next-emoji-small {
+            font-size: 28px;
+        }
+
+        .activity-compact {
+            padding: 20px;
+        }
+
+        .section-title {
+            font-size: 14px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 16px;
+        }
+
+        .activity-grid {
+            display: grid;
+            gap: 8px;
+        }
+
+        .activity-row {
+            display: grid;
+            grid-template-columns: 40px 1fr auto;
+            gap: 12px;
+            align-items: center;
+            padding: 12px;
+            border: 1px solid #e0e0e0;
+        }
+
+        .activity-dot {
+            width: 8px;
+            height: 8px;
+            background: #000;
+            border-radius: 50%;
+        }
+
+        .activity-dot.negative {
+            background: #c00;
+        }
+
+        .activity-text {
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .activity-lp-compact {
+            font-size: 13px;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        .activity-lp-compact.negative {
+            color: #c00;
+        }
+
+        .activity-timestamp {
+            font-size: 10px;
+            color: #999;
+            grid-column: 2 / 3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="title">Progress</div>
+            <div class="subtitle">Joakim & Taija</div>
+        </div>
+
+        <div class="hero-stats">
+            <div class="stats-grid">
+                <div class="stat-block">
+                    <div class="stat-value-large">2,450</div>
+                    <div class="stat-label">Love Points</div>
+                </div>
+                <div class="divider-vertical"></div>
+                <div class="stat-block">
+                    <div class="stat-value-large">42</div>
+                    <div class="stat-label">Day Streak</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="arena-compact">
+            <div class="arena-emoji-large">🌸</div>
+            <div class="arena-details">
+                <div class="arena-tier-badge">Tier 3 of 5</div>
+                <div class="arena-name-large">Blossom Fields</div>
+            </div>
+        </div>
+
+        <div class="progress-compact">
+            <div class="progress-info">
+                <div class="progress-label">Next: Crystal Castle</div>
+                <div class="progress-stats">550 LP remaining</div>
+            </div>
+            <div class="progress-visual">
+                <div class="progress-bar-thick">
+                    <div class="progress-fill-thick"></div>
+                </div>
+                <div class="next-emoji-small">🏰</div>
+            </div>
+        </div>
+
+        <div class="activity-compact">
+            <div class="section-title">Recent Activity</div>
+            <div class="activity-grid">
+                <div class="activity-row">
+                    <div class="activity-dot"></div>
+                    <div class="activity-text">Completed Trust Quiz</div>
+                    <div class="activity-lp-compact">+50 LP</div>
+                    <div class="activity-timestamp">15 minutes ago</div>
+                </div>
+
+                <div class="activity-row">
+                    <div class="activity-dot"></div>
+                    <div class="activity-text">Memory Flip Challenge</div>
+                    <div class="activity-lp-compact">+30 LP</div>
+                    <div class="activity-timestamp">2 hours ago</div>
+                </div>
+
+                <div class="activity-row">
+                    <div class="activity-dot"></div>
+                    <div class="activity-text">Daily Quest Bonus</div>
+                    <div class="activity-lp-compact">+25 LP</div>
+                    <div class="activity-timestamp">5 hours ago</div>
+                </div>
+
+                <div class="activity-row">
+                    <div class="activity-dot"></div>
+                    <div class="activity-text">Affirmation Quiz</div>
+                    <div class="activity-lp-compact">+30 LP</div>
+                    <div class="activity-timestamp">1 day ago</div>
+                </div>
+
+                <div class="activity-row">
+                    <div class="activity-dot negative"></div>
+                    <div class="activity-text">Missed Daily Quest</div>
+                    <div class="activity-lp-compact negative">-20 LP</div>
+                    <div class="activity-timestamp">2 days ago</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

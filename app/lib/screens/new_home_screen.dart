@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import '../utils/logger.dart';
+import '../utils/number_formatter.dart';
 import '../services/storage_service.dart';
 import '../services/arena_service.dart';
 import '../services/daily_pulse_service.dart';
@@ -12,7 +14,9 @@ import '../widgets/poke_bottom_sheet.dart';
 import '../widgets/remind_bottom_sheet.dart';
 import '../widgets/daily_pulse_widget.dart';
 import '../widgets/daily_quests_widget.dart';
+import '../widgets/quest_carousel.dart';
 import '../widgets/debug/debug_menu.dart';
+import '../models/daily_quest.dart';
 import 'daily_pulse_screen.dart';
 import 'word_ladder_hub_screen.dart';
 import 'memory_flip_game_screen.dart';
@@ -49,9 +53,7 @@ class _NewHomeScreenState extends State<NewHomeScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                _buildTopSection(),
-                // LP Progress bar removed per user request
-                // _buildArenaProgressSection(),
+                _buildSimplifiedHeader(),
                 _buildMainContent(),
               ],
             ),
@@ -94,7 +96,7 @@ class _NewHomeScreenState extends State<NewHomeScreen> {
         }
       }
     } catch (e) {
-      print('Error refreshing: $e');
+      Logger.error('Error refreshing', error: e, service: 'home');
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -505,24 +507,59 @@ class _NewHomeScreenState extends State<NewHomeScreen> {
 
         const SizedBox(height: 16),
 
-        // Main Quests section removed per user request
+        // Action buttons (Poke + Remind)
+        _buildActionButtons(),
 
-        // Side Quests
+        const SizedBox(height: 24),
+
+        // Side Quests section header with swipe hint
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'Side Quests',
+                style: AppTheme.headlineFont.copyWith(
+                  fontSize: 28,
+                  fontWeight: FontWeight.w700,
+                  letterSpacing: -0.5,
+                ),
+              ),
+              Text(
+                // RTL support for swipe hint
+                Directionality.of(context) == TextDirection.rtl
+                    ? '→ Swipe ←'
+                    : '← Swipe →',
+                style: const TextStyle(
+                  fontSize: 11,
+                  color: Color(0xFF999999),
+                  fontWeight: FontWeight.w600,
+                  letterSpacing: 1,
+                ),
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(height: 20),
+
+        // Side quests horizontal carousel
+        _buildSideQuestsCarousel(),
+
+        const SizedBox(height: 40),
+
+        // Version number for debugging hot reload
+        Center(
           child: Text(
-            'Side Quests',
-            style: AppTheme.headlineFont.copyWith(
-              fontSize: 20,
-              fontWeight: FontWeight.w600,
+            'v1.0.11',
+            style: TextStyle(
+              fontSize: 10,
+              color: Colors.grey.shade400,
             ),
           ),
         ),
-        const SizedBox(height: 16),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: _buildSideQuestsGrid(),
-        ),
+
+        const SizedBox(height: 20),
       ],
     );
   }
@@ -683,85 +720,24 @@ class _NewHomeScreenState extends State<NewHomeScreen> {
     );
   }
 
-  Widget _buildSideQuestsGrid() {
-    return GridView.count(
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      crossAxisCount: 3,
-      crossAxisSpacing: 12,
-      mainAxisSpacing: 12,
-      childAspectRatio: 0.9,
-      children: [
-        _buildSideQuestCard(
-          emoji: '📝',
-          title: 'Inbox',
-          subtitle: '2 new',
-          onTap: () => Navigator.push(
-            context,
-            MaterialPageRoute(builder: (_) => const InboxScreen()),
-          ),
-        ),
-        _buildSideQuestCard(
-          emoji: '💭',
-          title: 'Would You',
-          subtitle: 'Soon',
-          onTap: null, // Coming soon
-        ),
-        _buildSideQuestCard(
-          emoji: '🎭',
-          title: 'Challenge',
-          subtitle: 'Daily',
-          onTap: null, // Coming soon
-        ),
-      ],
-    );
-  }
+  Widget _buildSideQuestsCarousel() {
+    return FutureBuilder<List<DailyQuest>>(
+      future: _getSideQuests(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        }
 
-  Widget _buildSideQuestCard({
-    required String emoji,
-    required String title,
-    required String subtitle,
-    required VoidCallback? onTap,
-  }) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: AppTheme.primaryWhite,
-          border: Border.all(color: AppTheme.borderLight, width: 2),
-          borderRadius: BorderRadius.circular(12),
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(emoji, style: const TextStyle(fontSize: 30)),
-            const SizedBox(height: 6),
-            Text(
-              title,
-              style: AppTheme.bodyFont.copyWith(
-                fontSize: 12,
-                fontWeight: FontWeight.w600,
-              ),
-              textAlign: TextAlign.center,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-            ),
-            const SizedBox(height: 2),
-            Text(
-              subtitle,
-              style: AppTheme.bodyFont.copyWith(
-                fontSize: 10,
-                color: AppTheme.textSecondary,
-              ),
-              textAlign: TextAlign.center,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-            ),
-          ],
-        ),
-      ),
+        final sideQuests = snapshot.data ?? [];
+
+        return QuestCarousel(
+          quests: sideQuests,
+          currentUserId: _storage.getUser()?.id,
+          onQuestTap: _handleSideQuestTap,
+          cardWidthPercent: 0.6, // 60% width to match Daily Quests
+          showProgressBar: true,
+        );
+      },
     );
   }
 
@@ -815,6 +791,176 @@ class _NewHomeScreenState extends State<NewHomeScreen> {
     );
   }
 
+  /// Handle side quest tap - navigate to appropriate screen or show "Coming Soon"
+  Future<void> _handleSideQuestTap(DailyQuest quest) async {
+    // Check if this is a placeholder card
+    if (quest.contentId.startsWith('placeholder_')) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Coming Soon!'),
+          duration: Duration(seconds: 2),
+        ),
+      );
+      return;
+    }
+
+    // Handle real quest navigation based on type
+    switch (quest.type) {
+      case QuestType.wordLadder:
+        await Navigator.push(
+          context,
+          MaterialPageRoute(builder: (_) => const WordLadderHubScreen()),
+        );
+        // Refresh state after returning to show updated quest status
+        if (mounted) setState(() {});
+        break;
+      case QuestType.memoryFlip:
+        await Navigator.push(
+          context,
+          MaterialPageRoute(builder: (_) => const MemoryFlipGameScreen()),
+        );
+        // Refresh state after returning to show updated quest status
+        if (mounted) setState(() {});
+        break;
+      default:
+        // Fallback for unknown quest types
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Quest type ${quest.type.name} not yet implemented'),
+            duration: const Duration(seconds: 2),
+          ),
+        );
+    }
+  }
+
+  /// Build list of side quests (Word Ladder, Memory Flip always shown) + placeholders
+  Future<List<DailyQuest>> _getSideQuests() async {
+    final quests = <DailyQuest>[];
+    final today = DateTime.now();
+    final dateKey = '${today.year}-${today.month.toString().padLeft(2, '0')}-${today.day.toString().padLeft(2, '0')}';
+
+    // Get user/partner for completion tracking
+    final user = _storage.getUser();
+    final partner = _storage.getPartner();
+
+    // Word Ladder - always show (users can start new sessions)
+    final activeLadders = _ladderService.getActiveLadders();
+    final myTurnLadders = activeLadders.where((l) => _ladderService.isMyTurn(l));
+
+    String wordLadderDesc;
+    String wordLadderContentId;
+    if (myTurnLadders.isNotEmpty) {
+      wordLadderDesc = '${myTurnLadders.length} puzzle${myTurnLadders.length == 1 ? "" : "s"} waiting';
+      wordLadderContentId = myTurnLadders.first.id;
+    } else {
+      wordLadderDesc = 'Start new puzzle';
+      wordLadderContentId = 'new_word_ladder';
+    }
+
+    final wordLadderQuest = DailyQuest.create(
+      dateKey: dateKey,
+      type: QuestType.wordLadder,
+      contentId: wordLadderContentId,
+      isSideQuest: true,
+      imagePath: null, // No image yet for Word Ladder
+      description: wordLadderDesc,
+    );
+
+    // Set completion state based on turn tracking
+    if (user != null && partner != null && activeLadders.isNotEmpty) {
+      // Check first active ladder for turn state
+      final firstLadder = activeLadders.first;
+
+      if (firstLadder.status == 'completed') {
+        // Ladder is completed - show COMPLETED badge
+        wordLadderQuest.status = 'completed';
+        wordLadderQuest.userCompletions = {
+          user.id: true,
+          partner.pushToken: true,
+        };
+      } else if (!_ladderService.isMyTurn(firstLadder)) {
+        // It's partner's turn - mark user as completed to show partner badge
+        wordLadderQuest.userCompletions = {
+          user.id: true,
+          partner.pushToken: false,
+        };
+      }
+      // Otherwise leave as default (shows "YOUR TURN" badge)
+    }
+
+    quests.add(wordLadderQuest);
+
+    // Memory Flip - always show (users can start new sessions)
+    final activePuzzle = _storage.getActivePuzzle();
+
+    String memoryFlipDesc;
+    String memoryFlipContentId;
+    if (activePuzzle != null && activePuzzle.matchedPairs < activePuzzle.totalPairs) {
+      memoryFlipDesc = '${activePuzzle.matchedPairs}/${activePuzzle.totalPairs} pairs found';
+      memoryFlipContentId = activePuzzle.id;
+    } else {
+      memoryFlipDesc = 'Start new puzzle';
+      memoryFlipContentId = 'new_memory_flip';
+    }
+
+    final memoryFlipQuest = DailyQuest.create(
+      dateKey: dateKey,
+      type: QuestType.memoryFlip,
+      contentId: memoryFlipContentId,
+      isSideQuest: true,
+      imagePath: null, // No image yet for Memory Flip
+      description: memoryFlipDesc,
+    );
+
+    // Check flip allowance and mark user as "completed" if out of flips
+    if (user != null && partner != null && activePuzzle != null && activePuzzle.status != 'completed') {
+      final allowance = await _memoryService.getFlipAllowance(user.id);
+      if (allowance != null && allowance.flipsRemaining == 0) {
+        // Mark user as "completed" to trigger OUT OF FLIPS badge
+        memoryFlipQuest.userCompletions = {
+          user.id: true,
+          partner.pushToken: false,
+        };
+      }
+    }
+
+    // Set completion state if puzzle is completed
+    if (user != null && partner != null && activePuzzle != null && activePuzzle.status == 'completed') {
+      memoryFlipQuest.status = 'completed';
+      memoryFlipQuest.userCompletions = {
+        user.id: true,
+        partner.pushToken: true,
+      };
+    }
+
+    quests.add(memoryFlipQuest);
+
+    // Add placeholder cards to fill remaining slots (minimum 2 total cards)
+    final placeholders = [
+      {'title': 'Would You', 'desc': 'Coming Soon'},
+      {'title': 'Challenge', 'desc': 'Daily'},
+      {'title': 'Daily Dare', 'desc': 'Soon'},
+    ];
+
+    int currentCount = quests.length;
+    int placeholdersNeeded = currentCount < 2 ? 2 - currentCount : 0;
+
+    for (int i = 0; i < placeholdersNeeded && i < placeholders.length; i++) {
+      final placeholder = placeholders[i];
+      quests.add(DailyQuest.create(
+        dateKey: dateKey,
+        type: QuestType.quiz, // Placeholder type (will be ignored on tap)
+        contentId: 'placeholder_${placeholder['title']}',
+        isSideQuest: true,
+        imagePath: null,
+        description: placeholder['desc'] as String,
+        quizName: placeholder['title'] as String, // Store title in quizName for QuestCard display
+      ));
+    }
+
+    return quests;
+  }
+
   String _getGreeting() {
     final hour = DateTime.now().hour;
     if (hour < 12) {
@@ -824,5 +970,186 @@ class _NewHomeScreenState extends State<NewHomeScreen> {
     } else {
       return 'Good Evening!';
     }
+  }
+
+  /// New simplified header matching carousel design
+  Widget _buildSimplifiedHeader() {
+    final daysTogether = _calculateDaysTogether();
+    final lovePoints = _arenaService.getLovePoints();
+    final partner = _storage.getPartner();
+
+    return Container(
+      color: AppTheme.primaryWhite,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          // Title section (no border needed - border is on stats section below)
+          Padding(
+            padding: const EdgeInsets.fromLTRB(20, 24, 20, 20),
+            child: Column(
+              children: [
+                // "LOVE QUEST" title with debug menu access
+                GestureDetector(
+                  onDoubleTap: () {
+                    showDialog(
+                      context: context,
+                      builder: (context) => const DebugMenu(),
+                    );
+                  },
+                  child: Text(
+                    'LOVE QUEST',
+                    style: AppTheme.headlineFont.copyWith(
+                      fontSize: 32,
+                      fontWeight: FontWeight.w400,
+                      letterSpacing: 2,
+                      color: Colors.black,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 8),
+
+                // "Day Forty-Two" subtitle
+                Text(
+                  'Day ${NumberFormatter.toWords(daysTogether)}',
+                  style: AppTheme.bodyFont.copyWith(
+                    fontSize: 14,
+                    color: const Color(0xFF666666),
+                    fontStyle: FontStyle.italic,
+                  ),
+                ),
+              ],
+            ),
+          ),
+
+          // Stats section with top border (full width, edge-to-edge)
+          Container(
+            decoration: const BoxDecoration(
+              border: Border(
+                top: BorderSide(color: Colors.black, width: 2),
+              ),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(20, 20, 20, 16),
+              child: Column(
+                children: [
+                  // Stats rows
+                  _buildStatRow('PARTY', 'You & ${partner?.name ?? "Partner"}'),
+                  const SizedBox(height: 16),
+                  _buildStatRow('LOVE POINTS', lovePoints.toString()),
+                  const SizedBox(height: 16),
+
+                  // Progress bar
+                  _buildProgressBar(),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// Calculate days together from pairedAt date
+  int _calculateDaysTogether() {
+    final user = _storage.getUser();
+    final partner = _storage.getPartner();
+
+    if (user != null && partner != null) {
+      return DateTime.now().difference(partner.pairedAt).inDays + 1;
+    }
+    return 1;
+  }
+
+  /// Build stat row with label and value
+  Widget _buildStatRow(String label, String value) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(
+          label,
+          style: AppTheme.headlineFont.copyWith( // Use serif font like HTML mockup
+            fontSize: 14,
+            letterSpacing: 1,
+            fontWeight: FontWeight.w600,
+            color: Colors.black,
+          ),
+        ),
+        Text(
+          value,
+          style: AppTheme.headlineFont.copyWith( // Use serif font (Playfair Display) like HTML mockup
+            fontSize: 18,
+            fontWeight: FontWeight.w700,
+            color: Colors.black,
+          ),
+        ),
+      ],
+    );
+  }
+
+  /// Build horizontal progress bar for LP to next arena
+  Widget _buildProgressBar() {
+    final progress = _arenaService.getCurrentProgress();
+
+    return Container(
+      height: 8,
+      decoration: const BoxDecoration(
+        color: Color(0xFFE0E0E0), // Gray background showing full length
+      ),
+      child: Align(
+        alignment: Alignment.centerLeft, // Ensure black bar is left-aligned
+        child: FractionallySizedBox(
+          widthFactor: progress.clamp(0.0, 1.0),
+          child: Container(
+            decoration: const BoxDecoration(
+              color: Colors.black, // Black progress bar
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  /// Build action buttons section (Poke + Remind)
+  Widget _buildActionButtons() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: Row(
+        children: [
+          Expanded(
+            child: ElevatedButton(
+              onPressed: _showPokeBottomSheet,
+              style: ElevatedButton.styleFrom(
+                padding: const EdgeInsets.symmetric(vertical: 12),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: const [
+                  Text('💫', style: TextStyle(fontSize: 20)),
+                  SizedBox(width: 6),
+                  Text('Poke'),
+                ],
+              ),
+            ),
+          ),
+          const SizedBox(width: 10),
+          Expanded(
+            child: ElevatedButton(
+              onPressed: _showRemindBottomSheet,
+              style: ElevatedButton.styleFrom(
+                padding: const EdgeInsets.symmetric(vertical: 12),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: const [
+                  Text('💕', style: TextStyle(fontSize: 20)),
+                  SizedBox(width: 6),
+                  Text('Remind'),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }

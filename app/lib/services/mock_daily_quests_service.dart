@@ -1,5 +1,6 @@
 import '../models/daily_quest.dart';
 import '../services/storage_service.dart';
+import '../utils/logger.dart';
 
 /// Mock service for testing daily quests UI
 ///
@@ -15,7 +16,7 @@ class MockDailyQuestsService {
     final partner = _storage.getPartner();
 
     if (user == null) {
-      print('❌ No user found, cannot generate mock quests');
+      Logger.error('No user found, cannot generate mock quests', service: 'mock');
       return;
     }
 
@@ -71,10 +72,7 @@ class MockDailyQuestsService {
     quest3.userCompletions = {};
     await _storage.saveDailyQuest(quest3);
 
-    print('✅ Generated 3 mock daily quests for testing:');
-    print('   Quest 1: Completed by both users');
-    print('   Quest 2: User completed, waiting for partner');
-    print('   Quest 3: Not started (Your Turn)');
+    Logger.success('Generated 3 mock daily quests for testing', service: 'mock');
   }
 
   /// Clear all mock quests
@@ -87,6 +85,6 @@ class MockDailyQuestsService {
       await quest.delete();
     }
 
-    print('✅ Cleared all mock quests');
+    Logger.success('Cleared all mock quests', service: 'mock');
   }
 }

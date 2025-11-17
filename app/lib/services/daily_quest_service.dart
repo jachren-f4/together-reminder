@@ -4,6 +4,7 @@ import '../services/storage_service.dart';
 import '../services/love_point_service.dart';
 import '../services/quest_sync_service.dart';
 import '../services/quest_utilities.dart';
+import '../utils/logger.dart';
 
 /// Service for managing daily quests
 ///
@@ -79,13 +80,13 @@ class DailyQuestService {
   }) async {
     final quest = _storage.getDailyQuest(questId);
     if (quest == null) {
-      debugPrint('Quest not found: $questId');
+      Logger.debug('Quest not found: $questId', service: 'quest');
       return false;
     }
 
     // Check if already completed by this user
     if (quest.hasUserCompleted(userId)) {
-      debugPrint('User $userId already completed quest $questId');
+      Logger.debug('User $userId already completed quest $questId', service: 'quest');
       return false;
     }
 
@@ -121,10 +122,10 @@ class DailyQuestService {
           );
         }
 
-        debugPrint('Quest $questId completed by both users! Awarded $lpReward LP to both');
+        Logger.debug('Quest $questId completed by both users! Awarded $lpReward LP to both', service: 'quest');
       } else {
         // Quiz quests award LP via QuizService when quiz completes
-        debugPrint('Quest $questId (quiz) completed by both users! LP awarded via QuizService');
+        Logger.debug('Quest $questId (quiz) completed by both users! LP awarded via QuizService', service: 'quest');
       }
 
       // Update daily completion stats
@@ -132,7 +133,7 @@ class DailyQuestService {
     } else {
       // One user completed, still waiting for partner
       quest.status = 'in_progress';
-      debugPrint('Quest $questId completed by $userId, waiting for partner');
+      Logger.debug('Quest $questId completed by $userId, waiting for partner', service: 'quest');
     }
 
     // Save quest locally
@@ -145,7 +146,7 @@ class DailyQuestService {
         currentUserId: userId,
         partnerUserId: partnerUserId,
       );
-      debugPrint('Quest completion synced to Firebase');
+      Logger.debug('Quest completion synced to Firebase', service: 'quest');
     }
 
     return bothCompleted;
@@ -225,7 +226,7 @@ class DailyQuestService {
       // Delete quests older than 7 days
       if (now.difference(quest.expiresAt).inDays > 7) {
         await quest.delete();
-        debugPrint('Deleted old quest: ${quest.id}');
+        Logger.debug('Deleted old quest: ${quest.id}', service: 'quest');
       }
     }
   }

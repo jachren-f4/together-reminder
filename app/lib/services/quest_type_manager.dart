@@ -8,6 +8,7 @@ import '../services/quest_sync_service.dart';
 import '../services/quest_utilities.dart';
 import '../services/quiz_service.dart';
 import '../services/you_or_me_service.dart';
+import '../utils/logger.dart';
 
 /// Interface for quest providers
 ///
@@ -151,7 +152,7 @@ class QuizQuestProvider implements QuestProvider {
     try {
       // Use progression state to determine which quiz to assign
       if (progressionState == null) {
-        debugPrint('No progression state provided, cannot generate quiz quest');
+        Logger.debug('No progression state provided, cannot generate quiz quest', service: 'quest');
         return null;
       }
 
@@ -161,9 +162,9 @@ class QuizQuestProvider implements QuestProvider {
         progressionState.currentPosition,
       );
 
-      debugPrint('Generating quiz quest: Track ${progressionState.currentTrack}, '
+      Logger.debug('Generating quiz quest: Track ${progressionState.currentTrack}, '
           'Position ${progressionState.currentPosition}, '
-          'Category: ${config.categoryFilter}, Difficulty: ${config.difficulty}');
+          'Category: ${config.categoryFilter}, Difficulty: ${config.difficulty}', service: 'quest');
 
       // Use existing QuizService to create session
       // Skip active check to allow multiple daily quest quizzes
@@ -175,12 +176,12 @@ class QuizQuestProvider implements QuestProvider {
         isDailyQuest: true, // Mark as daily quest to prevent duplication in inbox
       );
 
-      debugPrint('Created quiz session: ${session.id}');
+      Logger.debug('Created quiz session: ${session.id}', service: 'quest');
 
       // Return session ID as contentId
       return session.id;
     } catch (e) {
-      debugPrint('Error generating quiz quest: $e');
+      Logger.error('Error generating quiz quest', error: e, service: 'quest');
       return null;
     }
   }
@@ -195,26 +196,26 @@ class QuizQuestProvider implements QuestProvider {
       final session = _storage.getQuizSession(contentId);
 
       if (session == null) {
-        debugPrint('Quiz session not found: $contentId');
+        Logger.debug('Quiz session not found: $contentId', service: 'quest');
         return false;
       }
 
       // Check if user has answered all questions
       final userAnswers = session.answers?[userId];
       if (userAnswers == null || userAnswers.isEmpty) {
-        debugPrint('User $userId has not answered quiz $contentId');
+        Logger.debug('User $userId has not answered quiz $contentId', service: 'quest');
         return false;
       }
 
       // Must have answered all questions
       if (userAnswers.length < session.questionIds.length) {
-        debugPrint('User $userId has not answered all questions in quiz $contentId');
+        Logger.debug('User $userId has not answered all questions in quiz $contentId', service: 'quest');
         return false;
       }
 
       return true;
     } catch (e) {
-      debugPrint('Error validating quiz completion: $e');
+      Logger.error('Error validating quiz completion', error: e, service: 'quest');
       return false;
     }
   }
@@ -248,14 +249,14 @@ class YouOrMeQuestProvider implements QuestProvider {
       // Return current user's session ID (quest points to their own session)
       final userSession = sessions[currentUserId];
       if (userSession == null) {
-        debugPrint('Error: User session not found in dual sessions');
+        Logger.error('Error: User session not found in dual sessions', service: 'quest');
         return null;
       }
 
-      debugPrint('Generated You or Me dual sessions: ${userSession.id} (user), ${sessions[partnerUserId]?.id} (partner)');
+      Logger.debug('Generated You or Me dual sessions: ${userSession.id} (user), ${sessions[partnerUserId]?.id} (partner)', service: 'quest');
       return userSession.id;
     } catch (e) {
-      debugPrint('Error generating You or Me quest: $e');
+      Logger.error('Error generating You or Me quest', error: e, service: 'quest');
       return null;
     }
   }
@@ -268,14 +269,14 @@ class YouOrMeQuestProvider implements QuestProvider {
     try {
       final session = await _youOrMeService.getSession(contentId);
       if (session == null) {
-        debugPrint('You or Me session not found: $contentId');
+        Logger.debug('You or Me session not found: $contentId', service: 'quest');
         return false;
       }
 
       // Check if user has answered all 10 questions
       return session.hasUserAnswered(userId);
     } catch (e) {
-      debugPrint('Error validating You or Me completion: $e');
+      Logger.error('Error validating You or Me completion', error: e, service: 'quest');
       return false;
     }
   }
@@ -305,7 +306,7 @@ class QuestTypeManager {
   /// Register a quest provider
   void registerProvider(QuestProvider provider) {
     _providers[provider.questType] = provider;
-    debugPrint('Registered quest provider for ${provider.questType.name}');
+    Logger.debug('Registered quest provider for ${provider.questType.name}', service: 'quest');
   }
 
   /// Generate daily quests for today
@@ -319,15 +320,15 @@ class QuestTypeManager {
       final dateKey = QuestUtilities.getTodayDateKey();
       final coupleId = QuestUtilities.generateCoupleId(currentUserId, partnerUserId);
 
-      debugPrint('🆔 Quest Generation:');
-      debugPrint('   Current User ID: $currentUserId');
-      debugPrint('   Partner User ID: $partnerUserId');
-      debugPrint('   Couple ID: $coupleId');
-      debugPrint('   Date Key: $dateKey');
+      Logger.debug('🆔 Quest Generation:', service: 'quest');
+      Logger.debug('   Current User ID: $currentUserId', service: 'quest');
+      Logger.debug('   Partner User ID: $partnerUserId', service: 'quest');
+      Logger.debug('   Couple ID: $coupleId', service: 'quest');
+      Logger.debug('   Date Key: $dateKey', service: 'quest');
 
       // Check if quests already exist
       if (_questService.hasTodayQuests()) {
-        debugPrint('Daily quests already exist for $dateKey');
+        Logger.debug('Daily quests already exist for $dateKey', service: 'quest');
         return _questService.getTodayQuests();
       }
 
@@ -360,7 +361,7 @@ class QuestTypeManager {
       final quests = <DailyQuest>[];
 
       for (int i = 0; i < 4; i++) {
-        debugPrint('🎯 Generating quest ${i + 1}/4... (Track $track, Position $position)');
+        Logger.debug('🎯 Generating quest ${i + 1}/4... (Track $track, Position $position)', service: 'quest');
 
         // Quest 4 is always You or Me, quests 1-3 follow quiz progression
         final questType = i == 3 ? QuestType.youOrMe : QuestType.quiz;
@@ -387,7 +388,7 @@ class QuestTypeManager {
         );
 
         if (contentId != null) {
-          debugPrint('✅ Quest ${i + 1} content created: $contentId');
+          Logger.debug('✅ Quest ${i + 1} content created: $contentId', service: 'quest');
 
           // Get format type and quiz name from quiz session (for quiz quests only)
           String formatType = 'classic'; // Default for all quest types
@@ -420,7 +421,7 @@ class QuestTypeManager {
 
           await _storage.saveDailyQuest(quest);
           quests.add(quest);
-          debugPrint('💾 Quest ${i + 1} saved to storage');
+          Logger.debug('💾 Quest ${i + 1} saved to storage', service: 'quest');
 
           // Advance local variables for next quiz quest generation (skip for You or Me)
           if (questType == QuestType.quiz && i < 3) {
@@ -429,15 +430,15 @@ class QuestTypeManager {
               track++;
               position = 0;
             }
-            debugPrint('📈 Will generate next quest at Track $track, Position $position');
+            Logger.debug('📈 Will generate next quest at Track $track, Position $position', service: 'quest');
           }
         } else {
-          debugPrint('❌ Quest ${i + 1} generation failed - contentId is null');
+          Logger.debug('❌ Quest ${i + 1} generation failed - contentId is null', service: 'quest');
         }
       }
 
       // Don't save progression advancement here - it will be saved when quests are completed
-      debugPrint('ℹ️  Progression state NOT advanced (waiting for quest completion)');
+      Logger.debug('ℹ️  Progression state NOT advanced (waiting for quest completion)', service: 'quest');
 
       // Save quests to Firebase (for partner to load)
       await _syncService.saveQuestsToFirebase(
@@ -447,11 +448,11 @@ class QuestTypeManager {
         progressionState: progressionState,
       );
 
-      debugPrint('Generated ${quests.length} daily quests for $dateKey (synced to Firebase)');
+      Logger.debug('Generated ${quests.length} daily quests for $dateKey (synced to Firebase)', service: 'quest');
 
       return quests;
     } catch (e) {
-      debugPrint('Error generating daily quests: $e');
+      Logger.error('Error generating daily quests', error: e, service: 'quest');
       return [];
     }
   }
@@ -466,7 +467,7 @@ class QuestTypeManager {
     final provider = _providers[questType];
 
     if (provider == null) {
-      debugPrint('No provider registered for quest type: ${questType.name}');
+      Logger.error('No provider registered for quest type: ${questType.name}', service: 'quest');
       return null;
     }
 
@@ -490,7 +491,7 @@ class QuestTypeManager {
       final provider = _providers[quest.type];
 
       if (provider == null) {
-        debugPrint('No provider for quest type: ${quest.type.name}');
+        Logger.error('No provider for quest type: ${quest.type.name}', service: 'quest');
         return false;
       }
 
@@ -500,7 +501,7 @@ class QuestTypeManager {
       );
 
       if (!isValid) {
-        debugPrint('Quest completion validation failed');
+        Logger.debug('Quest completion validation failed', service: 'quest');
         return false;
       }
 
@@ -510,7 +511,7 @@ class QuestTypeManager {
         userId: userId,
       );
     } catch (e) {
-      debugPrint('Error completing quest: $e');
+      Logger.error('Error completing quest', error: e, service: 'quest');
       return false;
     }
   }
@@ -527,7 +528,7 @@ class QuestTypeManager {
       var progressionState = _storage.getQuizProgressionState(coupleId);
 
       if (progressionState == null) {
-        debugPrint('No progression state found');
+        Logger.debug('No progression state found', service: 'quest');
         return;
       }
 
@@ -538,9 +539,9 @@ class QuestTypeManager {
       await _storage.updateQuizProgressionState(progressionState);
       await _syncService.saveProgressionState(progressionState);
 
-      debugPrint('Advanced quiz progression to Track ${progressionState.currentTrack}, Position ${progressionState.currentPosition}');
+      Logger.debug('Advanced quiz progression to Track ${progressionState.currentTrack}, Position ${progressionState.currentPosition}', service: 'quest');
     } catch (e) {
-      debugPrint('Error advancing quiz progression: $e');
+      Logger.error('Error advancing quiz progression', error: e, service: 'quest');
     }
   }
 

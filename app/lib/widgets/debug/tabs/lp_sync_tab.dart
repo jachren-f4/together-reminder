@@ -6,6 +6,7 @@ import '../../../services/storage_service.dart';
 import '../../../services/arena_service.dart';
 import '../../../services/quest_utilities.dart';
 import '../../../models/love_point_transaction.dart';
+import '../../../utils/logger.dart';
 import '../components/debug_section_card.dart';
 
 /// LP & Sync tab showing Love Points and Firebase synchronization
@@ -56,7 +57,7 @@ class _LpSyncTabState extends State<LpSyncTab> {
       setState(() => _isLoading = false);
     } catch (e) {
       setState(() => _isLoading = false);
-      print('Error loading LP & Sync data: $e');
+      Logger.error('Error loading LP & Sync data', error: e, service: 'debug');
     }
   }
 
@@ -99,7 +100,7 @@ class _LpSyncTabState extends State<LpSyncTab> {
         };
       }
     } catch (e) {
-      print('Error loading Firebase sync status: $e');
+      Logger.error('Error loading Firebase sync status', error: e, service: 'debug');
     }
   }
 

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:togetherremind/config/theme_config.dart';
 
 class AppTheme {
   // Minimal Black & White Color System
@@ -41,8 +42,8 @@ class AppTheme {
     end: Alignment.bottomRight,
   );
 
-  // Typography - Playfair Display for headlines, Inter for body
-  static TextStyle get headlineFont => GoogleFonts.playfairDisplay();
+  // Typography - Configurable serif for headlines, Inter for body
+  static TextStyle get headlineFont => ThemeConfig().serifFont;
   static TextStyle get bodyFont => GoogleFonts.inter();
 
   // Theme data
@@ -120,38 +121,38 @@ class AppTheme {
         ),
       ),
       textTheme: TextTheme(
-        // Headlines - Playfair Display
-        displayLarge: GoogleFonts.playfairDisplay(
+        // Headlines - Configurable serif font (default: Georgia)
+        displayLarge: ThemeConfig().serifFont.copyWith(
           fontSize: 36,
           fontWeight: FontWeight.w600,
           color: textPrimary,
           letterSpacing: -0.5,
         ),
-        displayMedium: GoogleFonts.playfairDisplay(
+        displayMedium: ThemeConfig().serifFont.copyWith(
           fontSize: 32,
           fontWeight: FontWeight.w600,
           color: textPrimary,
           letterSpacing: -0.5,
         ),
-        displaySmall: GoogleFonts.playfairDisplay(
+        displaySmall: ThemeConfig().serifFont.copyWith(
           fontSize: 28,
           fontWeight: FontWeight.w600,
           color: textPrimary,
           letterSpacing: -0.4,
         ),
-        headlineLarge: GoogleFonts.playfairDisplay(
+        headlineLarge: ThemeConfig().serifFont.copyWith(
           fontSize: 24,
           fontWeight: FontWeight.w600,
           color: textPrimary,
           letterSpacing: -0.3,
         ),
-        headlineMedium: GoogleFonts.playfairDisplay(
+        headlineMedium: ThemeConfig().serifFont.copyWith(
           fontSize: 22,
           fontWeight: FontWeight.w600,
           color: textPrimary,
           letterSpacing: -0.3,
         ),
-        headlineSmall: GoogleFonts.playfairDisplay(
+        headlineSmall: ThemeConfig().serifFont.copyWith(
           fontSize: 20,
           fontWeight: FontWeight.w600,
           color: textPrimary,

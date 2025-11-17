@@ -3,6 +3,7 @@ import '../models/quiz_session.dart';
 import '../services/quiz_service.dart';
 import '../services/storage_service.dart';
 import 'quiz_results_screen.dart';
+import '../utils/logger.dart';
 
 class QuizWaitingScreen extends StatefulWidget {
   final QuizSession session;
@@ -33,7 +34,7 @@ class _QuizWaitingScreenState extends State<QuizWaitingScreen> {
       // This ensures we see partner's answers immediately when they submit
       final updatedSession = await _quizService.getSession(_session.id);
       if (updatedSession == null) {
-        print('⚠️  Session not found: ${_session.id}');
+        Logger.warn('Session not found: ${_session.id}', service: 'quiz');
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text('Session not found')),
@@ -50,7 +51,7 @@ class _QuizWaitingScreenState extends State<QuizWaitingScreen> {
 
       // If completed, navigate to results
       if (_session.isCompleted) {
-        print('✅ Session completed! Navigating to results...');
+        Logger.success('Session completed! Navigating to results...', service: 'quiz');
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(
             builder: (context) => QuizResultsScreen(session: _session),
@@ -63,7 +64,7 @@ class _QuizWaitingScreenState extends State<QuizWaitingScreen> {
       final bothAnswered = _session.answers != null && _session.answers!.length >= 2;
       if (bothAnswered && !_session.isCompleted) {
         // Both users answered! Completion calculation should be running.
-        print('⏳ Both users answered (${_session.answers!.length} answers) - waiting for completion calculation...');
+        Logger.info('Both users answered (${_session.answers!.length} answers) - waiting for completion calculation...', service: 'quiz');
         // Don't navigate yet - wait for lpEarned to be calculated
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
@@ -75,7 +76,7 @@ class _QuizWaitingScreenState extends State<QuizWaitingScreen> {
 
       // Log current answer count for debugging
       final answerCount = _session.answers?.length ?? 0;
-      print('🔍 Manual check: $answerCount/2 answers, completed: ${_session.isCompleted}');
+      Logger.debug('Manual check: $answerCount/2 answers, completed: ${_session.isCompleted}', service: 'quiz');
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(

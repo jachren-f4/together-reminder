@@ -205,9 +205,14 @@ if (quest.formatType == 'affirmation') {
 
 See `docs/QUEST_TITLE_SYNC_ISSUE.md` for full technical analysis.
 
-### 10. Logger Service (Centralized Logging)
+### 10. Logger Service Verbosity Control
 
-**CRITICAL:** Use `Logger` instead of `print()` for all logging.
+**CRITICAL:** All Logger services are **disabled by default** to prevent log flooding.
+
+**Philosophy:**
+- Clean logs by default (only errors shown)
+- Enable specific services only when debugging that feature
+- Prevents AI coding agent context window pollution
 
 **Usage:**
 ```dart
@@ -220,33 +225,34 @@ Logger.error('Failed to load', error: e, service: 'quiz');  // Always logs
 Logger.success('Quest completed', service: 'quest');   // Only in debug mode
 ```
 
-**Benefits:**
-- ✅ Automatic debug/production filtering (respects `kDebugMode`)
-- ✅ Per-service verbosity control (disable noisy services)
-- ✅ Timestamps for timing analysis (HH:MM:SS format)
-- ✅ Error object and stack trace support
-- ✅ Ready for future Crashlytics integration
+**How to enable logging for a service:**
+1. Edit `lib/utils/logger.dart`
+2. Find service in `_serviceVerbosity` map (organized by category)
+3. Change `false` → `true`
+4. Run debug build - only that service's logs appear
 
-**Per-Service Verbosity:**
-Edit `lib/utils/logger.dart` to disable specific services:
+**Service Categories:**
 ```dart
-static const Map<String, bool> _serviceVerbosity = {
-  'quiz': true,
-  'notification': true,
-  'mock': false,  // Suppresses mock data logs
-};
+// CRITICAL CORE (3): storage, notification, lovepoint
+// MAJOR FEATURES (3): quiz, you_or_me, pairing
+// MINOR FEATURES (8): reminder, poke, daily_pulse, affirmation,
+//                      memory_flip, word_ladder, ladder, quest
+// INFRASTRUCTURE (5): debug, mock, word_validation, home, arena
 ```
 
-**When to use each level:**
-- `debug()` - Detailed flow tracking, development debugging
-- `info()` - Important state changes, non-errors
-- `warn()` - Recoverable issues, unexpected situations
-- `error()` - Failures, exceptions (always logs, even in production)
-- `success()` - Operation confirmations (only when needed)
+**GOTCHA:** Logger calls **without** `service:` parameter bypass verbosity control and always log.
+```dart
+Logger.debug('message');  // ❌ Always logs
+Logger.debug('message', service: 'quiz');  // ✅ Respects config
+```
+
+**Benefits:**
+- Debug builds: ~4 log lines instead of hundreds
+- Production: Only errors log
+- Easy to debug specific features without noise
 
 **Related files:**
-- `lib/utils/logger.dart` - Logger implementation
-- See `lib/services/quiz_service.dart` for usage examples
+- `lib/utils/logger.dart` - Logger implementation and service config
 
 ---
 
@@ -367,6 +373,21 @@ The optimized procedure runs builds in parallel with cleanup tasks:
 - **Result:** Builds complete by the time cleanup finishes, ready to launch immediately
 
 ### Debugging Tools
+
+#### Version Number for Hot Reload Verification
+
+**Purpose:** Visual confirmation that hot reload/rebuild is working correctly
+
+**Location:** `lib/screens/new_home_screen.dart` - Bottom of screen (above bottom padding)
+
+**Current Version:** `v1.0.3`
+
+**Requirement:** Increment version number with each UI change to verify that changes are being reflected in the running app.
+
+**Why this matters:**
+- Hot reload doesn't work with background Flutter processes (started with `&`)
+- Version number provides immediate visual feedback that rebuild succeeded
+- Helps distinguish between "bug still exists" vs "rebuild didn't apply"
 
 #### Enhanced Debug Menu
 

@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/services.dart';
 import '../models/quiz_question.dart';
 import 'storage_service.dart';
+import '../utils/logger.dart';
 
 class QuizQuestionBank {
   static final QuizQuestionBank _instance = QuizQuestionBank._internal();
@@ -40,9 +41,9 @@ class QuizQuestionBank {
       }
 
       _isInitialized = true;
-      print('✅ Loaded ${jsonList.length} quiz questions from JSON');
+      Logger.success('Loaded ${jsonList.length} quiz questions from JSON', service: 'quiz');
     } catch (e) {
-      print('❌ Error loading quiz questions: $e');
+      Logger.error('Error loading quiz questions', error: e, service: 'quiz');
       rethrow;
     }
   }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../utils/logger.dart';
 import 'package:confetti/confetti.dart';
 import '../models/quiz_session.dart';
 import '../models/quiz_question.dart';
@@ -120,7 +121,7 @@ class _QuizResultsScreenState extends State<QuizResultsScreen> {
         // print('✅ Quest progress saved - waiting for partner to complete');
       }
     } catch (e) {
-      print('❌ Error checking quest completion: $e');
+      Logger.error('Error checking quest completion', error: e, service: 'quiz');
       // Don't block results screen on quest errors
     }
   }
@@ -177,7 +178,7 @@ class _QuizResultsScreenState extends State<QuizResultsScreen> {
         // print('✅ Progression state saved to Firebase');
       }
     } catch (e) {
-      print('❌ Error checking daily quests completion: $e');
+      Logger.error('Error checking daily quests completion', error: e, service: 'quiz');
     }
   }
 

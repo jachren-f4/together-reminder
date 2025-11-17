@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Power Level Memory Challenge - Results</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --background: #FAFAFA;
+      --card-bg: #FFFEFB;
+      --text-primary: #1A1A1A;
+      --text-secondary: #6E6E6E;
+      --border: #F0F0F0;
+      --success-green: #22C55E;
+      --warning-orange: #F59E0B;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--background);
+      color: var(--text-primary);
+      padding: 20px;
+      max-width: 768px;
+      margin: 0 auto;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+
+    .result-icon {
+      font-size: 80px;
+      margin-bottom: 16px;
+    }
+
+    .header h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 36px;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 8px;
+      letter-spacing: -0.3px;
+    }
+
+    .header p {
+      font-size: 15px;
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
+
+    .reward-card {
+      background: var(--card-bg);
+      border: 2px solid var(--border);
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 16px;
+      text-align: center;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+    }
+
+    .reward-label {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 8px;
+    }
+
+    .reward-value {
+      font-family: 'Playfair Display', serif;
+      font-size: 48px;
+      font-weight: 700;
+      color: var(--success-green);
+      margin-bottom: 4px;
+    }
+
+    .reward-subtitle {
+      font-size: 14px;
+      color: var(--text-secondary);
+    }
+
+    .stats-card {
+      background: var(--card-bg);
+      border: 2px solid var(--border);
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 16px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+    }
+
+    .stats-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 16px;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .stat-box {
+      background: var(--background);
+      border-radius: 12px;
+      padding: 16px;
+      text-align: center;
+    }
+
+    .stat-value {
+      font-family: 'Playfair Display', serif;
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 4px;
+    }
+
+    .stat-label {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .comparison-section {
+      margin-bottom: 16px;
+    }
+
+    .comparison-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .comparison-row:last-child {
+      border-bottom: none;
+    }
+
+    .player-label {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text-secondary);
+    }
+
+    .player-value {
+      font-family: 'Playfair Display', serif;
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .button-primary {
+      width: 100%;
+      background: var(--text-primary);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      padding: 16px;
+      font-family: 'Inter', sans-serif;
+      font-size: 17px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: opacity 0.2s;
+      margin-bottom: 12px;
+    }
+
+    .button-primary:hover {
+      opacity: 0.9;
+    }
+
+    .button-secondary {
+      width: 100%;
+      background: var(--background);
+      color: var(--text-primary);
+      border: 2px solid var(--border);
+      border-radius: 12px;
+      padding: 16px;
+      font-family: 'Inter', sans-serif;
+      font-size: 17px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .button-secondary:hover {
+      border-color: var(--text-primary);
+    }
+
+    .badge {
+      display: inline-block;
+      background: rgba(34, 197, 94, 0.1);
+      border: 1px solid rgba(34, 197, 94, 0.3);
+      border-radius: 8px;
+      padding: 6px 12px;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--success-green);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    /* Defeat state styling */
+    .defeat .reward-value {
+      color: var(--warning-orange);
+    }
+
+    .defeat .badge {
+      background: rgba(245, 158, 11, 0.1);
+      border-color: rgba(245, 158, 11, 0.3);
+      color: var(--warning-orange);
+    }
+  </style>
+</head>
+<body>
+  <!-- Victory State -->
+  <div class="victory-state">
+    <div class="header">
+      <div class="result-icon">🏆</div>
+      <h1>Victory!</h1>
+      <p>Your memory proved superior in this epic battle</p>
+    </div>
+
+    <div class="reward-card">
+      <div class="reward-label">Love Points Earned</div>
+      <div class="reward-value">+50 LP</div>
+      <div class="reward-subtitle">
+        <span class="badge">Victory Reward</span>
+      </div>
+    </div>
+
+    <div class="stats-card">
+      <div class="stats-title">Your Performance</div>
+
+      <div class="stats-grid">
+        <div class="stat-box">
+          <div class="stat-value">4/5</div>
+          <div class="stat-label">Correct</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-value">80%</div>
+          <div class="stat-label">Accuracy</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-value">1,840</div>
+          <div class="stat-label">Power Level</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-value">2.3s</div>
+          <div class="stat-label">Avg Time</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="stats-card">
+      <div class="stats-title">Comparison</div>
+
+      <div class="comparison-section">
+        <div class="comparison-row">
+          <div class="player-label">Alice (You) - Correct Answers</div>
+          <div class="player-value">4</div>
+        </div>
+        <div class="comparison-row">
+          <div class="player-label">Bob - Correct Answers</div>
+          <div class="player-value">3</div>
+        </div>
+      </div>
+
+      <div class="comparison-section">
+        <div class="comparison-row">
+          <div class="player-label">Alice (You) - Final Power</div>
+          <div class="player-value">1,840</div>
+        </div>
+        <div class="comparison-row">
+          <div class="player-label">Bob - Final Power</div>
+          <div class="player-value">1,620</div>
+        </div>
+      </div>
+    </div>
+
+    <button class="button-primary">Done</button>
+    <button class="button-secondary">Challenge Again</button>
+  </div>
+
+  <!-- Defeat State (Hidden by default, uncomment to view) -->
+  <!--
+  <div class="defeat-state defeat">
+    <div class="header">
+      <div class="result-icon">💪</div>
+      <h1>Nice Try!</h1>
+      <p>Your partner's memory was sharper this time</p>
+    </div>
+
+    <div class="reward-card">
+      <div class="reward-label">Love Points Earned</div>
+      <div class="reward-value">+20 LP</div>
+      <div class="reward-subtitle">
+        <span class="badge">Participation Reward</span>
+      </div>
+    </div>
+
+    <div class="stats-card">
+      <div class="stats-title">Your Performance</div>
+
+      <div class="stats-grid">
+        <div class="stat-box">
+          <div class="stat-value">3/5</div>
+          <div class="stat-label">Correct</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-value">60%</div>
+          <div class="stat-label">Accuracy</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-value">1,420</div>
+          <div class="stat-label">Power Level</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-value">3.1s</div>
+          <div class="stat-label">Avg Time</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="stats-card">
+      <div class="stats-title">Comparison</div>
+
+      <div class="comparison-section">
+        <div class="comparison-row">
+          <div class="player-label">Alice (You) - Correct Answers</div>
+          <div class="player-value">3</div>
+        </div>
+        <div class="comparison-row">
+          <div class="player-label">Bob - Correct Answers</div>
+          <div class="player-value">4</div>
+        </div>
+      </div>
+
+      <div class="comparison-section">
+        <div class="comparison-row">
+          <div class="player-label">Alice (You) - Final Power</div>
+          <div class="player-value">1,420</div>
+        </div>
+        <div class="comparison-row">
+          <div class="player-label">Bob - Final Power</div>
+          <div class="player-value">1,740</div>
+        </div>
+      </div>
+    </div>
+
+    <button class="button-primary">Done</button>
+    <button class="button-secondary">Challenge Again</button>
+  </div>
+  -->
+</body>
+</html>

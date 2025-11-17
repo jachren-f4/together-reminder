@@ -38,7 +38,7 @@ class PokeService {
       // Check rate limit
       if (!canSendPoke()) {
         final remaining = getRemainingSeconds();
-        print('⏳ Rate limited. Wait $remaining seconds');
+        Logger.warn('Rate limited. Wait $remaining seconds', service: 'poke');
         return false;
       }
 

@@ -1,15 +1,18 @@
 import 'package:hive/hive.dart';
+import 'base_session.dart';
 
 part 'quiz_session.g.dart';
 
 @HiveType(typeId: 5)
-class QuizSession extends HiveObject {
+class QuizSession extends HiveObject implements BaseSession {
+  @override
   @HiveField(0)
   late String id;
 
   @HiveField(1)
   late List<String> questionIds; // 5 questions
 
+  @override
   @HiveField(2)
   late DateTime createdAt;
 
@@ -91,11 +94,34 @@ class QuizSession extends HiveObject {
     this.completedAt,
   });
 
+  @override
   bool get isExpired => DateTime.now().isAfter(expiresAt);
+  @override
   bool get isCompleted => status == 'completed';
+  @override
   bool hasUserAnswered(String userId) => answers?.containsKey(userId) ?? false;
 
   // Helper methods for knowledge test model
   bool isUserSubject(String userId) => subjectUserId == userId;
   bool isUserPredictor(String userId) => !isUserSubject(userId) && userId != subjectUserId;
+
+  @override
+  Map<String, dynamic> toFirebase() {
+    return {
+      'id': id,
+      'questionIds': questionIds,
+      'createdAt': createdAt.millisecondsSinceEpoch,
+      'expiresAt': expiresAt.millisecondsSinceEpoch,
+      'status': status,
+      'answers': answers,
+      'matchPercentage': matchPercentage,
+      'lpEarned': lpEarned,
+      'completedAt': completedAt?.millisecondsSinceEpoch,
+      'initiatedBy': initiatedBy,
+      'subjectUserId': subjectUserId,
+      'formatType': formatType,
+      'quizName': quizName,
+      'category': category,
+    };
+  }
 }

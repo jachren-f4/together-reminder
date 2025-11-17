@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile - Minimal Clean</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            background: #fafafa;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 420px;
+            margin: 0 auto;
+            background: #fff;
+            border: 2px solid #000;
+            box-shadow: 8px 8px 0 rgba(0, 0, 0, 0.1);
+        }
+
+        .hero {
+            padding: 48px 20px;
+            text-align: center;
+            border-bottom: 2px solid #000;
+        }
+
+        .couple-badge {
+            width: 100px;
+            height: 100px;
+            margin: 0 auto 24px;
+            background: #000;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 3px solid #000;
+            box-shadow: 6px 6px 0 rgba(0, 0, 0, 0.1);
+        }
+
+        .couple-initials {
+            font-size: 36px;
+            font-weight: 700;
+            color: #fff;
+            letter-spacing: 4px;
+        }
+
+        .couple-names {
+            font-size: 28px;
+            font-weight: 400;
+            margin-bottom: 8px;
+            letter-spacing: 2px;
+        }
+
+        .couple-meta {
+            font-size: 13px;
+            color: #666;
+            font-style: italic;
+        }
+
+        .stats-section {
+            padding: 32px 20px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 24px;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 36px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: #666;
+        }
+
+        .divider {
+            height: 2px;
+            background: #000;
+            margin: 0 20px;
+        }
+
+        .info-section {
+            padding: 32px 20px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 0;
+        }
+
+        .info-label {
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .info-value {
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .badges-section {
+            padding: 32px 20px;
+            border-bottom: 1px solid #e0e0e0;
+            text-align: center;
+        }
+
+        .section-title {
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 24px;
+        }
+
+        .badge-list {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .badge-icon {
+            width: 56px;
+            height: 56px;
+            background: #000;
+            color: #fff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            border: 2px solid #000;
+        }
+
+        .badge-icon.locked {
+            background: #f0f0f0;
+            opacity: 0.4;
+        }
+
+        .actions-section {
+            padding: 24px 20px;
+        }
+
+        .action-list {
+            display: grid;
+            gap: 12px;
+        }
+
+        .action-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px;
+            border: 1px solid #000;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .action-item:hover {
+            background: #000;
+            color: #fff;
+        }
+
+        .action-label {
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+        }
+
+        .action-arrow {
+            font-size: 14px;
+        }
+
+        .action-item:hover .action-arrow {
+            transform: translateX(4px);
+        }
+
+        .action-arrow {
+            transition: transform 0.2s ease;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="hero">
+            <div class="couple-badge">
+                <div class="couple-initials">J+T</div>
+            </div>
+            <div class="couple-names">Joakim & Taija</div>
+            <div class="couple-meta">Together since October 15, 2024</div>
+        </div>
+
+        <div class="stats-section">
+            <div class="stat-grid">
+                <div class="stat-item">
+                    <div class="stat-value">2,450</div>
+                    <div class="stat-label">Love Points</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">42</div>
+                    <div class="stat-label">Day Streak</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">126</div>
+                    <div class="stat-label">Quests Done</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">Level 5</div>
+                    <div class="stat-label">Current Rank</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="info-section">
+            <div class="info-row">
+                <div class="info-label">Quizzes Completed</div>
+                <div class="info-value">68</div>
+            </div>
+            <div class="info-row">
+                <div class="info-label">Games Played</div>
+                <div class="info-value">58</div>
+            </div>
+            <div class="info-row">
+                <div class="info-label">Achievements</div>
+                <div class="info-value">15 / 50</div>
+            </div>
+            <div class="info-row">
+                <div class="info-label">Reminders Sent</div>
+                <div class="info-value">134</div>
+            </div>
+        </div>
+
+        <div class="badges-section">
+            <div class="section-title">Recent Badges</div>
+            <div class="badge-list">
+                <div class="badge-icon">🏆</div>
+                <div class="badge-icon">🔥</div>
+                <div class="badge-icon">⭐</div>
+                <div class="badge-icon">💎</div>
+                <div class="badge-icon">🎯</div>
+                <div class="badge-icon locked">🎪</div>
+            </div>
+        </div>
+
+        <div class="actions-section">
+            <div class="action-list">
+                <div class="action-item">
+                    <div class="action-label">Edit Profile</div>
+                    <div class="action-arrow">→</div>
+                </div>
+                <div class="action-item">
+                    <div class="action-label">View All Achievements</div>
+                    <div class="action-arrow">→</div>
+                </div>
+                <div class="action-item">
+                    <div class="action-label">Activity History</div>
+                    <div class="action-arrow">→</div>
+                </div>
+                <div class="action-item">
+                    <div class="action-label">Settings</div>
+                    <div class="action-arrow">→</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

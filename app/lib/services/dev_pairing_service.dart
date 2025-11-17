@@ -89,7 +89,7 @@ class DevPairingService {
     final emulatorId = await DevConfig.emulatorId;
     if (emulatorId != null) {
       await _rtdb.child('dev_emulators').child(emulatorId).remove();
-      print('🧹 Cleaned up RTDB entry for $emulatorId');
+      Logger.info('Cleaned up RTDB entry for $emulatorId', service: 'pairing');
     }
   }
 }

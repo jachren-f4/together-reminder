@@ -40,6 +40,8 @@ class AffirmationQuizBank {
           category: quizJson['category'] as String,
           difficulty: quizJson['difficulty'] as int? ?? 1,
           formatType: quizJson['formatType'] as String? ?? 'affirmation',
+          imagePath: quizJson['imagePath'] as String?,
+          description: quizJson['description'] as String?,
           questions: questions,
         );
       }).toList();
@@ -114,6 +116,8 @@ class AffirmationQuiz {
   final String category;
   final int difficulty;
   final String formatType;
+  final String? imagePath; // Path to quest image asset
+  final String? description; // Quest description
   final List<QuizQuestion> questions;
 
   AffirmationQuiz({
@@ -122,6 +126,8 @@ class AffirmationQuiz {
     required this.category,
     required this.difficulty,
     required this.formatType,
+    this.imagePath,
+    this.description,
     required this.questions,
   });
 }

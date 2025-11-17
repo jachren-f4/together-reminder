@@ -18,22 +18,55 @@ class Logger {
   static const bool _enableInfo = kDebugMode;
   static const bool _enableSuccess = kDebugMode;
 
-  // Per-service verbosity flags for focused debugging
-  // Set to false to suppress debug logs for specific noisy services
+  // ============================================================================
+  // PER-SERVICE VERBOSITY CONTROL
+  // ============================================================================
+  //
+  // PHILOSOPHY: All services DISABLED by default to prevent log flooding
+  //
+  // WHY: Clean logs make debugging easier and prevent AI coding agent context
+  // window pollution. Only enable the specific services you're actively working on.
+  //
+  // HOW TO USE:
+  // 1. Find the service category you're working on below
+  // 2. Change its value from `false` to `true`
+  // 3. Run your debug build - only those logs will appear
+  // 4. Remember: error() ALWAYS logs regardless of these settings
+  //
+  // EXAMPLES:
+  // - Working on quiz feature? Enable 'quiz' and 'quest'
+  // - Debugging Firebase sync? Enable 'storage' and 'notification'
+  // - Adding new game? Enable that game's service only
+  //
+  // ============================================================================
+
   static const Map<String, bool> _serviceVerbosity = {
-    'quiz': true,
-    'notification': true,
-    'reminder': true,
-    'poke': true,
-    'pairing': true,
-    'storage': true,
-    'ladder': true,
-    'memory': true,
-    'lovepoint': true,
-    'quest': true,
-    'affirmation': true,
-    'mock': false,  // Suppress mock data logs by default
-    'debug': true,
+    // === CRITICAL CORE (Enable when debugging core infrastructure) ===
+    'storage': false,           // Hive local persistence operations (20 uses)
+    'notification': false,      // FCM/APNs push notifications, tokens (13 uses)
+    'lovepoint': false,         // Love Points awards, tier progression (11 uses)
+
+    // === MAJOR FEATURES (Enable when working on these features) ===
+    'quiz': false,              // Classic quiz gameplay, scoring, sync (36 uses)
+    'you_or_me': false,         // You or Me dual-session game (32 uses)
+    'pairing': false,           // QR/Remote device pairing (19 uses - stable, rarely needed)
+
+    // === MINOR FEATURES (Enable only when developing specific feature) ===
+    'reminder': false,          // Send reminder functionality (9 uses)
+    'poke': false,              // Poke send/receive interactions (7 uses)
+    'daily_pulse': false,       // Daily Pulse synchronized activities (14 uses)
+    'affirmation': false,       // Affirmation quiz variant (5 uses)
+    'memory_flip': false,       // Memory Flip card matching game (5 uses)
+    'word_ladder': false,       // Word Ladder game screens (7 uses)
+    'ladder': false,            // Word Ladder service backend (2 uses - confusing name, consider consolidating)
+    'quest': false,             // Daily quest sync, generation, completion, Firebase operations (47 uses)
+
+    // === INFRASTRUCTURE/DEBUG (Rarely needed - only for deep debugging) ===
+    'debug': false,             // Debug menu operations, device detection (38 uses)
+    'mock': false,              // Mock data injection for testing (6 uses)
+    'word_validation': false,   // Word dictionary initialization (2 uses)
+    'home': false,              // Home screen operations (1 use)
+    'arena': false,             // Arena/tier system (1 use)
   };
 
   /// Log debug information (only in debug mode)

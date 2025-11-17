@@ -35,10 +35,10 @@ class DevConfig {
         _cachedIsSimulator = !iosInfo.isPhysicalDevice;
 
         Logger.debug('iOS Device Detection:', service: 'debug');
-        print('   Device: ${iosInfo.name}');
-        print('   Model: ${iosInfo.model}');
-        print('   isPhysicalDevice: ${iosInfo.isPhysicalDevice}');
-        print('   isSimulator: $_cachedIsSimulator');
+        Logger.debug('Device: ${iosInfo.name}', service: 'debug');
+        Logger.debug('Model: ${iosInfo.model}', service: 'debug');
+        Logger.debug('isPhysicalDevice: ${iosInfo.isPhysicalDevice}', service: 'debug');
+        Logger.debug('isSimulator: $_cachedIsSimulator', service: 'debug');
 
         return _cachedIsSimulator!;
       }
@@ -51,10 +51,10 @@ class DevConfig {
         _cachedIsSimulator = !androidInfo.isPhysicalDevice;
 
         Logger.debug('Android Device Detection:', service: 'debug');
-        print('   Device: ${androidInfo.device}');
-        print('   Model: ${androidInfo.model}');
-        print('   isPhysicalDevice: ${androidInfo.isPhysicalDevice}');
-        print('   isSimulator: $_cachedIsSimulator');
+        Logger.debug('Device: ${androidInfo.device}', service: 'debug');
+        Logger.debug('Model: ${androidInfo.model}', service: 'debug');
+        Logger.debug('isPhysicalDevice: ${androidInfo.isPhysicalDevice}', service: 'debug');
+        Logger.debug('isSimulator: $_cachedIsSimulator', service: 'debug');
 
         return _cachedIsSimulator!;
       }

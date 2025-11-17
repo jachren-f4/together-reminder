@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../models/daily_quest.dart';
 import '../services/storage_service.dart';
+import '../theme/app_theme.dart';
 
 /// Card displaying a single daily quest with image, title, description, and status
 ///
@@ -38,21 +39,23 @@ class QuestCard extends StatelessWidget {
 
     return GestureDetector(
       onTap: isExpired ? null : onTap,
-      child: Container(
-        decoration: BoxDecoration(
-          color: Colors.white,
-          border: Border.all(color: Colors.black, width: 1),
-          borderRadius: BorderRadius.circular(0), // Sharp corners like mockup
-          boxShadow: showShadow
-              ? [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.15),
-                    blurRadius: 0,
-                    offset: const Offset(4, 4),
-                  ),
-                ]
-              : null,
-        ),
+      child: Opacity(
+        opacity: isExpired ? 0.5 : 1.0, // Gray out expired quests
+        child: Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            border: Border.all(color: Colors.black, width: 1),
+            borderRadius: BorderRadius.circular(0), // Sharp corners like mockup
+            boxShadow: showShadow
+                ? [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.15),
+                      blurRadius: 0,
+                      offset: const Offset(4, 4),
+                    ),
+                  ]
+                : null,
+          ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
@@ -64,7 +67,7 @@ class QuestCard extends StatelessWidget {
                 fit: BoxFit.cover,
                 // Performance: Cache resized images to reduce memory usage
                 cacheWidth: 400, // Reasonable resolution for 60% screen width
-                cacheHeight: 340, // 2x the display height (170px * 2)
+                // Note: Only cacheWidth specified to maintain aspect ratio
                 errorBuilder: (context, error, stackTrace) {
                   // Show fallback placeholder when image fails to load
                   return Container(
@@ -109,7 +112,7 @@ class QuestCard extends StatelessWidget {
                           children: [
                             Text(
                               _getQuestTitle(),
-                              style: const TextStyle(
+                              style: AppTheme.headlineFont.copyWith( // Serif font
                                 fontSize: 16,
                                 fontWeight: FontWeight.w600,
                               ),
@@ -117,9 +120,9 @@ class QuestCard extends StatelessWidget {
                             const SizedBox(height: 4),
                             Text(
                               _getQuestDescription(),
-                              style: const TextStyle(
+                              style: AppTheme.headlineFont.copyWith( // Serif font
                                 fontSize: 12,
-                                color: Color(0xFF666666),
+                                color: const Color(0xFF666666),
                                 fontStyle: FontStyle.italic,
                               ),
                             ),
@@ -137,7 +140,7 @@ class QuestCard extends StatelessWidget {
                         ),
                         child: Text(
                           '+${quest.lpAwarded ?? 30}',
-                          style: const TextStyle(
+                          style: AppTheme.headlineFont.copyWith( // Serif font
                             fontSize: 14,
                             fontWeight: FontWeight.w700,
                             color: Colors.white,
@@ -162,6 +165,7 @@ class QuestCard extends StatelessWidget {
               ),
             ),
           ],
+        ),
         ),
       ),
     );
@@ -233,9 +237,9 @@ class QuestCard extends StatelessWidget {
           color: Colors.black,
           border: Border.all(color: Colors.black, width: 1),
         ),
-        child: const Text(
+        child: Text(
           '✓ COMPLETED',
-          style: TextStyle(
+          style: AppTheme.headlineFont.copyWith( // Serif font
             fontSize: 11,
             fontWeight: FontWeight.w600,
             letterSpacing: 0.5,
@@ -264,7 +268,7 @@ class QuestCard extends StatelessWidget {
               child: Center(
                 child: Text(
                   partner.name[0].toUpperCase(),
-                  style: const TextStyle(
+                  style: AppTheme.headlineFont.copyWith( // Serif font
                     fontSize: 10,
                     fontWeight: FontWeight.w700,
                     color: Colors.white,
@@ -275,26 +279,63 @@ class QuestCard extends StatelessWidget {
             const SizedBox(width: 8),
             Text(
               '${partner.name} completed',
-              style: const TextStyle(
+              style: AppTheme.headlineFont.copyWith( // Serif font
                 fontSize: 11,
                 fontWeight: FontWeight.w600,
-                color: Color(0xFF666666),
+                color: const Color(0xFF666666),
               ),
             ),
           ],
         ),
       );
-    } else {
-      // User's turn
+    } else if (quest.type == QuestType.memoryFlip && !quest.isCompleted) {
+      // Memory Flip: Show "OUT OF FLIPS" if user exhausted daily flip allowance
+      if (userCompleted) {
+        return Container(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            border: Border.all(color: Colors.black, width: 1),
+          ),
+          child: Text(
+            'OUT OF FLIPS',
+            style: AppTheme.headlineFont.copyWith( // Serif font
+              fontSize: 11,
+              fontWeight: FontWeight.w600,
+              letterSpacing: 0.5,
+              color: Colors.black,
+            ),
+          ),
+        );
+      }
+      // Otherwise show YOUR TURN (flips available)
       return Container(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
         decoration: BoxDecoration(
           color: Colors.white,
           border: Border.all(color: Colors.black, width: 1),
         ),
-        child: const Text(
+        child: Text(
           'YOUR TURN',
-          style: TextStyle(
+          style: AppTheme.headlineFont.copyWith( // Serif font
+            fontSize: 11,
+            fontWeight: FontWeight.w600,
+            letterSpacing: 0.5,
+            color: Colors.black,
+          ),
+        ),
+      );
+    } else {
+      // User's turn (for turn-based games like Word Ladder)
+      return Container(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          border: Border.all(color: Colors.black, width: 1),
+        ),
+        child: Text(
+          'YOUR TURN',
+          style: AppTheme.headlineFont.copyWith( // Serif font
             fontSize: 11,
             fontWeight: FontWeight.w600,
             letterSpacing: 0.5,
@@ -306,14 +347,20 @@ class QuestCard extends StatelessWidget {
   }
 
   String _getQuestTitle() {
+    // Option 1: Use quest's quizName if available (for affirmation quizzes and custom titles)
+    // This allows side quests and placeholders to have custom titles
+    if (quest.quizName != null && quest.quizName!.isNotEmpty) {
+      return quest.quizName!;
+    }
+
+    // Option 2: Fallback to quest type-based titles
     switch (quest.type) {
       case QuestType.question:
         return 'Daily Question';
       case QuestType.quiz:
         // Check quest formatType first (always available from Firebase)
         if (quest.formatType == 'affirmation') {
-          // Use quest.quizName (synced from Firebase) or fallback
-          return quest.quizName ?? 'Affirmation Quiz';
+          return 'Affirmation Quiz'; // Fallback if quizName wasn't set
         }
         // Use sort order to generate distinct titles for classic quizzes
         return _getQuizTitle(quest.sortOrder);

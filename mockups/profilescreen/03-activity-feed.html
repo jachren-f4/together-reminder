@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile - Activity Feed</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            background: #fafafa;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 420px;
+            margin: 0 auto;
+            background: #fff;
+            border: 2px solid #000;
+            box-shadow: 8px 8px 0 rgba(0, 0, 0, 0.1);
+        }
+
+        .header {
+            border-bottom: 2px solid #000;
+            padding: 24px 20px;
+            text-align: center;
+        }
+
+        .title {
+            font-size: 32px;
+            font-weight: 400;
+            letter-spacing: 2px;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+        }
+
+        .subtitle {
+            font-size: 14px;
+            color: #666;
+            font-style: italic;
+        }
+
+        .profile-summary {
+            padding: 20px;
+            border-bottom: 2px solid #000;
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .profile-avatar {
+            width: 64px;
+            height: 64px;
+            background: #000;
+            color: #fff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            font-weight: 700;
+            border: 2px solid #000;
+            flex-shrink: 0;
+        }
+
+        .profile-info {
+            flex: 1;
+        }
+
+        .profile-name {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .profile-meta {
+            font-size: 11px;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+
+        .quick-stats {
+            display: flex;
+            gap: 16px;
+        }
+
+        .quick-stat {
+            font-size: 11px;
+        }
+
+        .quick-stat-value {
+            font-weight: 700;
+            margin-right: 4px;
+        }
+
+        .tabs {
+            display: flex;
+            border-bottom: 2px solid #000;
+        }
+
+        .tab {
+            flex: 1;
+            padding: 16px;
+            text-align: center;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+            cursor: pointer;
+            border-right: 1px solid #000;
+            transition: all 0.2s ease;
+        }
+
+        .tab:last-child {
+            border-right: none;
+        }
+
+        .tab.active {
+            background: #000;
+            color: #fff;
+        }
+
+        .tab:hover:not(.active) {
+            background: #f0f0f0;
+        }
+
+        .activity-feed {
+            padding: 20px;
+            max-height: 500px;
+            overflow-y: auto;
+        }
+
+        .activity-item {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .activity-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .activity-icon {
+            width: 40px;
+            height: 40px;
+            background: #000;
+            color: #fff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            flex-shrink: 0;
+            border: 1px solid #000;
+        }
+
+        .activity-content {
+            flex: 1;
+        }
+
+        .activity-text {
+            font-size: 13px;
+            margin-bottom: 4px;
+            line-height: 1.4;
+        }
+
+        .activity-text strong {
+            font-weight: 600;
+        }
+
+        .activity-meta {
+            display: flex;
+            gap: 12px;
+            font-size: 11px;
+            color: #999;
+        }
+
+        .activity-time {
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .activity-points {
+            font-weight: 600;
+            color: #000;
+        }
+
+        .section-heading {
+            font-size: 16px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 20px;
+        }
+
+        .filter-chips {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .chip {
+            border: 1px solid #000;
+            padding: 6px 12px;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .chip.active {
+            background: #000;
+            color: #fff;
+        }
+
+        .chip:hover:not(.active) {
+            background: #f0f0f0;
+        }
+
+        .load-more {
+            border: 1px solid #000;
+            padding: 12px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+            margin-top: 20px;
+        }
+
+        .load-more:hover {
+            background: #000;
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="title">Activity</div>
+            <div class="subtitle">Your Love Story</div>
+        </div>
+
+        <div class="profile-summary">
+            <div class="profile-avatar">J</div>
+            <div class="profile-info">
+                <div class="profile-name">Joakim</div>
+                <div class="profile-meta">Paired with Taija • 42 Days</div>
+                <div class="quick-stats">
+                    <div class="quick-stat">
+                        <span class="quick-stat-value">2,450</span>
+                        <span>LP</span>
+                    </div>
+                    <div class="quick-stat">
+                        <span class="quick-stat-value">126</span>
+                        <span>Quests</span>
+                    </div>
+                    <div class="quick-stat">
+                        <span class="quick-stat-value">15</span>
+                        <span>Badges</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="tabs">
+            <div class="tab active">Recent</div>
+            <div class="tab">Quests</div>
+            <div class="tab">Games</div>
+        </div>
+
+        <div class="activity-feed">
+            <div class="filter-chips">
+                <div class="chip active">All</div>
+                <div class="chip">Quizzes</div>
+                <div class="chip">Games</div>
+                <div class="chip">Milestones</div>
+            </div>
+
+            <div class="activity-item">
+                <div class="activity-icon">✓</div>
+                <div class="activity-content">
+                    <div class="activity-text">
+                        Completed <strong>Trust & Honesty Quiz</strong>
+                    </div>
+                    <div class="activity-meta">
+                        <div class="activity-time">2 hours ago</div>
+                        <div class="activity-points">+50 LP</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="activity-item">
+                <div class="activity-icon">🎮</div>
+                <div class="activity-content">
+                    <div class="activity-text">
+                        Played <strong>Memory Flip Challenge</strong> with Taija
+                    </div>
+                    <div class="activity-meta">
+                        <div class="activity-time">5 hours ago</div>
+                        <div class="activity-points">+30 LP</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="activity-item">
+                <div class="activity-icon">🏆</div>
+                <div class="activity-content">
+                    <div class="activity-text">
+                        Unlocked achievement: <strong>Level 5 Master</strong>
+                    </div>
+                    <div class="activity-meta">
+                        <div class="activity-time">2 days ago</div>
+                        <div class="activity-points">Milestone</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="activity-item">
+                <div class="activity-icon">💌</div>
+                <div class="activity-content">
+                    <div class="activity-text">
+                        Sent a reminder to <strong>Taija</strong>
+                    </div>
+                    <div class="activity-meta">
+                        <div class="activity-time">2 days ago</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="activity-item">
+                <div class="activity-icon">✓</div>
+                <div class="activity-content">
+                    <div class="activity-text">
+                        Completed <strong>Classic Knowledge Quest</strong>
+                    </div>
+                    <div class="activity-meta">
+                        <div class="activity-time">3 days ago</div>
+                        <div class="activity-points">+40 LP</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="activity-item">
+                <div class="activity-icon">🔥</div>
+                <div class="activity-content">
+                    <div class="activity-text">
+                        Reached <strong>40-day streak</strong>
+                    </div>
+                    <div class="activity-meta">
+                        <div class="activity-time">1 week ago</div>
+                        <div class="activity-points">+100 LP</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="activity-item">
+                <div class="activity-icon">⭐</div>
+                <div class="activity-content">
+                    <div class="activity-text">
+                        Unlocked achievement: <strong>Quiz Champion</strong>
+                    </div>
+                    <div class="activity-meta">
+                        <div class="activity-time">2 weeks ago</div>
+                        <div class="activity-points">Milestone</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="load-more">Load More Activity</div>
+        </div>
+    </div>
+</body>
+</html>

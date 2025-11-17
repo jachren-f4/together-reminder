@@ -302,18 +302,18 @@ class NotificationService {
         'snoozed',
         snoozedUntil: DateTime.now().add(const Duration(hours: 1)),
       );
-      print('⏰ Snoozed reminder for 1 hour');
+      Logger.info('Snoozed reminder for 1 hour', service: 'notification');
     } else if (response.actionId == 'poke_back' ||
                response.actionId == 'POKE_BACK_ACTION') {
       // Poke back action
       final pokeId = response.payload ?? '';
-      print('❤️ Poke back action for: $pokeId');
+      Logger.info('Poke back action for: $pokeId', service: 'notification');
       PokeService.sendPokeBack(pokeId);
     } else if (response.actionId == 'acknowledge' ||
                response.actionId == 'ACKNOWLEDGE_ACTION') {
       // Acknowledge action
       final pokeId = response.payload ?? '';
-      print('🙂 Acknowledge action for: $pokeId');
+      Logger.info('Acknowledge action for: $pokeId', service: 'notification');
       _storage.updateReminderStatus(pokeId, 'acknowledged');
     }
   }

@@ -1,5 +1,6 @@
 import '../models/arena.dart';
 import 'storage_service.dart';
+import '../utils/logger.dart';
 
 /// Service for managing arena progression and Love Points
 class ArenaService {
@@ -55,7 +56,7 @@ class ArenaService {
 
     await user.save(); // Save to Hive
 
-    print('🏆 Awarded $points LP for: $reason (Total: ${user.lovePoints})');
+    Logger.success('Awarded $points LP for: $reason (Total: ${user.lovePoints})', service: 'arena');
 
     // Check if unlocked new arena
     return didUnlockNewArena(oldLP, user.lovePoints);

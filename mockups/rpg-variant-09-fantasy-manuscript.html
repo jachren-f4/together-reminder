@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TogetherRemind - Fantasy Manuscript</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Palatino', 'Book Antiqua', 'Georgia', serif;
+            background: linear-gradient(135deg, #2c1810 0%, #1a0f08 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .manuscript {
+            max-width: 420px;
+            margin: 0 auto;
+            background: #f5f1e8;
+            border: 12px solid #3d2817;
+            border-image: repeating-linear-gradient(
+                45deg,
+                #3d2817,
+                #3d2817 10px,
+                #4a3420 10px,
+                #4a3420 20px
+            ) 12;
+            box-shadow:
+                0 0 0 2px #1a0f08,
+                0 20px 40px rgba(0, 0, 0, 0.8),
+                inset 0 0 30px rgba(139, 69, 19, 0.1);
+            position: relative;
+        }
+
+        .manuscript::before {
+            content: '';
+            position: absolute;
+            inset: -12px;
+            border: 3px solid rgba(139, 69, 19, 0.3);
+            pointer-events: none;
+        }
+
+        .illuminated-header {
+            background: linear-gradient(135deg, #8b4513 0%, #654321 100%);
+            padding: 24px 20px;
+            border-bottom: 3px double #3d2817;
+            position: relative;
+        }
+
+        .illuminated-header::after {
+            content: '';
+            position: absolute;
+            bottom: -6px;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: repeating-linear-gradient(
+                90deg,
+                #3d2817,
+                #3d2817 10px,
+                transparent 10px,
+                transparent 20px
+            );
+        }
+
+        .chapter-title {
+            color: #f5f1e8;
+            font-size: 28px;
+            text-align: center;
+            font-weight: 400;
+            letter-spacing: 3px;
+            margin-bottom: 8px;
+            text-shadow:
+                2px 2px 0 rgba(0, 0, 0, 0.5),
+                0 0 20px rgba(255, 215, 0, 0.3);
+        }
+
+        .chapter-subtitle {
+            color: rgba(245, 241, 232, 0.8);
+            font-size: 13px;
+            text-align: center;
+            font-style: italic;
+            letter-spacing: 1px;
+        }
+
+        .scroll-content {
+            padding: 20px;
+        }
+
+        .drop-cap-section {
+            background: linear-gradient(135deg, rgba(139, 69, 19, 0.1), rgba(101, 67, 33, 0.05));
+            border-left: 4px solid #8b4513;
+            border-right: 4px solid #8b4513;
+            padding: 16px;
+            margin-bottom: 20px;
+        }
+
+        .party-record {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 12px;
+        }
+
+        .heraldic-shield {
+            width: 56px;
+            height: 64px;
+            background: linear-gradient(135deg, #8b4513, #654321);
+            clip-path: polygon(50% 0%, 100% 0, 100% 75%, 50% 100%, 0 75%, 0 0);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            border: 2px solid #3d2817;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .party-details {
+            flex: 1;
+        }
+
+        .party-name {
+            font-size: 16px;
+            font-weight: 600;
+            color: #3d2817;
+            margin-bottom: 6px;
+            letter-spacing: 1px;
+        }
+
+        .experience-label {
+            font-size: 11px;
+            color: #654321;
+            margin-bottom: 4px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .experience-bar {
+            height: 8px;
+            background: rgba(139, 69, 19, 0.2);
+            border: 1px solid #8b4513;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .experience-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #d4af37, #ffd700, #d4af37);
+            background-size: 200% 100%;
+            animation: goldShimmer 3s ease infinite;
+            box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.3);
+        }
+
+        @keyframes goldShimmer {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .lp-display {
+            color: #d4af37;
+            font-size: 14px;
+            font-weight: 700;
+            margin-top: 6px;
+        }
+
+        .section-divider {
+            text-align: center;
+            margin: 24px 0 20px;
+            position: relative;
+        }
+
+        .divider-ornament {
+            display: inline-block;
+            background: #3d2817;
+            color: #d4af37;
+            padding: 8px 20px;
+            font-size: 14px;
+            font-weight: 600;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            border: 2px solid #8b4513;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .quest-scroll {
+            background: rgba(255, 255, 255, 0.5);
+            border: 2px solid #8b4513;
+            border-radius: 4px;
+            padding: 14px;
+            margin-bottom: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+        }
+
+        .quest-scroll:hover {
+            background: rgba(255, 255, 255, 0.8);
+            transform: translateX(4px);
+            box-shadow: -4px 4px 12px rgba(0, 0, 0, 0.25);
+        }
+
+        .quest-heading {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 10px;
+        }
+
+        .quest-emblem {
+            font-size: 32px;
+            filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.2));
+        }
+
+        .quest-text {
+            flex: 1;
+        }
+
+        .quest-name {
+            font-size: 15px;
+            font-weight: 600;
+            color: #3d2817;
+            margin-bottom: 4px;
+        }
+
+        .quest-description {
+            font-size: 12px;
+            color: #654321;
+            font-style: italic;
+            line-height: 1.4;
+        }
+
+        .reward-seal {
+            background: linear-gradient(135deg, #d4af37, #b8941e);
+            color: #3d2817;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 700;
+            border: 2px solid #8b4513;
+            box-shadow:
+                0 3px 6px rgba(0, 0, 0, 0.2),
+                inset 0 1px 0 rgba(255, 255, 255, 0.3);
+            white-space: nowrap;
+        }
+
+        .quest-rank {
+            display: flex;
+            gap: 4px;
+            margin-top: 8px;
+            padding-top: 8px;
+            border-top: 1px solid rgba(139, 69, 19, 0.3);
+        }
+
+        .rank-star {
+            width: 18px;
+            height: 18px;
+            background: rgba(139, 69, 19, 0.2);
+            clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+            border: 1px solid #8b4513;
+        }
+
+        .rank-star.earned {
+            background: linear-gradient(135deg, #d4af37, #ffd700);
+            box-shadow: 0 0 6px rgba(212, 175, 55, 0.6);
+        }
+
+        .optional-quest {
+            border-style: dashed;
+            background: rgba(147, 112, 219, 0.1);
+            border-color: #654321;
+        }
+
+        .action-chambers {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        .chamber {
+            background: linear-gradient(135deg, rgba(139, 69, 19, 0.1), rgba(101, 67, 33, 0.05));
+            border: 2px solid #8b4513;
+            border-radius: 8px;
+            padding: 18px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .chamber:hover {
+            background: linear-gradient(135deg, #8b4513, #654321);
+            transform: scale(1.05);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
+        }
+
+        .chamber:hover .chamber-icon,
+        .chamber:hover .chamber-label {
+            color: #f5f1e8;
+        }
+
+        .chamber-icon {
+            font-size: 34px;
+            margin-bottom: 8px;
+            transition: color 0.3s ease;
+        }
+
+        .chamber-label {
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #3d2817;
+            transition: color 0.3s ease;
+        }
+
+        .manuscript-footer {
+            background: linear-gradient(135deg, #3d2817, #2c1810);
+            padding: 14px 20px;
+            text-align: center;
+            border-top: 3px double #8b4513;
+        }
+
+        .footer-inscription {
+            color: #d4af37;
+            font-size: 11px;
+            font-style: italic;
+            letter-spacing: 1px;
+        }
+    </style>
+</head>
+<body>
+    <div class="manuscript">
+        <div class="illuminated-header">
+            <div class="chapter-title">⚔ The Love Quest ⚔</div>
+            <div class="chapter-subtitle">Chronicle of the Forty-Second Day</div>
+        </div>
+
+        <div class="scroll-content">
+            <div class="drop-cap-section">
+                <div class="party-record">
+                    <div class="heraldic-shield">👥</div>
+                    <div class="party-details">
+                        <div class="party-name">You & Emma</div>
+                        <div class="experience-label">Experience</div>
+                        <div class="experience-bar">
+                            <div class="experience-fill" style="width: 65%"></div>
+                        </div>
+                        <div class="lp-display">⚜ 2,450 Love Points</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section-divider">
+                <div class="divider-ornament">⚔ Daily Quests ⚔</div>
+            </div>
+
+            <div class="quest-scroll">
+                <div class="quest-heading">
+                    <div class="quest-emblem">💭</div>
+                    <div class="quest-text">
+                        <div class="quest-name">The Trust & Honesty Trial</div>
+                        <div class="quest-description">
+                            Embark upon a journey of ten questions that shall test
+                            the depths of your mutual understanding
+                        </div>
+                    </div>
+                    <div class="reward-seal">+50</div>
+                </div>
+                <div class="quest-rank">
+                    <div class="rank-star earned"></div>
+                    <div class="rank-star earned"></div>
+                    <div class="rank-star"></div>
+                    <div class="rank-star"></div>
+                    <div class="rank-star"></div>
+                </div>
+            </div>
+
+            <div class="quest-scroll">
+                <div class="quest-heading">
+                    <div class="quest-emblem">🎴</div>
+                    <div class="quest-text">
+                        <div class="quest-name">The Memory Flip Challenge</div>
+                        <div class="quest-description">
+                            Navigate a grid of sixteen mystical cards, matching
+                            pairs through keen observation and recall
+                        </div>
+                    </div>
+                    <div class="reward-seal">+30</div>
+                </div>
+                <div class="quest-rank">
+                    <div class="rank-star earned"></div>
+                    <div class="rank-star"></div>
+                    <div class="rank-star"></div>
+                    <div class="rank-star"></div>
+                    <div class="rank-star"></div>
+                </div>
+            </div>
+
+            <div class="quest-scroll">
+                <div class="quest-heading">
+                    <div class="quest-emblem">📚</div>
+                    <div class="quest-text">
+                        <div class="quest-name">The Classic Knowledge Quest</div>
+                        <div class="quest-description">
+                            Prove thy knowledge of thy beloved through trials
+                            of memory and attentiveness
+                        </div>
+                    </div>
+                    <div class="reward-seal">+40</div>
+                </div>
+                <div class="quest-rank">
+                    <div class="rank-star earned"></div>
+                    <div class="rank-star earned"></div>
+                    <div class="rank-star earned"></div>
+                    <div class="rank-star"></div>
+                    <div class="rank-star"></div>
+                </div>
+            </div>
+
+            <div class="section-divider">
+                <div class="divider-ornament">✨ Optional Ventures ✨</div>
+            </div>
+
+            <div class="quest-scroll optional-quest">
+                <div class="quest-heading">
+                    <div class="quest-emblem">🪜</div>
+                    <div class="quest-text">
+                        <div class="quest-name">The Word Ladder Adventure</div>
+                        <div class="quest-description">
+                            A cooperative puzzle requiring teamwork and linguistic cunning
+                        </div>
+                    </div>
+                    <div class="reward-seal">+20</div>
+                </div>
+            </div>
+
+            <div class="action-chambers">
+                <div class="chamber">
+                    <div class="chamber-icon">💌</div>
+                    <div class="chamber-label">Send Reminder</div>
+                </div>
+                <div class="chamber">
+                    <div class="chamber-icon">👆</div>
+                    <div class="chamber-label">Poke Partner</div>
+                </div>
+                <div class="chamber">
+                    <div class="chamber-icon">📥</div>
+                    <div class="chamber-label">View Inbox</div>
+                </div>
+                <div class="chamber">
+                    <div class="chamber-icon">🎮</div>
+                    <div class="chamber-label">All Activities</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="manuscript-footer">
+            <div class="footer-inscription">
+                "Every quest brings thee closer together"
+            </div>
+        </div>
+    </div>
+</body>
+</html>

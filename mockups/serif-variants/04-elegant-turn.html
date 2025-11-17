@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TogetherRemind - Elegant Turn</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            background: #fafafa;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 420px;
+            margin: 0 auto;
+            background: #fff;
+            border: 1px solid #000;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+        }
+
+        .header {
+            padding: 32px 24px;
+            text-align: center;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .title {
+            font-size: 36px;
+            font-weight: 300;
+            letter-spacing: 3px;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            font-size: 13px;
+            color: #999;
+            font-style: italic;
+            letter-spacing: 1px;
+        }
+
+        .stats {
+            padding: 24px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .stat-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 14px;
+            align-items: baseline;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #999;
+        }
+
+        .stat-value {
+            font-size: 17px;
+            font-weight: 600;
+        }
+
+        .progress {
+            height: 1px;
+            background: #e0e0e0;
+            margin-top: 8px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: #000;
+            width: 65%;
+        }
+
+        .section {
+            padding: 28px 24px;
+        }
+
+        .section-heading {
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            margin-bottom: 24px;
+            color: #666;
+            font-weight: 600;
+        }
+
+        .quest {
+            border: 1px solid #e0e0e0;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .quest:hover {
+            border-color: #000;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        .quest-main {
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+        }
+
+        .quest-icon {
+            font-size: 32px;
+            margin-right: 16px;
+        }
+
+        .quest-info {
+            flex: 1;
+        }
+
+        .quest-title {
+            font-size: 17px;
+            font-weight: 600;
+            margin-bottom: 6px;
+            line-height: 1.3;
+        }
+
+        .quest-desc {
+            font-size: 13px;
+            color: #666;
+            font-style: italic;
+            line-height: 1.4;
+        }
+
+        .reward {
+            font-size: 15px;
+            font-weight: 700;
+            padding: 6px 14px;
+            border: 1px solid #000;
+            background: #fff;
+            white-space: nowrap;
+        }
+
+        .quest-status {
+            border-top: 1px solid #e0e0e0;
+            padding: 14px 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .status-indicator {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+
+        .indicator-active {
+            background: #000;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.4; }
+        }
+
+        .indicator-waiting {
+            background: #ccc;
+        }
+
+        .indicator-done {
+            background: #22c55e;
+        }
+
+        .status-text {
+            font-size: 12px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        .text-active {
+            color: #000;
+        }
+
+        .text-waiting {
+            color: #999;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .partner-initial {
+            width: 22px;
+            height: 22px;
+            background: #f0f0f0;
+            border: 1px solid #ccc;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: 700;
+            color: #666;
+        }
+
+        .text-done {
+            color: #22c55e;
+        }
+
+        .actions {
+            padding: 24px;
+            padding-top: 0;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+
+        .action {
+            border: 1px solid #e0e0e0;
+            padding: 22px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .action:hover {
+            border-color: #000;
+            background: #fafafa;
+        }
+
+        .action-icon {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        .action-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            font-weight: 600;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="title">Love Quest</div>
+            <div class="subtitle">Day Forty-Two</div>
+        </div>
+
+        <div class="stats">
+            <div class="stat-row">
+                <div class="stat-label">Party</div>
+                <div class="stat-value">You & Emma</div>
+            </div>
+            <div class="stat-row">
+                <div class="stat-label">Love Points</div>
+                <div class="stat-value">2,450</div>
+            </div>
+            <div class="progress">
+                <div class="progress-fill"></div>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-heading">Daily Quests</div>
+
+            <div class="quest">
+                <div class="quest-main">
+                    <div class="quest-icon">💭</div>
+                    <div class="quest-info">
+                        <div class="quest-title">Trust & Honesty Quiz</div>
+                        <div class="quest-desc">Answer ten questions together</div>
+                    </div>
+                    <div class="reward">+50</div>
+                </div>
+                <div class="quest-status">
+                    <div class="status-indicator indicator-active"></div>
+                    <div class="status-text text-active">Your Turn</div>
+                </div>
+            </div>
+
+            <div class="quest">
+                <div class="quest-main">
+                    <div class="quest-icon">🎴</div>
+                    <div class="quest-info">
+                        <div class="quest-title">Memory Flip Challenge</div>
+                        <div class="quest-desc">Match all sixteen cards</div>
+                    </div>
+                    <div class="reward">+30</div>
+                </div>
+                <div class="quest-status">
+                    <div class="status-indicator indicator-waiting"></div>
+                    <div class="status-text text-waiting">
+                        <span class="partner-initial">E</span>
+                        <span>Waiting for you</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="quest">
+                <div class="quest-main">
+                    <div class="quest-icon">📚</div>
+                    <div class="quest-info">
+                        <div class="quest-title">Classic Knowledge Quest</div>
+                        <div class="quest-desc">Test what you know</div>
+                    </div>
+                    <div class="reward">+40</div>
+                </div>
+                <div class="quest-status">
+                    <div class="status-indicator indicator-done"></div>
+                    <div class="status-text text-done">Completed</div>
+                </div>
+            </div>
+
+            <div class="section-heading" style="margin-top: 32px;">Side Quests</div>
+
+            <div class="quest">
+                <div class="quest-main">
+                    <div class="quest-icon">🪜</div>
+                    <div class="quest-info">
+                        <div class="quest-title">Word Ladder Adventure</div>
+                        <div class="quest-desc">Collaborate to solve</div>
+                    </div>
+                    <div class="reward">+20</div>
+                </div>
+                <div class="quest-status">
+                    <div class="status-indicator indicator-active"></div>
+                    <div class="status-text text-active">Available</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="actions">
+            <div class="action">
+                <div class="action-icon">💌</div>
+                <div class="action-label">Send Reminder</div>
+            </div>
+            <div class="action">
+                <div class="action-icon">👆</div>
+                <div class="action-label">Poke Partner</div>
+            </div>
+            <div class="action">
+                <div class="action-icon">📥</div>
+                <div class="action-label">View Inbox</div>
+            </div>
+            <div class="action">
+                <div class="action-icon">🎮</div>
+                <div class="action-label">All Activities</div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

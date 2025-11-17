@@ -8,6 +8,7 @@ import 'package:togetherremind/services/storage_service.dart';
 import 'package:togetherremind/services/notification_service.dart';
 import 'package:togetherremind/config/dev_config.dart';
 import 'package:uuid/uuid.dart';
+import '../utils/logger.dart';
 
 /// Service for injecting mock data in development mode
 /// Enables testing without QR pairing flow
@@ -38,10 +39,10 @@ class MockDataService {
       final expectedUserId = DevConfig.dualPartnerUserIds[partnerIndex];
 
       if (user != null && user.id != expectedUserId) {
-        print('⚠️  Detected old user ID, replacing with deterministic ID...');
+        Logger.warn('Detected old user ID, replacing with deterministic ID...', service: 'mock');
         await _storage.clearAllData();
       } else if (partner != null && !partner.pushToken.contains('dev-user')) {
-        print('⚠️  Detected old partner ID, replacing with deterministic ID...');
+        Logger.warn('Detected old partner ID, replacing with deterministic ID...', service: 'mock');
         await _storage.clearAllData();
       }
 
@@ -518,6 +519,6 @@ class MockDataService {
   /// Clear all mock data (useful for dev menu in Phase 2)
   static Future<void> clearMockData() async {
     await _storage.clearAllData();
-    print('🗑️  Mock data cleared');
+    Logger.info('Mock data cleared', service: 'mock');
   }
 }

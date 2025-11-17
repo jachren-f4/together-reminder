@@ -5,6 +5,8 @@ import '../../../services/storage_service.dart';
 import '../../../services/daily_quest_service.dart';
 import '../../../services/clipboard_service.dart';
 import '../../../services/quest_utilities.dart';
+import '../../../utils/logger.dart';
+import '../../../config/theme_config.dart';
 import '../components/debug_section_card.dart';
 
 /// Actions tab for testing tools and data management
@@ -32,37 +34,36 @@ class _ActionsTabState extends State<ActionsTab> {
     setState(() => _isProcessing = true);
 
     try {
-      print('🗑️ Clearing local storage only...');
-      print('⚠️  NOTE: Firebase data is NOT cleared. Use external script for that.');
+      Logger.info('Clearing local storage only (Firebase data NOT cleared)', service: 'debug');
 
       if (_clearDailyQuests) {
         await _storage.dailyQuestsBox.clear();
         await _storage.dailyQuestCompletionsBox.clear();
-        print('✅ Daily quests cleared');
+        Logger.success('Daily quests cleared', service: 'debug');
       }
 
       if (_clearQuizSessions) {
         await _storage.quizSessionsBox.clear();
-        print('✅ Quiz sessions cleared');
+        Logger.success('Quiz sessions cleared', service: 'debug');
       }
 
       if (_clearLpTransactions) {
         await _storage.transactionsBox.clear();
-        print('✅ LP transactions cleared');
+        Logger.success('LP transactions cleared', service: 'debug');
       }
 
       if (_clearProgressionState) {
         await _storage.quizProgressionStatesBox.clear();
-        print('✅ Progression states cleared');
+        Logger.success('Progression states cleared', service: 'debug');
       }
 
       if (_clearAppliedLpAwards) {
         final metadataBox = Hive.box('app_metadata');
         await metadataBox.delete('applied_lp_awards');
-        print('✅ Applied LP awards cleared');
+        Logger.success('Applied LP awards cleared', service: 'debug');
       }
 
-      print('✅ Local storage cleared');
+      Logger.success('Local storage cleared', service: 'debug');
 
       if (mounted) {
         showDialog(
@@ -89,7 +90,7 @@ class _ActionsTabState extends State<ActionsTab> {
         );
       }
     } catch (e) {
-      print('❌ Error clearing local storage: $e');
+      Logger.error('Error clearing local storage', error: e, service: 'debug');
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -287,6 +288,96 @@ class _ActionsTabState extends State<ActionsTab> {
                   ),
                 ),
               ],
+            ),
+          ),
+
+          // Theme Settings
+          DebugSectionCard(
+            title: '🎨 THEME SETTINGS',
+            child: ValueListenableBuilder<SerifFont>(
+              valueListenable: ThemeConfig().currentFont,
+              builder: (context, currentFont, child) {
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Text(
+                      'Serif Font (Headlines)',
+                      style: const TextStyle(
+                        fontSize: 11,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.black87,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      'Current: ${ThemeConfig().currentFontName}',
+                      style: TextStyle(
+                        fontSize: 10,
+                        color: Colors.grey.shade600,
+                        fontStyle: FontStyle.italic,
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    ...SerifFont.values.map((font) {
+                      final isSelected = font == currentFont;
+                      return Container(
+                        margin: const EdgeInsets.only(bottom: 6),
+                        child: ElevatedButton(
+                          onPressed: () {
+                            ThemeConfig().setFont(font);
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text('Font changed to ${font.displayName}'),
+                                duration: const Duration(seconds: 1),
+                              ),
+                            );
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: isSelected ? Colors.black : Colors.white,
+                            foregroundColor: isSelected ? Colors.white : Colors.black,
+                            side: BorderSide(
+                              color: isSelected ? Colors.black : Colors.grey.shade300,
+                              width: 2,
+                            ),
+                            minimumSize: const Size(double.infinity, 56),
+                            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: Text(
+                                      font.displayName,
+                                      style: font.getTextStyle().copyWith(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w600,
+                                        color: isSelected ? Colors.white : Colors.black,
+                                      ),
+                                    ),
+                                  ),
+                                  if (isSelected)
+                                    Icon(Icons.check_circle, size: 16, color: Colors.white),
+                                ],
+                              ),
+                              const SizedBox(height: 2),
+                              Text(
+                                font.description,
+                                style: TextStyle(
+                                  fontSize: 9,
+                                  color: isSelected ? Colors.white70 : Colors.grey.shade600,
+                                  fontWeight: FontWeight.w400,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    }),
+                  ],
+                );
+              },
             ),
           ),
 

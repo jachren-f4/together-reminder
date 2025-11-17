@@ -17,8 +17,10 @@ import 'package:togetherremind/services/quest_type_manager.dart';
 import 'package:togetherremind/services/love_point_service.dart';
 import 'package:togetherremind/models/daily_quest.dart';
 import 'package:togetherremind/config/dev_config.dart';
+import 'package:togetherremind/config/theme_config.dart';
 import 'package:togetherremind/theme/app_theme.dart';
 import 'package:togetherremind/utils/logger.dart';
+import 'package:togetherremind/models/quest_type_config.dart';
 import 'firebase_options.dart';
 
 void main() async {
@@ -40,6 +42,9 @@ void main() async {
       rethrow;
     }
   }
+
+  // Register quest type configurations
+  QuestTypeConfigRegistry.registerDefaults();
 
   // Initialize Hive storage
   await StorageService.init();
@@ -186,21 +191,27 @@ class _TogetherRemindAppState extends State<TogetherRemindApp> {
     final storageService = StorageService();
     final hasPartner = storageService.hasPartner();
 
-    return MaterialApp(
-      navigatorKey: _navigatorKey,
-      title: 'TogetherRemind',
-      theme: AppTheme.lightTheme,
-      debugShowCheckedModeBanner: false,
-      home: Builder(
-        builder: (context) {
-          // Set the app context for NotificationService and LovePointService
-          WidgetsBinding.instance.addPostFrameCallback((_) {
-            NotificationService.setAppContext(context);
-            LovePointService.setAppContext(context);
-          });
-          return hasPartner ? const HomeScreen() : const OnboardingScreen();
-        },
-      ),
+    // Listen to font changes and rebuild the entire app
+    return ValueListenableBuilder<SerifFont>(
+      valueListenable: ThemeConfig().currentFont,
+      builder: (context, currentFont, child) {
+        return MaterialApp(
+          navigatorKey: _navigatorKey,
+          title: 'TogetherRemind',
+          theme: AppTheme.lightTheme,
+          debugShowCheckedModeBanner: false,
+          home: Builder(
+            builder: (context) {
+              // Set the app context for NotificationService and LovePointService
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                NotificationService.setAppContext(context);
+                LovePointService.setAppContext(context);
+              });
+              return hasPartner ? const HomeScreen() : const OnboardingScreen();
+            },
+          ),
+        );
+      },
     );
   }
 }

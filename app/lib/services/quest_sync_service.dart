@@ -5,6 +5,7 @@ import '../models/daily_quest.dart';
 import '../models/quiz_progression_state.dart';
 import '../services/storage_service.dart';
 import '../services/quest_utilities.dart';
+import '../utils/logger.dart';
 
 /// Service for synchronizing daily quests via Firebase RTDB
 ///
@@ -37,10 +38,10 @@ class QuestSyncService {
       final coupleId = QuestUtilities.generateCoupleId(currentUserId, partnerUserId);
       final dateKey = QuestUtilities.getTodayDateKey();
 
-      debugPrint('🔄 Quest Sync Check:');
-      debugPrint('   Couple ID: $coupleId');
-      debugPrint('   Date Key: $dateKey');
-      debugPrint('   Firebase Path: /daily_quests/$coupleId/$dateKey');
+      Logger.debug('🔄 Quest Sync Check:', service: 'quest');
+      Logger.debug('   Couple ID: $coupleId', service: 'quest');
+      Logger.debug('   Date Key: $dateKey', service: 'quest');
+      Logger.debug('   Firebase Path: /daily_quests/$coupleId/$dateKey', service: 'quest');
 
       // Determine device priority to prevent race condition
       // Device with alphabetically first user ID is device 0 (generates)
@@ -50,19 +51,19 @@ class QuestSyncService {
 
       if (isSecondDevice) {
         // Second device waits 3 seconds to allow first device to generate and sync
-        debugPrint('   ⏱️  Second device detected - waiting 3 seconds for first device to generate quests...');
+        Logger.debug('   ⏱️  Second device detected - waiting 3 seconds for first device to generate quests...', service: 'quest');
         await Future.delayed(const Duration(seconds: 3));
       }
 
       // ALWAYS check Firebase first (with retry for second device)
-      debugPrint('   📡 Checking Firebase for existing quests...');
+      Logger.debug('   📡 Checking Firebase for existing quests...', service: 'quest');
       final questsRef = _database.child('daily_quests/$coupleId/$dateKey');
 
       DataSnapshot snapshot = await questsRef.get();
 
       // If second device and Firebase is still empty, retry once after 2 more seconds
       if (isSecondDevice && (!snapshot.exists || snapshot.value == null)) {
-        debugPrint('   ⏱️  Firebase still empty - retrying in 2 seconds...');
+        Logger.debug('   ⏱️  Firebase still empty - retrying in 2 seconds...', service: 'quest');
         await Future.delayed(const Duration(seconds: 2));
         snapshot = await questsRef.get();
       }
@@ -86,15 +87,15 @@ class QuestSyncService {
           if (firebaseQuestIds.difference(localQuestIds).isEmpty &&
               localQuestIds.difference(firebaseQuestIds).isEmpty) {
             // Quest IDs match - just sync completion status
-            debugPrint('   ✅ Local quests match Firebase - syncing completion only');
+            Logger.debug('   ✅ Local quests match Firebase - syncing completion only', service: 'quest');
             await _syncCompletionStatus(coupleId, dateKey, currentUserId);
             return true;
           } else {
             // Quest IDs don't match - replace local with Firebase
-            debugPrint('   ⚠️  Local quest IDs don\'t match Firebase!');
-            debugPrint('   Firebase IDs: $firebaseQuestIds');
-            debugPrint('   Local IDs: $localQuestIds');
-            debugPrint('   🔄 Replacing local quests with Firebase quests...');
+            Logger.debug('   ⚠️  Local quest IDs don\'t match Firebase!', service: 'quest');
+            Logger.debug('   Firebase IDs: $firebaseQuestIds', service: 'quest');
+            Logger.debug('   Local IDs: $localQuestIds', service: 'quest');
+            Logger.debug('   🔄 Replacing local quests with Firebase quests...', service: 'quest');
 
             // Clear local quests
             for (final quest in localQuests) {
@@ -104,24 +105,24 @@ class QuestSyncService {
         }
 
         // Load quests from Firebase (either no local quests or mismatched IDs)
-        debugPrint('   ✅ Loading quests from Firebase...');
+        Logger.debug('   ✅ Loading quests from Firebase...', service: 'quest');
         await _loadQuestsFromFirebase(snapshot, dateKey);
         return true;
       } else {
         // No Firebase quests yet
         if (_storage.getTodayQuests().isNotEmpty) {
           // Local quests exist but not in Firebase - sync them
-          debugPrint('   ✅ Local quests exist but not in Firebase - syncing completion');
+          Logger.debug('   ✅ Local quests exist but not in Firebase - syncing completion', service: 'quest');
           await _syncCompletionStatus(coupleId, dateKey, currentUserId);
           return true;
         } else {
           // No quests anywhere - need to generate
-          debugPrint('   ⚠️  No quests in Firebase or locally - will generate new ones');
+          Logger.debug('   ⚠️  No quests in Firebase or locally - will generate new ones', service: 'quest');
           return false; // Indicates quests need to be generated
         }
       }
     } catch (e) {
-      debugPrint('Error syncing quests: $e');
+      Logger.error('Error syncing quests', error: e, service: 'quest');
       return false;
     }
   }
@@ -163,9 +164,9 @@ class QuestSyncService {
         } : null,
       });
 
-      debugPrint('Saved ${quests.length} quests to Firebase for $dateKey');
+      Logger.debug('Saved ${quests.length} quests to Firebase for $dateKey', service: 'quest');
     } catch (e) {
-      debugPrint('Error saving quests to Firebase: $e');
+      Logger.error('Error saving quests to Firebase', error: e, service: 'quest');
       rethrow;
     }
   }
@@ -232,9 +233,9 @@ class QuestSyncService {
         await _storage.saveDailyQuest(quest);
       }
 
-      debugPrint('Loaded ${questsData.length} quests from Firebase with preserved IDs and completions');
+      Logger.debug('Loaded ${questsData.length} quests from Firebase with preserved IDs and completions', service: 'quest');
     } catch (e) {
-      debugPrint('Error loading quests from Firebase: $e');
+      Logger.error('Error loading quests from Firebase', error: e, service: 'quest');
       rethrow;
     }
   }
@@ -256,7 +257,7 @@ class QuestSyncService {
         }
       }
     } catch (e) {
-      debugPrint('Error syncing completion status: $e');
+      Logger.error('Error syncing completion status', error: e, service: 'quest');
     }
   }
 
@@ -302,9 +303,9 @@ class QuestSyncService {
       final completionRef = _database.child('daily_quests/$coupleId/$dateKey/completions/$questId/$currentUserId');
       await completionRef.set(true);
 
-      debugPrint('Marked quest $questId as completed for $currentUserId in Firebase');
+      Logger.debug('Marked quest $questId as completed for $currentUserId in Firebase', service: 'quest');
     } catch (e) {
-      debugPrint('Error marking quest completed in Firebase: $e');
+      Logger.error('Error marking quest completed in Firebase', error: e, service: 'quest');
     }
   }
 
@@ -344,7 +345,7 @@ class QuestSyncService {
 
       return null;
     } catch (e) {
-      debugPrint('Error loading progression state: $e');
+      Logger.error('Error loading progression state', error: e, service: 'quest');
       return null;
     }
   }
@@ -366,9 +367,9 @@ class QuestSyncService {
         'hasCompletedAllTracks': state.hasCompletedAllTracks,
       });
 
-      debugPrint('Saved progression state to Firebase');
+      Logger.debug('Saved progression state to Firebase', service: 'quest');
     } catch (e) {
-      debugPrint('Error saving progression state: $e');
+      Logger.error('Error saving progression state', error: e, service: 'quest');
       rethrow;
     }
   }
@@ -399,14 +400,14 @@ class QuestSyncService {
 
           if (now.difference(questDate).inDays > 7) {
             await questsRef.child(dateKey).remove();
-            debugPrint('Cleaned up old quests for $dateKey');
+            Logger.debug('Cleaned up old quests for $dateKey', service: 'quest');
           }
         } catch (e) {
-          debugPrint('Error parsing date key $dateKey: $e');
+          Logger.error('Error parsing date key $dateKey', error: e, service: 'quest');
         }
       }
     } catch (e) {
-      debugPrint('Error cleaning up old quests: $e');
+      Logger.error('Error cleaning up old quests', error: e, service: 'quest');
     }
   }
 }

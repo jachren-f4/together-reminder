@@ -1,7 +1,7 @@
 # Quest Screen Unification Plan - Enhanced
 
 **Version:** 2.0
-**Status:** Phase 3 Complete ✅ (Classic Quiz migrated and tested)
+**Status:** Phase 4 Complete ✅ (Classic and Affirmation Quizzes migrated and tested)
 **Deferred Items:** See DEFERRED_ITEMS.md
 **Last Updated:** 2025-11-17
 
@@ -983,8 +983,14 @@ rm -rf lib/widgets/results_content/
   - **Bug Fix:** Improved LP deduplication using relatedId as Firebase key
   - **Tested:** End-to-end flow with 30 LP award (correct, no duplicates)
 
+- ✅ **Phase 4:** Affirmation Quiz Migration (2025-11-17)
+  - Registered Affirmation Quiz config with auto-polling (5-second intervals)
+  - Simplified daily_quests_widget.dart to use unified navigation for both Classic and Affirmation
+  - **Bug Fix:** Removed duplicate LP awarding from partner completion listener
+  - **Bug Fix:** Established single source of truth for LP awards (UnifiedResultsScreen only)
+  - **Tested:** End-to-end flow with auto-polling waiting screen and 30 LP award (correct, no duplicates)
+
 **Pending Phases:**
-- ⏳ **Phase 4:** Affirmation Quiz Migration
 - ⏳ **Phase 5:** You or Me Migration
 - ⏳ **Phase 6:** Validation & Cleanup
 

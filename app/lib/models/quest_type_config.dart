@@ -3,7 +3,9 @@ import 'base_session.dart';
 import 'quiz_session.dart';
 import '../screens/quiz_intro_screen.dart';
 import '../screens/quiz_question_screen.dart';
+import '../screens/affirmation_intro_screen.dart';
 import '../widgets/results_content/classic_quiz_results_content.dart';
+import '../widgets/results_content/affirmation_results_content.dart';
 
 /// Polling behavior for waiting screens
 enum PollingType {
@@ -100,6 +102,26 @@ class QuestTypeConfigRegistry {
     );
 
     // Phase 4: Affirmation Quiz
+    register(
+      'affirmation',
+      QuestTypeConfig(
+        formatType: 'affirmation',
+        introBuilder: (session) => AffirmationIntroScreen(session: session as QuizSession),
+        questionBuilder: (session) => QuizQuestionScreen(session: session as QuizSession),
+        resultsContentBuilder: (session) => AffirmationResultsContent(session: session),
+        waitingConfig: const WaitingConfig(
+          pollingType: PollingType.auto,
+          pollingInterval: Duration(seconds: 5),
+          showTimeRemaining: false,
+          waitingMessage: 'Waiting for your partner...',
+        ),
+        resultsConfig: const ResultsConfig(
+          showConfetti: false,
+          showLPBanner: true,
+        ),
+      ),
+    );
+
     // Phase 5: You or Me
   }
 }

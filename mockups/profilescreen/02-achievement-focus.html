@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile - Achievement Focus</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            background: #fafafa;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 420px;
+            margin: 0 auto;
+            background: #fff;
+            border: 2px solid #000;
+            box-shadow: 8px 8px 0 rgba(0, 0, 0, 0.1);
+        }
+
+        .header {
+            border-bottom: 2px solid #000;
+            padding: 24px 20px;
+            background: #000;
+            color: #fff;
+            text-align: center;
+        }
+
+        .title {
+            font-size: 32px;
+            font-weight: 400;
+            letter-spacing: 2px;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+        }
+
+        .subtitle {
+            font-size: 14px;
+            opacity: 0.8;
+            font-style: italic;
+        }
+
+        .level-banner {
+            padding: 24px 20px;
+            border-bottom: 2px solid #000;
+            text-align: center;
+            background: linear-gradient(135deg, #fafafa 0%, #f0f0f0 100%);
+        }
+
+        .level-badge {
+            width: 80px;
+            height: 80px;
+            background: #000;
+            color: #fff;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            border: 3px solid #000;
+            box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.15);
+            margin-bottom: 12px;
+        }
+
+        .level-number {
+            font-size: 32px;
+            font-weight: 700;
+        }
+
+        .level-label {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .level-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .level-subtitle {
+            font-size: 12px;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .progress-section {
+            padding: 20px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .section-heading {
+            font-size: 16px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 16px;
+        }
+
+        .progress-item {
+            margin-bottom: 20px;
+        }
+
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .progress-label {
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .progress-value {
+            font-size: 12px;
+            color: #666;
+            font-weight: 600;
+        }
+
+        .progress-bar-bg {
+            height: 8px;
+            background: #e0e0e0;
+            border: 1px solid #000;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background: #000;
+            transition: width 0.3s ease;
+        }
+
+        .achievements-grid {
+            padding: 20px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .achievement-cards {
+            display: grid;
+            gap: 12px;
+        }
+
+        .achievement-card {
+            border: 1px solid #000;
+            padding: 16px;
+            display: flex;
+            gap: 16px;
+            align-items: center;
+            transition: all 0.2s ease;
+        }
+
+        .achievement-card:hover {
+            box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.1);
+        }
+
+        .achievement-icon {
+            width: 48px;
+            height: 48px;
+            background: #000;
+            color: #fff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            flex-shrink: 0;
+        }
+
+        .achievement-card.locked .achievement-icon {
+            background: #e0e0e0;
+            opacity: 0.5;
+        }
+
+        .achievement-info {
+            flex: 1;
+        }
+
+        .achievement-name {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .achievement-desc {
+            font-size: 11px;
+            color: #666;
+            font-style: italic;
+        }
+
+        .achievement-date {
+            font-size: 10px;
+            color: #999;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-top: 4px;
+        }
+
+        .stats-compact {
+            padding: 20px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .stat-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .stat-row:last-child {
+            border-bottom: none;
+        }
+
+        .stat-name {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .stat-number {
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .actions {
+            padding: 20px;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+        }
+
+        .action-btn {
+            border: 1px solid #000;
+            padding: 16px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+        }
+
+        .action-btn:hover {
+            background: #000;
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="title">Achievements</div>
+            <div class="subtitle">Joakim & Taija</div>
+        </div>
+
+        <div class="level-banner">
+            <div class="level-badge">
+                <div class="level-number">5</div>
+                <div class="level-label">Level</div>
+            </div>
+            <div class="level-title">Love Apprentice</div>
+            <div class="level-subtitle">2,450 / 3,000 LP to Next Level</div>
+        </div>
+
+        <div class="progress-section">
+            <div class="section-heading">Progress Tracks</div>
+
+            <div class="progress-item">
+                <div class="progress-header">
+                    <div class="progress-label">Quiz Completion</div>
+                    <div class="progress-value">68/100</div>
+                </div>
+                <div class="progress-bar-bg">
+                    <div class="progress-bar-fill" style="width: 68%;"></div>
+                </div>
+            </div>
+
+            <div class="progress-item">
+                <div class="progress-header">
+                    <div class="progress-label">Daily Streak</div>
+                    <div class="progress-value">42/50</div>
+                </div>
+                <div class="progress-bar-bg">
+                    <div class="progress-bar-fill" style="width: 84%;"></div>
+                </div>
+            </div>
+
+            <div class="progress-item">
+                <div class="progress-header">
+                    <div class="progress-label">Game Master</div>
+                    <div class="progress-value">23/30</div>
+                </div>
+                <div class="progress-bar-bg">
+                    <div class="progress-bar-fill" style="width: 76%;"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="achievements-grid">
+            <div class="section-heading">Recent Unlocks</div>
+            <div class="achievement-cards">
+                <div class="achievement-card">
+                    <div class="achievement-icon">🏆</div>
+                    <div class="achievement-info">
+                        <div class="achievement-name">Level 5 Master</div>
+                        <div class="achievement-desc">Reached Level 5 together</div>
+                        <div class="achievement-date">Unlocked 2 days ago</div>
+                    </div>
+                </div>
+
+                <div class="achievement-card">
+                    <div class="achievement-icon">🔥</div>
+                    <div class="achievement-info">
+                        <div class="achievement-name">Fire Streak</div>
+                        <div class="achievement-desc">40 consecutive days active</div>
+                        <div class="achievement-date">Unlocked 1 week ago</div>
+                    </div>
+                </div>
+
+                <div class="achievement-card">
+                    <div class="achievement-icon">⭐</div>
+                    <div class="achievement-info">
+                        <div class="achievement-name">Quiz Champion</div>
+                        <div class="achievement-desc">Completed 50 quizzes</div>
+                        <div class="achievement-date">Unlocked 2 weeks ago</div>
+                    </div>
+                </div>
+
+                <div class="achievement-card locked">
+                    <div class="achievement-icon">💎</div>
+                    <div class="achievement-info">
+                        <div class="achievement-name">Diamond Partnership</div>
+                        <div class="achievement-desc">Reach Level 10</div>
+                        <div class="achievement-date">32% Progress</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="stats-compact">
+            <div class="section-heading">Quick Stats</div>
+            <div class="stat-row">
+                <div class="stat-name">Total Love Points</div>
+                <div class="stat-number">2,450</div>
+            </div>
+            <div class="stat-row">
+                <div class="stat-name">Days Together</div>
+                <div class="stat-number">42</div>
+            </div>
+            <div class="stat-row">
+                <div class="stat-name">Completed Quests</div>
+                <div class="stat-number">126</div>
+            </div>
+            <div class="stat-row">
+                <div class="stat-name">Games Played</div>
+                <div class="stat-number">58</div>
+            </div>
+        </div>
+
+        <div class="actions">
+            <div class="action-btn">View All Achievements</div>
+            <div class="action-btn">Share Progress</div>
+        </div>
+    </div>
+</body>
+</html>

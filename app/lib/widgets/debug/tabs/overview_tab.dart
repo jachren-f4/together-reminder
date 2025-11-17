@@ -7,6 +7,7 @@ import '../../../config/dev_config.dart';
 import '../../../services/storage_service.dart';
 import '../../../services/daily_quest_service.dart';
 import '../../../services/quest_utilities.dart';
+import '../../../utils/logger.dart';
 import '../components/debug_section_card.dart';
 import '../components/debug_status_indicator.dart';
 
@@ -81,7 +82,7 @@ class _OverviewTabState extends State<OverviewTab> {
       setState(() => _isLoading = false);
     } catch (e) {
       setState(() => _isLoading = false);
-      print('Error loading overview data: $e');
+      Logger.error('Error loading overview data', error: e, service: 'debug');
     }
   }
 

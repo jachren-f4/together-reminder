@@ -1,8 +1,8 @@
 # Power Level Showdown: Memory Challenge - Game Specification
 
-**Version:** 1.2
-**Date:** 2025-11-15
-**Status:** Design Phase (Implementation Reverted)
+**Version:** 1.4
+**Date:** 2025-11-16
+**Status:** Design Phase - Infrastructure Ready
 **Priority:** Medium
 
 ---
@@ -60,10 +60,20 @@ Manually restored all YouOrMe functionality:
 
 ### Current State
 - ✅ Specification document complete and ready for future implementation
-- ✅ HTML mockup available at `mockups/jrpg/5b_power_level_memory.html`
+- ✅ HTML mockups available:
+  - **App-accurate design**: `mockups/power_level/` (6 screens + hub + README)
+  - **JRPG-style reference**: `mockups/jrpg/5b_power_level_memory.html` (legacy)
 - ✅ No Power Level Battle code in codebase
 - ✅ YouOrMe feature fully functional
 - ✅ App builds successfully
+- ✅ **Infrastructure Ready:**
+  - Quiz query system exists (`QuizService.getCompletedSessions()`)
+  - Love Points system exists (`LovePointService.awardPointsToBothUsers()`)
+  - Firebase RTDB sync infrastructure exists
+  - Daily Quest framework exists (`QuestTypeManager`, provider pattern)
+  - Notification system exists (`NotificationService`)
+  - Activity feed integration exists (`ActivityService`)
+  - Hive storage system with typeIds 30-32 available
 - 🎯 **Ready for fresh implementation when user approves coding phase**
 
 ### Lessons Learned
@@ -71,6 +81,390 @@ Manually restored all YouOrMe functionality:
 2. Git revert can affect unrelated code - check diffs carefully
 3. Build after revert to catch accidental removals
 4. Keep feature boundaries clear when reverting partial implementations
+
+---
+
+## Lessons from You or Me Implementation
+
+**Reference:** `docs/QUEST_SYSTEM_V2.md` (Bug fixes 2025-11-16)
+
+### Why Power Level is Simpler: Single-Session Architecture
+
+**Good News:** Power Level uses a **single shared session** architecture, which avoids the major bugs encountered in You or Me's **dual separate sessions** implementation.
+
+| Aspect | You or Me (Dual) | Power Level (Single) |
+|--------|------------------|----------------------|
+| **Session Model** | Two separate sessions (`youorme_alice_123`, `youorme_bob_123`) | One shared session with both players' data |
+| **Quest Matching** | Timestamp correlation required | Direct ID match works |
+| **Partner Session Fetch** | Must construct partner ID and fetch separately | Already have all data in single session |
+| **Results Calculation** | Need `calculateResultsFromDualSessions(session1, session2)` | Standard `calculateResults(session)` works |
+| **Completion Detection** | Check both sessions independently | Check if both players completed in same session |
+
+### Critical Patterns to Follow
+
+Based on You or Me bug fixes, Power Level implementation MUST follow these patterns:
+
+#### 1. Denormalized Metadata (Already Good)
+
+✅ The `PowerLevelBattle` model includes all necessary data:
+- Question data embedded (not referenced from quiz sessions)
+- Player scores included in battle object
+- Status field drives UI state
+- No session lookups required on partner's device
+
+```dart
+// ✅ CORRECT - Power Level's self-contained model
+PowerLevelBattle {
+  aliceQuestions: [MemoryQuestion...],  // Data embedded
+  bobQuestions: [MemoryQuestion...],    // Data embedded
+  aliceScore: PlayerScore,              // Results embedded
+  bobScore: PlayerScore,                // Results embedded
+  status: 'waiting_for_bob'             // UI state embedded
+}
+```
+
+#### 2. Force Refresh for Partner Completion
+
+**CRITICAL:** When checking if partner has completed, ALWAYS use `forceRefresh: true`:
+
+```dart
+// ✅ CORRECT - Waiting screen pattern
+Future<void> checkPartnerCompletion() async {
+  final battle = await PowerLevelBattleService.getBattle(
+    battleId,
+    forceRefresh: true,  // Get latest from Firebase!
+  );
+
+  if (battle.aliceScore != null && battle.bobScore != null) {
+    // Both completed - show clash screen
+  }
+}
+```
+
+```dart
+// ❌ WRONG - Using local cache
+final battle = await PowerLevelBattleService.getBattle(battleId);
+// May show stale data if partner just completed
+```
+
+#### 3. Firebase Sync Strategy
+
+**When to sync:**
+- After each player completes their 5 questions
+- Sync entire battle object (not partial updates)
+- Update status field: `'alice_playing'` → `'waiting_for_bob'` → `'ready_for_clash'`
+
+**Pattern:**
+```dart
+Future<void> completePlayerQuestions(String userId) async {
+  // 1. Calculate score
+  final score = _calculatePlayerScore(userId);
+
+  // 2. Update battle object
+  battle.setPlayerScore(userId, score);
+  battle.updateStatus();  // Updates to 'waiting_for_bob' or 'ready_for_clash'
+
+  // 3. Sync to Firebase immediately
+  await _syncToFirebase(battle);
+
+  // 4. Send notification to partner
+  await _notifyPartner(userId);
+}
+```
+
+#### 4. Quest Integration (If Used as Daily Quest)
+
+**Simple pattern** (unlike You or Me's timestamp correlation):
+
+```dart
+// Battle creation
+final battle = PowerLevelBattle(id: 'battle_123', ...);
+final quest = DailyQuest(
+  id: 'quest_456',
+  type: QuestType.powerLevel,
+  contentId: 'battle_123',  // Direct ID reference
+  // ... denormalized metadata
+);
+```
+
+```dart
+// Quest completion detection
+final battle = await PowerLevelBattleService.getBattle(quest.contentId);
+if (battle.aliceScore != null && battle.bobScore != null) {
+  await questService.completeQuest(quest.id);
+}
+```
+
+**No timestamp extraction needed!** Both users reference the same battle ID.
+
+### Bugs to Avoid
+
+Based on You or Me experience, watch out for:
+
+1. **Stale Local Cache**
+   - ❌ Don't: Use local Hive data when checking partner completion
+   - ✅ Do: Always `forceRefresh: true` from Firebase
+
+2. **Missing Metadata**
+   - ❌ Don't: Reference quiz sessions by ID (partner won't have them)
+   - ✅ Do: Embed question data in `MemoryQuestion` model
+
+3. **Partial Sync**
+   - ❌ Don't: Sync individual fields separately
+   - ✅ Do: Sync entire battle object atomically
+
+4. **Status Confusion**
+   - ❌ Don't: Derive status from data (e.g., "if aliceScore exists...")
+   - ✅ Do: Use explicit status field (`'waiting_for_bob'`)
+
+---
+
+## Quest System V2 Compatibility
+
+**Reference:** Based on `docs/QUEST_SYSTEM_V2.md` checklist (2025-11-16)
+
+Power Level Memory Challenge is designed to integrate seamlessly with the Quest System V2 framework. This section outlines the compliance checklist and implementation requirements.
+
+### Compliance Checklist
+
+Power Level meets all Quest System V2 requirements:
+
+#### 1. Denormalized Metadata ✅
+
+**Requirement:** All display-critical data must be embedded in quest/session objects
+
+**Power Level Compliance:**
+```dart
+// PowerLevelBattle already includes all necessary metadata
+PowerLevelBattle {
+  aliceQuestions: [MemoryQuestion...],  // Questions embedded
+  bobQuestions: [MemoryQuestion...],    // Questions embedded
+  aliceScore: PlayerScore?,             // Results embedded
+  bobScore: PlayerScore?,               // Results embedded
+  status: String,                       // UI state embedded
+}
+
+// DailyQuest creation includes denormalized data
+DailyQuest(
+  id: 'quest_123',
+  type: QuestType.powerLevel,
+  contentId: 'battle_456',  // Direct battle ID reference
+  title: 'Power Level Challenge',
+  description: 'Test your memory...',
+  // NO session lookups needed
+)
+```
+
+**Why this works:**
+- Alice creates battle → embeds all question data
+- Alice creates quest → references battle by ID
+- Alice syncs to Firebase → includes all metadata
+- Bob loads quest from Firebase → has complete data
+- Bob loads battle from Firebase → has complete data
+- **No local session lookups required on either device**
+
+#### 2. Force Refresh Pattern ✅
+
+**Requirement:** Always use `forceRefresh: true` when checking partner completion
+
+**Power Level Implementation:**
+
+The waiting screen MUST use force refresh to detect partner completion:
+
+```dart
+// lib/screens/power_level_waiting_screen.dart
+
+class _PowerLevelWaitingScreenState extends State<PowerLevelWaitingScreen> {
+  Timer? _pollTimer;
+
+  @override
+  void initState() {
+    super.initState();
+    _startPolling();
+  }
+
+  void _startPolling() {
+    _pollTimer = Timer.periodic(Duration(seconds: 3), (_) async {
+      // ✅ CRITICAL: Force refresh from Firebase
+      final battle = await PowerLevelBattleService.getBattle(
+        widget.battleId,
+        forceRefresh: true,  // Get latest state!
+      );
+
+      if (battle.status == 'ready_for_clash') {
+        // Partner completed - navigate to clash screen
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(
+            builder: (_) => PowerLevelClashScreen(battle: battle),
+          ),
+        );
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _pollTimer?.cancel();
+    super.dispose();
+  }
+}
+```
+
+**Why this matters:**
+- Alice completes → syncs to Firebase → status = 'waiting_for_bob'
+- Bob completes → syncs to Firebase → status = 'ready_for_clash'
+- Alice's waiting screen polls Firebase every 3 seconds
+- **Without forceRefresh: Alice sees stale local data, never detects Bob's completion**
+- **With forceRefresh: Alice immediately sees 'ready_for_clash' status**
+
+#### 3. Firebase Sync Strategy ✅
+
+**Requirement:** Sync entire objects atomically, not individual fields
+
+**Power Level Implementation:**
+
+```dart
+// lib/services/power_level_battle_service.dart
+
+Future<void> completeBattle({
+  required String battleId,
+  required String userId,
+}) async {
+  // 1. Load current battle
+  final battle = await getBattle(battleId, forceRefresh: true);
+
+  // 2. Calculate player's score
+  final score = _calculatePlayerScore(battle, userId);
+
+  // 3. Update battle object in memory
+  if (userId == battle.aliceId) {
+    battle.aliceScore = score;
+  } else {
+    battle.bobScore = score;
+  }
+
+  // 4. Update status based on completion state
+  if (battle.aliceScore != null && battle.bobScore != null) {
+    battle.status = 'ready_for_clash';
+  } else if (battle.aliceScore != null) {
+    battle.status = 'waiting_for_bob';
+  } else if (battle.bobScore != null) {
+    battle.status = 'waiting_for_alice';
+  }
+
+  // 5. Sync ENTIRE battle object to Firebase (atomic operation)
+  await _syncToFirebase(battle);
+
+  // 6. Save to local Hive
+  await _storage.savePowerLevelBattle(battle);
+
+  // 7. Notify partner
+  await _notifyPartner(battle, userId);
+}
+
+Future<void> _syncToFirebase(PowerLevelBattle battle) async {
+  final coupleId = _getCoupleId();  // Sorted user IDs
+  await FirebaseDatabase.instance
+    .ref('power_level_battles/$coupleId/${battle.id}')
+    .set(battle.toJson());  // Sync entire object
+}
+```
+
+**Why atomic sync matters:**
+- Prevents race conditions between Alice and Bob
+- Ensures status field always matches data state
+- Partner sees consistent view of battle state
+
+#### 4. Quest Integration ✅
+
+**Requirement:** Simple quest-to-content mapping without complex lookups
+
+**Power Level Implementation:**
+
+```dart
+// Quest creation (when battle is created as daily quest)
+final battle = await PowerLevelBattleService.createBattle();
+
+final quest = DailyQuest(
+  id: _generateQuestId(),
+  type: QuestType.powerLevel,
+  contentId: battle.id,  // Direct ID reference (no timestamp extraction needed)
+  title: 'Power Level Challenge',
+  description: 'Test your memory of past quiz answers',
+  createdAt: DateTime.now(),
+  // Denormalized metadata
+);
+
+// Quest completion detection (in results screen)
+Future<void> _checkQuestCompletion() async {
+  final quest = questService.getTodayQuests()
+    .where((q) => q.type == QuestType.powerLevel && q.contentId == widget.battle.id)
+    .firstOrNull;
+
+  if (quest == null) return;  // Not a daily quest
+
+  // Check if both users completed
+  if (widget.battle.aliceScore != null && widget.battle.bobScore != null) {
+    await questService.completeQuest(quest.id);
+    await LovePointService.awardPointsToBothUsers(
+      userId1: alice.id,
+      userId2: bob.id,
+      amount: 30,
+      reason: 'daily_quest_power_level',
+    );
+  }
+}
+```
+
+**Comparison to You or Me:**
+
+| Aspect | You or Me (Complex) | Power Level (Simple) |
+|--------|---------------------|----------------------|
+| **Quest contentId** | `youorme_alice_123_timestamp` | `battle_456` |
+| **Partner ID Construction** | Extract timestamp, construct `youorme_bob_123_timestamp` | Use same `battle_456` ID |
+| **Completion Detection** | Match timestamps across two sessions | Check if both scores exist in one battle |
+| **Quest Matching Logic** | `questIdParts.last == sessionTimestamp` | `q.contentId == widget.battle.id` |
+
+### Implementation Requirements
+
+When implementing Power Level, the following files must implement these patterns:
+
+#### Required Files and Patterns
+
+| File | Pattern Required | Reference |
+|------|------------------|-----------|
+| `power_level_battle.dart` | Denormalized metadata in model | See checklist #1 |
+| `power_level_battle_service.dart` | Atomic sync strategy | See checklist #3 |
+| `power_level_waiting_screen.dart` | Force refresh polling | See checklist #2 |
+| `power_level_results_screen.dart` | Quest completion detection | See checklist #4 |
+| `power_level_quest_provider.dart` | Simple quest generation | See checklist #4 |
+
+#### Testing Requirements
+
+Before declaring Power Level complete, test these scenarios from QUEST_SYSTEM_V2.md:
+
+**Test 1: Partner Completion Detection**
+1. Alice completes battle
+2. Bob completes battle
+3. Alice's waiting screen should detect Bob's completion within 3 seconds
+4. **Verify:** Alice sees clash screen without manual refresh
+
+**Test 2: Quest Title Display**
+1. Alice generates daily Power Level quest
+2. Alice syncs to Firebase
+3. Bob loads quests from Firebase
+4. **Verify:** Bob sees "Power Level Challenge" title (not "Unknown Quest")
+
+**Test 3: LP Award Synchronization**
+1. Both users complete battle
+2. Quest marked complete
+3. **Verify:** Both users receive +30 LP notification
+
+**Test 4: Offline Resilience**
+1. Alice completes battle offline
+2. Alice goes online → syncs to Firebase
+3. Bob completes battle online
+4. **Verify:** Both see correct results, no data loss
 
 ---
 
@@ -905,15 +1299,51 @@ if (!UserService.hasPairedPartner()) {
 }
 ```
 
-### Case 6: Firebase Sync Failure
+### Case 6: Stale Local Cache (Partner Completion Not Detected)
+
+**Scenario:** Alice completes battle, Bob completes battle, but Alice's waiting screen never shows clash screen
+
+**Root Cause:** Waiting screen using local Hive cache instead of Firebase (violates Quest System V2 force refresh pattern)
+
+**Solution:**
+```dart
+// ❌ WRONG - Uses stale local cache
+Future<void> checkPartnerCompletion() async {
+  final battle = await PowerLevelBattleService.getBattle(battleId);
+  // This loads from local Hive, NOT Firebase
+  // Alice never sees Bob's completion
+}
+
+// ✅ CORRECT - Force refresh from Firebase
+Future<void> checkPartnerCompletion() async {
+  final battle = await PowerLevelBattleService.getBattle(
+    battleId,
+    forceRefresh: true,  // Fetch from Firebase!
+  );
+
+  if (battle.status == 'ready_for_clash') {
+    // Both completed - show clash screen
+    Navigator.pushReplacement(...);
+  }
+}
+```
+
+**Prevention:** See [Quest System V2 Compatibility](#quest-system-v2-compatibility) section, checklist #2 (Force Refresh Pattern)
+
+### Case 7: Firebase Sync Failure
 
 **Scenario:** No internet when trying to load battle
 
 **Solution:**
 ```dart
 try {
-  final battle = await PowerLevelBattleService.getBattle(battleId);
+  final battle = await PowerLevelBattleService.getBattle(
+    battleId,
+    forceRefresh: true,
+  );
 } catch (e) {
+  Logger.warn('Firebase fetch failed, using local cache', error: e, service: 'power_level');
+
   // Fallback to local Hive
   final localBattle = _storage.getPowerLevelBattle(battleId);
   if (localBattle != null) {
@@ -924,9 +1354,19 @@ try {
 }
 ```
 
+**Note:** This fallback is acceptable for offline resilience, but waiting screen should retry Firebase fetch when connection restored.
+
 ---
 
 ## Implementation Plan
+
+**IMPORTANT:** All implementation phases must comply with Quest System V2 patterns (see [Quest System V2 Compatibility](#quest-system-v2-compatibility) section above).
+
+**Key Compliance Requirements:**
+- ✅ Denormalized metadata in all models
+- ✅ `forceRefresh: true` in waiting screen polling
+- ✅ Atomic Firebase sync (sync entire battle object)
+- ✅ Simple quest integration (direct ID reference, no timestamp extraction)
 
 ### Phase 1: Data Layer (3-4 hours)
 
@@ -957,6 +1397,9 @@ try {
 - [ ] Implement power calculation
 - [ ] Implement battle lifecycle management
 - [ ] Add Firebase sync methods
+- [ ] **CRITICAL:** Implement `getBattle(battleId, {forceRefresh = false})` with Firebase fetch when `forceRefresh: true`
+- [ ] **CRITICAL:** Implement atomic sync (sync entire battle object, not individual fields)
+- [ ] **CRITICAL:** Update status field on every completion (`'waiting_for_bob'`, `'ready_for_clash'`)
 
 **Key Methods:**
 ```dart
@@ -1014,20 +1457,28 @@ class PowerLevelBattleService {
 - [ ] Add feedback overlay (correct/wrong)
 - [ ] Auto-advance to next question
 
-#### Task 3.3: Beam Struggle Screen
+#### Task 3.3: Waiting Screen
+- [ ] Create `lib/screens/power_level_waiting_screen.dart`
+- [ ] **CRITICAL:** Implement Firebase polling with `forceRefresh: true` every 3 seconds
+- [ ] **CRITICAL:** Detect partner completion via status field change (`'ready_for_clash'`)
+- [ ] Show loading indicator with partner's name
+- [ ] Auto-navigate to clash screen when both completed
+
+#### Task 3.4: Beam Struggle Screen
 - [ ] Create `lib/screens/power_level_clash_screen.dart`
 - [ ] Add animated beam struggle emoji
 - [ ] Display memory stats comparison
 - [ ] Add "See Results" button
 
-#### Task 3.4: Results Screen
+#### Task 3.5: Results Screen
 - [ ] Create `lib/screens/power_level_results_screen.dart`
 - [ ] Victory/defeat layouts
 - [ ] Memory accuracy breakdown
 - [ ] LP reward display
 - [ ] "Rematch" and "See Answers" buttons
+- [ ] **CRITICAL:** Implement quest completion detection (check if both scores exist)
 
-#### Task 3.5: Activities Integration
+#### Task 3.6: Activities Integration
 - [ ] Add Memory Challenge card to `activities_screen.dart`
 - [ ] Handle navigation to intro screen
 - [ ] Add badge if active battle waiting
@@ -1058,10 +1509,14 @@ class PowerLevelBattleService {
 - [ ] Create `PowerLevelQuestProvider`
 - [ ] Implement `generateQuest()` method
 - [ ] Register with `QuestTypeManager`
+- [ ] **CRITICAL:** Use direct battle ID as quest `contentId` (no timestamp extraction)
+- [ ] **CRITICAL:** Include denormalized metadata (title, description) in quest object
 
 #### Task 5.2: Quest Tracking
 - [ ] Link battle completion to daily quest
 - [ ] Award quest LP on top of battle LP
+- [ ] **CRITICAL:** Use simple quest matching: `q.contentId == widget.battle.id`
+- [ ] **CRITICAL:** Detect completion by checking if both scores exist in battle
 
 ---
 
@@ -1313,11 +1768,20 @@ Analytics.logEvent('memory_battle_results', {
 | `lib/screens/power_level_clash_screen.dart` | Beam struggle |
 | `lib/screens/power_level_results_screen.dart` | Results |
 | `database.rules.json` | Firebase rules |
-| `mockups/jrpg/5b_power_level_memory.html` | HTML prototype |
+| **Design Mockups** | |
+| `mockups/power_level/index.html` | Hub page with navigation |
+| `mockups/power_level/intro.html` | Eligibility check screen |
+| `mockups/power_level/question.html` | Question screen mockup |
+| `mockups/power_level/waiting.html` | Loading state mockup |
+| `mockups/power_level/clash.html` | Beam struggle mockup |
+| `mockups/power_level/results.html` | Victory/defeat mockup |
+| `mockups/power_level/README.md` | Design system documentation |
+| `mockups/jrpg/5b_power_level_memory.html` | Legacy JRPG-style mockup |
 
 ### References
 
-- Original concept mockup: `/mockups/jrpg/5b_power_level_memory.html`
+- **App-accurate mockups**: `/mockups/power_level/` (6 screens + hub + README)
+- **Legacy concept mockup**: `/mockups/jrpg/5b_power_level_memory.html` (JRPG-style)
 - Quest system docs: `/docs/QUEST_SYSTEM_V2.md`
 - LP service: `/app/lib/services/love_point_service.dart`
 - Quiz storage: `/app/lib/models/quiz_session.dart`

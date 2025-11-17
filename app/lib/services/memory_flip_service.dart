@@ -329,7 +329,7 @@ class MemoryFlipService {
         'action': 'flip',
       });
     } catch (e) {
-      print('Error syncing flip: $e');
+      Logger.error('Error syncing flip', error: e, service: 'memory_flip');
       // Don't throw - allow offline play
     }
   }
@@ -349,7 +349,7 @@ class MemoryFlipService {
         'action': 'match',
       });
     } catch (e) {
-      print('Error syncing match: $e');
+      Logger.error('Error syncing match', error: e, service: 'memory_flip');
       // Don't throw - allow offline play
     }
   }
@@ -372,7 +372,7 @@ class MemoryFlipService {
         'lovePoints': lovePoints,
       });
     } catch (e) {
-      print('Error sending match notification: $e');
+      Logger.error('Error sending match notification', error: e, service: 'memory_flip');
       // Don't throw - notification is not critical
     }
   }
@@ -395,7 +395,7 @@ class MemoryFlipService {
         'daysTaken': daysTaken,
       });
     } catch (e) {
-      print('Error sending completion notification: $e');
+      Logger.error('Error sending completion notification', error: e, service: 'memory_flip');
       // Don't throw - notification is not critical
     }
   }
@@ -416,7 +416,7 @@ class MemoryFlipService {
         'expiresInDays': expiresInDays,
       });
     } catch (e) {
-      print('Error sending new puzzle notification: $e');
+      Logger.error('Error sending new puzzle notification', error: e, service: 'memory_flip');
       // Don't throw - notification is not critical
     }
   }
