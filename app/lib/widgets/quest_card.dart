@@ -304,7 +304,7 @@ class QuestCard extends StatelessWidget {
               fontWeight: FontWeight.w600,
               letterSpacing: 0.5,
               color: Colors.black,
-            ),
+          ),
           ),
         );
       }
@@ -323,6 +323,47 @@ class QuestCard extends StatelessWidget {
             letterSpacing: 0.5,
             color: Colors.black,
           ),
+        ),
+      );
+    } else if (userCompleted) {
+      // User completed, waiting for partner (applies to You or Me, Word Ladder, etc.)
+      return Container(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+        decoration: BoxDecoration(
+          color: const Color(0xFFF0F0F0),
+          border: Border.all(color: Colors.black, width: 1),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              width: 18,
+              height: 18,
+              decoration: const BoxDecoration(
+                color: Colors.black,
+                shape: BoxShape.circle,
+              ),
+              child: Center(
+                child: Text(
+                  user?.name[0].toUpperCase() ?? 'Y',
+                  style: AppTheme.headlineFont.copyWith( // Serif font
+                    fontSize: 10,
+                    fontWeight: FontWeight.w700,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(width: 8),
+            Text(
+              'Waiting for ${partner?.name ?? "partner"}',
+              style: AppTheme.headlineFont.copyWith( // Serif font
+                fontSize: 11,
+                fontWeight: FontWeight.w600,
+                color: const Color(0xFF666666),
+              ),
+            ),
+          ],
         ),
       );
     } else {

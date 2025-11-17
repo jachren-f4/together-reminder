@@ -93,7 +93,7 @@ class YouOrMeIntroScreen extends StatelessWidget {
                 width: double.infinity,
                 child: FilledButton(
                   onPressed: () {
-                    Navigator.of(context).pushReplacement(
+                    Navigator.of(context).push(
                       MaterialPageRoute(
                         builder: (context) => YouOrMeGameScreen(session: session),
                       ),

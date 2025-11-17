@@ -241,22 +241,71 @@ class YouOrMeService {
     return session;
   }
 
-  /// Generate TWO You or Me sessions (one per user) with SAME questions
+  /// Generate a single You or Me session for both users
   ///
-  /// This implements the two-session architecture used by quiz games.
-  /// Both sessions contain identical questions, but each user owns their session.
+  /// This implements the single-session architecture used by quiz games.
+  /// Both users share the same session and add their answers to the same session object.
+  ///
+  /// [questId] - Optional daily quest ID (null if from Activities screen)
+  ///
+  /// Returns the shared session that both users will use
+  Future<YouOrMeSession> generateSession({
+    required String userId,
+    required String partnerId,
+    String? questId,
+  }) async {
+    Logger.info('Generating You or Me session', service: 'you_or_me');
+
+    final coupleId = QuestUtilities.generateCoupleId(userId, partnerId);
+    final questions = await getRandomQuestions(10, coupleId);
+    final timestamp = DateTime.now().millisecondsSinceEpoch;
+
+    // Single shared session (both users will add answers to this)
+    final session = YouOrMeSession(
+      id: 'youorme_$timestamp',  // Single shared ID (no userId prefix!)
+      userId: userId,
+      partnerId: partnerId,
+      initiatedBy: userId,
+      subjectUserId: userId,  // Keep for compatibility, but not critical
+      questId: questId,
+      questions: questions,
+      answers: {},  // Both users will add answers to this map
+      status: 'in_progress',
+      createdAt: DateTime.now(),
+      coupleId: coupleId,
+    );
+
+    // Save session locally (only once!)
+    await _storage.saveYouOrMeSession(session);
+
+    // Sync to Firebase (only once!)
+    await _syncSessionToRTDB(session);
+
+    Logger.success(
+      'Generated single session: ${session.id} (quest: ${questId ?? "standalone"})',
+      service: 'you_or_me',
+    );
+
+    return session;
+  }
+
+  /// DEPRECATED: Generate TWO You or Me sessions (one per user) with SAME questions
+  ///
+  /// This implements the old two-session architecture.
+  /// Replaced by generateSession() which creates a single shared session.
   ///
   /// [questId] - Optional daily quest ID (null if from Activities screen)
   ///
   /// Returns Map with both sessions:
   /// - Key: userId (who owns the session)
   /// - Value: YouOrMeSession
+  @Deprecated('Use generateSession() instead for single-session architecture')
   Future<Map<String, YouOrMeSession>> generateDualSessions({
     required String userId,
     required String partnerId,
     String? questId,
   }) async {
-    Logger.info('Generating dual You or Me sessions', service: 'you_or_me');
+    Logger.warn('generateDualSessions() is deprecated, use generateSession() instead', service: 'you_or_me');
 
     final coupleId = QuestUtilities.generateCoupleId(userId, partnerId);
     final questions = await getRandomQuestions(10, coupleId);
@@ -364,21 +413,18 @@ class YouOrMeService {
     }
   }
 
-  /// Complete session and award Love Points
-  /// Called when both users have submitted answers
+  /// Complete session when both users have submitted answers
+  ///
+  /// NOTE: LP is awarded by DailyQuestService.completeQuestForUser(), not here.
+  /// This prevents duplicate LP awards (issue: You or Me was awarding 60 LP instead of 30).
   Future<void> _completeSession(YouOrMeSession session) async {
     Logger.info('Completing session: ${session.id}', service: 'you_or_me');
 
     const lpEarned = 30; // Standard quest reward
 
-    // Award LP to both users
-    await LovePointService.awardPointsToBothUsers(
-      userId1: session.userId,
-      userId2: session.partnerId,
-      amount: lpEarned,
-      reason: 'you_or_me_completion',
-      relatedId: session.id,
-    );
+    // DO NOT award LP here - DailyQuestService handles it
+    // (This prevents duplicate LP awards: 30 + 30 = 60 bug)
+    // LP is awarded via DailyQuestService.completeQuestForUser() when quest is marked completed
 
     session.lpEarned = lpEarned;
     session.status = 'completed';
@@ -388,7 +434,7 @@ class YouOrMeService {
     await _syncSessionToRTDB(session);
 
     Logger.success(
-      'Session completed, 30 LP awarded to both users',
+      'Session completed (LP awarded via DailyQuestService)',
       service: 'you_or_me',
     );
   }
@@ -852,8 +898,7 @@ class YouOrMeService {
 
   /// Mark daily quest as completed for the user who submitted answers
   ///
-  /// Unlike quiz service, You or Me uses dual sessions with different IDs.
-  /// We need to match quests by timestamp since both sessions share the same timestamp.
+  /// With single-session architecture, quest.contentId matches session.id directly (like Quiz).
   Future<void> _markQuestCompletedForUser(String sessionId, String userId) async {
     try {
       Logger.info(
@@ -861,28 +906,11 @@ class YouOrMeService {
         service: 'you_or_me',
       );
 
-      // Extract timestamp from session ID (format: youorme_{userId}_{timestamp})
-      final sessionParts = sessionId.split('_');
-      if (sessionParts.length < 3) {
-        Logger.error('Invalid session ID format for quest marking: $sessionId', service: 'you_or_me');
-        return;
-      }
-      final timestamp = sessionParts.last;
-
-      // Find the quest that has a contentId with the same timestamp
+      // Find the quest with matching contentId (single-session architecture)
       final quests = _storage.getTodayQuests();
       final quest = quests.firstWhere(
-        (q) {
-          if (q.type != QuestType.youOrMe) return false;
-
-          // Extract timestamp from quest's contentId
-          final questIdParts = q.contentId.split('_');
-          if (questIdParts.length < 3) return false;
-
-          // Match by timestamp since both sessions share the same timestamp
-          return questIdParts.last == timestamp;
-        },
-        orElse: () => throw Exception('Quest not found for session timestamp: $timestamp'),
+        (q) => q.type == QuestType.youOrMe && q.contentId == sessionId,
+        orElse: () => throw Exception('Quest not found for session: $sessionId'),
       );
 
       Logger.debug(
@@ -893,9 +921,6 @@ class YouOrMeService {
       // Get partner info for Firebase sync
       final partner = _storage.getPartner();
 
-      // Create services
-      final dailyQuestService = DailyQuestService(storage: _storage);
-
       // Create sync service if partner exists
       QuestSyncService? questSyncService;
       if (partner != null) {
@@ -905,12 +930,12 @@ class YouOrMeService {
       }
 
       // Mark quest as completed for this user via DailyQuestService
-      final updatedDailyQuestService = DailyQuestService(
+      final dailyQuestService = DailyQuestService(
         storage: _storage,
         questSyncService: questSyncService,
       );
 
-      await updatedDailyQuestService.completeQuestForUser(
+      await dailyQuestService.completeQuestForUser(
         questId: quest.id,
         userId: userId,
         partnerUserId: partner?.pushToken,
