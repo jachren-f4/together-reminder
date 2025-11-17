@@ -1,6 +1,26 @@
 /// Utility for formatting numbers as words
 /// Used for quest descriptions and header subtitles
 class NumberFormatter {
+  /// Format a number with commas (e.g., 2450 → "2,450")
+  /// Used for Love Points and large numbers
+  static String format(int number) {
+    if (number < 1000) return number.toString();
+
+    final str = number.toString();
+    final result = StringBuffer();
+    int count = 0;
+
+    for (int i = str.length - 1; i >= 0; i--) {
+      if (count > 0 && count % 3 == 0) {
+        result.write(',');
+      }
+      result.write(str[i]);
+      count++;
+    }
+
+    return result.toString().split('').reversed.join();
+  }
+
   /// Convert a number (1-999) to its capitalized word equivalent
   /// Returns the number as a string if out of range
   ///

@@ -1,6 +1,7 @@
 import '../models/user.dart';
 import '../models/love_point_transaction.dart';
 import 'storage_service.dart';
+import 'general_activity_streak_service.dart';
 import 'package:uuid/uuid.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/foundation.dart';
@@ -159,12 +160,15 @@ class LovePointService {
   /// Get LP statistics
   static Map<String, dynamic> getStats() {
     final user = _storage.getUser();
+    final streakService = GeneralActivityStreakService();
+
     if (user == null) {
       return {
         'total': 0,
         'tier': 1,
         'floor': 0,
         'progressToNext': 0.0,
+        'streak': 0,
       };
     }
 
@@ -175,6 +179,7 @@ class LovePointService {
       'progressToNext': getProgressToNextTier(),
       'currentArena': getCurrentTierInfo(),
       'nextArena': getNextTierInfo(),
+      'streak': streakService.getCurrentStreak(),
     };
   }
 

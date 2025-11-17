@@ -4,6 +4,7 @@ import 'package:togetherremind/models/partner.dart';
 import 'package:togetherremind/models/user.dart';
 import 'package:togetherremind/services/storage_service.dart';
 import 'package:togetherremind/services/love_point_service.dart';
+import 'package:togetherremind/services/general_activity_streak_service.dart';
 import 'package:uuid/uuid.dart';
 import '../utils/logger.dart';
 
@@ -107,6 +108,9 @@ class PokeService {
         // Removed verbose logging
         // print('🎉 Mutual poke! Awarded 5 LP');
       }
+
+      // Record activity for streak tracking
+      await GeneralActivityStreakService().recordActivity();
 
       return true;
     } catch (e) {

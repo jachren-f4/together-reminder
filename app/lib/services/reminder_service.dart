@@ -4,6 +4,7 @@ import 'package:togetherremind/models/partner.dart';
 import 'package:togetherremind/models/user.dart';
 import 'package:togetherremind/services/storage_service.dart';
 import 'package:togetherremind/services/love_point_service.dart';
+import 'package:togetherremind/services/general_activity_streak_service.dart';
 import '../utils/logger.dart';
 
 class ReminderService {
@@ -51,6 +52,9 @@ class ReminderService {
         reason: 'reminder_sent',
         relatedId: reminder.id,
       );
+
+      // Record activity for streak tracking
+      await GeneralActivityStreakService().recordActivity();
 
       return true;
     } catch (e) {

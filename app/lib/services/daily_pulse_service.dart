@@ -6,6 +6,7 @@ import '../models/quiz_question.dart';
 import '../models/user.dart';
 import '../widgets/daily_pulse_widget.dart';
 import 'storage_service.dart';
+import 'general_activity_streak_service.dart';
 import 'quiz_service.dart';
 import 'notification_service.dart';
 import '../config/dev_config.dart';
@@ -128,6 +129,9 @@ class DailyPulseService {
       user.lovePoints = (user.lovePoints) + pulse.lpAwarded;
       await user.save();
     }
+
+    // Record activity for general streak tracking
+    await GeneralActivityStreakService().recordActivity();
 
     // Send notification to both users about completion
     await _sendCompletionNotification(pulse);

@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import '../models/daily_quest.dart';
 import '../services/storage_service.dart';
 import '../services/love_point_service.dart';
+import '../services/general_activity_streak_service.dart';
 import '../services/quest_sync_service.dart';
 import '../services/quest_utilities.dart';
 import '../utils/logger.dart';
@@ -137,7 +138,9 @@ class DailyQuestService {
     }
 
     // Save quest locally
-    await _storage.updateDailyQuest(quest);
+    // Use saveDailyQuest() instead of updateDailyQuest() to ensure the quest
+    // is saved by ID, even if it's a detached Hive object (Phase 5 fix)
+    await _storage.saveDailyQuest(quest);
 
     // Sync completion to Firebase if sync service is available
     if (_questSyncService != null && partnerUserId != null) {
@@ -148,6 +151,9 @@ class DailyQuestService {
       );
       Logger.debug('Quest completion synced to Firebase', service: 'quest');
     }
+
+    // Record activity for streak tracking
+    await GeneralActivityStreakService().recordActivity();
 
     return bothCompleted;
   }

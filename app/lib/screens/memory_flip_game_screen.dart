@@ -4,6 +4,7 @@ import 'package:togetherremind/models/memory_flip.dart';
 import 'package:togetherremind/services/memory_flip_service.dart';
 import 'package:togetherremind/services/storage_service.dart';
 import 'package:togetherremind/services/love_point_service.dart';
+import 'package:togetherremind/services/general_activity_streak_service.dart';
 import 'package:togetherremind/theme/app_theme.dart';
 import 'package:togetherremind/widgets/match_reveal_dialog.dart';
 
@@ -177,6 +178,9 @@ class _MemoryFlipGameScreenState extends State<MemoryFlipGameScreen> {
             reason: 'memory_flip_match',
             relatedId: _puzzle!.id,
           );
+
+          // Record activity for streak tracking
+          await GeneralActivityStreakService().recordActivity();
         }
 
         // Match found! Show celebration dialog
@@ -256,6 +260,9 @@ class _MemoryFlipGameScreenState extends State<MemoryFlipGameScreen> {
         reason: 'memory_flip_completed',
         relatedId: _puzzle!.id,
       );
+
+      // Record activity for streak tracking
+      await GeneralActivityStreakService().recordActivity();
     }
 
     showDialog(
