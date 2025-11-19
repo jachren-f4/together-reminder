@@ -53,5 +53,16 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleURLName</key>
+			<string>com.togetherremind.togetherremind</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>togetherremind</string>
+			</array>
+		</dict>
+	</array>
 </dict>
 </plist>

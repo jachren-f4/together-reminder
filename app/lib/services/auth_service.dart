@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
-import 'package:flutter_secure_storage.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 
@@ -136,18 +136,16 @@ class AuthService {
   /// Sign in with email and magic link
   Future<bool> signInWithMagicLink(String email) async {
     try {
-      _updateAuthState(AuthState.loading);
-      
+      // Don't change global auth state - let the UI handle loading
       await _supabase!.auth.signInWithOtp(
         email: email,
         emailRedirectTo: 'togetherremind://auth-callback',
       );
-      
+
       debugPrint('✅ Magic link sent to $email');
       return true;
     } catch (e) {
       debugPrint('❌ Sign in failed: $e');
-      _updateAuthState(AuthState.unauthenticated);
       return false;
     }
   }
@@ -345,9 +343,9 @@ class AuthService {
   Future<void> _restoreSession() async {
     try {
       final accessToken = await _secureStorage.read(key: _keyAccessToken);
-      final refreshToken = await _secureStorage.read(key: _keyRefreshToken);
-      
-      if (accessToken == null || refreshToken == null) {
+      final storedRefreshToken = await _secureStorage.read(key: _keyRefreshToken);
+
+      if (accessToken == null || storedRefreshToken == null) {
         debugPrint('ℹ️ No saved session found');
         _updateAuthState(AuthState.unauthenticated);
         return;
