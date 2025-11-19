@@ -31,57 +31,54 @@ class _YouOrMeResultsScreenState extends State<YouOrMeResultsScreen> {
   @override
   void initState() {
     super.initState();
-    _loadPartnerSessionAndCalculateResults();
+    _loadSessionAndCalculateResults();
 
     // Check and complete associated daily quest
     _checkQuestCompletion();
   }
 
-  Future<void> _loadPartnerSessionAndCalculateResults() async {
+  Future<void> _loadSessionAndCalculateResults() async {
     setState(() {
       _isLoadingPartnerSession = true;
     });
 
     try {
-      final partner = _storage.getPartner();
-      if (partner == null) {
-        // If no partner, just use current session
+      // Single-session architecture: Both users' answers are in the same session
+      // Check if both users have answered
+      if (!widget.session.areBothUsersAnswered()) {
+        // Refresh session from Firebase to get latest data (e.g., partner's answers)
+        Logger.debug('Not all users answered, refreshing session from Firebase', service: 'you_or_me');
+        final refreshedSession = await _service.getSession(
+          widget.session.id,
+          forceRefresh: true,
+        );
+
+        if (refreshedSession != null && refreshedSession.areBothUsersAnswered()) {
+          // Both answered now, calculate results
+          setState(() {
+            _results = _service.calculateResults(refreshedSession);
+            _isLoadingPartnerSession = false;
+          });
+        } else {
+          // Still waiting for partner
+          Logger.debug('Still waiting for partner to complete', service: 'you_or_me');
+          setState(() {
+            _results = null;
+            _isLoadingPartnerSession = false;
+          });
+        }
+      } else {
+        // Both users have answered, calculate results directly
+        Logger.debug('Both users answered, calculating results', service: 'you_or_me');
         setState(() {
-          _results = _service.calculateResultsFromDualSessions(widget.session, null);
+          _results = _service.calculateResults(widget.session);
           _isLoadingPartnerSession = false;
         });
-        return;
       }
-
-      // Extract timestamp from current session ID
-      final sessionParts = widget.session.id.split('_');
-      if (sessionParts.length < 3) {
-        Logger.error('Invalid session ID format: ${widget.session.id}', service: 'you_or_me');
-        setState(() {
-          _results = _service.calculateResultsFromDualSessions(widget.session, null);
-          _isLoadingPartnerSession = false;
-        });
-        return;
-      }
-      final timestamp = sessionParts.last;
-
-      // Construct partner's session ID
-      final partnerSessionId = 'youorme_${partner.pushToken}_$timestamp';
-
-      // Fetch the partner's session
-      final partnerSession = await _service.getSession(
-        partnerSessionId,
-        forceRefresh: true,
-      );
-
-      setState(() {
-        _results = _service.calculateResultsFromDualSessions(widget.session, partnerSession);
-        _isLoadingPartnerSession = false;
-      });
     } catch (e) {
-      Logger.error('Error loading partner session', error: e, service: 'you_or_me');
+      Logger.error('Error loading session results', error: e, service: 'you_or_me');
       setState(() {
-        _results = _service.calculateResultsFromDualSessions(widget.session, null);
+        _results = null;
         _isLoadingPartnerSession = false;
       });
     }
@@ -93,46 +90,51 @@ class _YouOrMeResultsScreenState extends State<YouOrMeResultsScreen> {
       final user = _storage.getUser();
       final partner = _storage.getPartner();
 
-      if (user == null || partner == null) return;
+      if (user == null || partner == null) {
+        Logger.debug('No user or partner, skipping quest completion check', service: 'you_or_me');
+        return;
+      }
 
       // Check if there's a daily quest for this game session
       final questService = DailyQuestService(storage: _storage);
       final todayQuests = questService.getTodayQuests();
 
-      // Extract timestamp from session ID (format: youorme_{userId}_{timestamp})
-      final sessionParts = widget.session.id.split('_');
-      final sessionTimestamp = sessionParts.length >= 3 ? sessionParts.last : '';
+      Logger.debug('Checking quest completion - Found ${todayQuests.length} quests today', service: 'you_or_me');
+      Logger.debug('Session ID: ${widget.session.id}', service: 'you_or_me');
 
-      // Find quest with matching timestamp (both sessions share the same timestamp)
+      // Find quest with matching contentId (single-session architecture)
       final matchingQuest = todayQuests
-          .where((q) {
-            if (q.type != QuestType.youOrMe) return false;
-
-            // Extract timestamp from quest's contentId
-            final questIdParts = q.contentId.split('_');
-            if (questIdParts.length < 3) return false;
-
-            // Match by timestamp since both sessions share the same timestamp
-            return questIdParts.last == sessionTimestamp;
-          })
+          .where((q) => q.type == QuestType.youOrMe && q.contentId == widget.session.id)
           .firstOrNull;
 
       if (matchingQuest == null) {
+        Logger.debug('❌ No matching You or Me quest found for session ${widget.session.id}', service: 'you_or_me');
         // Not a daily quest game - just played from Activities screen
         return;
       }
 
+      Logger.debug('✅ Found matching quest: ${matchingQuest.id} for session ${widget.session.id}', service: 'you_or_me');
+
       // Check if current user has completed all questions
       final userAnswers = widget.session.answers?[user.id];
       if (userAnswers == null || userAnswers.length < widget.session.questions.length) {
+        Logger.debug('User has not completed all questions yet (${userAnswers?.length ?? 0}/${widget.session.questions.length})', service: 'you_or_me');
         return; // User hasn't completed the game yet
       }
+
+      Logger.debug('User ${user.id} completed all ${widget.session.questions.length} questions, marking quest complete', service: 'you_or_me');
 
       // Mark quest as completed for this user
       final bothCompleted = await questService.completeQuestForUser(
         questId: matchingQuest.id,
         userId: user.id,
       );
+
+      Logger.debug('Quest completion result - bothCompleted: $bothCompleted', service: 'you_or_me');
+
+      // Verify quest was updated in storage
+      final updatedQuest = _storage.getDailyQuest(matchingQuest.id);
+      Logger.debug('Quest after update - ID: ${updatedQuest?.id}, userCompletions: ${updatedQuest?.userCompletions}', service: 'you_or_me');
 
       // Sync with Firebase
       final syncService = QuestSyncService(storage: _storage);
@@ -142,6 +144,8 @@ class _YouOrMeResultsScreenState extends State<YouOrMeResultsScreen> {
         currentUserId: user.id,
         partnerUserId: partner.pushToken,
       );
+
+      Logger.debug('Quest completion synced to Firebase for quest ${matchingQuest.id}', service: 'you_or_me');
 
       if (bothCompleted) {
         Logger.success('Daily You or Me quest completed by both users! Awarding 30 LP...', service: 'you_or_me');

@@ -319,12 +319,8 @@ class _DailyQuestsWidgetState extends State<DailyQuestsWidget> {
       return;
     }
 
-    // The quest contentId points to the creator's session.
-    // Find the current user's own session from the paired session.
-    final session = await _youOrMeService.getUserSessionFromPaired(
-      quest.contentId,
-      user.id,
-    );
+    // Single-session architecture: quest.contentId is the shared session ID
+    final session = await _youOrMeService.getSession(quest.contentId);
 
     if (session == null) {
       _showError('You or Me session not found');
@@ -356,6 +352,12 @@ class _DailyQuestsWidgetState extends State<DailyQuestsWidget> {
           builder: (context) => YouOrMeIntroScreen(session: session),
         ),
       );
+    }
+
+    // Refresh UI after returning from You or Me screens
+    // This ensures quest cards update to show completion status
+    if (mounted) {
+      setState(() {});
     }
   }
 
