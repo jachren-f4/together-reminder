@@ -9,6 +9,7 @@ import '../services/memory_flip_service.dart';
 import '../services/quiz_service.dart';
 import '../services/daily_quest_service.dart';
 import '../services/quest_sync_service.dart';
+import '../services/love_point_service.dart';
 import '../theme/app_theme.dart';
 import '../widgets/poke_bottom_sheet.dart';
 import '../widgets/remind_bottom_sheet.dart';
@@ -30,7 +31,7 @@ class NewHomeScreen extends StatefulWidget {
   State<NewHomeScreen> createState() => _NewHomeScreenState();
 }
 
-class _NewHomeScreenState extends State<NewHomeScreen> {
+class _NewHomeScreenState extends State<NewHomeScreen> with SingleTickerProviderStateMixin {
   final StorageService _storage = StorageService();
   final ArenaService _arenaService = ArenaService();
   final DailyPulseService _pulseService = DailyPulseService();
@@ -40,23 +41,52 @@ class _NewHomeScreenState extends State<NewHomeScreen> {
 
   bool _isRefreshing = false;
   DateTime? _lastSyncTime;
+  late AnimationController _pulseController;
+
+  @override
+  void initState() {
+    super.initState();
+    _pulseController = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 2),
+    )..repeat();
+
+    // Register LP change callback for real-time counter updates
+    _setupLPChangeCallback();
+  }
+
+  /// Setup callback for real-time LP counter updates
+  /// Matches pattern used by quest cards (daily_quests_widget.dart)
+  void _setupLPChangeCallback() {
+    // Register callback WITHOUT creating a new listener
+    // (Listener already started in main.dart - don't create duplicate!)
+    LovePointService.setLPChangeCallback(() {
+      if (mounted) {
+        setState(() {
+          // Trigger rebuild to update LP counter
+        });
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _pulseController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppTheme.backgroundGray,
       body: SafeArea(
-        child: RefreshIndicator(
-          onRefresh: _refreshFromFirebase,
-          child: SingleChildScrollView(
-            physics: const AlwaysScrollableScrollPhysics(),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                _buildSimplifiedHeader(),
-                _buildMainContent(),
-              ],
-            ),
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              _buildSimplifiedHeader(),
+              _buildMainContent(),
+            ],
           ),
         ),
       ),
@@ -491,52 +521,28 @@ class _NewHomeScreenState extends State<NewHomeScreen> {
         // Daily Quests
         const DailyQuestsWidget(),
 
-        // Last sync timestamp
-        if (_lastSyncTime != null)
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-            child: Text(
-              'Last updated: ${_formatTimeSince(_lastSyncTime!)}',
-              style: AppTheme.bodyFont.copyWith(
-                fontSize: 12,
-                color: AppTheme.textTertiary,
-              ),
-              textAlign: TextAlign.center,
-            ),
-          ),
-
-        const SizedBox(height: 16),
-
-        // Action buttons (Poke + Remind)
-        _buildActionButtons(),
-
         const SizedBox(height: 24),
 
-        // Side Quests section header with swipe hint
+        // Side Quests section header with action buttons
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                'Side Quests',
+                'SIDE QUESTS',
                 style: AppTheme.headlineFont.copyWith(
-                  fontSize: 28,
-                  fontWeight: FontWeight.w700,
-                  letterSpacing: -0.5,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w400,
+                  letterSpacing: 2,
                 ),
               ),
-              Text(
-                // RTL support for swipe hint
-                Directionality.of(context) == TextDirection.rtl
-                    ? '→ Swipe ←'
-                    : '← Swipe →',
-                style: const TextStyle(
-                  fontSize: 11,
-                  color: Color(0xFF999999),
-                  fontWeight: FontWeight.w600,
-                  letterSpacing: 1,
-                ),
+              Row(
+                children: [
+                  _buildActionButton('POKE', false, _showPokeBottomSheet),
+                  const SizedBox(width: 10),
+                  _buildActionButton('REMIND', false, _showRemindBottomSheet),
+                ],
               ),
             ],
           ),
@@ -551,7 +557,7 @@ class _NewHomeScreenState extends State<NewHomeScreen> {
         // Version number for debugging hot reload
         Center(
           child: Text(
-            'v1.0.11',
+            'v1.0.12',
             style: TextStyle(
               fontSize: 10,
               color: Colors.grey.shade400,
@@ -1109,47 +1115,73 @@ class _NewHomeScreenState extends State<NewHomeScreen> {
     );
   }
 
-  /// Build action buttons section (Poke + Remind)
-  Widget _buildActionButtons() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20),
-      child: Row(
-        children: [
-          Expanded(
-            child: ElevatedButton(
-              onPressed: _showPokeBottomSheet,
-              style: ElevatedButton.styleFrom(
-                padding: const EdgeInsets.symmetric(vertical: 12),
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: const [
-                  Text('💫', style: TextStyle(fontSize: 20)),
-                  SizedBox(width: 6),
-                  Text('Poke'),
-                ],
+  /// Build styled action button with optional dot indicator
+  Widget _buildActionButton(String label, bool showDot, VoidCallback onTap) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+        decoration: BoxDecoration(
+          color: AppTheme.primaryWhite,
+          border: Border.all(color: AppTheme.primaryBlack, width: 1),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.15),
+              offset: const Offset(4, 4),
+              blurRadius: 0,
+            ),
+          ],
+        ),
+        child: Stack(
+          clipBehavior: Clip.none,
+          children: [
+            Text(
+              label,
+              style: AppTheme.headlineFont.copyWith(
+                fontSize: 10,
+                fontWeight: FontWeight.w600,
+                letterSpacing: 0.5,
+                color: AppTheme.primaryBlack,
               ),
             ),
-          ),
-          const SizedBox(width: 10),
-          Expanded(
-            child: ElevatedButton(
-              onPressed: _showRemindBottomSheet,
-              style: ElevatedButton.styleFrom(
-                padding: const EdgeInsets.symmetric(vertical: 12),
+            if (showDot)
+              Positioned(
+                top: -4,
+                right: -4,
+                child: _buildDotIndicator(),
               ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: const [
-                  Text('💕', style: TextStyle(fontSize: 20)),
-                  SizedBox(width: 6),
-                  Text('Remind'),
-                ],
-              ),
-            ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
+
+  /// Build pulsing dot indicator
+  Widget _buildDotIndicator() {
+    return AnimatedBuilder(
+      animation: _pulseController,
+      builder: (context, child) {
+        final value = _pulseController.value;
+        final scale = 1.0 + (0.2 * value);
+        final opacity = 1.0 - (0.2 * value);
+
+        return Transform.scale(
+          scale: scale,
+          child: Opacity(
+            opacity: opacity,
+            child: Container(
+              width: 8,
+              height: 8,
+              decoration: BoxDecoration(
+                color: AppTheme.primaryBlack,
+                shape: BoxShape.circle,
+                border: Border.all(color: AppTheme.primaryWhite, width: 2),
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
 }
