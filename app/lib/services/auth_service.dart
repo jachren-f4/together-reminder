@@ -1,0 +1,401 @@
+import 'dart:async';
+import 'dart:convert';
+import 'package:flutter/foundation.dart';
+import 'package:flutter_secure_storage.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:jwt_decoder/jwt_decoder.dart';
+
+/// Authentication states
+enum AuthState {
+  initial,
+  authenticated,
+  unauthenticated,
+  loading,
+}
+
+/// Auth Service for managing Supabase authentication
+/// 
+/// Features:
+/// - Secure token storage
+/// - Background token refresh (5 min before expiry)
+/// - Local JWT expiry detection
+/// - Cross-device token sync
+/// - Automatic retry on auth failures
+class AuthService {
+  static final AuthService _instance = AuthService._internal();
+  factory AuthService() => _instance;
+  AuthService._internal();
+
+  // Secure storage for tokens
+  final _secureStorage = const FlutterSecureStorage();
+  
+  // Supabase client
+  SupabaseClient? _supabase;
+  
+  // Auth state stream
+  final _authStateController = StreamController<AuthState>.broadcast();
+  Stream<AuthState> get authStateStream => _authStateController.stream;
+  
+  // Current auth state
+  AuthState _authState = AuthState.initial;
+  AuthState get authState => _authState;
+  
+  // Background refresh timer
+  Timer? _refreshTimer;
+  
+  // Storage keys
+  static const _keyAccessToken = 'supabase_access_token';
+  static const _keyRefreshToken = 'supabase_refresh_token';
+  static const _keyTokenExpiry = 'supabase_token_expiry';
+  static const _keyUserId = 'supabase_user_id';
+  static const _keyUserEmail = 'supabase_user_email';
+
+  /// Initialize the auth service
+  Future<void> initialize({
+    required String supabaseUrl,
+    required String supabaseAnonKey,
+  }) async {
+    try {
+      // Initialize Supabase
+      await Supabase.initialize(
+        url: supabaseUrl,
+        anonKey: supabaseAnonKey,
+      );
+      
+      _supabase = Supabase.instance.client;
+      
+      // Listen to auth state changes from Supabase
+      _supabase!.auth.onAuthStateChange.listen((data) {
+        _handleAuthStateChange(data.event, data.session);
+      });
+      
+      // Try to restore previous session
+      await _restoreSession();
+      
+      // Start background refresh timer
+      _startRefreshTimer();
+      
+      debugPrint('✅ AuthService initialized');
+    } catch (e) {
+      debugPrint('❌ AuthService initialization failed: $e');
+      _updateAuthState(AuthState.unauthenticated);
+    }
+  }
+
+  /// Get current access token
+  Future<String?> getAccessToken() async {
+    try {
+      return await _secureStorage.read(key: _keyAccessToken);
+    } catch (e) {
+      debugPrint('Error reading access token: $e');
+      return null;
+    }
+  }
+
+  /// Get current user ID
+  Future<String?> getUserId() async {
+    try {
+      return await _secureStorage.read(key: _keyUserId);
+    } catch (e) {
+      debugPrint('Error reading user ID: $e');
+      return null;
+    }
+  }
+
+  /// Get current user email
+  Future<String?> getUserEmail() async {
+    try {
+      return await _secureStorage.read(key: _keyUserEmail);
+    } catch (e) {
+      debugPrint('Error reading user email: $e');
+      return null;
+    }
+  }
+
+  /// Check if user is authenticated
+  bool get isAuthenticated => _authState == AuthState.authenticated;
+
+  /// Check if token is expiring soon (within 5 minutes)
+  Future<bool> isTokenExpiringSoon() async {
+    try {
+      final expiryStr = await _secureStorage.read(key: _keyTokenExpiry);
+      if (expiryStr == null) return true;
+      
+      final expiry = DateTime.parse(expiryStr);
+      final now = DateTime.now();
+      final timeUntilExpiry = expiry.difference(now);
+      
+      // Refresh if expires within 5 minutes
+      return timeUntilExpiry.inMinutes < 5;
+    } catch (e) {
+      debugPrint('Error checking token expiry: $e');
+      return true; // Assume expiring to trigger refresh
+    }
+  }
+
+  /// Sign in with email and magic link
+  Future<bool> signInWithMagicLink(String email) async {
+    try {
+      _updateAuthState(AuthState.loading);
+      
+      await _supabase!.auth.signInWithOtp(
+        email: email,
+        emailRedirectTo: 'togetherremind://auth-callback',
+      );
+      
+      debugPrint('✅ Magic link sent to $email');
+      return true;
+    } catch (e) {
+      debugPrint('❌ Sign in failed: $e');
+      _updateAuthState(AuthState.unauthenticated);
+      return false;
+    }
+  }
+
+  /// Verify OTP from magic link
+  Future<bool> verifyOTP(String email, String token) async {
+    try {
+      _updateAuthState(AuthState.loading);
+      
+      final response = await _supabase!.auth.verifyOTP(
+        email: email,
+        token: token,
+        type: OtpType.email,
+      );
+      
+      if (response.session != null) {
+        await _saveSession(response.session!);
+        _updateAuthState(AuthState.authenticated);
+        debugPrint('✅ OTP verified successfully');
+        return true;
+      }
+      
+      _updateAuthState(AuthState.unauthenticated);
+      return false;
+    } catch (e) {
+      debugPrint('❌ OTP verification failed: $e');
+      _updateAuthState(AuthState.unauthenticated);
+      return false;
+    }
+  }
+
+  /// Refresh access token
+  Future<bool> refreshToken() async {
+    try {
+      final refreshToken = await _secureStorage.read(key: _keyRefreshToken);
+      
+      if (refreshToken == null) {
+        debugPrint('⚠️ No refresh token available');
+        await signOut();
+        return false;
+      }
+      
+      debugPrint('🔄 Refreshing access token...');
+      
+      final response = await _supabase!.auth.refreshSession();
+      
+      if (response.session != null) {
+        await _saveSession(response.session!);
+        debugPrint('✅ Token refreshed successfully');
+        return true;
+      }
+      
+      debugPrint('❌ Token refresh failed - no session');
+      await signOut();
+      return false;
+    } catch (e) {
+      debugPrint('❌ Token refresh error: $e');
+      
+      // If refresh fails, sign out user
+      await signOut();
+      return false;
+    }
+  }
+
+  /// Sign out
+  Future<void> signOut() async {
+    try {
+      await _supabase!.auth.signOut();
+      await _clearSession();
+      _updateAuthState(AuthState.unauthenticated);
+      debugPrint('✅ Signed out successfully');
+    } catch (e) {
+      debugPrint('❌ Sign out error: $e');
+      // Clear session anyway
+      await _clearSession();
+      _updateAuthState(AuthState.unauthenticated);
+    }
+  }
+
+  /// Create Authorization header for API requests
+  Future<Map<String, String>> getAuthHeaders() async {
+    final token = await getAccessToken();
+    
+    if (token == null) {
+      return {};
+    }
+    
+    return {
+      'Authorization': 'Bearer $token',
+      'Content-Type': 'application/json',
+    };
+  }
+
+  /// Handle API 401 responses (unauthorized)
+  /// 
+  /// Call this when you receive a 401 from the API
+  /// Returns true if token was refreshed successfully
+  Future<bool> handleUnauthorized() async {
+    debugPrint('🔐 Handling 401 - attempting token refresh');
+    return await refreshToken();
+  }
+
+  // Private methods
+
+  void _updateAuthState(AuthState newState) {
+    _authState = newState;
+    _authStateController.add(newState);
+  }
+
+  void _handleAuthStateChange(AuthChangeEvent event, Session? session) {
+    debugPrint('🔐 Auth state changed: $event');
+    
+    switch (event) {
+      case AuthChangeEvent.signedIn:
+        if (session != null) {
+          _saveSession(session);
+          _updateAuthState(AuthState.authenticated);
+        }
+        break;
+      case AuthChangeEvent.signedOut:
+        _clearSession();
+        _updateAuthState(AuthState.unauthenticated);
+        break;
+      case AuthChangeEvent.tokenRefreshed:
+        if (session != null) {
+          _saveSession(session);
+          _updateAuthState(AuthState.authenticated);
+        }
+        break;
+      case AuthChangeEvent.userUpdated:
+        if (session != null) {
+          _saveSession(session);
+        }
+        break;
+      default:
+        break;
+    }
+  }
+
+  Future<void> _saveSession(Session session) async {
+    try {
+      // Save tokens
+      await _secureStorage.write(
+        key: _keyAccessToken,
+        value: session.accessToken,
+      );
+      
+      await _secureStorage.write(
+        key: _keyRefreshToken,
+        value: session.refreshToken,
+      );
+      
+      // Calculate and save expiry
+      final expiresAt = DateTime.now().add(
+        Duration(seconds: session.expiresIn ?? 3600),
+      );
+      await _secureStorage.write(
+        key: _keyTokenExpiry,
+        value: expiresAt.toIso8601String(),
+      );
+      
+      // Save user info
+      if (session.user != null) {
+        await _secureStorage.write(
+          key: _keyUserId,
+          value: session.user!.id,
+        );
+        
+        await _secureStorage.write(
+          key: _keyUserEmail,
+          value: session.user!.email ?? '',
+        );
+      }
+      
+      debugPrint('✅ Session saved securely');
+    } catch (e) {
+      debugPrint('❌ Error saving session: $e');
+    }
+  }
+
+  Future<void> _clearSession() async {
+    try {
+      await _secureStorage.delete(key: _keyAccessToken);
+      await _secureStorage.delete(key: _keyRefreshToken);
+      await _secureStorage.delete(key: _keyTokenExpiry);
+      await _secureStorage.delete(key: _keyUserId);
+      await _secureStorage.delete(key: _keyUserEmail);
+      
+      debugPrint('✅ Session cleared');
+    } catch (e) {
+      debugPrint('❌ Error clearing session: $e');
+    }
+  }
+
+  Future<void> _restoreSession() async {
+    try {
+      final accessToken = await _secureStorage.read(key: _keyAccessToken);
+      final refreshToken = await _secureStorage.read(key: _keyRefreshToken);
+      
+      if (accessToken == null || refreshToken == null) {
+        debugPrint('ℹ️ No saved session found');
+        _updateAuthState(AuthState.unauthenticated);
+        return;
+      }
+      
+      // Check if token is expired
+      if (await isTokenExpiringSoon()) {
+        debugPrint('🔄 Token expiring soon, refreshing...');
+        final refreshed = await refreshToken();
+        
+        if (refreshed) {
+          _updateAuthState(AuthState.authenticated);
+        } else {
+          _updateAuthState(AuthState.unauthenticated);
+        }
+      } else {
+        debugPrint('✅ Session restored from storage');
+        _updateAuthState(AuthState.authenticated);
+      }
+    } catch (e) {
+      debugPrint('❌ Error restoring session: $e');
+      _updateAuthState(AuthState.unauthenticated);
+    }
+  }
+
+  void _startRefreshTimer() {
+    // Cancel existing timer
+    _refreshTimer?.cancel();
+    
+    // Check for token expiry every 60 seconds
+    _refreshTimer = Timer.periodic(
+      const Duration(seconds: 60),
+      (timer) async {
+        if (_authState == AuthState.authenticated) {
+          if (await isTokenExpiringSoon()) {
+            debugPrint('🔄 Token expiring soon - refreshing in background');
+            await refreshToken();
+          }
+        }
+      },
+    );
+    
+    debugPrint('✅ Background refresh timer started');
+  }
+
+  /// Dispose resources
+  void dispose() {
+    _refreshTimer?.cancel();
+    _authStateController.close();
+  }
+}

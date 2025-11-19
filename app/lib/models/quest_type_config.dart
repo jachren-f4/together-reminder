@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 import 'base_session.dart';
 import 'quiz_session.dart';
+import 'you_or_me.dart';
 import '../screens/quiz_intro_screen.dart';
 import '../screens/quiz_question_screen.dart';
 import '../screens/affirmation_intro_screen.dart';
+import '../screens/you_or_me_intro_screen.dart';
+import '../screens/you_or_me_game_screen.dart';
 import '../widgets/results_content/classic_quiz_results_content.dart';
 import '../widgets/results_content/affirmation_results_content.dart';
+import '../widgets/results_content/you_or_me_results_content.dart';
 
 /// Polling behavior for waiting screens
 enum PollingType {
@@ -123,5 +127,25 @@ class QuestTypeConfigRegistry {
     );
 
     // Phase 5: You or Me
+    register(
+      'youorme',
+      QuestTypeConfig(
+        formatType: 'youorme',
+        introBuilder: (session) => YouOrMeIntroScreen(session: session as YouOrMeSession),
+        questionBuilder: (session) => YouOrMeGameScreen(session: session as YouOrMeSession),
+        resultsContentBuilder: (session) => YouOrMeResultsContent(session: session as YouOrMeSession),
+        waitingConfig: const WaitingConfig(
+          pollingType: PollingType.auto,
+          pollingInterval: Duration(seconds: 3),
+          showTimeRemaining: false,
+          isDualSession: true, // CRITICAL: You or Me uses separate sessions per user
+          waitingMessage: 'Waiting for your partner...',
+        ),
+        resultsConfig: const ResultsConfig(
+          showConfetti: false,
+          showLPBanner: true,
+        ),
+      ),
+    );
   }
 }
