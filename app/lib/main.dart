@@ -15,12 +15,15 @@ import 'package:togetherremind/services/quest_sync_service.dart';
 import 'package:togetherremind/services/daily_quest_service.dart';
 import 'package:togetherremind/services/quest_type_manager.dart';
 import 'package:togetherremind/services/love_point_service.dart';
+import 'package:togetherremind/services/auth_service.dart';
 import 'package:togetherremind/models/daily_quest.dart';
 import 'package:togetherremind/config/dev_config.dart';
 import 'package:togetherremind/config/theme_config.dart';
+import 'package:togetherremind/config/supabase_config.dart';
 import 'package:togetherremind/theme/app_theme.dart';
 import 'package:togetherremind/utils/logger.dart';
 import 'package:togetherremind/models/quest_type_config.dart';
+import 'package:togetherremind/widgets/auth_wrapper.dart';
 import 'firebase_options.dart';
 
 void main() async {
@@ -63,6 +66,17 @@ void main() async {
 
   // Initialize Word Validation Service
   await WordValidationService.instance.initialize();
+
+  // Initialize AuthService with Supabase
+  if (SupabaseConfig.isConfigured) {
+    await AuthService().initialize(
+      supabaseUrl: SupabaseConfig.url,
+      supabaseAnonKey: SupabaseConfig.anonKey,
+    );
+    Logger.info('AuthService initialized with Supabase');
+  } else {
+    Logger.warn('Supabase not configured - auth features disabled. Set SUPABASE_URL and SUPABASE_ANON_KEY.');
+  }
 
   // 🚀 Auto-inject mock data in debug mode (only on simulators)
   Logger.debug('Debug Mode: $kDebugMode');
@@ -207,7 +221,14 @@ class _TogetherRemindAppState extends State<TogetherRemindApp> {
                 NotificationService.setAppContext(context);
                 LovePointService.setAppContext(context);
               });
-              return hasPartner ? const HomeScreen() : const OnboardingScreen();
+
+              // Use AuthWrapper if Supabase is configured, otherwise fall back to old behavior
+              if (SupabaseConfig.isConfigured) {
+                return const AuthWrapper();
+              } else {
+                // Legacy behavior for development without auth
+                return hasPartner ? const HomeScreen() : const OnboardingScreen();
+              }
             },
           ),
         );
