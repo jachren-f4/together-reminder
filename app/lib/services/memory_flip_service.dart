@@ -4,6 +4,7 @@ import 'package:cloud_functions/cloud_functions.dart';
 import '../models/memory_flip.dart';
 import '../services/storage_service.dart';
 import '../services/memory_content_bank.dart';
+import '../services/memory_flip_sync_service.dart';
 import '../utils/logger.dart';
 
 /// Result of checking for matches after flipping cards
@@ -25,6 +26,7 @@ class MatchResult {
 class MemoryFlipService {
   final StorageService _storage = StorageService();
   final FirebaseFunctions _functions = FirebaseFunctions.instance;
+  late final MemoryFlipSyncService _syncService = MemoryFlipSyncService(storage: _storage);
   static const int _defaultFlipsPerDay = 6; // Must be even number
   static const int _defaultPuzzleDurationDays = 7; // Weekly puzzles
   static const int _defaultPairCount = 8; // 8 pairs = 16 cards (4×4 grid)
@@ -32,8 +34,9 @@ class MemoryFlipService {
 
   /// Generate a new daily puzzle
   /// Creates a 4×4 grid with 8 pairs of emoji cards
-  Future<MemoryPuzzle> generateDailyPuzzle() async {
-    final puzzleId = const Uuid().v4();
+  Future<MemoryPuzzle> generateDailyPuzzle({String? puzzleId}) async {
+    // Use provided puzzle ID or generate new one (for date-based sync)
+    puzzleId ??= const Uuid().v4();
     final now = DateTime.now();
     final expiresAt = now.add(Duration(days: _defaultPuzzleDurationDays));
 
@@ -91,20 +94,66 @@ class MemoryFlipService {
   }
 
   /// Get the current active puzzle, or generate a new one if none exists
+  ///
+  /// Implements "first device creates, second device loads" pattern via Firebase RTDB
   Future<MemoryPuzzle> getCurrentPuzzle() async {
+    // Get user and partner for Firebase sync
+    final user = _storage.getUser();
+    final partner = _storage.getPartner();
+
+    // Check local storage first
     var puzzle = _storage.getActivePuzzle();
 
-    // If no active puzzle or expired, generate new one
+    // If no active puzzle or expired, check Firebase or generate new one
     if (puzzle == null || puzzle.expiresAt.isBefore(DateTime.now())) {
       if (puzzle != null && puzzle.status == 'active') {
         // Mark expired puzzle as completed (incomplete)
         puzzle.status = 'completed';
         await _storage.updateMemoryPuzzle(puzzle);
       }
-      puzzle = await generateDailyPuzzle();
+
+      // If we have both user and partner, try to sync with Firebase
+      if (user != null && partner != null) {
+        // Generate date-based puzzle ID for syncing (same ID for both partners today)
+        final dateKey = DateTime.now().toIso8601String().substring(0, 10); // YYYY-MM-DD
+        final puzzleId = 'puzzle_$dateKey';
+
+        // Try to load from Firebase
+        Logger.debug('Checking Firebase for puzzle: $puzzleId', service: 'memory_flip');
+        final firebasePuzzle = await _syncService.syncPuzzle(
+          puzzleId,
+          user.id,
+          partner.pushToken,
+        );
+
+        if (firebasePuzzle != null) {
+          // Puzzle exists in Firebase - save locally and return
+          Logger.debug('Loaded puzzle from Firebase', service: 'memory_flip');
+          await _storage.saveMemoryPuzzle(firebasePuzzle);
+          return firebasePuzzle;
+        }
+
+        // No puzzle in Firebase - generate new one with date-based ID and save to Firebase
+        Logger.debug('Generating new puzzle and saving to Firebase', service: 'memory_flip');
+        puzzle = await generateDailyPuzzle(puzzleId: puzzleId);
+
+        // Save to Firebase for partner to load
+        final coupleId = _getCoupleId(user.id, partner.pushToken);
+        await _syncService.savePuzzleToFirebase(puzzle, coupleId, user.id);
+      } else {
+        // No partner - just generate locally
+        Logger.debug('No partner found - generating local puzzle only', service: 'memory_flip');
+        puzzle = await generateDailyPuzzle();
+      }
     }
 
     return puzzle;
+  }
+
+  /// Generate couple ID from sorted push tokens
+  String _getCoupleId(String userToken, String partnerToken) {
+    final tokens = [userToken, partnerToken]..sort();
+    return tokens.join('_');
   }
 
   /// Get or create flip allowance for a user
@@ -206,6 +255,22 @@ class MemoryFlipService {
     }
 
     await _storage.updateMemoryPuzzle(puzzle);
+
+    // Sync match to Firebase RTDB for partner to see
+    final user = _storage.getUser();
+    final partner = _storage.getPartner();
+    if (user != null && partner != null) {
+      final coupleId = _getCoupleId(user.id, partner.pushToken);
+      _syncService.syncMatchToFirebase(
+        coupleId,
+        puzzle.id,
+        card1.id,
+        card2.id,
+        userId,
+      ).catchError((e) {
+        Logger.error('Error syncing match to Firebase RTDB', error: e, service: 'memory_flip');
+      });
+    }
   }
 
   /// Decrement flip allowance after a turn (2 flips)

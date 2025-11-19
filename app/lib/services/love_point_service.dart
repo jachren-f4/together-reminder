@@ -16,6 +16,9 @@ class LovePointService {
   // BuildContext for showing foreground notifications
   static BuildContext? _appContext;
 
+  // Callback for triggering UI updates when LP changes
+  static VoidCallback? _onLPChanged;
+
   // Vacation Arena Thresholds
   static const Map<int, Map<String, dynamic>> arenas = {
     1: {'name': 'Cozy Cabin', 'emoji': '🏕️', 'min': 0, 'max': 1000, 'floor': 0},
@@ -188,6 +191,13 @@ class LovePointService {
     _appContext = context;
   }
 
+  /// Register callback for LP changes (for real-time UI updates)
+  /// Use this in screens that need to update when LP changes
+  /// DO NOT call startListeningForLPAwards() again - that creates duplicate listeners!
+  static void setLPChangeCallback(VoidCallback? callback) {
+    _onLPChanged = callback;
+  }
+
   /// Award Love Points to BOTH users in a couple (for shared activities)
   /// This syncs the award to Firebase so both apps can apply it
   /// Uses relatedId as the Firebase key for atomic deduplication:
@@ -231,11 +241,19 @@ class LovePointService {
 
   /// Start listening for LP awards from Firebase
   /// Call this once on app start
+  ///
+  /// [onLPChanged] - Optional callback to trigger UI updates when LP changes
   static void startListeningForLPAwards({
     required String currentUserId,
     required String partnerUserId,
+    VoidCallback? onLPChanged,
   }) {
     try {
+      // Store callback for UI updates
+      if (onLPChanged != null) {
+        _onLPChanged = onLPChanged;
+      }
+
       // Generate couple ID
       final sortedIds = [currentUserId, partnerUserId]..sort();
       final coupleId = '${sortedIds[0]}_${sortedIds[1]}';
@@ -297,6 +315,9 @@ class LovePointService {
           emoji: '💰',
         );
       }
+
+      // Trigger UI update callback (for real-time LP counter updates)
+      _onLPChanged?.call();
     } catch (e, stackTrace) {
       Logger.error('Error handling LP award', error: e, stackTrace: stackTrace, service: 'lovepoint');
     }

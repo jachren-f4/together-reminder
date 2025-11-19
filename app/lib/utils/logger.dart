@@ -48,7 +48,7 @@ class Logger {
 
     // === MAJOR FEATURES (Enable when working on these features) ===
     'quiz': false,              // Classic quiz gameplay, scoring, sync (36 uses)
-    'you_or_me': false,         // You or Me dual-session game (32 uses)
+    'you_or_me': true,          // You or Me dual-session game (32 uses) - ENABLED for Phase 5 debugging
     'pairing': false,           // QR/Remote device pairing (19 uses - stable, rarely needed)
 
     // === MINOR FEATURES (Enable only when developing specific feature) ===
@@ -56,10 +56,10 @@ class Logger {
     'poke': false,              // Poke send/receive interactions (7 uses)
     'daily_pulse': false,       // Daily Pulse synchronized activities (14 uses)
     'affirmation': false,       // Affirmation quiz variant (5 uses)
-    'memory_flip': false,       // Memory Flip card matching game (5 uses)
+    'memory_flip': true,        // Memory Flip card matching game (5 uses) - ENABLED for sync debugging
     'word_ladder': false,       // Word Ladder game screens (7 uses)
     'ladder': false,            // Word Ladder service backend (2 uses - confusing name, consider consolidating)
-    'quest': false,             // Daily quest sync, generation, completion, Firebase operations (47 uses)
+    'quest': true,              // Daily quest sync, generation, completion, Firebase operations (47 uses) - ENABLED for Phase 5 debugging
 
     // === INFRASTRUCTURE/DEBUG (Rarely needed - only for deep debugging) ===
     'debug': false,             // Debug menu operations, device detection (38 uses)
