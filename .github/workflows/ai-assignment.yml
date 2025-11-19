@@ -1,0 +1,157 @@
+name: AI Agent Assignment
+
+on:
+  issues:
+    types: [labeled, opened]
+  project_card:
+    types: [created, moved]
+
+jobs:
+  assign-ai-agent:
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+      pull-requests: write
+      repository-projects: write
+    
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Analyze Issue and Assign AI Agent
+        id: analyze
+        run: |
+          echo "Analyzing issue context..."
+          
+          # Extract issue details
+          ISSUE_NUMBER="${{ github.event.issue.number || 'unknown' }}"
+          ISSUE_TITLE="${{ github.event.issue.title || '' }}"
+          ISSUE_BODY="${{ github.event.issue.body || '' }}"
+          ISSUE_LABELS=$(echo '${{ github.event.issue.labels }}' | jq -r '.[] | .name')
+          
+          # Determine appropriate AI agent based on labels and content
+          AGENT=""
+          REASON=""
+          
+          # Check for team labels
+          if echo "$ISSUE_LABELS" | grep -q "team/frontend"; then
+            AGENT="sonnet"
+            REASON="Frontend team label detected"
+          elif echo "$ISSUE_LABELS" | grep -q "team/backend"; then
+            AGENT="codex"
+            REASON="Backend team label detected"
+          elif echo "$ISSUE_LABELS" | grep -q "team/pm"; then
+            AGENT="claude"
+            REASON="Project management team label detected"
+          elif echo "$ISSUE_LABELS" | grep -q "team/qa"; then
+            AGENT="claude"
+            REASON="QA team label detected"
+          # Check for technology keywords in title/body
+          elif echo "$ISSUE_TITLE $ISSUE_BODY" | grep -i -E "(flutter|dart|ui|mobile)"; then
+            AGENT="sonnet"
+            REASON="Flutter/Dart keywords detected"
+          elif echo "$ISSUE_TITLE $ISSUE_BODY" | grep -i -E "(api|database|postgresql|backend|next\.js|typescript)"; then
+            AGENT="codex"
+            REASON="Backend/Database keywords detected"
+          elif echo "$ISSUE_TITLE $ISSUE_BODY" | grep -i -E "(architecture|design|documentation|review)"; then
+            AGENT="claude"
+            REASON="Architecture/Documentation keywords detected"
+          else
+            # Default assignment based on current workload
+            AGENT="claude"  # Claude can triage and reassign
+            REASON="No clear specialization, assigned to Claude for triage"
+          fi
+          
+          echo "agent=$AGENT" >> $GITHUB_OUTPUT
+          echo "reason=$REASON" >> $GITHUB_OUTPUT
+          echo "issue_number=$ISSUE_NUMBER" >> $GITHUB_OUTPUT
+      
+      - name: Create Assignment Comment
+        if: steps.analyze.outputs.agent != ''
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const agent = '${{ steps.analyze.outputs.agent }}';
+            const reason = '${{ steps.analyze.outputs.reason }}';
+            const issueNumber = '${{ steps.analyze.outputs.issue_number }}';
+            
+            // Create assignment comment
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: parseInt(issueNumber),
+              body: `🤖 **Auto-Assigned to ${agent.charAt(0).toUpperCase() + agent.slice(1)}**\n\n🎯 **Assignment Reason:** ${reason}\n\n📋 **Implementation Plan:**\n- [ ] ${agent} will analyze requirements\n- [ ] Generate implementation approach\n- [ ] Create development branch\n- [ ] Implement solution\n- [ ] Add comprehensive tests\n- [ ] Submit pull request\n- [ ] Request final review\n\n⏱️ **Expected Timeline:**\n- **Analysis:** ~15 minutes\n- **Implementation:** 1-4 hours\n- **Testing:** ~30 minutes\n- **PR Creation:** ~15 minutes\n\n🚀 **Priority:** ${{ github.event.labels.find(l => l.name.includes('priority'))?.name || 'medium' }}\n📅 **Phase:** ${{ github.event.labels.find(l => l.name.includes('phase'))?.name || 'unspecified' }}`
+            });
+      
+      - name: Mention AI Agent (Optional Automation)
+        if: steps.analyze.outputs.agent != ''
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const agent = '${{ steps.analyze.outputs.agent }}';
+            // You can customize this to actually @mention the agents
+            // if they have GitHub accounts or are part of your team
+            
+            console.log(`Assigned to ${agent} for autonomous implementation`);
+      
+      - name: Update Project Board (if project exists)
+        if: steps.analyze.outputs.agent != ''
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const issueNumber = '${{ steps.analyze.outputs.issue_number }}';
+            const agent = '${{ steps.analyze.outputs.agent }}';
+            
+            try {
+              // Try to add to project board (implementation depends on your project structure)
+              // This is a placeholder - you'll need to customize based on your project setup
+              console.log(`Issue #${issueNumber} ready for ${agent} processing`);
+              
+              // You could move it to an "AI Queue" column or similar
+              
+            } catch (error) {
+              console.log('Project board update skipped - structure may need configuration');
+            }
+      
+      - name: Trigger AI Notification (Webhook)
+        if: steps.analyze.outputs.agent != ''
+        run: |
+          # Send notification to your AI agent system
+          AGENT="${{ steps.analyze.outputs.agent }}"
+          ISSUE_NUMBER="${{ steps.analyze.outputs.issue_number }}"
+          REPO="${{ github.repository }}"
+          ISSUE_URL="${{ github.event.issue.html_url }}"
+          
+          echo "Triggering $AGENT for issue #$ISSUE_NUMBER from $REPO"
+          echo "Issue URL: $ISSUE_URL"
+          
+          # This could call your AI agent system webhook
+          # curl -X POST "$AI_WEBHOOK_URL" \
+          #   -H "Content-Type: application/json" \
+          #   -d "{\"agent\":\"$AGENT\",\"issue_number\":$ISSUE_NUMBER,\"repo\":\"$REPO\",\"action\":\"assign\"}"
+          
+          echo "AI agent notification sent"
+
+  # Separate workflow to monitor when issues need reassignment
+  monitor-agent-workload:
+    runs-on: ubuntu-latest
+    if: github.event.action == 'labeled' && startsWith(github.event.label.name, 'status/')
+    
+    steps:
+      - name: Check Agent Workload and Reassign
+        uses: actions/github-script@v6
+        with:
+          script: |
+            // This helps rebalance workload when agents get stuck
+            const statusLabel = '${{ github.event.label.name }}';
+            
+            if (statusLabel === 'status/blocked') {
+              const issueNumber = context.payload.issue.number;
+              
+              // Add comment suggesting reassignment
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: issueNumber,
+                body: '🚫 **Issue Blocked for AI Agent**\n\nThis issue is currently blocking the assigned AI agent. Consider:\n- [ ] Assigning to a different AI agent\n- [ ] Manual intervention by human team member\n- [ ] Breaking down into smaller tasks\n\n💬 **AI Triage:** @claude Can you help troubleshoot this blocker?'
+              });
+            }

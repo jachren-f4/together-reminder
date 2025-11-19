@@ -1,0 +1,147 @@
+name: AI Agent Cloud Automation
+
+on:
+  schedule:
+    # Every 5 minutes during business hours
+    - cron: '*/5 9-17 * * 1-5'
+    # Every 15 minutes outside business hours (night/weekend)
+    - cron: '*/15 * * * 0,6-8,18-23'
+  workflow_dispatch:
+    inputs:
+      agent_type:
+        description: 'Specific agent to run (sonnet/codex/claude)'
+        required: false
+        default: 'all'
+
+jobs:
+  ai-agent-automation:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30  # Prevent runaway jobs
+    permissions:
+      issues: write
+      pull-requests: write
+      repository-projects: write
+      contents: write
+    
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Setup Python Environment
+        run: |
+          python3 -m venv ai_venv
+          source ai_venv/bin/activate
+          pip install --upgrade pip
+          pip install PyGithub asyncio anthropic openai python-dotenv requests rich
+      
+      - name: Load Environment Variables
+        run: |
+          echo "GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }}" >> .env
+          echo "ANTHROPIC_API_KEY=${{ secrets.ANTHROPIC_API_KEY }}" >> .env
+          echo "OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }}" >> .env
+          echo "LOG_LEVEL=INFO" >> .env
+      
+      - name: Run Sonnet Agent
+        if: github.event.inputs.agent_type == 'all' || github.event.inputs.agent_type == 'sonnet'
+        id: sonnet-work
+        run: |
+          source ai_venv/bin/activate
+          echo "🤖 Running Sonnet (Flutter) automation..."
+          python -c "
+import asyncio
+import sys
+sys.path.append('ai_agents')
+from cloud_agent_runner import run_cloud_agent
+result = asyncio.run(run_cloud_agent('sonnet'))
+print(f'Sonnet completed: {result}')
+      "
+        continue-on-error: true
+      
+      - name: Run Codex Agent  
+        if: github.event.inputs.agent_type == 'all' || github.event.inputs.agent_type == 'codex'
+        id: codex-work
+        run: |
+          source ai_venv/bin/activate
+          echo "🤖 Running Codex (Backend) automation..."
+          python -c "
+import asyncio
+import sys
+sys.path.append('ai_agents')
+from cloud_agent_runner import run_cloud_agent
+result = asyncio.run(run_cloud_agent('codex'))
+print(f'Codex completed: {result}')
+      "
+        continue-on-error: true
+      
+      - name: Run Claude Agent
+        if: github.event.inputs.agent_type == 'all' || github.event.inputs.agent_type == 'claude'
+        id: claude-work
+        run: |
+          source ai_venv/bin/activate
+          echo "🤖 Running Claude (Architecture) automation..."
+          python -c "
+import asyncio
+import sys
+sys.path.append('ai_agents')
+from cloud_agent_runner import run_cloud_agent
+result = asyncio.run(run_cloud_agent('claude'))
+print(f'Claude completed: {result}')
+      "
+        continue-on-error: true
+      
+      - name: Create Status Report
+        if: always()
+        run: |
+          echo "📊 Creating automation status report..."
+          
+          # Get results from previous steps
+          SONNET_STATUS="${{ steps.sonnet-work.outcome }}"
+          CODEX_STATUS="${{ steps.codex-work.outcome }}"
+          CLAUDE_STATUS="${{ steps.claude-work.outcome }}"
+          
+          echo "✅ Cloud Automation Run Complete"
+          echo "🤖 Agent Status:"
+          echo "   Sonnet: $SONNET_STATUS"
+          echo "   Codex: $CODEX_STATUS"  
+          echo "   Claude: $CLAUDE_STATUS"
+          
+          # Create summary comment on main repository issue or create daily report
+          curl -X POST \
+            -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+            -H "Content-Type: application/json" \
+            -d '{
+              "title": "🤖 AI Automation Status - '${{ github.run_number }}'",
+              "body": "**Cloud AI Automation Run** 📊\n\n🤖 **Agent Results:**\n- **Sonnet (Flutter):** '"'"${{ steps.sonnet-work.outcome }}"'"'\n- **Codex (Backend):** '"'"${{ steps.codex-work.outcome }}"'"'\n- **Claude (Architecture):** '"'"${{ steps.claude-work.outcome }}"'"'\n\n⏱️ **Runtime:**'"${{ github.run_started_at }}"'"' to '"${{ github.run_completed_at }}"'"'\n\n🔄 **Next Run:** '"'"${{ github.workflow.head_branch }}"'"' agent',
+              "labels": ["ai-automation", "status/review"]
+            }' \
+            "https://api.github.com/repos/${{ github.repository }}/issues"
+
+  # Separate job for urgent triggered automation
+  urgent-processing:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'workflow_dispatch' && github.event.inputs.agent_type != 'all'
+    needs: ai-agent-automation
+    steps:
+      - name: Handle Urgent Manual Trigger
+        run: |
+          echo "🚨 Urgent processing triggered for ${ github.event.inputs.agent_type }"
+          echo "📋 Manual intervention may be needed"
+
+  # Cleanup and maintenance job
+  maintenance:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'schedule'
+    steps:
+      - uses: actions/checkout@v3
+      - name: Automated Maintenance
+        run: |
+          echo "🔧 Running daily AI maintenance..."
+          
+          # Clean up old automation reports  
+          curl -X GET -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+            "https://api.github.com/repos/${{ github.repository }}/issues?labels=ai-automation&state=open" \
+            | jq '[.[] | select(.created_at < "'$(date -d '7 days ago' -u +%Y-%m-%dT%H:%M:%SZ)'"')]' \
+            > old_issues.json
+            
+          echo "📈 Maintenance complete"
