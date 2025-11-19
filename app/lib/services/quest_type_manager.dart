@@ -239,22 +239,15 @@ class YouOrMeQuestProvider implements QuestProvider {
     QuizProgressionState? progressionState,
   }) async {
     try {
-      // Create TWO You or Me sessions (one per user) with same questions
-      final sessions = await _youOrMeService.generateDualSessions(
+      // Create single shared You or Me session (both users will use same ID)
+      final session = await _youOrMeService.generateSession(
         userId: currentUserId,
         partnerId: partnerUserId,
         questId: null, // Will be set by DailyQuest
       );
 
-      // Return current user's session ID (quest points to their own session)
-      final userSession = sessions[currentUserId];
-      if (userSession == null) {
-        Logger.error('Error: User session not found in dual sessions', service: 'quest');
-        return null;
-      }
-
-      Logger.debug('Generated You or Me dual sessions: ${userSession.id} (user), ${sessions[partnerUserId]?.id} (partner)', service: 'quest');
-      return userSession.id;
+      Logger.debug('Generated You or Me session: ${session.id} (shared by both users)', service: 'quest');
+      return session.id;
     } catch (e) {
       Logger.error('Error generating You or Me quest', error: e, service: 'quest');
       return null;

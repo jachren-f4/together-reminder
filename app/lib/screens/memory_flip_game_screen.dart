@@ -7,6 +7,7 @@ import 'package:togetherremind/services/love_point_service.dart';
 import 'package:togetherremind/services/general_activity_streak_service.dart';
 import 'package:togetherremind/theme/app_theme.dart';
 import 'package:togetherremind/widgets/match_reveal_dialog.dart';
+import 'package:togetherremind/utils/logger.dart';
 
 class MemoryFlipGameScreen extends StatefulWidget {
   const MemoryFlipGameScreen({super.key});
@@ -25,6 +26,9 @@ class _MemoryFlipGameScreenState extends State<MemoryFlipGameScreen> {
   String? _userId;
   bool _isLoading = true;
   bool _isProcessing = false;
+
+  // DEBUG: Show all cards for testing (set to false for production)
+  final bool _debugShowAllCards = true;
 
   // Temporarily flipped cards (not yet matched)
   List<MemoryCard> _flippedCards = [];
@@ -156,30 +160,27 @@ class _MemoryFlipGameScreenState extends State<MemoryFlipGameScreen> {
         final user = _storage.getUser();
 
         if (partner != null && user != null) {
-          // Sync match to Firestore
-          await _service.syncMatch(
+          // Sync match to Firestore (fire-and-forget, don't block UI)
+          _service.syncMatch(
             _puzzle!.id,
             [card1.id, card2.id],
             _userId!,
-          );
+          ).catchError((e) {
+            Logger.error('Error syncing match', error: e, service: 'memory_flip');
+          });
 
-          // Send push notification to partner
-          await _service.sendMatchNotification(
+          // Send push notification to partner (fire-and-forget, don't block UI)
+          _service.sendMatchNotification(
             partnerToken: partner.pushToken,
             senderName: user.name ?? 'Your Partner',
             emoji: matchResult.card1.emoji,
             quote: matchResult.quote,
             lovePoints: matchResult.lovePoints,
-          );
+          ).catchError((e) {
+            Logger.error('Error sending match notification', error: e, service: 'memory_flip');
+          });
 
-          // Award Love Points for match
-          await LovePointService.awardPoints(
-            amount: matchResult.lovePoints,
-            reason: 'memory_flip_match',
-            relatedId: _puzzle!.id,
-          );
-
-          // Record activity for streak tracking
+          // Record activity for streak tracking (KEEP await - critical for streaks)
           await GeneralActivityStreakService().recordActivity();
         }
 
@@ -680,7 +681,7 @@ class _MemoryFlipGameScreenState extends State<MemoryFlipGameScreen> {
 
   Widget _buildMemoryCard(MemoryCard card, bool isFlipped) {
     final isMatched = card.isMatched;
-    final showEmoji = isMatched || isFlipped;
+    final showEmoji = isMatched || isFlipped || _debugShowAllCards;
 
     return GestureDetector(
       onTap: () => _onCardTap(card),
@@ -688,7 +689,7 @@ class _MemoryFlipGameScreenState extends State<MemoryFlipGameScreen> {
         duration: const Duration(milliseconds: 300),
         curve: Curves.easeInOut,
         decoration: BoxDecoration(
-          color: AppTheme.primaryWhite,
+          color: isMatched ? AppTheme.accentGreen.withOpacity(0.1) : AppTheme.primaryWhite,
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
             color: isMatched
@@ -697,16 +698,38 @@ class _MemoryFlipGameScreenState extends State<MemoryFlipGameScreen> {
             width: 2,
           ),
         ),
-        child: Center(
-          child: showEmoji
-              ? Text(
-                  card.emoji,
-                  style: const TextStyle(fontSize: 36),
-                )
-              : const Text(
-                  '❤️',
-                  style: TextStyle(fontSize: 28),
+        child: Stack(
+          children: [
+            Center(
+              child: showEmoji
+                  ? Text(
+                      card.emoji,
+                      style: const TextStyle(fontSize: 36),
+                    )
+                  : const Text(
+                      '❤️',
+                      style: TextStyle(fontSize: 28),
+                    ),
+            ),
+            // Checkmark overlay for matched cards
+            if (isMatched)
+              Positioned(
+                top: 4,
+                right: 4,
+                child: Container(
+                  padding: const EdgeInsets.all(4),
+                  decoration: BoxDecoration(
+                    color: AppTheme.accentGreen,
+                    shape: BoxShape.circle,
+                  ),
+                  child: const Icon(
+                    Icons.check,
+                    color: AppTheme.primaryWhite,
+                    size: 16,
+                  ),
                 ),
+              ),
+          ],
         ),
       ),
     );
