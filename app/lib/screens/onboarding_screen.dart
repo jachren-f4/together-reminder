@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:togetherremind/screens/pairing_screen.dart';
 import 'package:togetherremind/services/storage_service.dart';
+import 'package:togetherremind/services/auth_service.dart';
 import 'package:togetherremind/theme/app_theme.dart';
 import 'package:uuid/uuid.dart';
 import 'package:togetherremind/models/user.dart';
@@ -88,6 +89,7 @@ class OnboardingScreen extends StatelessWidget {
 
   Future<void> _saveName(BuildContext context, String name) async {
     final storageService = StorageService();
+    final authService = AuthService();
     var user = storageService.getUser();
 
     if (user == null) {
@@ -106,6 +108,11 @@ class OnboardingScreen extends StatelessWidget {
     }
 
     await storageService.saveUser(user);
+
+    // Sync name to Supabase user metadata so other users can see it
+    if (authService.isAuthenticated) {
+      await authService.updateDisplayName(name);
+    }
 
     if (context.mounted) {
       Navigator.of(context).pop(); // Close dialog

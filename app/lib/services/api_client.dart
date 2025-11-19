@@ -21,6 +21,9 @@ class ApiClient {
   // API base URL (configure based on environment)
   String _baseUrl = 'https://your-api.vercel.app';
   
+  // Debug flag to simulate network errors
+  bool simulateNetworkError = false;
+  
   void configure({required String baseUrl}) {
     _baseUrl = baseUrl;
     debugPrint('✅ ApiClient configured: $_baseUrl');
@@ -89,6 +92,11 @@ class ApiClient {
     T Function(Map<String, dynamic>)? parser,
     int retryCount = 0,
   }) async {
+    if (simulateNetworkError) {
+      await Future.delayed(const Duration(milliseconds: 500));
+      return ApiResponse.error('Simulated network error');
+    }
+
     try {
       // Build URL
       final uri = _buildUri(endpoint, queryParams);
@@ -207,7 +215,17 @@ class ApiClient {
     // Server Error (500+)
     if (statusCode >= 500) {
       debugPrint('❌ Server error: $statusCode');
-      return ApiResponse.error('Server error - please try again later');
+      debugPrint('❌ Response body: ${response.body}');
+
+      // Try to get detailed error from response
+      try {
+        final errorData = jsonDecode(response.body) as Map<String, dynamic>;
+        final errorMessage = errorData['error'] as String? ?? 'Server error';
+        debugPrint('❌ Server error message: $errorMessage');
+        return ApiResponse.error(errorMessage);
+      } catch (e) {
+        return ApiResponse.error('Server error - please try again later');
+      }
     }
     
     // Client Error (400-499)
