@@ -8,7 +8,11 @@
     "start": "next start",
     "lint": "next lint",
     "test": "echo \"Tests coming soon\" && exit 0",
-    "test:jwt-performance": "ts-node scripts/test_jwt_performance.ts"
+    "test:connections": "ts-node scripts/test_connection_limits.ts",
+    "test:jwt-performance": "ts-node scripts/test_jwt_performance.ts",
+    "validate:schema": "supabase db query < scripts/validate_schema.sql",
+    "db:push": "supabase db push",
+    "db:reset": "supabase db reset"
   },
   "keywords": [
     "nextjs",
