@@ -1,0 +1,33 @@
+{
+  "name": "togetherremind-api",
+  "version": "1.0.0",
+  "description": "TogetherRemind Next.js API - PostgreSQL Backend",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "test": "echo \"Tests coming soon\" && exit 0"
+  },
+  "keywords": [
+    "nextjs",
+    "postgresql",
+    "api"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@supabase/supabase-js": "^2.83.0",
+    "@types/node": "^24.10.1",
+    "@types/react": "^19.2.6",
+    "@types/react-dom": "^19.2.3",
+    "next": "^16.0.3",
+    "pg": "^8.16.3",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "typescript": "^5.9.3"
+  },
+  "devDependencies": {
+    "@types/pg": "^8.15.6"
+  }
+}
