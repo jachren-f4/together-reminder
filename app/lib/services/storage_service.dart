@@ -166,7 +166,10 @@ class StorageService {
   Future<void> savePartner(Partner partner) async {
     try {
       await partnerBox.put('partner', partner);
-      Logger.info('Saved partner: ${partner.name} (${partner.pushToken.substring(0, 8)}...)', service: 'storage');
+      final tokenPreview = partner.pushToken.length >= 8
+          ? '${partner.pushToken.substring(0, 8)}...'
+          : partner.pushToken.isEmpty ? '(no token)' : partner.pushToken;
+      Logger.info('Saved partner: ${partner.name} ($tokenPreview)', service: 'storage');
     } catch (e, stackTrace) {
       Logger.error('Failed to save partner', error: e, stackTrace: stackTrace, service: 'storage');
       rethrow;

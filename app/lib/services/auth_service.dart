@@ -228,15 +228,44 @@ class AuthService {
   /// Create Authorization header for API requests
   Future<Map<String, String>> getAuthHeaders() async {
     final token = await getAccessToken();
-    
+
     if (token == null) {
       return {};
     }
-    
+
     return {
       'Authorization': 'Bearer $token',
       'Content-Type': 'application/json',
     };
+  }
+
+  /// Update user's display name in Supabase metadata
+  ///
+  /// This syncs the local name to Supabase so other users can see it
+  Future<bool> updateDisplayName(String name) async {
+    try {
+      if (_supabase == null) {
+        debugPrint('❌ Supabase not initialized');
+        return false;
+      }
+
+      final response = await _supabase!.auth.updateUser(
+        UserAttributes(
+          data: {'full_name': name},
+        ),
+      );
+
+      if (response.user != null) {
+        debugPrint('✅ Display name updated to: $name');
+        return true;
+      }
+
+      debugPrint('❌ Failed to update display name');
+      return false;
+    } catch (e) {
+      debugPrint('❌ Error updating display name: $e');
+      return false;
+    }
   }
 
   /// Handle API 401 responses (unauthorized)

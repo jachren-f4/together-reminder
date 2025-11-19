@@ -11,7 +11,7 @@ import 'package:togetherremind/models/pairing_code.dart';
 import 'package:togetherremind/screens/home_screen.dart';
 import 'package:togetherremind/services/storage_service.dart';
 import 'package:togetherremind/services/notification_service.dart';
-import 'package:togetherremind/services/remote_pairing_service.dart';
+import 'package:togetherremind/services/couple_pairing_service.dart';
 import 'package:togetherremind/theme/app_theme.dart';
 import '../utils/logger.dart';
 
@@ -25,7 +25,7 @@ class PairingScreen extends StatefulWidget {
 class _PairingScreenState extends State<PairingScreen>
     with SingleTickerProviderStateMixin {
   final StorageService _storageService = StorageService();
-  final RemotePairingService _remotePairingService = RemotePairingService();
+  final CouplePairingService _couplePairingService = CouplePairingService();
 
   late TabController _tabController;
   bool _showScanner = false;
@@ -36,6 +36,7 @@ class _PairingScreenState extends State<PairingScreen>
   bool _isGeneratingCode = false;
   bool _isWaitingForPartner = false;
   Timer? _countdownTimer;
+  Timer? _pairingStatusTimer;
   String? _codeInput;
   bool _isVerifyingCode = false;
   Map<String, dynamic>? _partnerData;
@@ -52,6 +53,7 @@ class _PairingScreenState extends State<PairingScreen>
   void dispose() {
     _tabController.dispose();
     _countdownTimer?.cancel();
+    _pairingStatusTimer?.cancel();
     super.dispose();
   }
 
@@ -161,7 +163,7 @@ class _PairingScreenState extends State<PairingScreen>
     });
 
     try {
-      final code = await _remotePairingService.generatePairingCode();
+      final code = await _couplePairingService.generatePairingCode();
       setState(() {
         _generatedCode = code;
         _isGeneratingCode = false;
@@ -170,6 +172,9 @@ class _PairingScreenState extends State<PairingScreen>
 
       // Start countdown timer
       _startCountdownTimer();
+
+      // Start polling for pairing status
+      _startPairingStatusPolling();
     } catch (e) {
       setState(() {
         _isGeneratingCode = false;
@@ -192,6 +197,7 @@ class _PairingScreenState extends State<PairingScreen>
 
       if (_generatedCode!.isExpired) {
         timer.cancel();
+        _pairingStatusTimer?.cancel();
         setState(() {
           _generatedCode = null;
           _isWaitingForPartner = false;
@@ -206,13 +212,52 @@ class _PairingScreenState extends State<PairingScreen>
     });
   }
 
+  void _startPairingStatusPolling() {
+    _pairingStatusTimer?.cancel();
+    _pairingStatusTimer = Timer.periodic(const Duration(seconds: 3), (timer) async {
+      if (!mounted || !_isWaitingForPartner) {
+        timer.cancel();
+        return;
+      }
+
+      try {
+        final status = await _couplePairingService.getStatus();
+        if (status != null) {
+          // Pairing completed! Stop polling
+          timer.cancel();
+          _countdownTimer?.cancel();
+
+          // Create partner from status
+          final partner = Partner(
+            name: status.partnerName ?? status.partnerEmail?.split('@').first ?? 'Partner',
+            pushToken: '', // Will be set up separately
+            pairedAt: status.createdAt,
+            avatarEmoji: '💕',
+          );
+
+          await _storageService.savePartner(partner);
+
+          if (mounted) {
+            Navigator.of(context).pushReplacement(
+              MaterialPageRoute(
+                builder: (context) => const HomeScreen(),
+              ),
+            );
+          }
+        }
+      } catch (e) {
+        Logger.error('Error polling pairing status', error: e, service: 'pairing');
+      }
+    });
+  }
+
   Future<void> _verifyCode(String code) async {
     setState(() {
       _isVerifyingCode = true;
     });
 
     try {
-      final partner = await _remotePairingService.pairWithCode(code);
+      final partner = await _couplePairingService.joinWithCode(code);
 
       setState(() {
         _isVerifyingCode = false;
@@ -578,7 +623,7 @@ class _PairingScreenState extends State<PairingScreen>
                         ),
                         const SizedBox(height: 4),
                         Text(
-                          'Codes expire after 10 minutes for security. You can regenerate a new code anytime.',
+                          'Codes expire after 24 hours for security. You can regenerate a new code anytime.',
                           style: AppTheme.bodyFont.copyWith(
                             fontSize: 13,
                             color: AppTheme.textSecondary,
@@ -749,7 +794,7 @@ class _PairingScreenState extends State<PairingScreen>
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Code expires in 10 minutes',
+                          'Code expires in 24 hours',
                           style: AppTheme.bodyFont.copyWith(
                             fontSize: 14,
                             fontWeight: FontWeight.w600,
@@ -782,6 +827,7 @@ class _PairingScreenState extends State<PairingScreen>
                   _isWaitingForPartner = false;
                 });
                 _countdownTimer?.cancel();
+                _pairingStatusTimer?.cancel();
               },
               child: Text(
                 'Generate New Code',
@@ -901,6 +947,7 @@ class _PairingScreenState extends State<PairingScreen>
                   _isWaitingForPartner = false;
                 });
                 _countdownTimer?.cancel();
+                _pairingStatusTimer?.cancel();
               },
               child: Text(
                 'Cancel Pairing',
