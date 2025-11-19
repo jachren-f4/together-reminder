@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "test": "echo \"Tests coming soon\" && exit 0"
+    "test": "echo \"Tests coming soon\" && exit 0",
+    "test:jwt-performance": "ts-node scripts/test_jwt_performance.ts"
   },
   "keywords": [
     "nextjs",
@@ -21,6 +22,7 @@
     "@types/node": "^24.10.1",
     "@types/react": "^19.2.6",
     "@types/react-dom": "^19.2.3",
+    "jsonwebtoken": "^9.0.2",
     "next": "^16.0.3",
     "pg": "^8.16.3",
     "react": "^19.2.0",
@@ -28,6 +30,8 @@
     "typescript": "^5.9.3"
   },
   "devDependencies": {
-    "@types/pg": "^8.15.6"
+    "@types/jsonwebtoken": "^9.0.7",
+    "@types/pg": "^8.15.6",
+    "ts-node": "^10.9.2"
   }
 }
