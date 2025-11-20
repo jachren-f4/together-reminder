@@ -8,6 +8,7 @@ import '../services/love_point_service.dart';
 import '../services/quest_utilities.dart';
 import '../services/daily_quest_service.dart';
 import '../services/quest_sync_service.dart';
+import '../services/api_client.dart';
 import '../models/daily_quest.dart';
 import '../config/dev_config.dart';
 import '../utils/logger.dart';
@@ -29,6 +30,7 @@ class YouOrMeService {
 
   final _storage = StorageService();
   final _database = FirebaseDatabase.instance.ref();
+  final _apiClient = ApiClient();
 
   List<YouOrMeQuestion>? _questionBank;
 
@@ -522,6 +524,9 @@ class YouOrMeService {
 
       await sessionRef.set(session.toMap());
 
+      // Sync to Supabase (Dual-Write)
+      await _syncSessionToSupabase(session);
+
       Logger.debug(
         'Synced session to Firebase: ${session.id}',
         service: 'you_or_me',
@@ -533,6 +538,26 @@ class YouOrMeService {
         service: 'you_or_me',
       );
       // Don't rethrow - allow local storage to continue
+    }
+  }
+
+  /// Sync You or Me session to Supabase (Dual-Write Implementation)
+  Future<void> _syncSessionToSupabase(YouOrMeSession session) async {
+    try {
+      Logger.debug('🚀 Attempting dual-write to Supabase (youOrMe)...', service: 'you_or_me');
+
+      final response = await _apiClient.post('/api/sync/you-or-me', body: {
+        'id': session.id,
+        'questions': session.questions.map((q) => q.toMap()).toList(),
+        'createdAt': session.createdAt.toIso8601String(),
+        'expiresAt': session.expiresAt?.toIso8601String(),
+      });
+
+      if (response.success) {
+        Logger.debug('✅ Supabase dual-write successful!', service: 'you_or_me');
+      }
+    } catch (e) {
+      Logger.error('Supabase dual-write exception', error: e, service: 'you_or_me');
     }
   }
 

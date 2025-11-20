@@ -5,12 +5,14 @@ import 'package:togetherremind/models/user.dart';
 import 'package:togetherremind/services/storage_service.dart';
 import 'package:togetherremind/services/love_point_service.dart';
 import 'package:togetherremind/services/general_activity_streak_service.dart';
+import 'package:togetherremind/services/api_client.dart';
 import 'package:uuid/uuid.dart';
 import '../utils/logger.dart';
 
 class PokeService {
   static final FirebaseFunctions _functions = FirebaseFunctions.instance;
   static final StorageService _storage = StorageService();
+  static final ApiClient _apiClient = ApiClient();
   static DateTime? _lastPokeTime;
   static const int _rateLimitSeconds = 30;
 
@@ -83,6 +85,9 @@ class PokeService {
       // Save locally
       await _storage.saveReminder(poke);
 
+      // Sync to Supabase (Dual-Write)
+      await _syncPokeToSupabase(poke);
+
       // Call Cloud Function
       final callable = _functions.httpsCallable('sendPoke');
       final result = await callable.call({
@@ -143,6 +148,10 @@ class PokeService {
       );
 
       await _storage.saveReminder(poke);
+
+      // Sync to Supabase (Dual-Write)
+      await _syncPokeToSupabase(poke);
+
       // Removed verbose logging
       // print('💾 Saved received poke from $fromName');
     } catch (e) {
@@ -232,5 +241,32 @@ class PokeService {
       'week': weekPokes,
       'mutual': mutualPokes,
     };
+  }
+
+  /// Sync poke to Supabase (Dual-Write Implementation)
+  static Future<void> _syncPokeToSupabase(Reminder poke) async {
+    try {
+      Logger.debug('🚀 Attempting dual-write to Supabase (poke)...', service: 'poke');
+
+      final response = await _apiClient.post('/api/sync/reminders', body: {
+        'id': poke.id,
+        'type': poke.type,
+        'fromName': poke.from,
+        'toName': poke.to,
+        'text': poke.text,
+        'category': poke.category,
+        'emoji': poke.text.contains('💫') ? '💫' : null,
+        'scheduledFor': poke.scheduledFor.toIso8601String(),
+        'status': poke.status,
+        'createdAt': poke.createdAt.toIso8601String(),
+        'sentAt': poke.status == 'sent' ? poke.timestamp.toIso8601String() : null,
+      });
+
+      if (response.success) {
+        Logger.debug('✅ Supabase dual-write successful!', service: 'poke');
+      }
+    } catch (e) {
+      Logger.error('Supabase dual-write exception', error: e, service: 'poke');
+    }
   }
 }
