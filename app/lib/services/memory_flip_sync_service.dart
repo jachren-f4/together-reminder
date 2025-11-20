@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:firebase_database/firebase_database.dart';
 import '../models/memory_flip.dart';
 import '../services/storage_service.dart';
+import '../services/api_client.dart';
 import '../utils/logger.dart';
 
 /// Service for synchronizing Memory Flip puzzles via Firebase RTDB
@@ -24,6 +25,7 @@ import '../utils/logger.dart';
 class MemoryFlipSyncService {
   final StorageService _storage;
   final DatabaseReference _database;
+  final ApiClient _apiClient = ApiClient();
 
   MemoryFlipSyncService({
     required StorageService storage,
@@ -159,10 +161,48 @@ class MemoryFlipSyncService {
 
       await puzzleRef.set(puzzleData);
 
+      // Sync to Supabase (Dual-Write)
+      await _syncPuzzleToSupabase(puzzle);
+
       Logger.debug('   ✅ Puzzle saved to Firebase', service: 'memory_flip');
     } catch (e) {
       Logger.error('Error saving puzzle to Firebase', error: e, service: 'memory_flip');
       // Don't throw - allow offline play
+    }
+  }
+
+  /// Sync Memory Flip puzzle to Supabase (Dual-Write Implementation)
+  Future<void> _syncPuzzleToSupabase(MemoryPuzzle puzzle) async {
+    try {
+      Logger.debug('🚀 Attempting dual-write to Supabase (memoryFlip)...', service: 'memory_flip');
+
+      final response = await _apiClient.post('/api/sync/memory-flip', body: {
+        'id': puzzle.id,
+        'date': puzzle.createdAt.toIso8601String().split('T')[0], // YYYY-MM-DD format
+        'totalPairs': puzzle.totalPairs,
+        'matchedPairs': puzzle.matchedPairs,
+        'cards': puzzle.cards.map((card) => {
+          'id': card.id,
+          'puzzleId': card.puzzleId,
+          'position': card.position,
+          'emoji': card.emoji,
+          'pairId': card.pairId,
+          'status': card.status,
+          'matchedBy': card.matchedBy,
+          'matchedAt': card.matchedAt?.toIso8601String(),
+          'revealQuote': card.revealQuote,
+        }).toList(),
+        'status': puzzle.status,
+        'completionQuote': puzzle.completionQuote,
+        'createdAt': puzzle.createdAt.toIso8601String(),
+        'completedAt': puzzle.completedAt?.toIso8601String(),
+      });
+
+      if (response.success) {
+        Logger.debug('✅ Supabase dual-write successful!', service: 'memory_flip');
+      }
+    } catch (e) {
+      Logger.error('Supabase dual-write exception', error: e, service: 'memory_flip');
     }
   }
 
