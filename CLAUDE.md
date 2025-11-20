@@ -152,21 +152,56 @@ All paths require security rules in `database.rules.json`:
 
 ### 8. Love Points UI Updates
 
-**CRITICAL:** LP counter does NOT auto-update when LP is awarded.
+**CRITICAL:** LP counter auto-updates in real-time when LP is awarded (matches quest card behavior).
 
 **Design rationale:**
-- Avoids ValueListenableBuilder complexity across screens
+- Uses callback pattern for real-time UI updates (consistent with quest cards)
 - Notification banner provides immediate feedback (3-sec overlay: "+30 LP 💰")
-- Counter updates on next screen rebuild (navigation, app restart)
+- LP counter updates immediately via `setState()` callback
+
+**Implementation pattern:**
+```dart
+// In NewHomeScreen.initState() or similar screens
+// IMPORTANT: Do NOT call startListeningForLPAwards() again - that creates duplicate listeners!
+// The listener is already started in main.dart, just register the callback:
+LovePointService.setLPChangeCallback(() {
+  if (mounted) {
+    setState(() {
+      // Trigger rebuild to update LP counter
+    });
+  }
+});
+```
+
+**Flow:**
+1. Partner awards LP → Firebase RTDB update
+2. `LovePointService._handleLPAward()` receives update
+3. Updates local Hive storage
+4. Shows notification banner ("+30 LP 💰")
+5. Calls `_onLPChanged` callback
+6. Screen's `setState()` triggers rebuild
+7. LP counter displays new value immediately
 
 **Implementation requirements:**
 - `LovePointService.setAppContext()` must be called in `main.dart` via `addPostFrameCallback`
-- See `love_point_service.dart:280-288` for notification trigger
+- Firebase listener is started ONCE in `main.dart` via `startListeningForLPAwards()`
+- Individual screens register callbacks via `setLPChangeCallback()` (do NOT call startListeningForLPAwards again!)
+- Callback is optional (backward compatible for screens that don't need real-time updates)
+
+**CRITICAL WARNING:**
+- Do NOT call `startListeningForLPAwards()` multiple times - it creates duplicate Firebase listeners
+- Each duplicate listener awards LP again, causing the 60 LP bug (30 LP × 2 listeners = 60 LP)
+- Always use `setLPChangeCallback()` in screens to register UI update callbacks
 
 **Related files:**
-- `lib/services/love_point_service.dart`
-- `lib/widgets/foreground_notification_banner.dart`
-- `lib/widgets/daily_quests_widget.dart:86-102`
+- `lib/services/love_point_service.dart:19-20` - Callback variable declaration
+- `lib/services/love_point_service.dart:194-199` - setLPChangeCallback() method (use this in screens!)
+- `lib/services/love_point_service.dart:239-265` - startListeningForLPAwards() (called once in main.dart)
+- `lib/services/love_point_service.dart:313` - Callback invocation after LP award
+- `lib/main.dart:133-136` - Listener initialization (called once on app start)
+- `lib/screens/new_home_screen.dart:60-70` - Reference implementation using setLPChangeCallback()
+- `lib/widgets/foreground_notification_banner.dart` - Notification overlay
+- `lib/widgets/daily_quests_widget.dart:86-102` - Quest card pattern (similar architecture)
 
 ### 9. Quest Title Display Rules
 

@@ -2,6 +2,7 @@ import '../models/user.dart';
 import '../models/love_point_transaction.dart';
 import 'storage_service.dart';
 import 'general_activity_streak_service.dart';
+import 'api_client.dart';
 import 'package:uuid/uuid.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/foundation.dart';
@@ -12,6 +13,7 @@ import '../utils/logger.dart';
 class LovePointService {
   static final StorageService _storage = StorageService();
   static final DatabaseReference _database = FirebaseDatabase.instance.ref();
+  static final ApiClient _apiClient = ApiClient(); // Supabase API Client
 
   // BuildContext for showing foreground notifications
   static BuildContext? _appContext;
@@ -222,7 +224,7 @@ class LovePointService {
       // If relatedId is null, generate a random key (no deduplication)
       final awardKey = relatedId ?? const Uuid().v4();
 
-      // Write LP award to Firebase
+      // 1. Write LP award to Firebase (Primary)
       // If both devices write to same key, Firebase onChildAdded only fires once
       await _database.child('lp_awards/$coupleId/$awardKey').set({
         'users': [userId1, userId2],
@@ -234,8 +236,53 @@ class LovePointService {
       });
 
       Logger.info('LP award synced to Firebase: $actualAmount LP for both users ($reason)', service: 'lovepoint');
+
+      // 2. Write to Supabase (Secondary - Dual Write)
+      _syncLPAwardToSupabase(
+        awardId: awardKey,
+        amount: amount,
+        reason: reason,
+        relatedId: relatedId,
+        multiplier: multiplier,
+        partnerId: userId2 == userId1 ? userId2 : (userId1 == _storage.getUser()?.id ? userId2 : userId1),
+      ).catchError((e) {
+        Logger.error('Supabase dual-write failed (awardLP)', error: e, service: 'lovepoint');
+      });
+
     } catch (e) {
       Logger.error('Error syncing LP award to Firebase', error: e, service: 'lovepoint');
+    }
+  }
+
+  /// Sync LP award to Supabase (Dual-Write Implementation)
+  static Future<void> _syncLPAwardToSupabase({
+    required String awardId,
+    required int amount,
+    required String reason,
+    String? relatedId,
+    int multiplier = 1,
+    required String partnerId,
+  }) async {
+    try {
+      Logger.debug('🚀 Attempting dual-write to Supabase (awardLP)...', service: 'lovepoint');
+
+      final response = await _apiClient.post('/api/sync/love-points', body: {
+        'id': awardId,
+        'amount': amount,
+        'reason': reason,
+        'relatedId': relatedId,
+        'multiplier': multiplier,
+        'partnerId': partnerId,
+        'timestamp': DateTime.now().toIso8601String(),
+      });
+
+      if (response.success) {
+        Logger.debug('✅ Supabase dual-write successful!', service: 'lovepoint');
+      } else {
+        Logger.error('Supabase dual-write failed: ${response.error}', service: 'lovepoint');
+      }
+    } catch (e) {
+      Logger.error('Supabase dual-write exception', error: e, service: 'lovepoint');
     }
   }
 

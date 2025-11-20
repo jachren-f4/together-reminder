@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Poke Variant 02 - Floating Action Button</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            background: #fafafa;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 420px;
+            margin: 0 auto;
+            background: #fff;
+            border: 2px solid #000;
+            box-shadow: 8px 8px 0 rgba(0, 0, 0, 0.1);
+            position: relative;
+            padding-bottom: 40px;
+        }
+
+        .header {
+            border-bottom: 2px solid #000;
+            padding: 24px 20px;
+            text-align: center;
+        }
+
+        .title {
+            font-size: 32px;
+            font-weight: 400;
+            letter-spacing: 2px;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+        }
+
+        .subtitle {
+            font-size: 14px;
+            color: #666;
+            font-style: italic;
+        }
+
+        .stats {
+            border-bottom: 1px solid #000;
+            padding: 20px;
+        }
+
+        .stat-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .stat-value {
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .progress-bg {
+            height: 2px;
+            background: #e0e0e0;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: #000;
+            width: 65%;
+        }
+
+        .section {
+            padding: 20px;
+            padding-bottom: 0;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .section-heading {
+            font-size: 16px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 20px;
+        }
+
+        .carousel-placeholder {
+            height: 280px;
+            background: #f5f5f5;
+            border: 1px dashed #ccc;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #999;
+            margin: 0 -20px 20px;
+            font-size: 14px;
+        }
+
+        /* FAB Container */
+        .fab-container {
+            position: fixed;
+            bottom: 40px;
+            right: 40px;
+            z-index: 1000;
+        }
+
+        .fab {
+            width: 64px;
+            height: 64px;
+            background: #000;
+            border: 3px solid #000;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .fab:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+        }
+
+        .fab-icon {
+            font-size: 28px;
+            color: #fff;
+        }
+
+        /* Speed Dial Menu */
+        .speed-dial {
+            position: absolute;
+            bottom: 80px;
+            right: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .fab-container:hover .speed-dial {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .speed-dial-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            justify-content: flex-end;
+        }
+
+        .speed-dial-label {
+            background: #000;
+            color: #fff;
+            padding: 8px 16px;
+            border: 2px solid #000;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            white-space: nowrap;
+            box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.2);
+        }
+
+        .speed-dial-button {
+            width: 48px;
+            height: 48px;
+            background: #fff;
+            border: 2px solid #000;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .speed-dial-button:hover {
+            transform: scale(1.1);
+            background: #000;
+        }
+
+        .speed-dial-button:hover .speed-dial-icon {
+            filter: grayscale(1) brightness(2);
+        }
+
+        .speed-dial-icon {
+            font-size: 24px;
+        }
+
+        .note {
+            padding: 16px 20px;
+            background: #fffbea;
+            border-top: 1px solid #e0e0e0;
+            font-size: 12px;
+            color: #666;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="title">Love Quest</div>
+            <div class="subtitle">Day Forty-Two</div>
+        </div>
+
+        <div class="stats">
+            <div class="stat-row">
+                <div class="stat-label">Party</div>
+                <div class="stat-value">You & Taija</div>
+            </div>
+            <div class="stat-row">
+                <div class="stat-label">Love Points</div>
+                <div class="stat-value">2,450</div>
+            </div>
+            <div class="progress-bg">
+                <div class="progress-bar"></div>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-heading">Daily Quests</div>
+            <div class="carousel-placeholder">
+                Daily Quests Carousel
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-heading">Side Quests</div>
+            <div class="carousel-placeholder">
+                Side Quests Carousel
+            </div>
+        </div>
+
+        <div class="note">
+            <strong>Variant 02: Floating Action Button</strong><br>
+            ✅ Always visible, no scrolling needed<br>
+            ✅ Saves vertical space<br>
+            ✅ Modern mobile pattern<br>
+            ⚠️ Hover required to see options (mobile: tap)<br>
+            ⚠️ Can obscure content<br>
+            💡 Hover over FAB to see speed dial menu
+        </div>
+    </div>
+
+    <!-- FAB -->
+    <div class="fab-container">
+        <div class="speed-dial">
+            <div class="speed-dial-item">
+                <div class="speed-dial-label">Send Reminder</div>
+                <div class="speed-dial-button">
+                    <span class="speed-dial-icon">💌</span>
+                </div>
+            </div>
+            <div class="speed-dial-item">
+                <div class="speed-dial-label">Poke Partner</div>
+                <div class="speed-dial-button">
+                    <span class="speed-dial-icon">👆</span>
+                </div>
+            </div>
+            <div class="speed-dial-item">
+                <div class="speed-dial-label">View Inbox</div>
+                <div class="speed-dial-button">
+                    <span class="speed-dial-icon">📥</span>
+                </div>
+            </div>
+        </div>
+        <div class="fab">
+            <span class="fab-icon">✨</span>
+        </div>
+    </div>
+</body>
+</html>

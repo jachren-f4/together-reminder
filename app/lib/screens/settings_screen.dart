@@ -3,6 +3,7 @@ import 'package:togetherremind/screens/onboarding_screen.dart';
 import 'package:togetherremind/services/storage_service.dart';
 import 'package:togetherremind/theme/app_theme.dart';
 import 'package:intl/intl.dart';
+import 'debug/data_validation_screen.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -310,7 +311,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     ],
                   ),
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: 30),
 
                 // Unpair button
                 SizedBox(
@@ -345,13 +346,22 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
                 // App version
                 Center(
-                  child: Text(
-                    'TogetherRemind v1.0.0\nMade with 💕',
-                    textAlign: TextAlign.center,
-                    style: AppTheme.bodyFont.copyWith(
-                      fontSize: 12,
-                      color: AppTheme.textTertiary,
-                      height: 1.5,
+                  child: GestureDetector(
+                    onLongPress: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => const DataValidationScreen(),
+                        ),
+                      );
+                    },
+                    child: Text(
+                      'TogetherRemind v1.0.0\nMade with 💕',
+                      textAlign: TextAlign.center,
+                      style: AppTheme.bodyFont.copyWith(
+                        fontSize: 12,
+                        color: AppTheme.textTertiary,
+                        height: 1.5,
+                      ),
                     ),
                   ),
                 ),

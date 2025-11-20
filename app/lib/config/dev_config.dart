@@ -8,6 +8,11 @@ class DevConfig {
   static final DeviceInfoPlugin _deviceInfo = DeviceInfoPlugin();
   static bool? _cachedIsSimulator;
 
+  /// Skip Supabase authentication in development mode
+  /// Set to true to bypass auth flow during development
+  /// Set to false when you need to test auth functionality
+  static const bool skipAuthInDev = false;
+
   /// Detect if running on iOS/Android simulator or emulator
   /// Returns true ONLY when running in a simulator/emulator
   /// Returns false when running on a real physical device
@@ -85,8 +90,9 @@ class DevConfig {
   /// - Bypasses QR pairing flow for rapid testing
   static Future<bool> get enableMockPairing async {
     if (!kDebugMode) return false;
-    // Always enable mock data in debug mode for gamification development
-    return true;
+    // Disabled to test real pairing flow with Supabase API
+    // Set to true when you want to skip pairing for other testing
+    return false;
   }
 
   // Mock data configuration

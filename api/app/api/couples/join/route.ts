@@ -160,7 +160,6 @@ export const POST = withRateLimit(
       // TODO: Send FCM notification to partner (code generator) if they have a push token
       const creatorPushToken = inviteWithToken.rows[0]?.creator_push_token;
       if (creatorPushToken) {
-        console.log('Partner push token available for notification:', creatorPushToken.substring(0, 20) + '...');
         // FCM notification will be implemented after database migration
       }
 

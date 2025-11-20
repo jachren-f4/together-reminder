@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Question 1/5</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            background: #fafafa;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 420px;
+            margin: 0 auto;
+            background: #fff;
+            border: 2px solid #000;
+            box-shadow: 8px 8px 0 rgba(0, 0, 0, 0.1);
+            min-height: 600px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            border-bottom: 2px solid #000;
+            padding: 16px 20px;
+            text-align: center;
+        }
+
+        .header-title {
+            font-size: 16px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .progress-bar {
+            height: 6px;
+            background: #e0e0e0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: #000;
+            width: 20%;
+            transition: width 0.3s ease;
+        }
+
+        .content {
+            flex: 1;
+            padding: 40px 24px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .category-badge {
+            display: inline-block;
+            background: #f0f0f0;
+            border: 1px solid #000;
+            color: #000;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            padding: 8px 16px;
+            border-radius: 20px;
+            margin-bottom: 32px;
+            text-transform: uppercase;
+        }
+
+        .question-text {
+            font-family: 'Playfair Display', 'Georgia', serif;
+            font-size: 28px;
+            font-weight: 700;
+            line-height: 1.4;
+            text-align: center;
+            margin-bottom: 48px;
+            max-width: 360px;
+        }
+
+        .scale-container {
+            width: 100%;
+            max-width: 300px;
+            margin-bottom: 48px;
+        }
+
+        .scale-label {
+            font-size: 12px;
+            color: #666;
+            text-align: center;
+            margin-bottom: 20px;
+            font-style: italic;
+        }
+
+        .hearts {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .heart {
+            width: 48px;
+            height: 48px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 48px;
+            line-height: 1;
+            user-select: none;
+        }
+
+        .heart.empty {
+            opacity: 0.3;
+        }
+
+        .heart.empty::before {
+            content: '♡';
+            color: #666;
+        }
+
+        .heart.filled::before {
+            content: '♥';
+            color: #dc143c;
+        }
+
+        .heart:hover {
+            transform: scale(1.1);
+        }
+
+        .scale-label-bottom {
+            font-size: 12px;
+            color: #666;
+            text-align: center;
+            font-style: italic;
+        }
+
+        .footer {
+            border-top: 2px solid #000;
+            padding: 20px;
+        }
+
+        .action-button {
+            width: 100%;
+            background: #e0e0e0;
+            color: #999;
+            border: 2px solid #ccc;
+            padding: 18px;
+            font-size: 16px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            cursor: not-allowed;
+            border-radius: 12px;
+            font-family: 'Georgia', 'Times New Roman', serif;
+            transition: all 0.2s ease;
+        }
+
+        .action-button.enabled {
+            background: #000;
+            color: #fff;
+            border-color: #000;
+            cursor: pointer;
+        }
+
+        .action-button.enabled:hover {
+            background: #fff;
+            color: #000;
+            box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.2);
+        }
+
+        .back-link {
+            display: block;
+            text-align: center;
+            margin-top: 12px;
+            font-size: 14px;
+            color: #ccc;
+            text-decoration: none;
+            font-style: italic;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="header-title">Question 1/5</div>
+        </div>
+        <div class="progress-bar">
+            <div class="progress-fill"></div>
+        </div>
+
+        <div class="content">
+            <div class="category-badge">Trust</div>
+
+            <div class="question-text">
+                Our relationship feels grounded in positivity.
+            </div>
+
+            <div class="scale-container">
+                <div class="scale-label">Strongly disagree</div>
+
+                <div class="hearts" id="heartScale">
+                    <div class="heart empty" data-value="1"></div>
+                    <div class="heart empty" data-value="2"></div>
+                    <div class="heart empty" data-value="3"></div>
+                    <div class="heart empty" data-value="4"></div>
+                    <div class="heart empty" data-value="5"></div>
+                </div>
+
+                <div class="scale-label-bottom">Strongly agree</div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <button class="action-button" id="nextButton">Next Question</button>
+            <a href="#" class="back-link">← Previous Question</a>
+        </div>
+    </div>
+
+    <script>
+        const hearts = document.querySelectorAll('.heart');
+        const nextButton = document.getElementById('nextButton');
+        let selectedValue = null;
+
+        hearts.forEach((heart, index) => {
+            heart.addEventListener('click', () => {
+                selectedValue = index + 1;
+
+                // Update hearts
+                hearts.forEach((h, i) => {
+                    if (i <= index) {
+                        h.classList.remove('empty');
+                        h.classList.add('filled');
+                    } else {
+                        h.classList.remove('filled');
+                        h.classList.add('empty');
+                    }
+                });
+
+                // Enable button
+                nextButton.classList.add('enabled');
+                nextButton.style.cursor = 'pointer';
+            });
+
+            heart.addEventListener('mouseenter', () => {
+                hearts.forEach((h, i) => {
+                    if (i <= index) {
+                        h.style.opacity = '1';
+                    }
+                });
+            });
+
+            heart.addEventListener('mouseleave', () => {
+                hearts.forEach((h, i) => {
+                    if (!h.classList.contains('filled')) {
+                        h.style.opacity = '';
+                    }
+                });
+            });
+        });
+
+        nextButton.addEventListener('click', () => {
+            if (selectedValue) {
+                alert(`Selected value: ${selectedValue}/5`);
+            }
+        });
+    </script>
+</body>
+</html>

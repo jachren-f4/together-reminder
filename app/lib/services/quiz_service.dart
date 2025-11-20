@@ -10,6 +10,7 @@ import 'affirmation_quiz_bank.dart';
 import 'love_point_service.dart';
 import 'daily_quest_service.dart';
 import 'quest_sync_service.dart';
+import 'api_client.dart';
 import '../config/dev_config.dart';
 import '../utils/logger.dart';
 
@@ -23,6 +24,7 @@ class QuizService {
   final AffirmationQuizBank _affirmationBank = AffirmationQuizBank();
   final FirebaseFunctions _functions = FirebaseFunctions.instance;
   final DatabaseReference _rtdb = FirebaseDatabase.instance.ref();
+  final ApiClient _apiClient = ApiClient(); // Supabase API Client
 
   /// Start a new quiz session
   /// The initiator becomes the SUBJECT - quiz is ABOUT them
@@ -705,12 +707,56 @@ class QuizService {
         'predictionScores': session.predictionScores,
       };
 
+      // 1. Sync to Firebase (Primary)
       await sessionRef.set(sessionData);
+      
+      // 2. Sync to Supabase (Secondary - Dual Write)
+      _syncSessionToSupabase(session).catchError((e) {
+        Logger.error('Supabase dual-write failed (quizSession)', error: e, service: 'quiz');
+      });
+
       // Removed verbose logging
       // print('✅ Session synced to Firebase: ${session.id} at /quiz_sessions/$coupleId/${session.id}');
     } catch (e) {
       Logger.error('Error syncing session to Firebase', error: e, service: 'quiz');
       rethrow;
+    }
+  }
+
+  /// Sync quiz session to Supabase (Dual-Write Implementation)
+  Future<void> _syncSessionToSupabase(QuizSession session) async {
+    try {
+      Logger.debug('🚀 Attempting dual-write to Supabase (quizSession)...', service: 'quiz');
+
+      final response = await _apiClient.post('/api/sync/quiz-sessions', body: {
+        'id': session.id,
+        'questionIds': session.questionIds,
+        'createdAt': session.createdAt.toIso8601String(),
+        'expiresAt': session.expiresAt.toIso8601String(),
+        'status': session.status,
+        'initiatedBy': session.initiatedBy,
+        'subjectUserId': session.subjectUserId,
+        'formatType': session.formatType,
+        'isDailyQuest': session.isDailyQuest,
+        'dailyQuestId': session.dailyQuestId,
+        'answers': session.answers,
+        'predictions': session.predictions,
+        'matchPercentage': session.matchPercentage,
+        'lpEarned': session.lpEarned,
+        'completedAt': session.completedAt?.toIso8601String(),
+        'alignmentMatches': session.alignmentMatches,
+        'predictionScores': session.predictionScores,
+        'quizName': session.quizName,
+        'category': session.category,
+      });
+
+      if (response.success) {
+        Logger.debug('✅ Supabase dual-write successful!', service: 'quiz');
+      } else {
+        Logger.error('Supabase dual-write failed: ${response.error}', service: 'quiz');
+      }
+    } catch (e) {
+      Logger.error('Supabase dual-write exception', error: e, service: 'quiz');
     }
   }
 

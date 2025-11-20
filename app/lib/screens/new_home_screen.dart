@@ -557,7 +557,7 @@ class _NewHomeScreenState extends State<NewHomeScreen> with SingleTickerProvider
         // Version number for debugging hot reload
         Center(
           child: Text(
-            'v1.0.12',
+            'v1.0.15',
             style: TextStyle(
               fontSize: 10,
               color: Colors.grey.shade400,

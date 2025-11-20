@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Poke Variant 05 - Minimal Bottom Bar</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            background: #fafafa;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 420px;
+            margin: 0 auto;
+            background: #fff;
+            border: 2px solid #000;
+            box-shadow: 8px 8px 0 rgba(0, 0, 0, 0.1);
+        }
+
+        .header {
+            border-bottom: 2px solid #000;
+            padding: 24px 20px;
+            text-align: center;
+        }
+
+        .title {
+            font-size: 32px;
+            font-weight: 400;
+            letter-spacing: 2px;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+        }
+
+        .subtitle {
+            font-size: 14px;
+            color: #666;
+            font-style: italic;
+        }
+
+        .stats {
+            border-bottom: 1px solid #000;
+            padding: 20px;
+        }
+
+        .stat-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .stat-value {
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .progress-bg {
+            height: 2px;
+            background: #e0e0e0;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: #000;
+            width: 65%;
+        }
+
+        .section {
+            padding: 20px;
+            padding-bottom: 0;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .section-heading {
+            font-size: 16px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 20px;
+        }
+
+        .carousel-placeholder {
+            height: 280px;
+            background: #f5f5f5;
+            border: 1px dashed #ccc;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #999;
+            margin: 0 -20px 20px;
+            font-size: 14px;
+        }
+
+        .bottom-bar {
+            border-top: 2px solid #000;
+            background: #fff;
+            display: flex;
+            align-items: center;
+            padding: 0;
+        }
+
+        .bottom-action {
+            flex: 1;
+            padding: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border-right: 1px solid #000;
+            background: #fff;
+        }
+
+        .bottom-action:last-child {
+            border-right: none;
+        }
+
+        .bottom-action:hover {
+            background: #000;
+            color: #fff;
+        }
+
+        .bottom-action:hover .action-icon {
+            filter: grayscale(1) brightness(2);
+        }
+
+        .action-icon {
+            font-size: 20px;
+        }
+
+        .action-text {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+        }
+
+        .note {
+            padding: 16px 20px;
+            background: #fffbea;
+            border-top: 1px solid #e0e0e0;
+            font-size: 12px;
+            color: #666;
+            font-style: italic;
+        }
+
+        /* Alternative: Sticky Bottom Bar */
+        .sticky-demo {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            max-width: 420px;
+            width: calc(100% - 40px);
+            background: #fff;
+            border: 2px solid #000;
+            box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.15);
+            display: none; /* Hidden by default, shown in variant */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="title">Love Quest</div>
+            <div class="subtitle">Day Forty-Two</div>
+        </div>
+
+        <div class="stats">
+            <div class="stat-row">
+                <div class="stat-label">Party</div>
+                <div class="stat-value">You & Taija</div>
+            </div>
+            <div class="stat-row">
+                <div class="stat-label">Love Points</div>
+                <div class="stat-value">2,450</div>
+            </div>
+            <div class="progress-bg">
+                <div class="progress-bar"></div>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-heading">Daily Quests</div>
+            <div class="carousel-placeholder">
+                Daily Quests Carousel
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-heading">Side Quests</div>
+            <div class="carousel-placeholder">
+                Side Quests Carousel
+            </div>
+        </div>
+
+        <div class="bottom-bar">
+            <div class="bottom-action">
+                <span class="action-icon">💌</span>
+                <span class="action-text">Remind</span>
+            </div>
+            <div class="bottom-action">
+                <span class="action-icon">👆</span>
+                <span class="action-text">Poke</span>
+            </div>
+            <div class="bottom-action">
+                <span class="action-icon">📥</span>
+                <span class="action-text">Inbox</span>
+            </div>
+        </div>
+
+        <div class="note">
+            <strong>Variant 05: Minimal Bottom Bar</strong><br>
+            ✅ Clean, streamlined design<br>
+            ✅ Focus on core actions (Poke, Remind, Inbox)<br>
+            ✅ Low visual noise<br>
+            ⚠️ Requires scrolling to reach<br>
+            💡 Could be made sticky (fixed position)<br>
+            💡 Three actions feel balanced
+        </div>
+    </div>
+</body>
+</html>

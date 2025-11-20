@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Poke Variant 04 - Inline Side Quest Cards</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            background: #fafafa;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 420px;
+            margin: 0 auto;
+            background: #fff;
+            border: 2px solid #000;
+            box-shadow: 8px 8px 0 rgba(0, 0, 0, 0.1);
+        }
+
+        .header {
+            border-bottom: 2px solid #000;
+            padding: 24px 20px;
+            text-align: center;
+        }
+
+        .title {
+            font-size: 32px;
+            font-weight: 400;
+            letter-spacing: 2px;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+        }
+
+        .subtitle {
+            font-size: 14px;
+            color: #666;
+            font-style: italic;
+        }
+
+        .stats {
+            border-bottom: 1px solid #000;
+            padding: 20px;
+        }
+
+        .stat-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .stat-value {
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .progress-bg {
+            height: 2px;
+            background: #e0e0e0;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: #000;
+            width: 65%;
+        }
+
+        .section {
+            padding: 20px;
+            padding-bottom: 0;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .section-heading {
+            font-size: 16px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 20px;
+        }
+
+        .carousel-placeholder {
+            height: 280px;
+            background: #f5f5f5;
+            border: 1px dashed #ccc;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #999;
+            margin: 0 -20px 20px;
+            font-size: 14px;
+        }
+
+        .side-quests-preview {
+            margin: 0 -20px 20px;
+            padding: 0 20px;
+            display: flex;
+            gap: 16px;
+            overflow-x: auto;
+            scrollbar-width: none;
+        }
+
+        .side-quests-preview::-webkit-scrollbar {
+            display: none;
+        }
+
+        .quest-card {
+            flex: 0 0 calc(60%);
+            border: 2px solid #000;
+            background: #fff;
+            overflow: hidden;
+        }
+
+        .quest-card.action-card {
+            background: linear-gradient(135deg, #000 0%, #333 100%);
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .quest-card.action-card:hover {
+            transform: scale(1.05);
+            box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.3);
+        }
+
+        .action-card-icon {
+            font-size: 48px;
+            margin-bottom: 16px;
+        }
+
+        .action-card-title {
+            font-size: 18px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+
+        .action-card-desc {
+            font-size: 12px;
+            color: #ccc;
+            text-align: center;
+            font-style: italic;
+        }
+
+        .quest-card.quest {
+            background: #f9f9f9;
+            padding: 20px;
+        }
+
+        .quest-placeholder {
+            font-size: 12px;
+            color: #999;
+            text-align: center;
+            padding: 60px 20px;
+        }
+
+        .note {
+            padding: 16px 20px;
+            background: #fffbea;
+            border-top: 1px solid #e0e0e0;
+            font-size: 12px;
+            color: #666;
+            font-style: italic;
+        }
+
+        .scroll-hint {
+            font-size: 11px;
+            color: #999;
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .progress-bar-container {
+            padding: 16px 20px 20px;
+            margin: 0 -20px;
+        }
+
+        .scroll-progress {
+            height: 3px;
+            background: #e0e0e0;
+            border-radius: 2px;
+        }
+
+        .scroll-progress-fill {
+            height: 100%;
+            background: #000;
+            width: 40%;
+            border-radius: 2px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="title">Love Quest</div>
+            <div class="subtitle">Day Forty-Two</div>
+        </div>
+
+        <div class="stats">
+            <div class="stat-row">
+                <div class="stat-label">Party</div>
+                <div class="stat-value">You & Taija</div>
+            </div>
+            <div class="stat-row">
+                <div class="stat-label">Love Points</div>
+                <div class="stat-value">2,450</div>
+            </div>
+            <div class="progress-bg">
+                <div class="progress-bar"></div>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-heading">Daily Quests</div>
+            <div class="carousel-placeholder">
+                Daily Quests Carousel
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-header">
+                <div class="section-heading" style="margin-bottom: 0;">Side Quests & Actions</div>
+                <span class="scroll-hint">← Swipe →</span>
+            </div>
+
+            <div class="side-quests-preview">
+                <!-- Quest Card -->
+                <div class="quest-card quest">
+                    <div class="quest-placeholder">
+                        Word Ladder<br>
+                        Quest Card
+                    </div>
+                </div>
+
+                <!-- Poke Action Card -->
+                <div class="quest-card action-card">
+                    <div class="action-card-icon">👆</div>
+                    <div class="action-card-title">Poke Partner</div>
+                    <div class="action-card-desc">Send a playful nudge</div>
+                </div>
+
+                <!-- Remind Action Card -->
+                <div class="quest-card action-card">
+                    <div class="action-card-icon">💌</div>
+                    <div class="action-card-title">Send Reminder</div>
+                    <div class="action-card-desc">Gentle reminder for quests</div>
+                </div>
+
+                <!-- Quest Card -->
+                <div class="quest-card quest">
+                    <div class="quest-placeholder">
+                        Curiosity<br>
+                        Quest Card
+                    </div>
+                </div>
+            </div>
+
+            <div class="progress-bar-container">
+                <div class="scroll-progress">
+                    <div class="scroll-progress-fill"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="note">
+            <strong>Variant 04: Inline Side Quest Cards</strong><br>
+            ✅ Natural discovery through scrolling<br>
+            ✅ Consistent interaction pattern<br>
+            ✅ Premium feel with dark card design<br>
+            ⚠️ Mixes actions with quests (potential confusion)<br>
+            ⚠️ Less prominent than dedicated section<br>
+            💡 Actions are styled differently to stand out
+        </div>
+    </div>
+</body>
+</html>
