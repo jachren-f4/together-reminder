@@ -53,6 +53,16 @@
         ".read": true,
         ".write": true
       }
+    },
+    "memory_puzzles": {
+      "$coupleId": {
+        ".read": true,
+        ".write": true,
+        "$puzzleId": {
+          ".read": true,
+          ".write": true
+        }
+      }
     }
   }
 }

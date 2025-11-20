@@ -5,6 +5,7 @@ import '../models/daily_quest.dart';
 import '../models/quiz_progression_state.dart';
 import '../services/storage_service.dart';
 import '../services/quest_utilities.dart';
+import '../services/api_client.dart';
 import '../utils/logger.dart';
 
 /// Service for synchronizing daily quests via Firebase RTDB
@@ -21,6 +22,7 @@ import '../utils/logger.dart';
 class QuestSyncService {
   final StorageService _storage;
   final DatabaseReference _database;
+  final ApiClient _apiClient = ApiClient(); // Supabase API Client
 
   QuestSyncService({
     required StorageService storage,
@@ -127,7 +129,7 @@ class QuestSyncService {
     }
   }
 
-  /// Save generated quests to Firebase
+  /// Save generated quests to Firebase AND Supabase (Dual-Write)
   Future<void> saveQuestsToFirebase({
     required List<DailyQuest> quests,
     required String currentUserId,
@@ -151,7 +153,7 @@ class QuestSyncService {
         'quizName': q.quizName,
       }).toList();
 
-      // Save to Firebase
+      // 1. Save to Firebase (Primary)
       await questsRef.set({
         'quests': questsData,
         'generatedBy': currentUserId,
@@ -165,9 +167,44 @@ class QuestSyncService {
       });
 
       Logger.debug('Saved ${quests.length} quests to Firebase for $dateKey', service: 'quest');
+
+      // 2. Save to Supabase (Secondary - Dual Write)
+      // We do this asynchronously and don't block if it fails
+      _saveQuestsToSupabase(quests, dateKey).catchError((e) {
+        Logger.error('Supabase dual-write failed (saveQuests)', error: e, service: 'quest');
+      });
+
     } catch (e) {
       Logger.error('Error saving quests to Firebase', error: e, service: 'quest');
       rethrow;
+    }
+  }
+
+  /// Save quests to Supabase (Dual-Write Implementation)
+  Future<void> _saveQuestsToSupabase(List<DailyQuest> quests, String dateKey) async {
+    try {
+      Logger.debug('🚀 Attempting dual-write to Supabase (saveQuests)...', service: 'quest');
+      
+      final response = await _apiClient.post('/api/sync/daily-quests', body: {
+        'dateKey': dateKey,
+        'quests': quests.map((q) => {
+          'id': q.id,
+          'questType': q.type.name, // Send string name (e.g. 'quiz')
+          'contentId': q.contentId,
+          'sortOrder': q.sortOrder,
+          'isSideQuest': q.isSideQuest,
+          'formatType': q.formatType,
+          'quizName': q.quizName,
+        }).toList(),
+      });
+
+      if (response.success) {
+        Logger.debug('✅ Supabase dual-write successful!', service: 'quest');
+      } else {
+        Logger.error('Supabase dual-write failed: ${response.error}', service: 'quest');
+      }
+    } catch (e) {
+      Logger.error('Supabase dual-write exception', error: e, service: 'quest');
     }
   }
 
@@ -290,7 +327,7 @@ class QuestSyncService {
     });
   }
 
-  /// Mark quest as completed for current user in Firebase
+  /// Mark quest as completed for current user in Firebase AND Supabase (Dual-Write)
   Future<void> markQuestCompleted({
     required String questId,
     required String currentUserId,
@@ -300,12 +337,39 @@ class QuestSyncService {
       final coupleId = QuestUtilities.generateCoupleId(currentUserId, partnerUserId);
       final dateKey = QuestUtilities.getTodayDateKey();
 
+      // 1. Firebase Write (Primary)
       final completionRef = _database.child('daily_quests/$coupleId/$dateKey/completions/$questId/$currentUserId');
       await completionRef.set(true);
 
       Logger.debug('Marked quest $questId as completed for $currentUserId in Firebase', service: 'quest');
+
+      // 2. Supabase Write (Secondary - Dual Write)
+      _markQuestCompletedInSupabase(questId, currentUserId).catchError((e) {
+        Logger.error('Supabase dual-write failed (markCompleted)', error: e, service: 'quest');
+      });
+
     } catch (e) {
       Logger.error('Error marking quest completed in Firebase', error: e, service: 'quest');
+    }
+  }
+
+  /// Mark quest completed in Supabase (Dual-Write Implementation)
+  Future<void> _markQuestCompletedInSupabase(String questId, String userId) async {
+    try {
+      Logger.debug('🚀 Attempting dual-write to Supabase (markCompleted)...', service: 'quest');
+
+      final response = await _apiClient.post('/api/sync/daily-quests/completion', body: {
+        'quest_id': questId,
+        'timestamp': DateTime.now().toIso8601String(),
+      });
+
+      if (response.success) {
+        Logger.debug('✅ Supabase dual-write successful!', service: 'quest');
+      } else {
+        Logger.error('Supabase dual-write failed: ${response.error}', service: 'quest');
+      }
+    } catch (e) {
+      Logger.error('Supabase dual-write exception', error: e, service: 'quest');
     }
   }
 

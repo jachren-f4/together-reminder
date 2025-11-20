@@ -1,10 +1,12 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import '../config/dev_config.dart';
 import '../services/auth_service.dart';
 import '../services/storage_service.dart';
 import '../services/couple_pairing_service.dart';
 import '../models/partner.dart';
+import '../models/user.dart';
 import '../screens/auth_screen.dart';
 import '../screens/onboarding_screen.dart';
 import '../screens/home_screen.dart';
@@ -28,6 +30,7 @@ class _AuthWrapperState extends State<AuthWrapper> {
   final _authService = AuthService();
   final _storageService = StorageService();
   final _couplePairingService = CouplePairingService();
+  final _secureStorage = const FlutterSecureStorage();
 
   bool _isCheckingPairingStatus = false;
   bool _hasCheckedPairingStatus = false;
@@ -45,6 +48,48 @@ class _AuthWrapperState extends State<AuthWrapper> {
         setState(() {});
       }
     });
+  }
+
+  /// Ensure coupleId and User are saved (for quest sync)
+  Future<void> _ensureCoupleIdSaved() async {
+    try {
+      // Ensure User object exists in storage (required for quest generation)
+      if (_storageService.getUser() == null) {
+        final userId = await _secureStorage.read(key: 'supabase_user_id');
+        final userEmail = await _secureStorage.read(key: 'supabase_user_email');
+
+        if (userId != null) {
+          final pushToken = await NotificationService.getToken() ?? '';
+          final user = User(
+            id: userId,
+            pushToken: pushToken,
+            createdAt: DateTime.now(),
+            name: userEmail?.split('@').first ?? 'User',
+          );
+          await _storageService.saveUser(user);
+          debugPrint('✅ User restored: ${user.name} (${user.id})');
+        }
+      }
+
+      // Check if coupleId already exists
+      final existingCoupleId = await _secureStorage.read(key: 'couple_id');
+      if (existingCoupleId != null) {
+        debugPrint('✅ CoupleId already saved: $existingCoupleId');
+        _hasCheckedPairingStatus = true;
+        return;
+      }
+
+      // Fetch from API and save
+      final status = await _couplePairingService.getStatus();
+      if (status != null) {
+        await _secureStorage.write(key: 'couple_id', value: status.coupleId);
+        debugPrint('✅ CoupleId saved: ${status.coupleId}');
+      }
+      _hasCheckedPairingStatus = true;
+    } catch (e) {
+      debugPrint('❌ Error ensuring coupleId: $e');
+      _hasCheckedPairingStatus = true;
+    }
   }
 
   /// Check if user is paired in database and restore partner if so
@@ -66,7 +111,30 @@ class _AuthWrapperState extends State<AuthWrapper> {
           avatarEmoji: '💕',
         );
         await _storageService.savePartner(partner);
+
+        // Store couple ID for quest generation and sync
+        await _secureStorage.write(key: 'couple_id', value: status.coupleId);
+
+        // Also create User object if missing (required for quest generation)
+        if (_storageService.getUser() == null) {
+          final userId = await _secureStorage.read(key: 'supabase_user_id');
+          final userEmail = await _secureStorage.read(key: 'supabase_user_email');
+
+          if (userId != null) {
+            final pushToken = await NotificationService.getToken() ?? '';
+            final user = User(
+              id: userId,
+              pushToken: pushToken,
+              createdAt: DateTime.now(),
+              name: userEmail?.split('@').first ?? 'User',
+            );
+            await _storageService.saveUser(user);
+            debugPrint('✅ User restored: ${user.name} (${user.id})');
+          }
+        }
+
         debugPrint('✅ Restored partner from database: ${partner.name}');
+        debugPrint('✅ Restored couple ID: ${status.coupleId}');
       }
     } catch (e) {
       debugPrint('❌ Error checking pairing status: $e');
@@ -113,6 +181,10 @@ class _AuthWrapperState extends State<AuthWrapper> {
       case AuthState.authenticated:
         // User is authenticated, check if they have a partner
         if (_storageService.hasPartner()) {
+          // Also ensure coupleId is saved (for quest sync)
+          if (!_hasCheckedPairingStatus) {
+            _ensureCoupleIdSaved();
+          }
           return const HomeScreen();
         } else {
           // No local partner - check if paired in database

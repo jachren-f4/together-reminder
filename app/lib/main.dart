@@ -16,6 +16,7 @@ import 'package:togetherremind/services/daily_quest_service.dart';
 import 'package:togetherremind/services/quest_type_manager.dart';
 import 'package:togetherremind/services/love_point_service.dart';
 import 'package:togetherremind/services/auth_service.dart';
+import 'package:togetherremind/services/api_client.dart';
 import 'package:togetherremind/models/daily_quest.dart';
 import 'package:togetherremind/config/dev_config.dart';
 import 'package:togetherremind/config/theme_config.dart';
@@ -74,6 +75,10 @@ void main() async {
       supabaseAnonKey: SupabaseConfig.anonKey,
     );
     Logger.info('AuthService initialized with Supabase');
+
+    // Configure API client
+    ApiClient().configure(baseUrl: SupabaseConfig.apiUrl);
+    Logger.info('ApiClient configured with ${SupabaseConfig.apiUrl}');
   } else {
     Logger.warn('Supabase not configured - auth features disabled. Set SUPABASE_URL and SUPABASE_ANON_KEY.');
   }

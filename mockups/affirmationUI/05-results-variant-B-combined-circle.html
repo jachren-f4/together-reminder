@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Results - Variant B: Combined Circle</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            background: #fafafa;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 420px;
+            margin: 0 auto;
+            background: #fff;
+            border: 2px solid #000;
+            box-shadow: 8px 8px 0 rgba(0, 0, 0, 0.1);
+        }
+
+        .header {
+            border-bottom: 2px solid #000;
+            padding: 16px 20px;
+            text-align: center;
+        }
+
+        .header-title {
+            font-size: 16px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .content {
+            padding: 32px 24px;
+        }
+
+        .quiz-title {
+            font-family: 'Playfair Display', 'Georgia', serif;
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+
+        .category-badge {
+            display: inline-block;
+            background: #f0f0f0;
+            border: 1px solid #000;
+            color: #000;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            padding: 8px 16px;
+            border-radius: 20px;
+            margin-bottom: 32px;
+            text-transform: uppercase;
+        }
+
+        .badge-center {
+            text-align: center;
+        }
+
+        .section {
+            margin-bottom: 32px;
+        }
+
+        .section-title {
+            font-size: 14px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 16px;
+            text-align: center;
+        }
+
+        .dual-scores-container {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            gap: 24px;
+            margin-bottom: 24px;
+        }
+
+        .score-circle-small {
+            width: 140px;
+            height: 140px;
+            position: relative;
+        }
+
+        .circle-svg {
+            transform: rotate(-90deg);
+        }
+
+        .circle-bg {
+            fill: none;
+            stroke: #e0e0e0;
+            stroke-width: 10;
+        }
+
+        .circle-progress {
+            fill: none;
+            stroke: #000;
+            stroke-width: 10;
+            stroke-linecap: round;
+            stroke-dasharray: 395.84;
+            transition: stroke-dashoffset 1s ease;
+        }
+
+        .circle-progress.you {
+            stroke-dashoffset: 47.5; /* 88% */
+        }
+
+        .circle-progress.partner {
+            stroke-dashoffset: 31.67; /* 92% */
+        }
+
+        .score-text-small {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+        }
+
+        .score-name {
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #666;
+            margin-bottom: 4px;
+        }
+
+        .score-percentage-small {
+            font-family: 'Playfair Display', 'Georgia', serif;
+            font-size: 32px;
+            font-weight: 700;
+            line-height: 1;
+            margin-bottom: 4px;
+        }
+
+        .score-average-small {
+            font-size: 12px;
+            color: #666;
+        }
+
+        .match-stats {
+            border: 3px solid #000;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            background: #f9f9f9;
+            margin-bottom: 24px;
+        }
+
+        .match-title {
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #666;
+            margin-bottom: 12px;
+        }
+
+        .match-score {
+            font-family: 'Playfair Display', 'Georgia', serif;
+            font-size: 48px;
+            font-weight: 700;
+            line-height: 1;
+            margin-bottom: 8px;
+        }
+
+        .match-bar {
+            height: 8px;
+            background: #e0e0e0;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 8px;
+        }
+
+        .match-bar-fill {
+            height: 100%;
+            background: #000;
+            width: 60%;
+            border-radius: 4px;
+        }
+
+        .match-text {
+            font-size: 13px;
+            color: #666;
+            font-style: italic;
+        }
+
+        .comparison-card {
+            border: 2px solid #000;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 16px;
+        }
+
+        .comparison-card.matched {
+            background: #f9f9f9;
+            border-width: 3px;
+        }
+
+        .question-number {
+            font-size: 12px;
+            font-weight: 700;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+
+        .question-text {
+            font-size: 14px;
+            line-height: 1.4;
+            margin-bottom: 16px;
+            font-weight: 600;
+        }
+
+        .answer-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .answer-row:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+
+        .answer-label {
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #666;
+            margin-bottom: 8px;
+        }
+
+        .answer-content {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .answer-hearts {
+            display: flex;
+            gap: 6px;
+        }
+
+        .mini-heart {
+            font-size: 18px;
+        }
+
+        .mini-heart.filled::before {
+            content: '♥';
+            color: #dc143c;
+        }
+
+        .mini-heart.empty::before {
+            content: '♡';
+            color: #ccc;
+        }
+
+        .answer-score {
+            font-size: 20px;
+            font-weight: 700;
+            color: #000;
+        }
+
+        .match-badge {
+            display: inline-block;
+            background: #000;
+            color: #fff;
+            font-size: 10px;
+            font-weight: 700;
+            padding: 4px 8px;
+            border-radius: 4px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .done-button {
+            width: 100%;
+            background: #000;
+            color: #fff;
+            border: 2px solid #000;
+            padding: 18px;
+            font-size: 16px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            cursor: pointer;
+            border-radius: 12px;
+            font-family: 'Georgia', 'Times New Roman', serif;
+            transition: all 0.2s ease;
+            margin-top: 32px;
+        }
+
+        .done-button:hover {
+            background: #fff;
+            color: #000;
+            box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.2);
+        }
+
+        .variant-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #2196f3;
+            color: #fff;
+            padding: 4px 8px;
+            font-size: 10px;
+            border-radius: 4px;
+            font-weight: 700;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="variant-badge">VARIANT B</div>
+        <div class="header">
+            <div class="header-title">Quiz Results</div>
+        </div>
+
+        <div class="content">
+            <div class="quiz-title">Feel-Good Foundations</div>
+            <div class="badge-center">
+                <div class="category-badge">Trust</div>
+            </div>
+
+            <div class="section">
+                <div class="section-title">Your Scores</div>
+
+                <div class="dual-scores-container">
+                    <div class="score-circle-small">
+                        <svg class="circle-svg" width="140" height="140">
+                            <circle class="circle-bg" cx="70" cy="70" r="63"></circle>
+                            <circle class="circle-progress you" cx="70" cy="70" r="63"></circle>
+                        </svg>
+                        <div class="score-text-small">
+                            <div class="score-name">You</div>
+                            <div class="score-percentage-small">88%</div>
+                            <div class="score-average-small">4.4/5.0</div>
+                        </div>
+                    </div>
+
+                    <div class="score-circle-small">
+                        <svg class="circle-svg" width="140" height="140">
+                            <circle class="circle-bg" cx="70" cy="70" r="63"></circle>
+                            <circle class="circle-progress partner" cx="70" cy="70" r="63"></circle>
+                        </svg>
+                        <div class="score-text-small">
+                            <div class="score-name">Taija</div>
+                            <div class="score-percentage-small">92%</div>
+                            <div class="score-average-small">4.6/5.0</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="match-stats">
+                    <div class="match-title">Agreement Rate</div>
+                    <div class="match-score">60%</div>
+                    <div class="match-bar">
+                        <div class="match-bar-fill"></div>
+                    </div>
+                    <div class="match-text">3 out of 5 questions matched</div>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-title">Compare answers</div>
+
+                <div class="comparison-card matched">
+                    <div class="question-number">Question 1 <span class="match-badge">Perfect Match</span></div>
+                    <div class="question-text">Our relationship feels grounded in positivity.</div>
+                    <div class="answer-row">
+                        <div>
+                            <div class="answer-label">You</div>
+                            <div class="answer-content">
+                                <div class="answer-hearts">
+                                    <span class="mini-heart filled"></span>
+                                    <span class="mini-heart filled"></span>
+                                    <span class="mini-heart filled"></span>
+                                    <span class="mini-heart filled"></span>
+                                    <span class="mini-heart filled"></span>
+                                </div>
+                                <div class="answer-score">5/5</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="answer-row">
+                        <div>
+                            <div class="answer-label">Taija</div>
+                            <div class="answer-content">
+                                <div class="answer-hearts">
+                                    <span class="mini-heart filled"></span>
+                                    <span class="mini-heart filled"></span>
+                                    <span class="mini-heart filled"></span>
+                                    <span class="mini-heart filled"></span>
+                                    <span class="mini-heart filled"></span>
+                                </div>
+                                <div class="answer-score">5/5</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="comparison-card">
+                    <div class="question-number">Question 2</div>
+                    <div class="question-text">I feel good about the way we interact.</div>
+                    <div class="answer-row">
+                        <div>
+                            <div class="answer-label">You</div>
+                            <div class="answer-content">
+                                <div class="answer-hearts">
+                                    <span class="mini-heart filled"></span>
+                                    <span class="mini-heart filled"></span>
+                                    <span class="mini-heart filled"></span>
+                                    <span class="mini-heart filled"></span>
+                                    <span class="mini-heart empty"></span>
+                                </div>
+                                <div class="answer-score">4/5</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="answer-row">
+                        <div>
+                            <div class="answer-label">Taija</div>
+                            <div class="answer-content">
+                                <div class="answer-hearts">
+                                    <span class="mini-heart filled"></span>
+                                    <span class="mini-heart filled"></span>
+                                    <span class="mini-heart filled"></span>
+                                    <span class="mini-heart filled"></span>
+                                    <span class="mini-heart filled"></span>
+                                </div>
+                                <div class="answer-score">5/5</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <button class="done-button">Done</button>
+        </div>
+    </div>
+</body>
+</html>

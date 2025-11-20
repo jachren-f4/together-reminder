@@ -1,0 +1,53 @@
+name: Migration Progress Update
+
+on:
+  schedule:
+    - cron: '0 9 * * 1' # Monday 9am
+  workflow_dispatch:
+
+jobs:
+  update-progress:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+      - name: Generate Progress Report
+        run: |
+          echo "# Migration Progress Report" > progress-report.md
+          echo "Generated on: $(date)" >> progress-report.md
+          
+          # Count issues by status
+          echo "## Issue Status Summary" >> progress-report.md
+          echo "- Total Issues: $(gh issue list --repo $GITHUB_REPOSITORY --json | jq length)" >> progress-report.md
+          
+          echo "- In Progress: $(gh issue list --repo $GITHUB_REPOSITORY --label 'status/in-progress' --json | jq length)" >> progress-report.md
+          
+          echo "- Done: $(gh issue list --repo $GITHUB_REPOSITORY --label 'status/done' --json | jq length)" >> progress-report.md
+          
+          echo "- Blocked: $(gh issue list --repo $GITHUB_REPOSITORY --label 'status/blocked' --json | jq length)" >> progress-report.md
+          
+          # Count by phase
+          echo "## Phase Progress" >> progress-report.md
+          for phase in infra auth features validation cutover; do
+            count=$(gh issue list --repo $GITHUB_REPOSITORY --label "phase/$phase" --json | jq length)
+            done=$(gh issue list --repo $GITHUB_REPOSITORY --label "phase/$phase,status/done" --json | jq length)
+            echo "- $phase: $done/$count complete" >> progress-report.md
+          done
+          
+      - name: Create Progress Issue
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const fs = require('fs');
+            const report = fs.readFileSync('progress-report.md', 'utf8');
+            
+            github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: `Migration Progress - ${new Date().toISOString().split('T')[0]}`,
+              body: report,
+              labels: ['status/review', 'team/pm']
+            });

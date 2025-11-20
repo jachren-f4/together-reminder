@@ -24,11 +24,7 @@ export function getPool(): Pool {
       connectionTimeoutMillis: 10000,
     });
 
-    // Log connection events
-    pool.on('connect', () => {
-      console.log('New database connection established');
-    });
-
+    // Log only errors (not new connections)
     pool.on('error', (err) => {
       console.error('Unexpected database pool error:', err);
     });
