@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Linked - Partner's Turn (Waiting)</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            background: #fafafa;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 420px;
+            margin: 0 auto;
+            background: #fff;
+            border: 2px solid #000;
+            box-shadow: 8px 8px 0 rgba(0, 0, 0, 0.1);
+        }
+
+        .header {
+            border-bottom: 2px solid #000;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .back-btn {
+            font-size: 24px;
+            cursor: pointer;
+            padding: 4px 8px;
+        }
+
+        .title {
+            font-size: 24px;
+            font-weight: 400;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .help-btn {
+            font-size: 18px;
+            width: 32px;
+            height: 32px;
+            border: 1px solid #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        .turn-banner {
+            background: #f0f0f0;
+            border-bottom: 2px solid #000;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .turn-banner-icon {
+            font-size: 32px;
+            margin-bottom: 8px;
+        }
+
+        .turn-banner-text {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .turn-banner-sub {
+            font-size: 12px;
+            color: #666;
+            font-style: italic;
+        }
+
+        .scoreboard {
+            display: flex;
+            border-bottom: 1px solid #000;
+        }
+
+        .player-score {
+            flex: 1;
+            padding: 14px;
+            text-align: center;
+        }
+
+        .player-score:first-child {
+            border-right: 1px solid #000;
+        }
+
+        .player-score.active {
+            background: #000;
+            color: #fff;
+        }
+
+        .player-name {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 2px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .turn-dot {
+            width: 8px;
+            height: 8px;
+            background: #4caf50;
+            border-radius: 50%;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .score-value {
+            font-size: 26px;
+            font-weight: 700;
+        }
+
+        .grid-container {
+            padding: 16px;
+            display: flex;
+            justify-content: center;
+            border-bottom: 1px solid #e0e0e0;
+            opacity: 0.7;
+        }
+
+        .crossword-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 2px;
+            background: #000;
+            padding: 2px;
+            width: 100%;
+            max-width: 320px;
+        }
+
+        .cell {
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            font-weight: 700;
+            position: relative;
+        }
+
+        .cell-void {
+            background: #000;
+        }
+
+        .cell-clue {
+            background: #e8e8e8;
+            font-size: 6px;
+            font-weight: 500;
+            padding: 2px;
+            text-align: center;
+            line-height: 1.1;
+            color: #333;
+            position: relative;
+        }
+
+        .cell-clue .arrow {
+            position: absolute;
+            font-size: 7px;
+        }
+
+        .cell-clue .arrow-down {
+            bottom: 1px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .cell-clue .arrow-across {
+            right: 1px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .cell-answer {
+            background: #fff;
+        }
+
+        .cell-answer.locked {
+            background: #c8e6c9;
+        }
+
+        .progress-section {
+            padding: 20px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .progress-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 12px;
+            color: #666;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .progress-bar-bg {
+            height: 8px;
+            background: #e0e0e0;
+            border: 1px solid #000;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background: #000;
+            width: 35%;
+            transition: width 0.3s ease;
+        }
+
+        .stats-row {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        .stat-label {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #666;
+            margin-top: 2px;
+        }
+
+        .action-bar {
+            display: flex;
+            padding: 16px 20px;
+            gap: 12px;
+        }
+
+        .action-btn {
+            flex: 1;
+            padding: 14px;
+            border: 1px solid #000;
+            background: #fff;
+            font-family: inherit;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .action-btn:hover {
+            background: #f5f5f5;
+        }
+
+        .action-btn.disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .recent-moves {
+            padding: 20px;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .recent-moves-title {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 12px;
+            color: #666;
+        }
+
+        .move-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .move-item:last-child {
+            border-bottom: none;
+        }
+
+        .move-avatar {
+            width: 32px;
+            height: 32px;
+            background: #000;
+            color: #fff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        .move-info {
+            flex: 1;
+        }
+
+        .move-text {
+            font-size: 13px;
+        }
+
+        .move-time {
+            font-size: 10px;
+            color: #999;
+            margin-top: 2px;
+        }
+
+        .move-points {
+            font-size: 14px;
+            font-weight: 700;
+            color: #4caf50;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="back-btn">←</div>
+            <div class="title">Linked</div>
+            <div class="help-btn">?</div>
+        </div>
+
+        <div class="turn-banner">
+            <div class="turn-banner-icon">⏳</div>
+            <div class="turn-banner-text">Waiting for Taija</div>
+            <div class="turn-banner-sub">You'll be notified when it's your turn</div>
+        </div>
+
+        <div class="scoreboard">
+            <div class="player-score">
+                <div class="player-name">You</div>
+                <div class="score-value">120</div>
+            </div>
+            <div class="player-score active">
+                <div class="player-name">
+                    <span class="turn-dot"></span>
+                    Taija
+                </div>
+                <div class="score-value">90</div>
+            </div>
+        </div>
+
+        <div class="grid-container">
+            <div class="crossword-grid">
+                <!-- Row 0 -->
+                <div class="cell cell-void"></div>
+                <div class="cell cell-clue">Dominant partner<span class="arrow arrow-down">▼</span></div>
+                <div class="cell cell-clue">Flower of love<span class="arrow arrow-down">▼</span></div>
+                <div class="cell cell-void"></div>
+                <div class="cell cell-clue">Quick kiss<span class="arrow arrow-down">▼</span></div>
+                <div class="cell cell-void"></div>
+                <div class="cell cell-clue">Envelop in arms<span class="arrow arrow-down">▼</span></div>
+
+                <!-- Row 1 -->
+                <div class="cell cell-clue">Flow of fluids<span class="arrow arrow-across">▶</span></div>
+                <div class="cell cell-answer locked">D</div>
+                <div class="cell cell-answer locked">R</div>
+                <div class="cell cell-answer locked">I</div>
+                <div class="cell cell-answer locked">P</div>
+                <div class="cell cell-void"></div>
+                <div class="cell cell-answer">W</div>
+
+                <!-- Row 2 -->
+                <div class="cell cell-clue">Sound of excitement<span class="arrow arrow-across">▶</span></div>
+                <div class="cell cell-answer locked">O</div>
+                <div class="cell cell-answer locked">O</div>
+                <div class="cell cell-void"></div>
+                <div class="cell cell-answer">E</div>
+                <div class="cell cell-void"></div>
+                <div class="cell cell-answer">R</div>
+
+                <!-- Row 3 -->
+                <div class="cell cell-clue">Massage (abbr.)<span class="arrow arrow-across">▶</span></div>
+                <div class="cell cell-answer locked">M</div>
+                <div class="cell cell-answer">S</div>
+                <div class="cell cell-void"></div>
+                <div class="cell cell-answer">C</div>
+                <div class="cell cell-void"></div>
+                <div class="cell cell-answer">A</div>
+
+                <!-- Row 4 -->
+                <div class="cell cell-void"></div>
+                <div class="cell cell-clue">Male reproductive fluid<span class="arrow arrow-down">▼</span></div>
+                <div class="cell cell-answer">E</div>
+                <div class="cell cell-clue">Loving stare<span class="arrow arrow-down">▼</span></div>
+                <div class="cell cell-answer">K</div>
+                <div class="cell cell-clue">Flow of fluids<span class="arrow arrow-down">▼</span></div>
+                <div class="cell cell-answer">P</div>
+
+                <!-- Row 5 -->
+                <div class="cell cell-void"></div>
+                <div class="cell cell-answer">S</div>
+                <div class="cell cell-void"></div>
+                <div class="cell cell-answer">G</div>
+                <div class="cell cell-void"></div>
+                <div class="cell cell-answer">D</div>
+                <div class="cell cell-void"></div>
+
+                <!-- Row 6 -->
+                <div class="cell cell-void"></div>
+                <div class="cell cell-answer">E</div>
+                <div class="cell cell-clue">WR_P<span class="arrow arrow-across">▶</span></div>
+                <div class="cell cell-answer">A</div>
+                <div class="cell cell-clue">D_IP<span class="arrow arrow-across">▶</span></div>
+                <div class="cell cell-answer">R</div>
+                <div class="cell cell-clue">Very aroused<span class="arrow arrow-down">▼</span></div>
+
+                <!-- Row 7 -->
+                <div class="cell cell-clue">P_CK<span class="arrow arrow-across">▶</span></div>
+                <div class="cell cell-answer">E</div>
+                <div class="cell cell-void"></div>
+                <div class="cell cell-answer">Z</div>
+                <div class="cell cell-clue">State of being<span class="arrow arrow-across">▶</span></div>
+                <div class="cell cell-answer">I</div>
+                <div class="cell cell-answer">S</div>
+
+                <!-- Row 8 -->
+                <div class="cell cell-clue">_RIP<span class="arrow arrow-across">▶</span></div>
+                <div class="cell cell-answer">D</div>
+                <div class="cell cell-clue">Exhibition kink<span class="arrow arrow-across">▶</span></div>
+                <div class="cell cell-answer">E</div>
+                <div class="cell cell-answer">X</div>
+                <div class="cell cell-answer">P</div>
+                <div class="cell cell-answer">O</div>
+            </div>
+        </div>
+
+        <div class="progress-section">
+            <div class="progress-label">
+                <span>Puzzle Progress</span>
+                <span>11 / 31 letters</span>
+            </div>
+            <div class="progress-bar-bg">
+                <div class="progress-bar-fill"></div>
+            </div>
+
+            <div class="stats-row">
+                <div class="stat-item">
+                    <div class="stat-value">6</div>
+                    <div class="stat-label">Your Letters</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">5</div>
+                    <div class="stat-label">Taija's Letters</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">4</div>
+                    <div class="stat-label">Turns</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="recent-moves">
+            <div class="recent-moves-title">Recent Activity</div>
+            <div class="move-item">
+                <div class="move-avatar">T</div>
+                <div class="move-info">
+                    <div class="move-text">Taija placed 4 letters</div>
+                    <div class="move-time">Playing now...</div>
+                </div>
+            </div>
+            <div class="move-item">
+                <div class="move-avatar">Y</div>
+                <div class="move-info">
+                    <div class="move-text">You completed "DRIP"</div>
+                    <div class="move-time">2 minutes ago</div>
+                </div>
+                <div class="move-points">+80</div>
+            </div>
+            <div class="move-item">
+                <div class="move-avatar">T</div>
+                <div class="move-info">
+                    <div class="move-text">Taija placed 3 letters</div>
+                    <div class="move-time">5 minutes ago</div>
+                </div>
+                <div class="move-points">+30</div>
+            </div>
+        </div>
+
+        <div class="action-bar">
+            <div class="action-btn">
+                <span>👆</span>
+                <span>Nudge Taija</span>
+            </div>
+            <div class="action-btn disabled">
+                <span>🔄</span>
+                <span>Refresh</span>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

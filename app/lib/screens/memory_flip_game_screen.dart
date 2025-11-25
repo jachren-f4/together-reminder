@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:confetti/confetti.dart';
 import 'package:togetherremind/models/memory_flip.dart';
@@ -19,203 +20,171 @@ class MemoryFlipGameScreen extends StatefulWidget {
 class _MemoryFlipGameScreenState extends State<MemoryFlipGameScreen> {
   final MemoryFlipService _service = MemoryFlipService();
   final StorageService _storage = StorageService();
+  final GeneralActivityStreakService _streakService = GeneralActivityStreakService();
   late ConfettiController _confettiController;
 
-  MemoryPuzzle? _puzzle;
-  MemoryFlipAllowance? _allowance;
-  String? _userId;
+  // Game state
+  GameState? _gameState;
   bool _isLoading = true;
   bool _isProcessing = false;
 
-  // DEBUG: Show all cards for testing (set to false for production)
-  final bool _debugShowAllCards = true;
+  // Currently selected cards for this turn
+  MemoryCard? _selectedCard1;
+  MemoryCard? _selectedCard2;
 
-  // Temporarily flipped cards (not yet matched)
-  List<MemoryCard> _flippedCards = [];
+  // Timer for auto-refresh
+  Timer? _refreshTimer;
 
   @override
   void initState() {
     super.initState();
     _confettiController = ConfettiController(duration: const Duration(seconds: 3));
     _loadGameState();
+
+    // Set up periodic refresh every 10 seconds to check for partner's moves
+    _refreshTimer = Timer.periodic(const Duration(seconds: 10), (_) {
+      if (!_isProcessing) {
+        _loadGameState(silent: true);
+      }
+    });
   }
 
   @override
   void dispose() {
+    _refreshTimer?.cancel();
     _confettiController.dispose();
     super.dispose();
   }
 
-  Future<void> _loadGameState() async {
-    setState(() => _isLoading = true);
+  Future<void> _loadGameState({bool silent = false}) async {
+    if (!silent) {
+      setState(() => _isLoading = true);
+    }
 
     try {
-      // Get current user
-      final user = _storage.getUser();
-      if (user == null) {
-        // Handle no user case
-        return;
-      }
-      _userId = user.id;
+      final gameState = await _service.getOrCreatePuzzle();
 
-      // Track old puzzle to detect new puzzle generation
-      final oldPuzzle = _puzzle;
-
-      // Load or generate puzzle
-      final puzzle = await _service.getCurrentPuzzle();
-      final allowance = await _service.getFlipAllowance(_userId!);
-
-      // If this is a new puzzle (different ID), notify partner
-      if (oldPuzzle == null || oldPuzzle.id != puzzle.id) {
-        final partner = _storage.getPartner();
-        if (partner != null && puzzle.matchedPairs == 0) {
-          // Only send notification if no matches yet (truly new puzzle)
-          final userName = user.name ?? 'Your partner';
-          final expiresInDays = puzzle.expiresAt.difference(DateTime.now()).inDays;
-
-          await _service.sendNewPuzzleNotification(
-            partnerToken: partner.pushToken,
-            senderName: userName,
-            totalPairs: puzzle.totalPairs,
-            expiresInDays: expiresInDays,
-          );
-        }
+      // Track activity streak
+      if (!silent && gameState.puzzle.matchedPairs == 0) {
+        // New puzzle started
+        _streakService.recordActivity();
       }
 
       setState(() {
-        _puzzle = puzzle;
-        _allowance = allowance;
+        _gameState = gameState;
         _isLoading = false;
+
+        // Reset selection if turn changed
+        if (!gameState.isMyTurn) {
+          _selectedCard1 = null;
+          _selectedCard2 = null;
+        }
       });
     } catch (e) {
-      setState(() => _isLoading = false);
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error loading game: $e')),
-        );
+      Logger.error('Error loading game state', error: e, service: 'memory_flip');
+      if (!silent) {
+        setState(() => _isLoading = false);
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Error loading game: $e')),
+          );
+        }
       }
     }
   }
 
   Future<void> _onCardTap(MemoryCard card) async {
-    // Prevent interactions while processing
-    if (_isProcessing) return;
+    if (_gameState == null || _isProcessing) return;
 
-    // Can't flip matched cards
-    if (card.isMatched) return;
+    // Check if it's player's turn
+    if (!_gameState!.isMyTurn) {
+      _showNotYourTurnDialog();
+      return;
+    }
 
-    // Already flipped in current turn
-    if (_flippedCards.any((c) => c.id == card.id)) return;
-
-    // Check if user has flips remaining
-    if (_allowance?.canFlip != true) {
+    // Check if player has flips
+    if (_gameState!.myFlipsRemaining < 2) {
       _showNoFlipsDialog();
       return;
     }
 
-    // Check if already have 2 cards flipped (should reset first)
-    if (_flippedCards.length >= 2) {
-      return;
-    }
+    // Can't select already matched cards
+    if (card.isMatched) return;
 
+    // Select first or second card
     setState(() {
-      _flippedCards.add(card);
+      if (_selectedCard1 == null) {
+        _selectedCard1 = card;
+      } else if (_selectedCard2 == null && card.id != _selectedCard1!.id) {
+        _selectedCard2 = card;
+      } else if (_selectedCard1!.id == card.id) {
+        // Deselect if tapping the same card
+        _selectedCard1 = null;
+      }
     });
 
-    // If this is the second card, check for match
-    if (_flippedCards.length == 2) {
-      await _checkForMatch();
+    // Submit move after second card selected
+    if (_selectedCard1 != null && _selectedCard2 != null) {
+      await _submitMove();
     }
   }
 
-  Future<void> _checkForMatch() async {
-    if (_puzzle == null || _flippedCards.length != 2) return;
+  Future<void> _submitMove() async {
+    if (_selectedCard1 == null || _selectedCard2 == null || _gameState == null) return;
 
     setState(() => _isProcessing = true);
 
-    // Wait a moment so user can see both cards
-    await Future.delayed(const Duration(milliseconds: 600));
+    // Show both cards for a moment
+    await Future.delayed(const Duration(milliseconds: 1000));
 
     try {
-      final card1 = _flippedCards[0];
-      final card2 = _flippedCards[1];
-
-      // Check for match
-      final matchResult = await _service.checkForMatches(
-        _puzzle!,
-        card1,
-        card2,
-        _userId!,
+      final result = await _service.submitMove(
+        _gameState!.puzzle.id,
+        _selectedCard1!.id,
+        _selectedCard2!.id,
       );
 
-      // Decrement flip allowance
-      await _service.decrementFlipAllowance(_userId!);
+      if (result.matchFound) {
+        // Show match celebration
+        _showMatchDialog();
 
-      // Reload allowance
-      final updatedAllowance = await _service.getFlipAllowance(_userId!);
+        // Award Love Points
+        final lovePoints = _service.calculateMatchPoints();
+        await LovePointService.awardPoints(
+          amount: lovePoints,
+          reason: 'Memory Flip match: ${_selectedCard1!.emoji}',
+        );
 
-      if (matchResult != null) {
-        // Match found! Sync with Cloud and send notification
-        final partner = _storage.getPartner();
-        final user = _storage.getUser();
+        // Play confetti
+        _confettiController.play();
 
-        if (partner != null && user != null) {
-          // Sync match to Firestore (fire-and-forget, don't block UI)
-          _service.syncMatch(
-            _puzzle!.id,
-            [card1.id, card2.id],
-            _userId!,
-          ).catchError((e) {
-            Logger.error('Error syncing match', error: e, service: 'memory_flip');
-          });
-
-          // Send push notification to partner (fire-and-forget, don't block UI)
-          _service.sendMatchNotification(
-            partnerToken: partner.pushToken,
-            senderName: user.name ?? 'Your Partner',
-            emoji: matchResult.card1.emoji,
-            quote: matchResult.quote,
-            lovePoints: matchResult.lovePoints,
-          ).catchError((e) {
-            Logger.error('Error sending match notification', error: e, service: 'memory_flip');
-          });
-
-          // Record activity for streak tracking (KEEP await - critical for streaks)
-          await GeneralActivityStreakService().recordActivity();
-        }
-
-        // Match found! Show celebration dialog
-        setState(() {
-          _allowance = updatedAllowance;
-          _flippedCards.clear();
-          _isProcessing = false;
-        });
-
-        if (mounted) {
-          await showDialog(
-            context: context,
-            barrierDismissible: false,
-            builder: (context) => MatchRevealDialog(
-              matchResult: matchResult,
-              onDismiss: () {
-                Navigator.of(context).pop();
-                _checkPuzzleCompletion();
-              },
-            ),
-          );
-        }
+        // Track activity
+        _streakService.recordActivity();
       } else {
-        // No match - flip cards back
-        await Future.delayed(const Duration(milliseconds: 800));
-        setState(() {
-          _allowance = updatedAllowance;
-          _flippedCards.clear();
-          _isProcessing = false;
-        });
+        // No match - cards will flip back
+        await Future.delayed(const Duration(milliseconds: 500));
       }
-    } catch (e) {
+
+      // Clear selection
       setState(() {
-        _flippedCards.clear();
+        _selectedCard1 = null;
+        _selectedCard2 = null;
+        _isProcessing = false;
+      });
+
+      // Reload game state
+      await _loadGameState();
+
+      // Check if game is completed
+      if (result.gameCompleted) {
+        _onPuzzleComplete();
+      }
+
+    } catch (e) {
+      Logger.error('Error submitting move', error: e, service: 'memory_flip');
+      setState(() {
+        _selectedCard1 = null;
+        _selectedCard2 = null;
         _isProcessing = false;
       });
 
@@ -227,283 +196,202 @@ class _MemoryFlipGameScreenState extends State<MemoryFlipGameScreen> {
     }
   }
 
-  void _checkPuzzleCompletion() {
-    if (_puzzle?.isCompleted == true) {
-      // Trigger confetti
-      _confettiController.play();
-      // Show completion dialog
-      _showCompletionDialog();
-    }
-  }
-
-  void _showCompletionDialog() async {
-    if (_puzzle == null) return;
-
-    final points = _service.calculateCompletionPoints(_puzzle!);
-    final daysTaken = _puzzle!.completedAt!.difference(_puzzle!.createdAt).inDays;
-
-    // Send completion notification to partner
-    final partner = _storage.getPartner();
-    final user = _storage.getUser();
-
-    if (partner != null && user != null) {
-      await _service.sendCompletionNotification(
-        partnerToken: partner.pushToken,
-        senderName: user.name ?? 'Your Partner',
-        completionQuote: _puzzle!.completionQuote,
-        lovePoints: points,
-        daysTaken: daysTaken,
-      );
-
-      // Award Love Points for puzzle completion
-      await LovePointService.awardPoints(
-        amount: points,
-        reason: 'memory_flip_completed',
-        relatedId: _puzzle!.id,
-      );
-
-      // Record activity for streak tracking
-      await GeneralActivityStreakService().recordActivity();
-    }
+  void _showMatchDialog() {
+    if (_selectedCard1 == null || _gameState == null) return;
 
     showDialog(
       context: context,
       barrierDismissible: false,
+      builder: (context) => MatchRevealDialog(
+        emoji: _selectedCard1!.emoji,
+        quote: _selectedCard1!.revealQuote,
+        lovePoints: _service.calculateMatchPoints(),
+        onDismiss: () {
+          Navigator.of(context).pop();
+        },
+      ),
+    );
+  }
+
+  void _showNotYourTurnDialog() {
+    final partnerName = _getPartnerName();
+    showDialog(
+      context: context,
       builder: (context) => AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
-        contentPadding: const EdgeInsets.all(32),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const Text('🎉', style: TextStyle(fontSize: 64)),
-            const SizedBox(height: 16),
-            Text(
-              'Puzzle Complete!',
-              style: AppTheme.headlineFont.copyWith(
-                fontSize: 28,
-                fontWeight: FontWeight.w600,
-                color: AppTheme.textPrimary,
-              ),
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 12),
-            Text(
-              _puzzle!.completionQuote,
-              style: AppTheme.bodyFont.copyWith(
-                fontSize: 16,
-                color: AppTheme.textSecondary,
-                height: 1.5,
-              ),
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 24),
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-              decoration: BoxDecoration(
-                color: AppTheme.backgroundGray,
-                borderRadius: BorderRadius.circular(16),
-                border: Border.all(color: AppTheme.borderLight, width: 2),
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Text('💎', style: TextStyle(fontSize: 24)),
-                  const SizedBox(width: 8),
-                  Text(
-                    '+$points Love Points',
-                    style: AppTheme.bodyFont.copyWith(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w700,
-                      color: AppTheme.textPrimary,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 24),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-                Navigator.of(context).pop(); // Go back to activities
-              },
-              style: ElevatedButton.styleFrom(
-                padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
-              ),
-              child: const Text('Done'),
-            ),
-          ],
-        ),
+        title: const Text('Not Your Turn'),
+        content: Text("It's $partnerName's turn to play. Wait for them to make their move!"),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+              _loadGameState(); // Refresh to check for updates
+            },
+            child: const Text('OK'),
+          ),
+        ],
       ),
     );
   }
 
   void _showNoFlipsDialog() {
-    if (_allowance == null) return;
+    if (_gameState == null) return;
 
-    final resetTime = _service.formatTimeUntilReset(_allowance!);
+    final timeUntilReset = _service.formatTimeRemaining(_gameState!.timeUntilTurnExpires);
 
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
-        contentPadding: const EdgeInsets.all(24),
+        title: const Text('Out of Flips'),
+        content: Text(
+          timeUntilReset.isNotEmpty
+              ? 'You have no flips remaining. New flips available in $timeUntilReset.'
+              : 'You have no flips remaining. Check back soon!',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('OK'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _onPuzzleComplete() {
+    if (_gameState == null) return;
+
+    final puzzle = _gameState!.puzzle;
+    final completionPoints = _service.calculateCompletionPoints(puzzle);
+
+    // Award completion bonus
+    LovePointService.awardPoints(
+      amount: completionPoints,
+      reason: 'Memory Flip puzzle completed!',
+    );
+
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => AlertDialog(
+        title: const Text('🎉 Puzzle Complete!'),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Text('⏳', style: TextStyle(fontSize: 48)),
-            const SizedBox(height: 16),
-            Text(
-              'No flips left',
-              style: AppTheme.headlineFont.copyWith(
-                fontSize: 22,
-                fontWeight: FontWeight.w600,
-              ),
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 8),
-            Text(
-              'Your flips will reset in $resetTime',
-              style: AppTheme.bodyFont.copyWith(
-                fontSize: 15,
-                color: AppTheme.textSecondary,
-              ),
-              textAlign: TextAlign.center,
-            ),
+            Text(puzzle.completionQuote),
             const SizedBox(height: 20),
-            OutlinedButton(
-              onPressed: () => Navigator.of(context).pop(),
-              child: const Text('OK'),
+            Text(
+              'Final Score',
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
+            const SizedBox(height: 10),
+            Text('You: ${puzzle.player1Pairs} pairs'),
+            Text('${_getPartnerName()}: ${puzzle.player2Pairs} pairs'),
+            const SizedBox(height: 10),
+            Text(
+              '+$completionPoints Love Points!',
+              style: TextStyle(
+                color: Theme.of(context).colorScheme.primary,
+                fontWeight: FontWeight.bold,
+              ),
             ),
           ],
         ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+              Navigator.of(context).pop(); // Go back to activities
+            },
+            child: const Text('Done'),
+          ),
+        ],
       ),
     );
   }
 
-  void _showInfoDialog() {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
-        contentPadding: const EdgeInsets.all(24),
-        content: SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'How to Play',
-                style: AppTheme.headlineFont.copyWith(
-                  fontSize: 24,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-              const SizedBox(height: 16),
-              _buildInfoItem(
-                '🃏',
-                'Find matching pairs',
-                'Flip two cards per turn to find matching emojis',
-              ),
-              const SizedBox(height: 12),
-              _buildInfoItem(
-                '💕',
-                'Work together',
-                'You and your partner share the same puzzle',
-              ),
-              const SizedBox(height: 12),
-              _buildInfoItem(
-                '🔄',
-                'Limited flips',
-                'You get 6 flips per day (3 matching attempts)',
-              ),
-              const SizedBox(height: 12),
-              _buildInfoItem(
-                '💎',
-                'Earn rewards',
-                'Complete puzzles faster for bonus Love Points',
-              ),
-              const SizedBox(height: 20),
-              OutlinedButton(
-                onPressed: () => Navigator.of(context).pop(),
-                child: const Text('Got it!'),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
+  String _getPartnerName() {
+    final partner = _storage.getPartner();
+    return partner?.name ?? 'Your partner';
   }
 
-  Widget _buildInfoItem(String emoji, String title, String description) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(emoji, style: const TextStyle(fontSize: 24)),
-        const SizedBox(width: 12),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                title,
-                style: AppTheme.bodyFont.copyWith(
-                  fontSize: 15,
-                  fontWeight: FontWeight.w600,
-                  color: AppTheme.textPrimary,
-                ),
-              ),
-              Text(
-                description,
-                style: AppTheme.bodyFont.copyWith(
-                  fontSize: 14,
-                  color: AppTheme.textSecondary,
-                ),
-              ),
-            ],
-          ),
-        ),
-      ],
+  Color _getCardColor(MemoryCard card) {
+    if (card.isMatched) {
+      return AppTheme.accentGreen.withOpacity(0.3);
+    }
+
+    if (_selectedCard1?.id == card.id || _selectedCard2?.id == card.id) {
+      return AppTheme.primaryBlack;
+    }
+
+    return Colors.grey[300]!;
+  }
+
+  Widget _getCardContent(MemoryCard card) {
+    final isSelected = _selectedCard1?.id == card.id || _selectedCard2?.id == card.id;
+    final isRevealed = card.isMatched || isSelected;
+
+    if (isRevealed) {
+      return Text(
+        card.emoji,
+        style: const TextStyle(fontSize: 32),
+      );
+    }
+
+    return Icon(
+      Icons.help_outline,
+      size: 32,
+      color: Colors.grey[600],
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        Scaffold(
-          backgroundColor: AppTheme.backgroundGray,
-          appBar: AppBar(
-        backgroundColor: AppTheme.primaryWhite,
+    return Scaffold(
+      backgroundColor: AppTheme.backgroundGray,
+      appBar: AppBar(
+        backgroundColor: AppTheme.backgroundGray,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: AppTheme.textPrimary),
+          icon: const Icon(Icons.arrow_back, color: Colors.black87),
           onPressed: () => Navigator.of(context).pop(),
         ),
-        title: Text(
+        title: const Text(
           'Memory Flip',
-          style: AppTheme.headlineFont.copyWith(
-            fontSize: 24,
+          style: TextStyle(
+            color: Colors.black87,
             fontWeight: FontWeight.w600,
-            color: AppTheme.textPrimary,
+            fontSize: 20,
           ),
         ),
         actions: [
           IconButton(
-            icon: const Icon(Icons.info_outline, color: AppTheme.textPrimary),
-            onPressed: _showInfoDialog,
+            icon: const Icon(Icons.refresh, color: Colors.black87),
+            onPressed: _isProcessing ? null : _loadGameState,
           ),
         ],
-        bottom: PreferredSize(
-          preferredSize: const Size.fromHeight(1),
-          child: Container(
-            color: AppTheme.borderLight,
-            height: 1,
-          ),
-        ),
       ),
-      body: _isLoading
-          ? const Center(child: CircularProgressIndicator())
-          : _buildGameContent(),
+      body: _buildBody(),
+    );
+  }
+
+  Widget _buildBody() {
+    if (_isLoading) {
+      return const Center(child: CircularProgressIndicator());
+    }
+
+    if (_gameState == null) {
+      return const Center(child: Text('Error loading game'));
+    }
+
+    return Stack(
+      children: [
+        Column(
+          children: [
+            _buildTurnIndicator(),
+            _buildScoreBoard(),
+            _buildFlipAllowance(),
+            Expanded(child: _buildGameGrid()),
+          ],
         ),
         // Confetti overlay
         Align(
@@ -513,15 +401,14 @@ class _MemoryFlipGameScreenState extends State<MemoryFlipGameScreen> {
             blastDirectionality: BlastDirectionality.explosive,
             particleDrag: 0.05,
             emissionFrequency: 0.05,
-            numberOfParticles: 30,
-            gravity: 0.1,
-            shouldLoop: false,
+            numberOfParticles: 50,
+            gravity: 0.3,
             colors: const [
               AppTheme.primaryBlack,
               AppTheme.accentGreen,
-              Colors.pink,
-              Colors.blue,
-              Colors.yellow,
+              AppTheme.accentOrange,
+              Colors.orange,
+              Colors.purple,
             ],
           ),
         ),
@@ -529,208 +416,180 @@ class _MemoryFlipGameScreenState extends State<MemoryFlipGameScreen> {
     );
   }
 
-  Widget _buildGameContent() {
-    if (_puzzle == null || _allowance == null) {
-      return const Center(child: Text('Error loading puzzle'));
-    }
+  Widget _buildTurnIndicator() {
+    if (_gameState == null) return const SizedBox.shrink();
 
-    return SingleChildScrollView(
-      padding: const EdgeInsets.all(20),
-      child: Column(
+    final color = _gameState!.isMyTurn ? Colors.green : Colors.orange;
+    final text = _gameState!.isMyTurn
+        ? "Your Turn"
+        : "Waiting for ${_getPartnerName()}";
+
+    return Container(
+      padding: const EdgeInsets.all(12),
+      margin: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: color.withOpacity(0.1),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: color, width: 1),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          _buildFlipAllowanceBanner(),
-          const SizedBox(height: 16),
-          _buildProgressIndicator(),
-          const SizedBox(height: 20),
-          _buildMemoryGrid(),
+          Icon(
+            _gameState!.isMyTurn ? Icons.play_arrow : Icons.hourglass_empty,
+            color: color,
+          ),
+          const SizedBox(width: 8),
+          Text(
+            text,
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+              color: color,
+            ),
+          ),
         ],
       ),
     );
   }
 
-  Widget _buildFlipAllowanceBanner() {
-    final resetTime = _service.formatTimeUntilReset(_allowance!);
+  Widget _buildScoreBoard() {
+    if (_gameState == null) return const SizedBox.shrink();
+
+    final myPairs = _gameState!.myPairs;
+    final partnerPairs = _gameState!.partnerPairs;
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          _buildScoreCard("You", myPairs, Colors.blue),
+          const Text("vs", style: TextStyle(fontSize: 20)),
+          _buildScoreCard(_getPartnerName(), partnerPairs, Colors.red),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildScoreCard(String name, int score, Color color) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+      decoration: BoxDecoration(
+        color: color.withOpacity(0.1),
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: color),
+      ),
+      child: Column(
+        children: [
+          Text(
+            name,
+            style: TextStyle(
+              color: color,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          Text(
+            '$score pairs',
+            style: TextStyle(
+              color: color,
+              fontSize: 18,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildFlipAllowance() {
+    if (_gameState == null) return const SizedBox.shrink();
+
+    final flipsRemaining = _gameState!.myFlipsRemaining;
+    final attemptsRemaining = flipsRemaining ~/ 2;
+    final timeUntilReset = _service.formatTimeRemaining(_gameState!.timeUntilTurnExpires);
 
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(12),
+      margin: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: AppTheme.primaryWhite,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: AppTheme.borderLight, width: 2),
+        color: Colors.grey[100],
+        borderRadius: BorderRadius.circular(12),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Row(
             children: [
-              const Text('🔄', style: TextStyle(fontSize: 32)),
-              const SizedBox(width: 12),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    '${_allowance!.flipsRemaining} flips left',
-                    style: AppTheme.bodyFont.copyWith(
-                      fontSize: 28,
-                      fontWeight: FontWeight.w700,
-                      color: AppTheme.textPrimary,
-                      letterSpacing: -0.5,
-                    ),
-                  ),
-                  const SizedBox(height: 2),
-                  Text(
-                    '${_allowance!.flipsRemaining ~/ 2} attempts remaining',
-                    style: AppTheme.bodyFont.copyWith(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500,
-                      color: AppTheme.textSecondary,
-                    ),
-                  ),
-                ],
+              Icon(
+                Icons.touch_app,
+                color: flipsRemaining > 0 ? Colors.green : Colors.red,
+              ),
+              const SizedBox(width: 8),
+              Text(
+                '$attemptsRemaining attempts left',
+                style: TextStyle(
+                  color: flipsRemaining > 0 ? Colors.green : Colors.red,
+                  fontWeight: FontWeight.w600,
+                ),
               ),
             ],
           ),
-          Text(
-            'Resets in $resetTime',
-            style: AppTheme.bodyFont.copyWith(
-              fontSize: 13,
-              fontWeight: FontWeight.w600,
-              color: AppTheme.textTertiary,
+          if (timeUntilReset.isNotEmpty)
+            Text(
+              'Resets in $timeUntilReset',
+              style: TextStyle(
+                color: Colors.grey[600],
+                fontSize: 12,
+              ),
             ),
-          ),
         ],
       ),
     );
   }
 
-  Widget _buildProgressIndicator() {
-    final progress = _puzzle!.progressPercentage;
-    final matchedCount = _puzzle!.matchedPairs;
-    final totalCount = _puzzle!.totalPairs;
+  Widget _buildGameGrid() {
+    if (_gameState == null) return const SizedBox.shrink();
 
-    return Container(
+    final puzzle = _gameState!.puzzle;
+    final canInteract = _gameState!.isMyTurn &&
+                       _gameState!.myFlipsRemaining >= 2 &&
+                       !_isProcessing;
+
+    return Padding(
       padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: AppTheme.primaryWhite,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppTheme.borderLight, width: 2),
-      ),
-      child: Column(
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                'Progress',
-                style: AppTheme.bodyFont.copyWith(
-                  fontSize: 15,
-                  fontWeight: FontWeight.w600,
-                  color: AppTheme.textPrimary,
-                ),
-              ),
-              Text(
-                '$matchedCount/$totalCount pairs',
-                style: AppTheme.bodyFont.copyWith(
-                  fontSize: 15,
-                  fontWeight: FontWeight.w600,
-                  color: AppTheme.textSecondary,
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 12),
-          ClipRRect(
-            borderRadius: BorderRadius.circular(8),
-            child: LinearProgressIndicator(
-              value: progress,
-              backgroundColor: AppTheme.backgroundGray,
-              valueColor: const AlwaysStoppedAnimation<Color>(AppTheme.primaryBlack),
-              minHeight: 8,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildMemoryGrid() {
-    if (_puzzle == null) return const SizedBox.shrink();
-
-    // Sort cards by position
-    final sortedCards = List<MemoryCard>.from(_puzzle!.cards)
-      ..sort((a, b) => a.position.compareTo(b.position));
-
-    return GridView.builder(
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 4,
-        crossAxisSpacing: 12,
-        mainAxisSpacing: 12,
-        childAspectRatio: 1,
-      ),
-      itemCount: sortedCards.length,
-      itemBuilder: (context, index) {
-        final card = sortedCards[index];
-        final isFlipped = _flippedCards.any((c) => c.id == card.id);
-
-        return _buildMemoryCard(card, isFlipped);
-      },
-    );
-  }
-
-  Widget _buildMemoryCard(MemoryCard card, bool isFlipped) {
-    final isMatched = card.isMatched;
-    final showEmoji = isMatched || isFlipped || _debugShowAllCards;
-
-    return GestureDetector(
-      onTap: () => _onCardTap(card),
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 300),
-        curve: Curves.easeInOut,
-        decoration: BoxDecoration(
-          color: isMatched ? AppTheme.accentGreen.withOpacity(0.1) : AppTheme.primaryWhite,
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(
-            color: isMatched
-                ? AppTheme.accentGreen
-                : (isFlipped ? AppTheme.primaryBlack : AppTheme.borderLight),
-            width: 2,
-          ),
+      child: GridView.builder(
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 4,
+          crossAxisSpacing: 8,
+          mainAxisSpacing: 8,
         ),
-        child: Stack(
-          children: [
-            Center(
-              child: showEmoji
-                  ? Text(
-                      card.emoji,
-                      style: const TextStyle(fontSize: 36),
-                    )
-                  : const Text(
-                      '❤️',
-                      style: TextStyle(fontSize: 28),
-                    ),
-            ),
-            // Checkmark overlay for matched cards
-            if (isMatched)
-              Positioned(
-                top: 4,
-                right: 4,
-                child: Container(
-                  padding: const EdgeInsets.all(4),
-                  decoration: BoxDecoration(
-                    color: AppTheme.accentGreen,
-                    shape: BoxShape.circle,
-                  ),
-                  child: const Icon(
-                    Icons.check,
-                    color: AppTheme.primaryWhite,
-                    size: 16,
-                  ),
+        itemCount: puzzle.cards.length,
+        itemBuilder: (context, index) {
+          final card = puzzle.cards[index];
+
+          return GestureDetector(
+            onTap: canInteract ? () => _onCardTap(card) : null,
+            child: AnimatedContainer(
+              duration: const Duration(milliseconds: 300),
+              decoration: BoxDecoration(
+                color: _getCardColor(card),
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(
+                  color: (_selectedCard1?.id == card.id || _selectedCard2?.id == card.id)
+                      ? AppTheme.primaryBlack
+                      : Colors.grey[400]!,
+                  width: (_selectedCard1?.id == card.id || _selectedCard2?.id == card.id)
+                      ? 3
+                      : 1,
                 ),
               ),
-          ],
-        ),
+              child: Center(
+                child: _getCardContent(card),
+              ),
+            ),
+          );
+        },
       ),
     );
   }

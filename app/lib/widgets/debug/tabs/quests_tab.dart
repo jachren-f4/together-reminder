@@ -370,6 +370,8 @@ class _QuestsTabState extends State<QuestsTab> {
         return Colors.pink;
       case QuestType.youOrMe:
         return Colors.teal;
+      case QuestType.linked:
+        return Colors.amber;
     }
   }
 }

@@ -63,6 +63,12 @@
           ".write": true
         }
       }
+    },
+    "couple_preferences": {
+      "$coupleId": {
+        ".read": true,
+        ".write": true
+      }
     }
   }
 }

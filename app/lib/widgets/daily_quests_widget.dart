@@ -292,6 +292,10 @@ class _DailyQuestsWidgetState extends State<DailyQuestsWidget> {
       case QuestType.game:
         // TODO: Navigate to Game screen
         break;
+
+      case QuestType.linked:
+        // Linked is handled via Side Quests carousel, not daily quests
+        break;
     }
 
     // Refresh state after returning

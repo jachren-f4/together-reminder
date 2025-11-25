@@ -26,13 +26,17 @@ class MemoryPuzzleAdapter extends TypeAdapter<MemoryPuzzle> {
       matchedPairs: fields[6] as int,
       completedAt: fields[7] as DateTime?,
       completionQuote: fields[8] as String,
+      currentPlayerId: fields[9] as String?,
+      turnNumber: fields[10] == null ? 0 : fields[10] as int,
+      player1Pairs: fields[11] == null ? 0 : fields[11] as int,
+      player2Pairs: fields[12] == null ? 0 : fields[12] as int,
     );
   }
 
   @override
   void write(BinaryWriter writer, MemoryPuzzle obj) {
     writer
-      ..writeByte(9)
+      ..writeByte(13)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -50,7 +54,15 @@ class MemoryPuzzleAdapter extends TypeAdapter<MemoryPuzzle> {
       ..writeByte(7)
       ..write(obj.completedAt)
       ..writeByte(8)
-      ..write(obj.completionQuote);
+      ..write(obj.completionQuote)
+      ..writeByte(9)
+      ..write(obj.currentPlayerId)
+      ..writeByte(10)
+      ..write(obj.turnNumber)
+      ..writeByte(11)
+      ..write(obj.player1Pairs)
+      ..writeByte(12)
+      ..write(obj.player2Pairs);
   }
 
   @override

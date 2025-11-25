@@ -53,7 +53,7 @@ class Logger {
 
     // === MINOR FEATURES (Enable only when developing specific feature) ===
     'reminder': false,          // Send reminder functionality (9 uses)
-    'poke': false,              // Poke send/receive interactions (7 uses)
+    'poke': true,               // Poke send/receive interactions (7 uses) - ENABLED for Phase 3 dual-write testing
     'daily_pulse': false,       // Daily Pulse synchronized activities (14 uses)
     'affirmation': false,       // Affirmation quiz variant (5 uses)
     'memory_flip': true,        // Memory Flip card matching game (5 uses) - ENABLED for sync debugging

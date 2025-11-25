@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Linked - V5 Abbreviated Clues</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            background: #f5f5f5;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 390px;
+            height: 100vh;
+            max-height: 844px;
+            background: #fff;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        /* Minimal top bar */
+        .top-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px 12px;
+            background: #000;
+            color: #fff;
+        }
+
+        .back-btn {
+            font-size: 18px;
+            cursor: pointer;
+            padding: 4px;
+        }
+
+        .game-info {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .turn-indicator {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 4px 8px;
+            background: #4caf50;
+            color: #fff;
+        }
+
+        .score-display {
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .menu-btn {
+            font-size: 16px;
+            cursor: pointer;
+            padding: 4px;
+        }
+
+        /* Grid area */
+        .grid-container {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px;
+            background: #fafafa;
+        }
+
+        .crossword-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 2px;
+            background: #222;
+            padding: 2px;
+            width: 100%;
+            max-width: 360px;
+        }
+
+        .cell {
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            position: relative;
+        }
+
+        .cell-void {
+            background: #222;
+        }
+
+        /* Clue cells - short abbreviations, larger font */
+        .cell-clue {
+            background: #e8e8e8;
+            font-family: 'Arial', 'Helvetica', sans-serif;
+            font-size: 8px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0px;
+            padding: 3px;
+            text-align: center;
+            line-height: 1.05;
+            color: #111;
+            cursor: pointer;
+            transition: background 0.15s;
+            word-break: break-word;
+            hyphens: auto;
+        }
+
+        .cell-clue:active {
+            background: #d0d0d0;
+        }
+
+        .cell-clue .arrow {
+            position: absolute;
+            font-size: 6px;
+            color: #666;
+        }
+
+        .cell-clue .arrow-down {
+            bottom: 1px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .cell-clue .arrow-across {
+            right: 1px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .cell-answer {
+            background: #fff;
+            font-size: 22px;
+            font-family: Georgia, serif;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+
+        .cell-answer:active {
+            background: #e3f2fd;
+        }
+
+        .cell-answer.locked {
+            background: #81c784;
+            color: #1b5e20;
+        }
+
+        .cell-answer.draft {
+            background: #ffee58;
+        }
+
+        /* Tap to see full clue banner */
+        .clue-banner {
+            padding: 10px 14px;
+            background: #fff;
+            border-top: 1px solid #e0e0e0;
+            border-bottom: 2px solid #000;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            min-height: 44px;
+        }
+
+        .clue-banner-icon {
+            font-size: 16px;
+        }
+
+        .clue-banner-text {
+            flex: 1;
+            font-size: 13px;
+            font-style: italic;
+        }
+
+        .clue-banner-direction {
+            font-size: 9px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #666;
+            padding: 3px 6px;
+            border: 1px solid #ccc;
+        }
+
+        /* Bottom controls */
+        .bottom-section {
+            background: #fff;
+        }
+
+        .rack-row {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            padding: 12px;
+        }
+
+        .rack-tile {
+            width: 46px;
+            height: 46px;
+            border: 2px solid #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #fffde7 0%, #fff8e1 100%);
+            cursor: grab;
+            box-shadow: 2px 2px 0 rgba(0,0,0,0.1);
+            transition: all 0.15s;
+        }
+
+        .rack-tile:active {
+            transform: scale(1.05);
+            box-shadow: 3px 3px 0 rgba(0,0,0,0.15);
+        }
+
+        .rack-tile.empty {
+            background: #eee;
+            border-style: dashed;
+            border-color: #999;
+            box-shadow: none;
+        }
+
+        .action-row {
+            display: flex;
+            gap: 8px;
+            padding: 0 12px 12px;
+            padding-bottom: max(12px, env(safe-area-inset-bottom));
+        }
+
+        .action-btn {
+            flex: 1;
+            padding: 12px;
+            border: 2px solid #000;
+            background: #fff;
+            font-family: inherit;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.15s;
+        }
+
+        .action-btn:active {
+            background: #f0f0f0;
+        }
+
+        .action-btn.primary {
+            background: #000;
+            color: #fff;
+            flex: 2;
+        }
+
+        .action-btn.primary:active {
+            background: #333;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="top-bar">
+            <div class="back-btn">←</div>
+            <div class="game-info">
+                <div class="turn-indicator">Your Turn</div>
+                <div class="score-display">40 - 30</div>
+            </div>
+            <div class="menu-btn">⋯</div>
+        </div>
+
+        <div class="grid-container">
+            <div class="crossword-grid">
+                <!-- Row 0 - Short clue text -->
+                <div class="cell cell-void"></div>
+                <div class="cell cell-clue">DOM PARTNER<span class="arrow arrow-down">▼</span></div>
+                <div class="cell cell-clue">LOVE FLOWER<span class="arrow arrow-down">▼</span></div>
+                <div class="cell cell-void"></div>
+                <div class="cell cell-clue">QUICK KISS<span class="arrow arrow-down">▼</span></div>
+                <div class="cell cell-void"></div>
+                <div class="cell cell-clue">HUG TIGHT<span class="arrow arrow-down">▼</span></div>
+
+                <!-- Row 1 -->
+                <div class="cell cell-clue">FLUID FLOW<span class="arrow arrow-across">▶</span></div>
+                <div class="cell cell-answer locked">D</div>
+                <div class="cell cell-answer locked">R</div>
+                <div class="cell cell-answer"></div>
+                <div class="cell cell-answer"></div>
+                <div class="cell cell-void"></div>
+                <div class="cell cell-answer"></div>
+
+                <!-- Row 2 -->
+                <div class="cell cell-clue">JOY SOUND<span class="arrow arrow-across">▶</span></div>
+                <div class="cell cell-answer locked">O</div>
+                <div class="cell cell-answer"></div>
+                <div class="cell cell-void"></div>
+                <div class="cell cell-answer"></div>
+                <div class="cell cell-void"></div>
+                <div class="cell cell-answer"></div>
+
+                <!-- Row 3 -->
+                <div class="cell cell-clue">RUB ABR<span class="arrow arrow-across">▶</span></div>
+                <div class="cell cell-answer"></div>
+                <div class="cell cell-answer draft">S</div>
+                <div class="cell cell-void"></div>
+                <div class="cell cell-answer"></div>
+                <div class="cell cell-void"></div>
+                <div class="cell cell-answer"></div>
+
+                <!-- Row 4 -->
+                <div class="cell cell-void"></div>
+                <div class="cell cell-clue">MALE FLUID<span class="arrow arrow-down">▼</span></div>
+                <div class="cell cell-answer"></div>
+                <div class="cell cell-clue">LOVE LOOK<span class="arrow arrow-down">▼</span></div>
+                <div class="cell cell-answer"></div>
+                <div class="cell cell-clue">DRIP DOWN<span class="arrow arrow-down">▼</span></div>
+                <div class="cell cell-answer"></div>
+
+                <!-- Row 5 -->
+                <div class="cell cell-void"></div>
+                <div class="cell cell-answer"></div>
+                <div class="cell cell-void"></div>
+                <div class="cell cell-answer"></div>
+                <div class="cell cell-void"></div>
+                <div class="cell cell-answer"></div>
+                <div class="cell cell-void"></div>
+
+                <!-- Row 6 -->
+                <div class="cell cell-void"></div>
+                <div class="cell cell-answer"></div>
+                <div class="cell cell-clue">WR_P<span class="arrow arrow-across">▶</span></div>
+                <div class="cell cell-answer"></div>
+                <div class="cell cell-clue">D_IP<span class="arrow arrow-across">▶</span></div>
+                <div class="cell cell-answer"></div>
+                <div class="cell cell-clue">SO HOT<span class="arrow arrow-down">▼</span></div>
+
+                <!-- Row 7 -->
+                <div class="cell cell-clue">P_CK<span class="arrow arrow-across">▶</span></div>
+                <div class="cell cell-answer"></div>
+                <div class="cell cell-void"></div>
+                <div class="cell cell-answer"></div>
+                <div class="cell cell-clue">STATE<span class="arrow arrow-across">▶</span></div>
+                <div class="cell cell-answer"></div>
+                <div class="cell cell-answer"></div>
+
+                <!-- Row 8 -->
+                <div class="cell cell-clue">_RIP<span class="arrow arrow-across">▶</span></div>
+                <div class="cell cell-answer"></div>
+                <div class="cell cell-clue">SHOW OFF<span class="arrow arrow-across">▶</span></div>
+                <div class="cell cell-answer"></div>
+                <div class="cell cell-answer"></div>
+                <div class="cell cell-answer"></div>
+                <div class="cell cell-answer"></div>
+            </div>
+        </div>
+
+        <div class="clue-banner">
+            <div class="clue-banner-icon">💡</div>
+            <div class="clue-banner-text">Tap any gray cell to see full clue</div>
+            <div class="clue-banner-direction">Hint</div>
+        </div>
+
+        <div class="bottom-section">
+            <div class="rack-row">
+                <div class="rack-tile">P</div>
+                <div class="rack-tile">O</div>
+                <div class="rack-tile empty"></div>
+                <div class="rack-tile">M</div>
+                <div class="rack-tile">E</div>
+            </div>
+            <div class="action-row">
+                <div class="action-btn">👁 2</div>
+                <div class="action-btn">↻</div>
+                <div class="action-btn primary">Ready</div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

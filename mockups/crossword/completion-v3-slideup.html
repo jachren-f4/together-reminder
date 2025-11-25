@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Linked - Completion V3 Slide Up Panel</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            background: #000;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 390px;
+            height: 100vh;
+            max-height: 844px;
+            background: #f5f5f5;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Completed grid preview (dimmed) */
+        .grid-preview {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            opacity: 0.3;
+        }
+
+        .mini-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 2px;
+            background: #000;
+            padding: 2px;
+            width: 100%;
+            max-width: 280px;
+        }
+
+        .mini-cell {
+            aspect-ratio: 1;
+            background: #81c784;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 700;
+            color: #1b5e20;
+        }
+
+        .mini-cell.void {
+            background: #000;
+        }
+
+        .mini-cell.clue {
+            background: #e0e0e0;
+            font-size: 6px;
+            color: #333;
+        }
+
+        /* Slide-up panel */
+        .slide-panel {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: #fff;
+            border-top: 3px solid #000;
+            animation: slide-up 0.5s ease-out;
+        }
+
+        @keyframes slide-up {
+            0% { transform: translateY(100%); }
+            100% { transform: translateY(0); }
+        }
+
+        .panel-handle {
+            width: 40px;
+            height: 4px;
+            background: #ccc;
+            border-radius: 2px;
+            margin: 12px auto;
+        }
+
+        .panel-content {
+            padding: 0 24px 24px;
+            padding-bottom: max(24px, env(safe-area-inset-bottom));
+        }
+
+        /* Header with animated border */
+        .panel-header {
+            text-align: center;
+            padding-bottom: 20px;
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .panel-header::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 2px;
+            background: #000;
+            animation: border-expand 0.6s ease-out 0.3s forwards;
+        }
+
+        @keyframes border-expand {
+            0% { width: 0; }
+            100% { width: 100%; }
+        }
+
+        .complete-text {
+            font-size: 12px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: #666;
+            margin-bottom: 8px;
+            animation: fade-in 0.4s ease-out 0.2s both;
+        }
+
+        .panel-title {
+            font-size: 28px;
+            font-weight: 400;
+            letter-spacing: 2px;
+            animation: fade-in 0.4s ease-out 0.3s both;
+        }
+
+        @keyframes fade-in {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+
+        /* Score blocks */
+        .score-blocks {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .score-block {
+            flex: 1;
+            padding: 16px;
+            border: 2px solid #e0e0e0;
+            text-align: center;
+            animation: block-pop 0.4s ease-out both;
+        }
+
+        .score-block:nth-child(1) { animation-delay: 0.4s; }
+        .score-block:nth-child(2) { animation-delay: 0.5s; }
+
+        @keyframes block-pop {
+            0% {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .score-block.winner {
+            border-color: #000;
+            background: #000;
+            color: #fff;
+        }
+
+        .block-name {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+            opacity: 0.7;
+        }
+
+        .block-score {
+            font-size: 36px;
+            font-weight: 700;
+            line-height: 1;
+        }
+
+        .block-label {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 8px;
+            opacity: 0.5;
+        }
+
+        /* Word count ribbon */
+        .stats-ribbon {
+            display: flex;
+            justify-content: center;
+            gap: 24px;
+            padding: 16px 0;
+            border-top: 1px solid #e0e0e0;
+            border-bottom: 1px solid #e0e0e0;
+            margin-bottom: 24px;
+            animation: fade-in 0.4s ease-out 0.6s both;
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        .stat-text {
+            font-size: 9px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #666;
+        }
+
+        /* Button */
+        .panel-btn {
+            width: 100%;
+            padding: 16px;
+            background: #000;
+            color: #fff;
+            border: none;
+            font-family: inherit;
+            font-size: 13px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            cursor: pointer;
+            animation: fade-in 0.4s ease-out 0.7s both;
+        }
+
+        .panel-btn:active {
+            background: #333;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Dimmed completed grid in background -->
+        <div class="grid-preview">
+            <div class="mini-grid">
+                <!-- Simplified representation of completed grid -->
+                <div class="mini-cell void"></div>
+                <div class="mini-cell clue">1</div>
+                <div class="mini-cell clue">2</div>
+                <div class="mini-cell void"></div>
+                <div class="mini-cell clue">3</div>
+                <div class="mini-cell void"></div>
+                <div class="mini-cell clue">4</div>
+
+                <div class="mini-cell clue">5</div>
+                <div class="mini-cell">D</div>
+                <div class="mini-cell">R</div>
+                <div class="mini-cell">I</div>
+                <div class="mini-cell">P</div>
+                <div class="mini-cell void"></div>
+                <div class="mini-cell">W</div>
+
+                <div class="mini-cell clue">6</div>
+                <div class="mini-cell">O</div>
+                <div class="mini-cell">O</div>
+                <div class="mini-cell void"></div>
+                <div class="mini-cell">E</div>
+                <div class="mini-cell void"></div>
+                <div class="mini-cell">R</div>
+
+                <div class="mini-cell clue">7</div>
+                <div class="mini-cell">M</div>
+                <div class="mini-cell">S</div>
+                <div class="mini-cell void"></div>
+                <div class="mini-cell">C</div>
+                <div class="mini-cell void"></div>
+                <div class="mini-cell">A</div>
+
+                <div class="mini-cell void"></div>
+                <div class="mini-cell clue">8</div>
+                <div class="mini-cell">E</div>
+                <div class="mini-cell clue">9</div>
+                <div class="mini-cell">K</div>
+                <div class="mini-cell clue">10</div>
+                <div class="mini-cell">P</div>
+
+                <div class="mini-cell void"></div>
+                <div class="mini-cell">S</div>
+                <div class="mini-cell void"></div>
+                <div class="mini-cell">G</div>
+                <div class="mini-cell void"></div>
+                <div class="mini-cell">D</div>
+                <div class="mini-cell void"></div>
+
+                <div class="mini-cell void"></div>
+                <div class="mini-cell">E</div>
+                <div class="mini-cell clue">11</div>
+                <div class="mini-cell">A</div>
+                <div class="mini-cell clue">12</div>
+                <div class="mini-cell">R</div>
+                <div class="mini-cell clue">13</div>
+
+                <div class="mini-cell clue">14</div>
+                <div class="mini-cell">E</div>
+                <div class="mini-cell void"></div>
+                <div class="mini-cell">Z</div>
+                <div class="mini-cell clue">15</div>
+                <div class="mini-cell">I</div>
+                <div class="mini-cell">S</div>
+
+                <div class="mini-cell clue">16</div>
+                <div class="mini-cell">D</div>
+                <div class="mini-cell clue">17</div>
+                <div class="mini-cell">E</div>
+                <div class="mini-cell">X</div>
+                <div class="mini-cell">P</div>
+                <div class="mini-cell">O</div>
+            </div>
+        </div>
+
+        <!-- Slide-up panel -->
+        <div class="slide-panel">
+            <div class="panel-handle"></div>
+            <div class="panel-content">
+                <div class="panel-header">
+                    <div class="complete-text">Puzzle Complete</div>
+                    <h1 class="panel-title">You Won!</h1>
+                </div>
+
+                <div class="score-blocks">
+                    <div class="score-block winner">
+                        <div class="block-name">You</div>
+                        <div class="block-score">180</div>
+                        <div class="block-label">Winner</div>
+                    </div>
+                    <div class="score-block">
+                        <div class="block-name">Taija</div>
+                        <div class="block-score">140</div>
+                        <div class="block-label">Points</div>
+                    </div>
+                </div>
+
+                <div class="stats-ribbon">
+                    <div class="stat">
+                        <div class="stat-number">12</div>
+                        <div class="stat-text">Words Found</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-number">8</div>
+                        <div class="stat-text">Total Turns</div>
+                    </div>
+                </div>
+
+                <button class="panel-btn">Continue</button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

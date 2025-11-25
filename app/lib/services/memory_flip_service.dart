@@ -1,304 +1,261 @@
+import 'dart:convert';
 import 'dart:math';
-import 'package:uuid/uuid.dart';
-import 'package:cloud_functions/cloud_functions.dart';
+import 'package:flutter/foundation.dart';
+import 'package:http/http.dart' as http;
 import '../models/memory_flip.dart';
 import '../services/storage_service.dart';
-import '../services/memory_content_bank.dart';
-import '../services/memory_flip_sync_service.dart';
+import '../services/auth_service.dart';
 import '../utils/logger.dart';
 
-/// Result of checking for matches after flipping cards
-class MatchResult {
-  final MemoryCard card1;
-  final MemoryCard card2;
-  final String quote;
-  final int lovePoints;
+/// Game state returned from API
+class GameState {
+  final MemoryPuzzle puzzle;
+  final bool isMyTurn;
+  final bool canPlay;
+  final int myFlipsRemaining;
+  final int partnerFlipsRemaining;
+  final int? timeUntilTurnExpires;
+  final int myPairs;
+  final int partnerPairs;
 
-  MatchResult({
-    required this.card1,
-    required this.card2,
-    required this.quote,
-    required this.lovePoints,
+  GameState({
+    required this.puzzle,
+    required this.isMyTurn,
+    required this.canPlay,
+    required this.myFlipsRemaining,
+    required this.partnerFlipsRemaining,
+    this.timeUntilTurnExpires,
+    required this.myPairs,
+    required this.partnerPairs,
+  });
+}
+
+/// Result of submitting a move
+class MoveResult {
+  final bool matchFound;
+  final bool turnAdvanced;
+  final int playerFlipsRemaining;
+  final int? partnerFlipsRemaining;
+  final bool gameCompleted;
+
+  MoveResult({
+    required this.matchFound,
+    required this.turnAdvanced,
+    required this.playerFlipsRemaining,
+    this.partnerFlipsRemaining,
+    this.gameCompleted = false,
   });
 }
 
 /// Core service for Memory Flip game logic
+///
+/// API-first architecture: Server is single source of truth.
+/// No local puzzle generation - all puzzles created server-side.
 class MemoryFlipService {
   final StorageService _storage = StorageService();
-  final FirebaseFunctions _functions = FirebaseFunctions.instance;
-  late final MemoryFlipSyncService _syncService = MemoryFlipSyncService(storage: _storage);
-  static const int _defaultFlipsPerDay = 6; // Must be even number
-  static const int _defaultPuzzleDurationDays = 7; // Weekly puzzles
-  static const int _defaultPairCount = 8; // 8 pairs = 16 cards (4×4 grid)
+  final AuthService _authService = AuthService();
+
   static const int _baseMatchPoints = 10;
 
-  /// Generate a new daily puzzle
-  /// Creates a 4×4 grid with 8 pairs of emoji cards
-  Future<MemoryPuzzle> generateDailyPuzzle({String? puzzleId}) async {
-    // Use provided puzzle ID or generate new one (for date-based sync)
-    puzzleId ??= const Uuid().v4();
-    final now = DateTime.now();
-    final expiresAt = now.add(Duration(days: _defaultPuzzleDurationDays));
-
-    // Get random emoji pairs from content bank
-    final pairs = MemoryContentBank.getBalancedPairs(_defaultPairCount);
-
-    // Create cards (2 per pair)
-    final cards = <MemoryCard>[];
-    for (var i = 0; i < pairs.length; i++) {
-      final pair = pairs[i];
-      final pairId = const Uuid().v4();
-
-      // Create two cards for this pair
-      cards.add(MemoryCard(
-        id: const Uuid().v4(),
-        puzzleId: puzzleId,
-        position: i * 2, // Will be shuffled later
-        emoji: pair.emoji,
-        pairId: pairId,
-        status: 'hidden',
-        revealQuote: pair.quote,
-      ));
-
-      cards.add(MemoryCard(
-        id: const Uuid().v4(),
-        puzzleId: puzzleId,
-        position: i * 2 + 1, // Will be shuffled later
-        emoji: pair.emoji,
-        pairId: pairId,
-        status: 'hidden',
-        revealQuote: pair.quote,
-      ));
-    }
-
-    // Shuffle cards and assign positions
-    cards.shuffle();
-    for (var i = 0; i < cards.length; i++) {
-      cards[i].position = i;
-    }
-
-    // Create puzzle
-    final puzzle = MemoryPuzzle(
-      id: puzzleId,
-      createdAt: now,
-      expiresAt: expiresAt,
-      cards: cards,
-      status: 'active',
-      totalPairs: _defaultPairCount,
-      matchedPairs: 0,
-      completionQuote: MemoryContentBank.getRandomCompletionQuote(),
-    );
-
-    await _storage.saveMemoryPuzzle(puzzle);
-    return puzzle;
-  }
-
-  /// Get the current active puzzle, or generate a new one if none exists
-  ///
-  /// Implements "first device creates, second device loads" pattern via Firebase RTDB
-  Future<MemoryPuzzle> getCurrentPuzzle() async {
-    // Get user and partner for Firebase sync
-    final user = _storage.getUser();
-    final partner = _storage.getPartner();
-
-    // Check local storage first
-    var puzzle = _storage.getActivePuzzle();
-
-    // If no active puzzle or expired, check Firebase or generate new one
-    if (puzzle == null || puzzle.expiresAt.isBefore(DateTime.now())) {
-      if (puzzle != null && puzzle.status == 'active') {
-        // Mark expired puzzle as completed (incomplete)
-        puzzle.status = 'completed';
-        await _storage.updateMemoryPuzzle(puzzle);
-      }
-
-      // If we have both user and partner, try to sync with Firebase
-      if (user != null && partner != null) {
-        // Generate date-based puzzle ID for syncing (same ID for both partners today)
-        final dateKey = DateTime.now().toIso8601String().substring(0, 10); // YYYY-MM-DD
-        final puzzleId = 'puzzle_$dateKey';
-
-        // Try to load from Firebase
-        Logger.debug('Checking Firebase for puzzle: $puzzleId', service: 'memory_flip');
-        final firebasePuzzle = await _syncService.syncPuzzle(
-          puzzleId,
-          user.id,
-          partner.pushToken,
-        );
-
-        if (firebasePuzzle != null) {
-          // Puzzle exists in Firebase - save locally and return
-          Logger.debug('Loaded puzzle from Firebase', service: 'memory_flip');
-          await _storage.saveMemoryPuzzle(firebasePuzzle);
-          return firebasePuzzle;
-        }
-
-        // No puzzle in Firebase - generate new one with date-based ID and save to Firebase
-        Logger.debug('Generating new puzzle and saving to Firebase', service: 'memory_flip');
-        puzzle = await generateDailyPuzzle(puzzleId: puzzleId);
-
-        // Save to Firebase for partner to load
-        final coupleId = _getCoupleId(user.id, partner.pushToken);
-        await _syncService.savePuzzleToFirebase(puzzle, coupleId, user.id);
+  /// Get API base URL based on environment
+  String get _apiBaseUrl {
+    if (kDebugMode) {
+      if (kIsWeb) {
+        return 'http://localhost:3000';
       } else {
-        // No partner - just generate locally
-        Logger.debug('No partner found - generating local puzzle only', service: 'memory_flip');
-        puzzle = await generateDailyPuzzle();
+        return 'http://10.0.2.2:3000';
       }
+    } else {
+      return const String.fromEnvironment('API_URL',
+          defaultValue: 'https://api.togetherremind.com');
     }
-
-    return puzzle;
   }
 
-  /// Generate couple ID from sorted push tokens
-  String _getCoupleId(String userToken, String partnerToken) {
-    final tokens = [userToken, partnerToken]..sort();
-    return tokens.join('_');
+  /// Make API request with authentication headers
+  Future<Map<String, dynamic>> _apiRequest(
+    String method,
+    String path, {
+    Map<String, dynamic>? body,
+  }) async {
+    final url = Uri.parse('$_apiBaseUrl$path');
+    final headers = await _authService.getAuthHeaders();
+    headers['Content-Type'] = 'application/json';
+
+    http.Response response;
+
+    try {
+      switch (method) {
+        case 'GET':
+          response = await http.get(url, headers: headers);
+          break;
+        case 'POST':
+          response = await http.post(
+            url,
+            headers: headers,
+            body: body != null ? jsonEncode(body) : '{}',
+          );
+          break;
+        default:
+          throw Exception('Unsupported HTTP method: $method');
+      }
+
+      if (response.statusCode >= 200 && response.statusCode < 300) {
+        return jsonDecode(response.body);
+      } else {
+        final error = jsonDecode(response.body);
+        throw Exception(error['error'] ?? 'API request failed');
+      }
+    } catch (e) {
+      Logger.error('API request failed: $method $path',
+          error: e, service: 'memory_flip');
+      rethrow;
+    }
   }
 
-  /// Get or create flip allowance for a user
-  Future<MemoryFlipAllowance> getFlipAllowance(String userId) async {
-    var allowance = _storage.getMemoryAllowance(userId);
+  /// Get or create today's puzzle from API
+  ///
+  /// This is the main entry point. Server handles:
+  /// - Creating puzzle if none exists for today
+  /// - Returning existing puzzle if already created
+  /// - All game state calculation (turns, flips, etc.)
+  Future<GameState> getOrCreatePuzzle() async {
+    try {
+      final response = await _apiRequest('POST', '/api/sync/memory-flip');
 
-    if (allowance == null) {
-      // Create initial allowance
-      allowance = MemoryFlipAllowance(
-        userId: userId,
-        flipsRemaining: _defaultFlipsPerDay,
-        resetsAt: _getNextResetTime(),
-        totalFlipsToday: 0,
-        lastFlipAt: DateTime.now(),
+      final puzzleData = response['puzzle'];
+      final gameStateData = response['gameState'];
+
+      final puzzle = _parsePuzzleFromApi(puzzleData);
+
+      // Cache locally for offline viewing (read-only)
+      await _storage.saveMemoryPuzzle(puzzle);
+
+      return GameState(
+        puzzle: puzzle,
+        isMyTurn: gameStateData['isMyTurn'] ?? false,
+        canPlay: gameStateData['canPlay'] ?? false,
+        myFlipsRemaining: gameStateData['myFlipsRemaining'] ?? 6,
+        partnerFlipsRemaining: gameStateData['partnerFlipsRemaining'] ?? 6,
+        timeUntilTurnExpires: gameStateData['timeUntilTurnExpires'],
+        myPairs: gameStateData['myPairs'] ?? 0,
+        partnerPairs: gameStateData['partnerPairs'] ?? 0,
       );
-      await _storage.saveMemoryAllowance(allowance);
-    } else if (allowance.needsReset) {
-      // Reset allowance if past reset time
-      await resetDailyAllowance(userId);
-      allowance = _storage.getMemoryAllowance(userId)!;
+    } catch (e) {
+      Logger.error('Failed to get/create puzzle from API', error: e, service: 'memory_flip');
+
+      // Fall back to cached puzzle if available (read-only mode)
+      final cached = _storage.getActivePuzzle();
+      if (cached != null) {
+        Logger.warn('Using cached puzzle (offline mode)', service: 'memory_flip');
+        return GameState(
+          puzzle: cached,
+          isMyTurn: false, // Can't play offline
+          canPlay: false,
+          myFlipsRemaining: 0,
+          partnerFlipsRemaining: 0,
+          myPairs: 0,
+          partnerPairs: 0,
+        );
+      }
+
+      rethrow;
     }
-
-    return allowance;
   }
 
-  /// Check if a user can flip (needs at least 2 flips for one turn)
-  Future<bool> canFlip(String userId) async {
-    final allowance = await getFlipAllowance(userId);
-    return allowance.canFlip;
+  /// Refresh game state from API (for polling)
+  Future<GameState> refreshGameState() async {
+    return getOrCreatePuzzle();
   }
 
-  /// Flip a card (temporarily reveal it)
-  /// Returns the flipped card
-  /// Note: This doesn't decrement allowance yet - that happens after checking for match
-  Future<MemoryCard> flipCard(String cardId, String userId) async {
-    final puzzle = await getCurrentPuzzle();
-    final card = puzzle.cards.firstWhere((c) => c.id == cardId);
-
-    if (card.isMatched) {
-      throw Exception('Card is already matched');
-    }
-
-    // Card flip is temporary - actual state update happens in matchCards or resetCards
-    return card;
-  }
-
-  /// Check for matches between two flipped cards
-  /// If cards match, marks them as matched and returns MatchResult
-  /// If cards don't match, returns null (caller should flip them back)
-  Future<MatchResult?> checkForMatches(
-    MemoryPuzzle puzzle,
-    MemoryCard card1,
-    MemoryCard card2,
-    String userId,
-  ) async {
-    // Check if cards match (same emoji and pairId)
-    if (card1.pairId == card2.pairId && card1.emoji == card2.emoji) {
-      // Match found!
-      await matchCards(puzzle, card1, card2, userId);
-
-      final lovePoints = calculateMatchPoints();
-
-      return MatchResult(
-        card1: card1,
-        card2: card2,
-        quote: card1.revealQuote,
-        lovePoints: lovePoints,
+  /// Parse puzzle from API response
+  MemoryPuzzle _parsePuzzleFromApi(Map<String, dynamic> data) {
+    final cardsData = data['cards'] as List;
+    final cards = cardsData.map((c) {
+      return MemoryCard(
+        id: c['id'],
+        puzzleId: data['id'],
+        position: c['position'] ?? 0,
+        emoji: c['emoji'],
+        pairId: c['pairId'],
+        status: c['status'],
+        revealQuote: '', // Not included in API response
       );
-    }
+    }).toList();
 
-    return null; // No match
-  }
-
-  /// Mark two cards as matched
-  Future<void> matchCards(
-    MemoryPuzzle puzzle,
-    MemoryCard card1,
-    MemoryCard card2,
-    String userId,
-  ) async {
-    final now = DateTime.now();
-
-    // Update card statuses
-    card1.status = 'matched';
-    card1.matchedBy = userId;
-    card1.matchedAt = now;
-
-    card2.status = 'matched';
-    card2.matchedBy = userId;
-    card2.matchedAt = now;
-
-    // Update puzzle progress
-    puzzle.matchedPairs++;
-
-    // Check if puzzle is complete
-    if (puzzle.matchedPairs >= puzzle.totalPairs) {
-      puzzle.status = 'completed';
-      puzzle.completedAt = now;
-    }
-
-    await _storage.updateMemoryPuzzle(puzzle);
-
-    // Sync match to Firebase RTDB for partner to see
-    final user = _storage.getUser();
-    final partner = _storage.getPartner();
-    if (user != null && partner != null) {
-      final coupleId = _getCoupleId(user.id, partner.pushToken);
-      _syncService.syncMatchToFirebase(
-        coupleId,
-        puzzle.id,
-        card1.id,
-        card2.id,
-        userId,
-      ).catchError((e) {
-        Logger.error('Error syncing match to Firebase RTDB', error: e, service: 'memory_flip');
-      });
-    }
-  }
-
-  /// Decrement flip allowance after a turn (2 flips)
-  Future<void> decrementFlipAllowance(String userId) async {
-    final allowance = await getFlipAllowance(userId);
-
-    if (allowance.flipsRemaining < 2) {
-      throw Exception('Not enough flips remaining');
-    }
-
-    allowance.flipsRemaining -= 2; // Each turn uses 2 flips
-    allowance.totalFlipsToday += 2;
-    allowance.lastFlipAt = DateTime.now();
-
-    await _storage.updateMemoryAllowance(allowance);
-  }
-
-  /// Reset daily flip allowance for a user
-  Future<void> resetDailyAllowance(String userId) async {
-    final allowance = MemoryFlipAllowance(
-      userId: userId,
-      flipsRemaining: _defaultFlipsPerDay,
-      resetsAt: _getNextResetTime(),
-      totalFlipsToday: 0,
-      lastFlipAt: DateTime.now(),
+    return MemoryPuzzle(
+      id: data['id'],
+      createdAt: data['createdAt'] != null
+          ? DateTime.parse(data['createdAt'])
+          : DateTime.now(),
+      expiresAt: DateTime.now().add(const Duration(days: 1)),
+      cards: cards,
+      status: data['status'] ?? 'active',
+      totalPairs: data['totalPairs'] ?? 8,
+      matchedPairs: data['matchedPairs'] ?? 0,
+      completionQuote: data['completionQuote'] ?? '',
+      completedAt: data['completedAt'] != null
+          ? DateTime.parse(data['completedAt'])
+          : null,
+      currentPlayerId: data['currentPlayerId'],
+      turnNumber: data['turnNumber'] ?? 0,
+      player1Pairs: data['player1Pairs'] ?? 0,
+      player2Pairs: data['player2Pairs'] ?? 0,
     );
+  }
 
-    await _storage.saveMemoryAllowance(allowance);
+  /// Submit a move (flip 2 cards)
+  Future<MoveResult> submitMove(
+    String puzzleId,
+    String card1Id,
+    String card2Id,
+  ) async {
+    try {
+      final response = await _apiRequest(
+        'POST',
+        '/api/sync/memory-flip/move',
+        body: {
+          'puzzleId': puzzleId,
+          'card1Id': card1Id,
+          'card2Id': card2Id,
+        },
+      );
+
+      // Update local cache with new state
+      if (response['puzzle'] != null) {
+        final updatedPuzzle = _parsePuzzleFromApi(response['puzzle']);
+        await _storage.updateMemoryPuzzle(updatedPuzzle);
+      }
+
+      return MoveResult(
+        matchFound: response['matchFound'] ?? false,
+        turnAdvanced: response['turnAdvanced'] ?? false,
+        playerFlipsRemaining: response['playerFlipsRemaining'] ?? 0,
+        partnerFlipsRemaining: response['partnerFlipsRemaining'],
+        gameCompleted: response['gameCompleted'] ?? false,
+      );
+    } catch (e) {
+      Logger.error('Failed to submit move', error: e, service: 'memory_flip');
+      throw Exception('Failed to submit move: $e');
+    }
+  }
+
+  /// Format time until turn expires as human-readable string
+  String formatTimeRemaining(int? seconds) {
+    if (seconds == null || seconds <= 0) return 'Expired';
+
+    final hours = seconds ~/ 3600;
+    final minutes = (seconds % 3600) ~/ 60;
+
+    if (hours > 0) {
+      if (minutes > 0) {
+        return '${hours}h ${minutes}m';
+      }
+      return '${hours}h';
+    } else if (minutes > 0) {
+      return '${minutes}m';
+    } else {
+      return 'Less than 1m';
+    }
   }
 
   /// Calculate Love Points for a match
@@ -308,65 +265,17 @@ class MemoryFlipService {
 
   /// Calculate Love Points reward for completing a puzzle
   int calculateCompletionPoints(MemoryPuzzle puzzle) {
-    int basePoints = 50; // Completion bonus
-    int pairBonus = puzzle.totalPairs * 10; // 10 per pair
+    int basePoints = 50;
+    int pairBonus = puzzle.totalPairs * 10;
 
-    // Time bonus (complete faster = more points)
-    Duration timeToComplete = puzzle.completedAt!.difference(puzzle.createdAt);
-    int daysTaken = timeToComplete.inDays;
-    int timeBonus = max(0, 30 - (daysTaken * 5)); // -5 per day
-
-    return basePoints + pairBonus + timeBonus;
-  }
-
-  /// Get next reset time (midnight of next day)
-  DateTime _getNextResetTime() {
-    final now = DateTime.now();
-    final tomorrow = DateTime(now.year, now.month, now.day + 1);
-    return tomorrow;
-  }
-
-  /// Get time until allowance resets
-  Duration getTimeUntilReset(MemoryFlipAllowance allowance) {
-    return allowance.resetsAt.difference(DateTime.now());
-  }
-
-  /// Format time until reset as a human-readable string
-  String formatTimeUntilReset(MemoryFlipAllowance allowance) {
-    final duration = getTimeUntilReset(allowance);
-
-    if (duration.inHours > 0) {
-      return '${duration.inHours}h';
-    } else if (duration.inMinutes > 0) {
-      return '${duration.inMinutes}m';
-    } else {
-      return 'soon';
+    if (puzzle.completedAt != null) {
+      Duration timeToComplete = puzzle.completedAt!.difference(puzzle.createdAt);
+      int daysTaken = timeToComplete.inDays;
+      int timeBonus = max(0, 30 - (daysTaken * 5));
+      return basePoints + pairBonus + timeBonus;
     }
-  }
 
-  /// Get a card by ID from current puzzle
-  Future<MemoryCard?> getCard(String cardId) async {
-    final puzzle = await getCurrentPuzzle();
-    try {
-      return puzzle.cards.firstWhere((c) => c.id == cardId);
-    } catch (e) {
-      return null;
-    }
-  }
-
-  /// Get all cards at specific positions
-  List<MemoryCard> getCardsAtPositions(MemoryPuzzle puzzle, List<int> positions) {
-    return puzzle.cards.where((c) => positions.contains(c.position)).toList();
-  }
-
-  /// Get all matched cards in puzzle
-  List<MemoryCard> getMatchedCards(MemoryPuzzle puzzle) {
-    return puzzle.cards.where((c) => c.isMatched).toList();
-  }
-
-  /// Get all hidden cards in puzzle
-  List<MemoryCard> getHiddenCards(MemoryPuzzle puzzle) {
-    return puzzle.cards.where((c) => c.isHidden).toList();
+    return basePoints + pairBonus;
   }
 
   /// Check if puzzle has expired
@@ -377,112 +286,5 @@ class MemoryFlipService {
   /// Get puzzle progress as percentage
   double getPuzzleProgress(MemoryPuzzle puzzle) {
     return puzzle.progressPercentage;
-  }
-
-  /// Sync flip with Cloud Function (Firestore backup)
-  Future<void> syncFlip(
-    String puzzleId,
-    List<String> cardIds,
-    String userId,
-  ) async {
-    try {
-      final callable = _functions.httpsCallable('syncMemoryFlip');
-      await callable.call({
-        'puzzleId': puzzleId,
-        'cardIds': cardIds,
-        'userId': userId,
-        'action': 'flip',
-      });
-    } catch (e) {
-      Logger.error('Error syncing flip', error: e, service: 'memory_flip');
-      // Don't throw - allow offline play
-    }
-  }
-
-  /// Sync match with Cloud Function (Firestore backup)
-  Future<void> syncMatch(
-    String puzzleId,
-    List<String> cardIds,
-    String userId,
-  ) async {
-    try {
-      final callable = _functions.httpsCallable('syncMemoryFlip');
-      await callable.call({
-        'puzzleId': puzzleId,
-        'cardIds': cardIds,
-        'userId': userId,
-        'action': 'match',
-      });
-    } catch (e) {
-      Logger.error('Error syncing match', error: e, service: 'memory_flip');
-      // Don't throw - allow offline play
-    }
-  }
-
-  /// Send match notification to partner
-  Future<void> sendMatchNotification({
-    required String partnerToken,
-    required String senderName,
-    required String emoji,
-    required String quote,
-    required int lovePoints,
-  }) async {
-    try {
-      final callable = _functions.httpsCallable('sendMemoryFlipMatchNotification');
-      await callable.call({
-        'partnerToken': partnerToken,
-        'senderName': senderName,
-        'emoji': emoji,
-        'quote': quote,
-        'lovePoints': lovePoints,
-      });
-    } catch (e) {
-      Logger.error('Error sending match notification', error: e, service: 'memory_flip');
-      // Don't throw - notification is not critical
-    }
-  }
-
-  /// Send completion notification to partner
-  Future<void> sendCompletionNotification({
-    required String partnerToken,
-    required String senderName,
-    required String completionQuote,
-    required int lovePoints,
-    required int daysTaken,
-  }) async {
-    try {
-      final callable = _functions.httpsCallable('sendMemoryFlipCompletionNotification');
-      await callable.call({
-        'partnerToken': partnerToken,
-        'senderName': senderName,
-        'completionQuote': completionQuote,
-        'lovePoints': lovePoints,
-        'daysTaken': daysTaken,
-      });
-    } catch (e) {
-      Logger.error('Error sending completion notification', error: e, service: 'memory_flip');
-      // Don't throw - notification is not critical
-    }
-  }
-
-  /// Send new puzzle notification to partner
-  Future<void> sendNewPuzzleNotification({
-    required String partnerToken,
-    required String senderName,
-    required int totalPairs,
-    required int expiresInDays,
-  }) async {
-    try {
-      final callable = _functions.httpsCallable('sendMemoryFlipNewPuzzleNotification');
-      await callable.call({
-        'partnerToken': partnerToken,
-        'senderName': senderName,
-        'totalPairs': totalPairs,
-        'expiresInDays': expiresInDays,
-      });
-    } catch (e) {
-      Logger.error('Error sending new puzzle notification', error: e, service: 'memory_flip');
-      // Don't throw - notification is not critical
-    }
   }
 }

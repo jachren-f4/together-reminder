@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Linked - V1 Compact Header</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            background: #fafafa;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 390px; /* iPhone 14 width */
+            min-height: 100vh;
+            max-height: 844px; /* iPhone 14 height */
+            background: #fff;
+            border-left: 1px solid #e0e0e0;
+            border-right: 1px solid #e0e0e0;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Compact header with scores inline */
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 16px;
+            border-bottom: 2px solid #000;
+            background: #fff;
+        }
+
+        .back-btn {
+            font-size: 20px;
+            cursor: pointer;
+            width: 32px;
+        }
+
+        .title {
+            font-size: 18px;
+            font-weight: 400;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .scores-inline {
+            display: flex;
+            gap: 12px;
+            font-size: 13px;
+        }
+
+        .score-item {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .score-item.active {
+            font-weight: 700;
+        }
+
+        .score-item .dot {
+            width: 6px;
+            height: 6px;
+            background: #4caf50;
+            border-radius: 50%;
+        }
+
+        /* Grid takes remaining space */
+        .grid-container {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 12px;
+            min-height: 0;
+        }
+
+        .crossword-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 2px;
+            background: #000;
+            padding: 2px;
+            width: 100%;
+            max-width: 340px;
+            aspect-ratio: 7/9;
+        }
+
+        .cell {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cell-void {
+            background: #000;
+        }
+
+        .cell-clue {
+            background: #f0f0f0;
+            font-family: 'Arial Narrow', 'Helvetica Neue', sans-serif;
+            font-size: 6px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            padding: 2px;
+            text-align: center;
+            line-height: 1.15;
+            color: #333;
+            position: relative;
+        }
+
+        .cell-clue .arrow {
+            position: absolute;
+            font-size: 6px;
+            color: #666;
+        }
+
+        .cell-clue .arrow-down {
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .cell-clue .arrow-across {
+            right: 1px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .cell-answer {
+            background: #fff;
+            font-size: 18px;
+            cursor: pointer;
+        }
+
+        .cell-answer.locked {
+            background: #c8e6c9;
+        }
+
+        .cell-answer.draft {
+            background: #fff9c4;
+        }
+
+        .cell-answer.empty {
+            background: #fff;
+        }
+
+        /* Bottom section - fixed */
+        .bottom-section {
+            border-top: 2px solid #000;
+            background: #fff;
+        }
+
+        .rack-section {
+            padding: 12px 16px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .rack-label {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+            color: #666;
+            text-align: center;
+        }
+
+        .rack {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .rack-tile {
+            width: 42px;
+            height: 42px;
+            border: 2px solid #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            font-weight: 700;
+            background: #fff8e1;
+            cursor: grab;
+        }
+
+        .rack-tile.empty {
+            background: #f5f5f5;
+            border-style: dashed;
+            border-color: #ccc;
+        }
+
+        .action-bar {
+            display: flex;
+            padding: 12px 16px;
+            gap: 10px;
+            padding-bottom: max(12px, env(safe-area-inset-bottom));
+        }
+
+        .action-btn {
+            flex: 1;
+            padding: 12px;
+            border: 1px solid #000;
+            background: #fff;
+            font-family: inherit;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .action-btn.primary {
+            background: #000;
+            color: #fff;
+            flex: 2;
+        }
+
+        .vision-count {
+            font-size: 9px;
+            opacity: 0.7;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="back-btn">←</div>
+            <div class="title">Linked</div>
+            <div class="scores-inline">
+                <div class="score-item active">
+                    <span class="dot"></span>
+                    <span>You: 40</span>
+                </div>
+                <div class="score-item">
+                    <span>Taija: 30</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid-container">
+            <div class="crossword-grid">
+                <!-- Row 0: Clue row -->
+                <div class="cell cell-void"></div>
+                <div class="cell cell-clue">DOMINANT PARTNER<span class="arrow arrow-down">▼</span></div>
+                <div class="cell cell-clue">FLOWER OF LOVE<span class="arrow arrow-down">▼</span></div>
+                <div class="cell cell-void"></div>
+                <div class="cell cell-clue">QUICK KISS<span class="arrow arrow-down">▼</span></div>
+                <div class="cell cell-void"></div>
+                <div class="cell cell-clue">ENVELOP IN ARMS<span class="arrow arrow-down">▼</span></div>
+
+                <!-- Row 1 - some letters placed -->
+                <div class="cell cell-clue">FLOW OF FLUIDS<span class="arrow arrow-across">▶</span></div>
+                <div class="cell cell-answer locked">D</div>
+                <div class="cell cell-answer locked">R</div>
+                <div class="cell cell-answer empty"></div>
+                <div class="cell cell-answer empty"></div>
+                <div class="cell cell-void"></div>
+                <div class="cell cell-answer empty"></div>
+
+                <!-- Row 2 -->
+                <div class="cell cell-clue">SOUND OF EXCITEMENT<span class="arrow arrow-across">▶</span></div>
+                <div class="cell cell-answer locked">O</div>
+                <div class="cell cell-answer empty"></div>
+                <div class="cell cell-void"></div>
+                <div class="cell cell-answer empty"></div>
+                <div class="cell cell-void"></div>
+                <div class="cell cell-answer empty"></div>
+
+                <!-- Row 3 -->
+                <div class="cell cell-clue">MASSAGE (ABBR.)<span class="arrow arrow-across">▶</span></div>
+                <div class="cell cell-answer empty"></div>
+                <div class="cell cell-answer draft">S</div>
+                <div class="cell cell-void"></div>
+                <div class="cell cell-answer empty"></div>
+                <div class="cell cell-void"></div>
+                <div class="cell cell-answer empty"></div>
+
+                <!-- Row 4 -->
+                <div class="cell cell-void"></div>
+                <div class="cell cell-clue">MALE FLUID<span class="arrow arrow-down">▼</span></div>
+                <div class="cell cell-answer empty"></div>
+                <div class="cell cell-clue">LOVING STARE<span class="arrow arrow-down">▼</span></div>
+                <div class="cell cell-answer empty"></div>
+                <div class="cell cell-clue">FLOW OF FLUIDS<span class="arrow arrow-down">▼</span></div>
+                <div class="cell cell-answer empty"></div>
+
+                <!-- Row 5 -->
+                <div class="cell cell-void"></div>
+                <div class="cell cell-answer empty"></div>
+                <div class="cell cell-void"></div>
+                <div class="cell cell-answer empty"></div>
+                <div class="cell cell-void"></div>
+                <div class="cell cell-answer empty"></div>
+                <div class="cell cell-void"></div>
+
+                <!-- Row 6 -->
+                <div class="cell cell-void"></div>
+                <div class="cell cell-answer empty"></div>
+                <div class="cell cell-clue">WR_P<span class="arrow arrow-across">▶</span></div>
+                <div class="cell cell-answer empty"></div>
+                <div class="cell cell-clue">D_IP<span class="arrow arrow-across">▶</span></div>
+                <div class="cell cell-answer empty"></div>
+                <div class="cell cell-clue">VERY AROUSED<span class="arrow arrow-down">▼</span></div>
+
+                <!-- Row 7 -->
+                <div class="cell cell-clue">P_CK<span class="arrow arrow-across">▶</span></div>
+                <div class="cell cell-answer empty"></div>
+                <div class="cell cell-void"></div>
+                <div class="cell cell-answer empty"></div>
+                <div class="cell cell-clue">STATE OF BEING<span class="arrow arrow-across">▶</span></div>
+                <div class="cell cell-answer empty"></div>
+                <div class="cell cell-answer empty"></div>
+
+                <!-- Row 8 -->
+                <div class="cell cell-clue">_RIP<span class="arrow arrow-across">▶</span></div>
+                <div class="cell cell-answer empty"></div>
+                <div class="cell cell-clue">EXHIBITION KINK<span class="arrow arrow-across">▶</span></div>
+                <div class="cell cell-answer empty"></div>
+                <div class="cell cell-answer empty"></div>
+                <div class="cell cell-answer empty"></div>
+                <div class="cell cell-answer empty"></div>
+            </div>
+        </div>
+
+        <div class="bottom-section">
+            <div class="rack-section">
+                <div class="rack-label">Your Letters</div>
+                <div class="rack">
+                    <div class="rack-tile">P</div>
+                    <div class="rack-tile">O</div>
+                    <div class="rack-tile empty"></div>
+                    <div class="rack-tile">M</div>
+                    <div class="rack-tile">E</div>
+                </div>
+            </div>
+
+            <div class="action-bar">
+                <div class="action-btn">👁 Vision <span class="vision-count">(2)</span></div>
+                <div class="action-btn primary">Submit Turn</div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -289,6 +289,101 @@ Logger.debug('message', service: 'quiz');  // ✅ Respects config
 **Related files:**
 - `lib/utils/logger.dart` - Logger implementation and service config
 
+### 11. Development Auth Bypass
+
+**CRITICAL:** Dev auth bypass allows development without email/OTP authentication while using real Supabase data.
+
+**When to use:**
+- Two-device testing (Android + Chrome)
+- Rapid iteration without authentication interruption
+- Testing with actual database content
+
+**Architecture:**
+- **Two-layer bypass:** API-side (`AUTH_DEV_BYPASS_ENABLED=true`) + Flutter-side (`skipAuthInDev=true`)
+- **Real data loading:** Fetches user/couple data from Supabase Postgres via `/api/dev/user-data`
+- **Per-device user IDs:** Each device (Android/Chrome) gets its own user ID from `DevConfig`
+- **Quest sync:** Firebase RTDB for real-time synchronization between devices
+
+**Configuration:**
+
+1. **API Environment** (`/api/.env.local`):
+```bash
+AUTH_DEV_BYPASS_ENABLED=true
+NODE_ENV=development
+```
+
+2. **Flutter Config** (`lib/config/dev_config.dart`):
+```dart
+static const bool skipAuthInDev = true;  // Bypass email auth
+static const String devUserIdAndroid = 'c7f42ec5-7c6d-4dc4-90f2-2aae6ede4d28';
+static const String devUserIdWeb = 'd71425a3-a92f-404e-bfbe-a54c4cb58b6a';
+```
+
+3. **Supabase Database:**
+- Must have existing `couples` table with user1_id and user2_id matching dev config
+- Users must exist in Supabase Auth with metadata (full_name, avatar_emoji)
+
+**Data Flow:**
+1. **User/Couple Data:** Loaded from Supabase Postgres via `/api/dev/user-data?userId=<uuid>`
+2. **Quest Sync:** Firebase RTDB (first device generates, second device loads)
+3. **Local Storage:** Hive (cached after initial load)
+4. **FCM Tokens:** Real tokens per device for notifications
+
+**How it works:**
+1. App startup detects `kDebugMode && skipAuthInDev`
+2. `DevDataService.loadRealDataIfNeeded()` calls API with dev user ID
+3. API returns user + partner + couple data from Supabase
+4. App stores data in Hive and proceeds to home screen
+5. No email/OTP prompt - seamless development experience
+
+**Quick Start:**
+```bash
+/runtogether  # Launches both devices with clean state
+```
+
+**Related files:**
+- `lib/services/dev_data_service.dart` - Fetches real user data from Supabase
+- `api/app/api/dev/user-data/route.ts` - Development endpoint (secured by env vars)
+- `lib/config/dev_config.dart` - Dev user ID configuration
+- `lib/services/auth_service.dart` - Injects X-Dev-User-Id header
+- `.claude/commands/runtogether.md` - Complete testing workflow
+
+**Security:**
+- Only active when `NODE_ENV=development` AND `AUTH_DEV_BYPASS_ENABLED=true`
+- API endpoint returns 403 in production
+- Never commit `.env.local` files
+
+### 12. Turn-Based Game "Who Goes First" Preference
+
+**CRITICAL:** For FUTURE features only. Do NOT retrofit to existing games (Memory Flip, etc.).
+
+**Implementation pattern:**
+```dart
+// In new turn-based game initialization
+final firstPlayerId = await CouplePreferencesService().getFirstPlayerId();
+puzzle.currentPlayerId = firstPlayerId;  // Start with preferred player
+```
+
+**Storage layers:**
+- Supabase: `couples.first_player_id` (authoritative, nullable)
+- Firebase RTDB: `/couple_preferences/{coupleId}` (real-time sync)
+- Hive: `app_metadata` box (keys: `first_player_id`, `couple_id`)
+
+**Listener initialization:**
+- Called ONCE in `main.dart:165` after user/partner check
+- Do NOT call `startListening()` multiple times
+- Pattern: Same as `LovePointService.startListeningForLPAwards()`
+
+**Default behavior:**
+- NULL in database → returns `user2_id` at runtime (latest joiner)
+- No DB write until user explicitly changes preference
+
+**Files:**
+- Service: `lib/services/couple_preferences_service.dart`
+- API: `api/app/api/sync/couple-preferences/route.ts`
+- UI: `lib/screens/settings_screen.dart:286-337` (GAME PREFERENCES section)
+- Migration: `api/supabase/migrations/010_first_player_preference.sql`
+
 ---
 
 ## Testing & Debugging
@@ -461,6 +556,78 @@ The optimized procedure runs builds in parallel with cleanup tasks:
 2. Launch both apps fresh
 3. Use in-app debug menu to reset individual device state as needed
 
+### Android Emulator Troubleshooting
+
+**Problem:** Android emulator becomes unresponsive, Flutter run hangs
+- **Symptoms:**
+  - `flutter run -d emulator-5554` starts but never produces output
+  - All `adb` commands hang indefinitely
+  - Emulator appears running but doesn't respond to commands
+
+**Root Causes:**
+1. Frozen emulator process (adb can't communicate)
+2. Multiple emulator instances with same AVD
+3. Flutter startup lock conflicts
+
+**Solution:**
+```bash
+# 1. Kill all emulator processes
+pkill -9 -f "qemu-system-aarch64"
+
+# 2. Start fresh emulator
+~/Library/Android/sdk/emulator/emulator -avd Pixel_5 &
+
+# 3. Wait for boot (10-15 seconds), verify connection
+~/Library/Android/sdk/platform-tools/adb devices
+
+# 4. If Flutter run still hangs, build and install APK manually:
+flutter build apk --debug
+~/Library/Android/sdk/platform-tools/adb install -r build/app/outputs/flutter-apk/app-debug.apk
+~/Library/Android/sdk/platform-tools/adb shell am start -n com.togetherremind.togetherremind/com.togetherremind.togetherremind.MainActivity
+```
+
+**Prevention:**
+- Always kill old emulator processes before starting new ones
+- Use `flutter run` without `&` for better error visibility
+- Monitor emulator health with `adb devices` periodically
+
+### API Testing Without Simulators
+
+**Philosophy:** Test API endpoints directly with shell scripts instead of running full Flutter apps on simulators.
+
+**Benefits:**
+- Fast iteration (no simulator startup)
+- Automated verification (CI-compatible)
+- Clear pass/fail output
+- Tests both users (Alice/Android, Bob/Chrome) in one run
+
+**Available Scripts:**
+```bash
+# Test Memory Flip turn-based API
+cd api && ./scripts/test_memory_flip_api.sh
+```
+
+**Script Location:** `api/scripts/test_memory_flip_api.sh`
+
+**What it tests:**
+1. API health check
+2. Reset Memory Flip data
+3. Create puzzle
+4. Get puzzle state
+5. Alice makes move
+6. Bob makes move
+7. Turn alternation
+8. Game completion
+
+**When to use:**
+- After modifying API endpoints
+- Before asking user to test on simulators
+- During code review
+
+**Prerequisites:**
+- API server running (`cd api && npm run dev`)
+- `AUTH_DEV_BYPASS_ENABLED=true` in `.env.local`
+
 ---
 
 ## File Locations Reference
@@ -555,6 +722,7 @@ The optimized procedure runs builds in parallel with cleanup tasks:
 | **[docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)** | Data models, push notification flow, device pairing architecture, feature specifications |
 | **[docs/SETUP.md](docs/SETUP.md)** | Firebase configuration, development setup, two-device testing, deployment |
 | **[docs/TROUBLESHOOTING.md](docs/TROUBLESHOOTING.md)** | Common issues, debugging strategies, error handling patterns, Chrome testing best practices |
+| **[docs/FLUTTER_TESTING_GUIDE.md](docs/FLUTTER_TESTING_GUIDE.md)** | Headless testing without simulators, API integration tests, shell script tests, templates |
 
 ---
 
@@ -567,4 +735,4 @@ The optimized procedure runs builds in parallel with cleanup tasks:
 
 ---
 
-**Last Updated:** 2025-11-14 (Refactored for improved organization and readability)
+**Last Updated:** 2025-11-21 (Added Flutter Testing Guide, API testing without simulators)

@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
+import '../config/dev_config.dart';
 
 /// Authentication states
 enum AuthState {
@@ -227,16 +228,51 @@ class AuthService {
 
   /// Create Authorization header for API requests
   Future<Map<String, String>> getAuthHeaders() async {
-    final token = await getAccessToken();
-
-    if (token == null) {
-      return {};
-    }
-
-    return {
-      'Authorization': 'Bearer $token',
+    final headers = <String, String>{
       'Content-Type': 'application/json',
     };
+
+    // Get JWT token (if available)
+    final token = await getAccessToken();
+    if (token != null) {
+      headers['Authorization'] = 'Bearer $token';
+    }
+
+    // In development mode, add X-Dev-User-Id header for auth bypass
+    // This allows testing with different users on different devices
+    if (kDebugMode) {
+      final devUserId = _getDevUserId();
+      if (devUserId != null) {
+        headers['X-Dev-User-Id'] = devUserId;
+        debugPrint('🔧 [DEV] Adding X-Dev-User-Id header: $devUserId');
+      }
+    }
+
+    return headers;
+  }
+
+  /// Get development user ID based on platform
+  /// Returns user1_id for Android, user2_id for Web/Chrome
+  /// Returns null if not configured (placeholder values)
+  String? _getDevUserId() {
+    // Check if running on Web (Chrome)
+    if (kIsWeb) {
+      final userId = DevConfig.devUserIdWeb;
+      // Only return if not a placeholder
+      if (userId.contains('REPLACE_WITH')) {
+        debugPrint('⚠️ [DEV] devUserIdWeb not configured in DevConfig');
+        return null;
+      }
+      return userId;
+    }
+
+    // Default to Android user ID for all other platforms
+    final userId = DevConfig.devUserIdAndroid;
+    if (userId.contains('REPLACE_WITH')) {
+      debugPrint('⚠️ [DEV] devUserIdAndroid not configured in DevConfig');
+      return null;
+    }
+    return userId;
   }
 
   /// Update user's display name in Supabase metadata

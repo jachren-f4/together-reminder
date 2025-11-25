@@ -413,6 +413,8 @@ class QuestCard extends StatelessWidget {
         return 'Memory Match Game';
       case QuestType.youOrMe:
         return 'You or Me?';
+      case QuestType.linked:
+        return 'Linked Puzzle';
     }
   }
 

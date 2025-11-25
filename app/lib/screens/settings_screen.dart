@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:togetherremind/screens/onboarding_screen.dart';
 import 'package:togetherremind/services/storage_service.dart';
+import 'package:togetherremind/services/couple_preferences_service.dart';
+import 'package:togetherremind/services/api_client.dart';
 import 'package:togetherremind/theme/app_theme.dart';
 import 'package:intl/intl.dart';
 import 'debug/data_validation_screen.dart';
@@ -14,6 +16,62 @@ class SettingsScreen extends StatefulWidget {
 
 class _SettingsScreenState extends State<SettingsScreen> {
   final StorageService _storageService = StorageService();
+  final CouplePreferencesService _preferencesService = CouplePreferencesService();
+
+  String? _firstPlayerId;
+  String? _user1Id;
+  String? _user2Id;
+  bool _loadingPreferences = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadPreferences();
+  }
+
+  Future<void> _loadPreferences() async {
+    setState(() => _loadingPreferences = true);
+    try {
+      // Fetch preferences from API to get user IDs and first player preference
+      final apiClient = ApiClient();
+      final response = await apiClient.get('/api/sync/couple-preferences');
+
+      if (response.success && response.data != null) {
+        final data = response.data as Map<String, dynamic>;
+        setState(() {
+          _firstPlayerId = data['firstPlayerId'] as String;
+          _user1Id = data['user1Id'] as String;
+          _user2Id = data['user2Id'] as String;
+          _loadingPreferences = false;
+        });
+      } else {
+        setState(() => _loadingPreferences = false);
+      }
+    } catch (e) {
+      setState(() => _loadingPreferences = false);
+    }
+  }
+
+  Future<void> _updateFirstPlayer(String userId) async {
+    try {
+      setState(() => _firstPlayerId = userId);
+      await _preferencesService.setFirstPlayerId(userId);
+
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Game preference updated')),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to update preference: $e')),
+        );
+      }
+      // Reload to revert UI change
+      _loadPreferences();
+    }
+  }
 
   Future<void> _unpairPartner() async {
     final confirmed = await showDialog<bool>(
@@ -237,6 +295,47 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   ),
                 ),
                 const SizedBox(height: 20),
+
+                // Game Preferences
+                if (user != null && partner != null) ...[
+                  _SectionCard(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'GAME PREFERENCES',
+                          style: AppTheme.bodyFont.copyWith(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w600,
+                            color: AppTheme.textTertiary,
+                            letterSpacing: 0.5,
+                          ),
+                        ),
+                        const SizedBox(height: 16),
+                        if (_user1Id != null && _user2Id != null)
+                          _PartnerToggle(
+                            label: 'Goes first in new games',
+                            user1Id: _user1Id == user.id ? _user1Id! : _user2Id!,
+                            user1Name: user.name ?? 'You',
+                            user2Id: _user1Id == user.id ? _user2Id! : _user1Id!,
+                            user2Name: partner.name,
+                            user2Emoji: partner.avatarEmoji ?? '👤',
+                            selectedUserId: _firstPlayerId,
+                            onChanged: _updateFirstPlayer,
+                            isLoading: _loadingPreferences,
+                          )
+                        else
+                          const Center(
+                            child: Padding(
+                              padding: EdgeInsets.all(20.0),
+                              child: CircularProgressIndicator(),
+                            ),
+                          ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                ],
 
                 // Data Management
                 _SectionCard(
@@ -483,6 +582,131 @@ class _StatItem extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+}
+
+class _PartnerToggle extends StatelessWidget {
+  final String label;
+  final String user1Id;
+  final String user1Name;
+  final String user2Id;
+  final String user2Name;
+  final String user2Emoji;
+  final String? selectedUserId;
+  final Function(String) onChanged;
+  final bool isLoading;
+
+  const _PartnerToggle({
+    required this.label,
+    required this.user1Id,
+    required this.user1Name,
+    required this.user2Id,
+    required this.user2Name,
+    required this.user2Emoji,
+    required this.selectedUserId,
+    required this.onChanged,
+    this.isLoading = false,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    if (isLoading) {
+      return const Center(
+        child: Padding(
+          padding: EdgeInsets.all(20.0),
+          child: CircularProgressIndicator(),
+        ),
+      );
+    }
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          label,
+          style: AppTheme.bodyFont.copyWith(
+            fontSize: 15,
+            fontWeight: FontWeight.w500,
+            color: AppTheme.textPrimary,
+          ),
+        ),
+        const SizedBox(height: 16),
+        Row(
+          children: [
+            Expanded(
+              child: _PartnerOption(
+                name: user1Name,
+                emoji: '👤',
+                isSelected: selectedUserId == user1Id,
+                onTap: () => onChanged(user1Id),
+              ),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: _PartnerOption(
+                name: user2Name,
+                emoji: user2Emoji,
+                isSelected: selectedUserId == user2Id,
+                onTap: () => onChanged(user2Id),
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+}
+
+class _PartnerOption extends StatelessWidget {
+  final String name;
+  final String emoji;
+  final bool isSelected;
+  final VoidCallback onTap;
+
+  const _PartnerOption({
+    required this.name,
+    required this.emoji,
+    required this.isSelected,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: isSelected ? AppTheme.primaryBlack : AppTheme.backgroundGray,
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(
+            color: isSelected ? AppTheme.primaryBlack : AppTheme.borderLight,
+            width: 2,
+          ),
+        ),
+        child: Column(
+          children: [
+            Text(
+              emoji,
+              style: const TextStyle(fontSize: 32),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              name,
+              style: AppTheme.bodyFont.copyWith(
+                fontSize: 14,
+                fontWeight: FontWeight.w600,
+                color: isSelected ? AppTheme.primaryWhite : AppTheme.textPrimary,
+              ),
+              textAlign: TextAlign.center,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
