@@ -11,7 +11,46 @@ class DevConfig {
   /// Skip Supabase authentication in development mode
   /// Set to true to bypass auth flow during development
   /// Set to false when you need to test auth functionality
-  static const bool skipAuthInDev = false;
+  static const bool skipAuthInDev = true;
+
+  // ============================================================================
+  // PHASE 4 MIGRATION FEATURE FLAGS
+  // ============================================================================
+  // These flags enable gradual migration from Firebase → Supabase
+  // ALL FLAGS ARE FALSE BY DEFAULT - existing code still works
+  // Enable individually to test specific migration pieces
+
+  /// Use Supabase for Daily Quests (instead of Firebase RTDB)
+  /// FALSE = Firebase RTDB (current/stable)
+  /// TRUE = Supabase API (Phase 4 migration)
+  static const bool useSuperbaseForDailyQuests = false;
+
+  /// Use Supabase for Love Points (instead of Firebase RTDB)
+  /// FALSE = Firebase RTDB (current/stable)
+  /// TRUE = Supabase API (Phase 4 migration)
+  static const bool useSupabaseForLovePoints = false;
+
+  /// Use Supabase for Memory Flip (instead of Firebase RTDB)
+  /// FALSE = Firebase RTDB (current/stable)
+  /// TRUE = Supabase API (Phase 4 migration)
+  static const bool useSupabaseForMemoryFlip = false;
+
+  /// Use Supabase for You or Me (instead of Firebase RTDB)
+  /// FALSE = Firebase RTDB (current/stable)
+  /// TRUE = Supabase API (Phase 4 migration)
+  static const bool useSupabaseForYouOrMe = false;
+
+  /// Development User IDs for API auth bypass
+  /// These IDs are sent to the API via X-Dev-User-Id header
+  /// Only active when API has AUTH_DEV_BYPASS_ENABLED=true
+  ///
+  /// Usage: Android uses devUserIdAndroid, Chrome/Web uses devUserIdWeb
+  /// This allows two-device testing with different users simultaneously
+  ///
+  /// **IMPORTANT**: Replace with your actual user IDs from database:
+  ///   SELECT user1_id, user2_id FROM couples LIMIT 1;
+  static const String devUserIdAndroid = 'c7f42ec5-7c6d-4dc4-90f2-2aae6ede4d28';  // user1_id
+  static const String devUserIdWeb = 'd71425a3-a92f-404e-bfbe-a54c4cb58b6a';      // user2_id
 
   /// Detect if running on iOS/Android simulator or emulator
   /// Returns true ONLY when running in a simulator/emulator
@@ -84,14 +123,11 @@ class DevConfig {
   /// Enable automatic mock data injection on startup
   /// Only works in debug mode on simulators/emulators
   ///
-  /// When enabled:
-  /// - Auto-creates mock partner "Alex" with fake push token
-  /// - Injects 10 varied reminders (sent/received, pending/done/snoozed)
-  /// - Bypasses QR pairing flow for rapid testing
+  /// **DEPRECATED:** Now using real data from Supabase via dev auth bypass
+  /// Mock data is no longer needed when using skipAuthInDev
   static Future<bool> get enableMockPairing async {
     if (!kDebugMode) return false;
-    // Disabled to test real pairing flow with Supabase API
-    // Set to true when you want to skip pairing for other testing
+    // Disabled - using real data from Supabase instead of mock data
     return false;
   }
 

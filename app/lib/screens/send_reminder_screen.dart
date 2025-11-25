@@ -3,6 +3,7 @@ import 'package:togetherremind/models/reminder.dart';
 import 'package:togetherremind/services/storage_service.dart';
 import 'package:togetherremind/services/reminder_service.dart';
 import 'package:togetherremind/theme/app_theme.dart';
+import 'package:togetherremind/utils/logger.dart';
 import 'package:uuid/uuid.dart';
 
 class SendReminderScreen extends StatefulWidget {
