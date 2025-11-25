@@ -1,14 +1,14 @@
-import '../models/user.dart';
 import '../models/love_point_transaction.dart';
 import 'storage_service.dart';
 import 'general_activity_streak_service.dart';
 import 'api_client.dart';
 import 'package:uuid/uuid.dart';
 import 'package:firebase_database/firebase_database.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import '../widgets/foreground_notification_banner.dart';
 import '../utils/logger.dart';
+import '../config/dev_config.dart';
+import 'dart:async';
 
 class LovePointService {
   static final StorageService _storage = StorageService();
@@ -20,6 +20,11 @@ class LovePointService {
 
   // Callback for triggering UI updates when LP changes
   static VoidCallback? _onLPChanged;
+
+  // Phase 4: Supabase polling for LP awards
+  static Timer? _pollingTimer;
+  static DateTime? _lastPollTime;
+  static const Duration _pollingInterval = Duration(seconds: 10);
 
   // Vacation Arena Thresholds
   static const Map<int, Map<String, dynamic>> arenas = {
@@ -205,6 +210,8 @@ class LovePointService {
   /// Uses relatedId as the Firebase key for atomic deduplication:
   /// - onChildAdded listener only fires ONCE per unique child path
   /// - Even if both devices write to same path, listener triggers only once
+  ///
+  /// PHASE 4: When useSupabaseForLovePoints is TRUE, uses Supabase-only path
   static Future<void> awardPointsToBothUsers({
     required String userId1,
     required String userId2,
@@ -213,6 +220,19 @@ class LovePointService {
     String? relatedId,
     int multiplier = 1,
   }) async {
+    // PHASE 4: Supabase-only path (flag-gated)
+    if (DevConfig.useSupabaseForLovePoints) {
+      return _awardPointsToBothUsersSupabase(
+        userId1: userId1,
+        userId2: userId2,
+        amount: amount,
+        reason: reason,
+        relatedId: relatedId,
+        multiplier: multiplier,
+      );
+    }
+
+    // OLD PATH: Firebase + Supabase dual-write (default)
     try {
       final actualAmount = amount * multiplier;
 
@@ -290,6 +310,8 @@ class LovePointService {
   /// Call this once on app start
   ///
   /// [onLPChanged] - Optional callback to trigger UI updates when LP changes
+  ///
+  /// PHASE 4: When useSupabaseForLovePoints is TRUE, uses Supabase polling
   static void startListeningForLPAwards({
     required String currentUserId,
     required String partnerUserId,
@@ -301,6 +323,13 @@ class LovePointService {
         _onLPChanged = onLPChanged;
       }
 
+      // PHASE 4: Supabase polling path (flag-gated)
+      if (DevConfig.useSupabaseForLovePoints) {
+        _startSupabasePollingForLPAwards(currentUserId);
+        return;
+      }
+
+      // OLD PATH: Firebase listener (default)
       // Generate couple ID
       final sortedIds = [currentUserId, partnerUserId]..sort();
       final coupleId = '${sortedIds[0]}_${sortedIds[1]}';
@@ -368,5 +397,143 @@ class LovePointService {
     } catch (e, stackTrace) {
       Logger.error('Error handling LP award', error: e, stackTrace: stackTrace, service: 'lovepoint');
     }
+  }
+
+  // ============================================================================
+  // PHASE 4: SUPABASE-ONLY METHODS (Flag-gated)
+  // ============================================================================
+
+  /// Award Love Points to BOTH users - Supabase-only implementation
+  /// Used when DevConfig.useSupabaseForLovePoints is TRUE
+  static Future<void> _awardPointsToBothUsersSupabase({
+    required String userId1,
+    required String userId2,
+    required int amount,
+    required String reason,
+    String? relatedId,
+    int multiplier = 1,
+  }) async {
+    try {
+      final awardKey = relatedId ?? const Uuid().v4();
+      final actualAmount = amount * multiplier;
+
+      // Write to Supabase API (single source of truth)
+      final response = await _apiClient.post('/api/sync/love-points', body: {
+        'id': awardKey,
+        'amount': amount,
+        'reason': reason,
+        'relatedId': relatedId,
+        'multiplier': multiplier,
+        'partnerId': userId2 == userId1 ? userId2 : (userId1 == _storage.getUser()?.id ? userId2 : userId1),
+        'timestamp': DateTime.now().toIso8601String(),
+      });
+
+      if (response.success) {
+        Logger.info('LP award synced to Supabase: $actualAmount LP for both users ($reason)', service: 'lovepoint');
+      } else {
+        Logger.error('Supabase LP award failed: ${response.error}', service: 'lovepoint');
+      }
+    } catch (e) {
+      Logger.error('Error syncing LP award to Supabase', error: e, service: 'lovepoint');
+    }
+  }
+
+  /// Start polling Supabase for new LP awards
+  /// Used when DevConfig.useSupabaseForLovePoints is TRUE
+  static void _startSupabasePollingForLPAwards(String currentUserId) {
+    // Cancel existing timer if any
+    _pollingTimer?.cancel();
+
+    // Initialize last poll time to now (avoid fetching old awards)
+    _lastPollTime = DateTime.now();
+
+    Logger.info('Starting Supabase polling for LP awards (10s interval)', service: 'lovepoint');
+
+    // Poll immediately, then every 10 seconds
+    _pollSupabaseForLPAwards(currentUserId);
+
+    _pollingTimer = Timer.periodic(_pollingInterval, (_) {
+      _pollSupabaseForLPAwards(currentUserId);
+    });
+  }
+
+  /// Poll Supabase API for new LP awards
+  static Future<void> _pollSupabaseForLPAwards(String currentUserId) async {
+    try {
+      // Fetch recent LP awards from Supabase
+      final response = await _apiClient.get('/api/sync/love-points');
+
+      if (!response.success) {
+        Logger.error('Failed to fetch LP awards from Supabase', service: 'lovepoint');
+        return;
+      }
+
+      final data = response.data;
+      if (data == null) return;
+
+      final transactions = data['transactions'] as List<dynamic>?;
+      if (transactions == null || transactions.isEmpty) return;
+
+      // Process new awards (since last poll)
+      for (final award in transactions) {
+        final awardId = award['id'] as String;
+        final createdAt = DateTime.parse(award['created_at'] as String);
+
+        // Skip awards older than last poll
+        if (_lastPollTime != null && createdAt.isBefore(_lastPollTime!)) {
+          continue;
+        }
+
+        // Check if already applied
+        final appliedAwards = _storage.getAppliedLPAwards();
+        if (appliedAwards.contains(awardId)) {
+          continue;
+        }
+
+        // Apply the award
+        final amount = award['amount'] as int;
+        final reason = award['reason'] as String;
+        final relatedId = award['related_id'] as String?;
+        final multiplier = award['multiplier'] as int? ?? 1;
+
+        await awardPoints(
+          amount: amount,
+          reason: reason,
+          relatedId: relatedId,
+          multiplier: multiplier,
+        );
+
+        // Mark as applied
+        _storage.markLPAwardAsApplied(awardId);
+
+        Logger.success('Applied LP award from Supabase: +$amount LP ($reason)', service: 'lovepoint');
+
+        // Show foreground notification banner
+        if (_appContext != null && _appContext!.mounted) {
+          ForegroundNotificationBanner.show(
+            _appContext!,
+            title: 'Love Points Earned!',
+            message: '+$amount LP',
+            emoji: '💰',
+          );
+        }
+
+        // Trigger UI update callback
+        _onLPChanged?.call();
+      }
+
+      // Update last poll time
+      _lastPollTime = DateTime.now();
+
+    } catch (e) {
+      Logger.error('Error polling Supabase for LP awards', error: e, service: 'lovepoint');
+    }
+  }
+
+  /// Stop Supabase polling (cleanup method)
+  static void stopSupabasePolling() {
+    _pollingTimer?.cancel();
+    _pollingTimer = null;
+    Logger.info('Stopped Supabase polling for LP awards', service: 'lovepoint');
   }
 }
