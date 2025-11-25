@@ -1,12 +1,11 @@
-import 'dart:convert';
 import 'package:firebase_database/firebase_database.dart';
-import 'package:flutter/foundation.dart';
 import '../models/daily_quest.dart';
 import '../models/quiz_progression_state.dart';
 import '../services/storage_service.dart';
 import '../services/quest_utilities.dart';
 import '../services/api_client.dart';
 import '../utils/logger.dart';
+import '../config/dev_config.dart';
 
 /// Service for synchronizing daily quests via Firebase RTDB
 ///
@@ -32,10 +31,18 @@ class QuestSyncService {
   /// Sync today's quests from Firebase or generate if first user
   ///
   /// Returns true if sync was successful
+  ///
+  /// PHASE 4: When useSuperbaseForDailyQuests is TRUE, uses Supabase-only path
   Future<bool> syncTodayQuests({
     required String currentUserId,
     required String partnerUserId,
   }) async {
+    // PHASE 4: Supabase-only path (flag-gated)
+    if (DevConfig.useSuperbaseForDailyQuests) {
+      return _syncTodayQuestsSupabase(currentUserId, partnerUserId);
+    }
+
+    // OLD PATH: Firebase (default)
     try {
       final coupleId = QuestUtilities.generateCoupleId(currentUserId, partnerUserId);
       final dateKey = QuestUtilities.getTodayDateKey();
@@ -130,12 +137,20 @@ class QuestSyncService {
   }
 
   /// Save generated quests to Firebase AND Supabase (Dual-Write)
+  ///
+  /// PHASE 4: When useSuperbaseForDailyQuests is TRUE, uses Supabase-only path
   Future<void> saveQuestsToFirebase({
     required List<DailyQuest> quests,
     required String currentUserId,
     required String partnerUserId,
     QuizProgressionState? progressionState,
   }) async {
+    // PHASE 4: Supabase-only path (flag-gated)
+    if (DevConfig.useSuperbaseForDailyQuests) {
+      return _saveQuestsToSupabaseOnly(quests);
+    }
+
+    // OLD PATH: Firebase + dual-write (default)
     try {
       final coupleId = QuestUtilities.generateCoupleId(currentUserId, partnerUserId);
       final dateKey = QuestUtilities.getTodayDateKey();
@@ -473,5 +488,212 @@ class QuestSyncService {
     } catch (e) {
       Logger.error('Error cleaning up old quests', error: e, service: 'quest');
     }
+  }
+
+  // ============================================================================
+  // PHASE 4: SUPABASE-ONLY METHODS (Flag-gated)
+  // ============================================================================
+
+  /// Sync today's quests from Supabase (Supabase-only path)
+  /// Used when DevConfig.useSuperbaseForDailyQuests is TRUE
+  Future<bool> _syncTodayQuestsSupabase(
+    String currentUserId,
+    String partnerUserId,
+  ) async {
+    try {
+      final dateKey = QuestUtilities.getTodayDateKey();
+
+      Logger.debug('🔄 Quest Sync Check (Supabase):', service: 'quest');
+      Logger.debug('   Date Key: $dateKey', service: 'quest');
+
+      // Determine device priority (same as Firebase)
+      final sortedIds = [currentUserId, partnerUserId]..sort();
+      final isSecondDevice = currentUserId == sortedIds[1];
+
+      if (isSecondDevice) {
+        Logger.debug('   ⏱️  Second device detected - waiting 3 seconds...', service: 'quest');
+        await Future.delayed(const Duration(seconds: 3));
+      }
+
+      // Try to fetch from Supabase
+      Logger.debug('   📡 Checking Supabase for existing quests...', service: 'quest');
+      final response = await _apiClient.get('/api/sync/daily-quests?date=$dateKey');
+
+      if (response.success && response.data != null) {
+        final questsData = response.data['quests'] as List?;
+
+        if (questsData != null && questsData.isNotEmpty) {
+          // Quests exist in Supabase - validate local quests match
+          final firebaseQuestIds = questsData.map((q) => q['id'] as String).toSet();
+          final localQuests = _storage.getTodayQuests();
+
+          if (localQuests.isNotEmpty) {
+            final localQuestIds = localQuests.map((q) => q.id).toSet();
+
+            if (firebaseQuestIds.difference(localQuestIds).isEmpty &&
+                localQuestIds.difference(firebaseQuestIds).isEmpty) {
+              // Quest IDs match - already synced
+              Logger.debug('   ✅ Local quests match Supabase', service: 'quest');
+              return true;
+            } else {
+              // Quest IDs don't match - replace with Supabase
+              Logger.debug('   ⚠️  Local quest IDs don\'t match Supabase!', service: 'quest');
+              Logger.debug('   Supabase IDs: $firebaseQuestIds', service: 'quest');
+              Logger.debug('   Local IDs: $localQuestIds', service: 'quest');
+              Logger.debug('   🔄 Replacing local quests with Supabase quests...', service: 'quest');
+
+              // Clear local quests
+              for (final quest in localQuests) {
+                await quest.delete();
+              }
+            }
+          }
+
+          // Load quests from Supabase
+          Logger.debug('   ✅ Loading quests from Supabase...', service: 'quest');
+          await _loadQuestsFromSupabase(questsData, dateKey);
+          return true;
+        }
+      }
+
+      // If second device and still no quests, retry once
+      if (isSecondDevice) {
+        Logger.debug('   ⏱️  Supabase still empty - retrying in 2 seconds...', service: 'quest');
+        await Future.delayed(const Duration(seconds: 2));
+
+        final retryResponse = await _apiClient.get('/api/sync/daily-quests?date=$dateKey');
+        if (retryResponse.success && retryResponse.data != null) {
+          final questsData = retryResponse.data['quests'] as List?;
+          if (questsData != null && questsData.isNotEmpty) {
+            await _loadQuestsFromSupabase(questsData, dateKey);
+            return true;
+          }
+        }
+      }
+
+      // No quests in Supabase yet
+      if (_storage.getTodayQuests().isNotEmpty) {
+        // Local quests exist but not in Supabase - already generated locally
+        Logger.debug('   ✅ Local quests exist but not in Supabase', service: 'quest');
+        return true;
+      } else {
+        // No quests anywhere - need to generate
+        Logger.debug('   ⚠️  No quests in Supabase or locally - will generate new ones', service: 'quest');
+        return false;
+      }
+    } catch (e) {
+      Logger.error('Error syncing quests from Supabase', error: e, service: 'quest');
+      return false;
+    }
+  }
+
+  /// Load quests from Supabase API response
+  Future<void> _loadQuestsFromSupabase(
+    List<dynamic> questsData,
+    String dateKey,
+  ) async {
+    try {
+      final now = DateTime.now();
+      final endOfDay = DateTime(now.year, now.month, now.day, 23, 59, 59);
+
+      for (final questData in questsData) {
+        final questMap = questData as Map<String, dynamic>;
+        final questId = questMap['id'] as String;
+
+        // Parse metadata
+        final metadata = questMap['metadata'] as Map<String, dynamic>?;
+        final formatType = metadata?['formatType'] as String? ?? 'classic';
+        final quizName = metadata?['quizName'] as String?;
+
+        // Parse quest type from string
+        final questTypeStr = questMap['quest_type'] as String;
+        final questType = _parseQuestType(questTypeStr);
+
+        // Create DailyQuest from Supabase data
+        final quest = DailyQuest(
+          id: questId,
+          dateKey: dateKey,
+          questType: questType,
+          contentId: questMap['content_id'] as String,
+          createdAt: now,
+          expiresAt: endOfDay,
+          status: 'pending',
+          sortOrder: questMap['sort_order'] as int,
+          isSideQuest: questMap['is_side_quest'] as bool? ?? false,
+          formatType: formatType,
+          quizName: quizName,
+          userCompletions: null,
+        );
+
+        // Save locally
+        await _storage.saveDailyQuest(quest);
+      }
+
+      Logger.success('Loaded ${questsData.length} quests from Supabase', service: 'quest');
+    } catch (e) {
+      Logger.error('Error loading quests from Supabase', error: e, service: 'quest');
+      rethrow;
+    }
+  }
+
+  /// Parse quest type string to int (for DailyQuest model)
+  int _parseQuestType(String questTypeStr) {
+    // Map quest type strings to their int values
+    // These match the QuestType enum values
+    switch (questTypeStr.toLowerCase()) {
+      case 'quiz':
+        return 0;
+      case 'memory_flip':
+        return 1;
+      case 'you_or_me':
+        return 2;
+      case 'word_ladder':
+        return 3;
+      case 'linked':
+        return 4;
+      default:
+        Logger.warn('Unknown quest type: $questTypeStr, defaulting to quiz', service: 'quest');
+        return 0; // Default to quiz
+    }
+  }
+
+  /// Save quests to Supabase (Supabase-only path)
+  /// Used when DevConfig.useSuperbaseForDailyQuests is TRUE
+  Future<void> _saveQuestsToSupabaseOnly(
+    List<DailyQuest> quests,
+  ) async {
+    try {
+      final dateKey = QuestUtilities.getTodayDateKey();
+
+      Logger.debug('🚀 Saving quests to Supabase (Supabase-only)...', service: 'quest');
+
+      final response = await _apiClient.post('/api/sync/daily-quests', body: {
+        'dateKey': dateKey,
+        'quests': quests.map((q) => {
+          'id': q.id,
+          'questType': _getQuestTypeString(q.type),
+          'contentId': q.contentId,
+          'sortOrder': q.sortOrder,
+          'isSideQuest': q.isSideQuest,
+          'formatType': q.formatType,
+          'quizName': q.quizName,
+        }).toList(),
+      });
+
+      if (response.success) {
+        Logger.success('Saved ${quests.length} quests to Supabase', service: 'quest');
+      } else {
+        Logger.error('Failed to save quests to Supabase: ${response.error}', service: 'quest');
+        throw Exception('Failed to save quests to Supabase');
+      }
+    } catch (e) {
+      Logger.error('Error saving quests to Supabase', error: e, service: 'quest');
+      rethrow;
+    }
+  }
+
+  /// Get quest type string from QuestType enum
+  String _getQuestTypeString(QuestType type) {
+    return type.name; // Returns 'quiz', 'memoryFlip', etc.
   }
 }
