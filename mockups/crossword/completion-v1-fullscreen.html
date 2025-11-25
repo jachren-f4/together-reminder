@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Linked - Completion V1 Full Screen</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            background: #000;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 390px;
+            height: 100vh;
+            max-height: 844px;
+            background: #fff;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Confetti particles */
+        .confetti-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .confetti {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background: #000;
+            top: -20px;
+            animation: confetti-fall 3s ease-out forwards;
+        }
+
+        .confetti:nth-child(odd) {
+            background: #333;
+        }
+
+        .confetti:nth-child(3n) {
+            width: 6px;
+            height: 12px;
+        }
+
+        .confetti:nth-child(4n) {
+            width: 10px;
+            height: 4px;
+        }
+
+        @keyframes confetti-fall {
+            0% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(800px) rotate(720deg);
+                opacity: 0;
+            }
+        }
+
+        /* Main content */
+        .completion-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 40px 24px;
+            text-align: center;
+        }
+
+        .completion-badge {
+            width: 120px;
+            height: 120px;
+            border: 4px solid #000;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 32px;
+            animation: badge-pop 0.6s ease-out;
+        }
+
+        @keyframes badge-pop {
+            0% { transform: scale(0); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+
+        .badge-check {
+            font-size: 48px;
+            font-weight: 300;
+        }
+
+        .completion-title {
+            font-size: 32px;
+            font-weight: 400;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+            animation: fade-up 0.5s ease-out 0.3s both;
+        }
+
+        .completion-subtitle {
+            font-size: 14px;
+            color: #666;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 48px;
+            animation: fade-up 0.5s ease-out 0.4s both;
+        }
+
+        @keyframes fade-up {
+            0% {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Score section */
+        .scores-section {
+            width: 100%;
+            max-width: 280px;
+            animation: fade-up 0.5s ease-out 0.5s both;
+        }
+
+        .score-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 0;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .score-row:last-child {
+            border-bottom: none;
+        }
+
+        .score-label {
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .score-value {
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        .score-row.winner {
+            background: #000;
+            color: #fff;
+            margin: 0 -16px;
+            padding: 16px;
+        }
+
+        .winner-tag {
+            font-size: 10px;
+            letter-spacing: 1px;
+            opacity: 0.7;
+        }
+
+        /* Stats */
+        .stats-row {
+            display: flex;
+            justify-content: center;
+            gap: 32px;
+            margin-top: 32px;
+            padding-top: 24px;
+            border-top: 2px solid #000;
+            animation: fade-up 0.5s ease-out 0.6s both;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 28px;
+            font-weight: 700;
+        }
+
+        .stat-label {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #666;
+            margin-top: 4px;
+        }
+
+        /* Bottom action */
+        .bottom-action {
+            padding: 24px;
+            padding-bottom: max(24px, env(safe-area-inset-bottom));
+            animation: fade-up 0.5s ease-out 0.7s both;
+        }
+
+        .action-btn {
+            width: 100%;
+            padding: 16px;
+            border: 2px solid #000;
+            background: #000;
+            color: #fff;
+            font-family: inherit;
+            font-size: 14px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+
+        .action-btn:active {
+            background: #333;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="confetti-container" id="confetti"></div>
+
+        <div class="completion-content">
+            <div class="completion-badge">
+                <span class="badge-check">✓</span>
+            </div>
+
+            <h1 class="completion-title">Complete</h1>
+            <p class="completion-subtitle">Puzzle Finished</p>
+
+            <div class="scores-section">
+                <div class="score-row winner">
+                    <div>
+                        <div class="score-label">You</div>
+                        <div class="winner-tag">Winner</div>
+                    </div>
+                    <div class="score-value">180</div>
+                </div>
+                <div class="score-row">
+                    <div class="score-label">Taija</div>
+                    <div class="score-value">140</div>
+                </div>
+            </div>
+
+            <div class="stats-row">
+                <div class="stat-item">
+                    <div class="stat-value">12</div>
+                    <div class="stat-label">Words</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">8</div>
+                    <div class="stat-label">Turns</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">4:32</div>
+                    <div class="stat-label">Time</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="bottom-action">
+            <button class="action-btn">Back to Home</button>
+        </div>
+    </div>
+
+    <script>
+        // Generate confetti
+        const container = document.getElementById('confetti');
+        for (let i = 0; i < 50; i++) {
+            const confetti = document.createElement('div');
+            confetti.className = 'confetti';
+            confetti.style.left = Math.random() * 100 + '%';
+            confetti.style.animationDelay = Math.random() * 2 + 's';
+            confetti.style.animationDuration = (2 + Math.random() * 2) + 's';
+            container.appendChild(confetti);
+        }
+    </script>
+</body>
+</html>

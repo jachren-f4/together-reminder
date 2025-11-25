@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:togetherremind/services/memory_flip_service.dart';
 import 'package:togetherremind/theme/app_theme.dart';
 
 class MatchRevealDialog extends StatefulWidget {
-  final MatchResult matchResult;
+  final String emoji;
+  final String quote;
+  final int lovePoints;
   final VoidCallback onDismiss;
 
   const MatchRevealDialog({
     super.key,
-    required this.matchResult,
+    required this.emoji,
+    required this.quote,
+    required this.lovePoints,
     required this.onDismiss,
   });
 
@@ -102,7 +105,7 @@ class _MatchRevealDialogState extends State<MatchRevealDialog>
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    _buildEmojiCard(widget.matchResult.card1.emoji),
+                    _buildEmojiCard(widget.emoji),
                     const SizedBox(width: 12),
                     const Text(
                       '=',
@@ -113,7 +116,7 @@ class _MatchRevealDialogState extends State<MatchRevealDialog>
                       ),
                     ),
                     const SizedBox(width: 12),
-                    _buildEmojiCard(widget.matchResult.card2.emoji),
+                    _buildEmojiCard(widget.emoji),
                   ],
                 ),
                 const SizedBox(height: 24),
@@ -127,7 +130,7 @@ class _MatchRevealDialogState extends State<MatchRevealDialog>
                     border: Border.all(color: AppTheme.borderLight, width: 2),
                   ),
                   child: Text(
-                    widget.matchResult.quote,
+                    widget.quote,
                     style: AppTheme.bodyFont.copyWith(
                       fontSize: 15,
                       color: AppTheme.textSecondary,
@@ -154,7 +157,7 @@ class _MatchRevealDialogState extends State<MatchRevealDialog>
                       const Text('💎', style: TextStyle(fontSize: 20)),
                       const SizedBox(width: 8),
                       Text(
-                        '+${widget.matchResult.lovePoints}',
+                        '+${widget.lovePoints}',
                         style: AppTheme.bodyFont.copyWith(
                           fontSize: 17,
                           fontWeight: FontWeight.w700,

@@ -1,8 +1,8 @@
-import { withAuth } from '@/lib/auth/middleware';
+import { withAuthOrDevBypass } from '@/lib/auth/dev-middleware';
 import { query } from '@/lib/db/pool';
 import { NextResponse } from 'next/server';
 
-export const POST = withAuth(async (req, userId) => {
+export const POST = withAuthOrDevBypass(async (req, userId) => {
     try {
         const body = await req.json();
         const { quests, dateKey } = body;
@@ -32,7 +32,14 @@ export const POST = withAuth(async (req, userId) => {
                     `INSERT INTO daily_quests (
              id, couple_id, date, quest_type, content_id, sort_order, is_side_quest, metadata, expires_at
            ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
-           ON CONFLICT (couple_id, date, quest_type, sort_order) DO NOTHING`,
+           ON CONFLICT (couple_id, date, quest_type, sort_order)
+           DO UPDATE SET
+             id = EXCLUDED.id,
+             content_id = EXCLUDED.content_id,
+             is_side_quest = EXCLUDED.is_side_quest,
+             metadata = EXCLUDED.metadata,
+             expires_at = EXCLUDED.expires_at,
+             generated_at = NOW()`,
                     [
                         quest.id,
                         coupleId,
@@ -65,7 +72,7 @@ export const POST = withAuth(async (req, userId) => {
     }
 });
 
-export const GET = withAuth(async (req, userId) => {
+export const GET = withAuthOrDevBypass(async (req, userId) => {
     try {
         const { searchParams } = new URL(req.url);
         const date = searchParams.get('date');

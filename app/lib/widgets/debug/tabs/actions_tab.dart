@@ -29,6 +29,83 @@ class _ActionsTabState extends State<ActionsTab> {
   bool _clearLpTransactions = true;
   bool _clearProgressionState = false;
   bool _clearAppliedLpAwards = false;
+  bool _clearMemoryFlip = true;
+
+  Future<void> _resetUserData() async {
+    // Show confirmation dialog
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Reset User Data?'),
+        content: const Text(
+          'This will clear your local user and partner data.\n\n'
+          'On next app restart, the app will reload real data from Supabase.\n\n'
+          'Useful for testing the dev auth bypass with fresh database content.',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(true),
+            style: TextButton.styleFrom(foregroundColor: Colors.red),
+            child: const Text('Reset'),
+          ),
+        ],
+      ),
+    );
+
+    if (confirmed != true) return;
+
+    setState(() => _isProcessing = true);
+
+    try {
+      Logger.info('Resetting user data (will reload from Supabase on restart)', service: 'debug');
+
+      // Clear user and partner boxes
+      await _storage.userBox.clear();
+      await _storage.partnerBox.clear();
+
+      Logger.success('User data reset', service: 'debug');
+
+      if (mounted) {
+        showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (context) => AlertDialog(
+            title: const Text('User Data Reset'),
+            content: const Text(
+              'User and partner data cleared.\n\n'
+              'Restart the app to reload from Supabase.\n\n'
+              'The app will automatically fetch real user names and couple data from the database.',
+            ),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop(); // Close alert
+                  Navigator.of(context).pop(); // Close debug dialog
+                },
+                child: const Text('OK'),
+              ),
+            ],
+          ),
+        );
+      }
+    } catch (e) {
+      Logger.error('Error resetting user data', error: e, service: 'debug');
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error: $e'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    } finally {
+      setState(() => _isProcessing = false);
+    }
+  }
 
   Future<void> _clearLocalStorage() async {
     setState(() => _isProcessing = true);
@@ -61,6 +138,12 @@ class _ActionsTabState extends State<ActionsTab> {
         final metadataBox = Hive.box('app_metadata');
         await metadataBox.delete('applied_lp_awards');
         Logger.success('Applied LP awards cleared', service: 'debug');
+      }
+
+      if (_clearMemoryFlip) {
+        await _storage.memoryPuzzlesBox.clear();
+        await _storage.memoryAllowancesBox.clear();
+        Logger.success('Memory Flip data cleared', service: 'debug');
       }
 
       Logger.success('Local storage cleared', service: 'debug');
@@ -186,6 +269,65 @@ class _ActionsTabState extends State<ActionsTab> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
+          // Reset User Data
+          DebugSectionCard(
+            title: '🔄 RESET USER DATA',
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: Colors.blue.shade50,
+                    borderRadius: BorderRadius.circular(6),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Icon(Icons.info, size: 14, color: Colors.blue.shade700),
+                          const SizedBox(width: 6),
+                          Text(
+                            'Dev Auth Bypass Active',
+                            style: TextStyle(
+                              fontSize: 11,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.blue.shade700,
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 6),
+                      Text(
+                        'Clear local user/partner data to force reload from Supabase.\n\n'
+                        'Useful for:\n'
+                        '• Testing with updated database content\n'
+                        '• Simulating fresh user setup\n'
+                        '• Resetting after manual database changes',
+                        style: TextStyle(
+                          fontSize: 10,
+                          color: Colors.blue.shade800,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 12),
+                ElevatedButton.icon(
+                  onPressed: _isProcessing ? null : _resetUserData,
+                  icon: const Icon(Icons.refresh),
+                  label: const Text('Reset User Data'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.orange,
+                    foregroundColor: Colors.white,
+                    minimumSize: const Size(double.infinity, 48),
+                  ),
+                ),
+              ],
+            ),
+          ),
+
           // Clear Local Storage
           DebugSectionCard(
             title: '🗑️ CLEAR LOCAL STORAGE',
@@ -221,6 +363,12 @@ class _ActionsTabState extends State<ActionsTab> {
                   _clearAppliedLpAwards,
                   (value) => setState(() => _clearAppliedLpAwards = value ?? false),
                   '${Hive.box('app_metadata').get('applied_lp_awards', defaultValue: <String>[]).length} IDs',
+                ),
+                _buildCheckbox(
+                  'Memory Flip',
+                  _clearMemoryFlip,
+                  (value) => setState(() => _clearMemoryFlip = value ?? false),
+                  '${_storage.memoryPuzzlesBox.length} puzzles',
                 ),
                 const SizedBox(height: 16),
                 ElevatedButton.icon(

@@ -1,0 +1,1047 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Linked - Interactive Gameplay</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            background: #fafafa;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 390px;
+            min-height: 100vh;
+            max-height: 844px;
+            background: #fff;
+            border-left: 1px solid #e0e0e0;
+            border-right: 1px solid #e0e0e0;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Header */
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 16px;
+            border-bottom: 2px solid #000;
+            background: #fff;
+        }
+
+        .back-btn {
+            font-size: 20px;
+            cursor: pointer;
+            width: 32px;
+        }
+
+        .title {
+            font-size: 18px;
+            font-weight: 400;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .scores-inline {
+            display: flex;
+            gap: 12px;
+            font-size: 13px;
+        }
+
+        .score-item {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            transition: all 0.3s;
+        }
+
+        .score-item.active {
+            font-weight: 700;
+        }
+
+        .score-item .dot {
+            width: 6px;
+            height: 6px;
+            background: #4caf50;
+            border-radius: 50%;
+        }
+
+        .score-item.score-bump {
+            transform: scale(1.3);
+            color: #4caf50;
+        }
+
+        /* Grid */
+        .grid-container {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 12px;
+            min-height: 0;
+            background: #fafafa;
+        }
+
+        .crossword-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 2px;
+            background: #222;
+            padding: 2px;
+            width: 100%;
+            max-width: 360px;
+        }
+
+        .cell {
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            position: relative;
+            transition: all 0.2s;
+        }
+
+        .cell-void {
+            background: #222;
+        }
+
+        .cell-clue {
+            background: #e8e8e8;
+            font-family: 'Arial', 'Helvetica', sans-serif;
+            font-size: 8px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0px;
+            padding: 3px;
+            text-align: center;
+            line-height: 1.05;
+            color: #111;
+            cursor: pointer;
+            word-break: break-word;
+            hyphens: auto;
+        }
+
+        .cell-clue:active {
+            background: #d0d0d0;
+        }
+
+        .cell-clue .arrow {
+            position: absolute;
+            font-size: 6px;
+            color: #666;
+        }
+
+        .cell-clue .arrow-down {
+            bottom: 1px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .cell-clue .arrow-across {
+            right: 1px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .cell-answer {
+            background: #fff;
+            font-size: 22px;
+            font-family: Georgia, serif;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .cell-answer.locked {
+            background: #81c784;
+            color: #1b5e20;
+        }
+
+        .cell-answer.draft {
+            background: #ffee58;
+            animation: pulse-draft 1s ease-in-out infinite;
+        }
+
+        @keyframes pulse-draft {
+            0%, 100% { background: #ffee58; }
+            50% { background: #fff176; }
+        }
+
+        .cell-answer.drop-target {
+            background: #e3f2fd;
+            box-shadow: inset 0 0 0 2px #2196f3;
+        }
+
+        .cell-answer.correct-reveal {
+            animation: correct-flash 0.6s ease-out;
+        }
+
+        @keyframes correct-flash {
+            0% { background: #fff; transform: scale(1); }
+            30% { background: #4caf50; transform: scale(1.1); }
+            100% { background: #81c784; transform: scale(1); }
+        }
+
+        .cell-answer.incorrect-shake {
+            animation: shake-bounce 0.5s ease-out;
+        }
+
+        @keyframes shake-bounce {
+            0%, 100% { transform: translateX(0); }
+            20% { transform: translateX(-8px); }
+            40% { transform: translateX(8px); }
+            60% { transform: translateX(-4px); }
+            80% { transform: translateX(4px); }
+        }
+
+        /* Word completion celebration */
+        .cell-answer.word-complete {
+            animation: word-celebrate 0.8s ease-out;
+        }
+
+        @keyframes word-celebrate {
+            0% { transform: scale(1); }
+            25% { transform: scale(1.15); background: #66bb6a; }
+            50% { transform: scale(1.05); }
+            75% { transform: scale(1.1); }
+            100% { transform: scale(1); background: #81c784; }
+        }
+
+        /* Bottom section */
+        .bottom-section {
+            border-top: 2px solid #000;
+            background: #fff;
+        }
+
+        .rack-section {
+            padding: 12px 16px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .rack-label {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+            color: #666;
+            text-align: center;
+        }
+
+        .rack {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .rack-tile {
+            width: 42px;
+            height: 42px;
+            border: 2px solid #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            font-weight: 700;
+            background: #fff8e1;
+            cursor: grab;
+            transition: all 0.15s;
+            user-select: none;
+        }
+
+        .rack-tile:active {
+            cursor: grabbing;
+            transform: scale(1.1);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+
+        .rack-tile.empty {
+            background: #f5f5f5;
+            border-style: dashed;
+            border-color: #ccc;
+            cursor: default;
+        }
+
+        .rack-tile.dragging {
+            opacity: 0.5;
+        }
+
+        .rack-tile.returning {
+            animation: return-bounce 0.4s ease-out;
+        }
+
+        .rack-tile.drop-target-rack {
+            background: #e3f2fd;
+            border-color: #2196f3;
+        }
+
+        @keyframes return-bounce {
+            0% { transform: scale(0); opacity: 0; }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .action-bar {
+            display: flex;
+            padding: 12px 16px;
+            gap: 10px;
+            padding-bottom: max(12px, env(safe-area-inset-bottom));
+        }
+
+        .action-btn {
+            flex: 1;
+            padding: 12px;
+            border: 1px solid #000;
+            background: #fff;
+            font-family: inherit;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            transition: all 0.15s;
+        }
+
+        .action-btn:active {
+            background: #f0f0f0;
+        }
+
+        .action-btn.primary {
+            background: #000;
+            color: #fff;
+            flex: 2;
+        }
+
+        .action-btn.primary:active {
+            background: #333;
+        }
+
+        .action-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .vision-count {
+            font-size: 9px;
+            opacity: 0.7;
+        }
+
+        /* Points popup */
+        .points-popup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            background: #000;
+            color: #fff;
+            padding: 24px 48px;
+            font-size: 32px;
+            font-weight: 700;
+            border-radius: 8px;
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .points-popup.show {
+            animation: popup-show 1.5s ease-out forwards;
+        }
+
+        @keyframes popup-show {
+            0% { transform: translate(-50%, -50%) scale(0); opacity: 0; }
+            15% { transform: translate(-50%, -50%) scale(1.2); opacity: 1; }
+            30% { transform: translate(-50%, -50%) scale(1); }
+            70% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+            100% { transform: translate(-50%, -50%) scale(0.8); opacity: 0; }
+        }
+
+        /* Word bonus popup */
+        .word-bonus {
+            position: fixed;
+            top: 40%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            background: linear-gradient(135deg, #4caf50, #66bb6a);
+            color: #fff;
+            padding: 16px 32px;
+            font-size: 18px;
+            font-weight: 700;
+            border-radius: 8px;
+            z-index: 1001;
+            text-align: center;
+            box-shadow: 0 8px 32px rgba(76, 175, 80, 0.4);
+        }
+
+        .word-bonus.show {
+            animation: bonus-show 2s ease-out forwards;
+        }
+
+        @keyframes bonus-show {
+            0% { transform: translate(-50%, -50%) scale(0) rotate(-10deg); opacity: 0; }
+            20% { transform: translate(-50%, -50%) scale(1.1) rotate(5deg); opacity: 1; }
+            40% { transform: translate(-50%, -50%) scale(1) rotate(0deg); }
+            80% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+            100% { transform: translate(-50%, -50%) translateY(-20px) scale(0.9); opacity: 0; }
+        }
+
+        .word-bonus .word {
+            font-size: 24px;
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .word-bonus .bonus-points {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        /* Floating letter indicator */
+        .floating-letter {
+            position: fixed;
+            width: 42px;
+            height: 42px;
+            background: #fff8e1;
+            border: 2px solid #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            font-weight: 700;
+            pointer-events: none;
+            z-index: 100;
+            transform: translate(-50%, -50%);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+
+        /* Instructions toast */
+        .toast {
+            position: fixed;
+            bottom: 200px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0,0,0,0.8);
+            color: #fff;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-size: 13px;
+            z-index: 500;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .toast.show {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="back-btn">←</div>
+            <div class="title">Linked</div>
+            <div class="scores-inline">
+                <div class="score-item active" id="your-score">
+                    <span class="dot"></span>
+                    <span>You: <span id="score-value">0</span></span>
+                </div>
+                <div class="score-item">
+                    <span>Taija: 30</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid-container">
+            <div class="crossword-grid" id="grid">
+                <!-- Grid will be generated by JavaScript -->
+            </div>
+        </div>
+
+        <div class="bottom-section">
+            <div class="rack-section">
+                <div class="rack-label">Your Letters</div>
+                <div class="rack" id="rack">
+                    <!-- Rack tiles will be generated by JavaScript -->
+                </div>
+            </div>
+
+            <div class="action-bar">
+                <button class="action-btn" id="hint-btn">💡 Hint <span class="vision-count" id="hint-count">(2)</span></button>
+                <button class="action-btn primary" id="submit-btn">Submit Turn</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="points-popup" id="points-popup">+0</div>
+    <div class="word-bonus" id="word-bonus">
+        <span class="word"></span>
+        <span class="bonus-points"></span>
+    </div>
+    <div class="toast" id="toast"></div>
+
+    <script>
+        // Puzzle solution from arroword_test.json
+        // Grid is 7 columns x 9 rows = indices 0-62
+        // Actual grid from JSON:
+        //   Row 1: ., D, R, I, P, ., W
+        //   Row 2: ., O, O, ., E, ., R
+        //   Row 3: ., M, S, ., C, ., A
+        //   Row 4: ., ., E, ., K, ., P
+        //   Row 5: ., S, ., G, ., D, .
+        //   Row 6: ., E, ., A, ., R, .
+        //   Row 7: ., E, ., Z, ., I, S
+        //   Row 8: ., D, ., E, X, P, O
+        const SOLUTION = {
+            // Row 1: DRIP across + WRAP column starts with W
+            10: 'I', 11: 'P', 13: 'W',
+            // Row 2: DOM continues O, ROSE continues O, PECK continues E, WRAP continues R
+            15: 'O', 16: 'O', 18: 'E', 20: 'R',
+            // Row 3: DOM=M, ROSE=S, PECK=C, WRAP=A
+            22: 'M', 23: 'S', 25: 'C', 27: 'A',
+            // Row 4: ROSE=E, PECK=K, WRAP=P
+            30: 'E', 32: 'K', 34: 'P',
+            // Row 5: SEED=S, GAZE=G, DRIP=D
+            36: 'S', 38: 'G', 40: 'D',
+            // Row 6: SEED=E, GAZE=A, DRIP=R
+            43: 'E', 45: 'A', 47: 'R',
+            // Row 7: SEED=E, GAZE=Z, DRIP=I, HOT=S
+            50: 'E', 52: 'Z', 54: 'I', 55: 'S',
+            // Row 8: SEED=D, GAZE=E, EXPO across: X, P, O
+            57: 'D', 59: 'E', 60: 'X', 61: 'P', 62: 'O'
+        };
+
+        // Words for bonus detection
+        const WORDS = [
+            { cells: [8, 9, 10, 11], word: 'DRIP', direction: 'across' },
+            { cells: [15, 16], word: 'MO', direction: 'across' }, // partial
+            { cells: [22, 23, 24], word: 'RUB', direction: 'across' },
+            { cells: [8, 15, 22], word: 'DMR', direction: 'down' }, // DOM column
+            { cells: [9, 16, 23, 30, 36, 43, 50, 57], word: 'ROSE...', direction: 'down' },
+        ];
+
+        // Grid layout
+        const GRID_LAYOUT = [
+            // Row 0 - clues
+            { type: 'void' },
+            { type: 'clue', text: 'DOM PARTNER', arrow: 'down' },
+            { type: 'clue', text: 'LOVE FLOWER', arrow: 'down' },
+            { type: 'void' },
+            { type: 'clue', text: 'QUICK KISS', arrow: 'down' },
+            { type: 'void' },
+            { type: 'clue', text: 'ENVELOP ARMS', arrow: 'down' },
+            // Row 1
+            { type: 'clue', text: 'FLUID FLOW', arrow: 'across' },
+            { type: 'answer', locked: true, letter: 'D' },
+            { type: 'answer', locked: true, letter: 'R' },
+            { type: 'answer' },
+            { type: 'answer' },
+            { type: 'void' },
+            { type: 'answer' },
+            // Row 2
+            { type: 'clue', text: 'JOY SOUND', arrow: 'across' },
+            { type: 'answer' },
+            { type: 'answer', locked: true, letter: 'O' },
+            { type: 'void' },
+            { type: 'answer' },
+            { type: 'void' },
+            { type: 'answer' },
+            // Row 3
+            { type: 'clue', text: 'RUB ABR', arrow: 'across' },
+            { type: 'answer' },
+            { type: 'answer' },
+            { type: 'void' },
+            { type: 'answer' },
+            { type: 'void' },
+            { type: 'answer' },
+            // Row 4
+            { type: 'void' },
+            { type: 'clue', text: 'MALE FLUID', arrow: 'down' },
+            { type: 'answer' },
+            { type: 'clue', text: 'LOVE LOOK', arrow: 'down' },
+            { type: 'answer' },
+            { type: 'clue', text: 'DRIP DOWN', arrow: 'down' },
+            { type: 'answer' },
+            // Row 5
+            { type: 'void' },
+            { type: 'answer' },
+            { type: 'void' },
+            { type: 'answer' },
+            { type: 'void' },
+            { type: 'answer' },
+            { type: 'void' },
+            // Row 6
+            { type: 'void' },
+            { type: 'answer' },
+            { type: 'clue', text: 'WR_P', arrow: 'across' },
+            { type: 'answer' },
+            { type: 'clue', text: 'D_IP', arrow: 'across' },
+            { type: 'answer' },
+            { type: 'clue', text: 'SO HOT', arrow: 'down' },
+            // Row 7
+            { type: 'clue', text: 'P_CK', arrow: 'across' },
+            { type: 'answer' },
+            { type: 'void' },
+            { type: 'answer' },
+            { type: 'clue', text: 'STATE', arrow: 'across' },
+            { type: 'answer' },
+            { type: 'answer' },
+            // Row 8
+            { type: 'clue', text: '_RIP', arrow: 'across' },
+            { type: 'answer' },
+            { type: 'clue', text: 'SHOW OFF', arrow: 'across' },
+            { type: 'answer' },
+            { type: 'answer' },
+            { type: 'answer' },
+            { type: 'answer' },
+        ];
+
+        // Game state
+        let score = 0;
+        let hintsLeft = 2;
+        let rackLetters = [];
+        let placedLetters = {}; // cellIndex -> { letter, rackIndex }
+        let selectedRackIndex = null;
+        let draggedLetter = null;
+
+        // Generate rack letters from remaining unfilled cells
+        function generateRackFromRemainingLetters() {
+            const neededLetters = [];
+
+            // Find all unfilled answer cells and get their solution letters
+            GRID_LAYOUT.forEach((cell, index) => {
+                if (cell.type === 'answer' && !cell.locked && SOLUTION[index]) {
+                    neededLetters.push(SOLUTION[index]);
+                }
+            });
+
+            // Shuffle and take up to 5 letters
+            const shuffled = neededLetters.sort(() => Math.random() - 0.5);
+            const rack = shuffled.slice(0, 5);
+
+            // Pad with nulls if fewer than 5 letters remain
+            while (rack.length < 5) {
+                rack.push(null);
+            }
+
+            return rack;
+        }
+
+        // Initialize
+        function init() {
+            // Generate initial rack from needed letters
+            rackLetters = generateRackFromRemainingLetters();
+            renderGrid();
+            renderRack();
+            setupEventListeners();
+            showToast('Drag letters to the grid, then Submit Turn');
+        }
+
+        function renderGrid() {
+            const grid = document.getElementById('grid');
+            grid.innerHTML = '';
+
+            GRID_LAYOUT.forEach((cell, index) => {
+                const div = document.createElement('div');
+                div.className = 'cell';
+                div.dataset.index = index;
+
+                if (cell.type === 'void') {
+                    div.classList.add('cell-void');
+                } else if (cell.type === 'clue') {
+                    div.classList.add('cell-clue');
+                    div.innerHTML = cell.text + `<span class="arrow arrow-${cell.arrow}">${cell.arrow === 'down' ? '▼' : '▶'}</span>`;
+                } else if (cell.type === 'answer') {
+                    div.classList.add('cell-answer');
+                    if (cell.locked) {
+                        div.classList.add('locked');
+                        div.textContent = cell.letter;
+                    } else if (placedLetters[index]) {
+                        div.classList.add('draft');
+                        div.textContent = placedLetters[index].letter;
+                        // Make draft letters draggable
+                        div.draggable = true;
+                        div.addEventListener('dragstart', (e) => handleDraftDragStart(e, index));
+                        div.addEventListener('dragend', handleDragEnd);
+                    }
+
+                    // Drop target handlers
+                    div.addEventListener('dragover', handleDragOver);
+                    div.addEventListener('dragleave', handleDragLeave);
+                    div.addEventListener('drop', handleDrop);
+                    div.addEventListener('click', () => handleCellClick(index));
+                }
+
+                grid.appendChild(div);
+            });
+        }
+
+        function renderRack() {
+            const rack = document.getElementById('rack');
+            rack.innerHTML = '';
+
+            rackLetters.forEach((letter, index) => {
+                const tile = document.createElement('div');
+                tile.className = 'rack-tile';
+                tile.dataset.index = index;
+
+                if (letter) {
+                    tile.textContent = letter;
+                    tile.draggable = true;
+                    tile.addEventListener('dragstart', handleDragStart);
+                    tile.addEventListener('dragend', handleDragEnd);
+                    tile.addEventListener('click', () => handleRackClick(index));
+                } else {
+                    tile.classList.add('empty');
+                    // Allow dropping letters back to empty rack slots
+                    tile.addEventListener('dragover', handleRackDragOver);
+                    tile.addEventListener('dragleave', handleRackDragLeave);
+                    tile.addEventListener('drop', (e) => handleRackDrop(e, index));
+                }
+
+                rack.appendChild(tile);
+            });
+        }
+
+        function handleDragStart(e) {
+            const index = parseInt(e.target.dataset.index);
+            draggedLetter = { letter: rackLetters[index], rackIndex: index, fromRack: true };
+            e.target.classList.add('dragging');
+            e.dataTransfer.effectAllowed = 'move';
+        }
+
+        function handleDraftDragStart(e, cellIndex) {
+            const placed = placedLetters[cellIndex];
+            draggedLetter = {
+                letter: placed.letter,
+                rackIndex: placed.rackIndex,
+                fromRack: false,
+                fromCell: cellIndex
+            };
+            e.target.classList.add('dragging');
+            e.dataTransfer.effectAllowed = 'move';
+        }
+
+        function handleRackDragOver(e) {
+            e.preventDefault();
+            // Only allow dropping letters from cells back to rack
+            if (draggedLetter && !draggedLetter.fromRack) {
+                e.target.classList.add('drop-target-rack');
+            }
+        }
+
+        function handleRackDragLeave(e) {
+            e.target.classList.remove('drop-target-rack');
+        }
+
+        function handleRackDrop(e, rackIndex) {
+            e.preventDefault();
+            e.target.classList.remove('drop-target-rack');
+
+            if (draggedLetter && !draggedLetter.fromRack) {
+                // Return letter from cell to rack
+                rackLetters[draggedLetter.rackIndex] = draggedLetter.letter;
+                delete placedLetters[draggedLetter.fromCell];
+                renderGrid();
+                renderRack();
+            }
+
+            draggedLetter = null;
+        }
+
+        function handleDragEnd(e) {
+            e.target.classList.remove('dragging');
+            document.querySelectorAll('.drop-target').forEach(el => el.classList.remove('drop-target'));
+        }
+
+        function handleDragOver(e) {
+            e.preventDefault();
+            const cell = GRID_LAYOUT[e.target.dataset.index];
+            if (cell && cell.type === 'answer' && !cell.locked && !placedLetters[e.target.dataset.index]) {
+                e.target.classList.add('drop-target');
+            }
+        }
+
+        function handleDragLeave(e) {
+            e.target.classList.remove('drop-target');
+        }
+
+        function handleDrop(e) {
+            e.preventDefault();
+            e.target.classList.remove('drop-target');
+
+            const cellIndex = parseInt(e.target.dataset.index);
+            const cell = GRID_LAYOUT[cellIndex];
+
+            if (cell && cell.type === 'answer' && !cell.locked && !placedLetters[cellIndex] && draggedLetter) {
+                if (draggedLetter.fromRack) {
+                    // From rack to cell
+                    placeLetter(cellIndex, draggedLetter.letter, draggedLetter.rackIndex);
+                } else {
+                    // From one cell to another - move the letter
+                    delete placedLetters[draggedLetter.fromCell];
+                    placedLetters[cellIndex] = {
+                        letter: draggedLetter.letter,
+                        rackIndex: draggedLetter.rackIndex
+                    };
+                    renderGrid();
+                }
+            }
+
+            draggedLetter = null;
+        }
+
+        function handleRackClick(index) {
+            if (!rackLetters[index]) return;
+
+            if (selectedRackIndex === index) {
+                selectedRackIndex = null;
+            } else {
+                selectedRackIndex = index;
+                showToast('Now tap an empty cell to place the letter');
+            }
+            renderRack();
+        }
+
+        function handleCellClick(cellIndex) {
+            const cell = GRID_LAYOUT[cellIndex];
+
+            // Remove placed letter
+            if (placedLetters[cellIndex]) {
+                const { rackIndex } = placedLetters[cellIndex];
+                rackLetters[rackIndex] = placedLetters[cellIndex].letter;
+                delete placedLetters[cellIndex];
+                renderGrid();
+                renderRack();
+                return;
+            }
+
+            // Place selected letter
+            if (selectedRackIndex !== null && cell.type === 'answer' && !cell.locked) {
+                placeLetter(cellIndex, rackLetters[selectedRackIndex], selectedRackIndex);
+                selectedRackIndex = null;
+            }
+        }
+
+        function placeLetter(cellIndex, letter, rackIndex) {
+            placedLetters[cellIndex] = { letter, rackIndex };
+            rackLetters[rackIndex] = null;
+            renderGrid();
+            renderRack();
+        }
+
+        function setupEventListeners() {
+            document.getElementById('submit-btn').addEventListener('click', submitTurn);
+            document.getElementById('hint-btn').addEventListener('click', useHint);
+        }
+
+        async function submitTurn() {
+            const placements = Object.entries(placedLetters);
+            if (placements.length === 0) {
+                showToast('Place at least one letter first!');
+                return;
+            }
+
+            let correctCount = 0;
+            let incorrectPlacements = [];
+            let turnPoints = 0;
+
+            // Check each placement
+            for (const [cellIndex, { letter, rackIndex }] of placements) {
+                const idx = parseInt(cellIndex);
+                const correct = SOLUTION[idx] === letter;
+
+                if (correct) {
+                    correctCount++;
+                    turnPoints += 10;
+
+                    // Mark as locked
+                    GRID_LAYOUT[idx].locked = true;
+                    GRID_LAYOUT[idx].letter = letter;
+                    delete placedLetters[idx];
+
+                    // Animate
+                    await animateCorrect(idx);
+                } else {
+                    incorrectPlacements.push({ cellIndex: idx, letter, rackIndex });
+                }
+            }
+
+            // Bounce back incorrect letters
+            for (const { cellIndex, letter, rackIndex } of incorrectPlacements) {
+                await animateIncorrect(cellIndex);
+                rackLetters[rackIndex] = letter;
+                delete placedLetters[cellIndex];
+            }
+
+            // Check for completed words
+            const completedWords = checkCompletedWords();
+            for (const word of completedWords) {
+                const bonus = word.word.length * 10;
+                turnPoints += bonus;
+                await showWordBonus(word.word, bonus);
+            }
+
+            // Update score
+            if (turnPoints > 0) {
+                score += turnPoints;
+                await showPointsPopup(turnPoints);
+                updateScore();
+            }
+
+            renderGrid();
+            renderRack();
+
+            // Check if rack is empty - auto-refill based on remaining needed letters
+            if (rackLetters.every(l => l === null)) {
+                setTimeout(() => {
+                    rackLetters = generateRackFromRemainingLetters();
+                    renderRack();
+                    if (rackLetters.some(l => l !== null)) {
+                        showToast('New letters! Keep going!');
+                    } else {
+                        showToast('Puzzle complete! No more letters needed.');
+                    }
+                }, 500);
+            }
+        }
+
+        function animateCorrect(cellIndex) {
+            return new Promise(resolve => {
+                const cell = document.querySelector(`[data-index="${cellIndex}"]`);
+                cell.classList.add('correct-reveal');
+                setTimeout(() => {
+                    cell.classList.remove('correct-reveal');
+                    resolve();
+                }, 600);
+            });
+        }
+
+        function animateIncorrect(cellIndex) {
+            return new Promise(resolve => {
+                const cell = document.querySelector(`[data-index="${cellIndex}"]`);
+                cell.classList.add('incorrect-shake');
+                setTimeout(() => {
+                    cell.classList.remove('incorrect-shake');
+                    resolve();
+                }, 500);
+            });
+        }
+
+        function checkCompletedWords() {
+            // Simplified check - just check DRIP for demo
+            const dripCells = [8, 9, 10, 11];
+            const dripComplete = dripCells.every(idx => GRID_LAYOUT[idx].locked);
+
+            if (dripComplete && !window.dripCelebrated) {
+                window.dripCelebrated = true;
+                // Celebrate the cells
+                dripCells.forEach(idx => {
+                    const cell = document.querySelector(`[data-index="${idx}"]`);
+                    cell.classList.add('word-complete');
+                });
+                return [{ word: 'DRIP', cells: dripCells }];
+            }
+
+            return [];
+        }
+
+        function showWordBonus(word, bonus) {
+            return new Promise(resolve => {
+                const popup = document.getElementById('word-bonus');
+                popup.querySelector('.word').textContent = word;
+                popup.querySelector('.bonus-points').textContent = `+${bonus} Word Bonus!`;
+                popup.classList.add('show');
+                setTimeout(() => {
+                    popup.classList.remove('show');
+                    resolve();
+                }, 2000);
+            });
+        }
+
+        function showPointsPopup(points) {
+            return new Promise(resolve => {
+                const popup = document.getElementById('points-popup');
+                popup.textContent = `+${points}`;
+                popup.classList.add('show');
+                setTimeout(() => {
+                    popup.classList.remove('show');
+                    resolve();
+                }, 1500);
+            });
+        }
+
+        function updateScore() {
+            const scoreEl = document.getElementById('your-score');
+            const valueEl = document.getElementById('score-value');
+            valueEl.textContent = score;
+            scoreEl.classList.add('score-bump');
+            setTimeout(() => scoreEl.classList.remove('score-bump'), 300);
+        }
+
+        function useHint() {
+            if (hintsLeft <= 0) {
+                showToast('No hints left!');
+                return;
+            }
+
+            hintsLeft--;
+            document.getElementById('hint-count').textContent = `(${hintsLeft})`;
+
+            // Find empty cells where rack letters could go
+            const availableLetters = rackLetters.filter(l => l !== null);
+            const validCells = [];
+
+            GRID_LAYOUT.forEach((cell, idx) => {
+                if (cell.type === 'answer' && !cell.locked && !placedLetters[idx]) {
+                    const solution = SOLUTION[idx];
+                    if (solution && availableLetters.includes(solution)) {
+                        validCells.push(idx);
+                    }
+                }
+            });
+
+            // Highlight valid cells
+            validCells.forEach(idx => {
+                const cell = document.querySelector(`[data-index="${idx}"]`);
+                cell.style.background = '#e3f2fd';
+                cell.style.boxShadow = 'inset 0 0 0 2px #2196f3';
+                setTimeout(() => {
+                    cell.style.background = '';
+                    cell.style.boxShadow = '';
+                }, 2000);
+            });
+
+            if (validCells.length > 0) {
+                showToast(`${validCells.length} valid placement${validCells.length > 1 ? 's' : ''} highlighted!`);
+            } else {
+                showToast('No valid placements for current letters');
+            }
+        }
+
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 2500);
+        }
+
+        // Start
+        init();
+    </script>
+</body>
+</html>

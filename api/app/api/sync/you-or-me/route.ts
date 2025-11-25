@@ -5,22 +5,10 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { withAuth } from '@/lib/auth/middleware';
+import { withAuthOrDevBypass } from '@/lib/auth/dev-middleware';
 import { query, getClient } from '@/lib/db/pool';
 
 export const dynamic = 'force-dynamic';
-
-// Handle CORS preflight
-export async function OPTIONS() {
-  return new NextResponse(null, {
-    status: 200,
-    headers: {
-      'Access-Control-Allow-Origin': '*',
-      'Access-Control-Allow-Methods': 'POST, OPTIONS',
-      'Access-Control-Allow-Headers': 'Content-Type, Authorization',
-    },
-  });
-}
 
 /**
  * Sync You or Me session to Supabase (Dual-Write)
@@ -33,7 +21,7 @@ export async function OPTIONS() {
  *   expiresAt?: string (ISO8601),
  * }
  */
-export const POST = withAuth(async (req, userId, email) => {
+export const POST = withAuthOrDevBypass(async (req, userId, email) => {
   try {
     const body = await req.json();
     const {

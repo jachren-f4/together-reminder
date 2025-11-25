@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Linked - Completion V4 Expanding Card</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            background: #000;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 390px;
+            height: 100vh;
+            max-height: 844px;
+            background: #fff;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Animated background pattern */
+        .pattern-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background:
+                linear-gradient(90deg, #f5f5f5 1px, transparent 1px),
+                linear-gradient(#f5f5f5 1px, transparent 1px);
+            background-size: 40px 40px;
+            animation: pattern-fade 1s ease-out;
+        }
+
+        @keyframes pattern-fade {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+
+        /* Central expanding card */
+        .expanding-card {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: calc(100% - 48px);
+            max-width: 340px;
+            background: #fff;
+            border: 3px solid #000;
+            animation: card-expand 0.6s ease-out;
+            overflow: hidden;
+        }
+
+        @keyframes card-expand {
+            0% {
+                width: 0;
+                height: 0;
+                opacity: 0;
+            }
+            50% {
+                width: calc(100% - 48px);
+                height: 4px;
+                opacity: 1;
+            }
+            100% {
+                width: calc(100% - 48px);
+                height: auto;
+            }
+        }
+
+        /* Card header */
+        .card-header {
+            background: #000;
+            color: #fff;
+            padding: 24px;
+            text-align: center;
+            animation: content-fade 0.4s ease-out 0.4s both;
+        }
+
+        @keyframes content-fade {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+
+        .header-eyebrow {
+            font-size: 10px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            opacity: 0.6;
+            margin-bottom: 8px;
+        }
+
+        .header-title {
+            font-size: 32px;
+            font-weight: 400;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+        }
+
+        /* Score visualization */
+        .score-visual {
+            padding: 32px 24px;
+            animation: content-fade 0.4s ease-out 0.5s both;
+        }
+
+        .score-bar-container {
+            margin-bottom: 24px;
+        }
+
+        .score-bar-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+
+        .bar-name {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .bar-points {
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        .score-bar {
+            height: 8px;
+            background: #e0e0e0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .score-bar-fill {
+            height: 100%;
+            background: #000;
+            animation: bar-fill 1s ease-out 0.6s both;
+        }
+
+        @keyframes bar-fill {
+            0% { width: 0; }
+            100% { width: var(--fill-width); }
+        }
+
+        .score-bar-fill.winner {
+            background: #000;
+        }
+
+        .score-bar-fill.loser {
+            background: #999;
+        }
+
+        /* Winner badge */
+        .winner-badge {
+            text-align: center;
+            padding: 16px;
+            border-top: 1px solid #e0e0e0;
+            border-bottom: 1px solid #e0e0e0;
+            animation: content-fade 0.4s ease-out 0.7s both;
+        }
+
+        .badge-text {
+            font-size: 11px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: #666;
+        }
+
+        .badge-name {
+            font-size: 24px;
+            font-weight: 700;
+            margin-top: 4px;
+        }
+
+        .badge-margin {
+            font-size: 12px;
+            color: #666;
+            margin-top: 4px;
+        }
+
+        /* Stats grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            border-bottom: 1px solid #e0e0e0;
+            animation: content-fade 0.4s ease-out 0.8s both;
+        }
+
+        .stat-cell {
+            padding: 20px 12px;
+            text-align: center;
+            border-right: 1px solid #e0e0e0;
+        }
+
+        .stat-cell:last-child {
+            border-right: none;
+        }
+
+        .stat-value {
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        .stat-label {
+            font-size: 9px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #666;
+            margin-top: 4px;
+        }
+
+        /* Card footer */
+        .card-footer {
+            padding: 20px 24px;
+            display: flex;
+            gap: 12px;
+            animation: content-fade 0.4s ease-out 0.9s both;
+        }
+
+        .footer-btn {
+            flex: 1;
+            padding: 14px;
+            border: 2px solid #000;
+            font-family: inherit;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+
+        .footer-btn.primary {
+            background: #000;
+            color: #fff;
+        }
+
+        .footer-btn.secondary {
+            background: #fff;
+            color: #000;
+        }
+
+        /* Decorative corner marks */
+        .corner-mark {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            border-color: #000;
+            border-style: solid;
+            border-width: 0;
+            opacity: 0;
+            animation: corner-fade 0.4s ease-out 1s forwards;
+        }
+
+        @keyframes corner-fade {
+            0% { opacity: 0; }
+            100% { opacity: 0.3; }
+        }
+
+        .corner-mark.tl {
+            top: 16px;
+            left: 16px;
+            border-top-width: 2px;
+            border-left-width: 2px;
+        }
+
+        .corner-mark.tr {
+            top: 16px;
+            right: 16px;
+            border-top-width: 2px;
+            border-right-width: 2px;
+        }
+
+        .corner-mark.bl {
+            bottom: 16px;
+            left: 16px;
+            border-bottom-width: 2px;
+            border-left-width: 2px;
+        }
+
+        .corner-mark.br {
+            bottom: 16px;
+            right: 16px;
+            border-bottom-width: 2px;
+            border-right-width: 2px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="pattern-bg"></div>
+
+        <div class="corner-mark tl"></div>
+        <div class="corner-mark tr"></div>
+        <div class="corner-mark bl"></div>
+        <div class="corner-mark br"></div>
+
+        <div class="expanding-card">
+            <div class="card-header">
+                <div class="header-eyebrow">Puzzle</div>
+                <h1 class="header-title">Complete</h1>
+            </div>
+
+            <div class="score-visual">
+                <div class="score-bar-container">
+                    <div class="score-bar-label">
+                        <span class="bar-name">You</span>
+                        <span class="bar-points">180</span>
+                    </div>
+                    <div class="score-bar">
+                        <div class="score-bar-fill winner" style="--fill-width: 100%;"></div>
+                    </div>
+                </div>
+
+                <div class="score-bar-container">
+                    <div class="score-bar-label">
+                        <span class="bar-name">Taija</span>
+                        <span class="bar-points">140</span>
+                    </div>
+                    <div class="score-bar">
+                        <div class="score-bar-fill loser" style="--fill-width: 78%;"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="winner-badge">
+                <div class="badge-text">Winner</div>
+                <div class="badge-name">You</div>
+                <div class="badge-margin">+40 points</div>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-cell">
+                    <div class="stat-value">12</div>
+                    <div class="stat-label">Words</div>
+                </div>
+                <div class="stat-cell">
+                    <div class="stat-value">8</div>
+                    <div class="stat-label">Turns</div>
+                </div>
+                <div class="stat-cell">
+                    <div class="stat-value">4:32</div>
+                    <div class="stat-label">Time</div>
+                </div>
+            </div>
+
+            <div class="card-footer">
+                <button class="footer-btn secondary">Rematch</button>
+                <button class="footer-btn primary">Done</button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

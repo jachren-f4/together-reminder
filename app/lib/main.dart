@@ -5,6 +5,7 @@ import 'package:togetherremind/screens/onboarding_screen.dart';
 import 'package:togetherremind/screens/home_screen.dart';
 import 'package:togetherremind/services/storage_service.dart';
 import 'package:togetherremind/services/mock_data_service.dart';
+import 'package:togetherremind/services/dev_data_service.dart';
 import 'package:togetherremind/services/dev_pairing_service.dart';
 import 'package:togetherremind/services/notification_service.dart';
 import 'package:togetherremind/services/quiz_question_bank.dart';
@@ -15,6 +16,7 @@ import 'package:togetherremind/services/quest_sync_service.dart';
 import 'package:togetherremind/services/daily_quest_service.dart';
 import 'package:togetherremind/services/quest_type_manager.dart';
 import 'package:togetherremind/services/love_point_service.dart';
+import 'package:togetherremind/services/couple_preferences_service.dart';
 import 'package:togetherremind/services/auth_service.dart';
 import 'package:togetherremind/services/api_client.dart';
 import 'package:togetherremind/models/daily_quest.dart';
@@ -83,12 +85,15 @@ void main() async {
     Logger.warn('Supabase not configured - auth features disabled. Set SUPABASE_URL and SUPABASE_ANON_KEY.');
   }
 
-  // 🚀 Auto-inject mock data in debug mode (only on simulators)
+  // 🚀 Load real user data in dev mode (bypasses auth but uses real database)
   Logger.debug('Debug Mode: $kDebugMode');
   final isSimulator = await DevConfig.isSimulator;
-  final enableMockPairing = await DevConfig.enableMockPairing;
   Logger.debug('Is Simulator: $isSimulator');
-  Logger.debug('Enable Mock Pairing: $enableMockPairing');
+
+  // Load real data from Supabase instead of mock data
+  await DevDataService().loadRealDataIfNeeded();
+
+  // Keep mock data service for backward compatibility (currently disabled)
   await MockDataService.injectMockDataIfNeeded();
 
   // 🔗 Start auto-pairing for dual-emulator setup (dev mode only)
@@ -155,6 +160,10 @@ Future<void> _initializeDailyQuests() async {
     );
     // Removed verbose logging
     // print('💰 LP listener initialized');
+
+    // ⚙️ Start listening for couple preference updates
+    CouplePreferencesService.startListening();
+    Logger.debug('Couple preferences listener initialized', service: 'preferences');
 
     // Initialize services
     final questService = DailyQuestService(storage: storage);

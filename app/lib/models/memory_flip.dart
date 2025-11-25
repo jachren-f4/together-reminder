@@ -31,6 +31,19 @@ class MemoryPuzzle extends HiveObject {
   @HiveField(8)
   late String completionQuote;
 
+  // Turn-based fields
+  @HiveField(9, defaultValue: null)
+  String? currentPlayerId;
+
+  @HiveField(10, defaultValue: 0)
+  int turnNumber;
+
+  @HiveField(11, defaultValue: 0)
+  int player1Pairs;
+
+  @HiveField(12, defaultValue: 0)
+  int player2Pairs;
+
   MemoryPuzzle({
     required this.id,
     required this.createdAt,
@@ -41,6 +54,10 @@ class MemoryPuzzle extends HiveObject {
     this.matchedPairs = 0,
     this.completedAt,
     required this.completionQuote,
+    this.currentPlayerId,
+    this.turnNumber = 0,
+    this.player1Pairs = 0,
+    this.player2Pairs = 0,
   });
 
   // Helper methods

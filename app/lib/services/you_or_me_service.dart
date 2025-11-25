@@ -550,7 +550,6 @@ class YouOrMeService {
         'id': session.id,
         'questions': session.questions.map((q) => q.toMap()).toList(),
         'createdAt': session.createdAt.toIso8601String(),
-        'expiresAt': session.expiresAt?.toIso8601String(),
       });
 
       if (response.success) {

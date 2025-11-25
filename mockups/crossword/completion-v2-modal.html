@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Linked - Completion V2 Modal Overlay</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            background: #000;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 390px;
+            height: 100vh;
+            max-height: 844px;
+            background: #fff;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Blurred background grid (completed state) */
+        .grid-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: #f5f5f5;
+            filter: blur(3px);
+            opacity: 0.5;
+        }
+
+        /* Dark overlay */
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            animation: overlay-fade 0.3s ease-out;
+        }
+
+        @keyframes overlay-fade {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+
+        /* Modal card */
+        .modal {
+            background: #fff;
+            width: 100%;
+            max-width: 320px;
+            padding: 32px 24px;
+            text-align: center;
+            animation: modal-pop 0.4s ease-out 0.2s both;
+        }
+
+        @keyframes modal-pop {
+            0% {
+                opacity: 0;
+                transform: scale(0.8) translateY(20px);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        .modal-header {
+            border-bottom: 2px solid #000;
+            padding-bottom: 20px;
+            margin-bottom: 24px;
+        }
+
+        .modal-title {
+            font-size: 24px;
+            font-weight: 400;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            margin-bottom: 4px;
+        }
+
+        .modal-subtitle {
+            font-size: 11px;
+            color: #666;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        /* Winner announcement */
+        .winner-section {
+            margin-bottom: 24px;
+        }
+
+        .winner-label {
+            font-size: 10px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: #666;
+            margin-bottom: 8px;
+        }
+
+        .winner-name {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .winner-score {
+            font-size: 14px;
+            color: #666;
+        }
+
+        /* Score comparison */
+        .score-comparison {
+            display: flex;
+            justify-content: center;
+            gap: 24px;
+            padding: 20px 0;
+            border-top: 1px solid #e0e0e0;
+            border-bottom: 1px solid #e0e0e0;
+            margin-bottom: 24px;
+        }
+
+        .player-score {
+            text-align: center;
+        }
+
+        .player-score.winner .player-points {
+            color: #000;
+        }
+
+        .player-score.loser .player-points {
+            color: #999;
+        }
+
+        .player-name {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 4px;
+        }
+
+        .player-points {
+            font-size: 32px;
+            font-weight: 700;
+        }
+
+        .score-divider {
+            display: flex;
+            align-items: center;
+            font-size: 20px;
+            color: #ccc;
+        }
+
+        /* Actions */
+        .modal-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .btn {
+            padding: 14px 24px;
+            border: 2px solid #000;
+            font-family: inherit;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+
+        .btn-primary {
+            background: #000;
+            color: #fff;
+        }
+
+        .btn-primary:active {
+            background: #333;
+        }
+
+        .btn-secondary {
+            background: #fff;
+            color: #000;
+        }
+
+        .btn-secondary:active {
+            background: #f0f0f0;
+        }
+
+        /* Decorative lines animation */
+        .decorative-lines {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 200%;
+            height: 200%;
+            pointer-events: none;
+        }
+
+        .line {
+            position: absolute;
+            background: #fff;
+            opacity: 0.1;
+        }
+
+        .line-h {
+            width: 100%;
+            height: 1px;
+            animation: line-sweep-h 2s ease-out forwards;
+        }
+
+        .line-v {
+            width: 1px;
+            height: 100%;
+            animation: line-sweep-v 2s ease-out forwards;
+        }
+
+        @keyframes line-sweep-h {
+            0% { transform: scaleX(0); }
+            100% { transform: scaleX(1); }
+        }
+
+        @keyframes line-sweep-v {
+            0% { transform: scaleY(0); }
+            100% { transform: scaleY(1); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="grid-background"></div>
+
+        <div class="overlay">
+            <div class="decorative-lines">
+                <div class="line line-h" style="top: 30%;"></div>
+                <div class="line line-h" style="top: 70%;"></div>
+                <div class="line line-v" style="left: 30%;"></div>
+                <div class="line line-v" style="left: 70%;"></div>
+            </div>
+
+            <div class="modal">
+                <div class="modal-header">
+                    <h1 class="modal-title">Linked</h1>
+                    <p class="modal-subtitle">Puzzle Complete</p>
+                </div>
+
+                <div class="winner-section">
+                    <div class="winner-label">Winner</div>
+                    <div class="winner-name">You</div>
+                    <div class="winner-score">by 40 points</div>
+                </div>
+
+                <div class="score-comparison">
+                    <div class="player-score winner">
+                        <div class="player-name">You</div>
+                        <div class="player-points">180</div>
+                    </div>
+                    <div class="score-divider">—</div>
+                    <div class="player-score loser">
+                        <div class="player-name">Taija</div>
+                        <div class="player-points">140</div>
+                    </div>
+                </div>
+
+                <div class="modal-actions">
+                    <button class="btn btn-primary">Done</button>
+                    <button class="btn btn-secondary">New Puzzle</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

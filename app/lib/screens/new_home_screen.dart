@@ -21,6 +21,7 @@ import '../models/daily_quest.dart';
 import 'daily_pulse_screen.dart';
 import 'word_ladder_hub_screen.dart';
 import 'memory_flip_game_screen.dart';
+import 'linked_game_screen.dart';
 import 'quiz_intro_screen.dart';
 import 'inbox_screen.dart';
 
@@ -557,7 +558,7 @@ class _NewHomeScreenState extends State<NewHomeScreen> with SingleTickerProvider
         // Version number for debugging hot reload
         Center(
           child: Text(
-            'v1.0.15',
+            'v1.0.20',
             style: TextStyle(
               fontSize: 10,
               color: Colors.grey.shade400,
@@ -828,6 +829,14 @@ class _NewHomeScreenState extends State<NewHomeScreen> with SingleTickerProvider
         // Refresh state after returning to show updated quest status
         if (mounted) setState(() {});
         break;
+      case QuestType.linked:
+        await Navigator.push(
+          context,
+          MaterialPageRoute(builder: (_) => const LinkedGameScreen()),
+        );
+        // Refresh state after returning to show updated quest status
+        if (mounted) setState(() {});
+        break;
       default:
         // Fallback for unknown quest types
         ScaffoldMessenger.of(context).showSnackBar(
@@ -839,7 +848,7 @@ class _NewHomeScreenState extends State<NewHomeScreen> with SingleTickerProvider
     }
   }
 
-  /// Build list of side quests (Word Ladder, Memory Flip always shown) + placeholders
+  /// Build list of side quests (Linked, Word Ladder, Memory Flip always shown) + placeholders
   Future<List<DailyQuest>> _getSideQuests() async {
     final quests = <DailyQuest>[];
     final today = DateTime.now();
@@ -848,6 +857,47 @@ class _NewHomeScreenState extends State<NewHomeScreen> with SingleTickerProvider
     // Get user/partner for completion tracking
     final user = _storage.getUser();
     final partner = _storage.getPartner();
+
+    // Linked - always show FIRST (arroword puzzle game)
+    final activeLinkedMatch = _storage.getActiveLinkedMatch();
+
+    String linkedDesc;
+    String linkedContentId;
+    if (activeLinkedMatch != null && activeLinkedMatch.status == 'active') {
+      linkedDesc = '${activeLinkedMatch.progressPercent}% complete';
+      linkedContentId = activeLinkedMatch.matchId;
+    } else {
+      linkedDesc = 'Start new puzzle';
+      linkedContentId = 'new_linked';
+    }
+
+    final linkedQuest = DailyQuest.create(
+      dateKey: dateKey,
+      type: QuestType.linked,
+      contentId: linkedContentId,
+      isSideQuest: true,
+      imagePath: null,
+      description: linkedDesc,
+    );
+
+    // Set completion state based on match status
+    if (user != null && partner != null && activeLinkedMatch != null) {
+      if (activeLinkedMatch.status == 'completed') {
+        linkedQuest.status = 'completed';
+        linkedQuest.userCompletions = {
+          user.id: true,
+          partner.pushToken: true,
+        };
+      } else if (activeLinkedMatch.currentTurnUserId != user.id) {
+        // It's partner's turn - show partner badge
+        linkedQuest.userCompletions = {
+          user.id: true,
+          partner.pushToken: false,
+        };
+      }
+    }
+
+    quests.add(linkedQuest);
 
     // Word Ladder - always show (users can start new sessions)
     final activeLadders = _ladderService.getActiveLadders();
@@ -918,17 +968,19 @@ class _NewHomeScreenState extends State<NewHomeScreen> with SingleTickerProvider
       description: memoryFlipDesc,
     );
 
-    // Check flip allowance and mark user as "completed" if out of flips
-    if (user != null && partner != null && activePuzzle != null && activePuzzle.status != 'completed') {
-      final allowance = await _memoryService.getFlipAllowance(user.id);
-      if (allowance != null && allowance.flipsRemaining == 0) {
-        // Mark user as "completed" to trigger OUT OF FLIPS badge
-        memoryFlipQuest.userCompletions = {
-          user.id: true,
-          partner.pushToken: false,
-        };
-      }
-    }
+    // TODO: Update flip allowance check for turn-based system
+    // The flip allowance is now part of the game state in the turn-based implementation
+    // This will be updated once the game state is loaded
+    // if (user != null && partner != null && activePuzzle != null && activePuzzle.status != 'completed') {
+    //   final allowance = await _memoryService.getFlipAllowance(user.id);
+    //   if (allowance != null && allowance.flipsRemaining == 0) {
+    //     // Mark user as "completed" to trigger OUT OF FLIPS badge
+    //     memoryFlipQuest.userCompletions = {
+    //       user.id: true,
+    //       partner.pushToken: false,
+    //     };
+    //   }
+    // }
 
     // Set completion state if puzzle is completed
     if (user != null && partner != null && activePuzzle != null && activePuzzle.status == 'completed') {

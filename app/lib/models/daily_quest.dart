@@ -9,6 +9,7 @@ enum QuestType {
   wordLadder,
   memoryFlip,
   youOrMe,
+  linked,
 }
 
 @HiveType(typeId: 17)

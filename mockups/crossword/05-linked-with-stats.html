@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Linked - Enhanced Stats State</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            background: #fafafa;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 420px;
+            margin: 0 auto;
+            background: #fff;
+            border: 2px solid #000;
+            box-shadow: 8px 8px 0 rgba(0, 0, 0, 0.1);
+        }
+
+        .header {
+            border-bottom: 2px solid #000;
+            padding: 24px 20px;
+            text-align: center;
+        }
+
+        .title {
+            font-size: 32px;
+            font-weight: 400;
+            letter-spacing: 2px;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+        }
+
+        .subtitle {
+            font-size: 14px;
+            color: #666;
+            font-style: italic;
+        }
+
+        .section {
+            padding: 20px;
+        }
+
+        .section-heading {
+            font-size: 16px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .swipe-hint {
+            font-size: 11px;
+            color: #999;
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+
+        .carousel-container {
+            position: relative;
+            margin: 0 -20px;
+            padding-bottom: 20px;
+        }
+
+        .carousel {
+            display: flex;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            gap: 16px;
+            padding: 0 20px;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+
+        .carousel::-webkit-scrollbar {
+            display: none;
+        }
+
+        .quest-card {
+            flex: 0 0 calc(60%);
+            scroll-snap-align: center;
+            border: 2px solid #000;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: #fff;
+            overflow: hidden;
+            opacity: 1;
+            transform: scale(1);
+            box-shadow: 6px 6px 0 rgba(0, 0, 0, 0.2);
+        }
+
+        .quest-image {
+            width: 100%;
+            height: 170px;
+            border-bottom: 2px solid #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            padding: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+        }
+
+        .progress-circle {
+            width: 48px;
+            height: 48px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 50%;
+            border: 3px solid #000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .progress-number {
+            font-size: 14px;
+            font-weight: 700;
+            line-height: 1;
+        }
+
+        .progress-label {
+            font-size: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-top: 2px;
+        }
+
+        .turn-indicator {
+            background: rgba(255, 255, 255, 0.95);
+            border: 2px solid #000;
+            padding: 6px 10px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .crossword-preview {
+            font-size: 80px;
+            color: rgba(255, 255, 255, 0.9);
+            font-weight: 700;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .quest-content {
+            padding: 16px;
+        }
+
+        .quest-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 12px;
+        }
+
+        .quest-info {
+            flex: 1;
+        }
+
+        .quest-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .quest-desc {
+            font-size: 12px;
+            color: #666;
+            font-style: italic;
+        }
+
+        .reward {
+            font-size: 14px;
+            font-weight: 700;
+            border: 1px solid #000;
+            padding: 4px 10px;
+            background: #000;
+            color: #fff;
+        }
+
+        .mini-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .mini-stat {
+            text-align: center;
+            padding: 8px 4px;
+            background: #f9f9f9;
+            border: 1px solid #e0e0e0;
+        }
+
+        .mini-stat-value {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 2px;
+        }
+
+        .mini-stat-label {
+            font-size: 9px;
+            text-transform: uppercase;
+            color: #666;
+            letter-spacing: 0.5px;
+        }
+
+        .quest-footer {
+            padding-top: 12px;
+            border-top: 1px solid #e0e0e0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .status-badge {
+            display: inline-block;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 6px 12px;
+            border: 1px solid #000;
+            background: #fff;
+            color: #000;
+        }
+
+        .power-ups {
+            display: flex;
+            gap: 6px;
+        }
+
+        .power-up {
+            font-size: 10px;
+            padding: 4px 8px;
+            background: #fff;
+            border: 1px solid #e0e0e0;
+            border-radius: 3px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .note {
+            margin-top: 30px;
+            padding: 20px;
+            background: #f0f0f0;
+            border-left: 3px solid #667eea;
+        }
+
+        .note-title {
+            font-size: 14px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .note-text {
+            font-size: 13px;
+            line-height: 1.6;
+            color: #444;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="title">Love Quest</div>
+            <div class="subtitle">Day Forty-Two</div>
+        </div>
+
+        <div class="section">
+            <div class="section-heading">
+                <span>Side Quests</span>
+                <span class="swipe-hint">← Swipe →</span>
+            </div>
+
+            <div class="carousel-container">
+                <div class="carousel">
+                    <div class="quest-card">
+                        <div class="quest-image">
+                            <div class="stat-overlay">
+                                <div class="progress-circle">
+                                    <div class="progress-number">42</div>
+                                    <div class="progress-label">Done</div>
+                                </div>
+                                <div class="turn-indicator">Your Turn</div>
+                            </div>
+                            <div class="crossword-preview">⊞</div>
+                        </div>
+                        <div class="quest-content">
+                            <div class="quest-header">
+                                <div class="quest-info">
+                                    <div class="quest-title">Linked Crossword</div>
+                                    <div class="quest-desc">Turn #18 · 5 letters ready</div>
+                                </div>
+                                <div class="reward">+50</div>
+                            </div>
+                            <div class="mini-stats">
+                                <div class="mini-stat">
+                                    <div class="mini-stat-value">240</div>
+                                    <div class="mini-stat-label">You</div>
+                                </div>
+                                <div class="mini-stat">
+                                    <div class="mini-stat-value">280</div>
+                                    <div class="mini-stat-label">Taija</div>
+                                </div>
+                                <div class="mini-stat">
+                                    <div class="mini-stat-value">18</div>
+                                    <div class="mini-stat-label">Turns</div>
+                                </div>
+                            </div>
+                            <div class="quest-footer">
+                                <span class="status-badge">Tap to Continue</span>
+                                <div class="power-ups">
+                                    <div class="power-up">👁️ 2</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="note">
+            <div class="note-title">Variant 5: Enhanced Stats State</div>
+            <div class="note-text">
+                Maximum information density variant. Progress and turn indicator overlay on image.
+                Mini-stats grid shows current scores and turn count. Description includes turn number
+                and rack status. Footer shows remaining Vision power-ups (👁️ 2).
+                Thicker border emphasizes action needed. Good for power users who want all info at a glance.
+            </div>
+        </div>
+    </div>
+</body>
+</html>

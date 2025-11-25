@@ -8,6 +8,7 @@ import '../services/quest_sync_service.dart';
 import '../services/quest_utilities.dart';
 import '../services/quiz_service.dart';
 import '../services/you_or_me_service.dart';
+import '../services/api_client.dart';
 import '../utils/logger.dart';
 
 /// Interface for quest providers
@@ -283,6 +284,7 @@ class QuestTypeManager {
   final DailyQuestService _questService;
   final QuestSyncService _syncService;
   final Map<QuestType, QuestProvider> _providers = {};
+  final ApiClient _apiClient = ApiClient();
 
   QuestTypeManager({
     required StorageService storage,
@@ -441,7 +443,13 @@ class QuestTypeManager {
         progressionState: progressionState,
       );
 
-      Logger.debug('Generated ${quests.length} daily quests for $dateKey (synced to Firebase)', service: 'quest');
+      // Save quests to Supabase (dual-write)
+      await _syncQuestsToSupabase(
+        quests: quests,
+        dateKey: dateKey,
+      );
+
+      Logger.debug('Generated ${quests.length} daily quests for $dateKey (synced to Firebase & Supabase)', service: 'quest');
 
       return quests;
     } catch (e) {
@@ -541,5 +549,34 @@ class QuestTypeManager {
   /// Get current quiz progression state
   QuizProgressionState? getProgressionState(String coupleId) {
     return _storage.getQuizProgressionState(coupleId);
+  }
+
+  /// Sync quests to Supabase (dual-write)
+  Future<void> _syncQuestsToSupabase({
+    required List<DailyQuest> quests,
+    required String dateKey,
+  }) async {
+    try {
+      final response = await _apiClient.post('/api/sync/daily-quests', body: {
+        'quests': quests.map((q) => {
+          'id': q.id,
+          'questType': q.type.name,
+          'contentId': q.contentId,
+          'sortOrder': q.sortOrder,
+          'isSideQuest': q.isSideQuest,
+          'formatType': q.formatType,
+          'quizName': q.quizName,
+        }).toList(),
+        'dateKey': dateKey,
+      });
+
+      if (response.success) {
+        Logger.debug('Daily quests synced to Supabase', service: 'quest');
+      } else {
+        Logger.error('Failed to sync daily quests to Supabase: ${response.error}', service: 'quest');
+      }
+    } catch (e) {
+      Logger.error('Error syncing daily quests to Supabase', error: e, service: 'quest');
+    }
   }
 }

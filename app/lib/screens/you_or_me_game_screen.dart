@@ -183,6 +183,14 @@ class _YouOrMeGameScreenState extends State<YouOrMeGameScreen>
     return 'M';
   }
 
+  String _getPartnerInitial() {
+    final partner = _storage.getPartner();
+    if (partner != null && partner.name != null && partner.name!.isNotEmpty) {
+      return partner.name![0].toUpperCase();
+    }
+    return 'P';
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -299,9 +307,9 @@ class _YouOrMeGameScreenState extends State<YouOrMeGameScreen>
                               const SizedBox(width: 20),
                               // "You" button (false)
                               _buildAnswerButton(
-                                label: partner?.name ?? 'Partner',
+                                label: _getPartnerInitial(),
                                 onPressed: () => _handleAnswer(false),
-                                isInitial: false,
+                                isInitial: true,
                               ),
                             ],
                           ),

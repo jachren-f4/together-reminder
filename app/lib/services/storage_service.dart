@@ -13,6 +13,7 @@ import '../models/quiz_expansion.dart';
 import '../models/daily_quest.dart';
 import '../models/quiz_progression_state.dart';
 import '../models/you_or_me.dart';
+import '../models/linked.dart';
 import '../utils/logger.dart';
 
 class StorageService {
@@ -36,6 +37,7 @@ class StorageService {
   static const String _youOrMeSessionsBox = 'you_or_me_sessions';
   static const String _youOrMeProgressionBox = 'you_or_me_progression';
   static const String _appMetadataBox = 'app_metadata';  // Untyped box for metadata
+  static const String _linkedMatchesBox = 'linked_matches';
 
   static Future<void> init() async {
     try {
@@ -66,6 +68,7 @@ class StorageService {
       if (!Hive.isAdapterRegistered(20)) Hive.registerAdapter(YouOrMeQuestionAdapter());
       if (!Hive.isAdapterRegistered(21)) Hive.registerAdapter(YouOrMeAnswerAdapter());
       if (!Hive.isAdapterRegistered(22)) Hive.registerAdapter(YouOrMeSessionAdapter());
+      if (!Hive.isAdapterRegistered(23)) Hive.registerAdapter(LinkedMatchAdapter());
 
       // Open boxes
       Logger.debug('Opening Hive boxes...', service: 'storage');
@@ -89,8 +92,9 @@ class StorageService {
       await Hive.openBox<YouOrMeSession>(_youOrMeSessionsBox);
       await Hive.openBox(_youOrMeProgressionBox);  // Untyped box for question tracking
       await Hive.openBox(_appMetadataBox);  // Untyped box for app metadata
+      await Hive.openBox<LinkedMatch>(_linkedMatchesBox);
 
-      Logger.info('Hive storage initialized successfully (20 boxes opened)', service: 'storage');
+      Logger.info('Hive storage initialized successfully (21 boxes opened)', service: 'storage');
     } catch (e, stackTrace) {
       Logger.error('Failed to initialize Hive storage', error: e, stackTrace: stackTrace, service: 'storage');
       rethrow;
@@ -362,6 +366,13 @@ class StorageService {
       Hive.box<MemoryFlipAllowance>(_memoryAllowancesBox);
 
   Future<void> saveMemoryPuzzle(MemoryPuzzle puzzle) async {
+    // Clear old active puzzles when saving a new one (prevents stale cache)
+    final oldPuzzles = memoryPuzzlesBox.values
+        .where((p) => p.id != puzzle.id && p.status == 'active')
+        .toList();
+    for (final old in oldPuzzles) {
+      await memoryPuzzlesBox.delete(old.id);
+    }
     await memoryPuzzlesBox.put(puzzle.id, puzzle);
   }
 
@@ -403,6 +414,43 @@ class StorageService {
 
   Future<void> updateMemoryAllowance(MemoryFlipAllowance allowance) async {
     await allowance.save();
+  }
+
+  // Linked Match operations
+  Box<LinkedMatch> get linkedMatchesBox => Hive.box<LinkedMatch>(_linkedMatchesBox);
+
+  Future<void> saveLinkedMatch(LinkedMatch match) async {
+    await linkedMatchesBox.put(match.matchId, match);
+  }
+
+  LinkedMatch? getLinkedMatch(String matchId) {
+    return linkedMatchesBox.get(matchId);
+  }
+
+  List<LinkedMatch> getAllLinkedMatches() {
+    final matches = linkedMatchesBox.values.toList();
+    matches.sort((a, b) => b.createdAt.compareTo(a.createdAt));
+    return matches;
+  }
+
+  LinkedMatch? getActiveLinkedMatch() {
+    return linkedMatchesBox.values
+        .where((m) => m.status == 'active')
+        .firstOrNull;
+  }
+
+  List<LinkedMatch> getCompletedLinkedMatches() {
+    final matches = linkedMatchesBox.values
+        .where((m) => m.status == 'completed')
+        .toList();
+    if (matches.isNotEmpty) {
+      matches.sort((a, b) => b.completedAt!.compareTo(a.completedAt!));
+    }
+    return matches;
+  }
+
+  Future<void> updateLinkedMatch(LinkedMatch match) async {
+    await match.save();
   }
 
   // Daily Pulse operations

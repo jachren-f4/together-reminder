@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Linked - Game Complete</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            background: #fafafa;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 420px;
+            margin: 0 auto;
+            background: #fff;
+            border: 2px solid #000;
+            box-shadow: 8px 8px 0 rgba(0, 0, 0, 0.1);
+        }
+
+        .header {
+            border-bottom: 2px solid #000;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .back-btn {
+            font-size: 24px;
+            cursor: pointer;
+            padding: 4px 8px;
+        }
+
+        .title {
+            font-size: 24px;
+            font-weight: 400;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .share-btn {
+            font-size: 18px;
+            width: 32px;
+            height: 32px;
+            border: 1px solid #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        .victory-section {
+            background: #000;
+            color: #fff;
+            padding: 40px 20px;
+            text-align: center;
+        }
+
+        .victory-icon {
+            font-size: 64px;
+            margin-bottom: 16px;
+        }
+
+        .victory-title {
+            font-size: 28px;
+            font-weight: 400;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+
+        .victory-subtitle {
+            font-size: 14px;
+            font-style: italic;
+            opacity: 0.8;
+        }
+
+        .final-scores {
+            display: flex;
+            border-bottom: 2px solid #000;
+        }
+
+        .final-player {
+            flex: 1;
+            padding: 24px 20px;
+            text-align: center;
+        }
+
+        .final-player:first-child {
+            border-right: 2px solid #000;
+        }
+
+        .final-player.winner {
+            background: #f5f5f5;
+        }
+
+        .winner-badge {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            background: #000;
+            color: #fff;
+            padding: 4px 12px;
+            display: inline-block;
+            margin-bottom: 8px;
+        }
+
+        .final-name {
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+
+        .final-score {
+            font-size: 48px;
+            font-weight: 700;
+        }
+
+        .final-label {
+            font-size: 11px;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-top: 4px;
+        }
+
+        .completed-grid {
+            padding: 16px;
+            display: flex;
+            justify-content: center;
+            background: #fafafa;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .crossword-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 2px;
+            background: #000;
+            padding: 2px;
+            width: 100%;
+            max-width: 280px;
+        }
+
+        .cell {
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 700;
+            position: relative;
+        }
+
+        .cell-void {
+            background: #000;
+        }
+
+        .cell-clue {
+            background: #e0e0e0;
+            font-size: 5px;
+            font-weight: 500;
+            padding: 1px;
+            text-align: center;
+            line-height: 1.1;
+            color: #666;
+        }
+
+        .cell-answer {
+            background: #c8e6c9;
+        }
+
+        .cell-answer.you {
+            background: #bbdefb;
+        }
+
+        .cell-answer.partner {
+            background: #f8bbd9;
+        }
+
+        .stats-section {
+            padding: 24px 20px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .stats-title {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 16px;
+            color: #666;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+        }
+
+        .stat-card {
+            text-align: center;
+            padding: 16px;
+            border: 1px solid #e0e0e0;
+        }
+
+        .stat-value {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .stat-label {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #666;
+        }
+
+        .achievements-section {
+            padding: 24px 20px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .achievements-title {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 16px;
+            color: #666;
+        }
+
+        .achievement {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 12px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .achievement:last-child {
+            border-bottom: none;
+        }
+
+        .achievement-icon {
+            width: 48px;
+            height: 48px;
+            border: 2px solid #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+
+        .achievement-info {
+            flex: 1;
+        }
+
+        .achievement-name {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 2px;
+        }
+
+        .achievement-desc {
+            font-size: 12px;
+            color: #666;
+            font-style: italic;
+        }
+
+        .achievement-points {
+            font-size: 14px;
+            font-weight: 700;
+            color: #4caf50;
+        }
+
+        .color-legend {
+            padding: 16px 20px;
+            background: #fafafa;
+            display: flex;
+            justify-content: center;
+            gap: 24px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 11px;
+        }
+
+        .legend-swatch {
+            width: 16px;
+            height: 16px;
+            border: 1px solid #000;
+        }
+
+        .legend-swatch.you {
+            background: #bbdefb;
+        }
+
+        .legend-swatch.partner {
+            background: #f8bbd9;
+        }
+
+        .action-bar {
+            display: flex;
+            padding: 16px 20px;
+            gap: 12px;
+        }
+
+        .action-btn {
+            flex: 1;
+            padding: 14px;
+            border: 1px solid #000;
+            background: #fff;
+            font-family: inherit;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .action-btn:hover {
+            background: #f5f5f5;
+        }
+
+        .action-btn.primary {
+            background: #000;
+            color: #fff;
+        }
+
+        .action-btn.primary:hover {
+            background: #333;
+        }
+
+        .lp-earned {
+            padding: 20px;
+            background: #f5f5f5;
+            text-align: center;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .lp-value {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .lp-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="back-btn">←</div>
+            <div class="title">Linked</div>
+            <div class="share-btn">↗</div>
+        </div>
+
+        <div class="victory-section">
+            <div class="victory-icon">🏆</div>
+            <div class="victory-title">Puzzle Complete!</div>
+            <div class="victory-subtitle">You solved it together in 12 turns</div>
+        </div>
+
+        <div class="final-scores">
+            <div class="final-player winner">
+                <div class="winner-badge">Winner</div>
+                <div class="final-name">You</div>
+                <div class="final-score">340</div>
+                <div class="final-label">points</div>
+            </div>
+            <div class="final-player">
+                <div class="winner-badge" style="visibility: hidden;">Winner</div>
+                <div class="final-name">Taija</div>
+                <div class="final-score">280</div>
+                <div class="final-label">points</div>
+            </div>
+        </div>
+
+        <div class="completed-grid">
+            <div class="crossword-grid">
+                <!-- Row 0 -->
+                <div class="cell cell-void"></div>
+                <div class="cell cell-clue"></div>
+                <div class="cell cell-clue"></div>
+                <div class="cell cell-void"></div>
+                <div class="cell cell-clue"></div>
+                <div class="cell cell-void"></div>
+                <div class="cell cell-clue"></div>
+
+                <!-- Row 1 -->
+                <div class="cell cell-clue"></div>
+                <div class="cell cell-answer you">D</div>
+                <div class="cell cell-answer partner">R</div>
+                <div class="cell cell-answer you">I</div>
+                <div class="cell cell-answer partner">P</div>
+                <div class="cell cell-void"></div>
+                <div class="cell cell-answer you">W</div>
+
+                <!-- Row 2 -->
+                <div class="cell cell-clue"></div>
+                <div class="cell cell-answer partner">O</div>
+                <div class="cell cell-answer you">O</div>
+                <div class="cell cell-void"></div>
+                <div class="cell cell-answer you">E</div>
+                <div class="cell cell-void"></div>
+                <div class="cell cell-answer partner">R</div>
+
+                <!-- Row 3 -->
+                <div class="cell cell-clue"></div>
+                <div class="cell cell-answer you">M</div>
+                <div class="cell cell-answer partner">S</div>
+                <div class="cell cell-void"></div>
+                <div class="cell cell-answer partner">C</div>
+                <div class="cell cell-void"></div>
+                <div class="cell cell-answer you">A</div>
+
+                <!-- Row 4 -->
+                <div class="cell cell-void"></div>
+                <div class="cell cell-clue"></div>
+                <div class="cell cell-answer you">E</div>
+                <div class="cell cell-clue"></div>
+                <div class="cell cell-answer you">K</div>
+                <div class="cell cell-clue"></div>
+                <div class="cell cell-answer partner">P</div>
+
+                <!-- Row 5 -->
+                <div class="cell cell-void"></div>
+                <div class="cell cell-answer partner">S</div>
+                <div class="cell cell-void"></div>
+                <div class="cell cell-answer you">G</div>
+                <div class="cell cell-void"></div>
+                <div class="cell cell-answer you">D</div>
+                <div class="cell cell-void"></div>
+
+                <!-- Row 6 -->
+                <div class="cell cell-void"></div>
+                <div class="cell cell-answer you">E</div>
+                <div class="cell cell-clue"></div>
+                <div class="cell cell-answer partner">A</div>
+                <div class="cell cell-clue"></div>
+                <div class="cell cell-answer partner">R</div>
+                <div class="cell cell-clue"></div>
+
+                <!-- Row 7 -->
+                <div class="cell cell-clue"></div>
+                <div class="cell cell-answer partner">E</div>
+                <div class="cell cell-void"></div>
+                <div class="cell cell-answer you">Z</div>
+                <div class="cell cell-clue"></div>
+                <div class="cell cell-answer you">I</div>
+                <div class="cell cell-answer partner">S</div>
+
+                <!-- Row 8 -->
+                <div class="cell cell-clue"></div>
+                <div class="cell cell-answer you">D</div>
+                <div class="cell cell-clue"></div>
+                <div class="cell cell-answer partner">E</div>
+                <div class="cell cell-answer you">X</div>
+                <div class="cell cell-answer partner">P</div>
+                <div class="cell cell-answer you">O</div>
+            </div>
+        </div>
+
+        <div class="color-legend">
+            <div class="legend-item">
+                <div class="legend-swatch you"></div>
+                <span>Your letters</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-swatch partner"></div>
+                <span>Taija's letters</span>
+            </div>
+        </div>
+
+        <div class="stats-section">
+            <div class="stats-title">Game Statistics</div>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-value">31</div>
+                    <div class="stat-label">Letters</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">17</div>
+                    <div class="stat-label">Words</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">12</div>
+                    <div class="stat-label">Turns</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="achievements-section">
+            <div class="achievements-title">Achievements Unlocked</div>
+            <div class="achievement">
+                <div class="achievement-icon">🎯</div>
+                <div class="achievement-info">
+                    <div class="achievement-name">Word Sniper</div>
+                    <div class="achievement-desc">Completed 3 words in a single turn</div>
+                </div>
+                <div class="achievement-points">+50</div>
+            </div>
+            <div class="achievement">
+                <div class="achievement-icon">⚡</div>
+                <div class="achievement-info">
+                    <div class="achievement-name">Quick Thinker</div>
+                    <div class="achievement-desc">Finished puzzle in under 15 turns</div>
+                </div>
+                <div class="achievement-points">+30</div>
+            </div>
+        </div>
+
+        <div class="lp-earned">
+            <div class="lp-value">+80 LP</div>
+            <div class="lp-label">Love Points Earned Together</div>
+        </div>
+
+        <div class="action-bar">
+            <div class="action-btn">
+                <span>↗</span>
+                <span>Share</span>
+            </div>
+            <div class="action-btn primary">
+                <span>🏠</span>
+                <span>Home</span>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

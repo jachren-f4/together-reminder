@@ -282,6 +282,31 @@ docs/
 
 ---
 
+## 🎮 Recently Implemented Features
+
+### Turn-Based Game Preferences (2025-11-25)
+
+Couples can set a global preference for who goes first in future turn-based games.
+
+**Settings:** Settings → Game Preferences → "Goes first in new games"
+**Default:** User who joined latest (user2) goes first
+
+**3-Layer Sync:**
+1. Supabase (`couples.first_player_id`) - authoritative
+2. Firebase RTDB (`/couple_preferences/{coupleId}`) - real-time partner sync
+3. Hive (`app_metadata` box) - local cache
+
+**For developers:**
+```dart
+// Use in new turn-based features
+final firstPlayerId = await CouplePreferencesService().getFirstPlayerId();
+game.currentPlayerId = firstPlayerId;
+```
+
+⚠️ **Note:** Only for new features - existing games unaffected.
+
+---
+
 ## 🎯 Success Criteria
 
 The migration is considered successful when:

@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Linked - Vision Power-Up Active</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            background: #fafafa;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 420px;
+            margin: 0 auto;
+            background: #fff;
+            border: 2px solid #000;
+            box-shadow: 8px 8px 0 rgba(0, 0, 0, 0.1);
+        }
+
+        .header {
+            border-bottom: 2px solid #000;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .back-btn {
+            font-size: 24px;
+            cursor: pointer;
+            padding: 4px 8px;
+        }
+
+        .title {
+            font-size: 24px;
+            font-weight: 400;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .help-btn {
+            font-size: 18px;
+            width: 32px;
+            height: 32px;
+            border: 1px solid #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        .vision-banner {
+            background: #fff3e0;
+            border-bottom: 2px solid #ff9800;
+            padding: 14px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .vision-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .vision-icon {
+            font-size: 24px;
+        }
+
+        .vision-text {
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .vision-sub {
+            font-size: 11px;
+            color: #666;
+        }
+
+        .vision-timer {
+            font-size: 20px;
+            font-weight: 700;
+            font-family: monospace;
+        }
+
+        .scoreboard {
+            display: flex;
+            border-bottom: 1px solid #000;
+        }
+
+        .player-score {
+            flex: 1;
+            padding: 12px;
+            text-align: center;
+        }
+
+        .player-score:first-child {
+            border-right: 1px solid #000;
+        }
+
+        .player-score.active {
+            background: #000;
+            color: #fff;
+        }
+
+        .player-name {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 2px;
+        }
+
+        .score-value {
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        .grid-container {
+            padding: 16px;
+            display: flex;
+            justify-content: center;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .crossword-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 2px;
+            background: #000;
+            padding: 2px;
+            width: 100%;
+            max-width: 320px;
+        }
+
+        .cell {
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            font-weight: 700;
+            position: relative;
+        }
+
+        .cell-void {
+            background: #000;
+        }
+
+        .cell-clue {
+            background: #e8e8e8;
+            font-size: 6px;
+            font-weight: 500;
+            padding: 2px;
+            text-align: center;
+            line-height: 1.1;
+            color: #333;
+            position: relative;
+        }
+
+        .cell-clue .arrow {
+            position: absolute;
+            font-size: 7px;
+        }
+
+        .cell-clue .arrow-down {
+            bottom: 1px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .cell-clue .arrow-across {
+            right: 1px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .cell-answer {
+            background: #fff;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+
+        .cell-answer.locked {
+            background: #c8e6c9;
+        }
+
+        .cell-answer.draft {
+            background: #fff9c4;
+        }
+
+        .cell-answer.vision-hint {
+            background: #ffecb3;
+            animation: pulse-hint 1s ease-in-out infinite;
+            position: relative;
+        }
+
+        .cell-answer.vision-hint::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border: 2px solid #ff9800;
+            animation: pulse-border 1s ease-in-out infinite;
+        }
+
+        @keyframes pulse-hint {
+            0%, 100% { background: #ffecb3; }
+            50% { background: #ffe082; }
+        }
+
+        @keyframes pulse-border {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .rack-section {
+            padding: 16px 20px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .rack-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+            color: #666;
+            text-align: center;
+        }
+
+        .rack {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .rack-tile {
+            width: 44px;
+            height: 44px;
+            border: 2px solid #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            font-weight: 700;
+            background: #fff8e1;
+            cursor: grab;
+            transition: all 0.15s ease;
+            box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+
+        .rack-tile:hover {
+            transform: translateY(-2px);
+            box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.15);
+        }
+
+        .rack-tile.has-hints {
+            border-color: #ff9800;
+            background: #fff3e0;
+        }
+
+        .rack-tile.has-hints::after {
+            content: attr(data-hints);
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: #ff9800;
+            color: #fff;
+            font-size: 10px;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .action-bar {
+            display: flex;
+            padding: 14px 20px;
+            gap: 10px;
+        }
+
+        .action-btn {
+            flex: 1;
+            padding: 12px;
+            border: 1px solid #000;
+            background: #fff;
+            font-family: inherit;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .action-btn:hover {
+            background: #f5f5f5;
+        }
+
+        .action-btn.primary {
+            background: #000;
+            color: #fff;
+            flex: 2;
+        }
+
+        .action-btn.active {
+            background: #ff9800;
+            border-color: #ff9800;
+            color: #fff;
+        }
+
+        .vision-count {
+            font-size: 9px;
+            opacity: 0.7;
+        }
+
+        .hint-legend {
+            padding: 12px 20px;
+            background: #fafafa;
+            border-top: 1px solid #e0e0e0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 11px;
+        }
+
+        .legend-swatch {
+            width: 16px;
+            height: 16px;
+            border: 1px solid #000;
+        }
+
+        .legend-swatch.hint {
+            background: #ffecb3;
+            border-color: #ff9800;
+        }
+
+        .legend-swatch.locked {
+            background: #c8e6c9;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="back-btn">←</div>
+            <div class="title">Linked</div>
+            <div class="help-btn">?</div>
+        </div>
+
+        <div class="vision-banner">
+            <div class="vision-info">
+                <div class="vision-icon">👁</div>
+                <div>
+                    <div class="vision-text">Vision Active!</div>
+                    <div class="vision-sub">Valid cells highlighted</div>
+                </div>
+            </div>
+            <div class="vision-timer">0:04</div>
+        </div>
+
+        <div class="scoreboard">
+            <div class="player-score active">
+                <div class="player-name">You</div>
+                <div class="score-value">120</div>
+            </div>
+            <div class="player-score">
+                <div class="player-name">Taija</div>
+                <div class="score-value">90</div>
+            </div>
+        </div>
+
+        <div class="grid-container">
+            <div class="crossword-grid">
+                <!-- Row 0 -->
+                <div class="cell cell-void"></div>
+                <div class="cell cell-clue">Dominant partner<span class="arrow arrow-down">▼</span></div>
+                <div class="cell cell-clue">Flower of love<span class="arrow arrow-down">▼</span></div>
+                <div class="cell cell-void"></div>
+                <div class="cell cell-clue">Quick kiss<span class="arrow arrow-down">▼</span></div>
+                <div class="cell cell-void"></div>
+                <div class="cell cell-clue">Envelop in arms<span class="arrow arrow-down">▼</span></div>
+
+                <!-- Row 1 -->
+                <div class="cell cell-clue">Flow of fluids<span class="arrow arrow-across">▶</span></div>
+                <div class="cell cell-answer locked">D</div>
+                <div class="cell cell-answer locked">R</div>
+                <div class="cell cell-answer locked">I</div>
+                <div class="cell cell-answer vision-hint">P</div>
+                <div class="cell cell-void"></div>
+                <div class="cell cell-answer">W</div>
+
+                <!-- Row 2 -->
+                <div class="cell cell-clue">Sound of excitement<span class="arrow arrow-across">▶</span></div>
+                <div class="cell cell-answer locked">O</div>
+                <div class="cell cell-answer vision-hint">O</div>
+                <div class="cell cell-void"></div>
+                <div class="cell cell-answer vision-hint">E</div>
+                <div class="cell cell-void"></div>
+                <div class="cell cell-answer">R</div>
+
+                <!-- Row 3 -->
+                <div class="cell cell-clue">Massage (abbr.)<span class="arrow arrow-across">▶</span></div>
+                <div class="cell cell-answer">M</div>
+                <div class="cell cell-answer vision-hint">S</div>
+                <div class="cell cell-void"></div>
+                <div class="cell cell-answer">C</div>
+                <div class="cell cell-void"></div>
+                <div class="cell cell-answer">A</div>
+
+                <!-- Row 4 -->
+                <div class="cell cell-void"></div>
+                <div class="cell cell-clue">Male reproductive fluid<span class="arrow arrow-down">▼</span></div>
+                <div class="cell cell-answer vision-hint">E</div>
+                <div class="cell cell-clue">Loving stare<span class="arrow arrow-down">▼</span></div>
+                <div class="cell cell-answer">K</div>
+                <div class="cell cell-clue">Flow of fluids<span class="arrow arrow-down">▼</span></div>
+                <div class="cell cell-answer vision-hint">P</div>
+
+                <!-- Row 5 -->
+                <div class="cell cell-void"></div>
+                <div class="cell cell-answer vision-hint">S</div>
+                <div class="cell cell-void"></div>
+                <div class="cell cell-answer">G</div>
+                <div class="cell cell-void"></div>
+                <div class="cell cell-answer">D</div>
+                <div class="cell cell-void"></div>
+
+                <!-- Row 6 -->
+                <div class="cell cell-void"></div>
+                <div class="cell cell-answer vision-hint">E</div>
+                <div class="cell cell-clue">WR_P<span class="arrow arrow-across">▶</span></div>
+                <div class="cell cell-answer">A</div>
+                <div class="cell cell-clue">D_IP<span class="arrow arrow-across">▶</span></div>
+                <div class="cell cell-answer">R</div>
+                <div class="cell cell-clue">Very aroused<span class="arrow arrow-down">▼</span></div>
+
+                <!-- Row 7 -->
+                <div class="cell cell-clue">P_CK<span class="arrow arrow-across">▶</span></div>
+                <div class="cell cell-answer vision-hint">E</div>
+                <div class="cell cell-void"></div>
+                <div class="cell cell-answer">Z</div>
+                <div class="cell cell-clue">State of being<span class="arrow arrow-across">▶</span></div>
+                <div class="cell cell-answer">I</div>
+                <div class="cell cell-answer vision-hint">S</div>
+
+                <!-- Row 8 -->
+                <div class="cell cell-clue">_RIP<span class="arrow arrow-across">▶</span></div>
+                <div class="cell cell-answer">D</div>
+                <div class="cell cell-clue">Exhibition kink<span class="arrow arrow-across">▶</span></div>
+                <div class="cell cell-answer vision-hint">E</div>
+                <div class="cell cell-answer">X</div>
+                <div class="cell cell-answer vision-hint">P</div>
+                <div class="cell cell-answer vision-hint">O</div>
+            </div>
+        </div>
+
+        <div class="rack-section">
+            <div class="rack-label">Letters with valid placements shown</div>
+            <div class="rack">
+                <div class="rack-tile has-hints" data-hints="3">P</div>
+                <div class="rack-tile has-hints" data-hints="2">O</div>
+                <div class="rack-tile has-hints" data-hints="4">S</div>
+                <div class="rack-tile">M</div>
+                <div class="rack-tile has-hints" data-hints="5">E</div>
+            </div>
+        </div>
+
+        <div class="hint-legend">
+            <div class="legend-item">
+                <div class="legend-swatch hint"></div>
+                <span>Valid placement</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-swatch locked"></div>
+                <span>Locked letter</span>
+            </div>
+        </div>
+
+        <div class="action-bar">
+            <div class="action-btn active">
+                <span>👁</span>
+                <span>Vision</span>
+                <span class="vision-count">(1 left)</span>
+            </div>
+            <div class="action-btn primary">Ready</div>
+        </div>
+    </div>
+</body>
+</html>
