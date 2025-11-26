@@ -28,6 +28,40 @@
 - **iOS:** `com.togetherremind.togetherremind2` (changed 2025-11-13 after security remediation)
 - **Android:** `com.togetherremind.togetherremind` (original, not yet migrated)
 
+### White-Label Architecture
+
+The app supports multiple branded versions via Flutter flavors:
+
+| Brand | Android Bundle ID | iOS Bundle ID | Dart Define |
+|-------|-------------------|---------------|-------------|
+| TogetherRemind | `com.togetherremind.togetherremind` | `com.togetherremind.togetherremind2` | `BRAND=togetherRemind` |
+| HolyCouples | `com.togetherremind.holycouples` | `com.togetherremind.holycouples` | `BRAND=holyCouples` |
+
+**Key files:**
+- `lib/config/brand/brand_config.dart` - Brand enum and config class
+- `lib/config/brand/brand_registry.dart` - All brand configurations
+- `lib/config/brand/brand_loader.dart` - Runtime brand loading
+- `assets/brands/{brandId}/` - Brand-specific content
+
+**Build commands:**
+```bash
+# TogetherRemind
+flutter run --flavor togetherremind --dart-define=BRAND=togetherRemind
+
+# HolyCouples
+flutter run --flavor holycouples --dart-define=BRAND=holyCouples
+
+# Web (any brand)
+flutter run -d chrome --dart-define=BRAND=holyCouples
+```
+
+**Validation:**
+```bash
+./scripts/validate_brand_assets.sh  # Validate all brands
+```
+
+See `docs/WHITE_LABEL_GUIDE.md` for complete brand creation guide.
+
 ---
 
 ## Critical Architecture Rules
@@ -740,6 +774,7 @@ cd api && ./scripts/test_memory_flip_api.sh
 | **[docs/SETUP.md](docs/SETUP.md)** | Firebase configuration, development setup, two-device testing, deployment |
 | **[docs/TROUBLESHOOTING.md](docs/TROUBLESHOOTING.md)** | Common issues, debugging strategies, error handling patterns, Chrome testing best practices |
 | **[docs/FLUTTER_TESTING_GUIDE.md](docs/FLUTTER_TESTING_GUIDE.md)** | Headless testing without simulators, API integration tests, shell script tests, templates |
+| **[docs/WHITE_LABEL_GUIDE.md](docs/WHITE_LABEL_GUIDE.md)** | Step-by-step brand creation, asset requirements, build commands, App Store submission |
 
 ---
 

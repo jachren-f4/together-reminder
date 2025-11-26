@@ -429,26 +429,26 @@ git revert -m 1 <merge-commit-hash>
 - [ ] Test all mini-games on both brands
 
 ### 5.4 Create Asset Validation Script
-- [ ] Create `scripts/validate_brand_assets.sh`
-- [ ] Script checks: all required JSON files exist per brand
-- [ ] Script checks: all required image directories exist
-- [ ] Script checks: JSON schema is valid
-- [ ] Run validation on all brands
+- [x] Create `scripts/validate_brand_assets.sh` ✅
+- [x] Script checks: all required JSON files exist per brand ✅
+- [x] Script checks: all required image directories exist ✅
+- [x] Script checks: JSON schema is valid ✅
+- [x] Run validation on all brands ✅ Both TogetherRemind and HolyCouples pass
 
 ### 5.5 Documentation
-- [ ] Create `docs/WHITE_LABEL_GUIDE.md` - Step-by-step brand creation guide
-- [ ] Document: Required assets checklist
-- [ ] Document: Firebase project setup per brand
-- [ ] Document: App Store submission checklist per brand
-- [ ] Document: Build commands reference
-- [ ] Update main `CLAUDE.md` with white-label info
+- [x] Create `docs/WHITE_LABEL_GUIDE.md` - Step-by-step brand creation guide ✅
+- [x] Document: Required assets checklist ✅
+- [x] Document: Firebase project setup per brand ✅
+- [x] Document: App Store submission checklist per brand ✅
+- [x] Document: Build commands reference ✅
+- [x] Update main `CLAUDE.md` with white-label info ✅
 
 ### 5.6 Final Cleanup
-- [ ] Remove any temporary/debug code
-- [ ] Verify no sensitive credentials in committed code
-- [ ] Update `.gitignore` if needed for brand-specific files
-- [ ] Run `flutter analyze` - fix any issues
-- [ ] Run full test suite (if exists)
+- [ ] Remove any temporary/debug code *(deferred - no critical issues)*
+- [x] Verify no sensitive credentials in committed code ✅
+- [x] Update `.gitignore` if needed for brand-specific files ✅
+- [x] Run `flutter analyze` - fix any issues ✅ (706 info warnings, 0 blocking errors in main code)
+- [ ] Run full test suite (if exists) *(no test suite exists)*
 
 ### 5.7 Phase 5 Final Testing ✅
 > **Complete all tests before declaring white-label implementation done**
@@ -458,7 +458,7 @@ git revert -m 1 <merge-commit-hash>
 - [ ] Build TogetherRemind (iOS IPA) - succeeds *(requires iOS device)*
 - [x] Build HolyCouples (Android APK) - succeeds ✅
 - [ ] Build HolyCouples (iOS IPA) - succeeds *(requires iOS device)*
-- [ ] Release builds work: `flutter build apk --release --flavor togetherremind`
+- [x] Release builds work: `flutter build apk --release --flavor togetherremind` ✅
 
 **Brand Differentiation Tests:**
 - [ ] TogetherRemind shows TogetherRemind colors
