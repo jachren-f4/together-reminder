@@ -254,14 +254,20 @@ class LinkedService {
   }
 
   /// Use hint power-up
-  Future<LinkedHintResult> useHint(String matchId) async {
+  /// [remainingRack] - letters still available after draft placements
+  Future<LinkedHintResult> useHint(String matchId, {List<String>? remainingRack}) async {
     try {
+      final body = <String, dynamic>{
+        'matchId': matchId,
+      };
+      if (remainingRack != null && remainingRack.isNotEmpty) {
+        body['remainingRack'] = remainingRack;
+      }
+
       final response = await _apiRequest(
         'POST',
         '/api/sync/linked/hint',
-        body: {
-          'matchId': matchId,
-        },
+        body: body,
       );
 
       return LinkedHintResult.fromJson(response);

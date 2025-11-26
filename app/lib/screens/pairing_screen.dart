@@ -321,7 +321,7 @@ class _PairingScreenState extends State<PairingScreen>
     return Scaffold(
       body: Container(
         width: double.infinity,
-        decoration: const BoxDecoration(
+        decoration: BoxDecoration(
           gradient: AppTheme.backgroundGradient,
         ),
         child: SafeArea(
@@ -708,7 +708,7 @@ class _PairingScreenState extends State<PairingScreen>
                     ),
                     child: Text(
                       _generatedCode!.code,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontFamily: 'Courier',
                         fontSize: 48,
                         fontWeight: FontWeight.w700,
@@ -855,7 +855,7 @@ class _PairingScreenState extends State<PairingScreen>
             const SizedBox(height: 40),
 
             // Waiting Animation
-            const SizedBox(
+            SizedBox(
               width: 64,
               height: 64,
               child: CircularProgressIndicator(
@@ -914,7 +914,7 @@ class _PairingScreenState extends State<PairingScreen>
                   const SizedBox(height: 12),
                   Text(
                     _generatedCode!.code,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontFamily: 'Courier',
                       fontSize: 36,
                       fontWeight: FontWeight.w700,

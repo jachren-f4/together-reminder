@@ -1,46 +1,39 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:togetherremind/config/theme_config.dart';
+import 'package:togetherremind/config/brand/brand_loader.dart';
 
 class AppTheme {
-  // Minimal Black & White Color System
-  static const Color primaryBlack = Color(0xFF1A1A1A);
-  static const Color primaryWhite = Color(0xFFFFFEFD);
-  static const Color backgroundGray = Color(0xFFFAFAFA);
+  // ============================================
+  // Colors delegated to BrandConfig
+  // ============================================
+  // These getters allow existing code to continue using AppTheme.colorName
+  // while the actual values come from the current brand configuration.
 
-  // Legacy colors (kept for compatibility during migration)
-  static const Color accentGreen = Color(0xFF22c55e);
-  static const Color accentOrange = Color(0xFFf59e0b);
+  // Primary colors
+  static Color get primaryBlack => BrandLoader().colors.primary;
+  static Color get primaryWhite => BrandLoader().colors.textOnPrimary;
+  static Color get backgroundGray => BrandLoader().colors.background;
+
+  // Legacy accent colors (kept for compatibility)
+  static Color get accentGreen => BrandLoader().colors.accentGreen;
+  static Color get accentOrange => BrandLoader().colors.accentOrange;
 
   // Background colors
-  static const Color backgroundStart = backgroundGray;
-  static const Color backgroundEnd = backgroundGray;
-  static const Color cardBackground = primaryWhite;
+  static Color get backgroundStart => BrandLoader().colors.background;
+  static Color get backgroundEnd => BrandLoader().colors.background;
+  static Color get cardBackground => BrandLoader().colors.surface;
 
   // Border and text colors
-  static const Color borderLight = Color(0xFFF0F0F0);
-  static const Color textPrimary = primaryBlack;
-  static const Color textSecondary = Color(0xFF6E6E6E);
-  static const Color textTertiary = Color(0xFFAAAAAA);
+  static Color get borderLight => BrandLoader().colors.borderLight;
+  static Color get textPrimary => BrandLoader().colors.textPrimary;
+  static Color get textSecondary => BrandLoader().colors.textSecondary;
+  static Color get textTertiary => BrandLoader().colors.textTertiary;
 
-  // No gradients - solid colors only
-  static const LinearGradient primaryGradient = LinearGradient(
-    colors: [primaryBlack, primaryBlack],
-    begin: Alignment.topLeft,
-    end: Alignment.bottomRight,
-  );
-
-  static const LinearGradient backgroundGradient = LinearGradient(
-    colors: [backgroundGray, backgroundGray],
-    begin: Alignment.topCenter,
-    end: Alignment.bottomCenter,
-  );
-
-  static const LinearGradient timeButtonGradient = LinearGradient(
-    colors: [backgroundGray, backgroundGray],
-    begin: Alignment.topLeft,
-    end: Alignment.bottomRight,
-  );
+  // No gradients - solid colors only (delegated to BrandConfig)
+  static LinearGradient get primaryGradient => BrandLoader().colors.primaryGradient;
+  static LinearGradient get backgroundGradient => BrandLoader().colors.backgroundGradient;
+  static LinearGradient get timeButtonGradient => BrandLoader().colors.backgroundGradient;
 
   // Typography - Configurable serif for headlines, Inter for body
   static TextStyle get headlineFont => ThemeConfig().serifFont;
@@ -53,7 +46,7 @@ class AppTheme {
       fontFamily: GoogleFonts.inter().fontFamily,
       primaryColor: primaryBlack,
       scaffoldBackgroundColor: backgroundGray,
-      colorScheme: const ColorScheme.light(
+      colorScheme: ColorScheme.light(
         primary: primaryBlack,
         secondary: textSecondary,
         surface: cardBackground,
@@ -80,7 +73,7 @@ class AppTheme {
         style: OutlinedButton.styleFrom(
           backgroundColor: backgroundGray,
           foregroundColor: primaryBlack,
-          side: const BorderSide(color: borderLight, width: 2),
+          side: BorderSide(color: borderLight, width: 2),
           padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12),
@@ -96,15 +89,15 @@ class AppTheme {
         fillColor: primaryWhite,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
-          borderSide: const BorderSide(color: borderLight, width: 2),
+          borderSide: BorderSide(color: borderLight, width: 2),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
-          borderSide: const BorderSide(color: borderLight, width: 2),
+          borderSide: BorderSide(color: borderLight, width: 2),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
-          borderSide: const BorderSide(color: primaryBlack, width: 2),
+          borderSide: BorderSide(color: primaryBlack, width: 2),
         ),
         contentPadding: const EdgeInsets.all(16),
         hintStyle: GoogleFonts.inter(

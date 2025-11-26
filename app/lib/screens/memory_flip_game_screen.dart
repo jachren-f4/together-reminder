@@ -403,7 +403,7 @@ class _MemoryFlipGameScreenState extends State<MemoryFlipGameScreen> {
             emissionFrequency: 0.05,
             numberOfParticles: 50,
             gravity: 0.3,
-            colors: const [
+            colors: [
               AppTheme.primaryBlack,
               AppTheme.accentGreen,
               AppTheme.accentOrange,

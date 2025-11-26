@@ -190,7 +190,7 @@ class _ActivityHubScreenState extends State<ActivityHubScreen> {
     final activities = _getFilteredActivities();
 
     return Container(
-      decoration: const BoxDecoration(
+      decoration: BoxDecoration(
         gradient: AppTheme.backgroundGradient,
       ),
       child: SafeArea(

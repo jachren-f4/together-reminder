@@ -386,22 +386,16 @@ class LinkedCompletedWord {
 
 /// Result from using a hint
 class LinkedHintResult {
-  final int cellIndex; // Cell that was revealed
-  final String letter; // Letter at that cell
-  final List<int> validCells; // Other valid cells for hints
+  final List<int> validCells; // Cells where rack letters can be correctly placed
   final int hintsRemaining;
 
   LinkedHintResult({
-    required this.cellIndex,
-    required this.letter,
     required this.validCells,
     required this.hintsRemaining,
   });
 
   factory LinkedHintResult.fromJson(Map<String, dynamic> json) {
     return LinkedHintResult(
-      cellIndex: json['cellIndex'] as int? ?? 0,
-      letter: json['letter'] as String? ?? '',
       validCells: List<int>.from(json['validCells'] ?? []),
       hintsRemaining: json['hintsRemaining'] as int? ?? 0,
     );

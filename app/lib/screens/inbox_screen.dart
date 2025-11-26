@@ -47,7 +47,7 @@ class _InboxScreenState extends State<InboxScreen> {
     final reminders = _getFilteredReminders();
 
     return Container(
-      decoration: const BoxDecoration(
+      decoration: BoxDecoration(
         gradient: AppTheme.backgroundGradient,
       ),
       child: SafeArea(
@@ -389,7 +389,7 @@ class _ReminderCard extends StatelessWidget {
           const SizedBox(height: 8),
           Text(
             timeFormat.format(reminder.timestamp),
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 12,
               color: AppTheme.textTertiary,
             ),
@@ -402,7 +402,7 @@ class _ReminderCard extends StatelessWidget {
                   child: OutlinedButton(
                     onPressed: () => onStatusUpdate('snoozed'),
                     style: OutlinedButton.styleFrom(
-                      side: const BorderSide(color: AppTheme.borderLight, width: 2),
+                      side: BorderSide(color: AppTheme.borderLight, width: 2),
                       foregroundColor: AppTheme.textPrimary,
                       backgroundColor: AppTheme.backgroundGray,
                       padding: const EdgeInsets.symmetric(vertical: 12),

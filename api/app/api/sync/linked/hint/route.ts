@@ -64,6 +64,7 @@ function findValidCells(
  *
  * Body: {
  *   matchId: string
+ *   remainingRack?: string[]  // Optional: letters still available (after draft placements)
  * }
  */
 export const POST = withAuthOrDevBypass(async (req, userId, email) => {
@@ -71,7 +72,7 @@ export const POST = withAuthOrDevBypass(async (req, userId, email) => {
 
   try {
     const body = await req.json();
-    const { matchId } = body;
+    const { matchId, remainingRack } = body;
 
     if (!matchId) {
       return NextResponse.json(
@@ -153,13 +154,16 @@ export const POST = withAuthOrDevBypass(async (req, userId, email) => {
       );
     }
 
-    const currentRack = match.current_rack || [];
+    // Use remainingRack if provided (accounts for draft placements), otherwise use full rack
+    const rackToUse = remainingRack && Array.isArray(remainingRack) && remainingRack.length > 0
+      ? remainingRack
+      : match.current_rack || [];
     const boardState = typeof match.board_state === 'string'
       ? JSON.parse(match.board_state)
       : match.board_state || {};
 
-    // Find valid cells for current rack
-    const validCells = findValidCells(puzzle, boardState, currentRack);
+    // Find valid cells for remaining rack letters
+    const validCells = findValidCells(puzzle, boardState, rackToUse);
 
     // Decrement hint count
     const newVision = currentVision - 1;

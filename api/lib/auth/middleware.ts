@@ -14,6 +14,13 @@ export interface AuthenticatedRequest extends NextRequest {
 }
 
 /**
+ * Context type for dynamic route parameters
+ */
+export interface RouteContext {
+  params: Promise<Record<string, string>> | Record<string, string>;
+}
+
+/**
  * Authenticate request using JWT token
  * 
  * @param req - Next.js request object
@@ -58,19 +65,20 @@ export function authenticate(
 
 /**
  * Wrap API route handler with authentication
- * 
+ *
  * Usage:
  * ```typescript
- * export const GET = withAuth(async (req, userId) => {
+ * export const GET = withAuth(async (req, userId, email, context) => {
  *   // Your authenticated route logic
- *   return NextResponse.json({ userId });
+ *   const { matchId } = await context.params;
+ *   return NextResponse.json({ userId, matchId });
  * });
  * ```
  */
 export function withAuth(
-  handler: (req: AuthenticatedRequest, userId: string, email?: string) => Promise<NextResponse>
+  handler: (req: AuthenticatedRequest, userId: string, email?: string, context?: RouteContext) => Promise<NextResponse>
 ) {
-  return async (req: NextRequest): Promise<NextResponse> => {
+  return async (req: NextRequest, context?: RouteContext): Promise<NextResponse> => {
     const authResult = authenticate(req);
 
     // If authResult is a NextResponse, it's an error
@@ -83,8 +91,8 @@ export function withAuth(
     authenticatedReq.userId = authResult.userId;
     authenticatedReq.userEmail = authResult.email;
 
-    // Call the actual handler
-    return handler(authenticatedReq, authResult.userId, authResult.email);
+    // Call the actual handler with context (for dynamic route params)
+    return handler(authenticatedReq, authResult.userId, authResult.email, context);
   };
 }
 
