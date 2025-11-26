@@ -402,20 +402,24 @@ git revert -m 1 <merge-commit-hash>
 ## Phase 5: Testing & Polish (Days 17-21)
 
 ### 5.1 Create Second Brand for Testing
-- [ ] Create `HolyCouplesBrand` class with different color palette
-- [ ] Create `assets/brands/holycouples/` directory structure
-- [ ] Copy TogetherRemind content as placeholder (to be replaced with real content later)
-- [ ] Create placeholder app icons for holycouples
-- [ ] Create `android/app/src/holycouples/` with placeholder `google-services.json`
-- [ ] Add HolyCouples to `BrandRegistry`
+- [x] Create `HolyCouplesBrand` class with different color palette ✅ Indigo/purple spiritual theme
+- [x] Create `assets/brands/holycouples/` directory structure ✅
+- [x] Copy TogetherRemind content as placeholder (to be replaced with real content later) ✅
+- [ ] Create placeholder app icons for holycouples *(deferred - using default icons)*
+- [x] Create `android/app/src/holycouples/` with placeholder `google-services.json` ✅
+- [x] Add HolyCouples to `BrandRegistry` ✅
+- [x] Create `ios/config/holycouples.xcconfig` ✅
+- [x] Create `ios/Firebase/HolyCouples/` with `GoogleService-Info.plist` ✅
+- [x] Create `scripts/run_holycouples.sh` convenience script ✅
 
 ### 5.2 Test Multi-Brand Building
-- [ ] Build and run TogetherRemind flavor on Android
-- [ ] Build and run HolyCouples flavor on Android
-- [ ] Verify different colors appear for each flavor
-- [ ] Verify different content loads for each flavor (when content differs)
-- [ ] Build and run TogetherRemind flavor on iOS
-- [ ] Build and run HolyCouples flavor on iOS
+- [x] Build and run TogetherRemind flavor on Android ✅
+- [x] Build and run HolyCouples flavor on Android ✅
+- [ ] Verify different colors appear for each flavor *(requires visual test)*
+- [ ] Verify different content loads for each flavor (when content differs) *(requires manual test)*
+- [ ] Build and run TogetherRemind flavor on iOS *(requires iOS device)*
+- [ ] Build and run HolyCouples flavor on iOS *(requires iOS device)*
+- [x] Build HolyCouples for Web ✅
 
 ### 5.3 Test Feature Functionality Per Brand
 - [ ] Test quiz flow on TogetherRemind
@@ -450,10 +454,10 @@ git revert -m 1 <merge-commit-hash>
 > **Complete all tests before declaring white-label implementation done**
 
 **Multi-Brand Build Tests:**
-- [ ] Build TogetherRemind (Android APK) - succeeds
-- [ ] Build TogetherRemind (iOS IPA) - succeeds
-- [ ] Build HolyCouples (Android APK) - succeeds
-- [ ] Build HolyCouples (iOS IPA) - succeeds
+- [x] Build TogetherRemind (Android APK) - succeeds ✅
+- [ ] Build TogetherRemind (iOS IPA) - succeeds *(requires iOS device)*
+- [x] Build HolyCouples (Android APK) - succeeds ✅
+- [ ] Build HolyCouples (iOS IPA) - succeeds *(requires iOS device)*
 - [ ] Release builds work: `flutter build apk --release --flavor togetherremind`
 
 **Brand Differentiation Tests:**

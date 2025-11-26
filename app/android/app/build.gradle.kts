@@ -38,12 +38,11 @@ android {
             applicationId = "com.togetherremind.togetherremind"
             resValue("string", "app_name", "TogetherRemind")
         }
-        // Future brands - uncomment when ready
-        // create("holycouples") {
-        //     dimension = "brand"
-        //     applicationId = "com.togetherremind.holycouples"
-        //     resValue("string", "app_name", "Holy Couples")
-        // }
+        create("holycouples") {
+            dimension = "brand"
+            applicationId = "com.togetherremind.holycouples"
+            resValue("string", "app_name", "Holy Couples")
+        }
     }
 
     buildTypes {
