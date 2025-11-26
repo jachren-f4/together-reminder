@@ -34,12 +34,14 @@ class BrandAssets {
   static const String sharedGfxPath = 'assets/shared/gfx';
 
   // Navigation icons (shared)
-  static const String homeIcon = 'assets/gfx/home.png';
-  static const String homeIconFilled = 'assets/gfx/home_filled.png';
-  static const String activitiesIcon = 'assets/gfx/activities.png';
-  static const String activitiesIconFilled = 'assets/gfx/activities_filled.png';
-  static const String inboxIcon = 'assets/gfx/inbox.png';
-  static const String inboxIconFilled = 'assets/gfx/inbox_filled.png';
-  static const String profileIcon = 'assets/gfx/profile.png';
-  static const String profileIconFilled = 'assets/gfx/profile_filled.png';
+  static const String homeIcon = '$sharedGfxPath/home.png';
+  static const String homeIconFilled = '$sharedGfxPath/home_filled.png';
+  static const String activitiesIcon = '$sharedGfxPath/activities.png';
+  static const String activitiesIconFilled = '$sharedGfxPath/activities_filled.png';
+  static const String inboxIcon = '$sharedGfxPath/inbox.png';
+  static const String inboxIconFilled = '$sharedGfxPath/inbox_filled.png';
+  static const String profileIcon = '$sharedGfxPath/profile.png';
+  static const String profileIconFilled = '$sharedGfxPath/profile_filled.png';
+  static const String settingsIcon = '$sharedGfxPath/settings.png';
+  static const String settingsIconFilled = '$sharedGfxPath/settings_filled.png';
 }

@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:math';
 import 'package:flutter/services.dart';
 import '../models/quiz_question.dart';
+import '../config/brand/brand_loader.dart';
 import 'storage_service.dart';
 import '../utils/logger.dart';
 
@@ -25,7 +26,7 @@ class QuizQuestionBank {
 
     // Load from JSON asset
     try {
-      final String jsonString = await rootBundle.loadString('assets/data/quiz_questions.json');
+      final String jsonString = await rootBundle.loadString(BrandLoader().content.quizQuestionsPath);
       final List<dynamic> jsonList = json.decode(jsonString);
 
       // Convert to QuizQuestion objects and save to Hive

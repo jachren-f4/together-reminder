@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:lottie/lottie.dart';
 import 'package:togetherremind/theme/app_theme.dart';
+import 'package:togetherremind/config/brand/brand_loader.dart';
 
 enum PokeAnimationType {
   send,
@@ -105,13 +106,14 @@ class _PokeAnimationOverlayState extends State<_PokeAnimationOverlay>
   }
 
   String _getAnimationPath() {
+    final assets = BrandLoader().assets;
     switch (widget.type) {
       case PokeAnimationType.send:
-        return 'assets/animations/poke_send.json';
+        return assets.pokeSendAnimation;
       case PokeAnimationType.receive:
-        return 'assets/animations/poke_receive.json';
+        return assets.pokeReceiveAnimation;
       case PokeAnimationType.mutual:
-        return 'assets/animations/poke_mutual.json';
+        return assets.pokeMutualAnimation;
     }
   }
 
