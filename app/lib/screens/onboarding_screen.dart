@@ -39,15 +39,15 @@ class OnboardingScreen extends StatelessWidget {
             hintText: 'Enter your name',
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
-              borderSide: const BorderSide(color: AppTheme.borderLight, width: 2),
+              borderSide: BorderSide(color: AppTheme.borderLight, width: 2),
             ),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
-              borderSide: const BorderSide(color: AppTheme.borderLight, width: 2),
+              borderSide: BorderSide(color: AppTheme.borderLight, width: 2),
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
-              borderSide: const BorderSide(color: AppTheme.primaryBlack, width: 2),
+              borderSide: BorderSide(color: AppTheme.primaryBlack, width: 2),
             ),
           ),
           onSubmitted: (value) async {
@@ -128,7 +128,7 @@ class OnboardingScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        decoration: const BoxDecoration(
+        decoration: BoxDecoration(
           gradient: AppTheme.backgroundGradient,
         ),
         child: SafeArea(

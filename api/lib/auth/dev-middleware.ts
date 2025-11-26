@@ -8,7 +8,7 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { AuthenticatedRequest, withAuth } from './middleware';
+import { AuthenticatedRequest, RouteContext, withAuth } from './middleware';
 
 /**
  * Check if development bypass is enabled
@@ -64,16 +64,17 @@ function getDevCredentials(req: NextRequest): { userId: string; email: string } 
  *
  * Usage:
  * ```typescript
- * export const POST = withAuthOrDevBypass(async (req, userId) => {
+ * export const POST = withAuthOrDevBypass(async (req, userId, email, context) => {
  *   // Works in dev without JWT, requires JWT in prod
- *   return NextResponse.json({ userId });
+ *   const { matchId } = await context.params;
+ *   return NextResponse.json({ userId, matchId });
  * });
  * ```
  */
 export function withAuthOrDevBypass(
-  handler: (req: AuthenticatedRequest, userId: string, email?: string) => Promise<NextResponse>
+  handler: (req: AuthenticatedRequest, userId: string, email?: string, context?: RouteContext) => Promise<NextResponse>
 ) {
-  return async (req: NextRequest): Promise<NextResponse> => {
+  return async (req: NextRequest, context?: RouteContext): Promise<NextResponse> => {
     // Check if dev bypass is enabled
     if (isDevBypassEnabled()) {
       const credentials = getDevCredentials(req);
@@ -93,8 +94,8 @@ export function withAuthOrDevBypass(
       authenticatedReq.userId = credentials.userId;
       authenticatedReq.userEmail = credentials.email;
 
-      // Call handler with dev credentials
-      const response = await handler(authenticatedReq, credentials.userId, credentials.email);
+      // Call handler with dev credentials and context (for dynamic route params)
+      const response = await handler(authenticatedReq, credentials.userId, credentials.email, context);
 
       // Add CORS headers for dev mode (browser requests from Flutter web)
       response.headers.set('Access-Control-Allow-Origin', '*');
@@ -104,7 +105,7 @@ export function withAuthOrDevBypass(
     }
 
     // Production or bypass disabled: use normal JWT auth
-    return withAuth(handler)(req);
+    return withAuth(handler)(req, context);
   };
 }
 

@@ -77,7 +77,7 @@ class _RemindBottomSheetState extends State<RemindBottomSheet> {
                 // Message input
                 TextField(
                   controller: _messageController,
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     hintText: 'Remind me to...',
                     filled: true,
                     fillColor: AppTheme.backgroundGray,

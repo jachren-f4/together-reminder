@@ -282,14 +282,20 @@ class _LinkedGameScreenState extends State<LinkedGameScreen> {
 
   /// Grid container with animation overlay
   Widget _buildGridWithOverlay() {
-    return Stack(
-      children: [
-        _buildGrid(),
-        // Floating points overlay (only during animation)
-        ..._buildFloatingPoints(),
-        // Word completion overlay (handles its own visibility)
-        _buildWordCompletionOverlay(),
-      ],
+    return GestureDetector(
+      onTap: _highlightedCells.isNotEmpty
+          ? () => setState(() => _highlightedCells.clear())
+          : null,
+      behavior: HitTestBehavior.translucent,
+      child: Stack(
+        children: [
+          _buildGrid(),
+          // Floating points overlay (only during animation)
+          ..._buildFloatingPoints(),
+          // Word completion overlay (handles its own visibility)
+          _buildWordCompletionOverlay(),
+        ],
+      ),
     );
   }
 
@@ -544,6 +550,7 @@ class _LinkedGameScreenState extends State<LinkedGameScreen> {
   Widget _buildAnswerCell(int index, String? letter, AnswerCellState state, {bool showGlow = false}) {
     final isHighlighted = _highlightedCells.contains(index);
     final isInteractive = _gameState!.isMyTurn && state != AnswerCellState.locked && !_isSubmitting;
+    final animState = _cellAnimations[index];
 
     // Also accept drops on draft cells (to swap/replace letters)
     final canAcceptDrop = isInteractive && (state == AnswerCellState.empty || state == AnswerCellState.draft);
@@ -551,7 +558,38 @@ class _LinkedGameScreenState extends State<LinkedGameScreen> {
     // Draft cells can be dragged to move to another cell
     final canDrag = isInteractive && state == AnswerCellState.draft && letter != null;
 
-    return DragTarget<_RackDragData>(
+    // Wrap with animation if needed
+    Widget wrapWithAnimation(Widget child) {
+      if (animState?.isShaking == true) {
+        return _ShakeWidget(
+          key: ValueKey('shake_$index'),
+          child: child,
+          onComplete: () {
+            if (mounted) {
+              setState(() {
+                _cellAnimations[index] = animState!.copyWith(isShaking: false);
+              });
+            }
+          },
+        );
+      }
+      if (animState?.isPopping == true) {
+        return _PopWidget(
+          key: ValueKey('pop_$index'),
+          child: child,
+          onComplete: () {
+            if (mounted) {
+              setState(() {
+                _cellAnimations[index] = animState!.copyWith(isPopping: false);
+              });
+            }
+          },
+        );
+      }
+      return child;
+    }
+
+    return wrapWithAnimation(DragTarget<_RackDragData>(
       onWillAcceptWithDetails: (details) => canAcceptDrop,
       onAcceptWithDetails: (details) {
         setState(() {
@@ -566,6 +604,8 @@ class _LinkedGameScreenState extends State<LinkedGameScreen> {
           _draftPlacements[index] = details.data.letter;
           _draftRackIndices[index] = details.data.rackIndex;
           _usedRackIndices.add(details.data.rackIndex);
+          // Clear hint highlights when letter is placed
+          _highlightedCells.clear();
         });
       },
       builder: (context, candidateData, rejectedData) {
@@ -574,10 +614,17 @@ class _LinkedGameScreenState extends State<LinkedGameScreen> {
         Color bgColor;
         Color textColor = Colors.black87;
         Color? glowColor;
+        Color? borderColor;
 
         switch (state) {
           case AnswerCellState.empty:
             bgColor = isDragTarget ? const Color(0xFFE3F2FD) : Colors.white;
+            // Highlight hint cells with light blue background + glow
+            if (isHighlighted) {
+              bgColor = const Color(0xFFBBDEFB); // Light blue
+              borderColor = const Color(0xFF2196F3); // Blue border
+              glowColor = const Color(0xFF2196F3); // Blue glow for pulse effect
+            }
           case AnswerCellState.draft:
             bgColor = isDragTarget ? const Color(0xFFE3F2FD) : const Color(0xFFFFEE58);
           case AnswerCellState.locked:
@@ -594,16 +641,16 @@ class _LinkedGameScreenState extends State<LinkedGameScreen> {
           _updateCellPosition(context, index);
         });
 
-        final cellContent = AnimatedContainer(
+        final baseCellContent = AnimatedContainer(
           duration: const Duration(milliseconds: 300),
           decoration: BoxDecoration(
             color: bgColor,
             border: isDragTarget
                 ? Border.all(color: const Color(0xFF2196F3), width: 2)
-                : null,
+                : borderColor != null
+                    ? Border.all(color: borderColor, width: 3)
+                    : null,
             boxShadow: [
-              if (isHighlighted)
-                BoxShadow(color: Colors.blue.withValues(alpha: 0.5), blurRadius: 8),
               if (glowColor != null)
                 BoxShadow(color: glowColor.withValues(alpha: 0.6), blurRadius: 12, spreadRadius: 2),
             ],
@@ -623,11 +670,16 @@ class _LinkedGameScreenState extends State<LinkedGameScreen> {
           ),
         );
 
+        // Wrap highlighted cells with pulse animation
+        final cellContent = isHighlighted
+            ? _PulseWidget(key: ValueKey('pulse_$index'), child: baseCellContent)
+            : baseCellContent;
+
         // If this is a draft cell, make it draggable
         if (canDrag) {
           final rackIndex = _draftRackIndices[index] ?? -1;
           return Draggable<_RackDragData>(
-            data: _RackDragData(letter: letter!, rackIndex: rackIndex, fromCellIndex: index),
+            data: _RackDragData(letter: letter, rackIndex: rackIndex, fromCellIndex: index),
             onDragStarted: () {
               // Remove letter from current cell when drag starts
               setState(() {
@@ -695,7 +747,7 @@ class _LinkedGameScreenState extends State<LinkedGameScreen> {
           child: cellContent,
         );
       },
-    );
+    ));
   }
 
   void _updateCellPosition(BuildContext cellContext, int index) {
@@ -774,7 +826,7 @@ class _LinkedGameScreenState extends State<LinkedGameScreen> {
             child: Column(
               children: [
                 Text(
-                  isDragTarget ? 'DROP TO RETURN' : (isMyTurn ? 'YOUR LETTERS' : 'WAITING FOR PARTNER'),
+                  isDragTarget ? 'DROP TO RETURN' : 'YOUR LETTERS',
                   style: TextStyle(
                     fontSize: 10,
                     letterSpacing: 1,
@@ -783,11 +835,18 @@ class _LinkedGameScreenState extends State<LinkedGameScreen> {
                   ),
                 ),
                 const SizedBox(height: 8),
+                // Always show 5 tile slots to prevent layout shift
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  children: List.generate(rack.length, (index) {
-                    final letter = rack[index];
-                    final isUsed = _usedRackIndices.contains(index);
+                  children: List.generate(5, (index) {
+                    // Show actual letter if available, otherwise empty slot
+                    final hasLetter = index < rack.length;
+                    final letter = hasLetter ? rack[index] : '';
+                    final isUsed = hasLetter && _usedRackIndices.contains(index);
+                    // Show empty slot if no letter or if rack is empty (waiting for partner)
+                    if (!hasLetter) {
+                      return _buildEmptyRackSlot();
+                    }
                     return _buildRackTile(letter, index, isUsed, isDisabled: isDisabled);
                   }),
                 ),
@@ -799,22 +858,26 @@ class _LinkedGameScreenState extends State<LinkedGameScreen> {
     );
   }
 
+  /// Empty rack slot - used when waiting for partner or when letter has been placed
+  Widget _buildEmptyRackSlot() {
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 4),
+      width: 42,
+      height: 42,
+      decoration: BoxDecoration(
+        color: const Color(0xFFF5F5F5),
+        border: Border.all(
+          color: const Color(0xFFCCCCCC),
+          width: 2,
+          style: BorderStyle.solid,
+        ),
+      ),
+    );
+  }
+
   Widget _buildRackTile(String letter, int rackIndex, bool isUsed, {bool isDisabled = false}) {
     if (isUsed) {
-      // Empty slot
-      return Container(
-        margin: const EdgeInsets.symmetric(horizontal: 4),
-        width: 42,
-        height: 42,
-        decoration: BoxDecoration(
-          color: const Color(0xFFF5F5F5),
-          border: Border.all(
-            color: const Color(0xFFCCCCCC),
-            width: 2,
-            style: BorderStyle.solid,
-          ),
-        ),
-      );
+      return _buildEmptyRackSlot();
     }
 
     final tile = Container(
@@ -887,7 +950,7 @@ class _LinkedGameScreenState extends State<LinkedGameScreen> {
 
   Widget _buildActionBar() {
     final hasPlacements = _draftPlacements.isNotEmpty;
-    final hintsRemaining = _gameState!.match.player1Vision;
+    final hintsRemaining = _gameState!.myVision;
     final isMyTurn = _gameState!.isMyTurn;
     final partnerName = StorageService().getPartner()?.name ?? 'Partner';
     final isDisabled = !isMyTurn || _showTurnComplete || _isSubmitting;
@@ -1000,19 +1063,56 @@ class _LinkedGameScreenState extends State<LinkedGameScreen> {
 
   Future<void> _useHint() async {
     try {
-      final result = await _service.useHint(_gameState!.match.matchId);
-      if (mounted) {
-        setState(() => _highlightedCells.add(result.cellIndex));
-        _showToast('${result.validCells.length} valid placements highlighted!');
+      // Calculate remaining rack letters (exclude letters already placed as drafts)
+      final fullRack = _gameState!.match.currentRack;
+      final remainingRack = <String>[];
+      for (int i = 0; i < fullRack.length; i++) {
+        if (!_usedRackIndices.contains(i)) {
+          remainingRack.add(fullRack[i]);
+        }
+      }
 
-        // Clear highlights after 2 seconds
-        Future.delayed(const Duration(seconds: 2), () {
-          if (mounted) {
-            setState(() => _highlightedCells.clear());
+      final result = await _service.useHint(
+        _gameState!.match.matchId,
+        remainingRack: remainingRack,
+      );
+      if (mounted) {
+        setState(() {
+          _highlightedCells.clear();
+          // API now returns only cells for remaining rack letters
+          _highlightedCells.addAll(result.validCells);
+
+          // Update hints remaining locally (avoid full reload which clears highlights)
+          if (_gameState != null) {
+            final oldMatch = _gameState!.match;
+            final currentUserId = StorageService().getUser()?.id ?? '';
+            final isPlayer1 = oldMatch.player1Id == currentUserId;
+
+            final updatedMatch = oldMatch.copyWith(
+              player1Vision: isPlayer1 ? result.hintsRemaining : oldMatch.player1Vision,
+              player2Vision: !isPlayer1 ? result.hintsRemaining : oldMatch.player2Vision,
+            );
+
+            _gameState = LinkedGameState(
+              match: updatedMatch,
+              puzzle: _gameState!.puzzle,
+              isMyTurn: _gameState!.isMyTurn,
+              canPlay: _gameState!.canPlay,
+              myScore: _gameState!.myScore,
+              partnerScore: _gameState!.partnerScore,
+              myVision: result.hintsRemaining,
+              partnerVision: _gameState!.partnerVision,
+              progressPercent: _gameState!.progressPercent,
+            );
           }
         });
 
-        await _loadGameState();
+        if (_highlightedCells.isEmpty) {
+          _showToast('No valid placements found for remaining letters');
+        } else {
+          _showToast('${_highlightedCells.length} cells highlighted • Tap to dismiss');
+        }
+        // Hints persist until letter placed or user taps to dismiss
       }
     } catch (e) {
       if (mounted) {
@@ -1048,15 +1148,14 @@ class _LinkedGameScreenState extends State<LinkedGameScreen> {
         // Animate each cell result with staggered timing
         await _animateResults(result);
 
-        // Show turn complete state
+        // Show turn complete state and update state incrementally (no reload)
         setState(() {
           _isSubmitting = false;
           _showTurnComplete = true;
-        });
 
-        // Reload game state after animation
-        await Future.delayed(const Duration(milliseconds: 500));
-        await _loadGameState();
+          // Update game state incrementally from submit result
+          _updateStateFromResult(result);
+        });
       }
     } catch (e) {
       if (mounted) {
@@ -1066,6 +1165,77 @@ class _LinkedGameScreenState extends State<LinkedGameScreen> {
         _showToast('Error: ${e.toString()}');
       }
     }
+  }
+
+  /// Update local game state from submit result (no API reload needed)
+  void _updateStateFromResult(LinkedTurnResult result) {
+    if (_gameState == null) return;
+
+    final oldMatch = _gameState!.match;
+    final newBoardState = Map<String, String>.from(oldMatch.boardState);
+
+    // Determine player info from match and current user
+    final currentUserId = StorageService().getUser()?.id ?? '';
+    final isPlayer1 = oldMatch.player1Id == currentUserId;
+    final partnerId = isPlayer1 ? oldMatch.player2Id : oldMatch.player1Id;
+
+    // Lock correct cells in board state (keys are strings)
+    for (final placement in result.results) {
+      if (placement.correct) {
+        // Get the letter from draft placements
+        final letter = _draftPlacements[placement.cellIndex];
+        if (letter != null) {
+          newBoardState[placement.cellIndex.toString()] = letter;
+        }
+      }
+    }
+
+    // Create updated match with new state
+    final updatedMatch = LinkedMatch(
+      matchId: oldMatch.matchId,
+      puzzleId: oldMatch.puzzleId,
+      status: result.gameComplete ? 'completed' : 'active',
+      boardState: newBoardState,
+      currentRack: [], // Not our turn anymore
+      currentTurnUserId: partnerId, // Switch to partner's turn
+      turnNumber: oldMatch.turnNumber + 1,
+      player1Score: isPlayer1 ? result.newScore : oldMatch.player1Score,
+      player2Score: !isPlayer1 ? result.newScore : oldMatch.player2Score,
+      player1Vision: oldMatch.player1Vision,
+      player2Vision: oldMatch.player2Vision,
+      lockedCellCount: newBoardState.length,
+      totalAnswerCells: oldMatch.totalAnswerCells,
+      player1Id: oldMatch.player1Id,
+      player2Id: oldMatch.player2Id,
+      winnerId: result.winnerId,
+      createdAt: oldMatch.createdAt,
+      completedAt: result.gameComplete ? DateTime.now() : null,
+    );
+
+    // Update game state
+    final newProgressPercent = oldMatch.totalAnswerCells > 0
+        ? (newBoardState.length / oldMatch.totalAnswerCells * 100).round()
+        : 0;
+
+    _gameState = LinkedGameState(
+      match: updatedMatch,
+      puzzle: _gameState!.puzzle,
+      isMyTurn: false, // Just submitted, now partner's turn
+      canPlay: false,
+      myScore: result.newScore,
+      partnerScore: _gameState!.partnerScore,
+      myVision: _gameState!.myVision,
+      partnerVision: _gameState!.partnerVision,
+      progressPercent: newProgressPercent,
+    );
+
+    // Clear draft state
+    _draftPlacements.clear();
+    _draftRackIndices.clear();
+    _usedRackIndices.clear();
+
+    // Check game completion
+    _checkGameCompletion();
   }
 
   Future<void> _animateResults(LinkedTurnResult result) async {
@@ -1083,13 +1253,18 @@ class _LinkedGameScreenState extends State<LinkedGameScreen> {
             points: points,
             showPoints: true,
             justLocked: placement.correct,
+            isShaking: !placement.correct, // Shake incorrect letters
+            isPopping: placement.correct,   // Pop correct letters
           );
         });
       }
+
+      // Wait for shake/pop animation to complete before showing next
+      await Future.delayed(const Duration(milliseconds: 300));
     }
 
     // Wait for last letter animation to complete (1200ms for FloatingPointsWidget)
-    await Future.delayed(const Duration(milliseconds: 1400));
+    await Future.delayed(const Duration(milliseconds: 1100));
 
     // Clear letter animations before showing word bonuses
     if (mounted) {
@@ -1139,12 +1314,16 @@ class _CellAnimationState {
   final int points;
   final bool showPoints;
   final bool justLocked;
+  final bool isShaking; // For incorrect letters
+  final bool isPopping; // For correct letters
 
   _CellAnimationState({
     required this.isCorrect,
     required this.points,
     required this.showPoints,
     required this.justLocked,
+    this.isShaking = false,
+    this.isPopping = false,
   });
 
   _CellAnimationState copyWith({
@@ -1152,12 +1331,16 @@ class _CellAnimationState {
     int? points,
     bool? showPoints,
     bool? justLocked,
+    bool? isShaking,
+    bool? isPopping,
   }) {
     return _CellAnimationState(
       isCorrect: isCorrect ?? this.isCorrect,
       points: points ?? this.points,
       showPoints: showPoints ?? this.showPoints,
       justLocked: justLocked ?? this.justLocked,
+      isShaking: isShaking ?? this.isShaking,
+      isPopping: isPopping ?? this.isPopping,
     );
   }
 }
@@ -1269,6 +1452,196 @@ class _FloatingPointsWidgetState extends State<_FloatingPointsWidget>
               ),
             ),
           ),
+        );
+      },
+    );
+  }
+}
+
+/// Shake animation widget for incorrect letter placements
+class _ShakeWidget extends StatefulWidget {
+  final Widget child;
+  final VoidCallback? onComplete;
+
+  const _ShakeWidget({
+    super.key,
+    required this.child,
+    this.onComplete,
+  });
+
+  @override
+  State<_ShakeWidget> createState() => _ShakeWidgetState();
+}
+
+class _ShakeWidgetState extends State<_ShakeWidget>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> _shakeAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      duration: const Duration(milliseconds: 400),
+      vsync: this,
+    );
+
+    // Shake left-right 4 times
+    _shakeAnimation = TweenSequence<double>([
+      TweenSequenceItem(tween: Tween(begin: 0.0, end: -8.0), weight: 1),
+      TweenSequenceItem(tween: Tween(begin: -8.0, end: 8.0), weight: 2),
+      TweenSequenceItem(tween: Tween(begin: 8.0, end: -6.0), weight: 2),
+      TweenSequenceItem(tween: Tween(begin: -6.0, end: 6.0), weight: 2),
+      TweenSequenceItem(tween: Tween(begin: 6.0, end: -4.0), weight: 2),
+      TweenSequenceItem(tween: Tween(begin: -4.0, end: 4.0), weight: 2),
+      TweenSequenceItem(tween: Tween(begin: 4.0, end: 0.0), weight: 1),
+    ]).animate(CurvedAnimation(
+      parent: _controller,
+      curve: Curves.easeOut,
+    ));
+
+    _controller.forward().then((_) {
+      widget.onComplete?.call();
+    });
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedBuilder(
+      animation: _shakeAnimation,
+      builder: (context, child) {
+        return Transform.translate(
+          offset: Offset(_shakeAnimation.value, 0),
+          child: widget.child,
+        );
+      },
+    );
+  }
+}
+
+/// Pop/scale animation widget for correct letter placements
+class _PopWidget extends StatefulWidget {
+  final Widget child;
+  final VoidCallback? onComplete;
+
+  const _PopWidget({
+    super.key,
+    required this.child,
+    this.onComplete,
+  });
+
+  @override
+  State<_PopWidget> createState() => _PopWidgetState();
+}
+
+class _PopWidgetState extends State<_PopWidget>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> _scaleAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      duration: const Duration(milliseconds: 300),
+      vsync: this,
+    );
+
+    // Pop: scale up to 1.15, then settle to 1.0
+    _scaleAnimation = TweenSequence<double>([
+      TweenSequenceItem(
+        tween: Tween(begin: 1.0, end: 1.15).chain(CurveTween(curve: Curves.easeOut)),
+        weight: 1,
+      ),
+      TweenSequenceItem(
+        tween: Tween(begin: 1.15, end: 1.0).chain(CurveTween(curve: Curves.elasticOut)),
+        weight: 2,
+      ),
+    ]).animate(_controller);
+
+    _controller.forward().then((_) {
+      widget.onComplete?.call();
+    });
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedBuilder(
+      animation: _scaleAnimation,
+      builder: (context, child) {
+        return Transform.scale(
+          scale: _scaleAnimation.value,
+          child: widget.child,
+        );
+      },
+    );
+  }
+}
+
+/// Subtle pulsing animation for hint-highlighted cells
+class _PulseWidget extends StatefulWidget {
+  final Widget child;
+
+  const _PulseWidget({
+    super.key,
+    required this.child,
+  });
+
+  @override
+  State<_PulseWidget> createState() => _PulseWidgetState();
+}
+
+class _PulseWidgetState extends State<_PulseWidget>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> _pulseAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      duration: const Duration(milliseconds: 1200),
+      vsync: this,
+    );
+
+    // Gentle pulse: scale from 1.0 to 1.05 and back
+    _pulseAnimation = Tween<double>(begin: 1.0, end: 1.05).animate(
+      CurvedAnimation(
+        parent: _controller,
+        curve: Curves.easeInOut,
+      ),
+    );
+
+    // Loop the animation
+    _controller.repeat(reverse: true);
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedBuilder(
+      animation: _pulseAnimation,
+      builder: (context, child) {
+        return Transform.scale(
+          scale: _pulseAnimation.value,
+          child: widget.child,
         );
       },
     );

@@ -23,20 +23,26 @@ import 'package:togetherremind/models/daily_quest.dart';
 import 'package:togetherremind/config/dev_config.dart';
 import 'package:togetherremind/config/theme_config.dart';
 import 'package:togetherremind/config/supabase_config.dart';
+import 'package:togetherremind/config/brand/brand_loader.dart';
 import 'package:togetherremind/theme/app_theme.dart';
 import 'package:togetherremind/utils/logger.dart';
 import 'package:togetherremind/models/quest_type_config.dart';
 import 'package:togetherremind/widgets/auth_wrapper.dart';
-import 'firebase_options.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  // Initialize brand configuration FIRST (before any other initialization)
+  BrandLoader().initialize();
+
+  // Set default font from brand configuration
+  ThemeConfig().setFont(BrandLoader().config.typography.defaultSerifFont);
 
   // Initialize Firebase (with try-catch for duplicate app error)
   try {
     if (Firebase.apps.isEmpty) {
       await Firebase.initializeApp(
-        options: DefaultFirebaseOptions.currentPlatform,
+        options: BrandLoader().firebase.toFirebaseOptions(),
       );
     } else {
       Logger.info('Firebase already initialized (Dart side)');
@@ -225,7 +231,7 @@ class _TogetherRemindAppState extends State<TogetherRemindApp> {
       builder: (context, currentFont, child) {
         return MaterialApp(
           navigatorKey: _navigatorKey,
-          title: 'TogetherRemind',
+          title: brand.appName,
           theme: AppTheme.lightTheme,
           debugShowCheckedModeBanner: false,
           home: Builder(
