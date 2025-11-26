@@ -384,6 +384,21 @@ puzzle.currentPlayerId = firstPlayerId;  // Start with preferred player
 - UI: `lib/screens/settings_screen.dart:286-337` (GAME PREFERENCES section)
 - Migration: `api/supabase/migrations/010_first_player_preference.sql`
 
+### 13. Linked Game Clue Cell Rendering
+
+**CRITICAL:** Clue cells are rendered inline in `linked_game_screen.dart:468`, NOT in `clue_cell.dart`.
+
+**Font sizing logic (in `_buildClueCell`):**
+- Emoji: `fontSize: 28`
+- Text ≤4 chars: `fontSize: 16`
+- Text ≤8 chars: `fontSize: 12`
+- Text ≤12 chars or has space: `fontSize: 9`
+- Longer text: `fontSize: 7`
+
+**Files:**
+- Actual renderer: `lib/screens/linked_game_screen.dart:468-526`
+- Unused widget: `lib/widgets/linked/clue_cell.dart` (kept for potential future use)
+
 ---
 
 ## Testing & Debugging
@@ -675,6 +690,8 @@ cd api && ./scripts/test_memory_flip_api.sh
 | `lib/screens/speed_round_screen.dart` | Speed round gameplay |
 | `lib/screens/word_ladder_game_screen.dart` | Word ladder gameplay |
 | `lib/screens/memory_flip_game_screen.dart` | Memory Flip 4×4 card grid |
+| `lib/screens/linked_game_screen.dart` | Linked (arroword) puzzle gameplay |
+| `lib/widgets/linked/clue_cell.dart` | **UNUSED** - clues rendered inline in linked_game_screen.dart |
 
 ### UI Components
 
