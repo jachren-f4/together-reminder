@@ -68,20 +68,20 @@ git revert -m 1 <merge-commit-hash>
 ## Phase 0: Pre-Work & Branch Setup
 
 ### 0.1 Crossword Coordination
-- [ ] Confirm crossword feature is merged to main (or at stable point)
-- [ ] Note any files crossword modified that overlap with white-label work
-- [ ] Identify any hardcoded colors added by crossword (will need migration later)
+- [x] Confirm crossword feature is merged to main (or at stable point) ✅ Nearly done, polish remaining
+- [x] Note any files crossword modified that overlap with white-label work ✅ See WHITE_LABEL_BASELINE.md
+- [x] Identify any hardcoded colors added by crossword (will need migration later) ✅ 98 Colors.* in linked files
 
 ### 0.2 Create Feature Branch
-- [ ] Ensure main branch is up to date: `git checkout main && git pull`
-- [ ] Create feature branch: `git checkout -b feature/white-label`
+- [x] Ensure main branch is up to date: `git checkout main && git pull` ✅
+- [x] Create feature branch: `git checkout -b feature/white-label` ✅ Created 2025-11-26
 - [ ] Push branch to remote: `git push -u origin feature/white-label`
 
 ### 0.3 Document Current State (Baseline)
 - [ ] Take screenshots of current app (for visual regression testing later)
-- [ ] Note current color count: `grep -r "Colors\." app/lib/ --include="*.dart" | wc -l`
-- [ ] Note current asset locations in `pubspec.yaml`
-- [ ] Commit baseline documentation
+- [x] Note current color count: 737 Colors.*, 151 Color(0x...), 426 AppTheme.* ✅
+- [x] Note current asset locations in `pubspec.yaml` ✅ See WHITE_LABEL_BASELINE.md
+- [x] Commit baseline documentation ✅ Commit 61bd6e42
 
 **Phase 0 Checkpoint:** Feature branch created, baseline documented, ready to start
 
