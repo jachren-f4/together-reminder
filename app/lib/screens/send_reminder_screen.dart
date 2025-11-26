@@ -155,7 +155,7 @@ class _SendReminderScreenState extends State<SendReminderScreen> {
     final partner = _storageService.getPartner();
 
     return Container(
-      decoration: const BoxDecoration(
+      decoration: BoxDecoration(
         gradient: AppTheme.backgroundGradient,
       ),
       child: SafeArea(
@@ -246,15 +246,15 @@ class _SendReminderScreenState extends State<SendReminderScreen> {
                                 hintText: 'Type your reminder...',
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(16),
-                                  borderSide: const BorderSide(color: AppTheme.borderLight, width: 2),
+                                  borderSide: BorderSide(color: AppTheme.borderLight, width: 2),
                                 ),
                                 enabledBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(16),
-                                  borderSide: const BorderSide(color: AppTheme.borderLight, width: 2),
+                                  borderSide: BorderSide(color: AppTheme.borderLight, width: 2),
                                 ),
                                 focusedBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(16),
-                                  borderSide: const BorderSide(color: AppTheme.primaryBlack, width: 2),
+                                  borderSide: BorderSide(color: AppTheme.primaryBlack, width: 2),
                                 ),
                                 contentPadding: const EdgeInsets.all(16),
                               ),

@@ -115,7 +115,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     final receivedCount = _storageService.getReceivedReminders().length;
 
     return Container(
-      decoration: const BoxDecoration(
+      decoration: BoxDecoration(
         color: AppTheme.backgroundGray,
       ),
       child: SafeArea(
@@ -282,14 +282,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         icon: '🔔',
                         label: 'Notifications',
                         value: 'Enabled',
-                        trailing: const Icon(Icons.chevron_right, color: AppTheme.textTertiary),
+                        trailing: Icon(Icons.chevron_right, color: AppTheme.textTertiary),
                       ),
                       const SizedBox(height: 12),
                       _SettingRow(
                         icon: '🌙',
                         label: 'Do Not Disturb',
                         value: 'Off',
-                        trailing: const Icon(Icons.chevron_right, color: AppTheme.textTertiary),
+                        trailing: Icon(Icons.chevron_right, color: AppTheme.textTertiary),
                       ),
                     ],
                   ),
@@ -359,7 +359,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                             const SnackBar(content: Text('Export feature coming soon')),
                           );
                         },
-                        child: const _SettingRow(
+                        child: _SettingRow(
                           icon: '💾',
                           label: 'Export Data',
                           value: '',
@@ -400,7 +400,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                             }
                           }
                         },
-                        child: const _SettingRow(
+                        child: _SettingRow(
                           icon: '🗑️',
                           label: 'Clear History',
                           value: '',

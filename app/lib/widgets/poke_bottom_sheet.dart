@@ -119,9 +119,9 @@ class _PokeBottomSheetState extends State<PokeBottomSheet>
     final partnerName = partner?.name ?? 'Partner';
 
     return Container(
-      decoration: const BoxDecoration(
+      decoration: BoxDecoration(
         color: AppTheme.primaryWhite,
-        borderRadius: BorderRadius.vertical(top: Radius.circular(32)),
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(32)),
       ),
       child: SafeArea(
         child: Column(

@@ -71,10 +71,10 @@ class PokeResponseDialog extends StatelessWidget {
       Navigator.of(context).pop();
 
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('🙂 Acknowledged'),
+        SnackBar(
+          content: const Text('🙂 Acknowledged'),
           backgroundColor: AppTheme.textSecondary,
-          duration: Duration(seconds: 2),
+          duration: const Duration(seconds: 2),
         ),
       );
     }

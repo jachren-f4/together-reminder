@@ -1014,11 +1014,11 @@ class _PairingScreenState extends State<PairingScreen>
                 counterText: '',
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
-                  borderSide: const BorderSide(color: AppTheme.borderLight, width: 2),
+                  borderSide: BorderSide(color: AppTheme.borderLight, width: 2),
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
-                  borderSide: const BorderSide(color: AppTheme.primaryBlack, width: 2),
+                  borderSide: BorderSide(color: AppTheme.primaryBlack, width: 2),
                 ),
                 filled: true,
                 fillColor: AppTheme.borderLight,
@@ -1220,7 +1220,7 @@ class _PairingScreenState extends State<PairingScreen>
           child: CircleAvatar(
             backgroundColor: Colors.white,
             child: IconButton(
-              icon: const Icon(Icons.close, color: AppTheme.primaryBlack),
+              icon: Icon(Icons.close, color: AppTheme.primaryBlack),
               onPressed: () {
                 setState(() {
                   _showScanner = false;
@@ -1270,7 +1270,7 @@ class _PairingScreenState extends State<PairingScreen>
           elevation: 0,
         ),
         child: isLoading
-            ? const SizedBox(
+            ? SizedBox(
                 width: 20,
                 height: 20,
                 child: CircularProgressIndicator(
@@ -1297,7 +1297,7 @@ class _PairingScreenState extends State<PairingScreen>
         style: OutlinedButton.styleFrom(
           foregroundColor: AppTheme.textPrimary,
           padding: const EdgeInsets.symmetric(vertical: 16),
-          side: const BorderSide(color: AppTheme.primaryBlack, width: 2),
+          side: BorderSide(color: AppTheme.primaryBlack, width: 2),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12),
           ),
