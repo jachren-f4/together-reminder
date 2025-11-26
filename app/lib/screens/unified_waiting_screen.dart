@@ -8,6 +8,7 @@ import '../services/storage_service.dart';
 import '../services/quiz_service.dart';
 import '../services/you_or_me_service.dart';
 import '../utils/logger.dart';
+import '../config/brand/brand_loader.dart';
 import 'unified_results_screen.dart';
 
 /// Unified waiting screen for all quest types
@@ -299,12 +300,12 @@ class _UnifiedWaitingScreenState extends State<UnifiedWaitingScreen> {
                 FilledButton.icon(
                   onPressed: _isChecking ? null : _checkStatus,
                   icon: _isChecking
-                      ? const SizedBox(
+                      ? SizedBox(
                           width: 16,
                           height: 16,
                           child: CircularProgressIndicator(
                             strokeWidth: 2,
-                            valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                            valueColor: AlwaysStoppedAnimation<Color>(BrandLoader().colors.textOnPrimary),
                           ),
                         )
                       : const Icon(Icons.refresh),

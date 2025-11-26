@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../config/brand/brand_loader.dart';
 import 'answer_cell.dart';
 
 /// Animated rack tile for letter selection
@@ -124,10 +125,10 @@ class _RackTileState extends State<RackTile>
             offset: Offset(0, isFloating ? 4 : 2),
           ),
           if (!isFloating)
-            const BoxShadow(
-              color: Colors.white24,
+            BoxShadow(
+              color: BrandLoader().colors.surface.withValues(alpha: 0.24),
               blurRadius: 1,
-              offset: Offset(-1, -1),
+              offset: const Offset(-1, -1),
             ),
         ],
       ),
@@ -138,11 +139,11 @@ class _RackTileState extends State<RackTile>
             fontSize: size * 0.5,
             fontWeight: FontWeight.w700,
             fontFamily: 'Georgia',
-            color: Colors.black87,
-            shadows: const [
+            color: BrandLoader().colors.textPrimary,
+            shadows: [
               Shadow(
-                color: Colors.white38,
-                offset: Offset(0.5, 0.5),
+                color: BrandLoader().colors.surface.withValues(alpha: 0.38),
+                offset: const Offset(0.5, 0.5),
                 blurRadius: 0,
               ),
             ],
@@ -158,9 +159,9 @@ class _RackTileState extends State<RackTile>
       width: widget.size,
       height: widget.size,
       decoration: BoxDecoration(
-        color: Colors.grey.shade200,
+        color: BrandLoader().colors.surface,
         border: Border.all(
-          color: Colors.grey.shade400,
+          color: BrandLoader().colors.textTertiary,
           width: 1.5,
           style: BorderStyle.solid,
         ),
@@ -168,7 +169,7 @@ class _RackTileState extends State<RackTile>
       ),
       child: CustomPaint(
         painter: _DashedBorderPainter(
-          color: Colors.grey.shade400,
+          color: BrandLoader().colors.textTertiary,
         ),
       ),
     );

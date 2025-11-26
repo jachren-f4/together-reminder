@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import '../../config/brand/brand_loader.dart';
 
 /// Countdown timer widget for next puzzle availability
 /// Displays in "Xh Ym" format
@@ -99,10 +100,10 @@ class _LinkedCountdownTimerState extends State<LinkedCountdownTimer> {
     return Text(
       widget.targetTime != null ? '${widget.prefix}$formattedTime' : '',
       style: widget.textStyle ??
-          const TextStyle(
+          TextStyle(
             fontSize: 12,
             fontStyle: FontStyle.italic,
-            color: Colors.black54,
+            color: BrandLoader().colors.textSecondary,
           ),
     );
   }
@@ -148,10 +149,10 @@ class LinkedCountdownStatic extends StatelessWidget {
     return Text(
       remaining != null ? '$prefix$formattedTime' : '',
       style: textStyle ??
-          const TextStyle(
+          TextStyle(
             fontSize: 12,
             fontStyle: FontStyle.italic,
-            color: Colors.black54,
+            color: BrandLoader().colors.textSecondary,
           ),
     );
   }

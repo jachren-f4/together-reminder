@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../config/brand/brand_loader.dart';
 
 /// Completion badge widget showing a checkmark
 /// Used on completed cards
@@ -8,13 +9,14 @@ class LinkedCompletionBadge extends StatelessWidget {
   final Color checkColor;
   final bool animate;
 
-  const LinkedCompletionBadge({
+  LinkedCompletionBadge({
     super.key,
     this.size = 40,
-    this.backgroundColor = Colors.white,
-    this.checkColor = Colors.black,
+    Color? backgroundColor,
+    Color? checkColor,
     this.animate = true,
-  });
+  })  : backgroundColor = backgroundColor ?? BrandLoader().colors.surface,
+        checkColor = checkColor ?? BrandLoader().colors.textPrimary;
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +28,7 @@ class LinkedCompletionBadge extends StatelessWidget {
         color: backgroundColor,
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.2),
+            color: BrandLoader().colors.textPrimary.withValues(alpha: 0.2),
             blurRadius: 4,
             offset: const Offset(0, 2),
           ),
@@ -50,13 +52,14 @@ class LinkedCompletionBadgeAnimated extends StatefulWidget {
   final Color checkColor;
   final Duration animationDuration;
 
-  const LinkedCompletionBadgeAnimated({
+  LinkedCompletionBadgeAnimated({
     super.key,
     this.size = 40,
-    this.backgroundColor = Colors.white,
-    this.checkColor = Colors.black,
+    Color? backgroundColor,
+    Color? checkColor,
     this.animationDuration = const Duration(milliseconds: 300),
-  });
+  })  : backgroundColor = backgroundColor ?? BrandLoader().colors.surface,
+        checkColor = checkColor ?? BrandLoader().colors.textPrimary;
 
   @override
   State<LinkedCompletionBadgeAnimated> createState() =>

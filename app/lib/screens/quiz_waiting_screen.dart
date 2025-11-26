@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../models/quiz_session.dart';
 import '../services/quiz_service.dart';
 import '../services/storage_service.dart';
+import '../config/brand/brand_loader.dart';
 import 'quiz_results_screen.dart';
 import '../utils/logger.dart';
 
@@ -215,7 +216,7 @@ class _QuizWaitingScreenState extends State<QuizWaitingScreen> {
                       'You',
                       'Answered',
                       theme,
-                      Colors.green,
+                      BrandLoader().colors.success,
                     ),
                     const SizedBox(height: 16),
                     _buildInfoRow(
@@ -223,7 +224,7 @@ class _QuizWaitingScreenState extends State<QuizWaitingScreen> {
                       partner?.name ?? 'Partner',
                       partnerAnswered ? 'Answered' : 'Pending',
                       theme,
-                      partnerAnswered ? Colors.green : Colors.orange,
+                      partnerAnswered ? BrandLoader().colors.success : BrandLoader().colors.warning,
                     ),
                   ],
                 ),

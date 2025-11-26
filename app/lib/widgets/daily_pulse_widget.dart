@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../config/brand/brand_loader.dart';
 
 /// Daily Pulse Widget - Compact card for Activities screen
 /// Shows today's daily pulse question with role indicator and streak
@@ -35,7 +36,7 @@ class DailyPulseWidget extends StatelessWidget {
           borderRadius: BorderRadius.circular(20),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.2),
+              color: BrandLoader().colors.textPrimary.withOpacity(0.2),
               blurRadius: 10,
               offset: const Offset(0, 4),
             ),
@@ -48,12 +49,12 @@ class DailyPulseWidget extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text(
+                Text(
                   '📅 Today\'s Pulse',
                   style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.w600,
-                    color: Colors.white,
+                    color: BrandLoader().colors.textOnPrimary,
                     fontFamily: 'Playfair Display',
                   ),
                 ),
@@ -61,15 +62,15 @@ class DailyPulseWidget extends StatelessWidget {
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                     decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.2),
+                      color: BrandLoader().colors.textOnPrimary.withOpacity(0.2),
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Text(
                       '🔥 $currentStreak days',
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 13,
                         fontWeight: FontWeight.w600,
-                        color: Colors.white,
+                        color: BrandLoader().colors.textOnPrimary,
                       ),
                     ),
                   ),
@@ -82,14 +83,14 @@ class DailyPulseWidget extends StatelessWidget {
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.15),
+                color: BrandLoader().colors.textOnPrimary.withOpacity(0.15),
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Text(
                 _getRoleBadgeText(),
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 14,
-                  color: Colors.white,
+                  color: BrandLoader().colors.textOnPrimary,
                 ),
               ),
             ),
@@ -99,9 +100,9 @@ class DailyPulseWidget extends StatelessWidget {
             // Question Preview or Status Message
             Text(
               _getMainText(),
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 16,
-                color: Colors.white,
+                color: BrandLoader().colors.textOnPrimary,
                 height: 1.5,
               ),
             ),
@@ -114,15 +115,15 @@ class DailyPulseWidget extends StatelessWidget {
               children: [
                 Text(
                   _getCtaText(),
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w600,
-                    color: Colors.white,
+                    color: BrandLoader().colors.textOnPrimary,
                   ),
                 ),
                 Icon(
                   Icons.arrow_forward,
-                  color: Colors.white.withOpacity(0.8),
+                  color: BrandLoader().colors.textOnPrimary.withOpacity(0.8),
                   size: 18,
                 ),
               ],

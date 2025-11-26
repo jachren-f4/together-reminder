@@ -5,6 +5,7 @@ import '../services/storage_service.dart';
 import '../models/linked.dart';
 import '../widgets/linked/answer_cell.dart';
 import 'linked_completion_screen.dart';
+import '../config/brand/brand_loader.dart';
 
 /// Main game screen for Linked (arroword puzzle game)
 /// Design matches mockups/crossword/interactive-gameplay.html
@@ -142,7 +143,7 @@ class _LinkedGameScreenState extends State<LinkedGameScreen> {
       SnackBar(
         content: Text(message),
         behavior: SnackBarBehavior.floating,
-        backgroundColor: Colors.black87,
+        backgroundColor: BrandLoader().colors.textPrimary.withOpacity(0.87),
       ),
     );
   }
@@ -167,7 +168,7 @@ class _LinkedGameScreenState extends State<LinkedGameScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(Icons.error_outline, size: 48, color: Colors.red),
+            Icon(Icons.error_outline, size: 48, color: BrandLoader().colors.error),
             const SizedBox(height: 16),
             Text('Error: $_error'),
             const SizedBox(height: 16),
@@ -192,7 +193,7 @@ class _LinkedGameScreenState extends State<LinkedGameScreen> {
     }
 
     return Container(
-      color: Colors.white,
+      color: BrandLoader().colors.surface,
       child: Column(
         children: [
           _buildHeader(),
@@ -209,9 +210,9 @@ class _LinkedGameScreenState extends State<LinkedGameScreen> {
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-      decoration: const BoxDecoration(
-        color: Colors.white,
-        border: Border(bottom: BorderSide(color: Colors.black, width: 2)),
+      decoration: BoxDecoration(
+        color: BrandLoader().colors.surface,
+        border: Border(bottom: BorderSide(color: BrandLoader().colors.textPrimary, width: 2)),
       ),
       child: Row(
         children: [
@@ -240,8 +241,8 @@ class _LinkedGameScreenState extends State<LinkedGameScreen> {
                   width: 6,
                   height: 6,
                   margin: const EdgeInsets.only(right: 4),
-                  decoration: const BoxDecoration(
-                    color: Color(0xFF4CAF50),
+                  decoration: BoxDecoration(
+                    color: BrandLoader().colors.success,
                     shape: BoxShape.circle,
                   ),
                 ),
@@ -260,8 +261,8 @@ class _LinkedGameScreenState extends State<LinkedGameScreen> {
                   width: 6,
                   height: 6,
                   margin: const EdgeInsets.only(right: 4),
-                  decoration: const BoxDecoration(
-                    color: Color(0xFF4CAF50),
+                  decoration: BoxDecoration(
+                    color: BrandLoader().colors.success,
                     shape: BoxShape.circle,
                   ),
                 ),
@@ -398,11 +399,11 @@ class _LinkedGameScreenState extends State<LinkedGameScreen> {
                   child: Container(
                     padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
                     decoration: BoxDecoration(
-                      color: const Color(0xFF4CAF50),
+                      color: BrandLoader().colors.success,
                       borderRadius: BorderRadius.circular(8),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.green.withValues(alpha: 0.4),
+                          color: BrandLoader().colors.success.withOpacity(0.4),
                           blurRadius: 12,
                           spreadRadius: 2,
                         ),
@@ -410,10 +411,10 @@ class _LinkedGameScreenState extends State<LinkedGameScreen> {
                     ),
                     child: Text(
                       '${word.word} +${word.bonus}',
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
-                        color: Colors.white,
+                        color: BrandLoader().colors.textOnPrimary,
                         fontFamily: 'Georgia',
                       ),
                     ),
@@ -430,12 +431,18 @@ class _LinkedGameScreenState extends State<LinkedGameScreen> {
   Widget _buildCell(int index, LinkedPuzzle puzzle, Map<String, String> boardState) {
     // Use cellTypes from API to determine cell type
     if (puzzle.isVoidCell(index)) {
-      return Container(color: const Color(0xFF222222));
+      return Container(color: BrandLoader().colors.textPrimary.withOpacity(0.13));
     }
 
     if (puzzle.isClueCell(index)) {
-      final clueNum = puzzle.gridnums[index];
-      final clue = puzzle.clues[clueNum.toString()];
+      // Check if this is a split clue cell (two clues pointing to same cell)
+      final splitClues = puzzle.getSplitClues(index);
+      if (splitClues != null) {
+        return _buildSplitClueCell(splitClues[0], splitClues[1]);
+      }
+
+      // Regular single clue cell - use target_index based lookup
+      final clue = puzzle.getClueAtCell(index);
       if (clue != null) {
         return _buildClueCell(clue);
       }
@@ -508,7 +515,7 @@ class _LinkedGameScreenState extends State<LinkedGameScreen> {
                   fontWeight: FontWeight.w800,
                   letterSpacing: 0,
                   height: 1.05,
-                  color: const Color(0xFF111111),
+                  color: BrandLoader().colors.textPrimary,
                 ),
               ),
             ),
@@ -519,9 +526,9 @@ class _LinkedGameScreenState extends State<LinkedGameScreen> {
               top: isDown ? null : 0,
               child: Text(
                 isDown ? '▼' : '▶',
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 6,
-                  color: Color(0xFF666666),
+                  color: BrandLoader().colors.textSecondary,
                 ),
               ),
             ),
@@ -537,6 +544,129 @@ class _LinkedGameScreenState extends State<LinkedGameScreen> {
       builder: (context) => AlertDialog(
         title: Text('Clue ${clue.number}'),
         content: Text(clue.content),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('OK'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// Build a split clue cell containing two clues (across on top, down on bottom)
+  Widget _buildSplitClueCell(LinkedClue acrossClue, LinkedClue downClue) {
+    return GestureDetector(
+      onTap: () => _showSplitClueDialog(acrossClue, downClue),
+      child: Container(
+        color: const Color(0xFFE8E8E8),
+        child: Column(
+          children: [
+            // Top half: across clue
+            Expanded(
+              child: _buildSplitClueHalf(acrossClue, isTop: true),
+            ),
+            // Divider line
+            Container(
+              height: 1,
+              color: BrandLoader().colors.textSecondary.withOpacity(0.4),
+            ),
+            // Bottom half: down clue
+            Expanded(
+              child: _buildSplitClueHalf(downClue, isTop: false),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  /// Build one half of a split clue cell
+  Widget _buildSplitClueHalf(LinkedClue clue, {required bool isTop}) {
+    final isDown = clue.arrow == 'down';
+    final displayText = clue.content.toUpperCase();
+
+    // Smaller font sizes for split cells (half the height)
+    final textLength = displayText.length;
+    double fontSize;
+    if (clue.type == 'emoji') {
+      fontSize = 14; // Smaller emoji for split cell
+    } else if (textLength <= 4) {
+      fontSize = 10;
+    } else if (textLength <= 8) {
+      fontSize = 8;
+    } else {
+      fontSize = 6;
+    }
+
+    return Stack(
+      children: [
+        // Centered content
+        Center(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 2),
+            child: Text(
+              clue.type == 'emoji' ? clue.content : displayText,
+              textAlign: TextAlign.center,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(
+                fontFamily: clue.type == 'emoji' ? null : 'Arial',
+                fontSize: fontSize,
+                fontWeight: FontWeight.w800,
+                letterSpacing: 0,
+                height: 1.05,
+                color: BrandLoader().colors.textPrimary,
+              ),
+            ),
+          ),
+        ),
+        // Arrow indicator
+        Positioned(
+          bottom: isDown ? 0 : null,
+          top: isDown ? null : 0,
+          right: isDown ? null : 0,
+          left: isDown ? 0 : null,
+          child: Padding(
+            padding: const EdgeInsets.all(1),
+            child: Text(
+              isDown ? '▼' : '▶',
+              style: TextStyle(
+                fontSize: 5,
+                color: BrandLoader().colors.textSecondary,
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  /// Show dialog with both clues for a split cell
+  void _showSplitClueDialog(LinkedClue acrossClue, LinkedClue downClue) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Split Clue'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                const Text('▶ ', style: TextStyle(fontWeight: FontWeight.bold)),
+                Expanded(child: Text(acrossClue.content)),
+              ],
+            ),
+            const SizedBox(height: 12),
+            Row(
+              children: [
+                const Text('▼ ', style: TextStyle(fontWeight: FontWeight.bold)),
+                Expanded(child: Text(downClue.content)),
+              ],
+            ),
+          ],
+        ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
@@ -612,28 +742,28 @@ class _LinkedGameScreenState extends State<LinkedGameScreen> {
         final isDragTarget = candidateData.isNotEmpty;
 
         Color bgColor;
-        Color textColor = Colors.black87;
+        Color textColor = BrandLoader().colors.textPrimary.withOpacity(0.87);
         Color? glowColor;
         Color? borderColor;
 
         switch (state) {
           case AnswerCellState.empty:
-            bgColor = isDragTarget ? const Color(0xFFE3F2FD) : Colors.white;
+            bgColor = isDragTarget ? BrandLoader().colors.info.withOpacity(0.1) : BrandLoader().colors.surface;
             // Highlight hint cells with light blue background + glow
             if (isHighlighted) {
-              bgColor = const Color(0xFFBBDEFB); // Light blue
-              borderColor = const Color(0xFF2196F3); // Blue border
-              glowColor = const Color(0xFF2196F3); // Blue glow for pulse effect
+              bgColor = BrandLoader().colors.info.withOpacity(0.2);
+              borderColor = BrandLoader().colors.info;
+              glowColor = BrandLoader().colors.info;
             }
           case AnswerCellState.draft:
-            bgColor = isDragTarget ? const Color(0xFFE3F2FD) : const Color(0xFFFFEE58);
+            bgColor = isDragTarget ? BrandLoader().colors.info.withOpacity(0.1) : BrandLoader().colors.warning.withOpacity(0.3);
           case AnswerCellState.locked:
-            bgColor = const Color(0xFF81C784);
-            textColor = const Color(0xFF1B5E20);
-            if (showGlow) glowColor = Colors.green;
+            bgColor = BrandLoader().colors.success.withOpacity(0.5);
+            textColor = BrandLoader().colors.success.withOpacity(0.9);
+            if (showGlow) glowColor = BrandLoader().colors.success;
           case AnswerCellState.incorrect:
-            bgColor = const Color(0xFFEF5350);
-            textColor = Colors.white;
+            bgColor = BrandLoader().colors.error.withOpacity(0.7);
+            textColor = BrandLoader().colors.textOnPrimary;
         }
 
         // Store cell position for floating points animation
@@ -646,7 +776,7 @@ class _LinkedGameScreenState extends State<LinkedGameScreen> {
           decoration: BoxDecoration(
             color: bgColor,
             border: isDragTarget
-                ? Border.all(color: const Color(0xFF2196F3), width: 2)
+                ? Border.all(color: BrandLoader().colors.info, width: 2)
                 : borderColor != null
                     ? Border.all(color: borderColor, width: 3)
                     : null,
@@ -707,11 +837,11 @@ class _LinkedGameScreenState extends State<LinkedGameScreen> {
                 width: 42,
                 height: 42,
                 decoration: BoxDecoration(
-                  color: const Color(0xFFFFEE58),
-                  border: Border.all(color: Colors.black, width: 2),
+                  color: BrandLoader().colors.warning.withOpacity(0.3),
+                  border: Border.all(color: BrandLoader().colors.textPrimary, width: 2),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withValues(alpha: 0.3),
+                      color: BrandLoader().colors.textPrimary.withOpacity(0.3),
                       blurRadius: 12,
                       offset: const Offset(0, 4),
                     ),
@@ -720,10 +850,11 @@ class _LinkedGameScreenState extends State<LinkedGameScreen> {
                 child: Center(
                   child: Text(
                     letter,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.w700,
                       fontFamily: 'Georgia',
+                      color: BrandLoader().colors.textPrimary,
                     ),
                   ),
                 ),
@@ -731,8 +862,8 @@ class _LinkedGameScreenState extends State<LinkedGameScreen> {
             ),
             childWhenDragging: Container(
               decoration: BoxDecoration(
-                color: Colors.white,
-                border: Border.all(color: const Color(0xFFCCCCCC), width: 1),
+                color: BrandLoader().colors.surface,
+                border: Border.all(color: BrandLoader().colors.borderLight, width: 1),
               ),
             ),
             child: cellContent,
@@ -777,9 +908,9 @@ class _LinkedGameScreenState extends State<LinkedGameScreen> {
   /// Bottom section: Rack + Action buttons (always visible to prevent layout shifts)
   Widget _buildBottomSection() {
     return Container(
-      decoration: const BoxDecoration(
-        color: Colors.white,
-        border: Border(top: BorderSide(color: Colors.black, width: 2)),
+      decoration: BoxDecoration(
+        color: BrandLoader().colors.surface,
+        border: Border(top: BorderSide(color: BrandLoader().colors.textPrimary, width: 2)),
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -815,10 +946,10 @@ class _LinkedGameScreenState extends State<LinkedGameScreen> {
         return Container(
           padding: const EdgeInsets.all(12),
           decoration: BoxDecoration(
-            color: isDragTarget ? const Color(0xFFE3F2FD) : null,
+            color: isDragTarget ? BrandLoader().colors.info.withOpacity(0.1) : null,
             border: Border(
-              bottom: const BorderSide(color: Color(0xFFE0E0E0)),
-              top: isDragTarget ? const BorderSide(color: Color(0xFF2196F3), width: 2) : BorderSide.none,
+              bottom: BorderSide(color: BrandLoader().colors.divider),
+              top: isDragTarget ? BorderSide(color: BrandLoader().colors.info, width: 2) : BorderSide.none,
             ),
           ),
           child: Opacity(
@@ -830,7 +961,7 @@ class _LinkedGameScreenState extends State<LinkedGameScreen> {
                   style: TextStyle(
                     fontSize: 10,
                     letterSpacing: 1,
-                    color: isDragTarget ? const Color(0xFF2196F3) : const Color(0xFF666666),
+                    color: isDragTarget ? BrandLoader().colors.info : BrandLoader().colors.textSecondary,
                     fontWeight: isDragTarget ? FontWeight.bold : FontWeight.normal,
                   ),
                 ),
@@ -865,9 +996,9 @@ class _LinkedGameScreenState extends State<LinkedGameScreen> {
       width: 42,
       height: 42,
       decoration: BoxDecoration(
-        color: const Color(0xFFF5F5F5),
+        color: BrandLoader().colors.background,
         border: Border.all(
-          color: const Color(0xFFCCCCCC),
+          color: BrandLoader().colors.borderLight,
           width: 2,
           style: BorderStyle.solid,
         ),
@@ -885,16 +1016,17 @@ class _LinkedGameScreenState extends State<LinkedGameScreen> {
       width: 42,
       height: 42,
       decoration: BoxDecoration(
-        color: const Color(0xFFFFF8E1),
-        border: Border.all(color: Colors.black, width: 2),
+        color: BrandLoader().colors.warning.withOpacity(0.15),
+        border: Border.all(color: BrandLoader().colors.textPrimary, width: 2),
       ),
       child: Center(
         child: Text(
           letter,
-          style: const TextStyle(
+          style: TextStyle(
             fontSize: 20,
             fontWeight: FontWeight.w700,
             fontFamily: 'Georgia',
+            color: BrandLoader().colors.textPrimary,
           ),
         ),
       ),
@@ -913,11 +1045,11 @@ class _LinkedGameScreenState extends State<LinkedGameScreen> {
           width: 42,
           height: 42,
           decoration: BoxDecoration(
-            color: const Color(0xFFFFF8E1),
-            border: Border.all(color: Colors.black, width: 2),
+            color: BrandLoader().colors.warning.withOpacity(0.15),
+            border: Border.all(color: BrandLoader().colors.textPrimary, width: 2),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withValues(alpha: 0.3),
+                color: BrandLoader().colors.textPrimary.withOpacity(0.3),
                 blurRadius: 12,
                 offset: const Offset(0, 4),
               ),
@@ -926,10 +1058,11 @@ class _LinkedGameScreenState extends State<LinkedGameScreen> {
           child: Center(
             child: Text(
               letter,
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.w700,
                 fontFamily: 'Georgia',
+                color: BrandLoader().colors.textPrimary,
               ),
             ),
           ),
@@ -940,8 +1073,8 @@ class _LinkedGameScreenState extends State<LinkedGameScreen> {
         width: 42,
         height: 42,
         decoration: BoxDecoration(
-          color: const Color(0xFFF5F5F5),
-          border: Border.all(color: const Color(0xFFCCCCCC), width: 2),
+          color: BrandLoader().colors.background,
+          border: Border.all(color: BrandLoader().colors.borderLight, width: 2),
         ),
       ),
       child: tile,
@@ -964,23 +1097,23 @@ class _LinkedGameScreenState extends State<LinkedGameScreen> {
     if (_isSubmitting) {
       buttonText = 'SUBMITTING...';
       buttonEnabled = false;
-      buttonBgColor = Colors.grey;
-      buttonTextColor = Colors.white;
+      buttonBgColor = BrandLoader().colors.disabled;
+      buttonTextColor = BrandLoader().colors.textOnPrimary;
     } else if (_showTurnComplete || !isMyTurn) {
       buttonText = "${partnerName.toUpperCase()}'S TURN";
       buttonEnabled = false;
-      buttonBgColor = const Color(0xFFE8E8E8);
-      buttonTextColor = const Color(0xFF666666);
+      buttonBgColor = BrandLoader().colors.background;
+      buttonTextColor = BrandLoader().colors.textSecondary;
     } else if (hasPlacements) {
       buttonText = 'SUBMIT TURN';
       buttonEnabled = true;
-      buttonBgColor = Colors.black;
-      buttonTextColor = Colors.white;
+      buttonBgColor = BrandLoader().colors.textPrimary;
+      buttonTextColor = BrandLoader().colors.textOnPrimary;
     } else {
       buttonText = 'PLACE LETTERS';
       buttonEnabled = false;
-      buttonBgColor = const Color(0xFFE0E0E0);
-      buttonTextColor = Colors.grey;
+      buttonBgColor = BrandLoader().colors.divider;
+      buttonTextColor = BrandLoader().colors.disabled;
     }
 
     return Padding(
@@ -996,8 +1129,8 @@ class _LinkedGameScreenState extends State<LinkedGameScreen> {
                 child: Container(
                   padding: const EdgeInsets.symmetric(vertical: 12),
                   decoration: BoxDecoration(
-                    color: Colors.white,
-                    border: Border.all(color: isDisabled ? Colors.grey : Colors.black),
+                    color: BrandLoader().colors.surface,
+                    border: Border.all(color: isDisabled ? BrandLoader().colors.disabled : BrandLoader().colors.textPrimary),
                   ),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -1011,7 +1144,7 @@ class _LinkedGameScreenState extends State<LinkedGameScreen> {
                           fontFamily: 'Georgia',
                           fontWeight: FontWeight.w600,
                           letterSpacing: 1,
-                          color: (hintsRemaining > 0 && !isDisabled) ? Colors.black : Colors.grey,
+                          color: (hintsRemaining > 0 && !isDisabled) ? BrandLoader().colors.textPrimary : BrandLoader().colors.disabled,
                         ),
                       ),
                       const SizedBox(width: 4),
@@ -1020,7 +1153,7 @@ class _LinkedGameScreenState extends State<LinkedGameScreen> {
                         style: TextStyle(
                           fontSize: 9,
                           fontFamily: 'Georgia',
-                          color: (hintsRemaining > 0 && !isDisabled) ? Colors.black54 : Colors.grey,
+                          color: (hintsRemaining > 0 && !isDisabled) ? BrandLoader().colors.textSecondary : BrandLoader().colors.disabled,
                         ),
                       ),
                     ],
@@ -1039,7 +1172,7 @@ class _LinkedGameScreenState extends State<LinkedGameScreen> {
                 padding: const EdgeInsets.symmetric(vertical: 12),
                 decoration: BoxDecoration(
                   color: buttonBgColor,
-                  border: Border.all(color: Colors.black),
+                  border: Border.all(color: BrandLoader().colors.textPrimary),
                 ),
                 child: Center(
                   child: Text(
@@ -1428,13 +1561,13 @@ class _FloatingPointsWidgetState extends State<_FloatingPointsWidget>
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                 decoration: BoxDecoration(
                   color: widget.isCorrect
-                      ? const Color(0xFF4CAF50)
-                      : const Color(0xFFEF5350),
+                      ? BrandLoader().colors.success
+                      : BrandLoader().colors.error,
                   borderRadius: BorderRadius.circular(12),
                   boxShadow: [
                     BoxShadow(
-                      color: (widget.isCorrect ? Colors.green : Colors.red)
-                          .withValues(alpha: 0.4),
+                      color: (widget.isCorrect ? BrandLoader().colors.success : BrandLoader().colors.error)
+                          .withOpacity(0.4),
                       blurRadius: 8,
                       offset: const Offset(0, 2),
                     ),
@@ -1442,10 +1575,10 @@ class _FloatingPointsWidgetState extends State<_FloatingPointsWidget>
                 ),
                 child: Text(
                   widget.isCorrect ? '+${widget.points}' : '✗',
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
-                    color: Colors.white,
+                    color: BrandLoader().colors.textOnPrimary,
                     fontFamily: 'Georgia',
                   ),
                 ),

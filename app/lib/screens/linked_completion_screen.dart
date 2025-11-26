@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:confetti/confetti.dart';
 import '../models/linked.dart';
+import '../services/love_point_service.dart';
+import '../services/storage_service.dart';
+import '../config/brand/brand_loader.dart';
 
 /// Completion screen for Linked game
 ///
@@ -57,6 +60,29 @@ class _LinkedCompletionScreenState extends State<LinkedCompletionScreen>
     // Start animations
     _confettiController.play();
     _animationController.forward();
+
+    // Award LP for completing the puzzle (with deduplication)
+    _awardCompletionLP();
+  }
+
+  Future<void> _awardCompletionLP() async {
+    // Use match ID as award key to prevent duplicate LP awards
+    final awardId = 'linked_completion_${widget.match.matchId}';
+    final appliedAwards = StorageService().getAppliedLPAwards();
+
+    if (appliedAwards.contains(awardId)) {
+      // Already awarded LP for this match
+      return;
+    }
+
+    // Award 30 LP for completing the puzzle
+    await LovePointService.awardPoints(
+      amount: 30,
+      reason: 'Linked puzzle completed!',
+    );
+
+    // Mark as awarded to prevent duplicates
+    await StorageService().markLPAwardAsApplied(awardId);
   }
 
   @override
@@ -81,7 +107,7 @@ class _LinkedCompletionScreenState extends State<LinkedCompletionScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: BrandLoader().colors.surface,
       body: Stack(
         children: [
           // Main content
@@ -133,11 +159,11 @@ class _LinkedCompletionScreenState extends State<LinkedCompletionScreen>
               numberOfParticles: 25,
               gravity: 0.1,
               shouldLoop: false,
-              colors: const [
-                Colors.black,
-                Colors.black87,
-                Colors.black54,
-                Colors.grey,
+              colors: [
+                BrandLoader().colors.textPrimary,
+                BrandLoader().colors.textPrimary.withOpacity(0.87),
+                BrandLoader().colors.textPrimary.withOpacity(0.54),
+                BrandLoader().colors.disabled,
               ],
             ),
           ),
@@ -157,15 +183,15 @@ class _LinkedCompletionScreenState extends State<LinkedCompletionScreen>
             height: 120,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              border: Border.all(color: Colors.black, width: 4),
+              border: Border.all(color: BrandLoader().colors.textPrimary, width: 4),
             ),
-            child: const Center(
+            child: Center(
               child: Text(
                 '✓',
                 style: TextStyle(
                   fontSize: 48,
                   fontWeight: FontWeight.w300,
-                  color: Colors.black,
+                  color: BrandLoader().colors.textPrimary,
                 ),
               ),
             ),
@@ -178,13 +204,13 @@ class _LinkedCompletionScreenState extends State<LinkedCompletionScreen>
   Widget _buildTitle() {
     return FadeTransition(
       opacity: _fadeAnimation,
-      child: const Text(
+      child: Text(
         'COMPLETE',
         style: TextStyle(
           fontSize: 32,
           fontWeight: FontWeight.w400,
           letterSpacing: 4,
-          color: Colors.black,
+          color: BrandLoader().colors.textPrimary,
           fontFamily: 'Georgia',
         ),
       ),
@@ -199,7 +225,7 @@ class _LinkedCompletionScreenState extends State<LinkedCompletionScreen>
         style: TextStyle(
           fontSize: 14,
           letterSpacing: 2,
-          color: Colors.grey.shade600,
+          color: BrandLoader().colors.textSecondary,
         ),
       ),
     );
@@ -236,12 +262,12 @@ class _LinkedCompletionScreenState extends State<LinkedCompletionScreen>
       margin: isHighlighted ? const EdgeInsets.symmetric(horizontal: 0) : null,
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
       decoration: BoxDecoration(
-        color: isHighlighted ? Colors.black : Colors.transparent,
+        color: isHighlighted ? BrandLoader().colors.textPrimary : Colors.transparent,
         border: isHighlighted
             ? null
             : Border(
                 bottom: BorderSide(
-                  color: Colors.grey.shade300,
+                  color: BrandLoader().colors.divider,
                   width: 1,
                 ),
               ),
@@ -257,7 +283,7 @@ class _LinkedCompletionScreenState extends State<LinkedCompletionScreen>
                 style: TextStyle(
                   fontSize: 14,
                   letterSpacing: 1,
-                  color: isHighlighted ? Colors.white : Colors.black,
+                  color: isHighlighted ? BrandLoader().colors.textOnPrimary : BrandLoader().colors.textPrimary,
                 ),
               ),
               if (isHighlighted)
@@ -266,7 +292,7 @@ class _LinkedCompletionScreenState extends State<LinkedCompletionScreen>
                   style: TextStyle(
                     fontSize: 10,
                     letterSpacing: 1,
-                    color: Colors.white.withOpacity(0.7),
+                    color: BrandLoader().colors.textOnPrimary.withOpacity(0.7),
                   ),
                 ),
             ],
@@ -276,7 +302,7 @@ class _LinkedCompletionScreenState extends State<LinkedCompletionScreen>
             style: TextStyle(
               fontSize: 24,
               fontWeight: FontWeight.w700,
-              color: isHighlighted ? Colors.white : Colors.black,
+              color: isHighlighted ? BrandLoader().colors.textOnPrimary : BrandLoader().colors.textPrimary,
             ),
           ),
         ],
@@ -290,9 +316,9 @@ class _LinkedCompletionScreenState extends State<LinkedCompletionScreen>
       child: Container(
         margin: const EdgeInsets.only(top: 32),
         padding: const EdgeInsets.only(top: 24),
-        decoration: const BoxDecoration(
+        decoration: BoxDecoration(
           border: Border(
-            top: BorderSide(color: Colors.black, width: 2),
+            top: BorderSide(color: BrandLoader().colors.textPrimary, width: 2),
           ),
         ),
         child: Row(
@@ -323,7 +349,7 @@ class _LinkedCompletionScreenState extends State<LinkedCompletionScreen>
           style: TextStyle(
             fontSize: 10,
             letterSpacing: 1,
-            color: Colors.grey.shade600,
+            color: BrandLoader().colors.textSecondary,
           ),
         ),
       ],
@@ -345,8 +371,8 @@ class _LinkedCompletionScreenState extends State<LinkedCompletionScreen>
             Navigator.of(context).popUntil((route) => route.isFirst);
           },
           style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.black,
-            foregroundColor: Colors.white,
+            backgroundColor: BrandLoader().colors.textPrimary,
+            foregroundColor: BrandLoader().colors.textOnPrimary,
             padding: const EdgeInsets.symmetric(vertical: 16),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(0),

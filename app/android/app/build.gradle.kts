@@ -22,14 +22,28 @@ android {
     }
 
     defaultConfig {
-        // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
+        // Application ID is set per flavor below
         applicationId = "com.togetherremind.togetherremind"
-        // You can update the following values to match your application needs.
-        // For more information, see: https://flutter.dev/to/review-gradle-config.
         minSdk = flutter.minSdkVersion
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
+    }
+
+    // White-label support: Each brand is a separate flavor
+    flavorDimensions += "brand"
+    productFlavors {
+        create("togetherremind") {
+            dimension = "brand"
+            applicationId = "com.togetherremind.togetherremind"
+            resValue("string", "app_name", "TogetherRemind")
+        }
+        // Future brands - uncomment when ready
+        // create("holycouples") {
+        //     dimension = "brand"
+        //     applicationId = "com.togetherremind.holycouples"
+        //     resValue("string", "app_name", "Holy Couples")
+        // }
     }
 
     buildTypes {

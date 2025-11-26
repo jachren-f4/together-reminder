@@ -4,6 +4,7 @@ import 'package:togetherremind/services/storage_service.dart';
 import 'package:togetherremind/services/reminder_service.dart';
 import 'package:togetherremind/theme/app_theme.dart';
 import 'package:togetherremind/utils/logger.dart';
+import 'package:togetherremind/config/brand/brand_loader.dart';
 import 'package:uuid/uuid.dart';
 
 class SendReminderScreen extends StatefulWidget {
@@ -185,7 +186,7 @@ class _SendReminderScreenState extends State<SendReminderScreen> {
                       borderRadius: BorderRadius.circular(24),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.black.withAlpha((0.06 * 255).round()),
+                          color: BrandLoader().colors.textPrimary.withAlpha((0.06 * 255).round()),
                           blurRadius: 6,
                           offset: const Offset(0, 2),
                         ),
@@ -222,7 +223,7 @@ class _SendReminderScreenState extends State<SendReminderScreen> {
                           borderRadius: BorderRadius.circular(20),
                           boxShadow: [
                             BoxShadow(
-                              color: Colors.black.withAlpha((0.06 * 255).round()),
+                              color: BrandLoader().colors.textPrimary.withAlpha((0.06 * 255).round()),
                               blurRadius: 8,
                               offset: const Offset(0, 2),
                             ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../config/brand/brand_loader.dart';
 
 /// Partner badge widget showing partner's initial in a circle with name
 /// Used on card when it's partner's turn
@@ -9,14 +10,15 @@ class LinkedPartnerBadge extends StatelessWidget {
   final Color backgroundColor;
   final Color textColor;
 
-  const LinkedPartnerBadge({
+  LinkedPartnerBadge({
     super.key,
     required this.partnerName,
     this.partnerEmoji,
     this.size = 32,
-    this.backgroundColor = const Color(0xFFE0E0E0),
-    this.textColor = Colors.black87,
-  });
+    Color? backgroundColor,
+    Color? textColor,
+  })  : backgroundColor = backgroundColor ?? const Color(0xFFE0E0E0),
+        textColor = textColor ?? BrandLoader().colors.textPrimary;
 
   String get _initial {
     if (partnerEmoji != null && partnerEmoji!.isNotEmpty) {
@@ -50,8 +52,8 @@ class LinkedPartnerBadge extends StatelessWidget {
             height: size,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              color: Colors.white,
-              border: Border.all(color: Colors.black26, width: 1),
+              color: BrandLoader().colors.surface,
+              border: Border.all(color: BrandLoader().colors.textTertiary.withValues(alpha: 0.5), width: 1),
             ),
             child: Center(
               child: Text(

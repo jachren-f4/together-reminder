@@ -3,6 +3,7 @@ import '../models/you_or_me.dart';
 import '../services/storage_service.dart';
 import '../services/you_or_me_service.dart';
 import '../utils/logger.dart';
+import '../config/brand/brand_loader.dart';
 import 'you_or_me_results_screen.dart';
 import 'you_or_me_waiting_screen.dart';
 
@@ -168,7 +169,7 @@ class _YouOrMeGameScreenState extends State<YouOrMeGameScreen>
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Error submitting answers: $e'),
-          backgroundColor: Colors.red,
+          backgroundColor: BrandLoader().colors.error,
         ),
       );
       setState(() => _isSubmitting = false);
@@ -204,7 +205,7 @@ class _YouOrMeGameScreenState extends State<YouOrMeGameScreen>
         backgroundColor: const Color(0xFFFAFAFA),
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black),
+          icon: Icon(Icons.arrow_back, color: BrandLoader().colors.textPrimary),
           onPressed: () => Navigator.of(context).pop(),
         ),
       ),
@@ -221,7 +222,7 @@ class _YouOrMeGameScreenState extends State<YouOrMeGameScreen>
                     child: LinearProgressIndicator(
                       value: progress,
                       backgroundColor: const Color(0xFFF0F0F0),
-                      valueColor: const AlwaysStoppedAnimation<Color>(Colors.black),
+                      valueColor: AlwaysStoppedAnimation<Color>(BrandLoader().colors.textPrimary),
                       minHeight: 6,
                     ),
                   ),
@@ -325,9 +326,9 @@ class _YouOrMeGameScreenState extends State<YouOrMeGameScreen>
           // Loading overlay
           if (_isSubmitting)
             Container(
-              color: Colors.black.withOpacity(0.5),
-              child: const Center(
-                child: CircularProgressIndicator(color: Colors.white),
+              color: BrandLoader().colors.textPrimary.withOpacity(0.5),
+              child: Center(
+                child: CircularProgressIndicator(color: BrandLoader().colors.textOnPrimary),
               ),
             ),
         ],
@@ -342,11 +343,11 @@ class _YouOrMeGameScreenState extends State<YouOrMeGameScreen>
         color: const Color(0xFFFFFEFD),
         border: Border.all(color: const Color(0xFFF0F0F0), width: 2),
         borderRadius: BorderRadius.circular(24),
-        boxShadow: const [
+        boxShadow: [
           BoxShadow(
-            color: Colors.black12,
+            color: BrandLoader().colors.textPrimary.withOpacity(0.12),
             blurRadius: 12,
-            offset: Offset(0, 4),
+            offset: const Offset(0, 4),
           ),
         ],
       ),

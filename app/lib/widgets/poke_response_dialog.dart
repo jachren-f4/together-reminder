@@ -4,6 +4,7 @@ import 'package:togetherremind/services/poke_service.dart';
 import 'package:togetherremind/services/poke_animation_service.dart';
 import 'package:togetherremind/services/storage_service.dart';
 import 'package:togetherremind/theme/app_theme.dart';
+import '../config/brand/brand_loader.dart';
 
 class PokeResponseDialog extends StatelessWidget {
   final String pokeId;
@@ -36,7 +37,7 @@ class PokeResponseDialog extends StatelessWidget {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(success ? '❤️ Poked back!' : '❌ Failed to poke back'),
-          backgroundColor: success ? AppTheme.accentGreen : Colors.red,
+          backgroundColor: success ? AppTheme.accentGreen : BrandLoader().colors.error,
           duration: const Duration(seconds: 2),
         ),
       );
@@ -93,7 +94,7 @@ class PokeResponseDialog extends StatelessWidget {
             borderRadius: BorderRadius.circular(24),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withAlpha((0.15 * 255).round()),
+                color: BrandLoader().colors.textPrimary.withAlpha((0.15 * 255).round()),
                 blurRadius: 20,
                 offset: const Offset(0, 10),
               ),
@@ -210,7 +211,7 @@ class _ResponseButton extends StatelessWidget {
               style: AppTheme.bodyFont.copyWith(
                 fontSize: 14,
                 fontWeight: FontWeight.w600,
-                color: isPrimary ? Colors.white : AppTheme.textPrimary,
+                color: isPrimary ? BrandLoader().colors.textOnPrimary : AppTheme.textPrimary,
               ),
             ),
           ],
