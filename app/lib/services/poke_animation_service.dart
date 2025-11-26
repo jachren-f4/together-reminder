@@ -148,7 +148,7 @@ class _PokeAnimationOverlayState extends State<_PokeAnimationOverlay>
           margin: const EdgeInsets.symmetric(horizontal: 40),
           padding: const EdgeInsets.all(40),
           decoration: BoxDecoration(
-            gradient: const LinearGradient(
+            gradient: LinearGradient(
               colors: [AppTheme.backgroundStart, AppTheme.backgroundEnd],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
@@ -189,7 +189,7 @@ class _PokeAnimationOverlayState extends State<_PokeAnimationOverlay>
               // Message
               Text(
                 _getMessage(),
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.w700,
                   color: AppTheme.primaryBlack,

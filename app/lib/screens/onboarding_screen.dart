@@ -17,10 +17,10 @@ class OnboardingScreen extends StatelessWidget {
       barrierDismissible: false,
       builder: (context) => AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        title: const Column(
+        title: Column(
           children: [
-            Text('👋', style: TextStyle(fontSize: 48)),
-            SizedBox(height: 12),
+            const Text('👋', style: TextStyle(fontSize: 48)),
+            const SizedBox(height: 12),
             Text(
               'What\'s your name?',
               style: TextStyle(

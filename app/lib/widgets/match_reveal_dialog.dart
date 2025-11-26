@@ -107,7 +107,7 @@ class _MatchRevealDialogState extends State<MatchRevealDialog>
                   children: [
                     _buildEmojiCard(widget.emoji),
                     const SizedBox(width: 12),
-                    const Text(
+                    Text(
                       '=',
                       style: TextStyle(
                         fontSize: 32,
