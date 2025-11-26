@@ -104,23 +104,23 @@ class _RackTileState extends State<RackTile>
       width: size,
       height: size,
       decoration: BoxDecoration(
-        gradient: const LinearGradient(
+        gradient: LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: [
-            Color(0xFFFFF59D), // Light yellow
-            Color(0xFFFFEE58), // Yellow
-            Color(0xFFFFCA28), // Darker yellow
+            BrandLoader().colors.warning.withOpacity(0.3),
+            BrandLoader().colors.warning.withOpacity(0.5),
+            BrandLoader().colors.warning.withOpacity(0.7),
           ],
         ),
         border: Border.all(
-          color: Colors.amber.shade700,
+          color: BrandLoader().colors.warning,
           width: 2,
         ),
         borderRadius: BorderRadius.circular(8),
         boxShadow: [
           BoxShadow(
-            color: Colors.amber.withValues(alpha: isFloating ? 0.5 : 0.3),
+            color: BrandLoader().colors.warning.withValues(alpha: isFloating ? 0.5 : 0.3),
             blurRadius: isFloating ? 12 : 4,
             offset: Offset(0, isFloating ? 4 : 2),
           ),

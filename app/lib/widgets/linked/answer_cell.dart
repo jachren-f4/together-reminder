@@ -95,23 +95,24 @@ class _LinkedAnswerCellState extends State<LinkedAnswerCell>
   }
 
   Color get _backgroundColor {
-    if (widget.isDragTarget) return const Color(0xFFE3F2FD); // Light blue
+    if (widget.isDragTarget) return BrandLoader().colors.info.withOpacity(0.15);
     switch (widget.state) {
       case AnswerCellState.empty:
         return BrandLoader().colors.surface;
       case AnswerCellState.draft:
-        return const Color(0xFFFFEE58); // Yellow
+        return BrandLoader().colors.warning.withOpacity(0.2);
       case AnswerCellState.locked:
-        return const Color(0xFF81C784); // Green
+        return BrandLoader().colors.success.withOpacity(0.15);
       case AnswerCellState.incorrect:
-        return const Color(0xFFEF5350); // Red
+        return BrandLoader().colors.error.withOpacity(0.2);
     }
   }
 
   Color get _borderColor {
     if (widget.isDragTarget) return BrandLoader().colors.info;
     if (widget.isHighlighted) return BrandLoader().colors.info;
-    if (widget.state == AnswerCellState.locked) return const Color(0xFF4CAF50);
+    if (widget.state == AnswerCellState.locked) return BrandLoader().colors.success;
+    if (widget.state == AnswerCellState.draft) return BrandLoader().colors.warning;
     if (widget.state == AnswerCellState.incorrect) return BrandLoader().colors.error;
     return BrandLoader().colors.textSecondary;
   }
@@ -144,7 +145,7 @@ class _LinkedAnswerCellState extends State<LinkedAnswerCell>
     if (widget.state == AnswerCellState.draft) {
       return [
         BoxShadow(
-          color: Colors.amber.withValues(alpha: 0.3),
+          color: BrandLoader().colors.warning.withValues(alpha: 0.3),
           blurRadius: 4,
           spreadRadius: 0,
         ),
@@ -186,9 +187,7 @@ class _LinkedAnswerCellState extends State<LinkedAnswerCell>
                             fontSize: widget.size * 0.5,
                             fontWeight: FontWeight.w700,
                             fontFamily: 'Georgia',
-                            color: widget.state == AnswerCellState.locked
-                                ? BrandLoader().colors.textOnPrimary
-                                : BrandLoader().colors.textPrimary,
+                            color: BrandLoader().colors.textPrimary, // Always dark text
                             shadows: widget.state == AnswerCellState.locked
                                 ? [
                                     Shadow(
@@ -248,8 +247,8 @@ class DraggableAnswerCell extends StatelessWidget {
           width: size * 1.1,
           height: size * 1.1,
           decoration: BoxDecoration(
-            color: const Color(0xFFFFEE58),
-            border: Border.all(color: Colors.amber.shade700, width: 2),
+            color: BrandLoader().colors.warning.withOpacity(0.3),
+            border: Border.all(color: BrandLoader().colors.warning, width: 2),
             borderRadius: BorderRadius.circular(6),
             boxShadow: [
               BoxShadow(

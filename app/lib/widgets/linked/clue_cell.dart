@@ -28,12 +28,12 @@ class LinkedClueCell extends StatelessWidget {
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
             colors: [
-              const Color(0xFFE8E8E8),
-              const Color(0xFFD0D0D0),
+              BrandLoader().colors.selected,
+              BrandLoader().colors.borderLight,
             ],
           ),
           border: Border.all(
-            color: const Color(0xFFB0B0B0),
+            color: BrandLoader().colors.textTertiary,
             width: 0.5,
           ),
         ),
