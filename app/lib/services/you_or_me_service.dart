@@ -11,6 +11,7 @@ import '../services/quest_sync_service.dart';
 import '../services/api_client.dart';
 import '../models/daily_quest.dart';
 import '../config/dev_config.dart';
+import '../config/brand/brand_loader.dart';
 import '../utils/logger.dart';
 
 /// Service for managing You or Me game sessions
@@ -50,7 +51,7 @@ class YouOrMeService {
 
     try {
       final jsonString = await rootBundle.loadString(
-        'assets/data/you_or_me_questions.json',
+        BrandLoader().content.youOrMeQuestionsPath,
       );
       final data = json.decode(jsonString) as Map<String, dynamic>;
 

@@ -5,6 +5,7 @@ import 'package:togetherremind/screens/activities_screen.dart';
 import 'package:togetherremind/screens/profile_screen.dart';
 import 'package:togetherremind/screens/settings_screen.dart';
 import 'package:togetherremind/theme/app_theme.dart';
+import 'package:togetherremind/config/brand/brand_assets.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -42,36 +43,36 @@ class _HomeScreenState extends State<HomeScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 _NavItem(
-                  iconOutline: 'assets/gfx/home.png',
-                  iconFilled: 'assets/gfx/home_filled.png',
+                  iconOutline: BrandAssets.homeIcon,
+                  iconFilled: BrandAssets.homeIconFilled,
                   label: 'Home',
                   isActive: _currentIndex == 0,
                   onTap: () => setState(() => _currentIndex = 0),
                 ),
                 _NavItem(
-                  iconOutline: 'assets/gfx/inbox.png',
-                  iconFilled: 'assets/gfx/inbox_filled.png',
+                  iconOutline: BrandAssets.inboxIcon,
+                  iconFilled: BrandAssets.inboxIconFilled,
                   label: 'Inbox',
                   isActive: _currentIndex == 1,
                   onTap: () => setState(() => _currentIndex = 1),
                 ),
                 _NavItem(
-                  iconOutline: 'assets/gfx/activities.png',
-                  iconFilled: 'assets/gfx/activities_filled.png',
+                  iconOutline: BrandAssets.activitiesIcon,
+                  iconFilled: BrandAssets.activitiesIconFilled,
                   label: 'Activities',
                   isActive: _currentIndex == 2,
                   onTap: () => setState(() => _currentIndex = 2),
                 ),
                 _NavItem(
-                  iconOutline: 'assets/gfx/profile.png',
-                  iconFilled: 'assets/gfx/profile_filled.png',
+                  iconOutline: BrandAssets.profileIcon,
+                  iconFilled: BrandAssets.profileIconFilled,
                   label: 'Profile',
                   isActive: _currentIndex == 3,
                   onTap: () => setState(() => _currentIndex = 3),
                 ),
                 _NavItem(
-                  iconOutline: 'assets/gfx/settings.png',
-                  iconFilled: 'assets/gfx/settings_filled.png',
+                  iconOutline: BrandAssets.settingsIcon,
+                  iconFilled: BrandAssets.settingsIconFilled,
                   label: 'Settings',
                   isActive: _currentIndex == 4,
                   onTap: () => setState(() => _currentIndex = 4),

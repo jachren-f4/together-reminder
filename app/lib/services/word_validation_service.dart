@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/services.dart';
+import '../config/brand/brand_loader.dart';
 import '../utils/logger.dart';
 
 class WordValidationService {
@@ -25,12 +26,12 @@ class WordValidationService {
 
     try {
       // Load English words
-      final englishJson = await rootBundle.loadString('assets/words/english_words.json');
+      final englishJson = await rootBundle.loadString(BrandLoader().content.englishWordsPath);
       final englishData = jsonDecode(englishJson) as Map<String, dynamic>;
       _loadWordsFromJson(englishData, 'en');
 
       // Load Finnish words
-      final finnishJson = await rootBundle.loadString('assets/words/finnish_words.json');
+      final finnishJson = await rootBundle.loadString(BrandLoader().content.finnishWordsPath);
       final finnishData = jsonDecode(finnishJson) as Map<String, dynamic>;
       _loadWordsFromJson(finnishData, 'fi');
 

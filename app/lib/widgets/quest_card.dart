@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../models/daily_quest.dart';
 import '../services/storage_service.dart';
+import '../config/brand/brand_loader.dart';
 import '../theme/app_theme.dart';
 
 /// Card displaying a single daily quest with image, title, description, and status
@@ -182,21 +183,22 @@ class QuestCard extends StatelessWidget {
     // Used for:
     // - Old quests without imagePath
     // - Non-quiz quest types (Word Ladder, Memory Flip, You or Me)
+    final questImages = BrandLoader().assets.questImagesPath;
     switch (quest.type) {
       case QuestType.quiz:
         // Fallback for quizzes without imagePath
         if (quest.formatType == 'affirmation') {
-          return 'assets/images/quests/affirmation-default.png';
+          return '$questImages/affirmation-default.png';
         }
-        return 'assets/images/quests/classic-quiz-default.png';
+        return '$questImages/classic-quiz-default.png';
       case QuestType.wordLadder:
-        return 'assets/images/quests/word-ladder.png';
+        return '$questImages/word-ladder.png';
       case QuestType.memoryFlip:
-        return 'assets/images/quests/memory-flip.png';
+        return '$questImages/memory-flip.png';
       case QuestType.youOrMe:
-        return 'assets/images/quests/you-or-me.png';
+        return '$questImages/you-or-me.png';
       case QuestType.question:
-        return 'assets/images/quests/daily-question.png';
+        return '$questImages/daily-question.png';
       default:
         return null;
     }

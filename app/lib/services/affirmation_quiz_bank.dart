@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/services.dart';
 import '../models/quiz_question.dart';
+import '../config/brand/brand_loader.dart';
 import '../utils/logger.dart';
 
 /// Service for loading and managing affirmation quizzes
@@ -18,7 +19,7 @@ class AffirmationQuizBank {
     if (_isInitialized) return;
 
     try {
-      final String jsonString = await rootBundle.loadString('assets/data/affirmation_quizzes.json');
+      final String jsonString = await rootBundle.loadString(BrandLoader().content.affirmationQuizzesPath);
       final Map<String, dynamic> jsonData = json.decode(jsonString);
       final List<dynamic> quizzesJson = jsonData['quizzes'] as List<dynamic>;
 

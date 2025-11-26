@@ -97,14 +97,16 @@ flutter:
   # the material Icons class.
   uses-material-design: true
 
-  # Assets
+  # Assets - Brand-specific and shared resources
   assets:
-    - assets/animations/
-    - assets/sounds/
-    - assets/data/
-    - assets/words/
-    - assets/gfx/
-    - assets/images/quests/
+    # Brand-specific content (TogetherRemind)
+    - assets/brands/togetherremind/data/
+    - assets/brands/togetherremind/animations/
+    - assets/brands/togetherremind/images/quests/
+    - assets/brands/togetherremind/words/
+    # Shared assets (same across all brands)
+    - assets/shared/gfx/
+    - assets/shared/sounds/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
