@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../models/you_or_me.dart';
 import '../services/storage_service.dart';
+import '../config/brand/brand_loader.dart';
 import 'you_or_me_game_screen.dart';
 
 /// Intro screen for You or Me game
@@ -34,13 +35,13 @@ class YouOrMeIntroScreen extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
                 decoration: BoxDecoration(
-                  color: Colors.black,
+                  color: BrandLoader().colors.primary,
                   borderRadius: BorderRadius.circular(8),
                 ),
-                child: const Text(
+                child: Text(
                   'GAME',
                   style: TextStyle(
-                    color: Colors.white,
+                    color: BrandLoader().colors.textOnPrimary,
                     fontSize: 12,
                     fontWeight: FontWeight.bold,
                     letterSpacing: 1.2,
@@ -100,8 +101,8 @@ class YouOrMeIntroScreen extends StatelessWidget {
                     );
                   },
                   style: FilledButton.styleFrom(
-                    backgroundColor: Colors.black,
-                    foregroundColor: Colors.white,
+                    backgroundColor: BrandLoader().colors.primary,
+                    foregroundColor: BrandLoader().colors.textOnPrimary,
                     padding: const EdgeInsets.symmetric(vertical: 16),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
@@ -124,7 +125,7 @@ class YouOrMeIntroScreen extends StatelessWidget {
                 child: Text(
                   '10 questions • Takes 2-3 minutes',
                   style: theme.textTheme.bodyMedium?.copyWith(
-                    color: Colors.grey[600],
+                    color: BrandLoader().colors.textSecondary,
                     fontSize: 14,
                   ),
                 ),
@@ -156,7 +157,7 @@ class YouOrMeIntroScreen extends StatelessWidget {
         Text(
           content,
           style: theme.textTheme.bodyLarge?.copyWith(
-            color: Colors.grey[700],
+            color: BrandLoader().colors.textSecondary,
             height: 1.5,
           ),
         ),

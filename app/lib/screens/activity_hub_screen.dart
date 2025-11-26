@@ -12,6 +12,7 @@ import 'package:togetherremind/screens/quiz_results_screen.dart';
 import 'package:togetherremind/screens/would_you_rather_intro_screen.dart';
 import 'package:togetherremind/screens/word_ladder_hub_screen.dart';
 import 'package:togetherremind/screens/memory_flip_game_screen.dart';
+import 'package:togetherremind/config/brand/brand_loader.dart';
 import 'package:intl/intl.dart';
 
 class ActivityHubScreen extends StatefulWidget {
@@ -366,7 +367,7 @@ class _ActivityCard extends StatelessWidget {
       case ActivityStatus.mutual:
         return AppTheme.primaryBlack;
       case ActivityStatus.expired:
-        return Colors.red;
+        return BrandLoader().colors.error;
       case ActivityStatus.pending:
         return AppTheme.textSecondary;
     }
@@ -383,7 +384,7 @@ class _ActivityCard extends StatelessWidget {
       case ActivityStatus.mutual:
         return AppTheme.primaryWhite;
       case ActivityStatus.expired:
-        return Colors.white;
+        return BrandLoader().colors.textOnPrimary;
       case ActivityStatus.pending:
         return AppTheme.primaryWhite;
     }

@@ -3,6 +3,7 @@ import '../models/ladder_session.dart';
 import '../services/ladder_service.dart';
 import 'word_ladder_completion_screen.dart';
 import '../utils/logger.dart';
+import '../config/brand/brand_loader.dart';
 
 class WordLadderGameScreen extends StatefulWidget {
   final String sessionId;
@@ -128,7 +129,7 @@ class _WordLadderGameScreenState extends State<WordLadderGameScreen> {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(message),
-        backgroundColor: Colors.green,
+        backgroundColor: BrandLoader().colors.success,
         behavior: SnackBarBehavior.floating,
       ),
     );
@@ -138,7 +139,7 @@ class _WordLadderGameScreenState extends State<WordLadderGameScreen> {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(message),
-        backgroundColor: Colors.red,
+        backgroundColor: BrandLoader().colors.error,
         behavior: SnackBarBehavior.floating,
       ),
     );
@@ -276,7 +277,7 @@ class _WordLadderGameScreenState extends State<WordLadderGameScreen> {
         Container(
           padding: const EdgeInsets.all(20),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: BrandLoader().colors.surface,
             borderRadius: BorderRadius.circular(16),
             border: Border.all(
               color: Theme.of(context).colorScheme.primary,
@@ -375,7 +376,7 @@ class _WordLadderGameScreenState extends State<WordLadderGameScreen> {
           child: Icon(
             Icons.arrow_forward,
             size: 20,
-            color: Colors.grey.shade400,
+            color: BrandLoader().colors.disabled,
           ),
         ),
       );
@@ -396,7 +397,7 @@ class _WordLadderGameScreenState extends State<WordLadderGameScreen> {
             color: Colors.transparent,
             borderRadius: BorderRadius.circular(16),
             border: Border.all(
-              color: Colors.grey.shade300,
+              color: BrandLoader().colors.divider,
               width: 2,
               style: BorderStyle.solid,
             ),
@@ -406,7 +407,7 @@ class _WordLadderGameScreenState extends State<WordLadderGameScreen> {
             style: TextStyle(
               fontWeight: FontWeight.bold,
               letterSpacing: 1.5,
-              color: Colors.grey.shade400,
+              color: BrandLoader().colors.disabled,
             ),
           ),
         ),
@@ -419,7 +420,7 @@ class _WordLadderGameScreenState extends State<WordLadderGameScreen> {
           child: Icon(
             Icons.arrow_forward,
             size: 20,
-            color: Colors.grey.shade400,
+            color: BrandLoader().colors.disabled,
           ),
         ),
       );
@@ -490,19 +491,19 @@ class _WordLadderGameScreenState extends State<WordLadderGameScreen> {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: Colors.red.shade50,
+        color: BrandLoader().colors.error.withOpacity(0.1),
         borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: Colors.red.shade300),
+        border: Border.all(color: BrandLoader().colors.error.withOpacity(0.3)),
       ),
       child: Row(
         children: [
-          Icon(Icons.error_outline, color: Colors.red.shade700),
+          Icon(Icons.error_outline, color: BrandLoader().colors.error),
           const SizedBox(width: 8),
           Expanded(
             child: Text(
               _errorMessage!,
               style: TextStyle(
-                color: Colors.red.shade700,
+                color: BrandLoader().colors.error,
                 fontWeight: FontWeight.w500,
               ),
             ),
@@ -516,19 +517,19 @@ class _WordLadderGameScreenState extends State<WordLadderGameScreen> {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: Colors.grey.shade100,
+        color: BrandLoader().colors.background,
         borderRadius: BorderRadius.circular(12),
       ),
       child: Column(
         children: [
-          Icon(Icons.hourglass_empty, size: 48, color: Colors.grey.shade600),
+          Icon(Icons.hourglass_empty, size: 48, color: BrandLoader().colors.textSecondary),
           const SizedBox(height: 12),
           Text(
             'Waiting for partner...',
             style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.w500,
-              color: Colors.grey.shade700,
+              color: BrandLoader().colors.textSecondary,
             ),
           ),
         ],
@@ -586,7 +587,7 @@ class _StatRow extends StatelessWidget {
           label,
           style: TextStyle(
             fontSize: 14,
-            color: Colors.grey.shade700,
+            color: BrandLoader().colors.textSecondary,
           ),
         ),
         Text(
@@ -596,7 +597,7 @@ class _StatRow extends StatelessWidget {
             fontWeight: FontWeight.bold,
             color: isTarget
                 ? Theme.of(context).colorScheme.primary
-                : Colors.black87,
+                : BrandLoader().colors.textPrimary.withOpacity(0.87),
           ),
         ),
       ],

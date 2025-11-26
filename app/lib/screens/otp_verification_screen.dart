@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import '../config/brand/brand_loader.dart';
 import '../services/auth_service.dart';
 import '../utils/logger.dart';
 
@@ -141,7 +142,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
               Container(
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
-                  color: Theme.of(context).primaryColor.withValues(alpha: 0.1),
+                  color: Theme.of(context).primaryColor.withOpacity(0.1),
                   shape: BoxShape.circle,
                 ),
                 child: Icon(
@@ -164,7 +165,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
               Text(
                 'We sent a verification code to',
                 style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                  color: Colors.grey[600],
+                  color: BrandLoader().colors.textSecondary,
                 ),
                 textAlign: TextAlign.center,
               ),
@@ -199,7 +200,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                   counterText: '',
                   hintText: '00000000',
                   hintStyle: TextStyle(
-                    color: Colors.grey[300],
+                    color: BrandLoader().colors.textTertiary,
                     fontSize: 24,
                     letterSpacing: 4,
                   ),
@@ -207,7 +208,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                     borderRadius: BorderRadius.circular(12),
                   ),
                   filled: true,
-                  fillColor: Colors.grey[50],
+                  fillColor: BrandLoader().colors.surface,
                 ),
                 onChanged: (value) {
                   // Auto-submit when 8 digits entered
@@ -223,18 +224,18 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                 Container(
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
-                    color: Colors.red[50],
+                    color: BrandLoader().colors.error.withOpacity(0.1),
                     borderRadius: BorderRadius.circular(8),
-                    border: Border.all(color: Colors.red[200]!),
+                    border: Border.all(color: BrandLoader().colors.error.withOpacity(0.3)),
                   ),
                   child: Row(
                     children: [
-                      Icon(Icons.error_outline, color: Colors.red[700], size: 20),
+                      Icon(Icons.error_outline, color: BrandLoader().colors.error, size: 20),
                       const SizedBox(width: 8),
                       Expanded(
                         child: Text(
                           _errorMessage!,
-                          style: TextStyle(color: Colors.red[700]),
+                          style: TextStyle(color: BrandLoader().colors.error),
                         ),
                       ),
                     ],
@@ -271,7 +272,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                 children: [
                   Text(
                     "Didn't receive the code? ",
-                    style: TextStyle(color: Colors.grey[600]),
+                    style: TextStyle(color: BrandLoader().colors.textSecondary),
                   ),
                   TextButton(
                     onPressed: _isLoading ? null : _resendCode,
@@ -286,7 +287,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
               Container(
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
-                  color: Colors.grey[100],
+                  color: BrandLoader().colors.surface,
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Column(
@@ -294,12 +295,12 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                   children: [
                     Row(
                       children: [
-                        Icon(Icons.help_outline, color: Colors.grey[600], size: 20),
+                        Icon(Icons.help_outline, color: BrandLoader().colors.textSecondary, size: 20),
                         const SizedBox(width: 8),
                         Text(
                           'Can\'t find the email?',
                           style: TextStyle(
-                            color: Colors.grey[700],
+                            color: BrandLoader().colors.textPrimary,
                             fontWeight: FontWeight.w600,
                           ),
                         ),
@@ -309,7 +310,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                     Text(
                       '• Check your spam/junk folder\n• Make sure you entered the correct email\n• Wait a few minutes and try again',
                       style: TextStyle(
-                        color: Colors.grey[600],
+                        color: BrandLoader().colors.textSecondary,
                         fontSize: 13,
                       ),
                     ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../config/brand/brand_loader.dart';
 import '../services/auth_service.dart';
 import '../utils/logger.dart';
 import 'otp_verification_screen.dart';
@@ -112,7 +113,7 @@ class _AuthScreenState extends State<AuthScreen> {
               Text(
                 'Stay connected with your partner',
                 style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                  color: Colors.grey[600],
+                  color: BrandLoader().colors.textSecondary,
                 ),
                 textAlign: TextAlign.center,
               ),
@@ -146,7 +147,7 @@ class _AuthScreenState extends State<AuthScreen> {
                           borderRadius: BorderRadius.circular(12),
                         ),
                         filled: true,
-                        fillColor: Colors.grey[50],
+                        fillColor: BrandLoader().colors.surface,
                       ),
                     ),
                     const SizedBox(height: 24),
@@ -156,18 +157,18 @@ class _AuthScreenState extends State<AuthScreen> {
                       Container(
                         padding: const EdgeInsets.all(12),
                         decoration: BoxDecoration(
-                          color: Colors.red[50],
+                          color: BrandLoader().colors.error.withOpacity(0.1),
                           borderRadius: BorderRadius.circular(8),
-                          border: Border.all(color: Colors.red[200]!),
+                          border: Border.all(color: BrandLoader().colors.error.withOpacity(0.3)),
                         ),
                         child: Row(
                           children: [
-                            Icon(Icons.error_outline, color: Colors.red[700], size: 20),
+                            Icon(Icons.error_outline, color: BrandLoader().colors.error, size: 20),
                             const SizedBox(width: 8),
                             Expanded(
                               child: Text(
                                 _errorMessage!,
-                                style: TextStyle(color: Colors.red[700]),
+                                style: TextStyle(color: BrandLoader().colors.error),
                               ),
                             ),
                           ],
@@ -206,18 +207,18 @@ class _AuthScreenState extends State<AuthScreen> {
               Container(
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
-                  color: Colors.blue[50],
+                  color: BrandLoader().colors.info.withOpacity(0.1),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Icon(Icons.info_outline, color: Colors.blue[700], size: 20),
+                    Icon(Icons.info_outline, color: BrandLoader().colors.info, size: 20),
                     const SizedBox(width: 12),
                     Expanded(
                       child: Text(
                         'We\'ll send you a magic link to sign in. No password needed!',
-                        style: TextStyle(color: Colors.blue[700]),
+                        style: TextStyle(color: BrandLoader().colors.info),
                       ),
                     ),
                   ],

@@ -5,6 +5,7 @@ import '../models/quiz_question.dart';
 import '../services/quiz_service.dart';
 import '../services/storage_service.dart';
 import '../widgets/five_point_scale.dart';
+import '../config/brand/brand_loader.dart';
 import 'quiz_waiting_screen.dart';
 
 class QuizQuestionScreen extends StatefulWidget {
@@ -376,7 +377,7 @@ class _QuizQuestionScreenState extends State<QuizQuestionScreen> {
                 color: theme.colorScheme.surface,
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.05),
+                    color: BrandLoader().colors.textPrimary.withOpacity(0.05),
                     blurRadius: 10,
                     offset: const Offset(0, -2),
                   ),

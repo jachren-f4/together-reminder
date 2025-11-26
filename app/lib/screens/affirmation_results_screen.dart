@@ -9,6 +9,7 @@ import '../services/quest_sync_service.dart';
 import '../services/love_point_service.dart';
 import '../models/daily_quest.dart';
 import '../services/quest_utilities.dart';
+import '../config/brand/brand_loader.dart';
 
 /// Results screen for affirmation-style quizzes
 /// Shows individual score (not match percentage) and answers
@@ -349,10 +350,10 @@ class _AffirmationResultsScreenState extends State<AffirmationResultsScreen> {
   }
 
   Color _getScoreColor(int percentage) {
-    if (percentage >= 80) return Colors.green;
-    if (percentage >= 60) return Colors.blue;
-    if (percentage >= 40) return Colors.orange;
-    return Colors.grey;
+    if (percentage >= 80) return BrandLoader().colors.success;
+    if (percentage >= 60) return BrandLoader().colors.primary;
+    if (percentage >= 40) return BrandLoader().colors.warning;
+    return BrandLoader().colors.textSecondary;
   }
 
   Widget _buildPartnerStatus(ThemeData theme, bool bothCompleted, String? partnerName) {
@@ -443,7 +444,7 @@ class _AffirmationResultsScreenState extends State<AffirmationResultsScreen> {
                   child: Icon(
                     isSelected ? Icons.favorite : Icons.favorite_border,
                     size: 20,
-                    color: isSelected ? Colors.red : Colors.grey[400],
+                    color: isSelected ? BrandLoader().colors.error : BrandLoader().colors.textSecondary.withOpacity(0.4),
                   ),
                 );
               }),

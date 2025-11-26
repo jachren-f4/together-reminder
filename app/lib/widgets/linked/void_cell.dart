@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../config/brand/brand_loader.dart';
 
 /// Black void cell - non-interactive filler
 /// Enhanced with subtle texture pattern
@@ -43,7 +44,7 @@ class _VoidPatternPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
-      ..color = Colors.white.withValues(alpha: 0.03)
+      ..color = BrandLoader().colors.surface.withValues(alpha: 0.03)
       ..strokeWidth = 0.5
       ..style = PaintingStyle.stroke;
 

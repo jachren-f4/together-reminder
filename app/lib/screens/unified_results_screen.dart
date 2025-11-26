@@ -8,6 +8,7 @@ import '../services/daily_quest_service.dart';
 import '../services/quest_sync_service.dart';
 import '../services/love_point_service.dart';
 import '../utils/logger.dart';
+import '../config/brand/brand_loader.dart';
 
 /// Unified results screen for all quest types
 /// Provides frame with confetti, LP banner, and quest completion logic
@@ -164,13 +165,13 @@ class _UnifiedResultsScreenState extends State<UnifiedResultsScreen> {
                 confettiController: _confettiController,
                 blastDirectionality: BlastDirectionality.explosive,
                 shouldLoop: false,
-                colors: const [
-                  Colors.red,
-                  Colors.blue,
-                  Colors.green,
-                  Colors.yellow,
-                  Colors.pink,
-                  Colors.purple,
+                colors: [
+                  BrandLoader().colors.error,
+                  BrandLoader().colors.primary,
+                  BrandLoader().colors.success,
+                  BrandLoader().colors.warning,
+                  BrandLoader().colors.info,
+                  BrandLoader().colors.accentGreen,
                 ],
               ),
             ),

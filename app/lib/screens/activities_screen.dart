@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../config/brand/brand_loader.dart';
 import '../utils/logger.dart';
 import '../services/quiz_service.dart';
 import '../services/ladder_service.dart';
@@ -95,18 +96,11 @@ class _ActivitiesScreenState extends State<ActivitiesScreen> {
                 Container(
                   padding: const EdgeInsets.all(20),
                   decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [
-                        Colors.orange.shade400,
-                        Colors.orange.shade600,
-                      ],
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                    ),
+                    color: BrandLoader().colors.warning,
                     borderRadius: BorderRadius.circular(16),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.orange.withOpacity(0.3),
+                        color: BrandLoader().colors.warning.withOpacity(0.3),
                         blurRadius: 10,
                         offset: const Offset(0, 4),
                       ),
@@ -117,16 +111,16 @@ class _ActivitiesScreenState extends State<ActivitiesScreen> {
                     children: [
                       Row(
                         children: [
-                          const Icon(
+                          Icon(
                             Icons.notifications_active,
-                            color: Colors.white,
+                            color: BrandLoader().colors.textOnPrimary,
                             size: 24,
                           ),
                           const SizedBox(width: 12),
-                          const Text(
+                          Text(
                             'Quiz in Progress',
                             style: TextStyle(
-                              color: Colors.white,
+                              color: BrandLoader().colors.textOnPrimary,
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
                             ),
@@ -134,9 +128,9 @@ class _ActivitiesScreenState extends State<ActivitiesScreen> {
                         ],
                       ),
                       const SizedBox(height: 8),
-                      const Text(
+                      Text(
                         'You have an active quiz waiting!',
-                        style: TextStyle(color: Colors.white),
+                        style: TextStyle(color: BrandLoader().colors.textOnPrimary),
                       ),
                       const SizedBox(height: 12),
                       FilledButton(
@@ -149,8 +143,8 @@ class _ActivitiesScreenState extends State<ActivitiesScreen> {
                           ).then((_) => setState(() {}));
                         },
                         style: FilledButton.styleFrom(
-                          backgroundColor: Colors.white,
-                          foregroundColor: Colors.orange.shade700,
+                          backgroundColor: BrandLoader().colors.surface,
+                          foregroundColor: BrandLoader().colors.warning,
                         ),
                         child: const Text('Continue Quiz'),
                       ),
@@ -340,7 +334,7 @@ class _ActivitiesScreenState extends State<ActivitiesScreen> {
                   emoji,
                   style: TextStyle(
                     fontSize: 32,
-                    color: isActive ? null : Colors.grey,
+                    color: isActive ? null : BrandLoader().colors.textSecondary,
                   ),
                 ),
               ),
@@ -504,10 +498,10 @@ class _ActivitiesScreenState extends State<ActivitiesScreen> {
   }
 
   Color _getMatchColor(int percentage) {
-    if (percentage >= 80) return Colors.green;
-    if (percentage >= 60) return Colors.blue;
-    if (percentage >= 40) return Colors.orange;
-    return Colors.grey;
+    if (percentage >= 80) return BrandLoader().colors.success;
+    if (percentage >= 60) return BrandLoader().colors.info;
+    if (percentage >= 40) return BrandLoader().colors.warning;
+    return BrandLoader().colors.textSecondary;
   }
 
   String _formatDate(DateTime? date) {
@@ -543,7 +537,7 @@ class _ActivitiesScreenState extends State<ActivitiesScreen> {
 
     if (yieldedCount > 0) {
       badge = '$yieldedCount need${yieldedCount == 1 ? "s" : ""} help!';
-      badgeColor = Colors.yellow.shade700;
+      badgeColor = BrandLoader().colors.warning;
     } else if (myTurnCount > 0) {
       badge = '$myTurnCount your turn';
       badgeColor = theme.colorScheme.primary;
@@ -566,7 +560,7 @@ class _ActivitiesScreenState extends State<ActivitiesScreen> {
           borderRadius: BorderRadius.circular(16),
           border: Border.all(
             color: yieldedCount > 0
-                ? Colors.yellow.shade300
+                ? BrandLoader().colors.warning
                 : theme.colorScheme.outline.withOpacity(0.2),
             width: yieldedCount > 0 ? 2 : 1,
           ),
@@ -686,7 +680,7 @@ class _ActivitiesScreenState extends State<ActivitiesScreen> {
         badgeColor = theme.colorScheme.primary;
       } else if (progress == total) {
         badge = 'Completed!';
-        badgeColor = Colors.green.shade700;
+        badgeColor = BrandLoader().colors.success;
       }
     }
 
@@ -779,10 +773,10 @@ class _ActivitiesScreenState extends State<ActivitiesScreen> {
                           ),
                           child: Text(
                             badge,
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontSize: 11,
                               fontWeight: FontWeight.bold,
-                              color: Colors.white,
+                              color: BrandLoader().colors.textOnPrimary,
                             ),
                           ),
                         ),

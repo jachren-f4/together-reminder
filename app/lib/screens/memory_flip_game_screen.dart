@@ -9,6 +9,7 @@ import 'package:togetherremind/services/general_activity_streak_service.dart';
 import 'package:togetherremind/theme/app_theme.dart';
 import 'package:togetherremind/widgets/match_reveal_dialog.dart';
 import 'package:togetherremind/utils/logger.dart';
+import '../config/brand/brand_loader.dart';
 
 class MemoryFlipGameScreen extends StatefulWidget {
   const MemoryFlipGameScreen({super.key});
@@ -316,14 +317,14 @@ class _MemoryFlipGameScreenState extends State<MemoryFlipGameScreen> {
 
   Color _getCardColor(MemoryCard card) {
     if (card.isMatched) {
-      return AppTheme.accentGreen.withOpacity(0.3);
+      return BrandLoader().colors.success.withOpacity(0.3);
     }
 
     if (_selectedCard1?.id == card.id || _selectedCard2?.id == card.id) {
-      return AppTheme.primaryBlack;
+      return BrandLoader().colors.textPrimary;
     }
 
-    return Colors.grey[300]!;
+    return BrandLoader().colors.divider;
   }
 
   Widget _getCardContent(MemoryCard card) {
@@ -340,7 +341,7 @@ class _MemoryFlipGameScreenState extends State<MemoryFlipGameScreen> {
     return Icon(
       Icons.help_outline,
       size: 32,
-      color: Colors.grey[600],
+      color: BrandLoader().colors.textSecondary,
     );
   }
 
@@ -352,20 +353,20 @@ class _MemoryFlipGameScreenState extends State<MemoryFlipGameScreen> {
         backgroundColor: AppTheme.backgroundGray,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black87),
+          icon: Icon(Icons.arrow_back, color: BrandLoader().colors.textPrimary.withOpacity(0.87)),
           onPressed: () => Navigator.of(context).pop(),
         ),
-        title: const Text(
+        title: Text(
           'Memory Flip',
           style: TextStyle(
-            color: Colors.black87,
+            color: BrandLoader().colors.textPrimary.withOpacity(0.87),
             fontWeight: FontWeight.w600,
             fontSize: 20,
           ),
         ),
         actions: [
           IconButton(
-            icon: const Icon(Icons.refresh, color: Colors.black87),
+            icon: Icon(Icons.refresh, color: BrandLoader().colors.textPrimary.withOpacity(0.87)),
             onPressed: _isProcessing ? null : _loadGameState,
           ),
         ],
@@ -419,7 +420,7 @@ class _MemoryFlipGameScreenState extends State<MemoryFlipGameScreen> {
   Widget _buildTurnIndicator() {
     if (_gameState == null) return const SizedBox.shrink();
 
-    final color = _gameState!.isMyTurn ? Colors.green : Colors.orange;
+    final color = _gameState!.isMyTurn ? BrandLoader().colors.success : BrandLoader().colors.warning;
     final text = _gameState!.isMyTurn
         ? "Your Turn"
         : "Waiting for ${_getPartnerName()}";
@@ -464,9 +465,9 @@ class _MemoryFlipGameScreenState extends State<MemoryFlipGameScreen> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          _buildScoreCard("You", myPairs, Colors.blue),
+          _buildScoreCard("You", myPairs, BrandLoader().colors.info),
           const Text("vs", style: TextStyle(fontSize: 20)),
-          _buildScoreCard(_getPartnerName(), partnerPairs, Colors.red),
+          _buildScoreCard(_getPartnerName(), partnerPairs, BrandLoader().colors.error),
         ],
       ),
     );
@@ -513,7 +514,7 @@ class _MemoryFlipGameScreenState extends State<MemoryFlipGameScreen> {
       padding: const EdgeInsets.all(12),
       margin: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.grey[100],
+        color: BrandLoader().colors.background,
         borderRadius: BorderRadius.circular(12),
       ),
       child: Row(
@@ -523,13 +524,13 @@ class _MemoryFlipGameScreenState extends State<MemoryFlipGameScreen> {
             children: [
               Icon(
                 Icons.touch_app,
-                color: flipsRemaining > 0 ? Colors.green : Colors.red,
+                color: flipsRemaining > 0 ? BrandLoader().colors.success : BrandLoader().colors.error,
               ),
               const SizedBox(width: 8),
               Text(
                 '$attemptsRemaining attempts left',
                 style: TextStyle(
-                  color: flipsRemaining > 0 ? Colors.green : Colors.red,
+                  color: flipsRemaining > 0 ? BrandLoader().colors.success : BrandLoader().colors.error,
                   fontWeight: FontWeight.w600,
                 ),
               ),
@@ -539,7 +540,7 @@ class _MemoryFlipGameScreenState extends State<MemoryFlipGameScreen> {
             Text(
               'Resets in $timeUntilReset',
               style: TextStyle(
-                color: Colors.grey[600],
+                color: BrandLoader().colors.textSecondary,
                 fontSize: 12,
               ),
             ),
@@ -577,8 +578,8 @@ class _MemoryFlipGameScreenState extends State<MemoryFlipGameScreen> {
                 borderRadius: BorderRadius.circular(8),
                 border: Border.all(
                   color: (_selectedCard1?.id == card.id || _selectedCard2?.id == card.id)
-                      ? AppTheme.primaryBlack
-                      : Colors.grey[400]!,
+                      ? BrandLoader().colors.textPrimary
+                      : BrandLoader().colors.border,
                   width: (_selectedCard1?.id == card.id || _selectedCard2?.id == card.id)
                       ? 3
                       : 1,

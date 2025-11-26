@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../models/quiz_session.dart';
 import '../services/storage_service.dart';
+import '../config/brand/brand_loader.dart';
 import 'quiz_question_screen.dart';
 
 /// Intro screen for affirmation-style quizzes
@@ -54,13 +55,13 @@ class AffirmationIntroScreen extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
                 decoration: BoxDecoration(
-                  color: Colors.black,
+                  color: BrandLoader().colors.primary,
                   borderRadius: BorderRadius.circular(8),
                 ),
-                child: const Text(
+                child: Text(
                   'QUIZ',
                   style: TextStyle(
-                    color: Colors.white,
+                    color: BrandLoader().colors.textOnPrimary,
                     fontSize: 12,
                     fontWeight: FontWeight.bold,
                     letterSpacing: 1.2,

@@ -7,6 +7,7 @@ import '../services/quest_sync_service.dart';
 import '../services/love_point_service.dart';
 import '../models/daily_quest.dart';
 import '../utils/logger.dart';
+import '../config/brand/brand_loader.dart';
 
 /// Results screen for You or Me game
 /// Shows agreement statistics and individual answers
@@ -200,7 +201,7 @@ class _YouOrMeResultsScreenState extends State<YouOrMeResultsScreen> {
         title: const Text('Results'),
         centerTitle: true,
         leading: IconButton(
-          icon: const Icon(Icons.close, color: Colors.black),
+          icon: Icon(Icons.close, color: BrandLoader().colors.textPrimary),
           onPressed: () => Navigator.of(context).popUntil((route) => route.isFirst),
         ),
       ),
@@ -226,7 +227,7 @@ class _YouOrMeResultsScreenState extends State<YouOrMeResultsScreen> {
               Text(
                 'See how your perspectives compare!',
                 style: theme.textTheme.bodyLarge?.copyWith(
-                  color: Colors.grey[600],
+                  color: BrandLoader().colors.textSecondary,
                 ),
               ),
 
@@ -268,13 +269,13 @@ class _YouOrMeResultsScreenState extends State<YouOrMeResultsScreen> {
                         _buildStatChip(
                           '$agreements/$totalQuestions',
                           'Agreed',
-                          Colors.green,
+                          BrandLoader().colors.success,
                         ),
                         const SizedBox(width: 12),
                         _buildStatChip(
                           '$disagreements/$totalQuestions',
                           'Different',
-                          Colors.orange,
+                          BrandLoader().colors.warning,
                         ),
                       ],
                     ),
@@ -322,8 +323,8 @@ class _YouOrMeResultsScreenState extends State<YouOrMeResultsScreen> {
                 child: FilledButton(
                   onPressed: () => Navigator.of(context).popUntil((route) => route.isFirst),
                   style: FilledButton.styleFrom(
-                    backgroundColor: Colors.black,
-                    foregroundColor: Colors.white,
+                    backgroundColor: BrandLoader().colors.primary,
+                    foregroundColor: BrandLoader().colors.textOnPrimary,
                     padding: const EdgeInsets.symmetric(vertical: 16),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
@@ -403,7 +404,7 @@ class _YouOrMeResultsScreenState extends State<YouOrMeResultsScreen> {
       decoration: BoxDecoration(
         color: const Color(0xFFFFFEFD),
         border: Border.all(
-          color: agreed ? Colors.green.withOpacity(0.3) : const Color(0xFFF0F0F0),
+          color: agreed ? BrandLoader().colors.success.withOpacity(0.3) : const Color(0xFFF0F0F0),
           width: 2,
         ),
         borderRadius: BorderRadius.circular(16),
@@ -421,12 +422,12 @@ class _YouOrMeResultsScreenState extends State<YouOrMeResultsScreen> {
                   width: 24,
                   height: 24,
                   decoration: BoxDecoration(
-                    color: Colors.green,
+                    color: BrandLoader().colors.success,
                     shape: BoxShape.circle,
                   ),
-                  child: const Icon(
+                  child: Icon(
                     Icons.check,
-                    color: Colors.white,
+                    color: BrandLoader().colors.textOnPrimary,
                     size: 16,
                   ),
                 ),

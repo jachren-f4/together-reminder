@@ -4,6 +4,7 @@ import 'package:togetherremind/services/storage_service.dart';
 import 'package:togetherremind/services/poke_service.dart';
 import 'package:togetherremind/services/reminder_service.dart';
 import 'package:togetherremind/theme/app_theme.dart';
+import 'package:togetherremind/config/brand/brand_loader.dart';
 import 'package:intl/intl.dart';
 
 class InboxScreen extends StatefulWidget {
@@ -77,7 +78,7 @@ class _InboxScreenState extends State<InboxScreen> {
                       borderRadius: BorderRadius.circular(12),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.black.withAlpha((0.06 * 255).round()),
+                          color: BrandLoader().colors.textPrimary.withOpacity(0.06),
                           blurRadius: 6,
                           offset: const Offset(0, 2),
                         ),
@@ -279,7 +280,7 @@ class _ReminderCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withAlpha((0.06 * 255).round()),
+            color: BrandLoader().colors.textPrimary.withOpacity(0.06),
             blurRadius: 6,
             offset: const Offset(0, 2),
           ),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:togetherremind/theme/app_theme.dart';
+import '../config/brand/brand_loader.dart';
 
 class ForegroundNotificationBanner extends StatefulWidget {
   final String title;
@@ -127,7 +128,7 @@ class _ForegroundNotificationBannerState
                       borderRadius: BorderRadius.circular(16),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.black.withOpacity(0.2),
+                          color: BrandLoader().colors.textPrimary.withOpacity(0.2),
                           blurRadius: 20,
                           offset: const Offset(0, 10),
                         ),

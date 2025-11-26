@@ -10,6 +10,7 @@ import '../services/you_or_me_service.dart';
 import '../services/quest_navigation_service.dart';
 import '../utils/logger.dart';
 import '../theme/app_theme.dart';
+import '../config/brand/brand_loader.dart';
 import '../widgets/quest_carousel.dart';
 import '../screens/you_or_me_intro_screen.dart';
 import '../screens/you_or_me_results_screen.dart';
@@ -129,9 +130,9 @@ class _DailyQuestsWidgetState extends State<DailyQuestsWidget> {
     final allCompleted = _questService.areAllMainQuestsCompleted();
 
     return Container(
-      decoration: const BoxDecoration(
+      decoration: BoxDecoration(
         border: Border(
-          top: BorderSide(color: Colors.black, width: 1),
+          top: BorderSide(color: BrandLoader().colors.textPrimary, width: 1),
         ),
       ),
       child: Column(
@@ -150,7 +151,7 @@ class _DailyQuestsWidgetState extends State<DailyQuestsWidget> {
                     fontSize: 28,
                     fontWeight: FontWeight.w700,
                     letterSpacing: -0.5,
-                    color: Colors.black,
+                    color: BrandLoader().colors.textPrimary,
                   ),
                 ),
               Text(
@@ -193,23 +194,23 @@ class _DailyQuestsWidgetState extends State<DailyQuestsWidget> {
     return Container(
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
-        color: Colors.grey.shade50,
+        color: BrandLoader().colors.background,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: Colors.grey.shade200,
+          color: BrandLoader().colors.borderLight,
           width: 2,
         ),
       ),
       child: Column(
         children: [
-          Icon(Icons.calendar_today, size: 48, color: Colors.grey.shade400),
+          Icon(Icons.calendar_today, size: 48, color: BrandLoader().colors.textTertiary),
           const SizedBox(height: 12),
           Text(
             'No Daily Quests Yet',
             style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.w600,
-              color: Colors.grey.shade700,
+              color: BrandLoader().colors.textSecondary,
             ),
           ),
           const SizedBox(height: 6),
@@ -217,7 +218,7 @@ class _DailyQuestsWidgetState extends State<DailyQuestsWidget> {
             'Check back tomorrow for new quests!',
             style: TextStyle(
               fontSize: 14,
-              color: Colors.grey.shade600,
+              color: BrandLoader().colors.textSecondary,
             ),
           ),
         ],
@@ -231,12 +232,12 @@ class _DailyQuestsWidgetState extends State<DailyQuestsWidget> {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
         decoration: BoxDecoration(
-          color: Colors.white,
-          border: Border.all(color: Colors.black, width: 2),
+          color: BrandLoader().colors.surface,
+          border: Border.all(color: BrandLoader().colors.textPrimary, width: 2),
           borderRadius: BorderRadius.circular(16),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.06),
+              color: BrandLoader().colors.textPrimary.withOpacity(0.06),
               blurRadius: 8,
               offset: const Offset(0, 2),
             ),
@@ -255,7 +256,7 @@ class _DailyQuestsWidgetState extends State<DailyQuestsWidget> {
                 style: TextStyle(
                   fontSize: 15,
                   fontWeight: FontWeight.w600,
-                  color: Colors.black,
+                  color: BrandLoader().colors.textPrimary,
                   height: 1.4,
                 ),
               ),
@@ -369,7 +370,7 @@ class _DailyQuestsWidgetState extends State<DailyQuestsWidget> {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(message),
-        backgroundColor: Colors.red,
+        backgroundColor: BrandLoader().colors.error,
       ),
     );
   }

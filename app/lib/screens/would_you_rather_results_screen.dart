@@ -5,6 +5,7 @@ import '../models/quiz_session.dart';
 import '../models/quiz_question.dart';
 import '../services/storage_service.dart';
 import '../services/quiz_service.dart';
+import '../config/brand/brand_loader.dart';
 
 /// Results screen for Would You Rather quiz
 /// Shows prediction accuracy + alignment bonuses
@@ -118,12 +119,12 @@ class _WouldYouRatherResultsScreenState extends State<WouldYouRatherResultsScree
               numberOfParticles: 50,
               gravity: 0.2,
               shouldLoop: false,
-              colors: const [
-                Colors.purple,
-                Colors.pink,
-                Colors.blue,
-                Colors.orange,
-                Colors.green,
+              colors: [
+                BrandLoader().colors.primary,
+                BrandLoader().colors.error,
+                BrandLoader().colors.info,
+                BrandLoader().colors.warning,
+                BrandLoader().colors.success,
               ],
             ),
           ),
@@ -189,7 +190,7 @@ class _WouldYouRatherResultsScreenState extends State<WouldYouRatherResultsScree
             Navigator.of(context).popUntil((route) => route.isFirst);
           },
           style: FilledButton.styleFrom(
-            backgroundColor: Colors.purple.shade600,
+            backgroundColor: BrandLoader().colors.primary,
             padding: const EdgeInsets.symmetric(vertical: 16),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(12),
@@ -217,8 +218,8 @@ class _WouldYouRatherResultsScreenState extends State<WouldYouRatherResultsScree
         decoration: BoxDecoration(
           gradient: LinearGradient(
             colors: [
-              Colors.purple.shade400,
-              Colors.purple.shade600,
+              BrandLoader().colors.primary.withOpacity(0.8),
+              BrandLoader().colors.primary,
             ],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
@@ -232,10 +233,10 @@ class _WouldYouRatherResultsScreenState extends State<WouldYouRatherResultsScree
               style: TextStyle(fontSize: 64),
             ),
             const SizedBox(height: 16),
-            const Text(
+            Text(
               'Combined Accuracy',
               style: TextStyle(
-                color: Colors.white,
+                color: BrandLoader().colors.textOnPrimary,
                 fontSize: 18,
                 fontWeight: FontWeight.w600,
               ),
@@ -243,8 +244,8 @@ class _WouldYouRatherResultsScreenState extends State<WouldYouRatherResultsScree
             const SizedBox(height: 8),
             Text(
               '$matchPercentage%',
-              style: const TextStyle(
-                color: Colors.white,
+              style: TextStyle(
+                color: BrandLoader().colors.textOnPrimary,
                 fontSize: 72,
                 fontWeight: FontWeight.bold,
               ),
@@ -252,8 +253,8 @@ class _WouldYouRatherResultsScreenState extends State<WouldYouRatherResultsScree
             const SizedBox(height: 8),
             Text(
               _getAccuracyMessage(matchPercentage),
-              style: const TextStyle(
-                color: Colors.white,
+              style: TextStyle(
+                color: BrandLoader().colors.textOnPrimary,
                 fontSize: 16,
               ),
               textAlign: TextAlign.center,
@@ -277,14 +278,14 @@ class _WouldYouRatherResultsScreenState extends State<WouldYouRatherResultsScree
           children: [
             Row(
               children: [
-                Icon(Icons.analytics, color: Colors.blue.shade700, size: 24),
+                Icon(Icons.analytics, color: BrandLoader().colors.info, size: 24),
                 const SizedBox(width: 8),
                 Text(
                   'Prediction Details',
                   style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
-                    color: Colors.blue.shade700,
+                    color: BrandLoader().colors.info,
                   ),
                 ),
               ],
@@ -308,7 +309,7 @@ class _WouldYouRatherResultsScreenState extends State<WouldYouRatherResultsScree
                   style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.bold,
-                    color: Colors.blue.shade700,
+                    color: BrandLoader().colors.info,
                   ),
                 ),
               ],
@@ -316,8 +317,8 @@ class _WouldYouRatherResultsScreenState extends State<WouldYouRatherResultsScree
             const SizedBox(height: 8),
             LinearProgressIndicator(
               value: userPercentage / 100,
-              backgroundColor: Colors.grey.shade300,
-              valueColor: AlwaysStoppedAnimation<Color>(Colors.blue.shade600),
+              backgroundColor: BrandLoader().colors.textTertiary.withOpacity(0.3),
+              valueColor: AlwaysStoppedAnimation<Color>(BrandLoader().colors.info),
               minHeight: 8,
               borderRadius: BorderRadius.circular(4),
             ),
@@ -341,7 +342,7 @@ class _WouldYouRatherResultsScreenState extends State<WouldYouRatherResultsScree
                   style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.bold,
-                    color: Colors.purple.shade700,
+                    color: BrandLoader().colors.primary,
                   ),
                 ),
               ],
@@ -349,8 +350,8 @@ class _WouldYouRatherResultsScreenState extends State<WouldYouRatherResultsScree
             const SizedBox(height: 8),
             LinearProgressIndicator(
               value: partnerPercentage / 100,
-              backgroundColor: Colors.grey.shade300,
-              valueColor: AlwaysStoppedAnimation<Color>(Colors.purple.shade600),
+              backgroundColor: BrandLoader().colors.textTertiary.withOpacity(0.3),
+              valueColor: AlwaysStoppedAnimation<Color>(BrandLoader().colors.primary),
               minHeight: 8,
               borderRadius: BorderRadius.circular(4),
             ),
@@ -389,7 +390,7 @@ class _WouldYouRatherResultsScreenState extends State<WouldYouRatherResultsScree
               'You and $partnerName chose the same answer on $alignmentMatches question${alignmentMatches == 1 ? "" : "s"}!',
               style: TextStyle(
                 fontSize: 14,
-                color: Colors.grey.shade700,
+                color: BrandLoader().colors.textSecondary,
               ),
               textAlign: TextAlign.center,
             ),
@@ -402,7 +403,7 @@ class _WouldYouRatherResultsScreenState extends State<WouldYouRatherResultsScree
   Widget _buildEnhancedLPBreakdown(int lpEarned, int baseLp, int alignmentBonus, int alignmentMatches, String accuracyTier, int matchPercentage) {
     return Card(
       elevation: 2,
-      color: Colors.amber.shade50,
+      color: BrandLoader().colors.warning.withOpacity(0.1),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16),
       ),
@@ -414,14 +415,14 @@ class _WouldYouRatherResultsScreenState extends State<WouldYouRatherResultsScree
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Icon(Icons.diamond, color: Colors.amber, size: 28),
+                Icon(Icons.diamond, color: BrandLoader().colors.warning, size: 28),
                 const SizedBox(width: 8),
                 Text(
                   '+$lpEarned Love Points',
                   style: TextStyle(
                     fontSize: 22,
                     fontWeight: FontWeight.bold,
-                    color: Colors.amber.shade900,
+                    color: BrandLoader().colors.warning.withOpacity(0.9),
                   ),
                 ),
               ],
@@ -453,7 +454,7 @@ class _WouldYouRatherResultsScreenState extends State<WouldYouRatherResultsScree
                         style: TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.bold,
-                          color: Colors.amber.shade900,
+                          color: BrandLoader().colors.warning.withOpacity(0.9),
                         ),
                       ),
                     ],
@@ -463,7 +464,7 @@ class _WouldYouRatherResultsScreenState extends State<WouldYouRatherResultsScree
                     'Tier: "$accuracyTier" ($matchPercentage% accuracy)',
                     style: TextStyle(
                       fontSize: 12,
-                      color: Colors.grey.shade600,
+                      color: BrandLoader().colors.textSecondary,
                       fontStyle: FontStyle.italic,
                     ),
                   ),
@@ -497,7 +498,7 @@ class _WouldYouRatherResultsScreenState extends State<WouldYouRatherResultsScree
                           style: TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.bold,
-                            color: Colors.amber.shade900,
+                            color: BrandLoader().colors.warning.withOpacity(0.9),
                           ),
                         ),
                       ],
@@ -507,7 +508,7 @@ class _WouldYouRatherResultsScreenState extends State<WouldYouRatherResultsScree
                       'Bonus for shared preferences',
                       style: TextStyle(
                         fontSize: 12,
-                        color: Colors.grey.shade600,
+                        color: BrandLoader().colors.textSecondary,
                         fontStyle: FontStyle.italic,
                       ),
                     ),
@@ -532,7 +533,7 @@ class _WouldYouRatherResultsScreenState extends State<WouldYouRatherResultsScree
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
-                      color: Colors.amber.shade900,
+                      color: BrandLoader().colors.warning.withOpacity(0.9),
                     ),
                   ),
                 ],
@@ -572,7 +573,7 @@ class _WouldYouRatherResultsScreenState extends State<WouldYouRatherResultsScree
               padding: const EdgeInsets.all(20),
               child: Row(
                 children: [
-                  Icon(Icons.list_alt, color: Colors.green.shade700, size: 24),
+                  Icon(Icons.list_alt, color: BrandLoader().colors.success, size: 24),
                   const SizedBox(width: 8),
                   const Expanded(
                     child: Text(
@@ -585,7 +586,7 @@ class _WouldYouRatherResultsScreenState extends State<WouldYouRatherResultsScree
                   ),
                   Icon(
                     _showDetailedReview ? Icons.expand_less : Icons.expand_more,
-                    color: Colors.grey.shade700,
+                    color: BrandLoader().colors.textSecondary,
                   ),
                 ],
               ),
@@ -620,9 +621,9 @@ class _WouldYouRatherResultsScreenState extends State<WouldYouRatherResultsScree
                         ),
                       ),
                       const SizedBox(height: 12),
-                      _buildAnswerRow('Your answer:', userAnswer >= 0 && userAnswer < question.options.length ? question.options[userAnswer] : '—', Colors.blue),
+                      _buildAnswerRow('Your answer:', userAnswer >= 0 && userAnswer < question.options.length ? question.options[userAnswer] : '—', BrandLoader().colors.info),
                       const SizedBox(height: 6),
-                      _buildAnswerRow('$partnerName\'s answer:', partnerAnswer >= 0 && partnerAnswer < question.options.length ? question.options[partnerAnswer] : '—', Colors.purple),
+                      _buildAnswerRow('$partnerName\'s answer:', partnerAnswer >= 0 && partnerAnswer < question.options.length ? question.options[partnerAnswer] : '—', BrandLoader().colors.primary),
                       const SizedBox(height: 6),
                       Row(
                         children: [
@@ -630,7 +631,7 @@ class _WouldYouRatherResultsScreenState extends State<WouldYouRatherResultsScree
                             'Your prediction: ',
                             style: TextStyle(
                               fontSize: 13,
-                              color: Colors.grey.shade700,
+                              color: BrandLoader().colors.textSecondary,
                             ),
                           ),
                           Text(
@@ -644,7 +645,7 @@ class _WouldYouRatherResultsScreenState extends State<WouldYouRatherResultsScree
                           Icon(
                             predictionCorrect ? Icons.check_circle : Icons.cancel,
                             size: 16,
-                            color: predictionCorrect ? Colors.green : Colors.red,
+                            color: predictionCorrect ? BrandLoader().colors.success : BrandLoader().colors.error,
                           ),
                         ],
                       ),
@@ -653,7 +654,7 @@ class _WouldYouRatherResultsScreenState extends State<WouldYouRatherResultsScree
                         Container(
                           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                           decoration: BoxDecoration(
-                            color: Colors.pink.shade50,
+                            color: BrandLoader().colors.error.withOpacity(0.1),
                             borderRadius: BorderRadius.circular(4),
                           ),
                           child: Row(
@@ -666,7 +667,7 @@ class _WouldYouRatherResultsScreenState extends State<WouldYouRatherResultsScree
                                 style: TextStyle(
                                   fontSize: 12,
                                   fontWeight: FontWeight.w600,
-                                  color: Colors.pink.shade700,
+                                  color: BrandLoader().colors.error,
                                 ),
                               ),
                             ],
@@ -684,14 +685,14 @@ class _WouldYouRatherResultsScreenState extends State<WouldYouRatherResultsScree
     );
   }
 
-  Widget _buildAnswerRow(String label, String answer, MaterialColor color) {
+  Widget _buildAnswerRow(String label, String answer, Color color) {
     return Row(
       children: [
         Text(
           label,
           style: TextStyle(
             fontSize: 13,
-            color: Colors.grey.shade700,
+            color: BrandLoader().colors.textSecondary,
           ),
         ),
         const SizedBox(width: 4),
@@ -706,7 +707,7 @@ class _WouldYouRatherResultsScreenState extends State<WouldYouRatherResultsScree
             style: TextStyle(
               fontSize: 13,
               fontWeight: FontWeight.w600,
-              color: color.shade700,
+              color: color,
             ),
           ),
         ),
@@ -771,9 +772,9 @@ class _WouldYouRatherResultsScreenState extends State<WouldYouRatherResultsScree
       if (!mounted) return;
 
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
+        SnackBar(
           content: Text('✅ Alice completed! Results calculated.'),
-          backgroundColor: Colors.green,
+          backgroundColor: BrandLoader().colors.success,
         ),
       );
     } catch (e) {
@@ -782,7 +783,7 @@ class _WouldYouRatherResultsScreenState extends State<WouldYouRatherResultsScree
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Error: ${e.toString()}'),
-          backgroundColor: Colors.red,
+          backgroundColor: BrandLoader().colors.error,
         ),
       );
     }
@@ -818,7 +819,7 @@ class _WouldYouRatherResultsScreenState extends State<WouldYouRatherResultsScree
             'You\'ve completed your predictions!',
             style: TextStyle(
               fontSize: 18,
-              color: Colors.grey.shade700,
+              color: BrandLoader().colors.textSecondary,
             ),
             textAlign: TextAlign.center,
           ),
@@ -828,7 +829,7 @@ class _WouldYouRatherResultsScreenState extends State<WouldYouRatherResultsScree
           // Waiting card
           Card(
             elevation: 2,
-            color: Colors.blue.shade50,
+            color: BrandLoader().colors.info.withOpacity(0.1),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(16),
             ),
@@ -841,7 +842,7 @@ class _WouldYouRatherResultsScreenState extends State<WouldYouRatherResultsScree
                     children: [
                       Icon(
                         Icons.hourglass_empty,
-                        color: Colors.blue.shade700,
+                        color: BrandLoader().colors.info,
                         size: 32,
                       ),
                       const SizedBox(width: 12),
@@ -850,7 +851,7 @@ class _WouldYouRatherResultsScreenState extends State<WouldYouRatherResultsScree
                         style: TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
-                          color: Colors.blue.shade700,
+                          color: BrandLoader().colors.info,
                         ),
                       ),
                     ],
@@ -860,7 +861,7 @@ class _WouldYouRatherResultsScreenState extends State<WouldYouRatherResultsScree
                     '$partnerName needs to complete their predictions before we can reveal the results.',
                     style: TextStyle(
                       fontSize: 16,
-                      color: Colors.grey.shade800,
+                      color: BrandLoader().colors.textPrimary.withOpacity(0.9),
                     ),
                     textAlign: TextAlign.center,
                   ),
@@ -869,7 +870,7 @@ class _WouldYouRatherResultsScreenState extends State<WouldYouRatherResultsScree
                     'Check back soon to see how well you know each other!',
                     style: TextStyle(
                       fontSize: 14,
-                      color: Colors.grey.shade600,
+                      color: BrandLoader().colors.textSecondary,
                       fontStyle: FontStyle.italic,
                     ),
                     textAlign: TextAlign.center,
@@ -885,7 +886,7 @@ class _WouldYouRatherResultsScreenState extends State<WouldYouRatherResultsScree
           OutlinedButton(
             onPressed: () => _mockAliceCompletion(),
             style: OutlinedButton.styleFrom(
-              side: BorderSide(color: Colors.orange.shade600, width: 2),
+              side: BorderSide(color: BrandLoader().colors.warning, width: 2),
               padding: const EdgeInsets.symmetric(vertical: 16),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12),
@@ -894,14 +895,14 @@ class _WouldYouRatherResultsScreenState extends State<WouldYouRatherResultsScree
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(Icons.bug_report, color: Colors.orange.shade600),
+                Icon(Icons.bug_report, color: BrandLoader().colors.warning),
                 const SizedBox(width: 8),
                 Text(
                   'DEBUG: Mock Alice Completion',
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
-                    color: Colors.orange.shade600,
+                    color: BrandLoader().colors.warning,
                   ),
                 ),
               ],
@@ -916,7 +917,7 @@ class _WouldYouRatherResultsScreenState extends State<WouldYouRatherResultsScree
               Navigator.of(context).popUntil((route) => route.isFirst);
             },
             style: FilledButton.styleFrom(
-              backgroundColor: Colors.blue.shade600,
+              backgroundColor: BrandLoader().colors.info,
               padding: const EdgeInsets.symmetric(vertical: 16),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12),
