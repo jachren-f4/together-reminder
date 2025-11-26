@@ -17,8 +17,8 @@ PLATFORM="${1:-all}"
 # Format: brandId:flavorName:dartDefine
 BRANDS=(
   "togetherremind:togetherremind:togetherRemind"
+  "holycouples:holycouples:holyCouples"
   # Add more brands here as they're implemented:
-  # "holycouples:holycouples:holyCouples"
   # "spicycouples:spicycouples:spicyCouples"
 )
 

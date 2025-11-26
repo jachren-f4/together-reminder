@@ -27,6 +27,7 @@ class BrandRegistry {
   /// Map of all brand configurations
   static final Map<Brand, BrandConfig> _brands = {
     Brand.togetherRemind: _togetherRemindConfig,
+    Brand.holyCouples: _holyCouplesConfig,
   };
 
   // ========================================
@@ -102,10 +103,11 @@ class BrandRegistry {
   );
 
   // ========================================
-  // Holy Couples (Future Brand - Template)
+  // Holy Couples (Test Brand)
   // ========================================
-  // Uncomment and customize when ready to add this brand
-  /*
+  // Uses TogetherRemind Firebase for testing multi-brand system
+  // TODO: Create separate Firebase project when ready for production
+
   static final _holyCouplesConfig = BrandConfig(
     brand: Brand.holyCouples,
     appName: 'Holy Couples',
@@ -113,34 +115,35 @@ class BrandRegistry {
     bundleIdAndroid: 'com.togetherremind.holycouples',
     bundleIdIOS: 'com.togetherremind.holycouples',
     colors: const BrandColors(
-      primary: Color(0xFF4A5568),        // Warm slate gray
-      primaryLight: Color(0xFF718096),
-      primaryDark: Color(0xFF2D3748),
-      background: Color(0xFFFAF9F7),     // Warm cream
-      surface: Color(0xFFFFFFF0),        // Ivory
+      // Deep blue/purple spiritual palette
+      primary: Color(0xFF4338CA),        // Indigo-700
+      primaryLight: Color(0xFF6366F1),   // Indigo-500
+      primaryDark: Color(0xFF312E81),    // Indigo-900
+      background: Color(0xFFFAF5FF),     // Soft lavender
+      surface: Color(0xFFFFFBF0),        // Warm ivory
 
-      textPrimary: Color(0xFF2D3748),
-      textSecondary: Color(0xFF718096),
-      textTertiary: Color(0xFFA0AEC0),
-      textOnPrimary: Color(0xFFFFFFF0),
+      textPrimary: Color(0xFF1E1B4B),    // Indigo-950
+      textSecondary: Color(0xFF6B7280),  // Gray-500
+      textTertiary: Color(0xFF9CA3AF),   // Gray-400
+      textOnPrimary: Color(0xFFFFFBF0),  // Warm ivory
 
-      accentGreen: Color(0xFF38A169),
-      accentOrange: Color(0xFFD69E2E),   // Gold
+      accentGreen: Color(0xFF059669),    // Emerald-600
+      accentOrange: Color(0xFFD97706),   // Amber-600 (gold)
 
-      border: Color(0xFF4A5568),
-      borderLight: Color(0xFFE2E8F0),
-      divider: Color(0xFFE2E8F0),
-      shadow: Color(0x26000000),
-      overlay: Color(0x80000000),
+      border: Color(0xFF4338CA),         // Indigo-700
+      borderLight: Color(0xFFE5E7EB),    // Gray-200
+      divider: Color(0xFFE5E7EB),        // Gray-200
+      shadow: Color(0x26312E81),         // Indigo shadow
+      overlay: Color(0x80312E81),        // Indigo overlay
 
-      success: Color(0xFF38A169),
-      error: Color(0xFFE53E3E),
-      warning: Color(0xFFD69E2E),
-      info: Color(0xFF3182CE),
+      success: Color(0xFF059669),        // Emerald-600
+      error: Color(0xFFDC2626),          // Red-600
+      warning: Color(0xFFD97706),        // Amber-600
+      info: Color(0xFF4338CA),           // Indigo-700
 
-      disabled: Color(0xFFCBD5E0),
-      highlight: Color(0xFFF7FAFC),
-      selected: Color(0xFFEDF2F7),
+      disabled: Color(0xFFD1D5DB),       // Gray-300
+      highlight: Color(0xFFF5F3FF),      // Violet-50
+      selected: Color(0xFFEDE9FE),       // Violet-100
     ),
     typography: const BrandTypography(
       defaultSerifFont: SerifFont.libreBaskerville,
@@ -148,22 +151,21 @@ class BrandRegistry {
     ),
     assets: const BrandAssets('holycouples'),
     content: const ContentPaths('holycouples'),
+    // Using TogetherRemind Firebase for testing (will be separate in production)
     firebase: const BrandFirebaseConfig(
-      // TODO: Set up separate Firebase project for Holy Couples
-      projectId: 'holycouples-prod',
-      storageBucket: 'holycouples-prod.firebasestorage.app',
-      databaseURL: 'https://holycouples-prod-default-rtdb.firebaseio.com',
-      messagingSenderId: 'TODO',
-      androidApiKey: 'TODO',
-      androidAppId: 'TODO',
-      iosApiKey: 'TODO',
-      iosAppId: 'TODO',
+      projectId: 'togetherremind',
+      storageBucket: 'togetherremind.firebasestorage.app',
+      databaseURL: 'https://togetherremind-default-rtdb.firebaseio.com',
+      messagingSenderId: '725871129285',
+      androidApiKey: 'AIzaSyDpkSTQ6PwEYtKQuzMe_GJt6x2fESNGM04',
+      androidAppId: '1:725871129285:android:fbf78b68b07590f327f6ac',
+      iosApiKey: 'AIzaSyBolavJ_1dNiEZ42dLd7OmANLCcKTvyPJg',
+      iosAppId: '1:725871129285:ios:9b09ef0e56448b1727f6ac',
       iosBundleId: 'com.togetherremind.holycouples',
-      webApiKey: 'TODO',
-      webAppId: 'TODO',
-      webAuthDomain: 'holycouples-prod.firebaseapp.com',
+      webApiKey: 'AIzaSyCh97osauFB0ljuBr5MU5QfHX6Zx3XOZ80',
+      webAppId: '1:725871129285:web:5c82d5e18390e80c27f6ac',
+      webAuthDomain: 'togetherremind.firebaseapp.com',
     ),
-    apiBaseUrl: 'https://api.holycouples.com',
+    apiBaseUrl: 'https://api.togetherremind.com', // Using same API for testing
   );
-  */
 }

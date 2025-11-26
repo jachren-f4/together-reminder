@@ -1,0 +1,24 @@
+{
+  "4": [
+    "rata", "sana", "kala", "loma", "valo", "palo", "talo", "pora", "kone", "tone",
+    "tori", "kori", "pori", "sori", "mato", "kato", "lato", "sato", "veto", "keto",
+    "sata", "tasa", "ääni", "aamu", "auto", "levy", "katu", "muna", "nimi", "elää",
+    "tuli", "vesi", "mies", "nainen", "lapsi", "päivä", "vuosi", "aika", "käsi", "jalka",
+    "pää", "silmä", "korva", "suu", "nenä", "talo", "koti", "ovi", "tie", "maa",
+    "taivas", "ilma", "vesi", "tuli", "kuu", "aurinko", "tähti", "pilvi", "sade", "lumi",
+    "jää", "meri", "järvi", "joki", "metsä", "puu", "kukka", "ruoho", "lehti", "oksa",
+    "juuri", "siemen", "hedelmä", "marja", "sieni", "kasvi", "eläin", "lintu", "kala", "kissa"
+  ],
+  "5": [
+    "rauta", "kukka", "taika", "ranta", "kaula", "sauna", "matto", "latte", "katto",
+    "valta", "malta", "palta", "aamu", "ilta", "yö", "päivä", "viikko", "vuosi",
+    "kevät", "kesä", "syksy", "talvi", "kuuma", "kylmä", "lämpö", "valo", "varjo",
+    "kirja", "lehti", "paperi", "kynä", "lyijy", "liitu", "pöytä", "tuoli", "sohva",
+    "sänky", "tyyny", "peitto", "lakana", "vaate", "paita", "housut", "hame", "mekko"
+  ],
+  "6": [
+    "taivas", "taisto", "rakaus", "kukkia", "aurinko", "kuu", "tähdet", "pilvet",
+    "metsä", "järvet", "joet", "vuoret", "laaksot", "niityt", "pellot", "kadut",
+    "talot", "kylät", "kaupungit", "maat", "maailma", "ihmiset", "perheet", "ystävät"
+  ]
+}
