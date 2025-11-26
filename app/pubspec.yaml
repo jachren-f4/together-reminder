@@ -104,6 +104,11 @@ flutter:
     - assets/brands/togetherremind/animations/
     - assets/brands/togetherremind/images/quests/
     - assets/brands/togetherremind/words/
+    # Brand-specific content (HolyCouples)
+    - assets/brands/holycouples/data/
+    - assets/brands/holycouples/animations/
+    - assets/brands/holycouples/images/quests/
+    - assets/brands/holycouples/words/
     # Shared assets (same across all brands)
     - assets/shared/gfx/
     - assets/shared/sounds/

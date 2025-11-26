@@ -1,0 +1,12 @@
+// HolyCouples flavor configuration
+// Used for both Debug and Release builds
+
+// App identity
+PRODUCT_BUNDLE_IDENTIFIER = com.togetherremind.holycouples
+PRODUCT_NAME = Holy Couples
+
+// Brand identifier (passed to Dart via --dart-define)
+BRAND = holyCouples
+
+// Firebase config path (relative to ios/)
+GOOGLE_SERVICE_INFO_PLIST = Firebase/HolyCouples/GoogleService-Info.plist
