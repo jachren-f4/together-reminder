@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../config/brand/brand_loader.dart';
 
 /// Answer cell state
 enum AnswerCellState {
@@ -97,7 +98,7 @@ class _LinkedAnswerCellState extends State<LinkedAnswerCell>
     if (widget.isDragTarget) return const Color(0xFFE3F2FD); // Light blue
     switch (widget.state) {
       case AnswerCellState.empty:
-        return Colors.white;
+        return BrandLoader().colors.surface;
       case AnswerCellState.draft:
         return const Color(0xFFFFEE58); // Yellow
       case AnswerCellState.locked:
@@ -108,11 +109,11 @@ class _LinkedAnswerCellState extends State<LinkedAnswerCell>
   }
 
   Color get _borderColor {
-    if (widget.isDragTarget) return Colors.blue;
-    if (widget.isHighlighted) return Colors.blue;
+    if (widget.isDragTarget) return BrandLoader().colors.info;
+    if (widget.isHighlighted) return BrandLoader().colors.info;
     if (widget.state == AnswerCellState.locked) return const Color(0xFF4CAF50);
-    if (widget.state == AnswerCellState.incorrect) return Colors.red;
-    return Colors.black54;
+    if (widget.state == AnswerCellState.incorrect) return BrandLoader().colors.error;
+    return BrandLoader().colors.textSecondary;
   }
 
   double get _borderWidth {
@@ -125,7 +126,7 @@ class _LinkedAnswerCellState extends State<LinkedAnswerCell>
     if (widget.isHighlighted) {
       return [
         BoxShadow(
-          color: Colors.blue.withValues(alpha: 0.5),
+          color: BrandLoader().colors.info.withValues(alpha: 0.5),
           blurRadius: 12,
           spreadRadius: 3,
         ),
@@ -134,7 +135,7 @@ class _LinkedAnswerCellState extends State<LinkedAnswerCell>
     if (widget.state == AnswerCellState.locked) {
       return [
         BoxShadow(
-          color: Colors.green.withValues(alpha: 0.3),
+          color: BrandLoader().colors.success.withValues(alpha: 0.3),
           blurRadius: 6,
           spreadRadius: 1,
         ),
@@ -186,13 +187,13 @@ class _LinkedAnswerCellState extends State<LinkedAnswerCell>
                             fontWeight: FontWeight.w700,
                             fontFamily: 'Georgia',
                             color: widget.state == AnswerCellState.locked
-                                ? Colors.white
-                                : Colors.black87,
+                                ? BrandLoader().colors.textOnPrimary
+                                : BrandLoader().colors.textPrimary,
                             shadows: widget.state == AnswerCellState.locked
                                 ? [
-                                    const Shadow(
-                                      color: Colors.black26,
-                                      offset: Offset(1, 1),
+                                    Shadow(
+                                      color: BrandLoader().colors.textPrimary.withValues(alpha: 0.26),
+                                      offset: const Offset(1, 1),
                                       blurRadius: 2,
                                     ),
                                   ]
@@ -252,7 +253,7 @@ class DraggableAnswerCell extends StatelessWidget {
             borderRadius: BorderRadius.circular(6),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withValues(alpha: 0.3),
+                color: BrandLoader().colors.textPrimary.withValues(alpha: 0.3),
                 blurRadius: 12,
                 offset: const Offset(0, 4),
               ),
@@ -265,7 +266,7 @@ class DraggableAnswerCell extends StatelessWidget {
                 fontSize: size * 0.55,
                 fontWeight: FontWeight.w700,
                 fontFamily: 'Georgia',
-                color: Colors.black87,
+                color: BrandLoader().colors.textPrimary,
               ),
             ),
           ),
@@ -276,8 +277,8 @@ class DraggableAnswerCell extends StatelessWidget {
         width: size,
         height: size,
         decoration: BoxDecoration(
-          color: Colors.grey.shade200,
-          border: Border.all(color: Colors.grey.shade400, width: 1.5),
+          color: BrandLoader().colors.surface,
+          border: Border.all(color: BrandLoader().colors.textTertiary, width: 1.5),
           borderRadius: BorderRadius.circular(4),
         ),
       ),

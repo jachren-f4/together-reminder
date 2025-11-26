@@ -13,6 +13,7 @@ import 'package:togetherremind/services/storage_service.dart';
 import 'package:togetherremind/services/notification_service.dart';
 import 'package:togetherremind/services/couple_pairing_service.dart';
 import 'package:togetherremind/theme/app_theme.dart';
+import '../config/brand/brand_loader.dart';
 import '../utils/logger.dart';
 
 class PairingScreen extends StatefulWidget {
@@ -387,7 +388,7 @@ class _PairingScreenState extends State<PairingScreen>
               borderRadius: BorderRadius.circular(8),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withAlpha((0.08 * 255).round()),
+                  color: BrandLoader().colors.textPrimary.withOpacity(0.08),
                   blurRadius: 8,
                   offset: const Offset(0, 2),
                 ),
@@ -440,7 +441,7 @@ class _PairingScreenState extends State<PairingScreen>
                   borderRadius: BorderRadius.circular(20),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withAlpha((0.06 * 255).round()),
+                      color: BrandLoader().colors.textPrimary.withOpacity(0.06),
                       blurRadius: 8,
                       offset: const Offset(0, 2),
                     ),
@@ -679,7 +680,7 @@ class _PairingScreenState extends State<PairingScreen>
                 borderRadius: BorderRadius.circular(20),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withAlpha((0.06 * 255).round()),
+                    color: BrandLoader().colors.textPrimary.withOpacity(0.06),
                     blurRadius: 8,
                     offset: const Offset(0, 2),
                   ),
@@ -723,7 +724,7 @@ class _PairingScreenState extends State<PairingScreen>
                     style: AppTheme.bodyFont.copyWith(
                       fontSize: 14,
                       color: _generatedCode!.timeRemaining.inMinutes < 3
-                          ? Colors.red
+                          ? BrandLoader().colors.error
                           : AppTheme.textTertiary,
                       fontWeight: _generatedCode!.timeRemaining.inMinutes < 3
                           ? FontWeight.w600
@@ -896,7 +897,7 @@ class _PairingScreenState extends State<PairingScreen>
                 borderRadius: BorderRadius.circular(16),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withAlpha((0.06 * 255).round()),
+                    color: BrandLoader().colors.textPrimary.withOpacity(0.06),
                     blurRadius: 8,
                     offset: const Offset(0, 2),
                   ),
@@ -1218,7 +1219,7 @@ class _PairingScreenState extends State<PairingScreen>
           top: 20,
           left: 20,
           child: CircleAvatar(
-            backgroundColor: Colors.white,
+            backgroundColor: BrandLoader().colors.surface,
             child: IconButton(
               icon: Icon(Icons.close, color: AppTheme.primaryBlack),
               onPressed: () {
@@ -1229,7 +1230,7 @@ class _PairingScreenState extends State<PairingScreen>
             ),
           ),
         ),
-        const Positioned(
+        Positioned(
           bottom: 40,
           left: 0,
           right: 0,
@@ -1237,12 +1238,12 @@ class _PairingScreenState extends State<PairingScreen>
             'Point camera at partner\'s QR code',
             textAlign: TextAlign.center,
             style: TextStyle(
-              color: Colors.white,
+              color: BrandLoader().colors.textOnPrimary,
               fontSize: 16,
               fontWeight: FontWeight.w600,
               shadows: [
                 Shadow(
-                  color: Colors.black54,
+                  color: BrandLoader().colors.textPrimary.withOpacity(0.54),
                   blurRadius: 8,
                 ),
               ],

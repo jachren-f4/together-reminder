@@ -4,6 +4,7 @@ import '../models/ladder_session.dart';
 import '../services/ladder_service.dart';
 import '../services/storage_service.dart';
 import 'word_ladder_game_screen.dart';
+import '../config/brand/brand_loader.dart';
 
 class WordLadderHubScreen extends StatefulWidget {
   const WordLadderHubScreen({super.key});
@@ -68,16 +69,16 @@ class _WordLadderHubScreenState extends State<WordLadderHubScreen> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Icon(Icons.sentiment_neutral, size: 64, color: Colors.grey),
+          Icon(Icons.sentiment_neutral, size: 64, color: BrandLoader().colors.disabled),
           const SizedBox(height: 16),
           const Text(
             'No active ladders',
             style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
           ),
           const SizedBox(height: 8),
-          const Text(
+          Text(
             'Pull down to refresh',
-            style: TextStyle(color: Colors.grey),
+            style: TextStyle(color: BrandLoader().colors.disabled),
           ),
         ],
       ),
@@ -141,16 +142,16 @@ class _LadderCard extends StatelessWidget {
     IconData icon;
 
     if (isYielded) {
-      cardColor = Colors.yellow.shade50;
-      borderColor = Colors.yellow.shade700;
+      cardColor = BrandLoader().colors.warning.withOpacity(0.1);
+      borderColor = BrandLoader().colors.warning;
       icon = Icons.help_outline;
     } else if (isMyTurn) {
       cardColor = theme.colorScheme.primaryContainer;
       borderColor = theme.colorScheme.primary;
       icon = Icons.play_arrow;
     } else {
-      cardColor = Colors.grey.shade100;
-      borderColor = Colors.grey.shade400;
+      cardColor = BrandLoader().colors.background;
+      borderColor = BrandLoader().colors.border;
       icon = Icons.hourglass_empty;
     }
 
@@ -257,7 +258,7 @@ class _LadderCard extends StatelessWidget {
                           '${ladder.stepCount} steps${ladder.optimalSteps != null ? " • Target: ${ladder.optimalSteps}" : ""}',
                           style: TextStyle(
                             fontSize: 12,
-                            color: Colors.grey.shade600,
+                            color: BrandLoader().colors.textSecondary,
                           ),
                         ),
                       ],
@@ -273,10 +274,10 @@ class _LadderCard extends StatelessWidget {
                         color: borderColor,
                         borderRadius: BorderRadius.circular(20),
                       ),
-                      child: const Text(
+                      child: Text(
                         'TAP TO PLAY',
                         style: TextStyle(
-                          color: Colors.white,
+                          color: BrandLoader().colors.textOnPrimary,
                           fontSize: 12,
                           fontWeight: FontWeight.bold,
                         ),

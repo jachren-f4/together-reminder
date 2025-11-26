@@ -4,6 +4,7 @@ import 'package:togetherremind/services/poke_service.dart';
 import 'package:togetherremind/services/poke_animation_service.dart';
 import 'package:togetherremind/services/storage_service.dart';
 import 'package:togetherremind/theme/app_theme.dart';
+import '../config/brand/brand_loader.dart';
 
 class PokeBottomSheet extends StatefulWidget {
   const PokeBottomSheet({super.key});
@@ -103,10 +104,10 @@ class _PokeBottomSheetState extends State<PokeBottomSheet>
         HapticFeedback.vibrate();
 
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('❌ Failed to send poke. Please try again.'),
-            backgroundColor: Colors.red,
-            duration: Duration(seconds: 3),
+          SnackBar(
+            content: const Text('❌ Failed to send poke. Please try again.'),
+            backgroundColor: BrandLoader().colors.error,
+            duration: const Duration(seconds: 3),
           ),
         );
       }
@@ -133,7 +134,7 @@ class _PokeBottomSheetState extends State<PokeBottomSheet>
               width: 40,
               height: 4,
               decoration: BoxDecoration(
-                color: Colors.black.withOpacity(0.2),
+                color: BrandLoader().colors.textPrimary.withOpacity(0.2),
                 borderRadius: BorderRadius.circular(2),
               ),
             ),
@@ -201,7 +202,7 @@ class _PokeBottomSheetState extends State<PokeBottomSheet>
                 border: Border.all(color: AppTheme.borderLight, width: 2),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withAlpha((0.06 * 255).round()),
+                    color: BrandLoader().colors.textPrimary.withAlpha((0.06 * 255).round()),
                     blurRadius: 8,
                     offset: const Offset(0, 2),
                   ),
@@ -233,7 +234,7 @@ class _PokeBottomSheetState extends State<PokeBottomSheet>
                             : AppTheme.primaryBlack,
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.black.withAlpha((0.15 * 255).round()),
+                            color: BrandLoader().colors.textPrimary.withAlpha((0.15 * 255).round()),
                             blurRadius: 16,
                             offset: const Offset(0, 8),
                           ),
@@ -243,21 +244,21 @@ class _PokeBottomSheetState extends State<PokeBottomSheet>
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           if (_isSending)
-                            const SizedBox(
+                            SizedBox(
                               width: 40,
                               height: 40,
                               child: CircularProgressIndicator(
-                                color: Colors.white,
+                                color: BrandLoader().colors.textOnPrimary,
                                 strokeWidth: 3,
                               ),
                             )
                           else if (_isRateLimited)
                             Text(
                               '${_remainingSeconds}s',
-                              style: const TextStyle(
+                              style: TextStyle(
                                 fontSize: 42,
                                 fontWeight: FontWeight.w700,
-                                color: Colors.white,
+                                color: BrandLoader().colors.textOnPrimary,
                               ),
                             )
                           else
@@ -275,7 +276,7 @@ class _PokeBottomSheetState extends State<PokeBottomSheet>
                             style: AppTheme.bodyFont.copyWith(
                               fontSize: 22,
                               fontWeight: FontWeight.w600,
-                              color: Colors.white,
+                              color: BrandLoader().colors.textOnPrimary,
                             ),
                           ),
                         ],

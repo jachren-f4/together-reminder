@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../config/brand/brand_loader.dart';
 import '../../models/linked.dart';
 
 /// Gray clue cell with clue content (text, emoji, or image) and arrow indicator
@@ -96,7 +97,7 @@ class LinkedClueCell extends StatelessWidget {
           fontSize: fontSize,
           fontWeight: FontWeight.w800,
           fontFamily: 'Arial',
-          color: Colors.black87,
+          color: BrandLoader().colors.textPrimary,
           height: 1.1,
         ),
         textAlign: TextAlign.center,
@@ -148,7 +149,7 @@ class LinkedClueCell extends StatelessWidget {
           return Icon(
             Icons.broken_image,
             size: size * 0.4,
-            color: Colors.grey,
+            color: BrandLoader().colors.textSecondary,
           );
         },
       ),
@@ -160,15 +161,15 @@ class LinkedClueCell extends StatelessWidget {
       width: 10,
       height: 10,
       decoration: BoxDecoration(
-        color: Colors.black.withValues(alpha: 0.1),
+        color: BrandLoader().colors.textPrimary.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(2),
       ),
       child: Center(
         child: Text(
           clue.isAcross ? '\u25B6' : '\u25BC', // ▶ or ▼
-          style: const TextStyle(
+          style: TextStyle(
             fontSize: 7,
-            color: Colors.black54,
+            color: BrandLoader().colors.textSecondary,
           ),
         ),
       ),

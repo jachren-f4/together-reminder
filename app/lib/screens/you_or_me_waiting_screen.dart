@@ -8,6 +8,7 @@ import '../services/daily_quest_service.dart';
 import '../services/quest_sync_service.dart';
 import '../services/love_point_service.dart';
 import '../utils/logger.dart';
+import '../config/brand/brand_loader.dart';
 import 'you_or_me_results_screen.dart';
 
 /// Waiting screen for You or Me game
@@ -191,7 +192,7 @@ class _YouOrMeWaitingScreenState extends State<YouOrMeWaitingScreen> {
         backgroundColor: const Color(0xFFFAFAFA),
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.close, color: Colors.black),
+          icon: Icon(Icons.close, color: BrandLoader().colors.textPrimary),
           onPressed: () => Navigator.of(context).popUntil((route) => route.isFirst),
         ),
       ),
@@ -206,12 +207,12 @@ class _YouOrMeWaitingScreenState extends State<YouOrMeWaitingScreen> {
                 width: 120,
                 height: 120,
                 decoration: BoxDecoration(
-                  color: Colors.black,
+                  color: BrandLoader().colors.primary,
                   shape: BoxShape.circle,
                 ),
-                child: const Icon(
+                child: Icon(
                   Icons.hourglass_empty,
-                  color: Colors.white,
+                  color: BrandLoader().colors.textOnPrimary,
                   size: 60,
                 ),
               ),
@@ -235,7 +236,7 @@ class _YouOrMeWaitingScreenState extends State<YouOrMeWaitingScreen> {
               Text(
                 'Waiting for ${partner?.name ?? 'your partner'} to complete the game...',
                 style: theme.textTheme.bodyLarge?.copyWith(
-                  color: Colors.grey[600],
+                  color: BrandLoader().colors.textSecondary,
                   height: 1.5,
                 ),
                 textAlign: TextAlign.center,
@@ -244,8 +245,8 @@ class _YouOrMeWaitingScreenState extends State<YouOrMeWaitingScreen> {
               const SizedBox(height: 32),
 
               // Loading indicator
-              const CircularProgressIndicator(
-                valueColor: AlwaysStoppedAnimation<Color>(Colors.black),
+              CircularProgressIndicator(
+                valueColor: AlwaysStoppedAnimation<Color>(BrandLoader().colors.primary),
               ),
 
               const SizedBox(height: 32),
@@ -270,7 +271,7 @@ class _YouOrMeWaitingScreenState extends State<YouOrMeWaitingScreen> {
                       child: Text(
                         'You\'ll see the results as soon as they finish!',
                         style: theme.textTheme.bodyMedium?.copyWith(
-                          color: Colors.grey[700],
+                          color: BrandLoader().colors.textSecondary,
                         ),
                       ),
                     ),

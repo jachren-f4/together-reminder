@@ -4,6 +4,7 @@ import 'package:togetherremind/services/storage_service.dart';
 import 'package:togetherremind/services/couple_preferences_service.dart';
 import 'package:togetherremind/services/api_client.dart';
 import 'package:togetherremind/theme/app_theme.dart';
+import 'package:togetherremind/config/brand/brand_loader.dart';
 import 'package:intl/intl.dart';
 import 'debug/data_validation_screen.dart';
 
@@ -88,7 +89,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           ),
           TextButton(
             onPressed: () => Navigator.pop(context, true),
-            style: TextButton.styleFrom(foregroundColor: Colors.red),
+            style: TextButton.styleFrom(foregroundColor: BrandLoader().colors.error),
             child: const Text('Unpair'),
           ),
         ],
@@ -383,7 +384,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                 ),
                                 TextButton(
                                   onPressed: () => Navigator.pop(context, true),
-                                  style: TextButton.styleFrom(foregroundColor: Colors.red),
+                                  style: TextButton.styleFrom(foregroundColor: BrandLoader().colors.error),
                                   child: const Text('Clear'),
                                 ),
                               ],
@@ -418,8 +419,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   child: OutlinedButton(
                     onPressed: _unpairPartner,
                     style: OutlinedButton.styleFrom(
-                      foregroundColor: Colors.red,
-                      side: const BorderSide(color: Colors.red, width: 2),
+                      foregroundColor: BrandLoader().colors.error,
+                      side: BorderSide(color: BrandLoader().colors.error, width: 2),
                       padding: const EdgeInsets.symmetric(vertical: 16),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(16),
@@ -488,7 +489,7 @@ class _SectionCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withAlpha((0.06 * 255).round()),
+            color: BrandLoader().colors.textPrimary.withOpacity(0.06),
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),

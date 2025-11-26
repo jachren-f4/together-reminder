@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../config/brand/brand_loader.dart';
 
 /// A 5-point Likert scale widget using heart icons
 /// Used for affirmation-style quiz questions
@@ -21,7 +22,7 @@ class FivePointScaleWidget extends StatelessWidget {
           'Strongly disagree',
           style: TextStyle(
             fontSize: 14,
-            color: Colors.grey[600],
+            color: BrandLoader().colors.textSecondary,
             fontWeight: FontWeight.w500,
           ),
         ),
@@ -44,7 +45,7 @@ class FivePointScaleWidget extends StatelessWidget {
               child: Icon(
                 isSelected ? Icons.favorite : Icons.favorite_border,
                 size: 48,
-                color: isSelected ? Colors.red : Colors.grey[400],
+                color: isSelected ? BrandLoader().colors.error : BrandLoader().colors.textTertiary,
               ),
             );
           }),
@@ -57,7 +58,7 @@ class FivePointScaleWidget extends StatelessWidget {
           'Strongly agree',
           style: TextStyle(
             fontSize: 14,
-            color: Colors.grey[600],
+            color: BrandLoader().colors.textSecondary,
             fontWeight: FontWeight.w500,
           ),
         ),

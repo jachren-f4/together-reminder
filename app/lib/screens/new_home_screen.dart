@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../config/brand/brand_loader.dart';
 import '../utils/logger.dart';
 import '../utils/number_formatter.dart';
 import '../services/storage_service.dart';
@@ -132,7 +133,7 @@ class _NewHomeScreenState extends State<NewHomeScreen> with SingleTickerProvider
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('Error refreshing: $e'),
-            backgroundColor: Colors.red,
+            backgroundColor: BrandLoader().colors.error,
           ),
         );
       }
@@ -561,7 +562,7 @@ class _NewHomeScreenState extends State<NewHomeScreen> with SingleTickerProvider
             'v1.0.21',
             style: TextStyle(
               fontSize: 10,
-              color: Colors.grey.shade400,
+              color: BrandLoader().colors.textTertiary,
             ),
           ),
         ),
@@ -1060,7 +1061,7 @@ class _NewHomeScreenState extends State<NewHomeScreen> with SingleTickerProvider
                       fontSize: 32,
                       fontWeight: FontWeight.w400,
                       letterSpacing: 2,
-                      color: Colors.black,
+                      color: BrandLoader().colors.textPrimary,
                     ),
                   ),
                 ),
@@ -1081,9 +1082,9 @@ class _NewHomeScreenState extends State<NewHomeScreen> with SingleTickerProvider
 
           // Stats section with top border (full width, edge-to-edge)
           Container(
-            decoration: const BoxDecoration(
+            decoration: BoxDecoration(
               border: Border(
-                top: BorderSide(color: Colors.black, width: 2),
+                top: BorderSide(color: BrandLoader().colors.primary, width: 2),
               ),
             ),
             child: Padding(
@@ -1158,8 +1159,8 @@ class _NewHomeScreenState extends State<NewHomeScreen> with SingleTickerProvider
         child: FractionallySizedBox(
           widthFactor: progress.clamp(0.0, 1.0),
           child: Container(
-            decoration: const BoxDecoration(
-              color: Colors.black, // Black progress bar
+            decoration: BoxDecoration(
+              color: BrandLoader().colors.primary, // Progress bar fill
             ),
           ),
         ),

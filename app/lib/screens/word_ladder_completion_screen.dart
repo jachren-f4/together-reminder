@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:confetti/confetti.dart';
 import '../models/ladder_session.dart';
 import '../services/ladder_service.dart';
+import '../config/brand/brand_loader.dart';
 
 class WordLadderCompletionScreen extends StatefulWidget {
   final String sessionId;
@@ -91,7 +92,7 @@ class _WordLadderCompletionScreenState
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontSize: 16,
-                      color: Colors.grey.shade600,
+                      color: BrandLoader().colors.textSecondary,
                     ),
                   ),
                   const SizedBox(height: 32),
@@ -176,20 +177,20 @@ class _WordLadderCompletionScreenState
                     Container(
                       padding: const EdgeInsets.all(16),
                       decoration: BoxDecoration(
-                        color: Colors.amber.shade50,
+                        color: BrandLoader().colors.warning.withOpacity(0.1),
                         borderRadius: BorderRadius.circular(12),
-                        border: Border.all(color: Colors.amber.shade300),
+                        border: Border.all(color: BrandLoader().colors.warning.withOpacity(0.3)),
                       ),
                       child: Row(
                         children: [
-                          Icon(Icons.military_tech, color: Colors.amber.shade700),
+                          Icon(Icons.military_tech, color: BrandLoader().colors.warning),
                           const SizedBox(width: 12),
                           Expanded(
                             child: Text(
                               'Optimal Solution Bonus! +10 LP',
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
-                                color: Colors.amber.shade900,
+                                color: BrandLoader().colors.warning,
                               ),
                             ),
                           ),
@@ -257,14 +258,14 @@ class _WordLadderCompletionScreenState
               numberOfParticles: 20,
               gravity: 0.3,
               shouldLoop: false,
-              colors: const [
-                Colors.red,
-                Colors.pink,
-                Colors.purple,
-                Colors.blue,
-                Colors.green,
-                Colors.yellow,
-                Colors.orange,
+              colors: [
+                BrandLoader().colors.error,
+                BrandLoader().colors.primary,
+                BrandLoader().colors.primaryDark,
+                BrandLoader().colors.info,
+                BrandLoader().colors.success,
+                BrandLoader().colors.warning,
+                BrandLoader().colors.accentOrange,
               ],
             ),
           ),
@@ -301,9 +302,9 @@ class _WordLadderCompletionScreenState
               ),
               backgroundColor: isFirst || isLast
                   ? Theme.of(context).colorScheme.primary
-                  : Colors.grey.shade300,
+                  : BrandLoader().colors.divider,
               labelStyle: TextStyle(
-                color: isFirst || isLast ? Colors.white : Colors.black87,
+                color: isFirst || isLast ? BrandLoader().colors.textOnPrimary : BrandLoader().colors.textPrimary.withOpacity(0.87),
               ),
             );
           }).toList(),
@@ -329,7 +330,7 @@ class _StatRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final color = highlight ? theme.colorScheme.primary : Colors.grey.shade700;
+    final color = highlight ? theme.colorScheme.primary : BrandLoader().colors.textSecondary;
 
     return Row(
       children: [

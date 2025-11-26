@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
+import '../../config/brand/brand_loader.dart';
 
 /// Progress ring widget showing completion percentage
 /// Displays as a white circle with percentage text inside
@@ -11,15 +12,16 @@ class LinkedProgressRing extends StatelessWidget {
   final Color progressColor;
   final TextStyle? textStyle;
 
-  const LinkedProgressRing({
+  LinkedProgressRing({
     super.key,
     required this.progressPercent,
     this.size = 40,
     this.strokeWidth = 3,
-    this.backgroundColor = Colors.white,
-    this.progressColor = Colors.black,
+    Color? backgroundColor,
+    Color? progressColor,
     this.textStyle,
-  });
+  })  : backgroundColor = backgroundColor ?? BrandLoader().colors.surface,
+        progressColor = progressColor ?? BrandLoader().colors.textPrimary;
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +40,7 @@ class LinkedProgressRing extends StatelessWidget {
               color: backgroundColor,
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.2),
+                  color: BrandLoader().colors.textPrimary.withValues(alpha: 0.2),
                   blurRadius: 4,
                   offset: const Offset(0, 2),
                 ),
@@ -61,7 +63,7 @@ class LinkedProgressRing extends StatelessWidget {
                 TextStyle(
                   fontSize: size * 0.25,
                   fontWeight: FontWeight.bold,
-                  color: Colors.black,
+                  color: BrandLoader().colors.textPrimary,
                 ),
           ),
         ],

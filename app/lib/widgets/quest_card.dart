@@ -44,13 +44,13 @@ class QuestCard extends StatelessWidget {
         opacity: isExpired ? 0.5 : 1.0, // Gray out expired quests
         child: Container(
           decoration: BoxDecoration(
-            color: Colors.white,
-            border: Border.all(color: Colors.black, width: 1),
+            color: BrandLoader().colors.surface,
+            border: Border.all(color: BrandLoader().colors.textPrimary, width: 1),
             borderRadius: BorderRadius.circular(0), // Sharp corners like mockup
             boxShadow: showShadow
                 ? [
                     BoxShadow(
-                      color: Colors.black.withOpacity(0.15),
+                      color: BrandLoader().colors.textPrimary.withOpacity(0.15),
                       blurRadius: 0,
                       offset: const Offset(4, 4),
                     ),
@@ -80,14 +80,14 @@ class QuestCard extends StatelessWidget {
                         Icon(
                           Icons.image_not_supported,
                           size: 48,
-                          color: Colors.grey.shade400,
+                          color: BrandLoader().colors.textTertiary,
                         ),
                         const SizedBox(height: 8),
                         Text(
                           'Image not found',
                           style: TextStyle(
                             fontSize: 12,
-                            color: Colors.grey.shade600,
+                            color: BrandLoader().colors.textSecondary,
                           ),
                         ),
                       ],
@@ -136,15 +136,15 @@ class QuestCard extends StatelessWidget {
                       Container(
                         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                         decoration: BoxDecoration(
-                          color: Colors.black,
-                          border: Border.all(color: Colors.black, width: 1),
+                          color: BrandLoader().colors.textPrimary,
+                          border: Border.all(color: BrandLoader().colors.textPrimary, width: 1),
                         ),
                         child: Text(
                           '+${quest.lpAwarded ?? 30}',
                           style: AppTheme.headlineFont.copyWith( // Serif font
                             fontSize: 14,
                             fontWeight: FontWeight.w700,
-                            color: Colors.white,
+                            color: BrandLoader().colors.textOnPrimary,
                           ),
                         ),
                       ),
@@ -236,8 +236,8 @@ class QuestCard extends StatelessWidget {
       return Container(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
         decoration: BoxDecoration(
-          color: Colors.black,
-          border: Border.all(color: Colors.black, width: 1),
+          color: BrandLoader().colors.textPrimary,
+          border: Border.all(color: BrandLoader().colors.textPrimary, width: 1),
         ),
         child: Text(
           '✓ COMPLETED',
@@ -245,7 +245,7 @@ class QuestCard extends StatelessWidget {
             fontSize: 11,
             fontWeight: FontWeight.w600,
             letterSpacing: 0.5,
-            color: Colors.white,
+            color: BrandLoader().colors.textOnPrimary,
           ),
         ),
       );
@@ -255,7 +255,7 @@ class QuestCard extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
         decoration: BoxDecoration(
           color: const Color(0xFFF0F0F0),
-          border: Border.all(color: Colors.black, width: 1),
+          border: Border.all(color: BrandLoader().colors.textPrimary, width: 1),
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
@@ -263,8 +263,8 @@ class QuestCard extends StatelessWidget {
             Container(
               width: 18,
               height: 18,
-              decoration: const BoxDecoration(
-                color: Colors.black,
+              decoration: BoxDecoration(
+                color: BrandLoader().colors.textPrimary,
                 shape: BoxShape.circle,
               ),
               child: Center(
@@ -273,7 +273,7 @@ class QuestCard extends StatelessWidget {
                   style: AppTheme.headlineFont.copyWith( // Serif font
                     fontSize: 10,
                     fontWeight: FontWeight.w700,
-                    color: Colors.white,
+                    color: BrandLoader().colors.textOnPrimary,
                   ),
                 ),
               ),
@@ -296,8 +296,8 @@ class QuestCard extends StatelessWidget {
         return Container(
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
           decoration: BoxDecoration(
-            color: Colors.white,
-            border: Border.all(color: Colors.black, width: 1),
+            color: BrandLoader().colors.surface,
+            border: Border.all(color: BrandLoader().colors.textPrimary, width: 1),
           ),
           child: Text(
             'OUT OF FLIPS',
@@ -305,7 +305,7 @@ class QuestCard extends StatelessWidget {
               fontSize: 11,
               fontWeight: FontWeight.w600,
               letterSpacing: 0.5,
-              color: Colors.black,
+              color: BrandLoader().colors.textPrimary,
           ),
           ),
         );
@@ -314,8 +314,8 @@ class QuestCard extends StatelessWidget {
       return Container(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
         decoration: BoxDecoration(
-          color: Colors.white,
-          border: Border.all(color: Colors.black, width: 1),
+          color: BrandLoader().colors.surface,
+          border: Border.all(color: BrandLoader().colors.textPrimary, width: 1),
         ),
         child: Text(
           'YOUR TURN',
@@ -323,7 +323,7 @@ class QuestCard extends StatelessWidget {
             fontSize: 11,
             fontWeight: FontWeight.w600,
             letterSpacing: 0.5,
-            color: Colors.black,
+            color: BrandLoader().colors.textPrimary,
           ),
         ),
       );
@@ -333,7 +333,7 @@ class QuestCard extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
         decoration: BoxDecoration(
           color: const Color(0xFFF0F0F0),
-          border: Border.all(color: Colors.black, width: 1),
+          border: Border.all(color: BrandLoader().colors.textPrimary, width: 1),
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
@@ -341,8 +341,8 @@ class QuestCard extends StatelessWidget {
             Container(
               width: 18,
               height: 18,
-              decoration: const BoxDecoration(
-                color: Colors.black,
+              decoration: BoxDecoration(
+                color: BrandLoader().colors.textPrimary,
                 shape: BoxShape.circle,
               ),
               child: Center(
@@ -351,7 +351,7 @@ class QuestCard extends StatelessWidget {
                   style: AppTheme.headlineFont.copyWith( // Serif font
                     fontSize: 10,
                     fontWeight: FontWeight.w700,
-                    color: Colors.white,
+                    color: BrandLoader().colors.textOnPrimary,
                   ),
                 ),
               ),
@@ -373,8 +373,8 @@ class QuestCard extends StatelessWidget {
       return Container(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
         decoration: BoxDecoration(
-          color: Colors.white,
-          border: Border.all(color: Colors.black, width: 1),
+          color: BrandLoader().colors.surface,
+          border: Border.all(color: BrandLoader().colors.textPrimary, width: 1),
         ),
         child: Text(
           'YOUR TURN',
@@ -382,7 +382,7 @@ class QuestCard extends StatelessWidget {
             fontSize: 11,
             fontWeight: FontWeight.w600,
             letterSpacing: 0.5,
-            color: Colors.black,
+            color: BrandLoader().colors.textPrimary,
           ),
         ),
       );

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../config/brand/brand_loader.dart';
 
 /// Score row widget showing both players' scores
 /// Format: "You: 240" vs "Partner: 280"
@@ -45,7 +46,7 @@ class LinkedScoreRow extends StatelessWidget {
         Container(
           width: 1,
           height: 20,
-          color: Colors.black26,
+          color: BrandLoader().colors.textTertiary.withValues(alpha: 0.5),
         ),
         const SizedBox(width: 12),
         // Partner score
@@ -86,14 +87,14 @@ class _ScoreItem extends StatelessWidget {
           fontSize: 14,
           fontWeight: isLeading ? FontWeight.bold : FontWeight.w500,
           fontFamily: 'Georgia',
-          color: isLeading ? Colors.black : Colors.black87,
+          color: BrandLoader().colors.textPrimary,
         );
 
     final effectiveLabelStyle = labelStyle ??
         TextStyle(
           fontSize: 11,
           fontWeight: FontWeight.w400,
-          color: Colors.black54,
+          color: BrandLoader().colors.textSecondary,
         );
 
     return Column(
@@ -114,10 +115,10 @@ class _ScoreItem extends StatelessWidget {
             ),
             if (isLeading && !isTied) ...[
               const SizedBox(width: 4),
-              const Icon(
+              Icon(
                 Icons.arrow_upward,
                 size: 12,
-                color: Colors.green,
+                color: BrandLoader().colors.success,
               ),
             ],
           ],
@@ -142,11 +143,11 @@ class LinkedScoreRowCompact extends StatelessWidget {
   Widget build(BuildContext context) {
     return Text(
       '$userScore - $partnerScore',
-      style: const TextStyle(
+      style: TextStyle(
         fontSize: 13,
         fontWeight: FontWeight.w600,
         fontFamily: 'Georgia',
-        color: Colors.black87,
+        color: BrandLoader().colors.textPrimary,
       ),
     );
   }
