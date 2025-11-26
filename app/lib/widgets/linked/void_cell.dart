@@ -21,12 +21,12 @@ class LinkedVoidCell extends StatelessWidget {
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: [
-            const Color(0xFF2A2A2A),
-            const Color(0xFF1A1A1A),
+            BrandLoader().colors.primaryLight,
+            BrandLoader().colors.primary,
           ],
         ),
         border: Border.all(
-          color: const Color(0xFF0A0A0A),
+          color: BrandLoader().colors.primaryDark,
           width: 0.5,
         ),
       ),

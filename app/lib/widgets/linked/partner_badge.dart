@@ -17,7 +17,7 @@ class LinkedPartnerBadge extends StatelessWidget {
     this.size = 32,
     Color? backgroundColor,
     Color? textColor,
-  })  : backgroundColor = backgroundColor ?? const Color(0xFFE0E0E0),
+  })  : backgroundColor = backgroundColor ?? BrandLoader().colors.borderLight,
         textColor = textColor ?? BrandLoader().colors.textPrimary;
 
   String get _initial {

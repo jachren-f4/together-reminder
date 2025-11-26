@@ -151,7 +151,7 @@ class _LinkedGameScreenState extends State<LinkedGameScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFFAFAFA),
+      backgroundColor: BrandLoader().colors.background,
       body: SafeArea(
         child: _buildBody(),
       ),
@@ -309,14 +309,14 @@ class _LinkedGameScreenState extends State<LinkedGameScreen> {
 
     return Container(
       key: _gridKey,
-      color: const Color(0xFFFAFAFA),
+      color: BrandLoader().colors.background,
       padding: const EdgeInsets.all(12),
       child: Center(
         child: AspectRatio(
           aspectRatio: cols / rows,
           child: Container(
-            decoration: const BoxDecoration(
-              color: Color(0xFF222222),
+            decoration: BoxDecoration(
+              color: BrandLoader().colors.textPrimary,
             ),
             padding: const EdgeInsets.all(2),
             child: GridView.builder(
@@ -447,7 +447,7 @@ class _LinkedGameScreenState extends State<LinkedGameScreen> {
         return _buildClueCell(clue);
       }
       // Fallback if clue not found
-      return Container(color: const Color(0xFFE8E8E8));
+      return Container(color: BrandLoader().colors.selected);
     }
 
     // Answer cell - check animation state
@@ -501,7 +501,7 @@ class _LinkedGameScreenState extends State<LinkedGameScreen> {
     return GestureDetector(
       onTap: () => _showClueDialog(clue),
       child: Container(
-        color: const Color(0xFFE8E8E8),
+        color: BrandLoader().colors.selected,
         padding: const EdgeInsets.all(3),
         child: Stack(
           children: [
@@ -559,7 +559,7 @@ class _LinkedGameScreenState extends State<LinkedGameScreen> {
     return GestureDetector(
       onTap: () => _showSplitClueDialog(acrossClue, downClue),
       child: Container(
-        color: const Color(0xFFE8E8E8),
+        color: BrandLoader().colors.selected,
         child: Column(
           children: [
             // Top half: across clue
@@ -756,10 +756,10 @@ class _LinkedGameScreenState extends State<LinkedGameScreen> {
               glowColor = BrandLoader().colors.info;
             }
           case AnswerCellState.draft:
-            bgColor = isDragTarget ? BrandLoader().colors.info.withOpacity(0.1) : BrandLoader().colors.warning.withOpacity(0.3);
+            bgColor = isDragTarget ? BrandLoader().colors.info.withOpacity(0.15) : BrandLoader().colors.warning.withOpacity(0.2);
           case AnswerCellState.locked:
-            bgColor = BrandLoader().colors.success.withOpacity(0.5);
-            textColor = BrandLoader().colors.success.withOpacity(0.9);
+            bgColor = BrandLoader().colors.success.withOpacity(0.15);
+            textColor = BrandLoader().colors.textPrimary;
             if (showGlow) glowColor = BrandLoader().colors.success;
           case AnswerCellState.incorrect:
             bgColor = BrandLoader().colors.error.withOpacity(0.7);
