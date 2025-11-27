@@ -109,7 +109,7 @@ class _QuestCarouselState extends State<QuestCarousel> {
       children: [
         // PageView with snap-to-center (replaces ListView for simpler implementation)
         SizedBox(
-          height: 350, // Increased to accommodate image (170px) + content + padding
+          height: 380, // Accommodate image (200px max) + content (~180px) with margin
           child: PageView.builder(
             controller: _pageController,
             physics: const BouncingScrollPhysics(), // iOS-style bounce for better overscroll
