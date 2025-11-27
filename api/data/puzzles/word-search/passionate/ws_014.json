@@ -1,0 +1,24 @@
+{
+  "puzzleId": "ws_014",
+  "title": "Passionate XIV",
+  "theme": "passion",
+  "size": {
+    "rows": 10,
+    "cols": 10
+  },
+  "grid": "CUTYIETNGHBTKCAWYDCUTBBGASPEQMNSEEMRIASAAUZVWJTIDGHNEKLISTNNCSEGBCTMAENEUJAANCHTETQCLASPHIXISSGYNCJC",
+  "words": {
+    "SUNSET": "31,D",
+    "BEWITCH": "22,DR",
+    "GASP": "23,R",
+    "SILK": "56,L",
+    "SQUEEZE": "92,U",
+    "MAGNETIC": "29,D",
+    "CLASP": "83,R",
+    "EYES": "5,DR",
+    "HANDS": "78,U",
+    "ENCHANT": "80,U",
+    "HUM": "9,D",
+    "ATTRACT": "68,UL"
+  }
+}

@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Affirmation Quiz - Results</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            background: #fafafa;
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+        }
+
+        .container {
+            max-width: 420px;
+            width: 100%;
+            background: #fff;
+            border: 2px solid #000;
+            box-shadow: 8px 8px 0 rgba(0, 0, 0, 0.1);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header */
+        .header {
+            border-bottom: 2px solid #000;
+            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .close-btn {
+            width: 40px;
+            height: 40px;
+            border: 2px solid #000;
+            background: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 20px;
+            transition: all 0.2s ease;
+        }
+
+        .close-btn:hover {
+            background: #000;
+            color: #fff;
+        }
+
+        .header-title {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: 600;
+        }
+
+        /* Score Hero */
+        .score-hero {
+            padding: 40px 20px;
+            text-align: center;
+            border-bottom: 2px solid #000;
+        }
+
+        .score-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #666;
+            margin-bottom: 20px;
+        }
+
+        .score-display {
+            margin-bottom: 20px;
+        }
+
+        .score-fraction {
+            font-size: 64px;
+            font-weight: 700;
+            line-height: 1;
+        }
+
+        .score-fraction .divider {
+            font-size: 48px;
+            font-weight: 300;
+            margin: 0 4px;
+        }
+
+        .score-fraction .total {
+            font-size: 40px;
+            color: #666;
+        }
+
+        .score-rating {
+            font-size: 14px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-top: 12px;
+        }
+
+        .score-message {
+            font-size: 16px;
+            font-style: italic;
+            color: #666;
+            margin-top: 16px;
+            line-height: 1.5;
+        }
+
+        /* Content */
+        .content {
+            padding: 24px 20px;
+            flex: 1;
+        }
+
+        /* Partner Comparison */
+        .comparison-card {
+            border: 2px solid #000;
+            margin-bottom: 24px;
+        }
+
+        .comparison-header {
+            padding: 16px 20px;
+            border-bottom: 1px solid #e0e0e0;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: 600;
+        }
+
+        .comparison-row {
+            display: flex;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .comparison-row:last-child {
+            border-bottom: none;
+        }
+
+        .comparison-person {
+            flex: 1;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .comparison-person:first-child {
+            border-right: 1px solid #e0e0e0;
+        }
+
+        .person-name {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #666;
+            margin-bottom: 8px;
+        }
+
+        .person-score {
+            font-size: 32px;
+            font-weight: 700;
+        }
+
+        .person-score .max {
+            font-size: 18px;
+            color: #999;
+        }
+
+        .waiting-badge {
+            display: inline-block;
+            background: #f5f5f5;
+            border: 1px solid #e0e0e0;
+            padding: 8px 16px;
+            font-size: 12px;
+            font-style: italic;
+            color: #666;
+        }
+
+        /* Section Title */
+        .section-title {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 16px;
+            font-weight: 600;
+        }
+
+        /* Answer Cards */
+        .answers {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .answer-card {
+            border: 2px solid #000;
+            padding: 16px;
+        }
+
+        .answer-statement {
+            font-size: 14px;
+            font-style: italic;
+            color: #333;
+            margin-bottom: 16px;
+            line-height: 1.5;
+        }
+
+        .answer-rating {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .rating-visual {
+            display: flex;
+            gap: 4px;
+        }
+
+        .rating-dot {
+            width: 24px;
+            height: 24px;
+            border: 2px solid #000;
+            border-radius: 50%;
+        }
+
+        .rating-dot.filled {
+            background: #000;
+        }
+
+        .rating-label {
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        /* Reward Card */
+        .reward-card {
+            border: 2px solid #000;
+            background: #000;
+            color: #fff;
+            padding: 20px;
+            text-align: center;
+            margin-top: 24px;
+        }
+
+        .reward-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            opacity: 0.7;
+            margin-bottom: 8px;
+        }
+
+        .reward-value {
+            font-size: 32px;
+            font-weight: 700;
+        }
+
+        /* Footer */
+        .footer {
+            padding: 20px;
+            border-top: 2px solid #000;
+            display: flex;
+            gap: 12px;
+        }
+
+        .secondary-btn {
+            flex: 1;
+            padding: 16px 20px;
+            background: #fff;
+            color: #000;
+            border: 2px solid #000;
+            font-family: 'Georgia', serif;
+            font-size: 14px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .secondary-btn:hover {
+            background: #f5f5f5;
+        }
+
+        .primary-btn {
+            flex: 1;
+            padding: 16px 20px;
+            background: #000;
+            color: #fff;
+            border: 2px solid #000;
+            font-family: 'Georgia', serif;
+            font-size: 14px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .primary-btn:hover {
+            background: #fff;
+            color: #000;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <button class="close-btn">&times;</button>
+            <span class="header-title">Complete</span>
+        </div>
+
+        <div class="score-hero">
+            <div class="score-label">Your Score</div>
+            <div class="score-display">
+                <span class="score-fraction">
+                    21<span class="divider">/</span><span class="total">25</span>
+                </span>
+            </div>
+            <div class="score-rating">Excellent</div>
+            <p class="score-message">
+                Your responses show a strong foundation of trust and emotional safety in your relationship.
+            </p>
+        </div>
+
+        <div class="content">
+            <div class="comparison-card">
+                <div class="comparison-header">Partner Comparison</div>
+                <div class="comparison-row">
+                    <div class="comparison-person">
+                        <div class="person-name">You</div>
+                        <div class="person-score">21<span class="max">/25</span></div>
+                    </div>
+                    <div class="comparison-person">
+                        <div class="person-name">Taija</div>
+                        <span class="waiting-badge">Waiting...</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section-title">Your Responses</div>
+
+            <div class="answers">
+                <div class="answer-card">
+                    <div class="answer-statement">
+                        "I feel comfortable sharing my deepest fears and insecurities with my partner."
+                    </div>
+                    <div class="answer-rating">
+                        <div class="rating-visual">
+                            <div class="rating-dot filled"></div>
+                            <div class="rating-dot filled"></div>
+                            <div class="rating-dot filled"></div>
+                            <div class="rating-dot filled"></div>
+                            <div class="rating-dot"></div>
+                        </div>
+                        <span class="rating-label">Agree (4/5)</span>
+                    </div>
+                </div>
+
+                <div class="answer-card">
+                    <div class="answer-statement">
+                        "My partner makes me feel valued and appreciated every day."
+                    </div>
+                    <div class="answer-rating">
+                        <div class="rating-visual">
+                            <div class="rating-dot filled"></div>
+                            <div class="rating-dot filled"></div>
+                            <div class="rating-dot filled"></div>
+                            <div class="rating-dot filled"></div>
+                            <div class="rating-dot filled"></div>
+                        </div>
+                        <span class="rating-label">Strongly Agree (5/5)</span>
+                    </div>
+                </div>
+
+                <div class="answer-card">
+                    <div class="answer-statement">
+                        "I trust my partner to support me through difficult times."
+                    </div>
+                    <div class="answer-rating">
+                        <div class="rating-visual">
+                            <div class="rating-dot filled"></div>
+                            <div class="rating-dot filled"></div>
+                            <div class="rating-dot filled"></div>
+                            <div class="rating-dot filled"></div>
+                            <div class="rating-dot"></div>
+                        </div>
+                        <span class="rating-label">Agree (4/5)</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="reward-card">
+                <div class="reward-label">You Earned</div>
+                <div class="reward-value">+30 LP</div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <button class="secondary-btn">Share</button>
+            <button class="primary-btn">Done</button>
+        </div>
+    </div>
+</body>
+</html>

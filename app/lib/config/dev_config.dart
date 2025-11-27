@@ -49,8 +49,8 @@ class DevConfig {
   ///
   /// **IMPORTANT**: Replace with your actual user IDs from database:
   ///   SELECT user1_id, user2_id FROM couples LIMIT 1;
-  static const String devUserIdAndroid = 'c7f42ec5-7c6d-4dc4-90f2-2aae6ede4d28';  // user1_id
-  static const String devUserIdWeb = 'd71425a3-a92f-404e-bfbe-a54c4cb58b6a';      // user2_id
+  static const String devUserIdAndroid = 'c7f42ec5-7c6d-4dc4-90f2-2aae6ede4d28';  // TestiY (user1_id)
+  static const String devUserIdWeb = 'd71425a3-a92f-404e-bfbe-a54c4cb58b6a';      // Jokke (user2_id)
 
   /// Detect if running on iOS/Android simulator or emulator
   /// Returns true ONLY when running in a simulator/emulator

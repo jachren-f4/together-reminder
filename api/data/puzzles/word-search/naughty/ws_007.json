@@ -1,0 +1,24 @@
+{
+  "puzzleId": "ws_007",
+  "title": "Intimate VII",
+  "theme": "intimacy",
+  "size": {
+    "rows": 10,
+    "cols": 10
+  },
+  "grid": "ECENIGAMIDOZNOISULLITPEFSIZZLEENPERSONALRUAQUSCDDNIFXHMQUZEOSTJOCWSEEXEHOMNNDTPZDTUKBREATHHKBEWITCHY",
+  "words": {
+    "ILLUSION": "19,L",
+    "PERSONAL": "32,R",
+    "ENCHANT": "86,UL",
+    "DESIRE": "80,U",
+    "NEED": "49,DL",
+    "SQUEEZE": "66,UL",
+    "SIZZLE": "24,R",
+    "BEWITCH": "92,R",
+    "SMOOTH": "45,DL",
+    "BREATH": "84,R",
+    "IMAGINE": "8,L",
+    "DEEP": "48,D"
+  }
+}

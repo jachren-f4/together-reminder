@@ -1,0 +1,22 @@
+{
+  "activity": "affirmation",
+  "brand": "holycouples",
+  "branches": [
+    {
+      "id": "emotional",
+      "displayName": "Emotional",
+      "description": "Heart-focused affirmations",
+      "folder": "emotional",
+      "questionCount": 6
+    },
+    {
+      "id": "practical",
+      "displayName": "Practical",
+      "description": "Action-oriented affirmations",
+      "folder": "practical",
+      "questionCount": 6
+    }
+  ],
+  "selectionMode": "quest_count_mod",
+  "version": "1.0.0"
+}

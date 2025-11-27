@@ -17,7 +17,7 @@ import '../utils/logger.dart';
 /// Service for managing You or Me game sessions
 ///
 /// Handles:
-/// - Loading questions from JSON
+/// - Loading questions from JSON with branch support
 /// - Random question selection with category variety
 /// - Session creation and management
 /// - Firebase RTDB synchronization
@@ -34,6 +34,7 @@ class YouOrMeService {
   final _apiClient = ApiClient();
 
   List<YouOrMeQuestion>? _questionBank;
+  String _currentBranch = '';  // Empty = legacy mode
 
   // ═══════════════════════════════════════════════════════════════════════════
   // Question Loading & Management
@@ -71,6 +72,62 @@ class YouOrMeService {
       );
       rethrow;
     }
+  }
+
+  /// Load questions from a specific branch.
+  ///
+  /// [branch] - Branch folder name (e.g., 'playful', 'reflective')
+  ///
+  /// This clears existing questions and loads from the branch folder.
+  /// Falls back to legacy file if branch folder doesn't exist.
+  Future<void> loadQuestionsWithBranch(String branch) async {
+    // Skip if already loaded for this branch
+    if (_questionBank != null && _currentBranch == branch) {
+      Logger.debug('Question bank already loaded for branch: $branch', service: 'you_or_me');
+      return;
+    }
+
+    // Clear existing questions when switching branches
+    _questionBank = null;
+
+    // Try branch-specific path first
+    final branchPath = BrandLoader().content.getYouOrMePath(branch);
+    try {
+      await _loadFromPath(branchPath);
+      _currentBranch = branch;
+      Logger.info('Loaded You or Me questions from branch: $branch', service: 'you_or_me');
+    } catch (e) {
+      // Fallback to legacy path
+      Logger.warn('Branch $branch not found, falling back to legacy', service: 'you_or_me');
+      await _loadFromPath(BrandLoader().content.youOrMeQuestionsPath);
+      _currentBranch = '';
+    }
+  }
+
+  /// Load questions from a specific JSON file path
+  Future<void> _loadFromPath(String path) async {
+    Logger.info('Loading You or Me questions from: $path', service: 'you_or_me');
+
+    final jsonString = await rootBundle.loadString(path);
+    final data = json.decode(jsonString) as Map<String, dynamic>;
+
+    _questionBank = (data['questions'] as List)
+        .map((q) => YouOrMeQuestion.fromMap(q as Map<String, dynamic>))
+        .toList();
+
+    Logger.success(
+      'Loaded ${_questionBank!.length} questions from $path',
+      service: 'you_or_me',
+    );
+  }
+
+  /// Get the currently loaded branch (empty string = legacy)
+  String get currentBranch => _currentBranch;
+
+  /// Reset state (useful for testing or brand switching)
+  void reset() {
+    _questionBank = null;
+    _currentBranch = '';
   }
 
   /// Get random questions for a new session

@@ -487,6 +487,104 @@ switch (state) {
 - GridView has 2px spacing between cells, dark container shows through gaps
 - This is intentional for grid lines, but cells must be OPAQUE to cover it
 
+### 15. Daily Quest Generation Structure
+
+**CRITICAL:** Daily quests generate exactly 3 quests per day (not 4).
+
+**Quest mix:**
+- Slot 0: Classic quiz (uses even track positions: 0, 2)
+- Slot 1: Affirmation quiz (uses odd track positions: 1, 3)
+- Slot 2: You or Me (separate branch progression)
+
+**Position advancement:** Advances once per day (after classic quiz), not per-quiz.
+
+**File:** `lib/services/quest_type_manager.dart:403-507`
+
+### 16. Branch Manifest System
+
+**Purpose:** Each content branch can have custom video (intro screen) and image (quest card).
+
+**Key Files:**
+- Service: `lib/services/branch_manifest_service.dart`
+- Model: `lib/models/branch_manifest.dart`
+- Manifests: `assets/brands/{brandId}/data/{activity}/{branch}/manifest.json`
+
+**Fallback Chain (video):**
+1. Manifest `videoPath` → 2. Activity default video → 3. Grayscale emoji
+
+**Fallback Chain (image):**
+1. Manifest `imagePath` → 2. Quest `imagePath` → 3. Type-based default
+
+**Adding branch media:**
+1. Add video/image to `assets/brands/{brandId}/videos/` or `images/quests/`
+2. Update branch's `manifest.json` with paths
+3. Register folder in `pubspec.yaml`
+4. Run `flutter clean && flutter run`
+
+See `docs/BRANCH_MANIFEST_GUIDE.md` for complete guide.
+
+### 17. Auth Service State vs Token Checks
+
+**CRITICAL:** Never use synchronous `_authService.isAuthenticated` for auth gating in async flows.
+
+**Why:** `isAuthenticated` reads from `_authState` which updates asynchronously after OTP verification. This causes race conditions when navigating between screens.
+
+```dart
+// ❌ WRONG - race condition after account creation
+if (!_authService.isAuthenticated) {
+  throw Exception('Not authenticated');
+}
+
+// ✅ CORRECT - reads from persisted storage
+final token = await _authService.getAccessToken();
+if (token == null) {
+  throw Exception('Not authenticated');
+}
+```
+
+**Affected file:** `lib/services/couple_pairing_service.dart` (fixed 2025-11-27)
+
+### 18. Leaderboard System
+
+**Key constraint:** Both users in a couple have **identical LP** (shared pool). The trigger uses `NEW.total_points` directly - never sum both users' LP.
+
+**Trigger debugging:** If leaderboard doesn't update when LP changes:
+1. Verify user is in `couples` table (most common issue)
+2. Check trigger exists: `SELECT tgname FROM pg_trigger WHERE tgrelid = 'user_love_points'::regclass;`
+3. Test with hardcoded couple_id to isolate issue
+
+**Files:**
+- Migration: `api/supabase/migrations/016_leaderboard.sql`
+- API: `api/app/api/leaderboard/route.ts`, `api/app/api/user/country/route.ts`
+- Full guide: `docs/LEADERBOARD_SYSTEM.md`
+
+### 19. Animation & Sound System
+
+**Services:**
+- `lib/animations/animation_config.dart` - Timing constants, curves, scale factors
+- `lib/services/haptic_service.dart` - `HapticService().trigger(HapticType.xxx)`
+- `lib/services/sound_service.dart` - `SoundService().play(SoundId.xxx)`
+- `lib/services/celebration_service.dart` - `CelebrationService.triggerConfetti(controller)`
+
+**Available HapticTypes:** `light`, `medium`, `heavy`, `success`, `warning`, `selection`
+
+**Available SoundIds:** `buttonTap`, `cardFlip`, `matchFound`, `wordFound`, `confettiBurst`, `toggleOn`, `toggleOff`
+
+**Accessibility Pattern:**
+```dart
+// In StatefulWidget with animations:
+bool _reduceMotion = false;
+
+@override
+void didChangeDependencies() {
+  super.didChangeDependencies();
+  _reduceMotion = AnimationConfig.shouldReduceMotion(context);
+}
+// Then check _reduceMotion before running animations
+```
+
+**Settings Toggles:** Sound Effects and Haptic Feedback in Settings screen, stored via `StorageService`
+
 ---
 
 ## Testing & Debugging
@@ -750,6 +848,8 @@ cd api && ./scripts/test_memory_flip_api.sh
 | `lib/services/word_ladder_service.dart` | Word ladder game logic |
 | `lib/services/memory_flip_service.dart` | Memory Flip game logic |
 | `lib/services/love_point_service.dart` | Love Points tracking and rewards |
+| `lib/services/leaderboard_service.dart` | Leaderboard API client (30s cache) |
+| `lib/services/country_service.dart` | Country detection & flag emojis |
 
 ### Configuration
 
@@ -793,6 +893,7 @@ cd api && ./scripts/test_memory_flip_api.sh
 | `lib/widgets/five_point_scale.dart` | 5-point Likert scale for affirmation quizzes |
 | `lib/widgets/quest_card.dart` | Daily quest card (uses quest.quizName for display) |
 | `lib/widgets/daily_quests_widget.dart` | Daily quests container (formatType detection) |
+| `lib/widgets/leaderboard_bottom_sheet.dart` | Leaderboard ranking UI |
 
 ### Debug Menu
 
@@ -830,6 +931,8 @@ cd api && ./scripts/test_memory_flip_api.sh
 | **[docs/TROUBLESHOOTING.md](docs/TROUBLESHOOTING.md)** | Common issues, debugging strategies, error handling patterns, Chrome testing best practices |
 | **[docs/FLUTTER_TESTING_GUIDE.md](docs/FLUTTER_TESTING_GUIDE.md)** | Headless testing without simulators, API integration tests, shell script tests, templates |
 | **[docs/WHITE_LABEL_GUIDE.md](docs/WHITE_LABEL_GUIDE.md)** | Step-by-step brand creation, asset requirements, build commands, App Store submission |
+| **[docs/BRANCH_MANIFEST_GUIDE.md](docs/BRANCH_MANIFEST_GUIDE.md)** | Branch-dependent videos/images, manifest.json format, fallback chains, adding new branches |
+| **[docs/LEADERBOARD_SYSTEM.md](docs/LEADERBOARD_SYSTEM.md)** | Leaderboard triggers, debugging, test user setup |
 
 ---
 
@@ -842,4 +945,4 @@ cd api && ./scripts/test_memory_flip_api.sh
 
 ---
 
-**Last Updated:** 2025-11-26 (Added Linked Game Answer Cell Colors warning - check widget files when UI changes don't take effect)
+**Last Updated:** 2025-11-27 (Added Auth Service race condition fix - use getAccessToken() not isAuthenticated)

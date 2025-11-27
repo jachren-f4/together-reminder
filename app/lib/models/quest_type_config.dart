@@ -4,9 +4,11 @@ import 'quiz_session.dart';
 import 'you_or_me.dart';
 import '../screens/quiz_intro_screen.dart';
 import '../screens/quiz_question_screen.dart';
+import '../screens/quiz_waiting_screen.dart';
 import '../screens/affirmation_intro_screen.dart';
 import '../screens/you_or_me_intro_screen.dart';
 import '../screens/you_or_me_game_screen.dart';
+import '../screens/you_or_me_waiting_screen.dart';
 import '../widgets/results_content/classic_quiz_results_content.dart';
 import '../widgets/results_content/affirmation_results_content.dart';
 import '../widgets/results_content/you_or_me_results_content.dart';
@@ -52,8 +54,9 @@ class ResultsConfig {
 /// Defines all screens and behaviors for a specific quest format
 class QuestTypeConfig {
   final String formatType; // 'classic', 'affirmation', 'youorme', etc.
-  final Widget Function(BaseSession session) introBuilder;
+  final Widget Function(BaseSession session, {String? branch}) introBuilder;
   final Widget Function(BaseSession session) questionBuilder;
+  final Widget Function(BaseSession session) waitingBuilder;
   final Widget Function(BaseSession session) resultsContentBuilder;
   final WaitingConfig waitingConfig;
   final ResultsConfig resultsConfig;
@@ -62,6 +65,7 @@ class QuestTypeConfig {
     required this.formatType,
     required this.introBuilder,
     required this.questionBuilder,
+    required this.waitingBuilder,
     required this.resultsContentBuilder,
     required this.waitingConfig,
     required this.resultsConfig,
@@ -89,8 +93,10 @@ class QuestTypeConfigRegistry {
       'classic',
       QuestTypeConfig(
         formatType: 'classic',
-        introBuilder: (session) => QuizIntroScreen(session: session as QuizSession),
+        introBuilder: (session, {String? branch}) =>
+            QuizIntroScreen(session: session as QuizSession, branch: branch),
         questionBuilder: (session) => QuizQuestionScreen(session: session as QuizSession),
+        waitingBuilder: (session) => QuizWaitingScreen(session: session as QuizSession),
         resultsContentBuilder: (session) => ClassicQuizResultsContent(session: session),
         waitingConfig: const WaitingConfig(
           pollingType: PollingType.manual,
@@ -105,13 +111,15 @@ class QuestTypeConfigRegistry {
       ),
     );
 
-    // Phase 4: Affirmation Quiz
+    // Phase 4: Affirmation Quiz (reuses QuizWaitingScreen like Classic)
     register(
       'affirmation',
       QuestTypeConfig(
         formatType: 'affirmation',
-        introBuilder: (session) => AffirmationIntroScreen(session: session as QuizSession),
+        introBuilder: (session, {String? branch}) =>
+            AffirmationIntroScreen(session: session as QuizSession, branch: branch),
         questionBuilder: (session) => QuizQuestionScreen(session: session as QuizSession),
+        waitingBuilder: (session) => QuizWaitingScreen(session: session as QuizSession),
         resultsContentBuilder: (session) => AffirmationResultsContent(session: session),
         waitingConfig: const WaitingConfig(
           pollingType: PollingType.auto,
@@ -131,8 +139,10 @@ class QuestTypeConfigRegistry {
       'youorme',
       QuestTypeConfig(
         formatType: 'youorme',
-        introBuilder: (session) => YouOrMeIntroScreen(session: session as YouOrMeSession),
+        introBuilder: (session, {String? branch}) =>
+            YouOrMeIntroScreen(session: session as YouOrMeSession, branch: branch),
         questionBuilder: (session) => YouOrMeGameScreen(session: session as YouOrMeSession),
+        waitingBuilder: (session) => YouOrMeWaitingScreen(session: session as YouOrMeSession),
         resultsContentBuilder: (session) => YouOrMeResultsContent(session: session as YouOrMeSession),
         waitingConfig: const WaitingConfig(
           pollingType: PollingType.auto,

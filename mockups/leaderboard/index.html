@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leaderboard Mockups - TogetherRemind</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            background: #fafafa;
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            font-size: 36px;
+            font-weight: 400;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+
+        .subtitle {
+            font-size: 16px;
+            color: #666;
+            font-style: italic;
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .mockup-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+        }
+
+        .mockup-card {
+            background: #fff;
+            border: 2px solid #000;
+            box-shadow: 8px 8px 0 rgba(0, 0, 0, 0.1);
+            padding: 24px;
+            text-decoration: none;
+            color: inherit;
+            transition: all 0.2s ease;
+        }
+
+        .mockup-card:hover {
+            transform: translate(-4px, -4px);
+            box-shadow: 12px 12px 0 rgba(0, 0, 0, 0.15);
+        }
+
+        .mockup-number {
+            font-size: 48px;
+            font-weight: 400;
+            color: #e0e0e0;
+            margin-bottom: 12px;
+        }
+
+        .mockup-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .mockup-desc {
+            font-size: 14px;
+            color: #666;
+            font-style: italic;
+            line-height: 1.5;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Leaderboard</h1>
+        <p class="subtitle">Love Points ranking system mockups</p>
+
+        <div class="mockup-grid">
+            <a href="01-leaderboard-global.html" class="mockup-card">
+                <div class="mockup-number">01</div>
+                <div class="mockup-title">Global Leaderboard</div>
+                <div class="mockup-desc">Main view with global rankings. User is in top 50 and highlighted.</div>
+            </a>
+
+            <a href="02-leaderboard-not-in-top.html" class="mockup-card">
+                <div class="mockup-number">02</div>
+                <div class="mockup-title">Not in Top 50</div>
+                <div class="mockup-desc">User's couple is ranked #127. Shows sticky footer with their position.</div>
+            </a>
+
+            <a href="03-leaderboard-country.html" class="mockup-card">
+                <div class="mockup-number">03</div>
+                <div class="mockup-title">Country View</div>
+                <div class="mockup-desc">Country tab selected (Germany). Shows local rankings with flag.</div>
+            </a>
+
+            <a href="04-leaderboard-empty.html" class="mockup-card">
+                <div class="mockup-number">04</div>
+                <div class="mockup-title">Empty State</div>
+                <div class="mockup-desc">No other couples in user's country. Celebratory "You're #1" message.</div>
+            </a>
+
+            <a href="05-leaderboard-loading.html" class="mockup-card">
+                <div class="mockup-number">05</div>
+                <div class="mockup-title">Loading State</div>
+                <div class="mockup-desc">Skeleton placeholders while fetching data from server.</div>
+            </a>
+
+            <a href="06-leaderboard-expanded.html" class="mockup-card">
+                <div class="mockup-number">06</div>
+                <div class="mockup-title">Full Top 50</div>
+                <div class="mockup-desc">Expanded view showing all 50 couples after tapping "Show Full Top 50".</div>
+            </a>
+        </div>
+    </div>
+</body>
+</html>

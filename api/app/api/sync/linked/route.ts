@@ -14,10 +14,42 @@ import { join } from 'path';
 
 export const dynamic = 'force-dynamic';
 
-// Load puzzle data
-function loadPuzzle(puzzleId: string): any {
+// Check if cooldown is enabled (defaults to true in production)
+const COOLDOWN_ENABLED = process.env.PUZZLE_COOLDOWN_ENABLED !== 'false';
+
+// Check if cooldown is active (last completion was on client's local date)
+async function isCooldownActive(coupleId: string, clientLocalDate: string | null): Promise<boolean> {
+  if (!COOLDOWN_ENABLED || !clientLocalDate) {
+    return false;
+  }
+
+  // Get most recent completed match
+  const result = await query(
+    `SELECT completed_at FROM linked_matches
+     WHERE couple_id = $1 AND status = 'completed'
+     ORDER BY completed_at DESC LIMIT 1`,
+    [coupleId]
+  );
+
+  if (result.rows.length === 0) {
+    return false; // No completed matches, no cooldown
+  }
+
+  const completedAt = new Date(result.rows[0].completed_at);
+
+  // Check if completion was on the same day as client's local date
+  // We compare the date strings to avoid timezone issues
+  const completedDateStr = completedAt.toISOString().split('T')[0];
+
+  return completedDateStr === clientLocalDate;
+}
+
+// Load puzzle data from branch-specific path
+function loadPuzzle(puzzleId: string, branch?: string): any {
   try {
-    const puzzlePath = join(process.cwd(), 'data', 'puzzles', `${puzzleId}.json`);
+    // Use branch path (default to 'casual' if no branch specified)
+    const branchFolder = branch || 'casual';
+    const puzzlePath = join(process.cwd(), 'data', 'puzzles', 'linked', branchFolder, `${puzzleId}.json`);
     const puzzleData = readFileSync(puzzlePath, 'utf-8');
     return JSON.parse(puzzleData);
   } catch (error) {
@@ -26,23 +58,59 @@ function loadPuzzle(puzzleId: string): any {
   }
 }
 
-// Load puzzle order config
-function loadPuzzleOrder(): string[] {
+// Load puzzle order config from branch-specific path
+function loadPuzzleOrder(branch?: string): string[] {
   try {
-    const orderPath = join(process.cwd(), 'data', 'puzzles', 'puzzle-order.json');
+    // Use branch path (default to 'casual' if no branch specified)
+    const branchFolder = branch || 'casual';
+    const orderPath = join(process.cwd(), 'data', 'puzzles', 'linked', branchFolder, 'puzzle-order.json');
     const orderData = readFileSync(orderPath, 'utf-8');
     const config = JSON.parse(orderData);
     return config.puzzles || [];
   } catch (error) {
     console.error('Failed to load puzzle order:', error);
     // Fallback to default
-    return ['arroword_001'];
+    return ['puzzle_001'];
   }
 }
 
-// Get next puzzle for couple (finds first uncompleted puzzle in order)
-async function getNextPuzzleForCouple(coupleId: string): Promise<{ puzzleId: string | null; activeMatch: any | null }> {
-  const puzzleOrder = loadPuzzleOrder();
+// Get current branch for couple based on completion count
+async function getCurrentBranch(coupleId: string): Promise<string> {
+  // Check for branch_progression record
+  const result = await query(
+    `SELECT current_branch, total_completions, max_branches
+     FROM branch_progression
+     WHERE couple_id = $1 AND activity_type = 'linked'`,
+    [coupleId]
+  );
+
+  if (result.rows.length === 0) {
+    // No progression record, default to first branch (casual)
+    return 'casual';
+  }
+
+  const { current_branch } = result.rows[0];
+  return getBranchFolderName('linked', current_branch);
+}
+
+// Map activity type and branch index to folder name
+function getBranchFolderName(activityType: string, branchIndex: number): string {
+  const branchNames: Record<string, string[]> = {
+    linked: ['casual', 'romantic', 'adult'],
+    wordSearch: ['everyday', 'passionate', 'naughty'],
+  };
+
+  const folders = branchNames[activityType] || ['default'];
+  return folders[branchIndex % folders.length];
+}
+
+// Get next puzzle for couple (finds first uncompleted puzzle in order for current branch)
+async function getNextPuzzleForCouple(coupleId: string): Promise<{ puzzleId: string | null; activeMatch: any | null; branch: string }> {
+  // Get current branch for this couple
+  const branch = await getCurrentBranch(coupleId);
+
+  // Load puzzle order for this branch
+  const puzzleOrder = loadPuzzleOrder(branch);
 
   // Check for any active match first
   const activeResult = await query(
@@ -51,7 +119,7 @@ async function getNextPuzzleForCouple(coupleId: string): Promise<{ puzzleId: str
   );
 
   if (activeResult.rows.length > 0) {
-    return { puzzleId: activeResult.rows[0].puzzle_id, activeMatch: activeResult.rows[0] };
+    return { puzzleId: activeResult.rows[0].puzzle_id, activeMatch: activeResult.rows[0], branch };
   }
 
   // Get all completed puzzles for this couple
@@ -65,12 +133,12 @@ async function getNextPuzzleForCouple(coupleId: string): Promise<{ puzzleId: str
   // Find first uncompleted puzzle
   for (const puzzleId of puzzleOrder) {
     if (!completedPuzzles.has(puzzleId)) {
-      return { puzzleId, activeMatch: null };
+      return { puzzleId, activeMatch: null, branch };
     }
   }
 
   // All puzzles completed
-  return { puzzleId: null, activeMatch: null };
+  return { puzzleId: null, activeMatch: null, branch };
 }
 
 // Calculate total answer cells from puzzle
@@ -203,6 +271,15 @@ export const POST = withAuthOrDevBypass(async (req, userId, email) => {
     // Extract base URL for image paths
     const baseUrl = new URL(req.url).origin;
 
+    // Parse request body for localDate
+    let localDate: string | null = null;
+    try {
+      const body = await req.json();
+      localDate = body.localDate || null;
+    } catch {
+      // No body or invalid JSON, continue without localDate
+    }
+
     // Get couple info
     const coupleResult = await query(
       `SELECT id, user1_id, user2_id, first_player_id FROM couples WHERE user1_id = $1 OR user2_id = $1 LIMIT 1`,
@@ -219,7 +296,17 @@ export const POST = withAuthOrDevBypass(async (req, userId, email) => {
     const { id: coupleId, user1_id, user2_id, first_player_id } = coupleResult.rows[0];
 
     // Get next puzzle for this couple (active match or first uncompleted)
-    const { puzzleId, activeMatch } = await getNextPuzzleForCouple(coupleId);
+    const { puzzleId, activeMatch, branch } = await getNextPuzzleForCouple(coupleId);
+
+    // If no active match and cooldown is active, return cooldown response
+    if (!activeMatch && await isCooldownActive(coupleId, localDate)) {
+      return NextResponse.json({
+        success: false,
+        code: 'COOLDOWN_ACTIVE',
+        message: 'Next puzzle available tomorrow',
+        cooldownEnabled: true,
+      });
+    }
 
     if (!puzzleId) {
       return NextResponse.json(
@@ -228,7 +315,8 @@ export const POST = withAuthOrDevBypass(async (req, userId, email) => {
       );
     }
 
-    const puzzle = loadPuzzle(puzzleId);
+    // Load puzzle from branch-specific path (falls back to legacy)
+    const puzzle = loadPuzzle(puzzleId, branch);
 
     if (!puzzle) {
       return NextResponse.json(

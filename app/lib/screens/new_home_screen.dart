@@ -5,13 +5,14 @@ import '../utils/number_formatter.dart';
 import '../services/storage_service.dart';
 import '../services/arena_service.dart';
 import '../services/daily_pulse_service.dart';
-import '../services/ladder_service.dart';
-import '../services/memory_flip_service.dart';
 import '../services/word_search_service.dart';
 import '../services/quiz_service.dart';
 import '../services/daily_quest_service.dart';
 import '../services/quest_sync_service.dart';
 import '../services/love_point_service.dart';
+import '../services/haptic_service.dart';
+import '../services/sound_service.dart';
+import '../animations/animation_config.dart';
 import '../theme/app_theme.dart';
 import '../widgets/poke_bottom_sheet.dart';
 import '../widgets/remind_bottom_sheet.dart';
@@ -19,10 +20,9 @@ import '../widgets/daily_pulse_widget.dart';
 import '../widgets/daily_quests_widget.dart';
 import '../widgets/quest_carousel.dart';
 import '../widgets/debug/debug_menu.dart';
+import '../widgets/leaderboard_bottom_sheet.dart';
 import '../models/daily_quest.dart';
 import 'daily_pulse_screen.dart';
-import 'word_ladder_hub_screen.dart';
-import 'memory_flip_game_screen.dart';
 import 'linked_game_screen.dart';
 import 'word_search_game_screen.dart';
 import 'quiz_intro_screen.dart';
@@ -35,18 +35,18 @@ class NewHomeScreen extends StatefulWidget {
   State<NewHomeScreen> createState() => _NewHomeScreenState();
 }
 
-class _NewHomeScreenState extends State<NewHomeScreen> with SingleTickerProviderStateMixin {
+class _NewHomeScreenState extends State<NewHomeScreen> with TickerProviderStateMixin {
   final StorageService _storage = StorageService();
   final ArenaService _arenaService = ArenaService();
   final DailyPulseService _pulseService = DailyPulseService();
-  final LadderService _ladderService = LadderService();
-  final MemoryFlipService _memoryService = MemoryFlipService();
   final WordSearchService _wordSearchService = WordSearchService();
   final QuizService _quizService = QuizService();
 
   bool _isRefreshing = false;
   DateTime? _lastSyncTime;
   late AnimationController _pulseController;
+  late AnimationController _lpPulseController;
+  int _lastLPValue = 0;
 
   @override
   void initState() {
@@ -55,6 +55,15 @@ class _NewHomeScreenState extends State<NewHomeScreen> with SingleTickerProvider
       vsync: this,
       duration: const Duration(seconds: 2),
     )..repeat();
+
+    // LP counter pulse animation (single pulse when LP changes)
+    _lpPulseController = AnimationController(
+      vsync: this,
+      duration: AnimationConfig.normal,
+    );
+
+    // Store initial LP value
+    _lastLPValue = _arenaService.getLovePoints();
 
     // Register LP change callback for real-time counter updates
     _setupLPChangeCallback();
@@ -67,6 +76,13 @@ class _NewHomeScreenState extends State<NewHomeScreen> with SingleTickerProvider
     // (Listener already started in main.dart - don't create duplicate!)
     LovePointService.setLPChangeCallback(() {
       if (mounted) {
+        final newLP = _arenaService.getLovePoints();
+        if (newLP != _lastLPValue) {
+          // Trigger pulse animation on LP change
+          _lpPulseController.forward(from: 0.0);
+          HapticService().trigger(HapticType.success);
+          _lastLPValue = newLP;
+        }
         setState(() {
           // Trigger rebuild to update LP counter
         });
@@ -77,6 +93,7 @@ class _NewHomeScreenState extends State<NewHomeScreen> with SingleTickerProvider
   @override
   void dispose() {
     _pulseController.dispose();
+    _lpPulseController.dispose();
     super.dispose();
   }
 
@@ -526,7 +543,7 @@ class _NewHomeScreenState extends State<NewHomeScreen> with SingleTickerProvider
         // Daily Quests
         const DailyQuestsWidget(),
 
-        const SizedBox(height: 24),
+        const SizedBox(height: 10),
 
         // Side Quests section header with action buttons
         Padding(
@@ -547,6 +564,8 @@ class _NewHomeScreenState extends State<NewHomeScreen> with SingleTickerProvider
                   _buildActionButton('POKE', false, _showPokeBottomSheet),
                   const SizedBox(width: 10),
                   _buildActionButton('REMIND', false, _showRemindBottomSheet),
+                  const SizedBox(width: 10),
+                  _buildActionButton('RANKING', false, _showLeaderboardBottomSheet),
                 ],
               ),
             ],
@@ -557,12 +576,12 @@ class _NewHomeScreenState extends State<NewHomeScreen> with SingleTickerProvider
         // Side quests horizontal carousel
         _buildSideQuestsCarousel(),
 
-        const SizedBox(height: 40),
+        const SizedBox(height: 16),
 
         // Version number for debugging hot reload
         Center(
           child: Text(
-            'v1.0.26',
+            'v1.0.41',
             style: TextStyle(
               fontSize: 10,
               color: BrandLoader().colors.textTertiary,
@@ -577,9 +596,6 @@ class _NewHomeScreenState extends State<NewHomeScreen> with SingleTickerProvider
 
   Widget _buildMainQuestsCarousel() {
     final pulseStatus = _pulseService.getDailyPulseStatus();
-    final activeLadders = _ladderService.getActiveLadders();
-    final myTurnLadders = activeLadders.where((l) => _ladderService.isMyTurn(l)).length;
-    final activePuzzle = _storage.getActivePuzzle();
     final activeQuiz = _quizService.getActiveSession();
 
     final quests = <Widget>[
@@ -595,38 +611,6 @@ class _NewHomeScreenState extends State<NewHomeScreen> with SingleTickerProvider
         rewards: ['+20 LP', '🔥 Streak'],
         isActive: pulseStatus != DailyPulseStatus.waitingForPartner && pulseStatus != DailyPulseStatus.bothCompleted,
         onTap: () => _navigateToDailyPulse(),
-      ),
-
-      // Word Ladder
-      _buildQuestCard(
-        emoji: '🪜',
-        title: 'Word Ladder Duet',
-        subtitle: myTurnLadders > 0
-            ? '$myTurnLadders puzzle${myTurnLadders == 1 ? "" : "s"} waiting'
-            : activeLadders.isEmpty
-                ? 'Start new puzzle'
-                : '${activeLadders.length} active',
-        rewards: ['+15 LP'],
-        isActive: myTurnLadders > 0,
-        onTap: () => Navigator.push(
-          context,
-          MaterialPageRoute(builder: (_) => const WordLadderHubScreen()),
-        ),
-      ),
-
-      // Memory Flip
-      _buildQuestCard(
-        emoji: '🃏',
-        title: 'Memory Flip Co-op',
-        subtitle: activePuzzle != null
-            ? '${activePuzzle.matchedPairs}/${activePuzzle.totalPairs} pairs found'
-            : 'Start new puzzle',
-        rewards: ['+40 LP'],
-        isActive: activePuzzle != null && activePuzzle.matchedPairs < activePuzzle.totalPairs,
-        onTap: () => Navigator.push(
-          context,
-          MaterialPageRoute(builder: (_) => const MemoryFlipGameScreen()),
-        ),
       ),
 
       // Couple Quiz
@@ -770,6 +754,10 @@ class _NewHomeScreenState extends State<NewHomeScreen> with SingleTickerProvider
     );
   }
 
+  void _showLeaderboardBottomSheet() {
+    LeaderboardBottomSheet.show(context);
+  }
+
   void _navigateToDailyPulse() {
     final pulse = _pulseService.getTodaysPulse();
     final question = _pulseService.getTodaysQuestion();
@@ -817,22 +805,6 @@ class _NewHomeScreenState extends State<NewHomeScreen> with SingleTickerProvider
 
     // Handle real quest navigation based on type
     switch (quest.type) {
-      case QuestType.wordLadder:
-        await Navigator.push(
-          context,
-          MaterialPageRoute(builder: (_) => const WordLadderHubScreen()),
-        );
-        // Refresh state after returning to show updated quest status
-        if (mounted) setState(() {});
-        break;
-      case QuestType.memoryFlip:
-        await Navigator.push(
-          context,
-          MaterialPageRoute(builder: (_) => const MemoryFlipGameScreen()),
-        );
-        // Refresh state after returning to show updated quest status
-        if (mounted) setState(() {});
-        break;
       case QuestType.linked:
         await Navigator.push(
           context,
@@ -860,7 +832,7 @@ class _NewHomeScreenState extends State<NewHomeScreen> with SingleTickerProvider
     }
   }
 
-  /// Build list of side quests (Linked, Word Ladder, Memory Flip always shown) + placeholders
+  /// Build list of side quests (Linked, Word Search) + placeholders
   Future<List<DailyQuest>> _getSideQuests() async {
     final quests = <DailyQuest>[];
     final today = DateTime.now();
@@ -951,100 +923,6 @@ class _NewHomeScreenState extends State<NewHomeScreen> with SingleTickerProvider
     }
 
     quests.add(wordSearchQuest);
-
-    // Word Ladder - always show (users can start new sessions)
-    final activeLadders = _ladderService.getActiveLadders();
-    final myTurnLadders = activeLadders.where((l) => _ladderService.isMyTurn(l));
-
-    String wordLadderDesc;
-    String wordLadderContentId;
-    if (myTurnLadders.isNotEmpty) {
-      wordLadderDesc = '${myTurnLadders.length} puzzle${myTurnLadders.length == 1 ? "" : "s"} waiting';
-      wordLadderContentId = myTurnLadders.first.id;
-    } else {
-      wordLadderDesc = 'Start new puzzle';
-      wordLadderContentId = 'new_word_ladder';
-    }
-
-    final wordLadderQuest = DailyQuest.create(
-      dateKey: dateKey,
-      type: QuestType.wordLadder,
-      contentId: wordLadderContentId,
-      isSideQuest: true,
-      imagePath: null, // No image yet for Word Ladder
-      description: wordLadderDesc,
-    );
-
-    // Set completion state based on turn tracking
-    if (user != null && partner != null && activeLadders.isNotEmpty) {
-      // Check first active ladder for turn state
-      final firstLadder = activeLadders.first;
-
-      if (firstLadder.status == 'completed') {
-        // Ladder is completed - show COMPLETED badge
-        wordLadderQuest.status = 'completed';
-        wordLadderQuest.userCompletions = {
-          user.id: true,
-          partner.pushToken: true,
-        };
-      } else if (!_ladderService.isMyTurn(firstLadder)) {
-        // It's partner's turn - mark user as completed to show partner badge
-        wordLadderQuest.userCompletions = {
-          user.id: true,
-          partner.pushToken: false,
-        };
-      }
-      // Otherwise leave as default (shows "YOUR TURN" badge)
-    }
-
-    quests.add(wordLadderQuest);
-
-    // Memory Flip - always show (users can start new sessions)
-    final activePuzzle = _storage.getActivePuzzle();
-
-    String memoryFlipDesc;
-    String memoryFlipContentId;
-    if (activePuzzle != null && activePuzzle.matchedPairs < activePuzzle.totalPairs) {
-      memoryFlipDesc = '${activePuzzle.matchedPairs}/${activePuzzle.totalPairs} pairs found';
-      memoryFlipContentId = activePuzzle.id;
-    } else {
-      memoryFlipDesc = 'Start new puzzle';
-      memoryFlipContentId = 'new_memory_flip';
-    }
-
-    final memoryFlipQuest = DailyQuest.create(
-      dateKey: dateKey,
-      type: QuestType.memoryFlip,
-      contentId: memoryFlipContentId,
-      isSideQuest: true,
-      imagePath: null, // No image yet for Memory Flip
-      description: memoryFlipDesc,
-    );
-
-    // TODO: Update flip allowance check for turn-based system
-    // The flip allowance is now part of the game state in the turn-based implementation
-    // This will be updated once the game state is loaded
-    // if (user != null && partner != null && activePuzzle != null && activePuzzle.status != 'completed') {
-    //   final allowance = await _memoryService.getFlipAllowance(user.id);
-    //   if (allowance != null && allowance.flipsRemaining == 0) {
-    //     // Mark user as "completed" to trigger OUT OF FLIPS badge
-    //     memoryFlipQuest.userCompletions = {
-    //       user.id: true,
-    //       partner.pushToken: false,
-    //     };
-    //   }
-    // }
-
-    // Set completion state if puzzle is completed
-    if (user != null && partner != null && activePuzzle != null && activePuzzle.status == 'completed') {
-      memoryFlipQuest.status = 'completed';
-      memoryFlipQuest.userCompletions = {
-        user.id: true,
-        partner.pushToken: true,
-      };
-    }
-
-    quests.add(memoryFlipQuest);
 
     // Add placeholder cards to fill remaining slots (minimum 2 total cards)
     final placeholders = [
@@ -1172,27 +1050,53 @@ class _NewHomeScreenState extends State<NewHomeScreen> with SingleTickerProvider
   }
 
   /// Build stat row with label and value
+  /// LP counter gets special pulse animation treatment
   Widget _buildStatRow(String label, String value) {
+    final isLPRow = label == 'LOVE POINTS';
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Text(
           label,
-          style: AppTheme.headlineFont.copyWith( // Use serif font like HTML mockup
+          style: AppTheme.headlineFont.copyWith(
             fontSize: 14,
             letterSpacing: 1,
             fontWeight: FontWeight.w600,
             color: Colors.black,
           ),
         ),
-        Text(
-          value,
-          style: AppTheme.headlineFont.copyWith( // Use serif font (Playfair Display) like HTML mockup
-            fontSize: 18,
-            fontWeight: FontWeight.w700,
-            color: Colors.black,
+        // LP counter gets animated pulse effect
+        if (isLPRow)
+          AnimatedBuilder(
+            animation: _lpPulseController,
+            builder: (context, child) {
+              // Subtle scale pulse (1.0 -> 1.05 -> 1.0)
+              final pulseValue = Curves.easeOutBack.transform(_lpPulseController.value);
+              final scale = 1.0 + (0.05 * (1.0 - (pulseValue - 0.5).abs() * 2).clamp(0.0, 1.0));
+
+              return Transform.scale(
+                scale: _lpPulseController.isAnimating ? scale : 1.0,
+                child: Text(
+                  value,
+                  style: AppTheme.headlineFont.copyWith(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w700,
+                    color: Colors.black,
+                  ),
+                ),
+              );
+            },
+          )
+        else
+          Text(
+            value,
+            style: AppTheme.headlineFont.copyWith(
+              fontSize: 18,
+              fontWeight: FontWeight.w700,
+              color: Colors.black,
+            ),
           ),
-        ),
       ],
     );
   }
@@ -1223,9 +1127,13 @@ class _NewHomeScreenState extends State<NewHomeScreen> with SingleTickerProvider
   /// Build styled action button with optional dot indicator
   Widget _buildActionButton(String label, bool showDot, VoidCallback onTap) {
     return GestureDetector(
-      onTap: onTap,
+      onTap: () {
+        SoundService().tap();
+        HapticService().tap();
+        onTap();
+      },
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
         decoration: BoxDecoration(
           color: AppTheme.primaryWhite,
           border: Border.all(color: AppTheme.primaryBlack, width: 1),

@@ -1,0 +1,24 @@
+{
+  "puzzleId": "ws_002",
+  "title": "Passionate II",
+  "theme": "passion",
+  "size": {
+    "rows": 10,
+    "cols": 10
+  },
+  "grid": "NQALLUREBNJTKETAEHESGMJRENLPWKGNIVARCNIYONSTSPFRTSIIANZASUCARETTULFBHTBKPLEAGMLNFMLLEPSKXANOISSAPCFF",
+  "words": {
+    "BEWITCH": "8,D",
+    "CRAVING": "36,L",
+    "FLUTTER": "66,L",
+    "SPARK": "56,UL",
+    "FANTASY": "99,U",
+    "PASSION": "96,L",
+    "BURN": "67,U",
+    "BEAT": "70,UR",
+    "SPELL": "86,L",
+    "ALLURE": "2,R",
+    "FREE": "46,UL",
+    "HEAT": "17,L"
+  }
+}

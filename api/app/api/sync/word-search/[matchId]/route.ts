@@ -12,10 +12,12 @@ import { join } from 'path';
 
 export const dynamic = 'force-dynamic';
 
-// Load puzzle data
-function loadPuzzle(puzzleId: string): any {
+// Load puzzle data from branch-specific path
+function loadPuzzle(puzzleId: string, branch?: string): any {
   try {
-    const puzzlePath = join(process.cwd(), 'data', 'puzzles', 'word-search', `${puzzleId}.json`);
+    // Use branch path (default to 'everyday' if no branch specified)
+    const branchFolder = branch || 'everyday';
+    const puzzlePath = join(process.cwd(), 'data', 'puzzles', 'word-search', branchFolder, `${puzzleId}.json`);
     const puzzleData = readFileSync(puzzlePath, 'utf-8');
     return JSON.parse(puzzleData);
   } catch (error) {
@@ -43,9 +45,9 @@ function getPuzzleForClient(puzzle: any): any {
  *
  * Poll specific match state (used during partner's turn)
  */
-export const GET = withAuthOrDevBypass(async (req, userId, email, params) => {
+export const GET = withAuthOrDevBypass(async (req, userId, email, context) => {
   try {
-    const matchId = params?.matchId;
+    const { matchId } = await context!.params;
 
     if (!matchId) {
       return NextResponse.json(
@@ -104,6 +106,8 @@ export const GET = withAuthOrDevBypass(async (req, userId, email, params) => {
         wordsFoundThisTurn: match.words_found_this_turn,
         player1WordsFound: match.player1_words_found,
         player2WordsFound: match.player2_words_found,
+        player1Score: match.player1_score || 0,
+        player2Score: match.player2_score || 0,
         player1Hints: match.player1_hints,
         player2Hints: match.player2_hints,
         player1Id: match.player1_id,
@@ -119,6 +123,8 @@ export const GET = withAuthOrDevBypass(async (req, userId, email, params) => {
         wordsRemainingThisTurn: 3 - match.words_found_this_turn,
         myWordsFound: isPlayer1 ? match.player1_words_found : match.player2_words_found,
         partnerWordsFound: isPlayer1 ? match.player2_words_found : match.player1_words_found,
+        myScore: isPlayer1 ? (match.player1_score || 0) : (match.player2_score || 0),
+        partnerScore: isPlayer1 ? (match.player2_score || 0) : (match.player1_score || 0),
         myHints: isPlayer1 ? match.player1_hints : match.player2_hints,
         partnerHints: isPlayer1 ? match.player2_hints : match.player1_hints,
         progressPercent: Math.round((foundWords.length / 12) * 100),

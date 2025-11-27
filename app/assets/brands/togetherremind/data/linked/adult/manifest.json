@@ -1,0 +1,8 @@
+{
+  "branch": "adult",
+  "activityType": "linked",
+  "imagePath": "assets/brands/togetherremind/images/quests/linked.png",
+  "fallbackEmoji": "🔗",
+  "displayName": "Adult",
+  "description": "Mature crossword clues"
+}

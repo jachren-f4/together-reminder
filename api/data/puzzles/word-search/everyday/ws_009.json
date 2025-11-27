@@ -1,0 +1,24 @@
+{
+  "puzzleId": "ws_009",
+  "title": "Daily Love IX",
+  "theme": "everyday",
+  "size": {
+    "rows": 10,
+    "cols": 10
+  },
+  "grid": "ICEHONESTKISEPJIPFHAEBZAJDERACFVERWNHUSHAZETMOTUETMRFNPBSELWIFNEISAMIALZRRINCOMRYKRLDEGHSMSXBRNHXUJQ",
+  "words": {
+    "BOND": "55,U",
+    "EVENING": "20,DR",
+    "HUSH": "36,R",
+    "HONEST": "3,R",
+    "PARTNER": "13,D",
+    "HOME": "87,U",
+    "BLISS": "92,UR",
+    "FAMILY": "30,D",
+    "CARE": "29,L",
+    "HOPE": "36,DL",
+    "SMILE": "88,U",
+    "WARM": "59,D"
+  }
+}

@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loading Leaderboard - TogetherRemind</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            background: #fafafa;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 420px;
+            margin: 0 auto;
+            background: #fff;
+            border: 2px solid #000;
+            box-shadow: 8px 8px 0 rgba(0, 0, 0, 0.1);
+        }
+
+        /* Header */
+        .header {
+            border-bottom: 2px solid #000;
+            padding: 24px 20px;
+            text-align: center;
+        }
+
+        .title {
+            font-size: 32px;
+            font-weight: 400;
+            letter-spacing: 2px;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+        }
+
+        .subtitle {
+            font-size: 14px;
+            color: #666;
+            font-style: italic;
+        }
+
+        /* Tab Toggle */
+        .tab-row {
+            display: flex;
+            border-bottom: 1px solid #000;
+        }
+
+        .tab {
+            flex: 1;
+            padding: 14px;
+            text-align: center;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border-right: 1px solid #000;
+        }
+
+        .tab:last-child {
+            border-right: none;
+        }
+
+        .tab.active {
+            background: #000;
+            color: #fff;
+        }
+
+        /* Stats Row - Skeleton */
+        .stats {
+            border-bottom: 1px solid #e0e0e0;
+            padding: 16px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #999;
+            margin-bottom: 4px;
+        }
+
+        /* Skeleton animation */
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 0.4;
+            }
+            50% {
+                opacity: 0.8;
+            }
+        }
+
+        .skeleton {
+            background: #e0e0e0;
+            border-radius: 4px;
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+
+        .skeleton-stat {
+            height: 24px;
+            width: 60px;
+            margin: 0 auto;
+        }
+
+        /* Leaderboard List - Skeleton */
+        .leaderboard-list {
+            max-height: 480px;
+            overflow-y: auto;
+        }
+
+        .skeleton-row {
+            display: flex;
+            align-items: center;
+            padding: 14px 20px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .skeleton-rank {
+            width: 32px;
+            height: 24px;
+            margin-right: 12px;
+        }
+
+        .skeleton-initials {
+            flex: 1;
+            height: 20px;
+            max-width: 80px;
+        }
+
+        .skeleton-lp {
+            width: 70px;
+            height: 18px;
+            margin-left: auto;
+        }
+
+        /* Staggered animation delays */
+        .skeleton-row:nth-child(1) .skeleton { animation-delay: 0s; }
+        .skeleton-row:nth-child(2) .skeleton { animation-delay: 0.1s; }
+        .skeleton-row:nth-child(3) .skeleton { animation-delay: 0.2s; }
+        .skeleton-row:nth-child(4) .skeleton { animation-delay: 0.3s; }
+        .skeleton-row:nth-child(5) .skeleton { animation-delay: 0.4s; }
+        .skeleton-row:nth-child(6) .skeleton { animation-delay: 0.5s; }
+        .skeleton-row:nth-child(7) .skeleton { animation-delay: 0.6s; }
+        .skeleton-row:nth-child(8) .skeleton { animation-delay: 0.7s; }
+        .skeleton-row:nth-child(9) .skeleton { animation-delay: 0.8s; }
+        .skeleton-row:nth-child(10) .skeleton { animation-delay: 0.9s; }
+
+        /* Loading hint */
+        .loading-hint {
+            padding: 20px;
+            text-align: center;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .loading-text {
+            font-size: 13px;
+            color: #999;
+            font-style: italic;
+        }
+
+        .loading-spinner {
+            display: inline-block;
+            margin-left: 8px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        /* Footer */
+        .footer {
+            padding: 16px 20px;
+            border-top: 1px solid #000;
+            text-align: center;
+        }
+
+        .footer-hint {
+            font-size: 11px;
+            color: #999;
+            font-style: italic;
+        }
+
+        /* Back link */
+        .back-link {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+            font-size: 14px;
+            color: #666;
+            text-decoration: none;
+        }
+
+        .back-link:hover {
+            color: #000;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="title">Leaderboard</div>
+            <div class="subtitle">Ranked by Love Points</div>
+        </div>
+
+        <!-- Tab Toggle -->
+        <div class="tab-row">
+            <div class="tab active">Global</div>
+            <div class="tab">My Country</div>
+        </div>
+
+        <!-- Stats Row - Skeleton -->
+        <div class="stats">
+            <div class="stat-item">
+                <div class="stat-label">Your Rank</div>
+                <div class="skeleton skeleton-stat"></div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-label">Love Points</div>
+                <div class="skeleton skeleton-stat"></div>
+            </div>
+        </div>
+
+        <!-- Leaderboard List - Skeleton -->
+        <div class="leaderboard-list">
+            <div class="skeleton-row">
+                <div class="skeleton skeleton-rank"></div>
+                <div class="skeleton skeleton-initials"></div>
+                <div class="skeleton skeleton-lp"></div>
+            </div>
+            <div class="skeleton-row">
+                <div class="skeleton skeleton-rank"></div>
+                <div class="skeleton skeleton-initials"></div>
+                <div class="skeleton skeleton-lp"></div>
+            </div>
+            <div class="skeleton-row">
+                <div class="skeleton skeleton-rank"></div>
+                <div class="skeleton skeleton-initials"></div>
+                <div class="skeleton skeleton-lp"></div>
+            </div>
+            <div class="skeleton-row">
+                <div class="skeleton skeleton-rank"></div>
+                <div class="skeleton skeleton-initials"></div>
+                <div class="skeleton skeleton-lp"></div>
+            </div>
+            <div class="skeleton-row">
+                <div class="skeleton skeleton-rank"></div>
+                <div class="skeleton skeleton-initials"></div>
+                <div class="skeleton skeleton-lp"></div>
+            </div>
+            <div class="skeleton-row">
+                <div class="skeleton skeleton-rank"></div>
+                <div class="skeleton skeleton-initials"></div>
+                <div class="skeleton skeleton-lp"></div>
+            </div>
+            <div class="skeleton-row">
+                <div class="skeleton skeleton-rank"></div>
+                <div class="skeleton skeleton-initials"></div>
+                <div class="skeleton skeleton-lp"></div>
+            </div>
+            <div class="skeleton-row">
+                <div class="skeleton skeleton-rank"></div>
+                <div class="skeleton skeleton-initials"></div>
+                <div class="skeleton skeleton-lp"></div>
+            </div>
+            <div class="skeleton-row">
+                <div class="skeleton skeleton-rank"></div>
+                <div class="skeleton skeleton-initials"></div>
+                <div class="skeleton skeleton-lp"></div>
+            </div>
+            <div class="skeleton-row">
+                <div class="skeleton skeleton-rank"></div>
+                <div class="skeleton skeleton-initials"></div>
+                <div class="skeleton skeleton-lp"></div>
+            </div>
+        </div>
+
+        <!-- Loading hint -->
+        <div class="loading-hint">
+            <span class="loading-text">Fetching latest rankings</span>
+            <span class="loading-spinner">⟳</span>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <div class="footer-hint">Rankings update every 5 minutes</div>
+        </div>
+    </div>
+
+    <a href="index.html" class="back-link">← Back to mockups</a>
+</body>
+</html>

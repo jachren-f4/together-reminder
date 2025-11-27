@@ -1,0 +1,24 @@
+{
+  "puzzleId": "ws_005",
+  "title": "Intimate V",
+  "theme": "intimacy",
+  "size": {
+    "rows": 10,
+    "cols": 10
+  },
+  "grid": "UQYLLSEOCIWDSNEASYQXQOLHIPEMQEHVCIIEVVFDUAXLWVZLEWNFBLAZEKLRGNFPNSARTXEVFZHNTJNIRHLOVERSESTENDERNTGN",
+  "words": {
+    "NAKED": "75,UR",
+    "TENDER": "90,R",
+    "BLAZE": "52,R",
+    "HUNGER": "30,D",
+    "LIPS": "43,UR",
+    "GENTLE": "98,U",
+    "WILD": "44,UL",
+    "FLESH": "38,DL",
+    "REVEAL": "59,UL",
+    "ACHE": "41,UR",
+    "SHIVER": "12,DR",
+    "LOVERS": "82,R"
+  }
+}

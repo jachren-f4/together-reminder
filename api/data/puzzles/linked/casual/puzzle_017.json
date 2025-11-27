@@ -1,0 +1,46 @@
+{
+  "author": "Crossword Maker GPT",
+  "title": "Adult Intimacy Puzzle #17",
+  "size": {
+    "rows": 9,
+    "cols": 7
+  },
+  "clues": {
+    "1": { "type": "emoji", "content": "💑", "arrow": "down", "target_index": 8 },
+    "2": { "type": "emoji", "content": "🍕", "arrow": "down", "target_index": 11 },
+    "3": { "type": "emoji", "content": "🧣", "arrow": "down", "target_index": 13 },
+    "4": { "type": "text", "content": "Before Q", "arrow": "across", "target_index": 11 },
+    "5": { "type": "text", "content": "After N", "arrow": "across", "target_index": 15 },
+    "6": { "type": "text", "content": "Twice weekly", "arrow": "across", "target_index": 17 },
+    "7": { "type": "text", "content": "Before [", "arrow": "across", "target_index": 25 },
+    "8": { "type": "text", "content": "WEI_D", "arrow": "across", "target_index": 36 },
+    "9": { "type": "text", "content": "Sound of understanding", "arrow": "down", "target_index": 44 },
+    "10": { "type": "text", "content": "T_KE", "arrow": "across", "target_index": 39 },
+    "11": { "type": "emoji", "content": "😌", "arrow": "across", "target_index": 50 },
+    "12": { "type": "text", "content": "Midday", "arrow": "across", "target_index": 59 }
+  },
+  "date": "2025-11-27",
+  "grid": [
+    ".", ".", ".", ".", ".", ".", ".",
+    ".", "L", ".", ".", "P", ".", "S",
+    ".", "O", ".", "B", "I", ".", "C",
+    ".", "V", ".", ".", "Z", ".", "A",
+    ".", "E", ".", ".", "Z", ".", "R",
+    ".", "R", ".", ".", "A", ".", "F",
+    ".", ".", "A", ".", ".", ".", ".",
+    ".", "C", "H", "I", "L", "L", ".",
+    ".", ".", ".", "N", "O", "O", "N"
+  ],
+  "gridnums": [
+    0, 1, 0, 0, 2, 0, 3,
+    0, 0, 0, 4, 0, 0, 0,
+    5, 0, 6, 0, 0, 0, 0,
+    0, 0, 0, 7, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0,
+    8, 0, 9, 10, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0,
+    11, 0, 0, 0, 0, 0, 0,
+    0, 0, 12, 0, 0, 0, 0
+  ],
+  "puzzleId": "puzzle_017"
+}

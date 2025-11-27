@@ -1,0 +1,24 @@
+{
+  "puzzleId": "ws_005",
+  "title": "Daily Love V",
+  "theme": "everyday",
+  "size": {
+    "rows": 10,
+    "cols": 10
+  },
+  "grid": "MNODCGUPQLWPCHEERFULTVSMILEERFXRRQMUDAEUHGOLEHGYVTMSAPGYLEXUOCUUPIAKZRRDAHMUJLJERLBAIJSAPWGDFDQMATCH",
+  "words": {
+    "SUPPORT": "86,UL",
+    "LAUGH": "81,UR",
+    "MATCH": "95,R",
+    "CALM": "61,UR",
+    "SMILE": "22,R",
+    "PLAY": "88,UL",
+    "GREET": "5,DR",
+    "HUSH": "73,UL",
+    "NOD": "1,R",
+    "FAMILY": "92,UR",
+    "FUTURE": "29,D",
+    "CHEERFUL": "12,R"
+  }
+}

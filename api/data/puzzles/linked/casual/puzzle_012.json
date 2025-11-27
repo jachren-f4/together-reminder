@@ -1,0 +1,49 @@
+{
+  "author": "Crossword Maker GPT",
+  "title": "Adult Intimacy Puzzle #12",
+  "size": {
+    "rows": 9,
+    "cols": 7
+  },
+  "clues": {
+    "1": { "type": "emoji", "content": "🎵", "arrow": "down", "target_index": 8 },
+    "2": { "type": "text", "content": "SE_D", "arrow": "down", "target_index": 10 },
+    "3": { "type": "emoji", "content": "🚗", "arrow": "down", "target_index": 11 },
+    "4": { "type": "emoji", "content": "🍰", "arrow": "down", "target_index": 13 },
+    "5": { "type": "text", "content": "Repair", "arrow": "across", "target_index": 8 },
+    "6": { "type": "text", "content": "Before X", "arrow": "down", "target_index": 24 },
+    "7": { "type": "text", "content": "After R", "arrow": "across", "target_index": 22 },
+    "8": { "type": "text", "content": "Clean surface", "arrow": "across", "target_index": 24 },
+    "9": { "type": "text", "content": "Alike", "arrow": "down", "target_index": 30 },
+    "10": { "type": "text", "content": "Authentic", "arrow": "down", "target_index": 38 },
+    "11": { "type": "text", "content": "___ always", "arrow": "down", "target_index": 47 },
+    "12": { "type": "text", "content": "COZ_", "arrow": "down", "target_index": 50 },
+    "13": { "type": "text", "content": "After @", "arrow": "across", "target_index": 47 },
+    "14": { "type": "emoji", "content": "📅", "arrow": "across", "target_index": 50 },
+    "15": { "type": "text", "content": "SOU_", "arrow": "across", "target_index": 59 }
+  },
+  "date": "2025-11-27",
+  "grid": [
+    ".", ".", ".", ".", ".", ".", ".",
+    ".", "M", "E", "N", "D", ".", "T",
+    ".", "U", ".", ".", "R", ".", "R",
+    ".", "S", ".", "W", "I", "P", "E",
+    ".", "I", "S", ".", "V", ".", "A",
+    ".", "C", "A", "R", "E", ".", "T",
+    ".", ".", "M", "E", ".", "A", ".",
+    ".", "Y", "E", "A", "R", "S", ".",
+    ".", ".", ".", "L", ".", ".", "."
+  ],
+  "gridnums": [
+    0, 1, 0, 2, 3, 0, 4,
+    5, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 6, 0, 0, 0,
+    7, 0, 8, 0, 0, 0, 0,
+    0, 0, 0, 10, 0, 0, 0,
+    0, 0, 0, 0, 0, 11, 0,
+    0, 12, 0, 0, 13, 0, 0,
+    14, 0, 0, 0, 0, 0, 0,
+    0, 0, 15, 0, 0, 0, 0
+  ],
+  "puzzleId": "puzzle_012"
+}

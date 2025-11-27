@@ -1,0 +1,24 @@
+{
+  "puzzleId": "ws_008",
+  "title": "Passionate VIII",
+  "theme": "passion",
+  "size": {
+    "rows": 10,
+    "cols": 10
+  },
+  "grid": "FLAMEBLAZEHTOOMSECNWNKZGPCLOOSEBRRNDIRWTCCEAUSSBKRKSMSSHJUTOSOKAILMRTNRQPPFTUNAGQZNKZBAOZXTVGNVSCPSF",
+  "words": {
+    "PASSION": "72,UR",
+    "ROMANCE": "70,UR",
+    "FLAME": "0,R",
+    "SMOOTH": "15,L",
+    "WORSHIP": "19,DL",
+    "NECK": "20,D",
+    "SOUL": "98,UL",
+    "BLAZE": "5,R",
+    "BURN": "47,D",
+    "DUSK": "35,DL",
+    "STRONG": "29,D",
+    "PRESS": "24,DL"
+  }
+}

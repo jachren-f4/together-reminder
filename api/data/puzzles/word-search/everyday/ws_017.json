@@ -1,0 +1,24 @@
+{
+  "puzzleId": "ws_017",
+  "title": "Daily Love XVII",
+  "theme": "everyday",
+  "size": {
+    "rows": 10,
+    "cols": 10
+  },
+  "grid": "PGTROFMOCNMZVEECHATLCSVCMIIKFVOSKENBVGGVUIPKTCROOZPKKOMUDAMYLQFJQPPACKEWARMTXAQETHGIRBKNIWAODESSELBR",
+  "words": {
+    "WARM": "71,R",
+    "EMBRACE": "13,DR",
+    "WINK": "89,L",
+    "JOKE": "63,U",
+    "COMFORT": "8,L",
+    "PAIR": "66,DR",
+    "MOVIE": "58,UL",
+    "KISS": "51,U",
+    "COUPLE": "20,D",
+    "BRIGHT": "85,L",
+    "BLESSED": "98,L",
+    "CHAT": "15,R"
+  }
+}

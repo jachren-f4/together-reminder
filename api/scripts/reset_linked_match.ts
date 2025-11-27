@@ -1,8 +1,12 @@
 /**
- * Reset Linked Match for Testing
+ * Reset Linked Match for Testing (Jokke & TestiY)
  *
  * Deletes the linked match from Supabase so a fresh one is created
  * with the latest puzzle data.
+ *
+ * Test users:
+ * - User 1 (Android): e2ecabb7-43ee-422c-b49c-f0636d57e6d2 (TestiY)
+ * - User 2 (Chrome):  634e2af3-1625-4532-89c0-2d0900a2690a (Jokke)
  *
  * Usage: cd api && npx tsx scripts/reset_linked_match.ts
  */
@@ -13,6 +17,7 @@ import * as dotenv from 'dotenv';
 // Load environment variables
 dotenv.config({ path: '.env.local' });
 
+// Couple ID for Jokke & TestiY
 const COUPLE_ID = '11111111-1111-1111-1111-111111111111';
 
 async function resetLinkedMatch() {

@@ -96,15 +96,32 @@ class LinkedService {
     }
   }
 
+  /// Get local date in YYYY-MM-DD format for cooldown check
+  String _getLocalDate() {
+    final now = DateTime.now();
+    return '${now.year}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}';
+  }
+
   /// Get or create active match from API
   ///
   /// This is the main entry point. Server handles:
   /// - Creating match if none exists
   /// - Returning existing active match
   /// - All game state calculation (turns, scores, etc.)
+  ///
+  /// Throws [LinkedCooldownActiveException] if puzzle cooldown is active.
   Future<LinkedGameState> getOrCreateMatch() async {
     try {
-      final response = await _apiRequest('POST', '/api/sync/linked');
+      final response = await _apiRequest(
+        'POST',
+        '/api/sync/linked',
+        body: {'localDate': _getLocalDate()},
+      );
+
+      // Check for cooldown response
+      if (response['code'] == 'COOLDOWN_ACTIVE') {
+        throw LinkedCooldownActiveException(response['message'] ?? 'Next puzzle available tomorrow');
+      }
 
       final matchData = response['match'];
       final puzzleData = response['puzzle'];
@@ -324,5 +341,14 @@ class LinkedService {
       return 'Soon';
     }
   }
+}
+
+/// Exception thrown when puzzle cooldown is active (next puzzle tomorrow)
+class LinkedCooldownActiveException implements Exception {
+  final String message;
+  LinkedCooldownActiveException(this.message);
+
+  @override
+  String toString() => message;
 }
 

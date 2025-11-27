@@ -224,7 +224,7 @@ class _LinkedCardState extends State<LinkedCard> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         const Text(
-                          'Linked',
+                          'Crossword',
                           style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
@@ -295,7 +295,7 @@ class _LinkedCardState extends State<LinkedCard> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         const Text(
-                          'Linked',
+                          'Crossword',
                           style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
@@ -366,7 +366,7 @@ class _LinkedCardState extends State<LinkedCard> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         const Text(
-                          'Linked',
+                          'Crossword',
                           style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
@@ -445,7 +445,7 @@ class _LinkedCardState extends State<LinkedCard> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         const Text(
-                          'Linked',
+                          'Crossword',
                           style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
@@ -498,7 +498,7 @@ class _LinkedCardState extends State<LinkedCard> {
                       children: [
                         _CompletedBadge(),
                         const Spacer(),
-                        const LinkedCompletionBadge(),
+                        LinkedCompletionBadge(),
                       ],
                     ),
                   ),
@@ -519,7 +519,7 @@ class _LinkedCardState extends State<LinkedCard> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         const Text(
-                          'Linked',
+                          'Crossword',
                           style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,

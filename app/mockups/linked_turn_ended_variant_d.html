@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Turn Ended - Variant D: Celebration Card</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #fef9f3 0%, #fdf6ed 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* App Bar */
+        .app-bar {
+            background: white;
+            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .back-btn {
+            font-size: 24px;
+            margin-right: 16px;
+            cursor: pointer;
+        }
+
+        .title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1a1a1a;
+        }
+
+        /* Game Content */
+        .game-content {
+            flex: 1;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* Letter Pool */
+        .letter-pool {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+            opacity: 0.3;
+        }
+
+        .letter-tile {
+            width: 44px;
+            height: 44px;
+            background: white;
+            border: 2px dashed #ccc;
+            border-radius: 8px;
+        }
+
+        /* Crossword Grid */
+        .crossword-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 40px);
+            gap: 2px;
+            background: #ccc;
+            padding: 2px;
+            border-radius: 4px;
+            opacity: 0.7;
+        }
+
+        .cell {
+            width: 40px;
+            height: 40px;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .cell.blocked {
+            background: #1a1a1a;
+        }
+
+        .cell.clue {
+            background: #f5f5f5;
+            font-size: 10px;
+            color: #666;
+            padding: 2px;
+            text-align: center;
+            line-height: 1.1;
+        }
+
+        .cell.filled {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        /* Overlay */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+        }
+
+        /* Celebration Card */
+        .celebration-card {
+            background: white;
+            border-radius: 24px;
+            padding: 32px 24px;
+            width: 90%;
+            max-width: 320px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        @keyframes popIn {
+            from {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        /* Decorative background */
+        .card-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 120px;
+            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+            border-radius: 24px 24px 50% 50%;
+        }
+
+        .card-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Animated emoji */
+        .celebration-emoji {
+            font-size: 72px;
+            animation: bounce 0.6s ease-in-out infinite alternate;
+        }
+
+        @keyframes bounce {
+            from { transform: translateY(0); }
+            to { transform: translateY(-8px); }
+        }
+
+        .celebration-title {
+            font-size: 24px;
+            font-weight: 800;
+            color: #1a1a1a;
+            margin: 16px 0 8px;
+        }
+
+        .celebration-message {
+            font-size: 15px;
+            color: #666;
+            line-height: 1.5;
+            margin-bottom: 8px;
+        }
+
+        /* Partner tag */
+        .partner-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: #f5f5f5;
+            padding: 8px 16px;
+            border-radius: 20px;
+            margin: 12px 0 24px;
+        }
+
+        .partner-avatar {
+            width: 28px;
+            height: 28px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 14px;
+        }
+
+        .partner-info {
+            text-align: left;
+        }
+
+        .partner-label {
+            font-size: 11px;
+            color: #999;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .partner-name {
+            font-size: 14px;
+            font-weight: 600;
+            color: #1a1a1a;
+        }
+
+        .turn-indicator {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            margin-left: auto;
+            color: #e65100;
+            font-size: 12px;
+        }
+
+        .turn-dot {
+            width: 6px;
+            height: 6px;
+            background: #e65100;
+            border-radius: 50%;
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(0.8); }
+        }
+
+        /* Stats row */
+        .stats-row {
+            display: flex;
+            justify-content: center;
+            gap: 24px;
+            margin-bottom: 24px;
+            padding: 16px;
+            background: #fafafa;
+            border-radius: 12px;
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: #1a1a1a;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: #999;
+        }
+
+        .primary-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 16px 32px;
+            border-radius: 50px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        /* Sparkle decorations */
+        .sparkle {
+            position: absolute;
+            font-size: 20px;
+            animation: sparkle 1.5s ease-in-out infinite;
+        }
+
+        .sparkle-1 { top: 20px; left: 20px; animation-delay: 0s; }
+        .sparkle-2 { top: 30px; right: 30px; animation-delay: 0.3s; }
+        .sparkle-3 { top: 80px; left: 40px; animation-delay: 0.6s; }
+        .sparkle-4 { top: 60px; right: 20px; animation-delay: 0.9s; }
+
+        @keyframes sparkle {
+            0%, 100% { opacity: 0.3; transform: scale(0.8); }
+            50% { opacity: 1; transform: scale(1.2); }
+        }
+
+        /* Description */
+        .variant-description {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            right: 20px;
+            background: #1a1a1a;
+            color: white;
+            padding: 16px;
+            border-radius: 12px;
+            font-size: 14px;
+            z-index: 200;
+        }
+
+        .variant-description h3 {
+            font-size: 16px;
+            margin-bottom: 8px;
+        }
+    </style>
+</head>
+<body>
+    <!-- App Bar -->
+    <div class="app-bar">
+        <span class="back-btn">&larr;</span>
+        <span class="title">Linked</span>
+    </div>
+
+    <!-- Game Content (dimmed) -->
+    <div class="game-content">
+        <div class="letter-pool">
+            <div class="letter-tile"></div>
+            <div class="letter-tile"></div>
+            <div class="letter-tile"></div>
+            <div class="letter-tile"></div>
+            <div class="letter-tile"></div>
+        </div>
+
+        <div class="crossword-grid">
+            <div class="cell blocked"></div>
+            <div class="cell clue">feel-<br>ing</div>
+            <div class="cell blocked"></div>
+            <div class="cell blocked"></div>
+            <div class="cell clue">to-<br>gether</div>
+            <div class="cell blocked"></div>
+            <div class="cell blocked"></div>
+
+            <div class="cell clue">heart</div>
+            <div class="cell filled">L</div>
+            <div class="cell filled">O</div>
+            <div class="cell filled">V</div>
+            <div class="cell filled">E</div>
+            <div class="cell blocked"></div>
+            <div class="cell blocked"></div>
+
+            <div class="cell blocked"></div>
+            <div class="cell filled">I</div>
+            <div class="cell blocked"></div>
+            <div class="cell blocked"></div>
+            <div class="cell"></div>
+            <div class="cell"></div>
+            <div class="cell"></div>
+
+            <div class="cell blocked"></div>
+            <div class="cell filled">F</div>
+            <div class="cell blocked"></div>
+            <div class="cell blocked"></div>
+            <div class="cell"></div>
+            <div class="cell blocked"></div>
+            <div class="cell blocked"></div>
+
+            <div class="cell blocked"></div>
+            <div class="cell filled">E</div>
+            <div class="cell blocked"></div>
+            <div class="cell blocked"></div>
+            <div class="cell"></div>
+            <div class="cell blocked"></div>
+            <div class="cell blocked"></div>
+        </div>
+    </div>
+
+    <!-- Overlay with Celebration Card -->
+    <div class="overlay">
+        <div class="celebration-card">
+            <div class="card-bg"></div>
+            <span class="sparkle sparkle-1">✨</span>
+            <span class="sparkle sparkle-2">⭐</span>
+            <span class="sparkle sparkle-3">✨</span>
+            <span class="sparkle sparkle-4">💫</span>
+
+            <div class="card-content">
+                <div class="celebration-emoji">🎉</div>
+                <h2 class="celebration-title">Turn Complete!</h2>
+                <p class="celebration-message">
+                    You placed all 9 letters. Nice teamwork!
+                </p>
+
+                <div class="partner-tag">
+                    <div class="partner-avatar">J</div>
+                    <div class="partner-info">
+                        <div class="partner-label">Up next</div>
+                        <div class="partner-name">Jokke</div>
+                    </div>
+                    <div class="turn-indicator">
+                        <span class="turn-dot"></span>
+                        Their turn
+                    </div>
+                </div>
+
+                <div class="stats-row">
+                    <div class="stat">
+                        <div class="stat-value">9</div>
+                        <div class="stat-label">Letters placed</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value">45%</div>
+                        <div class="stat-label">Complete</div>
+                    </div>
+                </div>
+
+                <button class="primary-btn">Done for now 👋</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Variant Description -->
+    <div class="variant-description">
+        <h3>Variant D: Celebration Card</h3>
+        <p>Playful celebration with animations, sparkles, and stats. Shows partner info prominently with "up next" indicator. Most engaging but might feel over-the-top for frequent use.</p>
+    </div>
+</body>
+</html>

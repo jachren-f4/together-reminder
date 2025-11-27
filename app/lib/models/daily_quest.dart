@@ -63,6 +63,9 @@ class DailyQuest extends HiveObject {
   @HiveField(15, defaultValue: null)
   String? description; // Quest description (e.g., "Answer ten questions together")
 
+  @HiveField(16, defaultValue: null)
+  String? branch; // Branch folder name (e.g., 'lighthearted', 'emotional', 'playful')
+
   DailyQuest({
     required this.id,
     required this.dateKey,
@@ -80,6 +83,7 @@ class DailyQuest extends HiveObject {
     this.quizName,
     this.imagePath,
     this.description,
+    this.branch,
   });
 
   // Helper getters
@@ -111,6 +115,7 @@ class DailyQuest extends HiveObject {
     String? quizName,
     String? imagePath,
     String? description,
+    String? branch,
   }) {
     final now = DateTime.now();
     final endOfDay = DateTime(now.year, now.month, now.day, 23, 59, 59);
@@ -129,6 +134,7 @@ class DailyQuest extends HiveObject {
       quizName: quizName,
       imagePath: imagePath,
       description: description,
+      branch: branch,
     );
   }
 }
