@@ -14,16 +14,13 @@ import { AuthenticatedRequest, RouteContext, withAuth } from './middleware';
  * Check if development bypass is enabled
  *
  * Requirements:
- * 1. NODE_ENV must be 'development'
- * 2. AUTH_DEV_BYPASS_ENABLED must be explicitly 'true'
+ * AUTH_DEV_BYPASS_ENABLED must be explicitly 'true'
  *
- * This dual-check prevents accidental bypass in production
+ * WARNING: Only enable this in Vercel for testing environments,
+ * never for production deployments!
  */
 function isDevBypassEnabled(): boolean {
-  return (
-    process.env.NODE_ENV === 'development' &&
-    process.env.AUTH_DEV_BYPASS_ENABLED === 'true'
-  );
+  return process.env.AUTH_DEV_BYPASS_ENABLED === 'true';
 }
 
 /**

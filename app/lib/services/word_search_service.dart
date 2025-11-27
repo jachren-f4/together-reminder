@@ -1,6 +1,6 @@
 import 'dart:convert';
-import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
+import '../config/supabase_config.dart';
 import '../models/word_search.dart';
 import '../services/storage_service.dart';
 import '../services/auth_service.dart';
@@ -16,19 +16,8 @@ class WordSearchService {
 
   static const int _completionPoints = 30;
 
-  /// Get API base URL based on environment
-  String get _apiBaseUrl {
-    if (kDebugMode) {
-      if (kIsWeb) {
-        return 'http://localhost:3000';
-      } else {
-        return 'http://10.0.2.2:3000';
-      }
-    } else {
-      return const String.fromEnvironment('API_URL',
-          defaultValue: 'https://api.togetherremind.com');
-    }
-  }
+  /// Get API base URL - uses centralized config
+  String get _apiBaseUrl => SupabaseConfig.apiUrl;
 
   /// Make API request with authentication headers
   Future<Map<String, dynamic>> _apiRequest(
