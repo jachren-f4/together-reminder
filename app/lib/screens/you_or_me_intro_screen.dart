@@ -114,6 +114,12 @@ class _YouOrMeIntroScreenState extends State<YouOrMeIntroScreen>
     );
 
     _initializeVideo();
+
+    // Start content animation immediately (don't wait for video)
+    // Video is a visual enhancement, not a blocker
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _startContentAnimation();
+    });
   }
 
   Future<void> _initializeVideo() async {

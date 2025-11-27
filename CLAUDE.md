@@ -585,6 +585,25 @@ void didChangeDependencies() {
 
 **Settings Toggles:** Sound Effects and Haptic Feedback in Settings screen, stored via `StorageService`
 
+### 20. Branch Rotation for Linked and Word Search
+
+**Branch cycling:** Advances on puzzle completion (in submit routes).
+- Linked: casual (0) → romantic (1) → adult (2) → casual (0)
+- Word Search: everyday (0) → passionate (1) → naughty (2) → everyday (0)
+
+**CRITICAL:** Default branch must be the FIRST branch (casual/everyday), not the last.
+
+**Puzzle locations:**
+- Linked: `api/data/puzzles/linked/{casual,romantic,adult}/puzzle_XXX.json`
+- Word Search: `api/data/puzzles/word-search/{everyday,passionate,naughty}/ws_XXX.json`
+
+**Generator script:**
+```bash
+cd api && node scripts/generate_word_search.js all 20  # Regenerates ALL branches
+```
+
+**Submit route behavior:** When `gameComplete=true`, response includes `nextBranch` (0-2).
+
 ---
 
 ## Testing & Debugging

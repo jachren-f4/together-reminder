@@ -107,6 +107,12 @@ class _QuizIntroScreenState extends State<QuizIntroScreen>
 
     _initializeVideo();
     _checkActiveSession();
+
+    // Start content animation immediately (don't wait for video)
+    // Video is a visual enhancement, not a blocker
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _startContentAnimation();
+    });
   }
 
   Future<void> _initializeVideo() async {
