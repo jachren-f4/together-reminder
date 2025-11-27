@@ -1,0 +1,24 @@
+{
+  "puzzleId": "ws_008",
+  "title": "Intimate VIII",
+  "theme": "intimacy",
+  "size": {
+    "rows": 10,
+    "cols": 10
+  },
+  "grid": "EESLUPGEHEJTOEMENMZEHSACGDHERRDUDVLAETDUTONIIUREILSIWGQRSIXLRCLSEOPMMAIEFLPRMZKCHRUXGHSNRWTPETAMITNI",
+  "words": {
+    "WILD": "52,UR",
+    "MIRAGE": "68,UL",
+    "EXPOSED": "92,UR",
+    "HUNGER": "20,DR",
+    "PULSE": "5,L",
+    "PRECIOUS": "91,U",
+    "PRIVATE": "66,UL",
+    "ALLURE": "69,U",
+    "THIRST": "90,U",
+    "LITHE": "59,UL",
+    "SQUEEZE": "63,UR",
+    "INTIMATE": "99,L"
+  }
+}

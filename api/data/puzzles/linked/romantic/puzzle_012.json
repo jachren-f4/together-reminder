@@ -1,0 +1,46 @@
+{
+  "author": "Crossword Maker GPT",
+  "title": "Adult Intimacy Puzzle #12",
+  "size": {
+    "rows": 9,
+    "cols": 7
+  },
+  "clues": {
+    "1": { "type": "emoji", "content": "🌸", "arrow": "down", "target_index": 8 },
+    "2": { "type": "text", "content": "___ you my heart", "arrow": "down", "target_index": 10 },
+    "3": { "type": "emoji", "content": "💬", "arrow": "down", "target_index": 11 },
+    "4": { "type": "emoji", "content": "🔥", "arrow": "down", "target_index": 13 },
+    "5": { "type": "text", "content": "After H", "arrow": "across", "target_index": 15 },
+    "6": { "type": "emoji", "content": "🔥", "arrow": "down", "target_index": 37 },
+    "7": { "type": "text", "content": "After D", "arrow": "across", "target_index": 34 },
+    "8": { "type": "text", "content": "Gentle touch", "arrow": "down", "target_index": 46 },
+    "9": { "type": "text", "content": "After T", "arrow": "across", "target_index": 44 },
+    "10": { "type": "text", "content": "Tremble", "arrow": "across", "target_index": 51 },
+    "11": { "type": "text", "content": "This is ___", "arrow": "across", "target_index": 57 },
+    "12": { "type": "text", "content": "ABOU_", "arrow": "across", "target_index": 60 }
+  },
+  "date": "2025-11-27",
+  "grid": [
+    ".", ".", ".", ".", ".", ".", ".",
+    ".", "L", ".", "O", "W", ".", "E",
+    ".", "I", ".", "W", "O", ".", "M",
+    ".", "L", ".", "E", "R", ".", "B",
+    ".", "Y", ".", ".", "D", ".", "E",
+    ".", ".", "L", ".", ".", ".", "R",
+    ".", ".", "U", ".", "P", ".", ".",
+    ".", ".", "S", "H", "A", "K", "E",
+    ".", "I", "T", ".", "T", ".", "."
+  ],
+  "gridnums": [
+    0, 1, 0, 2, 3, 0, 4,
+    0, 0, 0, 0, 0, 0, 0,
+    5, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0,
+    0, 0, 6, 0, 0, 7, 0,
+    0, 0, 0, 0, 8, 0, 0,
+    0, 9, 0, 0, 0, 0, 0,
+    0, 10, 0, 0, 0, 0, 0,
+    11, 0, 0, 12, 0, 0, 0
+  ],
+  "puzzleId": "puzzle_012"
+}

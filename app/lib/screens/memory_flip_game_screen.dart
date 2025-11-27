@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:confetti/confetti.dart';
 import 'package:togetherremind/models/memory_flip.dart';
@@ -6,9 +7,12 @@ import 'package:togetherremind/services/memory_flip_service.dart';
 import 'package:togetherremind/services/storage_service.dart';
 import 'package:togetherremind/services/love_point_service.dart';
 import 'package:togetherremind/services/general_activity_streak_service.dart';
+import 'package:togetherremind/services/haptic_service.dart';
+import 'package:togetherremind/services/sound_service.dart';
 import 'package:togetherremind/theme/app_theme.dart';
 import 'package:togetherremind/widgets/match_reveal_dialog.dart';
 import 'package:togetherremind/utils/logger.dart';
+import 'package:togetherremind/animations/animation_config.dart';
 import '../config/brand/brand_loader.dart';
 
 class MemoryFlipGameScreen extends StatefulWidget {
@@ -18,7 +22,8 @@ class MemoryFlipGameScreen extends StatefulWidget {
   State<MemoryFlipGameScreen> createState() => _MemoryFlipGameScreenState();
 }
 
-class _MemoryFlipGameScreenState extends State<MemoryFlipGameScreen> {
+class _MemoryFlipGameScreenState extends State<MemoryFlipGameScreen>
+    with TickerProviderStateMixin {
   final MemoryFlipService _service = MemoryFlipService();
   final StorageService _storage = StorageService();
   final GeneralActivityStreakService _streakService = GeneralActivityStreakService();
@@ -36,10 +41,42 @@ class _MemoryFlipGameScreenState extends State<MemoryFlipGameScreen> {
   // Timer for auto-refresh
   Timer? _refreshTimer;
 
+  // Flip animation controllers (one per card)
+  final Map<String, AnimationController> _flipControllers = {};
+  final Map<String, Animation<double>> _flipAnimations = {};
+
+  // Match sparkle animation
+  late AnimationController _sparkleController;
+  late Animation<double> _sparkleAnimation;
+
+  // Accessibility - reduce motion preference
+  bool _reduceMotion = false;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _reduceMotion = AnimationConfig.shouldReduceMotion(context);
+  }
+
   @override
   void initState() {
     super.initState();
     _confettiController = ConfettiController(duration: const Duration(seconds: 3));
+
+    // Match sparkle animation (pulsing glow)
+    _sparkleController = AnimationController(
+      duration: const Duration(milliseconds: 1500),
+      vsync: this,
+    )..repeat(reverse: true);
+
+    _sparkleAnimation = Tween<double>(
+      begin: 0.3,
+      end: 1.0,
+    ).animate(CurvedAnimation(
+      parent: _sparkleController,
+      curve: Curves.easeInOut,
+    ));
+
     _loadGameState();
 
     // Set up periodic refresh every 10 seconds to check for partner's moves
@@ -54,7 +91,40 @@ class _MemoryFlipGameScreenState extends State<MemoryFlipGameScreen> {
   void dispose() {
     _refreshTimer?.cancel();
     _confettiController.dispose();
+    _sparkleController.dispose();
+    // Dispose all flip controllers
+    for (final controller in _flipControllers.values) {
+      controller.dispose();
+    }
     super.dispose();
+  }
+
+  // Get or create flip animation controller for a card
+  AnimationController _getFlipController(String cardId) {
+    if (!_flipControllers.containsKey(cardId)) {
+      // Use instant duration when reduce motion is enabled
+      final duration = _reduceMotion
+          ? AnimationConfig.instant
+          : const Duration(milliseconds: 400);
+      final controller = AnimationController(
+        duration: duration,
+        vsync: this,
+      );
+      _flipControllers[cardId] = controller;
+      _flipAnimations[cardId] = Tween<double>(
+        begin: 0,
+        end: math.pi,
+      ).animate(CurvedAnimation(
+        parent: controller,
+        curve: Curves.easeInOut,
+      ));
+    }
+    return _flipControllers[cardId]!;
+  }
+
+  Animation<double> _getFlipAnimation(String cardId) {
+    _getFlipController(cardId); // Ensure controller exists
+    return _flipAnimations[cardId]!;
   }
 
   Future<void> _loadGameState({bool silent = false}) async {
@@ -99,12 +169,14 @@ class _MemoryFlipGameScreenState extends State<MemoryFlipGameScreen> {
 
     // Check if it's player's turn
     if (!_gameState!.isMyTurn) {
+      HapticService().trigger(HapticType.warning);
       _showNotYourTurnDialog();
       return;
     }
 
     // Check if player has flips
     if (_gameState!.myFlipsRemaining < 2) {
+      HapticService().trigger(HapticType.warning);
       _showNoFlipsDialog();
       return;
     }
@@ -112,14 +184,24 @@ class _MemoryFlipGameScreenState extends State<MemoryFlipGameScreen> {
     // Can't select already matched cards
     if (card.isMatched) return;
 
+    // Haptic feedback for card tap
+    HapticService().trigger(HapticType.medium);
+    SoundService().play(SoundId.cardFlip);
+
+    // Trigger flip animation
+    final controller = _getFlipController(card.id);
+
     // Select first or second card
     setState(() {
       if (_selectedCard1 == null) {
         _selectedCard1 = card;
+        controller.forward();
       } else if (_selectedCard2 == null && card.id != _selectedCard1!.id) {
         _selectedCard2 = card;
+        controller.forward();
       } else if (_selectedCard1!.id == card.id) {
         // Deselect if tapping the same card
+        controller.reverse();
         _selectedCard1 = null;
       }
     });
@@ -146,6 +228,10 @@ class _MemoryFlipGameScreenState extends State<MemoryFlipGameScreen> {
       );
 
       if (result.matchFound) {
+        // Match found - success haptic and sound
+        HapticService().trigger(HapticType.success);
+        SoundService().play(SoundId.matchFound);
+
         // Show match celebration
         _showMatchDialog();
 
@@ -162,8 +248,16 @@ class _MemoryFlipGameScreenState extends State<MemoryFlipGameScreen> {
         // Track activity
         _streakService.recordActivity();
       } else {
-        // No match - cards will flip back
+        // No match - warning haptic and flip cards back
+        HapticService().trigger(HapticType.warning);
+
         await Future.delayed(const Duration(milliseconds: 500));
+
+        // Reverse flip animations
+        final controller1 = _getFlipController(_selectedCard1!.id);
+        final controller2 = _getFlipController(_selectedCard2!.id);
+        controller1.reverse();
+        controller2.reverse();
       }
 
       // Clear selection
@@ -178,11 +272,21 @@ class _MemoryFlipGameScreenState extends State<MemoryFlipGameScreen> {
 
       // Check if game is completed
       if (result.gameCompleted) {
+        HapticService().trigger(HapticType.heavy);
+        SoundService().play(SoundId.confettiBurst);
         _onPuzzleComplete();
       }
 
     } catch (e) {
       Logger.error('Error submitting move', error: e, service: 'memory_flip');
+      // Reverse flip animations on error
+      if (_selectedCard1 != null) {
+        _getFlipController(_selectedCard1!.id).reverse();
+      }
+      if (_selectedCard2 != null) {
+        _getFlipController(_selectedCard2!.id).reverse();
+      }
+
       setState(() {
         _selectedCard1 = null;
         _selectedCard2 = null;
@@ -327,23 +431,6 @@ class _MemoryFlipGameScreenState extends State<MemoryFlipGameScreen> {
     return BrandLoader().colors.divider;
   }
 
-  Widget _getCardContent(MemoryCard card) {
-    final isSelected = _selectedCard1?.id == card.id || _selectedCard2?.id == card.id;
-    final isRevealed = card.isMatched || isSelected;
-
-    if (isRevealed) {
-      return Text(
-        card.emoji,
-        style: const TextStyle(fontSize: 32),
-      );
-    }
-
-    return Icon(
-      Icons.help_outline,
-      size: 32,
-      color: BrandLoader().colors.textSecondary,
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -568,30 +655,93 @@ class _MemoryFlipGameScreenState extends State<MemoryFlipGameScreen> {
         itemCount: puzzle.cards.length,
         itemBuilder: (context, index) {
           final card = puzzle.cards[index];
+          final isSelected = _selectedCard1?.id == card.id || _selectedCard2?.id == card.id;
 
           return GestureDetector(
             onTap: canInteract ? () => _onCardTap(card) : null,
-            child: AnimatedContainer(
-              duration: const Duration(milliseconds: 300),
-              decoration: BoxDecoration(
-                color: _getCardColor(card),
-                borderRadius: BorderRadius.circular(8),
-                border: Border.all(
-                  color: (_selectedCard1?.id == card.id || _selectedCard2?.id == card.id)
-                      ? BrandLoader().colors.textPrimary
-                      : BrandLoader().colors.border,
-                  width: (_selectedCard1?.id == card.id || _selectedCard2?.id == card.id)
-                      ? 3
-                      : 1,
-                ),
-              ),
-              child: Center(
-                child: _getCardContent(card),
-              ),
-            ),
+            child: _buildFlipCard(card, isSelected),
           );
         },
       ),
     );
+  }
+
+  Widget _buildFlipCard(MemoryCard card, bool isSelected) {
+    final animation = _getFlipAnimation(card.id);
+    final isRevealed = card.isMatched || isSelected;
+
+    // RepaintBoundary isolates repaints for better performance
+    return RepaintBoundary(
+      child: AnimatedBuilder(
+      animation: Listenable.merge([animation, _sparkleAnimation]),
+      builder: (context, child) {
+        final flipValue = animation.value;
+        final isShowingFront = flipValue < math.pi / 2;
+
+        // 3D perspective transform
+        final transform = Matrix4.identity()
+          ..setEntry(3, 2, 0.001) // perspective
+          ..rotateY(flipValue);
+
+        return Transform(
+          alignment: Alignment.center,
+          transform: transform,
+          child: Container(
+            decoration: BoxDecoration(
+              color: _getCardColor(card),
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(
+                color: isSelected
+                    ? BrandLoader().colors.textPrimary
+                    : BrandLoader().colors.border,
+                width: isSelected ? 3 : 1,
+              ),
+              // Sparkle glow effect for matched cards
+              boxShadow: card.isMatched
+                  ? [
+                      BoxShadow(
+                        color: BrandLoader().colors.success.withOpacity(
+                          _sparkleAnimation.value * 0.6,
+                        ),
+                        blurRadius: 12 * _sparkleAnimation.value,
+                        spreadRadius: 2 * _sparkleAnimation.value,
+                      ),
+                    ]
+                  : null,
+            ),
+            child: Center(
+              child: isShowingFront
+                  // Back of card (question mark)
+                  ? _buildCardBack()
+                  // Front of card (emoji) - flip horizontally to appear correct
+                  : Transform(
+                      alignment: Alignment.center,
+                      transform: Matrix4.identity()..rotateY(math.pi),
+                      child: _buildCardFront(card, isRevealed),
+                    ),
+            ),
+          ),
+        );
+      },
+      ),
+    );
+  }
+
+  Widget _buildCardBack() {
+    return Icon(
+      Icons.help_outline,
+      size: 32,
+      color: BrandLoader().colors.textSecondary,
+    );
+  }
+
+  Widget _buildCardFront(MemoryCard card, bool isRevealed) {
+    if (isRevealed) {
+      return Text(
+        card.emoji,
+        style: const TextStyle(fontSize: 32),
+      );
+    }
+    return _buildCardBack();
   }
 }

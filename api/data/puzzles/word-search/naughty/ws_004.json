@@ -1,0 +1,24 @@
+{
+  "puzzleId": "ws_004",
+  "title": "Intimate IV",
+  "theme": "intimacy",
+  "size": {
+    "rows": 10,
+    "cols": 10
+  },
+  "grid": "XOREPSIHWHVZHFEVERCBFUTSAMSUTBOSSNUDRAHLSIARAVPQPFKSMTEPWCOSRUITIDYRIHRYOLSNMAYEEHTVBVPVHEKJSTSKQEER",
+  "words": {
+    "CURVE": "18,DL",
+    "FEVER": "13,R",
+    "PANT": "55,UL",
+    "KISS": "50,UR",
+    "BLISS": "84,UL",
+    "HARD": "38,L",
+    "FORM": "49,DL",
+    "SHEER": "59,D",
+    "WHISPER": "8,L",
+    "SATIN": "31,DR",
+    "MURMUR": "25,DL",
+    "CRAVE": "57,D"
+  }
+}

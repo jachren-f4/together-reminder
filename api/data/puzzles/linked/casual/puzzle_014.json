@@ -1,0 +1,47 @@
+{
+  "author": "Crossword Maker GPT",
+  "title": "Adult Intimacy Puzzle #14",
+  "size": {
+    "rows": 9,
+    "cols": 7
+  },
+  "clues": {
+    "1": { "type": "emoji", "content": "😄", "arrow": "down", "target_index": 8 },
+    "2": { "type": "emoji", "content": "🤝", "arrow": "down", "target_index": 11 },
+    "3": { "type": "emoji", "content": "🔔", "arrow": "down", "target_index": 13 },
+    "4": { "type": "text", "content": "Waist accessory", "arrow": "across", "target_index": 8 },
+    "5": { "type": "text", "content": "Possibly", "arrow": "down", "target_index": 23 },
+    "6": { "type": "text", "content": "WEI_D", "arrow": "across", "target_index": 18 },
+    "7": { "type": "text", "content": "After R", "arrow": "across", "target_index": 32 },
+    "8": { "type": "text", "content": "_OON", "arrow": "across", "target_index": 34 },
+    "9": { "type": "text", "content": "Before H", "arrow": "across", "target_index": 37 },
+    "10": { "type": "text", "content": "Draw result", "arrow": "across", "target_index": 39 },
+    "11": { "type": "text", "content": "After G", "arrow": "across", "target_index": 44 },
+    "12": { "type": "text", "content": "Celebration drink", "arrow": "across", "target_index": 51 },
+    "13": { "type": "text", "content": "Casual no", "arrow": "across", "target_index": 59 }
+  },
+  "date": "2025-11-27",
+  "grid": [
+    ".", ".", ".", ".", ".", ".", ".",
+    ".", "B", "E", "L", "T", ".", "C",
+    ".", "E", ".", ".", "R", ".", "H",
+    ".", "A", "M", ".", "U", ".", "I",
+    ".", "M", "I", ".", "S", ".", "M",
+    ".", ".", "G", ".", "T", "I", "E",
+    ".", ".", "H", ".", ".", ".", ".",
+    ".", ".", "T", "O", "A", "S", "T",
+    ".", ".", ".", "N", "A", "H", "."
+  ],
+  "gridnums": [
+    0, 1, 0, 0, 2, 0, 3,
+    4, 0, 0, 0, 0, 0, 0,
+    0, 0, 5, 6, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 7, 0, 8, 0,
+    0, 9, 0, 10, 0, 0, 0,
+    0, 11, 0, 0, 0, 0, 0,
+    0, 12, 0, 0, 0, 0, 0,
+    0, 0, 13, 0, 0, 0, 0
+  ],
+  "puzzleId": "puzzle_014"
+}

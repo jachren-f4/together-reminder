@@ -1,0 +1,24 @@
+{
+  "puzzleId": "ws_009",
+  "title": "Passionate IX",
+  "theme": "passion",
+  "size": {
+    "rows": 10,
+    "cols": 10
+  },
+  "grid": "RWVDLOBEDCTEWHPBCYSESMPYOAELOEGEUSFLKAFEFNNFIDDXTVOHIIIHHSGOLCJVGEWEOMRTVOAARPAQTRAEHRMCFTDCYUHDCIEQ",
+  "words": {
+    "CRAVING": "96,UL",
+    "BOLD": "6,L",
+    "HOLD": "13,DR",
+    "HEAT": "56,DR",
+    "BEAT": "15,DR",
+    "IMAGINE": "97,UL",
+    "WHISPER": "66,UL",
+    "FIERCE": "43,DR",
+    "HEART": "84,L",
+    "MOVE": "69,U",
+    "SOFT": "18,D",
+    "FACE": "34,UR"
+  }
+}

@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:togetherremind/screens/new_home_screen.dart';
 import 'package:togetherremind/screens/activity_hub_screen.dart';
-import 'package:togetherremind/screens/activities_screen.dart';
 import 'package:togetherremind/screens/profile_screen.dart';
 import 'package:togetherremind/screens/settings_screen.dart';
 import 'package:togetherremind/theme/app_theme.dart';
 import 'package:togetherremind/config/brand/brand_assets.dart';
+import 'package:togetherremind/widgets/poke_bottom_sheet.dart';
+import 'package:togetherremind/services/sound_service.dart';
+import 'package:togetherremind/services/haptic_service.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -20,10 +22,18 @@ class _HomeScreenState extends State<HomeScreen> {
   final List<Widget> _screens = const [
     NewHomeScreen(),
     ActivityHubScreen(),
-    ActivitiesScreen(),
     ProfileScreen(),
     SettingsScreen(),
   ];
+
+  void _showPokeBottomSheet() {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) => const PokeBottomSheet(),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -56,26 +66,22 @@ class _HomeScreenState extends State<HomeScreen> {
                   isActive: _currentIndex == 1,
                   onTap: () => setState(() => _currentIndex = 1),
                 ),
-                _NavItem(
-                  iconOutline: BrandAssets.activitiesIcon,
-                  iconFilled: BrandAssets.activitiesIconFilled,
-                  label: 'Activities',
-                  isActive: _currentIndex == 2,
-                  onTap: () => setState(() => _currentIndex = 2),
+                _PokeNavItem(
+                  onTap: _showPokeBottomSheet,
                 ),
                 _NavItem(
                   iconOutline: BrandAssets.profileIcon,
                   iconFilled: BrandAssets.profileIconFilled,
                   label: 'Profile',
-                  isActive: _currentIndex == 3,
-                  onTap: () => setState(() => _currentIndex = 3),
+                  isActive: _currentIndex == 2,
+                  onTap: () => setState(() => _currentIndex = 2),
                 ),
                 _NavItem(
                   iconOutline: BrandAssets.settingsIcon,
                   iconFilled: BrandAssets.settingsIconFilled,
                   label: 'Settings',
-                  isActive: _currentIndex == 4,
-                  onTap: () => setState(() => _currentIndex = 4),
+                  isActive: _currentIndex == 3,
+                  onTap: () => setState(() => _currentIndex = 3),
                 ),
               ],
             ),
@@ -105,7 +111,11 @@ class _NavItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return Expanded(
       child: GestureDetector(
-        onTap: onTap,
+        onTap: () {
+          SoundService().tap();
+          HapticService().tap();
+          onTap();
+        },
         behavior: HitTestBehavior.opaque,
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -129,6 +139,46 @@ class _NavItem extends StatelessWidget {
                 color: isActive ? AppTheme.textPrimary : AppTheme.textTertiary,
               ),
               child: Text(label),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _PokeNavItem extends StatelessWidget {
+  final VoidCallback onTap;
+
+  const _PokeNavItem({
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: GestureDetector(
+        onTap: () {
+          SoundService().tap();
+          HapticService().tap();
+          onTap();
+        },
+        behavior: HitTestBehavior.opaque,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Text(
+              '💫',
+              style: TextStyle(fontSize: 22),
+            ),
+            const SizedBox(height: 4),
+            Text(
+              'Poke',
+              style: AppTheme.bodyFont.copyWith(
+                fontSize: 11,
+                fontWeight: FontWeight.w500,
+                color: AppTheme.textTertiary,
+              ),
             ),
           ],
         ),

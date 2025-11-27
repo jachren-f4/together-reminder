@@ -21,10 +21,12 @@ const DIRECTION_DELTAS: Record<string, number> = {
 // Points per letter in word
 const POINTS_PER_LETTER = 10;
 
-// Load puzzle data (including word positions for validation)
-function loadPuzzle(puzzleId: string): any {
+// Load puzzle data from branch-specific path (including word positions for validation)
+function loadPuzzle(puzzleId: string, branch?: string): any {
   try {
-    const puzzlePath = join(process.cwd(), 'data', 'puzzles', 'word-search', `${puzzleId}.json`);
+    // Use branch path (default to 'everyday' if no branch specified)
+    const branchFolder = branch || 'everyday';
+    const puzzlePath = join(process.cwd(), 'data', 'puzzles', 'word-search', branchFolder, `${puzzleId}.json`);
     const puzzleData = readFileSync(puzzlePath, 'utf-8');
     return JSON.parse(puzzleData);
   } catch (error) {
@@ -233,6 +235,7 @@ export const POST = withAuthOrDevBypass(async (req, userId, email) => {
     let newStatus = 'active';
     let winnerId = null;
     let completedAt = null;
+    let nextBranch = null;
 
     if (gameComplete) {
       newStatus = 'completed';
@@ -248,6 +251,22 @@ export const POST = withAuthOrDevBypass(async (req, userId, email) => {
         winnerId = user2_id;
       }
       // If tied, winnerId stays null
+
+      // Advance branch progression for Word Search activity
+      // This makes the next puzzle come from the next branch (everyday -> passionate -> naughty -> everyday)
+      const branchResult = await client.query(
+        `INSERT INTO branch_progression (couple_id, activity_type, current_branch, total_completions, max_branches)
+         VALUES ($1, 'wordSearch', 0, 1, 3)
+         ON CONFLICT (couple_id, activity_type)
+         DO UPDATE SET
+           total_completions = branch_progression.total_completions + 1,
+           current_branch = (branch_progression.total_completions + 1) % branch_progression.max_branches,
+           last_completed_at = NOW(),
+           updated_at = NOW()
+         RETURNING current_branch`,
+        [coupleId]
+      );
+      nextBranch = branchResult.rows[0]?.current_branch ?? 0;
     }
 
     // Switch turns if turn complete and game not over
@@ -309,7 +328,8 @@ export const POST = withAuthOrDevBypass(async (req, userId, email) => {
       gameComplete,
       nextTurnUserId: turnComplete && !gameComplete ? nextTurnUserId : null,
       colorIndex,
-      winnerId
+      winnerId,
+      nextBranch: gameComplete ? nextBranch : null,  // Branch for next puzzle (0=everyday, 1=passionate, 2=naughty)
     });
   } catch (error) {
     await client.query('ROLLBACK');

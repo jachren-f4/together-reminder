@@ -4,8 +4,11 @@ import '../models/quiz_question.dart';
 import '../config/brand/brand_loader.dart';
 import '../utils/logger.dart';
 
-/// Service for loading and managing affirmation quizzes
-/// Affirmation quizzes are pre-packaged sets of questions with metadata
+/// Service for loading and managing affirmation quizzes with branch support.
+///
+/// Affirmation quizzes are pre-packaged sets of questions with metadata.
+/// Supports branching content system where quizzes can be loaded from
+/// different branches (e.g., 'emotional' vs 'practical') based on progression.
 class AffirmationQuizBank {
   static final AffirmationQuizBank _instance = AffirmationQuizBank._internal();
   factory AffirmationQuizBank() => _instance;
@@ -13,13 +16,54 @@ class AffirmationQuizBank {
 
   List<AffirmationQuiz> _quizzes = [];
   bool _isInitialized = false;
+  String _currentBranch = '';  // Empty = legacy mode
 
-  /// Initialize affirmation quizzes from JSON file
+  /// Initialize affirmation quizzes from legacy flat file
   Future<void> initialize() async {
-    if (_isInitialized) return;
+    if (_isInitialized && _currentBranch.isEmpty) return;
 
+    await _loadFromPath(BrandLoader().content.affirmationQuizzesPath);
+    _currentBranch = '';
+    _isInitialized = true;
+  }
+
+  /// Initialize affirmation quizzes from a specific branch.
+  ///
+  /// [branch] - Branch folder name (e.g., 'emotional', 'practical')
+  ///
+  /// This clears existing quizzes and loads from the branch folder.
+  /// Falls back to legacy file if branch folder doesn't exist.
+  Future<void> initializeWithBranch(String branch) async {
+    // Skip if already loaded for this branch
+    if (_isInitialized && _currentBranch == branch) {
+      Logger.debug('AffirmationQuizBank already initialized for branch: $branch', service: 'affirmation');
+      return;
+    }
+
+    // Clear existing quizzes when switching branches
+    _quizzes = [];
+    _isInitialized = false;
+
+    // Try branch-specific path first
+    final branchPath = BrandLoader().content.getAffirmationPath(branch);
     try {
-      final String jsonString = await rootBundle.loadString(BrandLoader().content.affirmationQuizzesPath);
+      await _loadFromPath(branchPath);
+      _currentBranch = branch;
+      _isInitialized = true;
+      Logger.info('Loaded affirmation quizzes from branch: $branch', service: 'affirmation');
+    } catch (e) {
+      // Fallback to legacy path
+      Logger.warn('Branch $branch not found, falling back to legacy', service: 'affirmation');
+      await _loadFromPath(BrandLoader().content.affirmationQuizzesPath);
+      _currentBranch = '';
+      _isInitialized = true;
+    }
+  }
+
+  /// Load quizzes from a specific JSON file path
+  Future<void> _loadFromPath(String path) async {
+    try {
+      final String jsonString = await rootBundle.loadString(path);
       final Map<String, dynamic> jsonData = json.decode(jsonString);
       final List<dynamic> quizzesJson = jsonData['quizzes'] as List<dynamic>;
 
@@ -47,13 +91,15 @@ class AffirmationQuizBank {
         );
       }).toList();
 
-      _isInitialized = true;
-      Logger.success('Loaded ${_quizzes.length} affirmation quizzes (${_quizzes.fold<int>(0, (sum, q) => sum + q.questions.length)} total questions)', service: 'affirmation');
+      Logger.success('Loaded ${_quizzes.length} affirmation quizzes (${_quizzes.fold<int>(0, (sum, q) => sum + q.questions.length)} total questions) from $path', service: 'affirmation');
     } catch (e) {
-      Logger.error('Error loading affirmation quizzes', error: e, service: 'affirmation');
+      Logger.error('Error loading affirmation quizzes from $path', error: e, service: 'affirmation');
       rethrow;
     }
   }
+
+  /// Get the currently loaded branch (empty string = legacy)
+  String get currentBranch => _currentBranch;
 
   /// Get all affirmation quizzes
   List<AffirmationQuiz> getAllQuizzes() {
@@ -82,6 +128,13 @@ class AffirmationQuizBank {
     return categoryQuizzes.first;
   }
 
+  /// Get a random quiz (from any category in current branch)
+  AffirmationQuiz? getRandomQuiz() {
+    if (_quizzes.isEmpty) return null;
+    final shuffled = List<AffirmationQuiz>.from(_quizzes)..shuffle();
+    return shuffled.first;
+  }
+
   /// Get a quiz by matching its question IDs
   /// Used when partner device created the quiz and we need to find it for answering
   AffirmationQuiz? getQuizByQuestionIds(String category, List<String> questionIds) {
@@ -108,6 +161,13 @@ class AffirmationQuizBank {
 
   /// Get total quiz count
   int get totalQuizzes => _quizzes.length;
+
+  /// Reset initialization state (useful for testing or brand switching)
+  void reset() {
+    _quizzes = [];
+    _currentBranch = '';
+    _isInitialized = false;
+  }
 }
 
 /// Model for a complete affirmation quiz

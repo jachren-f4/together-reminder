@@ -1,0 +1,24 @@
+{
+  "puzzleId": "ws_003",
+  "title": "Intimate III",
+  "theme": "intimacy",
+  "size": {
+    "rows": 10,
+    "cols": 10
+  },
+  "grid": "RPIRGPSDESAWZAELJZKUTTEGLNIKSOOZMEBLSTDIUPBTMUUTHCCNRAELDRWEHAAVRLJSERQOCITEASEPXMEROMANCEXDOPUTVPTZ",
+  "words": {
+    "PRIVATE": "93,U",
+    "PRECIOUS": "79,U",
+    "GRIP": "4,L",
+    "TREMBLE": "74,U",
+    "ALLURE": "13,DR",
+    "TOUCH": "20,D",
+    "ROMANCE": "83,R",
+    "SKIN": "28,L",
+    "EMBRACE": "22,D",
+    "LITHE": "15,DR",
+    "MOAN": "81,U",
+    "TEASE": "74,R"
+  }
+}

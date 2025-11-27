@@ -1,0 +1,47 @@
+{
+  "author": "Crossword Maker GPT",
+  "title": "Adult Intimacy Puzzle #15",
+  "size": {
+    "rows": 9,
+    "cols": 7
+  },
+  "clues": {
+    "1": { "type": "emoji", "content": "☕", "arrow": "down", "target_index": 8 },
+    "2": { "type": "emoji", "content": "🎄", "arrow": "down", "target_index": 11 },
+    "3": { "type": "emoji", "content": "💘", "arrow": "down", "target_index": 13 },
+    "4": { "type": "text", "content": "_LOSE", "arrow": "across", "target_index": 8 },
+    "5": { "type": "text", "content": "Suitor", "arrow": "across", "target_index": 17 },
+    "6": { "type": "text", "content": "After E", "arrow": "across", "target_index": 22 },
+    "7": { "type": "text", "content": "Before F", "arrow": "across", "target_index": 29 },
+    "8": { "type": "emoji", "content": "😊", "arrow": "across", "target_index": 37 },
+    "9": { "type": "text", "content": "FIN_L", "arrow": "down", "target_index": 52 },
+    "10": { "type": "text", "content": "___ in love", "arrow": "down", "target_index": 53 },
+    "11": { "type": "text", "content": "Hold tight", "arrow": "across", "target_index": 50 },
+    "12": { "type": "text", "content": "After G", "arrow": "down", "target_index": 62 },
+    "13": { "type": "text", "content": "Delight sound", "arrow": "across", "target_index": 60 }
+  },
+  "date": "2025-11-27",
+  "grid": [
+    ".", ".", ".", ".", ".", ".", ".",
+    ".", "C", ".", ".", "M", ".", "C",
+    ".", "A", ".", "B", "E", "A", "U",
+    ".", "F", ".", ".", "R", ".", "P",
+    ".", "E", ".", ".", "R", ".", "I",
+    ".", ".", "S", "H", "Y", ".", "D",
+    ".", ".", ".", ".", ".", ".", ".",
+    ".", "G", "R", "A", "S", "P", ".",
+    ".", ".", ".", ".", "O", "O", "H"
+  ],
+  "gridnums": [
+    0, 1, 0, 0, 2, 0, 3,
+    4, 0, 0, 0, 0, 0, 0,
+    0, 0, 5, 0, 0, 0, 0,
+    6, 0, 0, 0, 0, 0, 0,
+    7, 0, 0, 0, 0, 0, 0,
+    0, 8, 0, 0, 0, 0, 0,
+    0, 0, 0, 9, 10, 0, 0,
+    11, 0, 0, 0, 0, 0, 12,
+    0, 0, 0, 13, 0, 0, 0
+  ],
+  "puzzleId": "puzzle_015"
+}

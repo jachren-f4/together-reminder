@@ -15,10 +15,12 @@ export const dynamic = 'force-dynamic';
 // Points per correct letter
 const POINTS_PER_LETTER = 10;
 
-// Load puzzle data (including solution)
-function loadPuzzle(puzzleId: string): any {
+// Load puzzle data from branch-specific path (including solution)
+function loadPuzzle(puzzleId: string, branch?: string): any {
   try {
-    const puzzlePath = join(process.cwd(), 'data', 'puzzles', `${puzzleId}.json`);
+    // Use branch path (default to 'casual' if no branch specified)
+    const branchFolder = branch || 'casual';
+    const puzzlePath = join(process.cwd(), 'data', 'puzzles', 'linked', branchFolder, `${puzzleId}.json`);
     const puzzleData = readFileSync(puzzlePath, 'utf-8');
     return JSON.parse(puzzleData);
   } catch (error) {
@@ -295,6 +297,7 @@ export const POST = withAuthOrDevBypass(async (req, userId, email) => {
 
     // Determine winner if game complete
     let winnerId = null;
+    let nextBranch = null;
     if (gameComplete) {
       if (newPlayer1Score > newPlayer2Score) {
         winnerId = user1_id;
@@ -302,6 +305,22 @@ export const POST = withAuthOrDevBypass(async (req, userId, email) => {
         winnerId = user2_id;
       }
       // If tied, winnerId stays null
+
+      // Advance branch progression for Linked activity
+      // This makes the next puzzle come from the next branch (casual -> romantic -> adult -> casual)
+      const branchResult = await client.query(
+        `INSERT INTO branch_progression (couple_id, activity_type, current_branch, total_completions, max_branches)
+         VALUES ($1, 'linked', 0, 1, 3)
+         ON CONFLICT (couple_id, activity_type)
+         DO UPDATE SET
+           total_completions = branch_progression.total_completions + 1,
+           current_branch = (branch_progression.total_completions + 1) % branch_progression.max_branches,
+           last_completed_at = NOW(),
+           updated_at = NOW()
+         RETURNING current_branch`,
+        [coupleId]
+      );
+      nextBranch = branchResult.rows[0]?.current_branch ?? 0;
     }
 
     // Generate new rack and switch turns
@@ -362,6 +381,7 @@ export const POST = withAuthOrDevBypass(async (req, userId, email) => {
       nextRack: gameComplete ? null : nextRack,
       winnerId,
       newLockedCount,
+      nextBranch: gameComplete ? nextBranch : null,  // Branch for next puzzle (0=casual, 1=romantic, 2=adult)
     });
   } catch (error) {
     await client.query('ROLLBACK');

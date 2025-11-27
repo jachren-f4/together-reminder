@@ -1,0 +1,24 @@
+{
+  "puzzleId": "ws_013",
+  "title": "Intimate XIII",
+  "theme": "intimacy",
+  "size": {
+    "rows": 10,
+    "cols": 10
+  },
+  "grid": "MAFDEENZDDRRREDNETAXSEEBAREGZQDVIRUDWGENTINTIGNITEYHJISFMEMPWSWHTHMROLGNAJFAUUOVXPPIRGSVGFEKISMOLDER",
+  "words": {
+    "FORM": "89,UL",
+    "SMOLDER": "93,R",
+    "SHIVER": "61,U",
+    "IGNITE": "44,R",
+    "SATIN": "86,UL",
+    "NEED": "6,L",
+    "BARE": "23,R",
+    "FIRE": "55,UL",
+    "TENDER": "17,L",
+    "DAZE": "8,D",
+    "GRIP": "85,L",
+    "SHAPE": "54,DL"
+  }
+}

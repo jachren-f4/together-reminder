@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:uuid/uuid.dart';
 import '../models/reminder.dart';
 import '../services/storage_service.dart';
@@ -25,187 +26,363 @@ class _RemindBottomSheetState extends State<RemindBottomSheet> {
   ];
 
   final List<Map<String, dynamic>> _timeOptions = [
-    {'emoji': '⚡', 'label': 'In 1 sec', 'minutes': 0},
-    {'emoji': '☕', 'label': '1 hour', 'minutes': 60},
-    {'emoji': '🌙', 'label': 'Tonight', 'minutes': null, 'special': 'tonight'},
-    {'emoji': '☀️', 'label': 'Tomorrow', 'minutes': null, 'special': 'tomorrow'},
+    {'emoji': '⚡', 'label': 'Now', 'minutes': 0},
+    {'emoji': '☕', 'label': '1 Hour', 'minutes': 60},
+    {'emoji': '🌙', 'label': '8 PM', 'special': 'tonight'},
+    {'emoji': '☀️', 'label': '8 AM', 'special': 'tomorrow'},
   ];
 
   @override
   Widget build(BuildContext context) {
+    final partner = StorageService().getPartner();
+    final partnerName = partner?.name ?? 'Partner';
+
     return Container(
       decoration: BoxDecoration(
         color: AppTheme.primaryWhite,
-        borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
-      ),
-      padding: EdgeInsets.only(
-        bottom: MediaQuery.of(context).viewInsets.bottom,
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(0)),
+        border: Border(
+          top: BorderSide(color: AppTheme.primaryBlack, width: 2),
+        ),
       ),
       child: SafeArea(
         child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(24.0),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                // Handle bar
-                Center(
-                  child: Container(
-                    width: 40,
-                    height: 4,
-                    margin: const EdgeInsets.only(bottom: 20),
-                    decoration: BoxDecoration(
-                      color: AppTheme.borderLight,
-                      borderRadius: BorderRadius.circular(2),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              // Header bar
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+                decoration: BoxDecoration(
+                  border: Border(
+                    bottom: BorderSide(color: AppTheme.primaryBlack, width: 2),
+                  ),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'REMINDER',
+                      style: AppTheme.bodyFont.copyWith(
+                        fontSize: 11,
+                        fontWeight: FontWeight.w600,
+                        letterSpacing: 1.5,
+                        color: AppTheme.textPrimary,
+                      ),
                     ),
+                    GestureDetector(
+                      onTap: () => Navigator.of(context).pop(),
+                      child: Text(
+                        '✕',
+                        style: TextStyle(
+                          fontSize: 18,
+                          color: AppTheme.textSecondary,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
+              // Hero section
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
+                child: Column(
+                  children: [
+                    Text(
+                      'Send a',
+                      style: AppTheme.headlineFont.copyWith(
+                        fontSize: 36,
+                        fontWeight: FontWeight.w400,
+                        letterSpacing: -1,
+                        color: AppTheme.textPrimary,
+                        height: 1.1,
+                      ),
+                    ),
+                    Text(
+                      'Reminder',
+                      style: AppTheme.headlineFont.copyWith(
+                        fontSize: 36,
+                        fontWeight: FontWeight.w400,
+                        fontStyle: FontStyle.italic,
+                        letterSpacing: -1,
+                        color: AppTheme.textPrimary,
+                        height: 1.1,
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    Container(
+                      width: 40,
+                      height: 1,
+                      color: AppTheme.primaryBlack,
+                    ),
+                    const SizedBox(height: 16),
+                    Text(
+                      'Schedule a thoughtful message for your partner',
+                      style: AppTheme.headlineFont.copyWith(
+                        fontSize: 13,
+                        fontStyle: FontStyle.italic,
+                        color: AppTheme.textSecondary,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ],
+                ),
+              ),
+
+              // Recipient bar
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
+                decoration: BoxDecoration(
+                  border: Border(
+                    top: BorderSide(color: AppTheme.primaryBlack, width: 1),
+                    bottom: BorderSide(color: AppTheme.primaryBlack, width: 1),
                   ),
                 ),
-
-                // Title
-                Text(
-                  'Send Reminder',
-                  style: AppTheme.headlineFont.copyWith(
-                    fontSize: 24,
-                    fontWeight: FontWeight.w600,
-                  ),
-                  textAlign: TextAlign.center,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'TO',
+                      style: AppTheme.bodyFont.copyWith(
+                        fontSize: 10,
+                        fontWeight: FontWeight.w600,
+                        letterSpacing: 1.5,
+                        color: AppTheme.textSecondary,
+                      ),
+                    ),
+                    Text(
+                      partnerName,
+                      style: AppTheme.bodyFont.copyWith(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w600,
+                        color: AppTheme.textPrimary,
+                      ),
+                    ),
+                  ],
                 ),
+              ),
 
-                const SizedBox(height: 24),
+              // Message field
+              Padding(
+                padding: const EdgeInsets.all(20),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'MESSAGE',
+                      style: AppTheme.bodyFont.copyWith(
+                        fontSize: 10,
+                        fontWeight: FontWeight.w600,
+                        letterSpacing: 1.5,
+                        color: AppTheme.textSecondary,
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    Container(
+                      decoration: BoxDecoration(
+                        border: Border.all(color: AppTheme.primaryBlack, width: 1),
+                      ),
+                      child: TextField(
+                        controller: _messageController,
+                        maxLines: 3,
+                        style: AppTheme.headlineFont.copyWith(
+                          fontSize: 14,
+                          color: AppTheme.textPrimary,
+                        ),
+                        decoration: InputDecoration(
+                          hintText: 'What would you like to remind them about?',
+                          hintStyle: AppTheme.headlineFont.copyWith(
+                            fontSize: 14,
+                            color: AppTheme.textTertiary,
+                            fontStyle: FontStyle.italic,
+                          ),
+                          border: InputBorder.none,
+                          contentPadding: const EdgeInsets.all(16),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 20),
 
-                // Message input
-                TextField(
-                  controller: _messageController,
-                  decoration: InputDecoration(
-                    hintText: 'Remind me to...',
-                    filled: true,
-                    fillColor: AppTheme.backgroundGray,
-                  ),
-                  maxLines: 3,
+                    // Delivery time
+                    Text(
+                      'DELIVERY TIME',
+                      style: AppTheme.bodyFont.copyWith(
+                        fontSize: 10,
+                        fontWeight: FontWeight.w600,
+                        letterSpacing: 1.5,
+                        color: AppTheme.textSecondary,
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    Row(
+                      children: _timeOptions.map((option) {
+                        final isSelected = _selectedTime == option['label'];
+                        return Expanded(
+                          child: GestureDetector(
+                            onTap: () {
+                              HapticFeedback.selectionClick();
+                              setState(() {
+                                _selectedTime = option['label'] as String;
+                              });
+                            },
+                            child: Container(
+                              margin: EdgeInsets.only(
+                                right: option != _timeOptions.last ? 8 : 0,
+                              ),
+                              padding: const EdgeInsets.symmetric(vertical: 12),
+                              decoration: BoxDecoration(
+                                color: isSelected
+                                    ? AppTheme.primaryBlack
+                                    : AppTheme.primaryWhite,
+                                border: Border.all(
+                                  color: AppTheme.primaryBlack,
+                                  width: 1,
+                                ),
+                              ),
+                              child: Column(
+                                children: [
+                                  Text(
+                                    option['emoji'] as String,
+                                    style: const TextStyle(fontSize: 18),
+                                  ),
+                                  const SizedBox(height: 4),
+                                  Text(
+                                    option['label'] as String,
+                                    style: AppTheme.bodyFont.copyWith(
+                                      fontSize: 9,
+                                      fontWeight: FontWeight.w600,
+                                      letterSpacing: 0.5,
+                                      color: isSelected
+                                          ? AppTheme.primaryWhite
+                                          : AppTheme.textPrimary,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        );
+                      }).toList(),
+                    ),
+                  ],
                 ),
+              ),
 
-                const SizedBox(height: 20),
+              // Quick messages
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'QUICK MESSAGES',
+                      style: AppTheme.bodyFont.copyWith(
+                        fontSize: 10,
+                        fontWeight: FontWeight.w600,
+                        letterSpacing: 1.5,
+                        color: AppTheme.textSecondary,
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    GridView.count(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      crossAxisCount: 2,
+                      mainAxisSpacing: 8,
+                      crossAxisSpacing: 8,
+                      childAspectRatio: 3.5,
+                      children: _quickMessages.map((msg) {
+                        return GestureDetector(
+                          onTap: () {
+                            HapticFeedback.selectionClick();
+                            _messageController.text = msg['text'];
+                          },
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 12, vertical: 10),
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                color: AppTheme.borderLight,
+                                width: 1,
+                              ),
+                            ),
+                            child: Row(
+                              children: [
+                                Text(
+                                  msg['emoji'],
+                                  style: const TextStyle(fontSize: 14),
+                                ),
+                                const SizedBox(width: 8),
+                                Expanded(
+                                  child: Text(
+                                    msg['text'],
+                                    style: AppTheme.bodyFont.copyWith(
+                                      fontSize: 12,
+                                      color: AppTheme.textPrimary,
+                                    ),
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
+                      }).toList(),
+                    ),
+                  ],
+                ),
+              ),
 
-                // Quick messages
-                Text(
-                  'Quick Messages',
-                  style: AppTheme.bodyFont.copyWith(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
+              // Footer with send button
+              Container(
+                margin: const EdgeInsets.only(top: 20),
+                padding: const EdgeInsets.all(20),
+                decoration: BoxDecoration(
+                  border: Border(
+                    top: BorderSide(color: AppTheme.primaryBlack, width: 2),
                   ),
                 ),
-                const SizedBox(height: 12),
-                GridView.builder(
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    crossAxisSpacing: 12,
-                    mainAxisSpacing: 12,
-                    childAspectRatio: 2.5,
-                  ),
-                  itemCount: _quickMessages.length,
-                  itemBuilder: (context, index) {
-                    final message = _quickMessages[index];
-                    return _buildQuickMessageButton(message);
-                  },
+                child: Column(
+                  children: [
+                    SizedBox(
+                      width: double.infinity,
+                      child: GestureDetector(
+                        onTap: _sendReminder,
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(vertical: 18),
+                          color: AppTheme.primaryBlack,
+                          child: Center(
+                            child: Text(
+                              'SEND REMINDER',
+                              style: AppTheme.headlineFont.copyWith(
+                                fontSize: 13,
+                                fontWeight: FontWeight.w400,
+                                letterSpacing: 2,
+                                color: AppTheme.primaryWhite,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    Text(
+                      'Your partner will be notified at the scheduled time',
+                      style: AppTheme.bodyFont.copyWith(
+                        fontSize: 11,
+                        fontStyle: FontStyle.italic,
+                        color: AppTheme.textTertiary,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ],
                 ),
-
-                const SizedBox(height: 24),
-
-                // Time selection
-                Text(
-                  'When?',
-                  style: AppTheme.bodyFont.copyWith(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-                const SizedBox(height: 12),
-                GridView.builder(
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    crossAxisSpacing: 12,
-                    mainAxisSpacing: 12,
-                    childAspectRatio: 2.5,
-                  ),
-                  itemCount: _timeOptions.length,
-                  itemBuilder: (context, index) {
-                    final time = _timeOptions[index];
-                    return _buildTimeButton(time);
-                  },
-                ),
-
-                const SizedBox(height: 32),
-
-                // Send button
-                ElevatedButton(
-                  onPressed: _sendReminder,
-                  style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                  ),
-                  child: const Text('Send Reminder'),
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
-      ),
-    );
-  }
-
-  Widget _buildQuickMessageButton(Map<String, dynamic> message) {
-    return OutlinedButton(
-      onPressed: () {
-        setState(() {
-          _messageController.text = message['text'];
-        });
-      },
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text(message['emoji'], style: const TextStyle(fontSize: 20)),
-          const SizedBox(width: 8),
-          Flexible(
-            child: Text(
-              message['text'],
-              style: const TextStyle(fontSize: 14),
-              overflow: TextOverflow.ellipsis,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildTimeButton(Map<String, dynamic> time) {
-    final isSelected = _selectedTime == time['label'];
-    return OutlinedButton(
-      onPressed: () {
-        setState(() {
-          _selectedTime = time['label'];
-        });
-      },
-      style: OutlinedButton.styleFrom(
-        backgroundColor: isSelected ? AppTheme.primaryBlack : AppTheme.backgroundGray,
-        foregroundColor: isSelected ? AppTheme.primaryWhite : AppTheme.textPrimary,
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text(time['emoji'], style: const TextStyle(fontSize: 20)),
-          const SizedBox(width: 8),
-          Flexible(
-            child: Text(
-              time['label'],
-              style: const TextStyle(fontSize: 14),
-              overflow: TextOverflow.ellipsis,
-            ),
-          ),
-        ],
       ),
     );
   }
@@ -213,24 +390,30 @@ class _RemindBottomSheetState extends State<RemindBottomSheet> {
   Future<void> _sendReminder() async {
     if (_messageController.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please enter a reminder message')),
+        SnackBar(
+          content: const Text('Please enter a reminder message'),
+          backgroundColor: AppTheme.primaryBlack,
+        ),
       );
       return;
     }
 
     if (_selectedTime == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please select a time')),
+        SnackBar(
+          content: const Text('Please select a time'),
+          backgroundColor: AppTheme.primaryBlack,
+        ),
       );
       return;
     }
 
-    // Send reminder logic
     final partner = StorageService().getPartner();
     final user = StorageService().getUser();
     if (partner == null || user == null) return;
 
-    final selectedTimeOption = _timeOptions.firstWhere((t) => t['label'] == _selectedTime);
+    final selectedTimeOption =
+        _timeOptions.firstWhere((t) => t['label'] == _selectedTime);
     final scheduledTime = _calculateScheduledTime(selectedTimeOption);
 
     const uuid = Uuid();
@@ -251,33 +434,87 @@ class _RemindBottomSheetState extends State<RemindBottomSheet> {
     try {
       final success = await ReminderService.sendReminder(reminder);
       if (!success) {
-        Logger.warn('Reminder saved locally but failed to send push notification', service: 'reminder');
+        Logger.warn(
+            'Reminder saved locally but failed to send push notification',
+            service: 'reminder');
       }
     } catch (e) {
-      Logger.error('Error sending push notification', error: e, service: 'reminder');
+      Logger.error('Error sending push notification',
+          error: e, service: 'reminder');
     }
 
     // Close modal and show success
     if (mounted) {
       Navigator.pop(context);
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Reminder sent to ${partner.name}'),
-          backgroundColor: AppTheme.primaryBlack,
-        ),
-      );
+      _showSuccessOverlay(partner.name);
     }
   }
 
+  void _showSuccessOverlay(String partnerName) {
+    showDialog(
+      context: context,
+      barrierColor: AppTheme.primaryBlack.withAlpha((0.95 * 255).round()),
+      builder: (context) {
+        Future.delayed(const Duration(seconds: 2), () {
+          if (Navigator.of(context).canPop()) {
+            Navigator.of(context).pop();
+          }
+        });
+
+        return Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              TweenAnimationBuilder(
+                tween: Tween<double>(begin: 0, end: 1),
+                duration: const Duration(milliseconds: 500),
+                builder: (context, double value, child) {
+                  return Transform.scale(
+                    scale: value,
+                    child: const Text('✨', style: TextStyle(fontSize: 120)),
+                  );
+                },
+              ),
+              const SizedBox(height: 24),
+              Text(
+                'REMINDER SENT',
+                style: AppTheme.headlineFont.copyWith(
+                  fontSize: 28,
+                  fontWeight: FontWeight.w400,
+                  color: AppTheme.primaryWhite,
+                  letterSpacing: 3,
+                ),
+              ),
+              const SizedBox(height: 12),
+              Text(
+                '$partnerName will be notified',
+                style: AppTheme.headlineFont.copyWith(
+                  fontSize: 16,
+                  fontStyle: FontStyle.italic,
+                  color: AppTheme.primaryWhite.withAlpha((0.7 * 255).round()),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
   DateTime _calculateScheduledTime(Map<String, dynamic> timeOption) {
+    final now = DateTime.now();
+
     if (timeOption['special'] == 'tonight') {
-      final now = DateTime.now();
-      return DateTime(now.year, now.month, now.day, 20, 0); // 8 PM
+      var tonight = DateTime(now.year, now.month, now.day, 20, 0);
+      if (now.isAfter(tonight)) {
+        tonight = tonight.add(const Duration(days: 1));
+      }
+      return tonight;
     } else if (timeOption['special'] == 'tomorrow') {
-      final tomorrow = DateTime.now().add(const Duration(days: 1));
-      return DateTime(tomorrow.year, tomorrow.month, tomorrow.day, 9, 0); // 9 AM
+      final tomorrow = now.add(const Duration(days: 1));
+      return DateTime(tomorrow.year, tomorrow.month, tomorrow.day, 8, 0);
     } else {
-      return DateTime.now().add(Duration(minutes: timeOption['minutes'] as int));
+      return now.add(Duration(minutes: timeOption['minutes'] as int));
     }
   }
 

@@ -2,8 +2,11 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import '../services/linked_service.dart';
 import '../services/storage_service.dart';
+import '../services/haptic_service.dart';
+import '../services/sound_service.dart';
 import '../models/linked.dart';
 import '../widgets/linked/answer_cell.dart';
+import '../widgets/linked/turn_complete_dialog.dart';
 import 'linked_completion_screen.dart';
 import '../config/brand/brand_loader.dart';
 
@@ -86,10 +89,14 @@ class _LinkedGameScreenState extends State<LinkedGameScreen> {
     }
   }
 
+  // Track if cooldown is active
+  bool _isCooldownActive = false;
+
   Future<void> _loadGameState() async {
     setState(() {
       _isLoading = true;
       _error = null;
+      _isCooldownActive = false;
     });
 
     try {
@@ -109,6 +116,14 @@ class _LinkedGameScreenState extends State<LinkedGameScreen> {
         });
         _startPolling();
         _checkGameCompletion();
+      }
+    } on LinkedCooldownActiveException catch (e) {
+      if (mounted) {
+        setState(() {
+          _isCooldownActive = true;
+          _error = e.message;
+          _isLoading = false;
+        });
       }
     } catch (e) {
       if (mounted) {
@@ -163,6 +178,49 @@ class _LinkedGameScreenState extends State<LinkedGameScreen> {
       return const Center(child: CircularProgressIndicator());
     }
 
+    // Cooldown active - show friendly message
+    if (_isCooldownActive) {
+      return Center(
+        child: Padding(
+          padding: const EdgeInsets.all(32),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(Icons.timer_outlined, size: 64, color: BrandLoader().colors.textSecondary),
+              const SizedBox(height: 24),
+              Text(
+                'Come Back Tomorrow!',
+                style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.w600,
+                  color: BrandLoader().colors.textPrimary,
+                ),
+              ),
+              const SizedBox(height: 12),
+              Text(
+                'New puzzle available at midnight',
+                style: TextStyle(
+                  fontSize: 16,
+                  color: BrandLoader().colors.textSecondary,
+                ),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 32),
+              ElevatedButton(
+                onPressed: () => Navigator.pop(context),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: BrandLoader().colors.textPrimary,
+                  foregroundColor: BrandLoader().colors.textOnPrimary,
+                  padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
+                ),
+                child: const Text('BACK TO HOME'),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+
     if (_error != null) {
       return Center(
         child: Column(
@@ -192,15 +250,27 @@ class _LinkedGameScreenState extends State<LinkedGameScreen> {
       return const Center(child: Text('No puzzle available'));
     }
 
-    return Container(
-      color: BrandLoader().colors.surface,
-      child: Column(
-        children: [
-          _buildHeader(),
-          Expanded(child: _buildGridWithOverlay()),
-          _buildBottomSection(),
-        ],
-      ),
+    return Stack(
+      children: [
+        // Game content
+        Container(
+          color: BrandLoader().colors.surface,
+          child: Column(
+            children: [
+              _buildHeader(),
+              Expanded(child: _buildGridWithOverlay()),
+              _buildBottomSection(),
+            ],
+          ),
+        ),
+        // Turn complete dialog overlay
+        if (_showTurnComplete)
+          TurnCompleteDialog(
+            partnerName: StorageService().getPartner()?.name ?? 'Partner',
+            onLeave: () => Navigator.of(context).pop(),
+            onStay: () => setState(() => _showTurnComplete = false),
+          ),
+      ],
     );
   }
 
@@ -224,7 +294,7 @@ class _LinkedGameScreenState extends State<LinkedGameScreen> {
           const SizedBox(width: 16),
           // Title
           const Text(
-            'LINKED',
+            'CROSSWORD',
             style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.w400,
@@ -722,6 +792,9 @@ class _LinkedGameScreenState extends State<LinkedGameScreen> {
     return wrapWithAnimation(DragTarget<_RackDragData>(
       onWillAcceptWithDetails: (details) => canAcceptDrop,
       onAcceptWithDetails: (details) {
+        // Haptic feedback on letter drop
+        HapticService().trigger(HapticType.medium);
+
         setState(() {
           // If there was already a letter here, return it to rack first
           if (_draftPlacements.containsKey(index)) {
@@ -1386,6 +1459,14 @@ class _LinkedGameScreenState extends State<LinkedGameScreen> {
       final points = placement.correct ? 10 : 0;
 
       await Future.delayed(const Duration(milliseconds: 400));
+
+      // Haptic and sound feedback for each result
+      if (placement.correct) {
+        HapticService().trigger(HapticType.success);
+        SoundService().play(SoundId.wordFound);
+      } else {
+        HapticService().trigger(HapticType.warning);
+      }
 
       if (mounted) {
         setState(() {

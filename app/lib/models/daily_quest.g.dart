@@ -33,13 +33,14 @@ class DailyQuestAdapter extends TypeAdapter<DailyQuest> {
       quizName: fields[13] as String?,
       imagePath: fields[14] as String?,
       description: fields[15] as String?,
+      branch: fields[16] as String?,
     );
   }
 
   @override
   void write(BinaryWriter writer, DailyQuest obj) {
     writer
-      ..writeByte(16)
+      ..writeByte(17)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -71,7 +72,9 @@ class DailyQuestAdapter extends TypeAdapter<DailyQuest> {
       ..writeByte(14)
       ..write(obj.imagePath)
       ..writeByte(15)
-      ..write(obj.description);
+      ..write(obj.description)
+      ..writeByte(16)
+      ..write(obj.branch);
   }
 
   @override

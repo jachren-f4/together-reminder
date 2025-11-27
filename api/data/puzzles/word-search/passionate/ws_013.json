@@ -1,0 +1,24 @@
+{
+  "puzzleId": "ws_013",
+  "title": "Passionate XIII",
+  "theme": "passion",
+  "size": {
+    "rows": 10,
+    "cols": 10
+  },
+  "grid": "JBYSATNAFLJREDGYVCQSDEEROOPLLPGAGCIBUIDENTHVNFZNBLOHWHREEGSLOZJECSSPRLMGWATOASCIQOLLHRXYEJPHEUKWNGWU",
+  "words": {
+    "CLING": "17,D",
+    "LACE": "82,UR",
+    "SPARK": "58,DL",
+    "POWERFUL": "90,UR",
+    "SPELL": "19,D",
+    "ESSENCE": "88,UL",
+    "FIRE": "45,UL",
+    "BREATH": "1,D",
+    "BODY": "35,UL",
+    "MOON": "70,U",
+    "FANTASY": "8,L",
+    "NESTLE": "47,DL"
+  }
+}

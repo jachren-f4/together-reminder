@@ -1,0 +1,8 @@
+{
+  "branch": "everyday",
+  "activityType": "wordSearch",
+  "imagePath": "assets/brands/togetherremind/images/quests/word-search.png",
+  "fallbackEmoji": "🔍",
+  "displayName": "Everyday",
+  "description": "Common words to find"
+}

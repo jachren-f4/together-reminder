@@ -1,0 +1,8 @@
+{
+  "branch": "naughty",
+  "activityType": "wordSearch",
+  "imagePath": "assets/brands/togetherremind/images/quests/word-search.png",
+  "fallbackEmoji": "🔍",
+  "displayName": "Naughty",
+  "description": "Playful words to find"
+}

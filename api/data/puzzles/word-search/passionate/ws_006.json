@@ -1,0 +1,24 @@
+{
+  "puzzleId": "ws_006",
+  "title": "Passionate VI",
+  "theme": "passion",
+  "size": {
+    "rows": 10,
+    "cols": 10
+  },
+  "grid": "HAIRROEFGTDEYESVXLBVJECDIUBAXTGGSTACGMAEGFPIDNFECSCAHTRJCASNCRSCZEREIUZZIOTBRTLSNVWRMPAEEFJCCEGSXNSH",
+  "words": {
+    "DESIRE": "10,DR",
+    "WISH": "82,U",
+    "FLAME": "7,D",
+    "CAPTIVE": "60,UR",
+    "CORE": "63,D",
+    "EMBRACE": "93,UR",
+    "PRESS": "85,UR",
+    "SATIN": "95,UR",
+    "HAIR": "0,R",
+    "DANCE": "23,DR",
+    "EYES": "11,R",
+    "SUNSET": "79,U"
+  }
+}

@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>You or Me - Waiting</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            background: #fafafa;
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+        }
+
+        .container {
+            max-width: 420px;
+            width: 100%;
+            background: #fff;
+            border: 2px solid #000;
+            box-shadow: 8px 8px 0 rgba(0, 0, 0, 0.1);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header */
+        .header {
+            border-bottom: 2px solid #000;
+            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .close-btn {
+            width: 40px;
+            height: 40px;
+            border: 2px solid #000;
+            background: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 20px;
+            transition: all 0.2s ease;
+        }
+
+        .close-btn:hover {
+            background: #000;
+            color: #fff;
+        }
+
+        .header-title {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: 600;
+        }
+
+        /* Content */
+        .content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+            text-align: center;
+        }
+
+        /* Completed Badge */
+        .completed-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: #000;
+            color: #fff;
+            padding: 10px 20px;
+            margin-bottom: 32px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .check-icon {
+            font-size: 16px;
+        }
+
+        /* Answers Summary */
+        .answers-preview {
+            border: 2px solid #000;
+            width: 100%;
+            max-width: 320px;
+            margin-bottom: 32px;
+            box-shadow: 6px 6px 0 rgba(0, 0, 0, 0.08);
+        }
+
+        .answers-header {
+            padding: 16px 20px;
+            border-bottom: 1px solid #e0e0e0;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: 600;
+        }
+
+        .answer-preview-item {
+            padding: 14px 20px;
+            border-bottom: 1px solid #e0e0e0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 14px;
+        }
+
+        .answer-preview-item:last-child {
+            border-bottom: none;
+        }
+
+        .answer-question-short {
+            flex: 1;
+            text-align: left;
+            color: #666;
+            font-style: italic;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            margin-right: 12px;
+        }
+
+        .answer-value {
+            font-weight: 600;
+            background: #f5f5f5;
+            padding: 4px 10px;
+            font-size: 12px;
+        }
+
+        /* Status Section */
+        .status-section {
+            margin-bottom: 32px;
+        }
+
+        .status-icon {
+            width: 80px;
+            height: 80px;
+            border: 2px solid #000;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            position: relative;
+        }
+
+        .status-icon::after {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            border: 2px solid #000;
+            border-radius: 50%;
+            border-top-color: transparent;
+            animation: spin 1.5s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .icon-inner {
+            font-size: 32px;
+        }
+
+        .status-title {
+            font-size: 24px;
+            font-weight: 400;
+            margin-bottom: 8px;
+        }
+
+        .status-description {
+            font-size: 15px;
+            color: #666;
+            font-style: italic;
+            line-height: 1.5;
+            max-width: 280px;
+            margin: 0 auto;
+        }
+
+        /* Partner Status */
+        .partner-status-card {
+            border: 2px solid #000;
+            padding: 20px;
+            width: 100%;
+            max-width: 320px;
+            margin-bottom: 24px;
+        }
+
+        .partner-row {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .partner-avatar {
+            width: 52px;
+            height: 52px;
+            border: 2px solid #000;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 26px;
+            background: #f5f5f5;
+        }
+
+        .partner-info {
+            flex: 1;
+        }
+
+        .partner-name {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .partner-progress {
+            font-size: 13px;
+            color: #666;
+        }
+
+        .partner-progress-bar {
+            height: 4px;
+            background: #e0e0e0;
+            margin-top: 8px;
+        }
+
+        .partner-progress-fill {
+            height: 100%;
+            background: #000;
+            width: 25%;
+        }
+
+        /* Poke Button */
+        .poke-btn {
+            width: 100%;
+            max-width: 320px;
+            padding: 16px 24px;
+            background: #fff;
+            color: #000;
+            border: 2px solid #000;
+            font-family: 'Georgia', serif;
+            font-size: 14px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .poke-btn:hover {
+            background: #000;
+            color: #fff;
+        }
+
+        /* Footer */
+        .footer {
+            padding: 20px;
+            border-top: 2px solid #000;
+        }
+
+        .secondary-btn {
+            width: 100%;
+            padding: 16px 20px;
+            background: #fff;
+            color: #000;
+            border: 2px solid #000;
+            font-family: 'Georgia', serif;
+            font-size: 14px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .secondary-btn:hover {
+            background: #f5f5f5;
+        }
+
+        .footer-hint {
+            text-align: center;
+            margin-top: 12px;
+            font-size: 12px;
+            color: #666;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <button class="close-btn">&times;</button>
+            <span class="header-title">You or Me</span>
+        </div>
+
+        <div class="content">
+            <div class="completed-badge">
+                <span class="check-icon">&#10003;</span>
+                <span>You're Done!</span>
+            </div>
+
+            <div class="answers-preview">
+                <div class="answers-header">Your Answers</div>
+                <div class="answer-preview-item">
+                    <span class="answer-question-short">"Cry during a sad movie"</span>
+                    <span class="answer-value">Taija</span>
+                </div>
+                <div class="answer-preview-item">
+                    <span class="answer-question-short">"Running late"</span>
+                    <span class="answer-value">You</span>
+                </div>
+                <div class="answer-preview-item">
+                    <span class="answer-question-short">"Better cook"</span>
+                    <span class="answer-value">Taija</span>
+                </div>
+            </div>
+
+            <div class="status-section">
+                <div class="status-icon">
+                    <span class="icon-inner">&#9203;</span>
+                </div>
+                <h2 class="status-title">Waiting for Taija</h2>
+                <p class="status-description">
+                    See how well your answers match once they complete the game!
+                </p>
+            </div>
+
+            <div class="partner-status-card">
+                <div class="partner-row">
+                    <div class="partner-avatar">&#128105;</div>
+                    <div class="partner-info">
+                        <div class="partner-name">Taija</div>
+                        <div class="partner-progress">In progress...</div>
+                    </div>
+                </div>
+            </div>
+
+            <button class="poke-btn">
+                <span>&#128072;</span>
+                <span>Nudge Partner</span>
+            </button>
+        </div>
+
+        <div class="footer">
+            <button class="secondary-btn">Return Home</button>
+            <div class="footer-hint">We'll notify you when results are ready</div>
+        </div>
+    </div>
+</body>
+</html>

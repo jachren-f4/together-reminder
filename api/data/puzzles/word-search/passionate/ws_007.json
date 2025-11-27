@@ -1,0 +1,24 @@
+{
+  "puzzleId": "ws_007",
+  "title": "Passionate VII",
+  "theme": "passion",
+  "size": {
+    "rows": 10,
+    "cols": 10
+  },
+  "grid": "TWLVBGLIDENNPOWERFULAVLTFLGCQSHDFGLCISDQCLHICTHNEENJRGELAASCEHHNJHALRETQGIAUUSDMAABTTPRRPMMCSETAOLFH",
+  "words": {
+    "MAGNETIC": "90,UR",
+    "BOLD": "4,DL",
+    "CLASP": "44,DR",
+    "THRILL": "70,UR",
+    "PULSE": "85,UR",
+    "HANDS": "65,UR",
+    "ENCHANT": "60,U",
+    "FLOAT": "98,L",
+    "POWERFUL": "12,R",
+    "IGNITE": "43,D",
+    "GLIDE": "5,R",
+    "CHARM": "35,DR"
+  }
+}

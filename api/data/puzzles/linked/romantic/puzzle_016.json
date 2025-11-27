@@ -1,0 +1,47 @@
+{
+  "author": "Crossword Maker GPT",
+  "title": "Adult Intimacy Puzzle #16",
+  "size": {
+    "rows": 9,
+    "cols": 7
+  },
+  "clues": {
+    "1": { "type": "emoji", "content": "⚡", "arrow": "down", "target_index": 8 },
+    "2": { "type": "emoji", "content": "💕", "arrow": "down", "target_index": 11 },
+    "3": { "type": "emoji", "content": "🎁", "arrow": "down", "target_index": 13 },
+    "4": { "type": "text", "content": "After @", "arrow": "down", "target_index": 17 },
+    "5": { "type": "text", "content": "Before J", "arrow": "across", "target_index": 15 },
+    "6": { "type": "text", "content": "Sweet sound", "arrow": "across", "target_index": 17 },
+    "7": { "type": "text", "content": "Say ___ more", "arrow": "across", "target_index": 22 },
+    "8": { "type": "text", "content": "___ a life", "arrow": "down", "target_index": 31 },
+    "9": { "type": "text", "content": "After F", "arrow": "across", "target_index": 29 },
+    "10": { "type": "text", "content": "Head to ___", "arrow": "down", "target_index": 44 },
+    "11": { "type": "text", "content": "_UMP", "arrow": "down", "target_index": 50 },
+    "12": { "type": "text", "content": "Both ways", "arrow": "across", "target_index": 47 },
+    "13": { "type": "emoji", "content": "😄", "arrow": "across", "target_index": 50 }
+  },
+  "date": "2025-11-27",
+  "grid": [
+    ".", ".", ".", ".", ".", ".", ".",
+    ".", "Z", ".", ".", "S", ".", "G",
+    ".", "I", ".", "A", "W", ".", "I",
+    ".", "N", "O", ".", "E", ".", "F",
+    ".", "G", ".", "B", "E", ".", "T",
+    ".", ".", ".", "U", "P", ".", ".",
+    ".", ".", "T", "I", ".", "B", "I",
+    ".", "J", "O", "L", "L", "Y", ".",
+    ".", ".", "E", "D", ".", ".", "."
+  ],
+  "gridnums": [
+    0, 1, 0, 0, 2, 0, 3,
+    0, 0, 0, 4, 0, 0, 0,
+    5, 0, 6, 0, 0, 0, 0,
+    7, 0, 0, 8, 0, 0, 0,
+    9, 0, 0, 0, 0, 0, 0,
+    0, 0, 10, 0, 0, 0, 0,
+    0, 11, 0, 0, 12, 0, 0,
+    13, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0
+  ],
+  "puzzleId": "puzzle_016"
+}

@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Classic Quiz - Waiting</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            background: #fafafa;
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+        }
+
+        .container {
+            max-width: 420px;
+            width: 100%;
+            background: #fff;
+            border: 2px solid #000;
+            box-shadow: 8px 8px 0 rgba(0, 0, 0, 0.1);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header */
+        .header {
+            border-bottom: 2px solid #000;
+            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .close-btn {
+            width: 40px;
+            height: 40px;
+            border: 2px solid #000;
+            background: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 20px;
+            transition: all 0.2s ease;
+        }
+
+        .close-btn:hover {
+            background: #000;
+            color: #fff;
+        }
+
+        .header-title {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: 600;
+        }
+
+        /* Content */
+        .content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+            text-align: center;
+        }
+
+        /* Status Icon */
+        .status-icon {
+            width: 120px;
+            height: 120px;
+            border: 3px solid #000;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 32px;
+            position: relative;
+        }
+
+        .status-icon::after {
+            content: '';
+            position: absolute;
+            top: -3px;
+            left: -3px;
+            right: -3px;
+            bottom: -3px;
+            border: 3px solid #000;
+            border-radius: 50%;
+            border-top-color: transparent;
+            animation: spin 1.5s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .icon-inner {
+            font-size: 48px;
+        }
+
+        /* Text */
+        .status-title {
+            font-size: 28px;
+            font-weight: 400;
+            margin-bottom: 12px;
+            letter-spacing: -0.5px;
+        }
+
+        .status-description {
+            font-size: 16px;
+            color: #666;
+            font-style: italic;
+            line-height: 1.6;
+            max-width: 280px;
+            margin-bottom: 40px;
+        }
+
+        /* Partner Card */
+        .partner-card {
+            border: 2px solid #000;
+            padding: 24px;
+            width: 100%;
+            max-width: 320px;
+            box-shadow: 6px 6px 0 rgba(0, 0, 0, 0.08);
+        }
+
+        .partner-header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+
+        .partner-avatar {
+            width: 56px;
+            height: 56px;
+            border: 2px solid #000;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            background: #f5f5f5;
+        }
+
+        .partner-info {
+            flex: 1;
+        }
+
+        .partner-name {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .partner-status {
+            font-size: 13px;
+            color: #666;
+            font-style: italic;
+        }
+
+        .progress-section {
+            border-top: 1px solid #e0e0e0;
+            padding-top: 16px;
+        }
+
+        .progress-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #666;
+            margin-bottom: 8px;
+        }
+
+        .progress-bar-bg {
+            height: 8px;
+            background: #e0e0e0;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background: #000;
+            width: 60%;
+            transition: width 0.3s ease;
+        }
+
+        .progress-text {
+            font-size: 12px;
+            color: #666;
+            margin-top: 8px;
+            text-align: right;
+        }
+
+        /* Divider */
+        .divider {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin: 32px 0;
+            width: 100%;
+            max-width: 320px;
+        }
+
+        .divider-line {
+            flex: 1;
+            height: 1px;
+            background: #e0e0e0;
+        }
+
+        .divider-text {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #999;
+        }
+
+        /* Action */
+        .action-section {
+            width: 100%;
+            max-width: 320px;
+        }
+
+        .poke-btn {
+            width: 100%;
+            padding: 16px 24px;
+            background: #fff;
+            color: #000;
+            border: 2px solid #000;
+            font-family: 'Georgia', serif;
+            font-size: 14px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .poke-btn:hover {
+            background: #000;
+            color: #fff;
+        }
+
+        .poke-icon {
+            font-size: 18px;
+        }
+
+        /* Footer */
+        .footer {
+            padding: 20px;
+            border-top: 2px solid #000;
+        }
+
+        .secondary-btn {
+            width: 100%;
+            padding: 16px 20px;
+            background: #fff;
+            color: #000;
+            border: 2px solid #000;
+            font-family: 'Georgia', serif;
+            font-size: 14px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .secondary-btn:hover {
+            background: #f5f5f5;
+        }
+
+        .footer-hint {
+            text-align: center;
+            margin-top: 12px;
+            font-size: 12px;
+            color: #666;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <button class="close-btn">&times;</button>
+            <span class="header-title">Trust & Honesty</span>
+        </div>
+
+        <div class="content">
+            <div class="status-icon">
+                <span class="icon-inner">&#9203;</span>
+            </div>
+
+            <h1 class="status-title">Waiting for Taija</h1>
+
+            <p class="status-description">
+                You've completed your part! We'll notify you when Taija finishes so you can see the results together.
+            </p>
+
+            <div class="partner-card">
+                <div class="partner-header">
+                    <div class="partner-avatar">&#128105;</div>
+                    <div class="partner-info">
+                        <div class="partner-name">Taija</div>
+                        <div class="partner-status">In progress...</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="divider">
+                <div class="divider-line"></div>
+                <span class="divider-text">or</span>
+                <div class="divider-line"></div>
+            </div>
+
+            <div class="action-section">
+                <button class="poke-btn">
+                    <span class="poke-icon">&#128072;</span>
+                    <span>Send a Gentle Reminder</span>
+                </button>
+            </div>
+        </div>
+
+        <div class="footer">
+            <button class="secondary-btn">Return Home</button>
+            <div class="footer-hint">We'll notify you when results are ready</div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,24 @@
+{
+  "puzzleId": "ws_014",
+  "title": "Intimate XIV",
+  "theme": "intimacy",
+  "size": {
+    "rows": 10,
+    "cols": 10
+  },
+  "grid": "BLKRAPSIRROTNAHCNEZSQQGCMCPHRILZHOGSEEOSPRESSNVTEERZDBTENESDRIUIRAGAPUURCIOWXSOCNEEMRGIETEHYFANTASYE",
+  "words": {
+    "ENTICE": "36,DL",
+    "SEDUCE": "39,D",
+    "REVERIE": "28,DL",
+    "FANTASY": "92,R",
+    "TEASE": "47,D",
+    "PRESS": "40,R",
+    "ENCHANT": "17,L",
+    "SPOT": "58,D",
+    "SPARK": "6,L",
+    "BURN": "53,DL",
+    "MOAN": "83,UR",
+    "DEEP": "59,UL"
+  }
+}

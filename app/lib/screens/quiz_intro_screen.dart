@@ -1,47 +1,236 @@
 import 'package:flutter/material.dart';
+import 'package:video_player/video_player.dart';
 import '../services/quiz_service.dart';
 import '../services/storage_service.dart';
+import '../services/branch_manifest_service.dart';
 import '../models/quiz_session.dart';
+import '../models/branch_progression_state.dart';
+import '../widgets/editorial/editorial.dart';
+import '../config/brand/brand_loader.dart';
 import 'quiz_question_screen.dart';
 import 'quiz_waiting_screen.dart';
 
 class QuizIntroScreen extends StatefulWidget {
-  final QuizSession? session; // Optional - provided for daily quests
+  final QuizSession? session;
+  final String? branch; // Branch for manifest video lookup
 
-  const QuizIntroScreen({super.key, this.session});
+  const QuizIntroScreen({super.key, this.session, this.branch});
 
   @override
   State<QuizIntroScreen> createState() => _QuizIntroScreenState();
 }
 
-class _QuizIntroScreenState extends State<QuizIntroScreen> {
+class _QuizIntroScreenState extends State<QuizIntroScreen>
+    with TickerProviderStateMixin {
   final QuizService _quizService = QuizService();
   final StorageService _storage = StorageService();
   bool _isLoading = false;
   String? _error;
 
+  // Video player state
+  VideoPlayerController? _videoController;
+  late AnimationController _fadeController;
+  late Animation<double> _fadeAnimation;
+  bool _showIcon = false;
+  bool _videoError = false;
+
+  // Content stagger animations
+  late AnimationController _contentController;
+  late Animation<double> _badgeAnimation;
+  late Animation<double> _titleAnimation;
+  late Animation<double> _descAnimation;
+  late Animation<double> _statsAnimation;
+  late Animation<double> _stepsAnimation;
+  late Animation<double> _footerAnimation;
+  bool _contentAnimationStarted = false;
+
   @override
   void initState() {
     super.initState();
+
+    _fadeController = AnimationController(
+      duration: const Duration(milliseconds: 800),
+      vsync: this,
+    );
+
+    _fadeAnimation = Tween<double>(
+      begin: 0.0,
+      end: 1.0,
+    ).animate(CurvedAnimation(
+      parent: _fadeController,
+      curve: Curves.easeInOut,
+    ));
+
+    // Content stagger animation controller (1200ms total for all elements)
+    _contentController = AnimationController(
+      duration: const Duration(milliseconds: 1200),
+      vsync: this,
+    );
+
+    // Staggered intervals for each content element
+    _badgeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(
+        parent: _contentController,
+        curve: const Interval(0.0, 0.3, curve: Curves.easeOut),
+      ),
+    );
+    _titleAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(
+        parent: _contentController,
+        curve: const Interval(0.1, 0.4, curve: Curves.easeOut),
+      ),
+    );
+    _descAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(
+        parent: _contentController,
+        curve: const Interval(0.2, 0.5, curve: Curves.easeOut),
+      ),
+    );
+    _statsAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(
+        parent: _contentController,
+        curve: const Interval(0.3, 0.6, curve: Curves.easeOut),
+      ),
+    );
+    _stepsAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(
+        parent: _contentController,
+        curve: const Interval(0.4, 0.7, curve: Curves.easeOut),
+      ),
+    );
+    _footerAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(
+        parent: _contentController,
+        curve: const Interval(0.5, 0.8, curve: Curves.easeOut),
+      ),
+    );
+
+    _initializeVideo();
     _checkActiveSession();
   }
 
+  Future<void> _initializeVideo() async {
+    try {
+      // Get video path from manifest if branch is provided
+      String? videoPath;
+      if (widget.branch != null) {
+        videoPath = await BranchManifestService().getVideoPath(
+          activityType: BranchableActivityType.classicQuiz,
+          branch: widget.branch!,
+        );
+      }
+
+      // Fallback to default video if no manifest video
+      if (videoPath == null || videoPath.isEmpty) {
+        final brandId = BrandLoader().config.brandId;
+        videoPath = 'assets/brands/$brandId/videos/feel-good-foundations.mp4';
+      }
+
+      _videoController = VideoPlayerController.asset(videoPath);
+
+      await _videoController!.initialize();
+
+      _videoController!.addListener(_onVideoProgress);
+      _videoController!.play();
+
+      if (mounted) {
+        setState(() {});
+      }
+    } catch (e) {
+      // If video fails to load, show the icon immediately
+      if (mounted) {
+        setState(() {
+          _videoError = true;
+          _showIcon = true;
+        });
+        // Start content animation immediately
+        _startContentAnimation();
+      }
+    }
+  }
+
+  void _startContentAnimation() {
+    if (_contentAnimationStarted) return;
+    _contentAnimationStarted = true;
+    _contentController.forward();
+  }
+
+  /// Wraps a widget with staggered fade + slide up animation
+  Widget _animatedContent(Animation<double> animation, Widget child) {
+    return AnimatedBuilder(
+      animation: animation,
+      builder: (context, _) {
+        return Opacity(
+          opacity: animation.value,
+          child: Transform.translate(
+            offset: Offset(0, 20 * (1 - animation.value)),
+            child: child,
+          ),
+        );
+      },
+    );
+  }
+
+  void _onVideoProgress() {
+    if (_videoController == null) return;
+
+    final position = _videoController!.value.position;
+    final duration = _videoController!.value.duration;
+
+    // When video is about to end (or has ended), fade to icon
+    if (duration.inMilliseconds > 0 &&
+        position.inMilliseconds >= duration.inMilliseconds - 100) {
+      if (!_showIcon) {
+        _showIcon = true;
+        _fadeController.forward();
+        // Start content stagger animation when video ends
+        _startContentAnimation();
+      }
+    }
+  }
+
+  @override
+  void dispose() {
+    _videoController?.removeListener(_onVideoProgress);
+    _videoController?.dispose();
+    _fadeController.dispose();
+    _contentController.dispose();
+    super.dispose();
+  }
+
   void _checkActiveSession() {
-    // Use provided session (from daily quest) or check for active session
-    final activeSession = widget.session ?? _quizService.getActiveSession();
+    // If session is passed explicitly (from quest card), show the intro screen
+    // Only auto-redirect if user has already answered (go to waiting)
+    // Don't auto-redirect to questions - let user see the intro first
+
+    if (widget.session != null) {
+      // Session passed from navigation - check if user already answered
+      final user = _storage.getUser();
+      if (user != null && widget.session!.hasUserAnswered(user.id)) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          Navigator.of(context).pushReplacement(
+            MaterialPageRoute(
+              builder: (context) => QuizWaitingScreen(session: widget.session!),
+            ),
+          );
+        });
+      }
+      // Otherwise, show the intro screen (don't redirect)
+      return;
+    }
+
+    // No session passed - check for active session (legacy path from activities)
+    final activeSession = _quizService.getActiveSession();
     if (activeSession != null) {
-      // Navigate to appropriate screen
       WidgetsBinding.instance.addPostFrameCallback((_) {
         final user = _storage.getUser();
         if (user != null && activeSession.hasUserAnswered(user.id)) {
-          // User already answered, show waiting screen
           Navigator.of(context).pushReplacement(
             MaterialPageRoute(
               builder: (context) => QuizWaitingScreen(session: activeSession),
             ),
           );
         } else {
-          // User needs to answer
           Navigator.of(context).pushReplacement(
             MaterialPageRoute(
               builder: (context) => QuizQuestionScreen(session: activeSession),
@@ -59,12 +248,10 @@ class _QuizIntroScreenState extends State<QuizIntroScreen> {
     });
 
     try {
-      // Use provided session or create new one
       final session = widget.session ?? await _quizService.startQuizSession();
 
       if (!mounted) return;
 
-      // Navigate to question screen
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
           builder: (context) => QuizQuestionScreen(session: session),
@@ -80,258 +267,330 @@ class _QuizIntroScreenState extends State<QuizIntroScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     final completedSessions = _quizService.getCompletedSessions();
-    final avgMatch = _quizService.getAverageMatchPercentage();
+    final partnerName = _storage.getPartner()?.name ?? 'your partner';
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Couple Quiz'),
-        centerTitle: true,
-      ),
+      backgroundColor: EditorialStyles.paper,
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(24.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              // Header
-              Center(
+        child: Column(
+          children: [
+            // Header (fixed at top)
+            _buildHeader(),
+
+            // Scrollable content (includes hero)
+            Expanded(
+              child: SingleChildScrollView(
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      '🧩',
-                      style: TextStyle(fontSize: 80),
-                    ),
-                    const SizedBox(height: 16),
-                    Text(
-                      'Ready to Start?',
-                      textAlign: TextAlign.center,
-                      style: theme.textTheme.headlineSmall?.copyWith(
-                        fontWeight: FontWeight.bold,
-                        fontFamily: 'Playfair Display',
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      'You\'ll answer 5 questions about yourself.\nThen ${_storage.getPartner()?.name ?? 'your partner'} will try to predict your answers!',
-                      textAlign: TextAlign.center,
-                      style: theme.textTheme.bodyMedium?.copyWith(
-                        color: theme.colorScheme.onSurfaceVariant,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+                    // Hero image area (scrolls with content)
+                    _buildHeroImage(),
 
-              const SizedBox(height: 32),
-
-              // Info cards
-              Container(
-                padding: const EdgeInsets.all(20),
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [
-                      theme.colorScheme.primary.withOpacity(0.1),
-                      theme.colorScheme.secondary.withOpacity(0.1),
-                    ],
-                  ),
-                  borderRadius: BorderRadius.circular(16),
-                  border: Border.all(
-                    color: theme.colorScheme.outline.withOpacity(0.2),
-                  ),
-                ),
-                child: Column(
-                  children: [
-                    Row(
-                      children: [
-                        Icon(Icons.military_tech, color: theme.colorScheme.primary),
-                        const SizedBox(width: 8),
-                        Text(
-                          'Potential reward',
-                          style: theme.textTheme.labelSmall?.copyWith(
-                            color: theme.colorScheme.onSurfaceVariant,
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      '10-50 LP',
-                      style: theme.textTheme.headlineMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
-                        fontFamily: 'Playfair Display',
-                      ),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      'Based on prediction accuracy',
-                      style: theme.textTheme.bodySmall?.copyWith(
-                        color: theme.colorScheme.onSurfaceVariant,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-
-              const SizedBox(height: 24),
-
-              // Stats (if any completed quizzes)
-              if (completedSessions.isNotEmpty) ...[
-                Container(
-                  padding: const EdgeInsets.all(20),
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [
-                        theme.colorScheme.primaryContainer,
-                        theme.colorScheme.secondaryContainer,
-                      ],
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                    ),
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                  child: Column(
-                    children: [
-                      Text(
-                        'Your Stats',
-                        style: theme.textTheme.titleMedium?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      const SizedBox(height: 12),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    // Content
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          _buildStatItem(
-                            '${completedSessions.length}',
-                            'Completed',
-                            theme,
+                          // Badge (animated)
+                          _animatedContent(
+                            _badgeAnimation,
+                            const EditorialBadge(
+                              label: 'Classic Quiz',
+                              isInverted: true,
+                            ),
                           ),
-                          Container(
-                            width: 1,
-                            height: 40,
-                            color: theme.colorScheme.outline.withOpacity(0.3),
+                          const SizedBox(height: 16),
+
+                          // Title (animated)
+                          _animatedContent(
+                            _titleAnimation,
+                            Text(
+                              widget.session?.category ?? 'Couple Quiz',
+                              style: EditorialStyles.headline,
+                            ),
                           ),
-                          _buildStatItem(
-                            '${avgMatch.round()}%',
-                            'Avg Match',
-                            theme,
+                          const SizedBox(height: 12),
+
+                          // Description (animated)
+                          _animatedContent(
+                            _descAnimation,
+                            Text(
+                              'Answer questions about yourself, then $partnerName will try to predict your answers. See how well you know each other!',
+                              style: EditorialStyles.bodyTextItalic,
+                            ),
                           ),
+                          const SizedBox(height: 32),
+
+                          // Stats card (animated)
+                          _animatedContent(
+                            _statsAnimation,
+                            EditorialStatsCard(
+                              rows: [
+                                ('Questions', '${widget.session?.questionIds.length ?? 5}'),
+                                ('Time', '~3 minutes'),
+                                ('Reward', '+30 LP'),
+                              ],
+                            ),
+                          ),
+                          const SizedBox(height: 32),
+
+                          // How it works (animated)
+                          _animatedContent(
+                            _stepsAnimation,
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'HOW IT WORKS',
+                                  style: EditorialStyles.labelUppercase,
+                                ),
+                                const SizedBox(height: 16),
+                                _buildStep(1, 'Answer each question about yourself'),
+                                _buildStep(2, '$partnerName answers the same questions about you'),
+                                _buildStep(3, 'Compare answers and discover insights'),
+                              ],
+                            ),
+                          ),
+
+                          // Previous stats (if any)
+                          if (completedSessions.isNotEmpty) ...[
+                            const SizedBox(height: 32),
+                            _buildPreviousStats(completedSessions),
+                          ],
+
+                          // Error message
+                          if (_error != null) ...[
+                            const SizedBox(height: 24),
+                            Container(
+                              padding: const EdgeInsets.all(12),
+                              decoration: BoxDecoration(
+                                color: BrandLoader().colors.error.withValues(alpha: 0.1),
+                                border: Border.all(color: BrandLoader().colors.error),
+                              ),
+                              child: Text(
+                                _error!,
+                                style: TextStyle(color: BrandLoader().colors.error),
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                          ],
                         ],
                       ),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 24),
-              ],
-
-              const Spacer(),
-
-              // Error message
-              if (_error != null) ...[
-                Container(
-                  padding: const EdgeInsets.all(12),
-                  decoration: BoxDecoration(
-                    color: theme.colorScheme.errorContainer,
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Text(
-                    _error!,
-                    style: TextStyle(color: theme.colorScheme.onErrorContainer),
-                    textAlign: TextAlign.center,
-                  ),
-                ),
-                const SizedBox(height: 16),
-              ],
-
-              // Start button
-              FilledButton(
-                onPressed: _isLoading ? null : _startQuiz,
-                style: FilledButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                ),
-                child: _isLoading
-                    ? const SizedBox(
-                        height: 20,
-                        width: 20,
-                        child: CircularProgressIndicator(strokeWidth: 2),
-                      )
-                    : const Text(
-                        'Start Quiz',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-              ),
-
-              const SizedBox(height: 12),
-
-              // Info text
-              Text(
-                'Both you and your partner will answer the same 5 questions. See how well you match!',
-                textAlign: TextAlign.center,
-                style: theme.textTheme.bodySmall?.copyWith(
-                  color: theme.colorScheme.onSurfaceVariant,
+                    ),
+                  ],
                 ),
               ),
-            ],
-          ),
+            ),
+
+            // Footer (fixed at bottom, animated)
+            _animatedContent(_footerAnimation, _buildFooter()),
+          ],
         ),
       ),
     );
   }
 
-  Widget _buildInfoRow(String emoji, String title, String subtitle) {
-    final theme = Theme.of(context);
-    return Row(
-      children: [
-        Text(emoji, style: const TextStyle(fontSize: 24)),
-        const SizedBox(width: 12),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+  Widget _buildHeader() {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      decoration: BoxDecoration(
+        color: EditorialStyles.paper,
+        border: Border(bottom: EditorialStyles.border),
+      ),
+      child: Row(
+        children: [
+          GestureDetector(
+            onTap: () => Navigator.of(context).pop(),
+            child: Container(
+              width: 40,
+              height: 40,
+              decoration: BoxDecoration(
+                color: EditorialStyles.paper,
+                border: EditorialStyles.fullBorder,
+              ),
+              child: Icon(
+                Icons.arrow_back,
+                size: 20,
+                color: EditorialStyles.ink,
+              ),
+            ),
+          ),
+          const SizedBox(width: 16),
+          Text(
+            'DAILY QUEST',
+            style: EditorialStyles.labelUppercase,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildHeroImage() {
+    return Container(
+      width: double.infinity,
+      height: 180,
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [
+            EditorialStyles.inkLight,
+            EditorialStyles.paper,
+          ],
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+        ),
+        border: Border(bottom: EditorialStyles.border),
+      ),
+      child: ClipRect(
+        child: Stack(
+          fit: StackFit.expand,
+          children: [
+            // Video layer (shows first, then fades out)
+            if (_videoController != null &&
+                _videoController!.value.isInitialized &&
+                !_videoError)
+              AnimatedBuilder(
+                animation: _fadeAnimation,
+                builder: (context, child) {
+                  return Opacity(
+                    opacity: 1.0 - _fadeAnimation.value,
+                    child: FittedBox(
+                      fit: BoxFit.cover,
+                      child: SizedBox(
+                        width: _videoController!.value.size.width,
+                        height: _videoController!.value.size.height,
+                        child: VideoPlayer(_videoController!),
+                      ),
+                    ),
+                  );
+                },
+              ),
+
+            // Icon layer (fades in after video) - grayscale
+            AnimatedBuilder(
+              animation: _fadeAnimation,
+              builder: (context, child) {
+                // Show immediately if video failed or not loaded
+                final showImmediately = _videoError ||
+                    _videoController == null ||
+                    !_videoController!.value.isInitialized;
+
+                return Opacity(
+                  opacity: showImmediately ? 1.0 : _fadeAnimation.value,
+                  child: Center(
+                    child: ColorFiltered(
+                      colorFilter: const ColorFilter.matrix(<double>[
+                        0.2126, 0.7152, 0.0722, 0, 0,
+                        0.2126, 0.7152, 0.0722, 0, 0,
+                        0.2126, 0.7152, 0.0722, 0, 0,
+                        0, 0, 0, 1, 0,
+                      ]),
+                      child: Text(
+                        '🧩',
+                        style: TextStyle(
+                          fontSize: 64,
+                          color: EditorialStyles.ink.withValues(alpha: 0.3),
+                        ),
+                      ),
+                    ),
+                  ),
+                );
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildStep(int number, String text) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 16),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          EditorialStepNumber(number: number),
+          const SizedBox(width: 16),
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.only(top: 4),
+              child: Text(
+                text,
+                style: EditorialStyles.bodySmall,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildPreviousStats(List<QuizSession> completedSessions) {
+    final avgMatch = _quizService.getAverageMatchPercentage();
+
+    return EditorialCard(
+      hasShadow: false,
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        children: [
+          Text(
+            'YOUR STATS',
+            style: EditorialStyles.labelUppercase,
+          ),
+          const SizedBox(height: 16),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              Text(
-                title,
-                style: theme.textTheme.titleSmall?.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
+              _buildStatColumn('${completedSessions.length}', 'Completed'),
+              Container(
+                width: 1,
+                height: 40,
+                color: EditorialStyles.inkLight,
               ),
-              Text(
-                subtitle,
-                style: theme.textTheme.bodySmall?.copyWith(
-                  color: theme.colorScheme.onSurfaceVariant,
-                ),
-              ),
+              _buildStatColumn('${avgMatch.round()}%', 'Avg Match'),
             ],
           ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildStatColumn(String value, String label) {
+    return Column(
+      children: [
+        Text(value, style: EditorialStyles.scoreMedium),
+        const SizedBox(height: 4),
+        Text(
+          label.toUpperCase(),
+          style: EditorialStyles.labelUppercaseSmall,
         ),
       ],
     );
   }
 
-  Widget _buildStatItem(String value, String label, ThemeData theme) {
-    return Column(
-      children: [
-        Text(
-          value,
-          style: theme.textTheme.headlineMedium?.copyWith(
-            fontWeight: FontWeight.bold,
-            color: theme.colorScheme.onPrimaryContainer,
+  Widget _buildFooter() {
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: EditorialStyles.paper,
+        border: Border(top: EditorialStyles.border),
+      ),
+      child: Column(
+        children: [
+          EditorialPrimaryButton(
+            label: _isLoading ? 'Starting...' : 'Begin Quiz',
+            onPressed: _isLoading ? null : _startQuiz,
           ),
-        ),
-        Text(
-          label,
-          style: theme.textTheme.bodySmall?.copyWith(
-            color: theme.colorScheme.onPrimaryContainer.withOpacity(0.7),
+          const SizedBox(height: 12),
+          Text(
+            'Complete to earn +30 Love Points',
+            style: EditorialStyles.bodySmall.copyWith(
+              color: EditorialStyles.inkMuted,
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

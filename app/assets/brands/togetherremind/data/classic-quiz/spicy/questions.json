@@ -1,0 +1,2522 @@
+[
+  {
+    "id": "q_spicy_001",
+    "question": "What's the outfit I find most attractive on you?",
+    "options": [
+      "Something fitted and sleek",
+      "Casual and comfortable",
+      "Dressed up for a night out",
+      "Something you just threw on",
+      "Other / Something else"
+    ],
+    "category": "favorites",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q_spicy_002",
+    "question": "Where would I most want a spontaneous kiss from you?",
+    "options": [
+      "On the neck",
+      "On the forehead",
+      "Behind the ear",
+      "On the hand",
+      "Other / Something else"
+    ],
+    "category": "favorites",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q_spicy_003",
+    "question": "What's my favorite physical feature of yours?",
+    "options": [
+      "Your eyes",
+      "Your smile",
+      "Your hands",
+      "Your hair",
+      "Other / Something else"
+    ],
+    "category": "favorites",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q_spicy_004",
+    "question": "What scent on you drives me the most wild?",
+    "options": [
+      "Fresh out of the shower",
+      "Your signature perfume/cologne",
+      "After working out",
+      "Just your natural scent",
+      "Other / Something else"
+    ],
+    "category": "favorites",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q_spicy_005",
+    "question": "What's the most romantic gesture I secretly wish you'd do more?",
+    "options": [
+      "Leave surprise love notes",
+      "Plan spontaneous dates",
+      "Give random compliments",
+      "Initiate physical affection",
+      "Other / Something else"
+    ],
+    "category": "favorites",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q_spicy_006",
+    "question": "What time of day do I feel most attracted to you?",
+    "options": [
+      "First thing in the morning",
+      "After you've gotten ready",
+      "Late at night",
+      "When you're focused on something",
+      "Other / Something else"
+    ],
+    "category": "favorites",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q_spicy_007",
+    "question": "What's the type of date that would put me most in the mood?",
+    "options": [
+      "Candlelit dinner at home",
+      "Dancing together",
+      "Watching the sunset",
+      "A spa day together",
+      "Other / Something else"
+    ],
+    "category": "favorites",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q_spicy_008",
+    "question": "What color do I think you look best in?",
+    "options": [
+      "Black",
+      "Red",
+      "White",
+      "Blue",
+      "Other / Something else"
+    ],
+    "category": "favorites",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q_spicy_009",
+    "question": "What's my favorite way to be physically close without words?",
+    "options": [
+      "Holding hands",
+      "Cuddling on the couch",
+      "Your head on my shoulder",
+      "A long embrace",
+      "Other / Something else"
+    ],
+    "category": "favorites",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q_spicy_010",
+    "question": "What song would I choose for a slow dance with you?",
+    "options": [
+      "Something classic and romantic",
+      "Our special song",
+      "Whatever's playing",
+      "Something modern and sultry",
+      "Other / Something else"
+    ],
+    "category": "favorites",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q_spicy_011",
+    "question": "What's the most attractive thing you do without realizing it?",
+    "options": [
+      "The way you laugh",
+      "How you bite your lip when thinking",
+      "When you stretch",
+      "The way you look at me",
+      "Other / Something else"
+    ],
+    "category": "favorites",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q_spicy_012",
+    "question": "What romantic movie scene would I want to recreate with you?",
+    "options": [
+      "A rain kiss scene",
+      "A beach sunset moment",
+      "A surprise reunion",
+      "A rooftop confession",
+      "Other / Something else"
+    ],
+    "category": "favorites",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q_spicy_013",
+    "question": "What's my dream romantic getaway destination with you?",
+    "options": [
+      "Paris, France",
+      "Maldives beach resort",
+      "Italian countryside",
+      "Secluded mountain cabin",
+      "Other / Something else"
+    ],
+    "category": "favorites",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q_spicy_014",
+    "question": "What's the sweetest text you could send me?",
+    "options": [
+      "Thinking about you",
+      "Can't wait to see you tonight",
+      "You looked amazing today",
+      "I'm so lucky you're mine",
+      "Other / Something else"
+    ],
+    "category": "favorites",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q_spicy_015",
+    "question": "What would be my ideal lazy Sunday with you?",
+    "options": [
+      "Breakfast in bed",
+      "Binge-watching together",
+      "Staying under the covers all day",
+      "Cooking together in pajamas",
+      "Other / Something else"
+    ],
+    "category": "favorites",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q_spicy_016",
+    "question": "What's my favorite pet name to call you?",
+    "options": [
+      "Babe/Baby",
+      "Honey/Sweetie",
+      "Something unique to us",
+      "Your actual name said lovingly",
+      "Other / Something else"
+    ],
+    "category": "favorites",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q_spicy_017",
+    "question": "What's the most romantic thing I've ever said to you?",
+    "options": [
+      "Something about our future",
+      "How beautiful/handsome you are",
+      "How I can't imagine life without you",
+      "Something I whispered privately",
+      "Other / Something else"
+    ],
+    "category": "favorites",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q_spicy_018",
+    "question": "What meal would I cook if I wanted to impress you romantically?",
+    "options": [
+      "Homemade pasta",
+      "Steak dinner",
+      "Your favorite comfort food",
+      "Breakfast for dinner",
+      "Other / Something else"
+    ],
+    "category": "favorites",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q_spicy_019",
+    "question": "What's my favorite thing to do right before bed with you?",
+    "options": [
+      "Talk about our day",
+      "Watch something together",
+      "Cuddle in silence",
+      "Give goodnight kisses",
+      "Other / Something else"
+    ],
+    "category": "favorites",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q_spicy_020",
+    "question": "What jewelry or accessory do I love seeing on you?",
+    "options": [
+      "A necklace or pendant",
+      "A watch",
+      "Rings",
+      "Earrings",
+      "Other / Something else"
+    ],
+    "category": "favorites",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q_spicy_021",
+    "question": "What's my dream anniversary celebration with you?",
+    "options": [
+      "A surprise trip",
+      "Recreating our first date",
+      "A fancy dinner out",
+      "A quiet night just us",
+      "Other / Something else"
+    ],
+    "category": "favorites",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q_spicy_022",
+    "question": "What type of massage would I most enjoy from you?",
+    "options": [
+      "Shoulder and back",
+      "Full body",
+      "Scalp massage",
+      "Foot massage",
+      "Other / Something else"
+    ],
+    "category": "favorites",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q_spicy_023",
+    "question": "What's my favorite way to wake up next to you?",
+    "options": [
+      "Wrapped in your arms",
+      "With gentle kisses",
+      "To the smell of coffee you made",
+      "Slowly and peacefully",
+      "Other / Something else"
+    ],
+    "category": "favorites",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q_spicy_024",
+    "question": "What hairstyle of yours do I find most attractive?",
+    "options": [
+      "Natural and effortless",
+      "All done up",
+      "Messy bedhead",
+      "Pulled back/tied up",
+      "Other / Something else"
+    ],
+    "category": "favorites",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q_spicy_025",
+    "question": "What's the most romantic weather to me?",
+    "options": [
+      "Rainy day indoors together",
+      "Snowy evening by the fire",
+      "Warm summer night",
+      "Cool autumn afternoon",
+      "Other / Something else"
+    ],
+    "category": "favorites",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q_spicy_026",
+    "question": "What's my favorite romantic era aesthetic?",
+    "options": [
+      "Old Hollywood glamour",
+      "Modern minimalist",
+      "Victorian romance",
+      "Bohemian/free-spirited",
+      "Other / Something else"
+    ],
+    "category": "favorites",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q_spicy_027",
+    "question": "What's the most attractive skill or talent you have?",
+    "options": [
+      "Your creative abilities",
+      "How you cook",
+      "Your sense of humor",
+      "How you handle tough situations",
+      "Other / Something else"
+    ],
+    "category": "favorites",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q_spicy_028",
+    "question": "What type of photo of you is my favorite?",
+    "options": [
+      "Candid and laughing",
+      "All dressed up",
+      "Casual selfies",
+      "Us together",
+      "Other / Something else"
+    ],
+    "category": "favorites",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q_spicy_029",
+    "question": "What romantic surprise would make me happiest?",
+    "options": [
+      "Flowers for no reason",
+      "A handwritten love letter",
+      "A planned surprise date",
+      "A thoughtful gift",
+      "Other / Something else"
+    ],
+    "category": "favorites",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q_spicy_030",
+    "question": "What drink would we share on a romantic evening?",
+    "options": [
+      "Wine",
+      "Champagne",
+      "Cocktails",
+      "Hot chocolate",
+      "Other / Something else"
+    ],
+    "category": "favorites",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q_spicy_031",
+    "question": "What's my favorite thing about your voice?",
+    "options": [
+      "When you whisper",
+      "When you laugh",
+      "How you say my name",
+      "Your morning voice",
+      "Other / Something else"
+    ],
+    "category": "favorites",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q_spicy_032",
+    "question": "What type of kiss do I enjoy most?",
+    "options": [
+      "Soft and gentle",
+      "Passionate and deep",
+      "Playful pecks",
+      "Forehead kisses",
+      "Other / Something else"
+    ],
+    "category": "favorites",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q_spicy_033",
+    "question": "What romantic activity do I secretly want us to try?",
+    "options": [
+      "Couples massage",
+      "Dance lessons together",
+      "A photoshoot just for us",
+      "Stargazing somewhere remote",
+      "Other / Something else"
+    ],
+    "category": "favorites",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q_spicy_034",
+    "question": "What's the most romantic room in our home to me?",
+    "options": [
+      "The bedroom",
+      "The living room",
+      "The kitchen",
+      "Wherever you are",
+      "Other / Something else"
+    ],
+    "category": "favorites",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q_spicy_035",
+    "question": "What's my favorite physical way you show affection?",
+    "options": [
+      "Hugs from behind",
+      "Playing with my hair",
+      "Holding my face when kissing",
+      "Intertwining fingers",
+      "Other / Something else"
+    ],
+    "category": "favorites",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q_spicy_036",
+    "question": "What fabric feels most romantic to me?",
+    "options": [
+      "Silk",
+      "Soft cotton",
+      "Cashmere",
+      "Lace",
+      "Other / Something else"
+    ],
+    "category": "favorites",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q_spicy_037",
+    "question": "What's my favorite romantic dessert to share?",
+    "options": [
+      "Chocolate fondue",
+      "Tiramisu",
+      "Strawberries and cream",
+      "Cheesecake",
+      "Other / Something else"
+    ],
+    "category": "favorites",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q_spicy_038",
+    "question": "What lighting sets the mood best for me?",
+    "options": [
+      "Candlelight",
+      "Fairy lights",
+      "Dim lamp light",
+      "Fireplace glow",
+      "Other / Something else"
+    ],
+    "category": "favorites",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q_spicy_039",
+    "question": "What's my favorite romantic movie genre?",
+    "options": [
+      "Classic romance",
+      "Romantic comedy",
+      "Drama/tearjerker",
+      "Foreign romance films",
+      "Other / Something else"
+    ],
+    "category": "favorites",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q_spicy_040",
+    "question": "What love language speaks to me most?",
+    "options": [
+      "Physical touch",
+      "Words of affirmation",
+      "Quality time",
+      "Acts of service",
+      "Other / Something else"
+    ],
+    "category": "favorites",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q_spicy_041",
+    "question": "What's our most unforgettable romantic moment?",
+    "options": [
+      "Our first kiss",
+      "A surprise you planned",
+      "A trip we took together",
+      "A quiet moment just us",
+      "Other / Something else"
+    ],
+    "category": "memories",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q_spicy_042",
+    "question": "When did you first know I was attracted to you?",
+    "options": [
+      "The way I looked at you",
+      "Something I said",
+      "How I touched you",
+      "I tried to hide it at first",
+      "Other / Something else"
+    ],
+    "category": "memories",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q_spicy_043",
+    "question": "What's the most passionate moment we've shared?",
+    "options": [
+      "A surprise reunion after time apart",
+      "A special anniversary",
+      "A spontaneous moment",
+      "After resolving a disagreement",
+      "Other / Something else"
+    ],
+    "category": "memories",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q_spicy_044",
+    "question": "What's the boldest romantic thing I've ever done for you?",
+    "options": [
+      "A grand gesture in public",
+      "A surprise trip or gift",
+      "Expressed deep feelings",
+      "Did something out of my comfort zone",
+      "Other / Something else"
+    ],
+    "category": "memories",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q_spicy_045",
+    "question": "What moment made you feel most desired by me?",
+    "options": [
+      "The way I complimented you",
+      "How I couldn't keep my hands off you",
+      "Something I whispered to you",
+      "The look in my eyes",
+      "Other / Something else"
+    ],
+    "category": "memories",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q_spicy_046",
+    "question": "What's the most romantic date we've been on?",
+    "options": [
+      "A fancy dinner out",
+      "A cozy night in",
+      "An adventurous outing",
+      "A spontaneous trip",
+      "Other / Something else"
+    ],
+    "category": "memories",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q_spicy_047",
+    "question": "When do I seem most in love with you?",
+    "options": [
+      "When I look at you a certain way",
+      "When I say something sweet",
+      "When I do small thoughtful things",
+      "All the time",
+      "Other / Something else"
+    ],
+    "category": "memories",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q_spicy_048",
+    "question": "What's a romantic moment that still gives us butterflies?",
+    "options": [
+      "Our first date",
+      "The first time we said I love you",
+      "A special trip together",
+      "A quiet meaningful moment",
+      "Other / Something else"
+    ],
+    "category": "memories",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q_spicy_049",
+    "question": "What's the sweetest thing I've done without being asked?",
+    "options": [
+      "Took care of you when sick",
+      "Planned something special",
+      "Remembered something small but important",
+      "Said exactly what you needed to hear",
+      "Other / Something else"
+    ],
+    "category": "memories",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q_spicy_050",
+    "question": "What romantic tradition do we have?",
+    "options": [
+      "Anniversary celebrations",
+      "Date nights",
+      "Goodnight rituals",
+      "Special greetings",
+      "Other / Something else"
+    ],
+    "category": "memories",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q_spicy_051",
+    "question": "What type of underwear does my partner find most attractive?",
+    "options": [
+      "Classic and simple",
+      "Lacy and delicate",
+      "Bold colors",
+      "Comfortable basics",
+      "Other / Something else"
+    ],
+    "category": "preferences",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q_spicy_052",
+    "question": "What's my stance on public displays of affection?",
+    "options": [
+      "Love it, bring it on",
+      "Subtle touches only",
+      "Save it for private",
+      "Depends on the setting",
+      "Other / Something else"
+    ],
+    "category": "preferences",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q_spicy_053",
+    "question": "What's my ideal amount of couple time vs alone time?",
+    "options": [
+      "Together as much as possible",
+      "Balance of both",
+      "Need my space regularly",
+      "Depends on my mood",
+      "Other / Something else"
+    ],
+    "category": "preferences",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q_spicy_054",
+    "question": "How do I prefer to resolve tension between us?",
+    "options": [
+      "Talk it out immediately",
+      "Take some space first",
+      "Physical reconnection",
+      "Write out my feelings",
+      "Other / Something else"
+    ],
+    "category": "preferences",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q_spicy_055",
+    "question": "What's my comfort level with flirty banter in texts?",
+    "options": [
+      "Love it all day",
+      "Sometimes when in the mood",
+      "Keep it for in-person",
+      "Too shy for that",
+      "Other / Something else"
+    ],
+    "category": "preferences",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q_spicy_056",
+    "question": "How adventurous am I with trying new things together?",
+    "options": [
+      "Very - I'll try anything once",
+      "Open with some boundaries",
+      "Prefer to stick with what works",
+      "Need lots of convincing",
+      "Other / Something else"
+    ],
+    "category": "preferences",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q_spicy_057",
+    "question": "What's my preference for surprise vs planned romance?",
+    "options": [
+      "Love surprises",
+      "Prefer knowing what's coming",
+      "Mix of both",
+      "Small surprises only",
+      "Other / Something else"
+    ],
+    "category": "preferences",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q_spicy_058",
+    "question": "How do I feel about matching couple outfits?",
+    "options": [
+      "Love it, so cute",
+      "Subtle coordination only",
+      "Absolutely not",
+      "For special occasions",
+      "Other / Something else"
+    ],
+    "category": "preferences",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q_spicy_059",
+    "question": "What's my ideal frequency for date nights?",
+    "options": [
+      "Weekly",
+      "Every couple weeks",
+      "Monthly",
+      "Spontaneous, no schedule",
+      "Other / Something else"
+    ],
+    "category": "preferences",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q_spicy_060",
+    "question": "How do I prefer receiving compliments?",
+    "options": [
+      "Out loud in front of others",
+      "Whispered just to me",
+      "In writing",
+      "Through actions not words",
+      "Other / Something else"
+    ],
+    "category": "preferences",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q_spicy_061",
+    "question": "What's my stance on talking about our relationship with friends?",
+    "options": [
+      "Share everything",
+      "Keep most things private",
+      "Only the good stuff",
+      "Different with different friends",
+      "Other / Something else"
+    ],
+    "category": "preferences",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q_spicy_062",
+    "question": "How do I feel about romantic gestures at work/in public?",
+    "options": [
+      "Love being surprised there",
+      "Keep it professional",
+      "Small gestures are fine",
+      "Embarrasses me",
+      "Other / Something else"
+    ],
+    "category": "preferences",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q_spicy_063",
+    "question": "What's my preference for physical closeness while sleeping?",
+    "options": [
+      "Tangled up together",
+      "Touching but separate",
+      "My own space",
+      "Start close, drift apart",
+      "Other / Something else"
+    ],
+    "category": "preferences",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q_spicy_064",
+    "question": "How do I prefer to show jealousy (if at all)?",
+    "options": [
+      "I don't get jealous",
+      "Subtle possessiveness",
+      "Open about it",
+      "Keep it to myself",
+      "Other / Something else"
+    ],
+    "category": "preferences",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q_spicy_065",
+    "question": "What's my comfort level with romantic nicknames?",
+    "options": [
+      "The cheesier the better",
+      "Sweet but not over the top",
+      "Prefer my real name",
+      "Only in private",
+      "Other / Something else"
+    ],
+    "category": "preferences",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q_spicy_066",
+    "question": "How do I feel about social media relationship posts?",
+    "options": [
+      "Post everything",
+      "Occasional cute posts",
+      "Keep it offline",
+      "Only milestones",
+      "Other / Something else"
+    ],
+    "category": "preferences",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q_spicy_067",
+    "question": "What's my ideal scenario for meeting your friends/family?",
+    "options": [
+      "Casual group hangout",
+      "One-on-one meetings first",
+      "Big family gathering",
+      "Take my time with it",
+      "Other / Something else"
+    ],
+    "category": "preferences",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q_spicy_068",
+    "question": "How do I prefer handling relationship disagreements?",
+    "options": [
+      "Face-to-face discussion",
+      "Some time apart first",
+      "Text it out",
+      "Pretend it didn't happen",
+      "Other / Something else"
+    ],
+    "category": "preferences",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q_spicy_069",
+    "question": "What's my tolerance for cheesy romantic movies?",
+    "options": [
+      "I secretly love them",
+      "Only with you",
+      "Can't stand them",
+      "They're fine background noise",
+      "Other / Something else"
+    ],
+    "category": "preferences",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q_spicy_070",
+    "question": "How important is physical appearance to me in our relationship?",
+    "options": [
+      "Very - I love when you dress up",
+      "Attracted no matter what",
+      "Appreciate effort but not required",
+      "Comfort over appearance",
+      "Other / Something else"
+    ],
+    "category": "preferences",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q_spicy_071",
+    "question": "What's my preference for who initiates romantic moments?",
+    "options": [
+      "I like to initiate",
+      "Prefer you to",
+      "Equal both ways",
+      "Whoever feels it first",
+      "Other / Something else"
+    ],
+    "category": "preferences",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q_spicy_072",
+    "question": "How do I handle missing you when apart?",
+    "options": [
+      "Constant texting",
+      "Save it for when we're together",
+      "Send you memes and thoughts",
+      "Get lost in my own activities",
+      "Other / Something else"
+    ],
+    "category": "preferences",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q_spicy_073",
+    "question": "What's my stance on couple therapy/check-ins?",
+    "options": [
+      "Important even when good",
+      "Only if there's a problem",
+      "Not for us",
+      "Open to trying it",
+      "Other / Something else"
+    ],
+    "category": "preferences",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q_spicy_074",
+    "question": "How do I feel about your friendships with exes?",
+    "options": [
+      "Totally fine with it",
+      "Prefer no contact",
+      "Case by case",
+      "Don't want to know",
+      "Other / Something else"
+    ],
+    "category": "preferences",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q_spicy_075",
+    "question": "What's my ideal level of spontaneity in our relationship?",
+    "options": [
+      "Keep me on my toes",
+      "Some surprises are nice",
+      "Prefer routine",
+      "Big plans, small surprises",
+      "Other / Something else"
+    ],
+    "category": "preferences",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q_spicy_076",
+    "question": "How do I feel about discussing past relationships?",
+    "options": [
+      "Open book",
+      "Only what's relevant",
+      "The past is the past",
+      "Curious about yours",
+      "Other / Something else"
+    ],
+    "category": "preferences",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q_spicy_077",
+    "question": "What's my comfort level with vulnerability?",
+    "options": [
+      "Very open with you",
+      "Takes time to open up",
+      "Struggle with it",
+      "Getting better at it",
+      "Other / Something else"
+    ],
+    "category": "preferences",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q_spicy_078",
+    "question": "How do I prefer to celebrate us?",
+    "options": [
+      "Big celebrations",
+      "Quiet meaningful moments",
+      "Experiences over gifts",
+      "Gifts show you care",
+      "Other / Something else"
+    ],
+    "category": "preferences",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q_spicy_079",
+    "question": "What's my stance on personal space within the relationship?",
+    "options": [
+      "What's yours is mine",
+      "Some things stay private",
+      "Need my own space",
+      "Balance of both",
+      "Other / Something else"
+    ],
+    "category": "preferences",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q_spicy_080",
+    "question": "How important is verbal affirmation to me?",
+    "options": [
+      "Need to hear it often",
+      "Actions speak louder",
+      "Nice but not essential",
+      "Once in a while is enough",
+      "Other / Something else"
+    ],
+    "category": "preferences",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q_spicy_081",
+    "question": "What's my preference for couple photos?",
+    "options": [
+      "Take them constantly",
+      "Special occasions only",
+      "Not really into it",
+      "Candid over posed",
+      "Other / Something else"
+    ],
+    "category": "preferences",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q_spicy_082",
+    "question": "How do I feel about pet names in front of others?",
+    "options": [
+      "Use them proudly",
+      "Tone it down in public",
+      "Only when alone",
+      "Doesn't bother me either way",
+      "Other / Something else"
+    ],
+    "category": "preferences",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q_spicy_083",
+    "question": "What's my ideal balance of togetherness?",
+    "options": [
+      "Do everything together",
+      "Share hobbies and have our own",
+      "Mostly independent",
+      "Joined at the hip",
+      "Other / Something else"
+    ],
+    "category": "preferences",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q_spicy_084",
+    "question": "How do I handle attraction to others while in a relationship?",
+    "options": [
+      "Eyes only for you",
+      "Can appreciate beauty",
+      "Don't act on it",
+      "We talk about it openly",
+      "Other / Something else"
+    ],
+    "category": "preferences",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q_spicy_085",
+    "question": "What's my preference for bedroom temperature?",
+    "options": [
+      "Cold with lots of blankets",
+      "Warm and cozy",
+      "Cool but not cold",
+      "Whatever you prefer",
+      "Other / Something else"
+    ],
+    "category": "preferences",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q_spicy_086",
+    "question": "How do I feel about planning for the future together?",
+    "options": [
+      "Love talking about it",
+      "One step at a time",
+      "Big picture only",
+      "Actions over plans",
+      "Other / Something else"
+    ],
+    "category": "preferences",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q_spicy_087",
+    "question": "What's my comfort with your opposite-sex friendships?",
+    "options": [
+      "Completely comfortable",
+      "Prefer to know them",
+      "A little jealous sometimes",
+      "Trust you completely",
+      "Other / Something else"
+    ],
+    "category": "preferences",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q_spicy_088",
+    "question": "How do I express frustration with you?",
+    "options": [
+      "Tell you directly",
+      "Get quiet at first",
+      "Need time to process",
+      "Write it down first",
+      "Other / Something else"
+    ],
+    "category": "preferences",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q_spicy_089",
+    "question": "What's my ideal way to reconnect after time apart?",
+    "options": [
+      "Long tight hug",
+      "Catch up over dinner",
+      "Quality time at home",
+      "Physical intimacy",
+      "Other / Something else"
+    ],
+    "category": "preferences",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q_spicy_090",
+    "question": "How do I feel about role play or acting out scenarios?",
+    "options": [
+      "Sounds fun to try",
+      "Not really my thing",
+      "With the right mood",
+      "Already do it",
+      "Other / Something else"
+    ],
+    "category": "preferences",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q_spicy_091",
+    "question": "What's my stance on keeping secrets (positive surprises)?",
+    "options": [
+      "Love a good surprise",
+      "Hate not knowing",
+      "Small secrets are fine",
+      "Can barely keep them",
+      "Other / Something else"
+    ],
+    "category": "preferences",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q_spicy_092",
+    "question": "How important is date variety to me?",
+    "options": [
+      "Always trying new things",
+      "Mix of new and familiar",
+      "Comfort in routine",
+      "Whatever we're doing together",
+      "Other / Something else"
+    ],
+    "category": "preferences",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q_spicy_093",
+    "question": "What's my preference for end-of-day check-ins?",
+    "options": [
+      "Tell you everything",
+      "Highlight reel only",
+      "Prefer to unwind quietly",
+      "Depends on the day",
+      "Other / Something else"
+    ],
+    "category": "preferences",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q_spicy_094",
+    "question": "How do I feel about trying new restaurants vs favorites?",
+    "options": [
+      "Always exploring",
+      "Mostly favorites",
+      "New for dates, favorites for comfort",
+      "Go with your preference",
+      "Other / Something else"
+    ],
+    "category": "preferences",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q_spicy_095",
+    "question": "What's my ideal level of independence?",
+    "options": [
+      "Very independent",
+      "Interdependent",
+      "Prefer doing things together",
+      "Flexible depending on activity",
+      "Other / Something else"
+    ],
+    "category": "preferences",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q_spicy_096",
+    "question": "How do I handle your bad moods?",
+    "options": [
+      "Give you space",
+      "Try to cheer you up",
+      "Be there quietly",
+      "Ask what you need",
+      "Other / Something else"
+    ],
+    "category": "preferences",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q_spicy_097",
+    "question": "What's my stance on flirting as a couple?",
+    "options": [
+      "Flirt like we just met",
+      "Settled into comfort",
+      "Occasional playfulness",
+      "That's not my style",
+      "Other / Something else"
+    ],
+    "category": "preferences",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q_spicy_098",
+    "question": "How do I prefer to handle financial decisions together?",
+    "options": [
+      "Discuss everything",
+      "Split it evenly",
+      "Whoever earns more pays more",
+      "Keep finances separate",
+      "Other / Something else"
+    ],
+    "category": "preferences",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q_spicy_099",
+    "question": "What's my comfort level with couple rituals?",
+    "options": [
+      "Love our little routines",
+      "Keep it fresh",
+      "Some traditions are nice",
+      "Go with the flow",
+      "Other / Something else"
+    ],
+    "category": "preferences",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q_spicy_100",
+    "question": "How do I feel about being protective?",
+    "options": [
+      "Very protective of you",
+      "Trust you to handle things",
+      "Protective in certain situations",
+      "Don't need to be",
+      "Other / Something else"
+    ],
+    "category": "preferences",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q_spicy_101",
+    "question": "What's my morning routine like in terms of affection?",
+    "options": [
+      "Cuddles before getting up",
+      "Quick kiss and go",
+      "Coffee first, affection later",
+      "Not a morning person",
+      "Other / Something else"
+    ],
+    "category": "daily_habits",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q_spicy_102",
+    "question": "How do I like to wind down at night with you?",
+    "options": [
+      "Watching something together",
+      "Talking about our day",
+      "Quiet time side by side",
+      "Physical closeness",
+      "Other / Something else"
+    ],
+    "category": "daily_habits",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q_spicy_103",
+    "question": "What's my getting ready routine like when you're watching?",
+    "options": [
+      "Put on a show",
+      "Get shy about it",
+      "Completely comfortable",
+      "Prefer privacy",
+      "Other / Something else"
+    ],
+    "category": "daily_habits",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q_spicy_104",
+    "question": "How do I prefer us to fall asleep?",
+    "options": [
+      "Cuddled up together",
+      "Touching but separate",
+      "Each in our own space",
+      "Fall asleep during a show",
+      "Other / Something else"
+    ],
+    "category": "daily_habits",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q_spicy_105",
+    "question": "What do I do when I wake up in the middle of the night?",
+    "options": [
+      "Move closer to you",
+      "Check my phone",
+      "Go right back to sleep",
+      "Lay awake thinking",
+      "Other / Something else"
+    ],
+    "category": "daily_habits",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q_spicy_106",
+    "question": "What's my typical behavior when getting dressed?",
+    "options": [
+      "Ask your opinion",
+      "Quick and efficient",
+      "Take my time choosing",
+      "Whatever's clean",
+      "Other / Something else"
+    ],
+    "category": "daily_habits",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q_spicy_107",
+    "question": "How long do I spend in the bathroom getting ready?",
+    "options": [
+      "Quick and efficient",
+      "Take my time",
+      "Depends on where we're going",
+      "Longer than I'll admit",
+      "Other / Something else"
+    ],
+    "category": "daily_habits",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q_spicy_108",
+    "question": "What's my behavior like right before we go out together?",
+    "options": [
+      "Excited and energized",
+      "Last-minute outfit changes",
+      "Ready and waiting",
+      "Running late as usual",
+      "Other / Something else"
+    ],
+    "category": "daily_habits",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q_spicy_109",
+    "question": "How do I act when I first see you after work?",
+    "options": [
+      "Immediate hug",
+      "Tell you about my day",
+      "Need decompression time",
+      "Ask about your day first",
+      "Other / Something else"
+    ],
+    "category": "daily_habits",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q_spicy_110",
+    "question": "What's my texting style during the day?",
+    "options": [
+      "Check in constantly",
+      "A few messages here and there",
+      "Minimal until we're together",
+      "Memes and random thoughts",
+      "Other / Something else"
+    ],
+    "category": "daily_habits",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q_spicy_111",
+    "question": "How do I handle seeing you look really good?",
+    "options": [
+      "Tell you immediately",
+      "Stare appreciatively",
+      "Get a little jealous",
+      "Keep it to myself",
+      "Other / Something else"
+    ],
+    "category": "daily_habits",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q_spicy_112",
+    "question": "What's my nighttime skincare/hygiene routine?",
+    "options": [
+      "Quick wash and done",
+      "Full routine every night",
+      "Skip it sometimes",
+      "We do it together",
+      "Other / Something else"
+    ],
+    "category": "daily_habits",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q_spicy_113",
+    "question": "How do I usually say goodbye in the morning?",
+    "options": [
+      "Long goodbye, hard to leave",
+      "Quick kiss and out",
+      "Multiple goodbye kisses",
+      "Already focused on the day",
+      "Other / Something else"
+    ],
+    "category": "daily_habits",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q_spicy_114",
+    "question": "What do I typically wear to bed?",
+    "options": [
+      "Pajamas",
+      "Comfortable underwear only",
+      "An old t-shirt",
+      "Nothing at all",
+      "Other / Something else"
+    ],
+    "category": "daily_habits",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q_spicy_115",
+    "question": "How often do I initiate casual physical contact?",
+    "options": [
+      "All the time",
+      "Several times a day",
+      "When the mood strikes",
+      "Wait for you to",
+      "Other / Something else"
+    ],
+    "category": "daily_habits",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q_spicy_116",
+    "question": "What's my habit when walking together?",
+    "options": [
+      "Hold hands always",
+      "Arm around you",
+      "Walk close but not touching",
+      "Depends on the setting",
+      "Other / Something else"
+    ],
+    "category": "daily_habits",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q_spicy_117",
+    "question": "How do I typically sit next to you on the couch?",
+    "options": [
+      "Right up against you",
+      "Legs over your lap",
+      "Close but separate",
+      "Lying with head on you",
+      "Other / Something else"
+    ],
+    "category": "daily_habits",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q_spicy_118",
+    "question": "What's my phone behavior when we're together?",
+    "options": [
+      "Put it away completely",
+      "Check occasionally",
+      "Always have it nearby",
+      "Share what I'm looking at",
+      "Other / Something else"
+    ],
+    "category": "daily_habits",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q_spicy_119",
+    "question": "How do I behave when you're changing clothes?",
+    "options": [
+      "Sneak a peek",
+      "Give you privacy",
+      "Help you choose",
+      "Keep chatting normally",
+      "Other / Something else"
+    ],
+    "category": "daily_habits",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q_spicy_120",
+    "question": "What time do I usually want to go to bed?",
+    "options": [
+      "Early bird",
+      "Night owl",
+      "Whenever you're ready",
+      "Never want the night to end",
+      "Other / Something else"
+    ],
+    "category": "daily_habits",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q_spicy_121",
+    "question": "How do I usually wake you up?",
+    "options": [
+      "Gentle kisses",
+      "Let you sleep as long as possible",
+      "Alarm and reluctant nudge",
+      "Breakfast ready to go",
+      "Other / Something else"
+    ],
+    "category": "daily_habits",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q_spicy_122",
+    "question": "What's my behavior in the shower when we're in a hurry?",
+    "options": [
+      "Quick and efficient",
+      "Still take my time",
+      "Invite you in anyway",
+      "Skip it entirely",
+      "Other / Something else"
+    ],
+    "category": "daily_habits",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q_spicy_123",
+    "question": "How do I act when you catch me staring at you?",
+    "options": [
+      "Smile and own it",
+      "Get embarrassed",
+      "Wink at you",
+      "Pretend I wasn't",
+      "Other / Something else"
+    ],
+    "category": "daily_habits",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q_spicy_124",
+    "question": "What's my usual pre-date ritual?",
+    "options": [
+      "Extra grooming effort",
+      "Try on multiple outfits",
+      "Quick freshen up",
+      "Same as any other day",
+      "Other / Something else"
+    ],
+    "category": "daily_habits",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q_spicy_125",
+    "question": "How do I typically react to your compliments?",
+    "options": [
+      "Get bashful",
+      "Return one immediately",
+      "Accept it graciously",
+      "Deflect or downplay",
+      "Other / Something else"
+    ],
+    "category": "daily_habits",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q_spicy_126",
+    "question": "What do I do right before falling asleep?",
+    "options": [
+      "Say I love you",
+      "One last cuddle",
+      "Scroll my phone briefly",
+      "Just drift off",
+      "Other / Something else"
+    ],
+    "category": "daily_habits",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q_spicy_127",
+    "question": "How do I respond when you look extra good today?",
+    "options": [
+      "Can't help but comment",
+      "Give you a look",
+      "Physical appreciation",
+      "Play it cool",
+      "Other / Something else"
+    ],
+    "category": "daily_habits",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q_spicy_128",
+    "question": "What's my weekend morning routine with you?",
+    "options": [
+      "Sleep in and cuddle",
+      "Get up and make breakfast",
+      "Lazy morning in bed",
+      "Still an early riser",
+      "Other / Something else"
+    ],
+    "category": "daily_habits",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q_spicy_129",
+    "question": "How do I act when we're both getting ready in the bathroom?",
+    "options": [
+      "Flirty and playful",
+      "Focused on my routine",
+      "Chat the whole time",
+      "Keep bumping into each other",
+      "Other / Something else"
+    ],
+    "category": "daily_habits",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q_spicy_130",
+    "question": "What's my behavior when we're running errands together?",
+    "options": [
+      "Make it a mini date",
+      "Get it done efficiently",
+      "Easily distracted",
+      "Hold hands the whole time",
+      "Other / Something else"
+    ],
+    "category": "daily_habits",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q_spicy_131",
+    "question": "If we could live anywhere together, where would I choose?",
+    "options": [
+      "Beach house",
+      "Mountain cabin",
+      "City penthouse",
+      "Countryside cottage",
+      "Other / Something else"
+    ],
+    "category": "future",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q_spicy_132",
+    "question": "What adventure do I most want to have with you?",
+    "options": [
+      "Travel the world together",
+      "Start a business together",
+      "Build our dream home",
+      "Go on a spontaneous road trip",
+      "Other / Something else"
+    ],
+    "category": "future",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q_spicy_133",
+    "question": "What's my dream proposal scenario (giving or receiving)?",
+    "options": [
+      "Somewhere meaningful to us",
+      "Grand public gesture",
+      "Intimate private moment",
+      "Complete surprise",
+      "Other / Something else"
+    ],
+    "category": "future",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q_spicy_134",
+    "question": "Where would I want our honeymoon to be?",
+    "options": [
+      "Tropical paradise",
+      "European adventure",
+      "Relaxing resort",
+      "Adventure destination",
+      "Other / Something else"
+    ],
+    "category": "future",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q_spicy_135",
+    "question": "What's my vision for date nights in 10 years?",
+    "options": [
+      "Still going strong",
+      "Cozy nights at home",
+      "Even more adventurous",
+      "Simple but meaningful",
+      "Other / Something else"
+    ],
+    "category": "future",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q_spicy_136",
+    "question": "What romantic milestone am I most looking forward to?",
+    "options": [
+      "Moving in together",
+      "Getting engaged",
+      "Our wedding day",
+      "Growing old together",
+      "Other / Something else"
+    ],
+    "category": "future",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q_spicy_137",
+    "question": "What would be my dream anniversary trip?",
+    "options": [
+      "Where we first met",
+      "Somewhere we've never been",
+      "A cruise",
+      "Staycation in luxury",
+      "Other / Something else"
+    ],
+    "category": "future",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q_spicy_138",
+    "question": "How do I imagine our mornings together in the future?",
+    "options": [
+      "Slow and romantic",
+      "Busy but connected",
+      "Coffee and cuddles",
+      "Exercise together",
+      "Other / Something else"
+    ],
+    "category": "future",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q_spicy_139",
+    "question": "What couple goal do I want us to achieve?",
+    "options": [
+      "Financial freedom",
+      "Travel bucket list",
+      "Perfect work-life balance",
+      "Build something together",
+      "Other / Something else"
+    ],
+    "category": "future",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q_spicy_140",
+    "question": "What's my dream date we haven't done yet?",
+    "options": [
+      "Hot air balloon ride",
+      "Private dinner somewhere special",
+      "Concert of our favorite artist",
+      "Spontaneous weekend getaway",
+      "Other / Something else"
+    ],
+    "category": "future",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q_spicy_141",
+    "question": "What tradition would I want to start as a couple?",
+    "options": [
+      "Annual trip to a new place",
+      "Weekly date night",
+      "Holiday traditions",
+      "Yearly relationship check-in",
+      "Other / Something else"
+    ],
+    "category": "future",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q_spicy_142",
+    "question": "What's something I want us to learn together?",
+    "options": [
+      "Dance lessons",
+      "Cooking classes",
+      "A new language",
+      "A sport or activity",
+      "Other / Something else"
+    ],
+    "category": "future",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q_spicy_143",
+    "question": "How do I envision our ideal home together?",
+    "options": [
+      "Cozy and comfortable",
+      "Modern and stylish",
+      "Full of memories",
+      "Room for growth",
+      "Other / Something else"
+    ],
+    "category": "future",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q_spicy_144",
+    "question": "What kind of old couple do I want us to become?",
+    "options": [
+      "Still flirty and fun",
+      "Quietly devoted",
+      "Active adventurers",
+      "Best friends above all",
+      "Other / Something else"
+    ],
+    "category": "future",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q_spicy_145",
+    "question": "What's a relationship skill I want us to improve?",
+    "options": [
+      "Communication",
+      "Quality time together",
+      "Keeping the spark alive",
+      "Supporting each other's dreams",
+      "Other / Something else"
+    ],
+    "category": "future",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q_spicy_146",
+    "question": "What would I want written in our love story?",
+    "options": [
+      "Against all odds",
+      "Perfect timing",
+      "Slow burn to forever",
+      "Love at first sight",
+      "Other / Something else"
+    ],
+    "category": "future",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q_spicy_147",
+    "question": "What kind of wedding would I dream of?",
+    "options": [
+      "Intimate and romantic",
+      "Big celebration",
+      "Destination wedding",
+      "Elopement adventure",
+      "Other / Something else"
+    ],
+    "category": "future",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q_spicy_148",
+    "question": "What couple bucket list item is top priority?",
+    "options": [
+      "A specific trip",
+      "A shared experience",
+      "A milestone to reach",
+      "Something adventurous",
+      "Other / Something else"
+    ],
+    "category": "future",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q_spicy_149",
+    "question": "How do I want to celebrate major milestones?",
+    "options": [
+      "With loved ones",
+      "Just the two of us",
+      "Grand gestures",
+      "Meaningful experiences",
+      "Other / Something else"
+    ],
+    "category": "future",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q_spicy_150",
+    "question": "What's my dream surprise you could plan?",
+    "options": [
+      "Surprise trip",
+      "Romantic dinner somewhere special",
+      "Recreate our first date",
+      "Gathering of friends/family",
+      "Other / Something else"
+    ],
+    "category": "future",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q_spicy_151",
+    "question": "What legacy do I want us to create together?",
+    "options": [
+      "A loving family",
+      "Positive community impact",
+      "Shared accomplishments",
+      "A love story to remember",
+      "Other / Something else"
+    ],
+    "category": "future",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q_spicy_152",
+    "question": "What's a small habit I hope we never lose?",
+    "options": [
+      "Goodnight kisses",
+      "Morning check-ins",
+      "Random I love yous",
+      "Inside jokes",
+      "Other / Something else"
+    ],
+    "category": "future",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q_spicy_153",
+    "question": "What's my dream retirement plan with you?",
+    "options": [
+      "Travel everywhere",
+      "Quiet life together",
+      "Stay active and social",
+      "Near family",
+      "Other / Something else"
+    ],
+    "category": "future",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q_spicy_154",
+    "question": "How do I hope our intimacy evolves over time?",
+    "options": [
+      "Deeper and more connected",
+      "Still passionate",
+      "More comfortable and free",
+      "Quality over quantity",
+      "Other / Something else"
+    ],
+    "category": "future",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q_spicy_155",
+    "question": "What's a fear I have about our future?",
+    "options": [
+      "Growing apart",
+      "Losing the spark",
+      "Life getting too busy",
+      "I have no fears about us",
+      "Other / Something else"
+    ],
+    "category": "future",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q_spicy_156",
+    "question": "What dream of mine do I want you most involved in?",
+    "options": [
+      "Career goals",
+      "Travel dreams",
+      "Personal growth",
+      "Family plans",
+      "Other / Something else"
+    ],
+    "category": "future",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q_spicy_157",
+    "question": "What do I hope we're still doing in our 80s?",
+    "options": [
+      "Holding hands",
+      "Going on dates",
+      "Making each other laugh",
+      "All of the above",
+      "Other / Something else"
+    ],
+    "category": "future",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q_spicy_158",
+    "question": "What's a romantic gesture I hope you'll always do?",
+    "options": [
+      "Surprise me sometimes",
+      "Tell me I'm beautiful/handsome",
+      "Remember the little things",
+      "Make me a priority",
+      "Other / Something else"
+    ],
+    "category": "future",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q_spicy_159",
+    "question": "What do I think will make our relationship last?",
+    "options": [
+      "Growing together",
+      "Never stopping the effort",
+      "True friendship foundation",
+      "Keeping things exciting",
+      "Other / Something else"
+    ],
+    "category": "future",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q_spicy_160",
+    "question": "What anniversary do I most want to celebrate big?",
+    "options": [
+      "First anniversary",
+      "Tenth anniversary",
+      "Twenty-fifth (silver)",
+      "Fiftieth (gold)",
+      "Other / Something else"
+    ],
+    "category": "future",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q_spicy_161",
+    "question": "Would you rather: Give up kissing or cuddling for a month?",
+    "options": [
+      "Give up kissing",
+      "Give up cuddling",
+      "Neither, impossible choice",
+      "Both are equally important",
+      "Other / Something else"
+    ],
+    "category": "would_you_rather",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q_spicy_162",
+    "question": "Would you rather: Have a partner who's an amazing cook or amazing at massages?",
+    "options": [
+      "Amazing cook",
+      "Amazing at massages",
+      "Can I have both?",
+      "Neither matters that much",
+      "Other / Something else"
+    ],
+    "category": "would_you_rather",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q_spicy_163",
+    "question": "Would you rather: Go on an adventurous date or a romantic quiet one?",
+    "options": [
+      "Adventurous",
+      "Romantic and quiet",
+      "Depends on my mood",
+      "Mix of both",
+      "Other / Something else"
+    ],
+    "category": "would_you_rather",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q_spicy_164",
+    "question": "Would you rather: Receive a love letter or a surprise gift?",
+    "options": [
+      "Love letter",
+      "Surprise gift",
+      "Either would make me happy",
+      "Words mean more than things",
+      "Other / Something else"
+    ],
+    "category": "would_you_rather",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q_spicy_165",
+    "question": "Would you rather: Have breakfast in bed or dinner under the stars?",
+    "options": [
+      "Breakfast in bed",
+      "Dinner under the stars",
+      "Both sound perfect",
+      "Depends who's cooking",
+      "Other / Something else"
+    ],
+    "category": "would_you_rather",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q_spicy_166",
+    "question": "Would you rather: Spend a week apart and have an amazing reunion, or never be apart?",
+    "options": [
+      "Week apart, amazing reunion",
+      "Never be apart",
+      "Absence makes the heart grow fonder",
+      "I need some alone time",
+      "Other / Something else"
+    ],
+    "category": "would_you_rather",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q_spicy_167",
+    "question": "Would you rather: Be surprised with flowers or your favorite food?",
+    "options": [
+      "Flowers",
+      "Favorite food",
+      "Food is the way to my heart",
+      "The thought counts most",
+      "Other / Something else"
+    ],
+    "category": "would_you_rather",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q_spicy_168",
+    "question": "Would you rather: Watch your partner's favorite movie or have them watch yours?",
+    "options": [
+      "Watch theirs",
+      "Have them watch mine",
+      "Watch both together",
+      "Find something new together",
+      "Other / Something else"
+    ],
+    "category": "would_you_rather",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q_spicy_169",
+    "question": "Would you rather: Have a partner who texts constantly or calls unexpectedly?",
+    "options": [
+      "Texts constantly",
+      "Calls unexpectedly",
+      "Balance of both",
+      "Quality over quantity",
+      "Other / Something else"
+    ],
+    "category": "would_you_rather",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q_spicy_170",
+    "question": "Would you rather: Slow dance in the kitchen or have a pillow fight?",
+    "options": [
+      "Slow dance",
+      "Pillow fight",
+      "Both sound fun",
+      "Romance over playfulness",
+      "Other / Something else"
+    ],
+    "category": "would_you_rather",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q_spicy_171",
+    "question": "Would you rather: Get a couples tattoo or matching jewelry?",
+    "options": [
+      "Couples tattoo",
+      "Matching jewelry",
+      "Neither",
+      "Both!",
+      "Other / Something else"
+    ],
+    "category": "would_you_rather",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q_spicy_172",
+    "question": "Would you rather: Have a lazy Sunday or an active adventure day?",
+    "options": [
+      "Lazy Sunday",
+      "Active adventure",
+      "Alternate between both",
+      "Start lazy, end active",
+      "Other / Something else"
+    ],
+    "category": "would_you_rather",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q_spicy_173",
+    "question": "Would you rather: Know all your partner's secrets or keep some mystery?",
+    "options": [
+      "Know everything",
+      "Keep some mystery",
+      "I like a little surprise",
+      "Full transparency always",
+      "Other / Something else"
+    ],
+    "category": "would_you_rather",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q_spicy_174",
+    "question": "Would you rather: Plan the perfect date or be completely surprised?",
+    "options": [
+      "Plan it myself",
+      "Be completely surprised",
+      "Collaborate on planning",
+      "Take turns planning",
+      "Other / Something else"
+    ],
+    "category": "would_you_rather",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q_spicy_175",
+    "question": "Would you rather: Be proposed to publicly or privately?",
+    "options": [
+      "Publicly",
+      "Privately",
+      "Doesn't matter",
+      "Somewhere meaningful",
+      "Other / Something else"
+    ],
+    "category": "would_you_rather",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q_spicy_176",
+    "question": "Would you rather: Have matching pajamas or matching robes?",
+    "options": [
+      "Matching pajamas",
+      "Matching robes",
+      "Neither",
+      "Both!",
+      "Other / Something else"
+    ],
+    "category": "would_you_rather",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q_spicy_177",
+    "question": "Would you rather: Share a dessert or have your own?",
+    "options": [
+      "Share",
+      "Have my own",
+      "Order two and share both",
+      "I'll eat most of the shared one",
+      "Other / Something else"
+    ],
+    "category": "would_you_rather",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q_spicy_178",
+    "question": "Would you rather: Go to couple's therapy when great or wait until there's a problem?",
+    "options": [
+      "When things are great",
+      "Only if there's a problem",
+      "Regular check-ins",
+      "Never need it",
+      "Other / Something else"
+    ],
+    "category": "would_you_rather",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q_spicy_179",
+    "question": "Would you rather: Whisper sweet nothings or leave love notes?",
+    "options": [
+      "Whisper sweet nothings",
+      "Leave love notes",
+      "Both equally",
+      "Actions over words",
+      "Other / Something else"
+    ],
+    "category": "would_you_rather",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "q_spicy_180",
+    "question": "Would you rather: Have a partner who remembers every date or every little preference?",
+    "options": [
+      "Remembers every date",
+      "Remembers preferences",
+      "Memory isn't everything",
+      "Both would be amazing",
+      "Other / Something else"
+    ],
+    "category": "would_you_rather",
+    "difficulty": 2,
+    "tier": 1
+  }
+]

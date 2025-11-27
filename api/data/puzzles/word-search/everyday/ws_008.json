@@ -1,0 +1,24 @@
+{
+  "puzzleId": "ws_008",
+  "title": "Daily Love VIII",
+  "theme": "everyday",
+  "size": {
+    "rows": 10,
+    "cols": 10
+  },
+  "grid": "UZLSUPPORTBUILDYTGLBSDSKHPCBCUGXTESPEAOHBQECIAPJMZAONAWHSPFTCDTENDEROHUOOPFVRBROWKZRQCHWTLIPYYERVUFD",
+  "words": {
+    "HOLD": "69,D",
+    "PEACE": "73,U",
+    "HAPPY": "55,U",
+    "BUILD": "10,R",
+    "ADORE": "50,DR",
+    "COMFORT": "28,D",
+    "TENDER": "62,R",
+    "COZY": "60,DR",
+    "SUPPORT": "3,R",
+    "WISH": "54,U",
+    "RESPECT": "76,U",
+    "LISTEN": "2,D"
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "puzzleId": "ws_011",
+  "title": "Daily Love XI",
+  "theme": "everyday",
+  "size": {
+    "rows": 10,
+    "cols": 10
+  },
+  "grid": "YADILOHXMCKXDJRRDEAAMPFIFABWGLFZRGNSERFMMKINDNADDLMWEEYTERGHAENPEREREATIDFLAIAABCCUHMARAQFHLPCVTYDPP",
+  "words": {
+    "FRIEND": "22,D",
+    "PAIR": "98,UL",
+    "KIND": "41,R",
+    "DINNER": "12,DR",
+    "DREAM": "48,DL",
+    "PLAY": "63,DR",
+    "GRATEFUL": "28,DL",
+    "HOLIDAY": "6,L",
+    "CALM": "9,D",
+    "DEAR": "47,UL",
+    "HEART": "59,DL",
+    "MATCH": "50,D"
+  }
+}

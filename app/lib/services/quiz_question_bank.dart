@@ -6,6 +6,10 @@ import '../config/brand/brand_loader.dart';
 import 'storage_service.dart';
 import '../utils/logger.dart';
 
+/// Manages quiz question loading and retrieval with branch support.
+///
+/// Supports branching content system where questions can be loaded from
+/// different branches (e.g., 'lighthearted' vs 'deeper') based on progression.
 class QuizQuestionBank {
   static final QuizQuestionBank _instance = QuizQuestionBank._internal();
   factory QuizQuestionBank() => _instance;
@@ -13,20 +17,60 @@ class QuizQuestionBank {
 
   final StorageService _storage = StorageService();
   bool _isInitialized = false;
+  String _currentBranch = '';  // Empty = legacy mode
 
-  /// Initialize quiz questions from JSON file into Hive storage
+  /// Initialize quiz questions from legacy flat file
   Future<void> initialize() async {
-    if (_isInitialized) return;
+    if (_isInitialized && _currentBranch.isEmpty) return;
 
-    // Check if questions already loaded
-    if (_storage.getAllQuizQuestions().isNotEmpty) {
+    // Check if questions already loaded (legacy mode)
+    if (_storage.getAllQuizQuestions().isNotEmpty && _currentBranch.isEmpty) {
       _isInitialized = true;
       return;
     }
 
-    // Load from JSON asset
+    // Load from legacy JSON asset
+    await _loadFromPath(BrandLoader().content.quizQuestionsPath);
+    _currentBranch = '';
+    _isInitialized = true;
+  }
+
+  /// Initialize quiz questions from a specific branch.
+  ///
+  /// [branch] - Branch folder name (e.g., 'lighthearted', 'deeper')
+  ///
+  /// This clears existing questions and loads from the branch folder.
+  /// Falls back to legacy file if branch folder doesn't exist.
+  Future<void> initializeWithBranch(String branch) async {
+    // Skip if already loaded for this branch
+    if (_isInitialized && _currentBranch == branch) {
+      Logger.debug('QuizQuestionBank already initialized for branch: $branch', service: 'quiz');
+      return;
+    }
+
+    // Clear existing questions when switching branches
+    await _clearQuestions();
+
+    // Try branch-specific path first
+    final branchPath = BrandLoader().content.getClassicQuizPath(branch);
     try {
-      final String jsonString = await rootBundle.loadString(BrandLoader().content.quizQuestionsPath);
+      await _loadFromPath(branchPath);
+      _currentBranch = branch;
+      _isInitialized = true;
+      Logger.info('Loaded quiz questions from branch: $branch', service: 'quiz');
+    } catch (e) {
+      // Fallback to legacy path
+      Logger.warn('Branch $branch not found, falling back to legacy', service: 'quiz');
+      await _loadFromPath(BrandLoader().content.quizQuestionsPath);
+      _currentBranch = '';
+      _isInitialized = true;
+    }
+  }
+
+  /// Load questions from a specific JSON file path
+  Future<void> _loadFromPath(String path) async {
+    try {
+      final String jsonString = await rootBundle.loadString(path);
       final List<dynamic> jsonList = json.decode(jsonString);
 
       // Convert to QuizQuestion objects and save to Hive
@@ -41,13 +85,23 @@ class QuizQuestionBank {
         await _storage.saveQuizQuestion(question);
       }
 
-      _isInitialized = true;
-      Logger.success('Loaded ${jsonList.length} quiz questions from JSON', service: 'quiz');
+      Logger.success('Loaded ${jsonList.length} quiz questions from $path', service: 'quiz');
     } catch (e) {
-      Logger.error('Error loading quiz questions', error: e, service: 'quiz');
+      Logger.error('Error loading quiz questions from $path', error: e, service: 'quiz');
       rethrow;
     }
   }
+
+  /// Clear all loaded questions (used when switching branches)
+  Future<void> _clearQuestions() async {
+    final box = _storage.quizQuestionsBox;
+    await box.clear();
+    _isInitialized = false;
+    Logger.debug('Cleared quiz questions from storage', service: 'quiz');
+  }
+
+  /// Get the currently loaded branch (empty string = legacy)
+  String get currentBranch => _currentBranch;
 
   /// Get all questions
   List<QuizQuestion> getAllQuestions() {
@@ -168,4 +222,11 @@ class QuizQuestionBank {
 
   /// Get total question count
   int get totalQuestions => getAllQuestions().length;
+
+  /// Reset initialization state (useful for testing or brand switching)
+  Future<void> reset() async {
+    await _clearQuestions();
+    _currentBranch = '';
+    _isInitialized = false;
+  }
 }

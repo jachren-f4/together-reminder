@@ -1,0 +1,24 @@
+{
+  "puzzleId": "ws_003",
+  "title": "Daily Love III",
+  "theme": "everyday",
+  "size": {
+    "rows": 10,
+    "cols": 10
+  },
+  "grid": "EMMBHURHRSAENVPEODEDMDYLDMXBTILDONEUCFANAZERYHOTMNYTMZESZULEOMORNINGURLCIEMJUKONCSTSURTESBHFFGNINEVE",
+  "words": {
+    "MORNING": "61,R",
+    "SOFT": "55,UR",
+    "TRUST": "86,L",
+    "SOULMATE": "88,U",
+    "ADORE": "10,DR",
+    "CHERISH": "36,DL",
+    "DINNER": "19,D",
+    "TENDER": "51,UR",
+    "HOME": "7,DL",
+    "LOYAL": "70,U",
+    "COZY": "71,UR",
+    "EVENING": "99,L"
+  }
+}

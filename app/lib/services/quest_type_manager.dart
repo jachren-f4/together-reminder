@@ -1,13 +1,16 @@
-import 'package:flutter/foundation.dart';
 import '../models/daily_quest.dart';
 import '../models/quiz_progression_state.dart';
-import '../models/quiz_session.dart';
+import '../models/branch_progression_state.dart';
 import '../services/storage_service.dart';
 import '../services/daily_quest_service.dart';
 import '../services/quest_sync_service.dart';
 import '../services/quest_utilities.dart';
 import '../services/quiz_service.dart';
+import '../services/quiz_question_bank.dart';
+import '../services/affirmation_quiz_bank.dart';
 import '../services/you_or_me_service.dart';
+import '../services/branch_progression_service.dart';
+import '../services/branch_manifest_service.dart';
 import '../services/api_client.dart';
 import '../utils/logger.dart';
 
@@ -21,10 +24,12 @@ abstract class QuestProvider {
   /// Generate a quest for the given date
   ///
   /// Returns the content ID for the generated quest
+  /// [coupleId] is used for branch progression tracking
   Future<String?> generateQuest({
     required String dateKey,
     required String currentUserId,
     required String partnerUserId,
+    required String coupleId,
     QuizProgressionState? progressionState,
   });
 
@@ -54,15 +59,19 @@ class TrackConfig {
 ///
 /// REUSES existing QuizService and question bank
 /// Maps track progression to category/tier filters
+/// Loads content from the appropriate branch based on progression
 class QuizQuestProvider implements QuestProvider {
   final StorageService _storage;
   final QuizService _quizService;
+  final BranchProgressionService _branchService;
 
   QuizQuestProvider({
     required StorageService storage,
     QuizService? quizService,
+    BranchProgressionService? branchService,
   })  : _storage = storage,
-        _quizService = quizService ?? QuizService();
+        _quizService = quizService ?? QuizService(),
+        _branchService = branchService ?? BranchProgressionService();
 
   @override
   QuestType get questType => QuestType.quiz;
@@ -148,6 +157,7 @@ class QuizQuestProvider implements QuestProvider {
     required String dateKey,
     required String currentUserId,
     required String partnerUserId,
+    required String coupleId,
     QuizProgressionState? progressionState,
   }) async {
     try {
@@ -166,6 +176,25 @@ class QuizQuestProvider implements QuestProvider {
       Logger.debug('Generating quiz quest: Track ${progressionState.currentTrack}, '
           'Position ${progressionState.currentPosition}, '
           'Category: ${config.categoryFilter}, Difficulty: ${config.difficulty}', service: 'quest');
+
+      // Load content from the appropriate branch based on format type
+      if (config.formatType == 'affirmation') {
+        // Get current branch for affirmation content
+        final branch = await _branchService.getCurrentBranch(
+          coupleId: coupleId,
+          activityType: BranchableActivityType.affirmation,
+        );
+        Logger.debug('Loading affirmation content from branch: $branch', service: 'quest');
+        await AffirmationQuizBank().initializeWithBranch(branch);
+      } else {
+        // Get current branch for classic quiz content
+        final branch = await _branchService.getCurrentBranch(
+          coupleId: coupleId,
+          activityType: BranchableActivityType.classicQuiz,
+        );
+        Logger.debug('Loading classic quiz content from branch: $branch', service: 'quest');
+        await QuizQuestionBank().initializeWithBranch(branch);
+      }
 
       // Use existing QuizService to create session
       // Skip active check to allow multiple daily quest quizzes
@@ -225,9 +254,13 @@ class QuizQuestProvider implements QuestProvider {
 /// Quest provider for You or Me game quests
 class YouOrMeQuestProvider implements QuestProvider {
   final YouOrMeService _youOrMeService;
+  final BranchProgressionService _branchService;
 
-  YouOrMeQuestProvider({YouOrMeService? youOrMeService})
-      : _youOrMeService = youOrMeService ?? YouOrMeService();
+  YouOrMeQuestProvider({
+    YouOrMeService? youOrMeService,
+    BranchProgressionService? branchService,
+  })  : _youOrMeService = youOrMeService ?? YouOrMeService(),
+        _branchService = branchService ?? BranchProgressionService();
 
   @override
   QuestType get questType => QuestType.youOrMe;
@@ -237,9 +270,18 @@ class YouOrMeQuestProvider implements QuestProvider {
     required String dateKey,
     required String currentUserId,
     required String partnerUserId,
+    required String coupleId,
     QuizProgressionState? progressionState,
   }) async {
     try {
+      // Load content from the appropriate branch
+      final branch = await _branchService.getCurrentBranch(
+        coupleId: coupleId,
+        activityType: BranchableActivityType.youOrMe,
+      );
+      Logger.debug('Loading You or Me content from branch: $branch', service: 'quest');
+      await _youOrMeService.loadQuestionsWithBranch(branch);
+
       // Create single shared You or Me session (both users will use same ID)
       final session = await _youOrMeService.generateSession(
         userId: currentUserId,
@@ -279,10 +321,12 @@ class YouOrMeQuestProvider implements QuestProvider {
 /// Manager for coordinating quest generation across different quest types
 ///
 /// Uses the provider pattern to support multiple quest types
+/// Manages branch progression for branchable activity types
 class QuestTypeManager {
   final StorageService _storage;
   final DailyQuestService _questService;
   final QuestSyncService _syncService;
+  final BranchProgressionService _branchService;
   final Map<QuestType, QuestProvider> _providers = {};
   final ApiClient _apiClient = ApiClient();
 
@@ -290,12 +334,14 @@ class QuestTypeManager {
     required StorageService storage,
     required DailyQuestService questService,
     required QuestSyncService syncService,
+    BranchProgressionService? branchService,
   })  : _storage = storage,
         _questService = questService,
-        _syncService = syncService {
+        _syncService = syncService,
+        _branchService = branchService ?? BranchProgressionService() {
     // Register default providers
-    registerProvider(QuizQuestProvider(storage: storage));
-    registerProvider(YouOrMeQuestProvider());
+    registerProvider(QuizQuestProvider(storage: storage, branchService: _branchService));
+    registerProvider(YouOrMeQuestProvider(branchService: _branchService));
   }
 
   /// Register a quest provider
@@ -348,25 +394,55 @@ class QuestTypeManager {
         }
       }
 
-      // Generate 4 daily quests: 3 quiz-based + 1 You or Me
+      // Generate 3 daily quests: 1 Classic + 1 Affirmation + 1 You or Me
       // Use local variables for iteration - don't modify progression until completion
       int track = progressionState.currentTrack;
       int position = progressionState.currentPosition;
 
       final quests = <DailyQuest>[];
 
-      for (int i = 0; i < 4; i++) {
-        Logger.debug('🎯 Generating quest ${i + 1}/4... (Track $track, Position $position)', service: 'quest');
+      for (int i = 0; i < 3; i++) {
+        // Determine quest type and format for this slot
+        late final QuestType questType;
+        String? forcedFormatType;
+        switch (i) {
+          case 0:
+            questType = QuestType.quiz;
+            forcedFormatType = 'classic';
+            break;
+          case 1:
+            questType = QuestType.quiz;
+            forcedFormatType = 'affirmation';
+            break;
+          case 2:
+            questType = QuestType.youOrMe;
+            forcedFormatType = null;
+            break;
+        }
 
-        // Quest 4 is always You or Me, quests 1-3 follow quiz progression
-        final questType = i == 3 ? QuestType.youOrMe : QuestType.quiz;
+        // Find appropriate position for requested format type
+        // Track pattern: [Classic (0), Affirmation (1), Classic (2), Affirmation (3)]
+        int targetPosition = position;
+        if (forcedFormatType == 'classic') {
+          // Positions 0,2 are classic in each track
+          if (position % 2 != 0) {
+            targetPosition = (position + 1) % 4;
+          }
+        } else if (forcedFormatType == 'affirmation') {
+          // Positions 1,3 are affirmation in each track
+          if (position % 2 != 1) {
+            targetPosition = (position + 1) % 4;
+          }
+        }
+
+        Logger.debug('🎯 Generating quest ${i + 1}/3... (Track $track, Position $targetPosition, Format: ${forcedFormatType ?? 'youOrMe'})', service: 'quest');
 
         // Create a temporary progression state for quiz quests
         final tempState = questType == QuestType.quiz
             ? QuizProgressionState(
                 coupleId: progressionState.coupleId,
                 currentTrack: track,
-                currentPosition: position,
+                currentPosition: targetPosition,
                 completedQuizzes: progressionState.completedQuizzes,
                 createdAt: progressionState.createdAt,
                 lastCompletedAt: progressionState.lastCompletedAt,
@@ -379,6 +455,7 @@ class QuestTypeManager {
           questType: questType,
           currentUserId: currentUserId,
           partnerUserId: partnerUserId,
+          coupleId: coupleId,
           progressionState: tempState,
         );
 
@@ -386,20 +463,51 @@ class QuestTypeManager {
           Logger.debug('✅ Quest ${i + 1} content created: $contentId', service: 'quest');
 
           // Get format type and quiz name from quiz session (for quiz quests only)
-          String formatType = 'classic'; // Default for all quest types
+          String formatType = forcedFormatType ?? 'classic'; // Use forced format if set
           String? quizName;
           String? imagePath;
           String? description;
           if (questType == QuestType.quiz) {
             final session = _storage.getQuizSession(contentId);
             if (session != null) {
-              if (session.formatType != null) {
-                formatType = session.formatType!;
-              }
               quizName = session.quizName; // Extract quiz name for display
               imagePath = session.imagePath; // Extract image path for carousel
               description = session.description; // Extract description for carousel
             }
+          }
+
+          // Get current branch for this quest type (for manifest lookups)
+          String? branch;
+          BranchableActivityType? activityType;
+          try {
+            if (questType == QuestType.quiz) {
+              activityType = formatType == 'affirmation'
+                  ? BranchableActivityType.affirmation
+                  : BranchableActivityType.classicQuiz;
+            } else if (questType == QuestType.youOrMe) {
+              activityType = BranchableActivityType.youOrMe;
+            }
+            if (activityType != null) {
+              branch = await BranchProgressionService().getCurrentBranch(
+                coupleId: coupleId,
+                activityType: activityType,
+              );
+              Logger.debug('📂 Quest ${i + 1} branch: $branch', service: 'quest');
+
+              // Try to get image from manifest (overrides session image)
+              if (branch != null) {
+                final manifestImage = await BranchManifestService().getImagePath(
+                  activityType: activityType,
+                  branch: branch,
+                );
+                if (manifestImage != null && manifestImage.isNotEmpty) {
+                  imagePath = manifestImage;
+                  Logger.debug('🖼️ Quest ${i + 1} using manifest image: $manifestImage', service: 'quest');
+                }
+              }
+            }
+          } catch (e) {
+            Logger.debug('⚠️ Could not get branch for quest ${i + 1}: $e', service: 'quest');
           }
 
           final quest = DailyQuest.create(
@@ -412,20 +520,22 @@ class QuestTypeManager {
             quizName: quizName,
             imagePath: imagePath,
             description: description,
+            branch: branch,
           );
 
           await _storage.saveDailyQuest(quest);
           quests.add(quest);
           Logger.debug('💾 Quest ${i + 1} saved to storage', service: 'quest');
 
-          // Advance local variables for next quiz quest generation (skip for You or Me)
-          if (questType == QuestType.quiz && i < 3) {
+          // Advance position after generating classic quiz (once per day)
+          // This ensures we move through the track positions over time
+          if (i == 0) {
             position++;
             if (position >= 4) {
               track++;
               position = 0;
             }
-            Logger.debug('📈 Will generate next quest at Track $track, Position $position', service: 'quest');
+            Logger.debug('📈 Position advanced to Track $track, Position $position for next day', service: 'quest');
           }
         } else {
           Logger.debug('❌ Quest ${i + 1} generation failed - contentId is null', service: 'quest');
@@ -463,6 +573,7 @@ class QuestTypeManager {
     required QuestType questType,
     required String currentUserId,
     required String partnerUserId,
+    required String coupleId,
     QuizProgressionState? progressionState,
   }) async {
     final provider = _providers[questType];
@@ -478,6 +589,7 @@ class QuestTypeManager {
       dateKey: dateKey,
       currentUserId: currentUserId,
       partnerUserId: partnerUserId,
+      coupleId: coupleId,
       progressionState: progressionState,
     );
   }
@@ -549,6 +661,61 @@ class QuestTypeManager {
   /// Get current quiz progression state
   QuizProgressionState? getProgressionState(String coupleId) {
     return _storage.getQuizProgressionState(coupleId);
+  }
+
+  /// Advance branch progression after completing a branchable quest.
+  ///
+  /// Call this after a quest is completed to advance to the next branch
+  /// for the next quest of the same activity type.
+  ///
+  /// [quest] - The completed quest
+  /// [coupleId] - The couple's ID for progression tracking
+  Future<void> advanceBranchProgression({
+    required DailyQuest quest,
+    required String coupleId,
+  }) async {
+    try {
+      // Determine which activity type to advance based on quest type and format
+      BranchableActivityType? activityType;
+
+      switch (quest.type) {
+        case QuestType.quiz:
+          // Distinguish between classic quiz and affirmation
+          activityType = quest.formatType == 'affirmation'
+              ? BranchableActivityType.affirmation
+              : BranchableActivityType.classicQuiz;
+          break;
+        case QuestType.youOrMe:
+          activityType = BranchableActivityType.youOrMe;
+          break;
+        case QuestType.linked:
+          activityType = BranchableActivityType.linked;
+          break;
+        case QuestType.wordSearch:
+          activityType = BranchableActivityType.wordSearch;
+          break;
+        default:
+          // Not a branchable quest type (memoryFlip, wordLadder)
+          Logger.debug(
+            'Quest type ${quest.type.name} is not branchable, skipping branch advancement',
+            service: 'quest',
+          );
+          return;
+      }
+
+      await _branchService.completeActivity(
+        coupleId: coupleId,
+        activityType: activityType,
+      );
+
+      Logger.info(
+        'Advanced branch progression for ${activityType.name}',
+        service: 'quest',
+      );
+    } catch (e) {
+      Logger.error('Error advancing branch progression', error: e, service: 'quest');
+      // Don't rethrow - branch progression failure shouldn't block quest completion
+    }
   }
 
   /// Sync quests to Supabase (dual-write)

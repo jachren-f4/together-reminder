@@ -1,0 +1,46 @@
+{
+  "author": "Crossword Maker GPT",
+  "title": "Adult Intimacy Puzzle #6",
+  "size": {
+    "rows": 9,
+    "cols": 7
+  },
+  "clues": {
+    "1": { "type": "emoji", "content": "😈", "arrow": "down", "target_index": 8 },
+    "2": { "type": "emoji", "content": "💋", "arrow": "down", "target_index": 11 },
+    "3": { "type": "emoji", "content": "💦", "arrow": "down", "target_index": 13 },
+    "4": { "type": "emoji", "content": "💪", "arrow": "down", "target_index": 17 },
+    "5": { "type": "text", "content": "Before J", "arrow": "across", "target_index": 15 },
+    "6": { "type": "text", "content": "_ULSE", "arrow": "across", "target_index": 20 },
+    "7": { "type": "text", "content": "After K", "arrow": "across", "target_index": 22 },
+    "8": { "type": "text", "content": "P_LSE", "arrow": "across", "target_index": 27 },
+    "9": { "type": "text", "content": "After S", "arrow": "across", "target_index": 29 },
+    "10": { "type": "text", "content": "HO_NY", "arrow": "across", "target_index": 34 },
+    "11": { "type": "text", "content": "Open fly", "arrow": "across", "target_index": 50 },
+    "12": { "type": "text", "content": "Playful denial", "arrow": "across", "target_index": 57 }
+  },
+  "date": "2025-11-27",
+  "grid": [
+    ".", ".", ".", ".", ".", ".", ".",
+    ".", "F", ".", ".", "N", ".", "S",
+    ".", "I", ".", "B", "A", ".", "P",
+    ".", "L", ".", "O", "P", ".", "U",
+    ".", "T", ".", "D", "E", ".", "R",
+    ".", "H", ".", ".", ".", ".", "T",
+    ".", ".", ".", ".", ".", ".", ".",
+    ".", "U", "N", "Z", "I", "P", ".",
+    ".", "T", "E", "A", "S", "E", "."
+  ],
+  "gridnums": [
+    0, 1, 0, 0, 2, 0, 3,
+    0, 0, 0, 4, 0, 0, 0,
+    5, 0, 0, 0, 0, 6, 0,
+    7, 0, 0, 0, 0, 8, 0,
+    9, 0, 0, 0, 0, 10, 0,
+    0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0,
+    11, 0, 0, 0, 0, 0, 0,
+    12, 0, 0, 0, 0, 0, 0
+  ],
+  "puzzleId": "puzzle_006"
+}

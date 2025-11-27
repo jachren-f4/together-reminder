@@ -139,7 +139,7 @@ class _DailyQuestsWidgetState extends State<DailyQuestsWidget> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const SizedBox(height: 20),
-          // Section header with swipe hint
+          // Section header (swipe hint commented out)
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20),
             child: Row(
@@ -154,15 +154,15 @@ class _DailyQuestsWidgetState extends State<DailyQuestsWidget> {
                     color: BrandLoader().colors.textPrimary,
                   ),
                 ),
-              Text(
-                '← SWIPE →', // Match HTML mockup exactly (always LTR, uppercase)
-                style: AppTheme.headlineFont.copyWith( // Use serif font like HTML mockup
-                  fontSize: 13, // Increased from 11 to match visual size of HTML mockup
-                  color: const Color(0xFF999999),
-                  fontWeight: FontWeight.w600,
-                  letterSpacing: 1,
-                ),
-              ),
+              // Text(
+              //   '← SWIPE →', // Match HTML mockup exactly (always LTR, uppercase)
+              //   style: AppTheme.headlineFont.copyWith( // Use serif font like HTML mockup
+              //     fontSize: 13, // Increased from 11 to match visual size of HTML mockup
+              //     color: const Color(0xFF999999),
+              //     fontWeight: FontWeight.w600,
+              //     letterSpacing: 1,
+              //   ),
+              // ),
             ],
           ),
         ),
@@ -358,7 +358,10 @@ class _DailyQuestsWidgetState extends State<DailyQuestsWidget> {
       await Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => YouOrMeIntroScreen(session: session),
+          builder: (context) => YouOrMeIntroScreen(
+            session: session,
+            branch: quest.branch,
+          ),
         ),
       );
     }

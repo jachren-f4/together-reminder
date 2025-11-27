@@ -1,0 +1,24 @@
+{
+  "puzzleId": "ws_013",
+  "title": "Daily Love XIII",
+  "theme": "everyday",
+  "size": {
+    "rows": 10,
+    "cols": 10
+  },
+  "grid": "EVOLVUTVUGZWORGFAYCRJCDOOLZTTDTCHSUOARANECQECUIALJJUEDRPCEKNSWDPHIOHXFJATASOSDZOVZFQGEMHNNJLGEQEREMD",
+  "words": {
+    "HOME": "64,DR",
+    "TALK": "28,D",
+    "SOFT": "33,UR",
+    "HEART": "67,U",
+    "SAFE": "60,DR",
+    "CHERISH": "21,DR",
+    "RESPECT": "96,UL",
+    "COZY": "44,UR",
+    "GROW": "14,L",
+    "LOVE": "3,L",
+    "FOND": "69,D",
+    "VALUE": "7,DL"
+  }
+}

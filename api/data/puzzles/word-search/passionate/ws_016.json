@@ -1,0 +1,24 @@
+{
+  "puzzleId": "ws_016",
+  "title": "Passionate XVI",
+  "theme": "passion",
+  "size": {
+    "rows": 10,
+    "cols": 10
+  },
+  "grid": "DICLINGSEFNTHGINNHWCURWINQIVINOGASPINTCMPECNADEHDSRKJJMNVBPLDHVRGEEANVTGAARXRAMFFHMOEKOSYUCRCYZMBRBA",
+  "words": {
+    "CLING": "2,R",
+    "DANCE": "45,L",
+    "SPARK": "49,DL",
+    "POUND": "40,U",
+    "MOAN": "95,UR",
+    "EVENING": "66,U",
+    "CHARM": "90,UR",
+    "MAGNETIC": "82,UR",
+    "BEING": "57,UL",
+    "GASP": "31,R",
+    "NIGHT": "15,L",
+    "CORE": "92,UR"
+  }
+}

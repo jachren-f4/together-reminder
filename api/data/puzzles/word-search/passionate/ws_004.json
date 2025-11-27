@@ -1,0 +1,24 @@
+{
+  "puzzleId": "ws_004",
+  "title": "Passionate IV",
+  "theme": "passion",
+  "size": {
+    "rows": 10,
+    "cols": 10
+  },
+  "grid": "GENTLERRNRNOITOPRENUZBDRODSSXMINJBOTRENRERIFLMVEDUPTMESEAEAMMSNBNKENSMEHAIGPIUCWOCNGEYHPVERGVESNETNI",
+  "words": {
+    "ROMANCE": "23,DR",
+    "EVENING": "37,DL",
+    "DREAM": "25,DR",
+    "DEEP": "48,DL",
+    "FIRE": "43,L",
+    "SKIP": "54,DR",
+    "INTENSE": "99,L",
+    "NESTLE": "8,DL",
+    "MURMUR": "59,U",
+    "POTION": "15,L",
+    "GASP": "83,UL",
+    "GENTLE": "0,R"
+  }
+}

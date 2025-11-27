@@ -1,0 +1,9 @@
+{
+  "branch": "playful",
+  "activityType": "youOrMe",
+  "videoPath": "assets/brands/togetherremind/videos/getting-comfortable.mp4",
+  "imagePath": "assets/brands/togetherremind/images/quests/you-or-me.png",
+  "fallbackEmoji": "🤝",
+  "displayName": "Playful",
+  "description": "Light-hearted comparisons for fun"
+}

@@ -1,0 +1,47 @@
+{
+  "author": "Crossword Maker GPT",
+  "title": "Adult Intimacy Puzzle #7",
+  "size": {
+    "rows": 9,
+    "cols": 7
+  },
+  "clues": {
+    "1": { "type": "emoji", "content": "🎁", "arrow": "down", "target_index": 8 },
+    "2": { "type": "emoji", "content": "💊", "arrow": "down", "target_index": 11 },
+    "3": { "type": "emoji", "content": "😺", "arrow": "down", "target_index": 13 },
+    "4": { "type": "text", "content": "Hold tight", "arrow": "across", "target_index": 8 },
+    "5": { "type": "text", "content": "After H", "arrow": "across", "target_index": 18 },
+    "6": { "type": "text", "content": "After T", "arrow": "down", "target_index": 26 },
+    "7": { "type": "emoji", "content": "🦵", "arrow": "down", "target_index": 30 },
+    "8": { "type": "text", "content": "Lost in moment", "arrow": "across", "target_index": 24 },
+    "9": { "type": "text", "content": "Bend point", "arrow": "down", "target_index": 40 },
+    "10": { "type": "text", "content": "Deep thrust sound", "arrow": "across", "target_index": 44 },
+    "11": { "type": "text", "content": "After R", "arrow": "down", "target_index": 57 },
+    "12": { "type": "text", "content": "B_D", "arrow": "across", "target_index": 54 },
+    "13": { "type": "text", "content": "Push hard", "arrow": "across", "target_index": 57 }
+  },
+  "date": "2025-11-27",
+  "grid": [
+    ".", ".", ".", ".", ".", ".", ".",
+    ".", "G", "R", "I", "P", ".", "P",
+    ".", "I", ".", ".", "I", ".", "U",
+    ".", "V", ".", "B", "L", "U", "R",
+    ".", "E", "L", ".", "L", ".", "R",
+    ".", ".", "E", ".", ".", "K", ".",
+    ".", ".", "G", "R", "U", "N", "T",
+    ".", ".", ".", ".", ".", "E", ".",
+    ".", "S", "H", "O", "V", "E", "."
+  ],
+  "gridnums": [
+    0, 1, 0, 0, 2, 0, 3,
+    4, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 5, 0, 6, 0,
+    0, 0, 7, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 9, 0,
+    0, 0, 0, 0, 0, 0, 0,
+    0, 10, 0, 0, 0, 0, 0,
+    0, 11, 0, 0, 12, 0, 0,
+    13, 0, 0, 0, 0, 0, 0
+  ],
+  "puzzleId": "puzzle_007"
+}

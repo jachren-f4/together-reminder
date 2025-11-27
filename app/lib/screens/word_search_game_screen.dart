@@ -1,10 +1,15 @@
 import 'dart:async';
+import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import '../services/word_search_service.dart';
 import '../services/storage_service.dart';
+import '../services/haptic_service.dart';
+import '../services/sound_service.dart';
 import '../models/word_search.dart';
 import '../config/brand/brand_loader.dart';
 import '../theme/app_theme.dart';
+import '../widgets/linked/turn_complete_dialog.dart';
+import '../animations/animation_config.dart';
 import 'word_search_completion_screen.dart';
 
 /// Word Search game screen
@@ -25,7 +30,7 @@ class WordSearchGameScreen extends StatefulWidget {
 }
 
 class _WordSearchGameScreenState extends State<WordSearchGameScreen>
-    with SingleTickerProviderStateMixin {
+    with TickerProviderStateMixin {
   final WordSearchService _service = WordSearchService();
   final StorageService _storage = StorageService();
 
@@ -44,6 +49,9 @@ class _WordSearchGameScreenState extends State<WordSearchGameScreen>
   // Submission state
   bool _isSubmitting = false;
 
+  // Turn complete dialog state
+  bool _showTurnComplete = false;
+
   // Polling timer for partner's turn
   Timer? _pollTimer;
   static const _pollInterval = Duration(seconds: 10);
@@ -51,6 +59,13 @@ class _WordSearchGameScreenState extends State<WordSearchGameScreen>
   // Shake animation for invalid words
   late AnimationController _shakeController;
   late Animation<double> _shakeAnimation;
+
+  // Selection trail pulse animation
+  late AnimationController _pulseController;
+  late Animation<double> _pulseAnimation;
+
+  // Accessibility - reduce motion preference
+  bool _reduceMotion = false;
 
   // Word colors matching mockup CSS variables
   static const List<Color> _wordColors = [
@@ -82,13 +97,39 @@ class _WordSearchGameScreenState extends State<WordSearchGameScreen>
       curve: Curves.easeInOut,
     ));
 
+    // Initialize pulse animation for selection trail
+    _pulseController = AnimationController(
+      duration: const Duration(milliseconds: 800),
+      vsync: this,
+    )..repeat(reverse: true);
+
+    _pulseAnimation = Tween<double>(
+      begin: 0.6,
+      end: 1.0,
+    ).animate(CurvedAnimation(
+      parent: _pulseController,
+      curve: Curves.easeInOut,
+    ));
+
     _loadGameState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _reduceMotion = AnimationConfig.shouldReduceMotion(context);
+
+    // Stop pulse animation if reduce motion is enabled
+    if (_reduceMotion && _pulseController.isAnimating) {
+      _pulseController.stop();
+    }
   }
 
   @override
   void dispose() {
     _pollTimer?.cancel();
     _shakeController.dispose();
+    _pulseController.dispose();
     super.dispose();
   }
 
@@ -118,10 +159,14 @@ class _WordSearchGameScreenState extends State<WordSearchGameScreen>
     }
   }
 
+  // Track if cooldown is active
+  bool _isCooldownActive = false;
+
   Future<void> _loadGameState() async {
     setState(() {
       _isLoading = true;
       _error = null;
+      _isCooldownActive = false;
     });
 
     try {
@@ -132,9 +177,18 @@ class _WordSearchGameScreenState extends State<WordSearchGameScreen>
           _isLoading = false;
           _clearSelection();
           _hintPosition = null;
+          _showTurnComplete = false;
         });
         _startPolling();
         _checkGameCompletion();
+      }
+    } on CooldownActiveException catch (e) {
+      if (mounted) {
+        setState(() {
+          _isCooldownActive = true;
+          _error = e.message;
+          _isLoading = false;
+        });
       }
     } catch (e) {
       if (mounted) {
@@ -175,6 +229,8 @@ class _WordSearchGameScreenState extends State<WordSearchGameScreen>
   }
 
   void _shakeGrid() {
+    // Skip shake animation if reduce motion is enabled
+    if (_reduceMotion) return;
     _shakeController.forward(from: 0);
   }
 
@@ -210,6 +266,9 @@ class _WordSearchGameScreenState extends State<WordSearchGameScreen>
 
   void _onCellTapDown(int row, int col) {
     if (!_gameState!.isMyTurn || _isSubmitting) return;
+
+    // Haptic feedback on selection start
+    HapticService().trigger(HapticType.selection);
 
     setState(() {
       _isSelecting = true;
@@ -252,26 +311,52 @@ class _WordSearchGameScreenState extends State<WordSearchGameScreen>
       );
 
       if (result.valid) {
+        // Success feedback
+        HapticService().trigger(HapticType.success);
+        SoundService().play(SoundId.wordFound);
+
         _showWordFoundOverlay(_selectedWord.toUpperCase(), result.pointsEarned);
 
-        // Refresh game state
+        // If game is complete, navigate directly to completion screen
+        // Don't use refreshGameState() - that would create a new match!
+        if (result.gameComplete) {
+          _pollTimer?.cancel();
+          if (mounted) {
+            _clearSelection();
+            // Short delay to show the word found overlay
+            await Future.delayed(const Duration(milliseconds: 800));
+            // Fetch the completed match state for accurate scores
+            try {
+              final finalState = await _service.pollMatchState(_gameState!.match.matchId);
+              setState(() => _gameState = finalState);
+            } catch (e) {
+              // If fetch fails, proceed with current state
+            }
+            _navigateToCompletionScreen();
+          }
+          return;
+        }
+
+        // Refresh game state (only if game not complete)
         final newState = await _service.refreshGameState();
         if (mounted) {
           setState(() {
             _gameState = newState;
             _clearSelection();
           });
-        }
 
-        if (result.turnComplete) {
-          _showToast("Turn complete! Partner's turn now.");
-        }
-
-        if (result.gameComplete) {
-          _checkGameCompletion();
+          // Show turn complete dialog if turn ended
+          if (result.turnComplete) {
+            // Delay to let the word found overlay show first
+            await Future.delayed(const Duration(milliseconds: 1200));
+            if (mounted) {
+              setState(() => _showTurnComplete = true);
+            }
+          }
         }
       } else {
-        // Shake grid for invalid word (no toast)
+        // Error feedback and shake grid for invalid word
+        HapticService().trigger(HapticType.warning);
         _shakeGrid();
         _clearSelection();
       }
@@ -352,6 +437,49 @@ class _WordSearchGameScreenState extends State<WordSearchGameScreen>
       return const Center(child: CircularProgressIndicator());
     }
 
+    // Cooldown active - show friendly message
+    if (_isCooldownActive) {
+      return Center(
+        child: Padding(
+          padding: const EdgeInsets.all(32),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(Icons.timer_outlined, size: 64, color: BrandLoader().colors.textSecondary),
+              const SizedBox(height: 24),
+              Text(
+                'Come Back Tomorrow!',
+                style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.w600,
+                  color: BrandLoader().colors.textPrimary,
+                ),
+              ),
+              const SizedBox(height: 12),
+              Text(
+                'New puzzle available at midnight',
+                style: TextStyle(
+                  fontSize: 16,
+                  color: BrandLoader().colors.textSecondary,
+                ),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 32),
+              ElevatedButton(
+                onPressed: () => Navigator.pop(context),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: BrandLoader().colors.textPrimary,
+                  foregroundColor: BrandLoader().colors.textOnPrimary,
+                  padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
+                ),
+                child: const Text('BACK TO HOME'),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+
     if (_error != null) {
       return Center(
         child: Column(
@@ -408,6 +536,13 @@ class _WordSearchGameScreenState extends State<WordSearchGameScreen>
                 ),
               ),
             ),
+          ),
+        // Turn complete dialog overlay
+        if (_showTurnComplete)
+          TurnCompleteDialog(
+            partnerName: _storage.getPartner()?.name ?? 'Partner',
+            onLeave: () => Navigator.of(context).pop(),
+            onStay: () => setState(() => _showTurnComplete = false),
           ),
       ],
     );
@@ -604,6 +739,9 @@ class _WordSearchGameScreenState extends State<WordSearchGameScreen>
 
     final cell = _getCellFromPosition(details.globalPosition);
     if (cell != null) {
+      // Haptic feedback on selection start
+      HapticService().trigger(HapticType.selection);
+
       setState(() {
         _isSelecting = true;
         _selectedPositions.clear();
@@ -647,6 +785,9 @@ class _WordSearchGameScreenState extends State<WordSearchGameScreen>
       if (!_isInLine(prevLast, lastCell, nextCell)) return;
     }
 
+    // Light haptic feedback when adding cell to selection
+    HapticService().trigger(HapticType.light);
+
     setState(() {
       _selectedPositions.add(nextCell);
       _updateSelectedWord();
@@ -660,7 +801,9 @@ class _WordSearchGameScreenState extends State<WordSearchGameScreen>
   Widget _buildGrid() {
     final puzzle = _gameState!.puzzle!;
 
-    return LayoutBuilder(
+    // RepaintBoundary isolates CustomPaint repaints for better performance
+    return RepaintBoundary(
+      child: LayoutBuilder(
       builder: (context, constraints) {
         final gridSize = constraints.maxWidth < constraints.maxHeight
             ? constraints.maxWidth
@@ -687,18 +830,26 @@ class _WordSearchGameScreenState extends State<WordSearchGameScreen>
                 }
               },
               onTapUp: (_) => _onSelectionEnd(),
-              child: Container(
-                key: _gridKey,
-                width: gridSize,
-                height: gridSize,
-                child: CustomPaint(
-                  painter: _WordSearchLinePainter(
-                    cellSize: _cellSize,
-                    selectedPositions: _selectedPositions,
-                    foundWords: _gameState!.match.foundWords,
-                  wordColors: _wordColors,
-                  isSelecting: _isSelecting,
-                ),
+              child: AnimatedBuilder(
+                animation: _pulseAnimation,
+                builder: (context, gridChild) {
+                  return Container(
+                    key: _gridKey,
+                    width: gridSize,
+                    height: gridSize,
+                    child: CustomPaint(
+                      painter: _WordSearchLinePainter(
+                        cellSize: _cellSize,
+                        selectedPositions: _selectedPositions,
+                        foundWords: _gameState!.match.foundWords,
+                        wordColors: _wordColors,
+                        isSelecting: _isSelecting,
+                        pulseValue: _pulseAnimation.value,
+                      ),
+                      child: gridChild,
+                    ),
+                  );
+                },
                 child: GridView.builder(
                   physics: const NeverScrollableScrollPhysics(),
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -711,13 +862,13 @@ class _WordSearchGameScreenState extends State<WordSearchGameScreen>
                     final pos = puzzle.indexToPosition(index);
                     return _buildCell(pos.row, pos.col, _cellSize);
                   },
-                  ),
                 ),
               ),
             ),
           ),
         );
       },
+    ),
     );
   }
 
@@ -1081,6 +1232,7 @@ class _WordSearchLinePainter extends CustomPainter {
   final List<WordSearchFoundWord> foundWords;
   final List<Color> wordColors;
   final bool isSelecting;
+  final double pulseValue;
 
   _WordSearchLinePainter({
     required this.cellSize,
@@ -1088,6 +1240,7 @@ class _WordSearchLinePainter extends CustomPainter {
     required this.foundWords,
     required this.wordColors,
     required this.isSelecting,
+    required this.pulseValue,
   });
 
   @override
@@ -1117,13 +1270,22 @@ class _WordSearchLinePainter extends CustomPainter {
       }
     }
 
-    // Draw current selection line (on top)
+    // Draw current selection line (on top) with pulsing effect
     if (selectedPositions.isNotEmpty && isSelecting) {
+      // Main selection line
       final paint = Paint()
         ..color = const Color(0xFFFF9800).withValues(alpha: 0.5) // Orange
         ..strokeWidth = cellSize * 0.7
         ..strokeCap = StrokeCap.round
         ..style = PaintingStyle.stroke;
+
+      // Pulsing glow effect
+      final glowPaint = Paint()
+        ..color = const Color(0xFFFF9800).withValues(alpha: 0.2 * pulseValue) // Pulsing glow
+        ..strokeWidth = cellSize * 0.9
+        ..strokeCap = StrokeCap.round
+        ..style = PaintingStyle.stroke
+        ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 4);
 
       if (selectedPositions.length >= 2) {
         final first = selectedPositions.first;
@@ -1134,7 +1296,26 @@ class _WordSearchLinePainter extends CustomPainter {
         final endX = (last.col + 0.5) * cellSize;
         final endY = (last.row + 0.5) * cellSize;
 
+        // Draw glow layer first
+        canvas.drawLine(Offset(startX, startY), Offset(endX, endY), glowPaint);
+        // Draw main line on top
         canvas.drawLine(Offset(startX, startY), Offset(endX, endY), paint);
+      } else if (selectedPositions.length == 1) {
+        // Draw pulsing circle for single cell selection
+        final pos = selectedPositions.first;
+        final centerX = (pos.col + 0.5) * cellSize;
+        final centerY = (pos.row + 0.5) * cellSize;
+
+        canvas.drawCircle(
+          Offset(centerX, centerY),
+          cellSize * 0.35 * pulseValue,
+          glowPaint,
+        );
+        canvas.drawCircle(
+          Offset(centerX, centerY),
+          cellSize * 0.25,
+          paint..style = PaintingStyle.fill,
+        );
       }
     }
   }
@@ -1143,6 +1324,7 @@ class _WordSearchLinePainter extends CustomPainter {
   bool shouldRepaint(covariant _WordSearchLinePainter oldDelegate) {
     return oldDelegate.selectedPositions != selectedPositions ||
         oldDelegate.foundWords != foundWords ||
-        oldDelegate.isSelecting != isSelecting;
+        oldDelegate.isSelecting != isSelecting ||
+        oldDelegate.pulseValue != pulseValue;
   }
 }

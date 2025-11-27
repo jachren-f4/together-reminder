@@ -1,0 +1,24 @@
+{
+  "puzzleId": "ws_019",
+  "title": "Passionate XIX",
+  "theme": "passion",
+  "size": {
+    "rows": 10,
+    "cols": 10
+  },
+  "grid": "OEVIAHLBGEKNNEYESOGKWHISPERLEMGUIKMOXDNRENGQSACCTEDHOADHGLLTISJREIWIETLIGETWGRCUGWKJISDIZLPOTIONTLPF",
+  "words": {
+    "CHEEK": "46,DL",
+    "MAGIC": "34,DR",
+    "WISH": "81,U",
+    "SKIN": "44,UL",
+    "GENTLE": "18,D",
+    "GLIDE": "80,U",
+    "WHISPER": "20,R",
+    "BOLD": "7,D",
+    "POTION": "90,R",
+    "STRONG": "85,UL",
+    "FLUTTER": "99,U",
+    "EYES": "13,R"
+  }
+}

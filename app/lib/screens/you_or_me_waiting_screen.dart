@@ -6,13 +6,13 @@ import '../services/you_or_me_service.dart';
 import '../services/storage_service.dart';
 import '../services/daily_quest_service.dart';
 import '../services/quest_sync_service.dart';
-import '../services/love_point_service.dart';
+import '../services/poke_service.dart';
 import '../utils/logger.dart';
-import '../config/brand/brand_loader.dart';
+import '../widgets/editorial/editorial.dart';
 import 'you_or_me_results_screen.dart';
 
 /// Waiting screen for You or Me game
-/// Shows while waiting for partner to complete the game
+/// Editorial newspaper aesthetic with spinner and partner status
 class YouOrMeWaitingScreen extends StatefulWidget {
   final YouOrMeSession session;
 
@@ -25,27 +25,81 @@ class YouOrMeWaitingScreen extends StatefulWidget {
   State<YouOrMeWaitingScreen> createState() => _YouOrMeWaitingScreenState();
 }
 
-class _YouOrMeWaitingScreenState extends State<YouOrMeWaitingScreen> {
+class _YouOrMeWaitingScreenState extends State<YouOrMeWaitingScreen>
+    with TickerProviderStateMixin {
   final YouOrMeService _service = YouOrMeService();
   final StorageService _storage = StorageService();
   Timer? _pollTimer;
   bool _isChecking = false;
+  bool _isSendingPoke = false;
+
+  // Animation controllers
+  late AnimationController _breatheController;
+  late AnimationController _dotsController;
+  late AnimationController _messageController;
+
+  // Current message index for rotation
+  int _currentMessageIndex = 0;
+  final List<String> _waitingMessages = [
+    'Good things take time...',
+    'Your partner is on their way...',
+    'Almost there...',
+    'Patience is a virtue...',
+    'The wait will be worth it...',
+  ];
 
   @override
   void initState() {
     super.initState();
+
+    // Breathing animation for partner card (subtle scale)
+    _breatheController = AnimationController(
+      duration: const Duration(milliseconds: 2000),
+      vsync: this,
+    )..repeat(reverse: true);
+
+    // Dots animation
+    _dotsController = AnimationController(
+      duration: const Duration(milliseconds: 1200),
+      vsync: this,
+    )..repeat();
+
+    // Message rotation
+    _messageController = AnimationController(
+      duration: const Duration(milliseconds: 500),
+      vsync: this,
+    );
+    _startMessageRotation();
+
     _checkQuestCompletion();
     _startPolling();
+  }
+
+  void _startMessageRotation() {
+    Future.delayed(const Duration(seconds: 4), () {
+      if (!mounted) return;
+      _messageController.forward().then((_) {
+        if (!mounted) return;
+        setState(() {
+          _currentMessageIndex = (_currentMessageIndex + 1) % _waitingMessages.length;
+        });
+        _messageController.reverse().then((_) {
+          _startMessageRotation();
+        });
+      });
+    });
   }
 
   @override
   void dispose() {
     _pollTimer?.cancel();
+    _breatheController.dispose();
+    _dotsController.dispose();
+    _messageController.dispose();
     super.dispose();
   }
 
   void _startPolling() {
-    // Poll every 3 seconds to check if partner has completed
     _pollTimer = Timer.periodic(const Duration(seconds: 3), (timer) {
       _checkPartnerCompletion();
     });
@@ -62,8 +116,6 @@ class _YouOrMeWaitingScreenState extends State<YouOrMeWaitingScreen> {
 
       if (user == null || partner == null) return;
 
-      // For You or Me, we need to check if the partner's session exists and has answers
-      // Extract timestamp from current session ID
       final sessionParts = widget.session.id.split('_');
       if (sessionParts.length < 3) {
         Logger.error('Invalid session ID format: ${widget.session.id}', service: 'you_or_me');
@@ -71,16 +123,13 @@ class _YouOrMeWaitingScreenState extends State<YouOrMeWaitingScreen> {
       }
       final timestamp = sessionParts.last;
 
-      // Construct partner's session ID
       final partnerSessionId = 'youorme_${partner.pushToken}_$timestamp';
 
-      // Try to get the partner's session from Firebase
       final partnerSession = await _service.getSession(
         partnerSessionId,
         forceRefresh: true,
       );
 
-      // Also refresh our own session to ensure we have latest data
       final updatedSession = await _service.getSession(
         widget.session.id,
         forceRefresh: true,
@@ -91,7 +140,6 @@ class _YouOrMeWaitingScreenState extends State<YouOrMeWaitingScreen> {
         return;
       }
 
-      // Check if both sessions exist and have answers
       final userHasAnswered = updatedSession.hasUserAnswered(user.id);
       final partnerHasAnswered = partnerSession != null &&
                                 partnerSession.hasUserAnswered(partner.pushToken);
@@ -103,7 +151,6 @@ class _YouOrMeWaitingScreenState extends State<YouOrMeWaitingScreen> {
 
         if (!mounted) return;
 
-        // Pass the user's session which will have the questions
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(
             builder: (context) => YouOrMeResultsScreen(session: updatedSession),
@@ -119,7 +166,6 @@ class _YouOrMeWaitingScreenState extends State<YouOrMeWaitingScreen> {
     }
   }
 
-  /// Check if this game session is linked to a daily quest and mark it as completed
   Future<void> _checkQuestCompletion() async {
     try {
       final user = _storage.getUser();
@@ -127,46 +173,37 @@ class _YouOrMeWaitingScreenState extends State<YouOrMeWaitingScreen> {
 
       if (user == null || partner == null) return;
 
-      // Check if there's a daily quest for this game session
       final questService = DailyQuestService(storage: _storage);
       final todayQuests = questService.getTodayQuests();
 
-      // Extract timestamp from session ID (format: youorme_{userId}_{timestamp})
       final sessionParts = widget.session.id.split('_');
       final sessionTimestamp = sessionParts.length >= 3 ? sessionParts.last : '';
 
-      // Find quest with matching timestamp (both sessions share the same timestamp)
       final matchingQuest = todayQuests
           .where((q) {
             if (q.type != QuestType.youOrMe) return false;
 
-            // Extract timestamp from quest's contentId
             final questIdParts = q.contentId.split('_');
             if (questIdParts.length < 3) return false;
 
-            // Match by timestamp since both sessions share the same timestamp
             return questIdParts.last == sessionTimestamp;
           })
           .firstOrNull;
 
       if (matchingQuest == null) {
-        // Not a daily quest game - just played from Activities screen
         return;
       }
 
-      // Check if current user has completed all questions
       final userAnswers = widget.session.answers?[user.id];
       if (userAnswers == null || userAnswers.length < widget.session.questions.length) {
-        return; // User hasn't completed the game yet
+        return;
       }
 
-      // Mark quest as completed for this user
       await questService.completeQuestForUser(
         questId: matchingQuest.id,
         userId: user.id,
       );
 
-      // Sync with Firebase
       final syncService = QuestSyncService(storage: _storage);
 
       await syncService.markQuestCompleted(
@@ -181,123 +218,252 @@ class _YouOrMeWaitingScreenState extends State<YouOrMeWaitingScreen> {
     }
   }
 
+  Future<void> _sendReminder() async {
+    setState(() => _isSendingPoke = true);
+
+    try {
+      await PokeService.sendPoke();
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Reminder sent!')),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to send reminder: $e')),
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() => _isSendingPoke = false);
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     final partner = _storage.getPartner();
+    final partnerName = partner?.name ?? 'Partner';
+    final partnerEmoji = partner?.avatarEmoji ?? '👤';
 
     return Scaffold(
-      backgroundColor: const Color(0xFFFAFAFA),
-      appBar: AppBar(
-        backgroundColor: const Color(0xFFFAFAFA),
-        elevation: 0,
-        leading: IconButton(
-          icon: Icon(Icons.close, color: BrandLoader().colors.textPrimary),
-          onPressed: () => Navigator.of(context).popUntil((route) => route.isFirst),
-        ),
-      ),
+      backgroundColor: EditorialStyles.paper,
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              // Animated icon
-              Container(
-                width: 120,
-                height: 120,
-                decoration: BoxDecoration(
-                  color: BrandLoader().colors.primary,
-                  shape: BoxShape.circle,
-                ),
-                child: Icon(
-                  Icons.hourglass_empty,
-                  color: BrandLoader().colors.textOnPrimary,
-                  size: 60,
-                ),
-              ),
+        child: Column(
+          children: [
+            // Header
+            EditorialHeaderSimple(
+              title: 'You or Me',
+              onClose: () => Navigator.of(context).popUntil((route) => route.isFirst),
+            ),
 
-              const SizedBox(height: 40),
+            // Content
+            Expanded(
+              child: SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 40),
+                  child: Column(
+                    children: [
+                      // Elegant dots animation
+                      _buildElegantDots(),
+                      const SizedBox(height: 32),
 
-              // Title
-              Text(
-                'All done!',
-                style: theme.textTheme.displaySmall?.copyWith(
-                  fontWeight: FontWeight.bold,
-                  fontFamily: 'Playfair Display',
-                  color: const Color(0xFF1A1A1A),
-                ),
-                textAlign: TextAlign.center,
-              ),
+                      // Title
+                      Text(
+                        'Waiting for $partnerName',
+                        style: EditorialStyles.headlineMedium,
+                        textAlign: TextAlign.center,
+                      ),
+                      const SizedBox(height: 12),
 
-              const SizedBox(height: 16),
+                      // Rotating message with crossfade
+                      AnimatedBuilder(
+                        animation: _messageController,
+                        builder: (context, child) {
+                          return Opacity(
+                            opacity: 1.0 - _messageController.value,
+                            child: ConstrainedBox(
+                              constraints: const BoxConstraints(maxWidth: 280),
+                              child: Text(
+                                _waitingMessages[_currentMessageIndex],
+                                style: EditorialStyles.bodyTextItalic,
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                      const SizedBox(height: 40),
 
-              // Message
-              Text(
-                'Waiting for ${partner?.name ?? 'your partner'} to complete the game...',
-                style: theme.textTheme.bodyLarge?.copyWith(
-                  color: BrandLoader().colors.textSecondary,
-                  height: 1.5,
-                ),
-                textAlign: TextAlign.center,
-              ),
-
-              const SizedBox(height: 32),
-
-              // Loading indicator
-              CircularProgressIndicator(
-                valueColor: AlwaysStoppedAnimation<Color>(BrandLoader().colors.primary),
-              ),
-
-              const SizedBox(height: 32),
-
-              // Info text
-              Container(
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: const Color(0xFFFFFEFD),
-                  border: Border.all(color: const Color(0xFFF0F0F0), width: 2),
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                child: Row(
-                  children: [
-                    const Icon(
-                      Icons.info_outline,
-                      color: Color(0xFF6E6E6E),
-                      size: 20,
-                    ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: Text(
-                        'You\'ll see the results as soon as they finish!',
-                        style: theme.textTheme.bodyMedium?.copyWith(
-                          color: BrandLoader().colors.textSecondary,
+                      // Partner card with breathing animation
+                      ConstrainedBox(
+                        constraints: const BoxConstraints(maxWidth: 320),
+                        child: AnimatedBuilder(
+                          animation: _breatheController,
+                          builder: (context, child) {
+                            // Subtle scale: 1.0 -> 1.02 -> 1.0 (breathing effect)
+                            final scale = 1.0 + (0.02 * Curves.easeInOut.transform(_breatheController.value));
+                            // Subtle vertical float: 0 -> -4px -> 0
+                            final yOffset = -4.0 * Curves.easeInOut.transform(
+                              _breatheController.value < 0.5
+                                  ? _breatheController.value * 2
+                                  : 2.0 - _breatheController.value * 2,
+                            );
+                            return Transform.translate(
+                              offset: Offset(0, yOffset),
+                              child: Transform.scale(
+                                scale: scale,
+                                child: child,
+                              ),
+                            );
+                          },
+                          child: EditorialPartnerCard(
+                            avatarEmoji: partnerEmoji,
+                            name: partnerName,
+                            status: 'In progress...',
+                          ),
                         ),
                       ),
-                    ),
-                  ],
-                ),
-              ),
+                      const SizedBox(height: 32),
 
-              const Spacer(),
+                      // Divider
+                      _buildDivider(),
+                      const SizedBox(height: 32),
 
-              // Exit button
-              TextButton(
-                onPressed: () => Navigator.of(context).popUntil((route) => route.isFirst),
-                child: const Text(
-                  'Exit',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w500,
-                    color: Color(0xFF6E6E6E),
+                      // Poke button
+                      ConstrainedBox(
+                        constraints: const BoxConstraints(maxWidth: 320),
+                        child: EditorialSecondaryButton(
+                          label: _isSendingPoke ? 'Sending...' : 'Nudge Partner',
+                          emoji: '👆',
+                          onPressed: _isSendingPoke ? null : _sendReminder,
+                        ),
+                      ),
+
+                      // Check for updates
+                      const SizedBox(height: 24),
+                      GestureDetector(
+                        onTap: _isChecking ? null : _checkPartnerCompletion,
+                        child: Text(
+                          _isChecking ? 'Checking...' : 'Tap to check for updates',
+                          style: EditorialStyles.bodySmall.copyWith(
+                            color: EditorialStyles.inkMuted,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ),
+            ),
 
-              const SizedBox(height: 16),
-            ],
-          ),
+            // Footer
+            Container(
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                color: EditorialStyles.paper,
+                border: Border(top: EditorialStyles.border),
+              ),
+              child: Column(
+                children: [
+                  EditorialSecondaryButton(
+                    label: 'Return Home',
+                    onPressed: () => Navigator.of(context).popUntil((route) => route.isFirst),
+                  ),
+                  const SizedBox(height: 12),
+                  Text(
+                    'We\'ll notify you when results are ready',
+                    style: EditorialStyles.bodySmall.copyWith(
+                      color: EditorialStyles.inkMuted,
+                      fontStyle: FontStyle.italic,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildElegantDots() {
+    return SizedBox(
+      width: 80,
+      height: 40,
+      child: AnimatedBuilder(
+        animation: _dotsController,
+        builder: (context, child) {
+          return Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: List.generate(3, (index) {
+              // Stagger each dot's animation
+              final offset = index * 0.33;
+              final animValue = (_dotsController.value + offset) % 1.0;
+
+              // Create a smooth wave: 0->1->0 over the animation cycle
+              final wave = animValue < 0.5
+                  ? animValue * 2
+                  : 2.0 - (animValue * 2);
+
+              // Apply easing
+              final easedWave = Curves.easeInOut.transform(wave);
+
+              // Scale: 0.6 -> 1.0 -> 0.6
+              final scale = 0.6 + (0.4 * easedWave);
+              // Opacity: 0.3 -> 1.0 -> 0.3
+              final opacity = 0.3 + (0.7 * easedWave);
+
+              return Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 6),
+                child: Transform.scale(
+                  scale: scale,
+                  child: Opacity(
+                    opacity: opacity,
+                    child: Container(
+                      width: 12,
+                      height: 12,
+                      decoration: BoxDecoration(
+                        color: EditorialStyles.ink,
+                        shape: BoxShape.circle,
+                      ),
+                    ),
+                  ),
+                ),
+              );
+            }),
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _buildDivider() {
+    return ConstrainedBox(
+      constraints: const BoxConstraints(maxWidth: 320),
+      child: Row(
+        children: [
+          Expanded(
+            child: Container(
+              height: 1,
+              color: EditorialStyles.inkLight,
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: Text(
+              'OR',
+              style: EditorialStyles.labelUppercaseSmall,
+            ),
+          ),
+          Expanded(
+            child: Container(
+              height: 1,
+              color: EditorialStyles.inkLight,
+            ),
+          ),
+        ],
       ),
     );
   }

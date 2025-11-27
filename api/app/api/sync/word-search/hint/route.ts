@@ -18,10 +18,12 @@ const DIRECTION_DELTAS: Record<string, number> = {
   'DR': 11, 'DL': 9, 'UR': -9, 'UL': -11
 };
 
-// Load puzzle data
-function loadPuzzle(puzzleId: string): any {
+// Load puzzle data from branch-specific path
+function loadPuzzle(puzzleId: string, branch?: string): any {
   try {
-    const puzzlePath = join(process.cwd(), 'data', 'puzzles', 'word-search', `${puzzleId}.json`);
+    // Use branch path (default to 'everyday' if no branch specified)
+    const branchFolder = branch || 'everyday';
+    const puzzlePath = join(process.cwd(), 'data', 'puzzles', 'word-search', branchFolder, `${puzzleId}.json`);
     const puzzleData = readFileSync(puzzlePath, 'utf-8');
     return JSON.parse(puzzleData);
   } catch (error) {

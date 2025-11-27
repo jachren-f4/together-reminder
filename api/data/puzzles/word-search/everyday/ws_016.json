@@ -1,0 +1,24 @@
+{
+  "puzzleId": "ws_016",
+  "title": "Daily Love XVI",
+  "theme": "everyday",
+  "size": {
+    "rows": 10,
+    "cols": 10
+  },
+  "grid": "GRATEFULWNHBSZTSHOKGJINSTEUXGYWMUMLBSULERRATRYHLFRTENEERODAUTENLBJCXUTGOVNSTRIPUTIXAICQGHFQTIGWDOYPZ",
+  "words": {
+    "HUSH": "16,D",
+    "TRUST": "50,UR",
+    "FUTURE": "89,U",
+    "BEAM": "64,UL",
+    "ADORE": "58,L",
+    "DINNER": "95,UL",
+    "GRATEFUL": "0,R",
+    "GENTLE": "70,UR",
+    "HUG": "46,UR",
+    "TRIP": "75,R",
+    "WAVE": "94,UL",
+    "JOLLY": "65,UR"
+  }
+}

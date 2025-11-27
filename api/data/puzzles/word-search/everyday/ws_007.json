@@ -1,0 +1,24 @@
+{
+  "puzzleId": "ws_007",
+  "title": "Daily Love VII",
+  "theme": "everyday",
+  "size": {
+    "rows": 10,
+    "cols": 10
+  },
+  "grid": "DKHCLWVDDGLNWPUTKRFRUIEEXDBETOFWERFMDEYWRLKFJUELLLEAEEOWTMEGEYNCSXOUICHODTJVZFRUCLXWITTVJETTNETNOCCL",
+  "words": {
+    "FUTURE": "34,DR",
+    "WEEKEND": "12,D",
+    "MOVIE": "57,DL",
+    "GIFT": "59,DL",
+    "LOYAL": "81,U",
+    "CUDDLE": "3,DR",
+    "CHEERFUL": "80,U",
+    "GROW": "9,D",
+    "PERFECT": "13,D",
+    "CONTENT": "97,L",
+    "SWEET": "64,UR",
+    "WINK": "31,U"
+  }
+}

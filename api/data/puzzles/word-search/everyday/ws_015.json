@@ -1,0 +1,24 @@
+{
+  "puzzleId": "ws_015",
+  "title": "Daily Love XV",
+  "theme": "everyday",
+  "size": {
+    "rows": 10,
+    "cols": 10
+  },
+  "grid": "LBYLYHRRYJDXGAUFJIRURDNEDFNIREEQIAXIYHETADNOBPLOMRMYEDUODOJOTGVRYLWFHPEPEAIFFBKPASLUWGVUIUMJBFAMILYS",
+  "words": {
+    "BUILD": "92,UR",
+    "SUPPORT": "99,U",
+    "BOND": "44,L",
+    "HOLIDAY": "68,UL",
+    "JOYFUL": "58,UL",
+    "TEAM": "60,D",
+    "EVENING": "72,U",
+    "FAMILY": "93,R",
+    "DUO": "53,R",
+    "LOYAL": "46,DL",
+    "DREAM": "10,D",
+    "MERRY": "48,U"
+  }
+}

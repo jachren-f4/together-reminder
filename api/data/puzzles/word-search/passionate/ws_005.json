@@ -1,0 +1,24 @@
+{
+  "puzzleId": "ws_005",
+  "title": "Passionate V",
+  "theme": "passion",
+  "size": {
+    "rows": 10,
+    "cols": 10
+  },
+  "grid": "FJHOLDTZHMOPSFACEYJOSQKQASPURRIQVRUSNIKSGHTEBERUDYJTFOLWEAGDAVDLIVOZTDPYLLZFEEESDUDTXPJTCIPNREDNETPG",
+  "words": {
+    "SQUEEZE": "12,DR",
+    "WILD": "55,DL",
+    "STARS": "79,UL",
+    "TENDER": "97,L",
+    "PURR": "26,R",
+    "ATTRACT": "60,UR",
+    "VELVET": "32,DR",
+    "BODY": "44,DL",
+    "FACE": "13,R",
+    "HOLD": "2,R",
+    "SKIN": "39,L",
+    "PULL": "90,UR"
+  }
+}

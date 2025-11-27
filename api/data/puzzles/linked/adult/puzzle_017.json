@@ -1,0 +1,47 @@
+{
+  "author": "Crossword Maker GPT",
+  "title": "Adult Intimacy Puzzle #17",
+  "size": {
+    "rows": 9,
+    "cols": 7
+  },
+  "clues": {
+    "1": { "type": "emoji", "content": "🪨", "arrow": "down", "target_index": 8 },
+    "2": { "type": "emoji", "content": "👍", "arrow": "down", "target_index": 11 },
+    "3": { "type": "emoji", "content": "💓", "arrow": "down", "target_index": 13 },
+    "4": { "type": "text", "content": "Before I", "arrow": "across", "target_index": 8 },
+    "5": { "type": "text", "content": "Change position", "arrow": "across", "target_index": 10 },
+    "6": { "type": "text", "content": "Exclamation of pleasure", "arrow": "across", "target_index": 15 },
+    "7": { "type": "emoji", "content": "🔌", "arrow": "down", "target_index": 31 },
+    "8": { "type": "text", "content": "Drink in", "arrow": "down", "target_index": 43 },
+    "9": { "type": "text", "content": "Quick release", "arrow": "across", "target_index": 43 },
+    "10": { "type": "text", "content": "Before J", "arrow": "down", "target_index": 61 },
+    "11": { "type": "text", "content": "Before M", "arrow": "down", "target_index": 62 },
+    "12": { "type": "text", "content": "LIM_", "arrow": "across", "target_index": 57 },
+    "13": { "type": "text", "content": "Massage lubricant", "arrow": "across", "target_index": 60 }
+  },
+  "date": "2025-11-27",
+  "grid": [
+    ".", ".", ".", ".", ".", ".", ".",
+    ".", "H", ".", "F", "L", "I", "P",
+    ".", "A", "H", ".", "I", ".", "U",
+    ".", "R", ".", ".", "K", ".", "L",
+    ".", "D", ".", "P", "E", ".", "S",
+    ".", ".", ".", "L", ".", ".", "E",
+    ".", "S", "P", "U", "R", "T", ".",
+    ".", "I", ".", "G", ".", ".", ".",
+    ".", "P", ".", ".", "O", "I", "L"
+  ],
+  "gridnums": [
+    0, 1, 0, 0, 2, 0, 3,
+    4, 0, 5, 0, 0, 0, 0,
+    6, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 7, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0,
+    0, 8, 0, 0, 0, 0, 0,
+    9, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 10, 11,
+    12, 0, 0, 13, 0, 0, 0
+  ],
+  "puzzleId": "puzzle_017"
+}

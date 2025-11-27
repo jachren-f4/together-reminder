@@ -3,6 +3,7 @@ import 'package:confetti/confetti.dart';
 import '../models/linked.dart';
 import '../services/love_point_service.dart';
 import '../services/storage_service.dart';
+import '../services/celebration_service.dart';
 import '../config/brand/brand_loader.dart';
 
 /// Completion screen for Linked game
@@ -57,9 +58,12 @@ class _LinkedCompletionScreenState extends State<LinkedCompletionScreen>
       ),
     );
 
-    // Start animations
-    _confettiController.play();
+    // Start animations with celebration sounds
     _animationController.forward();
+    CelebrationService().celebrate(
+      CelebrationType.questComplete,
+      confettiController: _confettiController,
+    );
 
     // Award LP for completing the puzzle (with deduplication)
     _awardCompletionLP();
@@ -78,7 +82,7 @@ class _LinkedCompletionScreenState extends State<LinkedCompletionScreen>
     // Award 30 LP for completing the puzzle
     await LovePointService.awardPoints(
       amount: 30,
-      reason: 'Linked puzzle completed!',
+      reason: 'Crossword puzzle completed!',
     );
 
     // Mark as awarded to prevent duplicates
@@ -147,25 +151,10 @@ class _LinkedCompletionScreenState extends State<LinkedCompletionScreen>
             ),
           ),
 
-          // Confetti overlay
-          Align(
-            alignment: Alignment.topCenter,
-            child: ConfettiWidget(
-              confettiController: _confettiController,
-              blastDirection: 3.14159 / 2, // Downward
-              maxBlastForce: 5,
-              minBlastForce: 2,
-              emissionFrequency: 0.05,
-              numberOfParticles: 25,
-              gravity: 0.1,
-              shouldLoop: false,
-              colors: [
-                BrandLoader().colors.textPrimary,
-                BrandLoader().colors.textPrimary.withOpacity(0.87),
-                BrandLoader().colors.textPrimary.withOpacity(0.54),
-                BrandLoader().colors.disabled,
-              ],
-            ),
+          // Confetti overlay using CelebrationService for consistent styling
+          CelebrationService().createConfettiWidget(
+            _confettiController,
+            type: CelebrationType.questComplete,
           ),
         ],
       ),

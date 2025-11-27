@@ -3,6 +3,7 @@ import 'package:confetti/confetti.dart';
 import '../models/word_search.dart';
 import '../services/love_point_service.dart';
 import '../services/storage_service.dart';
+import '../services/celebration_service.dart';
 import '../config/brand/brand_loader.dart';
 
 /// Completion screen for Word Search game
@@ -58,9 +59,12 @@ class _WordSearchCompletionScreenState extends State<WordSearchCompletionScreen>
       ),
     );
 
-    // Start animations
-    _confettiController.play();
+    // Start animations with celebration sound and haptic
     _animationController.forward();
+    CelebrationService().celebrate(
+      CelebrationType.questComplete,
+      confettiController: _confettiController,
+    );
 
     // Award LP for completing the puzzle (with deduplication)
     _awardCompletionLP();
@@ -148,25 +152,10 @@ class _WordSearchCompletionScreenState extends State<WordSearchCompletionScreen>
             ),
           ),
 
-          // Confetti overlay
-          Align(
-            alignment: Alignment.topCenter,
-            child: ConfettiWidget(
-              confettiController: _confettiController,
-              blastDirection: 3.14159 / 2, // Downward
-              maxBlastForce: 5,
-              minBlastForce: 2,
-              emissionFrequency: 0.05,
-              numberOfParticles: 25,
-              gravity: 0.1,
-              shouldLoop: false,
-              colors: [
-                BrandLoader().colors.textPrimary,
-                BrandLoader().colors.textPrimary.withValues(alpha: 0.87),
-                BrandLoader().colors.textPrimary.withValues(alpha: 0.54),
-                BrandLoader().colors.disabled,
-              ],
-            ),
+          // Confetti overlay via CelebrationService
+          CelebrationService().createConfettiWidget(
+            _confettiController,
+            type: CelebrationType.questComplete,
           ),
         ],
       ),

@@ -1,0 +1,24 @@
+{
+  "puzzleId": "ws_015",
+  "title": "Passionate XV",
+  "theme": "passion",
+  "size": {
+    "rows": 10,
+    "cols": 10
+  },
+  "grid": "NTESNUSBZVSSPYDELMUVHOAQRAOTEZEFSIZOFRLSITSENEULWQCEIODLHAOLDKOGLOYOGWECNAMORQSMXTWIRLFVVWEVITPACQGN",
+  "words": {
+    "SOFT": "11,D",
+    "FLOW": "36,DR",
+    "PASSION": "12,D",
+    "MOON": "17,DL",
+    "SWAY": "39,DL",
+    "BLAZE": "7,DL",
+    "ALLURE": "73,UR",
+    "TWIRL": "81,R",
+    "ROMANCE": "76,L",
+    "CAPTIVE": "96,L",
+    "SUNSET": "6,L",
+    "DESIRE": "60,UR"
+  }
+}

@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leaderboard - Lower Rank - TogetherRemind</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            background: #fafafa;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 420px;
+            margin: 0 auto;
+            background: #fff;
+            border: 2px solid #000;
+            box-shadow: 8px 8px 0 rgba(0, 0, 0, 0.1);
+        }
+
+        /* Header */
+        .header {
+            border-bottom: 2px solid #000;
+            padding: 24px 20px;
+            text-align: center;
+        }
+
+        .title {
+            font-size: 32px;
+            font-weight: 400;
+            letter-spacing: 2px;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+        }
+
+        .subtitle {
+            font-size: 14px;
+            color: #666;
+            font-style: italic;
+        }
+
+        /* Tab Toggle */
+        .tab-row {
+            display: flex;
+            border-bottom: 1px solid #000;
+        }
+
+        .tab {
+            flex: 1;
+            padding: 14px;
+            text-align: center;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border-right: 1px solid #000;
+        }
+
+        .tab:last-child {
+            border-right: none;
+        }
+
+        .tab.active {
+            background: #000;
+            color: #fff;
+        }
+
+        .tab:hover:not(.active) {
+            background: #f0f0f0;
+        }
+
+        /* Section Headers */
+        .section-header {
+            padding: 12px 20px;
+            background: #f8f8f8;
+            border-bottom: 1px solid #e0e0e0;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #999;
+            font-weight: 600;
+        }
+
+        /* Leaderboard List */
+        .leaderboard-row {
+            display: flex;
+            align-items: center;
+            padding: 14px 20px;
+            border-bottom: 1px solid #e0e0e0;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .leaderboard-row:hover {
+            background: #000;
+            color: #fff;
+        }
+
+        .leaderboard-row:hover .row-lp {
+            color: #fff;
+        }
+
+        .leaderboard-row.highlighted {
+            background: #f8f8f8;
+            border-left: 4px solid #000;
+            padding-left: 16px;
+        }
+
+        .leaderboard-row.highlighted:hover {
+            background: #000;
+            border-left-color: #fff;
+        }
+
+        .row-rank {
+            width: 40px;
+            font-size: 16px;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .row-rank.medal {
+            font-size: 20px;
+        }
+
+        .row-initials {
+            flex: 1;
+            font-size: 16px;
+            font-weight: 500;
+            padding-left: 12px;
+        }
+
+        .row-you {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            background: #000;
+            color: #fff;
+            padding: 2px 8px;
+            margin-left: 8px;
+        }
+
+        .leaderboard-row.highlighted:hover .row-you {
+            background: #fff;
+            color: #000;
+        }
+
+        .row-lp {
+            font-size: 14px;
+            color: #666;
+            font-weight: 600;
+        }
+
+        /* Expand Button */
+        .expand-section {
+            padding: 16px 20px;
+            border-top: 1px solid #000;
+        }
+
+        .expand-button {
+            width: 100%;
+            padding: 14px;
+            background: #fff;
+            border: 1px solid #000;
+            font-family: inherit;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .expand-button:hover {
+            background: #000;
+            color: #fff;
+        }
+
+        /* Footer */
+        .footer {
+            padding: 12px 20px;
+            border-top: 1px solid #e0e0e0;
+            text-align: center;
+        }
+
+        .footer-hint {
+            font-size: 11px;
+            color: #999;
+            font-style: italic;
+        }
+
+        /* Motivational message */
+        .motivation {
+            padding: 16px 20px;
+            text-align: center;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .motivation-text {
+            font-size: 13px;
+            color: #666;
+            font-style: italic;
+        }
+
+        .motivation-gap {
+            font-size: 14px;
+            font-weight: 600;
+            margin-top: 4px;
+        }
+
+        /* Back link */
+        .back-link {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+            font-size: 14px;
+            color: #666;
+            text-decoration: none;
+        }
+
+        .back-link:hover {
+            color: #000;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="title">Leaderboard</div>
+            <div class="subtitle">Ranked by Love Points</div>
+        </div>
+
+        <!-- Tab Toggle -->
+        <div class="tab-row">
+            <div class="tab active">Global</div>
+            <div class="tab">My Country</div>
+        </div>
+
+        <!-- Top 5 Section -->
+        <div class="section-header">Top 5</div>
+
+        <div class="leaderboard-row">
+            <div class="row-rank medal">🥇</div>
+            <div class="row-initials">E & R</div>
+            <div class="row-lp">12,450 LP</div>
+        </div>
+        <div class="leaderboard-row">
+            <div class="row-rank medal">🥈</div>
+            <div class="row-initials">S & M</div>
+            <div class="row-lp">10,890 LP</div>
+        </div>
+        <div class="leaderboard-row">
+            <div class="row-rank medal">🥉</div>
+            <div class="row-initials">L & J</div>
+            <div class="row-lp">9,320 LP</div>
+        </div>
+        <div class="leaderboard-row">
+            <div class="row-rank">#4</div>
+            <div class="row-initials">Z & A</div>
+            <div class="row-lp">8,560 LP</div>
+        </div>
+        <div class="leaderboard-row">
+            <div class="row-rank">#5</div>
+            <div class="row-initials">M & C</div>
+            <div class="row-lp">7,890 LP</div>
+        </div>
+
+        <!-- Your Position Section -->
+        <div class="section-header">Your Position</div>
+
+        <div class="leaderboard-row">
+            <div class="row-rank">#126</div>
+            <div class="row-initials">P & Q</div>
+            <div class="row-lp">480 LP</div>
+        </div>
+        <div class="leaderboard-row highlighted">
+            <div class="row-rank">#127</div>
+            <div class="row-initials">J & A<span class="row-you">You</span></div>
+            <div class="row-lp">450 LP</div>
+        </div>
+        <div class="leaderboard-row">
+            <div class="row-rank">#128</div>
+            <div class="row-initials">T & W</div>
+            <div class="row-lp">420 LP</div>
+        </div>
+
+        <!-- Motivation -->
+        <div class="motivation">
+            <div class="motivation-text">To reach top 50, you need</div>
+            <div class="motivation-gap">+1,100 LP</div>
+        </div>
+
+        <!-- Expand Button -->
+        <div class="expand-section">
+            <button class="expand-button">Show Full Top 50 →</button>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <div class="footer-hint">Updated 2 minutes ago</div>
+        </div>
+    </div>
+
+    <a href="index.html" class="back-link">← Back to mockups</a>
+</body>
+</html>

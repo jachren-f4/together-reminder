@@ -1,0 +1,24 @@
+{
+  "puzzleId": "ws_010",
+  "title": "Daily Love X",
+  "theme": "everyday",
+  "size": {
+    "rows": 10,
+    "cols": 10
+  },
+  "grid": "EITSEBHPRHNZJOCGGAFRXEUHUNXCTITIKAIYBATTONLRLRLXRSUPGGQKHMNECLEPKMZAJRHASFQLAKNBMNYQAYAEIDAWAVESYWBN",
+  "words": {
+    "GRIN": "52,UR",
+    "LAUGH": "42,UR",
+    "HAND": "56,DR",
+    "SAFE": "95,UL",
+    "TALK": "28,DL",
+    "WAVE": "91,R",
+    "BESTIE": "5,L",
+    "PLAN": "51,D",
+    "REST": "69,U",
+    "WALK": "97,UL",
+    "BEAM": "98,UL",
+    "TOUCH": "30,D"
+  }
+}

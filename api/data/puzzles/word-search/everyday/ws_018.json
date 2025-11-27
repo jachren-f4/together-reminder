@@ -1,0 +1,24 @@
+{
+  "puzzleId": "ws_018",
+  "title": "Daily Love XVIII",
+  "theme": "everyday",
+  "size": {
+    "rows": 10,
+    "cols": 10
+  },
+  "grid": "CRSIFSNGNREDCSCMAFEFSHGHJILBEOILIAELPLWRRAGRAEGFJEPUGELGRTIVRGLWUUOFYEUHENYUCAURSTSQCULKRLXCHHWPUEYW",
+  "words": {
+    "CHEERFUL": "12,DR",
+    "GIGGLE": "22,D",
+    "PLAN": "36,U",
+    "SURPRISE": "80,U",
+    "SNUGGLE": "82,UR",
+    "LAUGH": "31,D",
+    "FOREVER": "19,D",
+    "LUCKY": "54,DR",
+    "TOUCH": "57,DL",
+    "SHARE": "13,D",
+    "PLAY": "95,UR",
+    "SMILE": "5,D"
+  }
+}

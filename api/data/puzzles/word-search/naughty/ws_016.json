@@ -1,0 +1,24 @@
+{
+  "puzzleId": "ws_016",
+  "title": "Intimate XVI",
+  "theme": "intimacy",
+  "size": {
+    "rows": 10,
+    "cols": 10
+  },
+  "grid": "NKUTUWSLMFUTOKTTLEURIPNAAIQZRESWEARVFJMDGHHHHOJEULDCTIRCNSROGMKMSSNAKMYALPDPQENSPRIVATETIVRLDNIRGRCD",
+  "words": {
+    "WHISPER": "31,DR",
+    "MURMUR": "8,D",
+    "GRIND": "96,L",
+    "SPOT": "30,UR",
+    "TEASE": "87,U",
+    "HEAT": "41,UR",
+    "PRIVATE": "80,R",
+    "THRILL": "52,UR",
+    "ENCHANT": "77,UL",
+    "FORM": "36,DL",
+    "SMOLDER": "79,U",
+    "LIPS": "91,UR"
+  }
+}

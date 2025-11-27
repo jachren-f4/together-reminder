@@ -1,0 +1,52 @@
+{
+  "author": "Crossword Maker GPT",
+  "title": "Adult Intimacy Puzzle #11",
+  "size": {
+    "rows": 9,
+    "cols": 7
+  },
+  "clues": {
+    "1": { "type": "emoji", "content": "🥴", "arrow": "down", "target_index": 8 },
+    "2": { "type": "text", "content": "After @", "arrow": "down", "target_index": 9 },
+    "3": { "type": "text", "content": "Excited yes", "arrow": "down", "target_index": 12 },
+    "4": { "type": "text", "content": "Dominant pet name", "arrow": "across", "target_index": 8 },
+    "5": { "type": "text", "content": "Sharp breath", "arrow": "down", "target_index": 20 },
+    "6": { "type": "text", "content": "Command to proceed", "arrow": "down", "target_index": 23 },
+    "7": { "type": "text", "content": "Relief sound", "arrow": "across", "target_index": 18 },
+    "8": { "type": "text", "content": "Frustration sound", "arrow": "across", "target_index": 22 },
+    "9": { "type": "emoji", "content": "💘", "arrow": "down", "target_index": 32 },
+    "10": { "type": "text", "content": "P_C", "arrow": "across", "target_index": 27 },
+    "11": { "type": "text", "content": "YE_L", "arrow": "down", "target_index": 38 },
+    "12": { "type": "emoji", "content": "💋", "arrow": "across", "target_index": 38 },
+    "13": { "type": "text", "content": "_U_S_", "arrow": "down", "target_index": 44 },
+    "14": { "type": "text", "content": "After M", "arrow": "across", "target_index": 46 },
+    "15": { "type": "text", "content": "Erection difficulty (abbr.)", "arrow": "down", "target_index": 54 },
+    "16": { "type": "text", "content": "Toward intimacy", "arrow": "down", "target_index": 55 },
+    "17": { "type": "emoji", "content": "🍬", "arrow": "across", "target_index": 51 },
+    "18": { "type": "text", "content": "Possessive word", "arrow": "across", "target_index": 57 }
+  },
+  "date": "2025-11-27",
+  "grid": [
+    ".", ".", ".", ".", ".", ".", ".",
+    ".", "D", "A", "D", "D", "Y", ".",
+    ".", "R", ".", ".", "A", "A", "H",
+    ".", "U", "G", "H", ".", ".", "I",
+    ".", "N", "O", ".", "M", ".", "S",
+    ".", "K", ".", "L", "I", "P", "S",
+    ".", ".", "P", ".", "N", ".", ".",
+    ".", ".", "S", "W", "E", "E", "T",
+    ".", "M", "Y", ".", ".", "D", "O"
+  ],
+  "gridnums": [
+    0, 1, 2, 0, 0, 3, 0,
+    4, 0, 0, 0, 0, 0, 5,
+    0, 0, 6, 7, 0, 0, 0,
+    8, 0, 0, 0, 9, 10, 0,
+    0, 0, 0, 11, 0, 0, 0,
+    0, 0, 12, 0, 0, 0, 0,
+    0, 0, 0, 14, 0, 15, 16,
+    0, 17, 0, 0, 0, 0, 0,
+    18, 0, 0, 0, 0, 0, 0
+  ],
+  "puzzleId": "puzzle_011"
+}

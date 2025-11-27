@@ -33,6 +33,38 @@ class BrandAssets {
   static const String sharedAnimationsPath = 'assets/shared/animations';
   static const String sharedGfxPath = 'assets/shared/gfx';
 
+  // ============================================
+  // Sound assets (shared)
+  // ============================================
+
+  /// Get path to a sound file
+  /// [soundId] format: 'category/filename' (without extension)
+  /// Example: 'ui/tap_soft' -> 'assets/shared/sounds/ui/tap_soft.mp3'
+  static String soundPath(String soundId) => '$sharedSoundsPath/$soundId.mp3';
+
+  // UI sounds
+  static String get tapSoftSound => soundPath('ui/tap_soft');
+  static String get tapLightSound => soundPath('ui/tap_light');
+  static String get toggleOnSound => soundPath('ui/toggle_on');
+  static String get toggleOffSound => soundPath('ui/toggle_off');
+
+  // Celebration sounds
+  static String get confettiBurstSound => soundPath('celebration/confetti_burst');
+  static String get sparkleSound => soundPath('celebration/sparkle');
+  static String get chimeSuccessSound => soundPath('celebration/chime_success');
+
+  // Feedback sounds
+  static String get successSound => soundPath('feedback/success');
+  static String get errorSound => soundPath('feedback/error');
+  static String get warningSound => soundPath('feedback/warning');
+
+  // Game sounds
+  static String get cardFlipSound => soundPath('games/card_flip');
+  static String get matchFoundSound => soundPath('games/match_found');
+  static String get wordFoundSound => soundPath('games/word_found');
+  static String get letterTypeSound => soundPath('games/letter_type');
+  static String get answerSelectSound => soundPath('games/answer_select');
+
   // Navigation icons (shared)
   static const String homeIcon = '$sharedGfxPath/home.png';
   static const String homeIconFilled = '$sharedGfxPath/home_filled.png';

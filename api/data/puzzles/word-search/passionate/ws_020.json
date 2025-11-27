@@ -1,0 +1,24 @@
+{
+  "puzzleId": "ws_020",
+  "title": "Passionate XX",
+  "theme": "passion",
+  "size": {
+    "rows": 10,
+    "cols": 10
+  },
+  "grid": "HOLDZHPSNELLYLMUYRTCNTVHUOKVOARLMECPVVNRKUCSOULEGBHAHXWACRYMRGQGSKIXVEBDTXIPEGCVTIRIPSCPXKTHGILIWTWE",
+  "words": {
+    "RACE": "60,UR",
+    "GRIP": "48,DL",
+    "EMBRACE": "69,U",
+    "SIGH": "85,UL",
+    "PULL": "35,UL",
+    "TWILIGHT": "97,L",
+    "MOVE": "14,DR",
+    "HUM": "50,UR",
+    "SOUL": "43,R",
+    "HOLD": "0,R",
+    "SPIRIT": "85,L",
+    "NECK": "38,DL"
+  }
+}

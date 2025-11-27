@@ -1,0 +1,24 @@
+{
+  "puzzleId": "ws_011",
+  "title": "Passionate XI",
+  "theme": "passion",
+  "size": {
+    "rows": 10,
+    "cols": 10
+  },
+  "grid": "RLONGINGRBSEIPBSUDBVTRTLEHTPXXUYLTSSOAWRRURIUULORPPAWANLLUSSJSCDNGFKPIZZVELLIRHTMAGICPFTDKROTWTAPHAE",
+  "words": {
+    "WISH": "52,UR",
+    "THRILL": "79,L",
+    "FLUTTER": "66,UL",
+    "GLOW": "65,UR",
+    "RACE": "40,DR",
+    "STARS": "15,DR",
+    "LONGING": "1,R",
+    "POUND": "27,DL",
+    "PULL": "50,UR",
+    "MAGIC": "80,R",
+    "PULSE": "68,UL",
+    "SKIP": "58,DL"
+  }
+}

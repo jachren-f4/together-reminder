@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Affirmation Quiz - Intro</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            background: #fafafa;
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+        }
+
+        .container {
+            max-width: 420px;
+            width: 100%;
+            background: #fff;
+            border: 2px solid #000;
+            box-shadow: 8px 8px 0 rgba(0, 0, 0, 0.1);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header */
+        .header {
+            border-bottom: 2px solid #000;
+            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .back-btn {
+            width: 40px;
+            height: 40px;
+            border: 2px solid #000;
+            background: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 20px;
+            transition: all 0.2s ease;
+        }
+
+        .back-btn:hover {
+            background: #000;
+            color: #fff;
+        }
+
+        .header-title {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: 600;
+        }
+
+        /* Hero Image */
+        .hero-image {
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(135deg, #f5f5f5 0%, #e0e0e0 100%);
+            border-bottom: 2px solid #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .hero-placeholder {
+            font-size: 64px;
+            opacity: 0.3;
+        }
+
+        /* Content */
+        .content {
+            padding: 24px 20px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .badge {
+            display: inline-block;
+            background: #000;
+            color: #fff;
+            padding: 6px 14px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 16px;
+            align-self: flex-start;
+        }
+
+        .quiz-title {
+            font-size: 32px;
+            font-weight: 400;
+            line-height: 1.2;
+            margin-bottom: 12px;
+            letter-spacing: -0.5px;
+        }
+
+        .quiz-description {
+            font-size: 16px;
+            color: #666;
+            font-style: italic;
+            line-height: 1.6;
+            margin-bottom: 32px;
+        }
+
+        /* Stats Card */
+        .stats-card {
+            border: 2px solid #000;
+            padding: 20px;
+            margin-bottom: 32px;
+        }
+
+        .stats-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .stats-row:last-child {
+            border-bottom: none;
+        }
+
+        .stats-label {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #666;
+        }
+
+        .stats-value {
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        /* Scale Preview */
+        .section-title {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 16px;
+            font-weight: 600;
+        }
+
+        .scale-preview {
+            border: 2px solid #000;
+            padding: 20px;
+            margin-bottom: 32px;
+        }
+
+        .scale-description {
+            font-size: 14px;
+            color: #666;
+            font-style: italic;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+
+        .scale-visual {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .scale-point {
+            flex: 1;
+            text-align: center;
+        }
+
+        .scale-circle {
+            width: 40px;
+            height: 40px;
+            border: 2px solid #000;
+            border-radius: 50%;
+            margin: 0 auto 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+        }
+
+        .scale-point.filled .scale-circle {
+            background: #000;
+            color: #fff;
+        }
+
+        .scale-label {
+            font-size: 9px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #666;
+        }
+
+        /* Spacer */
+        .spacer {
+            flex: 1;
+        }
+
+        /* Footer */
+        .footer {
+            padding: 20px;
+            border-top: 2px solid #000;
+        }
+
+        .primary-btn {
+            width: 100%;
+            padding: 18px 24px;
+            background: #000;
+            color: #fff;
+            border: 2px solid #000;
+            font-family: 'Georgia', serif;
+            font-size: 16px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .primary-btn:hover {
+            background: #fff;
+            color: #000;
+        }
+
+        .reward-hint {
+            text-align: center;
+            margin-top: 12px;
+            font-size: 13px;
+            color: #666;
+        }
+
+        .reward-hint strong {
+            color: #000;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <button class="back-btn">&larr;</button>
+            <span class="header-title">Daily Quest</span>
+        </div>
+
+        <div class="hero-image">
+            <span class="hero-placeholder">&#10084;</span>
+        </div>
+
+        <div class="content">
+            <span class="badge">Affirmation</span>
+
+            <h1 class="quiz-title">Feel-Good Foundations</h1>
+
+            <p class="quiz-description">
+                Rate how strongly you agree with statements about your relationship's emotional foundation and support system.
+            </p>
+
+            <div class="stats-card">
+                <div class="stats-row">
+                    <span class="stats-label">Statements</span>
+                    <span class="stats-value">5</span>
+                </div>
+                <div class="stats-row">
+                    <span class="stats-label">Time</span>
+                    <span class="stats-value">~3 minutes</span>
+                </div>
+                <div class="stats-row">
+                    <span class="stats-label">Reward</span>
+                    <span class="stats-value">+30 LP</span>
+                </div>
+            </div>
+
+            <div class="section-title">Rating Scale</div>
+
+            <div class="scale-preview">
+                <p class="scale-description">
+                    You'll rate each statement on a 5-point scale from strongly disagree to strongly agree.
+                </p>
+                <div class="scale-visual">
+                    <div class="scale-point">
+                        <div class="scale-circle">1</div>
+                        <div class="scale-label">Strongly Disagree</div>
+                    </div>
+                    <div class="scale-point">
+                        <div class="scale-circle">2</div>
+                        <div class="scale-label">Disagree</div>
+                    </div>
+                    <div class="scale-point">
+                        <div class="scale-circle">3</div>
+                        <div class="scale-label">Neutral</div>
+                    </div>
+                    <div class="scale-point">
+                        <div class="scale-circle">4</div>
+                        <div class="scale-label">Agree</div>
+                    </div>
+                    <div class="scale-point filled">
+                        <div class="scale-circle">5</div>
+                        <div class="scale-label">Strongly Agree</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="spacer"></div>
+        </div>
+
+        <div class="footer">
+            <button class="primary-btn">Begin</button>
+            <div class="reward-hint">Complete to earn <strong>+30 Love Points</strong></div>
+        </div>
+    </div>
+</body>
+</html>

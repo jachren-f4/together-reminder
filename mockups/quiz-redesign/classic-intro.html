@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Classic Quiz - Intro</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            background: #fafafa;
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+        }
+
+        .container {
+            max-width: 420px;
+            width: 100%;
+            background: #fff;
+            border: 2px solid #000;
+            box-shadow: 8px 8px 0 rgba(0, 0, 0, 0.1);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header */
+        .header {
+            border-bottom: 2px solid #000;
+            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .back-btn {
+            width: 40px;
+            height: 40px;
+            border: 2px solid #000;
+            background: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 20px;
+            transition: all 0.2s ease;
+        }
+
+        .back-btn:hover {
+            background: #000;
+            color: #fff;
+        }
+
+        .header-title {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: 600;
+        }
+
+        /* Hero Image */
+        .hero-image {
+            width: 100%;
+            height: 220px;
+            background: linear-gradient(135deg, #f5f5f5 0%, #e0e0e0 100%);
+            border-bottom: 2px solid #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .hero-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .hero-placeholder {
+            font-size: 64px;
+            opacity: 0.3;
+        }
+
+        /* Content */
+        .content {
+            padding: 24px 20px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .badge {
+            display: inline-block;
+            background: #000;
+            color: #fff;
+            padding: 6px 14px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 16px;
+            align-self: flex-start;
+        }
+
+        .quiz-title {
+            font-size: 32px;
+            font-weight: 400;
+            line-height: 1.2;
+            margin-bottom: 12px;
+            letter-spacing: -0.5px;
+        }
+
+        .quiz-description {
+            font-size: 16px;
+            color: #666;
+            font-style: italic;
+            line-height: 1.6;
+            margin-bottom: 32px;
+        }
+
+        /* Stats Card */
+        .stats-card {
+            border: 2px solid #000;
+            padding: 20px;
+            margin-bottom: 32px;
+        }
+
+        .stats-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .stats-row:last-child {
+            border-bottom: none;
+        }
+
+        .stats-label {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #666;
+        }
+
+        .stats-value {
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        /* How it Works */
+        .section-title {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 16px;
+            font-weight: 600;
+        }
+
+        .steps {
+            margin-bottom: 32px;
+        }
+
+        .step {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+
+        .step-number {
+            width: 32px;
+            height: 32px;
+            border: 2px solid #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 14px;
+            flex-shrink: 0;
+        }
+
+        .step-text {
+            font-size: 14px;
+            color: #333;
+            line-height: 1.5;
+            padding-top: 4px;
+        }
+
+        /* Spacer */
+        .spacer {
+            flex: 1;
+        }
+
+        /* Footer */
+        .footer {
+            padding: 20px;
+            border-top: 2px solid #000;
+        }
+
+        .primary-btn {
+            width: 100%;
+            padding: 18px 24px;
+            background: #000;
+            color: #fff;
+            border: 2px solid #000;
+            font-family: 'Georgia', serif;
+            font-size: 16px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .primary-btn:hover {
+            background: #fff;
+            color: #000;
+        }
+
+        .reward-hint {
+            text-align: center;
+            margin-top: 12px;
+            font-size: 13px;
+            color: #666;
+        }
+
+        .reward-hint strong {
+            color: #000;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <button class="back-btn">&larr;</button>
+            <span class="header-title">Daily Quest</span>
+        </div>
+
+        <div class="hero-image">
+            <span class="hero-placeholder">&#128161;</span>
+        </div>
+
+        <div class="content">
+            <span class="badge">Classic Quiz</span>
+
+            <h1 class="quiz-title">Trust & Honesty</h1>
+
+            <p class="quiz-description">
+                Explore the foundation of your relationship through ten thoughtful questions about trust, communication, and honesty.
+            </p>
+
+            <div class="stats-card">
+                <div class="stats-row">
+                    <span class="stats-label">Questions</span>
+                    <span class="stats-value">10</span>
+                </div>
+                <div class="stats-row">
+                    <span class="stats-label">Time</span>
+                    <span class="stats-value">~5 minutes</span>
+                </div>
+                <div class="stats-row">
+                    <span class="stats-label">Reward</span>
+                    <span class="stats-value">+50 LP</span>
+                </div>
+            </div>
+
+            <div class="section-title">How It Works</div>
+
+            <div class="steps">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <div class="step-text">Answer each question about your partner</div>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <div class="step-text">Your partner answers the same questions</div>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <div class="step-text">Compare answers and discover insights</div>
+                </div>
+            </div>
+
+            <div class="spacer"></div>
+        </div>
+
+        <div class="footer">
+            <button class="primary-btn">Begin Quiz</button>
+            <div class="reward-hint">Complete to earn <strong>+50 Love Points</strong></div>
+        </div>
+    </div>
+</body>
+</html>

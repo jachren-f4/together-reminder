@@ -19,6 +19,8 @@ import 'package:togetherremind/services/love_point_service.dart';
 import 'package:togetherremind/services/couple_preferences_service.dart';
 import 'package:togetherremind/services/auth_service.dart';
 import 'package:togetherremind/services/api_client.dart';
+import 'package:togetherremind/services/sound_service.dart';
+import 'package:togetherremind/services/haptic_service.dart';
 import 'package:togetherremind/models/daily_quest.dart';
 import 'package:togetherremind/config/dev_config.dart';
 import 'package:togetherremind/config/theme_config.dart';
@@ -75,6 +77,10 @@ void main() async {
 
   // Initialize Word Validation Service
   await WordValidationService.instance.initialize();
+
+  // Initialize Sound and Haptic Services
+  await SoundService().initialize();
+  await HapticService().initialize();
 
   // Initialize AuthService with Supabase
   if (SupabaseConfig.isConfigured) {

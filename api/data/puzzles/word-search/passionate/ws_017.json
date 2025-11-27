@@ -1,0 +1,24 @@
+{
+  "puzzleId": "ws_017",
+  "title": "Passionate XVII",
+  "theme": "passion",
+  "size": {
+    "rows": 10,
+    "cols": 10
+  },
+  "grid": "SKESNETNISEDLSIGBZKVRNEITTQINIPRLESAPGRDXATIPOCNLVEESGJLMIHXSYENUFWVGGLQNIDREAMVUMQTFBBRZBPFKEOCMCQQ",
+  "words": {
+    "FLOAT": "65,U",
+    "INTENSE": "8,L",
+    "IGNITE": "43,D",
+    "WILD": "66,UR",
+    "DEEP": "11,DR",
+    "CRAVING": "97,U",
+    "YEARN": "61,U",
+    "SKIP": "9,DL",
+    "NESTLE": "72,U",
+    "SILK": "34,UL",
+    "PULSE": "90,U",
+    "DREAM": "74,R"
+  }
+}

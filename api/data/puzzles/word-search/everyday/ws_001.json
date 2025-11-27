@@ -1,0 +1,24 @@
+{
+  "puzzleId": "ws_001",
+  "title": "Daily Love I",
+  "theme": "everyday",
+  "size": {
+    "rows": 10,
+    "cols": 10
+  },
+  "grid": "VSCPYJHLAPWYAWALKUTTPEKOFQGFOHTNETNOCYUADFYKDTLOCNAZIMEAAJHKNIRGENTHQFDAKPCRDECUCOUPLERSGLDRIWPLUYXA",
+  "words": {
+    "CONTENT": "36,L",
+    "WALK": "13,R",
+    "MERRY": "53,DR",
+    "JOYFUL": "57,U",
+    "WEEKEND": "10,DR",
+    "GRIN": "63,L",
+    "DATE": "44,DR",
+    "CHAT": "78,UL",
+    "THANKFUL": "19,D",
+    "TOUCH": "18,D",
+    "GIFT": "63,UL",
+    "COUPLE": "80,R"
+  }
+}

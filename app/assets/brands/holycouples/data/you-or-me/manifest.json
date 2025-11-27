@@ -1,0 +1,22 @@
+{
+  "activity": "you-or-me",
+  "brand": "holycouples",
+  "branches": [
+    {
+      "id": "playful",
+      "displayName": "Playful",
+      "description": "Light comparisons and fun",
+      "folder": "playful",
+      "questionCount": 30
+    },
+    {
+      "id": "reflective",
+      "displayName": "Reflective",
+      "description": "Deeper insights",
+      "folder": "reflective",
+      "questionCount": 30
+    }
+  ],
+  "selectionMode": "quest_count_mod",
+  "version": "1.0.0"
+}

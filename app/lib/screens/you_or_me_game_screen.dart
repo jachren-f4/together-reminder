@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
+import 'dart:math' as math;
 import '../models/you_or_me.dart';
 import '../services/storage_service.dart';
 import '../services/you_or_me_service.dart';
+import '../services/haptic_service.dart';
+import '../services/sound_service.dart';
 import '../utils/logger.dart';
-import '../config/brand/brand_loader.dart';
+import '../widgets/editorial/editorial.dart';
 import 'you_or_me_results_screen.dart';
 import 'you_or_me_waiting_screen.dart';
 
 /// Main game screen for You or Me
-/// Shows question cards with swipe animations and answer buttons
+/// Editorial newspaper aesthetic with card stack and swipe animations
 class YouOrMeGameScreen extends StatefulWidget {
   final YouOrMeSession session;
 
@@ -22,7 +25,7 @@ class YouOrMeGameScreen extends StatefulWidget {
 }
 
 class _YouOrMeGameScreenState extends State<YouOrMeGameScreen>
-    with SingleTickerProviderStateMixin {
+    with TickerProviderStateMixin {
   final StorageService _storage = StorageService();
   final YouOrMeService _service = YouOrMeService();
 
@@ -31,16 +34,26 @@ class _YouOrMeGameScreenState extends State<YouOrMeGameScreen>
   bool _isSubmitting = false;
   bool _isAnimating = false;
 
+  // Card swipe animation
   late AnimationController _cardAnimationController;
   late Animation<Offset> _slideAnimation;
   late Animation<double> _rotateAnimation;
   late Animation<double> _fadeAnimation;
 
+  // Drag state for interactive swipe
+  Offset _dragOffset = Offset.zero;
+  double _dragRotation = 0;
+  bool? _pendingAnswer; // true = Me (right), false = You (left)
+
+  // Decision stamp animation
+  late AnimationController _stampController;
+  late Animation<double> _stampScaleAnimation;
+  late Animation<double> _stampOpacityAnimation;
+
   @override
   void initState() {
     super.initState();
 
-    // Setup card animation controller
     _cardAnimationController = AnimationController(
       duration: const Duration(milliseconds: 300),
       vsync: this,
@@ -73,34 +86,64 @@ class _YouOrMeGameScreenState extends State<YouOrMeGameScreen>
     _cardAnimationController.addStatusListener((status) {
       if (status == AnimationStatus.completed) {
         _cardAnimationController.reset();
+        _stampController.reset();
+        setState(() {
+          _pendingAnswer = null;
+        });
 
-        // Check if this was the last question BEFORE incrementing
         final wasLastQuestion = (_currentQuestionIndex + 1) >= widget.session.questions.length;
 
         if (wasLastQuestion) {
-          // Don't increment or rebuild - just submit answers
           _submitAnswers();
         } else {
-          // Move to next question
           setState(() {
             _currentQuestionIndex++;
           });
         }
       }
     });
+
+    // Decision stamp animation (bouncy pop-in)
+    _stampController = AnimationController(
+      duration: const Duration(milliseconds: 400),
+      vsync: this,
+    );
+
+    _stampScaleAnimation = TweenSequence<double>([
+      TweenSequenceItem(
+        tween: Tween(begin: 0.0, end: 1.2).chain(CurveTween(curve: Curves.easeOut)),
+        weight: 60,
+      ),
+      TweenSequenceItem(
+        tween: Tween(begin: 1.2, end: 1.0).chain(CurveTween(curve: Curves.elasticOut)),
+        weight: 40,
+      ),
+    ]).animate(_stampController);
+
+    _stampOpacityAnimation = Tween<double>(
+      begin: 0.0,
+      end: 1.0,
+    ).animate(CurvedAnimation(
+      parent: _stampController,
+      curve: const Interval(0.0, 0.3, curve: Curves.easeOut),
+    ));
   }
 
   @override
   void dispose() {
     _cardAnimationController.dispose();
+    _stampController.dispose();
     super.dispose();
   }
 
   Future<void> _handleAnswer(bool answerValue) async {
     if (_isSubmitting || _isAnimating) return;
 
-    // Prevent duplicate answers while animation is in progress
     _isAnimating = true;
+
+    // Haptic and sound feedback
+    HapticService().trigger(HapticType.medium);
+    SoundService().play(SoundId.answerSelect);
 
     final question = widget.session.questions[_currentQuestionIndex];
 
@@ -108,7 +151,7 @@ class _YouOrMeGameScreenState extends State<YouOrMeGameScreen>
       questionId: question.id,
       questionPrompt: question.prompt,
       questionContent: question.content,
-      answerValue: answerValue, // true = "Me", false = "You"
+      answerValue: answerValue,
       answeredAt: DateTime.now(),
     );
 
@@ -118,11 +161,77 @@ class _YouOrMeGameScreenState extends State<YouOrMeGameScreen>
       service: 'you_or_me',
     );
 
-    // Animate card out
+    // Show decision stamp, then swipe card away
+    setState(() {
+      _pendingAnswer = answerValue;
+    });
+    await _stampController.forward();
+
+    // Update slide direction based on answer (right = Me, left = You)
+    _slideAnimation = Tween<Offset>(
+      begin: Offset.zero,
+      end: Offset(answerValue ? 1.5 : -1.5, 0),
+    ).animate(CurvedAnimation(
+      parent: _cardAnimationController,
+      curve: Curves.easeInOut,
+    ));
+
+    _rotateAnimation = Tween<double>(
+      begin: 0,
+      end: answerValue ? 0.15 : -0.15,
+    ).animate(CurvedAnimation(
+      parent: _cardAnimationController,
+      curve: Curves.easeInOut,
+    ));
+
     await _cardAnimationController.forward();
 
-    // Animation completes, allow next answer
     _isAnimating = false;
+  }
+
+  // Handle drag gestures for swipe interaction
+  void _onPanStart(DragStartDetails details) {
+    if (_isSubmitting || _isAnimating) return;
+    HapticService().trigger(HapticType.selection);
+  }
+
+  void _onPanUpdate(DragUpdateDetails details) {
+    if (_isSubmitting || _isAnimating) return;
+
+    setState(() {
+      _dragOffset += details.delta;
+      // Rotation proportional to horizontal drag (-0.15 to 0.15 radians)
+      _dragRotation = (_dragOffset.dx / 300).clamp(-0.15, 0.15);
+
+      // Determine pending answer based on drag direction
+      if (_dragOffset.dx.abs() > 50) {
+        _pendingAnswer = _dragOffset.dx > 0; // Right = Me (true), Left = You (false)
+      } else {
+        _pendingAnswer = null;
+      }
+    });
+  }
+
+  void _onPanEnd(DragEndDetails details) {
+    if (_isSubmitting || _isAnimating) return;
+
+    final velocity = details.velocity.pixelsPerSecond.dx;
+    final threshold = 100.0;
+
+    // Check if swipe was strong enough
+    if (_dragOffset.dx.abs() > threshold || velocity.abs() > 500) {
+      final answerValue = _dragOffset.dx > 0; // Right = Me, Left = You
+      _handleAnswer(answerValue);
+    }
+
+    // Reset drag state
+    setState(() {
+      _dragOffset = Offset.zero;
+      _dragRotation = 0;
+      if (_pendingAnswer == null) {
+        _pendingAnswer = null;
+      }
+    });
   }
 
   Future<void> _submitAnswers() async {
@@ -141,21 +250,18 @@ class _YouOrMeGameScreenState extends State<YouOrMeGameScreen>
 
       if (!mounted) return;
 
-      // Check if partner has answered
       final updatedSession = await _service.getSession(widget.session.id);
       if (updatedSession == null) {
         throw Exception('Session not found');
       }
 
       if (updatedSession.areBothUsersAnswered()) {
-        // Both answered - go to results
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(
             builder: (context) => YouOrMeResultsScreen(session: updatedSession),
           ),
         );
       } else {
-        // Waiting for partner
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(
             builder: (context) => YouOrMeWaitingScreen(session: updatedSession),
@@ -169,106 +275,88 @@ class _YouOrMeGameScreenState extends State<YouOrMeGameScreen>
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Error submitting answers: $e'),
-          backgroundColor: BrandLoader().colors.error,
+          backgroundColor: EditorialStyles.ink,
         ),
       );
       setState(() => _isSubmitting = false);
     }
   }
 
-  String _getUserInitial() {
+  String _getUserName() {
     final user = _storage.getUser();
-    if (user != null && user.name != null && user.name!.isNotEmpty) {
-      return user.name![0].toUpperCase();
-    }
-    return 'M';
+    return user?.name ?? 'You';
   }
 
-  String _getPartnerInitial() {
+  String _getPartnerName() {
     final partner = _storage.getPartner();
-    if (partner != null && partner.name != null && partner.name!.isNotEmpty) {
-      return partner.name![0].toUpperCase();
-    }
-    return 'P';
+    return partner?.name ?? 'Partner';
   }
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final partner = _storage.getPartner();
     final question = widget.session.questions[_currentQuestionIndex];
     final progress = (_currentQuestionIndex + 1) / widget.session.questions.length;
 
     return Scaffold(
-      backgroundColor: const Color(0xFFFAFAFA),
-      appBar: AppBar(
-        backgroundColor: const Color(0xFFFAFAFA),
-        elevation: 0,
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: BrandLoader().colors.textPrimary),
-          onPressed: () => Navigator.of(context).pop(),
-        ),
-      ),
+      backgroundColor: EditorialStyles.paper,
       body: Stack(
         children: [
           SafeArea(
             child: Column(
               children: [
-                // Progress bar
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(3),
-                    child: LinearProgressIndicator(
-                      value: progress,
-                      backgroundColor: const Color(0xFFF0F0F0),
-                      valueColor: AlwaysStoppedAnimation<Color>(BrandLoader().colors.textPrimary),
-                      minHeight: 6,
-                    ),
-                  ),
+                // Header with progress
+                EditorialHeader(
+                  title: 'You or Me',
+                  counter: '${_currentQuestionIndex + 1} of ${widget.session.questions.length}',
+                  progress: progress,
+                  onClose: () => Navigator.of(context).pop(),
                 ),
 
+                // Content
                 Expanded(
-                  child: SingleChildScrollView(
-                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                  child: Padding(
+                    padding: const EdgeInsets.all(20),
                     child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        // Question prompt
-                        Text(
-                          question.prompt,
-                          style: const TextStyle(
-                            fontFamily: 'Playfair Display',
-                            fontSize: 28,
-                            fontWeight: FontWeight.w700,
-                            letterSpacing: -0.5,
-                            color: Color(0xFF1A1A1A),
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
-
-                        const SizedBox(height: 16),
-
                         // Card stack
-                        SizedBox(
-                          height: 240,
+                        Expanded(
                           child: Stack(
                             alignment: Alignment.center,
                             children: [
-                              // Background cards (stacked effect)
+                              // Background cards
                               if (_currentQuestionIndex + 2 < widget.session.questions.length)
-                                _buildBackgroundCard(offset: 16, opacity: 0.3, scale: 0.94),
+                                _buildBackgroundCard(offset: 12, opacity: 0.3, scale: 0.94),
                               if (_currentQuestionIndex + 1 < widget.session.questions.length)
-                                _buildBackgroundCard(offset: 8, opacity: 0.6, scale: 0.97),
+                                _buildBackgroundCard(offset: 6, opacity: 0.6, scale: 0.97),
 
-                              // Current card with animation
-                              SlideTransition(
-                                position: _slideAnimation,
-                                child: RotationTransition(
-                                  turns: _rotateAnimation,
-                                  child: FadeTransition(
-                                    opacity: _fadeAnimation,
-                                    child: _buildQuestionCard(question, _currentQuestionIndex),
+                              // Current card with drag gesture and animation
+                              GestureDetector(
+                                onPanStart: _onPanStart,
+                                onPanUpdate: _onPanUpdate,
+                                onPanEnd: _onPanEnd,
+                                child: Transform.translate(
+                                  offset: _dragOffset,
+                                  child: Transform.rotate(
+                                    angle: _dragRotation,
+                                    child: SlideTransition(
+                                      position: _slideAnimation,
+                                      child: RotationTransition(
+                                        turns: _rotateAnimation,
+                                        child: FadeTransition(
+                                          opacity: _fadeAnimation,
+                                          child: Stack(
+                                            children: [
+                                              _buildQuestionCard(question),
+                                              // Decision stamp overlay
+                                              if (_pendingAnswer != null)
+                                                Positioned.fill(
+                                                  child: _buildDecisionStamp(_pendingAnswer!),
+                                                ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ),
                                   ),
                                 ),
                               ),
@@ -276,45 +364,10 @@ class _YouOrMeGameScreenState extends State<YouOrMeGameScreen>
                           ),
                         ),
 
-                        const SizedBox(height: 16),
+                        const SizedBox(height: 24),
 
-                        // Answer section
-                        Container(
-                          width: double.infinity,
-                          decoration: BoxDecoration(
-                            color: const Color(0xFFFFFEFD),
-                            border: Border.all(color: const Color(0xFFF0F0F0), width: 2),
-                            borderRadius: BorderRadius.circular(24),
-                          ),
-                          padding: const EdgeInsets.fromLTRB(16, 24, 16, 24),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              // "Me" button (true)
-                              _buildAnswerButton(
-                                label: _getUserInitial(),
-                                onPressed: () => _handleAnswer(true),
-                                isInitial: true,
-                              ),
-                              const SizedBox(width: 20),
-                              const Text(
-                                'or',
-                                style: TextStyle(
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.w500,
-                                  color: Color(0xFFAAAAAA),
-                                ),
-                              ),
-                              const SizedBox(width: 20),
-                              // "You" button (false)
-                              _buildAnswerButton(
-                                label: _getPartnerInitial(),
-                                onPressed: () => _handleAnswer(false),
-                                isInitial: true,
-                              ),
-                            ],
-                          ),
-                        ),
+                        // Answer buttons
+                        _buildAnswerButtons(),
                       ],
                     ),
                   ),
@@ -326,9 +379,9 @@ class _YouOrMeGameScreenState extends State<YouOrMeGameScreen>
           // Loading overlay
           if (_isSubmitting)
             Container(
-              color: BrandLoader().colors.textPrimary.withOpacity(0.5),
+              color: EditorialStyles.ink.withValues(alpha: 0.5),
               child: Center(
-                child: CircularProgressIndicator(color: BrandLoader().colors.textOnPrimary),
+                child: CircularProgressIndicator(color: EditorialStyles.paper),
               ),
             ),
         ],
@@ -336,43 +389,36 @@ class _YouOrMeGameScreenState extends State<YouOrMeGameScreen>
     );
   }
 
-  Widget _buildQuestionCard(YouOrMeQuestion question, int index) {
+  Widget _buildQuestionCard(YouOrMeQuestion question) {
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
-        color: const Color(0xFFFFFEFD),
-        border: Border.all(color: const Color(0xFFF0F0F0), width: 2),
-        borderRadius: BorderRadius.circular(24),
+        color: EditorialStyles.paper,
+        border: EditorialStyles.fullBorder,
         boxShadow: [
           BoxShadow(
-            color: BrandLoader().colors.textPrimary.withOpacity(0.12),
-            blurRadius: 12,
-            offset: const Offset(0, 4),
+            color: EditorialStyles.ink.withValues(alpha: 0.1),
+            offset: const Offset(6, 6),
+            blurRadius: 0,
           ),
         ],
       ),
-      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 28),
+      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(
-            'Question ${index + 1} of ${widget.session.questions.length}',
-            style: const TextStyle(
-              fontSize: 13,
-              fontWeight: FontWeight.w500,
-              color: Color(0xFF6E6E6E),
+            question.prompt.toUpperCase(),
+            style: EditorialStyles.labelUppercaseSmall.copyWith(
+              color: EditorialStyles.inkMuted,
             ),
+            textAlign: TextAlign.center,
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: 20),
           Text(
-            question.content,
-            style: const TextStyle(
-              fontFamily: 'Playfair Display',
-              fontSize: 32,
-              fontWeight: FontWeight.w700,
-              letterSpacing: -0.8,
-              color: Color(0xFF1A1A1A),
-              height: 1.2,
+            '"${question.content}"',
+            style: EditorialStyles.questionText.copyWith(
+              fontStyle: FontStyle.italic,
             ),
             textAlign: TextAlign.center,
           ),
@@ -394,70 +440,122 @@ class _YouOrMeGameScreenState extends State<YouOrMeGameScreen>
           opacity: opacity,
           child: Container(
             width: double.infinity,
+            height: double.infinity,
             decoration: BoxDecoration(
-              color: const Color(0xFFFFFEFD),
-              border: Border.all(color: const Color(0xFFE0E0E0), width: 2),
-              borderRadius: BorderRadius.circular(24),
+              color: EditorialStyles.paper,
+              border: EditorialStyles.fullBorder,
             ),
-            height: 320,
           ),
         ),
       ),
     );
   }
 
+  Widget _buildAnswerButtons() {
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        border: EditorialStyles.fullBorder,
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          _buildAnswerButton(
+            label: _getUserName(),
+            emoji: '🙋',
+            onTap: () => _handleAnswer(true),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: Text(
+              'or',
+              style: EditorialStyles.bodySmall.copyWith(
+                color: EditorialStyles.inkMuted,
+              ),
+            ),
+          ),
+          _buildAnswerButton(
+            label: _getPartnerName(),
+            emoji: '🙋‍♀️',
+            onTap: () => _handleAnswer(false),
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget _buildAnswerButton({
     required String label,
-    required VoidCallback onPressed,
-    required bool isInitial,
+    required String emoji,
+    required VoidCallback onTap,
   }) {
     return GestureDetector(
-      onTap: onPressed,
+      onTap: _isSubmitting ? null : onTap,
       child: Container(
         width: 100,
-        height: 100,
+        padding: const EdgeInsets.symmetric(vertical: 16),
         decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          border: Border.all(color: const Color(0xFF1A1A1A), width: 2.5),
-          color: const Color(0xFFFFFEFD),
+          color: EditorialStyles.paper,
+          border: EditorialStyles.fullBorder,
         ),
-        child: Center(
-          child: isInitial
-              ? Text(
-                  label,
-                  style: const TextStyle(
-                    fontSize: 32,
-                    fontWeight: FontWeight.w700,
-                    color: Color(0xFF1A1A1A),
-                  ),
-                )
-              : Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Text(
-                      'Your',
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w600,
-                        color: Color(0xFF1A1A1A),
-                        height: 1.2,
-                      ),
-                    ),
-                    const SizedBox(height: 1),
-                    const Text(
-                      'partner',
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w600,
-                        color: Color(0xFF1A1A1A),
-                        height: 1.2,
-                      ),
-                    ),
-                  ],
-                ),
+        child: Column(
+          children: [
+            Text(emoji, style: const TextStyle(fontSize: 28)),
+            const SizedBox(height: 6),
+            Text(
+              label.length > 8 ? '${label.substring(0, 8)}...' : label,
+              style: EditorialStyles.labelUppercase.copyWith(
+                fontSize: 12,
+              ),
+              overflow: TextOverflow.ellipsis,
+            ),
+          ],
         ),
       ),
     );
   }
 
+  Widget _buildDecisionStamp(bool isMe) {
+    final stampText = isMe ? 'ME' : 'YOU';
+    final stampColor = isMe
+        ? EditorialStyles.ink
+        : EditorialStyles.inkMuted;
+
+    return AnimatedBuilder(
+      animation: _stampController,
+      builder: (context, child) {
+        return Center(
+          child: Transform.scale(
+            scale: _stampScaleAnimation.value,
+            child: Opacity(
+              opacity: _stampOpacityAnimation.value,
+              child: Transform.rotate(
+                angle: isMe ? 0.15 : -0.15,
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: stampColor,
+                      width: 4,
+                    ),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Text(
+                    stampText,
+                    style: TextStyle(
+                      fontFamily: 'Georgia',
+                      fontSize: 48,
+                      fontWeight: FontWeight.w900,
+                      color: stampColor,
+                      letterSpacing: 8,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
 }

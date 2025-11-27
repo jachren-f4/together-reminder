@@ -1,0 +1,8 @@
+{
+  "branch": "romantic",
+  "activityType": "linked",
+  "imagePath": "assets/brands/togetherremind/images/quests/linked.png",
+  "fallbackEmoji": "🔗",
+  "displayName": "Romantic",
+  "description": "Love-themed crossword clues"
+}

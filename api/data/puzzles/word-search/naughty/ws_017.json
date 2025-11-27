@@ -1,0 +1,24 @@
+{
+  "puzzleId": "ws_017",
+  "title": "Intimate XVII",
+  "theme": "intimacy",
+  "size": {
+    "rows": 10,
+    "cols": 10
+  },
+  "grid": "HCIYEARNLBFIMAGINENEUALLUPELOHTXNRWVRAIGPMHTIMTLSQMZBTAIALSAERPKISPUAITAACHEYRPSCREVEALECRESLUPNRUBG",
+  "words": {
+    "CAPTIVE": "80,UR",
+    "PASSION": "78,U",
+    "ALLURE": "37,D",
+    "PULL": "25,L",
+    "YEARN": "3,R",
+    "REVEAL": "81,R",
+    "FANTASY": "10,DR",
+    "PULSE": "94,L",
+    "TEMPT": "70,U",
+    "IMAGINE": "11,R",
+    "ACHE": "72,R",
+    "BURN": "98,L"
+  }
+}

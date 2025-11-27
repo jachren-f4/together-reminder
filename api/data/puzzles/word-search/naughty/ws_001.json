@@ -1,0 +1,24 @@
+{
+  "puzzleId": "ws_001",
+  "title": "Intimate I",
+  "theme": "intimacy",
+  "size": {
+    "rows": 10,
+    "cols": 10
+  },
+  "grid": "XFWFFIGUREHXBLNRUBTNZZPOLIBIDOECGNEDDIHCULDESOPXEDIZBEGINWRNVGRMOQBASEUAUZIOWOVCBKSSDNFGQKCMIYETSILK",
+  "words": {
+    "BARE": "80,UR",
+    "DRAW": "49,DL",
+    "NECK": "59,D",
+    "BODY": "66,DL",
+    "HIDDEN": "38,L",
+    "SILK": "96,R",
+    "BURN": "17,L",
+    "NIMBLE": "85,UL",
+    "FIGURE": "4,R",
+    "LIBIDO": "24,R",
+    "SOFT": "68,DL",
+    "EXPOSED": "48,L"
+  }
+}

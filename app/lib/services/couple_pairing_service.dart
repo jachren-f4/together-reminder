@@ -25,7 +25,9 @@ class CouplePairingService {
   /// Generate a new pairing code
   /// Returns PairingCode with 6-digit code and expiration time
   Future<PairingCode> generatePairingCode() async {
-    if (!_authService.isAuthenticated) {
+    // Use async token check to avoid race condition with auth state updates
+    final token = await _authService.getAccessToken();
+    if (token == null) {
       throw Exception('Not authenticated. Please sign in.');
     }
 
@@ -61,7 +63,9 @@ class CouplePairingService {
 
   /// Get current active invite code (if any)
   Future<PairingCode?> getCurrentInviteCode() async {
-    if (!_authService.isAuthenticated) {
+    // Use async token check to avoid race condition with auth state updates
+    final token = await _authService.getAccessToken();
+    if (token == null) {
       return null;
     }
 
@@ -95,7 +99,9 @@ class CouplePairingService {
   /// Pair with a partner using their code
   /// Returns Partner object after successful pairing
   Future<Partner> joinWithCode(String code) async {
-    if (!_authService.isAuthenticated) {
+    // Use async token check to avoid race condition with auth state updates
+    final token = await _authService.getAccessToken();
+    if (token == null) {
       throw Exception('Not authenticated. Please sign in.');
     }
 
@@ -146,7 +152,9 @@ class CouplePairingService {
   /// Check current pairing status
   /// Returns partner info if paired, null otherwise
   Future<CoupleStatus?> getStatus() async {
-    if (!_authService.isAuthenticated) {
+    // Use async token check to avoid race condition with auth state updates
+    final token = await _authService.getAccessToken();
+    if (token == null) {
       return null;
     }
 
@@ -178,7 +186,9 @@ class CouplePairingService {
 
   /// Leave current couple (unpair)
   Future<bool> leaveCouple() async {
-    if (!_authService.isAuthenticated) {
+    // Use async token check to avoid race condition with auth state updates
+    final token = await _authService.getAccessToken();
+    if (token == null) {
       throw Exception('Not authenticated. Please sign in.');
     }
 

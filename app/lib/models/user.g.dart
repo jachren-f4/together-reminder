@@ -25,13 +25,14 @@ class UserAdapter extends TypeAdapter<User> {
       arenaTier: fields[5] == null ? 1 : fields[5] as int,
       floor: fields[6] == null ? 0 : fields[6] as int,
       lastActivityDate: fields[7] as DateTime?,
+      avatarEmoji: fields[8] == null ? '😊' : fields[8] as String,
     );
   }
 
   @override
   void write(BinaryWriter writer, User obj) {
     writer
-      ..writeByte(8)
+      ..writeByte(9)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -47,7 +48,9 @@ class UserAdapter extends TypeAdapter<User> {
       ..writeByte(6)
       ..write(obj.floor)
       ..writeByte(7)
-      ..write(obj.lastActivityDate);
+      ..write(obj.lastActivityDate)
+      ..writeByte(8)
+      ..write(obj.avatarEmoji);
   }
 
   @override

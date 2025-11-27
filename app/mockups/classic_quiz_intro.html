@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Classic Quiz Intro - Editorial Design</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Source+Sans+Pro:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Source Sans Pro', -apple-system, sans-serif;
+            background: #FAFAF8;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            max-width: 430px;
+            margin: 0 auto;
+            border-left: 1px solid #E8E6E1;
+            border-right: 1px solid #E8E6E1;
+        }
+
+        /* Header - Fixed at top */
+        .header {
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            padding: 12px 16px;
+            border-bottom: 2px solid #1A1A1A;
+            display: flex;
+            align-items: center;
+            background: #FAFAF8;
+        }
+
+        .back-btn {
+            width: 40px;
+            height: 40px;
+            border: 2px solid #1A1A1A;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            cursor: pointer;
+            background: #FAFAF8;
+        }
+
+        .header-label {
+            margin-left: 16px;
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: #1A1A1A;
+        }
+
+        /* Scrollable Content Area */
+        .scroll-content {
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        /* Hero Banner - Scrolls with content */
+        .hero {
+            width: 100%;
+            height: 180px;
+            background: linear-gradient(180deg, #E8E6E1 0%, #FAFAF8 100%);
+            border-bottom: 2px solid #1A1A1A;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .hero-icon {
+            font-size: 64px;
+            opacity: 0.3;
+        }
+
+        /* Content */
+        .content {
+            padding: 24px 20px;
+        }
+
+        /* Badge */
+        .badge {
+            display: inline-block;
+            background: #1A1A1A;
+            color: #FAFAF8;
+            padding: 6px 14px;
+            font-size: 10px;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            margin-bottom: 16px;
+        }
+
+        /* Title */
+        .title {
+            font-family: 'Playfair Display', serif;
+            font-size: 32px;
+            font-weight: 700;
+            color: #1A1A1A;
+            line-height: 1.2;
+            margin-bottom: 12px;
+        }
+
+        /* Description */
+        .description {
+            font-family: 'Playfair Display', serif;
+            font-size: 16px;
+            font-style: italic;
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 32px;
+        }
+
+        /* Stats Card */
+        .stats-card {
+            border: 2px solid #1A1A1A;
+            margin-bottom: 32px;
+        }
+
+        .stats-row {
+            display: flex;
+            border-bottom: 1px solid #E8E6E1;
+            padding: 14px 16px;
+        }
+
+        .stats-row:last-child {
+            border-bottom: none;
+        }
+
+        .stats-label {
+            flex: 1;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .stats-value {
+            font-family: 'Playfair Display', serif;
+            font-size: 14px;
+            font-weight: 600;
+            color: #1A1A1A;
+        }
+
+        /* Section Title */
+        .section-title {
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: #1A1A1A;
+            margin-bottom: 16px;
+        }
+
+        /* Steps */
+        .step {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 16px;
+        }
+
+        .step-number {
+            width: 28px;
+            height: 28px;
+            border: 2px solid #1A1A1A;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Playfair Display', serif;
+            font-size: 14px;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+
+        .step-text {
+            margin-left: 14px;
+            font-size: 14px;
+            color: #444;
+            line-height: 1.5;
+            padding-top: 4px;
+        }
+
+        /* Footer - Fixed at bottom */
+        .footer {
+            position: sticky;
+            bottom: 0;
+            padding: 20px;
+            border-top: 2px solid #1A1A1A;
+            background: #FAFAF8;
+        }
+
+        .primary-btn {
+            width: 100%;
+            padding: 16px;
+            background: #1A1A1A;
+            color: #FAFAF8;
+            border: none;
+            font-size: 14px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            cursor: pointer;
+        }
+
+        .footer-note {
+            text-align: center;
+            font-size: 13px;
+            color: #999;
+            margin-top: 12px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header (Fixed) -->
+    <div class="header">
+        <div class="back-btn">&larr;</div>
+        <span class="header-label">Daily Quest</span>
+    </div>
+
+    <!-- Scrollable Content -->
+    <div class="scroll-content">
+        <!-- Hero Banner (Scrolls) -->
+        <div class="hero">
+            <span class="hero-icon">🧩</span>
+        </div>
+
+        <!-- Content -->
+        <div class="content">
+            <!-- Badge -->
+            <span class="badge">Classic Quiz</span>
+
+            <!-- Title -->
+            <h1 class="title">Couple Quiz</h1>
+
+            <!-- Description -->
+            <p class="description">
+                Answer questions about yourself, then Sarah will try to predict your answers. See how well you know each other!
+            </p>
+
+            <!-- Stats Card -->
+            <div class="stats-card">
+                <div class="stats-row">
+                    <span class="stats-label">Questions</span>
+                    <span class="stats-value">5</span>
+                </div>
+                <div class="stats-row">
+                    <span class="stats-label">Time</span>
+                    <span class="stats-value">~3 minutes</span>
+                </div>
+                <div class="stats-row">
+                    <span class="stats-label">Reward</span>
+                    <span class="stats-value">+30 LP</span>
+                </div>
+            </div>
+
+            <!-- How It Works -->
+            <h3 class="section-title">How It Works</h3>
+
+            <div class="step">
+                <div class="step-number">1</div>
+                <p class="step-text">Answer each question about yourself</p>
+            </div>
+
+            <div class="step">
+                <div class="step-number">2</div>
+                <p class="step-text">Sarah answers the same questions about you</p>
+            </div>
+
+            <div class="step">
+                <div class="step-number">3</div>
+                <p class="step-text">Compare answers and discover insights</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer (Fixed) -->
+    <div class="footer">
+        <button class="primary-btn">Begin Quiz</button>
+        <p class="footer-note">Complete to earn +30 Love Points</p>
+    </div>
+</body>
+</html>

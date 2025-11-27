@@ -1,0 +1,24 @@
+{
+  "puzzleId": "ws_010",
+  "title": "Passionate X",
+  "theme": "passion",
+  "size": {
+    "rows": 10,
+    "cols": 10
+  },
+  "grid": "PBLTIGNITEGHIEVITPACLDPNIPSKZEITSIGHTWRQDZIAXUUOMDEPTRKQCJAMXNUNIEMKEGQYGRAPCLRRFFDYROSXDIRJZBCEMRBP",
+  "words": {
+    "LIPS": "2,D",
+    "MOAN": "96,UL",
+    "SPIRIT": "86,UL",
+    "PURR": "51,DR",
+    "CORE": "56,UR",
+    "GRIP": "69,D",
+    "GLIDE": "10,D",
+    "IGNITE": "4,R",
+    "CAPTIVE": "19,L",
+    "SPIN": "26,L",
+    "SIGH": "32,R",
+    "DREAM": "88,U"
+  }
+}

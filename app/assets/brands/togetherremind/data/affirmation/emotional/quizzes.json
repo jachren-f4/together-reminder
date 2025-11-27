@@ -1,0 +1,250 @@
+{
+  "quizzes": [
+    {
+      "id": "gentle_beginnings",
+      "name": "Gentle Beginnings",
+      "category": "trust",
+      "difficulty": 1,
+      "formatType": "affirmation",
+      "imagePath": "assets/images/quests/feel-good-foundations.png",
+      "description": "Rate your feelings together",
+      "questions": [
+        {
+          "question": "I enjoy learning small new things about my partner every day.",
+          "questionType": "scale",
+          "options": [],
+          "correctAnswer": null
+        },
+        {
+          "question": "We find simple ways to have fun together.",
+          "questionType": "scale",
+          "options": [],
+          "correctAnswer": null
+        },
+        {
+          "question": "I feel comfortable being myself around my partner.",
+          "questionType": "scale",
+          "options": [],
+          "correctAnswer": null
+        },
+        {
+          "question": "We laugh together without effort.",
+          "questionType": "scale",
+          "options": [],
+          "correctAnswer": null
+        },
+        {
+          "question": "Being with my partner feels natural and relaxed.",
+          "questionType": "scale",
+          "options": [],
+          "correctAnswer": null
+        }
+      ]
+    },
+    {
+      "id": "warm_vibes",
+      "name": "Warm Vibes",
+      "category": "trust",
+      "difficulty": 1,
+      "formatType": "affirmation",
+      "imagePath": "assets/images/quests/feel-good-foundations.png",
+      "description": "Rate your feelings together",
+      "questions": [
+        {
+          "question": "My partner helps create a warm atmosphere in our daily life.",
+          "questionType": "scale",
+          "options": [],
+          "correctAnswer": null
+        },
+        {
+          "question": "I often feel uplifted when we spend time together.",
+          "questionType": "scale",
+          "options": [],
+          "correctAnswer": null
+        },
+        {
+          "question": "We greet each other in a pleasant, affectionate way.",
+          "questionType": "scale",
+          "options": [],
+          "correctAnswer": null
+        },
+        {
+          "question": "Being around my partner usually puts me in a good mood.",
+          "questionType": "scale",
+          "options": [],
+          "correctAnswer": null
+        },
+        {
+          "question": "We share positive emotions regularly.",
+          "questionType": "scale",
+          "options": [],
+          "correctAnswer": null
+        }
+      ]
+    },
+    {
+      "id": "simple_joys",
+      "name": "Simple Joys",
+      "category": "emotional_support",
+      "difficulty": 1,
+      "formatType": "affirmation",
+      "imagePath": "assets/images/quests/feel-good-foundations.png",
+      "description": "Rate your feelings together",
+      "questions": [
+        {
+          "question": "We appreciate small joyful moments together.",
+          "questionType": "scale",
+          "options": [],
+          "correctAnswer": null
+        },
+        {
+          "question": "Simple activities feel meaningful with my partner.",
+          "questionType": "scale",
+          "options": [],
+          "correctAnswer": null
+        },
+        {
+          "question": "We have small routines that bring us joy.",
+          "questionType": "scale",
+          "options": [],
+          "correctAnswer": null
+        },
+        {
+          "question": "I feel happy sharing everyday experiences with my partner.",
+          "questionType": "scale",
+          "options": [],
+          "correctAnswer": null
+        },
+        {
+          "question": "Small joys help strengthen our bond.",
+          "questionType": "scale",
+          "options": [],
+          "correctAnswer": null
+        }
+      ]
+    },
+    {
+      "id": "getting_comfortable",
+      "name": "Getting Comfortable",
+      "category": "trust",
+      "difficulty": 1,
+      "formatType": "affirmation",
+      "imagePath": "assets/images/quests/getting-comfortable.png",
+      "description": "Rate your feelings together",
+      "questions": [
+        {
+          "question": "I feel at ease expressing basic preferences.",
+          "questionType": "scale",
+          "options": [],
+          "correctAnswer": null
+        },
+        {
+          "question": "We can relax in silence together.",
+          "questionType": "scale",
+          "options": [],
+          "correctAnswer": null
+        },
+        {
+          "question": "We're good at making each other comfortable.",
+          "questionType": "scale",
+          "options": [],
+          "correctAnswer": null
+        },
+        {
+          "question": "We navigate small decisions without difficulty.",
+          "questionType": "scale",
+          "options": [],
+          "correctAnswer": null
+        },
+        {
+          "question": "I feel accepted as I am.",
+          "questionType": "scale",
+          "options": [],
+          "correctAnswer": null
+        }
+      ]
+    },
+    {
+      "id": "playful_moments",
+      "name": "Playful Moments",
+      "category": "trust",
+      "difficulty": 1,
+      "formatType": "affirmation",
+      "imagePath": "assets/images/quests/playful-moments.png",
+      "description": "Rate your feelings together",
+      "questions": [
+        {
+          "question": "We enjoy light teasing or playful banter.",
+          "questionType": "scale",
+          "options": [],
+          "correctAnswer": null
+        },
+        {
+          "question": "Our relationship includes fun moments every week.",
+          "questionType": "scale",
+          "options": [],
+          "correctAnswer": null
+        },
+        {
+          "question": "We bring humor into everyday situations.",
+          "questionType": "scale",
+          "options": [],
+          "correctAnswer": null
+        },
+        {
+          "question": "We make each other smile without trying.",
+          "questionType": "scale",
+          "options": [],
+          "correctAnswer": null
+        },
+        {
+          "question": "Playfulness helps us stay close.",
+          "questionType": "scale",
+          "options": [],
+          "correctAnswer": null
+        }
+      ]
+    },
+    {
+      "id": "feelgood_foundations",
+      "name": "Feel-Good Foundations",
+      "category": "trust",
+      "difficulty": 1,
+      "formatType": "affirmation",
+      "imagePath": "assets/images/quests/feel-good-foundations.png",
+      "description": "Rate your feelings together",
+      "questions": [
+        {
+          "question": "Our relationship feels grounded in positivity.",
+          "questionType": "scale",
+          "options": [],
+          "correctAnswer": null
+        },
+        {
+          "question": "I feel good about the way we interact.",
+          "questionType": "scale",
+          "options": [],
+          "correctAnswer": null
+        },
+        {
+          "question": "There's a sense of ease between us.",
+          "questionType": "scale",
+          "options": [],
+          "correctAnswer": null
+        },
+        {
+          "question": "We create a pleasant environment together.",
+          "questionType": "scale",
+          "options": [],
+          "correctAnswer": null
+        },
+        {
+          "question": "I feel emotionally steady when we spend time together.",
+          "questionType": "scale",
+          "options": [],
+          "correctAnswer": null
+        }
+      ]
+    }
+  ]
+}

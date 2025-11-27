@@ -1,0 +1,9 @@
+{
+  "branch": "lighthearted",
+  "activityType": "classicQuiz",
+  "videoPath": "assets/brands/togetherremind/videos/feel-good-foundations.mp4",
+  "imagePath": "assets/brands/togetherremind/images/quests/classic-quiz-default.png",
+  "fallbackEmoji": "🧩",
+  "displayName": "Lighthearted",
+  "description": "Fun and easy questions to get you started"
+}

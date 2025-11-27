@@ -15,6 +15,7 @@ import '../models/quiz_progression_state.dart';
 import '../models/you_or_me.dart';
 import '../models/linked.dart';
 import '../models/word_search.dart';
+import '../models/branch_progression_state.dart';
 import '../utils/logger.dart';
 
 class StorageService {
@@ -40,6 +41,7 @@ class StorageService {
   static const String _appMetadataBox = 'app_metadata';  // Untyped box for metadata
   static const String _linkedMatchesBox = 'linked_matches';
   static const String _wordSearchMatchesBox = 'word_search_matches';
+  static const String _branchProgressionBox = 'branch_progression_states';
 
   static Future<void> init() async {
     try {
@@ -73,6 +75,7 @@ class StorageService {
       if (!Hive.isAdapterRegistered(23)) Hive.registerAdapter(LinkedMatchAdapter());
       if (!Hive.isAdapterRegistered(24)) Hive.registerAdapter(WordSearchFoundWordAdapter());
       if (!Hive.isAdapterRegistered(25)) Hive.registerAdapter(WordSearchMatchAdapter());
+      if (!Hive.isAdapterRegistered(26)) Hive.registerAdapter(BranchProgressionStateAdapter());
 
       // Open boxes
       Logger.debug('Opening Hive boxes...', service: 'storage');
@@ -98,8 +101,9 @@ class StorageService {
       await Hive.openBox(_appMetadataBox);  // Untyped box for app metadata
       await Hive.openBox<LinkedMatch>(_linkedMatchesBox);
       await Hive.openBox<WordSearchMatch>(_wordSearchMatchesBox);
+      await Hive.openBox<BranchProgressionState>(_branchProgressionBox);
 
-      Logger.info('Hive storage initialized successfully (22 boxes opened)', service: 'storage');
+      Logger.info('Hive storage initialized successfully (23 boxes opened)', service: 'storage');
     } catch (e, stackTrace) {
       Logger.error('Failed to initialize Hive storage', error: e, stackTrace: stackTrace, service: 'storage');
       rethrow;
@@ -659,4 +663,42 @@ class StorageService {
 
   // You or Me Progression operations (untyped box for question tracking)
   Box get youOrMeProgressionBox => Hive.box(_youOrMeProgressionBox);
+
+  // Branch Progression State operations
+  Box<BranchProgressionState> get branchProgressionBox =>
+      Hive.box<BranchProgressionState>(_branchProgressionBox);
+
+  Future<void> saveBranchProgressionState(BranchProgressionState state) async {
+    await branchProgressionBox.put(state.storageKey, state);
+  }
+
+  BranchProgressionState? getBranchProgressionState(
+    String coupleId,
+    BranchableActivityType activityType,
+  ) {
+    final key = '${coupleId}_${activityType.name}';
+    return branchProgressionBox.get(key);
+  }
+
+  List<BranchProgressionState> getAllBranchProgressionStates(String coupleId) {
+    return branchProgressionBox.values
+        .where((s) => s.coupleId == coupleId)
+        .toList();
+  }
+
+  Future<void> updateBranchProgressionState(BranchProgressionState state) async {
+    await state.save();
+  }
+
+  Future<void> deleteBranchProgressionState(
+    String coupleId,
+    BranchableActivityType activityType,
+  ) async {
+    final key = '${coupleId}_${activityType.name}';
+    await branchProgressionBox.delete(key);
+  }
+
+  Future<void> clearAllBranchProgressionStates() async {
+    await branchProgressionBox.clear();
+  }
 }

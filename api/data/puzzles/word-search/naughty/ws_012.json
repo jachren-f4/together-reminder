@@ -1,0 +1,24 @@
+{
+  "puzzleId": "ws_012",
+  "title": "Intimate XII",
+  "theme": "intimacy",
+  "size": {
+    "rows": 10,
+    "cols": 10
+  },
+  "grid": "FMFEQDRVIFZZYOEBESEGBWPMLSUKVGAUABUONBAGSLNPHHVGRNFGPSYTEECTMLETFAINRSELGOQELTQSFWSMNRPLPITNAPVBBECK",
+  "words": {
+    "FLESH": "80,UR",
+    "NAKED": "49,UL",
+    "LOVERS": "24,DR",
+    "FLAME": "50,UR",
+    "SOFT": "82,UR",
+    "CRAVE": "58,U",
+    "KISS": "99,U",
+    "PANT": "93,L",
+    "BREATH": "95,U",
+    "SUPPLE": "25,DL",
+    "UNVEIL": "26,D",
+    "GENTLE": "47,D"
+  }
+}

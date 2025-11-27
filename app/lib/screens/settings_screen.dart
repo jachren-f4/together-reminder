@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:togetherremind/screens/onboarding_screen.dart';
 import 'package:togetherremind/services/storage_service.dart';
 import 'package:togetherremind/services/couple_preferences_service.dart';
 import 'package:togetherremind/services/api_client.dart';
+import 'package:togetherremind/services/sound_service.dart';
+import 'package:togetherremind/services/haptic_service.dart';
 import 'package:togetherremind/theme/app_theme.dart';
-import 'package:togetherremind/config/brand/brand_loader.dart';
 import 'package:intl/intl.dart';
 import 'debug/data_validation_screen.dart';
 
@@ -18,22 +18,33 @@ class SettingsScreen extends StatefulWidget {
 class _SettingsScreenState extends State<SettingsScreen> {
   final StorageService _storageService = StorageService();
   final CouplePreferencesService _preferencesService = CouplePreferencesService();
+  final SoundService _soundService = SoundService();
+  final HapticService _hapticService = HapticService();
 
   String? _firstPlayerId;
   String? _user1Id;
   String? _user2Id;
   bool _loadingPreferences = false;
+  bool _soundEnabled = true;
+  bool _hapticEnabled = true;
 
   @override
   void initState() {
     super.initState();
     _loadPreferences();
+    _loadSoundHapticPreferences();
+  }
+
+  Future<void> _loadSoundHapticPreferences() async {
+    setState(() {
+      _soundEnabled = _soundService.isEnabled;
+      _hapticEnabled = _hapticService.isEnabled;
+    });
   }
 
   Future<void> _loadPreferences() async {
     setState(() => _loadingPreferences = true);
     try {
-      // Fetch preferences from API to get user IDs and first player preference
       final apiClient = ApiClient();
       final response = await apiClient.get('/api/sync/couple-preferences');
 
@@ -69,39 +80,99 @@ class _SettingsScreenState extends State<SettingsScreen> {
           SnackBar(content: Text('Failed to update preference: $e')),
         );
       }
-      // Reload to revert UI change
       _loadPreferences();
     }
   }
 
-  Future<void> _unpairPartner() async {
-    final confirmed = await showDialog<bool>(
+  Future<void> _editName() async {
+    final user = _storageService.getUser();
+    if (user == null) return;
+
+    final controller = TextEditingController(text: user.name ?? '');
+
+    final newName = await showDialog<String>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Unpair Partner?'),
-        content: const Text(
-          'This will remove your partner and clear all reminders. This cannot be undone.',
+        title: const Text('Edit Name'),
+        content: TextField(
+          controller: controller,
+          autofocus: true,
+          decoration: const InputDecoration(
+            hintText: 'Enter your name',
+          ),
+          textCapitalization: TextCapitalization.words,
         ),
         actions: [
           TextButton(
-            onPressed: () => Navigator.pop(context, false),
+            onPressed: () => Navigator.pop(context),
             child: const Text('Cancel'),
           ),
           TextButton(
-            onPressed: () => Navigator.pop(context, true),
-            style: TextButton.styleFrom(foregroundColor: BrandLoader().colors.error),
-            child: const Text('Unpair'),
+            onPressed: () => Navigator.pop(context, controller.text.trim()),
+            child: const Text('Save'),
           ),
         ],
       ),
     );
 
-    if (confirmed == true) {
-      await _storageService.clearAllData();
+    if (newName != null && newName.isNotEmpty && newName != user.name) {
+      final updatedUser = user.copyWith(name: newName);
+      await _storageService.saveUser(updatedUser);
+      setState(() {});
       if (mounted) {
-        Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(builder: (context) => const OnboardingScreen()),
-          (route) => false,
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Name updated')),
+        );
+      }
+    }
+  }
+
+  Future<void> _editAvatar() async {
+    final user = _storageService.getUser();
+    if (user == null) return;
+
+    final emojis = ['😊', '😎', '🥰', '😇', '🤗', '😄', '🙂', '😁', '🤩', '😋', '🥳', '😏'];
+
+    final newEmoji = await showDialog<String>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Choose Avatar'),
+        content: Wrap(
+          spacing: 12,
+          runSpacing: 12,
+          children: emojis.map((emoji) => GestureDetector(
+            onTap: () => Navigator.pop(context, emoji),
+            child: Container(
+              width: 48,
+              height: 48,
+              decoration: BoxDecoration(
+                color: user.avatarEmoji == emoji
+                    ? AppTheme.primaryBlack
+                    : AppTheme.backgroundGray,
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Center(
+                child: Text(emoji, style: const TextStyle(fontSize: 28)),
+              ),
+            ),
+          )).toList(),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancel'),
+          ),
+        ],
+      ),
+    );
+
+    if (newEmoji != null && newEmoji != user.avatarEmoji) {
+      final updatedUser = user.copyWith(avatarEmoji: newEmoji);
+      await _storageService.saveUser(updatedUser);
+      setState(() {});
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Avatar updated')),
         );
       }
     }
@@ -111,341 +182,214 @@ class _SettingsScreenState extends State<SettingsScreen> {
   Widget build(BuildContext context) {
     final partner = _storageService.getPartner();
     final user = _storageService.getUser();
-    final allReminders = _storageService.getAllReminders();
-    final sentCount = _storageService.getSentReminders().length;
-    final receivedCount = _storageService.getReceivedReminders().length;
 
     return Container(
-      decoration: BoxDecoration(
-        color: AppTheme.backgroundGray,
-      ),
+      color: AppTheme.primaryWhite,
       child: SafeArea(
         child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(20),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Header
-                Text(
-                  'Settings',
-                  style: AppTheme.headlineFont.copyWith(
-                    fontSize: 32,
-                    fontWeight: FontWeight.w600,
-                    color: AppTheme.textPrimary,
-                    letterSpacing: -0.5,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Header
+              Container(
+                padding: const EdgeInsets.fromLTRB(24, 32, 24, 24),
+                decoration: BoxDecoration(
+                  border: Border(
+                    bottom: BorderSide(color: AppTheme.primaryBlack, width: 2),
                   ),
                 ),
-                const SizedBox(height: 30),
+                child: Text(
+                  'SETTINGS',
+                  style: AppTheme.headlineFont.copyWith(
+                    fontSize: 28,
+                    fontWeight: FontWeight.w400,
+                    color: AppTheme.textPrimary,
+                    letterSpacing: 3,
+                  ),
+                ),
+              ),
 
-                // Partner Info Card
-                if (partner != null) ...[
-                  _SectionCard(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'PARTNER',
-                          style: AppTheme.bodyFont.copyWith(
-                            fontSize: 12,
-                            fontWeight: FontWeight.w600,
-                            color: AppTheme.textTertiary,
-                            letterSpacing: 0.5,
-                          ),
-                        ),
-                        const SizedBox(height: 12),
-                        Row(
-                          children: [
-                            Container(
-                              width: 60,
-                              height: 60,
-                              decoration: BoxDecoration(
-                                color: AppTheme.backgroundGray,
-                                borderRadius: BorderRadius.circular(16),
-                                border: Border.all(color: AppTheme.borderLight, width: 2),
-                              ),
-                              child: Center(
-                                child: Text(
-                                  partner.avatarEmoji ?? '👤',
-                                  style: const TextStyle(fontSize: 32),
-                                ),
-                              ),
-                            ),
-                            const SizedBox(width: 16),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    partner.name,
-                                    style: AppTheme.bodyFont.copyWith(
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.w600,
-                                      color: AppTheme.textPrimary,
-                                    ),
-                                  ),
-                                  const SizedBox(height: 4),
-                                  Text(
-                                    'Paired ${DateFormat('MMM d, yyyy').format(partner.pairedAt)}',
-                                    style: AppTheme.bodyFont.copyWith(
-                                      fontSize: 13,
-                                      color: AppTheme.textSecondary,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 16),
-                        const Divider(),
-                        const SizedBox(height: 12),
-                        Row(
-                          children: [
-                            Expanded(
-                              child: _StatItem(
-                                label: 'Sent',
-                                value: sentCount.toString(),
-                                emoji: '💌',
-                              ),
-                            ),
-                            Expanded(
-                              child: _StatItem(
-                                label: 'Received',
-                                value: receivedCount.toString(),
-                                emoji: '📬',
-                              ),
-                            ),
-                            Expanded(
-                              child: _StatItem(
-                                label: 'Total',
-                                value: allReminders.length.toString(),
-                                emoji: '📊',
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
+              // Partner Banner
+              if (partner != null)
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFF8F8F8),
+                    border: Border(
+                      bottom: BorderSide(color: AppTheme.borderLight),
                     ),
                   ),
-                  const SizedBox(height: 20),
-                ],
-
-                // User Info
-                if (user != null) ...[
-                  _SectionCard(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'YOUR INFO',
-                          style: AppTheme.bodyFont.copyWith(
-                            fontSize: 12,
-                            fontWeight: FontWeight.w600,
-                            color: AppTheme.textTertiary,
-                            letterSpacing: 0.5,
-                          ),
-                        ),
-                        const SizedBox(height: 12),
-                        _SettingRow(
-                          icon: '👤',
-                          label: 'Name',
-                          value: user.name ?? 'Not set',
-                        ),
-                        const SizedBox(height: 12),
-                        _SettingRow(
-                          icon: '📱',
-                          label: 'User ID',
-                          value: user.id.substring(0, 8) + '...',
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-                ],
-
-                // Preferences
-                _SectionCard(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                  child: Row(
                     children: [
-                      Text(
-                        'PREFERENCES',
-                        style: AppTheme.bodyFont.copyWith(
-                          fontSize: 12,
-                          fontWeight: FontWeight.w600,
-                          color: AppTheme.textTertiary,
-                          letterSpacing: 0.5,
+                      // Initial circle
+                      Container(
+                        width: 44,
+                        height: 44,
+                        decoration: BoxDecoration(
+                          color: AppTheme.primaryBlack,
+                          shape: BoxShape.circle,
+                        ),
+                        child: Center(
+                          child: Text(
+                            partner.name.isNotEmpty ? partner.name[0].toUpperCase() : 'P',
+                            style: AppTheme.bodyFont.copyWith(
+                              fontSize: 18,
+                              fontWeight: FontWeight.w600,
+                              color: AppTheme.primaryWhite,
+                            ),
+                          ),
                         ),
                       ),
-                      const SizedBox(height: 12),
-                      _SettingRow(
-                        icon: '🔔',
-                        label: 'Notifications',
-                        value: 'Enabled',
-                        trailing: Icon(Icons.chevron_right, color: AppTheme.textTertiary),
-                      ),
-                      const SizedBox(height: 12),
-                      _SettingRow(
-                        icon: '🌙',
-                        label: 'Do Not Disturb',
-                        value: 'Off',
-                        trailing: Icon(Icons.chevron_right, color: AppTheme.textTertiary),
+                      const SizedBox(width: 14),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            partner.name,
+                            style: AppTheme.bodyFont.copyWith(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                              color: AppTheme.textPrimary,
+                            ),
+                          ),
+                          const SizedBox(height: 2),
+                          Text(
+                            'PARTNER SINCE ${DateFormat('MMM yyyy').format(partner.pairedAt).toUpperCase()}',
+                            style: AppTheme.bodyFont.copyWith(
+                              fontSize: 11,
+                              color: const Color(0xFF888888),
+                              letterSpacing: 1,
+                            ),
+                          ),
+                        ],
                       ),
                     ],
                   ),
                 ),
-                const SizedBox(height: 20),
 
-                // Game Preferences
-                if (user != null && partner != null) ...[
-                  _SectionCard(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'GAME PREFERENCES',
-                          style: AppTheme.bodyFont.copyWith(
-                            fontSize: 12,
-                            fontWeight: FontWeight.w600,
-                            color: AppTheme.textTertiary,
-                            letterSpacing: 0.5,
-                          ),
-                        ),
-                        const SizedBox(height: 16),
-                        if (_user1Id != null && _user2Id != null)
-                          _PartnerToggle(
-                            label: 'Goes first in new games',
-                            user1Id: _user1Id == user.id ? _user1Id! : _user2Id!,
-                            user1Name: user.name ?? 'You',
-                            user2Id: _user1Id == user.id ? _user2Id! : _user1Id!,
-                            user2Name: partner.name,
-                            user2Emoji: partner.avatarEmoji ?? '👤',
-                            selectedUserId: _firstPlayerId,
-                            onChanged: _updateFirstPlayer,
-                            isLoading: _loadingPreferences,
-                          )
-                        else
-                          const Center(
-                            child: Padding(
-                              padding: EdgeInsets.all(20.0),
-                              child: CircularProgressIndicator(),
+              // Profile Section
+              if (user != null)
+                _SettingsGroup(
+                  title: 'PROFILE',
+                  children: [
+                    _SettingRow(
+                      label: 'Name',
+                      value: user.name ?? 'Not set',
+                      onTap: _editName,
+                    ),
+                    _SettingRow(
+                      label: 'Avatar',
+                      value: 'Tap to change',
+                      onTap: _editAvatar,
+                    ),
+                  ],
+                ),
+
+              // Sound Section
+              _SettingsGroup(
+                title: 'SOUND',
+                children: [
+                  _ToggleRow(
+                    label: 'Sound Effects',
+                    value: _soundEnabled,
+                    onChanged: (value) async {
+                      // Play toggle sound BEFORE disabling (user hears confirmation)
+                      if (_soundEnabled) {
+                        await _soundService.play(value ? SoundId.toggleOn : SoundId.toggleOff);
+                      }
+                      setState(() => _soundEnabled = value);
+                      await _soundService.setEnabled(value);
+                      // Play toggle on sound AFTER enabling
+                      if (value) {
+                        await _soundService.play(SoundId.toggleOn);
+                      }
+                      // Haptic feedback for toggle
+                      _hapticService.trigger(HapticType.selection);
+                    },
+                  ),
+                  _ToggleRow(
+                    label: 'Haptic Feedback',
+                    value: _hapticEnabled,
+                    onChanged: (value) async {
+                      // Trigger haptic BEFORE disabling (user feels confirmation)
+                      _hapticService.trigger(HapticType.selection);
+                      setState(() => _hapticEnabled = value);
+                      await _hapticService.setEnabled(value);
+                      // Sound feedback for toggle
+                      _soundService.play(value ? SoundId.toggleOn : SoundId.toggleOff);
+                    },
+                  ),
+                ],
+              ),
+
+              // Games Section
+              if (user != null && partner != null)
+                _SettingsGroup(
+                  title: 'GAMES',
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Who goes first?',
+                            style: AppTheme.bodyFont.copyWith(
+                              fontSize: 14,
+                              color: AppTheme.textPrimary,
                             ),
                           ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-                ],
-
-                // Data Management
-                _SectionCard(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'DATA',
-                        style: AppTheme.bodyFont.copyWith(
-                          fontSize: 12,
-                          fontWeight: FontWeight.w600,
-                          color: AppTheme.textTertiary,
-                          letterSpacing: 0.5,
-                        ),
-                      ),
-                      const SizedBox(height: 12),
-                      GestureDetector(
-                        onTap: () {
-                          // TODO: Export data functionality
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text('Export feature coming soon')),
-                          );
-                        },
-                        child: _SettingRow(
-                          icon: '💾',
-                          label: 'Export Data',
-                          value: '',
-                          trailing: Icon(Icons.chevron_right, color: AppTheme.textTertiary),
-                        ),
-                      ),
-                      const SizedBox(height: 12),
-                      GestureDetector(
-                        onTap: () async {
-                          final confirmed = await showDialog<bool>(
-                            context: context,
-                            builder: (context) => AlertDialog(
-                              title: const Text('Clear History?'),
-                              content: const Text(
-                                'This will delete all reminders but keep your partner connection.',
-                              ),
-                              actions: [
-                                TextButton(
-                                  onPressed: () => Navigator.pop(context, false),
-                                  child: const Text('Cancel'),
+                          const SizedBox(height: 12),
+                          if (_user1Id != null && _user2Id != null)
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: _PickerOption(
+                                    label: 'You',
+                                    isSelected: _firstPlayerId == (_user1Id == user.id ? _user1Id : _user2Id),
+                                    onTap: () => _updateFirstPlayer(
+                                      _user1Id == user.id ? _user1Id! : _user2Id!,
+                                    ),
+                                  ),
                                 ),
-                                TextButton(
-                                  onPressed: () => Navigator.pop(context, true),
-                                  style: TextButton.styleFrom(foregroundColor: BrandLoader().colors.error),
-                                  child: const Text('Clear'),
+                                const SizedBox(width: 8),
+                                Expanded(
+                                  child: _PickerOption(
+                                    label: partner.name,
+                                    isSelected: _firstPlayerId == (_user1Id == user.id ? _user2Id : _user1Id),
+                                    onTap: () => _updateFirstPlayer(
+                                      _user1Id == user.id ? _user2Id! : _user1Id!,
+                                    ),
+                                  ),
                                 ),
                               ],
+                            )
+                          else if (_loadingPreferences)
+                            const Center(
+                              child: Padding(
+                                padding: EdgeInsets.all(12),
+                                child: SizedBox(
+                                  width: 20,
+                                  height: 20,
+                                  child: CircularProgressIndicator(strokeWidth: 2),
+                                ),
+                              ),
                             ),
-                          );
-
-                          if (confirmed == true) {
-                            await _storageService.clearAllReminders();
-                            setState(() {});
-                            if (mounted) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(content: Text('History cleared')),
-                              );
-                            }
-                          }
-                        },
-                        child: _SettingRow(
-                          icon: '🗑️',
-                          label: 'Clear History',
-                          value: '',
-                          trailing: Icon(Icons.chevron_right, color: AppTheme.textTertiary),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 30),
-
-                // Unpair button
-                SizedBox(
-                  width: double.infinity,
-                  child: OutlinedButton(
-                    onPressed: _unpairPartner,
-                    style: OutlinedButton.styleFrom(
-                      foregroundColor: BrandLoader().colors.error,
-                      side: BorderSide(color: BrandLoader().colors.error, width: 2),
-                      padding: const EdgeInsets.symmetric(vertical: 16),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(16),
+                        ],
                       ),
                     ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Icon(Icons.link_off),
-                        const SizedBox(width: 8),
-                        Text(
-                          'Unpair Partner',
-                          style: AppTheme.bodyFont.copyWith(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ],
-                    ),
+                  ],
+                ),
+
+              // Footer
+              Container(
+                padding: const EdgeInsets.symmetric(vertical: 32),
+                decoration: BoxDecoration(
+                  border: Border(
+                    top: BorderSide(color: AppTheme.borderLight),
                   ),
                 ),
-                const SizedBox(height: 30),
-
-                // App version
-                Center(
+                child: Center(
                   child: GestureDetector(
                     onLongPress: () {
                       Navigator.of(context).push(
@@ -455,18 +399,17 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       );
                     },
                     child: Text(
-                      'TogetherRemind v1.0.0\nMade with 💕',
-                      textAlign: TextAlign.center,
+                      'TOGETHERREMIND V1.0.0',
                       style: AppTheme.bodyFont.copyWith(
-                        fontSize: 12,
-                        color: AppTheme.textTertiary,
-                        height: 1.5,
+                        fontSize: 11,
+                        color: const Color(0xFFAAAAAA),
+                        letterSpacing: 1,
                       ),
                     ),
                   ),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),
@@ -474,200 +417,183 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 }
 
-class _SectionCard extends StatelessWidget {
-  final Widget child;
+class _SettingsGroup extends StatelessWidget {
+  final String title;
+  final List<Widget> children;
 
-  const _SectionCard({required this.child});
+  const _SettingsGroup({
+    required this.title,
+    required this.children,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: AppTheme.primaryWhite,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: BrandLoader().colors.textPrimary.withOpacity(0.06),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
+        border: Border(
+          bottom: BorderSide(color: AppTheme.borderLight),
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.fromLTRB(24, 16, 24, 8),
+            child: Text(
+              title,
+              style: AppTheme.bodyFont.copyWith(
+                fontSize: 10,
+                fontWeight: FontWeight.w600,
+                color: const Color(0xFF999999),
+                letterSpacing: 2,
+              ),
+            ),
           ),
+          ...children,
         ],
       ),
-      child: child,
     );
   }
 }
 
 class _SettingRow extends StatelessWidget {
-  final String icon;
   final String label;
   final String value;
-  final Widget? trailing;
+  final VoidCallback onTap;
 
   const _SettingRow({
-    required this.icon,
     required this.label,
     required this.value,
-    this.trailing,
+    required this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Text(icon, style: const TextStyle(fontSize: 24)),
-        const SizedBox(width: 12),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                label,
-                style: AppTheme.bodyFont.copyWith(
-                  fontSize: 15,
-                  fontWeight: FontWeight.w500,
-                  color: AppTheme.textPrimary,
-                ),
-              ),
-              if (value.isNotEmpty) ...[
-                const SizedBox(height: 2),
-                Text(
-                  value,
-                  style: AppTheme.bodyFont.copyWith(
-                    fontSize: 13,
-                    color: AppTheme.textSecondary,
-                  ),
-                ),
-              ],
-            ],
-          ),
-        ),
-        if (trailing != null) trailing!,
-      ],
-    );
-  }
-}
-
-class _StatItem extends StatelessWidget {
-  final String label;
-  final String value;
-  final String emoji;
-
-  const _StatItem({
-    required this.label,
-    required this.value,
-    required this.emoji,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Text(emoji, style: const TextStyle(fontSize: 24)),
-        const SizedBox(height: 4),
-        Text(
-          value,
-          style: AppTheme.bodyFont.copyWith(
-            fontSize: 20,
-            fontWeight: FontWeight.w600,
-            color: AppTheme.textPrimary,
-          ),
-        ),
-        Text(
-          label,
-          style: AppTheme.bodyFont.copyWith(
-            fontSize: 12,
-            color: AppTheme.textSecondary,
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class _PartnerToggle extends StatelessWidget {
-  final String label;
-  final String user1Id;
-  final String user1Name;
-  final String user2Id;
-  final String user2Name;
-  final String user2Emoji;
-  final String? selectedUserId;
-  final Function(String) onChanged;
-  final bool isLoading;
-
-  const _PartnerToggle({
-    required this.label,
-    required this.user1Id,
-    required this.user1Name,
-    required this.user2Id,
-    required this.user2Name,
-    required this.user2Emoji,
-    required this.selectedUserId,
-    required this.onChanged,
-    this.isLoading = false,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    if (isLoading) {
-      return const Center(
-        child: Padding(
-          padding: EdgeInsets.all(20.0),
-          child: CircularProgressIndicator(),
-        ),
-      );
-    }
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          label,
-          style: AppTheme.bodyFont.copyWith(
-            fontSize: 15,
-            fontWeight: FontWeight.w500,
-            color: AppTheme.textPrimary,
-          ),
-        ),
-        const SizedBox(height: 16),
-        Row(
+    return GestureDetector(
+      onTap: onTap,
+      behavior: HitTestBehavior.opaque,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+        child: Row(
           children: [
             Expanded(
-              child: _PartnerOption(
-                name: user1Name,
-                emoji: '👤',
-                isSelected: selectedUserId == user1Id,
-                onTap: () => onChanged(user1Id),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    label,
+                    style: AppTheme.bodyFont.copyWith(
+                      fontSize: 15,
+                      color: AppTheme.textPrimary,
+                    ),
+                  ),
+                  const SizedBox(height: 1),
+                  Text(
+                    value,
+                    style: AppTheme.bodyFont.copyWith(
+                      fontSize: 12,
+                      color: const Color(0xFF666666),
+                    ),
+                  ),
+                ],
               ),
             ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: _PartnerOption(
-                name: user2Name,
-                emoji: user2Emoji,
-                isSelected: selectedUserId == user2Id,
-                onTap: () => onChanged(user2Id),
+            Text(
+              '›',
+              style: TextStyle(
+                fontSize: 18,
+                color: const Color(0xFFCCCCCC),
               ),
             ),
           ],
         ),
-      ],
+      ),
     );
   }
 }
 
-class _PartnerOption extends StatelessWidget {
-  final String name;
-  final String emoji;
+class _ToggleRow extends StatelessWidget {
+  final String label;
+  final bool value;
+  final ValueChanged<bool> onChanged;
+
+  const _ToggleRow({
+    required this.label,
+    required this.value,
+    required this.onChanged,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+      child: Row(
+        children: [
+          Expanded(
+            child: Text(
+              label,
+              style: AppTheme.bodyFont.copyWith(
+                fontSize: 15,
+                color: AppTheme.textPrimary,
+              ),
+            ),
+          ),
+          _MiniToggle(
+            value: value,
+            onChanged: onChanged,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _MiniToggle extends StatelessWidget {
+  final bool value;
+  final ValueChanged<bool> onChanged;
+
+  const _MiniToggle({
+    required this.value,
+    required this.onChanged,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () => onChanged(!value),
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
+        width: 40,
+        height: 24,
+        decoration: BoxDecoration(
+          color: value ? AppTheme.primaryBlack : const Color(0xFFDDDDDD),
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: AnimatedAlign(
+          duration: const Duration(milliseconds: 200),
+          alignment: value ? Alignment.centerRight : Alignment.centerLeft,
+          child: Container(
+            margin: const EdgeInsets.all(3),
+            width: 18,
+            height: 18,
+            decoration: BoxDecoration(
+              color: AppTheme.primaryWhite,
+              shape: BoxShape.circle,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _PickerOption extends StatelessWidget {
+  final String label;
   final bool isSelected;
   final VoidCallback onTap;
 
-  const _PartnerOption({
-    required this.name,
-    required this.emoji,
+  const _PickerOption({
+    required this.label,
     required this.isSelected,
     required this.onTap,
   });
@@ -677,35 +603,26 @@ class _PartnerOption extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: AnimatedContainer(
-        duration: const Duration(milliseconds: 200),
-        padding: const EdgeInsets.all(16),
+        duration: const Duration(milliseconds: 150),
+        padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 12),
         decoration: BoxDecoration(
-          color: isSelected ? AppTheme.primaryBlack : AppTheme.backgroundGray,
-          borderRadius: BorderRadius.circular(12),
+          color: isSelected ? AppTheme.primaryBlack : AppTheme.primaryWhite,
           border: Border.all(
             color: isSelected ? AppTheme.primaryBlack : AppTheme.borderLight,
-            width: 2,
           ),
         ),
-        child: Column(
-          children: [
-            Text(
-              emoji,
-              style: const TextStyle(fontSize: 32),
+        child: Center(
+          child: Text(
+            label.toUpperCase(),
+            style: AppTheme.bodyFont.copyWith(
+              fontSize: 13,
+              fontWeight: FontWeight.w600,
+              letterSpacing: 0.5,
+              color: isSelected ? AppTheme.primaryWhite : AppTheme.textPrimary,
             ),
-            const SizedBox(height: 8),
-            Text(
-              name,
-              style: AppTheme.bodyFont.copyWith(
-                fontSize: 14,
-                fontWeight: FontWeight.w600,
-                color: isSelected ? AppTheme.primaryWhite : AppTheme.textPrimary,
-              ),
-              textAlign: TextAlign.center,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-            ),
-          ],
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+          ),
         ),
       ),
     );

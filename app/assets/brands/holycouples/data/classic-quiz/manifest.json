@@ -1,0 +1,22 @@
+{
+  "activity": "classic-quiz",
+  "brand": "holycouples",
+  "branches": [
+    {
+      "id": "lighthearted",
+      "displayName": "Lighthearted",
+      "description": "Fun and easy questions",
+      "folder": "lighthearted",
+      "questionCount": 156
+    },
+    {
+      "id": "deeper",
+      "displayName": "Deeper",
+      "description": "More meaningful questions",
+      "folder": "deeper",
+      "questionCount": 133
+    }
+  ],
+  "selectionMode": "quest_count_mod",
+  "version": "1.0.0"
+}

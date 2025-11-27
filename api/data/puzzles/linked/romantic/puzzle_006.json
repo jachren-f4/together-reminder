@@ -1,0 +1,49 @@
+{
+  "author": "Crossword Maker GPT",
+  "title": "Adult Intimacy Puzzle #6",
+  "size": {
+    "rows": 9,
+    "cols": 7
+  },
+  "clues": {
+    "1": { "type": "emoji", "content": "🏠", "arrow": "down", "target_index": 8 },
+    "2": { "type": "emoji", "content": "💍", "arrow": "down", "target_index": 11 },
+    "3": { "type": "text", "content": "Light touch", "arrow": "down", "target_index": 13 },
+    "4": { "type": "text", "content": "RO_E", "arrow": "across", "target_index": 8 },
+    "5": { "type": "text", "content": "YE_R", "arrow": "across", "target_index": 11 },
+    "6": { "type": "text", "content": "After T", "arrow": "across", "target_index": 15 },
+    "7": { "type": "text", "content": "Before T", "arrow": "across", "target_index": 18 },
+    "8": { "type": "text", "content": "___ only", "arrow": "across", "target_index": 22 },
+    "9": { "type": "text", "content": "Before M", "arrow": "across", "target_index": 29 },
+    "10": { "type": "text", "content": "_AY", "arrow": "across", "target_index": 36 },
+    "11": { "type": "emoji", "content": "❤️", "arrow": "across", "target_index": 38 },
+    "12": { "type": "text", "content": "___ close", "arrow": "down", "target_index": 44 },
+    "13": { "type": "text", "content": "Let's ___", "arrow": "down", "target_index": 55 },
+    "14": { "type": "emoji", "content": "🔍", "arrow": "across", "target_index": 50 },
+    "15": { "type": "text", "content": "Head to ___", "arrow": "across", "target_index": 58 }
+  },
+  "date": "2025-11-27",
+  "grid": [
+    ".", ".", ".", ".", ".", ".", ".",
+    ".", "B", ".", ".", "A", ".", "G",
+    ".", "U", ".", ".", "S", ".", "R",
+    ".", "I", "F", ".", "K", ".", "A",
+    ".", "L", ".", ".", ".", ".", "Z",
+    ".", "D", ".", "C", "O", "R", "E",
+    ".", ".", "S", ".", ".", ".", ".",
+    ".", "F", "I", "N", "D", ".", "G",
+    ".", ".", "T", "O", "E", ".", "O"
+  ],
+  "gridnums": [
+    0, 1, 0, 0, 2, 0, 3,
+    4, 0, 0, 5, 0, 0, 0,
+    6, 0, 0, 7, 0, 0, 0,
+    8, 0, 0, 0, 0, 0, 0,
+    9, 0, 0, 0, 0, 0, 0,
+    10, 0, 11, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 13,
+    14, 0, 0, 0, 0, 0, 0,
+    0, 15, 0, 0, 0, 0, 0
+  ],
+  "puzzleId": "puzzle_006"
+}
