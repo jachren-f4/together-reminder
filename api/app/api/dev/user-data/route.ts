@@ -19,8 +19,8 @@ const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
  * Returns user data and partner data for local storage initialization
  */
 export async function GET(request: NextRequest) {
-  // Only allow in development mode
-  if (process.env.NODE_ENV !== 'development' || process.env.AUTH_DEV_BYPASS_ENABLED !== 'true') {
+  // Only allow when dev bypass is explicitly enabled
+  if (process.env.AUTH_DEV_BYPASS_ENABLED !== 'true') {
     return NextResponse.json(
       { error: 'Dev endpoints disabled in production' },
       { status: 403 }
