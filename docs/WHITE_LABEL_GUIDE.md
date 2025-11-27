@@ -7,13 +7,14 @@ This guide explains how to add a new brand to the TogetherRemind white-label pla
 ## Table of Contents
 
 1. [Overview](#overview)
-2. [Prerequisites](#prerequisites)
-3. [Step-by-Step Brand Creation](#step-by-step-brand-creation)
-4. [Asset Requirements](#asset-requirements)
-5. [Build Commands](#build-commands)
-6. [Testing](#testing)
-7. [App Store Submission](#app-store-submission)
-8. [Troubleshooting](#troubleshooting)
+2. [Backend Architecture](#backend-architecture)
+3. [Prerequisites](#prerequisites)
+4. [Step-by-Step Brand Creation](#step-by-step-brand-creation)
+5. [Asset Requirements](#asset-requirements)
+6. [Build Commands](#build-commands)
+7. [Testing](#testing)
+8. [App Store Submission](#app-store-submission)
+9. [Troubleshooting](#troubleshooting)
 
 ---
 
@@ -26,6 +27,169 @@ Each brand in the white-label system is a separate app with:
 - **Separate Firebase project** (for user data isolation)
 
 Brands share the same codebase but are built with different configurations using Flutter flavors.
+
+---
+
+## Backend Architecture
+
+### Architecture Options
+
+| Approach | Database | Firebase | API | Pros | Cons | Best For |
+|----------|----------|----------|-----|------|------|----------|
+| **Shared Everything** | Same DB with `brand_id` column | Same project | Same deployment | Simple, cheap | No data isolation, single point of failure | MVP, testing |
+| **Shared Code, Separate Data** | Separate Supabase per brand | Separate Firebase per brand | Same codebase, env-driven | Data isolation, independent scaling | More setup per brand | Production |
+| **Fully Isolated** | Everything separate | Everything separate | Separate deployments | Complete isolation, sellable | Expensive, maintenance overhead | Enterprise |
+
+### Recommended: Shared Code, Separate Data
+
+For production white-label apps, we recommend **separate backend instances per brand** with **shared codebase**:
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                    SHARED CODEBASE                              │
+│  ┌──────────────────────────────────────────────────────────┐  │
+│  │  Flutter App (lib/)  │  API (api/)  │  Cloud Functions   │  │
+│  └──────────────────────────────────────────────────────────┘  │
+└─────────────────────────────────────────────────────────────────┘
+                              │
+          ┌───────────────────┼───────────────────┐
+          ▼                   ▼                   ▼
+┌─────────────────┐  ┌─────────────────┐  ┌─────────────────┐
+│ TogetherRemind  │  │   HolyCouples   │  │   Brand N...    │
+├─────────────────┤  ├─────────────────┤  ├─────────────────┤
+│ Firebase Proj A │  │ Firebase Proj B │  │ Firebase Proj N │
+│ Supabase Proj A │  │ Supabase Proj B │  │ Supabase Proj N │
+│ API Deploy A    │  │ API Deploy B    │  │ API Deploy N    │
+└─────────────────┘  └─────────────────┘  └─────────────────┘
+```
+
+### Why Separate Backends Per Brand?
+
+1. **Data Isolation** - Couples data never mixes between brands
+2. **FCM Tokens** - Push notifications route to correct users
+3. **Analytics** - Track brand performance independently
+4. **Compliance** - Meet regional data residency requirements
+5. **Scalability** - Scale high-traffic brands independently
+6. **Exit Strategy** - Can sell/transfer individual brands
+
+### Configuration Per Brand
+
+Each brand needs its own:
+
+| Service | Configuration | Location |
+|---------|---------------|----------|
+| **Firebase** | Project credentials | `BrandFirebaseConfig` in brand_registry.dart |
+| **Supabase** | Project URL + anon key | `BrandConfig.supabaseUrl`, `supabaseAnonKey` |
+| **API** | Base URL | `BrandConfig.apiBaseUrl` |
+| **FCM** | google-services.json | `android/app/src/{brand}/` |
+| **APNs** | GoogleService-Info.plist | `ios/Firebase/{Brand}/` |
+
+### Database Schema Considerations
+
+If using shared database (MVP approach), add `brand_id` to key tables.
+
+**Migration file:** `api/supabase/migrations/014_white_label_brand_id.sql`
+
+```bash
+# Apply the migration
+cd api
+supabase db push
+```
+
+The migration adds `brand_id` column to all key tables:
+- `couples`, `couple_invites`
+- `daily_quests`, `quest_completions`
+- `quiz_sessions`, `quiz_answers`, `quiz_progression`
+- `you_or_me_sessions`, `you_or_me_answers`, `you_or_me_progression`
+- `memory_puzzles`
+- `love_point_awards`, `user_love_points`
+- `linked_puzzles`, `word_search_puzzles` (if they exist)
+
+**Helper function for RLS:**
+```sql
+-- Set brand for current request
+SET LOCAL app.brand_id = 'holycouples';
+
+-- Query filtered by brand
+SELECT * FROM couples WHERE brand_id = get_current_brand_id();
+```
+
+### API Multi-Tenancy
+
+For shared API deployment, accept brand from request:
+
+```typescript
+// Middleware to extract brand
+export function brandMiddleware(req: Request) {
+  const brand = req.headers['x-brand-id'] || 'togetherremind';
+  // Validate brand exists
+  // Set database connection for brand
+  return brand;
+}
+```
+
+### Firebase RTDB Path Namespacing
+
+For shared Firebase (not recommended for production):
+
+```
+/brands/{brandId}/daily_quests/{coupleId}/...
+/brands/{brandId}/quiz_sessions/...
+/brands/{brandId}/lp_awards/...
+```
+
+### Environment Configuration Example
+
+**Production setup with separate backends:**
+
+```bash
+# .env.togetherremind
+SUPABASE_URL=https://abc123.supabase.co
+SUPABASE_ANON_KEY=eyJ...
+FIREBASE_PROJECT=togetherremind-prod
+API_BASE_URL=https://api.togetherremind.com
+
+# .env.holycouples
+SUPABASE_URL=https://xyz789.supabase.co
+SUPABASE_ANON_KEY=eyJ...
+FIREBASE_PROJECT=holycouples-prod
+API_BASE_URL=https://api.holycouples.com
+```
+
+### Scalability Considerations
+
+| Scale | Users/Brand | Recommendation |
+|-------|-------------|----------------|
+| **Small** | < 10K | Shared database with brand_id |
+| **Medium** | 10K - 100K | Separate Supabase, shared Firebase |
+| **Large** | 100K+ | Fully separate infrastructure |
+| **Enterprise** | 1M+ | Dedicated cloud accounts per brand |
+
+### Cost Optimization
+
+| Service | Free Tier | Cost at Scale | Strategy |
+|---------|-----------|---------------|----------|
+| **Firebase RTDB** | 1GB storage, 10GB/mo transfer | $5/GB storage | Use Supabase for large data |
+| **Supabase** | 500MB DB, 1GB storage | $25/mo pro | Separate projects only when needed |
+| **Cloud Functions** | 2M invocations/mo | $0.40/million | Share deployment, route by brand |
+| **FCM** | Free unlimited | Free | Always separate per brand |
+
+### Migration Path
+
+**Phase 1 (MVP):** All brands share TogetherRemind backend
+- Quick to launch new brands
+- Use brand_id for data filtering
+- Single deployment to maintain
+
+**Phase 2 (Growth):** Separate Firebase per brand
+- Critical for push notification isolation
+- Keep shared Supabase with brand_id
+- Separate google-services.json per brand
+
+**Phase 3 (Scale):** Fully separate infrastructure
+- Independent Supabase projects
+- Independent API deployments
+- Can scale/price brands independently
 
 ---
 

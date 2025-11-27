@@ -100,6 +100,8 @@ class BrandRegistry {
       webAuthDomain: 'togetherremind.firebaseapp.com',
     ),
     apiBaseUrl: 'https://api.togetherremind.com',
+    supabaseUrl: 'https://naqzdqdncdzxpxbdysgq.supabase.co',
+    supabaseAnonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5hcXpkcWRuY2R6eHB4YmR5c2dxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzI2MjM1MTAsImV4cCI6MjA0ODE5OTUxMH0.placeholder', // TODO: Replace with real key
   );
 
   // ========================================
@@ -167,5 +169,8 @@ class BrandRegistry {
       webAuthDomain: 'togetherremind.firebaseapp.com',
     ),
     apiBaseUrl: 'https://api.togetherremind.com', // Using same API for testing
+    // Using TogetherRemind Supabase for testing (create separate project for production)
+    supabaseUrl: 'https://naqzdqdncdzxpxbdysgq.supabase.co',
+    supabaseAnonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5hcXpkcWRuY2R6eHB4YmR5c2dxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzI2MjM1MTAsImV4cCI6MjA0ODE5OTUxMH0.placeholder', // TODO: Replace with real key for production
   );
 }

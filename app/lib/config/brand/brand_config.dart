@@ -67,8 +67,14 @@ class BrandConfig {
   /// Firebase project configuration
   final BrandFirebaseConfig firebase;
 
-  /// API base URL (for Supabase/Next.js API)
+  /// API base URL (for Next.js API routes)
   final String apiBaseUrl;
+
+  /// Supabase project URL
+  final String supabaseUrl;
+
+  /// Supabase anonymous/public key
+  final String supabaseAnonKey;
 
   const BrandConfig({
     required this.brand,
@@ -82,6 +88,8 @@ class BrandConfig {
     required this.content,
     required this.firebase,
     required this.apiBaseUrl,
+    required this.supabaseUrl,
+    required this.supabaseAnonKey,
   });
 
   /// Get the brand ID string (for asset paths, etc.)
