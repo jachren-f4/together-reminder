@@ -1,0 +1,24 @@
+{
+  "puzzleId": "ws_002",
+  "title": "Daily Love II",
+  "theme": "everyday",
+  "size": {
+    "rows": 10,
+    "cols": 10
+  },
+  "grid": "JNALPKYOZWGYADILOHEZJDESSELBGAOYSHOELECRKBAGCLUCKYENEALEWVIEDBEAMEIMZVMPIVPEAVZGVLEOREYLOPMVHETLIMAM",
+  "words": {
+    "PEACE": "71,UR",
+    "LUCKY": "45,R",
+    "KISS": "5,DL",
+    "TEAM": "94,UR",
+    "HOLIDAY": "17,L",
+    "HAND": "33,DL",
+    "HOPE": "92,UR",
+    "JOKE": "20,D",
+    "MOVIE": "99,UL",
+    "BEAM": "61,R",
+    "BLESSED": "27,L",
+    "PLAN": "4,L"
+  }
+}

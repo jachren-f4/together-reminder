@@ -1,0 +1,24 @@
+{
+  "puzzleId": "ws_012",
+  "title": "Daily Love XII",
+  "theme": "everyday",
+  "size": {
+    "rows": 10,
+    "cols": 10
+  },
+  "grid": "TRVYNBBTGOAEELGGUNSCHHSNOWIJCOCTPIZNKXAUBEDBRIGHTPWGEOEPMGMLTOMTDLRAGERTABKEOUELIDLYENODSTPMYTEVLSKL",
+  "words": {
+    "BRIGHT": "43,R",
+    "TRIP": "60,D",
+    "TEAM": "89,UL",
+    "GREET": "57,DL",
+    "DATE": "81,UR",
+    "SURPRISE": "88,UL",
+    "COUPLE": "19,D",
+    "NOD": "85,R",
+    "MORNING": "62,UR",
+    "SNUGGLE": "18,L",
+    "CHAT": "30,U",
+    "TOGETHER": "71,U"
+  }
+}

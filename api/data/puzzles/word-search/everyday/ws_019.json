@@ -1,0 +1,24 @@
+{
+  "puzzleId": "ws_019",
+  "title": "Daily Love XIX",
+  "theme": "everyday",
+  "size": {
+    "rows": 10,
+    "cols": 10
+  },
+  "grid": "SATSENOHNDDNEKEEWEZEOBWLTPTEBSXPESQSHTFSUEUSIBLAUELRTLTOMMLLTFPMYIELUBGEYALYEUCIOCLYFSUOKWQTMLOVESYJ",
+  "words": {
+    "LOVE": "93,R",
+    "LISTEN": "53,UR",
+    "BESTIE": "21,DR",
+    "LOYAL": "46,DL",
+    "SOULMATE": "97,U",
+    "HONEST": "7,L",
+    "TRUST": "60,UR",
+    "BLESSED": "69,U",
+    "PERFECT": "31,D",
+    "WEEKEND": "16,L",
+    "FAMILY": "38,DL",
+    "LUCKY": "58,D"
+  }
+}

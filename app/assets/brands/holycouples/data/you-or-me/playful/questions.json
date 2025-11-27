@@ -1,0 +1,184 @@
+{
+  "questions": [
+    {
+      "id": "yom_q001",
+      "prompt": "Who's more...",
+      "content": "Creative",
+      "category": "personality"
+    },
+    {
+      "id": "yom_q002",
+      "prompt": "Who's more...",
+      "content": "Organized",
+      "category": "personality"
+    },
+    {
+      "id": "yom_q003",
+      "prompt": "Who's more...",
+      "content": "Spontaneous",
+      "category": "personality"
+    },
+    {
+      "id": "yom_q004",
+      "prompt": "Who's more...",
+      "content": "Introverted",
+      "category": "personality"
+    },
+    {
+      "id": "yom_q005",
+      "prompt": "Who's more...",
+      "content": "Ambitious",
+      "category": "personality"
+    },
+    {
+      "id": "yom_q006",
+      "prompt": "Who's more...",
+      "content": "Patient",
+      "category": "personality"
+    },
+    {
+      "id": "yom_q007",
+      "prompt": "Who's more...",
+      "content": "Playful",
+      "category": "personality"
+    },
+    {
+      "id": "yom_q008",
+      "prompt": "Who's more...",
+      "content": "Romantic",
+      "category": "personality"
+    },
+    {
+      "id": "yom_q009",
+      "prompt": "Who's more...",
+      "content": "Practical",
+      "category": "personality"
+    },
+    {
+      "id": "yom_q010",
+      "prompt": "Who's more...",
+      "content": "Optimistic",
+      "category": "personality"
+    },
+    {
+      "id": "yom_q011",
+      "prompt": "Who's more...",
+      "content": "Adventurous",
+      "category": "personality"
+    },
+    {
+      "id": "yom_q012",
+      "prompt": "Who's more...",
+      "content": "Analytical",
+      "category": "personality"
+    },
+    {
+      "id": "yom_q013",
+      "prompt": "Who's more...",
+      "content": "Emotional",
+      "category": "personality"
+    },
+    {
+      "id": "yom_q014",
+      "prompt": "Who's more...",
+      "content": "Talkative",
+      "category": "personality"
+    },
+    {
+      "id": "yom_q015",
+      "prompt": "Who's more...",
+      "content": "Competitive",
+      "category": "personality"
+    },
+    {
+      "id": "yom_q016",
+      "prompt": "Who would...",
+      "content": "Plan the perfect date",
+      "category": "actions"
+    },
+    {
+      "id": "yom_q017",
+      "prompt": "Who would...",
+      "content": "Cook dinner tonight",
+      "category": "actions"
+    },
+    {
+      "id": "yom_q018",
+      "prompt": "Who would...",
+      "content": "Wake up first",
+      "category": "actions"
+    },
+    {
+      "id": "yom_q019",
+      "prompt": "Who would...",
+      "content": "Apologize first after an argument",
+      "category": "actions"
+    },
+    {
+      "id": "yom_q020",
+      "prompt": "Who would...",
+      "content": "Win at trivia night",
+      "category": "actions"
+    },
+    {
+      "id": "yom_q021",
+      "prompt": "Who would...",
+      "content": "Suggest a spontaneous trip",
+      "category": "actions"
+    },
+    {
+      "id": "yom_q022",
+      "prompt": "Who would...",
+      "content": "Choose the movie",
+      "category": "actions"
+    },
+    {
+      "id": "yom_q023",
+      "prompt": "Who would...",
+      "content": "Remember important dates",
+      "category": "actions"
+    },
+    {
+      "id": "yom_q024",
+      "prompt": "Who would...",
+      "content": "Make the bed in the morning",
+      "category": "actions"
+    },
+    {
+      "id": "yom_q025",
+      "prompt": "Who would...",
+      "content": "Take care of the plants",
+      "category": "actions"
+    },
+    {
+      "id": "yom_q026",
+      "prompt": "Who would...",
+      "content": "Handle a spider in the house",
+      "category": "actions"
+    },
+    {
+      "id": "yom_q027",
+      "prompt": "Who would...",
+      "content": "Navigate on a road trip",
+      "category": "actions"
+    },
+    {
+      "id": "yom_q028",
+      "prompt": "Who would...",
+      "content": "Stay up late talking",
+      "category": "actions"
+    },
+    {
+      "id": "yom_q029",
+      "prompt": "Who would...",
+      "content": "Send the first good morning text",
+      "category": "actions"
+    },
+    {
+      "id": "yom_q030",
+      "prompt": "Who would...",
+      "content": "Pick the restaurant",
+      "category": "actions"
+    }
+  ]
+}

@@ -6,8 +6,70 @@ import 'package:togetherremind/theme/app_theme.dart';
 import 'package:uuid/uuid.dart';
 import 'package:togetherremind/models/user.dart';
 
-class OnboardingScreen extends StatelessWidget {
+class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({super.key});
+
+  @override
+  State<OnboardingScreen> createState() => _OnboardingScreenState();
+}
+
+class _OnboardingScreenState extends State<OnboardingScreen> {
+  bool _isLoading = false;
+
+  /// Handle Get Started button press
+  /// Checks if user is returning (has existing name) and skips name dialog if so
+  Future<void> _handleGetStarted() async {
+    setState(() => _isLoading = true);
+
+    try {
+      final authService = AuthService();
+      final existingName = await authService.getDisplayName();
+
+      if (existingName != null && mounted) {
+        // Returning user - skip name dialog, go directly to pairing
+        debugPrint('👋 Welcome back, $existingName!');
+        await _saveNameAndNavigate(existingName);
+      } else if (mounted) {
+        // New user - show name dialog
+        _showNameDialog(context);
+      }
+    } finally {
+      if (mounted) {
+        setState(() => _isLoading = false);
+      }
+    }
+  }
+
+  /// Save name to storage and navigate to pairing screen
+  Future<void> _saveNameAndNavigate(String name) async {
+    final storageService = StorageService();
+    var user = storageService.getUser();
+
+    if (user == null) {
+      const uuid = Uuid();
+      final userId = uuid.v4();
+      final pushToken = 'simulator_token_$userId';
+
+      user = User(
+        id: userId,
+        pushToken: pushToken,
+        createdAt: DateTime.now(),
+        name: name,
+      );
+    } else {
+      user.name = name;
+    }
+
+    await storageService.saveUser(user);
+
+    if (mounted) {
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (context) => const PairingScreen(),
+        ),
+      );
+    }
+  }
 
   void _showNameDialog(BuildContext context) {
     final nameController = TextEditingController();
@@ -88,26 +150,7 @@ class OnboardingScreen extends StatelessWidget {
   }
 
   Future<void> _saveName(BuildContext context, String name) async {
-    final storageService = StorageService();
     final authService = AuthService();
-    var user = storageService.getUser();
-
-    if (user == null) {
-      const uuid = Uuid();
-      final userId = uuid.v4();
-      final pushToken = 'simulator_token_$userId';
-
-      user = User(
-        id: userId,
-        pushToken: pushToken,
-        createdAt: DateTime.now(),
-        name: name,
-      );
-    } else {
-      user.name = name;
-    }
-
-    await storageService.saveUser(user);
 
     // Sync name to Supabase user metadata so other users can see it
     if (authService.isAuthenticated) {
@@ -116,11 +159,7 @@ class OnboardingScreen extends StatelessWidget {
 
     if (context.mounted) {
       Navigator.of(context).pop(); // Close dialog
-      Navigator.of(context).push(
-        MaterialPageRoute(
-          builder: (context) => const PairingScreen(),
-        ),
-      );
+      await _saveNameAndNavigate(name);
     }
   }
 
@@ -191,9 +230,7 @@ class OnboardingScreen extends StatelessWidget {
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
-                    onPressed: () {
-                      _showNameDialog(context);
-                    },
+                    onPressed: _isLoading ? null : _handleGetStarted,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppTheme.primaryBlack,
                       foregroundColor: AppTheme.primaryWhite,
@@ -204,20 +241,29 @@ class OnboardingScreen extends StatelessWidget {
                         borderRadius: BorderRadius.circular(24),
                       ),
                     ),
-                    child: const Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          'Get Started',
-                          style: TextStyle(
-                            fontSize: 17,
-                            fontWeight: FontWeight.w600,
+                    child: _isLoading
+                        ? SizedBox(
+                            height: 20,
+                            width: 20,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                              color: AppTheme.primaryWhite,
+                            ),
+                          )
+                        : const Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                'Get Started',
+                                style: TextStyle(
+                                  fontSize: 17,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                              SizedBox(width: 8),
+                              Text('💕', style: TextStyle(fontSize: 20)),
+                            ],
                           ),
-                        ),
-                        SizedBox(width: 8),
-                        Text('💕', style: TextStyle(fontSize: 20)),
-                      ],
-                    ),
                   ),
                 ),
               ],

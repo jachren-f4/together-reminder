@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Empty Leaderboard - TogetherRemind</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            background: #fafafa;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 420px;
+            margin: 0 auto;
+            background: #fff;
+            border: 2px solid #000;
+            box-shadow: 8px 8px 0 rgba(0, 0, 0, 0.1);
+        }
+
+        /* Header */
+        .header {
+            border-bottom: 2px solid #000;
+            padding: 24px 20px;
+            text-align: center;
+        }
+
+        .title {
+            font-size: 32px;
+            font-weight: 400;
+            letter-spacing: 2px;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+        }
+
+        .subtitle {
+            font-size: 14px;
+            color: #666;
+            font-style: italic;
+        }
+
+        /* Tab Toggle */
+        .tab-row {
+            display: flex;
+            border-bottom: 1px solid #000;
+        }
+
+        .tab {
+            flex: 1;
+            padding: 14px;
+            text-align: center;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border-right: 1px solid #000;
+        }
+
+        .tab:last-child {
+            border-right: none;
+        }
+
+        .tab.active {
+            background: #000;
+            color: #fff;
+        }
+
+        .tab:hover:not(.active) {
+            background: #f0f0f0;
+        }
+
+        .tab .flag {
+            margin-right: 6px;
+        }
+
+        /* Empty State */
+        .empty-state {
+            padding: 60px 40px;
+            text-align: center;
+        }
+
+        .empty-trophy {
+            font-size: 80px;
+            margin-bottom: 24px;
+        }
+
+        .empty-title {
+            font-size: 22px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .empty-message {
+            font-size: 16px;
+            color: #666;
+            font-style: italic;
+            line-height: 1.5;
+            margin-bottom: 8px;
+        }
+
+        .empty-country {
+            font-size: 14px;
+            color: #999;
+            margin-top: 16px;
+        }
+
+        /* Your Position Card */
+        .your-position {
+            border-top: 2px solid #000;
+            padding: 20px;
+            background: #f8f8f8;
+        }
+
+        .position-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #666;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+
+        .position-card {
+            display: flex;
+            align-items: center;
+            padding: 16px 20px;
+            background: #fff;
+            border: 2px solid #000;
+        }
+
+        .position-rank {
+            font-size: 28px;
+            font-weight: 700;
+            width: 60px;
+        }
+
+        .position-medal {
+            font-size: 32px;
+            width: 60px;
+            text-align: center;
+        }
+
+        .position-info {
+            flex: 1;
+        }
+
+        .position-initials {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .position-celebrate {
+            font-size: 13px;
+            color: #666;
+            font-style: italic;
+        }
+
+        .position-lp {
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        /* Footer */
+        .footer {
+            padding: 12px 20px;
+            border-top: 1px solid #e0e0e0;
+            text-align: center;
+        }
+
+        .footer-hint {
+            font-size: 11px;
+            color: #999;
+            font-style: italic;
+        }
+
+        /* Back link */
+        .back-link {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+            font-size: 14px;
+            color: #666;
+            text-decoration: none;
+        }
+
+        .back-link:hover {
+            color: #000;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="title">Leaderboard</div>
+            <div class="subtitle">Ranked by Love Points</div>
+        </div>
+
+        <!-- Tab Toggle -->
+        <div class="tab-row">
+            <div class="tab">Global</div>
+            <div class="tab active"><span class="flag">🇱🇮</span> Liechtenstein</div>
+        </div>
+
+        <!-- Empty State -->
+        <div class="empty-state">
+            <div class="empty-trophy">🏆</div>
+            <div class="empty-title">You're the First!</div>
+            <div class="empty-message">
+                No other couples in Liechtenstein yet.
+            </div>
+            <div class="empty-message">
+                Share TogetherRemind with friends to grow the local rankings!
+            </div>
+            <div class="empty-country">🇱🇮 Liechtenstein</div>
+        </div>
+
+        <!-- Your Position Card -->
+        <div class="your-position">
+            <div class="position-label">Your Position</div>
+            <div class="position-card">
+                <div class="position-medal">🥇</div>
+                <div class="position-info">
+                    <div class="position-initials">J & A</div>
+                    <div class="position-celebrate">Champion by default!</div>
+                </div>
+                <div class="position-lp">2,450 LP</div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <div class="footer-hint">Check global rankings to see how you compare worldwide</div>
+        </div>
+    </div>
+
+    <a href="index.html" class="back-link">← Back to mockups</a>
+</body>
+</html>

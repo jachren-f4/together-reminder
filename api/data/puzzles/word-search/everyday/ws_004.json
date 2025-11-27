@@ -1,0 +1,24 @@
+{
+  "puzzleId": "ws_004",
+  "title": "Daily Love IV",
+  "theme": "everyday",
+  "size": {
+    "rows": 10,
+    "cols": 10
+  },
+  "grid": "OGBWVLYCYUHRYEIPCTRIRALCPSIEIWTTLADNHKIMBEHPUTKNUPLFLGEKKRGRIURGIHIYEZSLOKGRUNECSTUIKIBGDMEVAWTIGDSP",
+  "words": {
+    "TOGETHER": "81,UR",
+    "KIND": "55,DR",
+    "WINK": "29,DL",
+    "UNITY": "44,UR",
+    "BRIGHT": "86,UL",
+    "WAVE": "93,L",
+    "HUG": "65,DR",
+    "BLISS": "40,D",
+    "WISH": "3,DR",
+    "GRATEFUL": "1,D",
+    "GIGGLE": "96,UL",
+    "HAPPY": "42,UR"
+  }
+}

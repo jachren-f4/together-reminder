@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Full Leaderboard - TogetherRemind</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            background: #fafafa;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 420px;
+            margin: 0 auto;
+            background: #fff;
+            border: 2px solid #000;
+            box-shadow: 8px 8px 0 rgba(0, 0, 0, 0.1);
+        }
+
+        /* Header */
+        .header {
+            border-bottom: 2px solid #000;
+            padding: 24px 20px;
+            text-align: center;
+        }
+
+        .title {
+            font-size: 32px;
+            font-weight: 400;
+            letter-spacing: 2px;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+        }
+
+        .subtitle {
+            font-size: 14px;
+            color: #666;
+            font-style: italic;
+        }
+
+        /* Back Button */
+        .back-row {
+            padding: 12px 20px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            color: #666;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .back-btn:hover {
+            color: #000;
+        }
+
+        /* Tab Toggle */
+        .tab-row {
+            display: flex;
+            border-bottom: 1px solid #000;
+        }
+
+        .tab {
+            flex: 1;
+            padding: 14px;
+            text-align: center;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border-right: 1px solid #000;
+        }
+
+        .tab:last-child {
+            border-right: none;
+        }
+
+        .tab.active {
+            background: #000;
+            color: #fff;
+        }
+
+        .tab:hover:not(.active) {
+            background: #f0f0f0;
+        }
+
+        /* Section Headers */
+        .section-header {
+            padding: 12px 20px;
+            background: #f8f8f8;
+            border-bottom: 1px solid #e0e0e0;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #999;
+            font-weight: 600;
+        }
+
+        /* Leaderboard List */
+        .leaderboard-list {
+            max-height: 500px;
+            overflow-y: auto;
+        }
+
+        .leaderboard-row {
+            display: flex;
+            align-items: center;
+            padding: 12px 20px;
+            border-bottom: 1px solid #e0e0e0;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .leaderboard-row:hover {
+            background: #000;
+            color: #fff;
+        }
+
+        .leaderboard-row:hover .row-lp {
+            color: #fff;
+        }
+
+        .leaderboard-row.highlighted {
+            background: #f8f8f8;
+            border-left: 4px solid #000;
+            padding-left: 16px;
+        }
+
+        .leaderboard-row.highlighted:hover {
+            background: #000;
+            border-left-color: #fff;
+        }
+
+        .row-rank {
+            width: 40px;
+            font-size: 14px;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .row-rank.medal {
+            font-size: 18px;
+        }
+
+        .row-initials {
+            flex: 1;
+            font-size: 14px;
+            font-weight: 500;
+            padding-left: 12px;
+        }
+
+        .row-you {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            background: #000;
+            color: #fff;
+            padding: 2px 6px;
+            margin-left: 6px;
+        }
+
+        .leaderboard-row.highlighted:hover .row-you {
+            background: #fff;
+            color: #000;
+        }
+
+        .row-lp {
+            font-size: 13px;
+            color: #666;
+            font-weight: 600;
+        }
+
+        /* Footer */
+        .footer {
+            padding: 12px 20px;
+            border-top: 1px solid #000;
+            text-align: center;
+        }
+
+        .footer-hint {
+            font-size: 11px;
+            color: #999;
+            font-style: italic;
+        }
+
+        /* Back link */
+        .back-link {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+            font-size: 14px;
+            color: #666;
+            text-decoration: none;
+        }
+
+        .back-link:hover {
+            color: #000;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="title">Leaderboard</div>
+            <div class="subtitle">Full Top 50 Rankings</div>
+        </div>
+
+        <!-- Back Button -->
+        <div class="back-row">
+            <a href="01-leaderboard-global.html" class="back-btn">← Back to summary</a>
+        </div>
+
+        <!-- Tab Toggle -->
+        <div class="tab-row">
+            <div class="tab active">Global</div>
+            <div class="tab">My Country</div>
+        </div>
+
+        <!-- Section Header -->
+        <div class="section-header">Top 50 Couples Worldwide</div>
+
+        <!-- Leaderboard List -->
+        <div class="leaderboard-list">
+            <div class="leaderboard-row">
+                <div class="row-rank medal">🥇</div>
+                <div class="row-initials">E & R</div>
+                <div class="row-lp">12,450 LP</div>
+            </div>
+            <div class="leaderboard-row">
+                <div class="row-rank medal">🥈</div>
+                <div class="row-initials">S & M</div>
+                <div class="row-lp">10,890 LP</div>
+            </div>
+            <div class="leaderboard-row">
+                <div class="row-rank medal">🥉</div>
+                <div class="row-initials">L & J</div>
+                <div class="row-lp">9,320 LP</div>
+            </div>
+            <div class="leaderboard-row">
+                <div class="row-rank">#4</div>
+                <div class="row-initials">Z & A</div>
+                <div class="row-lp">8,560 LP</div>
+            </div>
+            <div class="leaderboard-row">
+                <div class="row-rank">#5</div>
+                <div class="row-initials">M & C</div>
+                <div class="row-lp">7,890 LP</div>
+            </div>
+            <div class="leaderboard-row">
+                <div class="row-rank">#6</div>
+                <div class="row-initials">A & B</div>
+                <div class="row-lp">7,210 LP</div>
+            </div>
+            <div class="leaderboard-row">
+                <div class="row-rank">#7</div>
+                <div class="row-initials">K & T</div>
+                <div class="row-lp">6,880 LP</div>
+            </div>
+            <div class="leaderboard-row">
+                <div class="row-rank">#8</div>
+                <div class="row-initials">D & P</div>
+                <div class="row-lp">6,450 LP</div>
+            </div>
+            <div class="leaderboard-row">
+                <div class="row-rank">#9</div>
+                <div class="row-initials">H & W</div>
+                <div class="row-lp">5,920 LP</div>
+            </div>
+            <div class="leaderboard-row">
+                <div class="row-rank">#10</div>
+                <div class="row-initials">F & G</div>
+                <div class="row-lp">5,340 LP</div>
+            </div>
+            <!-- Rows 11-40 condensed for display -->
+            <div class="leaderboard-row">
+                <div class="row-rank">#11</div>
+                <div class="row-initials">I & J</div>
+                <div class="row-lp">5,120 LP</div>
+            </div>
+            <div class="leaderboard-row">
+                <div class="row-rank">#12</div>
+                <div class="row-initials">K & L</div>
+                <div class="row-lp">4,890 LP</div>
+            </div>
+            <div class="leaderboard-row">
+                <div class="row-rank">#13</div>
+                <div class="row-initials">M & N</div>
+                <div class="row-lp">4,650 LP</div>
+            </div>
+            <div class="leaderboard-row">
+                <div class="row-rank">#14</div>
+                <div class="row-initials">O & P</div>
+                <div class="row-lp">4,420 LP</div>
+            </div>
+            <div class="leaderboard-row">
+                <div class="row-rank">#15</div>
+                <div class="row-initials">Q & R</div>
+                <div class="row-lp">4,180 LP</div>
+            </div>
+            <div class="leaderboard-row">
+                <div class="row-rank">#20</div>
+                <div class="row-initials">A & Z</div>
+                <div class="row-lp">3,750 LP</div>
+            </div>
+            <div class="leaderboard-row">
+                <div class="row-rank">#25</div>
+                <div class="row-initials">B & Y</div>
+                <div class="row-lp">3,420 LP</div>
+            </div>
+            <div class="leaderboard-row">
+                <div class="row-rank">#30</div>
+                <div class="row-initials">C & X</div>
+                <div class="row-lp">3,080 LP</div>
+            </div>
+            <div class="leaderboard-row">
+                <div class="row-rank">#35</div>
+                <div class="row-initials">D & W</div>
+                <div class="row-lp">2,820 LP</div>
+            </div>
+            <div class="leaderboard-row">
+                <div class="row-rank">#40</div>
+                <div class="row-initials">E & V</div>
+                <div class="row-lp">2,580 LP</div>
+            </div>
+            <div class="leaderboard-row">
+                <div class="row-rank">#41</div>
+                <div class="row-initials">Q & R</div>
+                <div class="row-lp">2,510 LP</div>
+            </div>
+            <div class="leaderboard-row highlighted">
+                <div class="row-rank">#42</div>
+                <div class="row-initials">J & A<span class="row-you">You</span></div>
+                <div class="row-lp">2,450 LP</div>
+            </div>
+            <div class="leaderboard-row">
+                <div class="row-rank">#43</div>
+                <div class="row-initials">U & V</div>
+                <div class="row-lp">2,380 LP</div>
+            </div>
+            <div class="leaderboard-row">
+                <div class="row-rank">#44</div>
+                <div class="row-initials">W & X</div>
+                <div class="row-lp">2,290 LP</div>
+            </div>
+            <div class="leaderboard-row">
+                <div class="row-rank">#45</div>
+                <div class="row-initials">Y & Z</div>
+                <div class="row-lp">2,150 LP</div>
+            </div>
+            <div class="leaderboard-row">
+                <div class="row-rank">#46</div>
+                <div class="row-initials">A & A</div>
+                <div class="row-lp">2,080 LP</div>
+            </div>
+            <div class="leaderboard-row">
+                <div class="row-rank">#47</div>
+                <div class="row-initials">B & B</div>
+                <div class="row-lp">1,990 LP</div>
+            </div>
+            <div class="leaderboard-row">
+                <div class="row-rank">#48</div>
+                <div class="row-initials">C & C</div>
+                <div class="row-lp">1,870 LP</div>
+            </div>
+            <div class="leaderboard-row">
+                <div class="row-rank">#49</div>
+                <div class="row-initials">D & D</div>
+                <div class="row-lp">1,760 LP</div>
+            </div>
+            <div class="leaderboard-row">
+                <div class="row-rank">#50</div>
+                <div class="row-initials">E & E</div>
+                <div class="row-lp">1,650 LP</div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <div class="footer-hint">Updated 2 minutes ago</div>
+        </div>
+    </div>
+
+    <a href="index.html" class="back-link">← Back to mockups</a>
+</body>
+</html>

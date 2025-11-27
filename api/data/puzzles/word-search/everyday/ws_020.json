@@ -1,0 +1,24 @@
+{
+  "puzzleId": "ws_020",
+  "title": "Daily Love XX",
+  "theme": "everyday",
+  "size": {
+    "rows": 10,
+    "cols": 10
+  },
+  "grid": "GBYLSQHXMDEPALJMJSRJNJLCAMIEUHTFPSVUALYHLFANVMGTEQEFEHOBZHCOEFDREDNETHQMORNINGSAQESRENNIDTQESPGUWVDT",
+  "words": {
+    "TENDER": "68,L",
+    "DREAM": "9,DL",
+    "MATCH": "25,DR",
+    "WISH": "96,UR",
+    "SAFE": "33,DL",
+    "MORNING": "71,R",
+    "PLAY": "32,U",
+    "SMILE": "4,DR",
+    "LAUGH": "13,DR",
+    "DINNER": "88,L",
+    "HUSH": "39,UL",
+    "GENTLE": "0,D"
+  }
+}

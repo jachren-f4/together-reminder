@@ -1,0 +1,24 @@
+{
+  "puzzleId": "ws_001",
+  "title": "Passionate I",
+  "theme": "passion",
+  "size": {
+    "rows": 10,
+    "cols": 10
+  },
+  "grid": "DEPYECREIFXAHYEARNSKGPWUKEGPKKSIGNCNIIQMDHKAIRPOORUSLGIYAWSPORNTXMOVEWROTWILIGHTLWYBERODASVIEOEMOANE",
+  "words": {
+    "LACE": "52,UR",
+    "TWILIGHT": "72,R",
+    "FIERCE": "9,L",
+    "SPIRIT": "18,DL",
+    "MOVE": "65,R",
+    "WORSHIP": "81,U",
+    "LONGING": "80,UR",
+    "DAWN": "0,DR",
+    "ADORE": "88,L",
+    "MOAN": "95,R",
+    "SWAY": "58,L",
+    "YEARN": "13,R"
+  }
+}

@@ -1,0 +1,898 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Poke Screen Variants - TogetherRemind</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            background: #2a2a2a;
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .page-title {
+            text-align: center;
+            color: #fff;
+            margin-bottom: 40px;
+        }
+
+        .page-title h1 {
+            font-size: 28px;
+            font-weight: 400;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+
+        .page-title p {
+            font-size: 14px;
+            color: #999;
+            font-style: italic;
+        }
+
+        .variants-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+            gap: 40px;
+            max-width: 1800px;
+            margin: 0 auto;
+        }
+
+        .variant-wrapper {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .variant-label {
+            background: #000;
+            color: #fff;
+            padding: 12px 16px;
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        .container {
+            max-width: 420px;
+            background: #fff;
+            border: 2px solid #000;
+            box-shadow: 8px 8px 0 rgba(0, 0, 0, 0.1);
+        }
+
+        /* ========================================
+           VARIANT 1: Full Card Style
+           ======================================== */
+        .v1-header {
+            border-bottom: 2px solid #000;
+            padding: 24px 20px;
+            text-align: center;
+        }
+
+        .v1-title {
+            font-size: 28px;
+            font-weight: 400;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 4px;
+        }
+
+        .v1-subtitle {
+            font-size: 13px;
+            color: #666;
+            font-style: italic;
+        }
+
+        .v1-recipient {
+            border-bottom: 1px solid #000;
+            padding: 16px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .v1-recipient-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #666;
+        }
+
+        .v1-recipient-name {
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .v1-main {
+            padding: 40px 20px;
+            text-align: center;
+            border-bottom: 1px solid #000;
+        }
+
+        .v1-emoji-display {
+            font-size: 80px;
+            margin-bottom: 24px;
+        }
+
+        .v1-poke-btn {
+            display: inline-block;
+            background: #000;
+            color: #fff;
+            border: none;
+            padding: 18px 60px;
+            font-family: 'Georgia', serif;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .v1-poke-btn:hover {
+            background: #333;
+        }
+
+        .v1-emoji-selector {
+            padding: 20px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .v1-emoji-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #666;
+            margin-bottom: 12px;
+        }
+
+        .v1-emoji-row {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        .v1-emoji-btn {
+            width: 52px;
+            height: 52px;
+            border: 1px solid #000;
+            background: #fff;
+            font-size: 26px;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+
+        .v1-emoji-btn:hover,
+        .v1-emoji-btn.selected {
+            background: #000;
+        }
+
+        .v1-footer {
+            padding: 16px 20px;
+            text-align: center;
+        }
+
+        .v1-footer-text {
+            font-size: 12px;
+            color: #999;
+            font-style: italic;
+        }
+
+        /* ========================================
+           VARIANT 2: Minimal Centered
+           ======================================== */
+        .v2-content {
+            padding: 60px 20px;
+            text-align: center;
+            min-height: 500px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .v2-eyebrow {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #666;
+            margin-bottom: 16px;
+        }
+
+        .v2-emoji {
+            font-size: 100px;
+            margin-bottom: 24px;
+        }
+
+        .v2-title {
+            font-size: 32px;
+            font-weight: 400;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+
+        .v2-recipient {
+            font-size: 14px;
+            color: #666;
+            font-style: italic;
+            margin-bottom: 40px;
+        }
+
+        .v2-divider {
+            width: 60px;
+            height: 2px;
+            background: #000;
+            margin: 0 auto 40px;
+        }
+
+        .v2-emoji-row {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            margin-bottom: 32px;
+        }
+
+        .v2-emoji-btn {
+            width: 56px;
+            height: 56px;
+            border: 1px solid #000;
+            background: #fff;
+            font-size: 28px;
+            cursor: pointer;
+        }
+
+        .v2-emoji-btn.selected {
+            background: #000;
+        }
+
+        .v2-send-btn {
+            display: inline-block;
+            background: #000;
+            color: #fff;
+            border: none;
+            padding: 16px 48px;
+            font-family: 'Georgia', serif;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            cursor: pointer;
+        }
+
+        .v2-hint {
+            margin-top: 24px;
+            font-size: 11px;
+            color: #999;
+        }
+
+        /* ========================================
+           VARIANT 3: Two-Column Split
+           ======================================== */
+        .v3-header {
+            border-bottom: 2px solid #000;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .v3-header-title {
+            font-size: 24px;
+            font-weight: 400;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .v3-split {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+        }
+
+        .v3-left {
+            border-right: 1px solid #000;
+            padding: 40px 20px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .v3-emoji-large {
+            font-size: 72px;
+            margin-bottom: 20px;
+        }
+
+        .v3-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #666;
+        }
+
+        .v3-right {
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .v3-section {
+            padding: 16px 0;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .v3-section:last-child {
+            border-bottom: none;
+        }
+
+        .v3-section-label {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #999;
+            margin-bottom: 8px;
+        }
+
+        .v3-section-value {
+            font-size: 15px;
+            font-weight: 600;
+        }
+
+        .v3-emoji-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+        }
+
+        .v3-emoji-option {
+            aspect-ratio: 1;
+            border: 1px solid #000;
+            background: #fff;
+            font-size: 22px;
+            cursor: pointer;
+        }
+
+        .v3-emoji-option.selected {
+            background: #000;
+        }
+
+        .v3-bottom {
+            border-top: 2px solid #000;
+            padding: 20px;
+        }
+
+        .v3-send-btn {
+            width: 100%;
+            background: #000;
+            color: #fff;
+            border: none;
+            padding: 16px;
+            font-family: 'Georgia', serif;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            cursor: pointer;
+        }
+
+        /* ========================================
+           VARIANT 4: Action Card Style
+           ======================================== */
+        .v4-header {
+            border-bottom: 1px solid #000;
+            padding: 16px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .v4-header-title {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+        }
+
+        .v4-close {
+            font-size: 18px;
+            cursor: pointer;
+            color: #666;
+        }
+
+        .v4-card {
+            margin: 20px;
+            border: 1px solid #000;
+        }
+
+        .v4-card-header {
+            padding: 16px;
+            border-bottom: 1px solid #000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .v4-card-label {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #666;
+        }
+
+        .v4-card-emoji {
+            font-size: 32px;
+        }
+
+        .v4-card-body {
+            padding: 24px 16px;
+            text-align: center;
+        }
+
+        .v4-card-title {
+            font-size: 22px;
+            font-weight: 400;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+
+        .v4-card-desc {
+            font-size: 13px;
+            color: #666;
+            font-style: italic;
+        }
+
+        .v4-recipient-bar {
+            margin: 0 20px;
+            padding: 14px 16px;
+            border: 1px solid #000;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .v4-avatar {
+            width: 36px;
+            height: 36px;
+            background: #000;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        .v4-recipient-info {
+            flex: 1;
+        }
+
+        .v4-recipient-label {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #999;
+        }
+
+        .v4-recipient-name {
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .v4-emoji-section {
+            padding: 20px;
+        }
+
+        .v4-emoji-header {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #666;
+            margin-bottom: 12px;
+        }
+
+        .v4-emoji-row {
+            display: flex;
+            gap: 10px;
+        }
+
+        .v4-emoji-btn {
+            flex: 1;
+            aspect-ratio: 1;
+            border: 1px solid #000;
+            background: #fff;
+            font-size: 26px;
+            cursor: pointer;
+        }
+
+        .v4-emoji-btn.selected {
+            background: #000;
+        }
+
+        .v4-actions {
+            padding: 0 20px 20px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .v4-btn-secondary {
+            padding: 14px;
+            border: 1px solid #000;
+            background: #fff;
+            font-family: 'Georgia', serif;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+        }
+
+        .v4-btn-primary {
+            padding: 14px;
+            border: 1px solid #000;
+            background: #000;
+            color: #fff;
+            font-family: 'Georgia', serif;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+        }
+
+        /* ========================================
+           VARIANT 5: Magazine Editorial
+           ======================================== */
+        .v5-masthead {
+            border-bottom: 2px solid #000;
+            padding: 12px 20px;
+            text-align: center;
+        }
+
+        .v5-masthead-text {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            color: #666;
+        }
+
+        .v5-hero {
+            padding: 48px 24px;
+            text-align: center;
+            border-bottom: 1px solid #000;
+        }
+
+        .v5-hero-emoji {
+            font-size: 64px;
+            margin-bottom: 24px;
+        }
+
+        .v5-hero-title {
+            font-size: 42px;
+            font-weight: 400;
+            letter-spacing: -1px;
+            margin-bottom: 4px;
+        }
+
+        .v5-hero-title-italic {
+            font-style: italic;
+        }
+
+        .v5-hero-line {
+            width: 40px;
+            height: 1px;
+            background: #000;
+            margin: 20px auto;
+        }
+
+        .v5-hero-desc {
+            font-size: 14px;
+            color: #666;
+            font-style: italic;
+            line-height: 1.6;
+            max-width: 280px;
+            margin: 0 auto;
+        }
+
+        .v5-meta {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            border-bottom: 1px solid #000;
+        }
+
+        .v5-meta-item {
+            padding: 16px 20px;
+            text-align: center;
+        }
+
+        .v5-meta-item:first-child {
+            border-right: 1px solid #000;
+        }
+
+        .v5-meta-label {
+            font-size: 9px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: #999;
+            margin-bottom: 4px;
+        }
+
+        .v5-meta-value {
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .v5-emoji-section {
+            padding: 20px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .v5-emoji-title {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: #666;
+            margin-bottom: 14px;
+            text-align: center;
+        }
+
+        .v5-emoji-row {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        .v5-emoji-btn {
+            width: 54px;
+            height: 54px;
+            border: 1px solid #000;
+            background: #fff;
+            font-size: 26px;
+            cursor: pointer;
+        }
+
+        .v5-emoji-btn.selected {
+            background: #000;
+        }
+
+        .v5-action {
+            padding: 20px;
+        }
+
+        .v5-send-btn {
+            width: 100%;
+            background: #000;
+            color: #fff;
+            border: none;
+            padding: 18px;
+            font-family: 'Georgia', serif;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            cursor: pointer;
+        }
+
+        .v5-footer {
+            padding: 0 20px 16px;
+            text-align: center;
+        }
+
+        .v5-footer-text {
+            font-size: 11px;
+            color: #999;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <div class="page-title">
+        <h1>Poke Screen Variants</h1>
+        <p>TogetherRemind Design System</p>
+    </div>
+
+    <div class="variants-grid">
+        <!-- VARIANT 1: Full Card Style -->
+        <div class="variant-wrapper">
+            <div class="variant-label">Variant 1 — Full Card Style</div>
+            <div class="container">
+                <div class="v1-header">
+                    <div class="v1-title">Send a Poke</div>
+                    <div class="v1-subtitle">A quick "thinking of you"</div>
+                </div>
+
+                <div class="v1-recipient">
+                    <span class="v1-recipient-label">Sending To</span>
+                    <span class="v1-recipient-name">Taija</span>
+                </div>
+
+                <div class="v1-main">
+                    <div class="v1-emoji-display">💫</div>
+                    <button class="v1-poke-btn">Poke</button>
+                </div>
+
+                <div class="v1-emoji-selector">
+                    <div class="v1-emoji-label">Choose Emoji</div>
+                    <div class="v1-emoji-row">
+                        <button class="v1-emoji-btn selected">💫</button>
+                        <button class="v1-emoji-btn">❤️</button>
+                        <button class="v1-emoji-btn">👋</button>
+                        <button class="v1-emoji-btn">🫶</button>
+                    </div>
+                </div>
+
+                <div class="v1-footer">
+                    <span class="v1-footer-text">Mutual pokes earn +5 Love Points</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- VARIANT 2: Minimal Centered -->
+        <div class="variant-wrapper">
+            <div class="variant-label">Variant 2 — Minimal Centered</div>
+            <div class="container">
+                <div class="v2-content">
+                    <div class="v2-eyebrow">Quick Action</div>
+                    <div class="v2-emoji">💫</div>
+                    <div class="v2-title">Poke</div>
+                    <div class="v2-recipient">to Taija</div>
+                    <div class="v2-divider"></div>
+                    <div class="v2-emoji-row">
+                        <button class="v2-emoji-btn selected">💫</button>
+                        <button class="v2-emoji-btn">❤️</button>
+                        <button class="v2-emoji-btn">👋</button>
+                        <button class="v2-emoji-btn">🫶</button>
+                    </div>
+                    <button class="v2-send-btn">Send Poke</button>
+                    <div class="v2-hint">📳 Vibration + animation on receive</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- VARIANT 3: Two-Column Split -->
+        <div class="variant-wrapper">
+            <div class="variant-label">Variant 3 — Two-Column Split</div>
+            <div class="container">
+                <div class="v3-header">
+                    <div class="v3-header-title">Poke Partner</div>
+                </div>
+
+                <div class="v3-split">
+                    <div class="v3-left">
+                        <div class="v3-emoji-large">💫</div>
+                        <div class="v3-label">Selected</div>
+                    </div>
+                    <div class="v3-right">
+                        <div class="v3-section">
+                            <div class="v3-section-label">To</div>
+                            <div class="v3-section-value">Taija</div>
+                        </div>
+                        <div class="v3-section">
+                            <div class="v3-section-label">Emoji</div>
+                            <div class="v3-emoji-grid">
+                                <button class="v3-emoji-option selected">💫</button>
+                                <button class="v3-emoji-option">❤️</button>
+                                <button class="v3-emoji-option">👋</button>
+                                <button class="v3-emoji-option">🫶</button>
+                            </div>
+                        </div>
+                        <div class="v3-section">
+                            <div class="v3-section-label">Reward</div>
+                            <div class="v3-section-value">+5 LP (mutual)</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="v3-bottom">
+                    <button class="v3-send-btn">Send Poke →</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- VARIANT 4: Action Card Style -->
+        <div class="variant-wrapper">
+            <div class="variant-label">Variant 4 — Action Card Style</div>
+            <div class="container">
+                <div class="v4-header">
+                    <span class="v4-header-title">Poke</span>
+                    <span class="v4-close">✕</span>
+                </div>
+
+                <div class="v4-card">
+                    <div class="v4-card-header">
+                        <span class="v4-card-label">Thinking of You</span>
+                        <span class="v4-card-emoji">💫</span>
+                    </div>
+                    <div class="v4-card-body">
+                        <div class="v4-card-title">Send a Poke</div>
+                        <div class="v4-card-desc">An instant nudge to brighten their day</div>
+                    </div>
+                </div>
+
+                <div class="v4-recipient-bar">
+                    <div class="v4-avatar">T</div>
+                    <div class="v4-recipient-info">
+                        <div class="v4-recipient-label">To</div>
+                        <div class="v4-recipient-name">Taija</div>
+                    </div>
+                </div>
+
+                <div class="v4-emoji-section">
+                    <div class="v4-emoji-header">Choose Vibe</div>
+                    <div class="v4-emoji-row">
+                        <button class="v4-emoji-btn selected">💫</button>
+                        <button class="v4-emoji-btn">❤️</button>
+                        <button class="v4-emoji-btn">👋</button>
+                        <button class="v4-emoji-btn">🫶</button>
+                    </div>
+                </div>
+
+                <div class="v4-actions">
+                    <button class="v4-btn-secondary">Cancel</button>
+                    <button class="v4-btn-primary">Send</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- VARIANT 5: Magazine Editorial -->
+        <div class="variant-wrapper">
+            <div class="variant-label">Variant 5 — Magazine Editorial</div>
+            <div class="container">
+                <div class="v5-masthead">
+                    <span class="v5-masthead-text">Together Remind</span>
+                </div>
+
+                <div class="v5-hero">
+                    <div class="v5-hero-emoji">💫</div>
+                    <div class="v5-hero-title">Send a<br><span class="v5-hero-title-italic">Poke</span></div>
+                    <div class="v5-hero-line"></div>
+                    <div class="v5-hero-desc">A gentle digital nudge — let them know you're thinking of them</div>
+                </div>
+
+                <div class="v5-meta">
+                    <div class="v5-meta-item">
+                        <div class="v5-meta-label">Recipient</div>
+                        <div class="v5-meta-value">Taija</div>
+                    </div>
+                    <div class="v5-meta-item">
+                        <div class="v5-meta-label">Reward</div>
+                        <div class="v5-meta-value">+5 LP</div>
+                    </div>
+                </div>
+
+                <div class="v5-emoji-section">
+                    <div class="v5-emoji-title">Select Emoji</div>
+                    <div class="v5-emoji-row">
+                        <button class="v5-emoji-btn selected">💫</button>
+                        <button class="v5-emoji-btn">❤️</button>
+                        <button class="v5-emoji-btn">👋</button>
+                        <button class="v5-emoji-btn">🫶</button>
+                    </div>
+                </div>
+
+                <div class="v5-action">
+                    <button class="v5-send-btn">Send Poke</button>
+                </div>
+
+                <div class="v5-footer">
+                    <span class="v5-footer-text">📳 Vibration + animation on receive</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Add interactivity for emoji selection within each variant
+        document.querySelectorAll('.variant-wrapper').forEach(wrapper => {
+            const buttons = wrapper.querySelectorAll('button[class*="emoji"]');
+            buttons.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    buttons.forEach(b => b.classList.remove('selected'));
+                    this.classList.add('selected');
+                });
+            });
+        });
+    </script>
+</body>
+</html>

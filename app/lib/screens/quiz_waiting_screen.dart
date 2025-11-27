@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import '../models/quiz_session.dart';
 import '../services/quiz_service.dart';
 import '../services/storage_service.dart';
-import '../config/brand/brand_loader.dart';
-import 'quiz_results_screen.dart';
+import '../services/poke_service.dart';
+import '../widgets/editorial/editorial.dart';
 import '../utils/logger.dart';
+import 'quiz_results_screen.dart';
 
 class QuizWaitingScreen extends StatefulWidget {
   final QuizSession session;
@@ -15,24 +16,81 @@ class QuizWaitingScreen extends StatefulWidget {
   State<QuizWaitingScreen> createState() => _QuizWaitingScreenState();
 }
 
-class _QuizWaitingScreenState extends State<QuizWaitingScreen> {
+class _QuizWaitingScreenState extends State<QuizWaitingScreen>
+    with TickerProviderStateMixin {
   final QuizService _quizService = QuizService();
   final StorageService _storage = StorageService();
   late QuizSession _session;
   bool _isChecking = false;
+  bool _isSendingPoke = false;
+
+  // Animation controllers
+  late AnimationController _breatheController;
+  late AnimationController _dotsController;
+  late AnimationController _messageController;
+
+  // Current message index for rotation
+  int _currentMessageIndex = 0;
+  final List<String> _waitingMessages = [
+    'Good things take time...',
+    'Your partner is on their way...',
+    'Almost there...',
+    'Patience is a virtue...',
+    'The wait will be worth it...',
+  ];
 
   @override
   void initState() {
     super.initState();
     _session = widget.session;
+
+    // Breathing animation for partner card (subtle scale)
+    _breatheController = AnimationController(
+      duration: const Duration(milliseconds: 2000),
+      vsync: this,
+    )..repeat(reverse: true);
+
+    // Dots animation
+    _dotsController = AnimationController(
+      duration: const Duration(milliseconds: 1200),
+      vsync: this,
+    )..repeat();
+
+    // Message rotation
+    _messageController = AnimationController(
+      duration: const Duration(milliseconds: 500),
+      vsync: this,
+    );
+    _startMessageRotation();
+  }
+
+  void _startMessageRotation() {
+    Future.delayed(const Duration(seconds: 4), () {
+      if (!mounted) return;
+      _messageController.forward().then((_) {
+        if (!mounted) return;
+        setState(() {
+          _currentMessageIndex = (_currentMessageIndex + 1) % _waitingMessages.length;
+        });
+        _messageController.reverse().then((_) {
+          _startMessageRotation();
+        });
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    _breatheController.dispose();
+    _dotsController.dispose();
+    _messageController.dispose();
+    super.dispose();
   }
 
   Future<void> _checkSessionStatus() async {
     setState(() => _isChecking = true);
 
     try {
-      // CRITICAL: Check Firebase for updates, not just local storage
-      // This ensures we see partner's answers immediately when they submit
       final updatedSession = await _quizService.getSession(_session.id);
       if (updatedSession == null) {
         Logger.warn('Session not found: ${_session.id}', service: 'quiz');
@@ -50,7 +108,6 @@ class _QuizWaitingScreenState extends State<QuizWaitingScreen> {
         _session = updatedSession;
       });
 
-      // If completed, navigate to results
       if (_session.isCompleted) {
         Logger.success('Session completed! Navigating to results...', service: 'quiz');
         Navigator.of(context).pushReplacement(
@@ -61,12 +118,8 @@ class _QuizWaitingScreenState extends State<QuizWaitingScreen> {
         return;
       }
 
-      // Check if both users have answered (waiting for completion calculation)
       final bothAnswered = _session.answers != null && _session.answers!.length >= 2;
       if (bothAnswered && !_session.isCompleted) {
-        // Both users answered! Completion calculation should be running.
-        Logger.info('Both users answered (${_session.answers!.length} answers) - waiting for completion calculation...', service: 'quiz');
-        // Don't navigate yet - wait for lpEarned to be calculated
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text('Both answered! Results calculating...')),
@@ -75,23 +128,35 @@ class _QuizWaitingScreenState extends State<QuizWaitingScreen> {
         return;
       }
 
-      // Log current answer count for debugging
-      final answerCount = _session.answers?.length ?? 0;
-      Logger.debug('Manual check: $answerCount/2 answers, completed: ${_session.isCompleted}', service: 'quiz');
-
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Updated! $answerCount/2 partners answered')),
-        );
-      }
-
-      // If expired, show error and return home
       if (_session.isExpired && !_session.isCompleted) {
         _showExpiredDialog();
       }
     } finally {
       if (mounted) {
         setState(() => _isChecking = false);
+      }
+    }
+  }
+
+  Future<void> _sendReminder() async {
+    setState(() => _isSendingPoke = true);
+
+    try {
+      await PokeService.sendPoke();
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Reminder sent!')),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to send reminder: $e')),
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() => _isSendingPoke = false);
       }
     }
   }
@@ -108,8 +173,8 @@ class _QuizWaitingScreenState extends State<QuizWaitingScreen> {
         actions: [
           TextButton(
             onPressed: () {
-              Navigator.of(context).pop(); // Close dialog
-              Navigator.of(context).pop(); // Return to intro
+              Navigator.of(context).pop();
+              Navigator.of(context).pop();
             },
             child: const Text('OK'),
           ),
@@ -118,245 +183,231 @@ class _QuizWaitingScreenState extends State<QuizWaitingScreen> {
     );
   }
 
-  String _getTimeRemaining() {
-    final now = DateTime.now();
-    final remaining = _session.expiresAt.difference(now);
-
-    if (remaining.isNegative) return 'Expired';
-
-    final hours = remaining.inHours;
-    final minutes = remaining.inMinutes.remainder(60);
-
-    if (hours > 0) {
-      return '$hours hr ${minutes} min';
-    } else {
-      return '$minutes min';
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     final partner = _storage.getPartner();
-    final user = _storage.getUser();
+    final partnerName = partner?.name ?? 'your partner';
+    final partnerEmoji = partner?.avatarEmoji ?? '👤';
     final partnerAnswered = _session.answers?.length == 2;
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Waiting for Partner'),
-        centerTitle: true,
-        leading: IconButton(
-          icon: const Icon(Icons.close),
-          onPressed: () => Navigator.of(context).pop(),
-        ),
-      ),
+      backgroundColor: EditorialStyles.paper,
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(24.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              // Animated icon
-              TweenAnimationBuilder<double>(
-                tween: Tween(begin: 0.0, end: 1.0),
-                duration: const Duration(milliseconds: 1500),
-                builder: (context, value, child) {
-                  return Transform.scale(
-                    scale: 0.8 + (0.2 * value),
-                    child: Opacity(
-                      opacity: 0.5 + (0.5 * value),
-                      child: const Text(
-                        '⏳',
-                        style: TextStyle(fontSize: 100),
+        child: Column(
+          children: [
+            // Header
+            EditorialHeaderSimple(
+              title: _session.category ?? 'Quiz',
+              onClose: () => Navigator.of(context).pop(),
+            ),
+
+            // Content
+            Expanded(
+              child: SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 40),
+                  child: Column(
+                    children: [
+                      // Elegant dots animation instead of spinning icon
+                      _buildElegantDots(),
+                      const SizedBox(height: 32),
+
+                      // Title
+                      Text(
+                        'Waiting for $partnerName',
+                        style: EditorialStyles.headlineMedium,
+                        textAlign: TextAlign.center,
                       ),
-                    ),
-                  );
-                },
-              ),
+                      const SizedBox(height: 12),
 
-              const SizedBox(height: 32),
-
-              // Status message
-              Text(
-                'You\'re all done!',
-                textAlign: TextAlign.center,
-                style: theme.textTheme.headlineSmall?.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-
-              const SizedBox(height: 12),
-
-              Text(
-                partnerAnswered
-                    ? 'Calculating results...'
-                    : 'Waiting for ${partner?.name ?? "your partner"} to finish',
-                textAlign: TextAlign.center,
-                style: theme.textTheme.bodyLarge?.copyWith(
-                  color: theme.colorScheme.onSurfaceVariant,
-                ),
-              ),
-
-              const SizedBox(height: 40),
-
-              // Info card
-              Container(
-                padding: const EdgeInsets.all(20),
-                decoration: BoxDecoration(
-                  color: theme.colorScheme.surfaceContainerHighest.withOpacity(0.3),
-                  borderRadius: BorderRadius.circular(16),
-                  border: Border.all(
-                    color: theme.colorScheme.outline.withOpacity(0.2),
-                  ),
-                ),
-                child: Column(
-                  children: [
-                    _buildInfoRow(
-                      Icons.person,
-                      'You',
-                      'Answered',
-                      theme,
-                      BrandLoader().colors.success,
-                    ),
-                    const SizedBox(height: 16),
-                    _buildInfoRow(
-                      Icons.person_outline,
-                      partner?.name ?? 'Partner',
-                      partnerAnswered ? 'Answered' : 'Pending',
-                      theme,
-                      partnerAnswered ? BrandLoader().colors.success : BrandLoader().colors.warning,
-                    ),
-                  ],
-                ),
-              ),
-
-              const SizedBox(height: 24),
-
-              // Timer
-              Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 20,
-                  vertical: 12,
-                ),
-                decoration: BoxDecoration(
-                  color: theme.colorScheme.primaryContainer,
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Icon(
-                      Icons.timer_outlined,
-                      size: 20,
-                      color: theme.colorScheme.onPrimaryContainer,
-                    ),
-                    const SizedBox(width: 8),
-                    Text(
-                      'Time remaining: ${_getTimeRemaining()}',
-                      style: TextStyle(
-                        fontWeight: FontWeight.w600,
-                        color: theme.colorScheme.onPrimaryContainer,
+                      // Rotating message with crossfade
+                      AnimatedBuilder(
+                        animation: _messageController,
+                        builder: (context, child) {
+                          return Opacity(
+                            opacity: 1.0 - _messageController.value,
+                            child: ConstrainedBox(
+                              constraints: const BoxConstraints(maxWidth: 280),
+                              child: Text(
+                                _waitingMessages[_currentMessageIndex],
+                                style: EditorialStyles.bodyTextItalic,
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                          );
+                        },
                       ),
+                      const SizedBox(height: 40),
+
+                      // Partner card with breathing animation
+                      ConstrainedBox(
+                        constraints: const BoxConstraints(maxWidth: 320),
+                        child: AnimatedBuilder(
+                          animation: _breatheController,
+                          builder: (context, child) {
+                            // Subtle scale: 1.0 -> 1.02 -> 1.0 (breathing effect)
+                            final scale = 1.0 + (0.02 * Curves.easeInOut.transform(_breatheController.value));
+                            // Subtle vertical float: 0 -> -4px -> 0
+                            final yOffset = -4.0 * Curves.easeInOut.transform(
+                              _breatheController.value < 0.5
+                                  ? _breatheController.value * 2
+                                  : 2.0 - _breatheController.value * 2,
+                            );
+                            return Transform.translate(
+                              offset: Offset(0, yOffset),
+                              child: Transform.scale(
+                                scale: scale,
+                                child: child,
+                              ),
+                            );
+                          },
+                          child: EditorialPartnerCard(
+                            avatarEmoji: partnerEmoji,
+                            name: partnerName,
+                            status: partnerAnswered ? 'Completed' : 'In progress...',
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 32),
+
+                      // Divider
+                      _buildDivider(),
+                      const SizedBox(height: 32),
+
+                      // Poke button
+                      ConstrainedBox(
+                        constraints: const BoxConstraints(maxWidth: 320),
+                        child: EditorialSecondaryButton(
+                          label: _isSendingPoke ? 'Sending...' : 'Send a Gentle Reminder',
+                          emoji: '👆',
+                          onPressed: _isSendingPoke ? null : _sendReminder,
+                        ),
+                      ),
+
+                      // Check for updates (hidden feature - tap status icon)
+                      const SizedBox(height: 24),
+                      GestureDetector(
+                        onTap: _isChecking ? null : _checkSessionStatus,
+                        child: Text(
+                          _isChecking ? 'Checking...' : 'Tap to check for updates',
+                          style: EditorialStyles.bodySmall.copyWith(
+                            color: EditorialStyles.inkMuted,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+
+            // Footer
+            Container(
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                color: EditorialStyles.paper,
+                border: Border(top: EditorialStyles.border),
+              ),
+              child: Column(
+                children: [
+                  EditorialSecondaryButton(
+                    label: 'Return Home',
+                    onPressed: () => Navigator.of(context).popUntil((route) => route.isFirst),
+                  ),
+                  const SizedBox(height: 12),
+                  Text(
+                    'We\'ll notify you when results are ready',
+                    style: EditorialStyles.bodySmall.copyWith(
+                      color: EditorialStyles.inkMuted,
+                      fontStyle: FontStyle.italic,
                     ),
-                  ],
-                ),
-              ),
-
-              const Spacer(),
-
-              // Help text
-              Text(
-                'You\'ll get a notification when your partner completes the quiz!',
-                textAlign: TextAlign.center,
-                style: theme.textTheme.bodySmall?.copyWith(
-                  color: theme.colorScheme.onSurfaceVariant,
-                ),
-              ),
-
-              const SizedBox(height: 16),
-
-              // Check for Updates button
-              ElevatedButton.icon(
-                onPressed: _isChecking ? null : _checkSessionStatus,
-                icon: Icon(_isChecking ? Icons.hourglass_empty : Icons.refresh),
-                label: Text(_isChecking ? 'Checking...' : 'Check for Updates'),
-                style: ElevatedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 32,
-                    vertical: 12,
                   ),
-                ),
+                ],
               ),
-
-              const SizedBox(height: 12),
-
-              // Close button
-              OutlinedButton(
-                onPressed: () => Navigator.of(context).pop(),
-                style: OutlinedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 32,
-                    vertical: 12,
-                  ),
-                ),
-                child: const Text('Close'),
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
   }
 
-  Widget _buildInfoRow(
-    IconData icon,
-    String name,
-    String status,
-    ThemeData theme,
-    Color statusColor,
-  ) {
-    return Row(
-      children: [
-        Icon(icon, size: 24, color: theme.colorScheme.onSurfaceVariant),
-        const SizedBox(width: 12),
-        Expanded(
-          child: Text(
-            name,
-            style: theme.textTheme.titleMedium?.copyWith(
-              fontWeight: FontWeight.w600,
+  Widget _buildElegantDots() {
+    return SizedBox(
+      width: 80,
+      height: 40,
+      child: AnimatedBuilder(
+        animation: _dotsController,
+        builder: (context, child) {
+          return Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: List.generate(3, (index) {
+              // Stagger each dot's animation
+              final offset = index * 0.33;
+              final animValue = (_dotsController.value + offset) % 1.0;
+
+              // Create a smooth wave: 0->1->0 over the animation cycle
+              final wave = animValue < 0.5
+                  ? animValue * 2
+                  : 2.0 - (animValue * 2);
+
+              // Apply easing
+              final easedWave = Curves.easeInOut.transform(wave);
+
+              // Scale: 0.6 -> 1.0 -> 0.6
+              final scale = 0.6 + (0.4 * easedWave);
+              // Opacity: 0.3 -> 1.0 -> 0.3
+              final opacity = 0.3 + (0.7 * easedWave);
+
+              return Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 6),
+                child: Transform.scale(
+                  scale: scale,
+                  child: Opacity(
+                    opacity: opacity,
+                    child: Container(
+                      width: 12,
+                      height: 12,
+                      decoration: BoxDecoration(
+                        color: EditorialStyles.ink,
+                        shape: BoxShape.circle,
+                      ),
+                    ),
+                  ),
+                ),
+              );
+            }),
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _buildDivider() {
+    return ConstrainedBox(
+      constraints: const BoxConstraints(maxWidth: 320),
+      child: Row(
+        children: [
+          Expanded(
+            child: Container(
+              height: 1,
+              color: EditorialStyles.inkLight,
             ),
           ),
-        ),
-        Container(
-          padding: const EdgeInsets.symmetric(
-            horizontal: 12,
-            vertical: 6,
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: Text(
+              'OR',
+              style: EditorialStyles.labelUppercaseSmall,
+            ),
           ),
-          decoration: BoxDecoration(
-            color: statusColor.withOpacity(0.2),
-            borderRadius: BorderRadius.circular(12),
+          Expanded(
+            child: Container(
+              height: 1,
+              color: EditorialStyles.inkLight,
+            ),
           ),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(
-                status == 'Answered' ? Icons.check_circle : Icons.pending,
-                size: 16,
-                color: statusColor,
-              ),
-              const SizedBox(width: 6),
-              Text(
-                status,
-                style: TextStyle(
-                  fontSize: 12,
-                  fontWeight: FontWeight.bold,
-                  color: statusColor,
-                ),
-              ),
-            ],
-          ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

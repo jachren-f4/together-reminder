@@ -67,6 +67,9 @@ class Logger {
     'word_validation': false,   // Word dictionary initialization (2 uses)
     'home': false,              // Home screen operations (1 use)
     'arena': false,             // Arena/tier system (1 use)
+    'leaderboard': true,        // Leaderboard API calls and caching - ENABLED for testing
+    'country': true,            // Country detection and updates - ENABLED for testing
+    'sound': true,              // Sound playback - ENABLED for debugging
   };
 
   /// Log debug information (only in debug mode)

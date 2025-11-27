@@ -1,0 +1,184 @@
+{
+  "questions": [
+    {
+      "id": "yom_intimate_001",
+      "prompt": "Who's more likely to...",
+      "content": "Initiate a deep conversation late at night",
+      "category": "scenarios"
+    },
+    {
+      "id": "yom_intimate_002",
+      "prompt": "Who's more likely to...",
+      "content": "Need reassurance after an argument",
+      "category": "scenarios"
+    },
+    {
+      "id": "yom_intimate_003",
+      "prompt": "Who's more likely to...",
+      "content": "Cry during an emotional moment together",
+      "category": "scenarios"
+    },
+    {
+      "id": "yom_intimate_004",
+      "prompt": "Who's more likely to...",
+      "content": "Express vulnerability first",
+      "category": "scenarios"
+    },
+    {
+      "id": "yom_intimate_005",
+      "prompt": "Who's more likely to...",
+      "content": "Say 'I love you' more often",
+      "category": "scenarios"
+    },
+    {
+      "id": "yom_intimate_006",
+      "prompt": "Who's more likely to...",
+      "content": "Reach out first after time apart",
+      "category": "scenarios"
+    },
+    {
+      "id": "yom_intimate_007",
+      "prompt": "Who's more likely to...",
+      "content": "Want to talk through feelings rather than let them pass",
+      "category": "scenarios"
+    },
+    {
+      "id": "yom_intimate_008",
+      "prompt": "Who's more likely to...",
+      "content": "Ask 'are we okay?' when sensing tension",
+      "category": "scenarios"
+    },
+    {
+      "id": "yom_intimate_009",
+      "prompt": "Who's more likely to...",
+      "content": "Remember the little things that matter",
+      "category": "scenarios"
+    },
+    {
+      "id": "yom_intimate_010",
+      "prompt": "Who's more likely to...",
+      "content": "Plan a meaningful surprise",
+      "category": "scenarios"
+    },
+    {
+      "id": "yom_intimate_011",
+      "prompt": "Who's more likely to...",
+      "content": "Put their phone away to be fully present",
+      "category": "scenarios"
+    },
+    {
+      "id": "yom_intimate_012",
+      "prompt": "Who's more likely to...",
+      "content": "Notice when the other is having a hard day",
+      "category": "scenarios"
+    },
+    {
+      "id": "yom_intimate_013",
+      "prompt": "Who's more likely to...",
+      "content": "Apologize first even when not fully wrong",
+      "category": "scenarios"
+    },
+    {
+      "id": "yom_intimate_014",
+      "prompt": "Who's more likely to...",
+      "content": "Stay up late talking about life",
+      "category": "scenarios"
+    },
+    {
+      "id": "yom_intimate_015",
+      "prompt": "Who's more likely to...",
+      "content": "Write a heartfelt love note",
+      "category": "scenarios"
+    },
+    {
+      "id": "yom_intimate_016",
+      "prompt": "Which of you...",
+      "content": "Is better at expressing emotions",
+      "category": "comparative"
+    },
+    {
+      "id": "yom_intimate_017",
+      "prompt": "Which of you...",
+      "content": "Needs more physical affection",
+      "category": "comparative"
+    },
+    {
+      "id": "yom_intimate_018",
+      "prompt": "Which of you...",
+      "content": "Is the better listener",
+      "category": "comparative"
+    },
+    {
+      "id": "yom_intimate_019",
+      "prompt": "Which of you...",
+      "content": "Feels love more through words",
+      "category": "comparative"
+    },
+    {
+      "id": "yom_intimate_020",
+      "prompt": "Which of you...",
+      "content": "Feels love more through actions",
+      "category": "comparative"
+    },
+    {
+      "id": "yom_intimate_021",
+      "prompt": "Which of you...",
+      "content": "Is more romantic at heart",
+      "category": "comparative"
+    },
+    {
+      "id": "yom_intimate_022",
+      "prompt": "Which of you...",
+      "content": "Is more protective of the relationship",
+      "category": "comparative"
+    },
+    {
+      "id": "yom_intimate_023",
+      "prompt": "Which of you...",
+      "content": "Is more afraid of losing the other",
+      "category": "comparative"
+    },
+    {
+      "id": "yom_intimate_024",
+      "prompt": "Which of you...",
+      "content": "Gives better comfort during tough times",
+      "category": "comparative"
+    },
+    {
+      "id": "yom_intimate_025",
+      "prompt": "Which of you...",
+      "content": "Falls deeper in love over time",
+      "category": "comparative"
+    },
+    {
+      "id": "yom_intimate_026",
+      "prompt": "Which of you...",
+      "content": "Is more sentimental about memories",
+      "category": "comparative"
+    },
+    {
+      "id": "yom_intimate_027",
+      "prompt": "Which of you...",
+      "content": "Would sacrifice more for the other",
+      "category": "comparative"
+    },
+    {
+      "id": "yom_intimate_028",
+      "prompt": "Which of you...",
+      "content": "Dreams more about your future together",
+      "category": "comparative"
+    },
+    {
+      "id": "yom_intimate_029",
+      "prompt": "Which of you...",
+      "content": "Is more in touch with their feelings",
+      "category": "comparative"
+    },
+    {
+      "id": "yom_intimate_030",
+      "prompt": "Which of you...",
+      "content": "Makes the other feel most loved",
+      "category": "comparative"
+    }
+  ]
+}

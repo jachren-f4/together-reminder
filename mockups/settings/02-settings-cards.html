@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings - Card Layout</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            background: #f5f5f5;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 420px;
+            margin: 0 auto;
+        }
+
+        .header {
+            padding: 24px 0;
+            margin-bottom: 20px;
+        }
+
+        .title {
+            font-size: 32px;
+            font-weight: 400;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .card {
+            background: #fff;
+            border: 1px solid #000;
+            margin-bottom: 16px;
+            box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.08);
+        }
+
+        .card-header {
+            padding: 12px 16px;
+            border-bottom: 1px solid #e0e0e0;
+            background: #fafafa;
+        }
+
+        .card-title {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #666;
+            font-weight: 600;
+        }
+
+        .card-body {
+            padding: 16px;
+        }
+
+        /* Partner Card */
+        .partner-display {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .avatar-frame {
+            width: 56px;
+            height: 56px;
+            border: 2px solid #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            background: #fff;
+        }
+
+        .partner-details h3 {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .partner-details .meta {
+            font-size: 12px;
+            color: #888;
+            font-style: italic;
+        }
+
+        /* List Items */
+        .list-item {
+            display: flex;
+            align-items: center;
+            padding: 14px 0;
+            border-bottom: 1px solid #f0f0f0;
+            cursor: pointer;
+        }
+
+        .list-item:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        .list-item:first-child {
+            padding-top: 0;
+        }
+
+        .item-icon {
+            font-size: 22px;
+            width: 36px;
+            flex-shrink: 0;
+        }
+
+        .item-text {
+            flex: 1;
+        }
+
+        .item-label {
+            font-size: 15px;
+            font-weight: 500;
+            margin-bottom: 2px;
+        }
+
+        .item-sublabel {
+            font-size: 12px;
+            color: #888;
+        }
+
+        .item-action {
+            color: #999;
+            font-size: 20px;
+            font-weight: 300;
+        }
+
+        /* Toggle */
+        .toggle {
+            width: 44px;
+            height: 26px;
+            background: #ddd;
+            border-radius: 13px;
+            position: relative;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .toggle.on {
+            background: #000;
+        }
+
+        .toggle::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: #fff;
+            border-radius: 50%;
+            top: 3px;
+            left: 3px;
+            transition: transform 0.2s;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+        }
+
+        .toggle.on::after {
+            transform: translateX(18px);
+        }
+
+        /* Selector */
+        .selector-label {
+            font-size: 14px;
+            margin-bottom: 14px;
+            font-weight: 500;
+        }
+
+        .selector-options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .selector-option {
+            border: 2px solid #e0e0e0;
+            padding: 14px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+
+        .selector-option:hover {
+            border-color: #999;
+        }
+
+        .selector-option.active {
+            border-color: #000;
+            background: #000;
+            color: #fff;
+        }
+
+        .selector-option .icon {
+            font-size: 26px;
+            margin-bottom: 6px;
+        }
+
+        .selector-option .label {
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Danger Zone */
+        .danger-card {
+            border-color: #c00;
+        }
+
+        .danger-card .card-header {
+            background: #fff5f5;
+            border-color: #fcc;
+        }
+
+        .danger-card .card-title {
+            color: #c00;
+        }
+
+        .danger-btn {
+            width: 100%;
+            padding: 14px;
+            border: 2px solid #c00;
+            background: transparent;
+            color: #c00;
+            font-family: inherit;
+            font-size: 13px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+
+        .danger-btn:hover {
+            background: #c00;
+            color: #fff;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 24px 0;
+            color: #999;
+            font-size: 12px;
+            line-height: 1.6;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="title">Settings</div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <div class="card-title">Partner</div>
+            </div>
+            <div class="card-body">
+                <div class="partner-display">
+                    <div class="avatar-frame">😊</div>
+                    <div class="partner-details">
+                        <h3>Taija</h3>
+                        <div class="meta">Paired November 15, 2024</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <div class="card-title">Your Profile</div>
+            </div>
+            <div class="card-body">
+                <div class="list-item">
+                    <div class="item-icon">👤</div>
+                    <div class="item-text">
+                        <div class="item-label">Name</div>
+                        <div class="item-sublabel">Joakim</div>
+                    </div>
+                    <div class="item-action">›</div>
+                </div>
+                <div class="list-item">
+                    <div class="item-icon">😎</div>
+                    <div class="item-text">
+                        <div class="item-label">Avatar</div>
+                        <div class="item-sublabel">Tap to change</div>
+                    </div>
+                    <div class="item-action">›</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <div class="card-title">Sound & Haptics</div>
+            </div>
+            <div class="card-body">
+                <div class="list-item">
+                    <div class="item-icon">🔊</div>
+                    <div class="item-text">
+                        <div class="item-label">Sound Effects</div>
+                        <div class="item-sublabel">Play sounds for interactions</div>
+                    </div>
+                    <div class="toggle on" onclick="this.classList.toggle('on')"></div>
+                </div>
+                <div class="list-item">
+                    <div class="item-icon">📳</div>
+                    <div class="item-text">
+                        <div class="item-label">Haptic Feedback</div>
+                        <div class="item-sublabel">Vibrate on interactions</div>
+                    </div>
+                    <div class="toggle on" onclick="this.classList.toggle('on')"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <div class="card-title">Game Preferences</div>
+            </div>
+            <div class="card-body">
+                <div class="selector-label">Goes first in new games</div>
+                <div class="selector-options">
+                    <div class="selector-option active" onclick="selectOpt(this)">
+                        <div class="icon">👤</div>
+                        <div class="label">You</div>
+                    </div>
+                    <div class="selector-option" onclick="selectOpt(this)">
+                        <div class="icon">😊</div>
+                        <div class="label">Taija</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card danger-card">
+            <div class="card-header">
+                <div class="card-title">Danger Zone</div>
+            </div>
+            <div class="card-body">
+                <button class="danger-btn">Unpair Partner</button>
+            </div>
+        </div>
+
+        <div class="footer">
+            TogetherRemind v1.0.0<br>
+            Made with 💕
+        </div>
+    </div>
+
+    <script>
+        function selectOpt(el) {
+            document.querySelectorAll('.selector-option').forEach(o => o.classList.remove('active'));
+            el.classList.add('active');
+        }
+    </script>
+</body>
+</html>

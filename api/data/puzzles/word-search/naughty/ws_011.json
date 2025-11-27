@@ -1,0 +1,24 @@
+{
+  "puzzleId": "ws_011",
+  "title": "Intimate XI",
+  "theme": "intimacy",
+  "size": {
+    "rows": 10,
+    "cols": 10
+  },
+  "grid": "XEEMURMUREILLUSIONNUIBHSSHLIGTEMDTRLGCNESEAUOALAYFIRXJMOWUIVZTDIAJMGPGZQEENOUSBJLIPSCRTLJAEFPGEELIGA",
+  "words": {
+    "ILLUSION": "10,R",
+    "LIPS": "80,R",
+    "ROMANCE": "34,D",
+    "SMOOTH": "77,UL",
+    "FIGURE": "49,DL",
+    "MURMUR": "3,R",
+    "PULL": "68,UL",
+    "WANT": "56,UR",
+    "IMAGINE": "63,UR",
+    "AGILE": "99,L",
+    "TREMBLE": "61,U",
+    "SIZZLE": "40,D"
+  }
+}

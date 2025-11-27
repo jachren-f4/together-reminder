@@ -31,17 +31,52 @@ class UnifiedWaitingScreen extends StatefulWidget {
   State<UnifiedWaitingScreen> createState() => _UnifiedWaitingScreenState();
 }
 
-class _UnifiedWaitingScreenState extends State<UnifiedWaitingScreen> {
+class _UnifiedWaitingScreenState extends State<UnifiedWaitingScreen>
+    with TickerProviderStateMixin {
   final StorageService _storage = StorageService();
   Timer? _pollingTimer;
   late BaseSession _session;
   bool _isChecking = false;
   String? _error;
 
+  // Animation controllers
+  late AnimationController _breatheController;
+  late AnimationController _dotsController;
+  late AnimationController _messageController;
+
+  // Current message index for rotation
+  int _currentMessageIndex = 0;
+  final List<String> _waitingMessages = [
+    'Good things take time...',
+    'Your partner is on their way...',
+    'Almost there...',
+    'Patience is a virtue...',
+    'The wait will be worth it...',
+  ];
+
   @override
   void initState() {
     super.initState();
     _session = widget.session;
+
+    // Breathing animation for icon area
+    _breatheController = AnimationController(
+      duration: const Duration(milliseconds: 2000),
+      vsync: this,
+    )..repeat(reverse: true);
+
+    // Dots animation
+    _dotsController = AnimationController(
+      duration: const Duration(milliseconds: 1200),
+      vsync: this,
+    )..repeat();
+
+    // Message rotation
+    _messageController = AnimationController(
+      duration: const Duration(milliseconds: 500),
+      vsync: this,
+    );
+    _startMessageRotation();
 
     // Start auto-polling if configured
     if (widget.config.pollingType == PollingType.auto) {
@@ -49,9 +84,27 @@ class _UnifiedWaitingScreenState extends State<UnifiedWaitingScreen> {
     }
   }
 
+  void _startMessageRotation() {
+    Future.delayed(const Duration(seconds: 4), () {
+      if (!mounted) return;
+      _messageController.forward().then((_) {
+        if (!mounted) return;
+        setState(() {
+          _currentMessageIndex = (_currentMessageIndex + 1) % _waitingMessages.length;
+        });
+        _messageController.reverse().then((_) {
+          _startMessageRotation();
+        });
+      });
+    });
+  }
+
   @override
   void dispose() {
     _pollingTimer?.cancel();
+    _breatheController.dispose();
+    _dotsController.dispose();
+    _messageController.dispose();
     super.dispose();
   }
 
@@ -186,16 +239,12 @@ class _UnifiedWaitingScreenState extends State<UnifiedWaitingScreen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              // Hourglass icon
-              Icon(
-                Icons.hourglass_empty,
-                size: 80,
-                color: theme.colorScheme.primary,
-              ),
+              // Elegant dots animation
+              _buildElegantDots(theme),
 
               const SizedBox(height: 24),
 
-              // Waiting message
+              // Waiting message (static title)
               Text(
                 widget.config.waitingMessage,
                 style: theme.textTheme.titleLarge?.copyWith(
@@ -206,19 +255,45 @@ class _UnifiedWaitingScreenState extends State<UnifiedWaitingScreen> {
 
               const SizedBox(height: 16),
 
-              // Partner name
-              if (partner != null)
-                Text(
-                  'Waiting for ${partner.name}...',
-                  style: theme.textTheme.bodyLarge?.copyWith(
-                    color: theme.colorScheme.onSurfaceVariant,
-                  ),
-                ),
+              // Rotating message with crossfade
+              AnimatedBuilder(
+                animation: _messageController,
+                builder: (context, child) {
+                  return Opacity(
+                    opacity: 1.0 - _messageController.value,
+                    child: Text(
+                      _waitingMessages[_currentMessageIndex],
+                      style: theme.textTheme.bodyMedium?.copyWith(
+                        fontStyle: FontStyle.italic,
+                        color: theme.colorScheme.onSurfaceVariant,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  );
+                },
+              ),
 
               const SizedBox(height: 32),
 
-              // Status info
-              Container(
+              // Status info with breathing animation
+              AnimatedBuilder(
+                animation: _breatheController,
+                builder: (context, child) {
+                  final scale = 1.0 + (0.02 * Curves.easeInOut.transform(_breatheController.value));
+                  final yOffset = -4.0 * Curves.easeInOut.transform(
+                    _breatheController.value < 0.5
+                        ? _breatheController.value * 2
+                        : 2.0 - _breatheController.value * 2,
+                  );
+                  return Transform.translate(
+                    offset: Offset(0, yOffset),
+                    child: Transform.scale(
+                      scale: scale,
+                      child: child,
+                    ),
+                  );
+                },
+                child: Container(
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
                   color: theme.colorScheme.surfaceContainerHighest,
@@ -265,6 +340,7 @@ class _UnifiedWaitingScreenState extends State<UnifiedWaitingScreen> {
                     ],
                   ],
                 ),
+              ),
               ),
 
               const SizedBox(height: 32),
@@ -353,6 +429,57 @@ class _UnifiedWaitingScreenState extends State<UnifiedWaitingScreen> {
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _buildElegantDots(ThemeData theme) {
+    return SizedBox(
+      width: 80,
+      height: 40,
+      child: AnimatedBuilder(
+        animation: _dotsController,
+        builder: (context, child) {
+          return Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: List.generate(3, (index) {
+              // Stagger each dot's animation
+              final offset = index * 0.33;
+              final animValue = (_dotsController.value + offset) % 1.0;
+
+              // Create a smooth wave: 0->1->0 over the animation cycle
+              final wave = animValue < 0.5
+                  ? animValue * 2
+                  : 2.0 - (animValue * 2);
+
+              // Apply easing
+              final easedWave = Curves.easeInOut.transform(wave);
+
+              // Scale: 0.6 -> 1.0 -> 0.6
+              final scale = 0.6 + (0.4 * easedWave);
+              // Opacity: 0.3 -> 1.0 -> 0.3
+              final opacity = 0.3 + (0.7 * easedWave);
+
+              return Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 6),
+                child: Transform.scale(
+                  scale: scale,
+                  child: Opacity(
+                    opacity: opacity,
+                    child: Container(
+                      width: 12,
+                      height: 12,
+                      decoration: BoxDecoration(
+                        color: theme.colorScheme.primary,
+                        shape: BoxShape.circle,
+                      ),
+                    ),
+                  ),
+                ),
+              );
+            }),
+          );
+        },
       ),
     );
   }

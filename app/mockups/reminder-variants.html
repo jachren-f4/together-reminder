@@ -1,0 +1,1069 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Send Reminder Variants - TogetherRemind</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            background: #2a2a2a;
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .page-title {
+            text-align: center;
+            color: #fff;
+            margin-bottom: 40px;
+        }
+
+        .page-title h1 {
+            font-size: 28px;
+            font-weight: 400;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+
+        .page-title p {
+            font-size: 14px;
+            color: #999;
+            font-style: italic;
+        }
+
+        .variants-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+            gap: 40px;
+            max-width: 1800px;
+            margin: 0 auto;
+        }
+
+        .variant-wrapper {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .variant-label {
+            background: #000;
+            color: #fff;
+            padding: 12px 16px;
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        .container {
+            max-width: 420px;
+            background: #fff;
+            border: 2px solid #000;
+            box-shadow: 8px 8px 0 rgba(0, 0, 0, 0.1);
+        }
+
+        /* Common elements */
+        input[type="text"], textarea {
+            font-family: 'Georgia', serif;
+            font-size: 14px;
+            width: 100%;
+            padding: 14px 16px;
+            border: 1px solid #000;
+            background: #fff;
+            outline: none;
+        }
+
+        input[type="text"]:focus, textarea:focus {
+            background: #fafafa;
+        }
+
+        textarea {
+            resize: none;
+            min-height: 80px;
+        }
+
+        /* ========================================
+           VARIANT 1: Sectioned Card
+           ======================================== */
+        .v1-header {
+            border-bottom: 2px solid #000;
+            padding: 24px 20px;
+            text-align: center;
+        }
+
+        .v1-title {
+            font-size: 24px;
+            font-weight: 400;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 4px;
+        }
+
+        .v1-subtitle {
+            font-size: 13px;
+            color: #666;
+            font-style: italic;
+        }
+
+        .v1-recipient {
+            border-bottom: 1px solid #000;
+            padding: 14px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .v1-recipient-label {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #666;
+        }
+
+        .v1-recipient-name {
+            font-size: 15px;
+            font-weight: 600;
+        }
+
+        .v1-section {
+            padding: 20px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .v1-section:last-child {
+            border-bottom: none;
+        }
+
+        .v1-section-label {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: #666;
+            margin-bottom: 12px;
+        }
+
+        .v1-quick-messages {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        .v1-quick-msg {
+            padding: 10px 12px;
+            border: 1px solid #000;
+            background: #fff;
+            font-size: 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .v1-quick-msg:hover {
+            background: #f5f5f5;
+        }
+
+        .v1-time-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+        }
+
+        .v1-time-btn {
+            padding: 14px 12px;
+            border: 1px solid #000;
+            background: #fff;
+            text-align: center;
+            cursor: pointer;
+        }
+
+        .v1-time-btn.selected {
+            background: #000;
+            color: #fff;
+        }
+
+        .v1-time-emoji {
+            font-size: 18px;
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .v1-time-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .v1-footer {
+            padding: 20px;
+            border-top: 2px solid #000;
+        }
+
+        .v1-send-btn {
+            width: 100%;
+            padding: 16px;
+            background: #000;
+            color: #fff;
+            border: none;
+            font-family: 'Georgia', serif;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            cursor: pointer;
+        }
+
+        .v1-lp-hint {
+            text-align: center;
+            margin-top: 12px;
+            font-size: 11px;
+            color: #999;
+            font-style: italic;
+        }
+
+        /* ========================================
+           VARIANT 2: Minimal Form
+           ======================================== */
+        .v2-content {
+            padding: 48px 24px;
+        }
+
+        .v2-eyebrow {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #666;
+            margin-bottom: 16px;
+            text-align: center;
+        }
+
+        .v2-title {
+            font-size: 36px;
+            font-weight: 400;
+            letter-spacing: -0.5px;
+            text-align: center;
+            margin-bottom: 4px;
+        }
+
+        .v2-title-italic {
+            font-style: italic;
+        }
+
+        .v2-recipient {
+            text-align: center;
+            font-size: 14px;
+            color: #666;
+            font-style: italic;
+            margin-bottom: 32px;
+        }
+
+        .v2-divider {
+            width: 60px;
+            height: 2px;
+            background: #000;
+            margin: 0 auto 32px;
+        }
+
+        .v2-field {
+            margin-bottom: 24px;
+        }
+
+        .v2-field-label {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: #666;
+            margin-bottom: 8px;
+        }
+
+        .v2-time-row {
+            display: flex;
+            gap: 8px;
+        }
+
+        .v2-time-btn {
+            flex: 1;
+            padding: 12px 8px;
+            border: 1px solid #000;
+            background: #fff;
+            text-align: center;
+            cursor: pointer;
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .v2-time-btn.selected {
+            background: #000;
+            color: #fff;
+        }
+
+        .v2-time-btn span {
+            display: block;
+            font-size: 16px;
+            margin-bottom: 4px;
+        }
+
+        .v2-send-btn {
+            width: 100%;
+            padding: 18px;
+            background: #000;
+            color: #fff;
+            border: none;
+            font-family: 'Georgia', serif;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            cursor: pointer;
+            margin-top: 8px;
+        }
+
+        .v2-hint {
+            text-align: center;
+            margin-top: 16px;
+            font-size: 11px;
+            color: #999;
+            font-style: italic;
+        }
+
+        /* ========================================
+           VARIANT 3: Two-Column Layout
+           ======================================== */
+        .v3-header {
+            border-bottom: 2px solid #000;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .v3-header-title {
+            font-size: 22px;
+            font-weight: 400;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .v3-split {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+        }
+
+        .v3-left {
+            border-right: 1px solid #000;
+            padding: 24px 20px;
+        }
+
+        .v3-right {
+            padding: 24px 20px;
+        }
+
+        .v3-section-title {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: #666;
+            margin-bottom: 12px;
+        }
+
+        .v3-recipient-display {
+            padding: 12px;
+            border: 1px solid #000;
+            text-align: center;
+            margin-bottom: 16px;
+        }
+
+        .v3-recipient-emoji {
+            font-size: 32px;
+            margin-bottom: 4px;
+        }
+
+        .v3-recipient-name {
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .v3-time-stack {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .v3-time-option {
+            padding: 12px;
+            border: 1px solid #000;
+            background: #fff;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .v3-time-option.selected {
+            background: #000;
+            color: #fff;
+        }
+
+        .v3-time-option span:first-child {
+            font-size: 16px;
+        }
+
+        .v3-time-option span:last-child {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .v3-message-area {
+            border-top: 1px solid #000;
+            padding: 20px;
+        }
+
+        .v3-quick-row {
+            display: flex;
+            gap: 8px;
+            margin-top: 12px;
+            flex-wrap: wrap;
+        }
+
+        .v3-quick-chip {
+            padding: 8px 12px;
+            border: 1px solid #000;
+            font-size: 11px;
+            cursor: pointer;
+        }
+
+        .v3-quick-chip:hover {
+            background: #f5f5f5;
+        }
+
+        .v3-bottom {
+            border-top: 2px solid #000;
+            padding: 20px;
+            display: flex;
+            gap: 12px;
+        }
+
+        .v3-btn-secondary {
+            flex: 1;
+            padding: 14px;
+            border: 1px solid #000;
+            background: #fff;
+            font-family: 'Georgia', serif;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+        }
+
+        .v3-btn-primary {
+            flex: 2;
+            padding: 14px;
+            border: 1px solid #000;
+            background: #000;
+            color: #fff;
+            font-family: 'Georgia', serif;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+        }
+
+        /* ========================================
+           VARIANT 4: Stacked Cards
+           ======================================== */
+        .v4-masthead {
+            border-bottom: 2px solid #000;
+            padding: 12px 20px;
+            text-align: center;
+        }
+
+        .v4-masthead-text {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            color: #666;
+        }
+
+        .v4-hero {
+            padding: 32px 24px;
+            text-align: center;
+            border-bottom: 1px solid #000;
+        }
+
+        .v4-hero-emoji {
+            font-size: 48px;
+            margin-bottom: 16px;
+        }
+
+        .v4-hero-title {
+            font-size: 28px;
+            font-weight: 400;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .v4-card {
+            margin: 16px;
+            border: 1px solid #000;
+        }
+
+        .v4-card-header {
+            padding: 12px 16px;
+            border-bottom: 1px solid #000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .v4-card-label {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #666;
+        }
+
+        .v4-card-badge {
+            font-size: 10px;
+            padding: 4px 8px;
+            background: #000;
+            color: #fff;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .v4-card-body {
+            padding: 16px;
+        }
+
+        .v4-to-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            background: #f5f5f5;
+            margin: 0 16px 16px;
+        }
+
+        .v4-to-avatar {
+            width: 36px;
+            height: 36px;
+            background: #000;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+        }
+
+        .v4-to-info {
+            flex: 1;
+        }
+
+        .v4-to-label {
+            font-size: 9px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #999;
+        }
+
+        .v4-to-name {
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .v4-time-pills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            padding: 0 16px 16px;
+        }
+
+        .v4-time-pill {
+            padding: 10px 16px;
+            border: 1px solid #000;
+            font-size: 11px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .v4-time-pill.selected {
+            background: #000;
+            color: #fff;
+        }
+
+        .v4-actions {
+            padding: 16px;
+            border-top: 2px solid #000;
+        }
+
+        .v4-send-btn {
+            width: 100%;
+            padding: 16px;
+            background: #000;
+            color: #fff;
+            border: none;
+            font-family: 'Georgia', serif;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            cursor: pointer;
+        }
+
+        /* ========================================
+           VARIANT 5: Magazine Editorial
+           ======================================== */
+        .v5-header {
+            border-bottom: 2px solid #000;
+            padding: 16px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .v5-header-title {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+        }
+
+        .v5-header-close {
+            font-size: 18px;
+            cursor: pointer;
+            color: #666;
+        }
+
+        .v5-hero {
+            padding: 40px 24px;
+            text-align: center;
+            border-bottom: 1px solid #000;
+        }
+
+        .v5-hero-title {
+            font-size: 42px;
+            font-weight: 400;
+            letter-spacing: -1px;
+            line-height: 1.1;
+            margin-bottom: 8px;
+        }
+
+        .v5-hero-title-italic {
+            font-style: italic;
+        }
+
+        .v5-hero-line {
+            width: 40px;
+            height: 1px;
+            background: #000;
+            margin: 20px auto;
+        }
+
+        .v5-hero-desc {
+            font-size: 14px;
+            color: #666;
+            font-style: italic;
+            line-height: 1.5;
+        }
+
+        .v5-recipient-bar {
+            border-bottom: 1px solid #000;
+            padding: 14px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .v5-recipient-label {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: #666;
+        }
+
+        .v5-recipient-name {
+            font-size: 15px;
+            font-weight: 600;
+        }
+
+        .v5-form {
+            padding: 20px;
+        }
+
+        .v5-field {
+            margin-bottom: 20px;
+        }
+
+        .v5-field-label {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+        .v5-time-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+        }
+
+        .v5-time-cell {
+            padding: 12px 8px;
+            border: 1px solid #000;
+            text-align: center;
+            cursor: pointer;
+        }
+
+        .v5-time-cell.selected {
+            background: #000;
+            color: #fff;
+        }
+
+        .v5-time-cell span:first-child {
+            display: block;
+            font-size: 18px;
+            margin-bottom: 4px;
+        }
+
+        .v5-time-cell span:last-child {
+            font-size: 9px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .v5-quick-section {
+            padding: 0 20px 20px;
+        }
+
+        .v5-quick-label {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+        .v5-quick-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+        }
+
+        .v5-quick-item {
+            padding: 10px 12px;
+            border: 1px solid #e0e0e0;
+            font-size: 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .v5-quick-item:hover {
+            border-color: #000;
+        }
+
+        .v5-footer {
+            border-top: 2px solid #000;
+            padding: 20px;
+        }
+
+        .v5-send-btn {
+            width: 100%;
+            padding: 18px;
+            background: #000;
+            color: #fff;
+            border: none;
+            font-family: 'Georgia', serif;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            cursor: pointer;
+            margin-bottom: 12px;
+        }
+
+        .v5-footer-hint {
+            text-align: center;
+            font-size: 11px;
+            color: #999;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <div class="page-title">
+        <h1>Send Reminder Variants</h1>
+        <p>TogetherRemind Design System</p>
+    </div>
+
+    <div class="variants-grid">
+        <!-- VARIANT 1: Sectioned Card -->
+        <div class="variant-wrapper">
+            <div class="variant-label">Variant 1 — Sectioned Card</div>
+            <div class="container">
+                <div class="v1-header">
+                    <div class="v1-title">Send Reminder</div>
+                    <div class="v1-subtitle">Schedule a message for your partner</div>
+                </div>
+
+                <div class="v1-recipient">
+                    <span class="v1-recipient-label">To</span>
+                    <span class="v1-recipient-name">Taija</span>
+                </div>
+
+                <div class="v1-section">
+                    <div class="v1-section-label">Message</div>
+                    <input type="text" placeholder="Type your reminder...">
+                    <div class="v1-quick-messages">
+                        <div class="v1-quick-msg"><span>💕</span> Love you!</div>
+                        <div class="v1-quick-msg"><span>🏠</span> I'm home</div>
+                        <div class="v1-quick-msg"><span>☕</span> Coffee?</div>
+                        <div class="v1-quick-msg"><span>🛒</span> Pick up milk</div>
+                    </div>
+                </div>
+
+                <div class="v1-section">
+                    <div class="v1-section-label">When</div>
+                    <div class="v1-time-grid">
+                        <div class="v1-time-btn selected">
+                            <span class="v1-time-emoji">⚡</span>
+                            <span class="v1-time-label">Now</span>
+                        </div>
+                        <div class="v1-time-btn">
+                            <span class="v1-time-emoji">☕</span>
+                            <span class="v1-time-label">1 Hour</span>
+                        </div>
+                        <div class="v1-time-btn">
+                            <span class="v1-time-emoji">🌙</span>
+                            <span class="v1-time-label">Tonight</span>
+                        </div>
+                        <div class="v1-time-btn">
+                            <span class="v1-time-emoji">☀️</span>
+                            <span class="v1-time-label">Tomorrow</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="v1-footer">
+                    <button class="v1-send-btn">Send Reminder →</button>
+                    <div class="v1-lp-hint">Earn +8 Love Points</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- VARIANT 2: Minimal Form -->
+        <div class="variant-wrapper">
+            <div class="variant-label">Variant 2 — Minimal Form</div>
+            <div class="container">
+                <div class="v2-content">
+                    <div class="v2-eyebrow">New Reminder</div>
+                    <div class="v2-title">Send a<br><span class="v2-title-italic">Reminder</span></div>
+                    <div class="v2-recipient">to Taija</div>
+                    <div class="v2-divider"></div>
+
+                    <div class="v2-field">
+                        <div class="v2-field-label">Message</div>
+                        <textarea placeholder="What would you like to remind them about?"></textarea>
+                    </div>
+
+                    <div class="v2-field">
+                        <div class="v2-field-label">Deliver</div>
+                        <div class="v2-time-row">
+                            <div class="v2-time-btn selected"><span>⚡</span>Now</div>
+                            <div class="v2-time-btn"><span>☕</span>1 hr</div>
+                            <div class="v2-time-btn"><span>🌙</span>Tonight</div>
+                            <div class="v2-time-btn"><span>☀️</span>Tomorrow</div>
+                        </div>
+                    </div>
+
+                    <button class="v2-send-btn">Send Reminder</button>
+                    <div class="v2-hint">Earn +8 Love Points</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- VARIANT 3: Two-Column Layout -->
+        <div class="variant-wrapper">
+            <div class="variant-label">Variant 3 — Two-Column Layout</div>
+            <div class="container">
+                <div class="v3-header">
+                    <div class="v3-header-title">Reminder</div>
+                </div>
+
+                <div class="v3-split">
+                    <div class="v3-left">
+                        <div class="v3-section-title">To</div>
+                        <div class="v3-recipient-display">
+                            <div class="v3-recipient-emoji">👩</div>
+                            <div class="v3-recipient-name">Taija</div>
+                        </div>
+                        <div class="v3-section-title">Reward</div>
+                        <div style="font-size: 14px; font-weight: 600;">+8 LP</div>
+                    </div>
+                    <div class="v3-right">
+                        <div class="v3-section-title">Deliver</div>
+                        <div class="v3-time-stack">
+                            <div class="v3-time-option selected"><span>⚡</span><span>Now</span></div>
+                            <div class="v3-time-option"><span>☕</span><span>1 Hour</span></div>
+                            <div class="v3-time-option"><span>🌙</span><span>Tonight</span></div>
+                            <div class="v3-time-option"><span>☀️</span><span>Tomorrow</span></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="v3-message-area">
+                    <div class="v3-section-title">Message</div>
+                    <input type="text" placeholder="Type your reminder...">
+                    <div class="v3-quick-row">
+                        <div class="v3-quick-chip">💕 Love you!</div>
+                        <div class="v3-quick-chip">🏠 I'm home</div>
+                        <div class="v3-quick-chip">☕ Coffee?</div>
+                    </div>
+                </div>
+
+                <div class="v3-bottom">
+                    <button class="v3-btn-secondary">Cancel</button>
+                    <button class="v3-btn-primary">Send →</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- VARIANT 4: Stacked Cards -->
+        <div class="variant-wrapper">
+            <div class="variant-label">Variant 4 — Stacked Cards</div>
+            <div class="container">
+                <div class="v4-masthead">
+                    <span class="v4-masthead-text">Together Remind</span>
+                </div>
+
+                <div class="v4-hero">
+                    <div class="v4-hero-emoji">💌</div>
+                    <div class="v4-hero-title">Send Reminder</div>
+                </div>
+
+                <div class="v4-to-row">
+                    <div class="v4-to-avatar">T</div>
+                    <div class="v4-to-info">
+                        <div class="v4-to-label">Recipient</div>
+                        <div class="v4-to-name">Taija</div>
+                    </div>
+                </div>
+
+                <div class="v4-card">
+                    <div class="v4-card-header">
+                        <span class="v4-card-label">Message</span>
+                    </div>
+                    <div class="v4-card-body">
+                        <input type="text" placeholder="Type your reminder..." style="border: none; padding: 0;">
+                    </div>
+                </div>
+
+                <div class="v4-card">
+                    <div class="v4-card-header">
+                        <span class="v4-card-label">Delivery Time</span>
+                        <span class="v4-card-badge">+8 LP</span>
+                    </div>
+                    <div class="v4-card-body" style="padding: 0;">
+                        <div class="v4-time-pills">
+                            <div class="v4-time-pill selected"><span>⚡</span> Now</div>
+                            <div class="v4-time-pill"><span>☕</span> 1 Hour</div>
+                            <div class="v4-time-pill"><span>🌙</span> Tonight</div>
+                            <div class="v4-time-pill"><span>☀️</span> Tomorrow</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="v4-actions">
+                    <button class="v4-send-btn">Send Reminder</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- VARIANT 5: Magazine Editorial -->
+        <div class="variant-wrapper">
+            <div class="variant-label">Variant 5 — Magazine Editorial</div>
+            <div class="container">
+                <div class="v5-header">
+                    <span class="v5-header-title">Reminder</span>
+                    <span class="v5-header-close">✕</span>
+                </div>
+
+                <div class="v5-hero">
+                    <div class="v5-hero-title">Send a<br><span class="v5-hero-title-italic">Reminder</span></div>
+                    <div class="v5-hero-line"></div>
+                    <div class="v5-hero-desc">Schedule a thoughtful message for your partner</div>
+                </div>
+
+                <div class="v5-recipient-bar">
+                    <div class="v5-recipient-label">To</div>
+                    <div class="v5-recipient-name">Taija</div>
+                </div>
+
+                <div class="v5-form">
+                    <div class="v5-field">
+                        <div class="v5-field-label">Message</div>
+                        <textarea placeholder="What would you like to remind them about?"></textarea>
+                    </div>
+
+                    <div class="v5-field">
+                        <div class="v5-field-label">Delivery Time</div>
+                        <div class="v5-time-grid">
+                            <div class="v5-time-cell selected"><span>⚡</span><span>Now</span></div>
+                            <div class="v5-time-cell"><span>☕</span><span>1 Hour</span></div>
+                            <div class="v5-time-cell"><span>🌙</span><span>8 PM</span></div>
+                            <div class="v5-time-cell"><span>☀️</span><span>8 AM</span></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="v5-quick-section">
+                    <div class="v5-quick-label">Quick Messages</div>
+                    <div class="v5-quick-grid">
+                        <div class="v5-quick-item"><span>💕</span> Love you!</div>
+                        <div class="v5-quick-item"><span>🏠</span> I'm home</div>
+                        <div class="v5-quick-item"><span>☕</span> Coffee?</div>
+                        <div class="v5-quick-item"><span>🛒</span> Pick up milk</div>
+                    </div>
+                </div>
+
+                <div class="v5-footer">
+                    <button class="v5-send-btn">Send Reminder</button>
+                    <div class="v5-footer-hint">Your partner will be notified at the scheduled time</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Add interactivity for time selection within each variant
+        document.querySelectorAll('.variant-wrapper').forEach(wrapper => {
+            const timeButtons = wrapper.querySelectorAll('[class*="time-btn"], [class*="time-option"], [class*="time-pill"], [class*="time-cell"]');
+            timeButtons.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    timeButtons.forEach(b => b.classList.remove('selected'));
+                    this.classList.add('selected');
+                });
+            });
+
+            // Quick message click fills input
+            const quickMsgs = wrapper.querySelectorAll('[class*="quick-msg"], [class*="quick-chip"], [class*="quick-item"]');
+            const input = wrapper.querySelector('input[type="text"], textarea');
+            quickMsgs.forEach(msg => {
+                msg.addEventListener('click', function() {
+                    if (input) {
+                        const text = this.textContent.trim().replace(/^[^\s]+\s/, '');
+                        input.value = text;
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

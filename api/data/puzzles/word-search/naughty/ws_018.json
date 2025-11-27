@@ -1,0 +1,24 @@
+{
+  "puzzleId": "ws_018",
+  "title": "Intimate XVIII",
+  "theme": "intimacy",
+  "size": {
+    "rows": 10,
+    "cols": 10
+  },
+  "grid": "WIUNVEILEWERABKCENPRAFSHIVERAZDTERPGECHKLXOESLCTSHIRBEAJNGJCWSGHGAADPUMMISWIMEKOKKKGSKOEATAYSWHTRNKV",
+  "words": {
+    "ROMANCE": "96,U",
+    "UNVEIL": "2,R",
+    "GASP": "64,U",
+    "NECK": "17,L",
+    "BARE": "13,L",
+    "SIGH": "61,DR",
+    "SHEER": "73,U",
+    "TOUCH": "89,U",
+    "WILD": "60,U",
+    "SHAPE": "48,U",
+    "SHIVER": "22,R",
+    "NEED": "97,U"
+  }
+}

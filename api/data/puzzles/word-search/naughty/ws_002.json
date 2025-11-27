@@ -1,0 +1,24 @@
+{
+  "puzzleId": "ws_002",
+  "title": "Intimate II",
+  "theme": "intimacy",
+  "size": {
+    "rows": 10,
+    "cols": 10
+  },
+  "grid": "VKWYSDIFOXAPASSIONJMRDSATNAWDTOWMTNFRHOEUZONGASPMASRLAFGSAMEESDFESLUPIOIENEFWAQBHGRRGYHGPSQHPLESHGIB",
+  "words": {
+    "SMOLDER": "22,D",
+    "GASP": "44,R",
+    "WANT": "27,L",
+    "PULSE": "68,L",
+    "SPOT": "56,UR",
+    "SIGH": "61,D",
+    "FANTASY": "63,U",
+    "PRESS": "92,UR",
+    "SHAPE": "95,UR",
+    "AROUSE": "10,D",
+    "FLAME": "75,UR",
+    "PASSION": "11,R"
+  }
+}

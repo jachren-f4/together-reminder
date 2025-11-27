@@ -1,9 +1,6 @@
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:togetherremind/models/reminder.dart';
-import 'package:togetherremind/models/partner.dart';
-import 'package:togetherremind/models/user.dart';
 import 'package:togetherremind/services/storage_service.dart';
-import 'package:togetherremind/services/love_point_service.dart';
 import 'package:togetherremind/services/general_activity_streak_service.dart';
 import '../utils/logger.dart';
 
@@ -33,25 +30,17 @@ class ReminderService {
       // print('   Sender: ${user.name ?? 'You'}');
       // print('   Text: ${reminder.text}');
 
-      // Call Cloud Function
+      // Call Cloud Function to send/schedule the reminder
+      // Note: scheduledFor is passed as ISO8601 string in local time
+      // Server currently sends immediately (TODO: implement Cloud Tasks for scheduling)
       final callable = _functions.httpsCallable('sendReminder');
-      final result = await callable.call({
+      await callable.call({
         'partnerToken': partner.pushToken,
         'senderName': user.name ?? 'Your Partner',
         'reminderText': reminder.text,
         'reminderId': reminder.id,
         'scheduledFor': reminder.scheduledFor.toIso8601String(),
       });
-
-      // Removed verbose logging
-      // Logger.success('Cloud Function response: ${result.data}', service: 'reminder');
-
-      // Award LP for sending reminder
-      await LovePointService.awardPoints(
-        amount: 5,
-        reason: 'reminder_sent',
-        relatedId: reminder.id,
-      );
 
       // Record activity for streak tracking
       await GeneralActivityStreakService().recordActivity();
@@ -79,18 +68,8 @@ class ReminderService {
     }
   }
 
-  /// Mark a reminder as done and award LP
+  /// Mark a reminder as done
   static Future<void> markReminderAsDone(String reminderId) async {
     await _storage.updateReminderStatus(reminderId, 'done');
-
-    // Award LP for completing a reminder
-    await LovePointService.awardPoints(
-      amount: 5,
-      reason: 'reminder_done',
-      relatedId: reminderId,
-    );
-
-    // Removed verbose logging
-    // Logger.success('Reminder marked as done, awarded 5 LP', service: 'reminder');
   }
 }

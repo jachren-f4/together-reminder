@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:share_plus/share_plus.dart';
+import 'package:confetti/confetti.dart';
 import '../utils/logger.dart';
 import '../models/quiz_session.dart';
 import '../models/quiz_question.dart';
@@ -7,12 +9,15 @@ import '../services/storage_service.dart';
 import '../services/daily_quest_service.dart';
 import '../services/quest_sync_service.dart';
 import '../services/love_point_service.dart';
+import '../services/haptic_service.dart';
+import '../services/celebration_service.dart';
+import '../animations/animation_config.dart';
 import '../models/daily_quest.dart';
 import '../services/quest_utilities.dart';
-import '../config/brand/brand_loader.dart';
+import '../widgets/editorial/editorial.dart';
 
 /// Results screen for affirmation-style quizzes
-/// Shows individual score (not match percentage) and answers
+/// Editorial newspaper aesthetic with fraction score display
 class AffirmationResultsScreen extends StatefulWidget {
   final QuizSession session;
 
@@ -25,33 +30,111 @@ class AffirmationResultsScreen extends StatefulWidget {
   State<AffirmationResultsScreen> createState() => _AffirmationResultsScreenState();
 }
 
-class _AffirmationResultsScreenState extends State<AffirmationResultsScreen> {
+class _AffirmationResultsScreenState extends State<AffirmationResultsScreen>
+    with TickerProviderStateMixin {
   final QuizService _quizService = QuizService();
   final StorageService _storage = StorageService();
   late List<QuizQuestion> _questions;
+  late ConfettiController _confettiController;
+
+  // Animation controllers for LP reward card
+  late AnimationController _rewardCardController;
+  late Animation<double> _rewardFadeAnimation;
+  late Animation<double> _rewardScaleAnimation;
 
   @override
   void initState() {
     super.initState();
     _questions = _quizService.getSessionQuestions(widget.session);
+    _confettiController = ConfettiController(duration: const Duration(seconds: 3));
 
-    // Check and complete associated daily quest
+    // Initialize reward card animation (staggered reveal)
+    _rewardCardController = AnimationController(
+      vsync: this,
+      duration: AnimationConfig.normal,
+    );
+    _rewardFadeAnimation = CurvedAnimation(
+      parent: _rewardCardController,
+      curve: AnimationConfig.fadeIn,
+    );
+    _rewardScaleAnimation = Tween<double>(
+      begin: 0.95,
+      end: 1.0,
+    ).animate(CurvedAnimation(
+      parent: _rewardCardController,
+      curve: AnimationConfig.scaleIn,
+    ));
+
+    // Start animation with delay for staggered effect
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      // Trigger celebration with confetti and sound
+      CelebrationService().celebrate(
+        CelebrationType.questComplete,
+        confettiController: _confettiController,
+      );
+
+      Future.delayed(AnimationConfig.staggerDelay, () {
+        if (mounted) {
+          _rewardCardController.forward();
+        }
+      });
+    });
+
     _checkQuestCompletion();
   }
 
-  /// Calculate average score from 1-5 scale answers
-  double _calculateAverageScore(List<int> answers) {
+  @override
+  void dispose() {
+    _confettiController.dispose();
+    _rewardCardController.dispose();
+    super.dispose();
+  }
+
+  /// Calculate total score from 1-5 scale answers
+  int _calculateTotalScore(List<int> answers) {
     if (answers.isEmpty) return 0;
-    final sum = answers.reduce((a, b) => a + b);
-    return sum / answers.length;
+    // Answers are 0-indexed (0-4), convert to 1-5
+    return answers.fold(0, (sum, answer) => sum + (answer + 1));
   }
 
-  /// Convert average (1-5) to percentage (0-100)
-  int _averageToPercentage(double average) {
-    return ((average / 5.0) * 100).round();
+  /// Get max possible score
+  int _getMaxScore() {
+    return _questions.length * 5;
   }
 
-  /// Check if this quiz session is linked to a daily quest and mark it as completed
+  /// Get rating label based on percentage
+  String _getRatingLabel(int score, int maxScore) {
+    final percentage = (score / maxScore * 100).round();
+    if (percentage >= 90) return 'EXCELLENT';
+    if (percentage >= 75) return 'VERY GOOD';
+    if (percentage >= 60) return 'GOOD';
+    if (percentage >= 40) return 'FAIR';
+    return 'NEEDS ATTENTION';
+  }
+
+  /// Get encouraging message based on score
+  String _getScoreMessage(int score, int maxScore) {
+    final percentage = (score / maxScore * 100).round();
+    final category = widget.session.category ?? 'this area';
+
+    if (percentage >= 80) {
+      return 'Your responses show a strong foundation of $category in your relationship.';
+    } else if (percentage >= 60) {
+      return 'You have a solid base in $category with room for growth together.';
+    } else {
+      return 'This is a great opportunity to strengthen $category together.';
+    }
+  }
+
+  /// Get answer label for 1-5 scale
+  String _getAnswerLabel(int index) {
+    const labels = ['Strongly Disagree', 'Disagree', 'Neutral', 'Agree', 'Strongly Agree'];
+    if (index >= 0 && index < labels.length) {
+      return labels[index];
+    }
+    return 'Unknown';
+  }
+
   Future<void> _checkQuestCompletion() async {
     try {
       final user = _storage.getUser();
@@ -59,36 +142,26 @@ class _AffirmationResultsScreenState extends State<AffirmationResultsScreen> {
 
       if (user == null || partner == null) return;
 
-      // Check if there's a daily quest for this quiz session
       final questService = DailyQuestService(storage: _storage);
       final todayQuests = questService.getTodayQuests();
 
-      // Find quest with matching contentId (quiz session ID)
       final matchingQuest = todayQuests.where((q) =>
         q.type == QuestType.quiz && q.contentId == widget.session.id
       ).firstOrNull;
 
-      if (matchingQuest == null) {
-        // Not a daily quest quiz - just a regular quiz
+      if (matchingQuest == null) return;
+
+      final userAnswers = widget.session.answers?[user.id];
+      if (userAnswers == null || userAnswers.length < widget.session.questionIds.length) {
         return;
       }
 
-      // Check if current user has completed all questions
-      final userAnswers = widget.session.answers?[user.id];
-      if (userAnswers == null || userAnswers.length < widget.session.questionIds.length) {
-        return; // User hasn't completed the quiz yet
-      }
-
-      // Mark quest as completed for this user
       final bothCompleted = await questService.completeQuestForUser(
         questId: matchingQuest.id,
         userId: user.id,
       );
 
-      // Sync with Firebase
-      final syncService = QuestSyncService(
-        storage: _storage,
-      );
+      final syncService = QuestSyncService(storage: _storage);
 
       await syncService.markQuestCompleted(
         questId: matchingQuest.id,
@@ -99,7 +172,6 @@ class _AffirmationResultsScreenState extends State<AffirmationResultsScreen> {
       if (bothCompleted) {
         Logger.success('Daily affirmation quest completed by both users! Awarding 30 LP...', service: 'quiz');
 
-        // Award Love Points to BOTH users via Firebase (real-time sync)
         await LovePointService.awardPointsToBothUsers(
           userId1: user.id,
           userId2: partner.pushToken,
@@ -108,37 +180,26 @@ class _AffirmationResultsScreenState extends State<AffirmationResultsScreen> {
           relatedId: matchingQuest.id,
         );
 
-        // Check if all 3 daily quests are completed
         await _checkDailyQuestsCompletion(questService, user.id, partner.pushToken);
       }
     } catch (e) {
       Logger.error('Error checking quest completion', error: e, service: 'quiz');
-      // Don't block results screen on quest errors
     }
   }
 
-  /// Check if all daily quests are completed and advance progression if so
   Future<void> _checkDailyQuestsCompletion(
     DailyQuestService questService,
     String currentUserId,
     String partnerUserId,
   ) async {
     try {
-      // Check if all main daily quests are completed by both users
       if (questService.areAllMainQuestsCompleted()) {
         Logger.success('All daily quests completed! Advancing progression...', service: 'quiz');
 
-        // Get the couple ID using QuestUtilities
         final coupleId = QuestUtilities.generateCoupleId(currentUserId, partnerUserId);
-
-        // Get current progression state
         var progressionState = _storage.getQuizProgressionState(coupleId);
-        if (progressionState == null) {
-          Logger.warn('No progression state found', service: 'quiz');
-          return;
-        }
+        if (progressionState == null) return;
 
-        // Advance progression by 3 positions (for the 3 completed quests)
         for (int i = 0; i < 3; i++) {
           progressionState.currentPosition++;
           if (progressionState.currentPosition >= 4) {
@@ -148,18 +209,14 @@ class _AffirmationResultsScreenState extends State<AffirmationResultsScreen> {
               progressionState.hasCompletedAllTracks = true;
               progressionState.currentTrack = 2;
               progressionState.currentPosition = 3;
-              break; // Max progression reached
+              break;
             }
           }
         }
 
-        // Save updated progression
         await _storage.updateQuizProgressionState(progressionState);
 
-        // Save to Firebase
-        final syncService = QuestSyncService(
-          storage: _storage,
-        );
+        final syncService = QuestSyncService(storage: _storage);
         await syncService.saveProgressionState(progressionState);
       }
     } catch (e) {
@@ -167,299 +224,411 @@ class _AffirmationResultsScreenState extends State<AffirmationResultsScreen> {
     }
   }
 
+  void _shareResults() {
+    final user = _storage.getUser();
+    final userAnswers = widget.session.answers?[user?.id] ?? [];
+    final totalScore = _calculateTotalScore(userAnswers);
+    final maxScore = _getMaxScore();
+
+    Share.share(
+      'I scored $totalScore/$maxScore on "${widget.session.quizName ?? 'Affirmation Quiz'}"! 💕\n\n'
+      'Try TogetherRemind to reflect on your relationship together!',
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     final user = _storage.getUser();
     final partner = _storage.getPartner();
+    final partnerName = partner?.name ?? 'Partner';
 
     if (user == null) {
-      return const Scaffold(
-        body: Center(child: Text('User not found')),
+      return Scaffold(
+        backgroundColor: EditorialStyles.paper,
+        body: Center(
+          child: Text('User not found', style: EditorialStyles.bodyText),
+        ),
       );
     }
 
     final userAnswers = widget.session.answers?[user.id] ?? [];
     final partnerAnswers = widget.session.answers?[partner?.pushToken] ?? [];
-
-    final averageScore = _calculateAverageScore(userAnswers);
-    final scorePercentage = _averageToPercentage(averageScore);
+    final totalScore = _calculateTotalScore(userAnswers);
+    final partnerScore = _calculateTotalScore(partnerAnswers);
+    final maxScore = _getMaxScore();
     final bothCompleted = userAnswers.isNotEmpty && partnerAnswers.isNotEmpty;
+    final lpEarned = widget.session.lpEarned ?? 30;
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Quiz Results'),
-        centerTitle: true,
-      ),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(20.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Quiz title
-              Text(
-                widget.session.quizName ?? 'Affirmation Quiz',
-                style: theme.textTheme.headlineSmall?.copyWith(
-                  fontWeight: FontWeight.bold,
-                  fontFamily: 'Playfair Display',
+      backgroundColor: EditorialStyles.paper,
+      body: Stack(
+        children: [
+          // Confetti celebration overlay
+          CelebrationService().createConfettiWidget(
+            _confettiController,
+            type: CelebrationType.questComplete,
+          ),
+          SafeArea(
+            child: Column(
+              children: [
+                // Header
+                EditorialHeaderSimple(
+                  title: 'Complete',
+                  onClose: () => Navigator.of(context).popUntil((route) => route.isFirst),
                 ),
-              ),
 
-              const SizedBox(height: 8),
+                // Scrollable content
+                Expanded(
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        // Score hero
+                        _buildScoreHero(totalScore, maxScore),
 
-              // Category badge
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-                decoration: BoxDecoration(
-                  color: theme.colorScheme.primaryContainer,
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Text(
-                  widget.session.category?.toUpperCase() ?? 'AFFIRMATION',
-                  style: TextStyle(
-                    fontSize: 11,
-                    fontWeight: FontWeight.bold,
-                    color: theme.colorScheme.onPrimaryContainer,
-                    letterSpacing: 1.0,
-                  ),
-                ),
-              ),
+                        // Content
+                        Padding(
+                          padding: const EdgeInsets.all(20),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              // Partner comparison
+                              _buildComparisonCard(
+                                totalScore,
+                                partnerScore,
+                                maxScore,
+                                bothCompleted,
+                                partnerName,
+                              ),
+                              const SizedBox(height: 24),
 
-              const SizedBox(height: 32),
+                              // Your responses header
+                              Text('YOUR RESPONSES', style: EditorialStyles.labelUppercase),
+                              const SizedBox(height: 16),
 
-              // Your results section
-              Text(
-                'Your results',
-                style: theme.textTheme.titleLarge?.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
+                              // Answer cards
+                              ...List.generate(_questions.length, (index) {
+                                if (index >= userAnswers.length) return const SizedBox.shrink();
+                                return Padding(
+                                  padding: const EdgeInsets.only(bottom: 12),
+                                  child: _buildAnswerCard(
+                                    _questions[index].question,
+                                    userAnswers[index],
+                                  ),
+                                );
+                              }),
 
-              const SizedBox(height: 8),
-
-              Text(
-                'This represents how satisfied you are with ${widget.session.category ?? 'this area'} in your relationship at present.',
-                style: theme.textTheme.bodyMedium?.copyWith(
-                  color: theme.colorScheme.onSurfaceVariant,
-                ),
-              ),
-
-              const SizedBox(height: 24),
-
-              // Circular progress indicator showing individual score
-              Center(
-                child: SizedBox(
-                  width: 200,
-                  height: 200,
-                  child: Stack(
-                    alignment: Alignment.center,
-                    children: [
-                      SizedBox(
-                        width: 200,
-                        height: 200,
-                        child: CircularProgressIndicator(
-                          value: scorePercentage / 100,
-                          strokeWidth: 12,
-                          backgroundColor: theme.colorScheme.surfaceContainerHighest,
-                          valueColor: AlwaysStoppedAnimation<Color>(
-                            _getScoreColor(scorePercentage),
+                              // Reward card
+                              const SizedBox(height: 12),
+                              _buildRewardCard(lpEarned),
+                            ],
                           ),
                         ),
+                      ],
+                    ),
+                  ),
+                ),
+
+                // Footer
+                Container(
+                  padding: const EdgeInsets.all(20),
+                  decoration: BoxDecoration(
+                    color: EditorialStyles.paper,
+                    border: Border(top: EditorialStyles.border),
+                  ),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: EditorialSecondaryButton(
+                          label: 'Share',
+                          onPressed: _shareResults,
+                        ),
                       ),
-                      Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Text(
-                            '$scorePercentage%',
-                            style: theme.textTheme.displayMedium?.copyWith(
-                              fontWeight: FontWeight.bold,
-                              fontFamily: 'Playfair Display',
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: EditorialPrimaryButton(
+                          label: 'Done',
+                          onPressed: () => Navigator.of(context).popUntil((route) => route.isFirst),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildScoreHero(int score, int maxScore) {
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 40, horizontal: 20),
+      decoration: BoxDecoration(
+        color: EditorialStyles.paper,
+        border: Border(bottom: EditorialStyles.border),
+      ),
+      child: Column(
+        children: [
+          Text(
+            'YOUR SCORE',
+            style: EditorialStyles.labelUppercaseSmall,
+          ),
+          const SizedBox(height: 20),
+
+          // Fraction score display
+          RichText(
+            text: TextSpan(
+              children: [
+                TextSpan(
+                  text: '$score',
+                  style: EditorialStyles.scoreLarge,
+                ),
+                TextSpan(
+                  text: '/',
+                  style: EditorialStyles.scoreMedium.copyWith(
+                    fontWeight: FontWeight.w300,
+                  ),
+                ),
+                TextSpan(
+                  text: '$maxScore',
+                  style: EditorialStyles.scoreMedium.copyWith(
+                    color: EditorialStyles.inkMuted,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 12),
+
+          Text(
+            _getRatingLabel(score, maxScore),
+            style: EditorialStyles.labelUppercase.copyWith(
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+          const SizedBox(height: 16),
+
+          Text(
+            _getScoreMessage(score, maxScore),
+            style: EditorialStyles.bodyTextItalic,
+            textAlign: TextAlign.center,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildComparisonCard(
+    int userScore,
+    int partnerScore,
+    int maxScore,
+    bool bothCompleted,
+    String partnerName,
+  ) {
+    return Container(
+      decoration: BoxDecoration(
+        border: EditorialStyles.fullBorder,
+      ),
+      child: Column(
+        children: [
+          // Header
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+            decoration: BoxDecoration(
+              border: Border(bottom: BorderSide(color: EditorialStyles.inkLight)),
+            ),
+            child: Text('PARTNER COMPARISON', style: EditorialStyles.labelUppercase),
+          ),
+
+          // Scores row
+          Row(
+            children: [
+              // Your score
+              Expanded(
+                child: Container(
+                  padding: const EdgeInsets.all(20),
+                  decoration: BoxDecoration(
+                    border: Border(right: BorderSide(color: EditorialStyles.inkLight)),
+                  ),
+                  child: Column(
+                    children: [
+                      Text(
+                        'YOU',
+                        style: EditorialStyles.labelUppercaseSmall.copyWith(
+                          color: EditorialStyles.inkMuted,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      RichText(
+                        text: TextSpan(
+                          children: [
+                            TextSpan(
+                              text: '$userScore',
+                              style: EditorialStyles.scoreMedium,
                             ),
-                          ),
-                          Text(
-                            '${averageScore.toStringAsFixed(1)}/5.0',
-                            style: theme.textTheme.bodyMedium?.copyWith(
-                              color: theme.colorScheme.onSurfaceVariant,
+                            TextSpan(
+                              text: '/$maxScore',
+                              style: EditorialStyles.bodySmall.copyWith(
+                                color: EditorialStyles.inkMuted,
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ],
                   ),
                 ),
               ),
 
-              const SizedBox(height: 32),
-
-              // Partner status
-              _buildPartnerStatus(theme, bothCompleted, partner?.name),
-
-              const SizedBox(height: 32),
-
-              // Your answers section
-              Text(
-                'Your answers',
-                style: theme.textTheme.titleLarge?.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-
-              const SizedBox(height: 16),
-
-              // List of questions and answers
-              ...List.generate(_questions.length, (index) {
-                if (index >= userAnswers.length) return const SizedBox.shrink();
-
-                final question = _questions[index];
-                final answer = userAnswers[index];
-
-                return Padding(
-                  padding: const EdgeInsets.only(bottom: 16),
-                  child: _buildAnswerCard(theme, index + 1, question.question, answer),
-                );
-              }),
-
-              const SizedBox(height: 24),
-
-              // Done button
-              FilledButton(
-                onPressed: () {
-                  Navigator.of(context).popUntil((route) => route.isFirst);
-                },
-                style: FilledButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-                  minimumSize: const Size(double.infinity, 50),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
+              // Partner score
+              Expanded(
+                child: Container(
+                  padding: const EdgeInsets.all(20),
+                  child: Column(
+                    children: [
+                      Text(
+                        partnerName.toUpperCase(),
+                        style: EditorialStyles.labelUppercaseSmall.copyWith(
+                          color: EditorialStyles.inkMuted,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      if (bothCompleted)
+                        RichText(
+                          text: TextSpan(
+                            children: [
+                              TextSpan(
+                                text: '$partnerScore',
+                                style: EditorialStyles.scoreMedium,
+                              ),
+                              TextSpan(
+                                text: '/$maxScore',
+                                style: EditorialStyles.bodySmall.copyWith(
+                                  color: EditorialStyles.inkMuted,
+                                ),
+                              ),
+                            ],
+                          ),
+                        )
+                      else
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                          decoration: BoxDecoration(
+                            color: EditorialStyles.inkLight.withValues(alpha: 0.3),
+                            border: Border.all(color: EditorialStyles.inkLight),
+                          ),
+                          child: Text(
+                            'Waiting...',
+                            style: EditorialStyles.bodySmall.copyWith(
+                              fontStyle: FontStyle.italic,
+                              color: EditorialStyles.inkMuted,
+                            ),
+                          ),
+                        ),
+                    ],
                   ),
-                ),
-                child: const Text(
-                  'Done',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Color _getScoreColor(int percentage) {
-    if (percentage >= 80) return BrandLoader().colors.success;
-    if (percentage >= 60) return BrandLoader().colors.primary;
-    if (percentage >= 40) return BrandLoader().colors.warning;
-    return BrandLoader().colors.textSecondary;
-  }
-
-  Widget _buildPartnerStatus(ThemeData theme, bool bothCompleted, String? partnerName) {
-    if (bothCompleted) {
-      return Container(
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: theme.colorScheme.primaryContainer,
-          borderRadius: BorderRadius.circular(12),
-        ),
-        child: Row(
-          children: [
-            Icon(
-              Icons.check_circle,
-              color: theme.colorScheme.primary,
-              size: 24,
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Text(
-                '${partnerName ?? 'Your partner'} has also completed this quiz',
-                style: TextStyle(
-                  color: theme.colorScheme.onPrimaryContainer,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-            ),
-          ],
-        ),
-      );
-    } else {
-      return Container(
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: theme.colorScheme.secondaryContainer,
-          borderRadius: BorderRadius.circular(12),
-        ),
-        child: Row(
-          children: [
-            Icon(
-              Icons.schedule,
-              color: theme.colorScheme.onSecondaryContainer,
-              size: 24,
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Text(
-                'Awaiting ${partnerName ?? 'partner'}\'s answers',
-                style: TextStyle(
-                  color: theme.colorScheme.onSecondaryContainer,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-            ),
-          ],
-        ),
-      );
-    }
-  }
-
-  Widget _buildAnswerCard(ThemeData theme, int number, String question, int answer) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        border: Border.all(
-          color: theme.colorScheme.outlineVariant,
-        ),
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            '$number. $question',
-            style: theme.textTheme.bodyMedium?.copyWith(
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-          const SizedBox(height: 12),
-          Row(
-            children: [
-              // Heart icons showing the rating
-              ...List.generate(5, (index) {
-                final value = index + 1;
-                final isSelected = value <= answer;
-                return Padding(
-                  padding: const EdgeInsets.only(right: 4),
-                  child: Icon(
-                    isSelected ? Icons.favorite : Icons.favorite_border,
-                    size: 20,
-                    color: isSelected ? BrandLoader().colors.error : BrandLoader().colors.textSecondary.withOpacity(0.4),
-                  ),
-                );
-              }),
-              const SizedBox(width: 8),
-              Text(
-                '$answer/5',
-                style: theme.textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.bold,
-                  color: theme.colorScheme.primary,
                 ),
               ),
             ],
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildAnswerCard(String question, int answerIndex) {
+    final rating = answerIndex + 1; // Convert 0-4 to 1-5
+
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        border: EditorialStyles.fullBorder,
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            '"$question"',
+            style: EditorialStyles.bodyTextItalic.copyWith(
+              fontSize: 14,
+            ),
+          ),
+          const SizedBox(height: 16),
+
+          // Rating dots
+          Row(
+            children: [
+              // 5 dots
+              ...List.generate(5, (index) {
+                final isFilled = index < rating;
+                return Container(
+                  width: 24,
+                  height: 24,
+                  margin: const EdgeInsets.only(right: 4),
+                  decoration: BoxDecoration(
+                    color: isFilled ? EditorialStyles.ink : EditorialStyles.paper,
+                    shape: BoxShape.circle,
+                    border: Border.all(
+                      color: EditorialStyles.ink,
+                      width: EditorialStyles.borderWidth,
+                    ),
+                  ),
+                );
+              }),
+              const SizedBox(width: 8),
+              Text(
+                '${_getAnswerLabel(answerIndex)} ($rating/5)',
+                style: EditorialStyles.labelUppercaseSmall.copyWith(
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildRewardCard(int lpEarned) {
+    return AnimatedBuilder(
+      animation: _rewardCardController,
+      builder: (context, child) {
+        return Transform.scale(
+          scale: _rewardScaleAnimation.value,
+          child: Opacity(
+            opacity: _rewardFadeAnimation.value,
+            child: Container(
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                color: EditorialStyles.ink,
+                border: EditorialStyles.fullBorder,
+              ),
+              child: Column(
+                children: [
+                  Text(
+                    'YOU EARNED',
+                    style: EditorialStyles.labelUppercase.copyWith(
+                      color: EditorialStyles.paper.withValues(alpha: 0.7),
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    '+$lpEarned LP',
+                    style: TextStyle(
+                      fontFamily: EditorialStyles.scoreLarge.fontFamily,
+                      fontSize: 32,
+                      fontWeight: FontWeight.w700,
+                      color: EditorialStyles.paper,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
 }

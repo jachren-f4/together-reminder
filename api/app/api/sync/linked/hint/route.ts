@@ -12,10 +12,12 @@ import { join } from 'path';
 
 export const dynamic = 'force-dynamic';
 
-// Load puzzle data
-function loadPuzzle(puzzleId: string): any {
+// Load puzzle data from branch-specific path
+function loadPuzzle(puzzleId: string, branch?: string): any {
   try {
-    const puzzlePath = join(process.cwd(), 'data', 'puzzles', `${puzzleId}.json`);
+    // Use branch path (default to 'casual' if no branch specified)
+    const branchFolder = branch || 'casual';
+    const puzzlePath = join(process.cwd(), 'data', 'puzzles', 'linked', branchFolder, `${puzzleId}.json`);
     const puzzleData = readFileSync(puzzlePath, 'utf-8');
     return JSON.parse(puzzleData);
   } catch (error) {

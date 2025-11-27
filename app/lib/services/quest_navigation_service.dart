@@ -7,7 +7,6 @@ import '../models/you_or_me.dart';
 import '../services/storage_service.dart';
 import '../services/quiz_service.dart';
 import '../services/you_or_me_service.dart';
-import '../screens/unified_waiting_screen.dart';
 import '../screens/unified_results_screen.dart';
 import '../utils/logger.dart';
 
@@ -59,10 +58,12 @@ class QuestNavigationService {
         Logger.debug('User answered, navigating to waiting', service: 'navigation');
         await navigateToWaiting(context, session, config);
       } else {
-        Logger.debug('User not answered, navigating to intro', service: 'navigation');
+        Logger.debug('User not answered, navigating to intro (branch: ${quest.branch})', service: 'navigation');
         await Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => config.introBuilder(session)),
+          MaterialPageRoute(
+            builder: (context) => config.introBuilder(session, branch: quest.branch),
+          ),
         );
       }
     } catch (e, stackTrace) {
@@ -72,6 +73,7 @@ class QuestNavigationService {
   }
 
   /// Navigate to waiting screen
+  /// Uses the quest-type-specific waiting screen (Editorial design)
   Future<void> navigateToWaiting(
     BuildContext context,
     BaseSession session,
@@ -80,12 +82,7 @@ class QuestNavigationService {
     await Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => UnifiedWaitingScreen(
-          session: session,
-          config: config.waitingConfig,
-          resultsConfig: config.resultsConfig,
-          resultsContentBuilder: config.resultsContentBuilder,
-        ),
+        builder: (context) => config.waitingBuilder(session),
       ),
     );
   }

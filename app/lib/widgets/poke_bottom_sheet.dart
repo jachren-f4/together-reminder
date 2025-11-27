@@ -13,11 +13,9 @@ class PokeBottomSheet extends StatefulWidget {
   State<PokeBottomSheet> createState() => _PokeBottomSheetState();
 }
 
-class _PokeBottomSheetState extends State<PokeBottomSheet>
-    with SingleTickerProviderStateMixin {
+class _PokeBottomSheetState extends State<PokeBottomSheet> {
   String _selectedEmoji = '💫';
   bool _isSending = false;
-  late AnimationController _pulseController;
   final StorageService _storage = StorageService();
   int _remainingSeconds = 0;
   bool _isRateLimited = false;
@@ -25,12 +23,6 @@ class _PokeBottomSheetState extends State<PokeBottomSheet>
   @override
   void initState() {
     super.initState();
-    _pulseController = AnimationController(
-      duration: const Duration(milliseconds: 1000),
-      vsync: this,
-    )..repeat(reverse: true);
-
-    // Check rate limit status
     _checkRateLimit();
   }
 
@@ -41,7 +33,6 @@ class _PokeBottomSheetState extends State<PokeBottomSheet>
     });
 
     if (_isRateLimited) {
-      // Start countdown
       Future.delayed(const Duration(seconds: 1), () {
         if (mounted && _remainingSeconds > 0) {
           _checkRateLimit();
@@ -50,22 +41,15 @@ class _PokeBottomSheetState extends State<PokeBottomSheet>
     }
   }
 
-  @override
-  void dispose() {
-    _pulseController.dispose();
-    super.dispose();
-  }
-
   Future<void> _sendPoke() async {
     if (_isSending) return;
 
-    // Check rate limit
     if (!PokeService.canSendPoke()) {
       final remaining = PokeService.getRemainingSeconds();
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('⏳ Wait $remaining seconds before poking again'),
-          backgroundColor: AppTheme.accentOrange,
+          content: Text('Wait $remaining seconds before poking again'),
+          backgroundColor: AppTheme.primaryBlack,
           duration: const Duration(seconds: 2),
         ),
       );
@@ -74,17 +58,14 @@ class _PokeBottomSheetState extends State<PokeBottomSheet>
 
     setState(() => _isSending = true);
 
-    // Send poke
     final success = await PokeService.sendPoke(emoji: _selectedEmoji);
 
     if (mounted) {
       setState(() => _isSending = false);
 
       if (success) {
-        // Close bottom sheet
         Navigator.of(context).pop();
 
-        // Show success animation
         await PokeAnimationService.showPokeAnimation(
           context,
           type: PokeAnimationType.send,
@@ -94,18 +75,17 @@ class _PokeBottomSheetState extends State<PokeBottomSheet>
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text('$_selectedEmoji Poke sent!'),
-              backgroundColor: AppTheme.accentGreen,
+              backgroundColor: AppTheme.primaryBlack,
               duration: const Duration(seconds: 2),
             ),
           );
         }
       } else {
-        // Error feedback
         HapticFeedback.vibrate();
 
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: const Text('❌ Failed to send poke. Please try again.'),
+            content: const Text('Failed to send poke. Please try again.'),
             backgroundColor: BrandLoader().colors.error,
             duration: const Duration(seconds: 3),
           ),
@@ -122,240 +102,136 @@ class _PokeBottomSheetState extends State<PokeBottomSheet>
     return Container(
       decoration: BoxDecoration(
         color: AppTheme.primaryWhite,
-        borderRadius: const BorderRadius.vertical(top: Radius.circular(32)),
+        border: Border(
+          top: BorderSide(color: AppTheme.primaryBlack, width: 2),
+        ),
       ),
       child: SafeArea(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            // Handle bar
-            const SizedBox(height: 12),
-            Container(
-              width: 40,
-              height: 4,
-              decoration: BoxDecoration(
-                color: BrandLoader().colors.textPrimary.withOpacity(0.2),
-                borderRadius: BorderRadius.circular(2),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 48),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // Eyebrow text
+              Text(
+                'QUICK ACTION',
+                style: AppTheme.bodyFont.copyWith(
+                  fontSize: 11,
+                  fontWeight: FontWeight.w600,
+                  letterSpacing: 2,
+                  color: AppTheme.textSecondary,
+                ),
               ),
-            ),
-            const SizedBox(height: 20),
+              const SizedBox(height: 20),
 
-            // Header
-            AnimatedBuilder(
-              animation: _pulseController,
-              builder: (context, child) {
-                return Transform.scale(
-                  scale: 1.0 + (_pulseController.value * 0.1),
-                  child: const Text(
-                    '💫',
-                    style: TextStyle(fontSize: 60),
-                  ),
-                );
-              },
-            ),
-            const SizedBox(height: 12),
-            Text(
-              'Send a Poke!',
-              style: AppTheme.headlineFont.copyWith(
-                fontSize: 32,
-                fontWeight: FontWeight.w600,
-                color: AppTheme.textPrimary,
-                letterSpacing: -0.5,
+              // Large emoji
+              Text(
+                _selectedEmoji,
+                style: const TextStyle(fontSize: 80),
               ),
-            ),
-            const SizedBox(height: 8),
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-              decoration: BoxDecoration(
-                color: AppTheme.backgroundGray,
-                borderRadius: BorderRadius.circular(20),
-                border: Border.all(color: AppTheme.borderLight, width: 2),
+              const SizedBox(height: 20),
+
+              // Title - uppercase serif
+              Text(
+                'POKE',
+                style: AppTheme.headlineFont.copyWith(
+                  fontSize: 32,
+                  fontWeight: FontWeight.w400,
+                  letterSpacing: 3,
+                  color: AppTheme.textPrimary,
+                ),
               ),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
+              const SizedBox(height: 8),
+
+              // Recipient - italic
+              Text(
+                'to $partnerName',
+                style: AppTheme.headlineFont.copyWith(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w400,
+                  fontStyle: FontStyle.italic,
+                  color: AppTheme.textSecondary,
+                ),
+              ),
+              const SizedBox(height: 24),
+
+              // Divider line
+              Container(
+                width: 60,
+                height: 2,
+                color: AppTheme.primaryBlack,
+              ),
+              const SizedBox(height: 32),
+
+              // Emoji selector row
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Text(
-                    '💕',
-                    style: TextStyle(fontSize: 16),
-                  ),
-                  const SizedBox(width: 8),
-                  Text(
-                    partnerName,
-                    style: AppTheme.bodyFont.copyWith(
-                      fontSize: 15,
-                      fontWeight: FontWeight.w600,
-                      color: AppTheme.textPrimary,
-                    ),
-                  ),
+                  _buildEmojiOption('💫'),
+                  const SizedBox(width: 16),
+                  _buildEmojiOption('❤️'),
+                  const SizedBox(width: 16),
+                  _buildEmojiOption('👋'),
+                  const SizedBox(width: 16),
+                  _buildEmojiOption('🫶'),
                 ],
               ),
-            ),
-            const SizedBox(height: 30),
+              const SizedBox(height: 32),
 
-            // Poke card
-            Container(
-              margin: const EdgeInsets.symmetric(horizontal: 20),
-              padding: const EdgeInsets.all(40),
-              decoration: BoxDecoration(
-                color: AppTheme.backgroundGray,
-                borderRadius: BorderRadius.circular(24),
-                border: Border.all(color: AppTheme.borderLight, width: 2),
-                boxShadow: [
-                  BoxShadow(
-                    color: BrandLoader().colors.textPrimary.withAlpha((0.06 * 255).round()),
-                    blurRadius: 8,
-                    offset: const Offset(0, 2),
-                  ),
-                ],
-              ),
-              child: Column(
-                children: [
-                  // Sparkles decoration
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      _buildSparkle(),
-                      _buildSparkle(),
-                    ],
-                  ),
-                  const SizedBox(height: 20),
-
-                  // Main poke button
-                  GestureDetector(
-                    onTap: (_isSending || _isRateLimited) ? null : _sendPoke,
-                    child: AnimatedContainer(
-                      duration: const Duration(milliseconds: 200),
-                      width: 180,
-                      height: 180,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: (_isSending || _isRateLimited)
-                            ? AppTheme.textTertiary
-                            : AppTheme.primaryBlack,
-                        boxShadow: [
-                          BoxShadow(
-                            color: BrandLoader().colors.textPrimary.withAlpha((0.15 * 255).round()),
-                            blurRadius: 16,
-                            offset: const Offset(0, 8),
-                          ),
-                        ],
+              // Send button
+              SizedBox(
+                width: double.infinity,
+                child: GestureDetector(
+                  onTap: (_isSending || _isRateLimited) ? null : _sendPoke,
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    decoration: BoxDecoration(
+                      color: (_isSending || _isRateLimited)
+                          ? AppTheme.textTertiary
+                          : AppTheme.primaryBlack,
+                      border: Border.all(
+                        color: AppTheme.primaryBlack,
+                        width: 1,
                       ),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          if (_isSending)
-                            SizedBox(
-                              width: 40,
-                              height: 40,
+                    ),
+                    child: Center(
+                      child: _isSending
+                          ? SizedBox(
+                              width: 20,
+                              height: 20,
                               child: CircularProgressIndicator(
-                                color: BrandLoader().colors.textOnPrimary,
-                                strokeWidth: 3,
+                                color: AppTheme.primaryWhite,
+                                strokeWidth: 2,
                               ),
                             )
-                          else if (_isRateLimited)
-                            Text(
-                              '${_remainingSeconds}s',
-                              style: TextStyle(
-                                fontSize: 42,
-                                fontWeight: FontWeight.w700,
-                                color: BrandLoader().colors.textOnPrimary,
+                          : Text(
+                              _isRateLimited
+                                  ? 'WAIT ${_remainingSeconds}S'
+                                  : 'SEND POKE',
+                              style: AppTheme.headlineFont.copyWith(
+                                fontSize: 13,
+                                fontWeight: FontWeight.w400,
+                                letterSpacing: 2,
+                                color: AppTheme.primaryWhite,
                               ),
-                            )
-                          else
-                            Text(
-                              _selectedEmoji,
-                              style: const TextStyle(fontSize: 70),
                             ),
-                          const SizedBox(height: 8),
-                          Text(
-                            _isSending
-                                ? 'Sending...'
-                                : _isRateLimited
-                                    ? 'Wait...'
-                                    : 'Poke',
-                            style: AppTheme.bodyFont.copyWith(
-                              fontSize: 22,
-                              fontWeight: FontWeight.w600,
-                              color: BrandLoader().colors.textOnPrimary,
-                            ),
-                          ),
-                        ],
-                      ),
                     ),
                   ),
-                  const SizedBox(height: 30),
-
-                  // Description
-                  Text(
-                    'Send an instant "thinking of you" ❤️',
-                    style: AppTheme.bodyFont.copyWith(
-                      fontSize: 16,
-                      color: AppTheme.textSecondary,
-                      fontWeight: FontWeight.w500,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(height: 8),
-
-                  // LP info
-                  Text(
-                    'Mutual pokes earn +5 LP',
-                    style: AppTheme.bodyFont.copyWith(
-                      fontSize: 12,
-                      color: AppTheme.textSecondary,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(height: 20),
-
-                  // Quick emoji selector
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      _buildEmojiOption('💫'),
-                      const SizedBox(width: 12),
-                      _buildEmojiOption('❤️'),
-                      const SizedBox(width: 12),
-                      _buildEmojiOption('👋'),
-                      const SizedBox(width: 12),
-                      _buildEmojiOption('🫶'),
-                    ],
-                  ),
-                  const SizedBox(height: 20),
-
-                  // Haptic indicator
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Text(
-                        '📳',
-                        style: TextStyle(fontSize: 16),
-                      ),
-                      const SizedBox(width: 6),
-                      Text(
-                        'Tap for vibration + animation',
-                        style: AppTheme.bodyFont.copyWith(
-                          fontSize: 13,
-                          color: AppTheme.textTertiary,
-                        ),
-                      ),
-                    ],
-                  ),
-
-                  // Sparkles decoration (bottom)
-                  const SizedBox(height: 20),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      _buildSparkle(),
-                      _buildSparkle(),
-                    ],
-                  ),
-                ],
+                ),
               ),
-            ),
-            const SizedBox(height: 30),
-          ],
+              const SizedBox(height: 20),
+
+              // Hint text
+              Text(
+                'Mutual pokes earn +5 Love Points',
+                style: AppTheme.bodyFont.copyWith(
+                  fontSize: 11,
+                  color: AppTheme.textTertiary,
+                  fontStyle: FontStyle.italic,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -369,16 +245,15 @@ class _PokeBottomSheetState extends State<PokeBottomSheet>
         setState(() => _selectedEmoji = emoji);
       },
       child: AnimatedContainer(
-        duration: const Duration(milliseconds: 200),
-        width: 54,
-        height: 54,
+        duration: const Duration(milliseconds: 150),
+        width: 56,
+        height: 56,
         decoration: BoxDecoration(
-          color: isSelected ? AppTheme.primaryWhite : AppTheme.backgroundGray,
+          color: isSelected ? AppTheme.primaryBlack : AppTheme.primaryWhite,
           border: Border.all(
-            color: isSelected ? AppTheme.primaryBlack : AppTheme.borderLight,
-            width: 2,
+            color: AppTheme.primaryBlack,
+            width: 1,
           ),
-          borderRadius: BorderRadius.circular(14),
         ),
         child: Center(
           child: Text(
@@ -387,30 +262,6 @@ class _PokeBottomSheetState extends State<PokeBottomSheet>
           ),
         ),
       ),
-    );
-  }
-
-  Widget _buildSparkle() {
-    return TweenAnimationBuilder<double>(
-      tween: Tween(begin: 0.3, end: 1.0),
-      duration: const Duration(milliseconds: 1500),
-      builder: (context, value, child) {
-        return Opacity(
-          opacity: value,
-          child: Transform.scale(
-            scale: 0.8 + (value * 0.4),
-            child: const Text(
-              '✨',
-              style: TextStyle(fontSize: 24),
-            ),
-          ),
-        );
-      },
-      onEnd: () {
-        if (mounted) {
-          setState(() {}); // Restart animation
-        }
-      },
     );
   }
 }

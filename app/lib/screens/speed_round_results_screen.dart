@@ -5,6 +5,8 @@ import '../models/quiz_question.dart';
 import '../services/quiz_service.dart';
 import '../services/storage_service.dart';
 import '../services/love_point_service.dart';
+import '../services/haptic_service.dart';
+import '../animations/animation_config.dart';
 
 /// Results screen for Speed Round with streak bonus breakdown
 class SpeedRoundResultsScreen extends StatefulWidget {
@@ -21,7 +23,7 @@ class SpeedRoundResultsScreen extends StatefulWidget {
   State<SpeedRoundResultsScreen> createState() => _SpeedRoundResultsScreenState();
 }
 
-class _SpeedRoundResultsScreenState extends State<SpeedRoundResultsScreen> with SingleTickerProviderStateMixin {
+class _SpeedRoundResultsScreenState extends State<SpeedRoundResultsScreen> with TickerProviderStateMixin {
   final QuizService _quizService = QuizService();
   final StorageService _storage = StorageService();
 
@@ -29,6 +31,11 @@ class _SpeedRoundResultsScreenState extends State<SpeedRoundResultsScreen> with 
   late AnimationController _animationController;
   late Animation<double> _scaleAnimation;
   late List<QuizQuestion> _questions;
+
+  // LP reward card animation
+  late AnimationController _rewardCardController;
+  late Animation<double> _rewardFadeAnimation;
+  late Animation<double> _rewardScaleAnimation;
 
   bool _bothAnswered = false;
   int _correctCount = 0;
@@ -51,15 +58,40 @@ class _SpeedRoundResultsScreenState extends State<SpeedRoundResultsScreen> with 
       curve: Curves.elasticOut,
     );
 
+    // Initialize reward card animation
+    _rewardCardController = AnimationController(
+      vsync: this,
+      duration: AnimationConfig.normal,
+    );
+    _rewardFadeAnimation = CurvedAnimation(
+      parent: _rewardCardController,
+      curve: AnimationConfig.fadeIn,
+    );
+    _rewardScaleAnimation = Tween<double>(begin: 0.95, end: 1.0).animate(
+      CurvedAnimation(
+        parent: _rewardCardController,
+        curve: AnimationConfig.scaleIn,
+      ),
+    );
+
     _questions = _quizService.getSessionQuestions(widget.session);
     _calculateResults();
     _animationController.forward();
+
+    // Start reward card animation with stagger delay
+    Future.delayed(AnimationConfig.staggerDelay, () {
+      if (mounted) {
+        _rewardCardController.forward();
+        HapticService().trigger(HapticType.success);
+      }
+    });
   }
 
   @override
   void dispose() {
     _confettiController.dispose();
     _animationController.dispose();
+    _rewardCardController.dispose();
     super.dispose();
   }
 
@@ -335,45 +367,56 @@ class _SpeedRoundResultsScreenState extends State<SpeedRoundResultsScreen> with 
 
                 const SizedBox(height: 16),
 
-                // LP Earned Card
-                Card(
-                  elevation: 2,
-                  color: Colors.purple.shade50,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(20.0),
-                    child: Column(
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(
-                              Icons.favorite,
-                              color: Colors.purple.shade400,
-                              size: 32,
+                // LP Earned Card with animation
+                AnimatedBuilder(
+                  animation: _rewardCardController,
+                  builder: (context, child) {
+                    return Transform.scale(
+                      scale: _rewardScaleAnimation.value,
+                      child: Opacity(
+                        opacity: _rewardFadeAnimation.value,
+                        child: Card(
+                          elevation: 2,
+                          color: Colors.purple.shade50,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(16),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(20.0),
+                            child: Column(
+                              children: [
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Icon(
+                                      Icons.favorite,
+                                      color: Colors.purple.shade400,
+                                      size: 32,
+                                    ),
+                                    const SizedBox(width: 12),
+                                    Text(
+                                      '+$_totalLp LP',
+                                      style: theme.textTheme.headlineMedium?.copyWith(
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.purple.shade700,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(height: 8),
+                                Text(
+                                  'Base: $_baseLp LP${_totalStreakBonus > 0 ? " + Streaks: $_totalStreakBonus LP" : ""}',
+                                  style: theme.textTheme.bodyMedium?.copyWith(
+                                    color: Colors.grey.shade700,
+                                  ),
+                                ),
+                              ],
                             ),
-                            const SizedBox(width: 12),
-                            Text(
-                              '+$_totalLp LP',
-                              style: theme.textTheme.headlineMedium?.copyWith(
-                                fontWeight: FontWeight.bold,
-                                color: Colors.purple.shade700,
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 8),
-                        Text(
-                          'Base: $_baseLp LP${_totalStreakBonus > 0 ? " + Streaks: $_totalStreakBonus LP" : ""}',
-                          style: theme.textTheme.bodyMedium?.copyWith(
-                            color: Colors.grey.shade700,
                           ),
                         ),
-                      ],
-                    ),
-                  ),
+                      ),
+                    );
+                  },
                 ),
 
                 const SizedBox(height: 32),

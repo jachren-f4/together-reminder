@@ -275,6 +275,27 @@ class AuthService {
     return userId;
   }
 
+  /// Get current user's display name from Supabase metadata
+  ///
+  /// Returns null if user is not authenticated or has no name set
+  Future<String?> getDisplayName() async {
+    try {
+      if (_supabase == null) return null;
+
+      final user = _supabase!.auth.currentUser;
+      if (user == null) return null;
+
+      final metadata = user.userMetadata;
+      if (metadata == null) return null;
+
+      final fullName = metadata['full_name'] as String?;
+      return (fullName != null && fullName.isNotEmpty) ? fullName : null;
+    } catch (e) {
+      debugPrint('Error getting display name: $e');
+      return null;
+    }
+  }
+
   /// Update user's display name in Supabase metadata
   ///
   /// This syncs the local name to Supabase so other users can see it

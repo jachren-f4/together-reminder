@@ -1,0 +1,46 @@
+{
+  "author": "Crossword Maker GPT",
+  "title": "Adult Intimacy Puzzle #9",
+  "size": {
+    "rows": 9,
+    "cols": 7
+  },
+  "clues": {
+    "1": { "type": "emoji", "content": "👰", "arrow": "down", "target_index": 9 },
+    "2": { "type": "emoji", "content": "💕", "arrow": "down", "target_index": 11 },
+    "3": { "type": "text", "content": "Take a seat", "arrow": "down", "target_index": 15 },
+    "4": { "type": "text", "content": "As ___", "arrow": "down", "target_index": 20 },
+    "5": { "type": "text", "content": "Q_OTE", "arrow": "across", "target_index": 20 },
+    "6": { "type": "text", "content": "After R", "arrow": "across", "target_index": 27 },
+    "7": { "type": "emoji", "content": "🍵", "arrow": "across", "target_index": 29 },
+    "8": { "type": "text", "content": "Before H", "arrow": "down", "target_index": 40 },
+    "9": { "type": "emoji", "content": "🧘", "arrow": "across", "target_index": 38 },
+    "10": { "type": "text", "content": "After K", "arrow": "down", "target_index": 51 },
+    "11": { "type": "text", "content": "Mix together", "arrow": "across", "target_index": 50 },
+    "12": { "type": "text", "content": "Hide and ___", "arrow": "across", "target_index": 59 }
+  },
+  "date": "2025-11-27",
+  "grid": [
+    ".", ".", ".", ".", ".", ".", ".",
+    ".", ".", "W", ".", "S", ".", ".",
+    ".", "S", "I", ".", "O", ".", "U",
+    ".", "I", "F", ".", ".", ".", "S",
+    ".", "T", "E", "A", ".", ".", "U",
+    ".", ".", ".", "Y", "O", "G", "A",
+    ".", ".", ".", ".", ".", ".", "L",
+    ".", "B", "L", "E", "N", "D", ".",
+    ".", ".", ".", "S", "E", "E", "K"
+  ],
+  "gridnums": [
+    0, 0, 1, 0, 2, 0, 0,
+    0, 3, 0, 0, 0, 0, 4,
+    0, 0, 0, 0, 0, 5, 0,
+    0, 0, 0, 0, 0, 6, 0,
+    7, 0, 0, 0, 0, 8, 0,
+    0, 0, 9, 0, 0, 0, 0,
+    0, 0, 10, 0, 0, 0, 0,
+    11, 0, 0, 0, 0, 0, 0,
+    0, 0, 12, 0, 0, 0, 0
+  ],
+  "puzzleId": "puzzle_009"
+}

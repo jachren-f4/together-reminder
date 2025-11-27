@@ -1,0 +1,24 @@
+{
+  "puzzleId": "ws_018",
+  "title": "Passionate XVIII",
+  "theme": "passion",
+  "size": {
+    "rows": 10,
+    "cols": 10
+  },
+  "grid": "OENIGAMIEVDHCTIWEBHHLOKLCWXEEEAPUYIORNARETIXTNUCTOYCTHSDSHLDEIRRSEHALAFRAEARWNCGHTIRICOTYYSIVFKFTWCZ",
+  "words": {
+    "WONDER": "25,D",
+    "IMAGINE": "7,L",
+    "ATTRACT": "30,DR",
+    "BEWITCH": "17,L",
+    "RUSH": "36,D",
+    "FIRE": "93,UL",
+    "ENCHANT": "27,D",
+    "WORSHIP": "97,UL",
+    "FIERCE": "95,UL",
+    "STARS": "90,UR",
+    "HEAT": "18,D",
+    "ADORE": "69,U"
+  }
+}

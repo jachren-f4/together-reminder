@@ -70,6 +70,7 @@ dependencies:
   lottie: ^3.1.3
   audioplayers: ^6.1.0
   confetti: ^0.7.0
+  video_player: ^2.9.2
 
 dev_dependencies:
   flutter_test:
@@ -99,19 +100,71 @@ flutter:
 
   # Assets - Brand-specific and shared resources
   assets:
-    # Brand-specific content (TogetherRemind)
+    # Brand-specific content (TogetherRemind) - Legacy flat files
     - assets/brands/togetherremind/data/
+    - assets/brands/togetherremind/data/_legacy/
+    # Brand-specific content (TogetherRemind) - Branch content
+    - assets/brands/togetherremind/data/classic-quiz/
+    - assets/brands/togetherremind/data/classic-quiz/lighthearted/
+    - assets/brands/togetherremind/data/classic-quiz/deeper/
+    - assets/brands/togetherremind/data/classic-quiz/spicy/
+    - assets/brands/togetherremind/data/affirmation/
+    - assets/brands/togetherremind/data/affirmation/emotional/
+    - assets/brands/togetherremind/data/affirmation/practical/
+    - assets/brands/togetherremind/data/affirmation/spiritual/
+    - assets/brands/togetherremind/data/you-or-me/
+    - assets/brands/togetherremind/data/you-or-me/playful/
+    - assets/brands/togetherremind/data/you-or-me/reflective/
+    - assets/brands/togetherremind/data/you-or-me/intimate/
+    - assets/brands/togetherremind/data/linked/
+    - assets/brands/togetherremind/data/linked/casual/
+    - assets/brands/togetherremind/data/linked/romantic/
+    - assets/brands/togetherremind/data/linked/adult/
+    - assets/brands/togetherremind/data/word-search/
+    - assets/brands/togetherremind/data/word-search/everyday/
+    - assets/brands/togetherremind/data/word-search/passionate/
+    - assets/brands/togetherremind/data/word-search/naughty/
+    # Brand-specific assets (TogetherRemind)
     - assets/brands/togetherremind/animations/
     - assets/brands/togetherremind/images/quests/
     - assets/brands/togetherremind/words/
-    # Brand-specific content (HolyCouples)
+    - assets/brands/togetherremind/videos/
+    # Brand-specific content (HolyCouples) - Legacy flat files
     - assets/brands/holycouples/data/
+    - assets/brands/holycouples/data/_legacy/
+    # Brand-specific content (HolyCouples) - Branch content
+    - assets/brands/holycouples/data/classic-quiz/
+    - assets/brands/holycouples/data/classic-quiz/lighthearted/
+    - assets/brands/holycouples/data/classic-quiz/deeper/
+    - assets/brands/holycouples/data/classic-quiz/spicy/
+    - assets/brands/holycouples/data/affirmation/
+    - assets/brands/holycouples/data/affirmation/emotional/
+    - assets/brands/holycouples/data/affirmation/practical/
+    - assets/brands/holycouples/data/affirmation/spiritual/
+    - assets/brands/holycouples/data/you-or-me/
+    - assets/brands/holycouples/data/you-or-me/playful/
+    - assets/brands/holycouples/data/you-or-me/reflective/
+    - assets/brands/holycouples/data/you-or-me/intimate/
+    - assets/brands/holycouples/data/linked/
+    - assets/brands/holycouples/data/linked/casual/
+    - assets/brands/holycouples/data/linked/romantic/
+    - assets/brands/holycouples/data/linked/adult/
+    - assets/brands/holycouples/data/word-search/
+    - assets/brands/holycouples/data/word-search/everyday/
+    - assets/brands/holycouples/data/word-search/passionate/
+    - assets/brands/holycouples/data/word-search/naughty/
+    # Brand-specific assets (HolyCouples)
     - assets/brands/holycouples/animations/
     - assets/brands/holycouples/images/quests/
     - assets/brands/holycouples/words/
+    - assets/brands/holycouples/videos/
     # Shared assets (same across all brands)
     - assets/shared/gfx/
     - assets/shared/sounds/
+    - assets/shared/sounds/ui/
+    - assets/shared/sounds/celebration/
+    - assets/shared/sounds/feedback/
+    - assets/shared/sounds/games/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

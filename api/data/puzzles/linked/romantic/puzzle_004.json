@@ -1,0 +1,45 @@
+{
+  "author": "Crossword Maker GPT",
+  "title": "Adult Intimacy Puzzle #4",
+  "size": {
+    "rows": 9,
+    "cols": 7
+  },
+  "clues": {
+    "1": { "type": "emoji", "content": "🏠", "arrow": "down", "target_index": 8 },
+    "2": { "type": "emoji", "content": "💒", "arrow": "down", "target_index": 11 },
+    "3": { "type": "text", "content": "___ spirits", "arrow": "down", "target_index": 13 },
+    "4": { "type": "text", "content": "Before S", "arrow": "across", "target_index": 13 },
+    "5": { "type": "text", "content": "Before Q", "arrow": "down", "target_index": 23 },
+    "6": { "type": "text", "content": "FLO_T", "arrow": "down", "target_index": 24 },
+    "7": { "type": "text", "content": "Lover's quarrel", "arrow": "across", "target_index": 22 },
+    "8": { "type": "text", "content": "Before J", "arrow": "across", "target_index": 27 },
+    "9": { "type": "emoji", "content": "💯", "arrow": "across", "target_index": 38 },
+    "10": { "type": "emoji", "content": "✨", "arrow": "across", "target_index": 50 },
+    "11": { "type": "text", "content": "By your ___", "arrow": "across", "target_index": 58 }
+  },
+  "date": "2025-11-27",
+  "grid": [
+    ".", ".", ".", ".", ".", ".", ".",
+    ".", "V", ".", ".", "A", ".", "R",
+    ".", "I", ".", ".", "L", ".", "A",
+    ".", "S", "P", "A", "T", ".", "I",
+    ".", "I", ".", ".", "A", ".", "S",
+    ".", "T", ".", "T", "R", "U", "E",
+    ".", ".", ".", ".", ".", ".", ".",
+    ".", "S", "A", "T", "I", "N", ".",
+    ".", ".", "S", "I", "D", "E", "."
+  ],
+  "gridnums": [
+    0, 1, 0, 0, 2, 0, 3,
+    0, 0, 0, 0, 0, 4, 0,
+    0, 0, 5, 6, 0, 0, 0,
+    7, 0, 0, 0, 0, 8, 0,
+    0, 0, 0, 0, 0, 0, 0,
+    0, 0, 9, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0,
+    10, 0, 0, 0, 0, 0, 0,
+    0, 11, 0, 0, 0, 0, 0
+  ],
+  "puzzleId": "puzzle_004"
+}

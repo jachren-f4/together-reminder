@@ -1,0 +1,24 @@
+{
+  "puzzleId": "ws_012",
+  "title": "Passionate XII",
+  "theme": "passion",
+  "size": {
+    "rows": 10,
+    "cols": 10
+  },
+  "grid": "AOEACNIKSPEDSVOAANAHDVEREZZVLAAGBSWNEQRMWGETILINEWNNGNVRGNOODIPETLEYGNNETIFLOATDIBMNLQEWMEMNIGHTYSVR",
+  "words": {
+    "FLOAT": "74,R",
+    "WONDER": "49,D",
+    "GENTLE": "31,DR",
+    "DESIRE": "11,DR",
+    "VELVET": "27,DL",
+    "DAWN": "20,D",
+    "BEING": "81,U",
+    "MIND": "90,U",
+    "EVENING": "2,DR",
+    "SWAY": "97,U",
+    "SKIN": "8,L",
+    "NIGHT": "91,R"
+  }
+}

@@ -1,0 +1,184 @@
+{
+  "questions": [
+    {
+      "id": "yom_q031",
+      "prompt": "Who's more likely to...",
+      "content": "Start a spontaneous adventure",
+      "category": "scenarios"
+    },
+    {
+      "id": "yom_q032",
+      "prompt": "Who's more likely to...",
+      "content": "Forget an anniversary",
+      "category": "scenarios"
+    },
+    {
+      "id": "yom_q033",
+      "prompt": "Who's more likely to...",
+      "content": "Fall asleep during a movie",
+      "category": "scenarios"
+    },
+    {
+      "id": "yom_q034",
+      "prompt": "Who's more likely to...",
+      "content": "Try a new hobby",
+      "category": "scenarios"
+    },
+    {
+      "id": "yom_q035",
+      "prompt": "Who's more likely to...",
+      "content": "Get lost while driving",
+      "category": "scenarios"
+    },
+    {
+      "id": "yom_q036",
+      "prompt": "Who's more likely to...",
+      "content": "Cry during a sad movie",
+      "category": "scenarios"
+    },
+    {
+      "id": "yom_q037",
+      "prompt": "Who's more likely to...",
+      "content": "Spend hours on their phone",
+      "category": "scenarios"
+    },
+    {
+      "id": "yom_q038",
+      "prompt": "Who's more likely to...",
+      "content": "Make an impulse purchase",
+      "category": "scenarios"
+    },
+    {
+      "id": "yom_q039",
+      "prompt": "Who's more likely to...",
+      "content": "Sing in the shower",
+      "category": "scenarios"
+    },
+    {
+      "id": "yom_q040",
+      "prompt": "Who's more likely to...",
+      "content": "Check their horoscope",
+      "category": "scenarios"
+    },
+    {
+      "id": "yom_q041",
+      "prompt": "Who's more likely to...",
+      "content": "Stay in on a Friday night",
+      "category": "scenarios"
+    },
+    {
+      "id": "yom_q042",
+      "prompt": "Who's more likely to...",
+      "content": "Try exotic food",
+      "category": "scenarios"
+    },
+    {
+      "id": "yom_q043",
+      "prompt": "Who's more likely to...",
+      "content": "Win an argument",
+      "category": "scenarios"
+    },
+    {
+      "id": "yom_q044",
+      "prompt": "Who's more likely to...",
+      "content": "Remember song lyrics",
+      "category": "scenarios"
+    },
+    {
+      "id": "yom_q045",
+      "prompt": "Who's more likely to...",
+      "content": "Take a hundred photos on vacation",
+      "category": "scenarios"
+    },
+    {
+      "id": "yom_q046",
+      "prompt": "Which of you...",
+      "content": "Is the better dancer",
+      "category": "comparative"
+    },
+    {
+      "id": "yom_q047",
+      "prompt": "Which of you...",
+      "content": "Is the better cook",
+      "category": "comparative"
+    },
+    {
+      "id": "yom_q048",
+      "prompt": "Which of you...",
+      "content": "Is funnier",
+      "category": "comparative"
+    },
+    {
+      "id": "yom_q049",
+      "prompt": "Which of you...",
+      "content": "Is the better listener",
+      "category": "comparative"
+    },
+    {
+      "id": "yom_q050",
+      "prompt": "Which of you...",
+      "content": "Is more fashion-forward",
+      "category": "comparative"
+    },
+    {
+      "id": "yom_q051",
+      "prompt": "Which of you...",
+      "content": "Is the early bird",
+      "category": "comparative"
+    },
+    {
+      "id": "yom_q052",
+      "prompt": "Which of you...",
+      "content": "Is the night owl",
+      "category": "comparative"
+    },
+    {
+      "id": "yom_q053",
+      "prompt": "Which of you...",
+      "content": "Is better with technology",
+      "category": "comparative"
+    },
+    {
+      "id": "yom_q054",
+      "prompt": "Which of you...",
+      "content": "Is more athletic",
+      "category": "comparative"
+    },
+    {
+      "id": "yom_q055",
+      "prompt": "Which of you...",
+      "content": "Gives better advice",
+      "category": "comparative"
+    },
+    {
+      "id": "yom_q056",
+      "prompt": "Which of you...",
+      "content": "Is the better driver",
+      "category": "comparative"
+    },
+    {
+      "id": "yom_q057",
+      "prompt": "Which of you...",
+      "content": "Has better taste in music",
+      "category": "comparative"
+    },
+    {
+      "id": "yom_q058",
+      "prompt": "Which of you...",
+      "content": "Is more artistic",
+      "category": "comparative"
+    },
+    {
+      "id": "yom_q059",
+      "prompt": "Which of you...",
+      "content": "Is better at keeping secrets",
+      "category": "comparative"
+    },
+    {
+      "id": "yom_q060",
+      "prompt": "Which of you...",
+      "content": "Is the better gift-giver",
+      "category": "comparative"
+    }
+  ]
+}

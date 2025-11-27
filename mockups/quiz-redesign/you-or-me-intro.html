@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>You or Me - Intro</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            background: #fafafa;
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+        }
+
+        .container {
+            max-width: 420px;
+            width: 100%;
+            background: #fff;
+            border: 2px solid #000;
+            box-shadow: 8px 8px 0 rgba(0, 0, 0, 0.1);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header */
+        .header {
+            border-bottom: 2px solid #000;
+            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .back-btn {
+            width: 40px;
+            height: 40px;
+            border: 2px solid #000;
+            background: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 20px;
+            transition: all 0.2s ease;
+        }
+
+        .back-btn:hover {
+            background: #000;
+            color: #fff;
+        }
+
+        .header-title {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: 600;
+        }
+
+        /* Hero Image */
+        .hero-image {
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(135deg, #f5f5f5 0%, #e0e0e0 100%);
+            border-bottom: 2px solid #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .hero-placeholder {
+            font-size: 64px;
+            opacity: 0.3;
+        }
+
+        /* Content */
+        .content {
+            padding: 24px 20px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .badge {
+            display: inline-block;
+            background: #000;
+            color: #fff;
+            padding: 6px 14px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 16px;
+            align-self: flex-start;
+        }
+
+        .quiz-title {
+            font-size: 32px;
+            font-weight: 400;
+            line-height: 1.2;
+            margin-bottom: 12px;
+            letter-spacing: -0.5px;
+        }
+
+        .quiz-description {
+            font-size: 16px;
+            color: #666;
+            font-style: italic;
+            line-height: 1.6;
+            margin-bottom: 32px;
+        }
+
+        /* Stats Card */
+        .stats-card {
+            border: 2px solid #000;
+            padding: 20px;
+            margin-bottom: 32px;
+        }
+
+        .stats-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .stats-row:last-child {
+            border-bottom: none;
+        }
+
+        .stats-label {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #666;
+        }
+
+        .stats-value {
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        /* How it Works */
+        .section-title {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 16px;
+            font-weight: 600;
+        }
+
+        /* Example Card */
+        .example-card {
+            border: 2px solid #000;
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.08);
+        }
+
+        .example-label {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #666;
+            margin-bottom: 12px;
+        }
+
+        .example-question {
+            font-size: 18px;
+            font-style: italic;
+            margin-bottom: 20px;
+            line-height: 1.4;
+        }
+
+        .example-buttons {
+            display: flex;
+            gap: 12px;
+        }
+
+        .example-btn {
+            flex: 1;
+            padding: 14px;
+            border: 2px solid #000;
+            background: #fff;
+            text-align: center;
+            font-family: 'Georgia', serif;
+            font-size: 14px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .example-btn:hover,
+        .example-btn.selected {
+            background: #000;
+            color: #fff;
+        }
+
+        /* Instructions */
+        .instructions {
+            margin-bottom: 24px;
+        }
+
+        .instruction {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 12px;
+            align-items: flex-start;
+        }
+
+        .instruction-icon {
+            width: 28px;
+            height: 28px;
+            border: 2px solid #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            flex-shrink: 0;
+        }
+
+        .instruction-text {
+            font-size: 14px;
+            color: #333;
+            line-height: 1.5;
+            padding-top: 2px;
+        }
+
+        /* Spacer */
+        .spacer {
+            flex: 1;
+        }
+
+        /* Footer */
+        .footer {
+            padding: 20px;
+            border-top: 2px solid #000;
+        }
+
+        .primary-btn {
+            width: 100%;
+            padding: 18px 24px;
+            background: #000;
+            color: #fff;
+            border: 2px solid #000;
+            font-family: 'Georgia', serif;
+            font-size: 16px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .primary-btn:hover {
+            background: #fff;
+            color: #000;
+        }
+
+        .reward-hint {
+            text-align: center;
+            margin-top: 12px;
+            font-size: 13px;
+            color: #666;
+        }
+
+        .reward-hint strong {
+            color: #000;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <button class="back-btn">&larr;</button>
+            <span class="header-title">Daily Quest</span>
+        </div>
+
+        <div class="hero-image">
+            <span class="hero-placeholder">&#129309;</span>
+        </div>
+
+        <div class="content">
+            <span class="badge">You or Me</span>
+
+            <h1 class="quiz-title">Who Does It Best?</h1>
+
+            <p class="quiz-description">
+                For each trait or behavior, decide who it describes better—you or your partner. See how well you know each other!
+            </p>
+
+            <div class="stats-card">
+                <div class="stats-row">
+                    <span class="stats-label">Questions</span>
+                    <span class="stats-value">8</span>
+                </div>
+                <div class="stats-row">
+                    <span class="stats-label">Time</span>
+                    <span class="stats-value">~3 minutes</span>
+                </div>
+                <div class="stats-row">
+                    <span class="stats-label">Reward</span>
+                    <span class="stats-value">+40 LP</span>
+                </div>
+            </div>
+
+            <div class="section-title">Example</div>
+
+            <div class="example-card">
+                <div class="example-label">Who is more likely to...</div>
+                <p class="example-question">"Fall asleep during a movie"</p>
+                <div class="example-buttons">
+                    <button class="example-btn">You</button>
+                    <button class="example-btn selected">Partner</button>
+                </div>
+            </div>
+
+            <div class="instructions">
+                <div class="instruction">
+                    <div class="instruction-icon">1</div>
+                    <div class="instruction-text">Read each question and choose who it fits better</div>
+                </div>
+                <div class="instruction">
+                    <div class="instruction-icon">2</div>
+                    <div class="instruction-text">Your partner answers the same questions separately</div>
+                </div>
+                <div class="instruction">
+                    <div class="instruction-icon">3</div>
+                    <div class="instruction-text">Compare answers and see how well you match!</div>
+                </div>
+            </div>
+
+            <div class="spacer"></div>
+        </div>
+
+        <div class="footer">
+            <button class="primary-btn">Start Game</button>
+            <div class="reward-hint">Complete to earn <strong>+40 Love Points</strong></div>
+        </div>
+    </div>
+
+    <script>
+        document.querySelectorAll('.example-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.example-btn').forEach(b => b.classList.remove('selected'));
+                btn.classList.add('selected');
+            });
+        });
+    </script>
+</body>
+</html>

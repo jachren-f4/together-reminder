@@ -75,15 +75,33 @@ class WordSearchService {
     }
   }
 
+  /// Get local date in YYYY-MM-DD format for cooldown check
+  String _getLocalDate() {
+    final now = DateTime.now();
+    return '${now.year}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}';
+  }
+
   /// Get or create active match from API
   ///
   /// This is the main entry point. Server handles:
   /// - Creating match if none exists
   /// - Returning existing active match
   /// - All game state calculation (turns, scores, etc.)
+  ///
+  /// Throws [CooldownActiveException] if puzzle cooldown is active.
   Future<WordSearchGameState> getOrCreateMatch() async {
     try {
-      final response = await _apiRequest('POST', '/api/sync/word-search');
+      final response = await _apiRequest(
+        'POST',
+        '/api/sync/word-search',
+        body: {'localDate': _getLocalDate()},
+      );
+
+      // Check for cooldown response
+      if (response['code'] == 'COOLDOWN_ACTIVE') {
+        throw CooldownActiveException(response['message'] ?? 'Next puzzle available tomorrow');
+      }
+
       final currentUserId = await _authService.getUserId();
 
       final gameState = WordSearchGameState.fromJson(response, currentUserId ?? '');
@@ -242,6 +260,15 @@ class WordSearchService {
 class NotYourTurnException implements Exception {
   final String message;
   NotYourTurnException(this.message);
+
+  @override
+  String toString() => message;
+}
+
+/// Exception thrown when puzzle cooldown is active (next puzzle tomorrow)
+class CooldownActiveException implements Exception {
+  final String message;
+  CooldownActiveException(this.message);
 
   @override
   String toString() => message;

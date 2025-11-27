@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import '../utils/logger.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:confetti/confetti.dart';
+import '../utils/logger.dart';
 import '../models/quiz_session.dart';
 import '../models/quiz_question.dart';
 import '../models/daily_quest.dart';
@@ -10,6 +11,10 @@ import '../services/daily_quest_service.dart';
 import '../services/quest_sync_service.dart';
 import '../services/love_point_service.dart';
 import '../services/quest_utilities.dart';
+import '../services/haptic_service.dart';
+import '../services/celebration_service.dart';
+import '../animations/animation_config.dart';
+import '../widgets/editorial/editorial.dart';
 
 class QuizResultsScreen extends StatefulWidget {
   final QuizSession session;
@@ -20,12 +25,19 @@ class QuizResultsScreen extends StatefulWidget {
   State<QuizResultsScreen> createState() => _QuizResultsScreenState();
 }
 
-class _QuizResultsScreenState extends State<QuizResultsScreen> {
+class _QuizResultsScreenState extends State<QuizResultsScreen>
+    with TickerProviderStateMixin {
   final QuizService _quizService = QuizService();
   final StorageService _storage = StorageService();
   late ConfettiController _confettiController;
   late List<QuizQuestion> _questions;
-  bool _showDetails = false;
+
+  // Animation controllers for Phase 2 visual effects
+  late AnimationController _scoreRingController;
+  late AnimationController _rewardCardController;
+  late Animation<double> _scoreRingAnimation;
+  late Animation<double> _rewardFadeAnimation;
+  late Animation<double> _rewardScaleAnimation;
 
   @override
   void initState() {
@@ -33,18 +45,61 @@ class _QuizResultsScreenState extends State<QuizResultsScreen> {
     _confettiController = ConfettiController(duration: const Duration(seconds: 3));
     _questions = _quizService.getSessionQuestions(widget.session);
 
-    // Show confetti for high matches
+    // Initialize score ring animation (arc draw effect)
+    _scoreRingController = AnimationController(
+      vsync: this,
+      duration: AnimationConfig.celebrationIn,
+    );
+    _scoreRingAnimation = CurvedAnimation(
+      parent: _scoreRingController,
+      curve: AnimationConfig.scaleIn,
+    );
+
+    // Initialize reward card animation (staggered reveal)
+    _rewardCardController = AnimationController(
+      vsync: this,
+      duration: AnimationConfig.normal,
+    );
+    _rewardFadeAnimation = CurvedAnimation(
+      parent: _rewardCardController,
+      curve: AnimationConfig.fadeIn,
+    );
+    _rewardScaleAnimation = Tween<double>(
+      begin: 0.95,
+      end: 1.0,
+    ).animate(CurvedAnimation(
+      parent: _rewardCardController,
+      curve: AnimationConfig.scaleIn,
+    ));
+
+    // Trigger celebration for high scores (80%+) with confetti, sound, and haptic
     if ((widget.session.matchPercentage ?? 0) >= 80) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        _confettiController.play();
+        final celebrationType = (widget.session.matchPercentage ?? 0) == 100
+            ? CelebrationType.perfectScore
+            : CelebrationType.questComplete;
+        CelebrationService().celebrate(
+          celebrationType,
+          confettiController: _confettiController,
+        );
       });
     }
 
-    // Check and complete associated daily quest
+    // Start animations with staggered timing
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _scoreRingController.forward();
+      // Delay reward card animation for staggered effect
+      Future.delayed(AnimationConfig.staggerDelay, () {
+        if (mounted) {
+          _rewardCardController.forward();
+          HapticService().trigger(HapticType.success);
+        }
+      });
+    });
+
     _checkQuestCompletion();
   }
 
-  /// Check if this quiz session is linked to a daily quest and mark it as completed
   Future<void> _checkQuestCompletion() async {
     try {
       final user = _storage.getUser();
@@ -52,48 +107,26 @@ class _QuizResultsScreenState extends State<QuizResultsScreen> {
 
       if (user == null || partner == null) return;
 
-      // Check if there's a daily quest for this quiz session
       final questService = DailyQuestService(storage: _storage);
       final todayQuests = questService.getTodayQuests();
 
-      // Removed verbose logging
-      // print('🔍 Checking quest completion for session: ${widget.session.id}');
-      // print('🔍 Found ${todayQuests.length} today quests');
-      // for (final q in todayQuests) {
-      //   print('🔍 Quest ${q.id}: type=${q.type}, contentId=${q.contentId}');
-      // }
-
-      // Find quest with matching contentId (quiz session ID)
       final matchingQuest = todayQuests.where((q) =>
         q.type == QuestType.quiz && q.contentId == widget.session.id
       ).firstOrNull;
 
-      if (matchingQuest == null) {
-        // Removed verbose logging
-        // print('❌ No matching quest found for session ${widget.session.id}');
-        // Not a daily quest quiz - just a regular quiz
+      if (matchingQuest == null) return;
+
+      final userAnswers = widget.session.answers?[user.id];
+      if (userAnswers == null || userAnswers.length < widget.session.questionIds.length) {
         return;
       }
 
-      // Removed verbose logging
-      // print('✅ Found matching quest: ${matchingQuest.id}');
-
-      // Check if current user has completed all questions
-      final userAnswers = widget.session.answers?[user.id];
-      if (userAnswers == null || userAnswers.length < widget.session.questionIds.length) {
-        return; // User hasn't completed the quiz yet
-      }
-
-      // Mark quest as completed for this user
       final bothCompleted = await questService.completeQuestForUser(
         questId: matchingQuest.id,
         userId: user.id,
       );
 
-      // Sync with Firebase
-      final syncService = QuestSyncService(
-        storage: _storage,
-      );
+      final syncService = QuestSyncService(storage: _storage);
 
       await syncService.markQuestCompleted(
         questId: matchingQuest.id,
@@ -102,10 +135,6 @@ class _QuizResultsScreenState extends State<QuizResultsScreen> {
       );
 
       if (bothCompleted) {
-        // Removed verbose logging
-        // print('✅ Daily quest completed by both users! Awarding 30 LP...');
-
-        // Award Love Points to BOTH users via Firebase (real-time sync)
         await LovePointService.awardPointsToBothUsers(
           userId1: user.id,
           userId2: partner.pushToken,
@@ -114,42 +143,24 @@ class _QuizResultsScreenState extends State<QuizResultsScreen> {
           relatedId: matchingQuest.id,
         );
 
-        // Check if all 3 daily quests are completed
         await _checkDailyQuestsCompletion(questService, user.id, partner.pushToken);
-      } else {
-        // Removed verbose logging
-        // print('✅ Quest progress saved - waiting for partner to complete');
       }
     } catch (e) {
       Logger.error('Error checking quest completion', error: e, service: 'quiz');
-      // Don't block results screen on quest errors
     }
   }
 
-  /// Check if all daily quests are completed and advance progression if so
   Future<void> _checkDailyQuestsCompletion(
     DailyQuestService questService,
     String currentUserId,
     String partnerUserId,
   ) async {
     try {
-      // Check if all main daily quests are completed by both users
       if (questService.areAllMainQuestsCompleted()) {
-        // Removed verbose logging
-        // print('🎯 All daily quests completed! Advancing progression...');
-
-        // Get the couple ID using QuestUtilities
         final coupleId = QuestUtilities.generateCoupleId(currentUserId, partnerUserId);
-
-        // Get current progression state
         var progressionState = _storage.getQuizProgressionState(coupleId);
-        if (progressionState == null) {
-          // Removed verbose logging
-          // print('⚠️  No progression state found');
-          return;
-        }
+        if (progressionState == null) return;
 
-        // Advance progression by 3 positions (for the 3 completed quests)
         for (int i = 0; i < 3; i++) {
           progressionState.currentPosition++;
           if (progressionState.currentPosition >= 4) {
@@ -159,23 +170,15 @@ class _QuizResultsScreenState extends State<QuizResultsScreen> {
               progressionState.hasCompletedAllTracks = true;
               progressionState.currentTrack = 2;
               progressionState.currentPosition = 3;
-              break; // Max progression reached
+              break;
             }
           }
         }
 
-        // Save updated progression
         await _storage.updateQuizProgressionState(progressionState);
-        // Removed verbose logging
-        // print('📈 Progression advanced to Track ${progressionState.currentTrack}, Position ${progressionState.currentPosition}');
 
-        // Save to Firebase
-        final syncService = QuestSyncService(
-          storage: _storage,
-        );
+        final syncService = QuestSyncService(storage: _storage);
         await syncService.saveProgressionState(progressionState);
-        // Removed verbose logging
-        // print('✅ Progression state saved to Firebase');
       }
     } catch (e) {
       Logger.error('Error checking daily quests completion', error: e, service: 'quiz');
@@ -185,316 +188,268 @@ class _QuizResultsScreenState extends State<QuizResultsScreen> {
   @override
   void dispose() {
     _confettiController.dispose();
+    _scoreRingController.dispose();
+    _rewardCardController.dispose();
     super.dispose();
   }
 
-  // Check if current user is the subject or predictor
-  bool get _isSubject {
-    final user = _storage.getUser();
-    if (user == null) return false;
-    return widget.session.isUserSubject(user.id);
-  }
-
   String _getMatchMessage(int percentage) {
-    final partner = _storage.getPartner();
-    final partnerName = partner?.name ?? 'Your partner';
-
-    if (_isSubject) {
-      // Subject sees how well partner knows them
-      if (percentage == 100) return '$partnerName knows you perfectly!';
-      if (percentage >= 80) return '$partnerName knows you really well!';
-      if (percentage >= 60) return '$partnerName is learning about you!';
-      if (percentage >= 40) return '$partnerName learned something new!';
-      return '$partnerName discovered new things about you!';
-    } else {
-      // Predictor sees how well they know partner
-      if (percentage == 100) return 'You knew $partnerName perfectly!';
-      if (percentage >= 80) return 'You know $partnerName really well!';
-      if (percentage >= 60) return 'You\'re learning $partnerName well!';
-      if (percentage >= 40) return 'You learned more about $partnerName!';
-      return 'You\'re discovering $partnerName!';
-    }
+    if (percentage == 100) return '"Perfect sync!"';
+    if (percentage >= 80) return '"Great minds think alike!"';
+    if (percentage >= 60) return '"On the same wavelength!"';
+    if (percentage >= 40) return '"Learning more every day!"';
+    return '"Every quiz brings you closer!"';
   }
 
-  String _getMatchDescription(int percentage) {
-    final partner = _storage.getPartner();
-    final partnerName = partner?.name ?? 'your partner';
-
-    if (_isSubject) {
-      // Subject perspective
-      if (percentage == 100) {
-        return '$partnerName predicted all your answers correctly! You earned a Perfect Sync badge 🏆';
-      }
-      if (percentage >= 80) {
-        return '$partnerName really understands you! Amazing connection!';
-      }
-      if (percentage >= 60) {
-        return 'Here\'s what $partnerName learned about you today.';
-      }
-      return '$partnerName is getting to know you better with each quiz!';
-    } else {
-      // Predictor perspective
-      if (percentage == 100) {
-        return 'You predicted all of $partnerName\'s answers! You earned a Perfect Sync badge 🏆';
-      }
-      if (percentage >= 80) {
-        return 'Your prediction accuracy is incredible! You really know $partnerName!';
-      }
-      if (percentage >= 60) {
-        return 'You\'re building a strong understanding of $partnerName!';
-      }
-      return 'Keep learning about $partnerName - every quiz brings you closer!';
-    }
-  }
-
-  Color _getMatchColor(int percentage) {
-    if (percentage >= 80) return Colors.green;
-    if (percentage >= 60) return Colors.blue;
-    if (percentage >= 40) return Colors.orange;
-    return Colors.grey;
+  void _shareResults() {
+    final matchPercentage = widget.session.matchPercentage ?? 0;
+    final lpEarned = widget.session.lpEarned ?? 0;
+    Share.share(
+      'We scored $matchPercentage% on our couple quiz and earned $lpEarned LP! 💕\n\n'
+      'Try TogetherRemind to test how well you know your partner!',
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     final matchPercentage = widget.session.matchPercentage ?? 0;
     final lpEarned = widget.session.lpEarned ?? 0;
-    final user = _storage.getUser();
-    final partner = _storage.getPartner();
     final answers = widget.session.answers ?? {};
     final userIds = answers.keys.toList();
+    final user = _storage.getUser();
+    final partner = _storage.getPartner();
+    final partnerName = partner?.name ?? 'Partner';
+
+    // Calculate stats
+    int matchCount = 0;
+    if (userIds.length >= 2) {
+      for (int i = 0; i < _questions.length; i++) {
+        if (answers[userIds[0]]?[i] == answers[userIds[1]]?[i]) {
+          matchCount++;
+        }
+      }
+    }
+    final differentCount = _questions.length - matchCount;
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Quiz Results'),
-        centerTitle: true,
-        leading: IconButton(
-          icon: const Icon(Icons.close),
-          onPressed: () {
-            // Pop all quiz screens and return to activities
-            Navigator.of(context).popUntil((route) => route.isFirst);
-          },
-        ),
-      ),
+      backgroundColor: EditorialStyles.paper,
       body: Stack(
         children: [
           SafeArea(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.all(24.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  // Match percentage circle
-                  Center(
-                    child: Container(
-                      width: 200,
-                      height: 200,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        gradient: LinearGradient(
-                          colors: [
-                            _getMatchColor(matchPercentage),
-                            _getMatchColor(matchPercentage).withOpacity(0.6),
-                          ],
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                        ),
-                        boxShadow: [
-                          BoxShadow(
-                            color: _getMatchColor(matchPercentage).withOpacity(0.3),
-                            blurRadius: 20,
-                            spreadRadius: 5,
-                          ),
-                        ],
-                      ),
-                      child: Center(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              '$matchPercentage%',
-                              style: const TextStyle(
-                                fontSize: 56,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white,
-                              ),
-                            ),
-                            const Text(
-                              'MATCH',
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w600,
-                                color: Colors.white,
-                                letterSpacing: 2,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
+            child: Column(
+              children: [
+                // Header
+                EditorialHeaderSimple(
+                  title: 'Quiz Complete',
+                  onClose: () => Navigator.of(context).popUntil((route) => route.isFirst),
+                ),
 
-                  const SizedBox(height: 32),
-
-                  // Match message
-                  Text(
-                    _getMatchMessage(matchPercentage),
-                    textAlign: TextAlign.center,
-                    style: theme.textTheme.headlineSmall?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-
-                  const SizedBox(height: 12),
-
-                  Text(
-                    _getMatchDescription(matchPercentage),
-                    textAlign: TextAlign.center,
-                    style: theme.textTheme.bodyLarge?.copyWith(
-                      color: theme.colorScheme.onSurfaceVariant,
-                    ),
-                  ),
-
-                  const SizedBox(height: 32),
-
-                  // LP earned card
-                  Container(
-                    padding: const EdgeInsets.all(20),
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: [
-                          theme.colorScheme.primaryContainer,
-                          theme.colorScheme.secondaryContainer,
-                        ],
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                      ),
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Text('💎', style: TextStyle(fontSize: 32)),
-                        const SizedBox(width: 12),
-                        Text(
-                          '+$lpEarned LP Earned!',
-                          style: theme.textTheme.headlineSmall?.copyWith(
-                            fontWeight: FontWeight.bold,
-                            color: theme.colorScheme.onPrimaryContainer,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-
-                  const SizedBox(height: 24),
-
-                  // Show details button
-                  OutlinedButton.icon(
-                    onPressed: () {
-                      setState(() {
-                        _showDetails = !_showDetails;
-                      });
-                    },
-                    icon: Icon(_showDetails ? Icons.expand_less : Icons.expand_more),
-                    label: Text(_showDetails ? 'Hide Details' : 'Show Answer Details'),
-                    style: OutlinedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(vertical: 12),
-                    ),
-                  ),
-
-                  // Answer details
-                  if (_showDetails && userIds.length >= 2) ...[
-                    const SizedBox(height: 24),
-                    ..._questions.asMap().entries.map((entry) {
-                      final index = entry.key;
-                      final question = entry.value;
-                      final user1Answer = answers[userIds[0]]?[index] ?? 0;
-                      final user2Answer = answers[userIds[1]]?[index] ?? 0;
-                      final isMatch = user1Answer == user2Answer;
-
-                      return Padding(
-                        padding: const EdgeInsets.only(bottom: 16),
-                        child: _buildAnswerCard(
-                          question,
-                          index + 1,
-                          user1Answer,
-                          user2Answer,
-                          isMatch,
-                          theme,
-                        ),
-                      );
-                    }),
-                  ],
-
-                  const SizedBox(height: 24),
-
-                  // Next quiz suggestion
-                  Container(
-                    padding: const EdgeInsets.all(20),
-                    decoration: BoxDecoration(
-                      color: theme.colorScheme.surfaceContainerHighest.withOpacity(0.5),
-                      borderRadius: BorderRadius.circular(16),
-                      border: Border.all(
-                        color: theme.colorScheme.outline.withOpacity(0.2),
-                      ),
-                    ),
+                // Scrollable content
+                Expanded(
+                  child: SingleChildScrollView(
                     child: Column(
                       children: [
-                        Text(
-                          '💡',
-                          style: const TextStyle(fontSize: 32),
-                        ),
-                        const SizedBox(height: 12),
-                        Text(
-                          _isSubject
-                              ? 'Want to test ${partner?.name ?? 'your partner'}? You start the next quiz!'
-                              : 'Want ${partner?.name ?? 'your partner'} to quiz you? Ask them to start the next one!',
-                          textAlign: TextAlign.center,
-                          style: theme.textTheme.bodyLarge?.copyWith(
-                            fontWeight: FontWeight.w600,
+                        // Score hero
+                        _buildScoreHero(matchPercentage),
+
+                        // Content
+                        Padding(
+                          padding: const EdgeInsets.all(20),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              // Stats grid
+                              _buildStatsGrid(matchCount, differentCount, _questions.length),
+                              const SizedBox(height: 32),
+
+                              // Answer breakdown header
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text('ANSWER BREAKDOWN', style: EditorialStyles.labelUppercase),
+                                  Text(
+                                    'Scroll for more',
+                                    style: EditorialStyles.bodySmall.copyWith(
+                                      color: EditorialStyles.inkMuted,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 16),
+
+                              // Answer cards
+                              if (userIds.length >= 2)
+                                ..._questions.asMap().entries.map((entry) {
+                                  final index = entry.key;
+                                  final question = entry.value;
+                                  final myAnswer = user != null && answers.containsKey(user.id)
+                                      ? answers[user.id]![index]
+                                      : answers[userIds[0]]![index];
+                                  final partnerAnswer = user != null && answers.containsKey(user.id)
+                                      ? answers[userIds.firstWhere((id) => id != user.id)]![index]
+                                      : answers[userIds[1]]![index];
+                                  final isMatch = myAnswer == partnerAnswer;
+
+                                  return Padding(
+                                    padding: const EdgeInsets.only(bottom: 12),
+                                    child: _buildAnswerCard(
+                                      question,
+                                      myAnswer,
+                                      partnerAnswer,
+                                      isMatch,
+                                      partnerName,
+                                    ),
+                                  );
+                                }),
+
+                              // Reward card
+                              const SizedBox(height: 12),
+                              _buildRewardCard(lpEarned),
+                            ],
                           ),
                         ),
                       ],
                     ),
                   ),
+                ),
 
-                  const SizedBox(height: 24),
-
-                  // Done button
-                  FilledButton(
-                    onPressed: () {
-                      Navigator.of(context).popUntil((route) => route.isFirst);
-                    },
-                    style: FilledButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(vertical: 16),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                    ),
-                    child: const Text(
-                      'Done',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
+                // Footer
+                Container(
+                  padding: const EdgeInsets.all(20),
+                  decoration: BoxDecoration(
+                    color: EditorialStyles.paper,
+                    border: Border(top: EditorialStyles.border),
                   ),
-                ],
-              ),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: EditorialSecondaryButton(
+                          label: 'Share',
+                          onPressed: _shareResults,
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: EditorialPrimaryButton(
+                          label: 'Done',
+                          onPressed: () => Navigator.of(context).popUntil((route) => route.isFirst),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
             ),
           ),
 
-          // Confetti
-          Align(
-            alignment: Alignment.topCenter,
-            child: ConfettiWidget(
-              confettiController: _confettiController,
-              blastDirectionality: BlastDirectionality.explosive,
-              emissionFrequency: 0.05,
-              numberOfParticles: 20,
-              gravity: 0.3,
-            ),
+          // Confetti with brand colors via CelebrationService
+          CelebrationService().createConfettiWidget(
+            _confettiController,
+            type: (widget.session.matchPercentage ?? 0) == 100
+                ? CelebrationType.perfectScore
+                : CelebrationType.questComplete,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildScoreHero(int matchPercentage) {
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 40, horizontal: 20),
+      decoration: BoxDecoration(
+        color: EditorialStyles.paper,
+        border: Border(bottom: EditorialStyles.border),
+      ),
+      child: Column(
+        children: [
+          Text(
+            'YOUR MATCH SCORE',
+            style: EditorialStyles.labelUppercaseSmall,
+          ),
+          const SizedBox(height: 16),
+
+          // Animated score ring with arc draw effect
+          AnimatedBuilder(
+            animation: _scoreRingAnimation,
+            builder: (context, child) {
+              return SizedBox(
+                width: 160,
+                height: 160,
+                child: CustomPaint(
+                  painter: _ScoreRingPainter(
+                    percentage: (matchPercentage / 100) * _scoreRingAnimation.value,
+                    trackColor: EditorialStyles.inkLight,
+                    progressColor: EditorialStyles.ink,
+                  ),
+                  child: Center(
+                    child: RichText(
+                      text: TextSpan(
+                        children: [
+                          TextSpan(
+                            text: '${(matchPercentage * _scoreRingAnimation.value).round()}',
+                            style: EditorialStyles.scoreLarge,
+                          ),
+                          TextSpan(
+                            text: '%',
+                            style: EditorialStyles.scoreMedium,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              );
+            },
+          ),
+          const SizedBox(height: 20),
+
+          // Fade in the message after ring animation
+          AnimatedBuilder(
+            animation: _scoreRingAnimation,
+            builder: (context, child) {
+              return Opacity(
+                opacity: _scoreRingAnimation.value,
+                child: Text(
+                  _getMatchMessage(matchPercentage),
+                  style: EditorialStyles.bodyText.copyWith(
+                    fontStyle: FontStyle.italic,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              );
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildStatsGrid(int matched, int different, int total) {
+    return Row(
+      children: [
+        Expanded(child: _buildStatBox('$matched', 'Matched')),
+        const SizedBox(width: 12),
+        Expanded(child: _buildStatBox('$different', 'Different')),
+        const SizedBox(width: 12),
+        Expanded(child: _buildStatBox('$total', 'Total')),
+      ],
+    );
+  }
+
+  Widget _buildStatBox(String value, String label) {
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 12),
+      decoration: BoxDecoration(
+        border: EditorialStyles.fullBorder,
+      ),
+      child: Column(
+        children: [
+          Text(value, style: EditorialStyles.scoreMedium),
+          const SizedBox(height: 4),
+          Text(
+            label.toUpperCase(),
+            style: EditorialStyles.labelUppercaseSmall,
           ),
         ],
       ),
@@ -503,119 +458,199 @@ class _QuizResultsScreenState extends State<QuizResultsScreen> {
 
   Widget _buildAnswerCard(
     QuizQuestion question,
-    int questionNumber,
-    int user1Answer,
-    int user2Answer,
+    int myAnswerIndex,
+    int partnerAnswerIndex,
     bool isMatch,
-    ThemeData theme,
+    String partnerName,
   ) {
-    // Determine which answer belongs to current user vs partner
-    final user = _storage.getUser();
-    final answers = widget.session.answers ?? {};
-    final userIds = answers.keys.toList();
-
-    // Find current user's answer and partner's answer
-    final myAnswer = user != null && answers.containsKey(user.id)
-        ? answers[user.id]![questionNumber - 1]
-        : user1Answer;
-    final partnerAnswer = user != null && answers.containsKey(user.id)
-        ? answers[userIds.firstWhere((id) => id != user.id)]![questionNumber - 1]
-        : user2Answer;
+    final myAnswer = question.options[myAnswerIndex];
+    final partnerAnswer = question.options[partnerAnswerIndex];
 
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: isMatch
-            ? Colors.green.withOpacity(0.1)
-            : theme.colorScheme.surfaceContainerHighest.withOpacity(0.3),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: isMatch
-              ? Colors.green.withOpacity(0.3)
-              : theme.colorScheme.outline.withOpacity(0.2),
-        ),
+        color: isMatch ? EditorialStyles.inkLight.withValues(alpha: 0.3) : EditorialStyles.paper,
+        border: EditorialStyles.fullBorder,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            children: [
-              Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 8,
-                  vertical: 4,
-                ),
-                decoration: BoxDecoration(
-                  color: theme.colorScheme.primaryContainer,
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Text(
-                  'Q$questionNumber',
-                  style: TextStyle(
-                    fontSize: 12,
-                    fontWeight: FontWeight.bold,
-                    color: theme.colorScheme.onPrimaryContainer,
-                  ),
-                ),
-              ),
-              const Spacer(),
-              Icon(
-                isMatch ? Icons.check_circle : Icons.cancel,
-                color: isMatch ? Colors.green : Colors.red,
-                size: 20,
-              ),
-              const SizedBox(width: 4),
-              Text(
-                isMatch ? 'Match!' : 'Different',
-                style: TextStyle(
-                  fontSize: 12,
-                  fontWeight: FontWeight.bold,
-                  color: isMatch ? Colors.green : Colors.red,
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 8),
           Text(
             question.question,
-            style: theme.textTheme.titleSmall?.copyWith(
-              fontWeight: FontWeight.w600,
+            style: EditorialStyles.bodySmall.copyWith(
+              color: EditorialStyles.inkMuted,
             ),
           ),
           const SizedBox(height: 12),
-          _buildAnswerRow('You', question.options[myAnswer], theme),
-          const SizedBox(height: 8),
-          _buildAnswerRow(
-            _storage.getPartner()?.name ?? 'Partner',
-            question.options[partnerAnswer],
-            theme,
+
+          // Answer comparison
+          Row(
+            children: [
+              Expanded(
+                child: _buildAnswerItem('You Said', myAnswer, isMatch),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: _buildAnswerItem('$partnerName Said', partnerAnswer, isMatch),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+
+          // Match indicator
+          Row(
+            children: [
+              Container(
+                width: 20,
+                height: 20,
+                decoration: BoxDecoration(
+                  color: isMatch ? EditorialStyles.ink : EditorialStyles.paper,
+                  shape: BoxShape.circle,
+                  border: isMatch ? null : Border.all(color: EditorialStyles.ink, width: 2),
+                ),
+                child: Center(
+                  child: Icon(
+                    isMatch ? Icons.check : Icons.close,
+                    size: 12,
+                    color: isMatch ? EditorialStyles.paper : EditorialStyles.ink,
+                  ),
+                ),
+              ),
+              const SizedBox(width: 6),
+              Text(
+                isMatch ? 'MATCH' : 'DIFFERENT',
+                style: EditorialStyles.labelUppercaseSmall.copyWith(
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ],
           ),
         ],
       ),
     );
   }
 
-  Widget _buildAnswerRow(String person, String answer, ThemeData theme) {
-    return Row(
-      children: [
-        SizedBox(
-          width: 80,
-          child: Text(
-            person,
-            style: theme.textTheme.bodySmall?.copyWith(
-              color: theme.colorScheme.onSurfaceVariant,
+  Widget _buildAnswerItem(String label, String value, bool isMatch) {
+    return Container(
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: EditorialStyles.paper,
+        border: Border.all(
+          color: isMatch ? EditorialStyles.ink : EditorialStyles.inkLight,
+          width: 1,
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            label.toUpperCase(),
+            style: EditorialStyles.labelUppercaseSmall,
+          ),
+          const SizedBox(height: 4),
+          Text(
+            value,
+            style: EditorialStyles.bodySmall.copyWith(
               fontWeight: FontWeight.w600,
             ),
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
           ),
-        ),
-        const SizedBox(width: 8),
-        Expanded(
-          child: Text(
-            answer,
-            style: theme.textTheme.bodyMedium,
-          ),
-        ),
-      ],
+        ],
+      ),
     );
   }
+
+  Widget _buildRewardCard(int lpEarned) {
+    return AnimatedBuilder(
+      animation: _rewardCardController,
+      builder: (context, child) {
+        return Transform.scale(
+          scale: _rewardScaleAnimation.value,
+          child: Opacity(
+            opacity: _rewardFadeAnimation.value,
+            child: Container(
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                color: EditorialStyles.ink,
+                border: EditorialStyles.fullBorder,
+              ),
+              child: Column(
+                children: [
+                  Text(
+                    'YOU EARNED',
+                    style: EditorialStyles.labelUppercase.copyWith(
+                      color: EditorialStyles.paper.withValues(alpha: 0.7),
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  // Animated LP count that counts up
+                  TweenAnimationBuilder<int>(
+                    tween: IntTween(begin: 0, end: lpEarned),
+                    duration: AnimationConfig.normal,
+                    builder: (context, value, child) {
+                      return Text(
+                        '+$value LP',
+                        style: TextStyle(
+                          fontFamily: EditorialStyles.scoreLarge.fontFamily,
+                          fontSize: 32,
+                          fontWeight: FontWeight.w700,
+                          color: EditorialStyles.paper,
+                        ),
+                      );
+                    },
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+}
+
+class _ScoreRingPainter extends CustomPainter {
+  final double percentage;
+  final Color trackColor;
+  final Color progressColor;
+
+  _ScoreRingPainter({
+    required this.percentage,
+    required this.trackColor,
+    required this.progressColor,
+  });
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final center = Offset(size.width / 2, size.height / 2);
+    final radius = size.width / 2 - 4;
+
+    // Track
+    final trackPaint = Paint()
+      ..color = trackColor
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 4;
+
+    canvas.drawCircle(center, radius, trackPaint);
+
+    // Progress
+    final progressPaint = Paint()
+      ..color = progressColor
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 4
+      ..strokeCap = StrokeCap.round;
+
+    final sweepAngle = 2 * 3.14159 * percentage;
+    canvas.drawArc(
+      Rect.fromCircle(center: center, radius: radius),
+      -1.5708, // Start from top
+      sweepAngle,
+      false,
+      progressPaint,
+    );
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => true;
 }
