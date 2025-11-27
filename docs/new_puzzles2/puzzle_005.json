@@ -1,0 +1,53 @@
+{
+  "author": "Crossword Maker GPT",
+  "title": "Adult Intimacy Puzzle #5",
+  "size": {
+    "rows": 9,
+    "cols": 7
+  },
+  "clues": {
+    "1": { "type": "emoji", "content": "🔥", "arrow": "down", "target_index": 8 },
+    "2": { "type": "text", "content": "Thrust hard", "arrow": "down", "target_index": 10 },
+    "3": { "type": "emoji", "content": "🍑", "arrow": "down", "target_index": 11 },
+    "4": { "type": "text", "content": "Slim hairy gay type", "arrow": "down", "target_index": 13 },
+    "5": { "type": "text", "content": "After E", "arrow": "across", "target_index": 8 },
+    "6": { "type": "text", "content": "After N", "arrow": "across", "target_index": 13 },
+    "7": { "type": "text", "content": "GU_", "arrow": "across", "target_index": 20 },
+    "8": { "type": "text", "content": "You and me together", "arrow": "across", "target_index": 24 },
+    "9": { "type": "text", "content": "Excited yes", "arrow": "down", "target_index": 33 },
+    "10": { "type": "text", "content": "_O__", "arrow": "across", "target_index": 29 },
+    "11": { "type": "emoji", "content": "👀", "arrow": "down", "target_index": 39 },
+    "12": { "type": "text", "content": "WAV_", "arrow": "across", "target_index": 36 },
+    "13": { "type": "emoji", "content": "💗", "arrow": "across", "target_index": 38 },
+    "14": { "type": "text", "content": "__O_", "arrow": "down", "target_index": 44 },
+    "15": { "type": "text", "content": "W_VE", "arrow": "down", "target_index": 50 },
+    "16": { "type": "text", "content": "After W", "arrow": "across", "target_index": 46 },
+    "17": { "type": "text", "content": "Anal (abbr.)", "arrow": "across", "target_index": 50 },
+    "18": { "type": "text", "content": "Bachelor's place", "arrow": "across", "target_index": 53 },
+    "19": { "type": "text", "content": "Sex worker term", "arrow": "across", "target_index": 58 }
+  },
+  "date": "2025-11-26",
+  "grid": [
+    ".", ".", ".", ".", ".", ".", ".",
+    ".", "F", ".", "P", "A", ".", "O",
+    ".", "L", ".", "O", "S", ".", "T",
+    ".", "A", ".", "U", "S", ".", "T",
+    ".", "M", "A", "N", ".", "Y", "E",
+    ".", "E", ".", "D", "E", "A", "R",
+    ".", ".", "B", ".", "X", ".", ".",
+    ".", "A", "L", ".", "P", "A", "D",
+    ".", ".", "W", "H", "O", "R", "E"
+  ],
+  "gridnums": [
+    0, 1, 0, 2, 3, 0, 4,
+    5, 0, 0, 0, 0, 6, 0,
+    0, 0, 0, 0, 0, 7, 0,
+    0, 0, 8, 0, 0, 9, 0,
+    10, 0, 0, 0, 11, 0, 0,
+    12, 0, 13, 0, 0, 0, 0,
+    0, 15, 0, 16, 0, 0, 0,
+    17, 0, 0, 18, 0, 0, 0,
+    0, 19, 0, 0, 0, 0, 0
+  ],
+  "puzzleId": "puzzle_005"
+}

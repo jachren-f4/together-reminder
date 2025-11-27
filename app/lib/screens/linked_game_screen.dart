@@ -746,23 +746,31 @@ class _LinkedGameScreenState extends State<LinkedGameScreen> {
         Color? glowColor;
         Color? borderColor;
 
+        // Use Color.alphaBlend to create SOLID colors (not transparent)
+        // This prevents the dark grid background from showing through
+        final surface = BrandLoader().colors.surface;
+
         switch (state) {
           case AnswerCellState.empty:
-            bgColor = isDragTarget ? BrandLoader().colors.info.withOpacity(0.1) : BrandLoader().colors.surface;
+            bgColor = isDragTarget
+                ? Color.alphaBlend(BrandLoader().colors.info.withOpacity(0.1), surface)
+                : surface;
             // Highlight hint cells with light blue background + glow
             if (isHighlighted) {
-              bgColor = BrandLoader().colors.info.withOpacity(0.2);
+              bgColor = Color.alphaBlend(BrandLoader().colors.info.withOpacity(0.2), surface);
               borderColor = BrandLoader().colors.info;
               glowColor = BrandLoader().colors.info;
             }
           case AnswerCellState.draft:
-            bgColor = isDragTarget ? BrandLoader().colors.info.withOpacity(0.15) : BrandLoader().colors.warning.withOpacity(0.2);
+            bgColor = isDragTarget
+                ? Color.alphaBlend(BrandLoader().colors.info.withOpacity(0.15), surface)
+                : Color.alphaBlend(BrandLoader().colors.warning.withOpacity(0.2), surface);
           case AnswerCellState.locked:
-            bgColor = BrandLoader().colors.success.withOpacity(0.15);
+            bgColor = Color.alphaBlend(BrandLoader().colors.success.withOpacity(0.15), surface);
             textColor = BrandLoader().colors.textPrimary;
             if (showGlow) glowColor = BrandLoader().colors.success;
           case AnswerCellState.incorrect:
-            bgColor = BrandLoader().colors.error.withOpacity(0.7);
+            bgColor = Color.alphaBlend(BrandLoader().colors.error.withOpacity(0.7), surface);
             textColor = BrandLoader().colors.textOnPrimary;
         }
 

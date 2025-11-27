@@ -1,0 +1,1290 @@
+<!--
+    ╔═══════════════════════════════════════════════════════════════════════════╗
+    ║                    WORD SEARCH GAME - UI REFERENCE MOCKUP                  ║
+    ╠═══════════════════════════════════════════════════════════════════════════╣
+    ║  This HTML mockup is the visual source of truth for implementing the       ║
+    ║  Flutter Word Search game screen.                                          ║
+    ║                                                                             ║
+    ║  📖 Implementation Plan: docs/WORD_SEARCH_GAME_PLAN.md                     ║
+    ║                                                                             ║
+    ║  WHAT TO TEST IN THIS MOCKUP:                                              ║
+    ║  1. Click and drag across letters to select words                          ║
+    ║  2. Watch the floating selection bubble update                             ║
+    ║  3. Find a valid word (e.g., FOREPLAY) - see green overlay animation       ║
+    ║  4. Try invalid selection - see shake animation                            ║
+    ║  5. Find 3 words - see turn switch                                         ║
+    ║  6. Click "Hint" button - see cell highlight                               ║
+    ║  7. Complete all 12 words - see completion screen                          ║
+    ║                                                                             ║
+    ║  MATCH THESE EXACTLY IN FLUTTER:                                           ║
+    ║  • Colors (CSS variables at top of <style>)                                ║
+    ║  • Typography (Georgia font, sizes, weights)                               ║
+    ║  • Grid layout (10x10, 2px gaps, no outer border)                          ║
+    ║  • Animations (timing, easing, keyframes)                                  ║
+    ║  • Touch interaction behavior                                              ║
+    ╚═══════════════════════════════════════════════════════════════════════════╝
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Word Search - TogetherRemind</title>
+    <style>
+        /* ============================================
+           DESIGN SYSTEM (Matching Linked Game)
+           ============================================ */
+
+        :root {
+            /* Brand Colors (TogetherRemind) */
+            --surface: #FFFFFF;
+            --background: #1A1A1A;
+            --text-primary: #1A1A1A;
+            --text-secondary: #666666;
+            --text-tertiary: #999999;
+            --text-on-primary: #FFFFFF;
+            --success: #4CAF50;
+            --error: #F44336;
+            --warning: #FF9800;
+            --info: #2196F3;
+            --border: #1A1A1A;
+            --border-light: #E0E0E0;
+            --divider: #E0E0E0;
+            --disabled: #BDBDBD;
+
+            /* Found word colors (rotating) */
+            --color-0: #5C6BC0;
+            --color-1: #66BB6A;
+            --color-2: #FFA726;
+            --color-3: #AB47BC;
+            --color-4: #EF5350;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+
+        body {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            background: #fafafa;
+            min-height: 100vh;
+            padding: 20px;
+            touch-action: none;
+        }
+
+        .container {
+            max-width: 420px;
+            margin: 0 auto;
+            background: var(--surface);
+            border: 2px solid var(--border);
+            box-shadow: 8px 8px 0 rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* ============================================
+           HEADER (Matching Linked exactly)
+           ============================================ */
+
+        .header {
+            padding: 12px 16px;
+            background: var(--surface);
+            border-bottom: 2px solid var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .back-btn {
+            font-size: 20px;
+            cursor: pointer;
+            color: var(--text-primary);
+            background: none;
+            border: none;
+            padding: 0;
+            line-height: 1;
+        }
+
+        .header-title {
+            font-size: 18px;
+            font-weight: 400;
+            letter-spacing: 2px;
+            color: var(--text-primary);
+            text-transform: uppercase;
+        }
+
+        .header-spacer {
+            flex: 1;
+        }
+
+        .score-display {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            font-size: 13px;
+        }
+
+        .score-item {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .score-item.active {
+            font-weight: 700;
+        }
+
+        .active-dot {
+            width: 6px;
+            height: 6px;
+            background: var(--success);
+            border-radius: 50%;
+        }
+
+        /* ============================================
+           GAME AREA
+           ============================================ */
+
+        .game-area {
+            padding: 16px;
+            background: var(--surface);
+            position: relative;
+        }
+
+        .floating-bubble {
+            position: absolute;
+            top: 16px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--text-primary);
+            color: var(--text-on-primary);
+            padding: 8px 16px;
+            font-size: 16px;
+            font-weight: 600;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            z-index: 100;
+            opacity: 0;
+            transition: opacity 0.15s ease;
+            pointer-events: none;
+        }
+
+        .floating-bubble.visible {
+            opacity: 1;
+        }
+
+        .grid-container {
+            position: relative;
+            touch-action: none;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(10, 1fr);
+            gap: 2px;
+            background: var(--border-light);
+            padding: 0;
+        }
+
+        .cell {
+            aspect-ratio: 1;
+            background: var(--surface);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            font-weight: 700;
+            font-family: 'Georgia', serif;
+            text-transform: uppercase;
+            cursor: pointer;
+            position: relative;
+            z-index: 1;
+            transition: background 0.1s ease;
+            color: var(--text-primary);
+            border: 1.5px solid var(--text-secondary);
+        }
+
+        .cell.selecting {
+            background: rgba(255, 152, 0, 0.2);
+            border-color: var(--text-primary);
+            border-width: 2px;
+        }
+
+        .cell.hint-highlight {
+            background: rgba(33, 150, 243, 0.2);
+            border-color: var(--info);
+            border-width: 3px;
+            animation: pulse 1.2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        /* SVG overlay for selection lines */
+        .selection-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        .selection-line {
+            fill: none;
+            stroke-linecap: round;
+            stroke-width: 26;
+            opacity: 0.4;
+        }
+
+        .selection-line.active {
+            stroke: var(--warning);
+            opacity: 0.5;
+        }
+
+        .selection-line.found {
+            opacity: 0.35;
+        }
+
+        /* ============================================
+           WORD BANK
+           ============================================ */
+
+        .word-bank {
+            padding: 12px 16px;
+            background: var(--surface);
+            border-bottom: 1px solid var(--divider);
+        }
+
+        .word-bank-title {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-secondary);
+            margin-bottom: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .word-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+        }
+
+        .word-item {
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 6px 4px;
+            text-align: center;
+            border: 1px solid var(--border-light);
+            transition: all 0.3s ease;
+            color: var(--text-primary);
+            background: var(--surface);
+        }
+
+        .word-item.found {
+            text-decoration: line-through;
+            opacity: 0.6;
+        }
+
+        .word-item.hint-active {
+            border-color: var(--info);
+            background: rgba(33, 150, 243, 0.1);
+            animation: pulse 1.2s infinite;
+        }
+
+        /* Word colors when found */
+        .word-item.color-0 { color: var(--color-0); border-color: var(--color-0); }
+        .word-item.color-1 { color: var(--color-1); border-color: var(--color-1); }
+        .word-item.color-2 { color: var(--color-2); border-color: var(--color-2); }
+        .word-item.color-3 { color: var(--color-3); border-color: var(--color-3); }
+        .word-item.color-4 { color: var(--color-4); border-color: var(--color-4); }
+
+        .color-0 { stroke: var(--color-0); }
+        .color-1 { stroke: var(--color-1); }
+        .color-2 { stroke: var(--color-2); }
+        .color-3 { stroke: var(--color-3); }
+        .color-4 { stroke: var(--color-4); }
+
+        /* ============================================
+           BOTTOM BAR (Matching Linked)
+           ============================================ */
+
+        .bottom-bar {
+            padding: 12px 16px;
+            display: flex;
+            gap: 12px;
+            background: var(--surface);
+            border-top: 1px solid var(--divider);
+        }
+
+        .hint-btn {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            padding: 12px;
+            background: var(--surface);
+            border: 1px solid var(--text-primary);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .hint-btn:hover:not(.disabled) {
+            background: var(--text-primary);
+            color: var(--text-on-primary);
+        }
+
+        .hint-btn.disabled {
+            border-color: var(--disabled);
+            color: var(--disabled);
+            cursor: not-allowed;
+        }
+
+        .hint-btn .emoji {
+            font-size: 14px;
+        }
+
+        .hint-btn .text {
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+
+        .hint-btn .count {
+            font-size: 9px;
+            color: var(--text-secondary);
+        }
+
+        .turn-progress {
+            flex: 2;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 12px;
+            background: var(--text-primary);
+            color: var(--text-on-primary);
+            border: 1px solid var(--text-primary);
+        }
+
+        .turn-progress.waiting {
+            background: var(--surface);
+            color: var(--text-secondary);
+        }
+
+        .progress-dots {
+            display: flex;
+            gap: 4px;
+        }
+
+        .progress-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--text-on-primary);
+            opacity: 0.4;
+        }
+
+        .progress-dot.filled {
+            opacity: 1;
+        }
+
+        .turn-progress.waiting .progress-dot {
+            background: var(--text-secondary);
+        }
+
+        .progress-text {
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+
+        /* ============================================
+           FLOATING POINTS ANIMATION
+           ============================================ */
+
+        .floating-point {
+            position: absolute;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: bold;
+            color: var(--text-on-primary);
+            pointer-events: none;
+            z-index: 200;
+            animation: floatUp 1.2s ease-out forwards;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .floating-point.success {
+            background: var(--success);
+        }
+
+        .floating-point.error {
+            background: var(--error);
+        }
+
+        @keyframes floatUp {
+            0% {
+                opacity: 1;
+                transform: translateY(0) scale(0.5);
+            }
+            30% {
+                transform: translateY(-20px) scale(1.2);
+            }
+            60% {
+                opacity: 1;
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(-60px) scale(1);
+            }
+        }
+
+        /* ============================================
+           WORD FOUND OVERLAY
+           ============================================ */
+
+        .word-overlay {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0.8);
+            background: var(--success);
+            color: var(--text-on-primary);
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 20px;
+            font-weight: bold;
+            z-index: 300;
+            opacity: 0;
+            pointer-events: none;
+            box-shadow: 0 4px 12px rgba(76, 175, 80, 0.4);
+            animation: wordFound 1.6s ease-out forwards;
+        }
+
+        @keyframes wordFound {
+            0% { opacity: 0; transform: translate(-50%, -50%) scale(0.8); }
+            20% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+            80% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+            100% { opacity: 0; transform: translate(-50%, -50%) scale(1); }
+        }
+
+        /* ============================================
+           PAUSE OVERLAY
+           ============================================ */
+
+        .pause-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.98);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 400;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .pause-overlay.visible {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .pause-icon {
+            font-size: 48px;
+            margin-bottom: 16px;
+        }
+
+        .pause-text {
+            font-size: 18px;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            margin-bottom: 24px;
+            color: var(--text-primary);
+        }
+
+        .resume-btn {
+            border: 2px solid var(--text-primary);
+            background: var(--surface);
+            padding: 12px 32px;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            cursor: pointer;
+            font-family: 'Georgia', serif;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+
+        .resume-btn:hover {
+            background: var(--text-primary);
+            color: var(--text-on-primary);
+        }
+
+        /* ============================================
+           WIN OVERLAY
+           ============================================ */
+
+        .win-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.9);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 500;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.5s ease;
+        }
+
+        .win-overlay.visible {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .win-badge {
+            width: 100px;
+            height: 100px;
+            border: 4px solid var(--surface);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 24px;
+            animation: popIn 0.6s ease-out;
+        }
+
+        .win-badge .check {
+            font-size: 48px;
+            color: var(--surface);
+            font-weight: 300;
+        }
+
+        @keyframes popIn {
+            0% { transform: scale(0); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+
+        .win-title {
+            font-size: 32px;
+            font-weight: 400;
+            letter-spacing: 4px;
+            color: var(--surface);
+            margin-bottom: 8px;
+        }
+
+        .win-subtitle {
+            font-size: 14px;
+            letter-spacing: 2px;
+            color: var(--text-tertiary);
+            margin-bottom: 32px;
+        }
+
+        .win-scores {
+            width: 280px;
+            margin-bottom: 32px;
+        }
+
+        .win-score-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .win-score-row.winner {
+            background: var(--surface);
+            color: var(--text-primary);
+        }
+
+        .win-score-row .label {
+            font-size: 14px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .win-score-row .value {
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        .win-score-row:not(.winner) {
+            color: var(--surface);
+        }
+
+        .win-actions {
+            display: flex;
+            gap: 12px;
+        }
+
+        .win-btn {
+            width: 56px;
+            height: 56px;
+            border: 2px solid var(--surface);
+            background: transparent;
+            color: var(--surface);
+            cursor: pointer;
+            font-size: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+        .win-btn:hover {
+            background: var(--surface);
+            color: var(--text-primary);
+        }
+
+        /* ============================================
+           SHAKE ANIMATION
+           ============================================ */
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20% { transform: translateX(8px); }
+            40% { transform: translateX(-6px); }
+            60% { transform: translateX(4px); }
+            80% { transform: translateX(-2px); }
+        }
+
+        .shake {
+            animation: shake 0.4s ease-out;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header (Matching Linked) -->
+        <div class="header">
+            <button class="back-btn" id="backBtn">←</button>
+            <span class="header-title">Word Search</span>
+            <div class="header-spacer"></div>
+            <div class="score-display">
+                <div class="score-item active" id="myScore">
+                    <span class="active-dot"></span>
+                    <span>You: <span id="myScoreValue">0</span></span>
+                </div>
+                <div class="score-item" id="partnerScore">
+                    <span>Taija: <span id="partnerScoreValue">0</span></span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Game Area -->
+        <div class="game-area">
+            <div class="floating-bubble" id="floatingBubble"></div>
+            <div class="grid-container" id="gridContainer">
+                <div class="grid" id="grid"></div>
+                <svg class="selection-overlay" id="selectionOverlay"></svg>
+            </div>
+        </div>
+
+        <!-- Word Bank -->
+        <div class="word-bank">
+            <div class="word-bank-title">
+                <span>Find These Words</span>
+                <span><span id="foundCount">0</span> / <span id="totalCount">12</span></span>
+            </div>
+            <div class="word-grid" id="wordGrid"></div>
+        </div>
+
+        <!-- Bottom Bar (Matching Linked) -->
+        <div class="bottom-bar">
+            <button class="hint-btn" id="hintBtn">
+                <span class="emoji">💡</span>
+                <span class="text">Hint</span>
+                <span class="count" id="hintCount">(3)</span>
+            </button>
+            <div class="turn-progress" id="turnProgress">
+                <div class="progress-dots">
+                    <span class="progress-dot" id="dot1"></span>
+                    <span class="progress-dot" id="dot2"></span>
+                    <span class="progress-dot" id="dot3"></span>
+                </div>
+                <span class="progress-text"><span id="turnCount">0</span>/3 FOUND</span>
+            </div>
+        </div>
+
+        <!-- Pause Overlay -->
+        <div class="pause-overlay" id="pauseOverlay">
+            <div class="pause-icon">⏸</div>
+            <div class="pause-text">Game Paused</div>
+            <button class="resume-btn" id="resumeBtn">Resume</button>
+        </div>
+
+        <!-- Win Overlay -->
+        <div class="win-overlay" id="winOverlay">
+            <div class="win-badge">
+                <span class="check">✓</span>
+            </div>
+            <div class="win-title">COMPLETE</div>
+            <div class="win-subtitle">PUZZLE FINISHED</div>
+            <div class="win-scores">
+                <div class="win-score-row winner" id="winnerRow">
+                    <span class="label">You</span>
+                    <span class="value" id="winMyScore">6</span>
+                </div>
+                <div class="win-score-row" id="loserRow">
+                    <span class="label">Taija</span>
+                    <span class="value" id="winPartnerScore">6</span>
+                </div>
+            </div>
+            <div class="win-actions">
+                <button class="win-btn" id="homeBtn" title="Home">🏠</button>
+                <button class="win-btn" id="shareWinBtn" title="Share">📤</button>
+                <button class="win-btn" id="replayBtn" title="Play Again">🔄</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ============================================
+        // GAME CONFIGURATION
+        // ============================================
+
+        const CONFIG = {
+            rows: 10,
+            cols: 10,
+            words: ['FOREPLAY', 'INTIMACY', 'PLEASURE', 'SENSUAL', 'ORGASM', 'EROTIC', 'CLIMAX', 'DESIRE', 'LUST', 'PASSION', 'ROMANCE', 'TENDER'],
+            colors: ['color-0', 'color-1', 'color-2', 'color-3', 'color-4'],
+            fixedGrid: [
+                ['S', 'X', 'Y', 'A', 'L', 'P', 'E', 'R', 'O', 'F'],
+                ['V', 'N', 'E', 'R', 'O', 'T', 'I', 'C', 'S', 'K'],
+                ['I', 'M', 'P', 'U', 'L', 'S', 'E', 'L', 'U', 'B'],
+                ['N', 'S', 'K', 'L', 'I', 'A', 'A', 'B', 'E', 'C'],
+                ['T', 'A', 'N', 'G', 'E', 'U', 'V', 'I', 'X', 'L'],
+                ['I', 'G', 'N', 'I', 'S', 'A', 'T', 'I', 'O', 'I'],
+                ['M', 'R', 'N', 'A', 'K', 'S', 'O', 'F', 'T', 'M'],
+                ['A', 'O', 'E', 'L', 'I', 'U', 'P', 'U', 'R', 'A'],
+                ['C', 'S', 'L', 'U', 'S', 'T', 'O', 'R', 'N', 'X'],
+                ['Y', 'B', 'D', 'E', 'S', 'I', 'R', 'E', 'S', 'E']
+            ]
+        };
+
+        // Direction vectors
+        const DIRECTIONS = [
+            { dr: 0, dc: 1 },   { dr: 0, dc: -1 },
+            { dr: 1, dc: 0 },   { dr: -1, dc: 0 },
+            { dr: 1, dc: 1 },   { dr: -1, dc: -1 },
+            { dr: 1, dc: -1 },  { dr: -1, dc: 1 }
+        ];
+
+        // ============================================
+        // GAME STATE
+        // ============================================
+
+        let grid = [];
+        let wordPositions = {};
+        let foundWords = new Set();
+        let currentSelection = [];
+        let isSelecting = false;
+        let hintsRemaining = 3;
+        let colorIndex = 0;
+        let hintedWord = null;
+        let wordsFoundThisTurn = 0;
+        let myScore = 0;
+        let partnerScore = 0;
+        let isMyTurn = true;
+
+        // DOM Elements
+        const gridEl = document.getElementById('grid');
+        const selectionOverlay = document.getElementById('selectionOverlay');
+        const floatingBubble = document.getElementById('floatingBubble');
+        const wordGridEl = document.getElementById('wordGrid');
+        const foundCountEl = document.getElementById('foundCount');
+        const hintCountEl = document.getElementById('hintCount');
+        const turnCountEl = document.getElementById('turnCount');
+        const myScoreValueEl = document.getElementById('myScoreValue');
+        const partnerScoreValueEl = document.getElementById('partnerScoreValue');
+        const turnProgressEl = document.getElementById('turnProgress');
+        const winOverlay = document.getElementById('winOverlay');
+
+        // ============================================
+        // INITIALIZATION
+        // ============================================
+
+        function initGame() {
+            grid = CONFIG.fixedGrid.map(row => [...row]);
+            wordPositions = {};
+            foundWords = new Set();
+            currentSelection = [];
+            isSelecting = false;
+            hintsRemaining = 3;
+            colorIndex = 0;
+            hintedWord = null;
+            wordsFoundThisTurn = 0;
+            myScore = 0;
+            partnerScore = 0;
+            isMyTurn = true;
+
+            findWordPositions();
+            renderGrid();
+            renderWordBank();
+            updateUI();
+
+            winOverlay.classList.remove('visible');
+        }
+
+        function findWordPositions() {
+            for (const word of CONFIG.words) {
+                const positions = findWordInGrid(word);
+                if (positions) wordPositions[word] = positions;
+            }
+        }
+
+        function findWordInGrid(word) {
+            for (let r = 0; r < CONFIG.rows; r++) {
+                for (let c = 0; c < CONFIG.cols; c++) {
+                    for (const dir of DIRECTIONS) {
+                        const positions = checkWordAt(word, r, c, dir);
+                        if (positions) return positions;
+                    }
+                }
+            }
+            return null;
+        }
+
+        function checkWordAt(word, startRow, startCol, dir) {
+            const positions = [];
+            for (let i = 0; i < word.length; i++) {
+                const row = startRow + i * dir.dr;
+                const col = startCol + i * dir.dc;
+                if (row < 0 || row >= CONFIG.rows || col < 0 || col >= CONFIG.cols) return null;
+                if (grid[row][col] !== word[i]) return null;
+                positions.push({ row, col });
+            }
+            return positions;
+        }
+
+        // ============================================
+        // RENDERING
+        // ============================================
+
+        function renderGrid() {
+            gridEl.innerHTML = '';
+            selectionOverlay.innerHTML = '';
+
+            for (let r = 0; r < CONFIG.rows; r++) {
+                for (let c = 0; c < CONFIG.cols; c++) {
+                    const cell = document.createElement('div');
+                    cell.className = 'cell';
+                    cell.textContent = grid[r][c];
+                    cell.dataset.row = r;
+                    cell.dataset.col = c;
+                    gridEl.appendChild(cell);
+                }
+            }
+            setupEventListeners();
+        }
+
+        function renderWordBank() {
+            wordGridEl.innerHTML = '';
+            document.getElementById('totalCount').textContent = CONFIG.words.length;
+
+            for (const word of CONFIG.words) {
+                const wordEl = document.createElement('div');
+                wordEl.className = 'word-item';
+                wordEl.textContent = word;
+                wordEl.dataset.word = word;
+                wordGridEl.appendChild(wordEl);
+            }
+        }
+
+        function updateUI() {
+            foundCountEl.textContent = foundWords.size;
+            hintCountEl.textContent = `(${hintsRemaining})`;
+            turnCountEl.textContent = wordsFoundThisTurn;
+            myScoreValueEl.textContent = myScore;
+            partnerScoreValueEl.textContent = partnerScore;
+
+            // Update progress dots
+            for (let i = 1; i <= 3; i++) {
+                const dot = document.getElementById(`dot${i}`);
+                dot.classList.toggle('filled', i <= wordsFoundThisTurn);
+            }
+
+            // Update turn display
+            if (!isMyTurn) {
+                turnProgressEl.classList.add('waiting');
+                turnProgressEl.querySelector('.progress-text').textContent = "TAIJA'S TURN";
+            } else {
+                turnProgressEl.classList.remove('waiting');
+                turnProgressEl.querySelector('.progress-text').textContent = `${wordsFoundThisTurn}/3 FOUND`;
+            }
+
+            // Hint button state
+            const hintBtn = document.getElementById('hintBtn');
+            hintBtn.classList.toggle('disabled', hintsRemaining <= 0 || !isMyTurn);
+        }
+
+        // ============================================
+        // EVENT HANDLERS
+        // ============================================
+
+        function setupEventListeners() {
+            const gridContainer = document.getElementById('gridContainer');
+            gridContainer.addEventListener('mousedown', handleStart);
+            gridContainer.addEventListener('mousemove', handleMove);
+            gridContainer.addEventListener('mouseup', handleEnd);
+            gridContainer.addEventListener('mouseleave', handleEnd);
+            gridContainer.addEventListener('touchstart', handleStart, { passive: false });
+            gridContainer.addEventListener('touchmove', handleMove, { passive: false });
+            gridContainer.addEventListener('touchend', handleEnd);
+            gridContainer.addEventListener('touchcancel', handleEnd);
+        }
+
+        function getCellFromEvent(e) {
+            const touch = e.touches ? e.touches[0] : e;
+            const element = document.elementFromPoint(touch.clientX, touch.clientY);
+            if (element && element.classList.contains('cell')) {
+                return {
+                    row: parseInt(element.dataset.row),
+                    col: parseInt(element.dataset.col),
+                    element
+                };
+            }
+            return null;
+        }
+
+        function handleStart(e) {
+            if (!isMyTurn) return;
+            e.preventDefault();
+            const cell = getCellFromEvent(e);
+            if (cell) {
+                isSelecting = true;
+                currentSelection = [cell];
+                updateSelectionVisual();
+                updateFloatingBubble();
+            }
+        }
+
+        function handleMove(e) {
+            if (!isSelecting || !isMyTurn) return;
+            e.preventDefault();
+            const cell = getCellFromEvent(e);
+            if (cell && isValidNextCell(cell)) {
+                if (currentSelection.length > 1) {
+                    const prevCell = currentSelection[currentSelection.length - 2];
+                    if (prevCell.row === cell.row && prevCell.col === cell.col) {
+                        currentSelection.pop();
+                        updateSelectionVisual();
+                        updateFloatingBubble();
+                        return;
+                    }
+                }
+                const alreadySelected = currentSelection.some(c => c.row === cell.row && c.col === cell.col);
+                if (!alreadySelected) {
+                    currentSelection.push(cell);
+                    updateSelectionVisual();
+                    updateFloatingBubble();
+                }
+            }
+        }
+
+        function handleEnd(e) {
+            if (!isSelecting) return;
+
+            const selectedWord = currentSelection.map(c => grid[c.row][c.col]).join('');
+            const reversedWord = selectedWord.split('').reverse().join('');
+
+            let foundWord = null;
+            if (CONFIG.words.includes(selectedWord) && !foundWords.has(selectedWord)) {
+                foundWord = selectedWord;
+            } else if (CONFIG.words.includes(reversedWord) && !foundWords.has(reversedWord)) {
+                foundWord = reversedWord;
+            }
+
+            if (foundWord) {
+                markWordFound(foundWord);
+            } else if (selectedWord.length >= 3) {
+                // Shake animation for invalid
+                gridEl.classList.add('shake');
+                setTimeout(() => gridEl.classList.remove('shake'), 400);
+            }
+
+            isSelecting = false;
+            currentSelection = [];
+            updateSelectionVisual();
+            floatingBubble.classList.remove('visible');
+        }
+
+        function isValidNextCell(cell) {
+            if (currentSelection.length === 0) return true;
+            const last = currentSelection[currentSelection.length - 1];
+            const dr = cell.row - last.row;
+            const dc = cell.col - last.col;
+            if (Math.abs(dr) > 1 || Math.abs(dc) > 1) return false;
+            if (dr === 0 && dc === 0) return false;
+            if (currentSelection.length > 1) {
+                const prevLast = currentSelection[currentSelection.length - 2];
+                const prevDr = last.row - prevLast.row;
+                const prevDc = last.col - prevLast.col;
+                if (Math.sign(dr) !== Math.sign(prevDr) || Math.sign(dc) !== Math.sign(prevDc)) {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        // ============================================
+        // VISUAL UPDATES
+        // ============================================
+
+        function updateSelectionVisual() {
+            document.querySelectorAll('.cell.selecting').forEach(c => c.classList.remove('selecting'));
+            const activeLine = selectionOverlay.querySelector('.selection-line.active');
+            if (activeLine) activeLine.remove();
+
+            if (currentSelection.length === 0) return;
+
+            currentSelection.forEach(c => {
+                const cellEl = document.querySelector(`.cell[data-row="${c.row}"][data-col="${c.col}"]`);
+                if (cellEl) cellEl.classList.add('selecting');
+            });
+
+            if (currentSelection.length >= 1) {
+                drawSelectionLine(currentSelection, 'active');
+            }
+        }
+
+        function drawSelectionLine(cells, type, colorClass = '') {
+            if (cells.length === 0) return;
+
+            const gridRect = gridEl.getBoundingClientRect();
+            const containerRect = document.getElementById('gridContainer').getBoundingClientRect();
+            const cellSize = gridRect.width / CONFIG.cols;
+            const offsetX = gridRect.left - containerRect.left;
+            const offsetY = gridRect.top - containerRect.top;
+
+            const points = cells.map(c => ({
+                x: offsetX + (c.col + 0.5) * cellSize,
+                y: offsetY + (c.row + 0.5) * cellSize
+            }));
+
+            const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+            line.setAttribute('x1', points[0].x);
+            line.setAttribute('y1', points[0].y);
+            line.setAttribute('x2', points[points.length - 1].x);
+            line.setAttribute('y2', points[points.length - 1].y);
+            line.setAttribute('class', `selection-line ${type} ${colorClass}`);
+
+            selectionOverlay.appendChild(line);
+        }
+
+        function updateFloatingBubble() {
+            if (currentSelection.length === 0) {
+                floatingBubble.classList.remove('visible');
+                return;
+            }
+            floatingBubble.textContent = currentSelection.map(c => grid[c.row][c.col]).join('');
+            floatingBubble.classList.add('visible');
+        }
+
+        // ============================================
+        // GAME LOGIC
+        // ============================================
+
+        function markWordFound(word) {
+            foundWords.add(word);
+            const colorClass = CONFIG.colors[colorIndex % CONFIG.colors.length];
+            colorIndex++;
+
+            // Draw permanent line
+            const positions = wordPositions[word];
+            if (positions) {
+                drawSelectionLine(positions, 'found', colorClass);
+            }
+
+            // Update word bank
+            const wordEl = wordGridEl.querySelector(`[data-word="${word}"]`);
+            if (wordEl) {
+                wordEl.classList.add('found', colorClass);
+                if (word === hintedWord) {
+                    wordEl.classList.remove('hint-active');
+                    hintedWord = null;
+                }
+            }
+
+            // Show floating points
+            showFloatingPoints(word.length * 10);
+
+            // Show word overlay
+            showWordOverlay(word, word.length * 10);
+
+            // Update scores and turn
+            myScore++;
+            wordsFoundThisTurn++;
+            updateUI();
+
+            // Check turn complete (3 words)
+            if (wordsFoundThisTurn >= 3) {
+                setTimeout(() => {
+                    wordsFoundThisTurn = 0;
+                    isMyTurn = false;
+                    updateUI();
+
+                    // Simulate partner's turn after 2 seconds
+                    setTimeout(simulatePartnerTurn, 2000);
+                }, 1000);
+            }
+
+            // Check win
+            if (foundWords.size === CONFIG.words.length) {
+                setTimeout(showWin, 1000);
+            }
+        }
+
+        function simulatePartnerTurn() {
+            // Find 3 unfound words for partner
+            const unfound = CONFIG.words.filter(w => !foundWords.has(w));
+            const partnerWords = unfound.slice(0, Math.min(3, unfound.length));
+
+            let delay = 0;
+            partnerWords.forEach((word, i) => {
+                setTimeout(() => {
+                    foundWords.add(word);
+                    const colorClass = CONFIG.colors[colorIndex % CONFIG.colors.length];
+                    colorIndex++;
+
+                    const positions = wordPositions[word];
+                    if (positions) drawSelectionLine(positions, 'found', colorClass);
+
+                    const wordEl = wordGridEl.querySelector(`[data-word="${word}"]`);
+                    if (wordEl) wordEl.classList.add('found', colorClass);
+
+                    partnerScore++;
+                    updateUI();
+
+                    if (foundWords.size === CONFIG.words.length) {
+                        setTimeout(showWin, 500);
+                    } else if (i === partnerWords.length - 1) {
+                        // Partner's turn complete
+                        setTimeout(() => {
+                            isMyTurn = true;
+                            wordsFoundThisTurn = 0;
+                            updateUI();
+                        }, 500);
+                    }
+                }, delay);
+                delay += 1000;
+            });
+        }
+
+        function showFloatingPoints(points) {
+            const gameArea = document.querySelector('.game-area');
+            const rect = gameArea.getBoundingClientRect();
+
+            const pointEl = document.createElement('div');
+            pointEl.className = 'floating-point success';
+            pointEl.textContent = `+${points}`;
+            pointEl.style.left = '50%';
+            pointEl.style.top = '50%';
+            pointEl.style.transform = 'translateX(-50%)';
+
+            gameArea.appendChild(pointEl);
+            setTimeout(() => pointEl.remove(), 1200);
+        }
+
+        function showWordOverlay(word, points) {
+            const gameArea = document.querySelector('.game-area');
+            const overlay = document.createElement('div');
+            overlay.className = 'word-overlay';
+            overlay.textContent = `${word} +${points}`;
+            gameArea.appendChild(overlay);
+            setTimeout(() => overlay.remove(), 1600);
+        }
+
+        function useHint() {
+            if (hintsRemaining <= 0 || !isMyTurn) return;
+
+            const unfoundWords = CONFIG.words.filter(w => !foundWords.has(w));
+            if (unfoundWords.length === 0) return;
+
+            const word = unfoundWords[Math.floor(Math.random() * unfoundWords.length)];
+            hintedWord = word;
+            hintsRemaining--;
+
+            // Highlight word in bank
+            const wordEl = wordGridEl.querySelector(`[data-word="${word}"]`);
+            if (wordEl) wordEl.classList.add('hint-active');
+
+            // Highlight first letter
+            const positions = wordPositions[word];
+            if (positions && positions.length > 0) {
+                const firstCell = document.querySelector(`.cell[data-row="${positions[0].row}"][data-col="${positions[0].col}"]`);
+                if (firstCell) {
+                    firstCell.classList.add('hint-highlight');
+                    setTimeout(() => firstCell.classList.remove('hint-highlight'), 3000);
+                }
+            }
+
+            updateUI();
+        }
+
+        function showWin() {
+            document.getElementById('winMyScore').textContent = myScore;
+            document.getElementById('winPartnerScore').textContent = partnerScore;
+
+            const winnerRow = document.getElementById('winnerRow');
+            const loserRow = document.getElementById('loserRow');
+
+            if (myScore >= partnerScore) {
+                winnerRow.querySelector('.label').textContent = 'You';
+                winnerRow.querySelector('.value').textContent = myScore;
+                loserRow.querySelector('.label').textContent = 'Taija';
+                loserRow.querySelector('.value').textContent = partnerScore;
+            } else {
+                winnerRow.querySelector('.label').textContent = 'Taija';
+                winnerRow.querySelector('.value').textContent = partnerScore;
+                loserRow.querySelector('.label').textContent = 'You';
+                loserRow.querySelector('.value').textContent = myScore;
+            }
+
+            winOverlay.classList.add('visible');
+        }
+
+        // ============================================
+        // EVENT BINDINGS
+        // ============================================
+
+        document.getElementById('hintBtn').addEventListener('click', useHint);
+        document.getElementById('backBtn').addEventListener('click', () => history.back());
+        document.getElementById('replayBtn').addEventListener('click', () => {
+            winOverlay.classList.remove('visible');
+            initGame();
+        });
+        document.getElementById('homeBtn').addEventListener('click', () => alert('Return to home'));
+        document.getElementById('shareWinBtn').addEventListener('click', () => alert('Share your score!'));
+
+        // Initialize
+        initGame();
+    </script>
+</body>
+</html>
