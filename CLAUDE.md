@@ -60,6 +60,13 @@ flutter run -d chrome --dart-define=BRAND=holyCouples
 ./scripts/validate_brand_assets.sh  # Validate all brands
 ```
 
+**Database Strategy:**
+- **Development:** Single shared Supabase with `brand_id` column filtering
+- **Production:** Separate Supabase project per brand (when launched)
+- **Migration:** `api/supabase/migrations/014_white_label_brand_id.sql`
+- **Apply:** `cd api && supabase db push`
+- API queries must filter: `WHERE brand_id = 'holycouples'`
+
 See `docs/WHITE_LABEL_GUIDE.md` for complete brand creation guide.
 
 ---
@@ -110,6 +117,11 @@ flutter pub run build_runner build --delete-conflicting-outputs
 | ⚠️ NOTE | Web platform doesn't support FCM service workers in Flutter debug → blank screen crash |
 | ⚠️ NOTE | `NotificationService.initialize()` skips FCM setup on web (by design) |
 | ⚠️ NOTE | `DevConfig.emulatorId` returns `'web-bob'` for web platform |
+
+**Flutter Web Asset Rebuilds:**
+- Adding new files to `assets/` subdirectories requires `flutter clean && flutter run` - hot restart does NOT rebuild the asset bundle
+- If image shows 404 with path like `assets/assets/brands/.../image.png`, the file exists in source but isn't in the build output
+- Always run full rebuild after adding new images to `assets/brands/{brand}/images/`
 
 ### 4. Cloud Function Signature (v2 API)
 
@@ -433,6 +445,48 @@ puzzle.currentPlayerId = firstPlayerId;  // Start with preferred player
 - Actual renderer: `lib/screens/linked_game_screen.dart:468-526`
 - Unused widget: `lib/widgets/linked/clue_cell.dart` (kept for potential future use)
 
+### 14. Linked Game Answer Cell Colors
+
+**CRITICAL:** Answer cell colors are defined INLINE in `linked_game_screen.dart:749-775`, NOT in `answer_cell.dart`.
+
+**The Problem:** The grid container uses a dark background (`textPrimary`) for grid lines. If cell colors use `withOpacity()`, the dark background bleeds through the transparency.
+
+**The Fix:** Use `Color.alphaBlend()` to create **solid, opaque** colors:
+
+```dart
+// lib/screens/linked_game_screen.dart - _buildAnswerCell()
+// ❌ WRONG - transparent, dark background shows through
+bgColor = BrandLoader().colors.warning.withOpacity(0.2);
+
+// ✅ CORRECT - solid color, no bleed-through
+final surface = BrandLoader().colors.surface;
+bgColor = Color.alphaBlend(BrandLoader().colors.warning.withOpacity(0.2), surface);
+```
+
+**Current color definitions (lines 749-775):**
+```dart
+final surface = BrandLoader().colors.surface;
+switch (state) {
+  case AnswerCellState.empty:
+    bgColor = surface;  // Pure white
+  case AnswerCellState.draft:
+    bgColor = Color.alphaBlend(BrandLoader().colors.warning.withOpacity(0.2), surface);  // Light yellow
+  case AnswerCellState.locked:
+    bgColor = Color.alphaBlend(BrandLoader().colors.success.withOpacity(0.15), surface); // Light green
+  case AnswerCellState.incorrect:
+    bgColor = Color.alphaBlend(BrandLoader().colors.error.withOpacity(0.7), surface);    // Red
+}
+```
+
+**Files:**
+- Actual colors: `lib/screens/linked_game_screen.dart:749-775` (`_buildAnswerCell()` method)
+- Unused widget: `lib/widgets/linked/answer_cell.dart` (imported but NOT used by the screen)
+
+**Why the grid needs dark background:**
+- Line 319: `Container(color: BrandLoader().colors.textPrimary)` creates grid lines
+- GridView has 2px spacing between cells, dark container shows through gaps
+- This is intentional for grid lines, but cells must be OPAQUE to cover it
+
 ---
 
 ## Testing & Debugging
@@ -725,6 +779,7 @@ cd api && ./scripts/test_memory_flip_api.sh
 | `lib/screens/word_ladder_game_screen.dart` | Word ladder gameplay |
 | `lib/screens/memory_flip_game_screen.dart` | Memory Flip 4×4 card grid |
 | `lib/screens/linked_game_screen.dart` | Linked (arroword) puzzle gameplay |
+| `lib/widgets/linked/answer_cell.dart` | **ACTUAL** answer cell colors (draft/locked/incorrect states) |
 | `lib/widgets/linked/clue_cell.dart` | **UNUSED** - clues rendered inline in linked_game_screen.dart |
 
 ### UI Components
@@ -787,4 +842,4 @@ cd api && ./scripts/test_memory_flip_api.sh
 
 ---
 
-**Last Updated:** 2025-11-21 (Added Flutter Testing Guide, API testing without simulators)
+**Last Updated:** 2025-11-26 (Added Linked Game Answer Cell Colors warning - check widget files when UI changes don't take effect)
