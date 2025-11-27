@@ -1,0 +1,49 @@
+{
+  "author": "Crossword Maker GPT",
+  "title": "Adult Intimacy Puzzle #3",
+  "size": {
+    "rows": 9,
+    "cols": 7
+  },
+  "clues": {
+    "1": { "type": "emoji", "content": "🥵", "arrow": "down", "target_index": 8 },
+    "2": { "type": "text", "content": "In the manner of", "arrow": "down", "target_index": 9 },
+    "3": { "type": "emoji", "content": "💫", "arrow": "down", "target_index": 11 },
+    "4": { "type": "text", "content": "After @", "arrow": "down", "target_index": 12 },
+    "5": { "type": "emoji", "content": "💓", "arrow": "down", "target_index": 13 },
+    "6": { "type": "text", "content": "One-handed browsing result", "arrow": "across", "target_index": 11 },
+    "7": { "type": "text", "content": "Command to proceed", "arrow": "down", "target_index": 24 },
+    "8": { "type": "text", "content": "C_CK", "arrow": "across", "target_index": 20 },
+    "9": { "type": "text", "content": "Before F", "arrow": "across", "target_index": 29 },
+    "10": { "type": "text", "content": "_PANK", "arrow": "across", "target_index": 34 },
+    "11": { "type": "text", "content": "After Q", "arrow": "across", "target_index": 36 },
+    "12": { "type": "text", "content": "Get on", "arrow": "down", "target_index": 44 },
+    "13": { "type": "text", "content": "Together as one", "arrow": "down", "target_index": 55 },
+    "14": { "type": "emoji", "content": "💍", "arrow": "across", "target_index": 50 },
+    "15": { "type": "text", "content": "Confident stance", "arrow": "across", "target_index": 58 }
+  },
+  "date": "2025-11-26",
+  "grid": [
+    ".", ".", ".", ".", ".", ".", ".",
+    ".", "F", "A", ".", "F", "A", "P",
+    ".", "E", "S", ".", "L", ".", "U",
+    ".", "V", ".", "G", "I", ".", "L",
+    ".", "E", ".", "O", "N", ".", "S",
+    ".", "R", ".", ".", "G", ".", "E",
+    ".", ".", "H", ".", ".", ".", ".",
+    ".", "V", "O", "W", "S", ".", "W",
+    ".", ".", "P", "O", "I", "S", "E"
+  ],
+  "gridnums": [
+    0, 1, 2, 0, 3, 4, 5,
+    0, 0, 0, 6, 0, 0, 0,
+    0, 0, 0, 7, 0, 8, 0,
+    0, 0, 0, 0, 0, 0, 0,
+    9, 0, 0, 0, 0, 10, 0,
+    11, 0, 12, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 13,
+    14, 0, 0, 0, 0, 0, 0,
+    0, 15, 0, 0, 0, 0, 0
+  ],
+  "puzzleId": "puzzle_003"
+}

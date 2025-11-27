@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Word Search - Mockup Index</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            background: #fafafa;
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            font-size: 32px;
+            font-weight: 400;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+            border-bottom: 2px solid #000;
+            padding-bottom: 16px;
+        }
+
+        .subtitle {
+            font-size: 14px;
+            color: #666;
+            font-style: italic;
+            margin-bottom: 32px;
+        }
+
+        .mockup-list {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .mockup-card {
+            border: 2px solid #000;
+            background: #fff;
+            padding: 24px;
+            text-decoration: none;
+            color: inherit;
+            display: block;
+            transition: all 0.2s ease;
+            box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.1);
+        }
+
+        .mockup-card:hover {
+            transform: translate(-2px, -2px);
+            box-shadow: 6px 6px 0 rgba(0, 0, 0, 0.15);
+        }
+
+        .mockup-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .mockup-desc {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.5;
+        }
+
+        .features {
+            margin-top: 16px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .feature-tag {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border: 1px solid #000;
+            padding: 4px 8px;
+            background: #f5f5f5;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 32px;
+            font-size: 14px;
+            color: #666;
+            text-decoration: none;
+            border-bottom: 1px solid #999;
+        }
+
+        .back-link:hover {
+            color: #000;
+            border-color: #000;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Word Search Game</h1>
+        <p class="subtitle">Interactive puzzle mockups for TogetherRemind</p>
+
+        <div class="mockup-list">
+            <a href="word-search-game.html" class="mockup-card">
+                <div class="mockup-title">Word Search (Linked Style)</div>
+                <div class="mockup-desc">
+                    Turn-based word search puzzle matching the Linked game's visual style.
+                    Find 3 words per turn, then pass to partner. Features header with
+                    scores, floating selection bubble, word bank, and completion screen.
+                </div>
+                <div class="features">
+                    <span class="feature-tag">10x10 Grid</span>
+                    <span class="feature-tag">Turn-Based</span>
+                    <span class="feature-tag">3 Words/Turn</span>
+                    <span class="feature-tag">Linked Style</span>
+                    <span class="feature-tag">Hints</span>
+                    <span class="feature-tag">Animations</span>
+                </div>
+            </a>
+        </div>
+
+        <a href="../flow-index.html" class="back-link">Back to All Mockups</a>
+    </div>
+</body>
+</html>

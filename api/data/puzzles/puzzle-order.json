@@ -1,9 +1,10 @@
 {
   "puzzles": [
-    "arroword_001",
-    "arroword_002",
-    "arroword_003",
-    "arroword_004"
+    "puzzle_001",
+    "puzzle_002",
+    "puzzle_003",
+    "puzzle_004",
+    "puzzle_005"
   ],
   "description": "Ordered list of puzzle IDs. Couples will progress through these sequentially."
 }

@@ -43,21 +43,41 @@ function transformCluesForClient(clues: any, puzzleId: string, baseUrl: string):
 
 // Get puzzle data without solution (for client)
 function getPuzzleForClient(puzzle: any, baseUrl: string = ''): any {
-  const { grid, gridnums, size, clues } = puzzle;
+  const { grid, size, clues } = puzzle;
   const cellTypes: string[] = [];
+  const cols = size.cols;
 
+  // Build a set of clue cell indices from target_index values
+  // For "across" clue with target_index X, clue cell is at X-1 (left of answer)
+  // For "down" clue with target_index X, clue cell is at X-cols (above answer)
+  const clueCellIndices = new Set<number>();
+
+  for (const [clueNum, clueData] of Object.entries(clues)) {
+    const clue = clueData as any;
+    const targetIndex = clue.target_index;
+    if (targetIndex === undefined) continue;
+
+    let clueCellIndex: number;
+    if (clue.arrow === 'across') {
+      clueCellIndex = targetIndex - 1;
+    } else if (clue.arrow === 'down') {
+      clueCellIndex = targetIndex - cols;
+    } else {
+      continue;
+    }
+
+    if (clueCellIndex >= 0 && clueCellIndex < grid.length) {
+      clueCellIndices.add(clueCellIndex);
+    }
+  }
+
+  // Now build cellTypes array
   for (let i = 0; i < grid.length; i++) {
-    // Check if it's a clue cell (has clue number AND matching clue data)
-    const clueNum = gridnums[i];
-    if (clueNum > 0 && clues[clueNum.toString()]) {
+    if (clueCellIndices.has(i)) {
       cellTypes.push('clue');
-    }
-    // Void cells: '.' in grid and not a clue cell
-    else if (grid[i] === '.') {
+    } else if (grid[i] === '.') {
       cellTypes.push('void');
-    }
-    // Answer cells: has a letter (not '.')
-    else {
+    } else {
       cellTypes.push('answer');
     }
   }
@@ -68,7 +88,6 @@ function getPuzzleForClient(puzzle: any, baseUrl: string = ''): any {
     author: puzzle.author,
     size: puzzle.size,
     clues: transformCluesForClient(clues, puzzle.puzzleId, baseUrl),
-    gridnums: puzzle.gridnums,
     cellTypes: cellTypes,
     // NOTE: grid (solution) is NOT sent to client
   };

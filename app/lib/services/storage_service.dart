@@ -14,6 +14,7 @@ import '../models/daily_quest.dart';
 import '../models/quiz_progression_state.dart';
 import '../models/you_or_me.dart';
 import '../models/linked.dart';
+import '../models/word_search.dart';
 import '../utils/logger.dart';
 
 class StorageService {
@@ -38,6 +39,7 @@ class StorageService {
   static const String _youOrMeProgressionBox = 'you_or_me_progression';
   static const String _appMetadataBox = 'app_metadata';  // Untyped box for metadata
   static const String _linkedMatchesBox = 'linked_matches';
+  static const String _wordSearchMatchesBox = 'word_search_matches';
 
   static Future<void> init() async {
     try {
@@ -69,6 +71,8 @@ class StorageService {
       if (!Hive.isAdapterRegistered(21)) Hive.registerAdapter(YouOrMeAnswerAdapter());
       if (!Hive.isAdapterRegistered(22)) Hive.registerAdapter(YouOrMeSessionAdapter());
       if (!Hive.isAdapterRegistered(23)) Hive.registerAdapter(LinkedMatchAdapter());
+      if (!Hive.isAdapterRegistered(24)) Hive.registerAdapter(WordSearchFoundWordAdapter());
+      if (!Hive.isAdapterRegistered(25)) Hive.registerAdapter(WordSearchMatchAdapter());
 
       // Open boxes
       Logger.debug('Opening Hive boxes...', service: 'storage');
@@ -93,8 +97,9 @@ class StorageService {
       await Hive.openBox(_youOrMeProgressionBox);  // Untyped box for question tracking
       await Hive.openBox(_appMetadataBox);  // Untyped box for app metadata
       await Hive.openBox<LinkedMatch>(_linkedMatchesBox);
+      await Hive.openBox<WordSearchMatch>(_wordSearchMatchesBox);
 
-      Logger.info('Hive storage initialized successfully (21 boxes opened)', service: 'storage');
+      Logger.info('Hive storage initialized successfully (22 boxes opened)', service: 'storage');
     } catch (e, stackTrace) {
       Logger.error('Failed to initialize Hive storage', error: e, stackTrace: stackTrace, service: 'storage');
       rethrow;
@@ -451,6 +456,47 @@ class StorageService {
 
   Future<void> updateLinkedMatch(LinkedMatch match) async {
     await match.save();
+  }
+
+  // Word Search Match operations
+  Box<WordSearchMatch> get wordSearchMatchesBox => Hive.box<WordSearchMatch>(_wordSearchMatchesBox);
+
+  Future<void> saveWordSearchMatch(WordSearchMatch match) async {
+    await wordSearchMatchesBox.put(match.matchId, match);
+  }
+
+  WordSearchMatch? getWordSearchMatch(String matchId) {
+    return wordSearchMatchesBox.get(matchId);
+  }
+
+  List<WordSearchMatch> getAllWordSearchMatches() {
+    final matches = wordSearchMatchesBox.values.toList();
+    matches.sort((a, b) => b.createdAt.compareTo(a.createdAt));
+    return matches;
+  }
+
+  WordSearchMatch? getActiveWordSearchMatch() {
+    return wordSearchMatchesBox.values
+        .where((m) => m.status == 'active')
+        .firstOrNull;
+  }
+
+  List<WordSearchMatch> getCompletedWordSearchMatches() {
+    final matches = wordSearchMatchesBox.values
+        .where((m) => m.status == 'completed')
+        .toList();
+    if (matches.isNotEmpty) {
+      matches.sort((a, b) => b.completedAt!.compareTo(a.completedAt!));
+    }
+    return matches;
+  }
+
+  Future<void> updateWordSearchMatch(WordSearchMatch match) async {
+    await match.save();
+  }
+
+  Future<void> deleteWordSearchMatch(String matchId) async {
+    await wordSearchMatchesBox.delete(matchId);
   }
 
   // Daily Pulse operations

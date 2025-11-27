@@ -1,0 +1,142 @@
+{
+  "author": "Crossword Maker GPT",
+  "title": "Adult Intimacy Puzzle #3",
+  "size": {
+    "rows": 9,
+    "cols": 7
+  },
+  "clues": {
+    "1": {
+      "type": "text",
+      "content": "Pussy (abbr.)",
+      "arrow": "down",
+      "target_index": 10
+    },
+    "2": {
+      "type": "text",
+      "content": "Kinky",
+      "arrow": "down",
+      "target_index": 13
+    },
+    "3": {
+      "type": "text",
+      "content": "Undress sound",
+      "arrow": "across",
+      "target_index": 8
+    },
+    "4": {
+      "type": "emoji",
+      "content": "🤗",
+      "arrow": "down",
+      "target_index": 18
+    },
+    "5": {
+      "type": "emoji",
+      "content": "✅",
+      "arrow": "down",
+      "target_index": 23
+    },
+    "6": {
+      "type": "text",
+      "content": "Lose clothing",
+      "arrow": "across",
+      "target_index": 17
+    },
+    "7": {
+      "type": "text",
+      "content": "Mom I'd like to follow home",
+      "arrow": "down",
+      "target_index": 29
+    },
+    "8": {
+      "type": "text",
+      "content": "C_EAM",
+      "arrow": "down",
+      "target_index": 31
+    },
+    "9": {
+      "type": "text",
+      "content": "CR_AM",
+      "arrow": "down",
+      "target_index": 33
+    },
+    "10": {
+      "type": "emoji",
+      "content": "🫂",
+      "arrow": "across",
+      "target_index": 29
+    },
+    "11": {
+      "type": "emoji",
+      "content": "🔥",
+      "arrow": "down",
+      "target_index": 41
+    },
+    "12": {
+      "type": "text",
+      "content": "L__S",
+      "arrow": "across",
+      "target_index": 36
+    },
+    "13": {
+      "type": "text",
+      "content": "Frustration sound",
+      "arrow": "down",
+      "target_index": 45
+    },
+    "14": {
+      "type": "text",
+      "content": "Erect state",
+      "arrow": "across",
+      "target_index": 45
+    },
+    "15": {
+      "type": "text",
+      "content": "GI_T",
+      "arrow": "across",
+      "target_index": 50
+    },
+    "16": {
+      "type": "text",
+      "content": "_REAM",
+      "arrow": "down",
+      "target_index": 58
+    },
+    "17": {
+      "type": "text",
+      "content": "Breast (abbr.)",
+      "arrow": "across",
+      "target_index": 54
+    },
+    "18": {
+      "type": "text",
+      "content": "Attractive quality",
+      "arrow": "across",
+      "target_index": 58
+    }
+  },
+  "date": "2025-11-26"
+,
+  "grid": [
+    ".", ".", ".", ".", ".", ".", ".",
+    ".", "Z", "I", "P", ".", ".", "O",
+    ".", ".", ".", "S", "H", "E", "D",
+    ".", ".", "Y", ".", "U", ".", "D",
+    ".", "M", "E", "R", "G", "E", ".",
+    ".", "I", "P", ".", ".", ".", "W",
+    ".", "L", ".", "U", "P", ".", "A",
+    ".", "F", ".", "G", ".", "B", "R",
+    ".", ".", "C", "H", "A", "R", "M"
+  ],
+  "gridnums": [
+    0, 0, 0, 1, 0, 0, 2,
+    3, 0, 0, 0, 4, 0, 0,
+    0, 0, 5, 0, 0, 0, 0,
+    0, 7, 0, 8, 0, 9, 0,
+    10, 0, 0, 0, 0, 0, 11,
+    12, 0, 0, 13, 0, 0, 0,
+    0, 0, 14, 0, 0, 0, 0,
+    15, 0, 16, 0, 17, 0, 0,
+    0, 18, 0, 0, 0, 0, 0
+  ]
+}
