@@ -70,6 +70,20 @@ assets/raw_images/
 12. Talking Comfortably.png (159 KB)
 13. simple_joys.png (747 KB)
 
+### November 27, 2025
+
+**Quest Card Images:**
+
+**Cropped with fuzz factor (10%):**
+1. linked.png (914×857, 1.2 MB) - Linked puzzle quest card
+
+**Command used:**
+```bash
+magick "linked.png" -fuzz 10% -trim +repage "cropped/linked.png"
+```
+
+**Note:** Standard `-trim` didn't detect the near-white border. The `-fuzz 10%` option treats pixels within 10% color similarity as matching, which successfully removed the whitespace margins.
+
 ---
 
 ## ImageMagick Commands
@@ -485,7 +499,8 @@ git commit -m "Add optimized affirmation quiz images"
 |------|--------|--------|
 | 2025-11-15 | Initial documentation created | Claude Code |
 | 2025-11-14 | Image processing performed (13 images cropped) | - |
+| 2025-11-27 | Added linked.png with fuzz factor cropping | Claude Code |
 
 ---
 
-**Last Updated:** 2025-11-15
+**Last Updated:** 2025-11-27

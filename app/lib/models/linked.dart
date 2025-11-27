@@ -205,9 +205,13 @@ class LinkedPuzzle {
   final int rows;
   final int cols;
   final Map<String, LinkedClue> clues; // Clue number -> clue data
-  final List<int> gridnums; // Clue numbers at each cell (0 = no clue)
   final List<String> cellTypes; // 'void', 'clue', or 'answer' for each cell
   // Note: grid (solution) is never sent to client
+
+  // Internal lookup: clue cell index -> list of clues displayed in that cell
+  // For "across" clue with target_index X, clue cell is at X-1 (left of answer)
+  // For "down" clue with target_index X, clue cell is at X-cols (above answer)
+  late final Map<int, List<LinkedClue>> _cluesByClueCellIndex;
 
   LinkedPuzzle({
     required this.puzzleId,
@@ -216,9 +220,28 @@ class LinkedPuzzle {
     required this.rows,
     required this.cols,
     required this.clues,
-    required this.gridnums,
     required this.cellTypes,
-  });
+  }) {
+    // Build the clue cell index lookup map
+    _cluesByClueCellIndex = {};
+    for (final clue in clues.values) {
+      final clueCellIndex = _calculateClueCellIndex(clue);
+      if (clueCellIndex >= 0) {
+        _cluesByClueCellIndex.putIfAbsent(clueCellIndex, () => []);
+        _cluesByClueCellIndex[clueCellIndex]!.add(clue);
+      }
+    }
+  }
+
+  /// Calculate the cell index where the clue is displayed
+  int _calculateClueCellIndex(LinkedClue clue) {
+    if (clue.isAcross) {
+      return clue.targetIndex - 1; // Left of answer start
+    } else if (clue.isDown) {
+      return clue.targetIndex - cols; // Above answer start
+    }
+    return -1;
+  }
 
   int get totalCells => rows * cols;
 
@@ -233,6 +256,47 @@ class LinkedPuzzle {
   /// Check if cell at index is an answer cell
   bool isAnswerCell(int index) =>
       index < cellTypes.length && cellTypes[index] == 'answer';
+
+  /// Get all clues displayed in this cell
+  List<LinkedClue> getCluesAtCell(int index) {
+    return _cluesByClueCellIndex[index] ?? [];
+  }
+
+  /// Check if cell at index is a split clue cell (has two clues pointing to it)
+  bool isSplitClueCell(int index) {
+    final cluesAtCell = getCluesAtCell(index);
+    return cluesAtCell.length >= 2;
+  }
+
+  /// Get clues for a split cell (returns [acrossClue, downClue] or null if not split)
+  List<LinkedClue>? getSplitClues(int index) {
+    final cluesAtCell = getCluesAtCell(index);
+    if (cluesAtCell.length < 2) return null;
+
+    // Find across and down clues
+    LinkedClue? acrossClue;
+    LinkedClue? downClue;
+
+    for (final clue in cluesAtCell) {
+      if (clue.isAcross) {
+        acrossClue = clue;
+      } else if (clue.isDown) {
+        downClue = clue;
+      }
+    }
+
+    if (acrossClue == null || downClue == null) return null;
+
+    // Return in order: across first (top), down second (bottom)
+    return [acrossClue, downClue];
+  }
+
+  /// Get single clue at cell (for regular clue cells)
+  LinkedClue? getClueAtCell(int index) {
+    final cluesAtCell = getCluesAtCell(index);
+    if (cluesAtCell.isEmpty) return null;
+    return cluesAtCell.first;
+  }
 
   /// Count total answer cells
   int countAnswerCells() => cellTypes.where((t) => t == 'answer').length;
@@ -256,7 +320,6 @@ class LinkedPuzzle {
       rows: size['rows'] as int,
       cols: size['cols'] as int,
       clues: clues,
-      gridnums: List<int>.from(json['gridnums'] ?? []),
       cellTypes: List<String>.from(json['cellTypes'] ?? []),
     );
   }

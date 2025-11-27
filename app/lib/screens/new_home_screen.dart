@@ -7,6 +7,7 @@ import '../services/arena_service.dart';
 import '../services/daily_pulse_service.dart';
 import '../services/ladder_service.dart';
 import '../services/memory_flip_service.dart';
+import '../services/word_search_service.dart';
 import '../services/quiz_service.dart';
 import '../services/daily_quest_service.dart';
 import '../services/quest_sync_service.dart';
@@ -23,6 +24,7 @@ import 'daily_pulse_screen.dart';
 import 'word_ladder_hub_screen.dart';
 import 'memory_flip_game_screen.dart';
 import 'linked_game_screen.dart';
+import 'word_search_game_screen.dart';
 import 'quiz_intro_screen.dart';
 import 'inbox_screen.dart';
 
@@ -39,6 +41,7 @@ class _NewHomeScreenState extends State<NewHomeScreen> with SingleTickerProvider
   final DailyPulseService _pulseService = DailyPulseService();
   final LadderService _ladderService = LadderService();
   final MemoryFlipService _memoryService = MemoryFlipService();
+  final WordSearchService _wordSearchService = WordSearchService();
   final QuizService _quizService = QuizService();
 
   bool _isRefreshing = false;
@@ -559,7 +562,7 @@ class _NewHomeScreenState extends State<NewHomeScreen> with SingleTickerProvider
         // Version number for debugging hot reload
         Center(
           child: Text(
-            'v1.0.21',
+            'v1.0.26',
             style: TextStyle(
               fontSize: 10,
               color: BrandLoader().colors.textTertiary,
@@ -838,6 +841,14 @@ class _NewHomeScreenState extends State<NewHomeScreen> with SingleTickerProvider
         // Refresh state after returning to show updated quest status
         if (mounted) setState(() {});
         break;
+      case QuestType.wordSearch:
+        await Navigator.push(
+          context,
+          MaterialPageRoute(builder: (_) => const WordSearchGameScreen()),
+        );
+        // Refresh state after returning to show updated quest status
+        if (mounted) setState(() {});
+        break;
       default:
         // Fallback for unknown quest types
         ScaffoldMessenger.of(context).showSnackBar(
@@ -899,6 +910,47 @@ class _NewHomeScreenState extends State<NewHomeScreen> with SingleTickerProvider
     }
 
     quests.add(linkedQuest);
+
+    // Word Search - always show SECOND (turn-based word search puzzle)
+    final activeWordSearchMatch = _wordSearchService.getCachedActiveMatch();
+
+    String wordSearchDesc;
+    String wordSearchContentId;
+    if (activeWordSearchMatch != null && activeWordSearchMatch.status == 'active') {
+      wordSearchDesc = '${activeWordSearchMatch.progressPercentInt}% complete';
+      wordSearchContentId = activeWordSearchMatch.matchId;
+    } else {
+      wordSearchDesc = 'Start new puzzle';
+      wordSearchContentId = 'new_word_search';
+    }
+
+    final wordSearchQuest = DailyQuest.create(
+      dateKey: dateKey,
+      type: QuestType.wordSearch,
+      contentId: wordSearchContentId,
+      isSideQuest: true,
+      imagePath: null,
+      description: wordSearchDesc,
+    );
+
+    // Set completion state based on match status
+    if (user != null && partner != null && activeWordSearchMatch != null) {
+      if (activeWordSearchMatch.status == 'completed') {
+        wordSearchQuest.status = 'completed';
+        wordSearchQuest.userCompletions = {
+          user.id: true,
+          partner.pushToken: true,
+        };
+      } else if (activeWordSearchMatch.currentTurnUserId != user.id) {
+        // It's partner's turn - show partner badge
+        wordSearchQuest.userCompletions = {
+          user.id: true,
+          partner.pushToken: false,
+        };
+      }
+    }
+
+    quests.add(wordSearchQuest);
 
     // Word Ladder - always show (users can start new sessions)
     final activeLadders = _ladderService.getActiveLadders();

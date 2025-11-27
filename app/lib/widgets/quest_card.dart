@@ -199,6 +199,10 @@ class QuestCard extends StatelessWidget {
         return '$questImages/you-or-me.png';
       case QuestType.question:
         return '$questImages/daily-question.png';
+      case QuestType.linked:
+        return '$questImages/linked.png';
+      case QuestType.wordSearch:
+        return '$questImages/word-search.png';
       default:
         return null;
     }
@@ -226,6 +230,8 @@ class QuestCard extends StatelessWidget {
         return 'Guess who said what';
       case QuestType.question:
         return 'Share your thoughts';
+      case QuestType.wordSearch:
+        return 'Find twelve hidden words';
       default:
         return '';
     }
@@ -417,6 +423,8 @@ class QuestCard extends StatelessWidget {
         return 'You or Me?';
       case QuestType.linked:
         return 'Linked Puzzle';
+      case QuestType.wordSearch:
+        return 'Word Search';
     }
   }
 

@@ -297,6 +297,10 @@ class _DailyQuestsWidgetState extends State<DailyQuestsWidget> {
       case QuestType.linked:
         // Linked is handled via Side Quests carousel, not daily quests
         break;
+
+      case QuestType.wordSearch:
+        // TODO: Navigate to Word Search screen
+        break;
     }
 
     // Refresh state after returning

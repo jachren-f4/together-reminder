@@ -10,6 +10,7 @@ enum QuestType {
   memoryFlip,
   youOrMe,
   linked,
+  wordSearch,
 }
 
 @HiveType(typeId: 17)
