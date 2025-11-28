@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Steps Counter - Past 20K</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            background: #fafafa;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 420px;
+            margin: 0 auto;
+            background: #fff;
+            border: 2px solid #000;
+            box-shadow: 8px 8px 0 rgba(0, 0, 0, 0.1);
+            min-height: 700px;
+        }
+
+        .variant-label {
+            background: #000;
+            color: #fff;
+            padding: 8px 16px;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .header {
+            border-bottom: 2px solid #000;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .back-btn {
+            font-size: 20px;
+            background: none;
+            border: none;
+            cursor: pointer;
+        }
+
+        .header-title {
+            font-size: 18px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .header-spacer {
+            width: 20px;
+        }
+
+        /* Max Reward Banner */
+        .max-banner {
+            background: #000;
+            color: #fff;
+            padding: 16px 24px;
+            text-align: center;
+        }
+
+        .max-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border: 1px solid rgba(255,255,255,0.3);
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+
+        .max-text {
+            font-size: 14px;
+            opacity: 0.8;
+        }
+
+        .max-reward {
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        /* Today Section */
+        .today-section {
+            padding: 32px 24px;
+        }
+
+        .today-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #666;
+            margin-bottom: 24px;
+            text-align: center;
+        }
+
+        /* Dual Ring Progress */
+        .ring-container {
+            position: relative;
+            width: 280px;
+            height: 280px;
+            margin: 0 auto 24px;
+        }
+
+        .ring-svg {
+            transform: rotate(-90deg);
+        }
+
+        .ring-bg {
+            fill: none;
+            stroke: #e0e0e0;
+            stroke-width: 14;
+        }
+
+        .ring-outer {
+            fill: none;
+            stroke: #000;
+            stroke-width: 14;
+            stroke-linecap: round;
+            stroke-dasharray: 720;
+        }
+
+        .ring-inner {
+            fill: none;
+            stroke: #666;
+            stroke-width: 14;
+            stroke-linecap: round;
+            stroke-dasharray: 565;
+        }
+
+        .ring-center {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+        }
+
+        .ring-number {
+            font-size: 48px;
+            font-weight: 700;
+            letter-spacing: -2px;
+        }
+
+        .ring-number .overflow {
+            color: #666;
+            font-size: 14px;
+            font-weight: 400;
+            display: block;
+            margin-top: 4px;
+        }
+
+        .ring-max {
+            font-size: 12px;
+            color: #000;
+            margin-top: 4px;
+            font-weight: 600;
+        }
+
+        /* Legend */
+        .legend {
+            display: flex;
+            justify-content: center;
+            gap: 32px;
+            margin-bottom: 24px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .legend-color {
+            width: 12px;
+            height: 12px;
+            border-radius: 2px;
+        }
+
+        .legend-color.you {
+            background: #000;
+        }
+
+        .legend-color.partner {
+            background: #666;
+        }
+
+        .legend-text {
+            font-size: 12px;
+        }
+
+        .legend-steps {
+            font-weight: 600;
+        }
+
+        /* Overflow Indicator */
+        .overflow-section {
+            text-align: center;
+            padding: 20px;
+            background: #f8f8f8;
+            margin: 0 -24px;
+        }
+
+        .overflow-bar {
+            height: 8px;
+            background: #e0e0e0;
+            margin-bottom: 12px;
+            position: relative;
+            overflow: visible;
+        }
+
+        .overflow-bar-fill {
+            height: 100%;
+            background: #000;
+            width: 100%;
+        }
+
+        .overflow-bar-extra {
+            position: absolute;
+            right: -20px;
+            top: 0;
+            height: 100%;
+            width: 20px;
+            background: repeating-linear-gradient(
+                90deg,
+                #000,
+                #000 4px,
+                transparent 4px,
+                transparent 8px
+            );
+        }
+
+        .overflow-text {
+            font-size: 12px;
+            color: #666;
+        }
+
+        .overflow-text strong {
+            color: #000;
+        }
+
+        /* Sync Status */
+        .sync-status {
+            text-align: center;
+            font-size: 11px;
+            color: #999;
+            padding: 24px;
+        }
+
+        .sync-time {
+            margin-top: 4px;
+        }
+
+        /* Tomorrow Preview */
+        .tomorrow-preview {
+            padding: 20px 24px;
+            border-top: 1px solid #e0e0e0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .tomorrow-label {
+            font-size: 12px;
+            color: #666;
+        }
+
+        .tomorrow-label strong {
+            display: block;
+            color: #000;
+            font-size: 14px;
+        }
+
+        .tomorrow-reward {
+            font-size: 24px;
+            font-weight: 700;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="variant-label">Counter Screen - Past 20K (Max Reached)</div>
+
+        <div class="header">
+            <button class="back-btn">←</button>
+            <div class="header-title">Steps Together</div>
+            <div class="header-spacer"></div>
+        </div>
+
+        <!-- Max Reward Banner -->
+        <div class="max-banner">
+            <div class="max-badge">Max Tier Reached!</div>
+            <div class="max-text">Tomorrow you'll earn</div>
+            <div class="max-reward">+30 LP</div>
+        </div>
+
+        <!-- Today Section -->
+        <div class="today-section">
+            <div class="today-label">Today · Goal Exceeded!</div>
+
+            <div class="ring-container">
+                <svg class="ring-svg" width="280" height="280" viewBox="0 0 280 280">
+                    <!-- Background rings -->
+                    <circle class="ring-bg" cx="140" cy="140" r="115"/>
+                    <circle class="ring-bg" cx="140" cy="140" r="90"/>
+                    <!-- Progress rings at 100% (full) -->
+                    <circle class="ring-outer" cx="140" cy="140" r="115" style="stroke-dashoffset: 0;"/>
+                    <circle class="ring-inner" cx="140" cy="140" r="90" style="stroke-dashoffset: 0;"/>
+                </svg>
+                <div class="ring-center">
+                    <div class="ring-number">
+                        24,500
+                        <span class="overflow">+4,500 over goal</span>
+                    </div>
+                    <div class="ring-max">Goal: 20,000</div>
+                </div>
+            </div>
+
+            <div class="legend">
+                <div class="legend-item">
+                    <div class="legend-color you"></div>
+                    <span class="legend-text">You: <span class="legend-steps">13,200</span></span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color partner"></div>
+                    <span class="legend-text">Taija: <span class="legend-steps">11,300</span></span>
+                </div>
+            </div>
+
+            <div class="overflow-section">
+                <div class="overflow-bar">
+                    <div class="overflow-bar-fill"></div>
+                    <div class="overflow-bar-extra"></div>
+                </div>
+                <div class="overflow-text">
+                    <strong>122%</strong> of daily goal · Keep going!
+                </div>
+            </div>
+        </div>
+
+        <div class="sync-status">
+            Last synced just now
+            <div class="sync-time">Taija synced 5 min ago</div>
+        </div>
+
+        <div class="tomorrow-preview">
+            <div class="tomorrow-label">
+                <strong>Tomorrow's Reward</strong>
+                Maximum tier achieved
+            </div>
+            <div class="tomorrow-reward">+30 LP</div>
+        </div>
+    </div>
+</body>
+</html>

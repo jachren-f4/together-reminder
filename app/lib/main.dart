@@ -11,13 +11,15 @@ import 'package:togetherremind/services/notification_service.dart';
 import 'package:togetherremind/services/quiz_question_bank.dart';
 import 'package:togetherremind/services/affirmation_quiz_bank.dart';
 import 'package:togetherremind/services/you_or_me_service.dart';
-import 'package:togetherremind/services/word_validation_service.dart';
 import 'package:togetherremind/services/quest_sync_service.dart';
 import 'package:togetherremind/services/daily_quest_service.dart';
 import 'package:togetherremind/services/quest_type_manager.dart';
 import 'package:togetherremind/services/love_point_service.dart';
 import 'package:togetherremind/services/couple_preferences_service.dart';
+import 'package:togetherremind/services/steps_feature_service.dart';
+import 'package:togetherremind/services/quest_utilities.dart';
 import 'package:togetherremind/services/auth_service.dart';
+import 'dart:io' show Platform;
 import 'package:togetherremind/services/api_client.dart';
 import 'package:togetherremind/services/sound_service.dart';
 import 'package:togetherremind/services/haptic_service.dart';
@@ -75,9 +77,6 @@ void main() async {
   // Initialize You or Me Service (load questions)
   await YouOrMeService().loadQuestions();
 
-  // Initialize Word Validation Service
-  await WordValidationService.instance.initialize();
-
   // Initialize Sound and Haptic Services
   await SoundService().initialize();
   await HapticService().initialize();
@@ -104,6 +103,9 @@ void main() async {
 
   // Load real data from Supabase instead of mock data
   await DevDataService().loadRealDataIfNeeded();
+
+  // Sync FCM push tokens on every startup (for poke notifications)
+  await DevDataService().syncPushTokensOnStartup();
 
   // Keep mock data service for backward compatibility (currently disabled)
   await MockDataService.injectMockDataIfNeeded();
@@ -177,6 +179,20 @@ Future<void> _initializeDailyQuests() async {
     CouplePreferencesService.startListening();
     Logger.debug('Couple preferences listener initialized', service: 'preferences');
 
+    // 👟 Initialize Steps Together feature (iOS only)
+    if (!kIsWeb && Platform.isIOS) {
+      final coupleId = QuestUtilities.generateCoupleId(user.id, partner.pushToken);
+      await StepsFeatureService().initialize(
+        coupleId: coupleId,
+        userId: user.id,
+      );
+      Logger.debug('Steps feature service initialized', service: 'steps');
+
+      // Sync steps on app launch (if connected to HealthKit)
+      await StepsFeatureService().syncSteps();
+      Logger.debug('Initial steps sync completed', service: 'steps');
+    }
+
     // Initialize services
     final questService = DailyQuestService(storage: storage);
     final syncService = QuestSyncService(
@@ -223,8 +239,45 @@ class TogetherRemindApp extends StatefulWidget {
   State<TogetherRemindApp> createState() => _TogetherRemindAppState();
 }
 
-class _TogetherRemindAppState extends State<TogetherRemindApp> {
+class _TogetherRemindAppState extends State<TogetherRemindApp> with WidgetsBindingObserver {
   final GlobalKey<NavigatorState> _navigatorKey = GlobalKey<NavigatorState>();
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+
+    // Sync steps when app comes back to foreground
+    if (state == AppLifecycleState.resumed) {
+      _syncStepsOnResume();
+    }
+  }
+
+  Future<void> _syncStepsOnResume() async {
+    // Only sync on iOS
+    if (kIsWeb || !Platform.isIOS) return;
+
+    // Only sync if user is connected
+    final storage = StorageService();
+    if (!storage.hasPartner()) return;
+
+    final connection = storage.getStepsConnection();
+    if (connection == null || !connection.isConnected) return;
+
+    Logger.debug('App resumed - syncing steps', service: 'steps');
+    await StepsFeatureService().syncSteps();
+  }
 
   @override
   Widget build(BuildContext context) {

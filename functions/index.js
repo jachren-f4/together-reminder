@@ -1,7 +1,14 @@
 const functions = require('firebase-functions');
 const admin = require('firebase-admin');
+const { CloudTasksClient } = require('@google-cloud/tasks');
 
 admin.initializeApp();
+
+// Cloud Tasks configuration
+const tasksClient = new CloudTasksClient();
+const PROJECT_ID = 'togetherremind';
+const LOCATION = 'us-central1';
+const QUEUE_NAME = 'reminder-queue';
 
 /**
  * Cloud Function to send reminder push notifications
@@ -1292,6 +1299,7 @@ exports.getPairingCode = functions.https.onCall(async (request) => {
       pushToken: data.pushToken,
       name: data.name,
       avatarEmoji: data.avatarEmoji,
+      createdAt: data.createdAt,
     };
 
   } catch (error) {
@@ -1601,5 +1609,242 @@ exports.sendDailyPulseStreakMilestone = functions.https.onCall(async (request) =
       'internal',
       `Failed to send notification: ${error.message}`
     );
+  }
+});
+
+/**
+ * Cloud Function to schedule a reminder for future delivery
+ * Uses Cloud Tasks to delay the notification until the scheduled time
+ */
+exports.scheduleReminder = functions.https.onCall(async (request) => {
+  try {
+    const { partnerToken, senderName, reminderText, reminderId, scheduledFor } = request.data;
+
+    console.log('⏰ Received schedule reminder request');
+    console.log('   partnerToken:', partnerToken ? 'EXISTS' : 'MISSING');
+    console.log('   senderName:', senderName || 'NOT_PROVIDED');
+    console.log('   reminderId:', reminderId || 'NOT_PROVIDED');
+    console.log('   scheduledFor:', scheduledFor || 'NOT_PROVIDED');
+
+    // Validate required fields
+    if (!partnerToken) {
+      throw new functions.https.HttpsError(
+        'invalid-argument',
+        'Partner push token is required'
+      );
+    }
+
+    if (!reminderText) {
+      throw new functions.https.HttpsError(
+        'invalid-argument',
+        'Reminder text is required'
+      );
+    }
+
+    if (!reminderId) {
+      throw new functions.https.HttpsError(
+        'invalid-argument',
+        'Reminder ID is required'
+      );
+    }
+
+    // Parse scheduled time (expecting UTC ISO8601 string)
+    const scheduledDate = new Date(scheduledFor);
+    const now = new Date();
+    const delayMs = scheduledDate.getTime() - now.getTime();
+
+    console.log('   Scheduled for:', scheduledDate.toISOString());
+    console.log('   Current time:', now.toISOString());
+    console.log('   Delay (ms):', delayMs);
+
+    // If scheduled for now or within 1 minute, send immediately
+    if (delayMs <= 60000) {
+      console.log('📤 Sending reminder immediately (delay <= 1 minute)');
+      return await sendReminderImmediately(partnerToken, senderName, reminderText, reminderId);
+    }
+
+    // Create Cloud Task for future delivery
+    console.log('📅 Creating Cloud Task for scheduled delivery');
+
+    const parent = tasksClient.queuePath(PROJECT_ID, LOCATION, QUEUE_NAME);
+
+    // Get the Cloud Function URL for the HTTP trigger
+    const url = `https://${LOCATION}-${PROJECT_ID}.cloudfunctions.net/sendScheduledReminderNotification`;
+
+    const task = {
+      httpRequest: {
+        httpMethod: 'POST',
+        url: url,
+        body: Buffer.from(JSON.stringify({
+          partnerToken,
+          senderName,
+          reminderText,
+          reminderId,
+        })).toString('base64'),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      },
+      scheduleTime: {
+        seconds: Math.floor(scheduledDate.getTime() / 1000),
+      },
+    };
+
+    const [response] = await tasksClient.createTask({ parent, task });
+
+    console.log('✅ Cloud Task created:', response.name);
+
+    return {
+      success: true,
+      scheduled: true,
+      taskName: response.name,
+      scheduledFor: scheduledFor,
+      timestamp: new Date().toISOString(),
+    };
+
+  } catch (error) {
+    console.error('Error scheduling reminder:', error);
+
+    if (error instanceof functions.https.HttpsError) {
+      throw error;
+    }
+
+    throw new functions.https.HttpsError(
+      'internal',
+      `Failed to schedule reminder: ${error.message}`
+    );
+  }
+});
+
+/**
+ * Helper function to send a reminder notification immediately
+ */
+async function sendReminderImmediately(partnerToken, senderName, reminderText, reminderId) {
+  const message = {
+    token: partnerToken,
+    notification: {
+      title: `Reminder from ${senderName || 'Your Partner'}`,
+      body: reminderText,
+    },
+    data: {
+      reminderId: reminderId,
+      fromName: senderName || 'Your Partner',
+      type: 'reminder',
+      text: reminderText,
+    },
+    android: {
+      notification: {
+        channelId: 'reminder_channel',
+        priority: 'high',
+        sound: 'default',
+      },
+    },
+    apns: {
+      payload: {
+        aps: {
+          alert: {
+            title: `Reminder from ${senderName || 'Your Partner'}`,
+            body: reminderText,
+          },
+          sound: 'default',
+          category: 'REMINDER_CATEGORY',
+          contentAvailable: true,
+        },
+      },
+    },
+  };
+
+  const response = await admin.messaging().send(message);
+  console.log('✅ Reminder sent immediately:', response);
+
+  return {
+    success: true,
+    scheduled: false,
+    messageId: response,
+    timestamp: new Date().toISOString(),
+  };
+}
+
+/**
+ * HTTP endpoint called by Cloud Tasks to send the scheduled notification
+ * This is triggered at the scheduled time by Cloud Tasks
+ */
+exports.sendScheduledReminderNotification = functions.https.onRequest(async (req, res) => {
+  try {
+    // Parse the request body (base64 encoded from Cloud Tasks)
+    let body = req.body;
+    if (typeof body === 'string') {
+      body = JSON.parse(Buffer.from(body, 'base64').toString());
+    }
+
+    const { partnerToken, senderName, reminderText, reminderId } = body;
+
+    console.log('⏰ Executing scheduled reminder');
+    console.log('   partnerToken:', partnerToken ? 'EXISTS' : 'MISSING');
+    console.log('   senderName:', senderName || 'NOT_PROVIDED');
+    console.log('   reminderId:', reminderId || 'NOT_PROVIDED');
+
+    if (!partnerToken || !reminderText || !reminderId) {
+      console.error('Missing required fields');
+      res.status(400).send({ error: 'Missing required fields' });
+      return;
+    }
+
+    const message = {
+      token: partnerToken,
+      notification: {
+        title: `Reminder from ${senderName || 'Your Partner'}`,
+        body: reminderText,
+      },
+      data: {
+        reminderId: reminderId,
+        fromName: senderName || 'Your Partner',
+        type: 'reminder',
+        text: reminderText,
+      },
+      android: {
+        notification: {
+          channelId: 'reminder_channel',
+          priority: 'high',
+          sound: 'default',
+        },
+      },
+      apns: {
+        payload: {
+          aps: {
+            alert: {
+              title: `Reminder from ${senderName || 'Your Partner'}`,
+              body: reminderText,
+            },
+            sound: 'default',
+            category: 'REMINDER_CATEGORY',
+            contentAvailable: true,
+          },
+        },
+      },
+    };
+
+    const response = await admin.messaging().send(message);
+    console.log('✅ Scheduled reminder sent:', response);
+
+    res.status(200).send({
+      success: true,
+      messageId: response,
+      timestamp: new Date().toISOString(),
+    });
+
+  } catch (error) {
+    console.error('Error sending scheduled reminder:', error);
+
+    // Return 200 even on FCM errors to prevent Cloud Tasks retry loops
+    // for invalid tokens (the user may have uninstalled the app)
+    if (error.code === 'messaging/invalid-registration-token' ||
+        error.code === 'messaging/registration-token-not-registered') {
+      console.log('⚠️ Invalid token - not retrying');
+      res.status(200).send({ error: 'Invalid token', skipped: true });
+      return;
+    }
+
+    res.status(500).send({ error: error.message });
   }
 });

@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Steps Counter - Normal State</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            background: #fafafa;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 420px;
+            margin: 0 auto;
+            background: #fff;
+            border: 2px solid #000;
+            box-shadow: 8px 8px 0 rgba(0, 0, 0, 0.1);
+            min-height: 700px;
+        }
+
+        .variant-label {
+            background: #000;
+            color: #fff;
+            padding: 8px 16px;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .header {
+            border-bottom: 2px solid #000;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .back-btn {
+            font-size: 20px;
+            background: none;
+            border: none;
+            cursor: pointer;
+        }
+
+        .header-title {
+            font-size: 18px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .header-spacer {
+            width: 20px;
+        }
+
+        /* Yesterday Section */
+        .yesterday-section {
+            padding: 24px;
+            border-bottom: 1px solid #e0e0e0;
+            background: #f8f8f8;
+        }
+
+        .section-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #666;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .claim-badge {
+            background: #000;
+            color: #fff;
+            padding: 2px 8px;
+            font-size: 10px;
+        }
+
+        .yesterday-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .yesterday-steps {
+            font-size: 36px;
+            font-weight: 700;
+        }
+
+        .yesterday-reward {
+            text-align: right;
+        }
+
+        .reward-amount {
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        .reward-label {
+            font-size: 11px;
+            color: #666;
+            text-transform: uppercase;
+        }
+
+        .claim-btn {
+            margin-top: 16px;
+            width: 100%;
+            padding: 14px;
+            font-family: inherit;
+            font-size: 13px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border: 2px solid #000;
+            background: #000;
+            color: #fff;
+            cursor: pointer;
+        }
+
+        /* Today Section */
+        .today-section {
+            padding: 32px 24px;
+        }
+
+        .today-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #666;
+            margin-bottom: 24px;
+            text-align: center;
+        }
+
+        /* Dual Ring Progress */
+        .ring-container {
+            position: relative;
+            width: 280px;
+            height: 280px;
+            margin: 0 auto 24px;
+        }
+
+        .ring-svg {
+            transform: rotate(-90deg);
+        }
+
+        .ring-bg {
+            fill: none;
+            stroke: #e0e0e0;
+            stroke-width: 14;
+        }
+
+        .ring-outer {
+            fill: none;
+            stroke: #000;
+            stroke-width: 14;
+            stroke-linecap: round;
+            stroke-dasharray: 720;
+            stroke-dashoffset: 360; /* 50% filled - your steps */
+        }
+
+        .ring-inner {
+            fill: none;
+            stroke: #666;
+            stroke-width: 14;
+            stroke-linecap: round;
+            stroke-dasharray: 565;
+            stroke-dashoffset: 282; /* 50% filled - partner steps */
+        }
+
+        .ring-center {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+        }
+
+        .ring-number {
+            font-size: 48px;
+            font-weight: 700;
+            letter-spacing: -2px;
+        }
+
+        .ring-goal {
+            font-size: 16px;
+            color: #666;
+        }
+
+        .ring-potential {
+            font-size: 14px;
+            color: #999;
+            margin-top: 4px;
+        }
+
+        /* Legend */
+        .legend {
+            display: flex;
+            justify-content: center;
+            gap: 32px;
+            margin-bottom: 24px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .legend-color {
+            width: 12px;
+            height: 12px;
+            border-radius: 2px;
+        }
+
+        .legend-color.you {
+            background: #000;
+        }
+
+        .legend-color.partner {
+            background: #666;
+        }
+
+        .legend-text {
+            font-size: 12px;
+        }
+
+        .legend-steps {
+            font-weight: 600;
+        }
+
+        /* Sync Status */
+        .sync-status {
+            text-align: center;
+            font-size: 11px;
+            color: #999;
+        }
+
+        .sync-time {
+            margin-top: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="variant-label">Counter Screen - Normal State (Under 20K)</div>
+
+        <div class="header">
+            <button class="back-btn">←</button>
+            <div class="header-title">Steps Together</div>
+            <div class="header-spacer"></div>
+        </div>
+
+        <!-- Yesterday - Claimable -->
+        <div class="yesterday-section">
+            <div class="section-label">
+                Yesterday
+                <span class="claim-badge">Claim Now</span>
+            </div>
+            <div class="yesterday-content">
+                <div class="yesterday-steps">14,200</div>
+                <div class="yesterday-reward">
+                    <div class="reward-amount">+21 LP</div>
+                    <div class="reward-label">Ready to claim</div>
+                </div>
+            </div>
+            <button class="claim-btn">Claim +21 Love Points</button>
+        </div>
+
+        <!-- Today - In Progress -->
+        <div class="today-section">
+            <div class="today-label">Today · In Progress</div>
+
+            <div class="ring-container">
+                <svg class="ring-svg" width="280" height="280" viewBox="0 0 280 280">
+                    <!-- Background rings -->
+                    <circle class="ring-bg" cx="140" cy="140" r="115"/>
+                    <circle class="ring-bg" cx="140" cy="140" r="90"/>
+                    <!-- Progress rings - outer is you, inner is partner -->
+                    <!-- stroke-dashoffset: 720 = 0%, 0 = 100% for outer (circumference ~720) -->
+                    <!-- stroke-dashoffset: 565 = 0%, 0 = 100% for inner (circumference ~565) -->
+                    <circle class="ring-outer" cx="140" cy="140" r="115" style="stroke-dashoffset: 468;"/> <!-- 35% = 7000/20000 -->
+                    <circle class="ring-inner" cx="140" cy="140" r="90" style="stroke-dashoffset: 412;"/> <!-- 27% = 5450/20000 -->
+                </svg>
+                <div class="ring-center">
+                    <div class="ring-number">12,450</div>
+                    <div class="ring-goal">/ 20,000</div>
+                    <div class="ring-potential">Tomorrow: +18 LP</div>
+                </div>
+            </div>
+
+            <div class="legend">
+                <div class="legend-item">
+                    <div class="legend-color you"></div>
+                    <span class="legend-text">You: <span class="legend-steps">7,000</span></span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color partner"></div>
+                    <span class="legend-text">Taija: <span class="legend-steps">5,450</span></span>
+                </div>
+            </div>
+
+            <div class="sync-status">
+                Last synced just now
+                <div class="sync-time">Taija synced 15 min ago</div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

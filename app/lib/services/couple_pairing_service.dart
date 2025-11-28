@@ -121,6 +121,15 @@ class CouplePairingService {
 
       final data = response.data as Map<String, dynamic>;
 
+      // Parse createdAt from API response (database timestamp for accurate "days together")
+      // Fall back to DateTime.now() for backward compatibility
+      DateTime pairedAt;
+      if (data['createdAt'] != null) {
+        pairedAt = DateTime.parse(data['createdAt'] as String);
+      } else {
+        pairedAt = DateTime.now();
+      }
+
       // Create partner object
       // Use partnerName from API response (extracted from user metadata)
       // Fall back to email parsing if name not available
@@ -129,7 +138,7 @@ class CouplePairingService {
               data['partnerEmail']?.split('@').first ??
               'Partner',
         pushToken: '', // Will be set up separately
-        pairedAt: DateTime.now(),
+        pairedAt: pairedAt,
         avatarEmoji: '💕',
       );
 

@@ -2,9 +2,7 @@ import 'package:flutter/material.dart';
 import '../config/brand/brand_loader.dart';
 import '../utils/logger.dart';
 import '../services/quiz_service.dart';
-import '../services/ladder_service.dart';
 import '../services/storage_service.dart';
-import '../services/memory_flip_service.dart';
 import '../services/daily_pulse_service.dart';
 import '../models/quiz_session.dart';
 import '../models/quiz_question.dart';
@@ -13,8 +11,6 @@ import 'quiz_intro_screen.dart';
 import 'quiz_results_screen.dart';
 import 'daily_pulse_screen.dart';
 import 'daily_pulse_results_screen.dart';
-import 'word_ladder_hub_screen.dart';
-import 'memory_flip_game_screen.dart';
 import 'speed_round_intro_screen.dart';
 import 'would_you_rather_intro_screen.dart';
 
@@ -27,9 +23,7 @@ class ActivitiesScreen extends StatefulWidget {
 
 class _ActivitiesScreenState extends State<ActivitiesScreen> {
   final QuizService _quizService = QuizService();
-  final LadderService _ladderService = LadderService();
   final StorageService _storage = StorageService();
-  final MemoryFlipService _memoryFlipService = MemoryFlipService();
   final DailyPulseService _dailyPulseService = DailyPulseService();
 
   @override
@@ -37,10 +31,6 @@ class _ActivitiesScreenState extends State<ActivitiesScreen> {
     final theme = Theme.of(context);
     final completedSessions = _quizService.getCompletedSessions();
     final activeSession = _quizService.getActiveSession();
-    final activeLadderCount = _storage.getActiveLadderCount();
-    final activeLadders = _ladderService.getActiveLadders();
-    final myTurnLadders = activeLadders.where((l) => _ladderService.isMyTurn(l)).length;
-    final yieldedLadders = activeLadders.where((l) => l.isYielded).length;
 
     return Scaffold(
       appBar: AppBar(
@@ -193,21 +183,6 @@ class _ActivitiesScreenState extends State<ActivitiesScreen> {
                 },
                 theme: theme,
               ),
-
-              const SizedBox(height: 16),
-
-              // Word Ladder Duet
-              _buildWordLadderCard(
-                context,
-                theme: theme,
-                myTurnCount: myTurnLadders,
-                yieldedCount: yieldedLadders,
-              ),
-
-              const SizedBox(height: 16),
-
-              // Memory Flip Co-op
-              _buildMemoryFlipCard(context, theme: theme),
 
               const SizedBox(height: 16),
 
@@ -522,281 +497,6 @@ class _ActivitiesScreenState extends State<ActivitiesScreen> {
     } else {
       return '${date.month}/${date.day}/${date.year}';
     }
-  }
-
-  Widget _buildWordLadderCard(
-    BuildContext context, {
-    required ThemeData theme,
-    required int myTurnCount,
-    required int yieldedCount,
-  }) {
-    // Build description with turn info
-    String description = 'Transform words together, one letter at a time';
-    String? badge;
-    Color? badgeColor;
-
-    if (yieldedCount > 0) {
-      badge = '$yieldedCount need${yieldedCount == 1 ? "s" : ""} help!';
-      badgeColor = BrandLoader().colors.warning;
-    } else if (myTurnCount > 0) {
-      badge = '$myTurnCount your turn';
-      badgeColor = theme.colorScheme.primary;
-    }
-
-    return InkWell(
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => const WordLadderHubScreen(),
-          ),
-        ).then((_) => setState(() {}));
-      },
-      borderRadius: BorderRadius.circular(16),
-      child: Container(
-        padding: const EdgeInsets.all(20),
-        decoration: BoxDecoration(
-          color: theme.colorScheme.surfaceContainerHighest.withOpacity(0.5),
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(
-            color: yieldedCount > 0
-                ? BrandLoader().colors.warning
-                : theme.colorScheme.outline.withOpacity(0.2),
-            width: yieldedCount > 0 ? 2 : 1,
-          ),
-        ),
-        child: Row(
-          children: [
-            // Emoji
-            Container(
-              width: 60,
-              height: 60,
-              decoration: BoxDecoration(
-                color: theme.colorScheme.primaryContainer,
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: const Center(
-                child: Text(
-                  '🪜',
-                  style: TextStyle(fontSize: 32),
-                ),
-              ),
-            ),
-
-            const SizedBox(width: 16),
-
-            // Content
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      Expanded(
-                        child: Text(
-                          'Word Ladder Duet',
-                          style: theme.textTheme.titleMedium?.copyWith(
-                            fontWeight: FontWeight.bold,
-                            color: theme.colorScheme.onSurface,
-                          ),
-                        ),
-                      ),
-                      if (badge != null)
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 8,
-                            vertical: 4,
-                          ),
-                          decoration: BoxDecoration(
-                            color: badgeColor!.withOpacity(0.2),
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          child: Text(
-                            badge,
-                            style: TextStyle(
-                              fontSize: 11,
-                              fontWeight: FontWeight.bold,
-                              color: badgeColor,
-                            ),
-                          ),
-                        ),
-                    ],
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    description,
-                    style: theme.textTheme.bodySmall?.copyWith(
-                      color: theme.colorScheme.onSurfaceVariant,
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 8,
-                      vertical: 4,
-                    ),
-                    decoration: BoxDecoration(
-                      color: theme.colorScheme.primaryContainer,
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: Text(
-                      '10-50 LP',
-                      style: TextStyle(
-                        fontSize: 11,
-                        fontWeight: FontWeight.bold,
-                        color: theme.colorScheme.onPrimaryContainer,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-
-            // Arrow
-            Icon(
-              Icons.arrow_forward_ios,
-              size: 16,
-              color: theme.colorScheme.onSurfaceVariant,
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildMemoryFlipCard(BuildContext context, {required ThemeData theme}) {
-    final activePuzzle = _storage.getActivePuzzle();
-    final user = _storage.getUser();
-    String description = 'Find matching emoji pairs together';
-    String? badge;
-    Color? badgeColor;
-
-    if (activePuzzle != null && user != null) {
-      final progress = activePuzzle.matchedPairs;
-      final total = activePuzzle.totalPairs;
-
-      if (progress > 0 && progress < total) {
-        badge = '$progress/$total pairs found';
-        badgeColor = theme.colorScheme.primary;
-      } else if (progress == total) {
-        badge = 'Completed!';
-        badgeColor = BrandLoader().colors.success;
-      }
-    }
-
-    return InkWell(
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => const MemoryFlipGameScreen(),
-          ),
-        ).then((_) => setState(() {}));
-      },
-      borderRadius: BorderRadius.circular(16),
-      child: Container(
-        padding: const EdgeInsets.all(20),
-        decoration: BoxDecoration(
-          color: theme.colorScheme.surfaceContainerHighest.withOpacity(0.5),
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(
-            color: theme.colorScheme.outline.withOpacity(0.2),
-          ),
-        ),
-        child: Row(
-          children: [
-            // Emoji
-            Container(
-              width: 60,
-              height: 60,
-              decoration: BoxDecoration(
-                color: theme.colorScheme.primaryContainer,
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: const Center(
-                child: Text('🃏', style: TextStyle(fontSize: 32)),
-              ),
-            ),
-
-            const SizedBox(width: 16),
-
-            // Content
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Memory Flip Co-op',
-                    style: theme.textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.bold,
-                      color: theme.colorScheme.onSurface,
-                    ),
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    description,
-                    style: theme.textTheme.bodySmall?.copyWith(
-                      color: theme.colorScheme.onSurfaceVariant,
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  Row(
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 8,
-                          vertical: 4,
-                        ),
-                        decoration: BoxDecoration(
-                          color: theme.colorScheme.primaryContainer,
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: Text(
-                          '10-130 LP',
-                          style: TextStyle(
-                            fontSize: 11,
-                            fontWeight: FontWeight.bold,
-                            color: theme.colorScheme.onPrimaryContainer,
-                          ),
-                        ),
-                      ),
-                      if (badge != null) ...[
-                        const SizedBox(width: 8),
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 8,
-                            vertical: 4,
-                          ),
-                          decoration: BoxDecoration(
-                            color: badgeColor,
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          child: Text(
-                            badge,
-                            style: TextStyle(
-                              fontSize: 11,
-                              fontWeight: FontWeight.bold,
-                              color: BrandLoader().colors.textOnPrimary,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ],
-                  ),
-                ],
-              ),
-            ),
-
-            // Arrow
-            Icon(
-              Icons.arrow_forward_ios,
-              size: 16,
-              color: theme.colorScheme.onSurfaceVariant,
-            ),
-          ],
-        ),
-      ),
-    );
   }
 
   Widget _buildDailyPulseSection(ThemeData theme) {

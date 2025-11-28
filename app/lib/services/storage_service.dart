@@ -6,9 +6,6 @@ import '../models/love_point_transaction.dart';
 import '../models/quiz_question.dart';
 import '../models/quiz_session.dart';
 import '../models/badge.dart';
-import '../models/word_pair.dart';
-import '../models/ladder_session.dart';
-import '../models/memory_flip.dart';
 import '../models/quiz_expansion.dart';
 import '../models/daily_quest.dart';
 import '../models/quiz_progression_state.dart';
@@ -16,6 +13,7 @@ import '../models/you_or_me.dart';
 import '../models/linked.dart';
 import '../models/word_search.dart';
 import '../models/branch_progression_state.dart';
+import '../models/steps_data.dart';
 import '../utils/logger.dart';
 
 class StorageService {
@@ -26,9 +24,6 @@ class StorageService {
   static const String _quizQuestionsBox = 'quiz_questions';
   static const String _quizSessionsBox = 'quiz_sessions';
   static const String _badgesBox = 'badges';
-  static const String _ladderSessionsBox = 'ladder_sessions';
-  static const String _memoryPuzzlesBox = 'memory_puzzles';
-  static const String _memoryAllowancesBox = 'memory_allowances';
   static const String _quizFormatsBox = 'quiz_formats';
   static const String _quizCategoriesBox = 'quiz_categories';
   static const String _quizStreaksBox = 'quiz_streaks';
@@ -42,6 +37,8 @@ class StorageService {
   static const String _linkedMatchesBox = 'linked_matches';
   static const String _wordSearchMatchesBox = 'word_search_matches';
   static const String _branchProgressionBox = 'branch_progression_states';
+  static const String _stepsDaysBox = 'steps_days';
+  static const String _stepsConnectionBox = 'steps_connection';
 
   static Future<void> init() async {
     try {
@@ -57,11 +54,7 @@ class StorageService {
       if (!Hive.isAdapterRegistered(4)) Hive.registerAdapter(QuizQuestionAdapter());
       if (!Hive.isAdapterRegistered(5)) Hive.registerAdapter(QuizSessionAdapter());
       if (!Hive.isAdapterRegistered(6)) Hive.registerAdapter(BadgeAdapter());
-      if (!Hive.isAdapterRegistered(8)) Hive.registerAdapter(WordPairAdapter());
-      if (!Hive.isAdapterRegistered(9)) Hive.registerAdapter(LadderSessionAdapter());
-      if (!Hive.isAdapterRegistered(10)) Hive.registerAdapter(MemoryPuzzleAdapter());
-      if (!Hive.isAdapterRegistered(11)) Hive.registerAdapter(MemoryCardAdapter());
-      if (!Hive.isAdapterRegistered(12)) Hive.registerAdapter(MemoryFlipAllowanceAdapter());
+      // Adapter IDs 8-12 were used by removed features (Word Ladder, Memory Flip)
       if (!Hive.isAdapterRegistered(13)) Hive.registerAdapter(QuizFormatAdapter());
       if (!Hive.isAdapterRegistered(14)) Hive.registerAdapter(QuizCategoryAdapter());
       if (!Hive.isAdapterRegistered(15)) Hive.registerAdapter(QuizStreakAdapter());
@@ -76,6 +69,8 @@ class StorageService {
       if (!Hive.isAdapterRegistered(24)) Hive.registerAdapter(WordSearchFoundWordAdapter());
       if (!Hive.isAdapterRegistered(25)) Hive.registerAdapter(WordSearchMatchAdapter());
       if (!Hive.isAdapterRegistered(26)) Hive.registerAdapter(BranchProgressionStateAdapter());
+      if (!Hive.isAdapterRegistered(27)) Hive.registerAdapter(StepsDayAdapter());
+      if (!Hive.isAdapterRegistered(28)) Hive.registerAdapter(StepsConnectionAdapter());
 
       // Open boxes
       Logger.debug('Opening Hive boxes...', service: 'storage');
@@ -86,9 +81,6 @@ class StorageService {
       await Hive.openBox<QuizQuestion>(_quizQuestionsBox);
       await Hive.openBox<QuizSession>(_quizSessionsBox);
       await Hive.openBox<Badge>(_badgesBox);
-      await Hive.openBox<LadderSession>(_ladderSessionsBox);
-      await Hive.openBox<MemoryPuzzle>(_memoryPuzzlesBox);
-      await Hive.openBox<MemoryFlipAllowance>(_memoryAllowancesBox);
       await Hive.openBox<QuizFormat>(_quizFormatsBox);
       await Hive.openBox<QuizCategory>(_quizCategoriesBox);
       await Hive.openBox<QuizStreak>(_quizStreaksBox);
@@ -102,8 +94,10 @@ class StorageService {
       await Hive.openBox<LinkedMatch>(_linkedMatchesBox);
       await Hive.openBox<WordSearchMatch>(_wordSearchMatchesBox);
       await Hive.openBox<BranchProgressionState>(_branchProgressionBox);
+      await Hive.openBox<StepsDay>(_stepsDaysBox);
+      await Hive.openBox<StepsConnection>(_stepsConnectionBox);
 
-      Logger.info('Hive storage initialized successfully (23 boxes opened)', service: 'storage');
+      Logger.info('Hive storage initialized successfully (25 boxes opened)', service: 'storage');
     } catch (e, stackTrace) {
       Logger.error('Failed to initialize Hive storage', error: e, stackTrace: stackTrace, service: 'storage');
       rethrow;
@@ -308,6 +302,10 @@ class StorageService {
     return sessions;
   }
 
+  Future<void> deleteQuizSession(String id) async {
+    await quizSessionsBox.delete(id);
+  }
+
   // Badge operations
   Box<Badge> get badgesBox => Hive.box<Badge>(_badgesBox);
 
@@ -323,106 +321,6 @@ class StorageService {
 
   bool hasBadge(String badgeName) {
     return badgesBox.values.any((b) => b.name == badgeName);
-  }
-
-  // Ladder Session operations
-  Box<LadderSession> get ladderSessionsBox =>
-      Hive.box<LadderSession>(_ladderSessionsBox);
-
-  Future<void> saveLadderSession(LadderSession session) async {
-    await ladderSessionsBox.put(session.id, session);
-  }
-
-  List<LadderSession> getAllLadderSessions() {
-    final sessions = ladderSessionsBox.values.toList();
-    sessions.sort((a, b) => b.createdAt.compareTo(a.createdAt));
-    return sessions;
-  }
-
-  List<LadderSession> getActiveLadders() {
-    return ladderSessionsBox.values
-        .where((session) => session.status == 'active')
-        .toList()
-      ..sort((a, b) => b.createdAt.compareTo(a.createdAt));
-  }
-
-  Future<void> updateLadderSession(LadderSession session) async {
-    await session.save();
-  }
-
-  LadderSession? getLadderSession(String id) {
-    return ladderSessionsBox.get(id);
-  }
-
-  int getActiveLadderCount() {
-    return ladderSessionsBox.values
-        .where((session) => session.status == 'active')
-        .length;
-  }
-
-  List<LadderSession> getCompletedLadders() {
-    return ladderSessionsBox.values
-        .where((session) => session.status == 'completed')
-        .toList()
-      ..sort((a, b) => b.completedAt!.compareTo(a.completedAt!));
-  }
-
-  // Memory Flip operations
-  Box<MemoryPuzzle> get memoryPuzzlesBox =>
-      Hive.box<MemoryPuzzle>(_memoryPuzzlesBox);
-
-  Box<MemoryFlipAllowance> get memoryAllowancesBox =>
-      Hive.box<MemoryFlipAllowance>(_memoryAllowancesBox);
-
-  Future<void> saveMemoryPuzzle(MemoryPuzzle puzzle) async {
-    // Clear old active puzzles when saving a new one (prevents stale cache)
-    final oldPuzzles = memoryPuzzlesBox.values
-        .where((p) => p.id != puzzle.id && p.status == 'active')
-        .toList();
-    for (final old in oldPuzzles) {
-      await memoryPuzzlesBox.delete(old.id);
-    }
-    await memoryPuzzlesBox.put(puzzle.id, puzzle);
-  }
-
-  MemoryPuzzle? getMemoryPuzzle(String id) {
-    return memoryPuzzlesBox.get(id);
-  }
-
-  List<MemoryPuzzle> getAllMemoryPuzzles() {
-    final puzzles = memoryPuzzlesBox.values.toList();
-    puzzles.sort((a, b) => b.createdAt.compareTo(a.createdAt));
-    return puzzles;
-  }
-
-  MemoryPuzzle? getActivePuzzle() {
-    return memoryPuzzlesBox.values
-        .where((p) => p.status == 'active')
-        .firstOrNull;
-  }
-
-  List<MemoryPuzzle> getCompletedPuzzles() {
-    final puzzles = memoryPuzzlesBox.values
-        .where((p) => p.status == 'completed')
-        .toList();
-    puzzles.sort((a, b) => b.completedAt!.compareTo(a.completedAt!));
-    return puzzles;
-  }
-
-  Future<void> saveMemoryAllowance(MemoryFlipAllowance allowance) async {
-    await memoryAllowancesBox.put(allowance.userId, allowance);
-  }
-
-  MemoryFlipAllowance? getMemoryAllowance(String userId) {
-    return memoryAllowancesBox.get(userId);
-  }
-
-  Future<void> updateMemoryPuzzle(MemoryPuzzle puzzle) async {
-    await puzzle.save();
-  }
-
-  Future<void> updateMemoryAllowance(MemoryFlipAllowance allowance) async {
-    await allowance.save();
   }
 
   // Linked Match operations
@@ -700,5 +598,81 @@ class StorageService {
 
   Future<void> clearAllBranchProgressionStates() async {
     await branchProgressionBox.clear();
+  }
+
+  // Steps Together operations
+  Box<StepsDay> get stepsDaysBox => Hive.box<StepsDay>(_stepsDaysBox);
+  Box<StepsConnection> get stepsConnectionBox => Hive.box<StepsConnection>(_stepsConnectionBox);
+
+  /// Save or update a day's step data
+  Future<void> saveStepsDay(StepsDay stepsDay) async {
+    await stepsDaysBox.put(stepsDay.dateKey, stepsDay);
+  }
+
+  /// Get step data for a specific date
+  StepsDay? getStepsDay(String dateKey) {
+    return stepsDaysBox.get(dateKey);
+  }
+
+  /// Get today's step data
+  StepsDay? getTodaySteps() {
+    final today = DateTime.now();
+    final dateKey = '${today.year}-${today.month.toString().padLeft(2, '0')}-${today.day.toString().padLeft(2, '0')}';
+    return getStepsDay(dateKey);
+  }
+
+  /// Get yesterday's step data
+  StepsDay? getYesterdaySteps() {
+    final yesterday = DateTime.now().subtract(const Duration(days: 1));
+    final dateKey = '${yesterday.year}-${yesterday.month.toString().padLeft(2, '0')}-${yesterday.day.toString().padLeft(2, '0')}';
+    return getStepsDay(dateKey);
+  }
+
+  /// Get all step days (for history)
+  List<StepsDay> getAllStepsDays() {
+    final days = stepsDaysBox.values.toList();
+    days.sort((a, b) => b.dateKey.compareTo(a.dateKey));
+    return days;
+  }
+
+  /// Get unclaimed step days that are still claimable
+  List<StepsDay> getClaimableStepsDays() {
+    return stepsDaysBox.values
+        .where((day) => day.canClaim)
+        .toList()
+      ..sort((a, b) => b.dateKey.compareTo(a.dateKey));
+  }
+
+  /// Update a steps day
+  Future<void> updateStepsDay(StepsDay stepsDay) async {
+    await stepsDay.save();
+  }
+
+  /// Save or update connection status
+  Future<void> saveStepsConnection(StepsConnection connection) async {
+    await stepsConnectionBox.put('connection', connection);
+  }
+
+  /// Get current connection status
+  StepsConnection? getStepsConnection() {
+    return stepsConnectionBox.get('connection');
+  }
+
+  /// Check if user has connected Apple Health
+  bool isStepsConnected() {
+    final connection = getStepsConnection();
+    return connection?.isConnected ?? false;
+  }
+
+  /// Check if both partners are connected
+  bool areBothStepsConnected() {
+    final connection = getStepsConnection();
+    return connection?.bothConnected ?? false;
+  }
+
+  /// Clear all steps data (for testing/reset)
+  Future<void> clearAllStepsData() async {
+    await stepsDaysBox.clear();
+    await stepsConnectionBox.clear();
   }
 }

@@ -46,10 +46,6 @@ class LovePointTransaction extends HiveObject {
         return 'Couple quiz';
       case 'weekly_challenge_bonus':
         return 'Weekly challenge';
-      case 'memory_flip_match':
-        return 'Memory match';
-      case 'memory_flip_completed':
-        return 'Puzzle complete';
       default:
         return reason;
     }

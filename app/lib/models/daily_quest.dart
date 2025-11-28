@@ -6,11 +6,10 @@ enum QuestType {
   question,
   quiz,
   game,
-  wordLadder,
-  memoryFlip,
   youOrMe,
   linked,
   wordSearch,
+  steps, // Steps Together - iOS only (HealthKit)
 }
 
 @HiveType(typeId: 17)

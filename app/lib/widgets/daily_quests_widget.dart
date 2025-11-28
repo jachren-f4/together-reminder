@@ -98,8 +98,7 @@ class _DailyQuestsWidgetState extends State<DailyQuestsWidget> {
             //
             // Quest types not yet migrated to unified system would award LP here,
             // but as of Phase 4, all quiz types use UnifiedResultsScreen.
-            // Future quest types (You or Me, Word Ladder, etc.) will also use unified
-            // system and rely on UnifiedResultsScreen for LP awards.
+            // Future quest types will also use unified system for LP awards.
           } else {
             quest.status = 'in_progress';
           }
@@ -274,14 +273,6 @@ class _DailyQuestsWidgetState extends State<DailyQuestsWidget> {
         await _handleQuizQuestTap(quest);
         break;
 
-      case QuestType.wordLadder:
-        // TODO: Navigate to Word Ladder screen
-        break;
-
-      case QuestType.memoryFlip:
-        // TODO: Navigate to Memory Flip screen
-        break;
-
       case QuestType.youOrMe:
         await _handleYouOrMeQuestTap(quest);
         break;
@@ -300,6 +291,10 @@ class _DailyQuestsWidgetState extends State<DailyQuestsWidget> {
 
       case QuestType.wordSearch:
         // TODO: Navigate to Word Search screen
+        break;
+
+      case QuestType.steps:
+        // Steps Together is handled via Side Quests carousel, not daily quests
         break;
     }
 

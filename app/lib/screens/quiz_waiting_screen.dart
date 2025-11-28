@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'dart:async';
 import '../models/quiz_session.dart';
 import '../services/quiz_service.dart';
+import '../services/quiz_api_service.dart';
 import '../services/storage_service.dart';
 import '../services/poke_service.dart';
+import '../config/dev_config.dart';
 import '../widgets/editorial/editorial.dart';
 import '../utils/logger.dart';
 import 'quiz_results_screen.dart';
@@ -19,10 +22,12 @@ class QuizWaitingScreen extends StatefulWidget {
 class _QuizWaitingScreenState extends State<QuizWaitingScreen>
     with TickerProviderStateMixin {
   final QuizService _quizService = QuizService();
+  final QuizApiService _quizApiService = QuizApiService();
   final StorageService _storage = StorageService();
   late QuizSession _session;
   bool _isChecking = false;
   bool _isSendingPoke = false;
+  Timer? _pollTimer;
 
   // Animation controllers
   late AnimationController _breatheController;
@@ -62,6 +67,39 @@ class _QuizWaitingScreenState extends State<QuizWaitingScreen>
       vsync: this,
     );
     _startMessageRotation();
+    _startPolling();
+  }
+
+  void _startPolling() {
+    if (DevConfig.useSupabaseForQuizzes) {
+      // Use API polling
+      _quizApiService.startPolling(
+        _session.id,
+        onUpdate: (state) {
+          if (!mounted) return;
+
+          if (state.isCompleted) {
+            _pollTimer?.cancel();
+            _quizApiService.stopPolling();
+            Navigator.of(context).pushReplacement(
+              MaterialPageRoute(
+                builder: (context) => QuizResultsScreen(session: state.session),
+              ),
+            );
+          } else {
+            setState(() {
+              _session = state.session;
+            });
+          }
+        },
+        intervalSeconds: 5,
+      );
+    } else {
+      // Legacy polling via Timer
+      _pollTimer = Timer.periodic(const Duration(seconds: 5), (_) {
+        _checkSessionStatus();
+      });
+    }
   }
 
   void _startMessageRotation() {
@@ -81,6 +119,8 @@ class _QuizWaitingScreenState extends State<QuizWaitingScreen>
 
   @override
   void dispose() {
+    _pollTimer?.cancel();
+    _quizApiService.stopPolling();
     _breatheController.dispose();
     _dotsController.dispose();
     _messageController.dispose();

@@ -3,10 +3,12 @@ import 'dart:async';
 import '../models/you_or_me.dart';
 import '../models/daily_quest.dart';
 import '../services/you_or_me_service.dart';
+import '../services/you_or_me_api_service.dart';
 import '../services/storage_service.dart';
 import '../services/daily_quest_service.dart';
 import '../services/quest_sync_service.dart';
 import '../services/poke_service.dart';
+import '../config/dev_config.dart';
 import '../utils/logger.dart';
 import '../widgets/editorial/editorial.dart';
 import 'you_or_me_results_screen.dart';
@@ -28,10 +30,12 @@ class YouOrMeWaitingScreen extends StatefulWidget {
 class _YouOrMeWaitingScreenState extends State<YouOrMeWaitingScreen>
     with TickerProviderStateMixin {
   final YouOrMeService _service = YouOrMeService();
+  final YouOrMeApiService _apiService = YouOrMeApiService();
   final StorageService _storage = StorageService();
   Timer? _pollTimer;
   bool _isChecking = false;
   bool _isSendingPoke = false;
+  late YouOrMeSession _session;
 
   // Animation controllers
   late AnimationController _breatheController;
@@ -51,6 +55,7 @@ class _YouOrMeWaitingScreenState extends State<YouOrMeWaitingScreen>
   @override
   void initState() {
     super.initState();
+    _session = widget.session;
 
     // Breathing animation for partner card (subtle scale)
     _breatheController = AnimationController(
@@ -93,6 +98,7 @@ class _YouOrMeWaitingScreenState extends State<YouOrMeWaitingScreen>
   @override
   void dispose() {
     _pollTimer?.cancel();
+    _apiService.stopPolling();
     _breatheController.dispose();
     _dotsController.dispose();
     _messageController.dispose();
@@ -100,9 +106,35 @@ class _YouOrMeWaitingScreenState extends State<YouOrMeWaitingScreen>
   }
 
   void _startPolling() {
-    _pollTimer = Timer.periodic(const Duration(seconds: 3), (timer) {
-      _checkPartnerCompletion();
-    });
+    if (DevConfig.useSupabaseForYouOrMe) {
+      // Use API polling
+      _apiService.startPolling(
+        _session.id,
+        onUpdate: (state) {
+          if (!mounted) return;
+
+          if (state.isCompleted) {
+            _pollTimer?.cancel();
+            _apiService.stopPolling();
+            Navigator.of(context).pushReplacement(
+              MaterialPageRoute(
+                builder: (context) => YouOrMeResultsScreen(session: state.session),
+              ),
+            );
+          } else {
+            setState(() {
+              _session = state.session;
+            });
+          }
+        },
+        intervalSeconds: 5,
+      );
+    } else {
+      // Legacy polling via Timer
+      _pollTimer = Timer.periodic(const Duration(seconds: 3), (timer) {
+        _checkPartnerCompletion();
+      });
+    }
   }
 
   Future<void> _checkPartnerCompletion() async {

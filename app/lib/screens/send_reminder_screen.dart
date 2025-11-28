@@ -19,6 +19,10 @@ class _SendReminderScreenState extends State<SendReminderScreen> {
   final TextEditingController _messageController = TextEditingController();
   String? _selectedTime;
 
+  void _dismissKeyboard() {
+    FocusScope.of(context).unfocus();
+  }
+
   final List<Map<String, dynamic>> _quickMessages = [
     {'emoji': '💕', 'text': 'Love you!'},
     {'emoji': '🏠', 'text': "I'm home"},
@@ -110,9 +114,10 @@ class _SendReminderScreenState extends State<SendReminderScreen> {
           error: e, service: 'reminder');
     }
 
-    // Show success overlay
+    // Show success overlay with appropriate message
     if (mounted) {
-      _showSuccessOverlay(partner.name, _selectedTime!);
+      final isScheduled = _selectedTime != 'Now';
+      _showSuccessOverlay(partner.name, _selectedTime!, isScheduled);
     }
 
     // Clear form
@@ -122,7 +127,13 @@ class _SendReminderScreenState extends State<SendReminderScreen> {
     });
   }
 
-  void _showSuccessOverlay(String partnerName, String timeLabel) {
+  void _showSuccessOverlay(String partnerName, String timeLabel, bool isScheduled) {
+    // Determine the title and subtitle based on whether it was scheduled or sent now
+    final title = isScheduled ? 'REMINDER SCHEDULED' : 'REMINDER SENT';
+    final subtitle = isScheduled
+        ? '$partnerName will be notified at $timeLabel'
+        : '$partnerName will be notified now';
+
     showDialog(
       context: context,
       barrierColor: AppTheme.primaryBlack.withAlpha((0.95 * 255).round()),
@@ -141,13 +152,13 @@ class _SendReminderScreenState extends State<SendReminderScreen> {
                 builder: (context, double value, child) {
                   return Transform.scale(
                     scale: value,
-                    child: const Text('✨', style: TextStyle(fontSize: 120)),
+                    child: Text(isScheduled ? '⏰' : '✨', style: const TextStyle(fontSize: 120)),
                   );
                 },
               ),
               const SizedBox(height: 24),
               Text(
-                'REMINDER SENT',
+                title,
                 style: AppTheme.headlineFont.copyWith(
                   fontSize: 28,
                   fontWeight: FontWeight.w400,
@@ -157,7 +168,7 @@ class _SendReminderScreenState extends State<SendReminderScreen> {
               ),
               const SizedBox(height: 12),
               Text(
-                '$partnerName will be notified',
+                subtitle,
                 style: AppTheme.headlineFont.copyWith(
                   fontSize: 16,
                   fontStyle: FontStyle.italic,
@@ -317,30 +328,28 @@ class _SendReminderScreenState extends State<SendReminderScreen> {
                             ),
                           ),
                           const SizedBox(height: 10),
-                          Container(
-                            decoration: BoxDecoration(
-                              border: Border.all(
-                                  color: AppTheme.primaryBlack, width: 1),
-                            ),
-                            child: TextField(
-                              controller: _messageController,
-                              maxLines: 3,
-                              style: AppTheme.headlineFont.copyWith(
-                                fontSize: 14,
-                                color: AppTheme.textPrimary,
+                          TextField(
+                            controller: _messageController,
+                            autofocus: true,
+                            textCapitalization: TextCapitalization.sentences,
+                            decoration: InputDecoration(
+                              hintText: 'What would you like to remind them about?',
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(12),
+                                borderSide: BorderSide(color: AppTheme.borderLight, width: 2),
                               ),
-                              decoration: InputDecoration(
-                                hintText:
-                                    'What would you like to remind them about?',
-                                hintStyle: AppTheme.headlineFont.copyWith(
-                                  fontSize: 14,
-                                  color: AppTheme.textTertiary,
-                                  fontStyle: FontStyle.italic,
-                                ),
-                                border: InputBorder.none,
-                                contentPadding: const EdgeInsets.all(16),
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(12),
+                                borderSide: BorderSide(color: AppTheme.borderLight, width: 2),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(12),
+                                borderSide: BorderSide(color: AppTheme.primaryBlack, width: 2),
                               ),
                             ),
+                            onSubmitted: (value) {
+                              _dismissKeyboard();
+                            },
                           ),
                           const SizedBox(height: 20),
 

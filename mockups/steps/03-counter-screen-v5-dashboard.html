@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Steps Counter - V5 Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            background: #fafafa;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 420px;
+            margin: 0 auto;
+            background: #fff;
+            border: 2px solid #000;
+            box-shadow: 8px 8px 0 rgba(0, 0, 0, 0.1);
+        }
+
+        .variant-label {
+            background: #000;
+            color: #fff;
+            padding: 8px 16px;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .header {
+            border-bottom: 2px solid #000;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .back-btn {
+            font-size: 20px;
+            background: none;
+            border: none;
+            cursor: pointer;
+        }
+
+        .header-title {
+            font-size: 18px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .header-spacer {
+            width: 20px;
+        }
+
+        /* Grid Layout */
+        .dashboard {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1px;
+            background: #000;
+        }
+
+        .card {
+            background: #fff;
+            padding: 20px;
+        }
+
+        .card.full {
+            grid-column: span 2;
+        }
+
+        .card-label {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #666;
+            margin-bottom: 8px;
+        }
+
+        .card-value {
+            font-size: 32px;
+            font-weight: 700;
+            letter-spacing: -1px;
+        }
+
+        .card-value.small {
+            font-size: 24px;
+        }
+
+        .card-sub {
+            font-size: 12px;
+            color: #666;
+            margin-top: 4px;
+        }
+
+        /* Claim Card */
+        .claim-card {
+            background: #000;
+            color: #fff;
+        }
+
+        .claim-card .card-label {
+            color: rgba(255,255,255,0.6);
+        }
+
+        .claim-card .card-sub {
+            color: rgba(255,255,255,0.6);
+        }
+
+        .claim-btn {
+            margin-top: 12px;
+            width: 100%;
+            padding: 10px;
+            font-family: inherit;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border: 1px solid #fff;
+            background: #fff;
+            color: #000;
+            cursor: pointer;
+        }
+
+        /* Progress Card */
+        .progress-visual {
+            display: flex;
+            gap: 4px;
+            margin-top: 12px;
+        }
+
+        .progress-segment {
+            flex: 1;
+            height: 8px;
+            background: #e0e0e0;
+        }
+
+        .progress-segment.filled {
+            background: #000;
+        }
+
+        .progress-segment.partial {
+            background: linear-gradient(to right, #000 50%, #e0e0e0 50%);
+        }
+
+        /* Person Cards */
+        .person-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+
+        .person-avatar {
+            width: 24px;
+            height: 24px;
+            background: #000;
+            color: #fff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        .person-avatar.partner {
+            background: #666;
+        }
+
+        .person-name {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .person-value {
+            font-size: 28px;
+            font-weight: 700;
+        }
+
+        .person-bar {
+            height: 4px;
+            background: #e0e0e0;
+            margin-top: 8px;
+        }
+
+        .person-bar-fill {
+            height: 100%;
+            background: #000;
+        }
+
+        .person-bar-fill.partner {
+            background: #666;
+        }
+
+        /* Tier Card */
+        .tier-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            margin-top: 8px;
+        }
+
+        .tier-item {
+            text-align: center;
+            padding: 8px 4px;
+            background: #f8f8f8;
+            border: 1px solid #e0e0e0;
+        }
+
+        .tier-item.achieved {
+            background: #000;
+            color: #fff;
+            border-color: #000;
+        }
+
+        .tier-item.current {
+            border: 2px solid #000;
+        }
+
+        .tier-lp {
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        .tier-steps {
+            font-size: 9px;
+            opacity: 0.7;
+        }
+
+        /* Status Footer */
+        .status-footer {
+            background: #f8f8f8;
+            padding: 16px 20px;
+            border-top: 1px solid #e0e0e0;
+            display: flex;
+            justify-content: space-between;
+            font-size: 11px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="variant-label">V5: Dashboard - Grid of stat cards</div>
+
+        <div class="header">
+            <button class="back-btn">←</button>
+            <div class="header-title">Steps Together</div>
+            <div class="header-spacer"></div>
+        </div>
+
+        <div class="dashboard">
+            <!-- Combined Today -->
+            <div class="card">
+                <div class="card-label">Today Combined</div>
+                <div class="card-value">12,450</div>
+                <div class="card-sub">/ 20,000 goal</div>
+                <div class="progress-visual">
+                    <div class="progress-segment filled"></div>
+                    <div class="progress-segment filled"></div>
+                    <div class="progress-segment filled"></div>
+                    <div class="progress-segment partial"></div>
+                    <div class="progress-segment"></div>
+                </div>
+            </div>
+
+            <!-- Yesterday Claim -->
+            <div class="card claim-card">
+                <div class="card-label">Yesterday</div>
+                <div class="card-value small">14,200</div>
+                <div class="card-sub">+21 LP ready</div>
+                <button class="claim-btn">Claim</button>
+            </div>
+
+            <!-- Your Steps -->
+            <div class="card">
+                <div class="person-header">
+                    <div class="person-avatar">Y</div>
+                    <span class="person-name">You</span>
+                </div>
+                <div class="person-value">7,000</div>
+                <div class="person-bar">
+                    <div class="person-bar-fill" style="width: 70%;"></div>
+                </div>
+            </div>
+
+            <!-- Partner Steps -->
+            <div class="card">
+                <div class="person-header">
+                    <div class="person-avatar partner">T</div>
+                    <span class="person-name">Taija</span>
+                </div>
+                <div class="person-value">5,450</div>
+                <div class="person-bar">
+                    <div class="person-bar-fill partner" style="width: 54%;"></div>
+                </div>
+            </div>
+
+            <!-- Tier Progress -->
+            <div class="card full">
+                <div class="card-label">Reward Tiers</div>
+                <div class="tier-grid">
+                    <div class="tier-item achieved">
+                        <div class="tier-lp">+15</div>
+                        <div class="tier-steps">10K</div>
+                    </div>
+                    <div class="tier-item current">
+                        <div class="tier-lp">+18</div>
+                        <div class="tier-steps">12K</div>
+                    </div>
+                    <div class="tier-item">
+                        <div class="tier-lp">+21</div>
+                        <div class="tier-steps">14K</div>
+                    </div>
+                    <div class="tier-item">
+                        <div class="tier-lp">+24</div>
+                        <div class="tier-steps">16K</div>
+                    </div>
+                    <div class="tier-item">
+                        <div class="tier-lp">+27</div>
+                        <div class="tier-steps">18K</div>
+                    </div>
+                    <div class="tier-item">
+                        <div class="tier-lp">+30</div>
+                        <div class="tier-steps">20K</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="status-footer">
+            <span>Your sync: just now</span>
+            <span>Taija sync: 15 min ago</span>
+        </div>
+    </div>
+</body>
+</html>

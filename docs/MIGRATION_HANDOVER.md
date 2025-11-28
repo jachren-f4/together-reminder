@@ -148,6 +148,114 @@ The migration eliminates these documented bugs:
 
 ---
 
+## Steps Together Feature Migration
+
+**Status:** Dual-write implemented, ready for validation
+
+The Steps Together feature tracks daily step counts from both partners via HealthKit (iOS) and awards LP based on combined totals. This feature was added with dual-write from the start.
+
+### Current State
+
+| Component | Firebase RTDB | Supabase | Status |
+|-----------|--------------|----------|--------|
+| Connection status | `/steps_data/{coupleId}/connections/{userId}` | `steps_connections` | ✅ Dual-write active |
+| Daily steps | `/steps_data/{coupleId}/today/{userId}` | `steps_daily` | ✅ Dual-write active |
+| Yesterday steps | `/steps_data/{coupleId}/yesterday/{userId}` | `steps_daily` | ✅ Dual-write active |
+| Claim tracking | `/steps_data/{coupleId}/yesterday/claimed_by` | `steps_rewards` | ✅ Dual-write active |
+
+### Supabase Schema
+
+Created in migration `018_steps_together.sql`:
+
+```sql
+-- Connection status per user
+steps_connections (
+  user_id UUID PRIMARY KEY,
+  couple_id UUID,
+  is_connected BOOLEAN,
+  connected_at TIMESTAMPTZ
+)
+
+-- Daily step counts
+steps_daily (
+  id UUID PRIMARY KEY,
+  couple_id UUID,
+  user_id UUID,
+  date_key DATE,
+  steps INT,
+  last_sync_at TIMESTAMPTZ,
+  UNIQUE(user_id, date_key)
+)
+
+-- Claim tracking (prevents double-claiming)
+steps_rewards (
+  id UUID PRIMARY KEY,
+  couple_id UUID,
+  date_key DATE,
+  combined_steps INT,
+  lp_earned INT,
+  claimed_by UUID,
+  claimed_at TIMESTAMPTZ,
+  UNIQUE(couple_id, date_key)
+)
+```
+
+### API Endpoint
+
+`/api/sync/steps` - Single endpoint with operation parameter:
+
+| Operation | Method | Purpose |
+|-----------|--------|---------|
+| `connection` | POST | Sync HealthKit connection status |
+| `steps` | POST | Sync daily step count |
+| `claim` | POST | Record LP claim (with double-claim prevention) |
+| - | GET | Get all step data for couple |
+
+### Migration Steps
+
+#### Phase 1: Validation (Current)
+- [x] Deploy Supabase migration (`018_steps_together.sql`)
+- [x] Deploy API endpoint (`/api/sync/steps`)
+- [x] Enable dual-write in Flutter (fire-and-forget)
+- [ ] Validate Supabase data matches Firebase for 1 week
+- [ ] Run comparison queries to verify data integrity
+
+#### Phase 2: Read Migration
+- [ ] Add GET endpoint to fetch step data from Supabase
+- [ ] Create `StepsSyncService.fetchFromSupabase()` method
+- [ ] A/B test: Some couples read from Supabase
+- [ ] Monitor for discrepancies
+
+#### Phase 3: Firebase Removal
+- [ ] Remove Firebase writes from `StepsSyncService`
+- [ ] Remove Firebase listeners (`_startTodayListener`, `_startYesterdayListener`)
+- [ ] Delete Firebase RTDB path `/steps_data/`
+- [ ] Update Flutter to read exclusively from Supabase
+
+### Real-Time Sync Consideration
+
+**Current Firebase behavior:**
+- Partner step updates appear in real-time via RTDB listeners
+- Partner claim status syncs immediately
+
+**Supabase replacement options:**
+1. **Polling** - Fetch every 30 seconds (simpler, slight delay)
+2. **Supabase Realtime** - Subscribe to `steps_daily` changes (complex setup)
+3. **Hybrid** - Polling for steps, push notification for claims
+
+**Recommendation:** Use polling (30s interval) since step data isn't time-critical. Claims can trigger push notification for immediate feedback.
+
+### Files to Modify
+
+| File | Changes Needed |
+|------|----------------|
+| `lib/services/steps_sync_service.dart` | Remove Firebase, add Supabase reads |
+| `lib/services/steps_health_service.dart` | Update data source references |
+| `api/app/api/sync/steps/route.ts` | Already complete |
+| `api/supabase/migrations/018_steps_together.sql` | Already complete |
+
+---
+
 ## Environment Variables Needed
 
 For Vercel deployment (set in Vercel dashboard):
@@ -221,4 +329,4 @@ SUPABASE_JWT_SECRET=xxx
 
 ---
 
-**Last Updated:** 2025-11-19
+**Last Updated:** 2025-11-28

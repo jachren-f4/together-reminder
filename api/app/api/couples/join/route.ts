@@ -120,11 +120,13 @@ export const POST = withRateLimit(
 
       // Create couple
       const coupleId = randomUUID();
-      await client.query(
+      const coupleResult = await client.query(
         `INSERT INTO couples (id, user1_id, user2_id, created_at, updated_at)
-         VALUES ($1, $2, $3, NOW(), NOW())`,
+         VALUES ($1, $2, $3, NOW(), NOW())
+         RETURNING created_at`,
         [coupleId, partnerId, userId]
       );
+      const coupleCreatedAt = coupleResult.rows[0].created_at;
 
       // Mark invite as used
       await client.query(
@@ -168,6 +170,7 @@ export const POST = withRateLimit(
         partnerId,
         partnerEmail,
         partnerName,
+        createdAt: coupleCreatedAt,
         message: 'Successfully paired!',
       });
     } catch (error) {

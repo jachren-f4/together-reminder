@@ -220,16 +220,6 @@ class _PokeBottomSheetState extends State<PokeBottomSheet> {
                 ),
               ),
               const SizedBox(height: 20),
-
-              // Hint text
-              Text(
-                'Mutual pokes earn +5 Love Points',
-                style: AppTheme.bodyFont.copyWith(
-                  fontSize: 11,
-                  color: AppTheme.textTertiary,
-                  fontStyle: FontStyle.italic,
-                ),
-              ),
             ],
           ),
         ),

@@ -3,9 +3,9 @@ import 'package:togetherremind/models/reminder.dart';
 import 'package:togetherremind/models/partner.dart';
 import 'package:togetherremind/models/user.dart';
 import 'package:togetherremind/services/storage_service.dart';
-import 'package:togetherremind/services/love_point_service.dart';
 import 'package:togetherremind/services/general_activity_streak_service.dart';
 import 'package:togetherremind/services/api_client.dart';
+import 'package:togetherremind/services/dev_data_service.dart';
 import 'package:uuid/uuid.dart';
 import '../utils/logger.dart';
 
@@ -59,6 +59,14 @@ class PokeService {
         return false;
       }
 
+      // Refresh partner's FCM token from Supabase before sending
+      // This ensures we have the latest token (solves startup race condition)
+      await DevDataService().refreshPartnerPushToken();
+
+      // Re-fetch partner to get updated token
+      final updatedPartner = _storage.getPartner();
+      final partnerToken = updatedPartner?.pushToken ?? partner.pushToken;
+
       final pokeId = const Uuid().v4();
       final now = DateTime.now();
 
@@ -91,7 +99,7 @@ class PokeService {
       // Call Cloud Function
       final callable = _functions.httpsCallable('sendPoke');
       final result = await callable.call({
-        'partnerToken': partner.pushToken,
+        'partnerToken': partnerToken,
         'senderName': user.name ?? 'Your Partner',
         'pokeId': pokeId,
         'emoji': emoji,
@@ -103,16 +111,7 @@ class PokeService {
       // Update rate limit timestamp
       _lastPokeTime = now;
 
-      // Check if this is a mutual poke and award LP
-      if (isMutualPoke(poke)) {
-        await LovePointService.awardPoints(
-          amount: 5,
-          reason: 'mutual_poke',
-          relatedId: pokeId,
-        );
-        // Removed verbose logging
-        // print('🎉 Mutual poke! Awarded 5 LP');
-      }
+      // LP awarding removed from pokes
 
       // Record activity for streak tracking
       await GeneralActivityStreakService().recordActivity();
@@ -177,16 +176,8 @@ class PokeService {
 
       if (!success) {
         _lastPokeTime = previousLastPokeTime; // Restore if failed
-      } else {
-        // Award LP for poke back
-        await LovePointService.awardPoints(
-          amount: 3,
-          reason: 'poke_back',
-          relatedId: originalPokeId,
-        );
-        // Removed verbose logging
-        // print('💕 Poke back! Awarded 3 LP');
       }
+      // LP awarding removed from poke back
 
       return success;
     } catch (e) {

@@ -198,7 +198,19 @@ class YouOrMeSession extends HiveObject implements BaseSession {
   @override
   bool hasUserAnswered(String userId) {
     return answers?.containsKey(userId) == true &&
-        answers![userId]!.length == 10;
+        answers![userId]!.length == questions.length;
+  }
+
+  /// Get the number of answers a user has submitted (0 if none)
+  int getUserAnswerCount(String userId) {
+    if (answers == null || !answers!.containsKey(userId)) return 0;
+    return answers![userId]!.length;
+  }
+
+  /// Check if user has started but not finished answering
+  bool hasUserStartedAnswering(String userId) {
+    final count = getUserAnswerCount(userId);
+    return count > 0 && count < questions.length;
   }
 
   /// Check if both users have answered

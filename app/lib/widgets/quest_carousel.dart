@@ -1,6 +1,8 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import '../models/daily_quest.dart';
 import 'quest_card.dart';
+import 'steps/steps_quest_card.dart';
 
 /// Reusable horizontal carousel widget with scroll tracking and active card detection
 ///
@@ -131,12 +133,7 @@ class _QuestCarouselState extends State<QuestCarousel> {
                       duration: const Duration(milliseconds: 300),
                       curve: Curves.easeInOut,
                       scale: 1.0, // All cards same size
-                      child: QuestCard(
-                        quest: quest,
-                        currentUserId: widget.currentUserId,
-                        onTap: () => widget.onQuestTap(quest),
-                        showShadow: isActive,
-                      ),
+                      child: _buildQuestCard(quest, isActive),
                     ),
                   ),
                 ),
@@ -168,6 +165,25 @@ class _QuestCarouselState extends State<QuestCarousel> {
             ),
           ),
       ],
+    );
+  }
+
+  /// Build appropriate card widget based on quest type
+  Widget _buildQuestCard(DailyQuest quest, bool isActive) {
+    // Use specialized StepsQuestCard for steps quests (iOS only)
+    if (quest.type == QuestType.steps && Platform.isIOS) {
+      return StepsQuestCard(
+        onTap: () => widget.onQuestTap(quest),
+        showShadow: isActive,
+      );
+    }
+
+    // Default: use generic QuestCard
+    return QuestCard(
+      quest: quest,
+      currentUserId: widget.currentUserId,
+      onTap: () => widget.onQuestTap(quest),
+      showShadow: isActive,
     );
   }
 

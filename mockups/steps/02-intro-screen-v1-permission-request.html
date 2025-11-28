@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Steps Intro - V1 Permission Request</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            background: #fafafa;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 420px;
+            margin: 0 auto;
+            background: #fff;
+            border: 2px solid #000;
+            box-shadow: 8px 8px 0 rgba(0, 0, 0, 0.1);
+            min-height: 700px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .variant-label {
+            background: #000;
+            color: #fff;
+            padding: 8px 16px;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 32px;
+            text-align: center;
+        }
+
+        .icon-container {
+            margin-bottom: 32px;
+        }
+
+        .walking-icons {
+            font-size: 64px;
+            letter-spacing: 8px;
+        }
+
+        .title {
+            font-size: 28px;
+            font-weight: 400;
+            letter-spacing: 2px;
+            margin-bottom: 16px;
+            text-transform: uppercase;
+        }
+
+        .description {
+            font-size: 16px;
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 32px;
+            font-style: italic;
+        }
+
+        .benefits {
+            text-align: left;
+            margin-bottom: 40px;
+            width: 100%;
+        }
+
+        .benefit {
+            display: flex;
+            align-items: start;
+            gap: 12px;
+            padding: 12px 0;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .benefit:last-child {
+            border-bottom: none;
+        }
+
+        .benefit-icon {
+            font-size: 20px;
+            flex-shrink: 0;
+        }
+
+        .benefit-text {
+            font-size: 14px;
+            line-height: 1.4;
+        }
+
+        .benefit-text strong {
+            display: block;
+            margin-bottom: 2px;
+        }
+
+        .benefit-text span {
+            color: #666;
+            font-size: 13px;
+        }
+
+        .buttons {
+            width: 100%;
+        }
+
+        .btn-primary {
+            width: 100%;
+            padding: 16px 24px;
+            font-family: inherit;
+            font-size: 14px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border: 2px solid #000;
+            background: #000;
+            color: #fff;
+            cursor: pointer;
+            margin-bottom: 12px;
+        }
+
+        .btn-secondary {
+            width: 100%;
+            padding: 12px 24px;
+            font-family: inherit;
+            font-size: 13px;
+            color: #666;
+            background: none;
+            border: none;
+            cursor: pointer;
+        }
+
+        .privacy-note {
+            font-size: 11px;
+            color: #999;
+            margin-top: 24px;
+            line-height: 1.4;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="variant-label">V1: Permission Request - Clean with benefits list</div>
+
+        <div class="content">
+            <div class="icon-container">
+                <div class="walking-icons">🚶‍♀️ 🚶‍♂️</div>
+            </div>
+
+            <h1 class="title">Walk Together</h1>
+
+            <p class="description">
+                Connect Apple Health to track your steps and earn Love Points as a couple.
+            </p>
+
+            <div class="benefits">
+                <div class="benefit">
+                    <span class="benefit-icon">❤️</span>
+                    <div class="benefit-text">
+                        <strong>Earn up to 30 LP daily</strong>
+                        <span>Hit 10K steps together for 15 LP, up to 30 LP at 20K</span>
+                    </div>
+                </div>
+                <div class="benefit">
+                    <span class="benefit-icon">👫</span>
+                    <div class="benefit-text">
+                        <strong>Combined goals</strong>
+                        <span>Your steps + partner's steps count together</span>
+                    </div>
+                </div>
+                <div class="benefit">
+                    <span class="benefit-icon">🔒</span>
+                    <div class="benefit-text">
+                        <strong>Privacy first</strong>
+                        <span>We only read step counts, nothing else</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="buttons">
+                <button class="btn-primary">Connect Apple Health</button>
+                <button class="btn-secondary">Maybe later</button>
+            </div>
+
+            <p class="privacy-note">
+                Your health data stays on your device. We only sync your daily step total with your partner.
+            </p>
+        </div>
+    </div>
+</body>
+</html>

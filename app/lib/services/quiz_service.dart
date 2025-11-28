@@ -1,16 +1,16 @@
 import 'package:uuid/uuid.dart';
 import 'package:cloud_functions/cloud_functions.dart';
-import 'package:firebase_database/firebase_database.dart';
 import '../models/quiz_session.dart';
 import '../models/quiz_question.dart';
 import '../models/badge.dart';
+import '../models/daily_quest.dart';
 import 'storage_service.dart';
 import 'quiz_question_bank.dart';
 import 'affirmation_quiz_bank.dart';
 import 'love_point_service.dart';
 import 'daily_quest_service.dart';
 import 'quest_sync_service.dart';
-import 'api_client.dart';
+import 'quiz_api_service.dart';
 import '../config/dev_config.dart';
 import '../utils/logger.dart';
 
@@ -23,8 +23,7 @@ class QuizService {
   final QuizQuestionBank _questionBank = QuizQuestionBank();
   final AffirmationQuizBank _affirmationBank = AffirmationQuizBank();
   final FirebaseFunctions _functions = FirebaseFunctions.instance;
-  final DatabaseReference _rtdb = FirebaseDatabase.instance.ref();
-  final ApiClient _apiClient = ApiClient(); // Supabase API Client
+  final QuizApiService _quizApiService = QuizApiService();
 
   /// Start a new quiz session
   /// The initiator becomes the SUBJECT - quiz is ABOUT them
@@ -134,54 +133,39 @@ class QuizService {
     return session;
   }
 
-  /// Submit answers for a quiz session
+  /// Submit answers for a quiz session via Supabase API
   Future<void> submitAnswers(String sessionId, String userId, List<int> answers) async {
-    final session = await getSession(sessionId);
-    if (session == null) {
-      throw Exception('Quiz session not found');
-    }
-
-    if (session.isExpired) {
-      session.status = 'expired';
-      await session.save();
-      throw Exception('Quiz session has expired');
-    }
-
-    if (session.hasUserAnswered(userId)) {
-      throw Exception('You have already answered this quiz');
-    }
-
-    // Save answers
-    session.answers ??= {};
-    session.answers![userId] = answers;
-    await session.save();
-
-    // Sync updated session to RTDB
-    await _syncSessionToRTDB(session);
-
-    // Removed verbose logging
-    // print('✅ Answers submitted for user $userId');
-
-    // Mark quest as completed for this user
+    await _submitAnswersViaApi(sessionId, answers);
     await _markQuestCompletedForUser(sessionId, userId);
+  }
 
-    // Check if both partners have answered
-    final user = _storage.getUser();
-    final partner = _storage.getPartner();
+  /// Submit answers via Supabase API
+  Future<QuizSubmitResult> _submitAnswersViaApi(String sessionId, List<int> answers, {List<int>? predictions}) async {
+    final result = await _quizApiService.submitAnswers(
+      sessionId: sessionId,
+      answers: answers,
+      predictions: predictions,
+    );
 
-    if (user != null && partner != null) {
-      final bothAnswered = session.answers!.length >= 2;
-
-      if (bothAnswered) {
-        // Calculate results and award LP
-        await _calculateAndCompleteSession(session);
-        // Sync completed session to RTDB so partner receives the update
-        await _syncSessionToRTDB(session);
-      } else {
-        // Notify partner if they haven't answered yet
-        await _sendQuizReminderNotification(session, userId);
+    // Update local cache with new state
+    if (result.success) {
+      final session = _storage.getQuizSession(sessionId);
+      if (session != null) {
+        session.answers = result.answers;
+        session.predictions = result.predictions;
+        if (result.isCompleted) {
+          session.status = 'completed';
+          session.matchPercentage = result.matchPercentage;
+          session.lpEarned = result.lpEarned;
+          session.alignmentMatches = result.alignmentMatches ?? 0;
+          session.predictionScores = result.predictionScores;
+          session.completedAt = DateTime.now();
+        }
+        await session.save();
       }
     }
+
+    return result;
   }
 
   /// Submit Would You Rather answers and predictions
@@ -240,153 +224,6 @@ class QuizService {
         await _sendQuizReminderNotification(session, userId);
       }
     }
-  }
-
-  /// Calculate match percentage and complete session
-  /// NEW LOGIC: Compare SUBJECT's self-answers vs. PREDICTOR's guesses
-  /// For affirmations: Calculate individual scores instead of match percentage
-  Future<void> _calculateAndCompleteSession(QuizSession session) async {
-    final answers = session.answers!;
-    if (answers.length < 2) return;
-
-    // Check if this is an affirmation quiz
-    if (session.formatType == 'affirmation') {
-      await _calculateAffirmationScores(session);
-      return;
-    }
-
-    // Classic quiz logic: Calculate match percentage
-    // Identify subject and predictor
-    final subjectAnswers = answers[session.subjectUserId];
-    if (subjectAnswers == null) {
-      Logger.error('Subject has not answered yet', service: 'quiz');
-      return;
-    }
-
-    // Find predictor (the other user)
-    final predictorId = answers.keys.firstWhere(
-      (id) => id != session.subjectUserId,
-      orElse: () => '',
-    );
-    if (predictorId.isEmpty) {
-      Logger.error('Predictor not found', service: 'quiz');
-      return;
-    }
-
-    final predictorGuesses = answers[predictorId];
-    if (predictorGuesses == null) {
-      Logger.error('Predictor has not answered yet', service: 'quiz');
-      return;
-    }
-
-    // Calculate prediction accuracy (how well predictor knows subject)
-    int matches = 0;
-    for (int i = 0; i < subjectAnswers.length && i < predictorGuesses.length; i++) {
-      if (subjectAnswers[i] == predictorGuesses[i]) {
-        matches++;
-      }
-    }
-
-    final matchPercentage = ((matches / subjectAnswers.length) * 100).round();
-
-    // Award fixed 30 LP for completing quiz together (regardless of match percentage)
-    const int lpEarned = 30;
-
-    // Award Perfect Sync badge for 100% matches
-    if (matchPercentage == 100) {
-      await _awardPerfectSyncBadge();
-    }
-
-    // Update session
-    session.matchPercentage = matchPercentage;
-    session.lpEarned = lpEarned;
-    session.status = 'completed';
-    session.completedAt = DateTime.now();
-    await session.save();
-
-    // NOTE: LP awarding is now handled by UnifiedResultsScreen for daily quests
-    // This prevents duplicate LP awards (once from QuizService, once from UnifiedResultsScreen)
-    // Standalone quizzes (non-daily-quests) currently don't award LP - will be added in future if needed
-
-    // Send completion notification to both users
-    await _sendQuizCompletedNotification(session, matchPercentage, lpEarned);
-
-    // Removed verbose logging
-    // print('✅ Quiz completed: $matchPercentage% match, +$lpEarned LP earned');
-  }
-
-  /// Calculate individual scores for affirmation quizzes
-  /// No match percentage - each user gets their own score based on 1-5 ratings
-  Future<void> _calculateAffirmationScores(QuizSession session) async {
-    final answers = session.answers!;
-    if (answers.length < 2) return;
-
-    // Calculate individual scores (convert answers to 1-5 scale values)
-    // Note: Answers are stored as 0-4 indices in storage, but represent 1-5 values
-    final scores = <String, int>{};
-    for (final entry in answers.entries) {
-      final userId = entry.key;
-      final userAnswers = entry.value;
-
-      // Convert 0-4 indices to 1-5 values
-      final scaleValues = userAnswers.map((index) => index + 1).toList();
-      final average = scaleValues.reduce((a, b) => a + b) / scaleValues.length;
-      final percentage = ((average / 5.0) * 100).round();
-      scores[userId] = percentage;
-      Logger.debug('User $userId affirmation score: $percentage%', service: 'affirmation');
-    }
-
-    // Award fixed 30 LP for completing affirmation together
-    const int lpEarned = 30;
-
-    // Update session
-    session.status = 'completed';
-    session.completedAt = DateTime.now();
-    session.lpEarned = lpEarned;
-    // Store individual scores in predictionScores field (repurposing for affirmations)
-    session.predictionScores = scores;
-    await session.save();
-
-    // Award LP to BOTH users
-    if (lpEarned > 0) {
-      final user = _storage.getUser();
-      final partner = _storage.getPartner();
-
-      if (user != null && partner != null) {
-        await LovePointService.awardPointsToBothUsers(
-          userId1: user.id,
-          userId2: partner.pushToken,
-          amount: lpEarned,
-          reason: 'affirmation_completed',
-          relatedId: session.id,
-        );
-        Logger.success('Affirmation quiz "${session.quizName}" completed - Scores: ${scores.values.join(', ')}%, +$lpEarned LP awarded', service: 'affirmation');
-      }
-    }
-  }
-
-  /// Award Perfect Sync badge if not already earned
-  Future<void> _awardPerfectSyncBadge() async {
-    const badgeName = 'Perfect Sync';
-
-    // Check if badge already exists
-    if (_storage.hasBadge(badgeName)) {
-      Logger.info('Badge "$badgeName" already earned', service: 'quiz');
-      return;
-    }
-
-    final badge = Badge(
-      id: const Uuid().v4(),
-      name: badgeName,
-      emoji: '🎯',
-      description: '100% match on a couple quiz',
-      earnedAt: DateTime.now(),
-      category: 'quiz',
-    );
-
-    await _storage.saveBadge(badge);
-    // Removed verbose logging
-    // print('🏆 Badge earned: $badgeName');
   }
 
   /// Calculate Would You Rather results
@@ -532,30 +369,6 @@ class QuizService {
     }
   }
 
-  /// Send completion notification
-  Future<void> _sendQuizCompletedNotification(QuizSession session, int matchPercentage, int lpEarned) async {
-    try {
-      final user = _storage.getUser();
-      final partner = _storage.getPartner();
-
-      if (user == null || partner == null) return;
-
-      final callable = _functions.httpsCallable('sendQuizCompleted');
-      await callable.call({
-        'partnerToken': partner.pushToken,
-        'senderName': user.name ?? 'Your partner',
-        'sessionId': session.id,
-        'matchPercentage': matchPercentage,
-        'lpEarned': lpEarned,
-      });
-
-      // Removed verbose logging
-      // print('✅ Quiz completion notification sent');
-    } catch (e) {
-      Logger.error('Error sending completion notification', error: e, service: 'quiz');
-    }
-  }
-
   /// Get active quiz session
   QuizSession? getActiveSession() {
     return _storage.getActiveQuizSession();
@@ -666,203 +479,240 @@ class QuizService {
     return getCompletedSessions().length >= 15;
   }
 
-  /// Sync quiz session to RTDB using shared couple path
+  /// Sync quiz session to Supabase API
+  /// Legacy Firebase RTDB sync has been removed - now using Supabase API exclusively
   Future<void> _syncSessionToRTDB(QuizSession session) async {
-    // Only sync in debug mode on simulators
-    if (!DevConfig.isSimulatorSync) {
-      return;
-    }
+    await _syncSessionToSupabaseApi(session);
+  }
 
+  /// Sync quiz session to Supabase API (new architecture)
+  /// This is called when useSupabaseForQuizzes flag is enabled
+  /// Returns the server-generated session ID (may differ from local ID)
+  Future<String?> _syncSessionToSupabaseApi(QuizSession session) async {
     try {
-      final user = _storage.getUser();
-      final partner = _storage.getPartner();
-      if (user == null || partner == null) {
-        Logger.warn('Cannot sync: user or partner not found', service: 'quiz');
-        return;
+      Logger.debug('Syncing session to Supabase API: ${session.id}', service: 'quiz');
+
+      // Get questions to send with the session
+      final questions = getSessionQuestions(session);
+      final questionsData = questions.map((q) => {
+        'id': q.id,
+        'text': q.question,
+        'choices': q.options,
+        'correctIndex': q.correctAnswerIndex,
+      }).toList();
+
+      // Create or update session via API
+      final gameState = await _quizApiService.createOrGetSession(
+        formatType: session.formatType ?? 'classic',
+        questions: questionsData,
+        quizName: session.quizName,
+        category: session.category,
+        dailyQuestId: session.dailyQuestId.isEmpty ? null : session.dailyQuestId,
+      );
+
+      final serverSessionId = gameState.session.id;
+      Logger.success('Session synced to Supabase API. Server ID: $serverSessionId (local was: ${session.id})', service: 'quiz');
+
+      // If server ID differs from local, update local session AND daily quest
+      if (serverSessionId != session.id && serverSessionId.isNotEmpty) {
+        final oldSessionId = session.id;
+        Logger.info('Updating local session ID to match server: $serverSessionId (was: $oldSessionId)', service: 'quiz');
+
+        // Delete old session with local ID
+        await _storage.deleteQuizSession(oldSessionId);
+
+        // Update session with server ID and save
+        session.id = serverSessionId;
+        await _storage.saveQuizSession(session);
+
+        // Also update any DailyQuest that references the old session ID
+        final dailyQuests = _storage.getTodayQuests();
+        for (final quest in dailyQuests) {
+          if (quest.contentId == oldSessionId) {
+            Logger.info('Updating DailyQuest ${quest.id} contentId from $oldSessionId to $serverSessionId', service: 'quiz');
+            quest.contentId = serverSessionId;
+            await _storage.saveDailyQuest(quest);
+
+            // Also update Supabase daily_quests table so partner sees correct contentId
+            _updateDailyQuestContentIdInSupabase(quest.id, serverSessionId);
+          }
+        }
       }
 
-      final coupleId = _generateCoupleId(user.id, partner.pushToken);
-      final sessionRef = _rtdb
-          .child('quiz_sessions')
-          .child(coupleId)
-          .child(session.id);
-
-      final sessionData = {
-        'id': session.id,
-        'questionIds': session.questionIds,
-        'createdAt': session.createdAt.millisecondsSinceEpoch,
-        'expiresAt': session.expiresAt.millisecondsSinceEpoch,
-        'status': session.status,
-        'initiatedBy': session.initiatedBy,
-        'subjectUserId': session.subjectUserId,
-        'formatType': session.formatType,
-        'isDailyQuest': session.isDailyQuest,
-        'dailyQuestId': session.dailyQuestId,
-        'answers': session.answers,
-        'predictions': session.predictions,
-        'matchPercentage': session.matchPercentage,
-        'lpEarned': session.lpEarned,
-        'completedAt': session.completedAt?.millisecondsSinceEpoch,
-        'alignmentMatches': session.alignmentMatches,
-        'predictionScores': session.predictionScores,
-      };
-
-      // 1. Sync to Firebase (Primary)
-      await sessionRef.set(sessionData);
-      
-      // 2. Sync to Supabase (Secondary - Dual Write)
-      _syncSessionToSupabase(session).catchError((e) {
-        Logger.error('Supabase dual-write failed (quizSession)', error: e, service: 'quiz');
-      });
-
-      // Removed verbose logging
-      // print('✅ Session synced to Firebase: ${session.id} at /quiz_sessions/$coupleId/${session.id}');
+      return serverSessionId;
     } catch (e) {
-      Logger.error('Error syncing session to Firebase', error: e, service: 'quiz');
-      rethrow;
+      Logger.error('Failed to sync session to Supabase API', error: e, service: 'quiz');
+      // Don't rethrow - allow local storage to continue working
+      return null;
     }
   }
 
-  /// Sync quiz session to Supabase (Dual-Write Implementation)
-  Future<void> _syncSessionToSupabase(QuizSession session) async {
-    try {
-      Logger.debug('🚀 Attempting dual-write to Supabase (quizSession)...', service: 'quiz');
-
-      final response = await _apiClient.post('/api/sync/quiz-sessions', body: {
-        'id': session.id,
-        'questionIds': session.questionIds,
-        'createdAt': session.createdAt.toIso8601String(),
-        'expiresAt': session.expiresAt.toIso8601String(),
-        'status': session.status,
-        'initiatedBy': session.initiatedBy,
-        'subjectUserId': session.subjectUserId,
-        'formatType': session.formatType,
-        'isDailyQuest': session.isDailyQuest,
-        'dailyQuestId': session.dailyQuestId,
-        'answers': session.answers,
-        'predictions': session.predictions,
-        'matchPercentage': session.matchPercentage,
-        'lpEarned': session.lpEarned,
-        'completedAt': session.completedAt?.toIso8601String(),
-        'alignmentMatches': session.alignmentMatches,
-        'predictionScores': session.predictionScores,
-        'quizName': session.quizName,
-        'category': session.category,
-      });
-
-      if (response.success) {
-        Logger.debug('✅ Supabase dual-write successful!', service: 'quiz');
-      } else {
-        Logger.error('Supabase dual-write failed: ${response.error}', service: 'quiz');
-      }
-    } catch (e) {
-      Logger.error('Supabase dual-write exception', error: e, service: 'quiz');
-    }
+  /// Update daily quest content_id in Supabase (fire-and-forget)
+  /// Called when local session ID is updated to match server ID
+  void _updateDailyQuestContentIdInSupabase(String questId, String newContentId) {
+    // Fire and forget - don't await, just log errors
+    _quizApiService.updateDailyQuestContentId(questId, newContentId).then((_) {
+      Logger.success('Updated daily_quests in Supabase: $questId -> $newContentId', service: 'quiz');
+    }).catchError((e) {
+      Logger.error('Failed to update daily_quests in Supabase', error: e, service: 'quiz');
+    });
   }
 
-  /// Get quiz session with Firebase fallback (simplified 2-tier)
-  /// 1. Try local Hive storage first (fast path)
-  /// 2. Check shared Firebase path (couple-based)
-  Future<QuizSession?> getSession(String sessionId) async {
+  /// Get quiz session with fallback
+  /// Handles two formats:
+  /// 1. UUID sessionId - direct lookup
+  /// 2. Semantic key "quiz:{formatType}:{dateKey}" - create/get via API
+  Future<QuizSession?> getSession(String contentId) async {
+    // Check if this is a semantic key (format: quiz:{formatType}:{dateKey})
+    if (contentId.startsWith('quiz:')) {
+      return await _getOrCreateSessionFromSemanticKey(contentId);
+    }
+
+    // Traditional UUID lookup
     // 1. Try local storage first (fast path)
-    var session = _storage.getQuizSession(sessionId);
+    var session = _storage.getQuizSession(contentId);
     if (session != null) {
-      // Removed verbose logging
-      // print('✅ Session found in local cache: $sessionId');
       return session;
     }
 
-    // 2. Check shared Firebase path
+    // 2. Poll from Supabase API
     try {
-      final user = _storage.getUser();
-      final partner = _storage.getPartner();
-      if (user == null || partner == null) {
-        Logger.warn('Cannot load session: user or partner not found', service: 'quiz');
+      final gameState = await _quizApiService.pollSessionState(contentId);
+      return gameState.session;
+    } catch (e) {
+      Logger.error('Error loading session from Supabase API', error: e, service: 'quiz');
+      return null;
+    }
+  }
+
+  /// Create or get session from semantic key (server-authoritative pattern)
+  /// Semantic key format: "quiz:{formatType}:{dateKey}"
+  /// This ensures both partners get the same session without race conditions.
+  Future<QuizSession?> _getOrCreateSessionFromSemanticKey(String semanticKey) async {
+    try {
+      // Parse semantic key: "quiz:{formatType}:{dateKey}"
+      final parts = semanticKey.split(':');
+      if (parts.length < 3) {
+        Logger.error('Invalid semantic key format: $semanticKey', service: 'quiz');
         return null;
       }
 
-      final coupleId = _generateCoupleId(user.id, partner.pushToken);
-      final sessionRef = _rtdb
-          .child('quiz_sessions')
-          .child(coupleId)
-          .child(sessionId);
+      final formatType = parts[1];
+      final dateKey = parts[2];
 
-      final snapshot = await sessionRef.get();
+      Logger.debug('Creating/getting session from semantic key: formatType=$formatType, dateKey=$dateKey', service: 'quiz');
 
-      if (snapshot.exists && snapshot.value != null) {
-        final data = snapshot.value as Map<dynamic, dynamic>;
-        session = QuizSession(
-          id: data['id'] as String,
-          questionIds: List<String>.from(data['questionIds'] ?? []),
-          createdAt: DateTime.fromMillisecondsSinceEpoch(data['createdAt'] as int),
-          expiresAt: DateTime.fromMillisecondsSinceEpoch(data['expiresAt'] as int),
-          status: data['status'] as String,
-          initiatedBy: data['initiatedBy'] as String,
-          subjectUserId: data['subjectUserId'] as String? ?? data['initiatedBy'] as String,
-          formatType: data['formatType'] as String? ?? 'classic',
-          isDailyQuest: data['isDailyQuest'] as bool? ?? false,
-          dailyQuestId: data['dailyQuestId'] as String? ?? '',
-          answers: data['answers'] != null
-              ? Map<String, List<int>>.from(
-                  (data['answers'] as Map).map(
-                    (k, v) => MapEntry(k.toString(), List<int>.from(v)),
-                  ),
-                )
-              : {},
-        );
+      // First, check if we already have a session cached for this date+format
+      final cachedSession = _findCachedSessionByDateAndFormat(dateKey, formatType);
+      if (cachedSession != null) {
+        Logger.debug('Found cached session for $formatType on $dateKey: ${cachedSession.id}', service: 'quiz');
+        return cachedSession;
+      }
 
-        session.matchPercentage = data['matchPercentage'] as int?;
-        session.lpEarned = data['lpEarned'] as int?;
-        session.completedAt = data['completedAt'] != null
-            ? DateTime.fromMillisecondsSinceEpoch(data['completedAt'] as int)
-            : null;
+      // Load questions from local content bank (required for session creation)
+      final questions = await _loadQuestionsForFormat(formatType);
+      if (questions.isEmpty) {
+        Logger.error('No questions loaded for format: $formatType', service: 'quiz');
+        return null;
+      }
 
-        // Handle predictions for Would You Rather
-        if (data.containsKey('predictions') && data['predictions'] != null) {
-          session.predictions = Map<String, List<int>>.from(
-            (data['predictions'] as Map).map(
-              (k, v) => MapEntry(k.toString(), List<int>.from(v)),
-            ),
-          );
-        }
+      // Call API to create or get existing session
+      final gameState = await _quizApiService.createOrGetSession(
+        formatType: formatType,
+        questions: questions,
+        dailyQuestId: semanticKey, // Use semantic key as quest link
+      );
 
-        // Cache locally
-        await _storage.saveQuizSession(session);
+      // Cache the session locally
+      await _storage.saveQuizSession(gameState.session);
 
-        // Removed verbose logging
-        // print('✅ Session loaded from Firebase: $sessionId (couple path: /quiz_sessions/$coupleId/$sessionId)');
+      Logger.debug('Got session from API: ${gameState.session.id} (isNew: ${!gameState.hasUserAnswered})', service: 'quiz');
+      return gameState.session;
+    } catch (e) {
+      Logger.error('Error creating/getting session from semantic key', error: e, service: 'quiz');
+      return null;
+    }
+  }
+
+  /// Find cached session by date and format type
+  QuizSession? _findCachedSessionByDateAndFormat(String dateKey, String formatType) {
+    final allSessions = _storage.getAllQuizSessions();
+    for (final session in allSessions) {
+      // Check if session matches date and format
+      final sessionDate = session.createdAt.toIso8601String().substring(0, 10);
+      if (sessionDate == dateKey && session.formatType == formatType) {
         return session;
       }
-    } catch (e) {
-      Logger.error('Error loading session from Firebase', error: e, service: 'quiz');
     }
-
-    Logger.warn('Session not found: $sessionId', service: 'quiz');
     return null;
   }
 
-  /// Generate deterministic couple ID by sorting user IDs alphabetically
-  /// Ensures both partners use the same Firebase path
-  String _generateCoupleId(String userId1, String userId2) {
-    final sortedIds = [userId1, userId2]..sort();
-    return '${sortedIds[0]}_${sortedIds[1]}';
+  /// Load questions for a specific format type from local content banks
+  Future<List<Map<String, dynamic>>> _loadQuestionsForFormat(String formatType) async {
+    try {
+      if (formatType == 'affirmation') {
+        // Load affirmation questions
+        await _affirmationBank.initialize();
+        final quiz = _affirmationBank.getRandomQuiz();
+        if (quiz == null) return [];
+        return quiz.questions.map((q) => <String, dynamic>{
+          'id': q.id,
+          'text': q.question,
+          'category': q.category,
+        }).toList();
+      } else {
+        // Load classic quiz questions
+        await _questionBank.initialize();
+        final questions = _questionBank.getRandomQuestionsForSession();
+        return questions.map((q) => <String, dynamic>{
+          'id': q.id,
+          'text': q.question,
+          'choices': q.options,
+          'category': q.category,
+        }).toList();
+      }
+    } catch (e) {
+      Logger.error('Error loading questions for format: $formatType', error: e, service: 'quiz');
+      return [];
+    }
   }
 
   /// Mark daily quest as completed for the user who submitted answers
   Future<void> _markQuestCompletedForUser(String sessionId, String userId) async {
     try {
       // Find the quest that corresponds to this session
+      // Supports both:
+      // 1. Direct match (sessionId == contentId for old UUIDs)
+      // 2. Semantic key match (contentId like "quiz:classic:2025-11-28" for new quests)
       final quests = _storage.getTodayQuests();
-      final quest = quests.firstWhere(
-        (q) => q.contentId == sessionId,
-        orElse: () => throw Exception('Quest not found for session: $sessionId'),
+      DailyQuest? quest;
+
+      // First try direct match (old UUID format)
+      quest = quests.cast<DailyQuest?>().firstWhere(
+        (q) => q?.contentId == sessionId,
+        orElse: () => null,
       );
+
+      // If not found, try semantic key lookup
+      if (quest == null) {
+        // Get the session to find its date and format
+        final session = _storage.getQuizSession(sessionId);
+        if (session != null) {
+          final dateKey = session.createdAt.toIso8601String().substring(0, 10);
+          final semanticKey = 'quiz:${session.formatType}:$dateKey';
+          quest = quests.cast<DailyQuest?>().firstWhere(
+            (q) => q?.contentId == semanticKey,
+            orElse: () => null,
+          );
+        }
+      }
+
+      if (quest == null) {
+        throw Exception('Quest not found for session: $sessionId');
+      }
 
       // Get partner info for Firebase sync
       final partner = _storage.getPartner();
-
-      // Create services
-      final dailyQuestService = DailyQuestService(storage: _storage);
 
       // Create sync service if partner exists
       QuestSyncService? questSyncService;

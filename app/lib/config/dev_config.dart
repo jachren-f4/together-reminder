@@ -13,6 +13,12 @@ class DevConfig {
   /// Set to false when you need to test auth functionality
   static const bool skipAuthInDev = true;
 
+  /// Allow auth bypass in profile/release builds for physical device testing
+  /// Set to true when you need to test on unplugged physical devices (e.g., walking outside)
+  /// Set to false for production releases
+  /// WARNING: Never ship to App Store with this set to true!
+  static const bool allowAuthBypassInRelease = true;
+
   /// Force production API (Vercel) even in debug builds
   /// Set to true when testing on physical devices that can't reach localhost
   /// Set to false for emulator/simulator development with local API
@@ -28,22 +34,22 @@ class DevConfig {
   /// Use Supabase for Daily Quests (instead of Firebase RTDB)
   /// FALSE = Firebase RTDB (current/stable)
   /// TRUE = Supabase API (Phase 4 migration)
-  static const bool useSuperbaseForDailyQuests = false;
+  static const bool useSuperbaseForDailyQuests = true;
 
   /// Use Supabase for Love Points (instead of Firebase RTDB)
   /// FALSE = Firebase RTDB (current/stable)
   /// TRUE = Supabase API (Phase 4 migration)
   static const bool useSupabaseForLovePoints = false;
 
-  /// Use Supabase for Memory Flip (instead of Firebase RTDB)
-  /// FALSE = Firebase RTDB (current/stable)
-  /// TRUE = Supabase API (Phase 4 migration)
-  static const bool useSupabaseForMemoryFlip = false;
-
   /// Use Supabase for You or Me (instead of Firebase RTDB)
   /// FALSE = Firebase RTDB (current/stable)
   /// TRUE = Supabase API (Phase 4 migration)
-  static const bool useSupabaseForYouOrMe = false;
+  static const bool useSupabaseForYouOrMe = true;
+
+  /// Use Supabase for Quizzes (Classic, Affirmation) instead of Firebase RTDB
+  /// FALSE = Firebase RTDB (current/stable)
+  /// TRUE = Supabase API (Phase 4 migration)
+  static const bool useSupabaseForQuizzes = true;
 
   /// Development User IDs for API auth bypass
   /// These IDs are sent to the API via X-Dev-User-Id header

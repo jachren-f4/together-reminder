@@ -1,9 +1,12 @@
+import 'dart:io' show Platform;
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:togetherremind/services/storage_service.dart';
 import 'package:togetherremind/services/couple_preferences_service.dart';
 import 'package:togetherremind/services/api_client.dart';
 import 'package:togetherremind/services/sound_service.dart';
 import 'package:togetherremind/services/haptic_service.dart';
+import 'package:togetherremind/services/steps_health_service.dart';
 import 'package:togetherremind/theme/app_theme.dart';
 import 'package:intl/intl.dart';
 import 'debug/data_validation_screen.dart';
@@ -28,11 +31,86 @@ class _SettingsScreenState extends State<SettingsScreen> {
   bool _soundEnabled = true;
   bool _hapticEnabled = true;
 
+  // Steps debug
+  bool _stepsConnected = false;
+  int _todaySteps = 0;
+  bool _loadingSteps = false;
+
   @override
   void initState() {
     super.initState();
     _loadPreferences();
     _loadSoundHapticPreferences();
+    _loadStepsData();
+  }
+
+  Future<void> _loadStepsData() async {
+    // Only load on iOS
+    if (kIsWeb || !Platform.isIOS) return;
+
+    setState(() => _loadingSteps = true);
+    try {
+      final healthService = StepsHealthService();
+
+      // Check local storage first (more reliable than hasPermission() which can be racy)
+      final connectionStatus = healthService.getConnectionStatus();
+      final isConnectedLocally = connectionStatus.isConnected;
+
+      // Also check HealthKit permission directly as fallback
+      final hasPermission = await healthService.hasPermission();
+
+      if (isConnectedLocally || hasPermission) {
+        final steps = await healthService.getTodaySteps();
+        setState(() {
+          _stepsConnected = true;
+          _todaySteps = steps;
+          _loadingSteps = false;
+        });
+      } else {
+        setState(() {
+          _stepsConnected = false;
+          _loadingSteps = false;
+        });
+      }
+    } catch (e) {
+      setState(() => _loadingSteps = false);
+    }
+  }
+
+  Future<void> _connectHealthKit() async {
+    setState(() => _loadingSteps = true);
+    try {
+      final healthService = StepsHealthService();
+      final granted = await healthService.requestPermission();
+
+      if (granted) {
+        final steps = await healthService.getTodaySteps();
+        setState(() {
+          _stepsConnected = true;
+          _todaySteps = steps;
+          _loadingSteps = false;
+        });
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('HealthKit connected!')),
+          );
+        }
+      } else {
+        setState(() => _loadingSteps = false);
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('HealthKit permission denied')),
+          );
+        }
+      }
+    } catch (e) {
+      setState(() => _loadingSteps = false);
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error: $e')),
+        );
+      }
+    }
   }
 
   Future<void> _loadSoundHapticPreferences() async {
@@ -377,6 +455,132 @@ class _SettingsScreenState extends State<SettingsScreen> {
                             ),
                         ],
                       ),
+                    ),
+                  ],
+                ),
+
+              // Steps Section (iOS only)
+              if (!kIsWeb && Platform.isIOS)
+                _SettingsGroup(
+                  title: 'STEPS TOGETHER',
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+                      child: _loadingSteps
+                          ? const Center(
+                              child: Padding(
+                                padding: EdgeInsets.all(12),
+                                child: SizedBox(
+                                  width: 20,
+                                  height: 20,
+                                  child: CircularProgressIndicator(strokeWidth: 2),
+                                ),
+                              ),
+                            )
+                          : _stepsConnected
+                              ? Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Row(
+                                      children: [
+                                        const Icon(Icons.check_circle, color: Colors.green, size: 20),
+                                        const SizedBox(width: 8),
+                                        Text(
+                                          'Apple Health Connected',
+                                          style: AppTheme.bodyFont.copyWith(
+                                            fontSize: 14,
+                                            color: Colors.green,
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    const SizedBox(height: 16),
+                                    Container(
+                                      padding: const EdgeInsets.all(16),
+                                      decoration: BoxDecoration(
+                                        color: const Color(0xFFF5F5F5),
+                                        borderRadius: BorderRadius.circular(12),
+                                      ),
+                                      child: Row(
+                                        children: [
+                                          Text(
+                                            '👟',
+                                            style: const TextStyle(fontSize: 32),
+                                          ),
+                                          const SizedBox(width: 16),
+                                          Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                "TODAY'S STEPS",
+                                                style: AppTheme.bodyFont.copyWith(
+                                                  fontSize: 10,
+                                                  color: const Color(0xFF888888),
+                                                  letterSpacing: 1,
+                                                ),
+                                              ),
+                                              const SizedBox(height: 4),
+                                              Text(
+                                                NumberFormat('#,###').format(_todaySteps),
+                                                style: AppTheme.headlineFont.copyWith(
+                                                  fontSize: 28,
+                                                  fontWeight: FontWeight.w600,
+                                                  color: AppTheme.textPrimary,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          const Spacer(),
+                                          IconButton(
+                                            icon: const Icon(Icons.refresh),
+                                            onPressed: _loadStepsData,
+                                            color: const Color(0xFF888888),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                )
+                              : Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      'Connect Apple Health to track your daily steps together.',
+                                      style: AppTheme.bodyFont.copyWith(
+                                        fontSize: 14,
+                                        color: const Color(0xFF666666),
+                                      ),
+                                    ),
+                                    const SizedBox(height: 16),
+                                    GestureDetector(
+                                      onTap: _connectHealthKit,
+                                      child: Container(
+                                        padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 20),
+                                        decoration: BoxDecoration(
+                                          color: AppTheme.primaryBlack,
+                                          borderRadius: BorderRadius.circular(8),
+                                        ),
+                                        child: Row(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            const Icon(Icons.favorite, color: Colors.red, size: 18),
+                                            const SizedBox(width: 8),
+                                            Text(
+                                              'CONNECT APPLE HEALTH',
+                                              style: AppTheme.bodyFont.copyWith(
+                                                fontSize: 12,
+                                                fontWeight: FontWeight.w600,
+                                                color: AppTheme.primaryWhite,
+                                                letterSpacing: 1,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
                     ),
                   ],
                 ),

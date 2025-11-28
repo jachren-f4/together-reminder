@@ -74,10 +74,19 @@ class RemotePairingService {
         'code': code.toUpperCase().trim(),
       });
 
+      // Parse createdAt from Firebase response (timestamp for accurate "days together")
+      // Fall back to DateTime.now() for backward compatibility
+      DateTime pairedAt;
+      if (result.data['createdAt'] != null) {
+        pairedAt = DateTime.fromMillisecondsSinceEpoch(result.data['createdAt'] as int);
+      } else {
+        pairedAt = DateTime.now();
+      }
+
       final partner = Partner(
         name: result.data['name'] ?? 'Partner',
         pushToken: result.data['pushToken'] ?? '',
-        pairedAt: DateTime.now(),
+        pairedAt: pairedAt,
         avatarEmoji: result.data['avatarEmoji'] ?? '💕',
       );
 

@@ -1,16 +1,13 @@
 import 'dart:convert';
 import 'dart:math';
 import 'package:flutter/services.dart';
-import 'package:firebase_database/firebase_database.dart';
 import '../models/you_or_me.dart';
 import '../services/storage_service.dart';
-import '../services/love_point_service.dart';
 import '../services/quest_utilities.dart';
 import '../services/daily_quest_service.dart';
 import '../services/quest_sync_service.dart';
-import '../services/api_client.dart';
+import '../services/you_or_me_api_service.dart';
 import '../models/daily_quest.dart';
-import '../config/dev_config.dart';
 import '../config/brand/brand_loader.dart';
 import '../utils/logger.dart';
 
@@ -20,8 +17,7 @@ import '../utils/logger.dart';
 /// - Loading questions from JSON with branch support
 /// - Random question selection with category variety
 /// - Session creation and management
-/// - Firebase RTDB synchronization
-/// - Background listening for partner sessions
+/// - Supabase API synchronization
 /// - Results calculation
 /// - Data cleanup (30 days retention)
 class YouOrMeService {
@@ -30,8 +26,7 @@ class YouOrMeService {
   YouOrMeService._internal();
 
   final _storage = StorageService();
-  final _database = FirebaseDatabase.instance.ref();
-  final _apiClient = ApiClient();
+  final _youOrMeApiService = YouOrMeApiService();
 
   List<YouOrMeQuestion>? _questionBank;
   String _currentBranch = '';  // Empty = legacy mode
@@ -186,8 +181,9 @@ class YouOrMeService {
   /// Select questions ensuring category variety
   ///
   /// Rules:
-  /// - At least 3 different categories
-  /// - Max 4 questions per category
+  /// - At least 3 different categories (soft goal)
+  /// - Max 4 questions per category (relaxed if needed to reach count)
+  /// - ALWAYS returns exactly [count] questions if pool has enough
   List<YouOrMeQuestion> _selectWithVariety(
     List<YouOrMeQuestion> available,
     int count,
@@ -199,7 +195,8 @@ class YouOrMeService {
     // Shuffle available questions
     final shuffled = List<YouOrMeQuestion>.from(available)..shuffle(random);
 
-    // Pick questions with category limits
+    // First pass: Pick questions with category limits (max 4 per category)
+    final skipped = <YouOrMeQuestion>[];
     for (final question in shuffled) {
       if (selected.length >= count) break;
 
@@ -209,6 +206,23 @@ class YouOrMeService {
       if (categoryCount < 4) {
         selected.add(question);
         categoryCounts[question.category] = categoryCount + 1;
+      } else {
+        // Track skipped questions for potential second pass
+        skipped.add(question);
+      }
+    }
+
+    // Second pass: If we still need more questions, relax the category limit
+    // This ensures we ALWAYS return [count] questions if available pool is large enough
+    if (selected.length < count && skipped.isNotEmpty) {
+      Logger.warn(
+        'First pass only got ${selected.length}/$count questions, relaxing category limits',
+        service: 'you_or_me',
+      );
+      for (final question in skipped) {
+        if (selected.length >= count) break;
+        selected.add(question);
+        categoryCounts[question.category] = (categoryCounts[question.category] ?? 0) + 1;
       }
     }
 
@@ -420,9 +434,7 @@ class YouOrMeService {
     };
   }
 
-  /// Submit user's answers for a session
-  ///
-  /// Triggers completion if both users have answered
+  /// Submit user's answers for a session via Supabase API
   Future<void> submitAnswers(
     String sessionId,
     String userId,
@@ -433,70 +445,32 @@ class YouOrMeService {
       service: 'you_or_me',
     );
 
-    var session = _storage.getYouOrMeSession(sessionId);
-    if (session == null) {
-      Logger.error('Session not found: $sessionId', service: 'you_or_me');
-      throw Exception('Session not found');
-    }
-
-    // Validate answer count
-    if (answers.length != 10) {
-      Logger.error(
-        'Invalid answer count: ${answers.length} (expected 10)',
-        service: 'you_or_me',
-      );
-      throw Exception('Must submit exactly 10 answers');
-    }
-
-    // Store answers
-    session.answers ??= {};
-    session.answers![userId] = answers;
-
-    // Save locally
-    await session.save();
-
-    // Sync to Firebase
-    await _syncSessionToRTDB(session);
-
-    Logger.success(
-      'Answers submitted for $userId (${session.getAnswerCount()}/2 users)',
-      service: 'you_or_me',
-    );
-
-    // Mark quest as completed for this user
+    await _submitAnswersViaApi(sessionId, answers);
     await _markQuestCompletedForUser(sessionId, userId);
-
-    // Check if both answered
-    if (session.areBothUsersAnswered()) {
-      Logger.info('Both users answered, completing session', service: 'you_or_me');
-      await _completeSession(session);
-    }
   }
 
-  /// Complete session when both users have submitted answers
-  ///
-  /// NOTE: LP is awarded by DailyQuestService.completeQuestForUser(), not here.
-  /// This prevents duplicate LP awards (issue: You or Me was awarding 60 LP instead of 30).
-  Future<void> _completeSession(YouOrMeSession session) async {
-    Logger.info('Completing session: ${session.id}', service: 'you_or_me');
-
-    const lpEarned = 30; // Standard quest reward
-
-    // DO NOT award LP here - DailyQuestService handles it
-    // (This prevents duplicate LP awards: 30 + 30 = 60 bug)
-    // LP is awarded via DailyQuestService.completeQuestForUser() when quest is marked completed
-
-    session.lpEarned = lpEarned;
-    session.status = 'completed';
-    session.completedAt = DateTime.now();
-
-    await session.save();
-    await _syncSessionToRTDB(session);
-
-    Logger.success(
-      'Session completed (LP awarded via DailyQuestService)',
-      service: 'you_or_me',
+  /// Submit answers via Supabase API
+  Future<YouOrMeSubmitResult> _submitAnswersViaApi(String sessionId, List<YouOrMeAnswer> answers) async {
+    final result = await _youOrMeApiService.submitAnswers(
+      sessionId: sessionId,
+      answers: answers,
     );
+
+    // Update local cache with new state
+    if (result.success) {
+      final session = _storage.getYouOrMeSession(sessionId);
+      if (session != null) {
+        session.answers = result.answers;
+        if (result.isCompleted) {
+          session.status = 'completed';
+          session.lpEarned = result.lpEarned;
+          session.completedAt = DateTime.now();
+        }
+        await session.save();
+      }
+    }
+
+    return result;
   }
 
   /// Get user's own session from a paired session ID
@@ -563,66 +537,37 @@ class YouOrMeService {
   // Firebase RTDB Sync
   // ═══════════════════════════════════════════════════════════════════════════
 
-  /// Sync session to Firebase RTDB using couple ID path
+  /// Sync session to Supabase API
+  /// Legacy Firebase RTDB sync has been removed - now using Supabase API exclusively
   Future<void> _syncSessionToRTDB(YouOrMeSession session) async {
+    await _syncSessionToSupabaseApi(session);
+  }
+
+  /// Sync session to Supabase API (new architecture)
+  /// This is called when useSupabaseForYouOrMe flag is enabled
+  Future<void> _syncSessionToSupabaseApi(YouOrMeSession session) async {
     try {
-      final user = _storage.getUser();
-      final partner = _storage.getPartner();
+      Logger.debug('Syncing session to Supabase API: ${session.id}', service: 'you_or_me');
 
-      if (user == null || partner == null) {
-        Logger.warn('User or partner not found, skipping Firebase sync', service: 'you_or_me');
-        return;
-      }
-
-      final coupleId = _generateCoupleId(user.id, partner.pushToken);
-      final sessionRef = _database
-          .child('you_or_me_sessions')
-          .child(coupleId)
-          .child(session.id);
-
-      await sessionRef.set(session.toMap());
-
-      // Sync to Supabase (Dual-Write)
-      await _syncSessionToSupabase(session);
-
-      Logger.debug(
-        'Synced session to Firebase: ${session.id}',
-        service: 'you_or_me',
+      // Create or update session via API
+      await _youOrMeApiService.createOrGetSession(
+        questions: session.questions,
+        questId: session.questId,
+        branch: null, // Branch is loaded locally
       );
+
+      Logger.success('Session synced to Supabase API: ${session.id}', service: 'you_or_me');
     } catch (e) {
-      Logger.error(
-        'Failed to sync session to Firebase',
-        error: e,
-        service: 'you_or_me',
-      );
-      // Don't rethrow - allow local storage to continue
+      Logger.error('Failed to sync session to Supabase API', error: e, service: 'you_or_me');
+      // Don't rethrow - allow local storage to continue working
     }
   }
 
-  /// Sync You or Me session to Supabase (Dual-Write Implementation)
-  Future<void> _syncSessionToSupabase(YouOrMeSession session) async {
-    try {
-      Logger.debug('🚀 Attempting dual-write to Supabase (youOrMe)...', service: 'you_or_me');
-
-      final response = await _apiClient.post('/api/sync/you-or-me', body: {
-        'id': session.id,
-        'questions': session.questions.map((q) => q.toMap()).toList(),
-        'createdAt': session.createdAt.toIso8601String(),
-      });
-
-      if (response.success) {
-        Logger.debug('✅ Supabase dual-write successful!', service: 'you_or_me');
-      }
-    } catch (e) {
-      Logger.error('Supabase dual-write exception', error: e, service: 'you_or_me');
-    }
-  }
-
-  /// Get session with Firebase fallback using couple ID path
+  /// Get session with fallback
   ///
   /// Tries in order:
   /// 1. Local storage (fastest)
-  /// 2. Firebase couple ID path (shared by both users)
+  /// 2. Supabase API
   Future<YouOrMeSession?> getSession(String sessionId, {bool forceRefresh = false}) async {
     // If not forcing refresh, try local storage first
     if (!forceRefresh) {
@@ -633,122 +578,13 @@ class YouOrMeService {
       }
     }
 
-    Logger.debug(
-      forceRefresh
-          ? 'Force refreshing session from Firebase'
-          : 'Session not in local storage, checking Firebase',
-      service: 'you_or_me',
-    );
-
-    // 2. Try Firebase couple ID path
+    // 2. Poll from Supabase API
     try {
-      final user = _storage.getUser();
-      final partner = _storage.getPartner();
-
-      if (user == null || partner == null) {
-        Logger.warn('User or partner not found, cannot check Firebase', service: 'you_or_me');
-        return null;
-      }
-
-      final coupleId = _generateCoupleId(user.id, partner.pushToken);
-      final snapshot = await _database
-          .child('you_or_me_sessions')
-          .child(coupleId)
-          .child(sessionId)
-          .once();
-
-      if (snapshot.snapshot.value != null) {
-        final data = Map<String, dynamic>.from(
-          snapshot.snapshot.value as Map,
-        );
-        final session = YouOrMeSession.fromMap(data);
-
-        Logger.debug('Session found in Firebase couple path', service: 'you_or_me');
-        await _storage.saveYouOrMeSession(session); // Cache locally
-        return session;
-      }
+      final gameState = await _youOrMeApiService.pollSessionState(sessionId);
+      return gameState.session;
     } catch (e) {
-      Logger.error(
-        'Failed to load session from Firebase',
-        error: e,
-        service: 'you_or_me',
-      );
-    }
-
-    Logger.warn('Session not found anywhere: $sessionId', service: 'you_or_me');
-    return null;
-  }
-
-  // ═══════════════════════════════════════════════════════════════════════════
-  // Background Listener
-  // ═══════════════════════════════════════════════════════════════════════════
-
-  /// Start listening for couple's sessions using couple ID path
-  /// Called once on app startup
-  Future<void> startListeningForPartnerSessions() async {
-    try {
-      final user = _storage.getUser();
-      final partner = _storage.getPartner();
-
-      if (user == null || partner == null) {
-        throw Exception('User or partner not found');
-      }
-
-      final coupleId = _generateCoupleId(user.id, partner.pushToken);
-
-      Logger.info(
-        'Starting listener for couple sessions: $coupleId',
-        service: 'you_or_me',
-      );
-
-      final ref = _database
-          .child('you_or_me_sessions')
-          .child(coupleId);
-
-      // Listen for new sessions
-      ref.onChildAdded.listen((event) {
-        try {
-          final data = Map<String, dynamic>.from(event.snapshot.value as Map);
-          final session = YouOrMeSession.fromMap(data);
-          _storage.saveYouOrMeSession(session);
-          Logger.debug(
-            'Partner session added: ${session.id}',
-            service: 'you_or_me',
-          );
-        } catch (e) {
-          Logger.error(
-            'Failed to process partner session',
-            error: e,
-            service: 'you_or_me',
-          );
-        }
-      });
-
-      // Listen for session updates
-      ref.onChildChanged.listen((event) {
-        try {
-          final data = Map<String, dynamic>.from(event.snapshot.value as Map);
-          final session = YouOrMeSession.fromMap(data);
-          _storage.saveYouOrMeSession(session);
-          Logger.debug(
-            'Partner session updated: ${session.id}',
-            service: 'you_or_me',
-          );
-        } catch (e) {
-          Logger.error(
-            'Failed to process partner session update',
-            error: e,
-            service: 'you_or_me',
-          );
-        }
-      });
-
-      Logger.success('Partner session listener started', service: 'you_or_me');
-    } catch (e) {
-      Logger.warn(
-        'Could not start partner listener (no partner yet?)',
-        service: 'you_or_me',
-      );
+      Logger.error('Error loading session from Supabase API', error: e, service: 'you_or_me');
+      return null;
     }
   }
 
@@ -970,13 +806,6 @@ class YouOrMeService {
   // ═══════════════════════════════════════════════════════════════════════════
   // Helper Methods
   // ═══════════════════════════════════════════════════════════════════════════
-
-  /// Generate couple ID from two user IDs
-  /// Ensures consistent couple ID regardless of who initiates
-  String _generateCoupleId(String userId1, String userId2) {
-    final sortedIds = [userId1, userId2]..sort();
-    return '${sortedIds[0]}_${sortedIds[1]}';
-  }
 
   /// Mark daily quest as completed for the user who submitted answers
   ///

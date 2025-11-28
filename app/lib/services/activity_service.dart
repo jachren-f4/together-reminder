@@ -41,12 +41,6 @@ class ActivityService {
     // Add quizzes
     activities.addAll(_getQuizzes());
 
-    // Add word ladders
-    activities.addAll(_getWordLadders());
-
-    // Add memory flip puzzles
-    activities.addAll(_getMemoryFlips());
-
     // Sort by timestamp (most recent first)
     activities.sort((a, b) => b.timestamp.compareTo(a.timestamp));
 
@@ -292,124 +286,6 @@ class ActivityService {
     }).toList();
   }
 
-  /// Convert word ladder sessions to activity items
-  List<ActivityItem> _getWordLadders() {
-    final sessions = _storage.getAllLadderSessions();
-    final userId = _getCurrentUserId();
-    final userName = _getUserName();
-    final partnerName = _getPartnerName();
-
-    return sessions.map((session) {
-      final isMyTurn = session.currentTurn == userId;
-      final isCompleted = session.isCompleted;
-
-      // Determine participants (ladder is collaborative, both participate)
-      final participants = <ParticipantStatus>[
-        ParticipantStatus(
-          userId: userId,
-          displayName: userName,
-          hasCompleted: isCompleted || !isMyTurn,
-        ),
-        ParticipantStatus(
-          userId: 'partner',
-          displayName: partnerName,
-          hasCompleted: isCompleted || isMyTurn,
-        ),
-      ];
-
-      // Determine status
-      ActivityStatus status;
-      if (isCompleted) {
-        status = ActivityStatus.completed;
-      } else if (session.isYielded) {
-        status = ActivityStatus.pending;
-      } else if (isMyTurn) {
-        status = ActivityStatus.yourTurn;
-      } else {
-        status = ActivityStatus.waitingForPartner;
-      }
-
-      return ActivityItem(
-        id: session.id,
-        type: ActivityType.wordLadder,
-        title: 'Word Ladder: ${session.startWord.toUpperCase()} → ${session.endWord.toUpperCase()}',
-        subtitle: isCompleted
-            ? 'Completed in ${session.stepCount} steps'
-            : (isMyTurn ? 'Your turn' : 'Waiting for $partnerName'),
-        timestamp: session.createdAt,
-        status: status,
-        participants: participants,
-        sourceData: session,
-        isUnread: isMyTurn && !isCompleted,
-        emoji: '🪜',
-      );
-    }).toList();
-  }
-
-  /// Convert memory flip puzzles to activity items
-  List<ActivityItem> _getMemoryFlips() {
-    final puzzles = _storage.getAllMemoryPuzzles();
-    final userId = _getCurrentUserId();
-    final userName = _getUserName();
-    final partnerName = _getPartnerName();
-
-    return puzzles.map((puzzle) {
-      final isCompleted = puzzle.isCompleted;
-
-      // Check flip allowances to determine who has participated
-      final userAllowance = _storage.getMemoryAllowance(userId);
-      final userHasFlipsLeft = userAllowance?.canFlip ?? true;
-      final userHasFlippedToday = (userAllowance?.totalFlipsToday ?? 0) > 0;
-
-      // For partner, we don't have their userId, so we check if any cards were matched by someone other than user
-      final partnerHasParticipated = puzzle.cards
-          .any((c) => c.matchedBy != null && c.matchedBy != userId);
-
-      // Determine participants
-      final participants = <ParticipantStatus>[
-        ParticipantStatus(
-          userId: userId,
-          displayName: userName,
-          // User has completed if: game is done, OR they have no flips left, OR they've flipped today
-          hasCompleted: isCompleted || !userHasFlipsLeft || userHasFlippedToday,
-        ),
-        ParticipantStatus(
-          userId: 'partner',
-          displayName: partnerName,
-          // Partner has completed if game is done or they've participated
-          hasCompleted: isCompleted || partnerHasParticipated,
-        ),
-      ];
-
-      // Determine status
-      ActivityStatus status;
-      if (isCompleted) {
-        status = ActivityStatus.completed;
-      } else if (!userHasFlipsLeft) {
-        // User has no flips left - waiting for partner or next day
-        status = ActivityStatus.waitingForPartner;
-      } else {
-        // User still has flips available
-        status = ActivityStatus.yourTurn;
-      }
-
-      return ActivityItem(
-        id: puzzle.id,
-        type: ActivityType.memoryFlip,
-        title: 'Memory Flip',
-        subtitle: isCompleted
-            ? 'Completed together'
-            : '${puzzle.matchedPairs}/${puzzle.totalPairs} pairs matched',
-        timestamp: puzzle.createdAt,
-        status: status,
-        participants: participants,
-        sourceData: puzzle,
-        isUnread: !isCompleted && userHasFlipsLeft,
-        emoji: '🎴',
-      );
-    }).toList();
-  }
-
   /// Get count of activities waiting for user's turn
   int getYourTurnCount() {
     return getAllActivities()
@@ -473,10 +349,12 @@ class ActivityService {
         return ActivityType.quiz;
       case 2: // QuestType.game
         return ActivityType.quiz; // Generic game maps to quiz for now
-      case 3: // QuestType.wordLadder
-        return ActivityType.wordLadder;
-      case 4: // QuestType.memoryFlip
-        return ActivityType.memoryFlip;
+      case 3: // QuestType.youOrMe
+        return ActivityType.wouldYouRather;
+      case 4: // QuestType.linked
+      case 5: // QuestType.wordSearch
+      case 6: // QuestType.steps
+        return ActivityType.quiz; // Game types map to quiz for now
       default:
         return ActivityType.quiz;
     }
@@ -505,10 +383,14 @@ class ActivityService {
         return 'Relationship Quiz #${quest.sortOrder + 1}';
       case 2: // QuestType.game
         return 'Fun Game';
-      case 3: // QuestType.wordLadder
-        return 'Word Ladder Challenge';
-      case 4: // QuestType.memoryFlip
-        return 'Memory Match Game';
+      case 3: // QuestType.youOrMe
+        return 'You or Me?';
+      case 4: // QuestType.linked
+        return 'Crossword Puzzle';
+      case 5: // QuestType.wordSearch
+        return 'Word Search';
+      case 6: // QuestType.steps
+        return 'Steps Together';
       default:
         return 'Daily Quest';
     }

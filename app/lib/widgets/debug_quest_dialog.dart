@@ -135,9 +135,6 @@ class _DebugQuestDialogState extends State<DebugQuestDialog> {
       await _storage.transactionsBox.clear();
       await _storage.quizSessionsBox.clear();
       await _storage.badgesBox.clear();
-      await _storage.ladderSessionsBox.clear();
-      await _storage.memoryPuzzlesBox.clear();
-      await _storage.memoryAllowancesBox.clear();
       await _storage.quizStreaksBox.clear();
       await _storage.dailyPulsesBox.clear();
       await _storage.dailyQuestsBox.clear();
