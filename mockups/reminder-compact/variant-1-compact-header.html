@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=390, initial-scale=1.0, maximum-scale=1.0">
+    <title>Variant 1: Compact Header</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #888;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+        }
+        .phone-frame {
+            width: 390px;
+            margin: 0 auto;
+            background: rgba(0,0,0,0.3);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+        }
+        .bottom-sheet {
+            background: #fff;
+            border-top: 2px solid #1a1a1a;
+            max-height: 85vh;
+            display: flex;
+            flex-direction: column;
+        }
+        .drag-handle {
+            width: 40px;
+            height: 4px;
+            background: #999;
+            border-radius: 2px;
+            margin: 12px auto 8px;
+        }
+        .header {
+            padding: 12px 20px 16px;
+            text-align: center;
+        }
+        .header h1 {
+            font-family: Georgia, serif;
+            font-size: 24px;
+            font-weight: 400;
+            color: #1a1a1a;
+        }
+        .header h1 em {
+            font-style: italic;
+        }
+        .header .subtitle {
+            font-size: 12px;
+            color: #666;
+            font-style: italic;
+            margin-top: 6px;
+        }
+        .recipient-bar {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 20px;
+            border-top: 1px solid #1a1a1a;
+            border-bottom: 1px solid #1a1a1a;
+        }
+        .recipient-bar .label {
+            font-size: 10px;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            color: #666;
+        }
+        .recipient-bar .name {
+            font-size: 14px;
+            font-weight: 600;
+            color: #1a1a1a;
+        }
+        .content {
+            padding: 16px 20px;
+            flex: 1;
+            overflow-y: auto;
+        }
+        .section-label {
+            font-size: 10px;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            color: #666;
+            margin-bottom: 8px;
+        }
+        .message-input {
+            width: 100%;
+            padding: 14px;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            font-size: 15px;
+            font-family: inherit;
+            margin-bottom: 16px;
+        }
+        .message-input:focus {
+            outline: none;
+            border-color: #1a1a1a;
+        }
+        .time-options {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+        .time-btn {
+            flex: 1;
+            padding: 10px 4px;
+            border: 1px solid #1a1a1a;
+            background: #fff;
+            text-align: center;
+            cursor: pointer;
+        }
+        .time-btn.selected {
+            background: #1a1a1a;
+            color: #fff;
+        }
+        .time-btn .emoji {
+            font-size: 16px;
+            display: block;
+            margin-bottom: 4px;
+        }
+        .time-btn .label {
+            font-size: 9px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+        .quick-messages {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+        }
+        .quick-msg {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 12px;
+            border: 1px solid #e0e0e0;
+            cursor: pointer;
+        }
+        .quick-msg .emoji { font-size: 14px; }
+        .quick-msg .text { font-size: 12px; color: #1a1a1a; }
+        .footer {
+            padding: 16px 20px;
+            border-top: 2px solid #1a1a1a;
+            background: #fff;
+        }
+        .send-btn {
+            width: 100%;
+            padding: 16px;
+            background: #1a1a1a;
+            color: #fff;
+            border: none;
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 2px;
+            cursor: pointer;
+        }
+        .footer-note {
+            font-size: 11px;
+            font-style: italic;
+            color: #999;
+            text-align: center;
+            margin-top: 10px;
+        }
+        .back-link {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            color: #fff;
+            text-decoration: none;
+            font-size: 14px;
+        }
+        .variant-label {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            color: #fff;
+            font-size: 12px;
+            background: rgba(0,0,0,0.5);
+            padding: 8px 12px;
+        }
+    </style>
+</head>
+<body>
+    <a href="index.html" class="back-link">&larr; Back to Index</a>
+    <div class="variant-label">Variant 1: Compact Header</div>
+
+    <div class="phone-frame">
+        <div class="bottom-sheet">
+            <div class="drag-handle"></div>
+
+            <div class="header">
+                <h1>Send a <em>Reminder</em></h1>
+                <p class="subtitle">Schedule a thoughtful message</p>
+            </div>
+
+            <div class="recipient-bar">
+                <span class="label">TO</span>
+                <span class="name">TestiY</span>
+            </div>
+
+            <div class="content">
+                <div class="section-label">MESSAGE</div>
+                <input type="text" class="message-input" placeholder="What would you like to remind them...">
+
+                <div class="section-label">DELIVERY TIME</div>
+                <div class="time-options">
+                    <div class="time-btn">
+                        <span class="emoji">⚡</span>
+                        <span class="label">Now</span>
+                    </div>
+                    <div class="time-btn selected">
+                        <span class="emoji">☕</span>
+                        <span class="label">1 Hour</span>
+                    </div>
+                    <div class="time-btn">
+                        <span class="emoji">🌙</span>
+                        <span class="label">8 PM</span>
+                    </div>
+                    <div class="time-btn">
+                        <span class="emoji">☀️</span>
+                        <span class="label">8 AM</span>
+                    </div>
+                </div>
+
+                <div class="section-label">QUICK MESSAGES</div>
+                <div class="quick-messages">
+                    <div class="quick-msg">
+                        <span class="emoji">💕</span>
+                        <span class="text">Love you!</span>
+                    </div>
+                    <div class="quick-msg">
+                        <span class="emoji">🏠</span>
+                        <span class="text">I'm home</span>
+                    </div>
+                    <div class="quick-msg">
+                        <span class="emoji">☕</span>
+                        <span class="text">Coffee?</span>
+                    </div>
+                    <div class="quick-msg">
+                        <span class="emoji">🛒</span>
+                        <span class="text">Pick up milk</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="footer">
+                <button class="send-btn">SEND REMINDER</button>
+                <p class="footer-note">Your partner will be notified at the scheduled time</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

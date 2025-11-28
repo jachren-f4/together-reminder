@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Steps Side Quest - Claim Ready</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            background: #fafafa;
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .variant-label {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: #000;
+            color: #fff;
+            padding: 8px 16px;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            text-align: center;
+        }
+
+        .quest-card {
+            width: 260px;
+            border: 1px solid #000;
+            background: #fff;
+            box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.15);
+            overflow: hidden;
+        }
+
+        .quest-image {
+            width: 100%;
+            height: 170px;
+            background: #000;
+            color: #fff;
+            border-bottom: 1px solid #000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .claim-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            opacity: 0.7;
+            margin-bottom: 8px;
+        }
+
+        .claim-steps {
+            font-size: 36px;
+            font-weight: 700;
+            letter-spacing: -2px;
+            margin-bottom: 4px;
+        }
+
+        .claim-date {
+            font-size: 12px;
+            opacity: 0.7;
+            margin-bottom: 12px;
+        }
+
+        .claim-reward {
+            font-size: 24px;
+            font-weight: 700;
+            padding: 4px 16px;
+            border: 1px solid rgba(255,255,255,0.3);
+        }
+
+        .quest-content {
+            padding: 16px;
+        }
+
+        .quest-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 12px;
+        }
+
+        .quest-info {
+            flex: 1;
+        }
+
+        .quest-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .quest-desc {
+            font-size: 12px;
+            color: #666;
+            font-style: italic;
+        }
+
+        .reward {
+            font-size: 14px;
+            font-weight: 700;
+            border: 1px solid #000;
+            padding: 4px 10px;
+            background: #000;
+            color: #fff;
+            white-space: nowrap;
+            margin-left: 8px;
+        }
+
+        .quest-footer {
+            padding-top: 12px;
+            border-top: 1px solid #e0e0e0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .status-badge {
+            display: inline-block;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 6px 12px;
+            border: 1px solid #000;
+            background: #000;
+            color: #fff;
+        }
+
+        .expiry {
+            font-size: 11px;
+            color: #999;
+        }
+    </style>
+</head>
+<body>
+    <div class="variant-label">Side Quest Card - Claim Ready</div>
+
+    <div class="quest-card">
+        <div class="quest-image">
+            <div class="claim-label">Yesterday</div>
+            <div class="claim-steps">14,200</div>
+            <div class="claim-date">November 27</div>
+            <div class="claim-reward">+21 LP</div>
+        </div>
+        <div class="quest-content">
+            <div class="quest-header">
+                <div class="quest-info">
+                    <div class="quest-title">Steps Together</div>
+                    <div class="quest-desc">Reward ready to claim</div>
+                </div>
+                <div class="reward">+21</div>
+            </div>
+            <div class="quest-footer">
+                <span class="status-badge">Claim Now</span>
+                <span class="expiry">36h left</span>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

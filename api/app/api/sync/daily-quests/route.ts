@@ -72,6 +72,48 @@ export const POST = withAuthOrDevBypass(async (req, userId) => {
     }
 });
 
+// PATCH: Update content_id for a daily quest (used when session ID changes after server sync)
+export const PATCH = withAuthOrDevBypass(async (req, userId) => {
+    try {
+        const body = await req.json();
+        const { questId, contentId } = body;
+
+        if (!questId || !contentId) {
+            return NextResponse.json({ error: 'Missing questId or contentId' }, { status: 400 });
+        }
+
+        // Find couple
+        const coupleResult = await query(
+            `SELECT id FROM couples WHERE user1_id = $1 OR user2_id = $1`,
+            [userId]
+        );
+
+        if (coupleResult.rows.length === 0) {
+            return NextResponse.json({ error: 'Couple not found' }, { status: 404 });
+        }
+        const coupleId = coupleResult.rows[0].id;
+
+        // Update content_id for the specific quest
+        const result = await query(
+            `UPDATE daily_quests
+             SET content_id = $1
+             WHERE id = $2 AND couple_id = $3
+             RETURNING *`,
+            [contentId, questId, coupleId]
+        );
+
+        if (result.rows.length === 0) {
+            return NextResponse.json({ error: 'Quest not found' }, { status: 404 });
+        }
+
+        console.log(`Updated quest ${questId} content_id to ${contentId}`);
+        return NextResponse.json({ success: true, quest: result.rows[0] });
+    } catch (error) {
+        console.error('Error updating quest content_id:', error);
+        return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+    }
+});
+
 export const GET = withAuthOrDevBypass(async (req, userId) => {
     try {
         const { searchParams } = new URL(req.url);

@@ -157,7 +157,9 @@ class _AuthWrapperState extends State<AuthWrapper> {
     });
 
     // Dev mode: Skip auth entirely for faster development
-    if (kDebugMode && DevConfig.skipAuthInDev) {
+    // Also supports profile builds for physical device testing (walking outside, etc.)
+    final canBypass = kDebugMode || DevConfig.allowAuthBypassInRelease;
+    if (canBypass && DevConfig.skipAuthInDev) {
       if (_storageService.hasPartner()) {
         return const HomeScreen();
       } else {

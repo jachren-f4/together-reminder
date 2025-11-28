@@ -67,45 +67,52 @@ async function resetAllGames() {
     console.log('   ℹ️  No matches found');
   }
 
-  // 3. Reset Memory Flip (moves first, then puzzles)
-  console.log('3️⃣  Memory Flip...');
+  // 3. Reset Quiz Sessions
+  console.log('3️⃣  Quiz Sessions...');
+  const { data: quizData, error: quizError } = await supabase
+    .from('quiz_sessions')
+    .delete()
+    .eq('couple_id', COUPLE_ID)
+    .select();
 
-  // Get puzzle IDs first
-  const { data: puzzles } = await supabase
-    .from('memory_puzzles')
-    .select('id')
-    .eq('couple_id', COUPLE_ID);
-
-  if (puzzles && puzzles.length > 0) {
-    const puzzleIds = puzzles.map(p => p.id);
-
-    // Delete moves
-    const { data: movesData, error: movesError } = await supabase
-      .from('memory_moves')
-      .delete()
-      .in('puzzle_id', puzzleIds)
-      .select();
-
-    if (movesError) {
-      console.error('   ❌ Error deleting moves:', movesError.message);
-    } else if (movesData && movesData.length > 0) {
-      console.log(`   ✅ Deleted ${movesData.length} move(s)`);
-    }
-
-    // Delete puzzles
-    const { data: puzzleData, error: puzzleError } = await supabase
-      .from('memory_puzzles')
-      .delete()
-      .eq('couple_id', COUPLE_ID)
-      .select();
-
-    if (puzzleError) {
-      console.error('   ❌ Error deleting puzzles:', puzzleError.message);
-    } else if (puzzleData && puzzleData.length > 0) {
-      console.log(`   ✅ Deleted ${puzzleData.length} puzzle(s)`);
-    }
+  if (quizError) {
+    console.error('   ❌ Error:', quizError.message);
+  } else if (quizData && quizData.length > 0) {
+    console.log(`   ✅ Deleted ${quizData.length} session(s)`);
   } else {
-    console.log('   ℹ️  No puzzles found');
+    console.log('   ℹ️  No sessions found');
+  }
+
+  // 4. Reset You or Me Sessions
+  console.log('4️⃣  You or Me Sessions...');
+  const { data: yomData, error: yomError } = await supabase
+    .from('you_or_me_sessions')
+    .delete()
+    .eq('couple_id', COUPLE_ID)
+    .select();
+
+  if (yomError) {
+    console.error('   ❌ Error:', yomError.message);
+  } else if (yomData && yomData.length > 0) {
+    console.log(`   ✅ Deleted ${yomData.length} session(s)`);
+  } else {
+    console.log('   ℹ️  No sessions found');
+  }
+
+  // 5. Reset Daily Quests
+  console.log('5️⃣  Daily Quests...');
+  const { data: questData, error: questError } = await supabase
+    .from('daily_quests')
+    .delete()
+    .eq('couple_id', COUPLE_ID)
+    .select();
+
+  if (questError) {
+    console.error('   ❌ Error:', questError.message);
+  } else if (questData && questData.length > 0) {
+    console.log(`   ✅ Deleted ${questData.length} quest(s)`);
+  } else {
+    console.log('   ℹ️  No quests found');
   }
 
   console.log('\n✨ All games reset! Ready for fresh testing.');

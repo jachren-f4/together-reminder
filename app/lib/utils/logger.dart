@@ -47,7 +47,7 @@ class Logger {
     'lovepoint': false,         // Love Points awards, tier progression (11 uses)
 
     // === MAJOR FEATURES (Enable when working on these features) ===
-    'quiz': false,              // Classic quiz gameplay, scoring, sync (36 uses)
+    'quiz': true,               // Classic quiz gameplay, scoring, sync (36 uses) - ENABLED for debugging
     'you_or_me': true,          // You or Me dual-session game (32 uses) - ENABLED for Phase 5 debugging
     'pairing': false,           // QR/Remote device pairing (19 uses - stable, rarely needed)
 
@@ -56,9 +56,6 @@ class Logger {
     'poke': true,               // Poke send/receive interactions (7 uses) - ENABLED for Phase 3 dual-write testing
     'daily_pulse': false,       // Daily Pulse synchronized activities (14 uses)
     'affirmation': false,       // Affirmation quiz variant (5 uses)
-    'memory_flip': true,        // Memory Flip card matching game (5 uses) - ENABLED for sync debugging
-    'word_ladder': false,       // Word Ladder game screens (7 uses)
-    'ladder': false,            // Word Ladder service backend (2 uses - confusing name, consider consolidating)
     'quest': true,              // Daily quest sync, generation, completion, Firebase operations (47 uses) - ENABLED for Phase 5 debugging
 
     // === INFRASTRUCTURE/DEBUG (Rarely needed - only for deep debugging) ===
@@ -67,9 +64,11 @@ class Logger {
     'word_validation': false,   // Word dictionary initialization (2 uses)
     'home': false,              // Home screen operations (1 use)
     'arena': false,             // Arena/tier system (1 use)
+    'navigation': true,         // Quest navigation service - ENABLED for debugging
     'leaderboard': true,        // Leaderboard API calls and caching - ENABLED for testing
     'country': true,            // Country detection and updates - ENABLED for testing
     'sound': true,              // Sound playback - ENABLED for debugging
+    'steps': true,              // Steps Together feature - ENABLED for debugging
   };
 
   /// Log debug information (only in debug mode)

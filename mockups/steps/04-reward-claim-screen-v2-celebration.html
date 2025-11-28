@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Steps Reward Claim - V2 Celebration</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            background: #fafafa;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 420px;
+            margin: 0 auto;
+            background: #fff;
+            border: 2px solid #000;
+            box-shadow: 8px 8px 0 rgba(0, 0, 0, 0.1);
+            min-height: 700px;
+            overflow: hidden;
+        }
+
+        .variant-label {
+            background: #000;
+            color: #fff;
+            padding: 8px 16px;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: #000;
+            color: #fff;
+            padding: 48px 24px;
+            text-align: center;
+            position: relative;
+        }
+
+        .confetti {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .confetti-piece {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background: #fff;
+            opacity: 0.3;
+        }
+
+        .confetti-piece:nth-child(1) { top: 10%; left: 10%; transform: rotate(45deg); }
+        .confetti-piece:nth-child(2) { top: 20%; left: 80%; transform: rotate(15deg); }
+        .confetti-piece:nth-child(3) { top: 40%; left: 20%; transform: rotate(75deg); }
+        .confetti-piece:nth-child(4) { top: 60%; left: 70%; transform: rotate(30deg); }
+        .confetti-piece:nth-child(5) { top: 80%; left: 40%; transform: rotate(60deg); }
+
+        .reward-amount {
+            font-size: 72px;
+            font-weight: 700;
+            letter-spacing: -3px;
+            line-height: 1;
+            margin-bottom: 8px;
+        }
+
+        .reward-label {
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            opacity: 0.7;
+        }
+
+        .tier-badge {
+            display: inline-block;
+            margin-top: 16px;
+            padding: 6px 16px;
+            border: 1px solid rgba(255,255,255,0.3);
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Content */
+        .content {
+            padding: 32px 24px;
+        }
+
+        .date-header {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .date-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #999;
+            margin-bottom: 4px;
+        }
+
+        .date-value {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        /* Steps Visualization */
+        .steps-visual {
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            gap: 8px;
+            height: 120px;
+            margin-bottom: 24px;
+            padding: 0 20px;
+        }
+
+        .step-bar {
+            flex: 1;
+            max-width: 100px;
+            background: #e0e0e0;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+        }
+
+        .step-bar-fill {
+            background: #000;
+            transition: height 0.5s ease;
+        }
+
+        .step-bar.you .step-bar-fill {
+            height: 82%;
+        }
+
+        .step-bar.partner .step-bar-fill {
+            background: #666;
+            height: 60%;
+        }
+
+        .step-bar-label {
+            position: absolute;
+            bottom: -24px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            font-size: 11px;
+            color: #666;
+        }
+
+        .step-bar-value {
+            position: absolute;
+            top: -24px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        /* Stats */
+        .stats-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 16px 0;
+            border-top: 1px solid #e0e0e0;
+            margin-top: 32px;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .stat-desc {
+            font-size: 11px;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Claim Button */
+        .claim-section {
+            padding: 24px;
+            background: #f8f8f8;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .claim-btn {
+            width: 100%;
+            padding: 18px 24px;
+            font-family: inherit;
+            font-size: 16px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            border: 2px solid #000;
+            background: #000;
+            color: #fff;
+            cursor: pointer;
+        }
+
+        .claim-meta {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 12px;
+            font-size: 11px;
+            color: #999;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="variant-label">V2: Celebration - Hero reward with confetti</div>
+
+        <div class="hero">
+            <div class="confetti">
+                <div class="confetti-piece"></div>
+                <div class="confetti-piece"></div>
+                <div class="confetti-piece"></div>
+                <div class="confetti-piece"></div>
+                <div class="confetti-piece"></div>
+            </div>
+            <div class="reward-amount">+21</div>
+            <div class="reward-label">Love Points</div>
+            <div class="tier-badge">14K Tier Reached</div>
+        </div>
+
+        <div class="content">
+            <div class="date-header">
+                <div class="date-label">Yesterday</div>
+                <div class="date-value">November 27, 2024</div>
+            </div>
+
+            <div class="steps-visual">
+                <div class="step-bar you">
+                    <div class="step-bar-value">8,200</div>
+                    <div class="step-bar-fill"></div>
+                    <div class="step-bar-label">You</div>
+                </div>
+                <div class="step-bar partner">
+                    <div class="step-bar-value">6,000</div>
+                    <div class="step-bar-fill"></div>
+                    <div class="step-bar-label">Taija</div>
+                </div>
+            </div>
+
+            <div class="stats-row">
+                <div class="stat-item">
+                    <div class="stat-number">14,200</div>
+                    <div class="stat-desc">Combined</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">71%</div>
+                    <div class="stat-desc">Of Goal</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">5,800</div>
+                    <div class="stat-desc">To Max</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="claim-section">
+            <button class="claim-btn">Claim Reward</button>
+            <div class="claim-meta">
+                <span>Expires in 36 hours</span>
+                <span>Both synced</span>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

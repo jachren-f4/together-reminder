@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Steps Reward Claim - V4 Comparison</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            background: #fafafa;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 420px;
+            margin: 0 auto;
+            background: #fff;
+            border: 2px solid #000;
+            box-shadow: 8px 8px 0 rgba(0, 0, 0, 0.1);
+        }
+
+        .variant-label {
+            background: #000;
+            color: #fff;
+            padding: 8px 16px;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .header {
+            border-bottom: 2px solid #000;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .back-btn {
+            font-size: 20px;
+            background: none;
+            border: none;
+            cursor: pointer;
+        }
+
+        .header-title {
+            font-size: 18px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .header-spacer {
+            width: 20px;
+        }
+
+        /* Partner Comparison */
+        .comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .partner-card {
+            padding: 24px;
+            text-align: center;
+        }
+
+        .partner-card:first-child {
+            border-right: 1px solid #e0e0e0;
+        }
+
+        .partner-avatar {
+            width: 56px;
+            height: 56px;
+            background: #000;
+            color: #fff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            margin: 0 auto 12px;
+        }
+
+        .partner-card.right .partner-avatar {
+            background: #666;
+        }
+
+        .partner-name {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .partner-steps {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .partner-percent {
+            font-size: 12px;
+            color: #666;
+        }
+
+        .partner-bar {
+            height: 4px;
+            background: #e0e0e0;
+            margin-top: 12px;
+        }
+
+        .partner-bar-fill {
+            height: 100%;
+            background: #000;
+        }
+
+        .partner-card.right .partner-bar-fill {
+            background: #666;
+        }
+
+        /* Combined Section */
+        .combined {
+            padding: 24px;
+            text-align: center;
+            background: #f8f8f8;
+        }
+
+        .combined-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #666;
+            margin-bottom: 8px;
+        }
+
+        .combined-steps {
+            font-size: 42px;
+            font-weight: 700;
+            letter-spacing: -2px;
+            margin-bottom: 4px;
+        }
+
+        .combined-goal {
+            font-size: 14px;
+            color: #666;
+        }
+
+        /* Stacked Bar */
+        .stacked-bar {
+            height: 16px;
+            background: #e0e0e0;
+            display: flex;
+            margin: 16px 0;
+            overflow: hidden;
+        }
+
+        .stacked-you {
+            background: #000;
+            width: 41%; /* 8200/20000 */
+        }
+
+        .stacked-partner {
+            background: #666;
+            width: 30%; /* 6000/20000 */
+        }
+
+        .stacked-legend {
+            display: flex;
+            justify-content: center;
+            gap: 24px;
+            font-size: 11px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .legend-dot {
+            width: 8px;
+            height: 8px;
+        }
+
+        .legend-dot.you {
+            background: #000;
+        }
+
+        .legend-dot.partner {
+            background: #666;
+        }
+
+        .legend-dot.remaining {
+            background: #e0e0e0;
+        }
+
+        /* Reward Section */
+        .reward-section {
+            padding: 24px;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .reward-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .reward-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .reward-tier {
+            width: 48px;
+            height: 48px;
+            border: 2px solid #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        .reward-text {
+            font-size: 14px;
+        }
+
+        .reward-text strong {
+            display: block;
+            font-size: 16px;
+        }
+
+        .reward-lp {
+            font-size: 32px;
+            font-weight: 700;
+        }
+
+        .claim-btn {
+            width: 100%;
+            padding: 16px 24px;
+            font-family: inherit;
+            font-size: 14px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border: 2px solid #000;
+            background: #000;
+            color: #fff;
+            cursor: pointer;
+        }
+
+        /* Missed Opportunity */
+        .missed {
+            padding: 16px 24px;
+            background: #f8f8f8;
+            border-top: 1px solid #e0e0e0;
+            text-align: center;
+        }
+
+        .missed-text {
+            font-size: 12px;
+            color: #666;
+        }
+
+        .missed-text strong {
+            color: #000;
+        }
+
+        /* Footer */
+        .footer {
+            padding: 16px 24px;
+            border-top: 1px solid #e0e0e0;
+            display: flex;
+            justify-content: space-between;
+            font-size: 11px;
+            color: #999;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="variant-label">V4: Comparison - Partner contribution side by side</div>
+
+        <div class="header">
+            <button class="back-btn">←</button>
+            <div class="header-title">Claim Steps</div>
+            <div class="header-spacer"></div>
+        </div>
+
+        <div class="comparison">
+            <div class="partner-card">
+                <div class="partner-avatar">Y</div>
+                <div class="partner-name">You</div>
+                <div class="partner-steps">8,200</div>
+                <div class="partner-percent">58% of total</div>
+                <div class="partner-bar">
+                    <div class="partner-bar-fill" style="width: 82%;"></div>
+                </div>
+            </div>
+            <div class="partner-card right">
+                <div class="partner-avatar">T</div>
+                <div class="partner-name">Taija</div>
+                <div class="partner-steps">6,000</div>
+                <div class="partner-percent">42% of total</div>
+                <div class="partner-bar">
+                    <div class="partner-bar-fill" style="width: 60%;"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="combined">
+            <div class="combined-label">Yesterday Combined</div>
+            <div class="combined-steps">14,200</div>
+            <div class="combined-goal">of 20,000 goal</div>
+
+            <div class="stacked-bar">
+                <div class="stacked-you"></div>
+                <div class="stacked-partner"></div>
+            </div>
+
+            <div class="stacked-legend">
+                <div class="legend-item">
+                    <div class="legend-dot you"></div>
+                    <span>You</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-dot partner"></div>
+                    <span>Taija</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-dot remaining"></div>
+                    <span>To max</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="reward-section">
+            <div class="reward-row">
+                <div class="reward-info">
+                    <div class="reward-tier">14K</div>
+                    <div class="reward-text">
+                        <strong>Tier Reached</strong>
+                        November 27, 2024
+                    </div>
+                </div>
+                <div class="reward-lp">+21</div>
+            </div>
+
+            <button class="claim-btn">Claim +21 Love Points</button>
+        </div>
+
+        <div class="missed">
+            <div class="missed-text">
+                <strong>1,800 more steps</strong> would have earned +24 LP (next tier)
+            </div>
+        </div>
+
+        <div class="footer">
+            <span>Expires in 36 hours</span>
+            <span>November 27, 2024</span>
+        </div>
+    </div>
+</body>
+</html>

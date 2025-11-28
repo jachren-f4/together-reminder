@@ -8,6 +8,7 @@ import '../services/storage_service.dart';
 import '../services/quiz_service.dart';
 import '../services/you_or_me_service.dart';
 import '../screens/unified_results_screen.dart';
+import '../screens/you_or_me_game_screen.dart';
 import '../utils/logger.dart';
 
 /// Centralized navigation service for all quest types
@@ -57,6 +58,10 @@ class QuestNavigationService {
       } else if (_hasUserAnswered(session, user.id)) {
         Logger.debug('User answered, navigating to waiting', service: 'navigation');
         await navigateToWaiting(context, session, config);
+      } else if (_hasUserStartedAnswering(session, user.id)) {
+        // User started but hasn't finished - resume mid-game (skip intro)
+        Logger.debug('User started answering, resuming game mid-progress', service: 'navigation');
+        await _navigateToResumeGame(context, session, user.id);
       } else {
         Logger.debug('User not answered, navigating to intro (branch: ${quest.branch})', service: 'navigation');
         await Navigator.push(
@@ -139,5 +144,43 @@ class QuestNavigationService {
       return session.hasUserAnswered(userId);
     }
     return false;
+  }
+
+  /// Check if user has started but not finished answering (for mid-game resume)
+  bool _hasUserStartedAnswering(BaseSession session, String userId) {
+    if (session is YouOrMeSession) {
+      return session.hasUserStartedAnswering(userId);
+    }
+    // TODO: Add support for other session types if needed
+    return false;
+  }
+
+  /// Navigate directly to game screen for resuming mid-progress
+  Future<void> _navigateToResumeGame(
+    BuildContext context,
+    BaseSession session,
+    String userId,
+  ) async {
+    if (session is YouOrMeSession) {
+      final answerCount = session.getUserAnswerCount(userId);
+      final existingAnswers = session.answers?[userId] ?? [];
+
+      Logger.info(
+        'Resuming You or Me at question ${answerCount + 1}/${session.questions.length}',
+        service: 'navigation',
+      );
+
+      await Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => YouOrMeGameScreen(
+            session: session,
+            initialQuestionIndex: answerCount,
+            existingAnswers: existingAnswers,
+          ),
+        ),
+      );
+    }
+    // TODO: Add support for other session types if needed
   }
 }

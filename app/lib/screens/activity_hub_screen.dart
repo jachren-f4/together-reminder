@@ -10,8 +10,6 @@ import 'package:togetherremind/widgets/participant_avatars.dart';
 import 'package:togetherremind/screens/quiz_intro_screen.dart';
 import 'package:togetherremind/screens/quiz_results_screen.dart';
 import 'package:togetherremind/screens/would_you_rather_intro_screen.dart';
-import 'package:togetherremind/screens/word_ladder_hub_screen.dart';
-import 'package:togetherremind/screens/memory_flip_game_screen.dart';
 import 'package:togetherremind/config/brand/brand_loader.dart';
 import 'package:intl/intl.dart';
 
@@ -114,28 +112,6 @@ class _ActivityHubScreenState extends State<ActivityHubScreen> {
           context,
           MaterialPageRoute(
             builder: (context) => const WouldYouRatherIntroScreen(),
-          ),
-        );
-        setState(() {});
-        break;
-
-      case ActivityType.wordLadder:
-        // Navigate to Word Ladder Hub
-        await Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => const WordLadderHubScreen(),
-          ),
-        );
-        setState(() {});
-        break;
-
-      case ActivityType.memoryFlip:
-        // Navigate to Memory Flip game (uses singleton/active puzzle)
-        await Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => const MemoryFlipGameScreen(),
           ),
         );
         setState(() {});

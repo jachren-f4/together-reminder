@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Steps Feature Mockups</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            background: #fafafa;
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 48px;
+            padding-bottom: 32px;
+            border-bottom: 2px solid #000;
+        }
+
+        .header h1 {
+            font-size: 36px;
+            font-weight: 400;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            margin-bottom: 8px;
+        }
+
+        .header p {
+            font-size: 14px;
+            color: #666;
+            font-style: italic;
+        }
+
+        .section {
+            margin-bottom: 48px;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .section-number {
+            width: 40px;
+            height: 40px;
+            background: #000;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .section-title {
+            font-size: 24px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .section-desc {
+            font-size: 14px;
+            color: #666;
+            margin-left: 56px;
+            margin-bottom: 24px;
+            max-width: 600px;
+        }
+
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .card {
+            background: #fff;
+            border: 2px solid #000;
+            text-decoration: none;
+            color: inherit;
+            transition: all 0.2s ease;
+        }
+
+        .card:hover {
+            box-shadow: 8px 8px 0 rgba(0, 0, 0, 0.1);
+            transform: translate(-2px, -2px);
+        }
+
+        .card-header {
+            background: #000;
+            color: #fff;
+            padding: 12px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .card-variant {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .card-arrow {
+            font-size: 18px;
+        }
+
+        .card-body {
+            padding: 20px;
+        }
+
+        .card-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .card-desc {
+            font-size: 13px;
+            color: #666;
+            line-height: 1.5;
+        }
+
+        .footer {
+            margin-top: 64px;
+            padding-top: 32px;
+            border-top: 1px solid #e0e0e0;
+            text-align: center;
+            font-size: 12px;
+            color: #999;
+        }
+
+        .footer a {
+            color: #000;
+        }
+
+        .quick-nav {
+            display: flex;
+            justify-content: center;
+            gap: 24px;
+            margin-bottom: 48px;
+            flex-wrap: wrap;
+        }
+
+        .quick-nav a {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #666;
+            text-decoration: none;
+            padding: 8px 16px;
+            border: 1px solid #e0e0e0;
+            transition: all 0.2s ease;
+        }
+
+        .quick-nav a:hover {
+            border-color: #000;
+            color: #000;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Steps Feature</h1>
+            <p>HTML Mockups for HealthKit Step Tracking Integration</p>
+        </div>
+
+        <nav class="quick-nav">
+            <a href="#side-quest">Side Quest Cards</a>
+            <a href="#intro">Intro Screens</a>
+            <a href="#counter">Counter Screens</a>
+            <a href="#claim">Reward Claim</a>
+        </nav>
+
+        <section class="section" id="side-quest">
+            <div class="section-header">
+                <div class="section-number">1</div>
+                <h2 class="section-title">Side Quest Cards</h2>
+            </div>
+            <p class="section-desc">
+                How the Steps feature appears on the home screen as a side quest.
+                Shows today's progress, yesterday's claimable reward, and partner contributions.
+            </p>
+            <div class="cards">
+                <a href="01-side-quest-card-v1-minimal.html" class="card">
+                    <div class="card-header">
+                        <span class="card-variant">V1</span>
+                        <span class="card-arrow">→</span>
+                    </div>
+                    <div class="card-body">
+                        <div class="card-title">Minimal</div>
+                        <div class="card-desc">Simple shoe emoji icon with basic title and claim status badge.</div>
+                    </div>
+                </a>
+                <a href="01-side-quest-card-v2-progress.html" class="card">
+                    <div class="card-header">
+                        <span class="card-variant">V2</span>
+                        <span class="card-arrow">→</span>
+                    </div>
+                    <div class="card-body">
+                        <div class="card-title">Progress</div>
+                        <div class="card-desc">Shows today's step count and progress bar in the image area.</div>
+                    </div>
+                </a>
+                <a href="01-side-quest-card-v3-dual-avatars.html" class="card">
+                    <div class="card-header">
+                        <span class="card-variant">V3</span>
+                        <span class="card-arrow">→</span>
+                    </div>
+                    <div class="card-body">
+                        <div class="card-title">Dual Avatars</div>
+                        <div class="card-desc">Shows both partners' avatars with individual step counts.</div>
+                    </div>
+                </a>
+                <a href="01-side-quest-card-v4-stacked-bar.html" class="card">
+                    <div class="card-header">
+                        <span class="card-variant">V4</span>
+                        <span class="card-arrow">→</span>
+                    </div>
+                    <div class="card-body">
+                        <div class="card-title">Stacked Bar</div>
+                        <div class="card-desc">Visual stacked bar showing each partner's contribution.</div>
+                    </div>
+                </a>
+                <a href="01-side-quest-card-v5-claim-ready.html" class="card">
+                    <div class="card-header">
+                        <span class="card-variant">V5</span>
+                        <span class="card-arrow">→</span>
+                    </div>
+                    <div class="card-body">
+                        <div class="card-title">Claim Ready</div>
+                        <div class="card-desc">Dark theme emphasizing yesterday's claimable reward.</div>
+                    </div>
+                </a>
+            </div>
+        </section>
+
+        <section class="section" id="intro">
+            <div class="section-header">
+                <div class="section-number">2</div>
+                <h2 class="section-title">Intro Screens</h2>
+            </div>
+            <p class="section-desc">
+                First-time user experience when enabling Steps. Explains the feature,
+                requests HealthKit permissions, and shows reward structure.
+            </p>
+            <div class="cards">
+                <a href="02-intro-screen-v1-permission-request.html" class="card">
+                    <div class="card-header">
+                        <span class="card-variant">V1</span>
+                        <span class="card-arrow">→</span>
+                    </div>
+                    <div class="card-body">
+                        <div class="card-title">Permission Request</div>
+                        <div class="card-desc">Focuses on HealthKit permission with clear explanation of data usage.</div>
+                    </div>
+                </a>
+                <a href="02-intro-screen-v2-reward-focused.html" class="card">
+                    <div class="card-header">
+                        <span class="card-variant">V2</span>
+                        <span class="card-arrow">→</span>
+                    </div>
+                    <div class="card-body">
+                        <div class="card-title">Reward Focused</div>
+                        <div class="card-desc">Leads with the reward tiers to motivate users before permission ask.</div>
+                    </div>
+                </a>
+                <a href="02-intro-screen-v3-visual-illustration.html" class="card">
+                    <div class="card-header">
+                        <span class="card-variant">V3</span>
+                        <span class="card-arrow">→</span>
+                    </div>
+                    <div class="card-body">
+                        <div class="card-title">Visual Illustration</div>
+                        <div class="card-desc">Large hero illustration of couple walking together.</div>
+                    </div>
+                </a>
+                <a href="02-intro-screen-v4-minimal-emotional.html" class="card">
+                    <div class="card-header">
+                        <span class="card-variant">V4</span>
+                        <span class="card-arrow">→</span>
+                    </div>
+                    <div class="card-body">
+                        <div class="card-title">Minimal Emotional</div>
+                        <div class="card-desc">Typography-focused with emotional copy about walking together.</div>
+                    </div>
+                </a>
+                <a href="02-intro-screen-v5-partner-waiting.html" class="card">
+                    <div class="card-header">
+                        <span class="card-variant">V5</span>
+                        <span class="card-arrow">→</span>
+                    </div>
+                    <div class="card-body">
+                        <div class="card-title">Partner Waiting</div>
+                        <div class="card-desc">Shows partner status cards - whether they've connected or not.</div>
+                    </div>
+                </a>
+            </div>
+        </section>
+
+        <section class="section" id="counter">
+            <div class="section-header">
+                <div class="section-number">3</div>
+                <h2 class="section-title">Counter Screens</h2>
+            </div>
+            <p class="section-desc">
+                Main step tracking view showing today's progress, individual contributions,
+                tier progress, and yesterday's claimable reward.
+            </p>
+            <div class="cards">
+                <a href="03-counter-screen-v1-dual-ring.html" class="card">
+                    <div class="card-header">
+                        <span class="card-variant">V1</span>
+                        <span class="card-arrow">→</span>
+                    </div>
+                    <div class="card-body">
+                        <div class="card-title">Dual Ring</div>
+                        <div class="card-desc">Concentric SVG rings showing both partners' contributions.</div>
+                    </div>
+                </a>
+                <a href="03-counter-screen-v2-stacked-bars.html" class="card">
+                    <div class="card-header">
+                        <span class="card-variant">V2</span>
+                        <span class="card-arrow">→</span>
+                    </div>
+                    <div class="card-body">
+                        <div class="card-title">Stacked Bars</div>
+                        <div class="card-desc">Horizontal stacked bar with clear contribution breakdown.</div>
+                    </div>
+                </a>
+                <a href="03-counter-screen-v3-avatar-bars.html" class="card">
+                    <div class="card-header">
+                        <span class="card-variant">V3</span>
+                        <span class="card-arrow">→</span>
+                    </div>
+                    <div class="card-body">
+                        <div class="card-title">Avatar Bars</div>
+                        <div class="card-desc">Individual progress bars with avatar icons and sync status.</div>
+                    </div>
+                </a>
+                <a href="03-counter-screen-v4-minimal-numbers.html" class="card">
+                    <div class="card-header">
+                        <span class="card-variant">V4</span>
+                        <span class="card-arrow">→</span>
+                    </div>
+                    <div class="card-body">
+                        <div class="card-title">Minimal Numbers</div>
+                        <div class="card-desc">Typography-focused with large numbers and thin progress bar.</div>
+                    </div>
+                </a>
+                <a href="03-counter-screen-v5-dashboard.html" class="card">
+                    <div class="card-header">
+                        <span class="card-variant">V5</span>
+                        <span class="card-arrow">→</span>
+                    </div>
+                    <div class="card-body">
+                        <div class="card-title">Dashboard</div>
+                        <div class="card-desc">Grid-based dashboard with stat cards for all information.</div>
+                    </div>
+                </a>
+            </div>
+        </section>
+
+        <section class="section" id="claim">
+            <div class="section-header">
+                <div class="section-number">4</div>
+                <h2 class="section-title">Reward Claim Screens</h2>
+            </div>
+            <p class="section-desc">
+                Confirmation screen when claiming yesterday's step reward. Shows breakdown,
+                tier achieved, and Love Points earned.
+            </p>
+            <div class="cards">
+                <a href="04-reward-claim-screen-v1-simple-claim.html" class="card">
+                    <div class="card-header">
+                        <span class="card-variant">V1</span>
+                        <span class="card-arrow">→</span>
+                    </div>
+                    <div class="card-body">
+                        <div class="card-title">Simple Claim</div>
+                        <div class="card-desc">Clean confirmation with stats box and partner breakdown.</div>
+                    </div>
+                </a>
+                <a href="04-reward-claim-screen-v2-celebration.html" class="card">
+                    <div class="card-header">
+                        <span class="card-variant">V2</span>
+                        <span class="card-arrow">→</span>
+                    </div>
+                    <div class="card-body">
+                        <div class="card-title">Celebration</div>
+                        <div class="card-desc">Hero section with large reward and confetti decoration.</div>
+                    </div>
+                </a>
+                <a href="04-reward-claim-screen-v3-tier-progress.html" class="card">
+                    <div class="card-header">
+                        <span class="card-variant">V3</span>
+                        <span class="card-arrow">→</span>
+                    </div>
+                    <div class="card-body">
+                        <div class="card-title">Tier Progress</div>
+                        <div class="card-desc">Vertical tier ladder showing which levels were achieved.</div>
+                    </div>
+                </a>
+                <a href="04-reward-claim-screen-v4-comparison.html" class="card">
+                    <div class="card-header">
+                        <span class="card-variant">V4</span>
+                        <span class="card-arrow">→</span>
+                    </div>
+                    <div class="card-body">
+                        <div class="card-title">Comparison</div>
+                        <div class="card-desc">Side-by-side partner comparison with contribution percentages.</div>
+                    </div>
+                </a>
+                <a href="04-reward-claim-screen-v5-minimal.html" class="card">
+                    <div class="card-header">
+                        <span class="card-variant">V5</span>
+                        <span class="card-arrow">→</span>
+                    </div>
+                    <div class="card-body">
+                        <div class="card-title">Minimal</div>
+                        <div class="card-desc">Typography-focused with centered layout and simple claim button.</div>
+                    </div>
+                </a>
+            </div>
+        </section>
+
+        <footer class="footer">
+            <p>Steps Feature Mockups · TogetherRemind · 20 variants across 4 screen types</p>
+        </footer>
+    </div>
+</body>
+</html>

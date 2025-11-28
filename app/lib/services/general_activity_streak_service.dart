@@ -16,8 +16,6 @@ class GeneralActivityStreakService {
   /// - Completing any daily quest
   /// - Sending a reminder
   /// - Sending a poke
-  /// - Completing Word Ladder game
-  /// - Completing Memory Flip game
   /// - Completing Daily Pulse
   Future<void> recordActivity() async {
     final streak = _storage.getStreak(_streakType);

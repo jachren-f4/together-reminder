@@ -22,15 +22,18 @@ class LeaderboardBottomSheet extends StatefulWidget {
   State<LeaderboardBottomSheet> createState() => _LeaderboardBottomSheetState();
 }
 
+enum LeaderboardView { global, country, tier }
+
 class _LeaderboardBottomSheetState extends State<LeaderboardBottomSheet> {
   final LeaderboardService _leaderboardService = LeaderboardService();
   final CountryService _countryService = CountryService();
 
-  bool _isGlobalView = true;
+  LeaderboardView _currentView = LeaderboardView.global;
   bool _isLoading = true;
   bool _isExpanded = false;
   LeaderboardData? _globalData;
   LeaderboardData? _countryData;
+  LeaderboardData? _tierData;
   String? _errorMessage;
 
   @override
@@ -46,16 +49,18 @@ class _LeaderboardBottomSheetState extends State<LeaderboardBottomSheet> {
     });
 
     try {
-      // Load both in parallel
+      // Load all three in parallel
       final results = await Future.wait([
         _leaderboardService.getGlobalLeaderboard(),
         _leaderboardService.getCountryLeaderboard(),
+        _leaderboardService.getTierLeaderboard(),
       ]);
 
       if (mounted) {
         setState(() {
           _globalData = results[0];
           _countryData = results[1];
+          _tierData = results[2];
           _isLoading = false;
         });
       }
@@ -69,7 +74,16 @@ class _LeaderboardBottomSheetState extends State<LeaderboardBottomSheet> {
     }
   }
 
-  LeaderboardData? get _currentData => _isGlobalView ? _globalData : _countryData;
+  LeaderboardData? get _currentData {
+    switch (_currentView) {
+      case LeaderboardView.global:
+        return _globalData;
+      case LeaderboardView.country:
+        return _countryData;
+      case LeaderboardView.tier:
+        return _tierData;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -152,6 +166,14 @@ class _LeaderboardBottomSheetState extends State<LeaderboardBottomSheet> {
   }
 
   Widget _buildTabToggle() {
+    // Build tier tab label with emoji + name
+    String tierLabel = 'MY TIER';
+    if (_tierData?.tierEmoji != null && _tierData?.tierName != null) {
+      tierLabel = '${_tierData!.tierEmoji} ${_tierData!.tierName!.toUpperCase()}';
+    } else if (_tierData?.tierEmoji != null) {
+      tierLabel = '${_tierData!.tierEmoji} MY TIER';
+    }
+
     return Container(
       decoration: BoxDecoration(
         border: Border(
@@ -161,26 +183,28 @@ class _LeaderboardBottomSheetState extends State<LeaderboardBottomSheet> {
       ),
       child: Row(
         children: [
-          _buildTab('GLOBAL', isGlobal: true),
+          _buildTab('GLOBAL', view: LeaderboardView.global),
           Container(width: 1, height: 48, color: AppTheme.primaryBlack),
           _buildTab(
             _countryData?.countryCode != null
                 ? '${_countryService.getFlagEmoji(_countryData!.countryCode!)} ${_countryData!.countryName ?? _countryData!.countryCode}'
                 : 'MY COUNTRY',
-            isGlobal: false,
+            view: LeaderboardView.country,
           ),
+          Container(width: 1, height: 48, color: AppTheme.primaryBlack),
+          _buildTab(tierLabel, view: LeaderboardView.tier),
         ],
       ),
     );
   }
 
-  Widget _buildTab(String label, {required bool isGlobal}) {
-    final isActive = _isGlobalView == isGlobal;
+  Widget _buildTab(String label, {required LeaderboardView view}) {
+    final isActive = _currentView == view;
     return Expanded(
       child: GestureDetector(
         onTap: () {
           HapticFeedback.selectionClick();
-          setState(() => _isGlobalView = isGlobal);
+          setState(() => _currentView = view);
         },
         child: Container(
           height: 48,
@@ -189,11 +213,14 @@ class _LeaderboardBottomSheetState extends State<LeaderboardBottomSheet> {
             child: Text(
               label,
               style: AppTheme.bodyFont.copyWith(
-                fontSize: 11,
+                fontSize: 9,
                 fontWeight: FontWeight.w600,
-                letterSpacing: 1,
+                letterSpacing: 0.5,
                 color: isActive ? AppTheme.primaryWhite : AppTheme.textPrimary,
               ),
+              textAlign: TextAlign.center,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
             ),
           ),
         ),
@@ -272,11 +299,30 @@ class _LeaderboardBottomSheetState extends State<LeaderboardBottomSheet> {
     }
 
     // Check for empty country leaderboard
-    if (!_isGlobalView && data.entries.isEmpty) {
+    if (_currentView == LeaderboardView.country && data.entries.isEmpty) {
       if (data.message != null) {
         return _buildNoCountryState(data.message!);
       }
       return _buildFirstInCountryState();
+    }
+
+    // Check for empty tier leaderboard
+    if (_currentView == LeaderboardView.tier && data.entries.isEmpty) {
+      return _buildFirstInTierState();
+    }
+
+    // Build section header based on view
+    String sectionHeader;
+    switch (_currentView) {
+      case LeaderboardView.global:
+        sectionHeader = 'TOP 5';
+        break;
+      case LeaderboardView.country:
+        sectionHeader = 'TOP 5${data.countryName != null ? ' IN ${data.countryName!.toUpperCase()}' : ''}';
+        break;
+      case LeaderboardView.tier:
+        sectionHeader = 'TOP 5${data.tierName != null ? ' IN ${data.tierName!.toUpperCase()}' : ''}';
+        break;
     }
 
     return ListView(
@@ -284,7 +330,7 @@ class _LeaderboardBottomSheetState extends State<LeaderboardBottomSheet> {
       padding: const EdgeInsets.symmetric(vertical: 8),
       children: [
         // Top 5 section
-        _buildSectionHeader('TOP 5${!_isGlobalView && data.countryName != null ? ' IN ${data.countryName!.toUpperCase()}' : ''}'),
+        _buildSectionHeader(sectionHeader),
         ...data.top5.map((entry) => _buildLeaderboardRow(entry)),
 
         // User context (if not in top 5)
@@ -582,9 +628,59 @@ class _LeaderboardBottomSheetState extends State<LeaderboardBottomSheet> {
     );
   }
 
+  Widget _buildFirstInTierState() {
+    final tierName = _tierData?.tierName ?? 'your tier';
+    final tierEmoji = _tierData?.tierEmoji ?? '🏆';
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(tierEmoji, style: const TextStyle(fontSize: 64)),
+          const SizedBox(height: 16),
+          Text(
+            "You're #1!",
+            style: AppTheme.headlineFont.copyWith(
+              fontSize: 24,
+              fontWeight: FontWeight.w400,
+            ),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            'First couple in $tierName',
+            style: AppTheme.bodyFont.copyWith(
+              fontSize: 14,
+              color: AppTheme.textSecondary,
+              fontStyle: FontStyle.italic,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget _buildFooter() {
     final data = _currentData;
     final updateTime = data?.updatedAt;
+
+    // Build context-specific footer text
+    String? contextText;
+    if (data != null) {
+      switch (_currentView) {
+        case LeaderboardView.global:
+          // No extra text for global
+          break;
+        case LeaderboardView.country:
+          if (data.totalCouples > 0) {
+            contextText = '${data.totalCouples} couples in ${data.countryName ?? 'your country'}';
+          }
+          break;
+        case LeaderboardView.tier:
+          if (data.totalInTier != null && data.totalInTier! > 0) {
+            contextText = '${data.totalInTier} couples in ${data.tierName ?? 'your tier'}';
+          }
+          break;
+      }
+    }
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
@@ -605,10 +701,10 @@ class _LeaderboardBottomSheetState extends State<LeaderboardBottomSheet> {
               fontStyle: FontStyle.italic,
             ),
           ),
-          if (data != null && !_isGlobalView && data.totalCouples > 0) ...[
+          if (contextText != null) ...[
             const SizedBox(height: 4),
             Text(
-              '${data.totalCouples} couples in ${data.countryName ?? 'your country'}',
+              contextText,
               style: AppTheme.bodyFont.copyWith(
                 fontSize: 11,
                 color: AppTheme.textSecondary,

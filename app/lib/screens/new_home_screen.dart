@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import '../config/brand/brand_loader.dart';
 import '../utils/logger.dart';
@@ -12,6 +13,7 @@ import '../services/quest_sync_service.dart';
 import '../services/love_point_service.dart';
 import '../services/haptic_service.dart';
 import '../services/sound_service.dart';
+import '../services/steps_feature_service.dart';
 import '../animations/animation_config.dart';
 import '../theme/app_theme.dart';
 import '../widgets/poke_bottom_sheet.dart';
@@ -27,6 +29,8 @@ import 'linked_game_screen.dart';
 import 'word_search_game_screen.dart';
 import 'quiz_intro_screen.dart';
 import 'inbox_screen.dart';
+import 'steps_intro_screen.dart';
+import 'steps_counter_screen.dart';
 
 class NewHomeScreen extends StatefulWidget {
   const NewHomeScreen({super.key});
@@ -559,14 +563,17 @@ class _NewHomeScreenState extends State<NewHomeScreen> with TickerProviderStateM
                   letterSpacing: 2,
                 ),
               ),
-              Row(
-                children: [
-                  _buildActionButton('POKE', false, _showPokeBottomSheet),
-                  const SizedBox(width: 10),
-                  _buildActionButton('REMIND', false, _showRemindBottomSheet),
-                  const SizedBox(width: 10),
-                  _buildActionButton('RANKING', false, _showLeaderboardBottomSheet),
-                ],
+              Flexible(
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    _buildActionButton('POKE', false, _showPokeBottomSheet),
+                    const SizedBox(width: 8),
+                    _buildActionButton('REMIND', false, _showRemindBottomSheet),
+                    const SizedBox(width: 8),
+                    _buildActionButton('RANKING', false, _showLeaderboardBottomSheet),
+                  ],
+                ),
               ),
             ],
           ),
@@ -581,7 +588,7 @@ class _NewHomeScreenState extends State<NewHomeScreen> with TickerProviderStateM
         // Version number for debugging hot reload
         Center(
           child: Text(
-            'v1.0.41',
+            'v1.0.62',
             style: TextStyle(
               fontSize: 10,
               color: BrandLoader().colors.textTertiary,
@@ -746,12 +753,7 @@ class _NewHomeScreenState extends State<NewHomeScreen> with TickerProviderStateM
   }
 
   void _showRemindBottomSheet() {
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: Colors.transparent,
-      builder: (context) => const RemindBottomSheet(),
-    );
+    RemindBottomSheet.show(context);
   }
 
   void _showLeaderboardBottomSheet() {
@@ -805,6 +807,9 @@ class _NewHomeScreenState extends State<NewHomeScreen> with TickerProviderStateM
 
     // Handle real quest navigation based on type
     switch (quest.type) {
+      case QuestType.steps:
+        await _handleStepsQuestTap();
+        break;
       case QuestType.linked:
         await Navigator.push(
           context,
@@ -832,7 +837,42 @@ class _NewHomeScreenState extends State<NewHomeScreen> with TickerProviderStateM
     }
   }
 
-  /// Build list of side quests (Linked, Word Search) + placeholders
+  /// Handle Steps Together card tap - navigate based on connection state
+  Future<void> _handleStepsQuestTap() async {
+    final stepsService = StepsFeatureService();
+    final state = stepsService.getCurrentState();
+
+    Widget targetScreen;
+
+    switch (state) {
+      case StepsFeatureState.notSupported:
+        // Shouldn't reach here on iOS
+        return;
+
+      case StepsFeatureState.neitherConnected:
+      case StepsFeatureState.partnerConnected:
+      case StepsFeatureState.waitingForPartner:
+        // Show intro screen for connection states
+        targetScreen = const StepsIntroScreen();
+        break;
+
+      case StepsFeatureState.tracking:
+      case StepsFeatureState.claimReady:
+        // Show counter screen for tracking/claim states
+        targetScreen = const StepsCounterScreen();
+        break;
+    }
+
+    await Navigator.push(
+      context,
+      MaterialPageRoute(builder: (_) => targetScreen),
+    );
+
+    // Refresh state after returning
+    if (mounted) setState(() {});
+  }
+
+  /// Build list of side quests (Steps, Linked, Word Search) + placeholders
   Future<List<DailyQuest>> _getSideQuests() async {
     final quests = <DailyQuest>[];
     final today = DateTime.now();
@@ -842,7 +882,62 @@ class _NewHomeScreenState extends State<NewHomeScreen> with TickerProviderStateM
     final user = _storage.getUser();
     final partner = _storage.getPartner();
 
-    // Linked - always show FIRST (arroword puzzle game)
+    // Steps Together - FIRST card (iOS only)
+    if (Platform.isIOS) {
+      final stepsService = StepsFeatureService();
+      final stepsState = stepsService.getCurrentState();
+
+      // Only add card if supported (not notSupported state)
+      if (stepsState != StepsFeatureState.notSupported) {
+        // Determine description and content ID based on state
+        String stepsDesc;
+        String stepsContentId;
+
+        switch (stepsState) {
+          case StepsFeatureState.notSupported:
+            // Won't reach here due to outer check
+            stepsDesc = '';
+            stepsContentId = '';
+            break;
+          case StepsFeatureState.neitherConnected:
+            stepsDesc = 'Connect HealthKit';
+            stepsContentId = 'steps_connect';
+            break;
+          case StepsFeatureState.partnerConnected:
+            stepsDesc = 'Partner is ready!';
+            stepsContentId = 'steps_connect';
+            break;
+          case StepsFeatureState.waitingForPartner:
+            stepsDesc = 'Waiting for partner';
+            stepsContentId = 'steps_waiting';
+            break;
+          case StepsFeatureState.tracking:
+            final projected = stepsService.getProjectedLP();
+            stepsDesc = projected > 0 ? 'Tomorrow: +$projected LP' : 'Keep walking!';
+            stepsContentId = 'steps_tracking';
+            break;
+          case StepsFeatureState.claimReady:
+            final earnedLP = stepsService.getClaimableRewardAmount();
+            stepsDesc = 'Claim +$earnedLP LP';
+            stepsContentId = 'steps_claim';
+            break;
+        }
+
+        final stepsQuest = DailyQuest.create(
+          dateKey: dateKey,
+          type: QuestType.steps,
+          contentId: stepsContentId,
+          isSideQuest: true,
+          imagePath: null,
+          description: stepsDesc,
+          quizName: 'Steps Together',
+        );
+
+        quests.add(stepsQuest);
+      }
+    }
+
+    // Linked - SECOND card (arroword puzzle game)
     final activeLinkedMatch = _storage.getActiveLinkedMatch();
 
     String linkedDesc;

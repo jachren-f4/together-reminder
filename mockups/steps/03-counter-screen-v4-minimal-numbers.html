@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Steps Counter - V4 Minimal Numbers</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            background: #fafafa;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 420px;
+            margin: 0 auto;
+            background: #fff;
+            border: 2px solid #000;
+            box-shadow: 8px 8px 0 rgba(0, 0, 0, 0.1);
+            min-height: 700px;
+        }
+
+        .variant-label {
+            background: #000;
+            color: #fff;
+            padding: 8px 16px;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .header {
+            border-bottom: 2px solid #000;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .back-btn {
+            font-size: 20px;
+            background: none;
+            border: none;
+            cursor: pointer;
+        }
+
+        .header-title {
+            font-size: 18px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .header-spacer {
+            width: 20px;
+        }
+
+        /* Main Content */
+        .content {
+            padding: 48px 32px;
+        }
+
+        /* Today */
+        .today-section {
+            text-align: center;
+            margin-bottom: 48px;
+        }
+
+        .today-label {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #666;
+            margin-bottom: 16px;
+        }
+
+        .today-number {
+            font-size: 72px;
+            font-weight: 700;
+            letter-spacing: -4px;
+            line-height: 1;
+        }
+
+        .today-breakdown {
+            margin-top: 16px;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .today-breakdown span {
+            color: #000;
+            font-weight: 600;
+        }
+
+        .today-progress {
+            height: 4px;
+            background: #e0e0e0;
+            margin-top: 24px;
+        }
+
+        .today-progress-fill {
+            height: 100%;
+            background: #000;
+            width: 62%;
+        }
+
+        .today-meta {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 8px;
+            font-size: 11px;
+            color: #999;
+        }
+
+        /* Divider */
+        .divider {
+            height: 1px;
+            background: #e0e0e0;
+            margin: 32px 0;
+        }
+
+        /* Yesterday */
+        .yesterday-section {
+            text-align: center;
+        }
+
+        .yesterday-label {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #666;
+            margin-bottom: 16px;
+        }
+
+        .yesterday-number {
+            font-size: 48px;
+            font-weight: 700;
+            letter-spacing: -2px;
+        }
+
+        .yesterday-reward {
+            margin-top: 8px;
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        .claim-btn {
+            margin-top: 24px;
+            width: 100%;
+            padding: 16px 24px;
+            font-family: inherit;
+            font-size: 14px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border: 2px solid #000;
+            background: #000;
+            color: #fff;
+            cursor: pointer;
+        }
+
+        .expiry-note {
+            margin-top: 12px;
+            font-size: 11px;
+            color: #999;
+        }
+
+        /* Potential Reward */
+        .potential-section {
+            margin-top: 48px;
+            padding: 20px;
+            background: #f8f8f8;
+            border: 1px solid #e0e0e0;
+        }
+
+        .potential-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #666;
+            margin-bottom: 8px;
+        }
+
+        .potential-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .potential-text {
+            font-size: 14px;
+        }
+
+        .potential-reward {
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .potential-hint {
+            font-size: 11px;
+            color: #999;
+            margin-top: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="variant-label">V4: Minimal Numbers - Typography focused</div>
+
+        <div class="header">
+            <button class="back-btn">←</button>
+            <div class="header-title">Steps Together</div>
+            <div class="header-spacer"></div>
+        </div>
+
+        <div class="content">
+            <!-- Today -->
+            <div class="today-section">
+                <div class="today-label">Today</div>
+                <div class="today-number">12,450</div>
+                <div class="today-breakdown">
+                    <span>7,000</span> you + <span>5,450</span> Taija
+                </div>
+                <div class="today-progress">
+                    <div class="today-progress-fill"></div>
+                </div>
+                <div class="today-meta">
+                    <span>0</span>
+                    <span>20,000</span>
+                </div>
+            </div>
+
+            <div class="divider"></div>
+
+            <!-- Yesterday -->
+            <div class="yesterday-section">
+                <div class="yesterday-label">Yesterday · Claim</div>
+                <div class="yesterday-number">14,200</div>
+                <div class="yesterday-reward">+21 LP</div>
+                <button class="claim-btn">Claim Reward</button>
+                <div class="expiry-note">Expires in 36 hours</div>
+            </div>
+
+            <!-- Potential -->
+            <div class="potential-section">
+                <div class="potential-label">Tomorrow's Potential</div>
+                <div class="potential-row">
+                    <span class="potential-text">If you stay at 12,450</span>
+                    <span class="potential-reward">+18 LP</span>
+                </div>
+                <div class="potential-hint">Walk 1,550 more for +21 LP</div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

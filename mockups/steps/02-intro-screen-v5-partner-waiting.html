@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Steps Intro - V5 Partner Waiting</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            background: #fafafa;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 420px;
+            margin: 0 auto;
+            background: #fff;
+            border: 2px solid #000;
+            box-shadow: 8px 8px 0 rgba(0, 0, 0, 0.1);
+            min-height: 700px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .variant-label {
+            background: #000;
+            color: #fff;
+            padding: 8px 16px;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .partner-banner {
+            background: #f8f8f8;
+            border-bottom: 1px solid #e0e0e0;
+            padding: 16px 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .partner-avatar {
+            width: 40px;
+            height: 40px;
+            background: #000;
+            color: #fff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+
+        .partner-info {
+            flex: 1;
+        }
+
+        .partner-name {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 2px;
+        }
+
+        .partner-status {
+            font-size: 12px;
+            color: #666;
+        }
+
+        .partner-status span {
+            color: #000;
+            font-weight: 600;
+        }
+
+        .content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 40px 32px;
+            text-align: center;
+        }
+
+        .icon-row {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 32px;
+        }
+
+        .icon-circle {
+            width: 80px;
+            height: 80px;
+            border: 2px solid #000;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+        }
+
+        .icon-circle.filled {
+            background: #000;
+            color: #fff;
+        }
+
+        .icon-plus {
+            font-size: 24px;
+            color: #666;
+        }
+
+        .title {
+            font-size: 28px;
+            font-weight: 400;
+            letter-spacing: 2px;
+            margin-bottom: 16px;
+            text-transform: uppercase;
+        }
+
+        .description {
+            font-size: 15px;
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 32px;
+        }
+
+        .description strong {
+            color: #000;
+        }
+
+        .preview-card {
+            width: 100%;
+            border: 1px solid #e0e0e0;
+            background: #f8f8f8;
+            padding: 20px;
+            margin-bottom: 32px;
+            text-align: left;
+        }
+
+        .preview-label {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #666;
+            margin-bottom: 12px;
+        }
+
+        .preview-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+
+        .preview-name {
+            font-size: 13px;
+        }
+
+        .preview-steps {
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .preview-steps.waiting {
+            color: #999;
+            font-style: italic;
+            font-weight: 400;
+        }
+
+        .preview-total {
+            display: flex;
+            justify-content: space-between;
+            padding-top: 12px;
+            border-top: 1px solid #e0e0e0;
+            margin-top: 8px;
+        }
+
+        .preview-total-label {
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .preview-total-value {
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .buttons {
+            width: 100%;
+            margin-top: auto;
+        }
+
+        .btn-primary {
+            width: 100%;
+            padding: 16px 24px;
+            font-family: inherit;
+            font-size: 14px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border: 2px solid #000;
+            background: #000;
+            color: #fff;
+            cursor: pointer;
+            margin-bottom: 12px;
+        }
+
+        .btn-secondary {
+            width: 100%;
+            padding: 12px 24px;
+            font-family: inherit;
+            font-size: 13px;
+            color: #666;
+            background: none;
+            border: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="variant-label">V5: Partner Waiting - Shows partner already connected</div>
+
+        <div class="partner-banner">
+            <div class="partner-avatar">T</div>
+            <div class="partner-info">
+                <div class="partner-name">Taija connected Steps</div>
+                <div class="partner-status">Walked <span>6,250 steps</span> today</div>
+            </div>
+        </div>
+
+        <div class="content">
+            <div class="icon-row">
+                <div class="icon-circle filled">T</div>
+                <div class="icon-plus">+</div>
+                <div class="icon-circle">?</div>
+            </div>
+
+            <h1 class="title">Join Taija</h1>
+
+            <p class="description">
+                <strong>Taija</strong> is already tracking steps. Connect your Health app to combine your walks and earn rewards together.
+            </p>
+
+            <div class="preview-card">
+                <div class="preview-label">Today's progress</div>
+                <div class="preview-row">
+                    <span class="preview-name">Taija</span>
+                    <span class="preview-steps">6,250 steps</span>
+                </div>
+                <div class="preview-row">
+                    <span class="preview-name">You</span>
+                    <span class="preview-steps waiting">Waiting to connect...</span>
+                </div>
+                <div class="preview-total">
+                    <span class="preview-total-label">Combined</span>
+                    <span class="preview-total-value">6,250 + ???</span>
+                </div>
+            </div>
+
+            <div class="buttons">
+                <button class="btn-primary">Connect & Start Earning</button>
+                <button class="btn-secondary">Maybe later</button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

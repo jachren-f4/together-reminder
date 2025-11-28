@@ -119,10 +119,19 @@ class QuestSyncService {
         return true;
       } else {
         // No Firebase quests yet
-        if (_storage.getTodayQuests().isNotEmpty) {
-          // Local quests exist but not in Firebase - sync them
-          Logger.debug('   ✅ Local quests exist but not in Firebase - syncing completion', service: 'quest');
-          await _syncCompletionStatus(coupleId, dateKey, currentUserId);
+        final localQuests = _storage.getTodayQuests();
+        if (localQuests.isNotEmpty) {
+          // Local quests exist but not in Firebase - SAVE THEM to Firebase
+          Logger.debug('   📤 Local quests exist but not in Firebase - uploading to Firebase...', service: 'quest');
+
+          // Save quests to Firebase so partner can load them
+          await saveQuestsToFirebase(
+            quests: localQuests,
+            currentUserId: currentUserId,
+            partnerUserId: partnerUserId,
+          );
+
+          Logger.debug('   ✅ Local quests synced to Firebase', service: 'quest');
           return true;
         } else {
           // No quests anywhere - need to generate
@@ -642,18 +651,18 @@ class QuestSyncService {
     // These match the QuestType enum values
     switch (questTypeStr.toLowerCase()) {
       case 'quiz':
-        return 0;
-      case 'memory_flip':
-        return 1;
+        return 1; // QuestType.quiz
       case 'you_or_me':
-        return 2;
-      case 'word_ladder':
-        return 3;
+        return 3; // QuestType.youOrMe
       case 'linked':
-        return 4;
+        return 4; // QuestType.linked
+      case 'word_search':
+        return 5; // QuestType.wordSearch
+      case 'steps':
+        return 6; // QuestType.steps
       default:
         Logger.warn('Unknown quest type: $questTypeStr, defaulting to quiz', service: 'quest');
-        return 0; // Default to quiz
+        return 1; // Default to quiz
     }
   }
 
