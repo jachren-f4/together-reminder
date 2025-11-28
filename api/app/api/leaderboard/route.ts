@@ -1,9 +1,9 @@
 /**
  * Leaderboard API Endpoint
  *
- * GET /api/leaderboard - Get global and country leaderboard data
+ * GET /api/leaderboard - Get global, country, or tier leaderboard data
  * Query params:
- *   - view: 'global' | 'country' (default: 'global')
+ *   - view: 'global' | 'country' | 'tier' (default: 'global')
  *   - limit: number (default: 50, max: 100)
  */
 
@@ -20,9 +20,16 @@ interface LeaderboardEntry {
 }
 
 interface LeaderboardResponse {
-  view: 'global' | 'country';
+  view: 'global' | 'country' | 'tier';
   country_code?: string;
   country_name?: string;
+  // Tier-specific fields
+  tier?: number;
+  tier_name?: string;
+  tier_emoji?: string;
+  tier_min_lp?: number;
+  tier_max_lp?: number;
+  total_in_tier?: number;
   entries: LeaderboardEntry[];
   user_rank?: number;
   user_total_lp?: number;
@@ -52,6 +59,15 @@ const COUNTRY_NAMES: Record<string, string> = {
   'KR': 'South Korea',
   'IN': 'India',
   'SG': 'Singapore',
+};
+
+// Tier definitions (must match Flutter's LovePointService.arenas)
+const TIER_INFO: Record<number, { name: string; emoji: string; min: number; max: number }> = {
+  1: { name: 'Cozy Cabin', emoji: '🏕️', min: 0, max: 1000 },
+  2: { name: 'Beach Villa', emoji: '🏖️', min: 1000, max: 2500 },
+  3: { name: 'Yacht Getaway', emoji: '⛵', min: 2500, max: 5000 },
+  4: { name: 'Mountain Penthouse', emoji: '🏔️', min: 5000, max: 10000 },
+  5: { name: 'Castle Retreat', emoji: '🏰', min: 10000, max: 999999 },
 };
 
 export const GET = withAuthOrDevBypass(async (req: NextRequest, userId: string) => {
@@ -85,7 +101,9 @@ export const GET = withAuthOrDevBypass(async (req: NextRequest, userId: string) 
     // 3. Get leaderboard data based on view
     let response: LeaderboardResponse;
 
-    if (view === 'country') {
+    if (view === 'tier') {
+      response = await getTierLeaderboard(userId, coupleId, limit);
+    } else if (view === 'country') {
       if (!userCountry) {
         // No country set - return empty with message
         return NextResponse.json({
@@ -280,6 +298,103 @@ async function getCountryLeaderboard(
     view: 'country',
     country_code: countryCode,
     country_name: COUNTRY_NAMES[countryCode] || countryCode,
+    entries,
+    user_rank: userRank,
+    user_total_lp: userTotalLp,
+    total_couples: totalCouples,
+    updated_at: new Date().toISOString()
+  };
+}
+
+async function getTierLeaderboard(
+  userId: string,
+  coupleId: string,
+  limit: number
+): Promise<LeaderboardResponse> {
+  // Get user's tier info
+  const userTierResult = await query(
+    `SELECT
+       couple_id,
+       user1_initial || ' & ' || user2_initial as initials,
+       total_lp,
+       tier_rank as rank,
+       arena_tier,
+       true as is_current_user
+     FROM couple_leaderboard
+     WHERE couple_id = $1`,
+    [coupleId]
+  );
+
+  const userEntry = userTierResult.rows[0];
+  const userTier = userEntry?.arena_tier || 1;
+  const userRank = userEntry?.rank;
+  const userTotalLp = userEntry?.total_lp || 0;
+  const tierInfo = TIER_INFO[userTier] || TIER_INFO[1];
+
+  // Get top N entries for user's tier
+  const topResult = await query(
+    `SELECT
+       couple_id,
+       user1_initial || ' & ' || user2_initial as initials,
+       total_lp,
+       tier_rank as rank,
+       couple_id = $1 as is_current_user
+     FROM couple_leaderboard
+     WHERE arena_tier = $2
+       AND tier_rank IS NOT NULL
+       AND tier_rank <= $3
+     ORDER BY tier_rank`,
+    [coupleId, userTier, limit]
+  );
+
+  // Get entries around user if not in top N
+  let contextEntries: LeaderboardEntry[] = [];
+  if (userRank && userRank > limit) {
+    const contextResult = await query(
+      `SELECT
+         couple_id,
+         user1_initial || ' & ' || user2_initial as initials,
+         total_lp,
+         tier_rank as rank,
+         couple_id = $1 as is_current_user
+       FROM couple_leaderboard
+       WHERE arena_tier = $2
+         AND tier_rank IS NOT NULL
+         AND tier_rank BETWEEN $3 AND $4
+       ORDER BY tier_rank`,
+      [coupleId, userTier, userRank - 1, userRank + 1]
+    );
+    contextEntries = contextResult.rows;
+  }
+
+  // Get total count for this tier
+  const countResult = await query(
+    `SELECT COUNT(*) as count FROM couple_leaderboard
+     WHERE arena_tier = $1 AND total_lp > 0`,
+    [userTier]
+  );
+  const totalInTier = parseInt(countResult.rows[0].count);
+
+  // Get global total for consistency
+  const globalCountResult = await query(
+    `SELECT COUNT(*) as count FROM couple_leaderboard WHERE total_lp > 0`
+  );
+  const totalCouples = parseInt(globalCountResult.rows[0].count);
+
+  // Combine entries
+  let entries = topResult.rows as LeaderboardEntry[];
+  if (contextEntries.length > 0) {
+    entries = [...entries, ...contextEntries];
+  }
+
+  return {
+    view: 'tier',
+    tier: userTier,
+    tier_name: tierInfo.name,
+    tier_emoji: tierInfo.emoji,
+    tier_min_lp: tierInfo.min,
+    tier_max_lp: tierInfo.max,
+    total_in_tier: totalInTier,
     entries,
     user_rank: userRank,
     user_total_lp: userTotalLp,

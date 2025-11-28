@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=390, initial-scale=1.0, maximum-scale=1.0">
+    <title>Variant 6: Minimal Essential</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #888;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+        }
+        .phone-frame {
+            width: 390px;
+            margin: 0 auto;
+            background: rgba(0,0,0,0.3);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+        }
+        .bottom-sheet {
+            background: #fff;
+            border-top: 2px solid #1a1a1a;
+            display: flex;
+            flex-direction: column;
+        }
+        .drag-handle {
+            width: 40px;
+            height: 4px;
+            background: #999;
+            border-radius: 2px;
+            margin: 12px auto 16px;
+        }
+        .content {
+            padding: 0 20px 20px;
+        }
+        .input-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+        .partner-badge {
+            background: #1a1a1a;
+            color: #fff;
+            padding: 8px 14px;
+            font-size: 13px;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+        .message-input {
+            flex: 1;
+            padding: 12px 14px;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            font-size: 15px;
+            font-family: inherit;
+        }
+        .message-input:focus {
+            outline: none;
+            border-color: #1a1a1a;
+        }
+        .time-options {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+        .time-btn {
+            flex: 1;
+            padding: 12px 4px;
+            border: 1px solid #1a1a1a;
+            background: #fff;
+            text-align: center;
+            cursor: pointer;
+        }
+        .time-btn.selected {
+            background: #1a1a1a;
+            color: #fff;
+        }
+        .time-btn .emoji {
+            font-size: 18px;
+            display: block;
+            margin-bottom: 4px;
+        }
+        .time-btn .label {
+            font-size: 9px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+        .send-btn {
+            width: 100%;
+            padding: 16px;
+            background: #1a1a1a;
+            color: #fff;
+            border: none;
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 2px;
+            cursor: pointer;
+        }
+        .back-link {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            color: #fff;
+            text-decoration: none;
+            font-size: 14px;
+        }
+        .variant-label {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            color: #fff;
+            font-size: 12px;
+            background: rgba(0,0,0,0.5);
+            padding: 8px 12px;
+        }
+    </style>
+</head>
+<body>
+    <a href="index.html" class="back-link">&larr; Back to Index</a>
+    <div class="variant-label">Variant 6: Minimal Essential</div>
+
+    <div class="phone-frame">
+        <div class="bottom-sheet">
+            <div class="drag-handle"></div>
+
+            <div class="content">
+                <!-- Inline recipient + input -->
+                <div class="input-row">
+                    <div class="partner-badge">TestiY</div>
+                    <input type="text" class="message-input" placeholder="Remind about...">
+                </div>
+
+                <!-- Time options -->
+                <div class="time-options">
+                    <div class="time-btn">
+                        <span class="emoji">⚡</span>
+                        <span class="label">Now</span>
+                    </div>
+                    <div class="time-btn selected">
+                        <span class="emoji">☕</span>
+                        <span class="label">1 Hour</span>
+                    </div>
+                    <div class="time-btn">
+                        <span class="emoji">🌙</span>
+                        <span class="label">8 PM</span>
+                    </div>
+                    <div class="time-btn">
+                        <span class="emoji">☀️</span>
+                        <span class="label">8 AM</span>
+                    </div>
+                </div>
+
+                <!-- Send button -->
+                <button class="send-btn">SEND</button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Steps Reward Claim - V3 Tier Progress</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            background: #fafafa;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 420px;
+            margin: 0 auto;
+            background: #fff;
+            border: 2px solid #000;
+            box-shadow: 8px 8px 0 rgba(0, 0, 0, 0.1);
+        }
+
+        .variant-label {
+            background: #000;
+            color: #fff;
+            padding: 8px 16px;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .header {
+            border-bottom: 2px solid #000;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .back-btn {
+            font-size: 20px;
+            background: none;
+            border: none;
+            cursor: pointer;
+        }
+
+        .header-title {
+            font-size: 18px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .header-spacer {
+            width: 20px;
+        }
+
+        /* Summary */
+        .summary {
+            padding: 24px;
+            text-align: center;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .summary-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #666;
+            margin-bottom: 8px;
+        }
+
+        .summary-steps {
+            font-size: 48px;
+            font-weight: 700;
+            letter-spacing: -2px;
+            margin-bottom: 4px;
+        }
+
+        .summary-date {
+            font-size: 14px;
+            color: #666;
+        }
+
+        /* Tier Progress */
+        .tier-section {
+            padding: 24px;
+        }
+
+        .tier-heading {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #666;
+            margin-bottom: 20px;
+        }
+
+        .tier-track {
+            position: relative;
+            padding-left: 40px;
+        }
+
+        .tier-line {
+            position: absolute;
+            left: 15px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: #e0e0e0;
+        }
+
+        .tier-line-fill {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            background: #000;
+            height: 70%; /* Reached 14K of 20K */
+        }
+
+        .tier-item {
+            position: relative;
+            padding: 12px 0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .tier-marker {
+            position: absolute;
+            left: -32px;
+            width: 14px;
+            height: 14px;
+            border: 2px solid #e0e0e0;
+            background: #fff;
+            border-radius: 50%;
+        }
+
+        .tier-item.achieved .tier-marker {
+            border-color: #000;
+            background: #000;
+        }
+
+        .tier-item.current .tier-marker {
+            border-color: #000;
+            background: #fff;
+            box-shadow: 0 0 0 3px rgba(0,0,0,0.1);
+        }
+
+        .tier-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .tier-steps {
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .tier-item.upcoming .tier-steps {
+            color: #999;
+        }
+
+        .tier-status {
+            font-size: 11px;
+            color: #999;
+        }
+
+        .tier-item.achieved .tier-status {
+            color: #000;
+        }
+
+        .tier-lp {
+            font-size: 16px;
+            font-weight: 700;
+        }
+
+        .tier-item.upcoming .tier-lp {
+            color: #ccc;
+        }
+
+        .tier-item.current {
+            background: #f8f8f8;
+            margin: 0 -24px;
+            padding: 16px 24px 16px 64px;
+        }
+
+        .tier-item.current .tier-marker {
+            left: 8px;
+        }
+
+        /* Claim Card */
+        .claim-card {
+            margin: 24px;
+            border: 2px solid #000;
+            background: #000;
+            color: #fff;
+            padding: 24px;
+            text-align: center;
+        }
+
+        .claim-reward {
+            font-size: 36px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .claim-label {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            opacity: 0.7;
+            margin-bottom: 16px;
+        }
+
+        .claim-btn {
+            width: 100%;
+            padding: 14px 24px;
+            font-family: inherit;
+            font-size: 14px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border: 1px solid #fff;
+            background: #fff;
+            color: #000;
+            cursor: pointer;
+        }
+
+        /* Breakdown */
+        .breakdown {
+            padding: 16px 24px;
+            background: #f8f8f8;
+            display: flex;
+            justify-content: space-around;
+        }
+
+        .breakdown-item {
+            text-align: center;
+        }
+
+        .breakdown-avatar {
+            width: 32px;
+            height: 32px;
+            background: #000;
+            color: #fff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            margin: 0 auto 8px;
+        }
+
+        .breakdown-avatar.partner {
+            background: #666;
+        }
+
+        .breakdown-name {
+            font-size: 11px;
+            color: #666;
+        }
+
+        .breakdown-steps {
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        /* Footer */
+        .footer {
+            padding: 16px 24px;
+            border-top: 1px solid #e0e0e0;
+            display: flex;
+            justify-content: space-between;
+            font-size: 11px;
+            color: #999;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="variant-label">V3: Tier Progress - Shows reward ladder achievement</div>
+
+        <div class="header">
+            <button class="back-btn">←</button>
+            <div class="header-title">Yesterday's Steps</div>
+            <div class="header-spacer"></div>
+        </div>
+
+        <div class="summary">
+            <div class="summary-label">Combined Steps</div>
+            <div class="summary-steps">14,200</div>
+            <div class="summary-date">November 27, 2024</div>
+        </div>
+
+        <div class="tier-section">
+            <div class="tier-heading">Reward Tiers Achieved</div>
+
+            <div class="tier-track">
+                <div class="tier-line">
+                    <div class="tier-line-fill"></div>
+                </div>
+
+                <div class="tier-item achieved">
+                    <div class="tier-marker"></div>
+                    <div class="tier-info">
+                        <span class="tier-steps">10,000</span>
+                        <span class="tier-status">Reached</span>
+                    </div>
+                    <span class="tier-lp">+15</span>
+                </div>
+
+                <div class="tier-item achieved">
+                    <div class="tier-marker"></div>
+                    <div class="tier-info">
+                        <span class="tier-steps">12,000</span>
+                        <span class="tier-status">Reached</span>
+                    </div>
+                    <span class="tier-lp">+18</span>
+                </div>
+
+                <div class="tier-item current">
+                    <div class="tier-marker"></div>
+                    <div class="tier-info">
+                        <span class="tier-steps">14,000</span>
+                        <span class="tier-status">Your tier</span>
+                    </div>
+                    <span class="tier-lp">+21</span>
+                </div>
+
+                <div class="tier-item upcoming">
+                    <div class="tier-marker"></div>
+                    <div class="tier-info">
+                        <span class="tier-steps">16,000</span>
+                        <span class="tier-status">1,800 more</span>
+                    </div>
+                    <span class="tier-lp">+24</span>
+                </div>
+
+                <div class="tier-item upcoming">
+                    <div class="tier-marker"></div>
+                    <div class="tier-info">
+                        <span class="tier-steps">18,000</span>
+                    </div>
+                    <span class="tier-lp">+27</span>
+                </div>
+
+                <div class="tier-item upcoming">
+                    <div class="tier-marker"></div>
+                    <div class="tier-info">
+                        <span class="tier-steps">20,000</span>
+                        <span class="tier-status">Max</span>
+                    </div>
+                    <span class="tier-lp">+30</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="claim-card">
+            <div class="claim-reward">+21 LP</div>
+            <div class="claim-label">Ready to Claim</div>
+            <button class="claim-btn">Claim Reward</button>
+        </div>
+
+        <div class="breakdown">
+            <div class="breakdown-item">
+                <div class="breakdown-avatar">Y</div>
+                <div class="breakdown-steps">8,200</div>
+                <div class="breakdown-name">You</div>
+            </div>
+            <div class="breakdown-item">
+                <div class="breakdown-avatar partner">T</div>
+                <div class="breakdown-steps">6,000</div>
+                <div class="breakdown-name">Taija</div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <span>Expires in 36 hours</span>
+            <span>Both partners synced</span>
+        </div>
+    </div>
+</body>
+</html>

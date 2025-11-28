@@ -7,8 +7,6 @@ enum ActivityType {
   question,
   quiz,
   affirmation,
-  wordLadder,
-  memoryFlip,
   wouldYouRather,
   dailyPulse,
 }
@@ -49,7 +47,7 @@ class ActivityItem {
   final DateTime timestamp;
   final ActivityStatus status;
   final List<ParticipantStatus> participants;
-  final dynamic sourceData; // Original model (QuizSession, Reminder, LadderSession, etc.)
+  final dynamic sourceData; // Original model (QuizSession, Reminder, etc.)
   final bool isUnread;
   final String? emoji; // Optional emoji for the activity
 
@@ -79,10 +77,6 @@ class ActivityItem {
         return 'Quiz';
       case ActivityType.affirmation:
         return 'Affirmation';
-      case ActivityType.wordLadder:
-        return 'Game';
-      case ActivityType.memoryFlip:
-        return 'Game';
       case ActivityType.wouldYouRather:
         return 'Game';
       case ActivityType.dailyPulse:
@@ -105,10 +99,6 @@ class ActivityItem {
         return '🎯';
       case ActivityType.affirmation:
         return '💗';
-      case ActivityType.wordLadder:
-        return '🪜';
-      case ActivityType.memoryFlip:
-        return '🎴';
       case ActivityType.wouldYouRather:
         return '🤔';
       case ActivityType.dailyPulse:

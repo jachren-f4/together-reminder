@@ -69,6 +69,22 @@
         ".read": true,
         ".write": true
       }
+    },
+    "steps_data": {
+      "$coupleId": {
+        ".read": true,
+        ".write": true,
+        "connection": {
+          ".read": true,
+          ".write": true
+        },
+        "days": {
+          "$dateKey": {
+            ".read": true,
+            ".write": true
+          }
+        }
+      }
     }
   }
 }

@@ -280,9 +280,7 @@ class _QuestCardState extends State<QuestCard>
     }
 
     // Option 2: Fallback to quest type-based images (backward compatibility)
-    // Used for:
-    // - Old quests without imagePath
-    // - Non-quiz quest types (Word Ladder, Memory Flip, You or Me)
+    // Used for old quests without imagePath
     final questImages = BrandLoader().assets.questImagesPath;
     switch (widget.quest.type) {
       case QuestType.quiz:
@@ -291,10 +289,6 @@ class _QuestCardState extends State<QuestCard>
           return '$questImages/affirmation-default.png';
         }
         return '$questImages/classic-quiz-default.png';
-      case QuestType.wordLadder:
-        return '$questImages/word-ladder.png';
-      case QuestType.memoryFlip:
-        return '$questImages/memory-flip.png';
       case QuestType.youOrMe:
         return '$questImages/you-or-me.png';
       case QuestType.question:
@@ -303,6 +297,9 @@ class _QuestCardState extends State<QuestCard>
         return '$questImages/linked.png';
       case QuestType.wordSearch:
         return '$questImages/word-search.png';
+      case QuestType.steps:
+        // Steps Together uses a special card widget, but fallback to emoji
+        return null;
       default:
         return null;
     }
@@ -322,16 +319,14 @@ class _QuestCardState extends State<QuestCard>
           return 'Rate your feelings together';
         }
         return 'Answer ten questions together';
-      case QuestType.wordLadder:
-        return 'Collaborate to solve';
-      case QuestType.memoryFlip:
-        return 'Match all sixteen cards';
       case QuestType.youOrMe:
         return 'Guess who said what';
       case QuestType.question:
         return 'Share your thoughts';
       case QuestType.wordSearch:
         return 'Find twelve hidden words';
+      case QuestType.steps:
+        return 'Walk together, earn together';
       default:
         return '';
     }
@@ -418,45 +413,8 @@ class _QuestCardState extends State<QuestCard>
           ],
         ),
       );
-    } else if (widget.quest.type == QuestType.memoryFlip && !widget.quest.isCompleted) {
-      // Memory Flip: Show "OUT OF FLIPS" if user exhausted daily flip allowance
-      if (userCompleted) {
-        return Container(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-          decoration: BoxDecoration(
-            color: BrandLoader().colors.surface,
-            border: Border.all(color: BrandLoader().colors.textPrimary, width: 1),
-          ),
-          child: Text(
-            'OUT OF FLIPS',
-            style: AppTheme.headlineFont.copyWith( // Serif font
-              fontSize: 11,
-              fontWeight: FontWeight.w600,
-              letterSpacing: 0.5,
-              color: BrandLoader().colors.textPrimary,
-          ),
-          ),
-        );
-      }
-      // Otherwise show YOUR TURN (flips available)
-      return Container(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-        decoration: BoxDecoration(
-          color: BrandLoader().colors.surface,
-          border: Border.all(color: BrandLoader().colors.textPrimary, width: 1),
-        ),
-        child: Text(
-          'YOUR TURN',
-          style: AppTheme.headlineFont.copyWith( // Serif font
-            fontSize: 11,
-            fontWeight: FontWeight.w600,
-            letterSpacing: 0.5,
-            color: BrandLoader().colors.textPrimary,
-          ),
-        ),
-      );
     } else if (userCompleted) {
-      // User completed, waiting for partner (applies to You or Me, Word Ladder, etc.)
+      // User completed, waiting for partner
       return Container(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
         decoration: BoxDecoration(
@@ -497,7 +455,7 @@ class _QuestCardState extends State<QuestCard>
         ),
       );
     } else {
-      // User's turn (for turn-based games like Word Ladder)
+      // User's turn
       return Container(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
         decoration: BoxDecoration(
@@ -537,16 +495,14 @@ class _QuestCardState extends State<QuestCard>
         return _getQuizTitle(widget.quest.sortOrder);
       case QuestType.game:
         return 'Fun Game';
-      case QuestType.wordLadder:
-        return 'Word Ladder Challenge';
-      case QuestType.memoryFlip:
-        return 'Memory Match Game';
       case QuestType.youOrMe:
         return 'You or Me?';
       case QuestType.linked:
         return 'Crossword Puzzle';
       case QuestType.wordSearch:
         return 'Word Search';
+      case QuestType.steps:
+        return 'Steps Together';
     }
   }
 

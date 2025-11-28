@@ -29,7 +29,6 @@ class _ActionsTabState extends State<ActionsTab> {
   bool _clearLpTransactions = true;
   bool _clearProgressionState = false;
   bool _clearAppliedLpAwards = false;
-  bool _clearMemoryFlip = true;
 
   Future<void> _resetUserData() async {
     // Show confirmation dialog
@@ -138,12 +137,6 @@ class _ActionsTabState extends State<ActionsTab> {
         final metadataBox = Hive.box('app_metadata');
         await metadataBox.delete('applied_lp_awards');
         Logger.success('Applied LP awards cleared', service: 'debug');
-      }
-
-      if (_clearMemoryFlip) {
-        await _storage.memoryPuzzlesBox.clear();
-        await _storage.memoryAllowancesBox.clear();
-        Logger.success('Memory Flip data cleared', service: 'debug');
       }
 
       Logger.success('Local storage cleared', service: 'debug');
@@ -363,12 +356,6 @@ class _ActionsTabState extends State<ActionsTab> {
                   _clearAppliedLpAwards,
                   (value) => setState(() => _clearAppliedLpAwards = value ?? false),
                   '${Hive.box('app_metadata').get('applied_lp_awards', defaultValue: <String>[]).length} IDs',
-                ),
-                _buildCheckbox(
-                  'Memory Flip',
-                  _clearMemoryFlip,
-                  (value) => setState(() => _clearMemoryFlip = value ?? false),
-                  '${_storage.memoryPuzzlesBox.length} puzzles',
                 ),
                 const SizedBox(height: 16),
                 ElevatedButton.icon(

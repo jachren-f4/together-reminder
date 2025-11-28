@@ -2,6 +2,7 @@ import 'package:cloud_functions/cloud_functions.dart';
 import 'package:togetherremind/models/reminder.dart';
 import 'package:togetherremind/services/storage_service.dart';
 import 'package:togetherremind/services/general_activity_streak_service.dart';
+import 'package:togetherremind/services/dev_data_service.dart';
 import '../utils/logger.dart';
 
 class ReminderService {
@@ -24,22 +25,25 @@ class ReminderService {
         return false;
       }
 
-      // Removed verbose logging
-      // print('📤 Sending reminder to partner...');
-      // print('   Partner token: ${partner.pushToken}');
-      // print('   Sender: ${user.name ?? 'You'}');
-      // print('   Text: ${reminder.text}');
+      // Refresh partner's FCM token from Supabase before sending
+      // This ensures we have the latest token (solves startup race condition)
+      await DevDataService().refreshPartnerPushToken();
 
-      // Call Cloud Function to send/schedule the reminder
-      // Note: scheduledFor is passed as ISO8601 string in local time
-      // Server currently sends immediately (TODO: implement Cloud Tasks for scheduling)
-      final callable = _functions.httpsCallable('sendReminder');
+      // Re-fetch partner to get updated token
+      final updatedPartner = _storage.getPartner();
+      final partnerToken = updatedPartner?.pushToken ?? partner.pushToken;
+
+      // Call Cloud Function to schedule the reminder
+      // scheduledFor is passed as UTC ISO8601 string for consistent timezone handling
+      // The Cloud Function will send immediately if delay <= 1 minute,
+      // otherwise it creates a Cloud Task to deliver at the scheduled time
+      final callable = _functions.httpsCallable('scheduleReminder');
       await callable.call({
-        'partnerToken': partner.pushToken,
+        'partnerToken': partnerToken,
         'senderName': user.name ?? 'Your Partner',
         'reminderText': reminder.text,
         'reminderId': reminder.id,
-        'scheduledFor': reminder.scheduledFor.toIso8601String(),
+        'scheduledFor': reminder.scheduledFor.toUtc().toIso8601String(),
       });
 
       // Record activity for streak tracking

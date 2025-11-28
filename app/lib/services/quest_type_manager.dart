@@ -1,5 +1,6 @@
 import '../models/daily_quest.dart';
 import '../models/quiz_progression_state.dart';
+import '../models/quiz_session.dart';
 import '../models/branch_progression_state.dart';
 import '../services/storage_service.dart';
 import '../services/daily_quest_service.dart';
@@ -177,39 +178,14 @@ class QuizQuestProvider implements QuestProvider {
           'Position ${progressionState.currentPosition}, '
           'Category: ${config.categoryFilter}, Difficulty: ${config.difficulty}', service: 'quest');
 
-      // Load content from the appropriate branch based on format type
-      if (config.formatType == 'affirmation') {
-        // Get current branch for affirmation content
-        final branch = await _branchService.getCurrentBranch(
-          coupleId: coupleId,
-          activityType: BranchableActivityType.affirmation,
-        );
-        Logger.debug('Loading affirmation content from branch: $branch', service: 'quest');
-        await AffirmationQuizBank().initializeWithBranch(branch);
-      } else {
-        // Get current branch for classic quiz content
-        final branch = await _branchService.getCurrentBranch(
-          coupleId: coupleId,
-          activityType: BranchableActivityType.classicQuiz,
-        );
-        Logger.debug('Loading classic quiz content from branch: $branch', service: 'quest');
-        await QuizQuestionBank().initializeWithBranch(branch);
-      }
+      // SERVER-AUTHORITATIVE: Return semantic key instead of creating session locally.
+      // The session will be created on-demand when the user opens the quiz.
+      // Format: "quiz:{formatType}:{dateKey}" - this allows the API to create/return
+      // the same session for both partners without race conditions.
+      final semanticKey = 'quiz:${config.formatType}:$dateKey';
+      Logger.debug('Generated semantic key for quiz: $semanticKey', service: 'quest');
 
-      // Use existing QuizService to create session
-      // Skip active check to allow multiple daily quest quizzes
-      final session = await _quizService.startQuizSession(
-        formatType: config.formatType,
-        categoryFilter: config.categoryFilter,
-        difficulty: config.difficulty,
-        skipActiveCheck: true, // Allow generating 3 daily quests
-        isDailyQuest: true, // Mark as daily quest to prevent duplication in inbox
-      );
-
-      Logger.debug('Created quiz session: ${session.id}', service: 'quest');
-
-      // Return session ID as contentId
-      return session.id;
+      return semanticKey;
     } catch (e) {
       Logger.error('Error generating quiz quest', error: e, service: 'quest');
       return null;
@@ -222,8 +198,21 @@ class QuizQuestProvider implements QuestProvider {
     required String userId,
   }) async {
     try {
-      // Check if quiz session exists and is completed
-      final session = _storage.getQuizSession(contentId);
+      QuizSession? session;
+
+      // Handle semantic key format (quiz:{formatType}:{dateKey})
+      if (contentId.startsWith('quiz:')) {
+        final parts = contentId.split(':');
+        if (parts.length >= 3) {
+          final formatType = parts[1];
+          final dateKey = parts[2];
+          // Find session by date and format
+          session = _findSessionByDateAndFormat(dateKey, formatType);
+        }
+      } else {
+        // Traditional UUID lookup
+        session = _storage.getQuizSession(contentId);
+      }
 
       if (session == null) {
         Logger.debug('Quiz session not found: $contentId', service: 'quest');
@@ -248,6 +237,18 @@ class QuizQuestProvider implements QuestProvider {
       Logger.error('Error validating quiz completion', error: e, service: 'quest');
       return false;
     }
+  }
+
+  /// Find session by date and format type from local storage
+  QuizSession? _findSessionByDateAndFormat(String dateKey, String formatType) {
+    final allSessions = _storage.getAllQuizSessions();
+    for (final session in allSessions) {
+      final sessionDate = session.createdAt.toIso8601String().substring(0, 10);
+      if (sessionDate == dateKey && session.formatType == formatType) {
+        return session;
+      }
+    }
+    return null;
   }
 }
 
@@ -695,7 +696,7 @@ class QuestTypeManager {
           activityType = BranchableActivityType.wordSearch;
           break;
         default:
-          // Not a branchable quest type (memoryFlip, wordLadder)
+          // Not a branchable quest type (deprecated types, etc.)
           Logger.debug(
             'Quest type ${quest.type.name} is not branchable, skipping branch advancement',
             service: 'quest',

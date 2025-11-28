@@ -71,11 +71,4 @@ class ContentPaths {
   String get classicQuizManifestPath => getManifestPath('classic-quiz');
   String get affirmationManifestPath => getManifestPath('affirmation');
   String get youOrMeManifestPath => getManifestPath('you-or-me');
-
-  // ============================================
-  // Word Lists (for Word Ladder game)
-  // ============================================
-
-  String get englishWordsPath => '$_wordsPath/english_words.json';
-  String get finnishWordsPath => '$_wordsPath/finnish_words.json';
 }

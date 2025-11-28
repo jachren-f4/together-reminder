@@ -1,9 +1,11 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io' show Platform;
 import 'package:flutter/foundation.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
+import 'package:device_info_plus/device_info_plus.dart';
 import '../config/dev_config.dart';
 
 /// Authentication states
@@ -51,6 +53,9 @@ class AuthService {
   static const _keyUserId = 'supabase_user_id';
   static const _keyUserEmail = 'supabase_user_email';
 
+  // Cached dev user ID (determined at initialization based on device)
+  String? _cachedDevUserId;
+
   /// Initialize the auth service
   Future<void> initialize({
     required String supabaseUrl,
@@ -75,7 +80,15 @@ class AuthService {
       
       // Start background refresh timer
       _startRefreshTimer();
-      
+
+      // Cache dev user ID based on device (for dev auth bypass)
+      // Also cache in release mode if allowAuthBypassInRelease is enabled
+      final canBypass = kDebugMode || DevConfig.allowAuthBypassInRelease;
+      if (canBypass && DevConfig.skipAuthInDev) {
+        _cachedDevUserId = await _determineDevUserId();
+        debugPrint('🔧 [DEV] Cached dev user ID: $_cachedDevUserId');
+      }
+
       debugPrint('✅ AuthService initialized');
     } catch (e) {
       debugPrint('❌ AuthService initialization failed: $e');
@@ -238,9 +251,10 @@ class AuthService {
       headers['Authorization'] = 'Bearer $token';
     }
 
-    // In development mode, add X-Dev-User-Id header for auth bypass
+    // In development mode (or with allowAuthBypassInRelease), add X-Dev-User-Id header for auth bypass
     // This allows testing with different users on different devices
-    if (kDebugMode) {
+    final canBypass = kDebugMode || DevConfig.allowAuthBypassInRelease;
+    if (canBypass && DevConfig.skipAuthInDev) {
       final devUserId = _getDevUserId();
       if (devUserId != null) {
         headers['X-Dev-User-Id'] = devUserId;
@@ -251,22 +265,63 @@ class AuthService {
     return headers;
   }
 
-  /// Get development user ID based on platform
-  /// Returns user1_id for Android, user2_id for Web/Chrome
-  /// Returns null if not configured (placeholder values)
+  /// Get cached development user ID (sync, for use in getAuthHeaders)
+  /// Returns user1_id (TestiY) for primary device, user2_id (Jokke) for secondary
   String? _getDevUserId() {
+    return _cachedDevUserId;
+  }
+
+  /// Determine development user ID based on platform and device
+  /// Called once at initialization to cache the result
+  ///
+  /// Device mapping:
+  /// - Android emulator / Joakim's iPhone 14 → TestiY (devUserIdAndroid)
+  /// - Web/Chrome / Onni's iPhone 12 → Jokke (devUserIdWeb)
+  Future<String?> _determineDevUserId() async {
     // Check if running on Web (Chrome)
     if (kIsWeb) {
       final userId = DevConfig.devUserIdWeb;
-      // Only return if not a placeholder
       if (userId.contains('REPLACE_WITH')) {
         debugPrint('⚠️ [DEV] devUserIdWeb not configured in DevConfig');
         return null;
       }
+      debugPrint('🔧 [DEV] Web platform → using Jokke (devUserIdWeb)');
       return userId;
     }
 
-    // Default to Android user ID for all other platforms
+    // Check iOS device model to determine which user
+    if (!kIsWeb && Platform.isIOS) {
+      try {
+        final deviceInfo = DeviceInfoPlugin();
+        final iosInfo = await deviceInfo.iosInfo;
+        final deviceName = iosInfo.name;
+        final deviceModel = iosInfo.utsname.machine; // e.g., "iPhone13,2" for iPhone 12
+        debugPrint('🔧 [DEV] iOS device: name=$deviceName, model=$deviceModel');
+
+        // iPhone 12 models: iPhone13,1 (mini), iPhone13,2 (regular), iPhone13,3 (Pro), iPhone13,4 (Pro Max)
+        // iPhone 14 models: iPhone14,7 (regular), iPhone14,8 (Plus), iPhone15,2 (Pro), iPhone15,3 (Pro Max)
+        // Use iPhone 12 (iPhone13,x) for Jokke (the partner)
+        if (deviceModel.startsWith('iPhone13,')) {
+          debugPrint('🔧 [DEV] iPhone 12 detected → using Jokke (devUserIdWeb)');
+          return DevConfig.devUserIdWeb;
+        }
+
+        // Also check device name as fallback
+        if (deviceName.toLowerCase().contains('onni') ||
+            deviceName.toLowerCase().contains('12')) {
+          debugPrint('🔧 [DEV] Onni\'s device or iPhone 12 → using Jokke (devUserIdWeb)');
+          return DevConfig.devUserIdWeb;
+        }
+
+        // iPhone 14 and others get TestiY
+        debugPrint('🔧 [DEV] Primary iOS device → using TestiY (devUserIdAndroid)');
+        return DevConfig.devUserIdAndroid;
+      } catch (e) {
+        debugPrint('⚠️ [DEV] Could not get iOS device info: $e');
+      }
+    }
+
+    // Default to Android user ID for Android and fallback
     final userId = DevConfig.devUserIdAndroid;
     if (userId.contains('REPLACE_WITH')) {
       debugPrint('⚠️ [DEV] devUserIdAndroid not configured in DevConfig');

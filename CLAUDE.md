@@ -19,10 +19,18 @@
 | Layer | Technology |
 |-------|------------|
 | **Frontend** | Flutter 3.16+, Dart 3.2+, Material Design 3 |
-| **Backend** | Firebase Cloud Functions (Node.js 20) |
+| **Backend** | Next.js API (Vercel) + Firebase Cloud Functions (Node.js 20) |
+| **Database** | Supabase (Postgres) |
 | **Storage** | Hive (local NoSQL) |
 | **Notifications** | FCM (Android), APNs (iOS) |
-| **Auth** | None (device pairing only) |
+| **Auth** | Supabase Auth (OTP) |
+
+### API URLs
+- **Production API (Vercel):** `https://api-joakim-achrens-projects.vercel.app`
+- **Supabase:** `https://naqzdqdncdzxpxbdysgq.supabase.co`
+- **Firebase RTDB:** `https://togetherremind-default-rtdb.firebaseio.com`
+
+**Config file:** `lib/config/supabase_config.dart`
 
 ### Bundle IDs
 - **iOS:** `com.togetherremind.togetherremind2` (changed 2025-11-13 after security remediation)
@@ -316,9 +324,8 @@ Logger.success('Quest completed', service: 'quest');   // Only in debug mode
 ```dart
 // CRITICAL CORE (3): storage, notification, lovepoint
 // MAJOR FEATURES (3): quiz, you_or_me, pairing
-// MINOR FEATURES (8): reminder, poke, daily_pulse, affirmation,
-//                      memory_flip, word_ladder, ladder, quest
-// INFRASTRUCTURE (5): debug, mock, word_validation, home, arena
+// MINOR FEATURES (5): reminder, poke, daily_pulse, affirmation, quest
+// INFRASTRUCTURE (4): debug, mock, home, arena
 ```
 
 **GOTCHA:** Logger calls **without** `service:` parameter bypass verbosity control and always log.
@@ -401,7 +408,7 @@ static const String devUserIdWeb = 'd71425a3-a92f-404e-bfbe-a54c4cb58b6a';
 
 ### 12. Turn-Based Game "Who Goes First" Preference
 
-**CRITICAL:** For FUTURE features only. Do NOT retrofit to existing games (Memory Flip, etc.).
+**CRITICAL:** For FUTURE turn-based features only.
 
 **Implementation pattern:**
 ```dart
@@ -489,12 +496,15 @@ switch (state) {
 
 ### 15. Daily Quest Generation Structure
 
-**CRITICAL:** Daily quests generate exactly 3 quests per day (not 4).
+**CRITICAL:** Daily quests generate exactly 3 quests per day.
 
 **Quest mix:**
 - Slot 0: Classic quiz (uses even track positions: 0, 2)
 - Slot 1: Affirmation quiz (uses odd track positions: 1, 3)
 - Slot 2: You or Me (separate branch progression)
+
+**QuestType enum indices:**
+- question (0), quiz (1), game (2), youOrMe (3), linked (4), wordSearch (5), steps (6)
 
 **Position advancement:** Advances once per day (after classic quiz), not per-quiz.
 
@@ -603,6 +613,37 @@ cd api && node scripts/generate_word_search.js all 20  # Regenerates ALL branche
 ```
 
 **Submit route behavior:** When `gameComplete=true`, response includes `nextBranch` (0-2).
+
+**Cooldown Control:**
+- Env var: `PUZZLE_COOLDOWN_ENABLED` (default: `true` if not set, `false` to disable)
+- Local: Set in `api/.env.local`
+- Vercel: `vercel env add PUZZLE_COOLDOWN_ENABLED production` (currently OFF for dev testing)
+
+### 21. Steps Together HealthKit Permission
+
+**CRITICAL:** Never use `hasPermission()` for sync gating - iOS doesn't reliably report permission status.
+
+```dart
+// ❌ WRONG - unreliable, returns false even when granted
+final hasPerms = await _health.hasPermissions([HealthDataType.STEPS]);
+if (!hasPerms) return null;
+
+// ✅ CORRECT - use stored connection status
+final connection = _storage.getStepsConnection();
+if (connection == null || !connection.isConnected) return null;
+```
+
+**Auto-sync triggers:**
+- App launch: `main.dart:192-194`
+- App resume: `main.dart:268-281` (lifecycle observer)
+- Timer: Every 60s on StepsCounterScreen
+
+**Files:**
+- Health service: `lib/services/steps_health_service.dart`
+- Sync service: `lib/services/steps_sync_service.dart`
+- Feature service: `lib/services/steps_feature_service.dart`
+- API endpoint: `api/app/api/sync/steps/route.ts`
+- Migration: `api/supabase/migrations/018_steps_together.sql`
 
 ---
 
@@ -811,43 +852,6 @@ flutter build apk --debug
 - Use `flutter run` without `&` for better error visibility
 - Monitor emulator health with `adb devices` periodically
 
-### API Testing Without Simulators
-
-**Philosophy:** Test API endpoints directly with shell scripts instead of running full Flutter apps on simulators.
-
-**Benefits:**
-- Fast iteration (no simulator startup)
-- Automated verification (CI-compatible)
-- Clear pass/fail output
-- Tests both users (Alice/Android, Bob/Chrome) in one run
-
-**Available Scripts:**
-```bash
-# Test Memory Flip turn-based API
-cd api && ./scripts/test_memory_flip_api.sh
-```
-
-**Script Location:** `api/scripts/test_memory_flip_api.sh`
-
-**What it tests:**
-1. API health check
-2. Reset Memory Flip data
-3. Create puzzle
-4. Get puzzle state
-5. Alice makes move
-6. Bob makes move
-7. Turn alternation
-8. Game completion
-
-**When to use:**
-- After modifying API endpoints
-- Before asking user to test on simulators
-- During code review
-
-**Prerequisites:**
-- API server running (`cd api && npm run dev`)
-- `AUTH_DEV_BYPASS_ENABLED=true` in `.env.local`
-
 ---
 
 ## File Locations Reference
@@ -864,8 +868,6 @@ cd api && ./scripts/test_memory_flip_api.sh
 | `lib/services/poke_animation_service.dart` | Lottie animations + haptic |
 | `lib/services/quiz_service.dart` | Quiz logic, question rotation, scoring |
 | `lib/services/affirmation_quiz_bank.dart` | Affirmation quiz loader (6 quizzes, 30 questions) |
-| `lib/services/word_ladder_service.dart` | Word ladder game logic |
-| `lib/services/memory_flip_service.dart` | Memory Flip game logic |
 | `lib/services/love_point_service.dart` | Love Points tracking and rewards |
 | `lib/services/leaderboard_service.dart` | Leaderboard API client (30s cache) |
 | `lib/services/country_service.dart` | Country detection & flag emojis |
@@ -895,8 +897,6 @@ cd api && ./scripts/test_memory_flip_api.sh
 | `lib/screens/affirmation_results_screen.dart` | Affirmation quiz results with progress visualization |
 | `lib/screens/speed_round_intro_screen.dart` | Speed round intro |
 | `lib/screens/speed_round_screen.dart` | Speed round gameplay |
-| `lib/screens/word_ladder_game_screen.dart` | Word ladder gameplay |
-| `lib/screens/memory_flip_game_screen.dart` | Memory Flip 4×4 card grid |
 | `lib/screens/linked_game_screen.dart` | Linked (arroword) puzzle gameplay |
 | `lib/widgets/linked/answer_cell.dart` | **ACTUAL** answer cell colors (draft/locked/incorrect states) |
 | `lib/widgets/linked/clue_cell.dart` | **UNUSED** - clues rendered inline in linked_game_screen.dart |
@@ -907,7 +907,6 @@ cd api && ./scripts/test_memory_flip_api.sh
 |------|---------|
 | `lib/widgets/poke_bottom_sheet.dart` | Send poke modal |
 | `lib/widgets/poke_response_dialog.dart` | Receive poke dialog |
-| `lib/widgets/match_reveal_dialog.dart` | Memory Flip match celebration |
 | `lib/widgets/foreground_notification_banner.dart` | In-app notification banner |
 | `lib/widgets/five_point_scale.dart` | 5-point Likert scale for affirmation quizzes |
 | `lib/widgets/quest_card.dart` | Daily quest card (uses quest.quizName for display) |
@@ -934,8 +933,6 @@ cd api && ./scripts/test_memory_flip_api.sh
 | `lib/models/reminder.dart` | Hive models (Reminder, Partner, User) |
 | `lib/models/pairing_code.dart` | PairingCode model with expiration tracking |
 | `lib/models/quiz.dart` | Quiz models (QuizSession, QuizAnswer, QuizQuestion) |
-| `lib/models/word_ladder.dart` | Word ladder models (WordLadderSession, WordGuess) |
-| `lib/models/memory_flip.dart` | Memory Flip models (MemoryPuzzle, MemoryCard) |
 | `lib/models/love_point.dart` | Love Points models (LovePointTransaction) |
 
 ---
@@ -964,4 +961,4 @@ cd api && ./scripts/test_memory_flip_api.sh
 
 ---
 
-**Last Updated:** 2025-11-27 (Added Auth Service race condition fix - use getAccessToken() not isAuthenticated)
+**Last Updated:** 2025-11-28 (Removed Word Ladder and Memory Flip - updated QuestType indices)

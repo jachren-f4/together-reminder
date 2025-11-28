@@ -364,16 +364,14 @@ class _QuestsTabState extends State<QuestsTab> {
         return Colors.orange;
       case QuestType.game:
         return Colors.purple;
-      case QuestType.wordLadder:
-        return Colors.green;
-      case QuestType.memoryFlip:
-        return Colors.pink;
       case QuestType.youOrMe:
         return Colors.teal;
       case QuestType.linked:
         return Colors.amber;
       case QuestType.wordSearch:
         return Colors.indigo;
+      case QuestType.steps:
+        return Colors.cyan;
     }
   }
 }

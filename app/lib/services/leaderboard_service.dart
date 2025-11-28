@@ -30,9 +30,16 @@ class LeaderboardEntry {
 
 /// Model for leaderboard response
 class LeaderboardData {
-  final String view; // 'global' or 'country'
+  final String view; // 'global', 'country', or 'tier'
   final String? countryCode;
   final String? countryName;
+  // Tier-specific fields
+  final int? tier;
+  final String? tierName;
+  final String? tierEmoji;
+  final int? tierMinLp;
+  final int? tierMaxLp;
+  final int? totalInTier;
   final List<LeaderboardEntry> entries;
   final int? userRank;
   final int? userTotalLp;
@@ -44,6 +51,12 @@ class LeaderboardData {
     required this.view,
     this.countryCode,
     this.countryName,
+    this.tier,
+    this.tierName,
+    this.tierEmoji,
+    this.tierMinLp,
+    this.tierMaxLp,
+    this.totalInTier,
     required this.entries,
     this.userRank,
     this.userTotalLp,
@@ -62,6 +75,12 @@ class LeaderboardData {
       view: json['view'] as String,
       countryCode: json['country_code'] as String?,
       countryName: json['country_name'] as String?,
+      tier: json['tier'] as int?,
+      tierName: json['tier_name'] as String?,
+      tierEmoji: json['tier_emoji'] as String?,
+      tierMinLp: json['tier_min_lp'] as int?,
+      tierMaxLp: json['tier_max_lp'] as int?,
+      totalInTier: json['total_in_tier'] as int?,
       entries: entries,
       userRank: json['user_rank'] as int?,
       userTotalLp: json['user_total_lp'] as int?,
@@ -114,8 +133,10 @@ class LeaderboardService {
   // Cache for leaderboard data (30s TTL per plan)
   LeaderboardData? _cachedGlobalData;
   LeaderboardData? _cachedCountryData;
+  LeaderboardData? _cachedTierData;
   DateTime? _globalCacheTime;
   DateTime? _countryCacheTime;
+  DateTime? _tierCacheTime;
   static const Duration _cacheTTL = Duration(seconds: 30);
 
   /// Fetch global leaderboard
@@ -182,12 +203,46 @@ class LeaderboardService {
     }
   }
 
+  /// Fetch tier leaderboard (for current user's tier)
+  Future<LeaderboardData?> getTierLeaderboard({bool forceRefresh = false}) async {
+    // Check cache
+    if (!forceRefresh && _cachedTierData != null && _tierCacheTime != null) {
+      final cacheAge = DateTime.now().difference(_tierCacheTime!);
+      if (cacheAge < _cacheTTL) {
+        Logger.debug('Returning cached tier leaderboard', service: 'leaderboard');
+        return _cachedTierData;
+      }
+    }
+
+    try {
+      final response = await _apiClient.get<Map<String, dynamic>>(
+        '/api/leaderboard',
+        queryParams: {'view': 'tier', 'limit': '50'},
+      );
+
+      if (response.success && response.data != null) {
+        _cachedTierData = LeaderboardData.fromJson(response.data!);
+        _tierCacheTime = DateTime.now();
+        Logger.info('Fetched tier leaderboard: ${_cachedTierData!.entries.length} entries in ${_cachedTierData!.tierName}', service: 'leaderboard');
+        return _cachedTierData;
+      } else {
+        Logger.error('Failed to fetch tier leaderboard: ${response.error}', service: 'leaderboard');
+        return null;
+      }
+    } catch (e) {
+      Logger.error('Error fetching tier leaderboard', error: e, service: 'leaderboard');
+      return null;
+    }
+  }
+
   /// Clear cache (call when LP changes)
   void clearCache() {
     _cachedGlobalData = null;
     _cachedCountryData = null;
+    _cachedTierData = null;
     _globalCacheTime = null;
     _countryCacheTime = null;
+    _tierCacheTime = null;
     Logger.debug('Leaderboard cache cleared', service: 'leaderboard');
   }
 }

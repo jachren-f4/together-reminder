@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Steps Intro - Waiting for Partner</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            background: #fafafa;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 420px;
+            margin: 0 auto;
+            background: #fff;
+            border: 2px solid #000;
+            box-shadow: 8px 8px 0 rgba(0, 0, 0, 0.1);
+            min-height: 700px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .variant-label {
+            background: #000;
+            color: #fff;
+            padding: 8px 16px;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .illustration {
+            background: #f8f8f8;
+            padding: 48px 32px;
+            text-align: center;
+            border-bottom: 2px solid #000;
+        }
+
+        .footprints {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 4px;
+            margin-bottom: 24px;
+        }
+
+        .footprint {
+            font-size: 24px;
+            opacity: 0.3;
+        }
+
+        .footprint:nth-child(odd) {
+            transform: rotate(-15deg);
+        }
+
+        .footprint:nth-child(even) {
+            transform: rotate(15deg);
+        }
+
+        .footprint.active {
+            opacity: 1;
+        }
+
+        .couple-visual {
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            gap: 24px;
+            margin-bottom: 16px;
+        }
+
+        .person {
+            text-align: center;
+        }
+
+        .person-avatar {
+            width: 64px;
+            height: 64px;
+            background: #e0e0e0;
+            color: #999;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            margin: 0 auto 8px;
+            position: relative;
+        }
+
+        .person-avatar.connected {
+            background: #000;
+            color: #fff;
+        }
+
+        .person-avatar .check {
+            position: absolute;
+            bottom: -4px;
+            right: -4px;
+            width: 24px;
+            height: 24px;
+            background: #000;
+            color: #fff;
+            border-radius: 50%;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid #fff;
+        }
+
+        .person-avatar .waiting {
+            position: absolute;
+            bottom: -4px;
+            right: -4px;
+            width: 24px;
+            height: 24px;
+            background: #999;
+            color: #fff;
+            border-radius: 50%;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid #fff;
+        }
+
+        .person-label {
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .person-status {
+            font-size: 11px;
+            color: #666;
+            margin-top: 2px;
+        }
+
+        .person-status.ready {
+            color: #000;
+        }
+
+        .plus-sign {
+            font-size: 32px;
+            font-weight: 300;
+            margin-bottom: 24px;
+        }
+
+        .equals-row {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+        }
+
+        .equals-sign {
+            font-size: 24px;
+        }
+
+        .combined-bubble {
+            background: #000;
+            color: #fff;
+            padding: 12px 24px;
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .content {
+            flex: 1;
+            padding: 32px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .title {
+            font-size: 28px;
+            font-weight: 400;
+            letter-spacing: 2px;
+            margin-bottom: 16px;
+            text-transform: uppercase;
+            text-align: center;
+        }
+
+        .description {
+            font-size: 15px;
+            color: #666;
+            line-height: 1.6;
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        .description strong {
+            color: #000;
+        }
+
+        /* Reward Tiers */
+        .tiers-section {
+            background: #f8f8f8;
+            border: 1px solid #e0e0e0;
+            padding: 20px;
+            margin-bottom: 32px;
+        }
+
+        .tiers-heading {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #666;
+            margin-bottom: 16px;
+        }
+
+        .tier-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .tier-row:last-child {
+            border-bottom: none;
+        }
+
+        .tier-steps {
+            font-size: 14px;
+        }
+
+        .tier-lp {
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        .buttons {
+            margin-top: auto;
+        }
+
+        .btn-primary {
+            width: 100%;
+            padding: 16px 24px;
+            font-family: inherit;
+            font-size: 14px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border: 2px solid #000;
+            background: #000;
+            color: #fff;
+            cursor: pointer;
+            margin-bottom: 12px;
+        }
+
+        .btn-secondary {
+            width: 100%;
+            padding: 12px 24px;
+            font-family: inherit;
+            font-size: 13px;
+            color: #666;
+            background: none;
+            border: none;
+            cursor: pointer;
+        }
+
+        .note {
+            font-size: 12px;
+            color: #999;
+            text-align: center;
+            margin-top: 16px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="variant-label">Intro Screen - Waiting for Partner to Connect</div>
+
+        <div class="illustration">
+            <div class="footprints">
+                <span class="footprint">👣</span>
+                <span class="footprint active">👣</span>
+                <span class="footprint">👣</span>
+                <span class="footprint active">👣</span>
+                <span class="footprint">👣</span>
+            </div>
+
+            <div class="couple-visual">
+                <div class="person">
+                    <div class="person-avatar connected">
+                        Y
+                        <span class="check">✓</span>
+                    </div>
+                    <div class="person-label">You</div>
+                    <div class="person-status ready">Connected!</div>
+                </div>
+                <div class="plus-sign">+</div>
+                <div class="person">
+                    <div class="person-avatar">
+                        T
+                        <span class="waiting">⏳</span>
+                    </div>
+                    <div class="person-label">Taija</div>
+                    <div class="person-status">Waiting...</div>
+                </div>
+            </div>
+
+            <div class="equals-row">
+                <span class="equals-sign">=</span>
+                <div class="combined-bubble">Up to +30 LP</div>
+            </div>
+        </div>
+
+        <div class="content">
+            <h1 class="title">Almost There!</h1>
+
+            <p class="description">
+                <strong>You're connected!</strong> Once Taija connects too, your steps will combine and you can start earning rewards together.
+            </p>
+
+            <div class="tiers-section">
+                <div class="tiers-heading">Reward Tiers</div>
+                <div class="tier-row">
+                    <span class="tier-steps">10,000 combined steps</span>
+                    <span class="tier-lp">+15 LP</span>
+                </div>
+                <div class="tier-row">
+                    <span class="tier-steps">14,000 combined steps</span>
+                    <span class="tier-lp">+21 LP</span>
+                </div>
+                <div class="tier-row">
+                    <span class="tier-steps">20,000 combined steps</span>
+                    <span class="tier-lp">+30 LP</span>
+                </div>
+            </div>
+
+            <div class="buttons">
+                <button class="btn-primary">Remind Taija</button>
+                <button class="btn-secondary">Done</button>
+            </div>
+
+            <div class="note">Your steps are being tracked in the meantime</div>
+        </div>
+    </div>
+</body>
+</html>

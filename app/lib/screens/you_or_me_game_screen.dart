@@ -14,10 +14,14 @@ import 'you_or_me_waiting_screen.dart';
 /// Editorial newspaper aesthetic with card stack and swipe animations
 class YouOrMeGameScreen extends StatefulWidget {
   final YouOrMeSession session;
+  final int initialQuestionIndex; // For resuming mid-game
+  final List<YouOrMeAnswer>? existingAnswers; // Pre-populated answers when resuming
 
   const YouOrMeGameScreen({
     super.key,
     required this.session,
+    this.initialQuestionIndex = 0,
+    this.existingAnswers,
   });
 
   @override
@@ -29,8 +33,8 @@ class _YouOrMeGameScreenState extends State<YouOrMeGameScreen>
   final StorageService _storage = StorageService();
   final YouOrMeService _service = YouOrMeService();
 
-  int _currentQuestionIndex = 0;
-  final List<YouOrMeAnswer> _answers = [];
+  late int _currentQuestionIndex;
+  late List<YouOrMeAnswer> _answers;
   bool _isSubmitting = false;
   bool _isAnimating = false;
 
@@ -53,6 +57,12 @@ class _YouOrMeGameScreenState extends State<YouOrMeGameScreen>
   @override
   void initState() {
     super.initState();
+
+    // Initialize with resume state if provided
+    _currentQuestionIndex = widget.initialQuestionIndex;
+    _answers = widget.existingAnswers != null
+        ? List<YouOrMeAnswer>.from(widget.existingAnswers!)
+        : [];
 
     _cardAnimationController = AnimationController(
       duration: const Duration(milliseconds: 300),
@@ -309,7 +319,10 @@ class _YouOrMeGameScreenState extends State<YouOrMeGameScreen>
                   title: 'You or Me',
                   counter: '${_currentQuestionIndex + 1} of ${widget.session.questions.length}',
                   progress: progress,
-                  onClose: () => Navigator.of(context).pop(),
+                  onClose: () {
+                    // Pop all the way back to home screen (skips intro)
+                    Navigator.of(context).popUntil((route) => route.isFirst);
+                  },
                 ),
 
                 // Content
