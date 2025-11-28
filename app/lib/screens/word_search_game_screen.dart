@@ -437,44 +437,96 @@ class _WordSearchGameScreenState extends State<WordSearchGameScreen>
       return const Center(child: CircularProgressIndicator());
     }
 
-    // Cooldown active - show friendly message
+    // Cooldown active - show friendly message with editorial serif style
     if (_isCooldownActive) {
       return Center(
         child: Padding(
-          padding: const EdgeInsets.all(32),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(Icons.timer_outlined, size: 64, color: BrandLoader().colors.textSecondary),
-              const SizedBox(height: 24),
-              Text(
-                'Come Back Tomorrow!',
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.w600,
+          padding: const EdgeInsets.symmetric(horizontal: 32),
+          child: Container(
+            padding: const EdgeInsets.all(32),
+            decoration: BoxDecoration(
+              color: BrandLoader().colors.surface,
+              border: Border.all(
+                color: BrandLoader().colors.textPrimary,
+                width: 2,
+              ),
+              boxShadow: [
+                BoxShadow(
+                  offset: const Offset(6, 6),
+                  color: BrandLoader().colors.textPrimary.withValues(alpha: 0.1),
+                ),
+              ],
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                // Decorative header line
+                Container(
+                  width: 60,
+                  height: 2,
                   color: BrandLoader().colors.textPrimary,
                 ),
-              ),
-              const SizedBox(height: 12),
-              Text(
-                'New puzzle available at midnight',
-                style: TextStyle(
-                  fontSize: 16,
+                const SizedBox(height: 24),
+                // Main title - serif uppercase
+                Text(
+                  'COME BACK',
+                  style: AppTheme.headlineFont.copyWith(
+                    fontSize: 32,
+                    fontWeight: FontWeight.w400,
+                    letterSpacing: 3,
+                    color: BrandLoader().colors.textPrimary,
+                  ),
+                ),
+                Text(
+                  'TOMORROW',
+                  style: AppTheme.headlineFont.copyWith(
+                    fontSize: 32,
+                    fontWeight: FontWeight.w400,
+                    letterSpacing: 3,
+                    color: BrandLoader().colors.textPrimary,
+                  ),
+                ),
+                const SizedBox(height: 16),
+                // Divider line
+                Container(
+                  width: 40,
+                  height: 1,
                   color: BrandLoader().colors.textSecondary,
                 ),
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 32),
-              ElevatedButton(
-                onPressed: () => Navigator.pop(context),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: BrandLoader().colors.textPrimary,
-                  foregroundColor: BrandLoader().colors.textOnPrimary,
-                  padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
+                const SizedBox(height: 16),
+                // Subtitle - italic serif
+                Text(
+                  'A new puzzle awaits at midnight',
+                  style: AppTheme.headlineFont.copyWith(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w400,
+                    fontStyle: FontStyle.italic,
+                    color: BrandLoader().colors.textSecondary,
+                  ),
+                  textAlign: TextAlign.center,
                 ),
-                child: const Text('BACK TO HOME'),
-              ),
-            ],
+                const SizedBox(height: 32),
+                // Button with editorial border style
+                GestureDetector(
+                  onTap: () => Navigator.pop(context),
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
+                    decoration: BoxDecoration(
+                      color: BrandLoader().colors.textPrimary,
+                    ),
+                    child: Text(
+                      'RETURN HOME',
+                      style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w600,
+                        letterSpacing: 2,
+                        color: BrandLoader().colors.textOnPrimary,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       );
