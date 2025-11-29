@@ -1,0 +1,67 @@
+{
+  "quizId": "quiz_005",
+  "title": "Spicy Quiz 5",
+  "branch": "spicy",
+  "questions": [
+    {
+      "id": "quiz_005_q1",
+      "text": "How often do I take breaks during work?",
+      "choices": [
+        "Frequent short breaks",
+        "Few longer breaks",
+        "Rarely",
+        "Only lunch",
+        "Other / It varies"
+      ],
+      "category": "daily_habits"
+    },
+    {
+      "id": "quiz_005_q2",
+      "text": "How often do I do laundry?",
+      "choices": [
+        "Weekly",
+        "Bi-weekly",
+        "When needed",
+        "Rarely",
+        "Other / It varies"
+      ],
+      "category": "daily_habits"
+    },
+    {
+      "id": "quiz_005_q3",
+      "text": "What's my before-bed routine?",
+      "choices": [
+        "Reading",
+        "Screen time",
+        "Skincare/hygiene",
+        "Meditation",
+        "Other / Something else"
+      ],
+      "category": "daily_habits"
+    },
+    {
+      "id": "quiz_005_q4",
+      "text": "Do I take vitamins or supplements?",
+      "choices": [
+        "Daily",
+        "Sometimes",
+        "Rarely",
+        "Never",
+        "Other / It varies"
+      ],
+      "category": "daily_habits"
+    },
+    {
+      "id": "quiz_005_q5",
+      "text": "What time do I usually go to bed on weekdays?",
+      "choices": [
+        "Before 10pm",
+        "10-11pm",
+        "11pm-midnight",
+        "After midnight",
+        "Other / It varies"
+      ],
+      "category": "daily_habits"
+    }
+  ]
+}

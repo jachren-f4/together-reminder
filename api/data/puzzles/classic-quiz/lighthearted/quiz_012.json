@@ -1,0 +1,61 @@
+{
+  "quizId": "quiz_012",
+  "title": "Lighthearted Quiz 12",
+  "branch": "lighthearted",
+  "questions": [
+    {
+      "id": "quiz_012_q1",
+      "text": "What's my favorite weather?",
+      "choices": [
+        "Sunny",
+        "Rainy",
+        "Snowy",
+        "Cloudy",
+        "Other / It varies"
+      ],
+      "category": "favorites"
+    },
+    {
+      "id": "quiz_012_q2",
+      "text": "What's my preferred gift type?",
+      "choices": [
+        "Practical",
+        "Sentimental",
+        "Experience",
+        "Surprise me",
+        "Other / It depends"
+      ],
+      "category": "preferences"
+    },
+    {
+      "id": "quiz_012_q3",
+      "text": "Would I rather: Movie night or Game night?",
+      "choices": [
+        "Movie night",
+        "Game night"
+      ],
+      "category": "would_you_rather"
+    },
+    {
+      "id": "quiz_012_q4",
+      "text": "Would I rather: Live without internet or Live without TV?",
+      "choices": [
+        "Without internet",
+        "Without TV"
+      ],
+      "category": "would_you_rather"
+    },
+    {
+      "id": "quiz_012_q5",
+      "text": "What's my favorite way to learn new things?",
+      "choices": [
+        "Reading",
+        "Videos",
+        "Hands-on practice",
+        "Classes",
+        "Other / Something else"
+      ],
+      "category": "favorites"
+    }
+  ]
+}

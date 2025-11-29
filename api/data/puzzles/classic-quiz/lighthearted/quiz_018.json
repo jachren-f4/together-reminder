@@ -1,0 +1,64 @@
+{
+  "quizId": "quiz_018",
+  "title": "Lighthearted Quiz 18",
+  "branch": "lighthearted",
+  "questions": [
+    {
+      "id": "quiz_018_q1",
+      "text": "What's my favorite style of clothing?",
+      "choices": [
+        "Casual",
+        "Sporty",
+        "Elegant",
+        "Trendy",
+        "Other / Something else"
+      ],
+      "category": "favorites"
+    },
+    {
+      "id": "quiz_018_q2",
+      "text": "Do I prefer routine or variety?",
+      "choices": [
+        "Strict routine",
+        "Mostly routine",
+        "Mostly variety",
+        "Constant change",
+        "Other / It depends"
+      ],
+      "category": "preferences"
+    },
+    {
+      "id": "quiz_018_q3",
+      "text": "What's my favorite way to relax?",
+      "choices": [
+        "Reading",
+        "Watching TV",
+        "Napping",
+        "Listening to music",
+        "Other / Something else"
+      ],
+      "category": "favorites"
+    },
+    {
+      "id": "quiz_018_q4",
+      "text": "What's my favorite pizza topping?",
+      "choices": [
+        "Pepperoni",
+        "Mushrooms",
+        "Olives",
+        "Extra cheese",
+        "Other / Something else"
+      ],
+      "category": "favorites"
+    },
+    {
+      "id": "quiz_018_q5",
+      "text": "Would I rather: Give a gift or Receive a gift?",
+      "choices": [
+        "Give a gift",
+        "Receive a gift"
+      ],
+      "category": "would_you_rather"
+    }
+  ]
+}

@@ -554,21 +554,65 @@ if (token == null) {
 
 **Affected file:** `lib/services/couple_pairing_service.dart` (fixed 2025-11-27)
 
-### 18. Leaderboard System
+### 18. Love Points - Single Source of Truth
 
-**Key constraint:** Both users in a couple have **identical LP** (shared pool). The trigger uses `NEW.total_points` directly - never sum both users' LP.
+**CRITICAL:** LP is stored at the **couple level** (`couples.total_lp`), NOT per-user. Both partners always see identical LP.
+
+**Architecture:**
+```
+couples.total_lp = 1160  ← SINGLE SOURCE OF TRUTH
+
+GET /love-points  → reads couples.total_lp (same for both users)
+awardLP()         → updates couples.total_lp atomically
+```
+
+**LP Award Sources:**
+
+| Activity | File | LP Amount |
+|----------|------|-----------|
+| Classic Quiz | `quiz-match/submit/route.ts` | 30 LP |
+| Affirmation Quiz | `quiz-match/submit/route.ts` | 30 LP |
+| You or Me | `you-or-me-match/submit/route.ts` | 30 LP |
+| Linked | `linked/submit/route.ts` | 30 LP |
+| Word Search | `word-search/submit/route.ts` | 30 LP |
+| Steps Together | `steps/route.ts` | 15-30 LP (dynamic) |
+
+**Maximum daily LP:** 165-180 LP
+
+**Shared awardLP utility** (`api/lib/lp/award.ts`):
+```typescript
+import { awardLP } from '@/lib/lp/award';
+
+// Inside game completion handler:
+await awardLP(coupleId, LP_REWARD, 'linked_complete', matchId);
+```
+
+**Files:**
+- Shared utility: `api/lib/lp/award.ts`
+- Migration: `api/supabase/migrations/025_lp_single_source.sql`
+- GET/POST LP: `api/app/api/sync/love-points/route.ts`
+
+**Why this matters:**
+- Old system stored LP per-user → could diverge (Jokke=240, TestiY=1160)
+- New system stores LP at couple level → always identical for both partners
+- Trigger on `couples.total_lp` updates leaderboard automatically
+
+### 19. Leaderboard System
+
+**Key constraint:** Leaderboard reads from `couples.total_lp` (couple-level LP).
 
 **Trigger debugging:** If leaderboard doesn't update when LP changes:
 1. Verify user is in `couples` table (most common issue)
-2. Check trigger exists: `SELECT tgname FROM pg_trigger WHERE tgrelid = 'user_love_points'::regclass;`
+2. Check trigger exists on `couples.total_lp`
 3. Test with hardcoded couple_id to isolate issue
 
 **Files:**
 - Migration: `api/supabase/migrations/016_leaderboard.sql`
+- LP trigger: `api/supabase/migrations/025_lp_single_source.sql`
 - API: `api/app/api/leaderboard/route.ts`, `api/app/api/user/country/route.ts`
 - Full guide: `docs/LEADERBOARD_SYSTEM.md`
 
-### 19. Animation & Sound System
+### 20. Animation & Sound System
 
 **Services:**
 - `lib/animations/animation_config.dart` - Timing constants, curves, scale factors
@@ -595,7 +639,7 @@ void didChangeDependencies() {
 
 **Settings Toggles:** Sound Effects and Haptic Feedback in Settings screen, stored via `StorageService`
 
-### 20. Branch Rotation for Linked and Word Search
+### 21. Branch Rotation for Linked and Word Search
 
 **Branch cycling:** Advances on puzzle completion (in submit routes).
 - Linked: casual (0) → romantic (1) → adult (2) → casual (0)
@@ -619,7 +663,7 @@ cd api && node scripts/generate_word_search.js all 20  # Regenerates ALL branche
 - Local: Set in `api/.env.local`
 - Vercel: `vercel env add PUZZLE_COOLDOWN_ENABLED production` (currently OFF for dev testing)
 
-### 21. Steps Together HealthKit Permission
+### 22. Steps Together HealthKit Permission
 
 **CRITICAL:** Never use `hasPermission()` for sync gating - iOS doesn't reliably report permission status.
 
@@ -961,4 +1005,4 @@ flutter build apk --debug
 
 ---
 
-**Last Updated:** 2025-11-28 (Removed Word Ladder and Memory Flip - updated QuestType indices)
+**Last Updated:** 2025-11-29 (Added LP Single Source of Truth documentation - couples.total_lp)

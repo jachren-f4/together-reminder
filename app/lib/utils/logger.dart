@@ -47,16 +47,16 @@ class Logger {
     'lovepoint': false,         // Love Points awards, tier progression (11 uses)
 
     // === MAJOR FEATURES (Enable when working on these features) ===
-    'quiz': true,               // Classic quiz gameplay, scoring, sync (36 uses) - ENABLED for debugging
-    'you_or_me': true,          // You or Me dual-session game (32 uses) - ENABLED for Phase 5 debugging
-    'pairing': false,           // QR/Remote device pairing (19 uses - stable, rarely needed)
+    'quiz': true,               // Classic quiz gameplay, scoring, sync (36 uses)
+    'you_or_me': true,          // You or Me dual-session game (32 uses)
+    'pairing': false,           // QR/Remote device pairing (19 uses)
 
     // === MINOR FEATURES (Enable only when developing specific feature) ===
     'reminder': false,          // Send reminder functionality (9 uses)
-    'poke': true,               // Poke send/receive interactions (7 uses) - ENABLED for Phase 3 dual-write testing
+    'poke': false,              // Poke send/receive interactions (7 uses)
     'daily_pulse': false,       // Daily Pulse synchronized activities (14 uses)
     'affirmation': false,       // Affirmation quiz variant (5 uses)
-    'quest': true,              // Daily quest sync, generation, completion, Firebase operations (47 uses) - ENABLED for Phase 5 debugging
+    'quest': true,              // Daily quest sync, generation, completion, Firebase operations (47 uses)
 
     // === INFRASTRUCTURE/DEBUG (Rarely needed - only for deep debugging) ===
     'debug': false,             // Debug menu operations, device detection (38 uses)
@@ -64,11 +64,11 @@ class Logger {
     'word_validation': false,   // Word dictionary initialization (2 uses)
     'home': false,              // Home screen operations (1 use)
     'arena': false,             // Arena/tier system (1 use)
-    'navigation': true,         // Quest navigation service - ENABLED for debugging
-    'leaderboard': true,        // Leaderboard API calls and caching - ENABLED for testing
-    'country': true,            // Country detection and updates - ENABLED for testing
-    'sound': true,              // Sound playback - ENABLED for debugging
-    'steps': true,              // Steps Together feature - ENABLED for debugging
+    'navigation': false,        // Quest navigation service
+    'leaderboard': false,       // Leaderboard API calls and caching
+    'country': false,           // Country detection and updates
+    'sound': false,             // Sound playback
+    'steps': false,             // Steps Together feature
   };
 
   /// Log debug information (only in debug mode)

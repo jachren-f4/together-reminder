@@ -30,7 +30,6 @@ import 'package:togetherremind/config/supabase_config.dart';
 import 'package:togetherremind/config/brand/brand_loader.dart';
 import 'package:togetherremind/theme/app_theme.dart';
 import 'package:togetherremind/utils/logger.dart';
-import 'package:togetherremind/models/quest_type_config.dart';
 import 'package:togetherremind/widgets/auth_wrapper.dart';
 
 void main() async {
@@ -58,9 +57,6 @@ void main() async {
       rethrow;
     }
   }
-
-  // Register quest type configurations
-  QuestTypeConfigRegistry.registerDefaults();
 
   // Initialize Hive storage
   await StorageService.init();

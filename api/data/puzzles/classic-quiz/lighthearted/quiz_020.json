@@ -1,0 +1,64 @@
+{
+  "quizId": "quiz_020",
+  "title": "Lighthearted Quiz 20",
+  "branch": "lighthearted",
+  "questions": [
+    {
+      "id": "quiz_020_q1",
+      "text": "Would I rather: Plan everything or Be spontaneous?",
+      "choices": [
+        "Plan everything",
+        "Be spontaneous"
+      ],
+      "category": "would_you_rather"
+    },
+    {
+      "id": "quiz_020_q2",
+      "text": "What's my favorite comfort food?",
+      "choices": [
+        "Mac and cheese",
+        "Soup",
+        "Pizza",
+        "Ice cream",
+        "Other / Something else"
+      ],
+      "category": "favorites"
+    },
+    {
+      "id": "quiz_020_q3",
+      "text": "What's my favorite candy or chocolate?",
+      "choices": [
+        "Dark chocolate",
+        "Milk chocolate",
+        "Gummy bears",
+        "Sour candy",
+        "Other / Something else"
+      ],
+      "category": "favorites"
+    },
+    {
+      "id": "quiz_020_q4",
+      "text": "How do I handle stress?",
+      "choices": [
+        "Talk it out",
+        "Need alone time",
+        "Exercise",
+        "Sleep it off",
+        "Other / It depends"
+      ],
+      "category": "preferences"
+    },
+    {
+      "id": "quiz_020_q5",
+      "text": "How do I like to be cheered up?",
+      "choices": [
+        "Humor",
+        "Affection",
+        "Alone time",
+        "Distraction",
+        "Other / It depends"
+      ],
+      "category": "preferences"
+    }
+  ]
+}

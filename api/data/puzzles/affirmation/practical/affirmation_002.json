@@ -1,0 +1,69 @@
+{
+  "quizId": "affirmation_002",
+  "title": "Getting Comfortable",
+  "category": "trust",
+  "branch": "practical",
+  "description": "Rate your feelings together",
+  "questions": [
+    {
+      "id": "affirmation_002_q1",
+      "text": "I feel at ease expressing basic preferences.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ]
+    },
+    {
+      "id": "affirmation_002_q2",
+      "text": "We can relax in silence together.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ]
+    },
+    {
+      "id": "affirmation_002_q3",
+      "text": "We're good at making each other comfortable.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ]
+    },
+    {
+      "id": "affirmation_002_q4",
+      "text": "We navigate small decisions without difficulty.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ]
+    },
+    {
+      "id": "affirmation_002_q5",
+      "text": "I feel accepted as I am.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ]
+    }
+  ]
+}

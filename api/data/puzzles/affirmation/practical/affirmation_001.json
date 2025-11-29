@@ -1,0 +1,69 @@
+{
+  "quizId": "affirmation_001",
+  "title": "Gentle Beginnings",
+  "category": "trust",
+  "branch": "practical",
+  "description": "Rate your feelings together",
+  "questions": [
+    {
+      "id": "affirmation_001_q1",
+      "text": "I enjoy learning small new things about my partner every day.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ]
+    },
+    {
+      "id": "affirmation_001_q2",
+      "text": "We find simple ways to have fun together.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ]
+    },
+    {
+      "id": "affirmation_001_q3",
+      "text": "I feel comfortable being myself around my partner.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ]
+    },
+    {
+      "id": "affirmation_001_q4",
+      "text": "We laugh together without effort.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ]
+    },
+    {
+      "id": "affirmation_001_q5",
+      "text": "Being with my partner feels natural and relaxed.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ]
+    }
+  ]
+}

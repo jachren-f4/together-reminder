@@ -1,0 +1,67 @@
+{
+  "quizId": "quiz_009",
+  "title": "Deep Quiz 9",
+  "branch": "deep",
+  "questions": [
+    {
+      "id": "quiz_009_q1",
+      "text": "Where do I see us in 5 years?",
+      "choices": [
+        "Same place, growing",
+        "New city",
+        "Big changes",
+        "Building together",
+        "Other / Something else"
+      ],
+      "category": "future"
+    },
+    {
+      "id": "quiz_009_q2",
+      "text": "What's my biggest personal growth goal?",
+      "choices": [
+        "Confidence",
+        "Health",
+        "Skills",
+        "Relationships",
+        "Other / Something else"
+      ],
+      "category": "future"
+    },
+    {
+      "id": "quiz_009_q3",
+      "text": "What's a skill I want to master?",
+      "choices": [
+        "Cooking",
+        "Art/craft",
+        "Technology",
+        "Physical skill",
+        "Other / Something else"
+      ],
+      "category": "future"
+    },
+    {
+      "id": "quiz_009_q4",
+      "text": "What do I want our legacy to be?",
+      "choices": [
+        "Strong family",
+        "Adventures together",
+        "Impact on others",
+        "Living fully",
+        "Other / Something else"
+      ],
+      "category": "future"
+    },
+    {
+      "id": "quiz_009_q5",
+      "text": "What's my ideal Friday 20 years from now?",
+      "choices": [
+        "Still working passionately",
+        "Retired and relaxed",
+        "Traveling",
+        "Family time",
+        "Other / Something else"
+      ],
+      "category": "future"
+    }
+  ]
+}

@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Onboarding - Minimalist Typewriter</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            background: #e8e5df;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .screens-container {
+            display: flex;
+            gap: 40px;
+            flex-wrap: wrap;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .screen {
+            width: 375px;
+            height: 812px;
+            background: #faf9f6;
+            border: 1px solid #333;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .screen-label {
+            position: absolute;
+            top: -30px;
+            left: 0;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #666;
+        }
+
+        .screen-wrapper {
+            position: relative;
+            padding-top: 40px;
+        }
+
+        /* Minimalist styles */
+        .page {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            padding: 60px 40px;
+        }
+
+        .page-number {
+            font-size: 11px;
+            letter-spacing: 3px;
+            color: #999;
+            margin-bottom: 60px;
+        }
+
+        .page-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .big-type {
+            font-size: 48px;
+            font-weight: 400;
+            line-height: 1.1;
+            letter-spacing: -1px;
+            margin-bottom: 24px;
+        }
+
+        .small-type {
+            font-size: 16px;
+            line-height: 1.6;
+            color: #555;
+            margin-bottom: 40px;
+        }
+
+        .mono-type {
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            letter-spacing: 1px;
+        }
+
+        .spacer {
+            flex: 1;
+        }
+
+        .action-area {
+            margin-top: auto;
+        }
+
+        .big-btn {
+            width: 100%;
+            padding: 20px;
+            background: #1a1a1a;
+            color: #faf9f6;
+            border: none;
+            font-family: 'Georgia', serif;
+            font-size: 14px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            cursor: pointer;
+        }
+
+        .small-link {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+            font-size: 13px;
+            color: #888;
+        }
+
+        .small-link a {
+            color: #333;
+        }
+
+        /* Form elements */
+        .form-section {
+            margin-bottom: 40px;
+        }
+
+        .label-text {
+            font-size: 10px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: #888;
+            margin-bottom: 12px;
+        }
+
+        .clean-input {
+            width: 100%;
+            padding: 16px 0;
+            border: none;
+            border-bottom: 1px solid #333;
+            font-family: 'Georgia', serif;
+            font-size: 20px;
+            background: transparent;
+        }
+
+        .clean-input:focus {
+            outline: none;
+            border-bottom-width: 2px;
+        }
+
+        .clean-input::placeholder {
+            color: #ccc;
+        }
+
+        .note-box {
+            padding: 20px;
+            background: #f0efeb;
+            margin-top: 24px;
+        }
+
+        .note-title {
+            font-size: 11px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+            color: #666;
+        }
+
+        .note-text {
+            font-size: 14px;
+            color: #555;
+            line-height: 1.6;
+        }
+
+        /* OTP specific */
+        .otp-grid {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+            margin: 40px 0;
+        }
+
+        .otp-cell {
+            width: 36px;
+            height: 44px;
+            border-bottom: 2px solid #333;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            padding-bottom: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        .otp-cell.empty {
+            border-bottom-color: #ccc;
+        }
+
+        .center-text {
+            text-align: center;
+        }
+
+        .link-text {
+            font-size: 13px;
+            color: #888;
+        }
+
+        .link-text a {
+            color: #333;
+            text-decoration: underline;
+        }
+
+        /* Pairing specific */
+        .tab-nav {
+            display: flex;
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+
+        .tab-link {
+            font-size: 12px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: #999;
+            cursor: pointer;
+            padding-bottom: 8px;
+        }
+
+        .tab-link.active {
+            color: #333;
+            border-bottom: 2px solid #333;
+        }
+
+        .qr-box {
+            width: 180px;
+            height: 180px;
+            margin: 0 auto 24px;
+            border: 1px solid #333;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .qr-pattern {
+            width: 150px;
+            height: 150px;
+            background:
+                linear-gradient(45deg, #333 25%, transparent 25%),
+                linear-gradient(-45deg, #333 25%, transparent 25%),
+                linear-gradient(45deg, transparent 75%, #333 75%),
+                linear-gradient(-45deg, transparent 75%, #333 75%);
+            background-size: 15px 15px;
+            background-position: 0 0, 0 7.5px, 7.5px -7.5px, -7.5px 0px;
+        }
+
+        .caption {
+            text-align: center;
+            font-size: 14px;
+            color: #666;
+            font-style: italic;
+        }
+
+        .divider-row {
+            display: flex;
+            align-items: center;
+            margin: 30px 0;
+        }
+
+        .divider-line {
+            flex: 1;
+            height: 1px;
+            background: #ddd;
+        }
+
+        .divider-word {
+            padding: 0 16px;
+            font-size: 11px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: #999;
+        }
+
+        .outline-btn {
+            width: 100%;
+            padding: 16px;
+            background: transparent;
+            border: 1px solid #333;
+            font-family: 'Georgia', serif;
+            font-size: 13px;
+            letter-spacing: 1px;
+            cursor: pointer;
+        }
+
+        /* Remote code */
+        .code-display {
+            text-align: center;
+            margin: 30px 0;
+        }
+
+        .code-label {
+            font-size: 10px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: #888;
+            margin-bottom: 12px;
+        }
+
+        .code-value {
+            font-family: 'Courier New', monospace;
+            font-size: 40px;
+            font-weight: 400;
+            letter-spacing: 8px;
+        }
+
+        .code-expiry {
+            font-size: 12px;
+            color: #888;
+            margin-top: 12px;
+            font-style: italic;
+        }
+
+        .btn-row {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .btn-row .outline-btn {
+            flex: 1;
+        }
+
+        /* Welcome icon */
+        .welcome-icon {
+            font-size: 64px;
+            margin-bottom: 32px;
+            filter: grayscale(100%);
+        }
+    </style>
+</head>
+<body>
+    <h1 style="text-align: center; font-size: 24px; margin-bottom: 40px; letter-spacing: 2px; text-transform: uppercase;">Variant 3: Minimalist Typewriter</h1>
+
+    <div class="screens-container">
+        <!-- Welcome Screen -->
+        <div class="screen-wrapper">
+            <div class="screen-label">1. Welcome</div>
+            <div class="screen">
+                <div class="page">
+                    <div class="page-number">001</div>
+                    <div class="page-content">
+                        <div class="welcome-icon">💕</div>
+                        <h1 class="big-type">Together<br>Remind</h1>
+                        <p class="small-type">Send caring reminders<br>to your partner</p>
+                        <div class="spacer"></div>
+                        <div class="action-area">
+                            <button class="big-btn">Get Started</button>
+                            <p class="small-link">Already have an account? <a href="#">Sign in</a></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Name Screen -->
+        <div class="screen-wrapper">
+            <div class="screen-label">2. Name Entry</div>
+            <div class="screen">
+                <div class="page">
+                    <div class="page-number">002 — Step 1 of 3</div>
+                    <div class="page-content">
+                        <h1 class="big-type">Your<br>Name</h1>
+                        <p class="small-type">How should your partner see you?</p>
+                        <div class="form-section">
+                            <div class="label-text">Enter Name</div>
+                            <input type="text" class="clean-input" placeholder="First name">
+                        </div>
+                        <div class="spacer"></div>
+                        <div class="action-area">
+                            <button class="big-btn">Continue</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Auth Screen -->
+        <div class="screen-wrapper">
+            <div class="screen-label">3. Email Auth</div>
+            <div class="screen">
+                <div class="page">
+                    <div class="page-number">003 — Step 2 of 3</div>
+                    <div class="page-content">
+                        <h1 class="big-type">Your<br>Email</h1>
+                        <p class="small-type">We'll send you a secure code</p>
+                        <div class="form-section">
+                            <div class="label-text">Email Address</div>
+                            <input type="email" class="clean-input" placeholder="you@example.com">
+                        </div>
+                        <div class="note-box">
+                            <div class="note-title">Note</div>
+                            <div class="note-text">No password needed. We use a magic code system.</div>
+                        </div>
+                        <div class="spacer"></div>
+                        <div class="action-area">
+                            <button class="big-btn">Send Code</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- OTP Screen -->
+        <div class="screen-wrapper">
+            <div class="screen-label">4. OTP Verification</div>
+            <div class="screen">
+                <div class="page">
+                    <div class="page-number">004 — Verification</div>
+                    <div class="page-content">
+                        <h1 class="big-type">Check<br>Email</h1>
+                        <p class="small-type center-text">Enter the 8-digit code sent to<br><strong class="mono-type">you@example.com</strong></p>
+                        <div class="otp-grid">
+                            <div class="otp-cell">4</div>
+                            <div class="otp-cell">7</div>
+                            <div class="otp-cell">2</div>
+                            <div class="otp-cell">9</div>
+                            <div class="otp-cell empty"></div>
+                            <div class="otp-cell empty"></div>
+                            <div class="otp-cell empty"></div>
+                            <div class="otp-cell empty"></div>
+                        </div>
+                        <p class="center-text link-text">Didn't receive it? <a href="#">Resend</a></p>
+                        <div class="spacer"></div>
+                        <div class="action-area">
+                            <button class="big-btn">Verify</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pairing Screen - In Person -->
+        <div class="screen-wrapper">
+            <div class="screen-label">5. Pairing (QR)</div>
+            <div class="screen">
+                <div class="page">
+                    <div class="page-number">005 — Step 3 of 3</div>
+                    <div class="page-content">
+                        <h1 class="big-type">Connect</h1>
+                        <div class="tab-nav">
+                            <span class="tab-link active">In Person</span>
+                            <span class="tab-link">Remote</span>
+                        </div>
+                        <div class="qr-box">
+                            <div class="qr-pattern"></div>
+                        </div>
+                        <p class="caption">Have your partner scan this</p>
+                        <div class="divider-row">
+                            <div class="divider-line"></div>
+                            <span class="divider-word">or</span>
+                            <div class="divider-line"></div>
+                        </div>
+                        <button class="outline-btn">Scan Their Code</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pairing Screen - Remote -->
+        <div class="screen-wrapper">
+            <div class="screen-label">5b. Pairing (Remote)</div>
+            <div class="screen">
+                <div class="page">
+                    <div class="page-number">005 — Step 3 of 3</div>
+                    <div class="page-content">
+                        <h1 class="big-type">Connect</h1>
+                        <div class="tab-nav">
+                            <span class="tab-link">In Person</span>
+                            <span class="tab-link active">Remote</span>
+                        </div>
+                        <div class="code-display">
+                            <div class="code-label">Your Code</div>
+                            <div class="code-value">A7X2K9</div>
+                            <div class="code-expiry">Expires in 23:45:12</div>
+                        </div>
+                        <div class="btn-row">
+                            <button class="outline-btn">Copy</button>
+                            <button class="outline-btn">Share</button>
+                        </div>
+                        <div class="divider-row">
+                            <div class="divider-line"></div>
+                            <span class="divider-word">or</span>
+                            <div class="divider-line"></div>
+                        </div>
+                        <button class="outline-btn">Enter Their Code</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

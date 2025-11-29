@@ -24,7 +24,8 @@ android {
     defaultConfig {
         // Application ID is set per flavor below
         applicationId = "com.togetherremind.togetherremind"
-        minSdk = flutter.minSdkVersion
+        // health plugin requires minSdk 26 (Android 8.0 Oreo)
+        minSdk = 26
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName

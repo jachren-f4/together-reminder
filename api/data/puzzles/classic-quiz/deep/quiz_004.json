@@ -1,0 +1,67 @@
+{
+  "quizId": "quiz_004",
+  "title": "Deep Quiz 4",
+  "branch": "deep",
+  "questions": [
+    {
+      "id": "quiz_004_q1",
+      "text": "Do I want to mentor or teach others?",
+      "choices": [
+        "Yes, definitely",
+        "Maybe",
+        "Probably not",
+        "Never",
+        "Other / Undecided"
+      ],
+      "category": "future"
+    },
+    {
+      "id": "quiz_004_q2",
+      "text": "What's my biggest dream?",
+      "choices": [
+        "Career success",
+        "Family",
+        "Travel",
+        "Personal growth",
+        "Other / Something else"
+      ],
+      "category": "future"
+    },
+    {
+      "id": "quiz_004_q3",
+      "text": "What's our favorite shared memory?",
+      "choices": [
+        "Vacation",
+        "First date",
+        "Holiday",
+        "Random moment",
+        "Other / Something else"
+      ],
+      "category": "memories"
+    },
+    {
+      "id": "quiz_004_q4",
+      "text": "What's important to me in our future?",
+      "choices": [
+        "Financial stability",
+        "Adventure",
+        "Family",
+        "Personal growth",
+        "Other / Something else"
+      ],
+      "category": "future"
+    },
+    {
+      "id": "quiz_004_q5",
+      "text": "What do I want to learn?",
+      "choices": [
+        "New language",
+        "Musical instrument",
+        "Sport",
+        "Creative skill",
+        "Other / Something else"
+      ],
+      "category": "future"
+    }
+  ]
+}

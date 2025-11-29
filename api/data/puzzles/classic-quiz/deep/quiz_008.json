@@ -1,0 +1,67 @@
+{
+  "quizId": "quiz_008",
+  "title": "Deep Quiz 8",
+  "branch": "deep",
+  "questions": [
+    {
+      "id": "quiz_008_q1",
+      "text": "What's my dream hobby to pursue?",
+      "choices": [
+        "Art/creative",
+        "Sports/fitness",
+        "Music",
+        "Collecting",
+        "Other / Something else"
+      ],
+      "category": "future"
+    },
+    {
+      "id": "quiz_008_q2",
+      "text": "What's my dream car?",
+      "choices": [
+        "Luxury",
+        "Sports",
+        "SUV",
+        "Electric",
+        "Other / Something else"
+      ],
+      "category": "future"
+    },
+    {
+      "id": "quiz_008_q3",
+      "text": "What was our first trip together?",
+      "choices": [
+        "Beach",
+        "Mountains",
+        "City",
+        "Road trip",
+        "Other place"
+      ],
+      "category": "memories"
+    },
+    {
+      "id": "quiz_008_q4",
+      "text": "What's my retirement dream?",
+      "choices": [
+        "Beach house",
+        "Mountain cabin",
+        "Travel the world",
+        "Stay close to family",
+        "Other / Something else"
+      ],
+      "category": "future"
+    },
+    {
+      "id": "quiz_008_q5",
+      "text": "Do I want to learn another language?",
+      "choices": [
+        "Spanish",
+        "French",
+        "Mandarin",
+        "Other language",
+        "No / Undecided"
+      ],
+      "category": "future"
+    }
+  ]
+}

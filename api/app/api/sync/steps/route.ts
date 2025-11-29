@@ -1,5 +1,6 @@
 import { withAuthOrDevBypass } from '@/lib/auth/dev-middleware';
 import { query } from '@/lib/db/pool';
+import { awardLP } from '@/lib/lp/award';
 import { NextResponse } from 'next/server';
 
 /**
@@ -127,6 +128,9 @@ async function handleClaimSync(
        VALUES ($1, $2, $3, $4, $5)`,
       [coupleId, dateKey, combinedSteps, lpEarned, userId]
     );
+
+    // Award LP to the couple for claiming steps reward
+    await awardLP(coupleId, lpEarned, 'steps_claim', dateKey);
 
     return NextResponse.json({ success: true, operation: 'claim', alreadyClaimed: false });
   } catch (error: unknown) {

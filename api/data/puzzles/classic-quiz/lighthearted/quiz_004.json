@@ -1,0 +1,67 @@
+{
+  "quizId": "quiz_004",
+  "title": "Lighthearted Quiz 4",
+  "branch": "lighthearted",
+  "questions": [
+    {
+      "id": "quiz_004_q1",
+      "text": "What's my favorite fruit?",
+      "choices": [
+        "Apple",
+        "Banana",
+        "Strawberry",
+        "Orange",
+        "Other / Something else"
+      ],
+      "category": "favorites"
+    },
+    {
+      "id": "quiz_004_q2",
+      "text": "What's my favorite drink?",
+      "choices": [
+        "Coffee",
+        "Tea",
+        "Juice",
+        "Soda",
+        "Other / Something else"
+      ],
+      "category": "favorites"
+    },
+    {
+      "id": "quiz_004_q3",
+      "text": "What's my ideal Friday night?",
+      "choices": [
+        "Going out",
+        "Staying in",
+        "Dinner with friends",
+        "Quiet evening",
+        "Other / It depends"
+      ],
+      "category": "preferences"
+    },
+    {
+      "id": "quiz_004_q4",
+      "text": "What's my risk tolerance?",
+      "choices": [
+        "Very cautious",
+        "Somewhat cautious",
+        "Balanced",
+        "Risk-taker",
+        "Other / It depends"
+      ],
+      "category": "preferences"
+    },
+    {
+      "id": "quiz_004_q5",
+      "text": "Do I prefer saving or spending money?",
+      "choices": [
+        "Strict saver",
+        "Mostly save",
+        "Balanced",
+        "Enjoy spending",
+        "Other / It depends"
+      ],
+      "category": "preferences"
+    }
+  ]
+}

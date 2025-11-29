@@ -7,6 +7,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { withAuthOrDevBypass } from '@/lib/auth/dev-middleware';
 import { query, getClient } from '@/lib/db/pool';
+import { awardLP } from '@/lib/lp/award';
 import { readFileSync } from 'fs';
 import { join } from 'path';
 
@@ -20,6 +21,9 @@ const DIRECTION_DELTAS: Record<string, number> = {
 
 // Points per letter in word
 const POINTS_PER_LETTER = 10;
+
+// LP reward for completing a Word Search puzzle
+const LP_REWARD = 30;
 
 // Load puzzle data from branch-specific path (including word positions for validation)
 function loadPuzzle(puzzleId: string, branch?: string): any {
@@ -251,6 +255,9 @@ export const POST = withAuthOrDevBypass(async (req, userId, email) => {
         winnerId = user2_id;
       }
       // If tied, winnerId stays null
+
+      // Award LP to the couple for completing the puzzle
+      await awardLP(coupleId, LP_REWARD, 'word_search_complete', matchId);
 
       // Advance branch progression for Word Search activity
       // This makes the next puzzle come from the next branch (everyday -> passionate -> naughty -> everyday)

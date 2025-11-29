@@ -1,0 +1,64 @@
+{
+  "quizId": "quiz_003",
+  "title": "Lighthearted Quiz 3",
+  "branch": "lighthearted",
+  "questions": [
+    {
+      "id": "quiz_003_q1",
+      "text": "How do I show love?",
+      "choices": [
+        "Words",
+        "Actions",
+        "Gifts",
+        "Time together",
+        "Other / Something else"
+      ],
+      "category": "preferences"
+    },
+    {
+      "id": "quiz_003_q2",
+      "text": "What's my ideal work environment?",
+      "choices": [
+        "Office",
+        "Remote",
+        "Hybrid",
+        "Co-working space",
+        "Other / Something else"
+      ],
+      "category": "preferences"
+    },
+    {
+      "id": "quiz_003_q3",
+      "text": "Do I prefer email or instant messaging?",
+      "choices": [
+        "Email",
+        "Instant messaging",
+        "Both",
+        "Neither",
+        "Other / It depends"
+      ],
+      "category": "preferences"
+    },
+    {
+      "id": "quiz_003_q4",
+      "text": "Would I rather: Summer heat or Winter cold?",
+      "choices": [
+        "Summer heat",
+        "Winter cold"
+      ],
+      "category": "would_you_rather"
+    },
+    {
+      "id": "quiz_003_q5",
+      "text": "What's my favorite ice cream flavor?",
+      "choices": [
+        "Vanilla",
+        "Chocolate",
+        "Strawberry",
+        "Cookie dough",
+        "Other / Something else"
+      ],
+      "category": "favorites"
+    }
+  ]
+}

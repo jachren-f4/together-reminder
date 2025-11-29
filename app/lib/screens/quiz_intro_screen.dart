@@ -1,20 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
-import '../services/quiz_service.dart';
 import '../services/storage_service.dart';
 import '../services/branch_manifest_service.dart';
-import '../models/quiz_session.dart';
+import '../services/quiz_match_service.dart';
 import '../models/branch_progression_state.dart';
 import '../widgets/editorial/editorial.dart';
 import '../config/brand/brand_loader.dart';
-import 'quiz_question_screen.dart';
-import 'quiz_waiting_screen.dart';
+import 'quiz_match_game_screen.dart';
 
+/// Intro screen for Classic Quiz (server-centric architecture)
+///
+/// Editorial newspaper aesthetic with animated content.
+/// Does NOT require a pre-loaded session - the game screen fetches
+/// from the API when user taps "Begin Quiz".
 class QuizIntroScreen extends StatefulWidget {
-  final QuizSession? session;
   final String? branch; // Branch for manifest video lookup
+  final String? questId; // Optional: Daily quest ID for updating local status
 
-  const QuizIntroScreen({super.key, this.session, this.branch});
+  const QuizIntroScreen({super.key, this.branch, this.questId});
 
   @override
   State<QuizIntroScreen> createState() => _QuizIntroScreenState();
@@ -22,10 +25,11 @@ class QuizIntroScreen extends StatefulWidget {
 
 class _QuizIntroScreenState extends State<QuizIntroScreen>
     with TickerProviderStateMixin {
-  final QuizService _quizService = QuizService();
   final StorageService _storage = StorageService();
-  bool _isLoading = false;
-  String? _error;
+
+  // Partner status for banner
+  bool _partnerCompleted = false;
+  String? _partnerName;
 
   // Video player state
   VideoPlayerController? _videoController;
@@ -106,13 +110,32 @@ class _QuizIntroScreenState extends State<QuizIntroScreen>
     );
 
     _initializeVideo();
-    _checkActiveSession();
+    _checkPartnerStatus();
 
     // Start content animation immediately (don't wait for video)
     // Video is a visual enhancement, not a blocker
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _startContentAnimation();
     });
+  }
+
+  /// Check if partner has already completed this quiz
+  Future<void> _checkPartnerStatus() async {
+    try {
+      final service = QuizMatchService();
+      final gameState = await service.getOrCreateMatch('classic');
+
+      if (mounted) {
+        setState(() {
+          // Only show partner status if match is active (not completed)
+          // and partner has actually answered
+          _partnerCompleted = !gameState.isCompleted && gameState.hasPartnerAnswered;
+          _partnerName = _storage.getPartner()?.name;
+        });
+      }
+    } catch (e) {
+      // Silently fail - banner is optional enhancement
+    }
   }
 
   Future<void> _initializeVideo() async {
@@ -204,76 +227,20 @@ class _QuizIntroScreenState extends State<QuizIntroScreen>
     super.dispose();
   }
 
-  void _checkActiveSession() {
-    // If session is passed explicitly (from quest card), show the intro screen
-    // Only auto-redirect if user has already answered (go to waiting)
-    // Don't auto-redirect to questions - let user see the intro first
-
-    if (widget.session != null) {
-      // Session passed from navigation - check if user already answered
-      final user = _storage.getUser();
-      if (user != null && widget.session!.hasUserAnswered(user.id)) {
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          Navigator.of(context).pushReplacement(
-            MaterialPageRoute(
-              builder: (context) => QuizWaitingScreen(session: widget.session!),
-            ),
-          );
-        });
-      }
-      // Otherwise, show the intro screen (don't redirect)
-      return;
-    }
-
-    // No session passed - check for active session (legacy path from activities)
-    final activeSession = _quizService.getActiveSession();
-    if (activeSession != null) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        final user = _storage.getUser();
-        if (user != null && activeSession.hasUserAnswered(user.id)) {
-          Navigator.of(context).pushReplacement(
-            MaterialPageRoute(
-              builder: (context) => QuizWaitingScreen(session: activeSession),
-            ),
-          );
-        } else {
-          Navigator.of(context).pushReplacement(
-            MaterialPageRoute(
-              builder: (context) => QuizQuestionScreen(session: activeSession),
-            ),
-          );
-        }
-      });
-    }
-  }
-
-  Future<void> _startQuiz() async {
-    setState(() {
-      _isLoading = true;
-      _error = null;
-    });
-
-    try {
-      final session = widget.session ?? await _quizService.startQuizSession();
-
-      if (!mounted) return;
-
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(
-          builder: (context) => QuizQuestionScreen(session: session),
+  void _startQuiz() {
+    // Navigate to server-centric game screen
+    Navigator.of(context).pushReplacement(
+      MaterialPageRoute(
+        builder: (context) => QuizMatchGameScreen(
+          quizType: 'classic',
+          questId: widget.questId,
         ),
-      );
-    } catch (e) {
-      setState(() {
-        _error = e.toString().replaceAll('Exception: ', '');
-        _isLoading = false;
-      });
-    }
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    final completedSessions = _quizService.getCompletedSessions();
     final partnerName = _storage.getPartner()?.name ?? 'your partner';
 
     return Scaffold(
@@ -283,6 +250,9 @@ class _QuizIntroScreenState extends State<QuizIntroScreen>
           children: [
             // Header (fixed at top)
             _buildHeader(),
+
+            // Partner status banner (shows if partner already completed)
+            _buildPartnerStatusBanner(),
 
             // Scrollable content (includes hero)
             Expanded(
@@ -313,7 +283,7 @@ class _QuizIntroScreenState extends State<QuizIntroScreen>
                           _animatedContent(
                             _titleAnimation,
                             Text(
-                              widget.session?.category ?? 'Couple Quiz',
+                              'Couple Quiz',
                               style: EditorialStyles.headline,
                             ),
                           ),
@@ -332,9 +302,9 @@ class _QuizIntroScreenState extends State<QuizIntroScreen>
                           // Stats card (animated)
                           _animatedContent(
                             _statsAnimation,
-                            EditorialStatsCard(
+                            const EditorialStatsCard(
                               rows: [
-                                ('Questions', '${widget.session?.questionIds.length ?? 5}'),
+                                ('Questions', '5'),
                                 ('Time', '~3 minutes'),
                                 ('Reward', '+30 LP'),
                               ],
@@ -359,29 +329,6 @@ class _QuizIntroScreenState extends State<QuizIntroScreen>
                               ],
                             ),
                           ),
-
-                          // Previous stats (if any)
-                          if (completedSessions.isNotEmpty) ...[
-                            const SizedBox(height: 32),
-                            _buildPreviousStats(completedSessions),
-                          ],
-
-                          // Error message
-                          if (_error != null) ...[
-                            const SizedBox(height: 24),
-                            Container(
-                              padding: const EdgeInsets.all(12),
-                              decoration: BoxDecoration(
-                                color: BrandLoader().colors.error.withValues(alpha: 0.1),
-                                border: Border.all(color: BrandLoader().colors.error),
-                              ),
-                              child: Text(
-                                _error!,
-                                style: TextStyle(color: BrandLoader().colors.error),
-                                textAlign: TextAlign.center,
-                              ),
-                            ),
-                          ],
                         ],
                       ),
                     ),
@@ -532,46 +479,49 @@ class _QuizIntroScreenState extends State<QuizIntroScreen>
     );
   }
 
-  Widget _buildPreviousStats(List<QuizSession> completedSessions) {
-    final avgMatch = _quizService.getAverageMatchPercentage();
+  Widget _buildPartnerStatusBanner() {
+    if (!_partnerCompleted || _partnerName == null) {
+      return const SizedBox.shrink();
+    }
 
-    return EditorialCard(
-      hasShadow: false,
-      padding: const EdgeInsets.all(16),
-      child: Column(
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+      decoration: BoxDecoration(
+        color: EditorialStyles.paper,
+        border: Border(bottom: EditorialStyles.border),
+      ),
+      child: Row(
         children: [
-          Text(
-            'YOUR STATS',
-            style: EditorialStyles.labelUppercase,
+          Container(
+            width: 24,
+            height: 24,
+            decoration: BoxDecoration(
+              color: EditorialStyles.ink,
+              shape: BoxShape.circle,
+            ),
+            child: const Icon(Icons.check, size: 14, color: Colors.white),
           ),
-          const SizedBox(height: 16),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              _buildStatColumn('${completedSessions.length}', 'Completed'),
-              Container(
-                width: 1,
-                height: 40,
-                color: EditorialStyles.inkLight,
-              ),
-              _buildStatColumn('${avgMatch.round()}%', 'Avg Match'),
-            ],
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  '$_partnerName already answered',
+                  style: EditorialStyles.bodySmall.copyWith(fontWeight: FontWeight.w600),
+                ),
+                Text(
+                  'Now predict their answers!',
+                  style: EditorialStyles.bodySmall.copyWith(
+                    color: EditorialStyles.inkMuted,
+                    fontStyle: FontStyle.italic,
+                  ),
+                ),
+              ],
+            ),
           ),
         ],
       ),
-    );
-  }
-
-  Widget _buildStatColumn(String value, String label) {
-    return Column(
-      children: [
-        Text(value, style: EditorialStyles.scoreMedium),
-        const SizedBox(height: 4),
-        Text(
-          label.toUpperCase(),
-          style: EditorialStyles.labelUppercaseSmall,
-        ),
-      ],
     );
   }
 
@@ -585,8 +535,8 @@ class _QuizIntroScreenState extends State<QuizIntroScreen>
       child: Column(
         children: [
           EditorialPrimaryButton(
-            label: _isLoading ? 'Starting...' : 'Begin Quiz',
-            onPressed: _isLoading ? null : _startQuiz,
+            label: 'Begin Quiz',
+            onPressed: _startQuiz,
           ),
           const SizedBox(height: 12),
           Text(

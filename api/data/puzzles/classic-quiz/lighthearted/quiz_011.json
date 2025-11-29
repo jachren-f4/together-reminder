@@ -1,0 +1,61 @@
+{
+  "quizId": "quiz_011",
+  "title": "Lighthearted Quiz 11",
+  "branch": "lighthearted",
+  "questions": [
+    {
+      "id": "quiz_011_q1",
+      "text": "What's my ideal humidity level?",
+      "choices": [
+        "Dry",
+        "Low humidity",
+        "Moderate",
+        "Humid",
+        "Other / I don't notice"
+      ],
+      "category": "preferences"
+    },
+    {
+      "id": "quiz_011_q2",
+      "text": "What's my favorite breakfast food?",
+      "choices": [
+        "Pancakes",
+        "Eggs",
+        "Cereal",
+        "Toast",
+        "Other / Something else"
+      ],
+      "category": "favorites"
+    },
+    {
+      "id": "quiz_011_q3",
+      "text": "Would I rather: Listen to music or Podcasts?",
+      "choices": [
+        "Music",
+        "Podcasts"
+      ],
+      "category": "would_you_rather"
+    },
+    {
+      "id": "quiz_011_q4",
+      "text": "What's my favorite superhero or fictional character?",
+      "choices": [
+        "Marvel hero",
+        "DC hero",
+        "Book character",
+        "Movie character",
+        "Other / Someone else"
+      ],
+      "category": "favorites"
+    },
+    {
+      "id": "quiz_011_q5",
+      "text": "Would I rather: Cook at home or Dine out?",
+      "choices": [
+        "Cook at home",
+        "Dine out"
+      ],
+      "category": "would_you_rather"
+    }
+  ]
+}

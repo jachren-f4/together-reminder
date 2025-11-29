@@ -1,0 +1,57 @@
+{
+  "quizId": "youorme_001",
+  "title": "Playful Round 1",
+  "branch": "playful",
+  "questions": [
+    {
+      "id": "youorme_001_q1",
+      "prompt": "Which of you...",
+      "content": "Is more athletic"
+    },
+    {
+      "id": "youorme_001_q2",
+      "prompt": "Who's more...",
+      "content": "Introverted"
+    },
+    {
+      "id": "youorme_001_q3",
+      "prompt": "Who's more...",
+      "content": "Ambitious"
+    },
+    {
+      "id": "youorme_001_q4",
+      "prompt": "Who's more...",
+      "content": "Analytical"
+    },
+    {
+      "id": "youorme_001_q5",
+      "prompt": "Which of you...",
+      "content": "Is the better driver"
+    },
+    {
+      "id": "youorme_001_q6",
+      "prompt": "Which of you...",
+      "content": "Is better with technology"
+    },
+    {
+      "id": "youorme_001_q7",
+      "prompt": "Which of you...",
+      "content": "Is more fashion-forward"
+    },
+    {
+      "id": "youorme_001_q8",
+      "prompt": "Which of you...",
+      "content": "Is more artistic"
+    },
+    {
+      "id": "youorme_001_q9",
+      "prompt": "Who's more...",
+      "content": "Organized"
+    },
+    {
+      "id": "youorme_001_q10",
+      "prompt": "Which of you...",
+      "content": "Has better taste in music"
+    }
+  ]
+}
