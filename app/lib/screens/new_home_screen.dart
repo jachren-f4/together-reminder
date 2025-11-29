@@ -72,6 +72,27 @@ class _NewHomeScreenState extends State<NewHomeScreen> with TickerProviderStateM
 
     // Register LP change callback for real-time counter updates
     _setupLPChangeCallback();
+
+    // Fetch LP from server on load to ensure sync
+    _syncLPFromServer();
+  }
+
+  /// Fetch LP from server on home screen load
+  /// This ensures LP is synced even if the user hasn't played a game this session
+  Future<void> _syncLPFromServer() async {
+    try {
+      await LovePointService.fetchAndSyncFromServer();
+      // Update stored value after sync
+      if (mounted) {
+        final newLP = _arenaService.getLovePoints();
+        if (newLP != _lastLPValue) {
+          _lastLPValue = newLP;
+          setState(() {});
+        }
+      }
+    } catch (e) {
+      Logger.error('Failed to sync LP on home screen load', error: e, service: 'home');
+    }
   }
 
   /// Setup callback for real-time LP counter updates

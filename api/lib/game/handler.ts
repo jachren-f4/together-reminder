@@ -1,0 +1,412 @@
+/**
+ * Unified Game Handler
+ *
+ * Shared utilities for all game types (quiz, you-or-me, etc).
+ * Reduces code duplication across game endpoints.
+ */
+
+import { query } from '@/lib/db/pool';
+import { awardLP } from '@/lib/lp/award';
+import { readFileSync } from 'fs';
+import { join } from 'path';
+
+// =============================================================================
+// Types
+// =============================================================================
+
+export type GameType = 'classic' | 'affirmation' | 'you_or_me';
+
+export interface CoupleInfo {
+  coupleId: string;
+  user1Id: string;
+  user2Id: string;
+  firstPlayerId: string | null;
+  totalLp: number;
+  isPlayer1: boolean;
+  partnerId: string;
+}
+
+export interface GameMatch {
+  id: string;
+  quizId: string;
+  quizType: GameType;
+  branch: string;
+  status: 'active' | 'completed';
+  player1Answers: number[];
+  player2Answers: number[];
+  player1AnswerCount: number;
+  player2AnswerCount: number;
+  matchPercentage: number | null;
+  player1Score: number;
+  player2Score: number;
+  currentTurnUserId: string | null;
+  turnNumber: number;
+  date: string;
+  createdAt: string;
+  completedAt: string | null;
+}
+
+export interface GameState {
+  canSubmit: boolean;
+  userAnswered: boolean;
+  partnerAnswered: boolean;
+  isCompleted: boolean;
+  isMyTurn?: boolean;  // for turn-based games
+}
+
+export interface GameResult {
+  matchPercentage: number;
+  lpEarned: number;
+  userAnswers: number[];
+  partnerAnswers: number[];
+  userScore?: number;
+  partnerScore?: number;
+}
+
+// =============================================================================
+// Configuration
+// =============================================================================
+
+const GAME_CONFIG: Record<GameType, {
+  branches: string[];
+  activityType: string;
+  folder: string;
+  lpReward: number;
+  isTurnBased: boolean;
+}> = {
+  classic: {
+    branches: ['lighthearted', 'deep', 'spicy'],
+    activityType: 'classic_quiz',
+    folder: 'classic-quiz',
+    lpReward: 30,
+    isTurnBased: false,
+  },
+  affirmation: {
+    branches: ['practical', 'emotional', 'spiritual'],
+    activityType: 'affirmation_quiz',
+    folder: 'affirmation',
+    lpReward: 30,
+    isTurnBased: false,
+  },
+  you_or_me: {
+    branches: ['playful', 'reflective', 'intimate'],
+    activityType: 'you_or_me',
+    folder: 'you-or-me',
+    lpReward: 30,
+    isTurnBased: true,
+  },
+};
+
+// =============================================================================
+// Couple Utilities
+// =============================================================================
+
+export async function getCouple(userId: string): Promise<CoupleInfo | null> {
+  const result = await query(
+    `SELECT id, user1_id, user2_id, first_player_id, total_lp
+     FROM couples
+     WHERE user1_id = $1 OR user2_id = $1
+     LIMIT 1`,
+    [userId]
+  );
+
+  if (result.rows.length === 0) return null;
+
+  const row = result.rows[0];
+  const isPlayer1 = userId === row.user1_id;
+
+  return {
+    coupleId: row.id,
+    user1Id: row.user1_id,
+    user2Id: row.user2_id,
+    firstPlayerId: row.first_player_id,
+    totalLp: row.total_lp || 0,
+    isPlayer1,
+    partnerId: isPlayer1 ? row.user2_id : row.user1_id,
+  };
+}
+
+// =============================================================================
+// Quiz Loading
+// =============================================================================
+
+export function loadQuiz(gameType: GameType, branch: string, quizId: string): any {
+  try {
+    const config = GAME_CONFIG[gameType];
+    const quizPath = join(process.cwd(), 'data', 'puzzles', config.folder, branch, `${quizId}.json`);
+    const quizData = readFileSync(quizPath, 'utf-8');
+    return JSON.parse(quizData);
+  } catch (error) {
+    console.error(`Failed to load quiz ${quizId} from ${gameType}/${branch}:`, error);
+    return null;
+  }
+}
+
+export function loadQuizOrder(gameType: GameType, branch: string): string[] {
+  try {
+    const config = GAME_CONFIG[gameType];
+    const orderPath = join(process.cwd(), 'data', 'puzzles', config.folder, branch, 'quiz-order.json');
+    const orderData = readFileSync(orderPath, 'utf-8');
+    const configData = JSON.parse(orderData);
+    return configData.quizzes || [];
+  } catch (error) {
+    console.error(`Failed to load quiz order for ${gameType}/${branch}:`, error);
+    return [];
+  }
+}
+
+// =============================================================================
+// Branch Management
+// =============================================================================
+
+export async function getCurrentBranch(coupleId: string, gameType: GameType): Promise<string> {
+  const config = GAME_CONFIG[gameType];
+
+  const result = await query(
+    `SELECT current_branch FROM branch_progression
+     WHERE couple_id = $1 AND activity_type = $2`,
+    [coupleId, config.activityType]
+  );
+
+  if (result.rows.length === 0) {
+    return config.branches[0];
+  }
+
+  const branchIndex = result.rows[0].current_branch;
+  return config.branches[branchIndex % config.branches.length];
+}
+
+// =============================================================================
+// Match Management
+// =============================================================================
+
+export async function getOrCreateMatch(
+  couple: CoupleInfo,
+  gameType: GameType,
+  localDate: string
+): Promise<{ match: GameMatch; quiz: any; isNew: boolean }> {
+  const branch = await getCurrentBranch(couple.coupleId, gameType);
+  const config = GAME_CONFIG[gameType];
+
+  // Check for existing match today
+  const existingResult = await query(
+    `SELECT * FROM quiz_matches
+     WHERE couple_id = $1 AND quiz_type = $2 AND date = $3
+     ORDER BY created_at DESC LIMIT 1`,
+    [couple.coupleId, gameType, localDate]
+  );
+
+  if (existingResult.rows.length > 0) {
+    const match = parseMatch(existingResult.rows[0]);
+    const quiz = loadQuiz(gameType, match.branch, match.quizId);
+    return { match, quiz, isNew: false };
+  }
+
+  // Find next quiz
+  const quizOrder = loadQuizOrder(gameType, branch);
+  const completedResult = await query(
+    `SELECT DISTINCT quiz_id FROM quiz_matches
+     WHERE couple_id = $1 AND quiz_type = $2 AND branch = $3 AND status = 'completed'`,
+    [couple.coupleId, gameType, branch]
+  );
+
+  const completedQuizzes = new Set(completedResult.rows.map(r => r.quiz_id));
+  let quizId = quizOrder.find(id => !completedQuizzes.has(id)) || quizOrder[0];
+
+  if (!quizId) {
+    throw new Error('No quizzes available');
+  }
+
+  const quiz = loadQuiz(gameType, branch, quizId);
+  if (!quiz) {
+    throw new Error('Quiz not found');
+  }
+
+  // Determine first player for turn-based games
+  const firstTurnUser = config.isTurnBased
+    ? (couple.firstPlayerId || couple.user2Id)
+    : null;
+
+  // Create new match
+  const insertResult = await query(
+    `INSERT INTO quiz_matches (
+      couple_id, quiz_id, quiz_type, branch, status,
+      player1_answers, player2_answers,
+      player1_answer_count, player2_answer_count,
+      current_turn_user_id, turn_number,
+      player1_id, player2_id, date, created_at
+    )
+    VALUES ($1, $2, $3, $4, 'active', '[]', '[]', 0, 0, $5, 1, $6, $7, $8, NOW())
+    RETURNING *`,
+    [couple.coupleId, quizId, gameType, branch, firstTurnUser, couple.user1Id, couple.user2Id, localDate]
+  );
+
+  const match = parseMatch(insertResult.rows[0]);
+  return { match, quiz, isNew: true };
+}
+
+export async function getMatchById(matchId: string): Promise<GameMatch | null> {
+  const result = await query(
+    `SELECT * FROM quiz_matches WHERE id = $1`,
+    [matchId]
+  );
+
+  if (result.rows.length === 0) return null;
+  return parseMatch(result.rows[0]);
+}
+
+function parseMatch(row: any): GameMatch {
+  return {
+    id: row.id,
+    quizId: row.quiz_id,
+    quizType: row.quiz_type,
+    branch: row.branch,
+    status: row.status,
+    player1Answers: typeof row.player1_answers === 'string'
+      ? JSON.parse(row.player1_answers)
+      : row.player1_answers || [],
+    player2Answers: typeof row.player2_answers === 'string'
+      ? JSON.parse(row.player2_answers)
+      : row.player2_answers || [],
+    player1AnswerCount: row.player1_answer_count || 0,
+    player2AnswerCount: row.player2_answer_count || 0,
+    matchPercentage: row.match_percentage,
+    player1Score: row.player1_score || 0,
+    player2Score: row.player2_score || 0,
+    currentTurnUserId: row.current_turn_user_id,
+    turnNumber: row.turn_number || 1,
+    date: row.date,
+    createdAt: row.created_at,
+    completedAt: row.completed_at,
+  };
+}
+
+// =============================================================================
+// Answer Submission
+// =============================================================================
+
+export async function submitAnswers(
+  match: GameMatch,
+  couple: CoupleInfo,
+  answers: number[]
+): Promise<{ match: GameMatch; result: GameResult | null }> {
+  const config = GAME_CONFIG[match.quizType];
+
+  // Check if user already answered
+  const userAnswered = couple.isPlayer1
+    ? match.player1AnswerCount > 0
+    : match.player2AnswerCount > 0;
+
+  if (userAnswered) {
+    throw new Error('Already submitted answers');
+  }
+
+  // Update answers
+  const updatedPlayer1Answers = couple.isPlayer1 ? answers : match.player1Answers;
+  const updatedPlayer2Answers = couple.isPlayer1 ? match.player2Answers : answers;
+
+  // Check if both answered
+  const bothAnswered = updatedPlayer1Answers.length > 0 && updatedPlayer2Answers.length > 0;
+
+  let matchPercentage: number | null = null;
+  let lpEarned = 0;
+  let newStatus = 'active';
+
+  if (bothAnswered) {
+    matchPercentage = calculateMatchPercentage(updatedPlayer1Answers, updatedPlayer2Answers);
+    newStatus = 'completed';
+    lpEarned = config.lpReward;
+    await awardLP(couple.coupleId, lpEarned, `${match.quizType}_complete`, match.id);
+  }
+
+  // Update database
+  const updateResult = await query(
+    `UPDATE quiz_matches
+     SET player1_answers = $1,
+         player2_answers = $2,
+         player1_answer_count = $3,
+         player2_answer_count = $4,
+         match_percentage = $5,
+         status = $6,
+         completed_at = $7
+     WHERE id = $8
+     RETURNING *`,
+    [
+      JSON.stringify(updatedPlayer1Answers),
+      JSON.stringify(updatedPlayer2Answers),
+      updatedPlayer1Answers.length,
+      updatedPlayer2Answers.length,
+      matchPercentage,
+      newStatus,
+      bothAnswered ? new Date().toISOString() : null,
+      match.id,
+    ]
+  );
+
+  const updatedMatch = parseMatch(updateResult.rows[0]);
+
+  const gameResult: GameResult | null = bothAnswered ? {
+    matchPercentage: matchPercentage!,
+    lpEarned,
+    userAnswers: couple.isPlayer1 ? updatedPlayer1Answers : updatedPlayer2Answers,
+    partnerAnswers: couple.isPlayer1 ? updatedPlayer2Answers : updatedPlayer1Answers,
+  } : null;
+
+  return { match: updatedMatch, result: gameResult };
+}
+
+function calculateMatchPercentage(p1: number[], p2: number[]): number {
+  if (p1.length === 0 || p2.length === 0) return 0;
+  const total = Math.min(p1.length, p2.length);
+  let matches = 0;
+  for (let i = 0; i < total; i++) {
+    if (p1[i] === p2[i]) matches++;
+  }
+  return Math.round((matches / total) * 100);
+}
+
+// =============================================================================
+// Game State
+// =============================================================================
+
+export function buildGameState(match: GameMatch, couple: CoupleInfo): GameState {
+  const config = GAME_CONFIG[match.quizType];
+
+  const userAnswered = couple.isPlayer1
+    ? match.player1AnswerCount > 0
+    : match.player2AnswerCount > 0;
+  const partnerAnswered = couple.isPlayer1
+    ? match.player2AnswerCount > 0
+    : match.player1AnswerCount > 0;
+
+  const isCompleted = match.status === 'completed';
+  const isMyTurn = config.isTurnBased
+    ? match.currentTurnUserId === (couple.isPlayer1 ? couple.user1Id : couple.user2Id)
+    : undefined;
+
+  const canSubmit = !userAnswered && match.status === 'active' &&
+    (config.isTurnBased ? isMyTurn === true : true);
+
+  return {
+    canSubmit,
+    userAnswered,
+    partnerAnswered,
+    isCompleted,
+    isMyTurn,
+  };
+}
+
+export function buildResult(match: GameMatch, couple: CoupleInfo): GameResult | null {
+  if (match.status !== 'completed') return null;
+
+  const config = GAME_CONFIG[match.quizType];
+
+  return {
+    matchPercentage: match.matchPercentage || 0,
+    lpEarned: config.lpReward,
+    userAnswers: couple.isPlayer1 ? match.player1Answers : match.player2Answers,
+    partnerAnswers: couple.isPlayer1 ? match.player2Answers : match.player1Answers,
+    userScore: couple.isPlayer1 ? match.player1Score : match.player2Score,
+    partnerScore: couple.isPlayer1 ? match.player2Score : match.player1Score,
+  };
+}

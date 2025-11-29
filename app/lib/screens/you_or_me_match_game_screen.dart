@@ -11,13 +11,10 @@ import '../widgets/editorial/editorial.dart';
 import 'you_or_me_match_waiting_screen.dart';
 import 'you_or_me_match_results_screen.dart';
 
-/// You-or-Me Match game screen (server-centric architecture)
+/// You-or-Me Match game screen (bulk submission)
 ///
-/// Uses YouOrMeMatchService which follows the LinkedService pattern:
-/// - Server provides quiz content (questions from JSON files)
-/// - Server creates and manages matches via quiz_matches table
-/// - Turn-based: players alternate answering questions
-/// - Simple polling for sync between partners
+/// Players answer all questions locally, then submit all at once.
+/// Uses unified game API (POST /api/sync/game/you_or_me/play).
 class YouOrMeMatchGameScreen extends StatefulWidget {
   final String? questId; // Optional: Daily quest ID for updating local status
 
@@ -40,7 +37,11 @@ class _YouOrMeMatchGameScreenState extends State<YouOrMeMatchGameScreen>
   bool _isLoading = true;
   String? _error;
   bool _isSubmitting = false;
-  String? _pendingAnswer; // 'you' or 'me'
+
+  // Question navigation
+  int _currentQuestionIndex = 0;
+  final List<String> _selectedAnswers = []; // 'you' or 'me'
+  String? _tempSelectedAnswer;
 
   // Card swipe animation
   late AnimationController _cardAnimationController;
@@ -133,30 +134,30 @@ class _YouOrMeMatchGameScreenState extends State<YouOrMeMatchGameScreen>
 
       if (!mounted) return;
 
-      // Check game completion and turn status
-      if (gameState.isCompleted) {
-        Navigator.of(context).pushReplacement(
-          MaterialPageRoute(
-            builder: (context) => YouOrMeMatchResultsScreen(
-              match: gameState.match,
-              quiz: gameState.quiz,
-              myScore: gameState.myScore,
-              partnerScore: gameState.partnerScore,
+      // Check if user has already answered
+      if (gameState.myAnswerCount > 0) {
+        // User already submitted - go to waiting or results
+        if (gameState.isCompleted) {
+          Navigator.of(context).pushReplacement(
+            MaterialPageRoute(
+              builder: (context) => YouOrMeMatchResultsScreen(
+                match: gameState.match,
+                quiz: gameState.quiz,
+                myScore: gameState.myScore,
+                partnerScore: gameState.partnerScore,
+              ),
             ),
-          ),
-        );
-        return;
-      }
-
-      if (!gameState.isMyTurn) {
-        // Go to waiting screen
-        Navigator.of(context).pushReplacement(
-          MaterialPageRoute(
-            builder: (context) => YouOrMeMatchWaitingScreen(
-              matchId: gameState.match.id,
+          );
+        } else {
+          Navigator.of(context).pushReplacement(
+            MaterialPageRoute(
+              builder: (context) => YouOrMeMatchWaitingScreen(
+                matchId: gameState.match.id,
+                questId: widget.questId,
+              ),
             ),
-          ),
-        );
+          );
+        }
         return;
       }
 
@@ -182,10 +183,10 @@ class _YouOrMeMatchGameScreenState extends State<YouOrMeMatchGameScreen>
     SoundService().play(SoundId.answerSelect);
 
     setState(() {
-      _pendingAnswer = answer;
+      _tempSelectedAnswer = answer;
     });
 
-    // Show decision stamp, then submit
+    // Show decision stamp, then animate card out
     await _stampController.forward();
 
     // Update slide direction based on answer (right = Me, left = You)
@@ -208,11 +209,33 @@ class _YouOrMeMatchGameScreenState extends State<YouOrMeMatchGameScreen>
 
     await _cardAnimationController.forward();
 
-    // Submit the answer
-    await _submitAnswer(answer);
+    // Store answer locally and move to next question
+    await _nextQuestion(answer);
   }
 
-  Future<void> _submitAnswer(String answer) async {
+  Future<void> _nextQuestion(String answer) async {
+    final questions = _gameState?.quiz?.questions ?? [];
+
+    setState(() {
+      _selectedAnswers.add(answer);
+      _tempSelectedAnswer = null;
+    });
+
+    // Check if we've answered all questions
+    if (_currentQuestionIndex < questions.length - 1) {
+      // Animate card back in and show next question
+      _cardAnimationController.reset();
+      _stampController.reset();
+      setState(() {
+        _currentQuestionIndex++;
+      });
+    } else {
+      // All questions answered - submit all at once
+      await _submitAllAnswers();
+    }
+  }
+
+  Future<void> _submitAllAnswers() async {
     if (_gameState == null) return;
 
     setState(() {
@@ -221,19 +244,18 @@ class _YouOrMeMatchGameScreenState extends State<YouOrMeMatchGameScreen>
     });
 
     try {
-      final result = await _service.submitAnswer(
+      final result = await _service.submitAllAnswers(
         matchId: _gameState!.match.id,
-        questionIndex: _gameState!.currentQuestion,
-        answer: answer,
+        answers: _selectedAnswers,
       );
 
       if (!mounted) return;
 
-      if (result.isCompleted) {
-        // Update local quest status (for home screen card)
-        await _updateLocalQuestStatus(bothCompleted: true);
+      // Update local quest status (for home screen card)
+      await _updateLocalQuestStatus(bothCompleted: result.isCompleted);
 
-        // Award LP locally when game is completed
+      // Award LP locally when both partners have completed
+      if (result.isCompleted) {
         final lpEarned = result.lpEarned ?? 30;
         await _arenaService.awardLovePoints(lpEarned, 'you_or_me_complete');
         Logger.debug('Awarded $lpEarned LP locally for You-or-Me completion', service: 'you_or_me');
@@ -241,18 +263,19 @@ class _YouOrMeMatchGameScreenState extends State<YouOrMeMatchGameScreen>
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(
             builder: (context) => YouOrMeMatchResultsScreen(
-              match: result.match,
+              match: _gameState!.match,
               quiz: _gameState!.quiz,
-              myScore: result.gameState.myScore,
-              partnerScore: result.gameState.partnerScore,
+              myScore: 0, // Will be calculated from answers
+              partnerScore: 0,
               lpEarned: result.lpEarned,
+              matchPercentage: result.matchPercentage,
+              userAnswers: result.userAnswers,
+              partnerAnswers: result.partnerAnswers,
             ),
           ),
         );
-      } else if (!result.gameState.isMyTurn) {
-        // Partner's turn now - update our completion status
-        await _updateLocalQuestStatus(bothCompleted: false);
-
+      } else {
+        // Partner hasn't answered yet - go to waiting screen
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(
             builder: (context) => YouOrMeMatchWaitingScreen(
@@ -261,24 +284,18 @@ class _YouOrMeMatchGameScreenState extends State<YouOrMeMatchGameScreen>
             ),
           ),
         );
-      } else {
-        // Still our turn, update state and reset animation
-        _cardAnimationController.reset();
-        _stampController.reset();
-        setState(() {
-          _gameState = result.gameState;
-          _pendingAnswer = null;
-          _isSubmitting = false;
-        });
       }
     } catch (e) {
-      Logger.error('Failed to submit answer', error: e, service: 'you_or_me');
+      Logger.error('Failed to submit answers', error: e, service: 'you_or_me');
       _cardAnimationController.reset();
       _stampController.reset();
       setState(() {
         _error = e.toString().replaceAll('Exception: ', '');
-        _pendingAnswer = null;
         _isSubmitting = false;
+        // Reset to allow retry - remove last answer
+        if (_selectedAnswers.isNotEmpty) {
+          _selectedAnswers.removeLast();
+        }
       });
     }
   }
@@ -405,7 +422,7 @@ class _YouOrMeMatchGameScreenState extends State<YouOrMeMatchGameScreen>
       );
     }
 
-    final currentIndex = _gameState!.currentQuestion;
+    final currentIndex = _currentQuestionIndex;
     if (currentIndex >= questions.length) {
       // Shouldn't happen, but handle gracefully
       return Scaffold(
@@ -462,9 +479,9 @@ class _YouOrMeMatchGameScreenState extends State<YouOrMeMatchGameScreen>
                                       children: [
                                         _buildQuestionCard(question),
                                         // Decision stamp overlay
-                                        if (_pendingAnswer != null)
+                                        if (_tempSelectedAnswer != null)
                                           Positioned.fill(
-                                            child: _buildDecisionStamp(_pendingAnswer! == 'me'),
+                                            child: _buildDecisionStamp(_tempSelectedAnswer! == 'me'),
                                           ),
                                       ],
                                     ),
