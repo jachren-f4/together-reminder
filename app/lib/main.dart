@@ -163,13 +163,8 @@ Future<void> _initializeDailyQuests() async {
       return;
     }
 
-    // 💰 Start listening for LP awards from partner
-    LovePointService.startListeningForLPAwards(
-      currentUserId: user.id,
-      partnerUserId: partner.pushToken,
-    );
-    // Removed verbose logging
-    // print('💰 LP listener initialized');
+    // 💰 LP is now server-authoritative - synced via game status API
+    // No Firebase RTDB listener needed
 
     // ⚙️ Start listening for couple preference updates
     CouplePreferencesService.startListening();

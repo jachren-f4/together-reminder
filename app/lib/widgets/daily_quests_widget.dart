@@ -3,9 +3,10 @@ import 'package:flutter/material.dart';
 import '../models/daily_quest.dart';
 import '../services/storage_service.dart';
 import '../services/daily_quest_service.dart';
-import '../services/quest_sync_service.dart';
+import '../services/api_client.dart';
 import '../theme/app_theme.dart';
 import '../config/brand/brand_loader.dart';
+import '../utils/logger.dart';
 import '../widgets/quest_carousel.dart';
 import '../screens/quiz_intro_screen.dart';
 import '../screens/affirmation_intro_screen.dart';
@@ -15,7 +16,8 @@ import '../screens/you_or_me_match_game_screen.dart';
 
 /// Widget displaying daily quests with completion tracking
 ///
-/// Shows 3 daily quests with visual progress tracker and completion banner
+/// Shows 3 daily quests with visual progress tracker and completion banner.
+/// Uses Supabase polling (instead of Firebase RTDB) for partner completion sync.
 class DailyQuestsWidget extends StatefulWidget {
   const DailyQuestsWidget({Key? key}) : super(key: key);
 
@@ -25,9 +27,12 @@ class DailyQuestsWidget extends StatefulWidget {
 
 class _DailyQuestsWidgetState extends State<DailyQuestsWidget> {
   final StorageService _storage = StorageService();
+  final ApiClient _apiClient = ApiClient();
   late DailyQuestService _questService;
-  late QuestSyncService _questSyncService;
-  StreamSubscription? _partnerCompletionSubscription;
+  Timer? _pollingTimer;
+
+  // Polling interval for partner quest status (30 seconds)
+  static const Duration _pollingInterval = Duration(seconds: 30);
 
   @override
   void initState() {
@@ -35,79 +40,90 @@ class _DailyQuestsWidgetState extends State<DailyQuestsWidget> {
     _questService = DailyQuestService(
       storage: _storage,
     );
-    _questSyncService = QuestSyncService(
-      storage: _storage,
-    );
 
-    // Listen for partner quest completions
-    _listenForPartnerCompletions();
-
-    // Quest generation happens in main.dart on app start
+    // Start polling for partner quest completions via Supabase
+    _startPolling();
   }
 
-  /// Listen for partner's quest completions in real-time
-  void _listenForPartnerCompletions() {
+  /// Start polling for partner quest completions
+  void _startPolling() {
+    // Initial poll
+    _pollQuestStatus();
+
+    // Set up periodic polling
+    _pollingTimer = Timer.periodic(_pollingInterval, (_) {
+      _pollQuestStatus();
+    });
+  }
+
+  /// Poll Supabase for quest completion status
+  Future<void> _pollQuestStatus() async {
     final user = _storage.getUser();
     final partner = _storage.getPartner();
 
     if (user == null || partner == null) {
-      return; // Can't listen without both users
+      return;
     }
 
-    _partnerCompletionSubscription = _questSyncService
-        .listenForPartnerCompletions(
-          currentUserId: user.id,
-          partnerUserId: partner.pushToken,
-        )
-        .listen((partnerCompletions) {
-      // partnerCompletions is a map of {questId: true} for completed quests
-      if (partnerCompletions.isEmpty) return;
+    try {
+      final response = await _apiClient.get('/api/sync/quest-status');
 
-      // Removed verbose logging
-      // print('📥 Received partner quest completions: ${partnerCompletions.keys.join(", ")}');
+      if (!response.success || response.data == null) {
+        return;
+      }
 
-      // Update local storage with partner's completions
-      for (final questId in partnerCompletions.keys) {
-        final quest = _storage.getDailyQuest(questId);
-        // print('🔍 Looking for quest: $questId');
-        // print('🔍 Found quest: ${quest != null ? quest.id : "NULL"}');
-        // if (quest != null) {
-        //   print('🔍 Partner already completed? ${quest.hasUserCompleted(partner.pushToken)}');
-        //   print('🔍 Partner user ID: ${partner.pushToken}');
-        //   print('🔍 Quest completions: ${quest.userCompletions}');
-        // }
-        if (quest != null && !quest.hasUserCompleted(partner.pushToken)) {
-          quest.userCompletions ??= {};
-          quest.userCompletions![partner.pushToken] = true;
+      final questsData = response.data['quests'] as List<dynamic>?;
+      if (questsData == null || questsData.isEmpty) {
+        return;
+      }
 
-          // Check if both completed now
-          if (quest.areBothUsersCompleted()) {
-            quest.status = 'completed';
-            quest.completedAt = DateTime.now();
+      bool anyUpdates = false;
 
-            // NOTE: LP awarding is handled by the server-centric results screens
-            // (QuizMatchResultsScreen, YouOrMeMatchResultsScreen, etc.)
-            // This listener only updates local quest status for UI display.
-          } else {
-            quest.status = 'in_progress';
+      for (final questData in questsData) {
+        final questId = questData['questId'] as String?;
+        final partnerCompleted = questData['partnerCompleted'] as bool? ?? false;
+        final status = questData['status'] as String?;
+
+        if (questId == null) continue;
+
+        // Find local quest by content_id (quiz_id in server response)
+        final localQuests = _storage.getTodayQuests();
+        final matchingQuest = localQuests.where((q) => q.contentId == questId).firstOrNull;
+
+        if (matchingQuest != null) {
+          // Update partner completion status
+          if (partnerCompleted && !matchingQuest.hasUserCompleted(partner.pushToken)) {
+            matchingQuest.userCompletions ??= {};
+            matchingQuest.userCompletions![partner.pushToken] = true;
+
+            // Update quest status
+            if (status == 'completed' || matchingQuest.areBothUsersCompleted()) {
+              matchingQuest.status = 'completed';
+              matchingQuest.completedAt = DateTime.now();
+            } else {
+              matchingQuest.status = 'in_progress';
+            }
+
+            _storage.updateDailyQuest(matchingQuest);
+            anyUpdates = true;
+
+            Logger.debug('Updated quest ${matchingQuest.type.name} with partner completion', service: 'quest');
           }
-
-          _storage.updateDailyQuest(quest);
-          // Removed verbose logging
-          // print('✅ Updated quest ${quest.type.name} with partner completion');
         }
       }
 
-      // Trigger UI rebuild
-      if (mounted) {
+      // Trigger UI rebuild if there were updates
+      if (anyUpdates && mounted) {
         setState(() {});
       }
-    });
+    } catch (e) {
+      Logger.error('Error polling quest status', error: e, service: 'quest');
+    }
   }
 
   @override
   void dispose() {
-    _partnerCompletionSubscription?.cancel();
+    _pollingTimer?.cancel();
     super.dispose();
   }
 

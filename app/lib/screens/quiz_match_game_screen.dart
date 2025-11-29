@@ -185,6 +185,7 @@ class _QuizMatchGameScreenState extends State<QuizMatchGameScreen>
       final result = await _service.submitAnswers(
         matchId: _gameState!.match.id,
         answers: _selectedAnswers,
+        quizType: widget.quizType,
       );
 
       if (!mounted) return;

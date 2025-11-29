@@ -104,30 +104,12 @@ class DailyQuestService {
       quest.completedAt = DateTime.now();
 
       // Award Love Points to BOTH users
-      // Note: Quiz quests award LP via QuizService, so skip LP for quiz type quests
+      // LP is now awarded server-side when games complete
+      // Client syncs LP via LovePointService.syncTotalLP() or fetchAndSyncFromServer()
       const lpReward = 30;
       quest.lpAwarded = lpReward;
 
-      if (quest.type != QuestType.quiz) {
-        // Non-quiz quests award LP here
-        final user = _storage.getUser();
-        final partner = _storage.getPartner();
-
-        if (user != null && partner != null) {
-          await LovePointService.awardPointsToBothUsers(
-            userId1: user.id,
-            userId2: partner.pushToken,
-            amount: lpReward,
-            reason: 'daily_quest',
-            relatedId: questId,
-          );
-        }
-
-        Logger.debug('Quest $questId completed by both users! Awarded $lpReward LP to both', service: 'quest');
-      } else {
-        // Quiz quests award LP via QuizService when quiz completes
-        Logger.debug('Quest $questId (quiz) completed by both users! LP awarded via QuizService', service: 'quest');
-      }
+      Logger.debug('Quest $questId completed by both users! LP handled server-side', service: 'quest');
 
       // Update daily completion stats
       await _updateDailyCompletion(quest.dateKey);

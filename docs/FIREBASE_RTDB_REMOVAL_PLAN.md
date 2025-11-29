@@ -46,27 +46,41 @@ Remove Firebase Realtime Database entirely and use only:
 
 ## Phase 1: Quiz Flow (Priority - Fix Current Bugs)
 
+### Status: IMPLEMENTED (2025-11-29)
+
 ### Goal
 Fix the quiz completion flow so both partners see correct status and LP.
 
-### Files to Modify
+### Implementation Summary
 
-1. **`app/lib/widgets/daily_quests_widget.dart`**
-   - Remove Firebase `_partnerCompletionSubscription`
-   - Add Supabase polling for partner quest status
-   - Poll every 30s when on home screen
+1. **Created `api/app/api/sync/quest-status/route.ts`** (NEW)
+   - Returns quest completion status from `quiz_matches` table (all game types use this table)
+   - Response: `{ quests: [{ questId, questType, status, userCompleted, partnerCompleted, matchId, lpAwarded, player1Score, player2Score, matchPercentage }], totalLp }`
+   - Fixed column name issues during implementation (you_or_me uses quiz_matches, not separate table)
 
-2. **`app/lib/services/quest_sync_service.dart`**
-   - Remove Firebase writes for quest completions
-   - Ensure all writes go to Supabase only
+2. **Modified `app/lib/widgets/daily_quests_widget.dart`**
+   - Removed Firebase `_partnerCompletionSubscription` and `StreamSubscription` import
+   - Added `Timer? _pollingTimer` for 30-second interval polling
+   - Polls `/api/sync/quest-status` endpoint
+   - Updates local quest status when partner completion detected
 
-3. **`api/app/api/sync/quest-status/route.ts`** (NEW)
-   - Create endpoint to return quest completion status for couple
-   - Returns: `{ quests: [{ questId, userCompleted, partnerCompleted, status }] }`
+3. **`app/lib/services/quest_sync_service.dart`**
+   - Already uses Supabase-only paths via `DevConfig.useSuperbaseForDailyQuests = true`
+   - Firebase writes are bypassed by the flag
 
 ### Testing Checklist - Phase 1
 
-After completing Phase 1, verify:
+**API Tests (via curl script `api/scripts/test_phase1_quest_status.sh`) - ALL PASSED (2025-11-29):**
+
+- [x] Quest status endpoint returns empty after reset
+- [x] User 1 can create quiz match via POST
+- [x] User 1 can submit answers
+- [x] User 2 polls and sees partner completed = true (polling works!)
+- [x] User 2 submits → match completes, 30 LP awarded, match % calculated
+- [x] Both users see completed status and 30 LP
+- [x] Total LP is returned in response
+
+**End-to-End Tests (with Flutter apps):**
 
 - [ ] Chrome completes quiz → Android sees "Jokke completed" on quest card (within 30s)
 - [ ] Android completes quiz → Both see "COMPLETED" status

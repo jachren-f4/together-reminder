@@ -3,15 +3,18 @@ import '../models/you_or_me_match.dart';
 import '../services/storage_service.dart';
 import '../widgets/editorial/editorial.dart';
 
-/// Results screen for You-or-Me Match (server-centric architecture)
+/// Results screen for You-or-Me Match (bulk submission)
 ///
-/// Displays scores and completion status
+/// Displays match percentage and completion status
 class YouOrMeMatchResultsScreen extends StatelessWidget {
   final YouOrMeMatch match;
   final ServerYouOrMeQuiz? quiz;
   final int myScore;
   final int partnerScore;
   final int? lpEarned;
+  final int? matchPercentage;
+  final List<String>? userAnswers;
+  final List<String>? partnerAnswers;
 
   const YouOrMeMatchResultsScreen({
     super.key,
@@ -20,6 +23,9 @@ class YouOrMeMatchResultsScreen extends StatelessWidget {
     required this.myScore,
     required this.partnerScore,
     this.lpEarned,
+    this.matchPercentage,
+    this.userAnswers,
+    this.partnerAnswers,
   });
 
   @override
@@ -32,9 +38,10 @@ class YouOrMeMatchResultsScreen extends StatelessWidget {
     final lp = lpEarned ?? 30;
 
     final totalQuestions = quiz?.totalQuestions ?? 10;
-    final matchPercentage = totalQuestions > 0
+    // Use server-provided match percentage if available, otherwise calculate locally
+    final displayMatchPercentage = matchPercentage ?? (totalQuestions > 0
         ? ((myScore + partnerScore) / (totalQuestions * 2) * 100).round()
-        : 0;
+        : 0);
 
     return Scaffold(
       backgroundColor: EditorialStyles.paper,
@@ -111,12 +118,12 @@ class YouOrMeMatchResultsScreen extends StatelessWidget {
                               ),
                               const SizedBox(height: 16),
                               Text(
-                                '$matchPercentage%',
+                                '$displayMatchPercentage%',
                                 style: EditorialStyles.scoreLarge,
                               ),
                               const SizedBox(height: 8),
                               Text(
-                                _getMatchDescription(matchPercentage),
+                                _getMatchDescription(displayMatchPercentage),
                                 style: EditorialStyles.bodyTextItalic,
                                 textAlign: TextAlign.center,
                               ),

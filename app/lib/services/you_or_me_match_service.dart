@@ -1,120 +1,30 @@
-import 'dart:async';
-import 'dart:convert';
-import 'package:http/http.dart' as http;
-import '../config/supabase_config.dart';
 import '../models/you_or_me_match.dart';
-import '../services/auth_service.dart';
+import '../services/unified_game_service.dart';
 import '../utils/logger.dart';
 
 /// Core service for You-or-Me game
 ///
-/// API-first architecture following LinkedService pattern:
-/// - Server is single source of truth
-/// - Server provides quiz content (questions)
-/// - Turn-based with server-managed currentTurnUserId
-/// - Simple 10-second polling for sync
+/// Uses UnifiedGameService for match management.
+/// Bulk submission - both partners answer all questions at once.
 class YouOrMeMatchService {
   static final YouOrMeMatchService _instance = YouOrMeMatchService._internal();
   factory YouOrMeMatchService() => _instance;
   YouOrMeMatchService._internal();
 
-  final AuthService _authService = AuthService();
-
-  /// Polling timer for waiting screens
-  Timer? _pollTimer;
+  final UnifiedGameService _unifiedService = UnifiedGameService();
 
   /// Callback for state updates during polling
   void Function(YouOrMeGameState)? _onStateUpdate;
 
-  /// Get API base URL
-  String get _apiBaseUrl => SupabaseConfig.apiUrl;
-
-  /// Make API request with authentication headers
-  Future<Map<String, dynamic>> _apiRequest(
-    String method,
-    String path, {
-    Map<String, dynamic>? body,
-  }) async {
-    final url = Uri.parse('$_apiBaseUrl$path');
-    final headers = await _authService.getAuthHeaders();
-    headers['Content-Type'] = 'application/json';
-
-    http.Response response;
-
-    try {
-      switch (method) {
-        case 'GET':
-          response = await http.get(url, headers: headers);
-          break;
-        case 'POST':
-          response = await http.post(
-            url,
-            headers: headers,
-            body: body != null ? jsonEncode(body) : '{}',
-          );
-          break;
-        default:
-          throw Exception('Unsupported HTTP method: $method');
-      }
-
-      if (response.statusCode >= 200 && response.statusCode < 300) {
-        return jsonDecode(response.body);
-      } else {
-        final error = jsonDecode(response.body);
-        throw Exception(error['error'] ?? 'API request failed');
-      }
-    } catch (e) {
-      Logger.error('API request failed: $method $path',
-          error: e, service: 'you_or_me');
-      rethrow;
-    }
-  }
-
-  /// Get local date in YYYY-MM-DD format
-  String _getLocalDate() {
-    final now = DateTime.now();
-    return '${now.year}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}';
-  }
-
   /// Get or create You-or-Me match for today
   ///
-  /// This is the main entry point. Server handles:
-  /// - Creating match if none exists for today
-  /// - Returning existing active match
-  /// - Providing quiz content (questions)
-  /// - Turn management
+  /// Uses UnifiedGameService under the hood.
   Future<YouOrMeGameState> getOrCreateMatch() async {
     try {
-      final response = await _apiRequest(
-        'POST',
-        '/api/sync/you-or-me-match',
-        body: {
-          'localDate': _getLocalDate(),
-        },
-      );
-
-      final matchData = response['match'];
-      final quizData = response['quiz'];
-      final gameStateData = response['gameState'];
-
-      final match = YouOrMeMatch.fromJson(matchData);
-      final quiz = quizData != null ? ServerYouOrMeQuiz.fromJson(quizData) : null;
-
-      return YouOrMeGameState(
-        match: match,
-        quiz: quiz,
-        isMyTurn: gameStateData['isMyTurn'] ?? false,
-        canPlay: gameStateData['canPlay'] ?? false,
-        currentQuestion: gameStateData['currentQuestion'] ?? 0,
-        myAnswerCount: gameStateData['myAnswerCount'] ?? 0,
-        partnerAnswerCount: gameStateData['partnerAnswerCount'] ?? 0,
-        myScore: gameStateData['myScore'] ?? 0,
-        partnerScore: gameStateData['partnerScore'] ?? 0,
-        isCompleted: gameStateData['isCompleted'] ?? false,
-        totalQuestions: gameStateData['totalQuestions'] ?? 10,
-      );
+      final response = await _unifiedService.startGame(GameType.you_or_me);
+      return _convertToGameState(response);
     } catch (e) {
-      Logger.error('Failed to get/create You-or-Me match from API',
+      Logger.error('Failed to get/create You-or-Me match',
           error: e, service: 'you_or_me');
       rethrow;
     }
@@ -123,31 +33,11 @@ class YouOrMeMatchService {
   /// Poll match state by ID (for waiting screens)
   Future<YouOrMeGameState> pollMatchState(String matchId) async {
     try {
-      final response = await _apiRequest(
-        'GET',
-        '/api/sync/you-or-me-match?matchId=$matchId',
+      final response = await _unifiedService.getMatchState(
+        gameType: GameType.you_or_me,
+        matchId: matchId,
       );
-
-      final matchData = response['match'];
-      final quizData = response['quiz'];
-      final gameStateData = response['gameState'];
-
-      final match = YouOrMeMatch.fromJson(matchData);
-      final quiz = quizData != null ? ServerYouOrMeQuiz.fromJson(quizData) : null;
-
-      return YouOrMeGameState(
-        match: match,
-        quiz: quiz,
-        isMyTurn: gameStateData['isMyTurn'] ?? false,
-        canPlay: gameStateData['canPlay'] ?? false,
-        currentQuestion: gameStateData['currentQuestion'] ?? 0,
-        myAnswerCount: gameStateData['myAnswerCount'] ?? 0,
-        partnerAnswerCount: gameStateData['partnerAnswerCount'] ?? 0,
-        myScore: gameStateData['myScore'] ?? 0,
-        partnerScore: gameStateData['partnerScore'] ?? 0,
-        isCompleted: gameStateData['isCompleted'] ?? false,
-        totalQuestions: gameStateData['totalQuestions'] ?? 10,
-      );
+      return _convertToGameState(response);
     } catch (e) {
       Logger.error('Failed to poll You-or-Me match state',
           error: e, service: 'you_or_me');
@@ -155,30 +45,38 @@ class YouOrMeMatchService {
     }
   }
 
-  /// Submit a single answer for the current question
+  /// Submit all answers at once (bulk submission)
   ///
+  /// Uses unified game API (POST /api/sync/game/you_or_me/play).
   /// [matchId] - The match ID
-  /// [questionIndex] - Which question this answer is for
-  /// [answer] - 'you' or 'me'
-  Future<YouOrMeSubmitResult> submitAnswer({
+  /// [answers] - List of answers: 'you' (0) or 'me' (1)
+  Future<YouOrMeBulkSubmitResult> submitAllAnswers({
     required String matchId,
-    required int questionIndex,
-    required String answer,
+    required List<String> answers,
   }) async {
     try {
-      final response = await _apiRequest(
-        'POST',
-        '/api/sync/you-or-me-match/submit',
-        body: {
-          'matchId': matchId,
-          'questionIndex': questionIndex,
-          'answer': answer,
-        },
+      // Convert string answers to indices: 'you' = 0, 'me' = 1
+      final answerIndices = answers.map((a) => a == 'me' ? 1 : 0).toList();
+
+      final response = await _unifiedService.submitAnswers(
+        gameType: GameType.you_or_me,
+        matchId: matchId,
+        answers: answerIndices,
       );
 
-      return YouOrMeSubmitResult.fromJson(response);
+      return YouOrMeBulkSubmitResult(
+        success: response.success,
+        bothAnswered: response.bothAnswered ?? false,
+        isCompleted: response.state.isCompleted,
+        matchPercentage: response.result?.matchPercentage,
+        lpEarned: response.result?.lpEarned,
+        userAnswers: answers,
+        partnerAnswers: response.result?.partnerAnswers
+            .map((i) => i == 1 ? 'me' : 'you')
+            .toList(),
+      );
     } catch (e) {
-      Logger.error('Failed to submit You-or-Me answer',
+      Logger.error('Failed to submit You-or-Me answers',
           error: e, service: 'you_or_me');
       rethrow;
     }
@@ -195,40 +93,88 @@ class YouOrMeMatchService {
     int intervalSeconds = 10,
   }) {
     _onStateUpdate = onUpdate;
-    stopPolling(); // Stop any existing polling
+    stopPolling();
 
     Logger.info('Starting polling for You-or-Me match: $matchId',
         service: 'you_or_me');
 
-    _pollTimer = Timer.periodic(
-      Duration(seconds: intervalSeconds),
-      (_) async {
-        try {
-          final state = await pollMatchState(matchId);
-          _onStateUpdate?.call(state);
-
-          // Stop polling if completed
-          if (state.isCompleted) {
-            Logger.info('Match completed, stopping polling',
-                service: 'you_or_me');
-            stopPolling();
-          }
-        } catch (e) {
-          Logger.error('Polling error', error: e, service: 'you_or_me');
-        }
+    _unifiedService.startPolling(
+      gameType: GameType.you_or_me,
+      matchId: matchId,
+      onUpdate: (response) {
+        final state = _convertToGameState(response);
+        _onStateUpdate?.call(state);
       },
+      intervalSeconds: intervalSeconds,
     );
   }
 
   /// Stop polling
   void stopPolling() {
-    _pollTimer?.cancel();
-    _pollTimer = null;
+    _unifiedService.stopPolling();
     _onStateUpdate = null;
   }
 
   /// Dispose resources
   void dispose() {
     stopPolling();
+  }
+
+  /// Convert unified API response to legacy YouOrMeGameState
+  YouOrMeGameState _convertToGameState(GamePlayResponse response) {
+    final match = YouOrMeMatch(
+      id: response.match.id,
+      quizId: response.match.quizId,
+      branch: response.match.branch,
+      status: response.match.status,
+      player1Answers: [], // You-or-me uses string answers, handled separately
+      player2Answers: [],
+      player1AnswerCount: 0, // Will be derived from state
+      player2AnswerCount: 0,
+      currentTurnUserId: null, // Not directly in unified response
+      turnNumber: 1,
+      player1Score: response.result?.userScore ?? 0,
+      player2Score: response.result?.partnerScore ?? 0,
+      player1Id: '',
+      player2Id: '',
+      date: response.match.date,
+      createdAt: DateTime.tryParse(response.match.createdAt) ?? DateTime.now(),
+      completedAt: response.match.completedAt != null
+          ? DateTime.tryParse(response.match.completedAt!)
+          : null,
+    );
+
+    ServerYouOrMeQuiz? quiz;
+    if (response.quiz != null) {
+      quiz = ServerYouOrMeQuiz(
+        quizId: response.quiz!.id,
+        title: response.quiz!.name,
+        branch: response.match.branch,
+        questions: response.quiz!.questions.map((q) => ServerYouOrMeQuestion(
+          id: q.id,
+          prompt: q.text.split('\n').first, // First line is prompt
+          content: q.text.split('\n').length > 1 ? q.text.split('\n')[1] : q.text,
+        )).toList(),
+        totalQuestions: response.quiz!.questions.length,
+      );
+    }
+
+    // Calculate answer counts from state
+    final myAnswerCount = response.state.userAnswered ? 10 : 0; // Simplified
+    final partnerAnswerCount = response.state.partnerAnswered ? 10 : 0;
+
+    return YouOrMeGameState(
+      match: match,
+      quiz: quiz,
+      isMyTurn: response.state.isMyTurn ?? false,
+      canPlay: response.state.canSubmit,
+      currentQuestion: 0, // Will be determined by UI
+      myAnswerCount: myAnswerCount,
+      partnerAnswerCount: partnerAnswerCount,
+      myScore: response.result?.userScore ?? 0,
+      partnerScore: response.result?.partnerScore ?? 0,
+      isCompleted: response.state.isCompleted,
+      totalQuestions: response.quiz?.questions.length ?? 10,
+    );
   }
 }

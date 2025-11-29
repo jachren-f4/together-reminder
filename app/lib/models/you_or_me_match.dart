@@ -148,7 +148,7 @@ class YouOrMeGameState {
   });
 }
 
-/// Submit result from you-or-me-match API
+/// Submit result from you-or-me-match API (legacy turn-based)
 class YouOrMeSubmitResult {
   final bool success;
   final bool isCompleted;
@@ -191,4 +191,25 @@ class YouOrMeSubmitResult {
       gameState: gameState,
     );
   }
+}
+
+/// Bulk submit result for You-or-Me (new unified API)
+class YouOrMeBulkSubmitResult {
+  final bool success;
+  final bool bothAnswered;
+  final bool isCompleted;
+  final int? matchPercentage;
+  final int? lpEarned;
+  final List<String> userAnswers;
+  final List<String>? partnerAnswers;
+
+  YouOrMeBulkSubmitResult({
+    required this.success,
+    required this.bothAnswered,
+    required this.isCompleted,
+    this.matchPercentage,
+    this.lpEarned,
+    required this.userAnswers,
+    this.partnerAnswers,
+  });
 }

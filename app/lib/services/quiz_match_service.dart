@@ -1,146 +1,53 @@
-import 'dart:async';
-import 'dart:convert';
-import 'package:http/http.dart' as http;
-import '../config/supabase_config.dart';
 import '../models/quiz_match.dart';
-import '../services/auth_service.dart';
+import '../services/unified_game_service.dart';
 import '../utils/logger.dart';
 
 /// Core service for Classic and Affirmation quizzes
 ///
-/// API-first architecture following LinkedService pattern:
-/// - Server is single source of truth
-/// - Server provides quiz content (questions)
-/// - No local quiz generation
-/// - Simple 10-second polling for sync
+/// Now uses UnifiedGameService under the hood.
+/// Maintains backward compatibility with existing screens.
 class QuizMatchService {
   static final QuizMatchService _instance = QuizMatchService._internal();
   factory QuizMatchService() => _instance;
   QuizMatchService._internal();
 
-  final AuthService _authService = AuthService();
-
-  /// Polling timer for waiting screens
-  Timer? _pollTimer;
+  final UnifiedGameService _unifiedService = UnifiedGameService();
 
   /// Callback for state updates during polling
   void Function(QuizMatchGameState)? _onStateUpdate;
 
-  /// Get API base URL
-  String get _apiBaseUrl => SupabaseConfig.apiUrl;
-
-  /// Make API request with authentication headers
-  Future<Map<String, dynamic>> _apiRequest(
-    String method,
-    String path, {
-    Map<String, dynamic>? body,
-  }) async {
-    final url = Uri.parse('$_apiBaseUrl$path');
-    final headers = await _authService.getAuthHeaders();
-    headers['Content-Type'] = 'application/json';
-
-    http.Response response;
-
-    try {
-      switch (method) {
-        case 'GET':
-          response = await http.get(url, headers: headers);
-          break;
-        case 'POST':
-          response = await http.post(
-            url,
-            headers: headers,
-            body: body != null ? jsonEncode(body) : '{}',
-          );
-          break;
-        default:
-          throw Exception('Unsupported HTTP method: $method');
-      }
-
-      if (response.statusCode >= 200 && response.statusCode < 300) {
-        return jsonDecode(response.body);
-      } else {
-        final error = jsonDecode(response.body);
-        throw Exception(error['error'] ?? 'API request failed');
-      }
-    } catch (e) {
-      Logger.error('API request failed: $method $path',
-          error: e, service: 'quiz');
-      rethrow;
-    }
-  }
-
-  /// Get local date in YYYY-MM-DD format
-  String _getLocalDate() {
-    final now = DateTime.now();
-    return '${now.year}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}';
-  }
-
   /// Get or create quiz match for today
-  ///
-  /// This is the main entry point. Server handles:
-  /// - Creating match if none exists for today
-  /// - Returning existing active match
-  /// - Providing quiz content (questions)
-  /// - All game state calculation
   ///
   /// [quizType] - 'classic' or 'affirmation'
   Future<QuizMatchGameState> getOrCreateMatch(String quizType) async {
     try {
-      final response = await _apiRequest(
-        'POST',
-        '/api/sync/quiz-match',
-        body: {
-          'localDate': _getLocalDate(),
-          'quizType': quizType,
-        },
-      );
+      final gameType = quizType == 'affirmation'
+          ? GameType.affirmation
+          : GameType.classic;
 
-      final matchData = response['match'];
-      final quizData = response['quiz'];
-      final gameStateData = response['gameState'];
+      final response = await _unifiedService.startGame(gameType);
 
-      final match = QuizMatch.fromJson(matchData);
-      final quiz = quizData != null ? ServerQuiz.fromJson(quizData) : null;
-
-      return QuizMatchGameState(
-        match: match,
-        quiz: quiz,
-        hasUserAnswered: gameStateData['hasUserAnswered'] ?? false,
-        hasPartnerAnswered: gameStateData['hasPartnerAnswered'] ?? false,
-        isCompleted: gameStateData['isCompleted'] ?? false,
-        canAnswer: gameStateData['canAnswer'] ?? false,
-      );
+      // Convert to legacy format
+      return _convertToGameState(response);
     } catch (e) {
-      Logger.error('Failed to get/create quiz match from API',
-          error: e, service: 'quiz');
+      Logger.error('Failed to get/create quiz match', error: e, service: 'quiz');
       rethrow;
     }
   }
 
   /// Poll match state by ID (for waiting screens)
-  Future<QuizMatchGameState> pollMatchState(String matchId) async {
+  Future<QuizMatchGameState> pollMatchState(String matchId, {String quizType = 'classic'}) async {
     try {
-      final response = await _apiRequest(
-        'GET',
-        '/api/sync/quiz-match?matchId=$matchId',
+      final gameType = quizType == 'affirmation'
+          ? GameType.affirmation
+          : GameType.classic;
+
+      final response = await _unifiedService.getMatchState(
+        gameType: gameType,
+        matchId: matchId,
       );
 
-      final matchData = response['match'];
-      final quizData = response['quiz'];
-      final gameStateData = response['gameState'];
-
-      final match = QuizMatch.fromJson(matchData);
-      final quiz = quizData != null ? ServerQuiz.fromJson(quizData) : null;
-
-      return QuizMatchGameState(
-        match: match,
-        quiz: quiz,
-        hasUserAnswered: gameStateData['hasUserAnswered'] ?? false,
-        hasPartnerAnswered: gameStateData['hasPartnerAnswered'] ?? false,
-        isCompleted: gameStateData['isCompleted'] ?? false,
-        canAnswer: gameStateData['canAnswer'] ?? false,
-      );
+      return _convertToGameState(response);
     } catch (e) {
       Logger.error('Failed to poll quiz match state', error: e, service: 'quiz');
       rethrow;
@@ -151,29 +58,31 @@ class QuizMatchService {
   ///
   /// [matchId] - The match ID
   /// [answers] - Array of answer indices
+  /// [quizType] - 'classic' or 'affirmation'
   Future<QuizMatchSubmitResult> submitAnswers({
     required String matchId,
     required List<int> answers,
+    String quizType = 'classic',
   }) async {
-    // DEBUG: Log what we're submitting
-    print('🔵 [QUIZ DEBUG] submitAnswers called');
-    print('🔵 [QUIZ DEBUG] matchId: "$matchId" (length: ${matchId.length})');
-    print('🔵 [QUIZ DEBUG] answers: $answers');
-
     try {
-      final response = await _apiRequest(
-        'POST',
-        '/api/sync/quiz-match/submit',
-        body: {
-          'matchId': matchId,
-          'answers': answers,
-        },
+      final gameType = quizType == 'affirmation'
+          ? GameType.affirmation
+          : GameType.classic;
+
+      final response = await _unifiedService.submitAnswers(
+        gameType: gameType,
+        matchId: matchId,
+        answers: answers,
       );
 
-      print('🟢 [QUIZ DEBUG] submitAnswers response: $response');
-      return QuizMatchSubmitResult.fromJson(response);
+      return QuizMatchSubmitResult(
+        success: response.success,
+        bothAnswered: response.bothAnswered ?? false,
+        isCompleted: response.state.isCompleted,
+        matchPercentage: response.result?.matchPercentage,
+        lpEarned: response.result?.lpEarned,
+      );
     } catch (e) {
-      print('🔴 [QUIZ DEBUG] submitAnswers error: $e');
       Logger.error('Failed to submit quiz answers', error: e, service: 'quiz');
       rethrow;
     }
@@ -183,45 +92,87 @@ class QuizMatchService {
   ///
   /// [matchId] - Match to poll
   /// [onUpdate] - Callback when state changes
-  /// [intervalSeconds] - Polling interval (default 10s)
+  /// [intervalSeconds] - Polling interval (default 5s)
+  /// [quizType] - 'classic' or 'affirmation'
   void startPolling(
     String matchId, {
     required void Function(QuizMatchGameState) onUpdate,
-    int intervalSeconds = 10,
+    int intervalSeconds = 5,
+    String quizType = 'classic',
   }) {
     _onStateUpdate = onUpdate;
-    stopPolling(); // Stop any existing polling
+    stopPolling();
 
     Logger.info('Starting polling for quiz match: $matchId', service: 'quiz');
 
-    _pollTimer = Timer.periodic(
-      Duration(seconds: intervalSeconds),
-      (_) async {
-        try {
-          final state = await pollMatchState(matchId);
-          _onStateUpdate?.call(state);
+    final gameType = quizType == 'affirmation'
+        ? GameType.affirmation
+        : GameType.classic;
 
-          // Stop polling if completed
-          if (state.isCompleted) {
-            Logger.info('Match completed, stopping polling', service: 'quiz');
-            stopPolling();
-          }
-        } catch (e) {
-          Logger.error('Polling error', error: e, service: 'quiz');
-        }
+    _unifiedService.startPolling(
+      gameType: gameType,
+      matchId: matchId,
+      onUpdate: (response) {
+        final state = _convertToGameState(response);
+        _onStateUpdate?.call(state);
       },
+      intervalSeconds: intervalSeconds,
     );
   }
 
   /// Stop polling
   void stopPolling() {
-    _pollTimer?.cancel();
-    _pollTimer = null;
+    _unifiedService.stopPolling();
     _onStateUpdate = null;
   }
 
   /// Dispose resources
   void dispose() {
     stopPolling();
+  }
+
+  /// Convert unified API response to legacy QuizMatchGameState
+  QuizMatchGameState _convertToGameState(GamePlayResponse response) {
+    final match = QuizMatch(
+      id: response.match.id,
+      quizId: response.match.quizId,
+      quizType: response.match.quizType,
+      branch: response.match.branch,
+      status: response.match.status,
+      player1Answers: response.result?.userAnswers ?? [],
+      player2Answers: response.result?.partnerAnswers ?? [],
+      matchPercentage: response.result?.matchPercentage,
+      player1Id: '',  // Not needed for UI
+      player2Id: '',  // Not needed for UI
+      date: response.match.date,
+      createdAt: DateTime.tryParse(response.match.createdAt) ?? DateTime.now(),
+      completedAt: response.match.completedAt != null
+          ? DateTime.tryParse(response.match.completedAt!)
+          : null,
+    );
+
+    ServerQuiz? quiz;
+    if (response.quiz != null) {
+      quiz = ServerQuiz(
+        quizId: response.quiz!.id,
+        title: response.quiz!.name,
+        branch: response.match.branch,
+        questions: response.quiz!.questions.map((q) => ServerQuizQuestion(
+          id: q.id,
+          text: q.text,
+          choices: q.choices,
+          category: q.category ?? '',
+        )).toList(),
+      );
+    }
+
+    return QuizMatchGameState(
+      match: match,
+      quiz: quiz,
+      hasUserAnswered: response.state.userAnswered,
+      hasPartnerAnswered: response.state.partnerAnswered,
+      isCompleted: response.state.isCompleted,
+      canAnswer: response.state.canSubmit,
+    );
   }
 }
