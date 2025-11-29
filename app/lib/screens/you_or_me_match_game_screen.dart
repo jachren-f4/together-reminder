@@ -260,13 +260,26 @@ class _YouOrMeMatchGameScreenState extends State<YouOrMeMatchGameScreen>
         await _arenaService.awardLovePoints(lpEarned, 'you_or_me_complete');
         Logger.debug('Awarded $lpEarned LP locally for You-or-Me completion', service: 'you_or_me');
 
+        // Calculate match count from answers (how many questions both partners answered the same)
+        // For you-or-me: answers are relative (me=1, you=0). A match means both picked the SAME PERSON.
+        // Server inverts player2's answers before comparison, and returns them already inverted.
+        // So here we can compare directly - if userAnswers[i] == partnerAnswers[i], both picked the same person.
+        int matchCount = 0;
+        final userAnswers = result.userAnswers ?? [];
+        final partnerAnswers = result.partnerAnswers ?? [];
+        for (int i = 0; i < userAnswers.length && i < partnerAnswers.length; i++) {
+          if (userAnswers[i] == partnerAnswers[i]) {
+            matchCount++;
+          }
+        }
+
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(
             builder: (context) => YouOrMeMatchResultsScreen(
               match: _gameState!.match,
               quiz: _gameState!.quiz,
-              myScore: 0, // Will be calculated from answers
-              partnerScore: 0,
+              myScore: matchCount, // Both partners see the same match count
+              partnerScore: matchCount,
               lpEarned: result.lpEarned,
               matchPercentage: result.matchPercentage,
               userAnswers: result.userAnswers,
