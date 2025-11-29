@@ -488,21 +488,11 @@ class _StepsClaimScreenState extends State<StepsClaimScreen>
     HapticService().tap();
 
     try {
-      // Claim the reward
+      // Claim the reward (LP is awarded server-side by /api/sync/steps)
       await _stepsService.claimReward();
 
-      // Award LP to both users
-      final user = _storage.getUser();
-      final partner = _storage.getPartner();
-
-      if (user != null && partner != null) {
-        await LovePointService.awardPointsToBothUsers(
-          userId1: user.id,
-          userId2: partner.pushToken,
-          amount: widget.stepsDay.earnedLP,
-          reason: 'Steps Together reward for ${widget.stepsDay.dateKey}',
-        );
-      }
+      // Sync LP from server after claim
+      await LovePointService.fetchAndSyncFromServer();
 
       // Success feedback
       HapticService().trigger(HapticType.success);
