@@ -1,0 +1,69 @@
+{
+  "quizId": "affirmation_002",
+  "title": "Simple Joys",
+  "category": "emotional_support",
+  "branch": "emotional",
+  "description": "Rate your feelings together",
+  "questions": [
+    {
+      "id": "affirmation_002_q1",
+      "text": "We appreciate small joyful moments together.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ]
+    },
+    {
+      "id": "affirmation_002_q2",
+      "text": "Simple activities feel meaningful with my partner.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ]
+    },
+    {
+      "id": "affirmation_002_q3",
+      "text": "We have small routines that bring us joy.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ]
+    },
+    {
+      "id": "affirmation_002_q4",
+      "text": "I feel happy sharing everyday experiences with my partner.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ]
+    },
+    {
+      "id": "affirmation_002_q5",
+      "text": "Small joys help strengthen our bond.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ]
+    }
+  ]
+}

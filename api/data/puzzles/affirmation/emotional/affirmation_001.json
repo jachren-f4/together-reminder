@@ -1,0 +1,69 @@
+{
+  "quizId": "affirmation_001",
+  "title": "Warm Vibes",
+  "category": "trust",
+  "branch": "emotional",
+  "description": "Rate your feelings together",
+  "questions": [
+    {
+      "id": "affirmation_001_q1",
+      "text": "My partner helps create a warm atmosphere in our daily life.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ]
+    },
+    {
+      "id": "affirmation_001_q2",
+      "text": "I often feel uplifted when we spend time together.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ]
+    },
+    {
+      "id": "affirmation_001_q3",
+      "text": "We greet each other in a pleasant, affectionate way.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ]
+    },
+    {
+      "id": "affirmation_001_q4",
+      "text": "Being around my partner usually puts me in a good mood.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ]
+    },
+    {
+      "id": "affirmation_001_q5",
+      "text": "We share positive emotions regularly.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ]
+    }
+  ]
+}

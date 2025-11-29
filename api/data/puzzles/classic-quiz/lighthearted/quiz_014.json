@@ -1,0 +1,64 @@
+{
+  "quizId": "quiz_014",
+  "title": "Lighthearted Quiz 14",
+  "branch": "lighthearted",
+  "questions": [
+    {
+      "id": "quiz_014_q1",
+      "text": "What's my favorite dessert?",
+      "choices": [
+        "Ice cream",
+        "Cake",
+        "Cookies",
+        "Brownies",
+        "Other / Something else"
+      ],
+      "category": "favorites"
+    },
+    {
+      "id": "quiz_014_q2",
+      "text": "How do I prefer to spend my weekend?",
+      "choices": [
+        "Outdoor activities",
+        "Relaxing at home",
+        "Social events",
+        "Exploring new places",
+        "Other / It depends"
+      ],
+      "category": "preferences"
+    },
+    {
+      "id": "quiz_014_q3",
+      "text": "Would I rather: Time with many friends or Quality time with one?",
+      "choices": [
+        "Many friends",
+        "Quality time with one"
+      ],
+      "category": "would_you_rather"
+    },
+    {
+      "id": "quiz_014_q4",
+      "text": "What's my favorite season?",
+      "choices": [
+        "Spring",
+        "Summer",
+        "Fall",
+        "Winter",
+        "Other / It varies"
+      ],
+      "category": "favorites"
+    },
+    {
+      "id": "quiz_014_q5",
+      "text": "Do I prefer fiction or non-fiction?",
+      "choices": [
+        "Fiction",
+        "Non-fiction",
+        "Both equally",
+        "Neither",
+        "Other / It depends"
+      ],
+      "category": "preferences"
+    }
+  ]
+}

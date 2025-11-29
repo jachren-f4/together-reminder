@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Onboarding - Bold Contrast</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            background: #1a1a1a;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .screens-container {
+            display: flex;
+            gap: 40px;
+            flex-wrap: wrap;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .screen {
+            width: 375px;
+            height: 812px;
+            background: #fff;
+            border: 4px solid #000;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .screen.inverted {
+            background: #000;
+            color: #fff;
+        }
+
+        .screen-label {
+            position: absolute;
+            top: -30px;
+            left: 0;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #888;
+        }
+
+        .screen-wrapper {
+            position: relative;
+            padding-top: 40px;
+        }
+
+        /* Bold styles */
+        .bold-page {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .bold-header {
+            padding: 30px;
+            border-bottom: 4px solid #000;
+        }
+
+        .inverted .bold-header {
+            border-bottom-color: #fff;
+        }
+
+        .header-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo-text {
+            font-size: 14px;
+            font-weight: 700;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+        }
+
+        .step-badge {
+            font-size: 11px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            padding: 6px 12px;
+            border: 2px solid currentColor;
+        }
+
+        .bold-content {
+            flex: 1;
+            padding: 40px 30px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .hero-emoji {
+            font-size: 100px;
+            margin-bottom: 32px;
+            filter: grayscale(100%);
+        }
+
+        .mega-title {
+            font-size: 56px;
+            font-weight: 900;
+            line-height: 0.95;
+            letter-spacing: -3px;
+            margin-bottom: 20px;
+        }
+
+        .sub-title {
+            font-size: 18px;
+            line-height: 1.5;
+            opacity: 0.7;
+        }
+
+        .bold-footer {
+            padding: 30px;
+            border-top: 4px solid #000;
+        }
+
+        .inverted .bold-footer {
+            border-top-color: #fff;
+        }
+
+        .mega-btn {
+            width: 100%;
+            padding: 20px 24px;
+            background: #000;
+            color: #fff;
+            border: none;
+            font-family: 'Georgia', serif;
+            font-size: 16px;
+            font-weight: 700;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            cursor: pointer;
+        }
+
+        .inverted .mega-btn {
+            background: #fff;
+            color: #000;
+        }
+
+        .link-row {
+            text-align: center;
+            margin-top: 16px;
+            font-size: 14px;
+            opacity: 0.6;
+        }
+
+        .link-row a {
+            color: inherit;
+            font-weight: 700;
+        }
+
+        /* Form styles */
+        .form-title {
+            font-size: 42px;
+            font-weight: 900;
+            line-height: 1;
+            letter-spacing: -2px;
+            margin-bottom: 12px;
+        }
+
+        .form-desc {
+            font-size: 16px;
+            opacity: 0.6;
+            margin-bottom: 40px;
+        }
+
+        .field-group {
+            margin-bottom: 32px;
+        }
+
+        .field-label {
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            margin-bottom: 12px;
+            display: block;
+        }
+
+        .bold-input {
+            width: 100%;
+            padding: 20px;
+            border: 4px solid #000;
+            font-family: 'Georgia', serif;
+            font-size: 20px;
+            background: #fff;
+        }
+
+        .inverted .bold-input {
+            background: #1a1a1a;
+            border-color: #fff;
+            color: #fff;
+        }
+
+        .bold-input:focus {
+            outline: none;
+            box-shadow: 8px 8px 0 rgba(0, 0, 0, 0.2);
+        }
+
+        .inverted .bold-input:focus {
+            box-shadow: 8px 8px 0 rgba(255, 255, 255, 0.2);
+        }
+
+        .bold-input::placeholder {
+            opacity: 0.3;
+        }
+
+        .highlight-box {
+            padding: 20px;
+            background: #000;
+            color: #fff;
+            margin-top: 24px;
+        }
+
+        .inverted .highlight-box {
+            background: #fff;
+            color: #000;
+        }
+
+        .highlight-title {
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+
+        .highlight-text {
+            font-size: 14px;
+            line-height: 1.5;
+            opacity: 0.8;
+        }
+
+        /* OTP styles */
+        .otp-row {
+            display: flex;
+            gap: 8px;
+            margin: 32px 0;
+        }
+
+        .otp-block {
+            flex: 1;
+            aspect-ratio: 1;
+            max-width: 44px;
+            border: 4px solid #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Courier New', monospace;
+            font-size: 24px;
+            font-weight: 900;
+        }
+
+        .inverted .otp-block {
+            border-color: #fff;
+        }
+
+        .otp-block.filled {
+            background: #000;
+            color: #fff;
+        }
+
+        .inverted .otp-block.filled {
+            background: #fff;
+            color: #000;
+        }
+
+        .resend-text {
+            text-align: center;
+            font-size: 14px;
+            opacity: 0.6;
+        }
+
+        .resend-text a {
+            color: inherit;
+            font-weight: 700;
+            text-decoration: underline;
+        }
+
+        /* Tab styles */
+        .bold-tabs {
+            display: flex;
+            border-bottom: 4px solid #000;
+        }
+
+        .inverted .bold-tabs {
+            border-bottom-color: #fff;
+        }
+
+        .bold-tab {
+            flex: 1;
+            padding: 16px;
+            text-align: center;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            cursor: pointer;
+            background: transparent;
+        }
+
+        .bold-tab.active {
+            background: #000;
+            color: #fff;
+        }
+
+        .inverted .bold-tab.active {
+            background: #fff;
+            color: #000;
+        }
+
+        /* QR styles */
+        .qr-wrapper {
+            width: 200px;
+            height: 200px;
+            margin: 24px auto;
+            border: 4px solid #000;
+            padding: 16px;
+        }
+
+        .inverted .qr-wrapper {
+            border-color: #fff;
+        }
+
+        .qr-mock {
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(
+                0deg,
+                #000 0px,
+                #000 4px,
+                transparent 4px,
+                transparent 8px
+            ),
+            repeating-linear-gradient(
+                90deg,
+                #000 0px,
+                #000 4px,
+                transparent 4px,
+                transparent 8px
+            );
+        }
+
+        .inverted .qr-mock {
+            background: repeating-linear-gradient(
+                0deg,
+                #fff 0px,
+                #fff 4px,
+                transparent 4px,
+                transparent 8px
+            ),
+            repeating-linear-gradient(
+                90deg,
+                #fff 0px,
+                #fff 4px,
+                transparent 4px,
+                transparent 8px
+            );
+        }
+
+        .qr-caption {
+            text-align: center;
+            font-size: 14px;
+            opacity: 0.6;
+            font-style: italic;
+        }
+
+        .or-row {
+            display: flex;
+            align-items: center;
+            margin: 24px 0;
+            gap: 16px;
+        }
+
+        .or-line {
+            flex: 1;
+            height: 2px;
+            background: currentColor;
+            opacity: 0.2;
+        }
+
+        .or-text {
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            opacity: 0.5;
+        }
+
+        .outline-btn {
+            width: 100%;
+            padding: 16px 24px;
+            background: transparent;
+            color: #000;
+            border: 4px solid #000;
+            font-family: 'Georgia', serif;
+            font-size: 14px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            cursor: pointer;
+        }
+
+        .inverted .outline-btn {
+            color: #fff;
+            border-color: #fff;
+        }
+
+        /* Code display */
+        .code-block {
+            background: #000;
+            color: #fff;
+            padding: 32px;
+            text-align: center;
+            margin: 24px 0;
+        }
+
+        .inverted .code-block {
+            background: #fff;
+            color: #000;
+        }
+
+        .code-pre {
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            opacity: 0.5;
+            margin-bottom: 12px;
+        }
+
+        .code-big {
+            font-family: 'Courier New', monospace;
+            font-size: 48px;
+            font-weight: 900;
+            letter-spacing: 12px;
+        }
+
+        .code-timer {
+            font-size: 12px;
+            opacity: 0.5;
+            margin-top: 12px;
+            font-style: italic;
+        }
+
+        .btn-pair {
+            display: flex;
+            gap: 12px;
+        }
+
+        .btn-pair .outline-btn {
+            flex: 1;
+        }
+    </style>
+</head>
+<body>
+    <h1 style="text-align: center; font-size: 24px; margin-bottom: 40px; letter-spacing: 2px; text-transform: uppercase; color: #fff;">Variant 4: Bold Contrast</h1>
+
+    <div class="screens-container">
+        <!-- Welcome Screen (Inverted) -->
+        <div class="screen-wrapper">
+            <div class="screen-label">1. Welcome</div>
+            <div class="screen inverted bold-page">
+                <div class="bold-header">
+                    <div class="header-row">
+                        <span class="logo-text">TogetherRemind</span>
+                    </div>
+                </div>
+                <div class="bold-content">
+                    <div class="hero-emoji">💕</div>
+                    <h1 class="mega-title">Send Love<br>Daily</h1>
+                    <p class="sub-title">Caring reminders<br>for your partner</p>
+                </div>
+                <div class="bold-footer">
+                    <button class="mega-btn">Get Started</button>
+                    <p class="link-row">Have an account? <a href="#">Sign in</a></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Name Screen -->
+        <div class="screen-wrapper">
+            <div class="screen-label">2. Name Entry</div>
+            <div class="screen bold-page">
+                <div class="bold-header">
+                    <div class="header-row">
+                        <span class="logo-text">TogetherRemind</span>
+                        <span class="step-badge">1 of 3</span>
+                    </div>
+                </div>
+                <div class="bold-content">
+                    <h2 class="form-title">Your<br>Name</h2>
+                    <p class="form-desc">How your partner will see you</p>
+                    <div class="field-group">
+                        <label class="field-label">First Name</label>
+                        <input type="text" class="bold-input" placeholder="Enter name">
+                    </div>
+                </div>
+                <div class="bold-footer">
+                    <button class="mega-btn">Continue</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Auth Screen (Inverted) -->
+        <div class="screen-wrapper">
+            <div class="screen-label">3. Email Auth</div>
+            <div class="screen inverted bold-page">
+                <div class="bold-header">
+                    <div class="header-row">
+                        <span class="logo-text">TogetherRemind</span>
+                        <span class="step-badge">2 of 3</span>
+                    </div>
+                </div>
+                <div class="bold-content">
+                    <h2 class="form-title">Your<br>Email</h2>
+                    <p class="form-desc">We'll send you a magic code</p>
+                    <div class="field-group">
+                        <label class="field-label">Email</label>
+                        <input type="email" class="bold-input" placeholder="you@example.com">
+                    </div>
+                    <div class="highlight-box">
+                        <div class="highlight-title">No Password</div>
+                        <div class="highlight-text">Magic code = quick + secure</div>
+                    </div>
+                </div>
+                <div class="bold-footer">
+                    <button class="mega-btn">Send Code</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- OTP Screen -->
+        <div class="screen-wrapper">
+            <div class="screen-label">4. OTP Verification</div>
+            <div class="screen bold-page">
+                <div class="bold-header">
+                    <div class="header-row">
+                        <span class="logo-text">TogetherRemind</span>
+                        <span class="step-badge">Verify</span>
+                    </div>
+                </div>
+                <div class="bold-content">
+                    <h2 class="form-title">Check<br>Inbox</h2>
+                    <p class="form-desc">8-digit code sent to you@example.com</p>
+                    <div class="otp-row">
+                        <div class="otp-block filled">4</div>
+                        <div class="otp-block filled">7</div>
+                        <div class="otp-block filled">2</div>
+                        <div class="otp-block filled">9</div>
+                        <div class="otp-block">_</div>
+                        <div class="otp-block">_</div>
+                        <div class="otp-block">_</div>
+                        <div class="otp-block">_</div>
+                    </div>
+                    <p class="resend-text">No code? <a href="#">Resend</a></p>
+                </div>
+                <div class="bold-footer">
+                    <button class="mega-btn">Verify</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pairing Screen - QR (Inverted) -->
+        <div class="screen-wrapper">
+            <div class="screen-label">5. Pairing (QR)</div>
+            <div class="screen inverted bold-page">
+                <div class="bold-header">
+                    <div class="header-row">
+                        <span class="logo-text">TogetherRemind</span>
+                        <span class="step-badge">3 of 3</span>
+                    </div>
+                </div>
+                <div class="bold-tabs">
+                    <div class="bold-tab active">In Person</div>
+                    <div class="bold-tab">Remote</div>
+                </div>
+                <div class="bold-content">
+                    <h2 class="form-title" style="font-size: 36px;">Connect</h2>
+                    <div class="qr-wrapper">
+                        <div class="qr-mock"></div>
+                    </div>
+                    <p class="qr-caption">Partner scans this</p>
+                    <div class="or-row">
+                        <div class="or-line"></div>
+                        <span class="or-text">or</span>
+                        <div class="or-line"></div>
+                    </div>
+                    <button class="outline-btn">Scan Theirs</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pairing Screen - Remote -->
+        <div class="screen-wrapper">
+            <div class="screen-label">5b. Pairing (Remote)</div>
+            <div class="screen bold-page">
+                <div class="bold-header">
+                    <div class="header-row">
+                        <span class="logo-text">TogetherRemind</span>
+                        <span class="step-badge">3 of 3</span>
+                    </div>
+                </div>
+                <div class="bold-tabs">
+                    <div class="bold-tab">In Person</div>
+                    <div class="bold-tab active">Remote</div>
+                </div>
+                <div class="bold-content">
+                    <h2 class="form-title" style="font-size: 36px;">Connect</h2>
+                    <div class="code-block">
+                        <div class="code-pre">Your Code</div>
+                        <div class="code-big">A7X2K9</div>
+                        <div class="code-timer">Expires 23:45:12</div>
+                    </div>
+                    <div class="btn-pair">
+                        <button class="outline-btn">Copy</button>
+                        <button class="outline-btn">Share</button>
+                    </div>
+                    <div class="or-row">
+                        <div class="or-line"></div>
+                        <span class="or-text">or</span>
+                        <div class="or-line"></div>
+                    </div>
+                    <button class="outline-btn">Enter Code</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

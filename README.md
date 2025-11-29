@@ -284,6 +284,36 @@ docs/
 
 ## 🎮 Recently Implemented Features
 
+### Love Points - Single Source of Truth (2025-11-29)
+
+LP is now stored at the **couple level** (`couples.total_lp`), ensuring both partners always see identical LP totals.
+
+**Architecture:**
+- **Before:** `user_love_points.total_points` per user (could diverge)
+- **After:** `couples.total_lp` single column (always identical)
+
+**LP Award Sources:**
+| Activity | LP Amount |
+|----------|-----------|
+| Classic Quiz | 30 LP |
+| Affirmation Quiz | 30 LP |
+| You or Me | 30 LP |
+| Linked | 30 LP |
+| Word Search | 30 LP |
+| Steps Together | 15-30 LP |
+
+**For developers:**
+```typescript
+import { awardLP } from '@/lib/lp/award';
+
+// Inside game completion handler:
+await awardLP(coupleId, LP_REWARD, 'linked_complete', matchId);
+```
+
+**Migration:** `api/supabase/migrations/025_lp_single_source.sql`
+
+---
+
 ### Turn-Based Game Preferences (2025-11-25)
 
 Couples can set a global preference for who goes first in future turn-based games.

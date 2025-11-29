@@ -649,14 +649,17 @@ class QuestSyncService {
   int _parseQuestType(String questTypeStr) {
     // Map quest type strings to their int values
     // These match the QuestType enum values
+    // Support both snake_case (database) and camelCase (legacy) formats
     switch (questTypeStr.toLowerCase()) {
       case 'quiz':
         return 1; // QuestType.quiz
       case 'you_or_me':
+      case 'youorme': // camelCase lowercase
         return 3; // QuestType.youOrMe
       case 'linked':
         return 4; // QuestType.linked
       case 'word_search':
+      case 'wordsearch': // camelCase lowercase
         return 5; // QuestType.wordSearch
       case 'steps':
         return 6; // QuestType.steps

@@ -1,23 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 import '../config/brand/brand_loader.dart';
-import '../models/quiz_session.dart';
 import '../models/branch_progression_state.dart';
 import '../services/branch_manifest_service.dart';
+import '../services/quiz_match_service.dart';
+import '../services/storage_service.dart';
 import '../widgets/editorial/editorial.dart';
-import 'quiz_question_screen.dart';
+import 'quiz_match_game_screen.dart';
 
-/// Intro screen for affirmation-style quizzes
-/// Editorial newspaper aesthetic with scale preview
+/// Intro screen for Affirmation Quiz (server-centric architecture)
+///
+/// Editorial newspaper aesthetic with animated content.
+/// Does NOT require a pre-loaded session - the game screen fetches
+/// from the API when user taps "Begin".
 class AffirmationIntroScreen extends StatefulWidget {
-  final QuizSession session;
   final String? branch; // Branch for manifest video lookup
+  final String? questId; // Optional: Daily quest ID for updating local status
 
-  const AffirmationIntroScreen({
-    super.key,
-    required this.session,
-    this.branch,
-  });
+  const AffirmationIntroScreen({super.key, this.branch, this.questId});
 
   @override
   State<AffirmationIntroScreen> createState() => _AffirmationIntroScreenState();
@@ -25,6 +25,13 @@ class AffirmationIntroScreen extends StatefulWidget {
 
 class _AffirmationIntroScreenState extends State<AffirmationIntroScreen>
     with TickerProviderStateMixin {
+  final StorageService _storage = StorageService();
+
+  // Partner status for banner
+  bool _partnerCompleted = false;
+  String? _partnerName;
+
+  // Video player state
   VideoPlayerController? _videoController;
   late AnimationController _fadeController;
   late Animation<double> _fadeAnimation;
@@ -103,12 +110,32 @@ class _AffirmationIntroScreenState extends State<AffirmationIntroScreen>
     );
 
     _initializeVideo();
+    _checkPartnerStatus();
 
     // Start content animation immediately (don't wait for video)
     // Video is a visual enhancement, not a blocker
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _startContentAnimation();
     });
+  }
+
+  /// Check if partner has already completed this quiz
+  Future<void> _checkPartnerStatus() async {
+    try {
+      final service = QuizMatchService();
+      final gameState = await service.getOrCreateMatch('affirmation');
+
+      if (mounted) {
+        setState(() {
+          // Only show partner status if match is active (not completed)
+          // and partner has actually answered
+          _partnerCompleted = !gameState.isCompleted && gameState.hasPartnerAnswered;
+          _partnerName = _storage.getPartner()?.name;
+        });
+      }
+    } catch (e) {
+      // Silently fail - banner is optional enhancement
+    }
   }
 
   Future<void> _initializeVideo() async {
@@ -200,34 +227,32 @@ class _AffirmationIntroScreenState extends State<AffirmationIntroScreen>
     super.dispose();
   }
 
-  String _getDescription(String category) {
-    switch (category) {
-      case 'trust':
-        return 'Rate how strongly you agree with statements about trust and emotional safety in your relationship.';
-      case 'emotional_support':
-        return 'Rate how strongly you agree with statements about emotional support and understanding.';
-      case 'commitment':
-        return 'Rate how strongly you agree with statements about commitment and dedication.';
-      case 'intimacy':
-        return 'Rate how strongly you agree with statements about emotional and physical closeness.';
-      case 'relationship_satisfaction':
-        return 'Rate how strongly you agree with statements about overall relationship satisfaction.';
-      case 'shared_values':
-        return 'Rate how strongly you agree with statements about shared values and goals.';
-      default:
-        return 'Rate how strongly you agree with statements about your relationship\'s emotional foundation.';
-    }
+  void _startQuiz() {
+    // Navigate to server-centric game screen
+    Navigator.of(context).pushReplacement(
+      MaterialPageRoute(
+        builder: (context) => QuizMatchGameScreen(
+          quizType: 'affirmation',
+          questId: widget.questId,
+        ),
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
+    final partnerName = _storage.getPartner()?.name ?? 'your partner';
+
     return Scaffold(
       backgroundColor: EditorialStyles.paper,
       body: SafeArea(
         child: Column(
           children: [
             // Header (fixed at top)
-            _buildHeader(context),
+            _buildHeader(),
+
+            // Partner status banner (shows if partner already completed)
+            _buildPartnerStatusBanner(),
 
             // Scrollable content (includes hero)
             Expanded(
@@ -235,7 +260,7 @@ class _AffirmationIntroScreenState extends State<AffirmationIntroScreen>
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Hero image with video (scrolls with content)
+                    // Hero image area (scrolls with content)
                     _buildHeroImage(),
 
                     // Content
@@ -258,7 +283,7 @@ class _AffirmationIntroScreenState extends State<AffirmationIntroScreen>
                           _animatedContent(
                             _titleAnimation,
                             Text(
-                              widget.session.quizName ?? 'Affirmation Quiz',
+                              'Affirmation Quiz',
                               style: EditorialStyles.headline,
                             ),
                           ),
@@ -268,7 +293,7 @@ class _AffirmationIntroScreenState extends State<AffirmationIntroScreen>
                           _animatedContent(
                             _descAnimation,
                             Text(
-                              _getDescription(widget.session.category ?? 'trust'),
+                              'Rate how strongly you agree with statements about your relationship. Then compare with $partnerName to discover new insights!',
                               style: EditorialStyles.bodyTextItalic,
                             ),
                           ),
@@ -277,9 +302,9 @@ class _AffirmationIntroScreenState extends State<AffirmationIntroScreen>
                           // Stats card (animated)
                           _animatedContent(
                             _statsAnimation,
-                            EditorialStatsCard(
+                            const EditorialStatsCard(
                               rows: [
-                                ('Statements', '${widget.session.questionIds.length}'),
+                                ('Statements', '5'),
                                 ('Time', '~3 minutes'),
                                 ('Reward', '+30 LP'),
                               ],
@@ -311,14 +336,14 @@ class _AffirmationIntroScreenState extends State<AffirmationIntroScreen>
             ),
 
             // Footer (fixed at bottom, animated)
-            _animatedContent(_footerAnimation, _buildFooter(context)),
+            _animatedContent(_footerAnimation, _buildFooter()),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildHeader(BuildContext context) {
+  Widget _buildHeader() {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       decoration: BoxDecoration(
@@ -504,7 +529,53 @@ class _AffirmationIntroScreenState extends State<AffirmationIntroScreen>
     );
   }
 
-  Widget _buildFooter(BuildContext context) {
+  Widget _buildPartnerStatusBanner() {
+    if (!_partnerCompleted || _partnerName == null) {
+      return const SizedBox.shrink();
+    }
+
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+      decoration: BoxDecoration(
+        color: EditorialStyles.paper,
+        border: Border(bottom: EditorialStyles.border),
+      ),
+      child: Row(
+        children: [
+          Container(
+            width: 24,
+            height: 24,
+            decoration: BoxDecoration(
+              color: EditorialStyles.ink,
+              shape: BoxShape.circle,
+            ),
+            child: const Icon(Icons.check, size: 14, color: Colors.white),
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  '$_partnerName already answered',
+                  style: EditorialStyles.bodySmall.copyWith(fontWeight: FontWeight.w600),
+                ),
+                Text(
+                  'See how your ratings compare!',
+                  style: EditorialStyles.bodySmall.copyWith(
+                    color: EditorialStyles.inkMuted,
+                    fontStyle: FontStyle.italic,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildFooter() {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
@@ -515,13 +586,7 @@ class _AffirmationIntroScreenState extends State<AffirmationIntroScreen>
         children: [
           EditorialPrimaryButton(
             label: 'Begin',
-            onPressed: () {
-              Navigator.of(context).pushReplacement(
-                MaterialPageRoute(
-                  builder: (context) => QuizQuestionScreen(session: widget.session),
-                ),
-              );
-            },
+            onPressed: _startQuiz,
           ),
           const SizedBox(height: 12),
           Text(

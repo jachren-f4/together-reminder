@@ -1,0 +1,67 @@
+{
+  "quizId": "quiz_004",
+  "title": "Spicy Quiz 4",
+  "branch": "spicy",
+  "questions": [
+    {
+      "id": "quiz_004_q1",
+      "text": "What's my typical screen time before bed?",
+      "choices": [
+        "None",
+        "Under 30 min",
+        "30-60 min",
+        "Over an hour",
+        "Other / It varies"
+      ],
+      "category": "daily_habits"
+    },
+    {
+      "id": "quiz_004_q2",
+      "text": "Do I follow a skincare routine?",
+      "choices": [
+        "Detailed routine",
+        "Basic routine",
+        "Minimal",
+        "None",
+        "Other / It varies"
+      ],
+      "category": "daily_habits"
+    },
+    {
+      "id": "quiz_004_q3",
+      "text": "What's my evening routine?",
+      "choices": [
+        "Cook dinner",
+        "Order food",
+        "Eat out",
+        "Meal prep",
+        "Other / It varies"
+      ],
+      "category": "daily_habits"
+    },
+    {
+      "id": "quiz_004_q4",
+      "text": "How do I typically spend my lunch break?",
+      "choices": [
+        "Eat quickly",
+        "Full break",
+        "Work through it",
+        "Social time",
+        "Other / It varies"
+      ],
+      "category": "daily_habits"
+    },
+    {
+      "id": "quiz_004_q5",
+      "text": "How often do I clean my living space?",
+      "choices": [
+        "Daily",
+        "Weekly",
+        "Bi-weekly",
+        "When it's messy",
+        "Other / It varies"
+      ],
+      "category": "daily_habits"
+    }
+  ]
+}

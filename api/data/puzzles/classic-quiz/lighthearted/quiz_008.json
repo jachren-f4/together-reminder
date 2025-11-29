@@ -1,0 +1,61 @@
+{
+  "quizId": "quiz_008",
+  "title": "Lighthearted Quiz 8",
+  "branch": "lighthearted",
+  "questions": [
+    {
+      "id": "quiz_008_q1",
+      "text": "What's my preferred meeting style?",
+      "choices": [
+        "In person",
+        "Video call",
+        "Phone call",
+        "Email/async",
+        "Other / It depends"
+      ],
+      "category": "preferences"
+    },
+    {
+      "id": "quiz_008_q2",
+      "text": "What time do I usually wake up?",
+      "choices": [
+        "Before 7am",
+        "7-8am",
+        "8-9am",
+        "After 9am",
+        "Other / It varies"
+      ],
+      "category": "preferences"
+    },
+    {
+      "id": "quiz_008_q3",
+      "text": "What's my favorite way to exercise?",
+      "choices": [
+        "Running",
+        "Yoga",
+        "Gym",
+        "Swimming",
+        "Other / Something else"
+      ],
+      "category": "favorites"
+    },
+    {
+      "id": "quiz_008_q4",
+      "text": "Would I rather: Early morning or Late night?",
+      "choices": [
+        "Early morning",
+        "Late night"
+      ],
+      "category": "would_you_rather"
+    },
+    {
+      "id": "quiz_008_q5",
+      "text": "Would I rather: Big city life or Quiet countryside?",
+      "choices": [
+        "Big city life",
+        "Quiet countryside"
+      ],
+      "category": "would_you_rather"
+    }
+  ]
+}

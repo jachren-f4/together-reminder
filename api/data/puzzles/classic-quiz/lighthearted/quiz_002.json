@@ -1,0 +1,64 @@
+{
+  "quizId": "quiz_002",
+  "title": "Lighthearted Quiz 2",
+  "branch": "lighthearted",
+  "questions": [
+    {
+      "id": "quiz_002_q1",
+      "text": "Would I rather: Text messaging or Phone calls?",
+      "choices": [
+        "Text messaging",
+        "Phone calls"
+      ],
+      "category": "would_you_rather"
+    },
+    {
+      "id": "quiz_002_q2",
+      "text": "What's my conflict resolution style?",
+      "choices": [
+        "Talk immediately",
+        "Need time to think",
+        "Avoid conflict",
+        "Seek compromise",
+        "Other / It depends"
+      ],
+      "category": "preferences"
+    },
+    {
+      "id": "quiz_002_q3",
+      "text": "What's my favorite movie genre?",
+      "choices": [
+        "Action",
+        "Comedy",
+        "Romance",
+        "Horror",
+        "Other / Something else"
+      ],
+      "category": "favorites"
+    },
+    {
+      "id": "quiz_002_q4",
+      "text": "What's my secret guilty pleasure?",
+      "choices": [
+        "Reality TV",
+        "Junk food",
+        "Video games",
+        "Romance novels",
+        "Other / Something else"
+      ],
+      "category": "favorites"
+    },
+    {
+      "id": "quiz_002_q5",
+      "text": "What's my favorite holiday?",
+      "choices": [
+        "Christmas",
+        "Halloween",
+        "Birthday",
+        "New Year",
+        "Other / Something else"
+      ],
+      "category": "favorites"
+    }
+  ]
+}

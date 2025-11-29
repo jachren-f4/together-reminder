@@ -1,15 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:togetherremind/models/activity_item.dart';
 import 'package:togetherremind/models/reminder.dart';
-import 'package:togetherremind/models/quiz_session.dart';
 import 'package:togetherremind/services/activity_service.dart';
 import 'package:togetherremind/services/storage_service.dart';
 import 'package:togetherremind/services/reminder_service.dart';
 import 'package:togetherremind/theme/app_theme.dart';
 import 'package:togetherremind/widgets/participant_avatars.dart';
-import 'package:togetherremind/screens/quiz_intro_screen.dart';
-import 'package:togetherremind/screens/quiz_results_screen.dart';
-import 'package:togetherremind/screens/would_you_rather_intro_screen.dart';
 import 'package:togetherremind/config/brand/brand_loader.dart';
 import 'package:intl/intl.dart';
 
@@ -74,44 +70,22 @@ class _ActivityHubScreenState extends State<ActivityHubScreen> {
 
       case ActivityType.affirmation:
       case ActivityType.quiz:
-        // Check if this is a daily quest or standalone quiz
-        if (activity.sourceData is QuizSession) {
-          final session = activity.sourceData as QuizSession;
-          if (session.isCompleted) {
-            // Navigate to results
-            await Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => QuizResultsScreen(session: session),
-              ),
-            );
-          } else {
-            // Navigate to intro/quiz
-            await Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const QuizIntroScreen(),
-              ),
-            );
-          }
-        } else {
-          // This is a daily quest - navigate back to home where they can complete it
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Return to home screen to complete this quest'),
-              duration: Duration(seconds: 2),
-            ),
-          );
-        }
-        setState(() {}); // Refresh after returning
+        // Daily quests are the entry point for quizzes now - direct user to home
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Return to home screen to complete this quest'),
+            duration: Duration(seconds: 2),
+          ),
+        );
+        setState(() {});
         break;
 
       case ActivityType.wouldYouRather:
-        // Navigate to Would You Rather
-        await Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => const WouldYouRatherIntroScreen(),
+        // Would You Rather is no longer available as standalone
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Return to home screen to complete this quest'),
+            duration: Duration(seconds: 2),
           ),
         );
         setState(() {});
