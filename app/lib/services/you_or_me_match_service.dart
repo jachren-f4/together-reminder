@@ -122,6 +122,20 @@ class YouOrMeMatchService {
 
   /// Convert unified API response to legacy YouOrMeGameState
   YouOrMeGameState _convertToGameState(GamePlayResponse response) {
+    // Calculate match count from answers (how many questions both partners answered the same)
+    // For you-or-me: the server already handles the relative answer inversion.
+    // partnerAnswers are returned in the user's perspective, so we can compare directly.
+    int matchCount = 0;
+    if (response.result != null) {
+      final userAnswers = response.result!.userAnswers;
+      final partnerAnswers = response.result!.partnerAnswers;
+      for (int i = 0; i < userAnswers.length && i < partnerAnswers.length; i++) {
+        if (userAnswers[i] == partnerAnswers[i]) {
+          matchCount++;
+        }
+      }
+    }
+
     final match = YouOrMeMatch(
       id: response.match.id,
       quizId: response.match.quizId,
@@ -133,8 +147,8 @@ class YouOrMeMatchService {
       player2AnswerCount: 0,
       currentTurnUserId: null, // Not directly in unified response
       turnNumber: 1,
-      player1Score: response.result?.userScore ?? 0,
-      player2Score: response.result?.partnerScore ?? 0,
+      player1Score: matchCount, // Use calculated match count
+      player2Score: matchCount, // Both see the same match count
       player1Id: '',
       player2Id: '',
       date: response.match.date,
@@ -171,8 +185,8 @@ class YouOrMeMatchService {
       currentQuestion: 0, // Will be determined by UI
       myAnswerCount: myAnswerCount,
       partnerAnswerCount: partnerAnswerCount,
-      myScore: response.result?.userScore ?? 0,
-      partnerScore: response.result?.partnerScore ?? 0,
+      myScore: matchCount, // Use calculated match count
+      partnerScore: matchCount, // Both see the same match count
       isCompleted: response.state.isCompleted,
       totalQuestions: response.quiz?.questions.length ?? 10,
     );

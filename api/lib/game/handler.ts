@@ -135,7 +135,30 @@ export function loadQuiz(gameType: GameType, branch: string, quizId: string): an
     const config = GAME_CONFIG[gameType];
     const quizPath = join(process.cwd(), 'data', 'puzzles', config.folder, branch, `${quizId}.json`);
     const quizData = readFileSync(quizPath, 'utf-8');
-    return JSON.parse(quizData);
+    const rawQuiz = JSON.parse(quizData);
+
+    // Normalize quiz format to common structure
+    // For you_or_me: questions have { id, prompt, content } -> { id, text, choices: [] }
+    // For classic/affirmation: questions have { id, text, choices }
+    if (gameType === 'you_or_me') {
+      return {
+        id: rawQuiz.quizId || quizId,
+        name: rawQuiz.title || 'You or Me',
+        questions: (rawQuiz.questions || []).map((q: any) => ({
+          id: q.id,
+          // Combine prompt and content into text format expected by Flutter
+          text: `${q.prompt}\n${q.content}`,
+          choices: ['You', 'Me'], // You or Me always has these two choices
+        })),
+      };
+    }
+
+    // For classic and affirmation, return as-is but ensure consistent structure
+    return {
+      id: rawQuiz.quizId || rawQuiz.id || quizId,
+      name: rawQuiz.title || rawQuiz.name || 'Quiz',
+      questions: rawQuiz.questions || [],
+    };
   } catch (error) {
     console.error(`Failed to load quiz ${quizId} from ${gameType}/${branch}:`, error);
     return null;
@@ -313,7 +336,7 @@ export async function submitAnswers(
   let newStatus = 'active';
 
   if (bothAnswered) {
-    matchPercentage = calculateMatchPercentage(updatedPlayer1Answers, updatedPlayer2Answers);
+    matchPercentage = calculateMatchPercentage(updatedPlayer1Answers, updatedPlayer2Answers, match.quizType);
     newStatus = 'completed';
     lpEarned = config.lpReward;
     await awardLP(couple.coupleId, lpEarned, `${match.quizType}_complete`, match.id);
@@ -355,12 +378,22 @@ export async function submitAnswers(
   return { match: updatedMatch, result: gameResult };
 }
 
-function calculateMatchPercentage(p1: number[], p2: number[]): number {
+function calculateMatchPercentage(p1: number[], p2: number[], gameType?: GameType): number {
   if (p1.length === 0 || p2.length === 0) return 0;
   const total = Math.min(p1.length, p2.length);
   let matches = 0;
+
+  // For you_or_me games, answers are relative (me=1, you=0) to each player.
+  // A "match" means both picked the SAME PERSON.
+  // Player1 picking "Player2" sends 0 (you), Player2 picking "Player2" sends 1 (me).
+  // So we need to invert player2's answers: 0↔1 before comparison.
+  // This way, if both picked Player2: p1[i]=0, inverted p2[i]=0 → MATCH!
+  const compareP2 = gameType === 'you_or_me'
+    ? p2.map(v => v === 0 ? 1 : 0)  // Invert: 0→1, 1→0
+    : p2;
+
   for (let i = 0; i < total; i++) {
-    if (p1[i] === p2[i]) matches++;
+    if (p1[i] === compareP2[i]) matches++;
   }
   return Math.round((matches / total) * 100);
 }
