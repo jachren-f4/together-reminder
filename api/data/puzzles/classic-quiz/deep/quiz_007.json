@@ -1,0 +1,67 @@
+{
+  "quizId": "quiz_007",
+  "title": "Deep Quiz 7",
+  "branch": "deep",
+  "questions": [
+    {
+      "id": "quiz_007_q1",
+      "text": "What's my dream side hustle or passion project?",
+      "choices": [
+        "Creative venture",
+        "Online business",
+        "Consulting",
+        "Non-profit",
+        "Other / Something else"
+      ],
+      "category": "future"
+    },
+    {
+      "id": "quiz_007_q2",
+      "text": "What would I do if I won the lottery?",
+      "choices": [
+        "Travel",
+        "Invest",
+        "Help others",
+        "Buy a dream home",
+        "Other / Something else"
+      ],
+      "category": "future"
+    },
+    {
+      "id": "quiz_007_q3",
+      "text": "Do I want to be famous or influential?",
+      "choices": [
+        "Yes, in my field",
+        "Maybe",
+        "Prefer privacy",
+        "Never",
+        "Other / Undecided"
+      ],
+      "category": "future"
+    },
+    {
+      "id": "quiz_007_q4",
+      "text": "What's my ideal work-life balance in the future?",
+      "choices": [
+        "Career-focused",
+        "Balanced",
+        "Life-focused",
+        "Flexible/remote",
+        "Other / It depends"
+      ],
+      "category": "future"
+    },
+    {
+      "id": "quiz_007_q5",
+      "text": "Do I want a minimalist or abundant lifestyle?",
+      "choices": [
+        "Very minimalist",
+        "Somewhat minimal",
+        "Balanced",
+        "Abundant/collector",
+        "Other / It depends"
+      ],
+      "category": "future"
+    }
+  ]
+}

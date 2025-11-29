@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Onboarding - Newspaper Masthead</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            background: #f0ede8;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .screens-container {
+            display: flex;
+            gap: 40px;
+            flex-wrap: wrap;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .screen {
+            width: 375px;
+            height: 812px;
+            background: #fffef9;
+            border: 3px solid #1a1a1a;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .screen-label {
+            position: absolute;
+            top: -30px;
+            left: 0;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #666;
+        }
+
+        .screen-wrapper {
+            position: relative;
+            padding-top: 40px;
+        }
+
+        /* Newspaper Header Style */
+        .masthead {
+            text-align: center;
+            padding: 20px 20px 16px;
+            border-bottom: 3px double #1a1a1a;
+        }
+
+        .masthead-date {
+            font-size: 10px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: #666;
+            margin-bottom: 8px;
+        }
+
+        .masthead-title {
+            font-size: 42px;
+            font-weight: 400;
+            font-style: italic;
+            letter-spacing: -1px;
+            line-height: 1;
+            margin-bottom: 8px;
+        }
+
+        .masthead-subtitle {
+            font-size: 11px;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: #666;
+        }
+
+        .edition-bar {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 20px;
+            border-bottom: 1px solid #1a1a1a;
+            font-size: 10px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        /* Welcome Screen */
+        .welcome-screen {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .hero-section {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 40px 30px;
+            text-align: center;
+        }
+
+        .hero-icon {
+            font-size: 100px;
+            margin-bottom: 30px;
+            filter: grayscale(100%);
+        }
+
+        .hero-headline {
+            font-size: 32px;
+            font-weight: 400;
+            line-height: 1.2;
+            margin-bottom: 20px;
+        }
+
+        .hero-subhead {
+            font-size: 16px;
+            font-style: italic;
+            color: #555;
+            line-height: 1.6;
+        }
+
+        .cta-section {
+            padding: 24px 30px 40px;
+            border-top: 1px solid #ddd;
+        }
+
+        .primary-btn {
+            width: 100%;
+            padding: 16px 24px;
+            background: #1a1a1a;
+            color: #fffef9;
+            border: none;
+            font-family: 'Georgia', serif;
+            font-size: 14px;
+            font-weight: 400;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            cursor: pointer;
+        }
+
+        .sign-in-link {
+            display: block;
+            text-align: center;
+            margin-top: 16px;
+            font-size: 13px;
+            color: #666;
+        }
+
+        .sign-in-link a {
+            color: #1a1a1a;
+            font-weight: 600;
+        }
+
+        /* Form Screens */
+        .form-screen {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .article-header {
+            padding: 30px 24px 20px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .article-kicker {
+            font-size: 10px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: #999;
+            margin-bottom: 12px;
+        }
+
+        .article-headline {
+            font-size: 28px;
+            font-weight: 400;
+            line-height: 1.2;
+            margin-bottom: 12px;
+        }
+
+        .article-deck {
+            font-size: 15px;
+            font-style: italic;
+            color: #555;
+            line-height: 1.5;
+        }
+
+        .article-content {
+            flex: 1;
+            padding: 24px;
+        }
+
+        .form-field {
+            margin-bottom: 24px;
+        }
+
+        .field-label {
+            display: block;
+            font-size: 10px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+            color: #666;
+        }
+
+        .field-input {
+            width: 100%;
+            padding: 14px 16px;
+            border: 1px solid #1a1a1a;
+            border-bottom-width: 2px;
+            font-family: 'Georgia', serif;
+            font-size: 18px;
+            background: transparent;
+        }
+
+        .field-input:focus {
+            outline: none;
+            border-color: #000;
+            background: #f9f8f4;
+        }
+
+        .field-input::placeholder {
+            color: #bbb;
+            font-style: italic;
+        }
+
+        .callout-box {
+            padding: 16px;
+            background: #f5f4ef;
+            border-left: 2px solid #1a1a1a;
+            margin-top: 20px;
+        }
+
+        .callout-title {
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 6px;
+        }
+
+        .callout-text {
+            font-size: 13px;
+            color: #555;
+            line-height: 1.5;
+            font-style: italic;
+        }
+
+        .form-footer {
+            padding: 20px 24px 30px;
+            border-top: 1px solid #ddd;
+        }
+
+        /* OTP Screen */
+        .otp-container {
+            display: flex;
+            justify-content: center;
+            gap: 6px;
+            margin: 24px 0;
+        }
+
+        .otp-box {
+            width: 40px;
+            height: 48px;
+            border: 1px solid #1a1a1a;
+            border-bottom-width: 2px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Courier New', monospace;
+            font-size: 22px;
+            font-weight: 600;
+            background: #fffef9;
+        }
+
+        .otp-box.active {
+            background: #f5f4ef;
+        }
+
+        .resend-row {
+            text-align: center;
+            font-size: 13px;
+            color: #666;
+            margin-top: 20px;
+        }
+
+        .resend-row a {
+            color: #1a1a1a;
+            font-weight: 600;
+            text-decoration: underline;
+        }
+
+        /* Pairing Screen */
+        .tab-row {
+            display: flex;
+            border-bottom: 2px solid #1a1a1a;
+        }
+
+        .tab-item {
+            flex: 1;
+            padding: 12px 16px;
+            text-align: center;
+            font-size: 11px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            cursor: pointer;
+            background: #f5f4ef;
+            border-right: 1px solid #1a1a1a;
+        }
+
+        .tab-item:last-child {
+            border-right: none;
+        }
+
+        .tab-item.active {
+            background: #fffef9;
+            font-weight: 700;
+        }
+
+        .qr-section {
+            padding: 24px;
+            text-align: center;
+        }
+
+        .qr-frame {
+            width: 200px;
+            height: 200px;
+            margin: 0 auto 16px;
+            border: 2px solid #1a1a1a;
+            padding: 8px;
+        }
+
+        .qr-inner {
+            width: 100%;
+            height: 100%;
+            background: repeating-conic-gradient(
+                #1a1a1a 0% 25%,
+                #fffef9 25% 50%
+            ) 50% / 12px 12px;
+        }
+
+        .qr-caption {
+            font-size: 13px;
+            font-style: italic;
+            color: #666;
+        }
+
+        .or-divider {
+            display: flex;
+            align-items: center;
+            padding: 0 24px;
+            margin: 8px 0;
+        }
+
+        .or-line {
+            flex: 1;
+            height: 1px;
+            background: #ddd;
+        }
+
+        .or-text {
+            padding: 0 12px;
+            font-size: 10px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: #999;
+        }
+
+        .scan-btn {
+            margin: 0 24px;
+            padding: 14px 20px;
+            background: transparent;
+            border: 1px solid #1a1a1a;
+            font-family: 'Georgia', serif;
+            font-size: 13px;
+            letter-spacing: 1px;
+            cursor: pointer;
+            width: calc(100% - 48px);
+        }
+
+        /* Remote Code Display */
+        .code-banner {
+            margin: 0 24px 20px;
+            padding: 20px;
+            background: #1a1a1a;
+            color: #fffef9;
+            text-align: center;
+        }
+
+        .code-label {
+            font-size: 9px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            opacity: 0.7;
+            margin-bottom: 8px;
+        }
+
+        .code-digits {
+            font-family: 'Courier New', monospace;
+            font-size: 32px;
+            font-weight: 700;
+            letter-spacing: 6px;
+        }
+
+        .code-timer {
+            font-size: 11px;
+            font-style: italic;
+            opacity: 0.7;
+            margin-top: 8px;
+        }
+
+        .action-row {
+            display: flex;
+            gap: 10px;
+            padding: 0 24px;
+            margin-bottom: 16px;
+        }
+
+        .action-btn {
+            flex: 1;
+            padding: 12px;
+            background: transparent;
+            border: 1px solid #1a1a1a;
+            font-family: 'Georgia', serif;
+            font-size: 12px;
+            letter-spacing: 1px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1 style="text-align: center; font-size: 24px; margin-bottom: 40px; letter-spacing: 2px; text-transform: uppercase;">Variant 2: Newspaper Masthead</h1>
+
+    <div class="screens-container">
+        <!-- Welcome Screen -->
+        <div class="screen-wrapper">
+            <div class="screen-label">1. Welcome</div>
+            <div class="screen welcome-screen">
+                <div class="masthead">
+                    <div class="masthead-date">Est. 2024</div>
+                    <h1 class="masthead-title">TogetherRemind</h1>
+                    <div class="masthead-subtitle">The Couples' Daily Companion</div>
+                </div>
+                <div class="edition-bar">
+                    <span>First Edition</span>
+                    <span>Your Love Story Begins</span>
+                </div>
+                <div class="hero-section">
+                    <div class="hero-icon">💕</div>
+                    <h2 class="hero-headline">Send Caring Reminders<br>To Your Partner</h2>
+                    <p class="hero-subhead">Build stronger connections through<br>daily moments of thoughtfulness</p>
+                </div>
+                <div class="cta-section">
+                    <button class="primary-btn">Begin Your Story</button>
+                    <p class="sign-in-link">Returning reader? <a href="#">Sign in here</a></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Name Screen -->
+        <div class="screen-wrapper">
+            <div class="screen-label">2. Name Entry</div>
+            <div class="screen form-screen">
+                <div class="masthead">
+                    <div class="masthead-date">Registration</div>
+                    <h1 class="masthead-title">TogetherRemind</h1>
+                    <div class="masthead-subtitle">Step 1 of 3</div>
+                </div>
+                <div class="article-header">
+                    <div class="article-kicker">Getting Started</div>
+                    <h2 class="article-headline">What shall we call you?</h2>
+                    <p class="article-deck">Your name will appear to your partner when you send reminders</p>
+                </div>
+                <div class="article-content">
+                    <div class="form-field">
+                        <label class="field-label">Your Name</label>
+                        <input type="text" class="field-input" placeholder="Enter your first name">
+                    </div>
+                </div>
+                <div class="form-footer">
+                    <button class="primary-btn">Continue</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Auth Screen -->
+        <div class="screen-wrapper">
+            <div class="screen-label">3. Email Auth</div>
+            <div class="screen form-screen">
+                <div class="masthead">
+                    <div class="masthead-date">Verification</div>
+                    <h1 class="masthead-title">TogetherRemind</h1>
+                    <div class="masthead-subtitle">Step 2 of 3</div>
+                </div>
+                <div class="article-header">
+                    <div class="article-kicker">Secure Access</div>
+                    <h2 class="article-headline">Your email address</h2>
+                    <p class="article-deck">We'll send a secure code to verify your identity</p>
+                </div>
+                <div class="article-content">
+                    <div class="form-field">
+                        <label class="field-label">Email Address</label>
+                        <input type="email" class="field-input" placeholder="you@example.com">
+                    </div>
+                    <div class="callout-box">
+                        <div class="callout-title">Editor's Note</div>
+                        <div class="callout-text">No password required. We use a magic code system for enhanced security.</div>
+                    </div>
+                </div>
+                <div class="form-footer">
+                    <button class="primary-btn">Send Verification Code</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- OTP Screen -->
+        <div class="screen-wrapper">
+            <div class="screen-label">4. OTP Verification</div>
+            <div class="screen form-screen">
+                <div class="masthead">
+                    <div class="masthead-date">Verification</div>
+                    <h1 class="masthead-title">TogetherRemind</h1>
+                    <div class="masthead-subtitle">Almost There</div>
+                </div>
+                <div class="article-header">
+                    <div class="article-kicker">Confirmation Required</div>
+                    <h2 class="article-headline">Check your inbox</h2>
+                    <p class="article-deck">Enter the 8-digit code sent to<br><strong>you@example.com</strong></p>
+                </div>
+                <div class="article-content">
+                    <div class="otp-container">
+                        <div class="otp-box active">4</div>
+                        <div class="otp-box active">7</div>
+                        <div class="otp-box active">2</div>
+                        <div class="otp-box active">9</div>
+                        <div class="otp-box">-</div>
+                        <div class="otp-box">-</div>
+                        <div class="otp-box">-</div>
+                        <div class="otp-box">-</div>
+                    </div>
+                    <div class="resend-row">
+                        Didn't receive it? <a href="#">Request new code</a>
+                    </div>
+                </div>
+                <div class="form-footer">
+                    <button class="primary-btn">Verify Code</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pairing Screen - In Person -->
+        <div class="screen-wrapper">
+            <div class="screen-label">5. Pairing (QR)</div>
+            <div class="screen form-screen">
+                <div class="masthead">
+                    <div class="masthead-date">Connection</div>
+                    <h1 class="masthead-title">TogetherRemind</h1>
+                    <div class="masthead-subtitle">Step 3 of 3</div>
+                </div>
+                <div class="article-header">
+                    <div class="article-kicker">Partner Setup</div>
+                    <h2 class="article-headline">Connect with your partner</h2>
+                </div>
+                <div class="tab-row">
+                    <div class="tab-item active">In Person</div>
+                    <div class="tab-item">Remote</div>
+                </div>
+                <div class="qr-section">
+                    <div class="qr-frame">
+                        <div class="qr-inner"></div>
+                    </div>
+                    <p class="qr-caption">Have your partner scan this code</p>
+                </div>
+                <div class="or-divider">
+                    <div class="or-line"></div>
+                    <span class="or-text">or</span>
+                    <div class="or-line"></div>
+                </div>
+                <button class="scan-btn">Scan Partner's Code</button>
+            </div>
+        </div>
+
+        <!-- Pairing Screen - Remote -->
+        <div class="screen-wrapper">
+            <div class="screen-label">5b. Pairing (Remote)</div>
+            <div class="screen form-screen">
+                <div class="masthead">
+                    <div class="masthead-date">Connection</div>
+                    <h1 class="masthead-title">TogetherRemind</h1>
+                    <div class="masthead-subtitle">Step 3 of 3</div>
+                </div>
+                <div class="article-header">
+                    <div class="article-kicker">Partner Setup</div>
+                    <h2 class="article-headline">Connect with your partner</h2>
+                </div>
+                <div class="tab-row">
+                    <div class="tab-item">In Person</div>
+                    <div class="tab-item active">Remote</div>
+                </div>
+                <div class="article-content" style="padding-top: 20px;">
+                    <div class="code-banner">
+                        <div class="code-label">Your Pairing Code</div>
+                        <div class="code-digits">A7X2K9</div>
+                        <div class="code-timer">Expires in 23:45:12</div>
+                    </div>
+                    <div class="action-row">
+                        <button class="action-btn">Copy Code</button>
+                        <button class="action-btn">Share via Text</button>
+                    </div>
+                    <div class="or-divider">
+                        <div class="or-line"></div>
+                        <span class="or-text">or</span>
+                        <div class="or-line"></div>
+                    </div>
+                    <button class="scan-btn" style="margin-top: 16px;">Enter Partner's Code</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

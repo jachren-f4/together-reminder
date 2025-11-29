@@ -1,0 +1,64 @@
+{
+  "quizId": "quiz_010",
+  "title": "Lighthearted Quiz 10",
+  "branch": "lighthearted",
+  "questions": [
+    {
+      "id": "quiz_010_q1",
+      "text": "What's my favorite way to celebrate my birthday?",
+      "choices": [
+        "Big party",
+        "Dinner with close friends",
+        "Quiet day at home",
+        "Adventure/trip",
+        "Other / Something else"
+      ],
+      "category": "favorites"
+    },
+    {
+      "id": "quiz_010_q2",
+      "text": "What's my favorite type of cuisine?",
+      "choices": [
+        "Italian",
+        "Mexican",
+        "Asian",
+        "American",
+        "Other / Something else"
+      ],
+      "category": "favorites"
+    },
+    {
+      "id": "quiz_010_q3",
+      "text": "Do I prefer hot or cold weather?",
+      "choices": [
+        "Hot",
+        "Cold",
+        "Mild",
+        "Varies",
+        "Other / No preference"
+      ],
+      "category": "preferences"
+    },
+    {
+      "id": "quiz_010_q4",
+      "text": "What's my favorite scent or perfume type?",
+      "choices": [
+        "Floral",
+        "Citrus",
+        "Woody",
+        "Sweet",
+        "Other / Something else"
+      ],
+      "category": "favorites"
+    },
+    {
+      "id": "quiz_010_q5",
+      "text": "Would I rather: Save money or Spend on experiences?",
+      "choices": [
+        "Save money",
+        "Spend on experiences"
+      ],
+      "category": "would_you_rather"
+    }
+  ]
+}

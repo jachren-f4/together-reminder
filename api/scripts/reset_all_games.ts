@@ -99,8 +99,24 @@ async function resetAllGames() {
     console.log('   ℹ️  No sessions found');
   }
 
-  // 5. Reset Daily Quests
-  console.log('5️⃣  Daily Quests...');
+  // 5. Reset Quiz Matches (server-centric architecture)
+  console.log('5️⃣  Quiz Matches...');
+  const { data: quizMatchData, error: quizMatchError } = await supabase
+    .from('quiz_matches')
+    .delete()
+    .eq('couple_id', COUPLE_ID)
+    .select();
+
+  if (quizMatchError) {
+    console.error('   ❌ Error:', quizMatchError.message);
+  } else if (quizMatchData && quizMatchData.length > 0) {
+    console.log(`   ✅ Deleted ${quizMatchData.length} match(es)`);
+  } else {
+    console.log('   ℹ️  No matches found');
+  }
+
+  // 6. Reset Daily Quests
+  console.log('6️⃣  Daily Quests...');
   const { data: questData, error: questError } = await supabase
     .from('daily_quests')
     .delete()

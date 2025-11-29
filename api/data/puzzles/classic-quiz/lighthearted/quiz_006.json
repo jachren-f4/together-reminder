@@ -1,0 +1,64 @@
+{
+  "quizId": "quiz_006",
+  "title": "Lighthearted Quiz 6",
+  "branch": "lighthearted",
+  "questions": [
+    {
+      "id": "quiz_006_q1",
+      "text": "How do I prefer to celebrate achievements?",
+      "choices": [
+        "Share with others",
+        "Private satisfaction",
+        "Treat myself",
+        "Move on to next goal",
+        "Other / It depends"
+      ],
+      "category": "preferences"
+    },
+    {
+      "id": "quiz_006_q2",
+      "text": "What's my favorite animal?",
+      "choices": [
+        "Dog",
+        "Cat",
+        "Bird",
+        "Fish",
+        "Other / Something else"
+      ],
+      "category": "favorites"
+    },
+    {
+      "id": "quiz_006_q3",
+      "text": "Would I rather: Work from home or Office?",
+      "choices": [
+        "Work from home",
+        "Office"
+      ],
+      "category": "would_you_rather"
+    },
+    {
+      "id": "quiz_006_q4",
+      "text": "What's my favorite type of art?",
+      "choices": [
+        "Painting",
+        "Photography",
+        "Sculpture",
+        "Digital art",
+        "Other / Something else"
+      ],
+      "category": "favorites"
+    },
+    {
+      "id": "quiz_006_q5",
+      "text": "What's my favorite board game or card game?",
+      "choices": [
+        "Monopoly",
+        "Uno",
+        "Chess",
+        "Scrabble",
+        "Other / Something else"
+      ],
+      "category": "favorites"
+    }
+  ]
+}

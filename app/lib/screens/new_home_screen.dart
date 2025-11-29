@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import '../config/brand/brand_loader.dart';
 import '../utils/logger.dart';
@@ -27,7 +28,7 @@ import '../models/daily_quest.dart';
 import 'daily_pulse_screen.dart';
 import 'linked_game_screen.dart';
 import 'word_search_game_screen.dart';
-import 'quiz_intro_screen.dart';
+import 'quiz_match_game_screen.dart';
 import 'inbox_screen.dart';
 import 'steps_intro_screen.dart';
 import 'steps_counter_screen.dart';
@@ -588,7 +589,7 @@ class _NewHomeScreenState extends State<NewHomeScreen> with TickerProviderStateM
         // Version number for debugging hot reload
         Center(
           child: Text(
-            'v1.0.62',
+            'v1.0.63',
             style: TextStyle(
               fontSize: 10,
               color: BrandLoader().colors.textTertiary,
@@ -620,7 +621,7 @@ class _NewHomeScreenState extends State<NewHomeScreen> with TickerProviderStateM
         onTap: () => _navigateToDailyPulse(),
       ),
 
-      // Couple Quiz
+      // Couple Quiz (server-centric)
       _buildQuestCard(
         emoji: '🎯',
         title: 'Couple Quiz',
@@ -629,7 +630,7 @@ class _NewHomeScreenState extends State<NewHomeScreen> with TickerProviderStateM
         isActive: activeQuiz != null,
         onTap: () => Navigator.push(
           context,
-          MaterialPageRoute(builder: (_) => const QuizIntroScreen()),
+          MaterialPageRoute(builder: (_) => const QuizMatchGameScreen(quizType: 'classic')),
         ),
       ),
     ];
@@ -727,10 +728,52 @@ class _NewHomeScreenState extends State<NewHomeScreen> with TickerProviderStateM
       future: _getSideQuests(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator());
+          return const SizedBox(
+            height: 380,
+            child: Center(child: CircularProgressIndicator()),
+          );
+        }
+
+        // Handle errors - show error message with retry option
+        if (snapshot.hasError) {
+          Logger.error('Side quests error', error: snapshot.error, service: 'home');
+          return SizedBox(
+            height: 380,
+            child: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.error_outline, size: 48, color: BrandLoader().colors.textTertiary),
+                  const SizedBox(height: 8),
+                  Text(
+                    'Error loading side quests',
+                    style: TextStyle(color: BrandLoader().colors.textSecondary),
+                  ),
+                  const SizedBox(height: 8),
+                  TextButton(
+                    onPressed: () => setState(() {}), // Trigger rebuild
+                    child: const Text('Tap to retry'),
+                  ),
+                ],
+              ),
+            ),
+          );
         }
 
         final sideQuests = snapshot.data ?? [];
+
+        // Handle empty state
+        if (sideQuests.isEmpty) {
+          return SizedBox(
+            height: 380,
+            child: Center(
+              child: Text(
+                'No side quests available',
+                style: TextStyle(color: BrandLoader().colors.textSecondary),
+              ),
+            ),
+          );
+        }
 
         return QuestCarousel(
           quests: sideQuests,
@@ -882,8 +925,8 @@ class _NewHomeScreenState extends State<NewHomeScreen> with TickerProviderStateM
     final user = _storage.getUser();
     final partner = _storage.getPartner();
 
-    // Steps Together - FIRST card (iOS only)
-    if (Platform.isIOS) {
+    // Steps Together - FIRST card (iOS only, skip on web)
+    if (!kIsWeb && Platform.isIOS) {
       final stepsService = StepsFeatureService();
       final stepsState = stepsService.getCurrentState();
 

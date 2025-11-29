@@ -1,0 +1,61 @@
+{
+  "quizId": "quiz_013",
+  "title": "Lighthearted Quiz 13",
+  "branch": "lighthearted",
+  "questions": [
+    {
+      "id": "quiz_013_q1",
+      "text": "Do I prefer cats or dogs?",
+      "choices": [
+        "Cats",
+        "Dogs",
+        "Both",
+        "Neither",
+        "Other / Something else"
+      ],
+      "category": "preferences"
+    },
+    {
+      "id": "quiz_013_q2",
+      "text": "Would I rather: Beach vacation or Mountain retreat?",
+      "choices": [
+        "Beach vacation",
+        "Mountain retreat"
+      ],
+      "category": "would_you_rather"
+    },
+    {
+      "id": "quiz_013_q3",
+      "text": "Would I rather: Be too hot or Too cold?",
+      "choices": [
+        "Too hot",
+        "Too cold"
+      ],
+      "category": "would_you_rather"
+    },
+    {
+      "id": "quiz_013_q4",
+      "text": "How do I express gratitude?",
+      "choices": [
+        "Words",
+        "Actions",
+        "Gifts",
+        "Quality time",
+        "Other / Something else"
+      ],
+      "category": "preferences"
+    },
+    {
+      "id": "quiz_013_q5",
+      "text": "What's my ideal bedtime?",
+      "choices": [
+        "Before 10pm",
+        "10-11pm",
+        "11pm-midnight",
+        "After midnight",
+        "Other / It varies"
+      ],
+      "category": "preferences"
+    }
+  ]
+}

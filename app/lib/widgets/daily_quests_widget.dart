@@ -4,17 +4,14 @@ import '../models/daily_quest.dart';
 import '../services/storage_service.dart';
 import '../services/daily_quest_service.dart';
 import '../services/quest_sync_service.dart';
-import '../services/love_point_service.dart';
-import '../services/quiz_service.dart';
-import '../services/you_or_me_service.dart';
-import '../services/quest_navigation_service.dart';
-import '../utils/logger.dart';
 import '../theme/app_theme.dart';
 import '../config/brand/brand_loader.dart';
 import '../widgets/quest_carousel.dart';
-import '../screens/you_or_me_intro_screen.dart';
-import '../screens/you_or_me_results_screen.dart';
-import '../screens/you_or_me_waiting_screen.dart';
+import '../screens/quiz_intro_screen.dart';
+import '../screens/affirmation_intro_screen.dart';
+import '../screens/quiz_match_game_screen.dart';
+import '../screens/you_or_me_match_intro_screen.dart';
+import '../screens/you_or_me_match_game_screen.dart';
 
 /// Widget displaying daily quests with completion tracking
 ///
@@ -30,9 +27,6 @@ class _DailyQuestsWidgetState extends State<DailyQuestsWidget> {
   final StorageService _storage = StorageService();
   late DailyQuestService _questService;
   late QuestSyncService _questSyncService;
-  final QuizService _quizService = QuizService();
-  final YouOrMeService _youOrMeService = YouOrMeService();
-  late QuestNavigationService _navigationService;
   StreamSubscription? _partnerCompletionSubscription;
 
   @override
@@ -44,7 +38,6 @@ class _DailyQuestsWidgetState extends State<DailyQuestsWidget> {
     _questSyncService = QuestSyncService(
       storage: _storage,
     );
-    _navigationService = QuestNavigationService(storage: _storage);
 
     // Listen for partner quest completions
     _listenForPartnerCompletions();
@@ -92,13 +85,9 @@ class _DailyQuestsWidgetState extends State<DailyQuestsWidget> {
             quest.status = 'completed';
             quest.completedAt = DateTime.now();
 
-            // NOTE: LP awarding is now handled by UnifiedResultsScreen for quest types
-            // using the unified system (classic, affirmation). This prevents duplicate
-            // LP awards (once from partner listener, once from UnifiedResultsScreen).
-            //
-            // Quest types not yet migrated to unified system would award LP here,
-            // but as of Phase 4, all quiz types use UnifiedResultsScreen.
-            // Future quest types will also use unified system for LP awards.
+            // NOTE: LP awarding is handled by the server-centric results screens
+            // (QuizMatchResultsScreen, YouOrMeMatchResultsScreen, etc.)
+            // This listener only updates local quest status for UI display.
           } else {
             quest.status = 'in_progress';
           }
@@ -305,74 +294,76 @@ class _DailyQuestsWidgetState extends State<DailyQuestsWidget> {
   }
 
   Future<void> _handleQuizQuestTap(DailyQuest quest) async {
-    // Both Classic and Affirmation quizzes now use unified navigation (Phases 3-4)
-    try {
-      await _navigationService.launchQuest(context, quest);
-    } catch (e) {
-      _showError('Failed to launch quiz: ${e.toString().replaceAll('Exception: ', '')}');
-    }
-  }
-
-  Future<void> _handleYouOrMeQuestTap(DailyQuest quest) async {
-    // Get user and partner
     final user = _storage.getUser();
-    final partner = _storage.getPartner();
+    final userCompleted = user != null && quest.hasUserCompleted(user.id);
 
-    if (user == null || partner == null) {
-      _showError('User or partner not found');
-      return;
-    }
-
-    // Single-session architecture: quest.contentId is the shared session ID
-    final session = await _youOrMeService.getSession(quest.contentId);
-
-    if (session == null) {
-      _showError('You or Me session not found');
-      return;
-    }
-
-    // Check if both users have completed
-    if (session.areBothUsersAnswered()) {
-      // Both answered - show results
+    // If user has already completed their part, go directly to game screen
+    // (which will show waiting or results screen)
+    if (userCompleted) {
+      final quizType = quest.formatType == 'affirmation' ? 'affirmation' : 'classic';
       await Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => YouOrMeResultsScreen(session: session),
+          builder: (context) => QuizMatchGameScreen(
+            quizType: quizType,
+            questId: quest.id,
+          ),
         ),
       );
-    } else if (session.hasUserAnswered(user.id)) {
-      // User answered, waiting for partner
+      return;
+    }
+
+    // User hasn't completed yet - show intro screen first
+    if (quest.formatType == 'affirmation') {
       await Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => YouOrMeWaitingScreen(session: session),
+          builder: (context) => AffirmationIntroScreen(
+            branch: quest.branch,
+            questId: quest.id,
+          ),
         ),
       );
     } else {
-      // User hasn't answered - show intro screen
+      // Classic quiz
       await Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => YouOrMeIntroScreen(
-            session: session,
+          builder: (context) => QuizIntroScreen(
             branch: quest.branch,
+            questId: quest.id,
           ),
         ),
       );
     }
-
-    // Refresh UI after returning from You or Me screens
-    // This ensures quest cards update to show completion status
-    if (mounted) {
-      setState(() {});
-    }
   }
 
-  void _showError(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        backgroundColor: BrandLoader().colors.error,
+  Future<void> _handleYouOrMeQuestTap(DailyQuest quest) async {
+    final user = _storage.getUser();
+    final userCompleted = user != null && quest.hasUserCompleted(user.id);
+
+    // If user has already completed their part, go directly to game screen
+    // (which will show waiting or results screen)
+    if (userCompleted) {
+      await Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => YouOrMeMatchGameScreen(
+            questId: quest.id,
+          ),
+        ),
+      );
+      return;
+    }
+
+    // User hasn't completed yet - show intro screen first
+    await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => YouOrMeMatchIntroScreen(
+          branch: quest.branch,
+          questId: quest.id,
+        ),
       ),
     );
   }

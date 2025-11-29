@@ -22,7 +22,7 @@ class DevConfig {
   /// Force production API (Vercel) even in debug builds
   /// Set to true when testing on physical devices that can't reach localhost
   /// Set to false for emulator/simulator development with local API
-  static const bool useProductionApi = true;
+  static const bool useProductionApi = false;
 
   // ============================================================================
   // PHASE 4 MIGRATION FEATURE FLAGS
@@ -50,6 +50,13 @@ class DevConfig {
   /// FALSE = Firebase RTDB (current/stable)
   /// TRUE = Supabase API (Phase 4 migration)
   static const bool useSupabaseForQuizzes = true;
+
+  /// Use server-centric quiz architecture (Phase 5 migration)
+  /// Server provides quiz content, manages matches via quiz_matches table
+  /// Follows LinkedService pattern: API-first, simple polling, no Firebase sync
+  /// FALSE = Legacy quiz flow (session-based)
+  /// TRUE = Server-centric flow (match-based, like Linked/WordSearch games)
+  static const bool useServerCentricQuizzes = true;
 
   /// Development User IDs for API auth bypass
   /// These IDs are sent to the API via X-Dev-User-Id header

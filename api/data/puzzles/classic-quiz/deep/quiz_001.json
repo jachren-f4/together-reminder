@@ -1,0 +1,67 @@
+{
+  "quizId": "quiz_001",
+  "title": "Deep Quiz 1",
+  "branch": "deep",
+  "questions": [
+    {
+      "id": "quiz_001_q1",
+      "text": "What's my idea of success?",
+      "choices": [
+        "Career achievement",
+        "Happy relationship",
+        "Personal fulfillment",
+        "Making a difference",
+        "Other / Something else"
+      ],
+      "category": "future"
+    },
+    {
+      "id": "quiz_001_q2",
+      "text": "What's my ideal age to retire?",
+      "choices": [
+        "Early (50s)",
+        "Standard (60s)",
+        "Late (70s)",
+        "Never retire",
+        "Other / Undecided"
+      ],
+      "category": "future"
+    },
+    {
+      "id": "quiz_001_q3",
+      "text": "What's my dream job?",
+      "choices": [
+        "Creative field",
+        "Business",
+        "Helping others",
+        "Entrepreneurship",
+        "Other / Something else"
+      ],
+      "category": "future"
+    },
+    {
+      "id": "quiz_001_q4",
+      "text": "Where do I want to travel next?",
+      "choices": [
+        "Europe",
+        "Asia",
+        "Beach destination",
+        "Mountains",
+        "Other place"
+      ],
+      "category": "future"
+    },
+    {
+      "id": "quiz_001_q5",
+      "text": "Do I want to write a book someday?",
+      "choices": [
+        "Yes, definitely",
+        "Maybe",
+        "Probably not",
+        "Never",
+        "Other / Undecided"
+      ],
+      "category": "future"
+    }
+  ]
+}
