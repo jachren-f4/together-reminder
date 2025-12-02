@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Word Search Grid Size - Mockups</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #f5f5f5;
+      padding: 40px 20px;
+      min-height: 100vh;
+    }
+    h1 {
+      font-family: Georgia, serif;
+      font-size: 28px;
+      font-weight: 400;
+      color: #1a1a1a;
+      text-align: center;
+      margin-bottom: 12px;
+    }
+    .subtitle {
+      text-align: center;
+      color: #666;
+      font-size: 14px;
+      margin-bottom: 16px;
+    }
+    .stats {
+      text-align: center;
+      color: #888;
+      font-size: 12px;
+      margin-bottom: 40px;
+      padding: 16px;
+      background: #fff;
+      border-radius: 8px;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .stats strong { color: #1a1a1a; }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 24px;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+    .card {
+      background: white;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+    .card-header {
+      padding: 16px 20px;
+      border-bottom: 1px solid #eee;
+    }
+    .card-header h2 {
+      font-size: 16px;
+      font-weight: 600;
+      color: #1a1a1a;
+      margin-bottom: 4px;
+    }
+    .card-header p {
+      font-size: 13px;
+      color: #666;
+    }
+    .card-header .savings {
+      display: inline-block;
+      margin-top: 8px;
+      padding: 4px 8px;
+      background: #e8f5e9;
+      color: #2e7d32;
+      font-size: 11px;
+      font-weight: 600;
+      border-radius: 4px;
+    }
+    .card-preview {
+      height: 580px;
+      position: relative;
+    }
+    .card-preview iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+    .card-footer {
+      padding: 12px 20px;
+      background: #fafafa;
+      border-top: 1px solid #eee;
+    }
+    .card-footer a {
+      font-size: 13px;
+      color: #1a1a1a;
+      text-decoration: none;
+    }
+    .card-footer a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <h1>Word Search Grid Size Options</h1>
+  <p class="subtitle">Mockups exploring ways to increase the puzzle grid size on small screens</p>
+
+  <div class="stats">
+    <strong>Current layout breakdown:</strong><br>
+    Header ~48px + Grid (flexible) + Word Bank ~192px + Bottom Bar ~60px<br>
+    <em>On a small phone (568px height), the word bank takes ~34% of available space!</em>
+  </div>
+
+  <div class="grid">
+    <div class="card">
+      <div class="card-header">
+        <h2>Option 1: Collapsible Word Bank</h2>
+        <p>Tap to expand/collapse the word list. Shows compact summary when collapsed.</p>
+        <span class="savings">Saves ~160px when collapsed</span>
+      </div>
+      <div class="card-preview">
+        <iframe src="01-collapsible-wordbank.html"></iframe>
+      </div>
+      <div class="card-footer">
+        <a href="01-collapsible-wordbank.html" target="_blank">Open full screen →</a>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <h2>Option 2: Bottom Sheet Word Bank</h2>
+        <p>Word bank lives in a draggable bottom sheet. Pull up to see words.</p>
+        <span class="savings">Saves ~192px when hidden</span>
+      </div>
+      <div class="card-preview">
+        <iframe src="02-bottom-sheet.html"></iframe>
+      </div>
+      <div class="card-footer">
+        <a href="02-bottom-sheet.html" target="_blank">Open full screen →</a>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <h2>Option 3: Horizontal Word Strip</h2>
+        <p>Single-row horizontally scrolling word list. Always visible but compact.</p>
+        <span class="savings">Saves ~144px</span>
+      </div>
+      <div class="card-preview">
+        <iframe src="03-horizontal-strip.html"></iframe>
+      </div>
+      <div class="card-footer">
+        <a href="03-horizontal-strip.html" target="_blank">Open full screen →</a>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <h2>Option 4: Focus Mode</h2>
+        <p>Toggle button hides all UI except the grid. Maximum play area.</p>
+        <span class="savings">Saves ~250px+ in focus mode</span>
+      </div>
+      <div class="card-preview">
+        <iframe src="04-focus-mode.html"></iframe>
+      </div>
+      <div class="card-footer">
+        <a href="04-focus-mode.html" target="_blank">Open full screen →</a>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <h2>Option 5: Max Grid + Compact Words</h2>
+        <p>Grid uses full width. Word bank condensed to 6×2 grid with smaller text. Shows 3 phone sizes.</p>
+        <span class="savings">Saves ~100px vs current</span>
+      </div>
+      <div class="card-preview" style="height: 620px;">
+        <iframe src="05-max-grid-compact-words.html"></iframe>
+      </div>
+      <div class="card-footer">
+        <a href="05-max-grid-compact-words.html" target="_blank">Open full screen →</a>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <h2>Option 6: Dynamic Layout</h2>
+        <p>Grid fixed to full width. Word bank expands to fill remaining space with readable font sizes. Adapts layout per screen.</p>
+        <span class="savings">Best of both worlds</span>
+      </div>
+      <div class="card-preview" style="height: 620px;">
+        <iframe src="06-dynamic-layout.html"></iframe>
+      </div>
+      <div class="card-footer">
+        <a href="06-dynamic-layout.html" target="_blank">Open full screen →</a>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

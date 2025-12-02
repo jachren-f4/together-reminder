@@ -197,6 +197,15 @@ class LovePointService {
     _onLPChanged = callback;
   }
 
+  /// Trigger LP change callback (exposed for testing)
+  ///
+  /// This is used internally after LP sync and can be called in tests
+  /// to verify callback behavior.
+  @visibleForTesting
+  static void notifyLPChanged() {
+    _onLPChanged?.call();
+  }
+
   // ============================================================================
   // SERVER-AUTHORITATIVE LP SYNC (Replaces Firebase RTDB)
   // ============================================================================
@@ -246,7 +255,7 @@ class LovePointService {
       }
 
       // Trigger UI update callback
-      _onLPChanged?.call();
+      notifyLPChanged();
 
       Logger.success('LP synced successfully: $serverTotalLp', service: 'lovepoint');
     } catch (e, stackTrace) {

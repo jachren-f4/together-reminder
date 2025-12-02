@@ -31,6 +31,7 @@ import 'package:togetherremind/config/brand/brand_loader.dart';
 import 'package:togetherremind/theme/app_theme.dart';
 import 'package:togetherremind/utils/logger.dart';
 import 'package:togetherremind/widgets/auth_wrapper.dart';
+import 'package:togetherremind/widgets/daily_quests_widget.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -281,6 +282,7 @@ class _TogetherRemindAppState extends State<TogetherRemindApp> with WidgetsBindi
       builder: (context, currentFont, child) {
         return MaterialApp(
           navigatorKey: _navigatorKey,
+          navigatorObservers: [questRouteObserver],
           title: brand.appName,
           theme: AppTheme.lightTheme,
           debugShowCheckedModeBanner: false,

@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
@@ -8,6 +9,7 @@ import '../services/storage_service.dart';
 import '../services/arena_service.dart';
 import '../services/daily_pulse_service.dart';
 import '../services/word_search_service.dart';
+import '../services/linked_service.dart';
 import '../services/quiz_service.dart';
 import '../services/daily_quest_service.dart';
 import '../services/quest_sync_service.dart';
@@ -45,6 +47,7 @@ class _NewHomeScreenState extends State<NewHomeScreen> with TickerProviderStateM
   final ArenaService _arenaService = ArenaService();
   final DailyPulseService _pulseService = DailyPulseService();
   final WordSearchService _wordSearchService = WordSearchService();
+  final LinkedService _linkedService = LinkedService();
   final QuizService _quizService = QuizService();
 
   bool _isRefreshing = false;
@@ -52,6 +55,14 @@ class _NewHomeScreenState extends State<NewHomeScreen> with TickerProviderStateM
   late AnimationController _pulseController;
   late AnimationController _lpPulseController;
   int _lastLPValue = 0;
+  Timer? _sideQuestPollingTimer;
+
+  // Cached side quests Future to prevent FutureBuilder from rebuilding on every setState
+  // Without this, the carousel blinks every time any setState is called (e.g., from DailyQuests polling)
+  Future<List<DailyQuest>>? _sideQuestsFuture;
+
+  // Polling interval for side quest game state (5 seconds during dev)
+  static const Duration _sideQuestPollingInterval = Duration(seconds: 5);
 
   @override
   void initState() {
@@ -75,6 +86,9 @@ class _NewHomeScreenState extends State<NewHomeScreen> with TickerProviderStateM
 
     // Fetch LP from server on load to ensure sync
     _syncLPFromServer();
+
+    // Start polling for side quest game state (Linked, Word Search)
+    _startSideQuestPolling();
   }
 
   /// Fetch LP from server on home screen load
@@ -118,9 +132,84 @@ class _NewHomeScreenState extends State<NewHomeScreen> with TickerProviderStateM
 
   @override
   void dispose() {
+    _sideQuestPollingTimer?.cancel();
     _pulseController.dispose();
     _lpPulseController.dispose();
     super.dispose();
+  }
+
+  /// Start polling for side quest game state updates
+  void _startSideQuestPolling() {
+    // Initialize cached Future on first load
+    _refreshSideQuestsFuture();
+
+    // Initial poll
+    _pollSideQuestGameState();
+
+    // Set up periodic polling
+    _sideQuestPollingTimer = Timer.periodic(_sideQuestPollingInterval, (_) {
+      _pollSideQuestGameState();
+    });
+  }
+
+  /// Refresh the cached side quests Future (call when data changes)
+  void _refreshSideQuestsFuture() {
+    _sideQuestsFuture = _getSideQuests();
+  }
+
+  /// Poll server for Linked and Word Search game state updates
+  Future<void> _pollSideQuestGameState() async {
+    try {
+      // Capture state before polling to detect changes
+      final linkedBefore = _storage.getActiveLinkedMatch();
+      final wsBefore = _storage.getActiveWordSearchMatch();
+      final linkedTurnBefore = linkedBefore?.currentTurnUserId;
+      final wsTurnBefore = wsBefore?.currentTurnUserId;
+
+      // Check if there's an active Linked match to poll
+      if (linkedBefore != null && linkedBefore.status == 'active') {
+        try {
+          await _linkedService.pollMatchState(linkedBefore.matchId);
+          Logger.debug('Polled Linked match: ${linkedBefore.matchId}', service: 'home');
+        } catch (e) {
+          // Silently ignore - match may have been completed or doesn't exist
+        }
+      }
+
+      // Check if there's an active Word Search match to poll
+      if (wsBefore != null && wsBefore.status == 'active') {
+        try {
+          await _wordSearchService.pollMatchState(wsBefore.matchId);
+          Logger.debug('Polled Word Search match: ${wsBefore.matchId}', service: 'home');
+        } catch (e) {
+          // Silently ignore - match may have been completed or doesn't exist
+        }
+      }
+
+      // Check if anything changed
+      final linkedAfter = _storage.getActiveLinkedMatch();
+      final wsAfter = _storage.getActiveWordSearchMatch();
+      final linkedTurnAfter = linkedAfter?.currentTurnUserId;
+      final wsTurnAfter = wsAfter?.currentTurnUserId;
+
+      final hasChanges = linkedTurnBefore != linkedTurnAfter ||
+          wsTurnBefore != wsTurnAfter ||
+          linkedBefore?.status != linkedAfter?.status ||
+          wsBefore?.status != wsAfter?.status;
+
+      // Only rebuild if there were actual changes
+      if (hasChanges && mounted) {
+        Logger.debug(
+          'Side quest state changed - Linked: $linkedTurnBefore→$linkedTurnAfter, WS: $wsTurnBefore→$wsTurnAfter',
+          service: 'home',
+        );
+        // Refresh the cached Future with new data
+        _refreshSideQuestsFuture();
+        setState(() {});
+      }
+    } catch (e) {
+      Logger.error('Error polling side quest state', error: e, service: 'home');
+    }
   }
 
   @override
@@ -745,10 +834,14 @@ class _NewHomeScreenState extends State<NewHomeScreen> with TickerProviderStateM
   }
 
   Widget _buildSideQuestsCarousel() {
+    // Use cached Future to prevent FutureBuilder from showing loading state
+    // on every rebuild (e.g., when DailyQuests polling triggers setState)
+    // The Future is only refreshed when side quest data actually changes
     return FutureBuilder<List<DailyQuest>>(
-      future: _getSideQuests(),
+      future: _sideQuestsFuture ?? _getSideQuests(),
       builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
+        // Only show loading on initial load, not on rebuilds
+        if (snapshot.connectionState == ConnectionState.waiting && !snapshot.hasData) {
           return const SizedBox(
             height: 380,
             child: Center(child: CircularProgressIndicator()),
@@ -880,7 +973,10 @@ class _NewHomeScreenState extends State<NewHomeScreen> with TickerProviderStateM
           MaterialPageRoute(builder: (_) => const LinkedGameScreen()),
         );
         // Refresh state after returning to show updated quest status
-        if (mounted) setState(() {});
+        if (mounted) {
+          _refreshSideQuestsFuture();
+          setState(() {});
+        }
         break;
       case QuestType.wordSearch:
         await Navigator.push(
@@ -888,7 +984,10 @@ class _NewHomeScreenState extends State<NewHomeScreen> with TickerProviderStateM
           MaterialPageRoute(builder: (_) => const WordSearchGameScreen()),
         );
         // Refresh state after returning to show updated quest status
-        if (mounted) setState(() {});
+        if (mounted) {
+          _refreshSideQuestsFuture();
+          setState(() {});
+        }
         break;
       default:
         // Fallback for unknown quest types
@@ -933,7 +1032,10 @@ class _NewHomeScreenState extends State<NewHomeScreen> with TickerProviderStateM
     );
 
     // Refresh state after returning
-    if (mounted) setState(() {});
+    if (mounted) {
+      _refreshSideQuestsFuture();
+      setState(() {});
+    }
   }
 
   /// Build list of side quests (Steps, Linked, Word Search) + placeholders
@@ -1024,18 +1126,20 @@ class _NewHomeScreenState extends State<NewHomeScreen> with TickerProviderStateM
     );
 
     // Set completion state based on match status
+    // Use partner.id (UUID) if available, fallback to pushToken for backward compatibility
     if (user != null && partner != null && activeLinkedMatch != null) {
+      final partnerKey = partner.id.isNotEmpty ? partner.id : partner.pushToken;
       if (activeLinkedMatch.status == 'completed') {
         linkedQuest.status = 'completed';
         linkedQuest.userCompletions = {
           user.id: true,
-          partner.pushToken: true,
+          partnerKey: true,
         };
       } else if (activeLinkedMatch.currentTurnUserId != user.id) {
         // It's partner's turn - show partner badge
         linkedQuest.userCompletions = {
           user.id: true,
-          partner.pushToken: false,
+          partnerKey: false,
         };
       }
     }
@@ -1065,18 +1169,20 @@ class _NewHomeScreenState extends State<NewHomeScreen> with TickerProviderStateM
     );
 
     // Set completion state based on match status
+    // Use partner.id (UUID) if available, fallback to pushToken for backward compatibility
     if (user != null && partner != null && activeWordSearchMatch != null) {
+      final partnerKey = partner.id.isNotEmpty ? partner.id : partner.pushToken;
       if (activeWordSearchMatch.status == 'completed') {
         wordSearchQuest.status = 'completed';
         wordSearchQuest.userCompletions = {
           user.id: true,
-          partner.pushToken: true,
+          partnerKey: true,
         };
       } else if (activeWordSearchMatch.currentTurnUserId != user.id) {
         // It's partner's turn - show partner badge
         wordSearchQuest.userCompletions = {
           user.id: true,
-          partner.pushToken: false,
+          partnerKey: false,
         };
       }
     }

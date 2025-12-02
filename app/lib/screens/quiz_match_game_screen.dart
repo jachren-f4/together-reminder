@@ -3,7 +3,6 @@ import '../models/quiz_match.dart';
 import '../services/quiz_match_service.dart';
 import '../services/daily_quest_service.dart';
 import '../services/storage_service.dart';
-import '../services/arena_service.dart';
 import '../services/haptic_service.dart';
 import '../services/sound_service.dart';
 import '../utils/logger.dart';
@@ -34,7 +33,6 @@ class QuizMatchGameScreen extends StatefulWidget {
 class _QuizMatchGameScreenState extends State<QuizMatchGameScreen>
     with TickerProviderStateMixin {
   final QuizMatchService _service = QuizMatchService();
-  final ArenaService _arenaService = ArenaService();
 
   // Animation controllers
   late AnimationController _slideController;
@@ -193,12 +191,9 @@ class _QuizMatchGameScreenState extends State<QuizMatchGameScreen>
       // Update local quest status (for home screen card)
       await _updateLocalQuestStatus(bothCompleted: result.isCompleted);
 
-      // Award LP locally when both partners have completed
+      // LP is now server-authoritative - synced via UnifiedGameService.submitAnswers()
+      // No local awardLovePoints() needed (would cause double-counting)
       if (result.isCompleted) {
-        final lpEarned = result.lpEarned ?? 30;
-        await _arenaService.awardLovePoints(lpEarned, 'quiz_complete');
-        Logger.debug('Awarded $lpEarned LP locally for quiz completion', service: 'quiz');
-
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(
             builder: (context) => QuizMatchResultsScreen(
@@ -253,9 +248,11 @@ class _QuizMatchGameScreenState extends State<QuizMatchGameScreen>
         if (quest != null) {
           quest.status = 'completed';
           // Also mark partner as completed in userCompletions
+          // Use partner.id (UUID) if available, fallback to pushToken for backward compatibility
           if (partner != null) {
+            final partnerKey = partner.id.isNotEmpty ? partner.id : partner.pushToken;
             quest.userCompletions ??= {};
-            quest.userCompletions![partner.pushToken] = true;
+            quest.userCompletions![partnerKey] = true;
           }
           await quest.save();
           Logger.debug('Marked quest as fully completed for ${widget.questId}', service: 'quiz');

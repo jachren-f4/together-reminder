@@ -10,8 +10,10 @@ class DevConfig {
 
   /// Skip Supabase authentication in development mode
   /// Set to true to bypass auth flow during development
-  /// Set to false when you need to test auth functionality
-  static const bool skipAuthInDev = true;
+  /// Set to false when you need to test auth/onboarding functionality
+  ///
+  /// QUICK TOGGLE: Change to `true` to skip onboarding, `false` to test it
+  static const bool skipAuthInDev = true;  // <-- Toggle this!
 
   /// Allow auth bypass in profile/release builds for physical device testing
   /// Set to true when you need to test on unplugged physical devices (e.g., walking outside)

@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Results Screen - Affirmation Quiz (Therapeutic)</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            background: #f5f5f5;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .page-title {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .page-title h1 {
+            font-size: 20px;
+            font-weight: 400;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+
+        .page-title p {
+            font-size: 13px;
+            color: #666;
+            font-style: italic;
+        }
+
+        .screens-container {
+            display: flex;
+            gap: 30px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .screen-section {
+            text-align: center;
+        }
+
+        .score-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #666;
+            margin-bottom: 12px;
+            font-weight: 600;
+        }
+
+        /* Phone frame */
+        .phone-frame {
+            width: 340px;
+            background: #fff;
+            border: 2px solid #000;
+            border-radius: 32px;
+            overflow: hidden;
+            box-shadow: 8px 8px 0 rgba(0, 0, 0, 0.1);
+        }
+
+        /* Results Screen - Therapeutic warm background */
+        .results-screen {
+            padding: 40px 24px;
+            text-align: center;
+            min-height: 580px;
+            display: flex;
+            flex-direction: column;
+            background: linear-gradient(180deg, #fdfcf8 0%, #fff 100%);
+        }
+
+        .therapeutic-badge {
+            display: inline-block;
+            font-size: 9px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            background: #000;
+            color: #fff;
+            padding: 4px 12px;
+            margin-bottom: 16px;
+        }
+
+        .results-icon {
+            font-size: 48px;
+            margin-bottom: 16px;
+        }
+
+        .results-label {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #666;
+            margin-bottom: 8px;
+        }
+
+        .results-score {
+            font-size: 20px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            margin-bottom: 16px;
+        }
+
+        .alignment-visual {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 24px;
+        }
+
+        .alignment-dot {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            border: 2px solid #000;
+            background: #fff;
+        }
+
+        .alignment-dot.filled {
+            background: #000;
+        }
+
+        .results-message {
+            font-size: 18px;
+            font-style: italic;
+            color: #333;
+            margin-bottom: 16px;
+            line-height: 1.4;
+        }
+
+        .results-subtext {
+            font-size: 14px;
+            color: #555;
+            margin-bottom: 32px;
+            line-height: 1.6;
+            max-width: 280px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .lp-reward {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: #000;
+            color: #fff;
+            padding: 12px 24px;
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 32px;
+        }
+
+        .results-button {
+            background: #fff;
+            color: #000;
+            border: 2px solid #000;
+            padding: 16px 32px;
+            font-family: inherit;
+            font-size: 14px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin-top: auto;
+        }
+
+        .results-button:hover {
+            background: #000;
+            color: #fff;
+        }
+
+        /* Extra gentle framing for low scores */
+        .low-alignment .results-subtext {
+            font-size: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="page-title">
+        <h1>Affirmation Quiz — Therapeutic Results</h1>
+        <p>Attachment branch — Gentle tone, validates both perspectives</p>
+    </div>
+
+    <div class="screens-container">
+        <!-- HIGH ALIGNMENT (5/5) -->
+        <div class="screen-section">
+            <div class="score-label">High Alignment (5/5)</div>
+            <div class="phone-frame">
+                <div class="results-screen">
+                    <div class="therapeutic-badge">Deeper</div>
+                    <div class="results-icon">💛</div>
+                    <div class="results-label">Aligned on</div>
+                    <div class="results-score">5 of 5 statements</div>
+                    <div class="alignment-visual">
+                        <div class="alignment-dot filled"></div>
+                        <div class="alignment-dot filled"></div>
+                        <div class="alignment-dot filled"></div>
+                        <div class="alignment-dot filled"></div>
+                        <div class="alignment-dot filled"></div>
+                    </div>
+                    <div class="results-message">"You feel similarly about your connection"</div>
+                    <div class="results-subtext">
+                        You're experiencing your bond in the same way — that's a beautiful sign of attunement.
+                    </div>
+                    <div class="lp-reward">+ 30 LP</div>
+                    <button class="results-button">Explore Together</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- MID ALIGNMENT (3/5) -->
+        <div class="screen-section">
+            <div class="score-label">Mid Alignment (3/5)</div>
+            <div class="phone-frame">
+                <div class="results-screen">
+                    <div class="therapeutic-badge">Deeper</div>
+                    <div class="results-icon">💛</div>
+                    <div class="results-label">Aligned on</div>
+                    <div class="results-score">3 of 5 statements</div>
+                    <div class="alignment-visual">
+                        <div class="alignment-dot filled"></div>
+                        <div class="alignment-dot filled"></div>
+                        <div class="alignment-dot filled"></div>
+                        <div class="alignment-dot"></div>
+                        <div class="alignment-dot"></div>
+                    </div>
+                    <div class="results-message">"Some different experiences here"</div>
+                    <div class="results-subtext">
+                        This quiz reflects how you each <em>feel</em> — and feelings are always valid, even when they differ.
+                    </div>
+                    <div class="lp-reward">+ 30 LP</div>
+                    <button class="results-button">Explore Together</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- LOW ALIGNMENT (1-2/5) -->
+        <div class="screen-section">
+            <div class="score-label">Low Alignment (1-2/5)</div>
+            <div class="phone-frame">
+                <div class="results-screen low-alignment">
+                    <div class="therapeutic-badge">Deeper</div>
+                    <div class="results-icon">💛</div>
+                    <div class="results-label">Aligned on</div>
+                    <div class="results-score">1 of 5 statements</div>
+                    <div class="alignment-visual">
+                        <div class="alignment-dot filled"></div>
+                        <div class="alignment-dot"></div>
+                        <div class="alignment-dot"></div>
+                        <div class="alignment-dot"></div>
+                        <div class="alignment-dot"></div>
+                    </div>
+                    <div class="results-message">"You're experiencing things differently right now"</div>
+                    <div class="results-subtext">
+                        Neither of you is wrong. These differences are invitations to understand each other better.
+                    </div>
+                    <div class="lp-reward">+ 30 LP</div>
+                    <button class="results-button">Explore Together</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

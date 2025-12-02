@@ -8,11 +8,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { withAuthOrDevBypass } from '@/lib/auth/dev-middleware';
 import { query, getClient } from '@/lib/db/pool';
+import { LP_REWARDS } from '@/lib/lp/config';
 
 export const dynamic = 'force-dynamic';
-
-// LP reward for completing You or Me
-const LP_REWARD = 30;
 
 /**
  * POST /api/sync/you-or-me/submit
@@ -134,27 +132,20 @@ export const POST = withAuthOrDevBypass(async (req, userId, email) => {
     let completedAt = null;
 
     if (bothComplete) {
-      lpEarned = LP_REWARD;
+      lpEarned = LP_REWARDS.YOU_OR_ME;
       completedAt = new Date();
 
-      // Award LP to both users (use session ID as related_id to prevent duplicates)
+      // Award LP using couples.total_lp (single source of truth)
       await client.query(
-        `INSERT INTO love_point_awards (id, couple_id, amount, reason, related_id, created_at)
-         VALUES (gen_random_uuid(), $1, $2, 'you_or_me', $3, NOW())
-         ON CONFLICT (couple_id, related_id) DO NOTHING`,
-        [coupleId, lpEarned, sessionId]
+        `UPDATE couples SET total_lp = COALESCE(total_lp, 0) + $1 WHERE id = $2`,
+        [lpEarned, coupleId]
       );
 
-      // Update user LP totals
+      // Record LP transaction for audit trail
       await client.query(
-        `UPDATE user_love_points SET total_points = total_points + $1, updated_at = NOW()
-         WHERE user_id = $2`,
-        [lpEarned, user1_id]
-      );
-      await client.query(
-        `UPDATE user_love_points SET total_points = total_points + $1, updated_at = NOW()
-         WHERE user_id = $2`,
-        [lpEarned, user2_id]
+        `INSERT INTO love_point_transactions (user_id, amount, source, description, created_at)
+         VALUES ($1, $2, 'you_or_me_complete', $3, NOW()), ($4, $2, 'you_or_me_complete', $3, NOW())`,
+        [user1_id, lpEarned, `you_or_me_complete (${sessionId})`, user2_id]
       );
     }
 

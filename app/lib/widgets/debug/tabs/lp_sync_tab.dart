@@ -1,15 +1,14 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
-import 'package:firebase_database/firebase_database.dart';
 import '../../../services/storage_service.dart';
 import '../../../services/arena_service.dart';
-import '../../../services/quest_utilities.dart';
+import '../../../services/api_client.dart';
 import '../../../models/love_point_transaction.dart';
 import '../../../utils/logger.dart';
 import '../components/debug_section_card.dart';
 
-/// LP & Sync tab showing Love Points and Firebase synchronization
+/// LP & Sync tab showing Love Points and API synchronization
 class LpSyncTab extends StatefulWidget {
   const LpSyncTab({Key? key}) : super(key: key);
 
@@ -20,13 +19,14 @@ class LpSyncTab extends StatefulWidget {
 class _LpSyncTabState extends State<LpSyncTab> {
   final StorageService _storage = StorageService();
   final ArenaService _arenaService = ArenaService();
-  final FirebaseDatabase _database = FirebaseDatabase.instance;
+  final ApiClient _apiClient = ApiClient();
 
   bool _isLoading = true;
   List<LovePointTransaction> _transactions = [];
   List<String> _appliedAwards = [];
   int _currentLP = 0;
-  Map<String, dynamic> _firebaseSync = {};
+  int _serverLP = 0;
+  Map<String, dynamic> _serverSync = {};
 
   @override
   void initState() {
@@ -48,11 +48,11 @@ class _LpSyncTabState extends State<LpSyncTab> {
         metadataBox.get('applied_lp_awards', defaultValue: <String>[]),
       );
 
-      // Get current LP
+      // Get current LP (local)
       _currentLP = _arenaService.getLovePoints();
 
-      // Get Firebase sync status
-      await _loadFirebaseSync();
+      // Get server sync status
+      await _loadServerSync();
 
       setState(() => _isLoading = false);
     } catch (e) {
@@ -61,46 +61,54 @@ class _LpSyncTabState extends State<LpSyncTab> {
     }
   }
 
-  Future<void> _loadFirebaseSync() async {
+  Future<void> _loadServerSync() async {
     try {
-      final user = _storage.getUser();
-      final partner = _storage.getPartner();
-
-      if (user != null && partner != null) {
-        final coupleId = QuestUtilities.generateCoupleId(user.id, partner.pushToken);
-
-        // Check daily_quests path
-        final questsRef = _database.ref('daily_quests/$coupleId');
-        final questsSnapshot = await questsRef.get();
-
-        // Check quiz_progression path
-        final progressionRef = _database.ref('quiz_progression/$coupleId');
-        final progressionSnapshot = await progressionRef.get();
-
-        // Check lp_awards path
-        final awardsRef = _database.ref('lp_awards/$coupleId');
-        final awardsSnapshot = await awardsRef.get();
-
-        _firebaseSync = {
-          'daily_quests': {
-            'path': 'daily_quests/$coupleId',
-            'exists': questsSnapshot.exists,
-            'childrenCount': questsSnapshot.exists ? questsSnapshot.children.length : 0,
-          },
-          'quiz_progression': {
-            'path': 'quiz_progression/$coupleId',
-            'exists': progressionSnapshot.exists,
-            'data': progressionSnapshot.exists ? progressionSnapshot.value : null,
-          },
-          'lp_awards': {
-            'path': 'lp_awards/$coupleId',
-            'exists': awardsSnapshot.exists,
-            'childrenCount': awardsSnapshot.exists ? awardsSnapshot.children.length : 0,
-          },
-        };
+      // Fetch LP from server
+      final lpResponse = await _apiClient.get('/api/sync/love-points');
+      if (lpResponse.success && lpResponse.data != null) {
+        _serverLP = lpResponse.data['totalLp'] as int? ?? 0;
       }
+
+      // Fetch daily quests count from server
+      final questsResponse = await _apiClient.get('/api/sync/daily-quests');
+      int questCount = 0;
+      if (questsResponse.success && questsResponse.data != null) {
+        final quests = questsResponse.data['quests'] as List<dynamic>?;
+        questCount = quests?.length ?? 0;
+      }
+
+      // Fetch LP awards from server
+      final awardsResponse = await _apiClient.get('/api/sync/love-points/history');
+      int awardsCount = 0;
+      if (awardsResponse.success && awardsResponse.data != null) {
+        final awards = awardsResponse.data['awards'] as List<dynamic>?;
+        awardsCount = awards?.length ?? 0;
+      }
+
+      _serverSync = {
+        'love_points': {
+          'path': '/api/sync/love-points',
+          'exists': true,
+          'value': _serverLP,
+        },
+        'daily_quests': {
+          'path': '/api/sync/daily-quests',
+          'exists': questCount > 0,
+          'childrenCount': questCount,
+        },
+        'lp_awards': {
+          'path': '/api/sync/love-points/history',
+          'exists': awardsCount > 0,
+          'childrenCount': awardsCount,
+        },
+      };
     } catch (e) {
-      Logger.error('Error loading Firebase sync status', error: e, service: 'debug');
+      Logger.error('Error loading server sync status', error: e, service: 'debug');
+      _serverSync = {
+        'love_points': {'path': '/api/sync/love-points', 'exists': false, 'value': 0},
+        'daily_quests': {'path': '/api/sync/daily-quests', 'exists': false, 'childrenCount': 0},
+        'lp_awards': {'path': '/api/sync/love-points/history', 'exists': false, 'childrenCount': 0},
+      };
     }
   }
 
@@ -119,8 +127,8 @@ class _LpSyncTabState extends State<LpSyncTab> {
     return JsonEncoder.withIndent('  ').convert(_appliedAwards);
   }
 
-  String _getFirebaseSyncData() {
-    return JsonEncoder.withIndent('  ').convert(_firebaseSync);
+  String _getServerSyncData() {
+    return JsonEncoder.withIndent('  ').convert(_serverSync);
   }
 
   @override
@@ -128,6 +136,8 @@ class _LpSyncTabState extends State<LpSyncTab> {
     if (_isLoading) {
       return const Center(child: CircularProgressIndicator());
     }
+
+    final lpMatch = _currentLP == _serverLP;
 
     return RefreshIndicator(
       onRefresh: _loadData,
@@ -149,7 +159,7 @@ class _LpSyncTabState extends State<LpSyncTab> {
               child: Column(
                 children: [
                   Text(
-                    '💰 Current Love Points',
+                    '💰 Love Points',
                     style: TextStyle(
                       fontSize: 12,
                       fontWeight: FontWeight.w700,
@@ -157,14 +167,68 @@ class _LpSyncTabState extends State<LpSyncTab> {
                     ),
                   ),
                   const SizedBox(height: 8),
-                  Text(
-                    '$_currentLP LP',
-                    style: const TextStyle(
-                      fontSize: 32,
-                      fontWeight: FontWeight.w700,
-                      color: Colors.green,
-                    ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Column(
+                        children: [
+                          Text(
+                            'Local',
+                            style: TextStyle(
+                              fontSize: 10,
+                              color: Colors.grey.shade600,
+                            ),
+                          ),
+                          Text(
+                            '$_currentLP',
+                            style: const TextStyle(
+                              fontSize: 24,
+                              fontWeight: FontWeight.w700,
+                              color: Colors.green,
+                            ),
+                          ),
+                        ],
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        child: Icon(
+                          lpMatch ? Icons.check_circle : Icons.warning,
+                          color: lpMatch ? Colors.green : Colors.orange,
+                          size: 24,
+                        ),
+                      ),
+                      Column(
+                        children: [
+                          Text(
+                            'Server',
+                            style: TextStyle(
+                              fontSize: 10,
+                              color: Colors.grey.shade600,
+                            ),
+                          ),
+                          Text(
+                            '$_serverLP',
+                            style: TextStyle(
+                              fontSize: 24,
+                              fontWeight: FontWeight.w700,
+                              color: lpMatch ? Colors.green : Colors.orange,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
                   ),
+                  if (!lpMatch)
+                    Padding(
+                      padding: const EdgeInsets.only(top: 8),
+                      child: Text(
+                        '⚠️ LP mismatch between local and server',
+                        style: TextStyle(
+                          fontSize: 10,
+                          color: Colors.orange.shade700,
+                        ),
+                      ),
+                    ),
                 ],
               ),
             ),
@@ -305,42 +369,40 @@ class _LpSyncTabState extends State<LpSyncTab> {
               ),
             ),
 
-            // Firebase Sync Status
+            // Server Sync Status
             DebugSectionCard(
-              title: '🔥 FIREBASE SYNC STATUS',
-              copyData: _getFirebaseSyncData(),
-              copyMessage: 'Firebase sync status copied',
+              title: '☁️ SERVER SYNC STATUS (Supabase)',
+              copyData: _getServerSyncData(),
+              copyMessage: 'Server sync status copied',
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  // daily_quests path
-                  _buildFirebasePath(
-                    '/daily_quests',
-                    _firebaseSync['daily_quests']?['path'] ?? 'N/A',
-                    _firebaseSync['daily_quests']?['exists'] ?? false,
-                    'Date keys: ${_firebaseSync['daily_quests']?['childrenCount'] ?? 0}',
+                  // love_points endpoint
+                  _buildServerPath(
+                    '/love-points',
+                    _serverSync['love_points']?['path'] ?? 'N/A',
+                    _serverSync['love_points']?['exists'] ?? false,
+                    'Value: ${_serverSync['love_points']?['value'] ?? 0}',
                   ),
 
                   const SizedBox(height: 16),
 
-                  // quiz_progression path
-                  _buildFirebasePath(
-                    '/quiz_progression',
-                    _firebaseSync['quiz_progression']?['path'] ?? 'N/A',
-                    _firebaseSync['quiz_progression']?['exists'] ?? false,
-                    _firebaseSync['quiz_progression']?['data'] != null
-                        ? 'Data exists'
-                        : 'No data',
+                  // daily_quests endpoint
+                  _buildServerPath(
+                    '/daily-quests',
+                    _serverSync['daily_quests']?['path'] ?? 'N/A',
+                    _serverSync['daily_quests']?['exists'] ?? false,
+                    'Quests: ${_serverSync['daily_quests']?['childrenCount'] ?? 0}',
                   ),
 
                   const SizedBox(height: 16),
 
-                  // lp_awards path
-                  _buildFirebasePath(
-                    '/lp_awards',
-                    _firebaseSync['lp_awards']?['path'] ?? 'N/A',
-                    _firebaseSync['lp_awards']?['exists'] ?? false,
-                    'Awards: ${_firebaseSync['lp_awards']?['childrenCount'] ?? 0}',
+                  // lp_awards endpoint
+                  _buildServerPath(
+                    '/love-points/history',
+                    _serverSync['lp_awards']?['path'] ?? 'N/A',
+                    _serverSync['lp_awards']?['exists'] ?? false,
+                    'Awards: ${_serverSync['lp_awards']?['childrenCount'] ?? 0}',
                   ),
                 ],
               ),
@@ -351,7 +413,7 @@ class _LpSyncTabState extends State<LpSyncTab> {
     );
   }
 
-  Widget _buildFirebasePath(String name, String path, bool exists, String info) {
+  Widget _buildServerPath(String name, String path, bool exists, String info) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [

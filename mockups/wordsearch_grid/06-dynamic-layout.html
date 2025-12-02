@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Word Search - Dynamic Layout</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #1a1a1a;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+      flex-wrap: wrap;
+      padding: 20px;
+    }
+
+    .phone-label {
+      position: absolute;
+      top: -24px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 11px;
+      color: #888;
+      white-space: nowrap;
+    }
+
+    .phone-wrapper {
+      position: relative;
+    }
+
+    .phone {
+      background: #f8f6f1;
+      border-radius: 40px;
+      overflow: hidden;
+      position: relative;
+      box-shadow: 0 25px 50px rgba(0,0,0,0.5);
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Different phone sizes */
+    .phone.iphone-se {
+      width: 320px;
+      height: 568px;
+    }
+
+    .phone.iphone-8 {
+      width: 375px;
+      height: 667px;
+    }
+
+    .phone.iphone-14 {
+      width: 390px;
+      height: 844px;
+    }
+
+    /* Header - compact but readable */
+    .header {
+      padding: 10px 14px;
+      border-bottom: 2px solid #1a1a1a;
+      display: flex;
+      align-items: center;
+      background: #f8f6f1;
+      flex-shrink: 0;
+    }
+
+    .back-btn {
+      font-size: 18px;
+      color: #1a1a1a;
+      cursor: pointer;
+    }
+
+    .title {
+      font-family: Georgia, serif;
+      font-size: 16px;
+      letter-spacing: 1.5px;
+      margin-left: 10px;
+    }
+
+    .scores {
+      margin-left: auto;
+      font-size: 12px;
+      display: flex;
+      gap: 12px;
+    }
+
+    .score {
+      display: flex;
+      align-items: center;
+      gap: 3px;
+    }
+
+    .score.active::before {
+      content: '';
+      width: 5px;
+      height: 5px;
+      background: #4caf50;
+      border-radius: 50%;
+    }
+
+    .score.active {
+      font-weight: 700;
+    }
+
+    /* Grid Area - fixed to screen width, square */
+    .grid-area {
+      flex-shrink: 0;
+      padding: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #f8f6f1;
+    }
+
+    .grid-container {
+      width: 100%;
+      aspect-ratio: 1;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(10, 1fr);
+      gap: 1px;
+      width: 100%;
+      height: 100%;
+      background: #888;
+      padding: 1px;
+    }
+
+    .cell {
+      background: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: Georgia, serif;
+      font-weight: 700;
+      color: #1a1a1a;
+    }
+
+    /* Readable font sizes */
+    .iphone-se .cell { font-size: 14px; }
+    .iphone-8 .cell { font-size: 16px; }
+    .iphone-14 .cell { font-size: 17px; }
+
+    .cell.found {
+      background: rgba(102, 187, 106, 0.3);
+    }
+
+    /* Word Bank - FLEXIBLE, expands to fill remaining space */
+    .word-bank {
+      background: #f8f6f1;
+      border-top: 1px solid #ddd;
+      padding: 10px 12px;
+      flex: 1; /* Takes remaining space */
+      min-height: 0;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .word-bank-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+      flex-shrink: 0;
+    }
+
+    .word-bank-title {
+      font-size: 10px;
+      letter-spacing: 1px;
+      color: #888;
+      text-transform: uppercase;
+    }
+
+    /* Word grid fills available space */
+    .word-grid {
+      flex: 1;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      grid-template-rows: repeat(3, 1fr);
+      gap: 6px;
+      min-height: 0;
+    }
+
+    /* On smaller screens, use 6 columns */
+    .iphone-se .word-grid {
+      grid-template-columns: repeat(6, 1fr);
+      grid-template-rows: repeat(2, 1fr);
+      gap: 4px;
+    }
+
+    .word-item {
+      padding: 6px 4px;
+      border: 1px solid #ddd;
+      text-align: center;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      color: #1a1a1a;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 0;
+    }
+
+    /* Larger word items on taller phones */
+    .iphone-14 .word-item {
+      font-size: 12px;
+      letter-spacing: 1px;
+    }
+
+    .word-item.found {
+      color: rgba(102, 187, 106, 0.7);
+      text-decoration: line-through;
+      border-color: #66bb6a;
+    }
+
+    /* Bottom Bar */
+    .bottom-bar {
+      padding: 10px 12px;
+      border-top: 1px solid #ddd;
+      display: flex;
+      gap: 10px;
+      background: #f8f6f1;
+      flex-shrink: 0;
+    }
+
+    .hint-btn {
+      flex: 1;
+      padding: 12px 8px;
+      border: 1px solid #1a1a1a;
+      background: #f8f6f1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      cursor: pointer;
+    }
+
+    .turn-indicator {
+      flex: 2;
+      padding: 12px 8px;
+      background: #1a1a1a;
+      color: #f8f6f1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+    }
+
+    .dots {
+      display: flex;
+      gap: 3px;
+    }
+
+    .dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.4);
+    }
+
+    .dot.filled {
+      background: #fff;
+    }
+
+    /* Layout info overlay */
+    .layout-info {
+      position: absolute;
+      bottom: 8px;
+      right: 8px;
+      background: rgba(0,0,0,0.75);
+      color: #fff;
+      padding: 6px 10px;
+      border-radius: 4px;
+      font-size: 9px;
+      line-height: 1.4;
+    }
+  </style>
+</head>
+<body>
+  <!-- iPhone SE (smallest - word bank gets compressed) -->
+  <div class="phone-wrapper">
+    <span class="phone-label">iPhone SE (320×568) - Tight fit</span>
+    <div class="phone iphone-se">
+      <div class="header">
+        <span class="back-btn">←</span>
+        <span class="title">WORD SEARCH</span>
+        <div class="scores">
+          <span class="score active">You: 45</span>
+          <span class="score">Emma: 30</span>
+        </div>
+      </div>
+
+      <div class="grid-area">
+        <div class="grid-container">
+          <div class="grid" id="grid-se"></div>
+        </div>
+      </div>
+
+      <div class="word-bank">
+        <div class="word-bank-header">
+          <span class="word-bank-title">Find these words</span>
+          <span class="word-bank-title">4/12</span>
+        </div>
+        <div class="word-grid">
+          <div class="word-item found">LOVE</div>
+          <div class="word-item found">HEART</div>
+          <div class="word-item">PASSION</div>
+          <div class="word-item found">KISS</div>
+          <div class="word-item">EMBRACE</div>
+          <div class="word-item">ROMANCE</div>
+          <div class="word-item found">TENDER</div>
+          <div class="word-item">ADORE</div>
+          <div class="word-item">CHERISH</div>
+          <div class="word-item">DESIRE</div>
+          <div class="word-item">FOREVER</div>
+          <div class="word-item">SOULMATE</div>
+        </div>
+      </div>
+
+      <div class="bottom-bar">
+        <div class="hint-btn">💡 HINT (2)</div>
+        <div class="turn-indicator">
+          <div class="dots">
+            <div class="dot filled"></div>
+            <div class="dot"></div>
+            <div class="dot"></div>
+          </div>
+          1/3 FOUND
+        </div>
+      </div>
+      <div class="layout-info">Grid: 308px<br>Words: 6×2</div>
+    </div>
+  </div>
+
+  <!-- iPhone 8 / SE 2nd gen -->
+  <div class="phone-wrapper">
+    <span class="phone-label">iPhone 8 (375×667) - Balanced</span>
+    <div class="phone iphone-8">
+      <div class="header">
+        <span class="back-btn">←</span>
+        <span class="title">WORD SEARCH</span>
+        <div class="scores">
+          <span class="score active">You: 45</span>
+          <span class="score">Emma: 30</span>
+        </div>
+      </div>
+
+      <div class="grid-area">
+        <div class="grid-container">
+          <div class="grid" id="grid-8"></div>
+        </div>
+      </div>
+
+      <div class="word-bank">
+        <div class="word-bank-header">
+          <span class="word-bank-title">Find these words</span>
+          <span class="word-bank-title">4/12</span>
+        </div>
+        <div class="word-grid">
+          <div class="word-item found">LOVE</div>
+          <div class="word-item found">HEART</div>
+          <div class="word-item">PASSION</div>
+          <div class="word-item found">KISS</div>
+          <div class="word-item">EMBRACE</div>
+          <div class="word-item">ROMANCE</div>
+          <div class="word-item found">TENDER</div>
+          <div class="word-item">ADORE</div>
+          <div class="word-item">CHERISH</div>
+          <div class="word-item">DESIRE</div>
+          <div class="word-item">FOREVER</div>
+          <div class="word-item">SOULMATE</div>
+        </div>
+      </div>
+
+      <div class="bottom-bar">
+        <div class="hint-btn">💡 HINT (2)</div>
+        <div class="turn-indicator">
+          <div class="dots">
+            <div class="dot filled"></div>
+            <div class="dot"></div>
+            <div class="dot"></div>
+          </div>
+          1/3 FOUND
+        </div>
+      </div>
+      <div class="layout-info">Grid: 363px<br>Words: 4×3</div>
+    </div>
+  </div>
+
+  <!-- iPhone 14 (taller - word bank gets more room) -->
+  <div class="phone-wrapper">
+    <span class="phone-label">iPhone 14 (390×844) - Extra space</span>
+    <div class="phone iphone-14">
+      <div class="header">
+        <span class="back-btn">←</span>
+        <span class="title">WORD SEARCH</span>
+        <div class="scores">
+          <span class="score active">You: 45</span>
+          <span class="score">Emma: 30</span>
+        </div>
+      </div>
+
+      <div class="grid-area">
+        <div class="grid-container">
+          <div class="grid" id="grid-14"></div>
+        </div>
+      </div>
+
+      <div class="word-bank">
+        <div class="word-bank-header">
+          <span class="word-bank-title">Find these words</span>
+          <span class="word-bank-title">4/12</span>
+        </div>
+        <div class="word-grid">
+          <div class="word-item found">LOVE</div>
+          <div class="word-item found">HEART</div>
+          <div class="word-item">PASSION</div>
+          <div class="word-item found">KISS</div>
+          <div class="word-item">EMBRACE</div>
+          <div class="word-item">ROMANCE</div>
+          <div class="word-item found">TENDER</div>
+          <div class="word-item">ADORE</div>
+          <div class="word-item">CHERISH</div>
+          <div class="word-item">DESIRE</div>
+          <div class="word-item">FOREVER</div>
+          <div class="word-item">SOULMATE</div>
+        </div>
+      </div>
+
+      <div class="bottom-bar">
+        <div class="hint-btn">💡 HINT (2)</div>
+        <div class="turn-indicator">
+          <div class="dots">
+            <div class="dot filled"></div>
+            <div class="dot"></div>
+            <div class="dot"></div>
+          </div>
+          1/3 FOUND
+        </div>
+      </div>
+      <div class="layout-info">Grid: 378px<br>Words: 4×3 (spacious)</div>
+    </div>
+  </div>
+
+  <script>
+    const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    const grids = ['grid-se', 'grid-8', 'grid-14'];
+
+    grids.forEach(gridId => {
+      const grid = document.getElementById(gridId);
+      for (let i = 0; i < 100; i++) {
+        const cell = document.createElement('div');
+        cell.className = 'cell';
+        if ([12, 13, 14, 15, 34, 35, 36, 37, 38].includes(i)) {
+          cell.className = 'cell found';
+        }
+        cell.textContent = letters[Math.floor(Math.random() * 26)];
+        grid.appendChild(cell);
+      }
+    });
+  </script>
+</body>
+</html>

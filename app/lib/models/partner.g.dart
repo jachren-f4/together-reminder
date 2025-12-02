@@ -21,13 +21,14 @@ class PartnerAdapter extends TypeAdapter<Partner> {
       pushToken: fields[1] as String,
       pairedAt: fields[2] as DateTime,
       avatarEmoji: fields[3] as String?,
+      id: fields[4] == null ? '' : fields[4] as String,
     );
   }
 
   @override
   void write(BinaryWriter writer, Partner obj) {
     writer
-      ..writeByte(4)
+      ..writeByte(5)
       ..writeByte(0)
       ..write(obj.name)
       ..writeByte(1)
@@ -35,7 +36,9 @@ class PartnerAdapter extends TypeAdapter<Partner> {
       ..writeByte(2)
       ..write(obj.pairedAt)
       ..writeByte(3)
-      ..write(obj.avatarEmoji);
+      ..write(obj.avatarEmoji)
+      ..writeByte(4)
+      ..write(obj.id);
   }
 
   @override

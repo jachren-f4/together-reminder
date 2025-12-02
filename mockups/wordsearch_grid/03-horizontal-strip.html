@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Word Search - Horizontal Word Strip</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #1a1a1a;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .phone {
+      width: 375px;
+      height: 667px;
+      background: #f8f6f1;
+      border-radius: 40px;
+      overflow: hidden;
+      position: relative;
+      box-shadow: 0 25px 50px rgba(0,0,0,0.5);
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Header */
+    .header {
+      padding: 12px 16px;
+      border-bottom: 2px solid #1a1a1a;
+      display: flex;
+      align-items: center;
+      background: #f8f6f1;
+      flex-shrink: 0;
+    }
+
+    .back-btn {
+      font-size: 20px;
+      color: #1a1a1a;
+      cursor: pointer;
+    }
+
+    .title {
+      font-family: Georgia, serif;
+      font-size: 18px;
+      letter-spacing: 2px;
+      margin-left: 12px;
+    }
+
+    .scores {
+      margin-left: auto;
+      font-size: 13px;
+      display: flex;
+      gap: 16px;
+    }
+
+    .score {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .score.active::before {
+      content: '';
+      width: 6px;
+      height: 6px;
+      background: #4caf50;
+      border-radius: 50%;
+    }
+
+    .score.active {
+      font-weight: 700;
+    }
+
+    /* Grid Area - gets most space */
+    .grid-area {
+      flex: 1;
+      padding: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #f8f6f1;
+      min-height: 0;
+    }
+
+    .grid-container {
+      width: 100%;
+      max-width: 350px;
+      aspect-ratio: 1;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(10, 1fr);
+      gap: 2px;
+      width: 100%;
+      height: 100%;
+    }
+
+    .cell {
+      background: #fff;
+      border: 1px solid #666;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: Georgia, serif;
+      font-size: 15px;
+      font-weight: 700;
+      color: #1a1a1a;
+    }
+
+    .cell.found {
+      background: rgba(102, 187, 106, 0.3);
+    }
+
+    /* Horizontal Word Strip - very compact */
+    .word-strip {
+      background: #f8f6f1;
+      border-top: 1px solid #e0e0e0;
+      padding: 8px 0;
+      flex-shrink: 0;
+    }
+
+    .strip-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 16px 6px;
+    }
+
+    .strip-title {
+      font-size: 9px;
+      letter-spacing: 1px;
+      color: #888;
+    }
+
+    .strip-count {
+      font-size: 9px;
+      letter-spacing: 1px;
+      color: #888;
+    }
+
+    .word-scroll {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding: 0 16px 4px;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
+
+    .word-scroll::-webkit-scrollbar {
+      display: none;
+    }
+
+    .word-chip {
+      padding: 6px 12px;
+      border: 1px solid #e0e0e0;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 1px;
+      color: #1a1a1a;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .word-chip.found {
+      color: rgba(102, 187, 106, 0.7);
+      text-decoration: line-through;
+      border-color: #66bb6a;
+    }
+
+    /* Scroll fade indicators */
+    .word-strip-container {
+      position: relative;
+    }
+
+    .word-strip-container::after {
+      content: '';
+      position: absolute;
+      right: 0;
+      top: 0;
+      bottom: 0;
+      width: 40px;
+      background: linear-gradient(to right, transparent, #f8f6f1);
+      pointer-events: none;
+    }
+
+    /* Bottom Bar */
+    .bottom-bar {
+      padding: 12px;
+      border-top: 1px solid #e0e0e0;
+      display: flex;
+      gap: 12px;
+      background: #f8f6f1;
+      flex-shrink: 0;
+    }
+
+    .hint-btn {
+      flex: 1;
+      padding: 12px;
+      border: 1px solid #1a1a1a;
+      background: #f8f6f1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 1px;
+      cursor: pointer;
+    }
+
+    .turn-indicator {
+      flex: 2;
+      padding: 12px;
+      background: #1a1a1a;
+      color: #f8f6f1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 1px;
+    }
+
+    .dots {
+      display: flex;
+      gap: 4px;
+    }
+
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.4);
+    }
+
+    .dot.filled {
+      background: #fff;
+    }
+
+    .instructions {
+      position: absolute;
+      bottom: 100px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(0,0,0,0.8);
+      color: white;
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 12px;
+      white-space: nowrap;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .phone:hover .instructions {
+      opacity: 1;
+    }
+  </style>
+</head>
+<body>
+  <div class="phone">
+    <div class="header">
+      <span class="back-btn">←</span>
+      <span class="title">WORD SEARCH</span>
+      <div class="scores">
+        <span class="score active">You: 45</span>
+        <span class="score">Emma: 30</span>
+      </div>
+    </div>
+
+    <div class="grid-area">
+      <div class="grid-container">
+        <div class="grid" id="grid"></div>
+      </div>
+    </div>
+
+    <div class="word-strip">
+      <div class="strip-header">
+        <span class="strip-title">FIND THESE WORDS</span>
+        <span class="strip-count">4/12</span>
+      </div>
+      <div class="word-strip-container">
+        <div class="word-scroll">
+          <div class="word-chip found">LOVE</div>
+          <div class="word-chip found">HEART</div>
+          <div class="word-chip">PASSION</div>
+          <div class="word-chip found">KISS</div>
+          <div class="word-chip">EMBRACE</div>
+          <div class="word-chip">ROMANCE</div>
+          <div class="word-chip found">TENDER</div>
+          <div class="word-chip">ADORE</div>
+          <div class="word-chip">CHERISH</div>
+          <div class="word-chip">DESIRE</div>
+          <div class="word-chip">FOREVER</div>
+          <div class="word-chip">SOULMATE</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="bottom-bar">
+      <div class="hint-btn">💡 HINT (2)</div>
+      <div class="turn-indicator">
+        <div class="dots">
+          <div class="dot filled"></div>
+          <div class="dot"></div>
+          <div class="dot"></div>
+        </div>
+        1/3 FOUND
+      </div>
+    </div>
+
+    <div class="instructions">Scroll horizontally to see all words</div>
+  </div>
+
+  <script>
+    // Generate random letters for grid
+    const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    const grid = document.getElementById('grid');
+
+    for (let i = 0; i < 100; i++) {
+      const cell = document.createElement('div');
+      cell.className = 'cell';
+      if ([12, 13, 14, 15, 34, 35, 36, 37, 38].includes(i)) {
+        cell.className = 'cell found';
+      }
+      cell.textContent = letters[Math.floor(Math.random() * 26)];
+      grid.appendChild(cell);
+    }
+  </script>
+</body>
+</html>

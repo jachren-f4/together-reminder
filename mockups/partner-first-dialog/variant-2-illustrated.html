@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Partner Goes First - Illustrated</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #1a1a1a;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .phone {
+      width: 375px;
+      height: 812px;
+      background: #f8f6f1;
+      border-radius: 40px;
+      overflow: hidden;
+      position: relative;
+      box-shadow: 0 25px 50px rgba(0,0,0,0.5);
+    }
+
+    /* Simulated Word Search grid behind overlay */
+    .puzzle-bg {
+      position: absolute;
+      inset: 0;
+      padding: 60px 20px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .puzzle-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 4px;
+    }
+
+    .back-btn {
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      color: #666;
+    }
+
+    .puzzle-title {
+      font-family: Georgia, serif;
+      font-size: 18px;
+      color: #1a1a1a;
+    }
+
+    .placeholder {
+      width: 32px;
+    }
+
+    .grid-container {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 24px;
+    }
+
+    .word-list {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .word {
+      font-family: Georgia, serif;
+      font-size: 14px;
+      color: #888;
+      letter-spacing: 1px;
+    }
+
+    .puzzle-grid {
+      display: grid;
+      grid-template-columns: repeat(8, 36px);
+      gap: 1px;
+      background: #e8e4dc;
+      padding: 1px;
+    }
+
+    .cell {
+      width: 36px;
+      height: 36px;
+      background: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: Georgia, serif;
+      font-size: 16px;
+      color: #ccc;
+    }
+
+    /* Dark overlay */
+    .overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(26, 26, 26, 0.6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      animation: fadeIn 0.3s ease-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    /* Dialog card */
+    .dialog {
+      width: 280px;
+      background: #f8f6f1;
+      border-radius: 4px;
+      padding: 8px;
+      box-shadow: 0 15px 30px rgba(0,0,0,0.3);
+      animation: slideUp 0.3s ease-out;
+    }
+
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .dialog-inner {
+      border: 1px solid #1a1a1a;
+      padding: 28px 24px;
+      text-align: center;
+    }
+
+    .dialog-label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 2px;
+      color: #888;
+      margin-bottom: 20px;
+    }
+
+    /* Hourglass illustration */
+    .illustration {
+      width: 60px;
+      height: 80px;
+      margin: 0 auto 20px;
+      position: relative;
+    }
+
+    .hourglass {
+      width: 100%;
+      height: 100%;
+    }
+
+    .hourglass-frame {
+      position: absolute;
+      inset: 0;
+      border: 2px solid #1a1a1a;
+      border-radius: 4px;
+    }
+
+    .hourglass-frame::before,
+    .hourglass-frame::after {
+      content: '';
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 80%;
+      height: 3px;
+      background: #1a1a1a;
+    }
+
+    .hourglass-frame::before { top: 6px; }
+    .hourglass-frame::after { bottom: 6px; }
+
+    .hourglass-glass {
+      position: absolute;
+      top: 14px;
+      bottom: 14px;
+      left: 8px;
+      right: 8px;
+    }
+
+    .hourglass-top,
+    .hourglass-bottom {
+      position: absolute;
+      left: 0;
+      right: 0;
+      height: 45%;
+      overflow: hidden;
+    }
+
+    .hourglass-top {
+      top: 0;
+      background: linear-gradient(to bottom, transparent 20%, #d4d0c8 20%);
+      clip-path: polygon(0 0, 100% 0, 60% 100%, 40% 100%);
+    }
+
+    .hourglass-bottom {
+      bottom: 0;
+      background: linear-gradient(to bottom, #888 0%, #888 60%, transparent 60%);
+      clip-path: polygon(40% 0, 60% 0, 100% 100%, 0 100%);
+    }
+
+    .sand-stream {
+      position: absolute;
+      top: 45%;
+      left: 50%;
+      width: 2px;
+      height: 10%;
+      background: #888;
+      transform: translateX(-50%);
+      animation: sandFall 1.5s ease-in-out infinite;
+    }
+
+    @keyframes sandFall {
+      0%, 100% { opacity: 1; height: 10%; }
+      50% { opacity: 0.5; height: 6%; }
+    }
+
+    .dialog-title {
+      font-family: Georgia, serif;
+      font-size: 24px;
+      font-weight: 400;
+      color: #1a1a1a;
+      letter-spacing: -0.5px;
+      margin-bottom: 16px;
+    }
+
+    .divider {
+      width: 40px;
+      height: 1px;
+      background: #1a1a1a;
+      margin: 0 auto 16px;
+    }
+
+    .dialog-text {
+      font-size: 14px;
+      color: #666;
+      line-height: 1.6;
+      margin-bottom: 24px;
+    }
+
+    .dialog-text .partner-name {
+      font-family: Georgia, serif;
+      font-weight: 600;
+      font-style: italic;
+      color: #1a1a1a;
+    }
+
+    .btn-primary {
+      width: 100%;
+      padding: 14px;
+      background: #1a1a1a;
+      border: 1px solid #1a1a1a;
+      color: #f8f6f1;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 1px;
+      cursor: pointer;
+      margin-bottom: 12px;
+    }
+
+    .btn-secondary {
+      font-size: 13px;
+      color: #666;
+      letter-spacing: 0.5px;
+      cursor: pointer;
+      background: none;
+      border: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="phone">
+    <!-- Word Search background -->
+    <div class="puzzle-bg">
+      <div class="puzzle-header">
+        <div class="back-btn">←</div>
+        <div class="puzzle-title">Word Search</div>
+        <div class="placeholder"></div>
+      </div>
+      <div class="grid-container">
+        <div class="word-list">
+          <span class="word">LOVE</span>
+          <span class="word">HEART</span>
+          <span class="word">TOGETHER</span>
+          <span class="word">KISS</span>
+        </div>
+        <div class="puzzle-grid">
+          <div class="cell">L</div><div class="cell">O</div><div class="cell">V</div><div class="cell">E</div>
+          <div class="cell">X</div><div class="cell">K</div><div class="cell">I</div><div class="cell">S</div>
+          <div class="cell">H</div><div class="cell">E</div><div class="cell">A</div><div class="cell">R</div>
+          <div class="cell">T</div><div class="cell">Y</div><div class="cell">Z</div><div class="cell">S</div>
+          <div class="cell">T</div><div class="cell">O</div><div class="cell">G</div><div class="cell">E</div>
+          <div class="cell">T</div><div class="cell">H</div><div class="cell">E</div><div class="cell">R</div>
+          <div class="cell">A</div><div class="cell">B</div><div class="cell">C</div><div class="cell">D</div>
+          <div class="cell">E</div><div class="cell">F</div><div class="cell">G</div><div class="cell">H</div>
+          <div class="cell">I</div><div class="cell">J</div><div class="cell">K</div><div class="cell">L</div>
+          <div class="cell">M</div><div class="cell">N</div><div class="cell">O</div><div class="cell">P</div>
+          <div class="cell">Q</div><div class="cell">R</div><div class="cell">S</div><div class="cell">T</div>
+          <div class="cell">U</div><div class="cell">V</div><div class="cell">W</div><div class="cell">X</div>
+          <div class="cell">Y</div><div class="cell">Z</div><div class="cell">A</div><div class="cell">B</div>
+          <div class="cell">C</div><div class="cell">D</div><div class="cell">E</div><div class="cell">F</div>
+          <div class="cell">G</div><div class="cell">H</div><div class="cell">I</div><div class="cell">J</div>
+          <div class="cell">K</div><div class="cell">L</div><div class="cell">M</div><div class="cell">N</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Overlay with dialog -->
+    <div class="overlay">
+      <div class="dialog">
+        <div class="dialog-inner">
+          <div class="dialog-label">WORD SEARCH</div>
+
+          <!-- Hourglass illustration -->
+          <div class="illustration">
+            <svg viewBox="0 0 60 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <!-- Frame -->
+              <rect x="5" y="2" width="50" height="76" rx="3" stroke="#1a1a1a" stroke-width="2" fill="none"/>
+              <!-- Top bar -->
+              <rect x="10" y="8" width="40" height="3" fill="#1a1a1a"/>
+              <!-- Bottom bar -->
+              <rect x="10" y="69" width="40" height="3" fill="#1a1a1a"/>
+              <!-- Glass top -->
+              <path d="M15 14 L45 14 L35 38 L25 38 Z" fill="#e8e4dc" stroke="#1a1a1a" stroke-width="1"/>
+              <!-- Glass bottom -->
+              <path d="M25 42 L35 42 L45 66 L15 66 Z" fill="#e8e4dc" stroke="#1a1a1a" stroke-width="1"/>
+              <!-- Sand in top (small amount) -->
+              <path d="M28 30 L32 30 L35 38 L25 38 Z" fill="#888"/>
+              <!-- Sand stream -->
+              <rect x="29" y="38" width="2" height="4" fill="#888">
+                <animate attributeName="opacity" values="1;0.5;1" dur="1.5s" repeatCount="indefinite"/>
+              </rect>
+              <!-- Sand in bottom (more sand) -->
+              <path d="M20 58 L40 58 L45 66 L15 66 Z" fill="#888"/>
+            </svg>
+          </div>
+
+          <div class="dialog-title">Your turn is coming</div>
+          <div class="divider"></div>
+          <div class="dialog-text">
+            <span class="partner-name">Emma</span> gets to make the first move on this puzzle. You'll be notified when it's your turn!
+          </div>
+          <button class="btn-primary">GO BACK</button>
+          <button class="btn-secondary">Stay and preview</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

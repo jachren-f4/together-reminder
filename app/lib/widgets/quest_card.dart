@@ -3,6 +3,7 @@ import '../models/daily_quest.dart';
 import '../services/storage_service.dart';
 import '../services/sound_service.dart';
 import '../services/haptic_service.dart';
+import '../services/couple_preferences_service.dart';
 import '../config/brand/brand_loader.dart';
 import '../theme/app_theme.dart';
 import '../animations/animation_config.dart';
@@ -39,6 +40,10 @@ class _QuestCardState extends State<QuestCard>
   late Animation<double> _scaleAnimation;
   late Animation<double> _shadowAnimation;
   bool _isPressed = false;
+  String? _firstPlayerName; // For "who goes first" display on turn-based games
+  bool? _isMyTurn; // For turn-based games: true if it's current user's turn
+  bool _hasActiveGame = false; // Whether a game is in progress
+  bool _firstPlayerLoaded = false; // Guard to prevent repeated async calls
 
   bool get _isExpired => widget.quest.isExpired;
 
@@ -63,6 +68,86 @@ class _QuestCardState extends State<QuestCard>
       parent: _pressController,
       curve: AnimationConfig.buttonPress,
     ));
+
+    // Load turn-based game state (Linked, Word Search)
+    if (widget.quest.type == QuestType.linked || widget.quest.type == QuestType.wordSearch) {
+      _loadTurnBasedGameState();
+    }
+  }
+
+  void _loadTurnBasedGameState() {
+    // Synchronous part: check active game from Hive (fast, local read)
+    final storage = StorageService();
+    final user = storage.getUser();
+    final userId = user?.id;
+
+    if (userId == null) return;
+
+    // Check for active game in local storage
+    String? currentTurnUserId;
+    bool hasActiveGame = false;
+
+    if (widget.quest.type == QuestType.linked) {
+      final activeMatch = storage.getActiveLinkedMatch();
+      if (activeMatch != null && activeMatch.status != 'completed') {
+        hasActiveGame = true;
+        currentTurnUserId = activeMatch.currentTurnUserId;
+      }
+    } else if (widget.quest.type == QuestType.wordSearch) {
+      final activeMatch = storage.getActiveWordSearchMatch();
+      if (activeMatch != null && activeMatch.status != 'completed') {
+        hasActiveGame = true;
+        currentTurnUserId = activeMatch.currentTurnUserId;
+      }
+    }
+
+    // If game is active, determine whose turn it is (synchronous)
+    if (hasActiveGame && currentTurnUserId != null) {
+      _hasActiveGame = true;
+      _isMyTurn = currentTurnUserId == userId;
+      return;
+    }
+
+    // No active game - reset turn state and load "who goes first" preference (async, once)
+    _hasActiveGame = false;
+    _isMyTurn = null;
+    if (!_firstPlayerLoaded) {
+      _firstPlayerLoaded = true;
+      _loadFirstPlayerPreference();
+    }
+  }
+
+  Future<void> _loadFirstPlayerPreference() async {
+    try {
+      final storage = StorageService();
+      final user = storage.getUser();
+      final partner = storage.getPartner();
+
+      final firstPlayerId = await CouplePreferencesService().getFirstPlayerId();
+
+      if (mounted) {
+        setState(() {
+          if (firstPlayerId == user?.id) {
+            _firstPlayerName = user?.name ?? 'You';
+          } else if (firstPlayerId == partner?.id) {
+            _firstPlayerName = partner?.name ?? 'Partner';
+          } else {
+            _firstPlayerName = null;
+          }
+        });
+      }
+    } catch (e) {
+      // Silently fail - will show "Begin together" as fallback
+    }
+  }
+
+  @override
+  void didUpdateWidget(QuestCard oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    // Refresh turn-based game state when widget rebuilds (e.g., after polling updates)
+    if (widget.quest.type == QuestType.linked || widget.quest.type == QuestType.wordSearch) {
+      _loadTurnBasedGameState();
+    }
   }
 
   @override
@@ -98,6 +183,12 @@ class _QuestCardState extends State<QuestCard>
 
   @override
   Widget build(BuildContext context) {
+    // For turn-based games, refresh turn state on every build (Hive read is fast)
+    // This ensures we always show current turn status after navigation or polling
+    if (widget.quest.type == QuestType.linked || widget.quest.type == QuestType.wordSearch) {
+      _loadTurnBasedGameState();
+    }
+
     final storage = StorageService();
     final user = storage.getUser();
     final partner = storage.getPartner();
@@ -332,7 +423,118 @@ class _QuestCardState extends State<QuestCard>
     }
   }
 
+  /// Check if partner has completed this quest
+  /// Uses partner.id (UUID) if available, falls back to pushToken for backward compatibility
+  bool _hasPartnerCompleted(dynamic partner) {
+    // Prefer partner.id (UUID) - matches how user completions are stored
+    if (partner.id != null && partner.id.isNotEmpty) {
+      return widget.quest.hasUserCompleted(partner.id);
+    }
+    // Fallback to pushToken for backward compatibility with old Partner data
+    return widget.quest.hasUserCompleted(partner.pushToken);
+  }
+
+  /// Get user's initial for badge display (e.g., "J" for Joakim)
+  String _getUserInitial(dynamic user) {
+    if (user?.name != null && user.name.isNotEmpty) {
+      return user.name[0].toUpperCase();
+    }
+    return '•'; // Fallback dot if no name available
+  }
+
   Widget _buildStatusBadge(dynamic user, dynamic partner, bool userCompleted, bool bothCompleted) {
+    // For turn-based games (Linked, Word Search), check turn status FIRST
+    // These games have multiple turns before completion, unlike quizzes where each user plays once
+    final isTurnBased = widget.quest.type == QuestType.linked || widget.quest.type == QuestType.wordSearch;
+
+    if (isTurnBased && _hasActiveGame) {
+      // Game is in progress - show whose turn it is
+      if (_isMyTurn == true && partner != null) {
+        // It's my turn - show "Partner is waiting" (social nudge)
+        return Container(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+          decoration: BoxDecoration(
+            color: const Color(0xFFF0F0F0),
+            border: Border.all(color: BrandLoader().colors.textPrimary, width: 1),
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                width: 18,
+                height: 18,
+                decoration: BoxDecoration(
+                  color: BrandLoader().colors.textPrimary,
+                  shape: BoxShape.circle,
+                ),
+                child: Center(
+                  child: Text(
+                    partner.name[0].toUpperCase(),
+                    style: AppTheme.headlineFont.copyWith(
+                      fontSize: 10,
+                      fontWeight: FontWeight.w700,
+                      color: BrandLoader().colors.textOnPrimary,
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(width: 8),
+              Text(
+                '${partner.name} is waiting',
+                style: AppTheme.headlineFont.copyWith(
+                  fontSize: 11,
+                  fontWeight: FontWeight.w600,
+                  color: BrandLoader().colors.textPrimary,
+                ),
+              ),
+            ],
+          ),
+        );
+      } else if (_isMyTurn == false) {
+        // It's partner's turn - show "Waiting for Partner"
+        return Container(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+          decoration: BoxDecoration(
+            color: const Color(0xFFF0F0F0),
+            border: Border.all(color: BrandLoader().colors.textPrimary, width: 1),
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                width: 18,
+                height: 18,
+                decoration: BoxDecoration(
+                  color: BrandLoader().colors.textPrimary,
+                  shape: BoxShape.circle,
+                ),
+                child: Center(
+                  child: Text(
+                    _getUserInitial(user),
+                    style: AppTheme.headlineFont.copyWith(
+                      fontSize: 10,
+                      fontWeight: FontWeight.w700,
+                      color: BrandLoader().colors.textOnPrimary,
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(width: 8),
+              Text(
+                'Waiting for ${partner?.name ?? "partner"}',
+                style: AppTheme.headlineFont.copyWith(
+                  fontSize: 11,
+                  fontWeight: FontWeight.w600,
+                  color: const Color(0xFF666666),
+                ),
+              ),
+            ],
+          ),
+        );
+      }
+      // If _isMyTurn is null, fall through to standard logic
+    }
+
     if (bothCompleted) {
       // Animated completion badge with draw-in checkmark
       return TweenAnimationBuilder<double>(
@@ -372,7 +574,7 @@ class _QuestCardState extends State<QuestCard>
           );
         },
       );
-    } else if (partner != null && widget.quest.hasUserCompleted(partner.pushToken)) {
+    } else if (partner != null && _hasPartnerCompleted(partner)) {
       // Partner completed, user hasn't
       return Container(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
@@ -403,7 +605,7 @@ class _QuestCardState extends State<QuestCard>
             ),
             const SizedBox(width: 8),
             Text(
-              '${partner.name} completed',
+              '${partner.name} has completed',
               style: AppTheme.headlineFont.copyWith( // Serif font
                 fontSize: 11,
                 fontWeight: FontWeight.w600,
@@ -433,7 +635,7 @@ class _QuestCardState extends State<QuestCard>
               ),
               child: Center(
                 child: Text(
-                  user?.name[0].toUpperCase() ?? 'Y',
+                  _getUserInitial(user),
                   style: AppTheme.headlineFont.copyWith( // Serif font
                     fontSize: 10,
                     fontWeight: FontWeight.w700,
@@ -455,7 +657,14 @@ class _QuestCardState extends State<QuestCard>
         ),
       );
     } else {
-      // User's turn
+      // Fresh quest - show who goes first (turn-based) or "Begin together"
+      String statusText;
+      if (isTurnBased && _firstPlayerName != null) {
+        statusText = '$_firstPlayerName goes first';
+      } else {
+        statusText = 'Begin together';
+      }
+
       return Container(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
         decoration: BoxDecoration(
@@ -463,11 +672,11 @@ class _QuestCardState extends State<QuestCard>
           border: Border.all(color: BrandLoader().colors.textPrimary, width: 1),
         ),
         child: Text(
-          'YOUR TURN',
+          statusText,
           style: AppTheme.headlineFont.copyWith( // Serif font
             fontSize: 11,
             fontWeight: FontWeight.w600,
-            letterSpacing: 0.5,
+            fontStyle: FontStyle.italic,
             color: BrandLoader().colors.textPrimary,
           ),
         ),
@@ -476,23 +685,21 @@ class _QuestCardState extends State<QuestCard>
   }
 
   String _getQuestTitle() {
-    // Option 1: Use quest's quizName if available (for affirmation quizzes and custom titles)
-    // This allows side quests and placeholders to have custom titles
+    // Priority 1: Use quest's quizName if available
+    // This is set from branch manifest at quest creation time
     if (widget.quest.quizName != null && widget.quest.quizName!.isNotEmpty) {
       return widget.quest.quizName!;
     }
 
-    // Option 2: Fallback to quest type-based titles
+    // Priority 2: Fallback to quest type-based titles
     switch (widget.quest.type) {
       case QuestType.question:
         return 'Daily Question';
       case QuestType.quiz:
-        // Check quest formatType first (always available from Firebase)
         if (widget.quest.formatType == 'affirmation') {
-          return 'Affirmation Quiz'; // Fallback if quizName wasn't set
+          return 'Affirmation Quiz';
         }
-        // Use sort order to generate distinct titles for classic quizzes
-        return _getQuizTitle(widget.quest.sortOrder);
+        return 'Couple Quiz'; // Fallback for classic quizzes without manifest
       case QuestType.game:
         return 'Fun Game';
       case QuestType.youOrMe:
@@ -504,21 +711,5 @@ class _QuestCardState extends State<QuestCard>
       case QuestType.steps:
         return 'Steps Together';
     }
-  }
-
-  String _getQuizTitle(int sortOrder) {
-    // Generate titles based on position in daily quest lineup
-    // These will cycle through as progression advances
-    const titles = [
-      'Getting to Know You',
-      'Deeper Connection',
-      'Understanding Each Other',
-    ];
-
-    if (sortOrder >= 0 && sortOrder < titles.length) {
-      return titles[sortOrder];
-    }
-
-    return 'Relationship Quiz #${sortOrder + 1}';
   }
 }

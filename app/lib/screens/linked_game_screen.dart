@@ -4,9 +4,11 @@ import '../services/linked_service.dart';
 import '../services/storage_service.dart';
 import '../services/haptic_service.dart';
 import '../services/sound_service.dart';
+import '../services/love_point_service.dart';
 import '../models/linked.dart';
 import '../widgets/linked/answer_cell.dart';
 import '../widgets/linked/turn_complete_dialog.dart';
+import '../widgets/linked/partner_first_dialog.dart';
 import 'linked_completion_screen.dart';
 import '../config/brand/brand_loader.dart';
 import '../theme/app_theme.dart';
@@ -40,6 +42,7 @@ class _LinkedGameScreenState extends State<LinkedGameScreen> {
   LinkedTurnResult? _lastResult;
   final Map<int, _CellAnimationState> _cellAnimations = {};
   bool _showTurnComplete = false;
+  bool _showPartnerFirst = false;
 
   // Grid key and cell positions for floating points
   final GlobalKey _gridKey = GlobalKey();
@@ -103,6 +106,11 @@ class _LinkedGameScreenState extends State<LinkedGameScreen> {
     try {
       final gameState = await _service.getOrCreateMatch();
       if (mounted) {
+        // Check if this is a new puzzle where partner goes first
+        // Show dialog if: not my turn AND turn number is 1 (fresh puzzle)
+        final isNewPuzzlePartnerFirst =
+            !gameState.isMyTurn && gameState.match.turnNumber == 1;
+
         setState(() {
           _gameState = gameState;
           _isLoading = false;
@@ -112,6 +120,7 @@ class _LinkedGameScreenState extends State<LinkedGameScreen> {
           _highlightedCells.clear();
           _cellAnimations.clear();
           _showTurnComplete = false;
+          _showPartnerFirst = isNewPuzzlePartnerFirst;
           _currentWordIndex = -1;
           _lastResult = null;
         });
@@ -141,17 +150,27 @@ class _LinkedGameScreenState extends State<LinkedGameScreen> {
     final match = _gameState!.match;
     if (match.status == 'completed') {
       _pollTimer?.cancel();
-      final user = StorageService().getUser();
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(
-          builder: (context) => LinkedCompletionScreen(
-            match: match,
-            currentUserId: user?.id ?? '',
-            partnerName: StorageService().getPartner()?.name,
-          ),
-        ),
-      );
+      _navigateToCompletionWithLPSync(match);
     }
+  }
+
+  Future<void> _navigateToCompletionWithLPSync(LinkedMatch match) async {
+    // LP is server-authoritative - sync from server before showing completion
+    // Server already awarded LP via awardLP() in linked/submit route
+    await LovePointService.fetchAndSyncFromServer();
+
+    if (!mounted) return;
+
+    final user = StorageService().getUser();
+    Navigator.of(context).pushReplacement(
+      MaterialPageRoute(
+        builder: (context) => LinkedCompletionScreen(
+          match: match,
+          currentUserId: user?.id ?? '',
+          partnerName: StorageService().getPartner()?.name,
+        ),
+      ),
+    );
   }
 
   void _showToast(String message) {
@@ -322,6 +341,14 @@ class _LinkedGameScreenState extends State<LinkedGameScreen> {
             partnerName: StorageService().getPartner()?.name ?? 'Partner',
             onLeave: () => Navigator.of(context).pop(),
             onStay: () => setState(() => _showTurnComplete = false),
+          ),
+        // Partner first dialog overlay (shown when entering new puzzle where partner starts)
+        if (_showPartnerFirst)
+          PartnerFirstDialog(
+            partnerName: StorageService().getPartner()?.name ?? 'Partner',
+            puzzleType: 'puzzle',
+            onGoBack: () => Navigator.of(context).pop(),
+            onStay: () => setState(() => _showPartnerFirst = false),
           ),
       ],
     );
@@ -1423,6 +1450,11 @@ class _LinkedGameScreenState extends State<LinkedGameScreen> {
           // Update game state incrementally from submit result
           _updateStateFromResult(result);
         });
+
+        // Save updated match to local storage after setState (for quest card turn display)
+        if (_gameState != null) {
+          await StorageService().saveLinkedMatch(_gameState!.match);
+        }
       }
     } catch (e) {
       if (mounted) {

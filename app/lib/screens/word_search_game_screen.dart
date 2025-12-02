@@ -5,10 +5,12 @@ import '../services/word_search_service.dart';
 import '../services/storage_service.dart';
 import '../services/haptic_service.dart';
 import '../services/sound_service.dart';
+import '../services/love_point_service.dart';
 import '../models/word_search.dart';
 import '../config/brand/brand_loader.dart';
 import '../theme/app_theme.dart';
 import '../widgets/linked/turn_complete_dialog.dart';
+import '../widgets/linked/partner_first_dialog.dart';
 import '../animations/animation_config.dart';
 import 'word_search_completion_screen.dart';
 
@@ -51,6 +53,7 @@ class _WordSearchGameScreenState extends State<WordSearchGameScreen>
 
   // Turn complete dialog state
   bool _showTurnComplete = false;
+  bool _showPartnerFirst = false;
 
   // Polling timer for partner's turn
   Timer? _pollTimer;
@@ -172,12 +175,18 @@ class _WordSearchGameScreenState extends State<WordSearchGameScreen>
     try {
       final gameState = await _service.getOrCreateMatch();
       if (mounted) {
+        // Check if this is a new puzzle where partner goes first
+        // Show dialog if: not my turn AND no words have been found yet (fresh puzzle)
+        final isNewPuzzlePartnerFirst =
+            !gameState.isMyTurn && gameState.match.totalWordsFound == 0;
+
         setState(() {
           _gameState = gameState;
           _isLoading = false;
           _clearSelection();
           _hintPosition = null;
           _showTurnComplete = false;
+          _showPartnerFirst = isNewPuzzlePartnerFirst;
         });
         _startPolling();
         _checkGameCompletion();
@@ -209,7 +218,13 @@ class _WordSearchGameScreenState extends State<WordSearchGameScreen>
     }
   }
 
-  void _navigateToCompletionScreen() {
+  Future<void> _navigateToCompletionScreen() async {
+    // LP is server-authoritative - sync from server before showing completion
+    // Server already awarded LP via awardLP() in word-search/submit route
+    await LovePointService.fetchAndSyncFromServer();
+
+    if (!mounted) return;
+
     final user = _storage.getUser();
     final partner = _storage.getPartner();
 
@@ -595,6 +610,14 @@ class _WordSearchGameScreenState extends State<WordSearchGameScreen>
             partnerName: _storage.getPartner()?.name ?? 'Partner',
             onLeave: () => Navigator.of(context).pop(),
             onStay: () => setState(() => _showTurnComplete = false),
+          ),
+        // Partner first dialog overlay (shown when entering new puzzle where partner starts)
+        if (_showPartnerFirst)
+          PartnerFirstDialog(
+            partnerName: _storage.getPartner()?.name ?? 'Partner',
+            puzzleType: 'word search',
+            onGoBack: () => Navigator.of(context).pop(),
+            onStay: () => setState(() => _showPartnerFirst = false),
           ),
       ],
     );

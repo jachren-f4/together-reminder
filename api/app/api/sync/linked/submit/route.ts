@@ -7,17 +7,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { withAuthOrDevBypass } from '@/lib/auth/dev-middleware';
 import { query, getClient } from '@/lib/db/pool';
-import { awardLP } from '@/lib/lp/award';
+import { LP_REWARDS, SCORING } from '@/lib/lp/config';
 import { readFileSync } from 'fs';
 import { join } from 'path';
 
 export const dynamic = 'force-dynamic';
-
-// Points per correct letter
-const POINTS_PER_LETTER = 10;
-
-// LP reward for completing a Linked puzzle
-const LP_REWARD = 30;
 
 // Load puzzle data from branch-specific path (including solution)
 function loadPuzzle(puzzleId: string, branch?: string): any {
@@ -275,7 +269,7 @@ export const POST = withAuthOrDevBypass(async (req, userId, email) => {
         // Lock the cell
         boardState[cellIndex.toString()] = letter.toUpperCase();
         newlyLockedCells.push(cellIndex);
-        pointsEarned += POINTS_PER_LETTER;
+        pointsEarned += SCORING.LINKED_POINTS_PER_LETTER;
       }
     }
 
@@ -310,8 +304,18 @@ export const POST = withAuthOrDevBypass(async (req, userId, email) => {
       }
       // If tied, winnerId stays null
 
-      // Award LP to the couple for completing the puzzle
-      await awardLP(coupleId, LP_REWARD, 'linked_complete', matchId);
+      // Award LP directly using the same client (avoids connection pool issues)
+      await client.query(
+        `UPDATE couples SET total_lp = COALESCE(total_lp, 0) + $1 WHERE id = $2`,
+        [LP_REWARDS.LINKED, coupleId]
+      );
+
+      // Record LP transaction for audit trail
+      await client.query(
+        `INSERT INTO love_point_transactions (user_id, amount, source, description, created_at)
+         VALUES ($1, $2, 'linked_complete', $3, NOW()), ($4, $2, 'linked_complete', $3, NOW())`,
+        [user1_id, LP_REWARDS.LINKED, `linked_complete (${matchId})`, user2_id]
+      );
 
       // Advance branch progression for Linked activity
       // This makes the next puzzle come from the next branch (casual -> romantic -> adult -> casual)

@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quest Badge Variants - Index</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            background: #fafafa;
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        h1 {
+            font-size: 28px;
+            font-weight: 400;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 16px;
+            border-bottom: 2px solid #000;
+            padding-bottom: 16px;
+        }
+        .description {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 32px;
+            line-height: 1.6;
+        }
+        .variants {
+            display: grid;
+            gap: 16px;
+        }
+        .variant-link {
+            display: block;
+            border: 1px solid #000;
+            padding: 20px;
+            text-decoration: none;
+            color: #000;
+            transition: all 0.2s ease;
+        }
+        .variant-link:hover {
+            background: #000;
+            color: #fff;
+        }
+        .variant-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        .variant-desc {
+            font-size: 14px;
+            color: #666;
+        }
+        .variant-link:hover .variant-desc {
+            color: #ccc;
+        }
+        .state-preview {
+            margin-top: 12px;
+            font-size: 12px;
+            font-family: monospace;
+            background: #f5f5f5;
+            padding: 8px;
+            border-radius: 4px;
+        }
+        .variant-link:hover .state-preview {
+            background: #333;
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Quest Badge Variants</h1>
+        <p class="description">
+            Currently "YOUR TURN" is shown for both fresh quests and when partner has completed.
+            These mockups explore different ways to distinguish these states and make the UI more informative.
+        </p>
+
+        <div class="variants">
+            <a href="01-start-action.html" class="variant-link">
+                <div class="variant-title">Variant 1: START (Action-Oriented)</div>
+                <div class="variant-desc">Fresh quest shows "START" - clear call to action. Partner completed shows "YOUR TURN" with urgency.</div>
+                <div class="state-preview">
+                    Fresh: START | Partner done: YOUR TURN | You done: Waiting for... | Both: COMPLETED
+                </div>
+            </a>
+
+            <a href="02-new-status.html" class="variant-link">
+                <div class="variant-title">Variant 2: NEW (Status Badge)</div>
+                <div class="variant-desc">Fresh quest shows "NEW" badge - highlights novelty. Partner completed shows "YOUR TURN".</div>
+                <div class="state-preview">
+                    Fresh: NEW | Partner done: YOUR TURN | You done: Waiting for... | Both: COMPLETED
+                </div>
+            </a>
+
+            <a href="03-both-icons.html" class="variant-link">
+                <div class="variant-title">Variant 3: Dual Initial Circles</div>
+                <div class="variant-desc">Shows both partner initials with filled/empty states to indicate who has completed.</div>
+                <div class="state-preview">
+                    Fresh: [Y][T] empty | Partner done: [Y][T filled] | You done: [Y filled][T] | Both: [Y filled][T filled]
+                </div>
+            </a>
+
+            <a href="04-progress-dots.html" class="variant-link">
+                <div class="variant-title">Variant 4: Progress Dots</div>
+                <div class="variant-desc">Two dots showing completion progress - minimal and elegant.</div>
+                <div class="state-preview">
+                    Fresh: START ○○ | Partner done: YOUR TURN ○● | You done: WAITING ●○ | Both: DONE ●●
+                </div>
+            </a>
+
+            <a href="05-text-with-context.html" class="variant-link">
+                <div class="variant-title">Variant 5: Contextual Text</div>
+                <div class="variant-desc">More descriptive text that explains the current state clearly.</div>
+                <div class="state-preview">
+                    Fresh: "Begin together" | Partner done: "Taija is waiting" | You done: "Waiting for Taija" | Both: COMPLETED
+                </div>
+            </a>
+        </div>
+    </div>
+</body>
+</html>

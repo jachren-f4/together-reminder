@@ -464,7 +464,8 @@ class QuestTypeManager {
           Logger.debug('✅ Quest ${i + 1} content created: $contentId', service: 'quest');
 
           // Get format type and quiz name from quiz session (for quiz quests only)
-          String formatType = forcedFormatType ?? 'classic'; // Use forced format if set
+          // For youOrMe quests, use 'youOrMe' as formatType (matches API 'you_or_me' after normalization)
+          String formatType = forcedFormatType ?? (questType == QuestType.youOrMe ? 'youOrMe' : 'classic');
           String? quizName;
           String? imagePath;
           String? description;
@@ -495,15 +496,25 @@ class QuestTypeManager {
               );
               Logger.debug('📂 Quest ${i + 1} branch: $branch', service: 'quest');
 
-              // Try to get image from manifest (overrides session image)
+              // Try to get manifest data (image and quizName for classic quizzes)
               if (branch != null) {
-                final manifestImage = await BranchManifestService().getImagePath(
+                final manifest = await BranchManifestService().getManifest(
                   activityType: activityType,
                   branch: branch,
                 );
-                if (manifestImage != null && manifestImage.isNotEmpty) {
-                  imagePath = manifestImage;
-                  Logger.debug('🖼️ Quest ${i + 1} using manifest image: $manifestImage', service: 'quest');
+
+                // Use manifest image if available
+                if (manifest.imagePath != null && manifest.imagePath!.isNotEmpty) {
+                  imagePath = manifest.imagePath;
+                  Logger.debug('🖼️ Quest ${i + 1} using manifest image: $imagePath', service: 'quest');
+                }
+
+                // For classic quizzes, set quizName from manifest displayName
+                // (affirmation quizzes already have quizName from session)
+                if (activityType == BranchableActivityType.classicQuiz &&
+                    manifest.displayName != null) {
+                  quizName = '${manifest.displayName} Quiz';
+                  Logger.debug('📝 Quest ${i + 1} using manifest title: $quizName', service: 'quest');
                 }
               }
             }

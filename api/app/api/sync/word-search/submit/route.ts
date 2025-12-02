@@ -7,7 +7,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { withAuthOrDevBypass } from '@/lib/auth/dev-middleware';
 import { query, getClient } from '@/lib/db/pool';
-import { awardLP } from '@/lib/lp/award';
+import { LP_REWARDS, SCORING } from '@/lib/lp/config';
 import { readFileSync } from 'fs';
 import { join } from 'path';
 
@@ -18,12 +18,6 @@ const DIRECTION_DELTAS: Record<string, number> = {
   'R': 1, 'L': -1, 'D': 10, 'U': -10,
   'DR': 11, 'DL': 9, 'UR': -9, 'UL': -11
 };
-
-// Points per letter in word
-const POINTS_PER_LETTER = 10;
-
-// LP reward for completing a Word Search puzzle
-const LP_REWARD = 30;
 
 // Load puzzle data from branch-specific path (including word positions for validation)
 function loadPuzzle(puzzleId: string, branch?: string): any {
@@ -210,7 +204,7 @@ export const POST = withAuthOrDevBypass(async (req, userId, email) => {
 
     // Word is valid! Lock it
     const colorIndex = foundWords.length % 5;
-    const pointsEarned = upperWord.length * POINTS_PER_LETTER;
+    const pointsEarned = upperWord.length * SCORING.WORD_SEARCH_POINTS_PER_LETTER;
 
     foundWords.push({
       word: upperWord,
@@ -256,8 +250,18 @@ export const POST = withAuthOrDevBypass(async (req, userId, email) => {
       }
       // If tied, winnerId stays null
 
-      // Award LP to the couple for completing the puzzle
-      await awardLP(coupleId, LP_REWARD, 'word_search_complete', matchId);
+      // Award LP directly using the same client (avoids connection pool issues)
+      await client.query(
+        `UPDATE couples SET total_lp = COALESCE(total_lp, 0) + $1 WHERE id = $2`,
+        [LP_REWARDS.WORD_SEARCH, coupleId]
+      );
+
+      // Record LP transaction for audit trail
+      await client.query(
+        `INSERT INTO love_point_transactions (user_id, amount, source, description, created_at)
+         VALUES ($1, $2, 'word_search_complete', $3, NOW()), ($4, $2, 'word_search_complete', $3, NOW())`,
+        [user1_id, LP_REWARDS.WORD_SEARCH, `word_search_complete (${matchId})`, user2_id]
+      );
 
       // Advance branch progression for Word Search activity
       // This makes the next puzzle come from the next branch (everyday -> passionate -> naughty -> everyday)
