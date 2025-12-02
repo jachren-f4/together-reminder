@@ -576,18 +576,24 @@ class _WordSearchGameScreenState extends State<WordSearchGameScreen>
     // Fixed component heights
     const headerHeight = 44.0; // header with padding and border
     const bottomBarHeight = 54.0; // bottom bar with padding
-    final gridSize = screenWidth - 12; // 6px padding each side
+    const minWordBankHeight = 100.0; // minimum space for word bank
 
-    // Calculate word bank height (what's left after fixed components)
+    // Available height for content (between header and bottom bar)
     final availableHeight = screenHeight - safeAreaTop - safeAreaBottom;
-    final usedHeight = headerHeight + gridSize + bottomBarHeight;
-    final wordBankHeight = (availableHeight - usedHeight).clamp(80.0, 300.0);
+    final contentAreaHeight = availableHeight - headerHeight - bottomBarHeight;
+
+    // Grid size: use screen width, but cap it so word bank has minimum space
+    final maxGridSize = contentAreaHeight - minWordBankHeight;
+    final gridSize = (screenWidth - 12).clamp(0.0, maxGridSize); // 6px padding each side
+
+    // Word bank gets remaining space after grid
+    final wordBankHeight = (contentAreaHeight - gridSize).clamp(minWordBankHeight, 300.0);
 
     // Total content height (grid + word bank)
     final contentHeight = gridSize + wordBankHeight;
 
     // Calculate vertical centering offset
-    final centeringSpace = availableHeight - headerHeight - contentHeight - bottomBarHeight;
+    final centeringSpace = contentAreaHeight - contentHeight;
     final topPadding = (centeringSpace / 2).clamp(0.0, double.infinity);
 
     return Stack(
