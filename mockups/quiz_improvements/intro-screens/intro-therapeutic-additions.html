@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Therapeutic Quiz Intro - Additions to Existing Screen</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            background: #f5f5f5;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .page-title {
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        .page-title h1 {
+            font-size: 20px;
+            font-weight: 400;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+
+        .page-title p {
+            font-size: 13px;
+            color: #666;
+            font-style: italic;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .screens-container {
+            display: flex;
+            gap: 40px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 30px;
+        }
+
+        .screen-section {
+            text-align: center;
+        }
+
+        .section-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #666;
+            margin-bottom: 12px;
+            font-weight: 600;
+        }
+
+        /* Phone frame */
+        .phone-frame {
+            width: 375px;
+            background: #FAF9F6;
+            border: 2px solid #000;
+            border-radius: 32px;
+            overflow: hidden;
+            box-shadow: 8px 8px 0 rgba(0, 0, 0, 0.1);
+        }
+
+        /* Header */
+        .header {
+            padding: 12px 16px;
+            border-bottom: 1px solid #000;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .back-button {
+            width: 40px;
+            height: 40px;
+            border: 1px solid #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+
+        .header-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #666;
+        }
+
+        /* Hero video area */
+        .hero-area {
+            height: 160px;
+            background: linear-gradient(180deg, #e0e0e0 0%, #FAF9F6 100%);
+            border-bottom: 1px solid #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .hero-emoji {
+            font-size: 56px;
+            filter: grayscale(100%);
+            opacity: 0.4;
+        }
+
+        .video-label {
+            position: absolute;
+            bottom: 8px;
+            right: 8px;
+            font-size: 9px;
+            color: #999;
+            font-style: italic;
+        }
+
+        /* Content */
+        .content {
+            padding: 20px;
+        }
+
+        /* Badges row */
+        .badges-row {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+
+        .badge {
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            padding: 6px 12px;
+            background: #000;
+            color: #fff;
+        }
+
+        .badge.deeper {
+            background: #000;
+            color: #fff;
+        }
+
+        /* Title */
+        .title {
+            font-size: 28px;
+            font-weight: 400;
+            line-height: 1.2;
+            margin-bottom: 12px;
+        }
+
+        /* Description */
+        .description {
+            font-size: 15px;
+            font-style: italic;
+            color: #444;
+            line-height: 1.6;
+            margin-bottom: 24px;
+        }
+
+        /* Therapeutic note - NEW ADDITION */
+        .therapeutic-note {
+            padding: 16px;
+            background: #f8f6f2;
+            border-left: 3px solid #000;
+            margin-bottom: 24px;
+        }
+
+        .therapeutic-note p {
+            font-size: 14px;
+            font-style: italic;
+            color: #555;
+            line-height: 1.5;
+        }
+
+        /* Stats card */
+        .stats-card {
+            border: 1px solid #000;
+            margin-bottom: 24px;
+        }
+
+        .stats-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 16px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .stats-row:last-child {
+            border-bottom: none;
+        }
+
+        .stats-label {
+            font-size: 13px;
+            color: #666;
+        }
+
+        .stats-value {
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        /* How it works */
+        .section-heading {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #666;
+            margin-bottom: 16px;
+        }
+
+        .step {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+
+        .step-number {
+            width: 28px;
+            height: 28px;
+            border: 1px solid #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+
+        .step-text {
+            font-size: 14px;
+            line-height: 1.4;
+            padding-top: 4px;
+        }
+
+        /* Footer */
+        .footer {
+            padding: 20px;
+            border-top: 1px solid #000;
+            text-align: center;
+        }
+
+        .begin-button {
+            width: 100%;
+            padding: 16px;
+            background: #000;
+            color: #fff;
+            border: none;
+            font-family: inherit;
+            font-size: 14px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            cursor: pointer;
+            margin-bottom: 12px;
+        }
+
+        .footer-note {
+            font-size: 13px;
+            color: #888;
+        }
+
+        /* Annotations */
+        .annotations {
+            margin-top: 20px;
+            padding: 16px;
+            background: #fff;
+            border: 1px dashed #ccc;
+            max-width: 375px;
+            font-size: 12px;
+            text-align: left;
+        }
+
+        .annotation-title {
+            font-weight: 600;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 10px;
+            color: #666;
+        }
+
+        .annotation-item {
+            margin-bottom: 6px;
+            padding-left: 12px;
+            position: relative;
+            line-height: 1.5;
+        }
+
+        .annotation-item::before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            color: #999;
+        }
+
+        .highlight {
+            background: #fffde7;
+            padding: 2px 4px;
+        }
+
+        /* Comparison callout */
+        .comparison-section {
+            max-width: 900px;
+            margin: 60px auto 0;
+            text-align: center;
+        }
+
+        .comparison-title {
+            font-size: 16px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 24px;
+        }
+
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            text-align: left;
+        }
+
+        .comparison-card {
+            background: #fff;
+            border: 1px solid #ddd;
+            padding: 20px;
+        }
+
+        .comparison-card h3 {
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 16px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .comparison-item {
+            margin-bottom: 12px;
+        }
+
+        .comparison-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #888;
+            margin-bottom: 4px;
+        }
+
+        .comparison-value {
+            font-size: 13px;
+            line-height: 1.4;
+        }
+
+        .comparison-value.casual {
+            color: #666;
+        }
+
+        .comparison-value.therapeutic {
+            color: #000;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+    <div class="page-title">
+        <h1>Therapeutic Intro Screen Additions</h1>
+        <p>Minimal changes to the existing quiz intro screen structure. Keep the video, layout, and flow — just adjust copy and add a "Deeper" badge for therapeutic branches.</p>
+    </div>
+
+    <div class="screens-container">
+        <!-- THERAPEUTIC CLASSIC QUIZ (CONNECTION) -->
+        <div class="screen-section">
+            <div class="section-label">Connection Branch (Therapeutic)</div>
+            <div class="phone-frame">
+                <div class="header">
+                    <div class="back-button">←</div>
+                    <div class="header-label">Daily Quest</div>
+                </div>
+
+                <div class="hero-area">
+                    <div class="hero-emoji">💫</div>
+                    <div class="video-label">Video plays here, fades to icon</div>
+                </div>
+
+                <div class="content">
+                    <!-- CHANGE 1: Add "Deeper" badge alongside activity badge -->
+                    <div class="badges-row">
+                        <div class="badge">Classic Quiz</div>
+                        <div class="badge deeper">Deeper</div>
+                    </div>
+
+                    <div class="title">Connection Quiz</div>
+
+                    <!-- CHANGE 2: Adjusted description for therapeutic framing -->
+                    <div class="description">
+                        Answer questions about yourself, then Taija will try to predict your answers. These questions go a little deeper — discover what you truly know about each other's inner world.
+                    </div>
+
+                    <!-- CHANGE 3: Optional therapeutic note (first time only) -->
+                    <div class="therapeutic-note">
+                        <p>There are no wrong answers here. Just be curious about your partner.</p>
+                    </div>
+
+                    <div class="stats-card">
+                        <div class="stats-row">
+                            <span class="stats-label">Questions</span>
+                            <span class="stats-value">10</span>
+                        </div>
+                        <div class="stats-row">
+                            <span class="stats-label">Time</span>
+                            <span class="stats-value">~5 minutes</span>
+                        </div>
+                        <div class="stats-row">
+                            <span class="stats-label">Reward</span>
+                            <span class="stats-value">+30 LP</span>
+                        </div>
+                    </div>
+
+                    <div class="section-heading">How It Works</div>
+                    <div class="step">
+                        <div class="step-number">1</div>
+                        <div class="step-text">Answer each question about yourself</div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">2</div>
+                        <div class="step-text">Taija answers the same questions about you</div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">3</div>
+                        <div class="step-text">Compare answers and discover insights</div>
+                    </div>
+                </div>
+
+                <div class="footer">
+                    <button class="begin-button">Begin Quiz</button>
+                    <div class="footer-note">Complete to earn +30 Love Points</div>
+                </div>
+            </div>
+
+            <div class="annotations">
+                <div class="annotation-title">Changes from Casual</div>
+                <div class="annotation-item"><span class="highlight">"Deeper" badge</span> added next to activity badge</div>
+                <div class="annotation-item"><span class="highlight">Description updated</span> to mention "deeper" questions and "inner world"</div>
+                <div class="annotation-item"><span class="highlight">Therapeutic note</span> added (show only first time user sees therapeutic branch)</div>
+                <div class="annotation-item">Everything else stays the same (video, stats, steps, footer)</div>
+            </div>
+        </div>
+
+        <!-- THERAPEUTIC AFFIRMATION (ATTACHMENT) -->
+        <div class="screen-section">
+            <div class="section-label">Attachment Branch (Therapeutic)</div>
+            <div class="phone-frame">
+                <div class="header">
+                    <div class="back-button">←</div>
+                    <div class="header-label">Daily Quest</div>
+                </div>
+
+                <div class="hero-area">
+                    <div class="hero-emoji">💛</div>
+                    <div class="video-label">Video plays here, fades to icon</div>
+                </div>
+
+                <div class="content">
+                    <div class="badges-row">
+                        <div class="badge">Affirmation</div>
+                        <div class="badge deeper">Deeper</div>
+                    </div>
+
+                    <div class="title">Attachment Check-In</div>
+
+                    <div class="description">
+                        Rate how much you agree with each statement about your relationship. This quiz explores how you each experience your connection — your sense of safety, trust, and closeness.
+                    </div>
+
+                    <div class="therapeutic-note">
+                        <p>Your feelings are valid, even when they differ from your partner's.</p>
+                    </div>
+
+                    <div class="stats-card">
+                        <div class="stats-row">
+                            <span class="stats-label">Statements</span>
+                            <span class="stats-value">5</span>
+                        </div>
+                        <div class="stats-row">
+                            <span class="stats-label">Time</span>
+                            <span class="stats-value">~3 minutes</span>
+                        </div>
+                        <div class="stats-row">
+                            <span class="stats-label">Reward</span>
+                            <span class="stats-value">+30 LP</span>
+                        </div>
+                    </div>
+
+                    <div class="section-heading">How It Works</div>
+                    <div class="step">
+                        <div class="step-number">1</div>
+                        <div class="step-text">Rate each statement on a 5-point scale</div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">2</div>
+                        <div class="step-text">Taija rates the same statements</div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">3</div>
+                        <div class="step-text">See how your perspectives compare</div>
+                    </div>
+                </div>
+
+                <div class="footer">
+                    <button class="begin-button">Begin Quiz</button>
+                    <div class="footer-note">Complete to earn +30 Love Points</div>
+                </div>
+            </div>
+
+            <div class="annotations">
+                <div class="annotation-title">Changes from Casual</div>
+                <div class="annotation-item"><span class="highlight">"Deeper" badge</span> added</div>
+                <div class="annotation-item"><span class="highlight">Description</span> explains attachment focus (safety, trust, closeness)</div>
+                <div class="annotation-item"><span class="highlight">Therapeutic note</span> validates differing feelings</div>
+                <div class="annotation-item">Step 3 changed to "perspectives compare" (not "match")</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- COMPARISON SECTION -->
+    <div class="comparison-section">
+        <div class="comparison-title">Copy Differences: Casual vs Therapeutic</div>
+        <div class="comparison-grid">
+            <div class="comparison-card">
+                <h3>Casual Branch</h3>
+                <div class="comparison-item">
+                    <div class="comparison-label">Badges</div>
+                    <div class="comparison-value casual">[Activity Type] only</div>
+                </div>
+                <div class="comparison-item">
+                    <div class="comparison-label">Description</div>
+                    <div class="comparison-value casual">"See how well you know each other!"</div>
+                </div>
+                <div class="comparison-item">
+                    <div class="comparison-label">Therapeutic Note</div>
+                    <div class="comparison-value casual">None</div>
+                </div>
+                <div class="comparison-item">
+                    <div class="comparison-label">Step 3</div>
+                    <div class="comparison-value casual">"Compare answers and discover insights"</div>
+                </div>
+            </div>
+
+            <div class="comparison-card">
+                <h3>Therapeutic Branch</h3>
+                <div class="comparison-item">
+                    <div class="comparison-label">Badges</div>
+                    <div class="comparison-value therapeutic">[Activity Type] + "Deeper"</div>
+                </div>
+                <div class="comparison-item">
+                    <div class="comparison-label">Description</div>
+                    <div class="comparison-value therapeutic">"These questions go a little deeper — discover what you truly know about each other's inner world."</div>
+                </div>
+                <div class="comparison-item">
+                    <div class="comparison-label">Therapeutic Note</div>
+                    <div class="comparison-value therapeutic">"There are no wrong answers. Just be curious." (first time only)</div>
+                </div>
+                <div class="comparison-item">
+                    <div class="comparison-label">Step 3</div>
+                    <div class="comparison-value therapeutic">"Compare answers and discover insights" (same)</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

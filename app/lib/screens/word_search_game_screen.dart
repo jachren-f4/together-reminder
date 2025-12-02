@@ -574,8 +574,8 @@ class _WordSearchGameScreenState extends State<WordSearchGameScreen>
           child: Column(
             children: [
               _buildHeader(),
-              Expanded(child: _buildGameArea()),
-              _buildWordBank(),
+              _buildGameArea(), // Fixed size based on screen width
+              Expanded(child: _buildWordBank()), // Expands to fill remaining space
               _buildBottomBar(),
             ],
           ),
@@ -624,12 +624,11 @@ class _WordSearchGameScreenState extends State<WordSearchGameScreen>
   }
 
   Widget _buildHeader() {
-    final user = _storage.getUser();
     final partner = _storage.getPartner();
     final isMyTurn = _gameState!.isMyTurn;
 
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
       decoration: BoxDecoration(
         color: BrandLoader().colors.surface,
         border: Border(
@@ -644,19 +643,19 @@ class _WordSearchGameScreenState extends State<WordSearchGameScreen>
             child: Text(
               '←',
               style: TextStyle(
-                fontSize: 20,
+                fontSize: 18,
                 color: BrandLoader().colors.textPrimary,
               ),
             ),
           ),
-          const SizedBox(width: 12),
+          const SizedBox(width: 10),
           // Title
           Text(
             'WORD SEARCH',
             style: AppTheme.headlineFont.copyWith(
-              fontSize: 18,
+              fontSize: 16,
               fontWeight: FontWeight.w400,
-              letterSpacing: 2,
+              letterSpacing: 1.5,
               color: BrandLoader().colors.textPrimary,
             ),
           ),
@@ -669,9 +668,9 @@ class _WordSearchGameScreenState extends State<WordSearchGameScreen>
                 children: [
                   if (isMyTurn)
                     Container(
-                      width: 6,
-                      height: 6,
-                      margin: const EdgeInsets.only(right: 4),
+                      width: 5,
+                      height: 5,
+                      margin: const EdgeInsets.only(right: 3),
                       decoration: BoxDecoration(
                         color: BrandLoader().colors.success,
                         shape: BoxShape.circle,
@@ -680,22 +679,22 @@ class _WordSearchGameScreenState extends State<WordSearchGameScreen>
                   Text(
                     'You: ${_gameState!.myScore}',
                     style: TextStyle(
-                      fontSize: 13,
+                      fontSize: 12,
                       fontWeight: isMyTurn ? FontWeight.w700 : FontWeight.w400,
                       color: BrandLoader().colors.textPrimary,
                     ),
                   ),
                 ],
               ),
-              const SizedBox(width: 16),
+              const SizedBox(width: 12),
               // Partner score
               Row(
                 children: [
                   if (!isMyTurn)
                     Container(
-                      width: 6,
-                      height: 6,
-                      margin: const EdgeInsets.only(right: 4),
+                      width: 5,
+                      height: 5,
+                      margin: const EdgeInsets.only(right: 3),
                       decoration: BoxDecoration(
                         color: BrandLoader().colors.success,
                         shape: BoxShape.circle,
@@ -704,7 +703,7 @@ class _WordSearchGameScreenState extends State<WordSearchGameScreen>
                   Text(
                     '${partner?.name ?? "Partner"}: ${_gameState!.partnerScore}',
                     style: TextStyle(
-                      fontSize: 13,
+                      fontSize: 12,
                       fontWeight: !isMyTurn ? FontWeight.w700 : FontWeight.w400,
                       color: BrandLoader().colors.textPrimary,
                     ),
@@ -719,9 +718,22 @@ class _WordSearchGameScreenState extends State<WordSearchGameScreen>
   }
 
   Widget _buildGameArea() {
-    return Padding(
-      padding: const EdgeInsets.all(16),
-      child: _buildGrid(),
+    // Grid takes full width with minimal padding, square aspect ratio
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        // Use screen width minus minimal padding for grid size
+        final screenWidth = MediaQuery.of(context).size.width;
+        final gridSize = screenWidth - 12; // 6px padding on each side
+
+        return Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 6),
+          child: SizedBox(
+            width: gridSize,
+            height: gridSize,
+            child: _buildGrid(),
+          ),
+        );
+      },
     );
   }
 
@@ -988,22 +1000,20 @@ class _WordSearchGameScreenState extends State<WordSearchGameScreen>
     final puzzle = _gameState!.puzzle!;
     final match = _gameState!.match;
 
-    // Fixed height for word items (4 rows * 36px + 3 gaps * 8px + padding)
-    const double wordItemHeight = 36;
-    const double rowCount = 4;
-    const double gapSize = 8;
-    const double totalHeight = (wordItemHeight * rowCount) + (gapSize * (rowCount - 1));
+    // Dynamic layout: word bank expands to fill remaining space
+    // Use 4 columns x 3 rows layout for better readability
+    const int columnCount = 4;
+    const double gapSize = 6;
 
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
       decoration: BoxDecoration(
         color: BrandLoader().colors.surface,
         border: Border(
-          bottom: BorderSide(color: const Color(0xFFE0E0E0)),
+          top: BorderSide(color: const Color(0xFFE0E0E0)),
         ),
       ),
       child: Column(
-        mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Title row
@@ -1019,7 +1029,7 @@ class _WordSearchGameScreenState extends State<WordSearchGameScreen>
                 ),
               ),
               Text(
-                '${match.totalWordsFound} / 12',
+                '${match.totalWordsFound} / ${puzzle.words.length}',
                 style: TextStyle(
                   fontSize: 10,
                   letterSpacing: 1,
@@ -1028,17 +1038,16 @@ class _WordSearchGameScreenState extends State<WordSearchGameScreen>
               ),
             ],
           ),
-          const SizedBox(height: 12),
-          // Word grid (3 columns, fixed height)
-          SizedBox(
-            height: totalHeight,
+          const SizedBox(height: 8),
+          // Word grid - expands to fill available space
+          Expanded(
             child: GridView.builder(
               physics: const NeverScrollableScrollPhysics(),
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 3,
+                crossAxisCount: columnCount,
                 mainAxisSpacing: gapSize,
                 crossAxisSpacing: gapSize,
-                mainAxisExtent: wordItemHeight,
+                childAspectRatio: 2.2, // Width to height ratio for word items
               ),
               itemCount: puzzle.words.length,
               itemBuilder: (context, index) {
@@ -1050,7 +1059,7 @@ class _WordSearchGameScreenState extends State<WordSearchGameScreen>
                     : null;
 
                 return Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 6),
+                  padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
                   decoration: BoxDecoration(
                     color: BrandLoader().colors.surface,
                     border: Border.all(
@@ -1058,16 +1067,19 @@ class _WordSearchGameScreenState extends State<WordSearchGameScreen>
                     ),
                   ),
                   child: Center(
-                    child: Text(
-                      word.toUpperCase(),
-                      style: TextStyle(
-                        fontSize: 11,
-                        fontWeight: FontWeight.w600,
-                        letterSpacing: 1,
-                        color: found
-                            ? color!.withValues(alpha: 0.6)
-                            : BrandLoader().colors.textPrimary,
-                        decoration: found ? TextDecoration.lineThrough : null,
+                    child: FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: Text(
+                        word.toUpperCase(),
+                        style: TextStyle(
+                          fontSize: 11,
+                          fontWeight: FontWeight.w600,
+                          letterSpacing: 0.5,
+                          color: found
+                              ? color!.withValues(alpha: 0.6)
+                              : BrandLoader().colors.textPrimary,
+                          decoration: found ? TextDecoration.lineThrough : null,
+                        ),
                       ),
                     ),
                   ),
@@ -1086,7 +1098,7 @@ class _WordSearchGameScreenState extends State<WordSearchGameScreen>
     final wordsThisTurn = _gameState!.match.wordsFoundThisTurn;
 
     return Container(
-      padding: const EdgeInsets.all(12),
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
       decoration: BoxDecoration(
         color: BrandLoader().colors.surface,
         border: Border(
@@ -1100,7 +1112,7 @@ class _WordSearchGameScreenState extends State<WordSearchGameScreen>
             child: GestureDetector(
               onTap: isMyTurn && hintsRemaining > 0 ? _useHint : null,
               child: Container(
-                padding: const EdgeInsets.symmetric(vertical: 12),
+                padding: const EdgeInsets.symmetric(vertical: 10),
                 decoration: BoxDecoration(
                   color: BrandLoader().colors.surface,
                   border: Border.all(
@@ -1116,19 +1128,19 @@ class _WordSearchGameScreenState extends State<WordSearchGameScreen>
                       '💡',
                       style: const TextStyle(fontSize: 14),
                     ),
-                    const SizedBox(width: 6),
+                    const SizedBox(width: 4),
                     Text(
                       'HINT',
                       style: TextStyle(
-                        fontSize: 11,
+                        fontSize: 10,
                         fontWeight: FontWeight.w600,
-                        letterSpacing: 1,
+                        letterSpacing: 0.5,
                         color: isMyTurn && hintsRemaining > 0
                             ? BrandLoader().colors.textPrimary
                             : const Color(0xFFBDBDBD),
                       ),
                     ),
-                    const SizedBox(width: 4),
+                    const SizedBox(width: 3),
                     Text(
                       '($hintsRemaining)',
                       style: TextStyle(
@@ -1141,12 +1153,12 @@ class _WordSearchGameScreenState extends State<WordSearchGameScreen>
               ),
             ),
           ),
-          const SizedBox(width: 12),
+          const SizedBox(width: 10),
           // Turn progress
           Expanded(
             flex: 2,
             child: Container(
-              padding: const EdgeInsets.symmetric(vertical: 12),
+              padding: const EdgeInsets.symmetric(vertical: 10),
               decoration: BoxDecoration(
                 color: isMyTurn
                     ? BrandLoader().colors.textPrimary
@@ -1163,9 +1175,9 @@ class _WordSearchGameScreenState extends State<WordSearchGameScreen>
                     children: List.generate(3, (i) {
                       final filled = i < wordsThisTurn;
                       return Container(
-                        width: 8,
-                        height: 8,
-                        margin: const EdgeInsets.only(right: 4),
+                        width: 7,
+                        height: 7,
+                        margin: const EdgeInsets.only(right: 3),
                         decoration: BoxDecoration(
                           color: isMyTurn
                               ? BrandLoader().colors.textOnPrimary.withValues(alpha: filled ? 1.0 : 0.4)
@@ -1175,13 +1187,13 @@ class _WordSearchGameScreenState extends State<WordSearchGameScreen>
                       );
                     }),
                   ),
-                  const SizedBox(width: 8),
+                  const SizedBox(width: 6),
                   Text(
                     isMyTurn ? '$wordsThisTurn/3 FOUND' : "PARTNER'S TURN",
                     style: TextStyle(
-                      fontSize: 11,
+                      fontSize: 10,
                       fontWeight: FontWeight.w600,
-                      letterSpacing: 1,
+                      letterSpacing: 0.5,
                       color: isMyTurn
                           ? BrandLoader().colors.textOnPrimary
                           : BrandLoader().colors.textSecondary,
