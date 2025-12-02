@@ -566,36 +566,48 @@ class _WordSearchGameScreenState extends State<WordSearchGameScreen>
       return const Center(child: Text('No puzzle available'));
     }
 
-    // Calculate exact heights for predictable layout on all platforms
-    final mediaQuery = MediaQuery.of(context);
-    final screenWidth = mediaQuery.size.width;
-    final screenHeight = mediaQuery.size.height;
-    final safeAreaTop = mediaQuery.padding.top;
-    final safeAreaBottom = mediaQuery.padding.bottom;
+    // Use LayoutBuilder to get actual available space (after SafeArea)
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final availableWidth = constraints.maxWidth;
+        final availableHeight = constraints.maxHeight;
 
-    // Fixed component heights
-    const headerHeight = 44.0; // header with padding and border
-    const bottomBarHeight = 54.0; // bottom bar with padding
-    const minWordBankHeight = 100.0; // minimum space for word bank
+        // Fixed component heights
+        const headerHeight = 44.0; // header with padding and border
+        const bottomBarHeight = 54.0; // bottom bar with padding
+        const minWordBankHeight = 100.0; // minimum space for word bank
 
-    // Available height for content (between header and bottom bar)
-    final availableHeight = screenHeight - safeAreaTop - safeAreaBottom;
-    final contentAreaHeight = availableHeight - headerHeight - bottomBarHeight;
+        // Available height for content (between header and bottom bar)
+        final contentAreaHeight = availableHeight - headerHeight - bottomBarHeight;
 
-    // Grid size: use screen width, but cap it so word bank has minimum space
-    final maxGridSize = contentAreaHeight - minWordBankHeight;
-    final gridSize = (screenWidth - 12).clamp(0.0, maxGridSize); // 6px padding each side
+        // Grid size: use available width, but cap it so word bank has minimum space
+        final maxGridSize = contentAreaHeight - minWordBankHeight;
+        final gridSize = (availableWidth - 12).clamp(0.0, maxGridSize); // 6px padding each side
 
-    // Word bank gets remaining space after grid
-    final wordBankHeight = (contentAreaHeight - gridSize).clamp(minWordBankHeight, 300.0);
+        // Word bank gets remaining space after grid
+        final wordBankHeight = (contentAreaHeight - gridSize).clamp(minWordBankHeight, 300.0);
 
-    // Total content height (grid + word bank)
-    final contentHeight = gridSize + wordBankHeight;
+        // Total content height (grid + word bank)
+        final contentHeight = gridSize + wordBankHeight;
 
-    // Calculate vertical centering offset
-    final centeringSpace = contentAreaHeight - contentHeight;
-    final topPadding = (centeringSpace / 2).clamp(0.0, double.infinity);
+        // Calculate vertical centering offset
+        final centeringSpace = contentAreaHeight - contentHeight;
+        final topPadding = (centeringSpace / 2).clamp(0.0, double.infinity);
 
+        return _buildMainContent(
+          gridSize: gridSize,
+          wordBankHeight: wordBankHeight,
+          topPadding: topPadding,
+        );
+      },
+    );
+  }
+
+  Widget _buildMainContent({
+    required double gridSize,
+    required double wordBankHeight,
+    required double topPadding,
+  }) {
     return Stack(
       children: [
         // Main content
@@ -606,8 +618,8 @@ class _WordSearchGameScreenState extends State<WordSearchGameScreen>
               _buildHeader(),
               // Centering spacer (takes half of remaining space)
               if (topPadding > 0) SizedBox(height: topPadding),
-              // Grid - fixed size based on screen width
-              _buildGameArea(),
+              // Grid - fixed size calculated from constraints
+              _buildGameArea(gridSize),
               // Word bank - calculated fixed height
               SizedBox(
                 height: wordBankHeight,
@@ -756,23 +768,15 @@ class _WordSearchGameScreenState extends State<WordSearchGameScreen>
     );
   }
 
-  Widget _buildGameArea() {
-    // Grid takes full width with minimal padding, square aspect ratio
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        // Use screen width minus minimal padding for grid size
-        final screenWidth = MediaQuery.of(context).size.width;
-        final gridSize = screenWidth - 12; // 6px padding on each side
-
-        return Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 6),
-          child: SizedBox(
-            width: gridSize,
-            height: gridSize,
-            child: _buildGrid(),
-          ),
-        );
-      },
+  Widget _buildGameArea(double gridSize) {
+    // Grid with calculated size passed from parent
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 6),
+      child: SizedBox(
+        width: gridSize,
+        height: gridSize,
+        child: _buildGrid(),
+      ),
     );
   }
 

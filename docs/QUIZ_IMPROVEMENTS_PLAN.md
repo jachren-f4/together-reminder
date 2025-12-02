@@ -804,9 +804,7 @@ Each new branch needs a `manifest.json`:
 
 ---
 
-### Phase 5: Branch Rotation Update
-
-**Effort:** ~1-2 hours
+### Phase 6: Branch Rotation Update
 
 **Files:**
 - `lib/services/quest_type_manager.dart`
@@ -933,3 +931,5 @@ String getScoreMessage({
 | 2025-12-02 | Initial plan created |
 | 2025-12-02 | Updated with Option C decision — results screen full redesign |
 | 2025-12-02 | Added detailed implementation specs and mockup references |
+| 2025-12-02 | Added Phase 1: Fix Existing Content Bugs (renumbered phases 2-6) |
+| 2025-12-02 | Removed all time estimates from document |
