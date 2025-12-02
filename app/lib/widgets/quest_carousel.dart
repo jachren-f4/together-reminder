@@ -179,7 +179,11 @@ class _QuestCarouselState extends State<QuestCarousel> {
     }
 
     // Default: use generic QuestCard
+    // Key includes completion count to force rebuild when quest status changes
+    // (Hive returns same object instances, so without Key Flutter reuses State)
+    final completionCount = quest.userCompletions?.length ?? 0;
     return QuestCard(
+      key: ValueKey('${quest.id}_$completionCount'),
       quest: quest,
       currentUserId: widget.currentUserId,
       onTap: () => widget.onQuestTap(quest),

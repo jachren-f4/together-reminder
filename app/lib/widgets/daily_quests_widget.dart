@@ -4,6 +4,7 @@ import '../models/daily_quest.dart';
 import '../services/storage_service.dart';
 import '../services/daily_quest_service.dart';
 import '../services/api_client.dart';
+import '../services/love_point_service.dart';
 import '../theme/app_theme.dart';
 import '../config/brand/brand_loader.dart';
 import '../utils/logger.dart';
@@ -13,6 +14,10 @@ import '../screens/affirmation_intro_screen.dart';
 import '../screens/quiz_match_game_screen.dart';
 import '../screens/you_or_me_match_intro_screen.dart';
 import '../screens/you_or_me_match_game_screen.dart';
+
+/// Global RouteObserver for tracking navigation events
+/// This should be added to MaterialApp's navigatorObservers
+final RouteObserver<ModalRoute<void>> questRouteObserver = RouteObserver<ModalRoute<void>>();
 
 /// Widget displaying daily quests with completion tracking
 ///
@@ -25,14 +30,14 @@ class DailyQuestsWidget extends StatefulWidget {
   State<DailyQuestsWidget> createState() => _DailyQuestsWidgetState();
 }
 
-class _DailyQuestsWidgetState extends State<DailyQuestsWidget> {
+class _DailyQuestsWidgetState extends State<DailyQuestsWidget> with RouteAware {
   final StorageService _storage = StorageService();
   final ApiClient _apiClient = ApiClient();
   late DailyQuestService _questService;
   Timer? _pollingTimer;
 
-  // Polling interval for partner quest status (30 seconds)
-  static const Duration _pollingInterval = Duration(seconds: 30);
+  // Polling interval for partner quest status (5 seconds during dev, increase for production)
+  static const Duration _pollingInterval = Duration(seconds: 5);
 
   @override
   void initState() {
@@ -43,6 +48,28 @@ class _DailyQuestsWidgetState extends State<DailyQuestsWidget> {
 
     // Start polling for partner quest completions via Supabase
     _startPolling();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // Subscribe to route events to detect when we return from a quest screen
+    final route = ModalRoute.of(context);
+    if (route != null) {
+      questRouteObserver.subscribe(this, route);
+    }
+  }
+
+  @override
+  void didPopNext() {
+    // Called when a route has been popped off, and this route is now visible
+    // This happens when returning from quiz/waiting/results screens
+    if (mounted) {
+      setState(() {
+        // Force refresh from Hive - quest status should now be updated
+      });
+      Logger.debug('Route popped - refreshing quest cards', service: 'quest');
+    }
   }
 
   /// Start polling for partner quest completions
@@ -80,21 +107,33 @@ class _DailyQuestsWidgetState extends State<DailyQuestsWidget> {
       bool anyUpdates = false;
 
       for (final questData in questsData) {
-        final questId = questData['questId'] as String?;
+        final questType = questData['questType'] as String?;
         final partnerCompleted = questData['partnerCompleted'] as bool? ?? false;
         final status = questData['status'] as String?;
 
-        if (questId == null) continue;
+        if (questType == null) continue;
 
-        // Find local quest by content_id (quiz_id in server response)
+        // Find local quest by matching formatType to questType
+        // API returns: 'classic', 'affirmation', 'you_or_me'
+        // Quest formatType: 'classic', 'affirmation', 'youOrMe'
         final localQuests = _storage.getTodayQuests();
-        final matchingQuest = localQuests.where((q) => q.contentId == questId).firstOrNull;
+        final normalizedQuestType = questType == 'you_or_me' ? 'youOrMe' : questType;
+        final matchingQuest = localQuests.where((q) => q.formatType == normalizedQuestType).firstOrNull;
+
+        Logger.debug(
+          'Poll: questType=$questType, normalized=$normalizedQuestType, partnerCompleted=$partnerCompleted, '
+          'localQuests=${localQuests.map((q) => "${q.type.name}:${q.formatType}").join(", ")}, '
+          'matched=${matchingQuest?.type.name}',
+          service: 'quest',
+        );
 
         if (matchingQuest != null) {
           // Update partner completion status
-          if (partnerCompleted && !matchingQuest.hasUserCompleted(partner.pushToken)) {
+          // Use partner.id (UUID) if available, fallback to pushToken for backward compatibility
+          final partnerKey = partner.id.isNotEmpty ? partner.id : partner.pushToken;
+          if (partnerCompleted && !matchingQuest.hasUserCompleted(partnerKey)) {
             matchingQuest.userCompletions ??= {};
-            matchingQuest.userCompletions![partner.pushToken] = true;
+            matchingQuest.userCompletions![partnerKey] = true;
 
             // Update quest status
             if (status == 'completed' || matchingQuest.areBothUsersCompleted()) {
@@ -115,6 +154,9 @@ class _DailyQuestsWidgetState extends State<DailyQuestsWidget> {
       // Trigger UI rebuild if there were updates
       if (anyUpdates && mounted) {
         setState(() {});
+
+        // Also sync LP from server - partner completion may have awarded LP
+        await LovePointService.fetchAndSyncFromServer();
       }
     } catch (e) {
       Logger.error('Error polling quest status', error: e, service: 'quest');
@@ -123,6 +165,7 @@ class _DailyQuestsWidgetState extends State<DailyQuestsWidget> {
 
   @override
   void dispose() {
+    questRouteObserver.unsubscribe(this);
     _pollingTimer?.cancel();
     super.dispose();
   }
@@ -303,9 +346,15 @@ class _DailyQuestsWidgetState extends State<DailyQuestsWidget> {
         break;
     }
 
-    // Refresh state after returning
+    // Refresh state after returning from quest
+    // setState() alone is enough - Hive returns the same object instances
+    // that were updated by the game screen's _updateLocalQuestStatus()
+    // The rebuild will re-read from _questService.getMainDailyQuests()
+    // which fetches fresh data from Hive
     if (mounted) {
-      setState(() {});
+      setState(() {
+        // Force widget rebuild - Hive objects are already updated
+      });
     }
   }
 

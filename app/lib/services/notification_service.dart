@@ -26,6 +26,7 @@ Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
     // print('🔗 Background pairing confirmation received');
     final partnerName = message.data['partnerName'] ?? 'Partner';
     final partnerToken = message.data['partnerToken'] ?? '';
+    final partnerId = message.data['partnerId'] ?? '';
 
     // Save partner data immediately
     await StorageService.init(); // Ensure Hive is initialized
@@ -35,6 +36,7 @@ Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
       pushToken: partnerToken,
       pairedAt: DateTime.now(),
       avatarEmoji: '👤',
+      id: partnerId,
     );
     await storage.savePartner(partner);
     // Removed verbose logging

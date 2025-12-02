@@ -7,11 +7,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { withAuthOrDevBypass } from '@/lib/auth/dev-middleware';
 import { query, getClient } from '@/lib/db/pool';
+import { LP_REWARDS, LP_BONUSES } from '@/lib/lp/config';
 
 export const dynamic = 'force-dynamic';
-
-// LP reward for completing a quiz
-const LP_REWARD = 30;
 
 /**
  * POST /api/sync/quiz/submit
@@ -121,7 +119,7 @@ export const POST = withAuthOrDevBypass(async (req, userId, email) => {
       if (session.format_type === 'affirmation') {
         // Affirmation quizzes don't have match percentage
         // Each user answers for themselves
-        lpEarned = LP_REWARD;
+        lpEarned = LP_REWARDS.QUIZ_AFFIRMATION;
         completedAt = new Date();
       } else if (session.format_type === 'would_you_rather') {
         // Calculate Would You Rather results
@@ -144,30 +142,23 @@ export const POST = withAuthOrDevBypass(async (req, userId, email) => {
           user1_id,
           user2_id
         );
-        lpEarned = LP_REWARD;
+        lpEarned = LP_REWARDS.QUIZ_CLASSIC;
         completedAt = new Date();
       }
 
-      // Award LP to both users
+      // Award LP using couples.total_lp (single source of truth)
       if (lpEarned && lpEarned > 0) {
-        // Use session ID as related_id to prevent duplicate awards
+        // Update couples.total_lp directly (avoids connection pool issues by using same client)
         await client.query(
-          `INSERT INTO love_point_awards (id, couple_id, amount, reason, related_id, created_at)
-           VALUES (gen_random_uuid(), $1, $2, $3, $4, NOW())
-           ON CONFLICT (couple_id, related_id) DO NOTHING`,
-          [coupleId, lpEarned, `quiz_${session.format_type}`, sessionId]
+          `UPDATE couples SET total_lp = COALESCE(total_lp, 0) + $1 WHERE id = $2`,
+          [lpEarned, coupleId]
         );
 
-        // Update user LP totals
+        // Record LP transaction for audit trail
         await client.query(
-          `UPDATE user_love_points SET total_points = total_points + $1, updated_at = NOW()
-           WHERE user_id = $2`,
-          [lpEarned, user1_id]
-        );
-        await client.query(
-          `UPDATE user_love_points SET total_points = total_points + $1, updated_at = NOW()
-           WHERE user_id = $2`,
-          [lpEarned, user2_id]
+          `INSERT INTO love_point_transactions (user_id, amount, source, description, created_at)
+           VALUES ($1, $2, $3, $4, NOW()), ($5, $2, $3, $4, NOW())`,
+          [user1_id, lpEarned, `quiz_${session.format_type}`, `quiz_complete (${sessionId})`, user2_id]
         );
       }
     }
@@ -302,8 +293,8 @@ function calculateWouldYouRatherResults(
     : 0;
 
   // LP based on combined accuracy and alignment
-  const baseLP = LP_REWARD;
-  const alignmentBonus = alignmentMatches * 5;
+  const baseLP = LP_REWARDS.QUIZ_WOULD_YOU_RATHER;
+  const alignmentBonus = alignmentMatches * LP_BONUSES.WYR_ALIGNMENT_PER_MATCH;
   const lpEarned = baseLP + alignmentBonus;
 
   return {

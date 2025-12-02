@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Intro Screen - Attachment Quiz</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            background: #f5f5f5;
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .page-title {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .page-title h1 {
+            font-size: 20px;
+            font-weight: 400;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+
+        .page-title p {
+            font-size: 13px;
+            color: #666;
+            font-style: italic;
+        }
+
+        /* Phone frame */
+        .phone-frame {
+            width: 375px;
+            height: 700px;
+            background: #fff;
+            border: 2px solid #000;
+            border-radius: 32px;
+            overflow: hidden;
+            box-shadow: 12px 12px 0 rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Intro Screen */
+        .intro-screen {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 40px 32px;
+            text-align: center;
+            background: linear-gradient(180deg, #fdfcf8 0%, #fff 100%);
+        }
+
+        .intro-icon {
+            font-size: 64px;
+            margin-bottom: 32px;
+        }
+
+        .intro-badge {
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            background: #000;
+            color: #fff;
+            padding: 6px 16px;
+            margin-bottom: 16px;
+        }
+
+        .intro-title {
+            font-size: 28px;
+            font-weight: 400;
+            letter-spacing: 1px;
+            margin-bottom: 24px;
+        }
+
+        .intro-message {
+            font-size: 16px;
+            line-height: 1.7;
+            color: #444;
+            margin-bottom: 16px;
+            max-width: 280px;
+        }
+
+        .intro-emphasis {
+            font-size: 15px;
+            font-style: italic;
+            color: #666;
+            margin-bottom: 48px;
+        }
+
+        .intro-button {
+            background: #000;
+            color: #fff;
+            border: none;
+            padding: 16px 48px;
+            font-family: inherit;
+            font-size: 14px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .intro-button:hover {
+            background: #333;
+        }
+
+        .skip-link {
+            margin-top: 20px;
+            font-size: 12px;
+            color: #999;
+            text-decoration: underline;
+            cursor: pointer;
+        }
+
+        /* Annotations */
+        .annotations {
+            margin-top: 30px;
+            padding: 20px;
+            background: #fff;
+            border: 1px dashed #ccc;
+            max-width: 375px;
+            font-size: 12px;
+        }
+
+        .annotation-title {
+            font-weight: 600;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 10px;
+            color: #666;
+        }
+
+        .annotation-item {
+            margin-bottom: 8px;
+            padding-left: 12px;
+            position: relative;
+            line-height: 1.5;
+        }
+
+        .annotation-item::before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            color: #999;
+        }
+    </style>
+</head>
+<body>
+    <div class="page-title">
+        <h1>Intro Screen — Attachment Check-In</h1>
+        <p>Shown once when user first encounters therapeutic Affirmation Quiz</p>
+    </div>
+
+    <div class="phone-frame">
+        <div class="intro-screen">
+            <div class="intro-icon">💛</div>
+            <div class="intro-badge">Deeper</div>
+            <div class="intro-title">Attachment Check-In</div>
+            <div class="intro-message">
+                This quiz explores how you each experience your connection — your sense of safety, trust, and closeness.
+            </div>
+            <div class="intro-emphasis">
+                Your feelings are valid, even when they differ from your partner's.
+            </div>
+            <button class="intro-button">Let's Begin</button>
+            <div class="skip-link">Don't show this again</div>
+        </div>
+    </div>
+
+    <div class="annotations">
+        <div class="annotation-title">Design Notes</div>
+        <div class="annotation-item">Heart emoji signals emotional/relational focus</div>
+        <div class="annotation-item">Explains what "attachment" means in plain language</div>
+        <div class="annotation-item">Key message: "Feelings are valid" — prevents blame</div>
+        <div class="annotation-item">"Even when they differ" — normalizes mismatch</div>
+        <div class="annotation-item">Prepares users for potential differences in perception</div>
+    </div>
+</body>
+</html>

@@ -88,6 +88,7 @@ class RemotePairingService {
         pushToken: result.data['pushToken'] ?? '',
         pairedAt: pairedAt,
         avatarEmoji: result.data['avatarEmoji'] ?? '💕',
+        id: result.data['partnerId'] ?? '', // Partner's user ID for quest tracking
       );
 
       await _storage.savePartner(partner);

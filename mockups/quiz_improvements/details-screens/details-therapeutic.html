@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Details Screen - Therapeutic Quizzes</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            background: #f5f5f5;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .page-title {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .page-title h1 {
+            font-size: 20px;
+            font-weight: 400;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+
+        .page-title p {
+            font-size: 13px;
+            color: #666;
+            font-style: italic;
+        }
+
+        .screens-container {
+            display: flex;
+            gap: 30px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .screen-section {
+            text-align: center;
+        }
+
+        .section-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #666;
+            margin-bottom: 12px;
+            font-weight: 600;
+        }
+
+        /* Phone frame */
+        .phone-frame {
+            width: 340px;
+            background: #fff;
+            border: 2px solid #000;
+            border-radius: 32px;
+            overflow: hidden;
+            box-shadow: 8px 8px 0 rgba(0, 0, 0, 0.1);
+        }
+
+        /* Details Screen - Therapeutic warm background */
+        .details-screen {
+            padding: 32px 20px;
+            min-height: 600px;
+            background: linear-gradient(180deg, #fdfcf8 0%, #fff 100%);
+        }
+
+        .details-header {
+            text-align: center;
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .therapeutic-badge {
+            display: inline-block;
+            font-size: 9px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            background: #000;
+            color: #fff;
+            padding: 4px 12px;
+            margin-bottom: 12px;
+        }
+
+        .details-icon {
+            font-size: 32px;
+            margin-bottom: 8px;
+        }
+
+        .details-title {
+            font-size: 16px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Question items */
+        .question-item {
+            padding: 20px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .question-item:last-of-type {
+            border-bottom: none;
+        }
+
+        .question-text {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            line-height: 1.4;
+        }
+
+        .answer-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 6px;
+            font-size: 13px;
+        }
+
+        .answer-label {
+            color: #666;
+            min-width: 100px;
+        }
+
+        .answer-value {
+            color: #000;
+        }
+
+        /* Affirmation scale display */
+        .scale-display {
+            margin: 12px 0;
+        }
+
+        .scale-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+            font-size: 13px;
+        }
+
+        .scale-name {
+            min-width: 60px;
+            color: #666;
+        }
+
+        .scale-bar {
+            display: flex;
+            gap: 4px;
+            flex: 1;
+        }
+
+        .scale-segment {
+            width: 20%;
+            height: 8px;
+            background: #e0e0e0;
+            border-radius: 2px;
+        }
+
+        .scale-segment.filled {
+            background: #000;
+        }
+
+        .scale-value {
+            min-width: 30px;
+            text-align: right;
+            font-weight: 600;
+        }
+
+        /* Match/mismatch indicator */
+        .match-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-top: 8px;
+            padding: 4px 10px;
+            border-radius: 2px;
+        }
+
+        .match-indicator.similar {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        .match-indicator.different {
+            background: #fef3e8;
+            color: #8d6e4a;
+        }
+
+        /* Conversation prompt - key therapeutic element */
+        .conversation-prompt {
+            margin-top: 16px;
+            padding: 16px;
+            background: #faf8f5;
+            border-left: 3px solid #000;
+        }
+
+        .prompt-icon {
+            font-size: 16px;
+            margin-bottom: 8px;
+        }
+
+        .prompt-text {
+            font-size: 14px;
+            font-style: italic;
+            color: #444;
+            line-height: 1.5;
+        }
+
+        .prompt-note {
+            font-size: 12px;
+            color: #888;
+            margin-top: 8px;
+        }
+
+        /* Done button */
+        .done-button {
+            display: block;
+            width: 100%;
+            background: #000;
+            color: #fff;
+            border: none;
+            padding: 16px;
+            font-family: inherit;
+            font-size: 14px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            margin-top: 24px;
+        }
+    </style>
+</head>
+<body>
+    <div class="page-title">
+        <h1>Details Screen — Therapeutic Quizzes</h1>
+        <p>Includes conversation prompts, validates both perspectives</p>
+    </div>
+
+    <div class="screens-container">
+        <!-- CONNECTION CLASSIC QUIZ -->
+        <div class="screen-section">
+            <div class="section-label">Classic Quiz (Connection)</div>
+            <div class="phone-frame">
+                <div class="details-screen">
+                    <div class="details-header">
+                        <div class="therapeutic-badge">Deeper</div>
+                        <div class="details-icon">💬</div>
+                        <div class="details-title">A Chance to Go Deeper</div>
+                    </div>
+
+                    <div class="question-item">
+                        <div class="question-text">"What do I need most when I'm stressed?"</div>
+                        <div class="answer-row">
+                            <span class="answer-label">You guessed:</span>
+                            <span class="answer-value">Space and time alone</span>
+                        </div>
+                        <div class="answer-row">
+                            <span class="answer-label">Sarah said:</span>
+                            <span class="answer-value">Someone to listen</span>
+                        </div>
+                        <span class="match-indicator different">Different perspectives</span>
+
+                        <div class="conversation-prompt">
+                            <div class="prompt-icon">💛</div>
+                            <div class="prompt-text">"When you're stressed, what helps most? Has this changed over time?"</div>
+                            <div class="prompt-note">This isn't about being "right" — it's an invitation to understand.</div>
+                        </div>
+                    </div>
+
+                    <div class="question-item">
+                        <div class="question-text">"What's my biggest current worry?"</div>
+                        <div class="answer-row">
+                            <span class="answer-label">You guessed:</span>
+                            <span class="answer-value">Work pressures</span>
+                        </div>
+                        <div class="answer-row">
+                            <span class="answer-label">Sarah said:</span>
+                            <span class="answer-value">Work pressures</span>
+                        </div>
+                        <span class="match-indicator similar">✓ You knew this</span>
+                    </div>
+
+                    <button class="done-button">Done</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ATTACHMENT AFFIRMATION -->
+        <div class="screen-section">
+            <div class="section-label">Affirmation (Attachment)</div>
+            <div class="phone-frame">
+                <div class="details-screen">
+                    <div class="details-header">
+                        <div class="therapeutic-badge">Deeper</div>
+                        <div class="details-icon">💛</div>
+                        <div class="details-title">Your Perspectives</div>
+                    </div>
+
+                    <div class="question-item">
+                        <div class="question-text">"I can reach my partner when I need them"</div>
+                        <div class="scale-display">
+                            <div class="scale-row">
+                                <span class="scale-name">Sarah</span>
+                                <div class="scale-bar">
+                                    <div class="scale-segment filled"></div>
+                                    <div class="scale-segment filled"></div>
+                                    <div class="scale-segment filled"></div>
+                                    <div class="scale-segment filled"></div>
+                                    <div class="scale-segment filled"></div>
+                                </div>
+                                <span class="scale-value">5/5</span>
+                            </div>
+                            <div class="scale-row">
+                                <span class="scale-name">Mike</span>
+                                <div class="scale-bar">
+                                    <div class="scale-segment filled"></div>
+                                    <div class="scale-segment filled"></div>
+                                    <div class="scale-segment"></div>
+                                    <div class="scale-segment"></div>
+                                    <div class="scale-segment"></div>
+                                </div>
+                                <span class="scale-value">2/5</span>
+                            </div>
+                        </div>
+                        <span class="match-indicator different">Different experiences</span>
+
+                        <div class="conversation-prompt">
+                            <div class="prompt-icon">💛</div>
+                            <div class="prompt-text">"What would help you feel like you can reach me more easily?"</div>
+                            <div class="prompt-note">Neither of you is wrong. Both feelings are valid.</div>
+                        </div>
+                    </div>
+
+                    <button class="done-button">Done</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- GROWTH YOU-OR-ME -->
+        <div class="screen-section">
+            <div class="section-label">You-or-Me (Growth)</div>
+            <div class="phone-frame">
+                <div class="details-screen">
+                    <div class="details-header">
+                        <div class="therapeutic-badge">Deeper</div>
+                        <div class="details-icon">🌱</div>
+                        <div class="details-title">Your Perspectives</div>
+                    </div>
+
+                    <div class="question-item">
+                        <div class="question-text">"Who needs more reassurance?"</div>
+                        <div class="answer-row">
+                            <span class="answer-label">Sarah said:</span>
+                            <span class="answer-value">Me (herself)</span>
+                        </div>
+                        <div class="answer-row">
+                            <span class="answer-label">Mike said:</span>
+                            <span class="answer-value">Me (himself)</span>
+                        </div>
+                        <span class="match-indicator different">Both said themselves</span>
+
+                        <div class="conversation-prompt">
+                            <div class="prompt-icon">💛</div>
+                            <div class="prompt-text">"You both feel you need more reassurance. What does reassurance look like for each of you?"</div>
+                            <div class="prompt-note">This is about understanding each other's needs.</div>
+                        </div>
+                    </div>
+
+                    <div class="question-item">
+                        <div class="question-text">"Who finds it harder to ask for help?"</div>
+                        <div class="answer-row">
+                            <span class="answer-label">Sarah said:</span>
+                            <span class="answer-value">Mike</span>
+                        </div>
+                        <div class="answer-row">
+                            <span class="answer-label">Mike said:</span>
+                            <span class="answer-value">Mike</span>
+                        </div>
+                        <span class="match-indicator similar">✓ You agree</span>
+                    </div>
+
+                    <button class="done-button">Done</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

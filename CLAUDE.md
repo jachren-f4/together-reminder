@@ -7,10 +7,16 @@
 ## Table of Contents
 
 1. [Stack Overview](#stack-overview)
-2. [Critical Architecture Rules](#critical-architecture-rules)
-3. [Testing & Debugging](#testing--debugging)
-4. [File Locations Reference](#file-locations-reference)
-5. [Additional Documentation](#additional-documentation)
+2. [Architecture Rules](#architecture-rules)
+   - [Initialization & Storage](#initialization--storage)
+   - [Sync & Data Flow](#sync--data-flow)
+   - [Love Points System](#love-points-system)
+   - [Game-Specific Rules](#game-specific-rules)
+   - [UI Patterns](#ui-patterns)
+   - [Security & Platform](#security--platform)
+3. [Development Setup](#development-setup)
+4. [Testing & Debugging](#testing--debugging)
+5. [File Reference](#file-reference)
 
 ---
 
@@ -25,84 +31,54 @@
 | **Notifications** | FCM (Android), APNs (iOS) |
 | **Auth** | Supabase Auth (OTP) |
 
-### API URLs
-- **Production API (Vercel):** `https://api-joakim-achrens-projects.vercel.app`
+### URLs & Config
+- **Production API:** `https://api-joakim-achrens-projects.vercel.app`
 - **Supabase:** `https://naqzdqdncdzxpxbdysgq.supabase.co`
-- **Firebase RTDB:** `https://togetherremind-default-rtdb.firebaseio.com`
-
-**Config file:** `lib/config/supabase_config.dart`
+- **Config:** `lib/config/supabase_config.dart`
 
 ### Bundle IDs
-- **iOS:** `com.togetherremind.togetherremind2` (changed 2025-11-13 after security remediation)
-- **Android:** `com.togetherremind.togetherremind` (original, not yet migrated)
+- **iOS:** `com.togetherremind.togetherremind2`
+- **Android:** `com.togetherremind.togetherremind`
 
 ### White-Label Architecture
 
-The app supports multiple branded versions via Flutter flavors:
-
-| Brand | Android Bundle ID | iOS Bundle ID | Dart Define |
-|-------|-------------------|---------------|-------------|
+| Brand | Android | iOS | Dart Define |
+|-------|---------|-----|-------------|
 | TogetherRemind | `com.togetherremind.togetherremind` | `com.togetherremind.togetherremind2` | `BRAND=togetherRemind` |
 | HolyCouples | `com.togetherremind.holycouples` | `com.togetherremind.holycouples` | `BRAND=holyCouples` |
 
-**Key files:**
-- `lib/config/brand/brand_config.dart` - Brand enum and config class
-- `lib/config/brand/brand_registry.dart` - All brand configurations
-- `lib/config/brand/brand_loader.dart` - Runtime brand loading
-- `assets/brands/{brandId}/` - Brand-specific content
-
-**Build commands:**
+**Build:**
 ```bash
-# TogetherRemind
-flutter run --flavor togetherremind --dart-define=BRAND=togetherRemind
-
-# HolyCouples
-flutter run --flavor holycouples --dart-define=BRAND=holyCouples
-
-# Web (any brand)
-flutter run -d chrome --dart-define=BRAND=holyCouples
+flutter run --flavor togetherremind --dart-define=BRAND=togetherRemind  # Android
+flutter run -d chrome --dart-define=BRAND=holyCouples                    # Web
 ```
 
-**Validation:**
-```bash
-./scripts/validate_brand_assets.sh  # Validate all brands
-```
+**Key files:** `lib/config/brand/brand_config.dart`, `brand_registry.dart`, `brand_loader.dart`
 
-**Database Strategy:**
-- **Development:** Single shared Supabase with `brand_id` column filtering
-- **Production:** Separate Supabase project per brand (when launched)
-- **Migration:** `api/supabase/migrations/014_white_label_brand_id.sql`
-- **Apply:** `cd api && supabase db push`
-- API queries must filter: `WHERE brand_id = 'holycouples'`
-
-See `docs/WHITE_LABEL_GUIDE.md` for complete brand creation guide.
+See `docs/WHITE_LABEL_GUIDE.md` for complete guide.
 
 ---
 
-## Critical Architecture Rules
+## Architecture Rules
 
-### 1. Initialization Order (MUST FOLLOW)
+### Initialization & Storage
 
+#### Startup Order (MUST FOLLOW)
 ```dart
-// main.dart - STRICT ORDER REQUIRED
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);  // 1. Firebase FIRST
-  await StorageService.init();                                                     // 2. Hive Storage
-  await NotificationService.initialize();                                          // 3. NotificationService
-  await MockDataService.injectMockDataIfNeeded();                                 // 4. Mock data (optional)
-
-  runApp(const TogetherRemindApp());                                              // 5. Run app
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);  // 1. Firebase
+  await StorageService.init();                                                     // 2. Hive
+  await NotificationService.initialize();                                          // 3. Notifications
+  await MockDataService.injectMockDataIfNeeded();                                 // 4. Mock data
+  runApp(const TogetherRemindApp());
 }
 ```
 
-### 2. Hive Data Migration
-
-**CRITICAL:** Always use `defaultValue` when adding fields to existing HiveTypes:
-
+#### Hive Field Migration
+Always use `defaultValue` for new fields on existing HiveTypes:
 ```dart
-// ✅ CORRECT - prevents "type 'Null' is not a subtype" crashes
+// ✅ CORRECT
 @HiveField(10, defaultValue: 'reminder')
 String category;
 
@@ -110,874 +86,317 @@ String category;
 @HiveField(10)
 late String category;
 ```
+After adding: `flutter pub run build_runner build --delete-conflicting-outputs`
 
-After adding fields:
-```bash
-flutter pub run build_runner build --delete-conflicting-outputs
-```
-
-### 3. Web Platform Safety
-
-| Rule | Description |
-|------|-------------|
-| ✅ DO | Use `NotificationService.getToken()` for FCM tokens |
-| ❌ DON'T | Call `FirebaseMessaging.instance.getToken()` directly |
-| ⚠️ NOTE | Web platform doesn't support FCM service workers in Flutter debug → blank screen crash |
-| ⚠️ NOTE | `NotificationService.initialize()` skips FCM setup on web (by design) |
-| ⚠️ NOTE | `DevConfig.emulatorId` returns `'web-bob'` for web platform |
-
-**Flutter Web Asset Rebuilds:**
-- Adding new files to `assets/` subdirectories requires `flutter clean && flutter run` - hot restart does NOT rebuild the asset bundle
-- If image shows 404 with path like `assets/assets/brands/.../image.png`, the file exists in source but isn't in the build output
-- Always run full rebuild after adding new images to `assets/brands/{brand}/images/`
-
-### 4. Cloud Function Signature (v2 API)
-
-Firebase Functions v6+ requires `(request)` signature:
-
-```javascript
-// ✅ CORRECT (v2)
-exports.myFunction = functions.https.onCall(async (request) => {
-  const { param1, param2 } = request.data;
-});
-
-// ❌ WRONG (v1 - causes "parameter is required" errors)
-exports.myFunction = functions.https.onCall(async (data, context) => {
-  const { param1, param2 } = data;
-});
-```
-
-### 5. Device Detection
-
-Detection is async with caching - MUST await:
-
+#### Device Detection
 ```dart
-// Async with proper detection
-final isSimulator = await DevConfig.isSimulator;
-
-// Sync cached check (returns false if not yet determined)
-final isSim = DevConfig.isSimulatorSync;
+final isSimulator = await DevConfig.isSimulator;  // Async, cached
+final isSim = DevConfig.isSimulatorSync;          // Sync, may be stale
 ```
 
-### 6. Firebase Credentials (SECURITY CRITICAL)
+---
 
-**NEVER COMMIT:**
-```
-android/app/google-services.json
-ios/Runner/GoogleService-Info.plist
-.env
-functions/.env
-functions/serviceAccountKey.json
-```
+### Sync & Data Flow
 
-**Why:**
-- Contains API keys and project identifiers
-- Enables unauthorized Firebase access
-- Can lead to billing fraud, data breaches, service abuse
-- Firebase security rules don't protect against valid credentials
+All sync uses Supabase API with polling (Firebase RTDB removed 2024-12-01).
 
-**If accidentally committed:**
-1. Remove from history (use BFG Repo-Cleaner or git-filter-repo)
-2. Rotate ALL Firebase credentials in Console
-3. Regenerate and download new config files
-4. Update .gitignore and recommit
+| Sync Type | Endpoint | Notes |
+|-----------|----------|-------|
+| Daily Quests | `GET/POST /api/sync/daily-quests` | First device creates, second loads |
+| Quest Completion | `POST /api/sync/daily-quests/completion` | Mark complete |
+| Love Points | `GET/POST /api/sync/love-points` | From `couples.total_lp` |
+| Steps | `GET/POST /api/sync/steps` | HealthKit data |
 
-**Before every commit:**
-```bash
-git status  # Verify no sensitive files staged
-git diff    # Review all changes
-```
+**Polling:** Partner updates fetched every 30-60 seconds.
 
-### 7. Firebase RTDB Paths & Permissions
-
-All paths require security rules in `database.rules.json`:
-
-| Path | Purpose |
-|------|---------|
-| `/pairing_codes/{code}` | Remote pairing (write-once) |
-| `/dev_emulators/{emulatorId}` | Dev FCM tokens (dev mode only) |
-| `/daily_quests/{coupleId}/{dateKey}` | Quest sync between partners |
-| `/quiz_progression/{coupleId}` | Quiz progression state |
-| `/quiz_sessions/{emulatorId}/{sessionId}` | Quiz data for partner access |
-
-**Deploy rules:** `firebase deploy --only database`
-
-**Common error:** "Quiz session not found" → Missing `/quiz_sessions/` rules
-
-### 8. Love Points UI Updates
-
-**CRITICAL:** LP counter auto-updates in real-time when LP is awarded (matches quest card behavior).
-
-**Design rationale:**
-- Uses callback pattern for real-time UI updates (consistent with quest cards)
-- Notification banner provides immediate feedback (3-sec overlay: "+30 LP 💰")
-- LP counter updates immediately via `setState()` callback
-
-**Implementation pattern:**
+#### Quest Title Display
+Use denormalized metadata, NOT session lookups (partner has no local sessions):
 ```dart
-// In NewHomeScreen.initState() or similar screens
-// IMPORTANT: Do NOT call startListeningForLPAwards() again - that creates duplicate listeners!
-// The listener is already started in main.dart, just register the callback:
-LovePointService.setLPChangeCallback(() {
-  if (mounted) {
-    setState(() {
-      // Trigger rebuild to update LP counter
-    });
-  }
-});
-```
-
-**Flow:**
-1. Partner awards LP → Firebase RTDB update
-2. `LovePointService._handleLPAward()` receives update
-3. Updates local Hive storage
-4. Shows notification banner ("+30 LP 💰")
-5. Calls `_onLPChanged` callback
-6. Screen's `setState()` triggers rebuild
-7. LP counter displays new value immediately
-
-**Implementation requirements:**
-- `LovePointService.setAppContext()` must be called in `main.dart` via `addPostFrameCallback`
-- Firebase listener is started ONCE in `main.dart` via `startListeningForLPAwards()`
-- Individual screens register callbacks via `setLPChangeCallback()` (do NOT call startListeningForLPAwards again!)
-- Callback is optional (backward compatible for screens that don't need real-time updates)
-
-**CRITICAL WARNING:**
-- Do NOT call `startListeningForLPAwards()` multiple times - it creates duplicate Firebase listeners
-- Each duplicate listener awards LP again, causing the 60 LP bug (30 LP × 2 listeners = 60 LP)
-- Always use `setLPChangeCallback()` in screens to register UI update callbacks
-
-**Related files:**
-- `lib/services/love_point_service.dart:19-20` - Callback variable declaration
-- `lib/services/love_point_service.dart:194-199` - setLPChangeCallback() method (use this in screens!)
-- `lib/services/love_point_service.dart:239-265` - startListeningForLPAwards() (called once in main.dart)
-- `lib/services/love_point_service.dart:313` - Callback invocation after LP award
-- `lib/main.dart:133-136` - Listener initialization (called once on app start)
-- `lib/screens/new_home_screen.dart:60-70` - Reference implementation using setLPChangeCallback()
-- `lib/widgets/foreground_notification_banner.dart` - Notification overlay
-- `lib/widgets/daily_quests_widget.dart:86-102` - Quest card pattern (similar architecture)
-
-### 9. Quest Title Display Rules
-
-**CRITICAL:** Quest title display must use denormalized metadata, NOT session lookups.
-
-**Why this matters:**
-- Alice creates daily quests → writes to Firebase → has local sessions
-- Bob loads quests from Firebase → has quests but NO local sessions
-- Session lookup fails on Bob's device → displays wrong titles
-
-**Design pattern:**
-```dart
-// ❌ WRONG - session lookup fails on partner's device
+// ❌ Session lookup fails on partner's device
 final session = StorageService().getQuizSession(quest.contentId);
-if (session != null && session.formatType == 'affirmation') {
-  return session.quizName!;
-}
 
-// ✅ CORRECT - uses Firebase-synced metadata
-if (quest.formatType == 'affirmation') {
-  return quest.quizName ?? 'Affirmation Quiz';
-}
+// ✅ Use synced metadata
+return quest.quizName ?? 'Affirmation Quiz';
 ```
 
-**Affected components:**
-- `lib/widgets/quest_card.dart` - Main screen quest titles
-- `lib/services/activity_service.dart` - Inbox quest titles
-- `lib/widgets/daily_quests_widget.dart` - Format type detection
+#### Quest Completion Flow
+1. User finishes quiz → API call → Hive updated → Navigate to waiting screen
+2. Partner polling every 30s → Detects completion → Updates UI
+3. RouteAware `didPopNext()` refreshes quest cards when returning home
 
-**Data flow:**
-1. Alice: QuizSession created → `formatType`, `quizName` extracted
-2. Alice: DailyQuest created with metadata from session
-3. Alice: Quest synced to Firebase with `formatType`, `quizName`
-4. Bob: Quest loaded from Firebase with all metadata intact
-5. Bob: UI uses `quest.formatType` and `quest.quizName` directly
+**Files:** `lib/widgets/daily_quests_widget.dart` (RouteAware, polling)
 
-See `docs/QUEST_TITLE_SYNC_ISSUE.md` for full technical analysis.
+---
 
-### 10. Logger Service Verbosity Control
+### Love Points System
 
-**CRITICAL:** All Logger services are **disabled by default** to prevent log flooding.
+**Single Source of Truth:** `couples.total_lp` (couple-level, not per-user)
 
-**Philosophy:**
-- Clean logs by default (only errors shown)
-- Enable specific services only when debugging that feature
-- Prevents AI coding agent context window pollution
+| Activity | LP | File |
+|----------|-----|------|
+| Classic/Affirmation Quiz | 30 | `quiz-match/submit/route.ts` |
+| You or Me | 30 | `you-or-me-match/submit/route.ts` |
+| Linked | 30 | `linked/submit/route.ts` |
+| Word Search | 30 | `word-search/submit/route.ts` |
+| Steps Together | 15-30 | `steps/route.ts` |
 
-**Usage:**
+**Max daily:** 165-180 LP
+
+#### Server Awards LP (DO NOT award locally)
 ```dart
-import '../utils/logger.dart';
+// ❌ WRONG - causes double-counting
+await _arenaService.awardLovePoints(30, 'quiz_complete');
 
-Logger.debug('Processing data', service: 'quiz');      // Only in debug mode
-Logger.info('User logged in', service: 'auth');        // Only in debug mode
-Logger.warn('Slow network', service: 'network');       // Only in debug mode
-Logger.error('Failed to load', error: e, service: 'quiz');  // Always logs
-Logger.success('Quest completed', service: 'quest');   // Only in debug mode
+// ✅ CORRECT - sync from server
+await LovePointService.fetchAndSyncFromServer();
 ```
 
-**How to enable logging for a service:**
-1. Edit `lib/utils/logger.dart`
-2. Find service in `_serviceVerbosity` map (organized by category)
-3. Change `false` → `true`
-4. Run debug build - only that service's logs appear
+**Shared utility:** `api/lib/lp/award.ts`
 
-**Service Categories:**
+#### UI Updates via Callback
 ```dart
-// CRITICAL CORE (3): storage, notification, lovepoint
-// MAJOR FEATURES (3): quiz, you_or_me, pairing
-// MINOR FEATURES (5): reminder, poke, daily_pulse, affirmation, quest
-// INFRASTRUCTURE (4): debug, mock, home, arena
+LovePointService.setLPChangeCallback(() {
+  if (mounted) setState(() {});
+});
 ```
 
-**GOTCHA:** Logger calls **without** `service:` parameter bypass verbosity control and always log.
-```dart
-Logger.debug('message');  // ❌ Always logs
-Logger.debug('message', service: 'quiz');  // ✅ Respects config
-```
+---
 
-**Benefits:**
-- Debug builds: ~4 log lines instead of hundreds
-- Production: Only errors log
-- Easy to debug specific features without noise
+### Game-Specific Rules
 
-**Related files:**
-- `lib/utils/logger.dart` - Logger implementation and service config
-
-### 11. Development Auth Bypass
-
-**CRITICAL:** Dev auth bypass allows development without email/OTP authentication while using real Supabase data.
-
-**When to use:**
-- Two-device testing (Android + Chrome)
-- Rapid iteration without authentication interruption
-- Testing with actual database content
-
-**Architecture:**
-- **Two-layer bypass:** API-side (`AUTH_DEV_BYPASS_ENABLED=true`) + Flutter-side (`skipAuthInDev=true`)
-- **Real data loading:** Fetches user/couple data from Supabase Postgres via `/api/dev/user-data`
-- **Per-device user IDs:** Each device (Android/Chrome) gets its own user ID from `DevConfig`
-- **Quest sync:** Firebase RTDB for real-time synchronization between devices
-
-**Configuration:**
-
-1. **API Environment** (`/api/.env.local`):
-```bash
-AUTH_DEV_BYPASS_ENABLED=true
-NODE_ENV=development
-```
-
-2. **Flutter Config** (`lib/config/dev_config.dart`):
-```dart
-static const bool skipAuthInDev = true;  // Bypass email auth
-static const String devUserIdAndroid = 'c7f42ec5-7c6d-4dc4-90f2-2aae6ede4d28';
-static const String devUserIdWeb = 'd71425a3-a92f-404e-bfbe-a54c4cb58b6a';
-```
-
-3. **Supabase Database:**
-- Must have existing `couples` table with user1_id and user2_id matching dev config
-- Users must exist in Supabase Auth with metadata (full_name, avatar_emoji)
-
-**Data Flow:**
-1. **User/Couple Data:** Loaded from Supabase Postgres via `/api/dev/user-data?userId=<uuid>`
-2. **Quest Sync:** Firebase RTDB (first device generates, second device loads)
-3. **Local Storage:** Hive (cached after initial load)
-4. **FCM Tokens:** Real tokens per device for notifications
-
-**How it works:**
-1. App startup detects `kDebugMode && skipAuthInDev`
-2. `DevDataService.loadRealDataIfNeeded()` calls API with dev user ID
-3. API returns user + partner + couple data from Supabase
-4. App stores data in Hive and proceeds to home screen
-5. No email/OTP prompt - seamless development experience
-
-**Quick Start:**
-```bash
-/runtogether  # Launches both devices with clean state
-```
-
-**Related files:**
-- `lib/services/dev_data_service.dart` - Fetches real user data from Supabase
-- `api/app/api/dev/user-data/route.ts` - Development endpoint (secured by env vars)
-- `lib/config/dev_config.dart` - Dev user ID configuration
-- `lib/services/auth_service.dart` - Injects X-Dev-User-Id header
-- `.claude/commands/runtogether.md` - Complete testing workflow
-
-**Security:**
-- Only active when `NODE_ENV=development` AND `AUTH_DEV_BYPASS_ENABLED=true`
-- API endpoint returns 403 in production
-- Never commit `.env.local` files
-
-### 12. Turn-Based Game "Who Goes First" Preference
-
-**CRITICAL:** For FUTURE turn-based features only.
-
-**Implementation pattern:**
-```dart
-// In new turn-based game initialization
-final firstPlayerId = await CouplePreferencesService().getFirstPlayerId();
-puzzle.currentPlayerId = firstPlayerId;  // Start with preferred player
-```
-
-**Storage layers:**
-- Supabase: `couples.first_player_id` (authoritative, nullable)
-- Firebase RTDB: `/couple_preferences/{coupleId}` (real-time sync)
-- Hive: `app_metadata` box (keys: `first_player_id`, `couple_id`)
-
-**Listener initialization:**
-- Called ONCE in `main.dart:165` after user/partner check
-- Do NOT call `startListening()` multiple times
-- Pattern: Same as `LovePointService.startListeningForLPAwards()`
-
-**Default behavior:**
-- NULL in database → returns `user2_id` at runtime (latest joiner)
-- No DB write until user explicitly changes preference
-
-**Files:**
-- Service: `lib/services/couple_preferences_service.dart`
-- API: `api/app/api/sync/couple-preferences/route.ts`
-- UI: `lib/screens/settings_screen.dart:286-337` (GAME PREFERENCES section)
-- Migration: `api/supabase/migrations/010_first_player_preference.sql`
-
-### 13. Linked Game Clue Cell Rendering
-
-**CRITICAL:** Clue cells are rendered inline in `linked_game_screen.dart:468`, NOT in `clue_cell.dart`.
-
-**Font sizing logic (in `_buildClueCell`):**
-- Emoji: `fontSize: 28`
-- Text ≤4 chars: `fontSize: 16`
-- Text ≤8 chars: `fontSize: 12`
-- Text ≤12 chars or has space: `fontSize: 9`
-- Longer text: `fontSize: 7`
-
-**Files:**
-- Actual renderer: `lib/screens/linked_game_screen.dart:468-526`
-- Unused widget: `lib/widgets/linked/clue_cell.dart` (kept for potential future use)
-
-### 14. Linked Game Answer Cell Colors
-
-**CRITICAL:** Answer cell colors are defined INLINE in `linked_game_screen.dart:749-775`, NOT in `answer_cell.dart`.
-
-**The Problem:** The grid container uses a dark background (`textPrimary`) for grid lines. If cell colors use `withOpacity()`, the dark background bleeds through the transparency.
-
-**The Fix:** Use `Color.alphaBlend()` to create **solid, opaque** colors:
-
-```dart
-// lib/screens/linked_game_screen.dart - _buildAnswerCell()
-// ❌ WRONG - transparent, dark background shows through
-bgColor = BrandLoader().colors.warning.withOpacity(0.2);
-
-// ✅ CORRECT - solid color, no bleed-through
-final surface = BrandLoader().colors.surface;
-bgColor = Color.alphaBlend(BrandLoader().colors.warning.withOpacity(0.2), surface);
-```
-
-**Current color definitions (lines 749-775):**
-```dart
-final surface = BrandLoader().colors.surface;
-switch (state) {
-  case AnswerCellState.empty:
-    bgColor = surface;  // Pure white
-  case AnswerCellState.draft:
-    bgColor = Color.alphaBlend(BrandLoader().colors.warning.withOpacity(0.2), surface);  // Light yellow
-  case AnswerCellState.locked:
-    bgColor = Color.alphaBlend(BrandLoader().colors.success.withOpacity(0.15), surface); // Light green
-  case AnswerCellState.incorrect:
-    bgColor = Color.alphaBlend(BrandLoader().colors.error.withOpacity(0.7), surface);    // Red
-}
-```
-
-**Files:**
-- Actual colors: `lib/screens/linked_game_screen.dart:749-775` (`_buildAnswerCell()` method)
-- Unused widget: `lib/widgets/linked/answer_cell.dart` (imported but NOT used by the screen)
-
-**Why the grid needs dark background:**
-- Line 319: `Container(color: BrandLoader().colors.textPrimary)` creates grid lines
-- GridView has 2px spacing between cells, dark container shows through gaps
-- This is intentional for grid lines, but cells must be OPAQUE to cover it
-
-### 15. Daily Quest Generation Structure
-
-**CRITICAL:** Daily quests generate exactly 3 quests per day.
-
-**Quest mix:**
-- Slot 0: Classic quiz (uses even track positions: 0, 2)
-- Slot 1: Affirmation quiz (uses odd track positions: 1, 3)
-- Slot 2: You or Me (separate branch progression)
-
-**QuestType enum indices:**
-- question (0), quiz (1), game (2), youOrMe (3), linked (4), wordSearch (5), steps (6)
-
-**Position advancement:** Advances once per day (after classic quiz), not per-quiz.
+#### Daily Quest Generation
+Exactly 3 quests per day:
+- Slot 0: Classic quiz (even track positions: 0, 2)
+- Slot 1: Affirmation quiz (odd track positions: 1, 3)
+- Slot 2: You or Me (separate progression)
 
 **File:** `lib/services/quest_type_manager.dart:403-507`
 
-### 16. Branch Manifest System
+#### You-or-Me Answer Encoding
+Uses RELATIVE encoding, not absolute:
+- User taps "You" → sends 0 (partner)
+- User taps "Me" → sends 1 (self)
+- Server inverts for comparison: `api/lib/game/handler.ts:381-399`
 
-**Purpose:** Each content branch can have custom video (intro screen) and image (quest card).
+**DO NOT** invert answers on Flutter side or compare raw values.
 
-**Key Files:**
-- Service: `lib/services/branch_manifest_service.dart`
-- Model: `lib/models/branch_manifest.dart`
-- Manifests: `assets/brands/{brandId}/data/{activity}/{branch}/manifest.json`
+#### Linked Game
+- Clue cells: Rendered inline at `linked_game_screen.dart:468` (not `clue_cell.dart`)
+- Answer colors: Defined inline at `linked_game_screen.dart:749-775`
+- Use `Color.alphaBlend()` for solid colors (prevents dark grid bleed-through)
 
-**Fallback Chain (video):**
-1. Manifest `videoPath` → 2. Activity default video → 3. Grayscale emoji
+#### Side Quest Polling (Linked, Word Search)
 
-**Fallback Chain (image):**
-1. Manifest `imagePath` → 2. Quest `imagePath` → 3. Type-based default
+**Key distinction:**
+- Daily quests: Each user plays once → tracked via `userCompletions`
+- Side quests: Multiple turns per user → tracked via `currentTurnUserId`
 
-**Adding branch media:**
-1. Add video/image to `assets/brands/{brandId}/videos/` or `images/quests/`
-2. Update branch's `manifest.json` with paths
-3. Register folder in `pubspec.yaml`
-4. Run `flutter clean && flutter run`
+**Polling:** `new_home_screen.dart:137-186`
+- 5s interval, polls `linkedService.pollMatchState()` / `wordSearchService.pollMatchState()`
+- Updates Hive → refreshes `_sideQuestsFuture` → rebuilds quest cards
 
-See `docs/BRANCH_MANIFEST_GUIDE.md` for complete guide.
+**Quest card turn detection:** `quest_card.dart:77-117`
+- Reads `currentTurnUserId` synchronously from Hive in `build()`
+- Turn status checked FIRST in `_buildStatusBadge()`, before completion logic
 
-### 17. Auth Service State vs Token Checks
-
-**CRITICAL:** Never use synchronous `_authService.isAuthenticated` for auth gating in async flows.
-
-**Why:** `isAuthenticated` reads from `_authState` which updates asynchronously after OTP verification. This causes race conditions when navigating between screens.
-
+**CRITICAL:** After Linked turn submission, save to Hive (Word Search does this via `refreshGameState()`):
 ```dart
-// ❌ WRONG - race condition after account creation
-if (!_authService.isAuthenticated) {
-  throw Exception('Not authenticated');
-}
-
-// ✅ CORRECT - reads from persisted storage
-final token = await _authService.getAccessToken();
-if (token == null) {
-  throw Exception('Not authenticated');
-}
+// linked_game_screen.dart - after setState with _updateStateFromResult()
+await StorageService().saveLinkedMatch(_gameState!.match);
 ```
 
-**Affected file:** `lib/services/couple_pairing_service.dart` (fixed 2025-11-27)
+#### Branch Rotation (Linked & Word Search)
+Advances on completion:
+- Linked: casual → romantic → adult → casual
+- Word Search: everyday → passionate → naughty → everyday
 
-### 18. Love Points - Single Source of Truth
+**Cooldown:** `PUZZLE_COOLDOWN_ENABLED` env var (default: true)
 
-**CRITICAL:** LP is stored at the **couple level** (`couples.total_lp`), NOT per-user. Both partners always see identical LP.
-
-**Architecture:**
-```
-couples.total_lp = 1160  ← SINGLE SOURCE OF TRUTH
-
-GET /love-points  → reads couples.total_lp (same for both users)
-awardLP()         → updates couples.total_lp atomically
-```
-
-**LP Award Sources:**
-
-| Activity | File | LP Amount |
-|----------|------|-----------|
-| Classic Quiz | `quiz-match/submit/route.ts` | 30 LP |
-| Affirmation Quiz | `quiz-match/submit/route.ts` | 30 LP |
-| You or Me | `you-or-me-match/submit/route.ts` | 30 LP |
-| Linked | `linked/submit/route.ts` | 30 LP |
-| Word Search | `word-search/submit/route.ts` | 30 LP |
-| Steps Together | `steps/route.ts` | 15-30 LP (dynamic) |
-
-**Maximum daily LP:** 165-180 LP
-
-**Shared awardLP utility** (`api/lib/lp/award.ts`):
-```typescript
-import { awardLP } from '@/lib/lp/award';
-
-// Inside game completion handler:
-await awardLP(coupleId, LP_REWARD, 'linked_complete', matchId);
-```
-
-**Files:**
-- Shared utility: `api/lib/lp/award.ts`
-- Migration: `api/supabase/migrations/025_lp_single_source.sql`
-- GET/POST LP: `api/app/api/sync/love-points/route.ts`
-
-**Why this matters:**
-- Old system stored LP per-user → could diverge (Jokke=240, TestiY=1160)
-- New system stores LP at couple level → always identical for both partners
-- Trigger on `couples.total_lp` updates leaderboard automatically
-
-### 19. Leaderboard System
-
-**Key constraint:** Leaderboard reads from `couples.total_lp` (couple-level LP).
-
-**Trigger debugging:** If leaderboard doesn't update when LP changes:
-1. Verify user is in `couples` table (most common issue)
-2. Check trigger exists on `couples.total_lp`
-3. Test with hardcoded couple_id to isolate issue
-
-**Files:**
-- Migration: `api/supabase/migrations/016_leaderboard.sql`
-- LP trigger: `api/supabase/migrations/025_lp_single_source.sql`
-- API: `api/app/api/leaderboard/route.ts`, `api/app/api/user/country/route.ts`
-- Full guide: `docs/LEADERBOARD_SYSTEM.md`
-
-### 20. Animation & Sound System
-
-**Services:**
-- `lib/animations/animation_config.dart` - Timing constants, curves, scale factors
-- `lib/services/haptic_service.dart` - `HapticService().trigger(HapticType.xxx)`
-- `lib/services/sound_service.dart` - `SoundService().play(SoundId.xxx)`
-- `lib/services/celebration_service.dart` - `CelebrationService.triggerConfetti(controller)`
-
-**Available HapticTypes:** `light`, `medium`, `heavy`, `success`, `warning`, `selection`
-
-**Available SoundIds:** `buttonTap`, `cardFlip`, `matchFound`, `wordFound`, `confettiBurst`, `toggleOn`, `toggleOff`
-
-**Accessibility Pattern:**
+#### Steps Together
+Never use `hasPermission()` for sync gating (iOS unreliable):
 ```dart
-// In StatefulWidget with animations:
-bool _reduceMotion = false;
-
-@override
-void didChangeDependencies() {
-  super.didChangeDependencies();
-  _reduceMotion = AnimationConfig.shouldReduceMotion(context);
-}
-// Then check _reduceMotion before running animations
-```
-
-**Settings Toggles:** Sound Effects and Haptic Feedback in Settings screen, stored via `StorageService`
-
-### 21. Branch Rotation for Linked and Word Search
-
-**Branch cycling:** Advances on puzzle completion (in submit routes).
-- Linked: casual (0) → romantic (1) → adult (2) → casual (0)
-- Word Search: everyday (0) → passionate (1) → naughty (2) → everyday (0)
-
-**CRITICAL:** Default branch must be the FIRST branch (casual/everyday), not the last.
-
-**Puzzle locations:**
-- Linked: `api/data/puzzles/linked/{casual,romantic,adult}/puzzle_XXX.json`
-- Word Search: `api/data/puzzles/word-search/{everyday,passionate,naughty}/ws_XXX.json`
-
-**Generator script:**
-```bash
-cd api && node scripts/generate_word_search.js all 20  # Regenerates ALL branches
-```
-
-**Submit route behavior:** When `gameComplete=true`, response includes `nextBranch` (0-2).
-
-**Cooldown Control:**
-- Env var: `PUZZLE_COOLDOWN_ENABLED` (default: `true` if not set, `false` to disable)
-- Local: Set in `api/.env.local`
-- Vercel: `vercel env add PUZZLE_COOLDOWN_ENABLED production` (currently OFF for dev testing)
-
-### 22. Steps Together HealthKit Permission
-
-**CRITICAL:** Never use `hasPermission()` for sync gating - iOS doesn't reliably report permission status.
-
-```dart
-// ❌ WRONG - unreliable, returns false even when granted
+// ❌ Unreliable
 final hasPerms = await _health.hasPermissions([HealthDataType.STEPS]);
-if (!hasPerms) return null;
 
-// ✅ CORRECT - use stored connection status
+// ✅ Use stored status
 final connection = _storage.getStepsConnection();
-if (connection == null || !connection.isConnected) return null;
+if (connection?.isConnected != true) return null;
 ```
 
-**Auto-sync triggers:**
-- App launch: `main.dart:192-194`
-- App resume: `main.dart:268-281` (lifecycle observer)
-- Timer: Every 60s on StepsCounterScreen
+---
 
-**Files:**
-- Health service: `lib/services/steps_health_service.dart`
-- Sync service: `lib/services/steps_sync_service.dart`
-- Feature service: `lib/services/steps_feature_service.dart`
-- API endpoint: `api/app/api/sync/steps/route.ts`
-- Migration: `api/supabase/migrations/018_steps_together.sql`
+### UI Patterns
+
+#### LP Counter Auto-Updates
+- `LovePointService.setAppContext()` in `main.dart`
+- Screens register via `setLPChangeCallback()`
+- Notification banner shows "+30 LP" for 3 seconds
+
+#### Animation & Sound
+- Haptics: `HapticService().trigger(HapticType.success)`
+- Sound: `SoundService().play(SoundId.confettiBurst)`
+- Accessibility: Check `AnimationConfig.shouldReduceMotion(context)`
+
+#### Branch Manifests
+Custom video/image per content branch:
+- Manifests: `assets/brands/{brandId}/data/{activity}/{branch}/manifest.json`
+- Fallback: Manifest → Activity default → Grayscale emoji
+
+See `docs/BRANCH_MANIFEST_GUIDE.md`
+
+---
+
+### Security & Platform
+
+#### Never Commit These Files
+```
+android/app/google-services.json
+ios/Runner/GoogleService-Info.plist
+.env, functions/.env, functions/serviceAccountKey.json
+```
+
+If committed: Remove from history, rotate ALL Firebase credentials.
+
+#### Web Platform Safety
+- Use `NotificationService.getToken()` not `FirebaseMessaging.instance.getToken()`
+- Web doesn't support FCM service workers in debug → blank screen crash
+- New assets require `flutter clean && flutter run`
+
+#### Cloud Functions v2
+```javascript
+// ✅ CORRECT (v2)
+exports.fn = functions.https.onCall(async (request) => {
+  const { param } = request.data;
+});
+
+// ❌ WRONG (v1)
+exports.fn = functions.https.onCall(async (data, context) => {});
+```
+
+#### Auth Token Checks
+Never use sync `isAuthenticated` in async flows:
+```dart
+// ❌ Race condition
+if (!_authService.isAuthenticated) throw Exception('Not auth');
+
+// ✅ Read from storage
+final token = await _authService.getAccessToken();
+if (token == null) throw Exception('Not auth');
+```
+
+#### FutureBuilder with Polling (Anti-Blink)
+When using `FutureBuilder` in widgets that rebuild due to polling:
+```dart
+// ❌ WRONG - blinks on every setState
+FutureBuilder(future: _fetchData(), ...)  // New Future every build
+
+// ✅ CORRECT - cache the Future
+Future<Data>? _cachedFuture;
+void _refreshCache() => _cachedFuture = _fetchData();
+
+// Only refresh when data changes:
+if (hasChanges && mounted) { _refreshCache(); setState(() {}); }
+
+// In build:
+FutureBuilder(future: _cachedFuture ?? _fetchData(), ...)
+```
+
+**Ref:** `new_home_screen.dart:_sideQuestsFuture`, `docs/POLLING_ARCHITECTURE.md`
+
+---
+
+## Development Setup
+
+### Dev Auth Bypass
+Skip email/OTP while using real Supabase data:
+
+1. **API** (`api/.env.local`): `AUTH_DEV_BYPASS_ENABLED=true`
+2. **Flutter** (`lib/config/dev_config.dart`): `skipAuthInDev = true`
+
+**Quick start:** `/runtogether` launches Android + Chrome with clean state
+
+**Files:** `lib/services/dev_data_service.dart`, `api/app/api/dev/user-data/route.ts`
+
+### Logger Verbosity
+All services disabled by default. Enable in `lib/utils/logger.dart`:
+```dart
+Logger.debug('msg', service: 'quiz');  // ✅ Respects config
+Logger.debug('msg');                    // ❌ Always logs (bypasses config)
+```
 
 ---
 
 ## Testing & Debugging
 
-### Complete Clean Testing Procedure
-
-Use when testing quest sync, Firebase RTDB sync, Love Point awards, or cross-device synchronization.
-
-#### Quick Reference (Optimized with Parallel Builds)
-
+### Quick Reset
 ```bash
-# 1. Kill existing Flutter processes
-pkill -9 -f "flutter"
-
-# 2. Start builds in parallel (background)
-cd /Users/joakimachren/Desktop/togetherremind/app
-flutter build apk --debug &
-ANDROID_BUILD_PID=$!
-flutter build web --debug &
-WEB_BUILD_PID=$!
-
-# 3. While builds run, do cleanup
-~/Library/Android/sdk/platform-tools/adb uninstall com.togetherremind.togetherremind
-
-cd /Users/joakimachren/Desktop/togetherremind
-firebase database:remove /daily_quests --force
-firebase database:remove /quiz_sessions --force
-firebase database:remove /lp_awards --force
-firebase database:remove /quiz_progression --force
-
-# 4. Wait for builds to complete
-echo "⏳ Waiting for builds to complete..."
-wait $ANDROID_BUILD_PID && echo "✅ Android build complete"
-wait $WEB_BUILD_PID && echo "✅ Web build complete"
-
-# 5. Launch Alice (Android) - generates fresh quests
-cd /Users/joakimachren/Desktop/togetherremind/app
-flutter run -d emulator-5554 &
-
-# 6. Launch Bob (Chrome) - loads from Firebase
-flutter run -d chrome &
+./scripts/reset_all_progress.sh  # Clears Supabase + instructions
+/runtogether                      # Launches both devices
 ```
 
-#### Detailed Steps
-
-**Step 1: Uninstall Android App**
-```bash
-# Try current Android Bundle ID first
-~/Library/Android/sdk/platform-tools/adb uninstall com.togetherremind.togetherremind
-
-# If DELETE_FAILED_INTERNAL_ERROR, check what's installed
-~/Library/Android/sdk/platform-tools/adb shell pm list packages | grep togetherremind
-~/Library/Android/sdk/platform-tools/adb uninstall com.togetherremind.togetherremind2
-```
-- **Why:** Removes app and local Hive storage, ensuring fresh initialization
-- **Note:** MUST use full path `~/Library/Android/sdk/platform-tools/adb` (not in PATH)
-
-**Step 2: Kill Flutter Processes & Clear Chrome Storage**
+### Manual Reset Steps
 ```bash
 pkill -9 -f "flutter"
-
-# Clear Chrome manually in DevTools:
-# F12 → Application tab → Storage → Clear site data
-# OR: Close Chrome entirely and restart
+cd api && npx tsx scripts/reset_couple_progress.ts
+~/Library/Android/sdk/platform-tools/adb uninstall com.togetherremind.togetherremind
+# Chrome: DevTools → Application → Clear site data
+flutter run -d emulator-5554 --flavor togetherremind --dart-define=BRAND=togetherRemind &
+flutter run -d chrome --dart-define=BRAND=togetherRemind &
 ```
-- **Why:** Ensures no old processes interfere; Chrome starts with clean storage
 
-**Step 3: Clean Build Artifacts** (Optional)
+### Debug Menu
+**Access:** Double-tap greeting text on home screen
+
+**Tabs:** Overview, Quests, Sessions, LP & Sync, Actions
+
+### Data Clearing
+
+| Tool | Clears | Safe for Partner? |
+|------|--------|-------------------|
+| In-App Debug Menu | Local Hive | Yes |
+| Reset Script | Supabase | No (run before both apps) |
+
+### Version Verification
+Check `lib/screens/new_home_screen.dart` bottom - increment on UI changes to verify hot reload worked.
+
+### Android Emulator Hangs
 ```bash
-cd /Users/joakimachren/Desktop/togetherremind/app
-flutter clean
-```
-- **Why:** Rebuilds from scratch for major code changes
-- **When:** Skip for quick tests
-
-**Step 4: Clean Firebase RTDB**
-```bash
-cd /Users/joakimachren/Desktop/togetherremind
-firebase database:remove /daily_quests --force
-firebase database:remove /quiz_sessions --force
-firebase database:remove /lp_awards --force
-firebase database:remove /quiz_progression --force
-```
-- **Why:** First device generates fresh quests, preventing ID mismatches
-- **Note:** `--force` bypasses confirmation prompts
-
-**Step 5: Launch Alice (Android Emulator)**
-```bash
-cd /Users/joakimachren/Desktop/togetherremind/app
-flutter run -d emulator-5554 &
-```
-- **Why:** First device generates fresh daily quests and writes to Firebase
-- **Wait:** Look for "✅ Daily quests generated: 3 quests" in console
-
-**Step 6: Launch Bob (Chrome)**
-```bash
-cd /Users/joakimachren/Desktop/togetherremind/app
-flutter run -d chrome &
-```
-- **Why:** Second device loads quests from Firebase with matching IDs
-
-### Why Complete Clean Testing Matters
-
-- Prevents stale data from interfering with results
-- Eliminates Hive storage issues (fresh install)
-- Ensures clean Firebase state (first device generates, second loads)
-- Validates proper initialization sequence
-- Reproduces real user experience of clean launches and first-time pairing
-
-### Parallel Build Optimization
-
-The optimized procedure runs builds in parallel with cleanup tasks:
-- **Time savings:** ~10-15 seconds (builds run during cleanup)
-- **Android build:** ~12-15 seconds (runs in background)
-- **Web build:** ~15-18 seconds (runs in background)
-- **Cleanup tasks:** ~5-8 seconds (uninstall + Firebase clear)
-- **Result:** Builds complete by the time cleanup finishes, ready to launch immediately
-
-### Debugging Tools
-
-#### Version Number for Hot Reload Verification
-
-**Purpose:** Visual confirmation that hot reload/rebuild is working correctly
-
-**Location:** `lib/screens/new_home_screen.dart` - Bottom of screen (above bottom padding)
-
-**Current Version:** `v1.0.3`
-
-**Requirement:** Increment version number with each UI change to verify that changes are being reflected in the running app.
-
-**Why this matters:**
-- Hot reload doesn't work with background Flutter processes (started with `&`)
-- Version number provides immediate visual feedback that rebuild succeeded
-- Helps distinguish between "bug still exists" vs "rebuild didn't apply"
-
-#### Enhanced Debug Menu
-
-**Access:** Double-tap greeting text ("Good morning" / "Good afternoon")
-
-**Features:**
-- 5-tab interface (Overview, Quests, Sessions, LP & Sync, Actions)
-- Firebase vs Local comparison with validation
-- Copy to clipboard at page/section/card level
-- Pull-to-refresh on Overview, Quests, Sessions, LP tabs
-- Selective storage clearing (requires app restart)
-
-⚠️ **IMPORTANT:**
-- Old `debug_quest_dialog.dart` still exists but not used (can be removed)
-- Clear storage does NOT clear Firebase - use external script
-
-#### Helper Scripts (in `/tmp/`)
-
-| Script | Purpose |
-|--------|---------|
-| `clear_firebase.sh` | **DELETE ALL** Firebase RTDB data (use BEFORE launching fresh apps) |
-| `debug_firebase.sh` | Inspect current Firebase RTDB data |
-| `verify_quiz_sync.sh` | Verify quest contentIds match sessions in Firebase |
-
-### Data Clearing Separation
-
-**Why this matters:** One device clearing Firebase deletes shared data, causing quest ID mismatches.
-
-| Tool | Clears | Purpose | Safe for Partner? |
-|------|--------|---------|-------------------|
-| **In-App Debug Menu** | Hive boxes (local) | Reset individual device state | ✅ Yes |
-| **External Script** | Firebase RTDB paths | Clean slate for both devices | ❌ No (run BEFORE both apps) |
-
-**Usage Pattern:**
-1. Run external script to clear Firebase
-2. Launch both apps fresh
-3. Use in-app debug menu to reset individual device state as needed
-
-### Android Emulator Troubleshooting
-
-**Problem:** Android emulator becomes unresponsive, Flutter run hangs
-- **Symptoms:**
-  - `flutter run -d emulator-5554` starts but never produces output
-  - All `adb` commands hang indefinitely
-  - Emulator appears running but doesn't respond to commands
-
-**Root Causes:**
-1. Frozen emulator process (adb can't communicate)
-2. Multiple emulator instances with same AVD
-3. Flutter startup lock conflicts
-
-**Solution:**
-```bash
-# 1. Kill all emulator processes
 pkill -9 -f "qemu-system-aarch64"
-
-# 2. Start fresh emulator
 ~/Library/Android/sdk/emulator/emulator -avd Pixel_5 &
-
-# 3. Wait for boot (10-15 seconds), verify connection
 ~/Library/Android/sdk/platform-tools/adb devices
-
-# 4. If Flutter run still hangs, build and install APK manually:
-flutter build apk --debug
-~/Library/Android/sdk/platform-tools/adb install -r build/app/outputs/flutter-apk/app-debug.apk
-~/Library/Android/sdk/platform-tools/adb shell am start -n com.togetherremind.togetherremind/com.togetherremind.togetherremind.MainActivity
 ```
-
-**Prevention:**
-- Always kill old emulator processes before starting new ones
-- Use `flutter run` without `&` for better error visibility
-- Monitor emulator health with `adb devices` periodically
 
 ---
 
-## File Locations Reference
+## File Reference
 
 ### Core Services
-
 | File | Purpose |
 |------|---------|
-| `lib/services/storage_service.dart` | Hive box management |
+| `lib/services/storage_service.dart` | Hive management |
 | `lib/services/notification_service.dart` | FCM + local notifications |
-| `lib/services/reminder_service.dart` | Send/receive reminders |
-| `lib/services/remote_pairing_service.dart` | Remote code pairing logic |
-| `lib/services/poke_service.dart` | Poke logic, rate limiting (30s), mutual detection (2min) |
-| `lib/services/poke_animation_service.dart` | Lottie animations + haptic |
-| `lib/services/quiz_service.dart` | Quiz logic, question rotation, scoring |
-| `lib/services/affirmation_quiz_bank.dart` | Affirmation quiz loader (6 quizzes, 30 questions) |
-| `lib/services/love_point_service.dart` | Love Points tracking and rewards |
-| `lib/services/leaderboard_service.dart` | Leaderboard API client (30s cache) |
-| `lib/services/country_service.dart` | Country detection & flag emojis |
+| `lib/services/love_point_service.dart` | LP tracking |
+| `lib/services/quiz_service.dart` | Quiz logic |
+| `lib/services/couple_preferences_service.dart` | Who goes first |
 
-### Configuration
-
+### Config
 | File | Purpose |
 |------|---------|
-| `lib/config/dev_config.dart` | Mock data control, simulator detection |
-| `lib/firebase_options.dart` | Auto-generated Firebase config |
-| `lib/utils/logger.dart` | Centralized logging service (replaces print) |
-| `functions/index.js` | Cloud Functions (sendReminder, sendPoke, etc.) |
-| `database.rules.json` | RTDB security rules |
+| `lib/config/dev_config.dart` | Mock data, simulator detection |
+| `lib/utils/logger.dart` | Logging with verbosity control |
 
-### UI Screens
-
+### Screens
 | File | Purpose |
 |------|---------|
-| `lib/screens/home_screen.dart` | Main screen with FAB |
-| `lib/screens/pairing_screen.dart` | Tabbed pairing (QR + Remote code) |
-| `lib/screens/inbox_screen.dart` | Poke filter tab + card display |
-| `lib/screens/activities_screen.dart` | Activities hub with game cards |
-| `lib/screens/quiz_intro_screen.dart` | Classic quiz intro |
-| `lib/screens/quiz_screen.dart` | Classic quiz gameplay |
-| `lib/screens/affirmation_intro_screen.dart` | Affirmation quiz intro |
-| `lib/screens/affirmation_question_screen.dart` | Affirmation quiz 5-point scale questions |
-| `lib/screens/affirmation_results_screen.dart` | Affirmation quiz results with progress visualization |
-| `lib/screens/speed_round_intro_screen.dart` | Speed round intro |
-| `lib/screens/speed_round_screen.dart` | Speed round gameplay |
-| `lib/screens/linked_game_screen.dart` | Linked (arroword) puzzle gameplay |
-| `lib/widgets/linked/answer_cell.dart` | **ACTUAL** answer cell colors (draft/locked/incorrect states) |
-| `lib/widgets/linked/clue_cell.dart` | **UNUSED** - clues rendered inline in linked_game_screen.dart |
+| `lib/screens/new_home_screen.dart` | Main screen |
+| `lib/screens/linked_game_screen.dart` | Linked puzzle |
+| `lib/screens/quiz_match_game_screen.dart` | Quiz gameplay |
 
-### UI Components
-
+### Debug
 | File | Purpose |
 |------|---------|
-| `lib/widgets/poke_bottom_sheet.dart` | Send poke modal |
-| `lib/widgets/poke_response_dialog.dart` | Receive poke dialog |
-| `lib/widgets/foreground_notification_banner.dart` | In-app notification banner |
-| `lib/widgets/five_point_scale.dart` | 5-point Likert scale for affirmation quizzes |
-| `lib/widgets/quest_card.dart` | Daily quest card (uses quest.quizName for display) |
-| `lib/widgets/daily_quests_widget.dart` | Daily quests container (formatType detection) |
-| `lib/widgets/leaderboard_bottom_sheet.dart` | Leaderboard ranking UI |
-
-### Debug Menu
-
-| File | Purpose |
-|------|---------|
-| `lib/widgets/debug/debug_menu.dart` | Main tab-based debug interface (5 tabs) |
-| `lib/widgets/debug/tabs/overview_tab.dart` | System health, device info, storage stats |
-| `lib/widgets/debug/tabs/quests_tab.dart` | Quest comparison, validation, detailed cards |
-| `lib/widgets/debug/tabs/sessions_tab.dart` | Quiz session inspector with filters |
-| `lib/widgets/debug/tabs/lp_sync_tab.dart` | LP transactions, Firebase sync monitoring |
-| `lib/widgets/debug/tabs/actions_tab.dart` | Data cleanup, clipboard operations |
-| `lib/widgets/debug/components/` | Shared components (copy button, section card, status indicator) |
-| `lib/services/clipboard_service.dart` | Clipboard operations with user feedback |
-
-### Models
-
-| File | Purpose |
-|------|---------|
-| `lib/models/reminder.dart` | Hive models (Reminder, Partner, User) |
-| `lib/models/pairing_code.dart` | PairingCode model with expiration tracking |
-| `lib/models/quiz.dart` | Quiz models (QuizSession, QuizAnswer, QuizQuestion) |
-| `lib/models/love_point.dart` | Love Points models (LovePointTransaction) |
+| `lib/widgets/debug/debug_menu.dart` | 5-tab debug interface |
+| `lib/widgets/debug/tabs/*.dart` | Individual debug tabs |
 
 ---
 
@@ -985,24 +404,13 @@ flutter build apk --debug
 
 | Document | Contents |
 |----------|----------|
-| **[docs/QUEST_SYSTEM_V2.md](docs/QUEST_SYSTEM_V2.md)** | Quest system architecture, dual vs single session patterns, common pitfalls when adding new quest types, denormalization rules |
-| **[docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)** | Data models, push notification flow, device pairing architecture, feature specifications |
-| **[docs/SETUP.md](docs/SETUP.md)** | Firebase configuration, development setup, two-device testing, deployment |
-| **[docs/TROUBLESHOOTING.md](docs/TROUBLESHOOTING.md)** | Common issues, debugging strategies, error handling patterns, Chrome testing best practices |
-| **[docs/FLUTTER_TESTING_GUIDE.md](docs/FLUTTER_TESTING_GUIDE.md)** | Headless testing without simulators, API integration tests, shell script tests, templates |
-| **[docs/WHITE_LABEL_GUIDE.md](docs/WHITE_LABEL_GUIDE.md)** | Step-by-step brand creation, asset requirements, build commands, App Store submission |
-| **[docs/BRANCH_MANIFEST_GUIDE.md](docs/BRANCH_MANIFEST_GUIDE.md)** | Branch-dependent videos/images, manifest.json format, fallback chains, adding new branches |
-| **[docs/LEADERBOARD_SYSTEM.md](docs/LEADERBOARD_SYSTEM.md)** | Leaderboard triggers, debugging, test user setup |
+| `docs/QUEST_SYSTEM_V2.md` | Quest architecture, patterns |
+| `docs/ARCHITECTURE.md` | Data models, push flow |
+| `docs/SETUP.md` | Firebase setup, deployment |
+| `docs/TROUBLESHOOTING.md` | Common issues |
+| `docs/WHITE_LABEL_GUIDE.md` | Brand creation |
+| `docs/LEADERBOARD_SYSTEM.md` | Leaderboard triggers |
 
 ---
 
-## Resources
-
-- [Flutter Docs](https://docs.flutter.dev/)
-- [Firebase Flutter](https://firebase.flutter.dev/)
-- [Hive Docs](https://docs.hivedb.dev/)
-- [pub.dev](https://pub.dev/)
-
----
-
-**Last Updated:** 2025-11-29 (Added LP Single Source of Truth documentation - couples.total_lp)
+**Last Updated:** 2025-12-01

@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Partner Goes First - Dialog Mockups</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #f5f5f5;
+      padding: 40px 20px;
+      min-height: 100vh;
+    }
+    h1 {
+      font-family: Georgia, serif;
+      font-size: 28px;
+      font-weight: 400;
+      color: #1a1a1a;
+      text-align: center;
+      margin-bottom: 12px;
+    }
+    .subtitle {
+      text-align: center;
+      color: #666;
+      font-size: 14px;
+      margin-bottom: 40px;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 24px;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+    .card {
+      background: white;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+    .card-header {
+      padding: 16px 20px;
+      border-bottom: 1px solid #eee;
+    }
+    .card-header h2 {
+      font-size: 16px;
+      font-weight: 600;
+      color: #1a1a1a;
+      margin-bottom: 4px;
+    }
+    .card-header p {
+      font-size: 13px;
+      color: #666;
+    }
+    .card-preview {
+      height: 500px;
+      position: relative;
+    }
+    .card-preview iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+    .card-footer {
+      padding: 12px 20px;
+      background: #fafafa;
+      border-top: 1px solid #eee;
+    }
+    .card-footer a {
+      font-size: 13px;
+      color: #1a1a1a;
+      text-decoration: none;
+    }
+    .card-footer a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <h1>Partner Goes First Dialog</h1>
+  <p class="subtitle">Four variants for when a user enters a puzzle but it's their partner's turn to start</p>
+
+  <div class="grid">
+    <div class="card">
+      <div class="card-header">
+        <h2>Variant 1: Editorial Classic</h2>
+        <p>Matches existing turn complete dialog style exactly</p>
+      </div>
+      <div class="card-preview">
+        <iframe src="variant-1-editorial.html"></iframe>
+      </div>
+      <div class="card-footer">
+        <a href="variant-1-editorial.html" target="_blank">Open full screen →</a>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <h2>Variant 2: Illustrated</h2>
+        <p>Adds a decorative hourglass/waiting illustration</p>
+      </div>
+      <div class="card-preview">
+        <iframe src="variant-2-illustrated.html"></iframe>
+      </div>
+      <div class="card-footer">
+        <a href="variant-2-illustrated.html" target="_blank">Open full screen →</a>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <h2>Variant 3: Encouraging</h2>
+        <p>Positive messaging with notification prompt</p>
+      </div>
+      <div class="card-preview">
+        <iframe src="variant-3-encouraging.html"></iframe>
+      </div>
+      <div class="card-footer">
+        <a href="variant-3-encouraging.html" target="_blank">Open full screen →</a>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <h2>Variant 4: Action-Oriented</h2>
+        <p>Offers option to send a gentle reminder</p>
+      </div>
+      <div class="card-preview">
+        <iframe src="variant-4-action.html"></iframe>
+      </div>
+      <div class="card-footer">
+        <a href="variant-4-action.html" target="_blank">Open full screen →</a>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

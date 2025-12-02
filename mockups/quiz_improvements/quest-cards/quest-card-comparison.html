@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quest Cards - Casual vs Therapeutic Comparison</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            background: #f5f5f5;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .page-title {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .page-title h1 {
+            font-size: 24px;
+            font-weight: 400;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+
+        .page-title p {
+            font-size: 14px;
+            color: #666;
+            font-style: italic;
+        }
+
+        .comparison-container {
+            display: flex;
+            gap: 40px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 40px;
+        }
+
+        .card-section {
+            text-align: center;
+        }
+
+        .section-label {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #666;
+            margin-bottom: 16px;
+            font-weight: 600;
+        }
+
+        /* Phone frame */
+        .phone-frame {
+            width: 320px;
+            background: #fff;
+            border: 2px solid #000;
+            border-radius: 24px;
+            padding: 20px 16px;
+            box-shadow: 8px 8px 0 rgba(0, 0, 0, 0.1);
+        }
+
+        /* Quest Card Base Styles */
+        .quest-card {
+            border: 1px solid #000;
+            background: #fff;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .quest-card:hover {
+            box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.15);
+        }
+
+        .quest-image {
+            width: 100%;
+            height: 100px;
+            background: linear-gradient(135deg, #f0f0f0 0%, #fafafa 100%);
+            border-bottom: 1px solid #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+        }
+
+        .quest-content {
+            padding: 16px;
+        }
+
+        .quest-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 12px;
+        }
+
+        .quest-info {
+            flex: 1;
+        }
+
+        .quest-title {
+            font-size: 15px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .quest-desc {
+            font-size: 12px;
+            color: #666;
+            font-style: italic;
+        }
+
+        .reward {
+            font-size: 13px;
+            font-weight: 700;
+            border: 1px solid #000;
+            padding: 4px 10px;
+            background: #000;
+            color: #fff;
+        }
+
+        .quest-footer {
+            padding-top: 12px;
+            border-top: 1px solid #e0e0e0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .status-badge {
+            display: inline-block;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 6px 12px;
+            border: 1px solid #000;
+            background: #fff;
+        }
+
+        /* ================================ */
+        /* CASUAL QUEST CARD STYLES         */
+        /* ================================ */
+        .quest-card.casual {
+            /* Standard styling - no special treatment */
+        }
+
+        .quest-card.casual .quest-image {
+            background: linear-gradient(135deg, #f0f0f0 0%, #fafafa 100%);
+        }
+
+        /* ================================ */
+        /* THERAPEUTIC QUEST CARD STYLES    */
+        /* ================================ */
+        .quest-card.therapeutic {
+            border: 2px solid #000;
+            position: relative;
+        }
+
+        .quest-card.therapeutic .quest-image {
+            background: linear-gradient(135deg, #f8f6f0 0%, #fdfcf8 100%);
+        }
+
+        .therapeutic-badge {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            background: #000;
+            color: #fff;
+            font-size: 9px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            padding: 4px 10px;
+        }
+
+        .quest-card.therapeutic .quest-desc {
+            color: #555;
+        }
+
+        /* Annotation Styles */
+        .annotations {
+            margin-top: 20px;
+            padding: 16px;
+            background: #fafafa;
+            border: 1px dashed #ccc;
+            font-size: 12px;
+        }
+
+        .annotation-title {
+            font-weight: 600;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 10px;
+            color: #666;
+        }
+
+        .annotation-item {
+            margin-bottom: 6px;
+            padding-left: 12px;
+            position: relative;
+        }
+
+        .annotation-item::before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            color: #999;
+        }
+
+        /* Divider */
+        .divider {
+            width: 100%;
+            max-width: 800px;
+            margin: 40px auto;
+            border-top: 1px solid #ddd;
+        }
+
+        /* Additional variants section */
+        .variants-section {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .variants-title {
+            text-align: center;
+            font-size: 18px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 30px;
+        }
+
+        .variants-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+        }
+
+        .variant-card {
+            background: #fff;
+            border: 1px solid #ddd;
+            padding: 20px;
+        }
+
+        .variant-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #999;
+            margin-bottom: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="page-title">
+        <h1>Quest Card Comparison</h1>
+        <p>Casual vs Therapeutic visual differentiation</p>
+    </div>
+
+    <div class="comparison-container">
+        <!-- CASUAL QUEST CARD -->
+        <div class="card-section">
+            <div class="section-label">Casual Quest</div>
+            <div class="phone-frame">
+                <div class="quest-card casual">
+                    <div class="quest-image">🎯</div>
+                    <div class="quest-content">
+                        <div class="quest-header">
+                            <div class="quest-info">
+                                <div class="quest-title">Lighthearted Quiz</div>
+                                <div class="quest-desc">How well do you know each other?</div>
+                            </div>
+                            <div class="reward">+30</div>
+                        </div>
+                        <div class="quest-footer">
+                            <span class="status-badge">Your Turn</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="annotations">
+                    <div class="annotation-title">Casual Styling</div>
+                    <div class="annotation-item">Standard 1px border</div>
+                    <div class="annotation-item">No badge</div>
+                    <div class="annotation-item">Neutral gray gradient</div>
+                    <div class="annotation-item">Standard description text</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- THERAPEUTIC QUEST CARD -->
+        <div class="card-section">
+            <div class="section-label">Therapeutic Quest</div>
+            <div class="phone-frame">
+                <div class="quest-card therapeutic">
+                    <div class="therapeutic-badge">Deeper</div>
+                    <div class="quest-image">💫</div>
+                    <div class="quest-content">
+                        <div class="quest-header">
+                            <div class="quest-info">
+                                <div class="quest-title">Connection Quiz</div>
+                                <div class="quest-desc">Discover each other's inner world</div>
+                            </div>
+                            <div class="reward">+30</div>
+                        </div>
+                        <div class="quest-footer">
+                            <span class="status-badge">Your Turn</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="annotations">
+                    <div class="annotation-title">Therapeutic Styling</div>
+                    <div class="annotation-item">Thicker 2px border</div>
+                    <div class="annotation-item">"Deeper" badge top-left</div>
+                    <div class="annotation-item">Warmer cream gradient</div>
+                    <div class="annotation-item">Softer, inviting description</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- ALL THERAPEUTIC VARIANTS -->
+    <div class="variants-section">
+        <div class="variants-title">All Therapeutic Quest Cards</div>
+        <div class="variants-grid">
+            <!-- Connection Quiz -->
+            <div class="variant-card">
+                <div class="variant-label">Classic Quiz — Connection Branch</div>
+                <div class="quest-card therapeutic">
+                    <div class="therapeutic-badge">Deeper</div>
+                    <div class="quest-image">💫</div>
+                    <div class="quest-content">
+                        <div class="quest-header">
+                            <div class="quest-info">
+                                <div class="quest-title">Connection Quiz</div>
+                                <div class="quest-desc">Discover each other's inner world</div>
+                            </div>
+                            <div class="reward">+30</div>
+                        </div>
+                        <div class="quest-footer">
+                            <span class="status-badge">Your Turn</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Attachment Affirmation -->
+            <div class="variant-card">
+                <div class="variant-label">Affirmation Quiz — Attachment Branch</div>
+                <div class="quest-card therapeutic">
+                    <div class="therapeutic-badge">Deeper</div>
+                    <div class="quest-image">💛</div>
+                    <div class="quest-content">
+                        <div class="quest-header">
+                            <div class="quest-info">
+                                <div class="quest-title">Attachment Check-In</div>
+                                <div class="quest-desc">How do you each feel about your bond?</div>
+                            </div>
+                            <div class="reward">+30</div>
+                        </div>
+                        <div class="quest-footer">
+                            <span class="status-badge">Your Turn</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Growth You-or-Me -->
+            <div class="variant-card">
+                <div class="variant-label">You-or-Me — Growth Branch</div>
+                <div class="quest-card therapeutic">
+                    <div class="therapeutic-badge">Deeper</div>
+                    <div class="quest-image">🌱</div>
+                    <div class="quest-content">
+                        <div class="quest-header">
+                            <div class="quest-info">
+                                <div class="quest-title">Growth Patterns</div>
+                                <div class="quest-desc">Explore how you support each other</div>
+                            </div>
+                            <div class="reward">+30</div>
+                        </div>
+                        <div class="quest-footer">
+                            <span class="status-badge">Your Turn</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

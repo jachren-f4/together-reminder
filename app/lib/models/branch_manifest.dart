@@ -12,7 +12,10 @@
 ///   "activityType": "classicQuiz",
 ///   "videoPath": "assets/brands/togetherremind/videos/classic-quiz-lighthearted.mp4",
 ///   "imagePath": "assets/brands/togetherremind/images/quests/classic-quiz-lighthearted.png",
-///   "fallbackEmoji": "🧩"
+///   "fallbackEmoji": "🧩",
+///   "title": "Getting to Know You",
+///   "displayName": "Lighthearted",
+///   "description": "Fun and easy questions to get you started"
 /// }
 /// ```
 class BranchManifest {
@@ -21,7 +24,8 @@ class BranchManifest {
   final String? videoPath;
   final String? imagePath;
   final String? fallbackEmoji;
-  final String? displayName;
+  final String? title; // Editorial headline for intro screen (e.g., "Getting to Know You")
+  final String? displayName; // Short branch name for quest card (e.g., "Lighthearted")
   final String? description;
 
   const BranchManifest({
@@ -30,6 +34,7 @@ class BranchManifest {
     this.videoPath,
     this.imagePath,
     this.fallbackEmoji,
+    this.title,
     this.displayName,
     this.description,
   });
@@ -41,6 +46,7 @@ class BranchManifest {
       videoPath: json['videoPath'] as String?,
       imagePath: json['imagePath'] as String?,
       fallbackEmoji: json['fallbackEmoji'] as String?,
+      title: json['title'] as String?,
       displayName: json['displayName'] as String?,
       description: json['description'] as String?,
     );
@@ -70,6 +76,7 @@ class BranchManifest {
       if (videoPath != null) 'videoPath': videoPath,
       if (imagePath != null) 'imagePath': imagePath,
       if (fallbackEmoji != null) 'fallbackEmoji': fallbackEmoji,
+      if (title != null) 'title': title,
       if (displayName != null) 'displayName': displayName,
       if (description != null) 'description': description,
     };

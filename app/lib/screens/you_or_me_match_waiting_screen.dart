@@ -3,8 +3,8 @@ import 'dart:async';
 import '../models/you_or_me_match.dart';
 import '../services/you_or_me_match_service.dart';
 import '../services/storage_service.dart';
-import '../services/arena_service.dart';
 import '../services/daily_quest_service.dart';
+import '../services/love_point_service.dart';
 import '../services/poke_service.dart';
 import '../utils/logger.dart';
 import '../widgets/editorial/editorial.dart';
@@ -32,7 +32,6 @@ class _YouOrMeMatchWaitingScreenState extends State<YouOrMeMatchWaitingScreen>
     with TickerProviderStateMixin {
   final YouOrMeMatchService _service = YouOrMeMatchService();
   final StorageService _storage = StorageService();
-  final ArenaService _arenaService = ArenaService();
   bool _isChecking = false;
   bool _isSendingPoke = false;
 
@@ -101,10 +100,10 @@ class _YouOrMeMatchWaitingScreenState extends State<YouOrMeMatchWaitingScreen>
 
   /// Handle game completion - sync LP and quest status, then navigate to results
   Future<void> _handleCompletion(YouOrMeGameState state) async {
-    // Award LP locally (same as the submitter gets)
-    const lpEarned = 30;
-    await _arenaService.awardLovePoints(lpEarned, 'you_or_me_complete');
-    Logger.debug('Waiting screen: Awarded $lpEarned LP locally for You or Me completion', service: 'you_or_me');
+    // LP is now server-authoritative - sync from server
+    // This ensures both devices show the same LP value
+    await LovePointService.fetchAndSyncFromServer();
+    Logger.debug('Waiting screen: Synced LP from server after You or Me completion', service: 'you_or_me');
 
     // Update local quest status to completed
     await _updateLocalQuestStatus();
@@ -118,7 +117,7 @@ class _YouOrMeMatchWaitingScreenState extends State<YouOrMeMatchWaitingScreen>
           quiz: state.quiz,
           myScore: state.myScore,
           partnerScore: state.partnerScore,
-          lpEarned: lpEarned,
+          lpEarned: 30, // Standard LP reward for game completion
         ),
       ),
     );
@@ -145,9 +144,11 @@ class _YouOrMeMatchWaitingScreenState extends State<YouOrMeMatchWaitingScreen>
       if (quest != null) {
         quest.status = 'completed';
         // Also mark partner as completed in userCompletions
+        // Use partner.id (UUID) if available, fallback to pushToken for backward compatibility
         if (partner != null) {
+          final partnerKey = partner.id.isNotEmpty ? partner.id : partner.pushToken;
           quest.userCompletions ??= {};
-          quest.userCompletions![partner.pushToken] = true;
+          quest.userCompletions![partnerKey] = true;
         }
         await quest.save();
         Logger.debug('Waiting screen: Marked quest as fully completed for ${widget.questId}', service: 'you_or_me');

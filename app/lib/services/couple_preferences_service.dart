@@ -1,5 +1,4 @@
 import 'dart:ui';
-import 'package:firebase_database/firebase_database.dart';
 import 'package:hive/hive.dart';
 import '../utils/logger.dart';
 import 'api_client.dart';
@@ -9,15 +8,18 @@ import 'storage_service.dart';
 ///
 /// Features:
 /// - Global "who goes first" preference for turn-based games
-/// - Syncs between partners via Firebase RTDB
-/// - Persists to Supabase for authoritative storage
+/// - Syncs between partners via Supabase API
 /// - Local caching in Hive for fast access
+///
+/// Architecture (Supabase-only):
+/// - GET /api/sync/couple-preferences - fetch current preference
+/// - POST /api/sync/couple-preferences - update preference
+/// - Hive cache for instant local reads
 class CouplePreferencesService {
   static final CouplePreferencesService _instance = CouplePreferencesService._internal();
   factory CouplePreferencesService() => _instance;
   CouplePreferencesService._internal();
 
-  static final DatabaseReference _database = FirebaseDatabase.instance.ref();
   static final ApiClient _apiClient = ApiClient();
   static final StorageService _storage = StorageService();
 
@@ -86,7 +88,6 @@ class CouplePreferencesService {
   /// Updates:
   /// 1. Local Hive cache
   /// 2. Supabase database (via API)
-  /// 3. Firebase RTDB for real-time partner sync
   Future<void> setFirstPlayerId(String userId) async {
     try {
       Logger.info('Setting first player ID to: $userId', service: 'preferences');
@@ -106,15 +107,6 @@ class CouplePreferencesService {
         throw Exception('Failed to update preferences: ${response.error}');
       }
 
-      final data = response.data as Map<String, dynamic>;
-      final coupleId = data['coupleId'] as String;
-
-      // 3. Write to Firebase RTDB for real-time partner sync
-      await _database.child('couple_preferences/$coupleId').set({
-        'firstPlayerId': userId,
-        'timestamp': DateTime.now().millisecondsSinceEpoch,
-      });
-
       Logger.success('First player ID updated successfully', service: 'preferences');
 
       // Trigger UI callback if registered
@@ -126,50 +118,31 @@ class CouplePreferencesService {
     }
   }
 
-  /// Start listening for real-time preference updates from Firebase RTDB
+  /// Refresh preferences from server
   ///
-  /// Call this ONCE during app initialization (in main.dart)
-  /// Partners' changes will trigger automatic cache updates and UI refreshes
-  static void startListening() async {
+  /// Call this when returning to settings screen or after partner might have changed preference
+  Future<void> refreshFromServer() async {
     try {
-      // Get couple ID from cache or API
-      final box = Hive.box(_appMetadataBox);
-      String? coupleId = box.get(_coupleIdKey) as String?;
+      Logger.debug('Refreshing preferences from server...', service: 'preferences');
 
-      if (coupleId == null) {
-        // Fetch from API if not cached
-        final response = await _apiClient.get('/api/sync/couple-preferences');
-        if (response.success && response.data != null) {
-          final data = response.data as Map<String, dynamic>;
-          coupleId = data['coupleId'] as String;
-          await box.put(_coupleIdKey, coupleId);
-        } else {
-          Logger.warn('Cannot start listener: couple ID not available', service: 'preferences');
-          return;
-        }
-      }
+      final response = await _apiClient.get('/api/sync/couple-preferences');
 
-      Logger.info('Starting Firebase listener for couple preferences: $coupleId', service: 'preferences');
-
-      // Listen for value changes (onValue triggers on any update)
-      _database.child('couple_preferences/$coupleId').onValue.listen((event) async {
-        if (event.snapshot.value == null) return;
-
-        final data = event.snapshot.value as Map<dynamic, dynamic>;
+      if (response.success && response.data != null) {
+        final data = response.data as Map<String, dynamic>;
         final firstPlayerId = data['firstPlayerId'] as String?;
+        final coupleId = data['coupleId'] as String?;
 
-        if (firstPlayerId != null) {
-          // Update local cache
+        if (firstPlayerId != null && coupleId != null) {
+          final box = Hive.box(_appMetadataBox);
           await box.put(_firstPlayerIdKey, firstPlayerId);
-          Logger.success('Preference updated from Firebase: firstPlayerId = $firstPlayerId', service: 'preferences');
+          await box.put(_coupleIdKey, coupleId);
 
-          // Trigger UI callback if registered
+          Logger.success('Preferences refreshed from server', service: 'preferences');
           _onPreferenceChanged?.call();
         }
-      });
-
+      }
     } catch (e) {
-      Logger.error('Error setting up preference listener', error: e, service: 'preferences');
+      Logger.error('Error refreshing preferences', error: e, service: 'preferences');
     }
   }
 
@@ -198,5 +171,16 @@ class CouplePreferencesService {
     await box.delete(_firstPlayerIdKey);
     await box.delete(_coupleIdKey);
     Logger.info('Preference cache cleared', service: 'preferences');
+  }
+
+  // ============================================================================
+  // DEPRECATED METHODS (kept for backward compatibility)
+  // ============================================================================
+
+  /// @deprecated Firebase listener removed - use refreshFromServer() instead
+  static void startListening() {
+    // No-op - Firebase listener removed
+    // Preferences are now fetched on-demand via refreshFromServer()
+    Logger.debug('startListening() is deprecated - use refreshFromServer() instead', service: 'preferences');
   }
 }

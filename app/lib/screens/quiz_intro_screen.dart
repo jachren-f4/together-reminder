@@ -31,6 +31,9 @@ class _QuizIntroScreenState extends State<QuizIntroScreen>
   bool _partnerCompleted = false;
   String? _partnerName;
 
+  // Manifest data for dynamic title
+  String? _quizTitle;
+
   // Video player state
   VideoPlayerController? _videoController;
   late AnimationController _fadeController;
@@ -111,12 +114,34 @@ class _QuizIntroScreenState extends State<QuizIntroScreen>
 
     _initializeVideo();
     _checkPartnerStatus();
+    _loadManifestTitle();
 
     // Start content animation immediately (don't wait for video)
     // Video is a visual enhancement, not a blocker
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _startContentAnimation();
     });
+  }
+
+  /// Load title from branch manifest for dynamic display
+  Future<void> _loadManifestTitle() async {
+    if (widget.branch == null) return;
+
+    try {
+      final manifest = await BranchManifestService().getManifest(
+        activityType: BranchableActivityType.classicQuiz,
+        branch: widget.branch!,
+      );
+
+      if (mounted) {
+        setState(() {
+          // Use title (editorial headline) if available, fallback to displayName
+          _quizTitle = manifest.title ?? manifest.displayName;
+        });
+      }
+    } catch (e) {
+      // Silently fail - will use default title
+    }
   }
 
   /// Check if partner has already completed this quiz
@@ -279,11 +304,11 @@ class _QuizIntroScreenState extends State<QuizIntroScreen>
                           ),
                           const SizedBox(height: 16),
 
-                          // Title (animated)
+                          // Title (animated) - uses manifest title if available
                           _animatedContent(
                             _titleAnimation,
                             Text(
-                              'Couple Quiz',
+                              _quizTitle ?? 'Couple Quiz',
                               style: EditorialStyles.headline,
                             ),
                           ),

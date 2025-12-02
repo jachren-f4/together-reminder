@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daily Deck - Variant 4: Floating Overlay</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            background: #fafafa;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 420px;
+            margin: 0 auto;
+            background: #fff;
+            border: 2px solid #000;
+            box-shadow: 8px 8px 0 rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+
+        .header {
+            border-bottom: 2px solid #000;
+            padding: 24px 20px;
+            text-align: center;
+        }
+
+        .title {
+            font-size: 32px;
+            font-weight: 400;
+            letter-spacing: 2px;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+        }
+
+        .subtitle {
+            font-size: 14px;
+            color: #666;
+            font-style: italic;
+        }
+
+        .stats {
+            border-bottom: 1px solid #000;
+            padding: 20px;
+        }
+
+        .stat-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .stat-value {
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .progress-bg {
+            height: 2px;
+            background: #e0e0e0;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: #000;
+            width: 65%;
+        }
+
+        .section {
+            padding: 20px;
+            padding-bottom: 0;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .section-heading {
+            font-size: 16px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .swipe-hint {
+            font-size: 11px;
+            color: #999;
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+
+        .carousel-container {
+            position: relative;
+            margin: 0 -20px;
+            padding-bottom: 20px;
+        }
+
+        .carousel {
+            display: flex;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            gap: 16px;
+            padding: 0 20px;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+
+        .carousel::-webkit-scrollbar {
+            display: none;
+        }
+
+        .quest-card {
+            flex: 0 0 calc(60%);
+            scroll-snap-align: center;
+            border: 1px solid #000;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: #fff;
+            overflow: hidden;
+            opacity: 0.6;
+            transform: scale(0.95);
+        }
+
+        .quest-card.active {
+            opacity: 1;
+            transform: scale(1);
+            box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.15);
+        }
+
+        .quest-card:hover {
+            opacity: 1;
+        }
+
+        .quest-image {
+            width: 100%;
+            height: 120px;
+            background: linear-gradient(135deg, #e8e8e8 0%, #f5f5f5 100%);
+            border-bottom: 1px solid #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+        }
+
+        .quest-content {
+            padding: 16px;
+        }
+
+        .quest-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 12px;
+        }
+
+        .quest-info {
+            flex: 1;
+        }
+
+        .quest-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .quest-desc {
+            font-size: 12px;
+            color: #666;
+            font-style: italic;
+        }
+
+        .reward {
+            font-size: 14px;
+            font-weight: 700;
+            border: 1px solid #000;
+            padding: 4px 10px;
+            background: #000;
+            color: #fff;
+        }
+
+        .quest-footer {
+            padding-top: 12px;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .status-badge {
+            display: inline-block;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 6px 12px;
+            border: 1px solid #000;
+        }
+
+        .your-turn {
+            background: #fff;
+            color: #000;
+        }
+
+        .partner-done {
+            background: #f0f0f0;
+            color: #666;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .initial {
+            width: 18px;
+            height: 18px;
+            background: #000;
+            color: #fff;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            font-weight: 700;
+        }
+
+        .completed {
+            background: #000;
+            color: #fff;
+        }
+
+        .progress-bar-container {
+            padding: 16px 20px 20px;
+            margin: 0 -20px;
+        }
+
+        .scroll-progress {
+            height: 3px;
+            background: #e0e0e0;
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .scroll-progress-fill {
+            height: 100%;
+            background: #000;
+            width: 33.33%;
+            transition: width 0.3s ease;
+            border-radius: 2px;
+        }
+
+        .actions {
+            padding: 20px;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+
+        .action {
+            border: 1px solid #000;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .action:hover {
+            background: #000;
+            color: #fff;
+        }
+
+        .action-icon {
+            font-size: 32px;
+            margin-bottom: 8px;
+        }
+
+        .action-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+        }
+
+        /* ===================== */
+        /* DAILY DECK - VARIANT 4 */
+        /* Floating overlay at bottom */
+        /* ===================== */
+        .floating-deck {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: calc(100% - 40px);
+            max-width: 400px;
+            background: #000;
+            color: #fff;
+            border: 2px solid #000;
+            box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.3);
+            z-index: 100;
+            animation: slideUp 0.3s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateX(-50%) translateY(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(-50%) translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .floating-deck-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 16px;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .floating-deck-label {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .floating-deck-icon {
+            font-size: 24px;
+        }
+
+        .floating-deck-title {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            font-weight: 600;
+        }
+
+        .floating-deck-dimension {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            background: rgba(255,255,255,0.15);
+            padding: 4px 10px;
+        }
+
+        .floating-deck-close {
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 20px;
+            cursor: pointer;
+            opacity: 0.6;
+            padding: 4px;
+        }
+
+        .floating-deck-close:hover {
+            opacity: 1;
+        }
+
+        .floating-deck-body {
+            padding: 16px;
+        }
+
+        .floating-deck-prompt {
+            font-size: 16px;
+            font-style: italic;
+            line-height: 1.5;
+            margin-bottom: 16px;
+            text-align: center;
+        }
+
+        .floating-deck-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 12px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .floating-deck-status {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .floating-status-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12px;
+            opacity: 0.8;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.3);
+        }
+
+        .status-dot.complete {
+            background: #4CAF50;
+        }
+
+        .floating-deck-action {
+            background: #fff;
+            color: #000;
+            border: none;
+            padding: 10px 24px;
+            font-family: inherit;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+
+        .floating-deck-action:hover {
+            background: #f0f0f0;
+        }
+
+        .floating-deck-reward {
+            text-align: center;
+            font-size: 11px;
+            opacity: 0.6;
+            margin-top: 12px;
+        }
+
+        /* Trigger button when card is dismissed */
+        .deck-trigger {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 60px;
+            height: 60px;
+            background: #000;
+            color: #fff;
+            border: 2px solid #000;
+            border-radius: 50%;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            z-index: 99;
+        }
+
+        .deck-trigger:hover {
+            transform: scale(1.1);
+        }
+
+        .deck-trigger .badge {
+            position: absolute;
+            top: -4px;
+            right: -4px;
+            width: 20px;
+            height: 20px;
+            background: #ff4444;
+            color: #fff;
+            border-radius: 50%;
+            font-size: 11px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+        }
+
+        .variant-label {
+            background: #000;
+            color: #fff;
+            padding: 8px 16px;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 20px;
+            display: inline-block;
+        }
+
+        /* Add bottom padding to container for floating card */
+        .container {
+            margin-bottom: 160px;
+        }
+    </style>
+</head>
+<body>
+    <div class="variant-label">Variant 4: Floating Overlay</div>
+
+    <div class="container">
+        <div class="header">
+            <div class="title">Love Quest</div>
+            <div class="subtitle">Day Forty-Two</div>
+        </div>
+
+        <div class="stats">
+            <div class="stat-row">
+                <div class="stat-label">Party</div>
+                <div class="stat-value">You & Taija</div>
+            </div>
+            <div class="stat-row">
+                <div class="stat-label">Love Points</div>
+                <div class="stat-value">2,450</div>
+            </div>
+            <div class="progress-bg">
+                <div class="progress-bar"></div>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-heading">
+                <span>Daily Quests</span>
+                <span class="swipe-hint">← Swipe →</span>
+            </div>
+
+            <div class="carousel-container">
+                <div class="carousel" id="questCarousel">
+                    <div class="quest-card active">
+                        <div class="quest-image">🎯</div>
+                        <div class="quest-content">
+                            <div class="quest-header">
+                                <div class="quest-info">
+                                    <div class="quest-title">Trust & Honesty Quiz</div>
+                                    <div class="quest-desc">Answer ten questions together</div>
+                                </div>
+                                <div class="reward">+50</div>
+                            </div>
+                            <div class="quest-footer">
+                                <span class="status-badge your-turn">Your Turn</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="quest-card">
+                        <div class="quest-image">🧩</div>
+                        <div class="quest-content">
+                            <div class="quest-header">
+                                <div class="quest-info">
+                                    <div class="quest-title">Memory Flip Challenge</div>
+                                    <div class="quest-desc">Match all sixteen cards</div>
+                                </div>
+                                <div class="reward">+30</div>
+                            </div>
+                            <div class="quest-footer">
+                                <span class="status-badge partner-done">
+                                    <span class="initial">T</span>
+                                    <span>Taija completed</span>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="quest-card">
+                        <div class="quest-image">📚</div>
+                        <div class="quest-content">
+                            <div class="quest-header">
+                                <div class="quest-info">
+                                    <div class="quest-title">Classic Knowledge Quest</div>
+                                    <div class="quest-desc">Test what you know</div>
+                                </div>
+                                <div class="reward">+40</div>
+                            </div>
+                            <div class="quest-footer">
+                                <span class="status-badge completed">✓ Completed</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="progress-bar-container">
+                    <div class="scroll-progress">
+                        <div class="scroll-progress-fill" id="scrollProgress"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="actions">
+            <div class="action">
+                <div class="action-icon">💌</div>
+                <div class="action-label">Send Reminder</div>
+            </div>
+            <div class="action">
+                <div class="action-icon">👆</div>
+                <div class="action-label">Poke Partner</div>
+            </div>
+            <div class="action">
+                <div class="action-icon">📥</div>
+                <div class="action-label">View Inbox</div>
+            </div>
+            <div class="action">
+                <div class="action-icon">🎮</div>
+                <div class="action-label">All Activities</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- FLOATING DAILY DECK -->
+    <div class="floating-deck" id="floatingDeck">
+        <div class="floating-deck-header">
+            <div class="floating-deck-label">
+                <span class="floating-deck-icon">🃏</span>
+                <span class="floating-deck-title">Today's Card</span>
+            </div>
+            <span class="floating-deck-dimension">Appreciation</span>
+            <button class="floating-deck-close" onclick="dismissDeck()">×</button>
+        </div>
+        <div class="floating-deck-body">
+            <div class="floating-deck-prompt">
+                "Tell your partner three things you appreciate about them."
+            </div>
+            <div class="floating-deck-footer">
+                <div class="floating-deck-status">
+                    <div class="floating-status-item">
+                        <span class="status-dot complete"></span>
+                        <span>You ✓</span>
+                    </div>
+                    <div class="floating-status-item">
+                        <span class="status-dot"></span>
+                        <span>Taija pending</span>
+                    </div>
+                </div>
+                <button class="floating-deck-action">Mark Done</button>
+            </div>
+            <div class="floating-deck-reward">Both complete: +10 LP</div>
+        </div>
+    </div>
+
+    <!-- TRIGGER BUTTON (shown when deck dismissed) -->
+    <div class="deck-trigger" id="deckTrigger" onclick="showDeck()">
+        🃏
+        <span class="badge">1</span>
+    </div>
+
+    <script>
+        const carousel = document.getElementById('questCarousel');
+        const cards = carousel.querySelectorAll('.quest-card');
+        const progressFill = document.getElementById('scrollProgress');
+        const floatingDeck = document.getElementById('floatingDeck');
+        const deckTrigger = document.getElementById('deckTrigger');
+
+        function updateActiveCard() {
+            const scrollLeft = carousel.scrollLeft;
+            const cardWidth = cards[0].offsetWidth + 16;
+            const centerPosition = scrollLeft + (carousel.offsetWidth / 2);
+
+            cards.forEach((card, index) => {
+                const cardLeft = (cardWidth * index) + 20;
+                const cardCenter = cardLeft + (card.offsetWidth / 2);
+                const distance = Math.abs(centerPosition - cardCenter);
+
+                if (distance < cardWidth / 2) {
+                    card.classList.add('active');
+                } else {
+                    card.classList.remove('active');
+                }
+            });
+
+            const maxScroll = carousel.scrollWidth - carousel.clientWidth;
+            const scrollPercentage = maxScroll > 0 ? (scrollLeft / maxScroll) * 100 : 0;
+            progressFill.style.width = scrollPercentage + '%';
+        }
+
+        function dismissDeck() {
+            floatingDeck.style.display = 'none';
+            deckTrigger.style.display = 'flex';
+        }
+
+        function showDeck() {
+            floatingDeck.style.display = 'block';
+            deckTrigger.style.display = 'none';
+        }
+
+        carousel.addEventListener('scroll', updateActiveCard);
+        updateActiveCard();
+    </script>
+</body>
+</html>

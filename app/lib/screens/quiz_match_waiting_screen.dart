@@ -3,8 +3,8 @@ import 'dart:async';
 import '../models/quiz_match.dart';
 import '../services/quiz_match_service.dart';
 import '../services/storage_service.dart';
-import '../services/arena_service.dart';
 import '../services/daily_quest_service.dart';
+import '../services/love_point_service.dart';
 import '../services/poke_service.dart';
 import '../utils/logger.dart';
 import '../widgets/editorial/editorial.dart';
@@ -33,7 +33,6 @@ class _QuizMatchWaitingScreenState extends State<QuizMatchWaitingScreen>
     with TickerProviderStateMixin {
   final QuizMatchService _service = QuizMatchService();
   final StorageService _storage = StorageService();
-  final ArenaService _arenaService = ArenaService();
   bool _isChecking = false;
   bool _isSendingPoke = false;
 
@@ -94,10 +93,10 @@ class _QuizMatchWaitingScreenState extends State<QuizMatchWaitingScreen>
 
   /// Handle quiz completion - sync LP and quest status, then navigate to results
   Future<void> _handleCompletion(QuizMatchGameState state) async {
-    // Award LP locally (same as the submitter gets)
-    const lpEarned = 30;
-    await _arenaService.awardLovePoints(lpEarned, 'quiz_complete');
-    Logger.debug('Waiting screen: Awarded $lpEarned LP locally for quiz completion', service: 'quiz');
+    // LP is now server-authoritative - sync from server
+    // This ensures both devices show the same LP value
+    await LovePointService.fetchAndSyncFromServer();
+    Logger.debug('Waiting screen: Synced LP from server after quiz completion', service: 'quiz');
 
     // Update local quest status to completed
     await _updateLocalQuestStatus();
@@ -110,7 +109,7 @@ class _QuizMatchWaitingScreenState extends State<QuizMatchWaitingScreen>
           match: state.match,
           quiz: state.quiz,
           matchPercentage: state.match.matchPercentage,
-          lpEarned: lpEarned,
+          lpEarned: 30, // Standard LP reward for quiz completion
         ),
       ),
     );
@@ -137,9 +136,11 @@ class _QuizMatchWaitingScreenState extends State<QuizMatchWaitingScreen>
       if (quest != null) {
         quest.status = 'completed';
         // Also mark partner as completed in userCompletions
+        // Use partner.id (UUID) if available, fallback to pushToken for backward compatibility
         if (partner != null) {
+          final partnerKey = partner.id.isNotEmpty ? partner.id : partner.pushToken;
           quest.userCompletions ??= {};
-          quest.userCompletions![partner.pushToken] = true;
+          quest.userCompletions![partnerKey] = true;
         }
         await quest.save();
         Logger.debug('Waiting screen: Marked quest as fully completed for ${widget.questId}', service: 'quiz');

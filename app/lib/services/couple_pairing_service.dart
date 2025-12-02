@@ -140,6 +140,7 @@ class CouplePairingService {
         pushToken: '', // Will be set up separately
         pairedAt: pairedAt,
         avatarEmoji: '💕',
+        id: data['partnerId'] as String? ?? '',
       );
 
       // Save partner to local storage

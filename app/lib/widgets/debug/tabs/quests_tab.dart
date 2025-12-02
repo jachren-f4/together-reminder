@@ -1,16 +1,15 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:firebase_database/firebase_database.dart';
 import '../../../services/storage_service.dart';
 import '../../../services/daily_quest_service.dart';
-import '../../../services/quest_utilities.dart';
+import '../../../services/api_client.dart';
 import '../../../models/daily_quest.dart';
 import '../../../utils/logger.dart';
 import '../components/debug_section_card.dart';
 import '../components/debug_copy_button.dart';
 import '../components/debug_status_indicator.dart';
 
-/// Quests tab showing Firebase vs Local comparison and validation
+/// Quests tab showing Server vs Local comparison and validation
 class QuestsTab extends StatefulWidget {
   const QuestsTab({Key? key}) : super(key: key);
 
@@ -21,11 +20,11 @@ class QuestsTab extends StatefulWidget {
 class _QuestsTabState extends State<QuestsTab> {
   final StorageService _storage = StorageService();
   final DailyQuestService _questService = DailyQuestService(storage: StorageService());
-  final FirebaseDatabase _database = FirebaseDatabase.instance;
+  final ApiClient _apiClient = ApiClient();
 
   bool _isLoading = true;
   List<DailyQuest> _localQuests = [];
-  Map<String, dynamic>? _firebaseData;
+  Map<String, dynamic>? _serverData;
   List<String> _validationIssues = [];
 
   @override
@@ -41,17 +40,14 @@ class _QuestsTabState extends State<QuestsTab> {
       // Get local quests
       _localQuests = _questService.getTodayQuests();
 
-      // Get Firebase data
-      final user = _storage.getUser();
-      final partner = _storage.getPartner();
+      // Get server data via Supabase API
+      final dateKey = _questService.getTodayDateKey();
+      final response = await _apiClient.get('/api/sync/daily-quests?date=$dateKey');
 
-      if (user != null && partner != null) {
-        final coupleId = QuestUtilities.generateCoupleId(user.id, partner.pushToken);
-        final dateKey = _questService.getTodayDateKey();
-        final dbRef = _database.ref('daily_quests/$coupleId/$dateKey');
-        final snapshot = await dbRef.get();
-
-        _firebaseData = snapshot.exists ? snapshot.value as Map<String, dynamic>? : null;
+      if (response.success && response.data != null) {
+        _serverData = response.data as Map<String, dynamic>;
+      } else {
+        _serverData = null;
       }
 
       // Run validation
@@ -68,20 +64,20 @@ class _QuestsTabState extends State<QuestsTab> {
     _validationIssues.clear();
 
     // Check if quest IDs match
-    if (_firebaseData != null) {
-      final firebaseQuests = _firebaseData!['quests'] as List<dynamic>?;
-      if (firebaseQuests != null) {
-        final firebaseIds = firebaseQuests.map((q) => q['id'] as String).toSet();
+    if (_serverData != null) {
+      final serverQuests = _serverData!['quests'] as List<dynamic>?;
+      if (serverQuests != null) {
+        final serverIds = serverQuests.map((q) => q['id'] as String).toSet();
         final localIds = _localQuests.map((q) => q.id).toSet();
 
-        if (firebaseIds.length != localIds.length || !firebaseIds.containsAll(localIds)) {
-          _validationIssues.add('⚠️ Quest IDs mismatch between Firebase and Local');
+        if (serverIds.length != localIds.length || !serverIds.containsAll(localIds)) {
+          _validationIssues.add('⚠️ Quest IDs mismatch between Server and Local');
         } else {
-          _validationIssues.add('✅ All quest IDs match between Firebase and Local');
+          _validationIssues.add('✅ All quest IDs match between Server and Local');
         }
       }
     } else {
-      _validationIssues.add('⚠️ No Firebase data found');
+      _validationIssues.add('⚠️ No server data found');
     }
 
     // Check content IDs
@@ -166,12 +162,12 @@ class _QuestsTabState extends State<QuestsTab> {
               title: '📊 QUEST COMPARISON (${_localQuests.length} quests)',
               copyData: JsonEncoder.withIndent('  ').convert({
                 'local': _localQuests.map((q) => q.id).toList(),
-                'firebase': _firebaseData?['quests']?.map((q) => q['id']).toList() ?? [],
+                'server': _serverData?['quests']?.map((q) => q['id']).toList() ?? [],
               }),
               copyMessage: 'Quest comparison copied',
               child: Column(
                 children: _localQuests.map((quest) {
-                  final inFirebase = _firebaseData?['quests']
+                  final inServer = _serverData?['quests']
                       ?.any((q) => q['id'] == quest.id) ?? false;
 
                   return Container(
@@ -206,7 +202,7 @@ class _QuestsTabState extends State<QuestsTab> {
                           ),
                         ),
                         DebugStatusIndicator(
-                          status: inFirebase ? DebugStatus.success : DebugStatus.error,
+                          status: inServer ? DebugStatus.success : DebugStatus.error,
                         ),
                       ],
                     ),

@@ -103,9 +103,10 @@ class DevDataService {
 
         final partner = Partner(
           name: partnerData['name'],
-          pushToken: partnerToken ?? partnerData['id'], // Use real FCM token, fallback to ID
+          pushToken: partnerToken ?? '', // Use real FCM token if available
           pairedAt: DateTime.parse(coupleData['createdAt']),
           avatarEmoji: partnerData['avatarEmoji'],
+          id: partnerData['id'], // Partner's user ID (UUID)
         );
 
         await _storage.savePartner(partner);
@@ -265,6 +266,7 @@ class DevDataService {
         pushToken: newToken,
         pairedAt: partner.pairedAt,
         avatarEmoji: partner.avatarEmoji,
+        id: partner.id, // Preserve existing partner ID
       );
       await _storage.savePartner(updatedPartner);
       debugPrint('✅ [DEV] Updated partner FCM token');

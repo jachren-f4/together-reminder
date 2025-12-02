@@ -3,7 +3,6 @@ import '../models/you_or_me_match.dart';
 import '../services/you_or_me_match_service.dart';
 import '../services/daily_quest_service.dart';
 import '../services/storage_service.dart';
-import '../services/arena_service.dart';
 import '../services/haptic_service.dart';
 import '../services/sound_service.dart';
 import '../utils/logger.dart';
@@ -31,7 +30,6 @@ class _YouOrMeMatchGameScreenState extends State<YouOrMeMatchGameScreen>
     with TickerProviderStateMixin {
   final YouOrMeMatchService _service = YouOrMeMatchService();
   final StorageService _storage = StorageService();
-  final ArenaService _arenaService = ArenaService();
 
   YouOrMeGameState? _gameState;
   bool _isLoading = true;
@@ -254,12 +252,9 @@ class _YouOrMeMatchGameScreenState extends State<YouOrMeMatchGameScreen>
       // Update local quest status (for home screen card)
       await _updateLocalQuestStatus(bothCompleted: result.isCompleted);
 
-      // Award LP locally when both partners have completed
+      // LP is now server-authoritative - synced via UnifiedGameService.submitAnswers()
+      // No local awardLovePoints() needed (would cause double-counting)
       if (result.isCompleted) {
-        final lpEarned = result.lpEarned ?? 30;
-        await _arenaService.awardLovePoints(lpEarned, 'you_or_me_complete');
-        Logger.debug('Awarded $lpEarned LP locally for You-or-Me completion', service: 'you_or_me');
-
         // Calculate match count from answers (how many questions both partners answered the same)
         // For you-or-me: answers are relative (me=1, you=0). A match means both picked the SAME PERSON.
         // Server inverts player2's answers before comparison, and returns them already inverted.
@@ -336,9 +331,11 @@ class _YouOrMeMatchGameScreenState extends State<YouOrMeMatchGameScreen>
         if (quest != null) {
           quest.status = 'completed';
           // Also mark partner as completed in userCompletions
+          // Use partner.id (UUID) if available, fallback to pushToken for backward compatibility
           if (partner != null) {
+            final partnerKey = partner.id.isNotEmpty ? partner.id : partner.pushToken;
             quest.userCompletions ??= {};
-            quest.userCompletions![partner.pushToken] = true;
+            quest.userCompletions![partnerKey] = true;
           }
           await quest.save();
           Logger.debug('Marked quest as fully completed for ${widget.questId}', service: 'you_or_me');

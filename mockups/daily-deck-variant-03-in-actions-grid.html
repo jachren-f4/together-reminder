@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daily Deck - Variant 3: In Actions Grid</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            background: #fafafa;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 420px;
+            margin: 0 auto;
+            background: #fff;
+            border: 2px solid #000;
+            box-shadow: 8px 8px 0 rgba(0, 0, 0, 0.1);
+        }
+
+        .header {
+            border-bottom: 2px solid #000;
+            padding: 24px 20px;
+            text-align: center;
+        }
+
+        .title {
+            font-size: 32px;
+            font-weight: 400;
+            letter-spacing: 2px;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+        }
+
+        .subtitle {
+            font-size: 14px;
+            color: #666;
+            font-style: italic;
+        }
+
+        .stats {
+            border-bottom: 1px solid #000;
+            padding: 20px;
+        }
+
+        .stat-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .stat-value {
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .progress-bg {
+            height: 2px;
+            background: #e0e0e0;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: #000;
+            width: 65%;
+        }
+
+        .section {
+            padding: 20px;
+            padding-bottom: 0;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .section-heading {
+            font-size: 16px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .swipe-hint {
+            font-size: 11px;
+            color: #999;
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+
+        .carousel-container {
+            position: relative;
+            margin: 0 -20px;
+            padding-bottom: 20px;
+        }
+
+        .carousel {
+            display: flex;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            gap: 16px;
+            padding: 0 20px;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+
+        .carousel::-webkit-scrollbar {
+            display: none;
+        }
+
+        .quest-card {
+            flex: 0 0 calc(60%);
+            scroll-snap-align: center;
+            border: 1px solid #000;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: #fff;
+            overflow: hidden;
+            opacity: 0.6;
+            transform: scale(0.95);
+        }
+
+        .quest-card.active {
+            opacity: 1;
+            transform: scale(1);
+            box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.15);
+        }
+
+        .quest-card:hover {
+            opacity: 1;
+        }
+
+        .quest-image {
+            width: 100%;
+            height: 120px;
+            background: linear-gradient(135deg, #e8e8e8 0%, #f5f5f5 100%);
+            border-bottom: 1px solid #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+        }
+
+        .quest-content {
+            padding: 16px;
+        }
+
+        .quest-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 12px;
+        }
+
+        .quest-info {
+            flex: 1;
+        }
+
+        .quest-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .quest-desc {
+            font-size: 12px;
+            color: #666;
+            font-style: italic;
+        }
+
+        .reward {
+            font-size: 14px;
+            font-weight: 700;
+            border: 1px solid #000;
+            padding: 4px 10px;
+            background: #000;
+            color: #fff;
+        }
+
+        .quest-footer {
+            padding-top: 12px;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .status-badge {
+            display: inline-block;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 6px 12px;
+            border: 1px solid #000;
+        }
+
+        .your-turn {
+            background: #fff;
+            color: #000;
+        }
+
+        .partner-done {
+            background: #f0f0f0;
+            color: #666;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .initial {
+            width: 18px;
+            height: 18px;
+            background: #000;
+            color: #fff;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            font-weight: 700;
+        }
+
+        .completed {
+            background: #000;
+            color: #fff;
+        }
+
+        .progress-bar-container {
+            padding: 16px 20px 20px;
+            margin: 0 -20px;
+        }
+
+        .scroll-progress {
+            height: 3px;
+            background: #e0e0e0;
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .scroll-progress-fill {
+            height: 100%;
+            background: #000;
+            width: 33.33%;
+            transition: width 0.3s ease;
+            border-radius: 2px;
+        }
+
+        /* ===================== */
+        /* DAILY DECK - VARIANT 3 */
+        /* Integrated into actions grid as featured item */
+        /* ===================== */
+        .actions {
+            padding: 20px;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+
+        .action {
+            border: 1px solid #000;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .action:hover {
+            background: #000;
+            color: #fff;
+        }
+
+        .action-icon {
+            font-size: 32px;
+            margin-bottom: 8px;
+        }
+
+        .action-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+        }
+
+        /* Daily Deck as featured action - spans full width */
+        .daily-deck-action {
+            grid-column: 1 / -1;
+            border: 2px solid #000;
+            padding: 0;
+            text-align: left;
+            display: flex;
+            overflow: hidden;
+            background: #fff;
+        }
+
+        .daily-deck-action:hover {
+            background: #fff;
+            color: #000;
+        }
+
+        .daily-deck-action:hover .deck-visual {
+            background: #222;
+        }
+
+        .deck-visual {
+            width: 100px;
+            background: #000;
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
+            transition: background 0.2s ease;
+        }
+
+        .deck-visual-icon {
+            font-size: 36px;
+            margin-bottom: 8px;
+        }
+
+        .deck-visual-label {
+            font-size: 9px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            opacity: 0.8;
+        }
+
+        .deck-main {
+            flex: 1;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .deck-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .deck-title {
+            font-size: 14px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .deck-dimension {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            background: #f0f0f0;
+            padding: 3px 8px;
+            border: 1px solid #ddd;
+        }
+
+        .deck-prompt {
+            font-size: 13px;
+            font-style: italic;
+            color: #444;
+            margin-bottom: 10px;
+            line-height: 1.4;
+        }
+
+        .deck-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .deck-status {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .deck-status-item {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 11px;
+            color: #666;
+        }
+
+        .status-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #ccc;
+        }
+
+        .status-dot.complete {
+            background: #4CAF50;
+        }
+
+        .deck-reward {
+            font-size: 12px;
+            font-weight: 700;
+            color: #000;
+        }
+
+        .variant-label {
+            background: #000;
+            color: #fff;
+            padding: 8px 16px;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 20px;
+            display: inline-block;
+        }
+    </style>
+</head>
+<body>
+    <div class="variant-label">Variant 3: In Actions Grid</div>
+
+    <div class="container">
+        <div class="header">
+            <div class="title">Love Quest</div>
+            <div class="subtitle">Day Forty-Two</div>
+        </div>
+
+        <div class="stats">
+            <div class="stat-row">
+                <div class="stat-label">Party</div>
+                <div class="stat-value">You & Taija</div>
+            </div>
+            <div class="stat-row">
+                <div class="stat-label">Love Points</div>
+                <div class="stat-value">2,450</div>
+            </div>
+            <div class="progress-bg">
+                <div class="progress-bar"></div>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-heading">
+                <span>Daily Quests</span>
+                <span class="swipe-hint">← Swipe →</span>
+            </div>
+
+            <div class="carousel-container">
+                <div class="carousel" id="questCarousel">
+                    <div class="quest-card active">
+                        <div class="quest-image">🎯</div>
+                        <div class="quest-content">
+                            <div class="quest-header">
+                                <div class="quest-info">
+                                    <div class="quest-title">Trust & Honesty Quiz</div>
+                                    <div class="quest-desc">Answer ten questions together</div>
+                                </div>
+                                <div class="reward">+50</div>
+                            </div>
+                            <div class="quest-footer">
+                                <span class="status-badge your-turn">Your Turn</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="quest-card">
+                        <div class="quest-image">🧩</div>
+                        <div class="quest-content">
+                            <div class="quest-header">
+                                <div class="quest-info">
+                                    <div class="quest-title">Memory Flip Challenge</div>
+                                    <div class="quest-desc">Match all sixteen cards</div>
+                                </div>
+                                <div class="reward">+30</div>
+                            </div>
+                            <div class="quest-footer">
+                                <span class="status-badge partner-done">
+                                    <span class="initial">T</span>
+                                    <span>Taija completed</span>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="quest-card">
+                        <div class="quest-image">📚</div>
+                        <div class="quest-content">
+                            <div class="quest-header">
+                                <div class="quest-info">
+                                    <div class="quest-title">Classic Knowledge Quest</div>
+                                    <div class="quest-desc">Test what you know</div>
+                                </div>
+                                <div class="reward">+40</div>
+                            </div>
+                            <div class="quest-footer">
+                                <span class="status-badge completed">✓ Completed</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="progress-bar-container">
+                    <div class="scroll-progress">
+                        <div class="scroll-progress-fill" id="scrollProgress"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ACTIONS WITH DAILY DECK AS FEATURED -->
+        <div class="actions">
+            <!-- Daily Deck as featured full-width action -->
+            <div class="action daily-deck-action">
+                <div class="deck-visual">
+                    <div class="deck-visual-icon">🃏</div>
+                    <div class="deck-visual-label">Today</div>
+                </div>
+                <div class="deck-main">
+                    <div class="deck-header">
+                        <span class="deck-title">Daily Card</span>
+                        <span class="deck-dimension">Appreciation</span>
+                    </div>
+                    <div class="deck-prompt">"Tell your partner three things you appreciate about them."</div>
+                    <div class="deck-footer">
+                        <div class="deck-status">
+                            <div class="deck-status-item">
+                                <span class="status-dot complete"></span>
+                                <span>You ✓</span>
+                            </div>
+                            <div class="deck-status-item">
+                                <span class="status-dot"></span>
+                                <span>Taija</span>
+                            </div>
+                        </div>
+                        <div class="deck-reward">+10 LP</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Regular actions -->
+            <div class="action">
+                <div class="action-icon">💌</div>
+                <div class="action-label">Send Reminder</div>
+            </div>
+            <div class="action">
+                <div class="action-icon">👆</div>
+                <div class="action-label">Poke Partner</div>
+            </div>
+            <div class="action">
+                <div class="action-icon">📥</div>
+                <div class="action-label">View Inbox</div>
+            </div>
+            <div class="action">
+                <div class="action-icon">🎮</div>
+                <div class="action-label">All Activities</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const carousel = document.getElementById('questCarousel');
+        const cards = carousel.querySelectorAll('.quest-card');
+        const progressFill = document.getElementById('scrollProgress');
+
+        function updateActiveCard() {
+            const scrollLeft = carousel.scrollLeft;
+            const cardWidth = cards[0].offsetWidth + 16;
+            const centerPosition = scrollLeft + (carousel.offsetWidth / 2);
+
+            cards.forEach((card, index) => {
+                const cardLeft = (cardWidth * index) + 20;
+                const cardCenter = cardLeft + (card.offsetWidth / 2);
+                const distance = Math.abs(centerPosition - cardCenter);
+
+                if (distance < cardWidth / 2) {
+                    card.classList.add('active');
+                } else {
+                    card.classList.remove('active');
+                }
+            });
+
+            const maxScroll = carousel.scrollWidth - carousel.clientWidth;
+            const scrollPercentage = maxScroll > 0 ? (scrollLeft / maxScroll) * 100 : 0;
+            progressFill.style.width = scrollPercentage + '%';
+        }
+
+        carousel.addEventListener('scroll', updateActiveCard);
+        updateActiveCard();
+    </script>
+</body>
+</html>

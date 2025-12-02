@@ -1,6 +1,5 @@
 import 'dart:math';
 import 'package:cloud_functions/cloud_functions.dart';
-import 'package:firebase_database/firebase_database.dart';
 import '../models/quiz_expansion.dart';
 import '../models/quiz_question.dart';
 import '../models/user.dart';
@@ -11,17 +10,21 @@ import 'quiz_service.dart';
 import 'notification_service.dart';
 import '../config/dev_config.dart';
 import '../utils/logger.dart';
+import 'api_client.dart';
 
 /// Service for managing Daily Pulse feature
 /// - One question per day, alternating subject between partners
 /// - Subject answers about themselves, Predictor guesses
 /// - Tracks streaks and awards bonus LP
+///
+/// Architecture (Supabase-only):
+/// - Daily pulse data syncs via Supabase API
+/// - Notifications sent via Cloud Functions
 class DailyPulseService {
   final StorageService _storage = StorageService();
   final QuizService _quizService = QuizService();
-  final DatabaseReference _rtdb = FirebaseDatabase.instance.ref();
   final FirebaseFunctions _functions = FirebaseFunctions.instance;
-  bool _isListening = false;
+  final ApiClient _apiClient = ApiClient();
 
   /// Get today's Daily Pulse (creates new one if needed)
   QuizDailyPulse getTodaysPulse() {
@@ -64,8 +67,8 @@ class DailyPulseService {
     // Save updated pulse
     _storage.saveDailyPulse(pulse);
 
-    // Sync to RTDB for partner
-    await _syncPulseToRTDB(pulse);
+    // Sync to Supabase
+    await _syncPulseToServer(pulse);
 
     // Send notification to partner
     await _sendAnswerNotification(pulse, userId);
@@ -253,66 +256,52 @@ class DailyPulseService {
             lastDate.day == yesterday.day);
   }
 
-  /// Sync Daily Pulse to RTDB (dev mode only)
-  Future<void> _syncPulseToRTDB(QuizDailyPulse pulse) async {
-    if (!DevConfig.isSimulatorSync) return;
-
+  /// Sync Daily Pulse to Supabase
+  Future<void> _syncPulseToServer(QuizDailyPulse pulse) async {
     try {
-      final emulatorId = await DevConfig.emulatorId;
-      if (emulatorId == null) return;
-
-      await _rtdb.child('daily_pulses').child(emulatorId).child(pulse.id).set({
+      await _apiClient.post('/api/sync/daily-pulse', body: {
         'id': pulse.id,
         'questionId': pulse.questionId,
-        'availableDate': pulse.availableDate.millisecondsSinceEpoch,
+        'availableDate': pulse.availableDate.toIso8601String(),
         'subjectUserId': pulse.subjectUserId,
         'answers': pulse.answers,
         'bothAnswered': pulse.bothAnswered,
         'lpAwarded': pulse.lpAwarded,
-        'completedAt': pulse.completedAt?.millisecondsSinceEpoch,
+        'completedAt': pulse.completedAt?.toIso8601String(),
         'isMatch': pulse.isMatch,
       });
 
-      Logger.success('Daily Pulse synced to RTDB: ${pulse.id}', service: 'daily_pulse');
+      Logger.success('Daily Pulse synced to server: ${pulse.id}', service: 'daily_pulse');
     } catch (e) {
-      Logger.error('Error syncing Daily Pulse to RTDB', error: e, service: 'daily_pulse');
+      Logger.error('Error syncing Daily Pulse to server', error: e, service: 'daily_pulse');
     }
   }
 
-  /// Start listening for partner's Daily Pulse updates
-  Future<void> startListeningForPartnerPulses() async {
-    if (_isListening) return;
-    if (!DevConfig.isSimulatorSync) return;
-
-    _isListening = true;
-
+  /// Fetch partner's Daily Pulse updates from server
+  Future<void> fetchPartnerPulseUpdates() async {
     try {
-      final myIndex = await DevConfig.partnerIndex;
-      final partnerEmulatorId = myIndex == 0 ? 'web-bob' : 'emulator-5554';
+      final today = _getDateKey(DateTime.now());
+      final response = await _apiClient.get('/api/sync/daily-pulse?date=$today');
 
-      Logger.info('Listening for partner Daily Pulses: $partnerEmulatorId', service: 'daily_pulse');
+      if (!response.success || response.data == null) {
+        Logger.debug('No partner pulse data from server', service: 'daily_pulse');
+        return;
+      }
 
-      _rtdb.child('daily_pulses').child(partnerEmulatorId).onChildAdded.listen((event) {
-        if (event.snapshot.value != null) {
-          _handlePartnerPulse(event.snapshot);
-        }
-      });
+      final data = response.data as Map<String, dynamic>;
+      _handlePartnerPulse(data);
 
-      _rtdb.child('daily_pulses').child(partnerEmulatorId).onChildChanged.listen((event) {
-        if (event.snapshot.value != null) {
-          _handlePartnerPulse(event.snapshot);
-        }
-      });
+      Logger.info('Fetched partner pulse updates', service: 'daily_pulse');
     } catch (e) {
-      Logger.error('Error listening for partner Daily Pulses', error: e, service: 'daily_pulse');
+      Logger.error('Error fetching partner Daily Pulse', error: e, service: 'daily_pulse');
     }
   }
 
-  /// Handle partner's Daily Pulse from RTDB
-  void _handlePartnerPulse(DataSnapshot snapshot) {
+  /// Handle partner's Daily Pulse from server
+  void _handlePartnerPulse(Map<String, dynamic> data) {
     try {
-      final data = snapshot.value as Map<dynamic, dynamic>;
-      final pulseId = data['id'] as String;
+      final pulseId = data['id'] as String?;
+      if (pulseId == null) return;
 
       final existingPulse = _storage.getDailyPulse(pulseId);
       if (existingPulse != null) {
@@ -327,7 +316,7 @@ class DailyPulseService {
         existingPulse.bothAnswered = data['bothAnswered'] as bool;
         existingPulse.lpAwarded = data['lpAwarded'] as int;
         existingPulse.completedAt = data['completedAt'] != null
-            ? DateTime.fromMillisecondsSinceEpoch(data['completedAt'] as int)
+            ? DateTime.parse(data['completedAt'] as String)
             : null;
         existingPulse.isMatch = data['isMatch'] as bool;
         _storage.saveDailyPulse(existingPulse);
@@ -337,7 +326,7 @@ class DailyPulseService {
         final pulse = QuizDailyPulse(
           id: pulseId,
           questionId: data['questionId'] as String,
-          availableDate: DateTime.fromMillisecondsSinceEpoch(data['availableDate'] as int),
+          availableDate: DateTime.parse(data['availableDate'] as String),
           subjectUserId: data['subjectUserId'] as String,
           answers: data['answers'] != null
               ? Map<String, int>.from(
@@ -349,7 +338,7 @@ class DailyPulseService {
           bothAnswered: data['bothAnswered'] as bool,
           lpAwarded: data['lpAwarded'] as int,
           completedAt: data['completedAt'] != null
-              ? DateTime.fromMillisecondsSinceEpoch(data['completedAt'] as int)
+              ? DateTime.parse(data['completedAt'] as String)
               : null,
           isMatch: data['isMatch'] as bool,
         );
@@ -463,5 +452,16 @@ class DailyPulseService {
     } catch (e) {
       Logger.error('Error sending streak milestone notification', error: e, service: 'daily_pulse');
     }
+  }
+
+  // ============================================================================
+  // DEPRECATED METHODS (kept for backward compatibility)
+  // ============================================================================
+
+  /// @deprecated Use fetchPartnerPulseUpdates() instead
+  Future<void> startListeningForPartnerPulses() async {
+    // No-op - Firebase listener removed
+    // Use fetchPartnerPulseUpdates() for polling instead
+    Logger.debug('startListeningForPartnerPulses() is deprecated - use fetchPartnerPulseUpdates()', service: 'daily_pulse');
   }
 }
