@@ -10,345 +10,783 @@
 
 This document outlines the implementation plan for improving the quiz experience across all three quiz types (Classic, Affirmation, You-or-Me) with focus on:
 
-1. **Results screen reframing** — Shift from judgment to discovery
-2. **Therapeutic vs casual differentiation** — Visual and tonal distinction
+1. **Results screen redesign** — Replace current simple results with full details inline (Option C)
+2. **Therapeutic vs casual differentiation** — "Deeper" badge on quest cards and intro screens
 3. **New therapeutic content** — Connection, Attachment, and Growth branches
 
 ---
 
-## Part 1: Results Screen Improvements
+## Part 1: UI Changes Overview
 
-### 1.1 Core Principle
+### 1.1 Summary of Changes
 
-**Before:** Score as judgment ("You got 7/10 correct")
-**After:** Score as discovery ("You discovered 3 new things about each other")
+| Screen | Change | Scope |
+|--------|--------|-------|
+| **Quest Card** | Add "Deeper" badge overlay on image for therapeutic branches | Minor |
+| **Intro Screen** | Add "Deeper" badge below video (next to activity badge) | Minor |
+| **Results Screen** | Full redesign — score + question details inline (replaces current) | Major |
 
-### 1.2 Framing by Quiz Type
+### 1.2 What Stays the Same
 
-| Quiz Type | Tone | Low Score Framing | Competition OK? |
-|-----------|------|-------------------|-----------------|
-| Classic Casual | Playful | "Surprises!" | Yes |
-| Classic Therapeutic | Warm | "Discoveries" | No |
-| Affirmation Casual | Reflective | "Different perspectives" | No |
-| Affirmation Therapeutic | Gentle | "Different experiences" | No |
-| You-or-Me Casual | Fun | "Debate material!" | Yes |
-| You-or-Me Therapeutic | Curious | "Different perceptions" | No |
+- Quest card layout, styling, and structure (only add badge overlay)
+- Intro screen video, stats card, "How It Works" steps, footer
+- Navigation flow between screens
 
-### 1.3 Message Copy by Score Range
+---
+
+## Part 2: Quest Card Changes
+
+### 2.1 Current State
+
+The quest card (`lib/widgets/quest_card.dart`) displays:
+- Quest image (170px max height)
+- Title + description
+- LP reward badge
+- Status badge (Your Turn, Completed, etc.)
+
+### 2.2 Change Required
+
+**Add a "Deeper" badge overlay** on the quest image for therapeutic branches only.
+
+**Mockup Reference:** `mockups/quiz_improvements/quest-cards/quest-card-comparison.html`
+
+#### Visual Specification
+
+```
+┌─────────────────────────────────────┐
+│ ┌────────┐                          │
+│ │ Deeper │  ← Black badge, top-left │
+│ └────────┘                          │
+│                                     │
+│         [Quest Image]               │
+│            💫                       │
+│                                     │
+├─────────────────────────────────────┤
+│  Connection Quiz                    │
+│  Discover each other's inner world  │
+│                             +30 LP  │
+├─────────────────────────────────────┤
+│  [Your Turn]                        │
+└─────────────────────────────────────┘
+```
+
+#### Badge Styling
+
+```dart
+// Position: Absolute, top-left of image area
+// Offset: 12px from top, 12px from left
+Container(
+  padding: EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+  color: Colors.black,  // EditorialStyles.ink
+  child: Text(
+    'DEEPER',
+    style: TextStyle(
+      color: Colors.white,
+      fontSize: 9,
+      fontWeight: FontWeight.w700,
+      letterSpacing: 1.5,
+    ),
+  ),
+)
+```
+
+#### Implementation
+
+**File to modify:** `app/lib/widgets/quest_card.dart`
+
+**Logic:**
+1. Determine if current branch is therapeutic (Connection, Attachment, or Growth)
+2. If therapeutic, render "Deeper" badge positioned over the quest image
+3. No other changes to quest card
+
+**Therapeutic branch detection:**
+```dart
+bool isTherapeuticBranch(String? branch) {
+  const therapeuticBranches = ['connection', 'attachment', 'growth'];
+  return branch != null && therapeuticBranches.contains(branch.toLowerCase());
+}
+```
+
+---
+
+## Part 3: Intro Screen Changes
+
+### 3.1 Current State
+
+The intro screens (`quiz_intro_screen.dart`, `affirmation_intro_screen.dart`, `you_or_me_match_intro_screen.dart`) display:
+- Header with "DAILY QUEST" label
+- Hero video that fades to grayscale emoji
+- Activity badge (e.g., "Classic Quiz")
+- Title from manifest
+- Description
+- Stats card
+- "How It Works" steps
+- Footer with Begin button
+
+### 3.2 Change Required
+
+**Add "Deeper" badge** next to the activity badge for therapeutic branches.
+
+**Mockup Reference:** `mockups/quiz_improvements/intro-screens/intro-therapeutic-additions.html`
+
+#### Visual Specification
+
+```
+┌─────────────────────────────────────┐
+│  ← DAILY QUEST                      │
+├─────────────────────────────────────┤
+│                                     │
+│         [Video / 💫]                │
+│                                     │
+├─────────────────────────────────────┤
+│                                     │
+│  ┌──────────────┐ ┌────────┐        │
+│  │ Classic Quiz │ │ Deeper │        │
+│  └──────────────┘ └────────┘        │
+│                                     │
+│  Connection Quiz                    │
+│                                     │
+│  Answer questions about yourself... │
+│  These questions go a little deeper │
+│  — discover what you truly know     │
+│  about each other's inner world.    │
+│                                     │
+```
+
+#### Badge Row Implementation
+
+```dart
+// Badges row - add "Deeper" badge for therapeutic branches
+Row(
+  children: [
+    EditorialBadge(
+      label: 'Classic Quiz',  // or 'Affirmation', 'You or Me'
+      isInverted: true,
+    ),
+    if (isTherapeuticBranch(widget.branch)) ...[
+      SizedBox(width: 8),
+      EditorialBadge(
+        label: 'Deeper',
+        isInverted: true,
+      ),
+    ],
+  ],
+)
+```
+
+### 3.3 Description Copy Updates
+
+For therapeutic branches, update the description text:
+
+**Classic Quiz (Connection):**
+> "Answer questions about yourself, then [Partner] will try to predict your answers. These questions go a little deeper — discover what you truly know about each other's inner world."
+
+**Affirmation (Attachment):**
+> "Rate how much you agree with each statement about your relationship. This quiz explores how you each experience your connection — your sense of safety, trust, and closeness."
+
+**You-or-Me (Growth):**
+> "For each question, choose who it applies to more. These questions explore your patterns as a couple — how you support each other, handle challenges, and grow together."
+
+### 3.4 Optional: First-Time Therapeutic Note
+
+For the first time a user encounters a therapeutic branch, optionally show a brief note:
+
+```dart
+// Show only if user hasn't seen this therapeutic intro before
+if (isTherapeuticBranch && !hasSeenTherapeuticIntro) {
+  Container(
+    padding: EdgeInsets.all(16),
+    decoration: BoxDecoration(
+      color: Color(0xFFF8F6F2),  // Warm cream
+      border: Border(left: BorderSide(color: Colors.black, width: 3)),
+    ),
+    child: Text(
+      'There are no wrong answers here. Just be curious about your partner.',
+      style: TextStyle(fontStyle: FontStyle.italic),
+    ),
+  )
+}
+```
+
+**Storage key:** `has_seen_therapeutic_intro_[branch_type]` (e.g., `has_seen_therapeutic_intro_connection`)
+
+---
+
+## Part 4: Results Screen Redesign (Option C)
+
+### 4.1 Current State
+
+The current results screen (`quiz_match_results_screen.dart`) shows:
+- "Quiz Complete!" title
+- Match percentage (e.g., "70%")
+- Generic description based on percentage
+- LP earned
+- "Return Home" button
+
+**It does NOT show:**
+- Individual question breakdowns
+- What user guessed vs what partner answered
+- Conversation prompts
+
+### 4.2 New Design: Full Details Inline
+
+Replace the current results screen with a new design that includes:
+1. Score summary at top
+2. Score-appropriate message (varies by casual/therapeutic)
+3. LP reward
+4. Scrollable list of all questions with answers
+5. Conversation prompts for mismatches (therapeutic only)
+6. "Done" button at bottom
+
+**Mockup References:**
+- `mockups/quiz_improvements/results-screens/results-classic-casual.html`
+- `mockups/quiz_improvements/results-screens/results-classic-therapeutic.html`
+- `mockups/quiz_improvements/results-screens/results-affirmation-casual.html`
+- `mockups/quiz_improvements/results-screens/results-affirmation-therapeutic.html`
+- `mockups/quiz_improvements/results-screens/results-youorme-casual.html`
+- `mockups/quiz_improvements/results-screens/results-youorme-therapeutic.html`
+- `mockups/quiz_improvements/details-screens/details-casual.html`
+- `mockups/quiz_improvements/details-screens/details-therapeutic.html`
+
+### 4.3 Results Screen Structure
+
+```
+┌─────────────────────────────────────┐
+│  ← [Quiz Title]               [X]   │  ← Header
+├─────────────────────────────────────┤
+│                                     │
+│  [Deeper]  ← Only for therapeutic   │
+│                                     │
+│            💫                       │
+│                                     │
+│         7 / 10                      │  ← Score
+│                                     │
+│  "A few surprises in there!"        │  ← Message (varies by score)
+│                                     │
+│  You discovered 3 things you        │  ← Subtext
+│  didn't know about each other.      │
+│                                     │
+│       ┌─────────────────┐           │
+│       │    + 30 LP      │           │  ← LP Reward
+│       └─────────────────┘           │
+│                                     │
+├─────────────────────────────────────┤
+│  WHAT YOU LEARNED                   │  ← Section header
+├─────────────────────────────────────┤
+│                                     │
+│  "What's my favorite pizza?"        │  ← Question
+│  You guessed: Pepperoni             │
+│  Actually: Mushrooms                │
+│  🍕 Noted for next pizza night!     │  ← Playful comment (casual)
+│                                     │
+│  ─────────────────────────────────  │
+│                                     │
+│  "What do I need when stressed?"    │  ← Question
+│  You guessed: Space alone           │
+│  Sarah said: Someone to listen      │
+│                                     │
+│  ┌─────────────────────────────────┐│
+│  │ 💛 "When you're stressed, what  ││  ← Conversation prompt
+│  │    helps most?"                 ││     (therapeutic only)
+│  │                                 ││
+│  │ This isn't about being "right"  ││
+│  │ — it's an invitation to         ││
+│  │ understand.                     ││
+│  └─────────────────────────────────┘│
+│                                     │
+│  ─────────────────────────────────  │
+│                                     │
+│  "What's my go-to comfort show?"    │
+│  You guessed: The Office            │
+│  Actually: The Office               │
+│  ✓ You knew this!                   │  ← Match indicator
+│                                     │
+├─────────────────────────────────────┤
+│                                     │
+│  ┌─────────────────────────────────┐│
+│  │            Done                 ││  ← Button
+│  └─────────────────────────────────┘│
+│                                     │
+└─────────────────────────────────────┘
+```
+
+### 4.4 Message Copy by Score Range
 
 #### Classic Quiz — Casual (Lighthearted, Deeper, Spicy)
 
-| Score | Message |
-|-------|---------|
-| 9-10 | "You two are scary good" |
-| 7-8 | "Solid! You've been paying attention" |
-| 5-6 | "A few surprises in there!" |
-| 3-4 | "Looks like you learned something new today" |
-| 0-2 | "Plot twist! Time to compare notes" |
+| Score | Message | Subtext |
+|-------|---------|---------|
+| 9-10 | "You two are scary good" | "Only [X] surprise in there!" |
+| 7-8 | "Solid! You've been paying attention" | "You discovered [X] things you didn't know." |
+| 5-6 | "A few surprises in there!" | "You discovered [X] things you didn't know about each other." |
+| 3-4 | "Looks like you learned something new today" | "Lots of new things to remember!" |
+| 0-2 | "Plot twist! Time to compare notes" | "Looks like there's lots to learn — that's half the fun!" |
 
 #### Classic Quiz — Therapeutic (Connection)
 
-| Score | Message |
-|-------|---------|
-| 9-10 | "You really see each other" |
-| 7-8 | "You know each other well — and learned even more today" |
-| 5-6 | "Some beautiful discoveries here" |
-| 3-4 | "You uncovered some new layers today" |
-| 0-2 | "Lots to explore together — that's a gift" |
+| Score | Message | Subtext |
+|-------|---------|---------|
+| 9-10 | "You really see each other" | "You've built something beautiful — a deep understanding of each other's inner world." |
+| 7-8 | "You know each other well — and learned even more today" | "Knowing someone deeply is a lifelong journey." |
+| 5-6 | "Some beautiful discoveries here" | "Knowing someone deeply is a lifelong journey. Today you got a little closer." |
+| 3-4 | "You uncovered some new layers today" | "These questions revealed new things to explore together." |
+| 0-2 | "Lots to explore together — that's a gift" | "These questions revealed new layers to discover. That's what growing closer looks like." |
 
 #### Affirmation Quiz — Casual (Emotional, Practical, Spiritual)
 
-| Alignment | Message |
-|-----------|---------|
-| 5/5 | "Completely in sync on this one" |
-| 4/5 | "Mostly aligned — with room to talk" |
-| 3/5 | "Some different perspectives here" |
-| 1-2/5 | "You see things differently — worth exploring" |
+| Alignment | Message | Subtext |
+|-----------|---------|---------|
+| 5/5 | "Completely in sync on this one" | "You see your relationship the same way — that's a strong foundation." |
+| 4/5 | "Mostly aligned — with room to talk" | "You shared how you see your relationship." |
+| 3/5 | "Some different perspectives here" | "You shared how you see your relationship. The differences are worth exploring." |
+| 1-2/5 | "You see things differently — worth exploring" | "Differences aren't problems — they're starting points for conversation." |
 
 #### Affirmation Quiz — Therapeutic (Attachment)
 
-| Alignment | Message |
-|-----------|---------|
-| 5/5 | "You feel similarly about your connection" |
-| 4/5 | "Mostly aligned — and aware of each other" |
-| 3/5 | "Some different experiences here" |
-| 1-2/5 | "You're experiencing things differently right now" |
+| Alignment | Message | Subtext |
+|-----------|---------|---------|
+| 5/5 | "You feel similarly about your connection" | "You're experiencing your bond in the same way — that's a beautiful sign of attunement." |
+| 4/5 | "Mostly aligned — and aware of each other" | "This quiz reflects how you each feel." |
+| 3/5 | "Some different experiences here" | "This quiz reflects how you each *feel* — and feelings are always valid, even when they differ." |
+| 1-2/5 | "You're experiencing things differently right now" | "Neither of you is wrong. These differences are invitations to understand each other better." |
 
 #### You-or-Me — Casual (Playful, Reflective)
 
-| Agreement | Message |
-|-----------|---------|
-| 9-10/10 | "You two are totally in sync!" |
-| 7-8/10 | "Mostly agreed — a few debates ahead" |
-| 5-6/10 | "Split down the middle! This could get interesting" |
-| 3-4/10 | "You see yourselves very differently!" |
-| 0-2/10 | "Opposite views! Time to make your case" |
+| Agreement | Message | Subtext |
+|-----------|---------|---------|
+| 9-10/10 | "You two are totally in sync!" | "You see your dynamic the same way — impressive teamwork." |
+| 7-8/10 | "Mostly agreed — a few debates ahead" | "You've got some debates ahead!" |
+| 5-6/10 | "Split down the middle! This could get interesting" | "You've got some debates ahead — may the best argument win!" |
+| 3-4/10 | "You see yourselves very differently!" | "Time to compare notes!" |
+| 0-2/10 | "Opposite views! Time to make your case" | "You see things completely differently — this is going to be a fun conversation!" |
 
 #### You-or-Me — Therapeutic (Growth)
 
-| Agreement | Message |
-|-----------|---------|
-| 9-10/10 | "You see your patterns clearly together" |
-| 7-8/10 | "Mostly aligned on how you work as a couple" |
-| 5-6/10 | "Some different views on your dynamics" |
-| 3-4/10 | "You perceive your patterns differently" |
-| 0-2/10 | "Very different perspectives — lots to explore" |
+| Agreement | Message | Subtext |
+|-----------|---------|---------|
+| 9-10/10 | "You see your patterns clearly together" | "You're attuned to how you work as a couple — that awareness is a strength." |
+| 7-8/10 | "Mostly aligned on how you work as a couple" | "You see your dynamic similarly." |
+| 5-6/10 | "Some different views on your dynamics" | "How we see ourselves vs. how our partner sees us often differs — and that's OK." |
+| 3-4/10 | "You perceive your patterns differently" | "These are opportunities to learn how your partner experiences your relationship." |
+| 0-2/10 | "Very different perspectives — lots to explore" | "You perceive your patterns differently. These are opportunities to understand each other better." |
 
-### 1.4 Universal Rules
+### 4.5 Question Item Display
 
-1. **Never use "wrong" or "incorrect"** — use "different," "surprise," "discovery"
-2. **Low scores get more supportive framing** — more words to prevent negative interpretation
-3. **Always offer a conversation prompt** — especially on mismatches
-4. **LP awarded regardless of score** — effort, not accuracy, is rewarded
-5. **Therapeutic quizzes use softer language** — "experiences," "perspectives," "invitations"
+#### For Matches (Correct Answers)
+
+```dart
+Column(
+  children: [
+    Text(question.text),  // "What's my favorite pizza?"
+    Row(children: [
+      Text('You guessed: ', style: labelStyle),
+      Text(userAnswer, style: correctStyle),  // Green
+    ]),
+    Row(children: [
+      Text('Actually: ', style: labelStyle),
+      Text(partnerAnswer, style: correctStyle),  // Green
+    ]),
+    MatchIndicator(text: '✓ You knew this!'),  // Green background
+  ],
+)
+```
+
+#### For Mismatches — Casual
+
+```dart
+Column(
+  children: [
+    Text(question.text),
+    Row(children: [
+      Text('You guessed: ', style: labelStyle),
+      Text(userAnswer, style: incorrectStyle),  // Red
+    ]),
+    Row(children: [
+      Text('Actually: ', style: labelStyle),
+      Text(partnerAnswer, style: correctStyle),  // Green
+    ]),
+    PlayfulComment(text: 'Noted for next pizza night! 🍕'),  // Italic, gray
+  ],
+)
+```
+
+#### For Mismatches — Therapeutic
+
+```dart
+Column(
+  children: [
+    Text(question.text),
+    Row(children: [
+      Text('You guessed: ', style: labelStyle),
+      Text(userAnswer),
+    ]),
+    Row(children: [
+      Text('${partnerName} said: ', style: labelStyle),
+      Text(partnerAnswer),
+    ]),
+    MismatchIndicator(text: 'Different perspectives'),  // Warm orange background
+    ConversationPrompt(
+      icon: '💛',
+      prompt: '"When you're stressed, what helps most?"',
+      note: 'This isn't about being "right" — it's an invitation to understand.',
+    ),
+  ],
+)
+```
+
+### 4.6 Conversation Prompts
+
+For therapeutic quizzes, mismatches include a conversation prompt box:
+
+**Styling:**
+```dart
+Container(
+  margin: EdgeInsets.only(top: 16),
+  padding: EdgeInsets.all(16),
+  decoration: BoxDecoration(
+    color: Color(0xFFFAF8F5),  // Warm cream
+    border: Border(left: BorderSide(color: Colors.black, width: 3)),
+  ),
+  child: Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Text('💛', style: TextStyle(fontSize: 16)),
+      SizedBox(height: 8),
+      Text(
+        promptText,  // e.g., '"When you're stressed, what helps most?"'
+        style: TextStyle(fontStyle: FontStyle.italic, fontSize: 14),
+      ),
+      SizedBox(height: 8),
+      Text(
+        'This isn't about being "right" — it's an invitation to understand.',
+        style: TextStyle(fontSize: 12, color: Colors.grey[600]),
+      ),
+    ],
+  ),
+)
+```
+
+**Prompt sources:**
+- **Option A:** Generic prompts per quiz type (simpler)
+- **Option B:** Per-question prompts stored in JSON (more work, better UX)
+
+Recommendation: Start with Option A (generic prompts), iterate to Option B later.
+
+**Generic prompts by quiz type:**
+
+| Quiz Type | Generic Prompt |
+|-----------|----------------|
+| Connection | "What would help you understand this about each other better?" |
+| Attachment | "What would help you feel more [topic] in your relationship?" |
+| Growth | "How does each of you experience this pattern?" |
+
+### 4.7 Affirmation-Specific Display
+
+For Affirmation quizzes, show alignment bars instead of text answers:
+
+```dart
+Column(
+  children: [
+    Text(statement.text),  // "I can reach my partner when I need them"
+    SizedBox(height: 12),
+    // User's rating
+    Row(
+      children: [
+        Text('You:', style: labelStyle),
+        SizedBox(width: 8),
+        RatingBar(value: userRating, maxValue: 5),  // Visual bar
+        Text('${userRating}/5'),
+      ],
+    ),
+    // Partner's rating
+    Row(
+      children: [
+        Text('${partnerName}:', style: labelStyle),
+        SizedBox(width: 8),
+        RatingBar(value: partnerRating, maxValue: 5),
+        Text('${partnerRating}/5'),
+      ],
+    ),
+    // Alignment indicator
+    if ((userRating - partnerRating).abs() <= 1)
+      MatchIndicator(text: '✓ You see this similarly')
+    else
+      MismatchIndicator(text: 'Different experiences'),
+  ],
+)
+```
+
+### 4.8 You-or-Me-Specific Display
+
+For You-or-Me quizzes, show who each person picked:
+
+```dart
+Column(
+  children: [
+    Text(question.text),  // "Who's the better cook?"
+    SizedBox(height: 12),
+    Row(
+      children: [
+        Text('${userName} said: ', style: labelStyle),
+        Text(userPick == 'self' ? 'Me 👈' : '${partnerName} 👉'),
+      ],
+    ),
+    Row(
+      children: [
+        Text('${partnerName} said: ', style: labelStyle),
+        Text(partnerPick == 'self' ? 'Me 👈' : '${userName} 👉'),
+      ],
+    ),
+    // Show result
+    if (userPick == partnerPick)
+      MatchIndicator(text: '✓ You agree!')
+    else if (userPick == 'self' && partnerPick == 'self')
+      MismatchIndicator(text: 'Both said themselves!')
+    else
+      MismatchIndicator(text: 'Opposite views!'),
+  ],
+)
+```
+
+### 4.9 Files to Modify
+
+| File | Changes |
+|------|---------|
+| `lib/screens/quiz_match_results_screen.dart` | Full redesign — add question details inline |
+| `lib/screens/you_or_me_match_results_screen.dart` | Full redesign — add question details inline |
+| `lib/models/quiz_match.dart` | May need to ensure question/answer data is available |
+| `lib/services/quiz_match_service.dart` | May need to return full question details in results |
+
+### 4.10 Data Requirements
+
+The results screen needs access to:
+
+```dart
+class QuizResultsData {
+  final int score;           // e.g., 7
+  final int totalQuestions;  // e.g., 10
+  final int lpEarned;        // e.g., 30
+  final String branch;       // e.g., 'connection'
+  final bool isTherapeutic;  // e.g., true
+  final List<QuestionResult> questions;
+}
+
+class QuestionResult {
+  final String questionText;
+  final String userAnswer;
+  final String partnerAnswer;
+  final bool isMatch;
+  final String? conversationPrompt;  // For therapeutic mismatches
+}
+```
+
+**API consideration:** The server may need to return full question details in the completion response, not just the match percentage.
 
 ---
 
-## Part 2: UI Differentiation (Therapeutic vs Casual)
+## Part 5: Implementation Phases
 
-### 2.1 Quest Card Differentiation
+### Phase 1: Quest Card Badge (Small Change)
 
-Therapeutic quests need visual distinction on the home screen carousel.
+**Effort:** ~1 hour
 
-| Element | Casual Quest | Therapeutic Quest |
-|---------|--------------|-------------------|
-| Badge | None or activity name | "Deeper" badge |
-| Border | Standard 1px | Subtle accent (2px or colored) |
-| Icon style | Playful emoji | Softer/warmer emoji |
-| Subtitle | Activity description | "Connect on a deeper level" |
+**Files:**
+- `lib/widgets/quest_card.dart`
 
-### 2.2 Intro Screen (First-Time Therapeutic)
+**Tasks:**
+1. Add `isTherapeuticBranch()` helper function
+2. Add positioned "Deeper" badge container over quest image
+3. Conditionally render badge for therapeutic branches
 
-When user plays their first therapeutic quest of each type, show a brief framing screen:
+**Test:** Verify badge appears on Connection/Attachment/Growth quest cards only.
 
-**Purpose:**
-- Set expectations for deeper content
-- Remove pressure of "right answers"
-- Frame as connection opportunity
+---
 
-**Content varies by quiz type:**
+### Phase 2: Intro Screen Badge (Small Change)
 
-| Quiz Type | Intro Message |
-|-----------|---------------|
-| Connection (Classic) | "These questions go deeper — they're designed to help you truly know each other. There are no wrong answers." |
-| Attachment (Affirmation) | "This quiz explores how you each experience your connection. Your feelings are valid, even when they differ." |
-| Growth (You-or-Me) | "These questions explore your patterns as a couple. It's about understanding, not judging." |
+**Effort:** ~2 hours
 
-### 2.3 Results Screen Structure
+**Files:**
+- `lib/screens/quiz_intro_screen.dart`
+- `lib/screens/affirmation_intro_screen.dart`
+- `lib/screens/you_or_me_match_intro_screen.dart`
 
-#### Casual Quizzes — Primary Screen
+**Tasks:**
+1. Modify badge section to render two badges in a Row
+2. Add "Deeper" badge conditionally for therapeutic branches
+3. Update description copy for therapeutic branches
+4. (Optional) Add first-time therapeutic note with storage tracking
 
-```
-┌─────────────────────────────────────┐
-│                                     │
-│         [Score: 7/10]               │
-│                                     │
-│   "[Playful message]"               │
-│                                     │
-│         + 30 LP                     │
-│                                     │
-│   [See the Surprises]               │
-│                                     │
-└─────────────────────────────────────┘
-```
+**Test:** Verify "Deeper" badge and updated copy appear for therapeutic branches.
 
-#### Therapeutic Quizzes — Primary Screen
+---
 
-```
-┌─────────────────────────────────────┐
-│                                     │
-│         [Score: 6/10]               │
-│                                     │
-│   "[Warm message]"                  │
-│                                     │
-│   [Supportive subtext about         │
-│    the value of discovery]          │
-│                                     │
-│         + 30 LP                     │
-│                                     │
-│   [Explore What You Learned]        │
-│                                     │
-└─────────────────────────────────────┘
-```
+### Phase 3: Results Screen Redesign (Major Change)
 
-#### Details Screen — Mismatch Display
+**Effort:** ~8-12 hours
 
-**Casual:** Simple display with playful commentary
-```
-Sarah thought: "Pizza"
-Mike actually: "Sushi"
-```
+**Files:**
+- `lib/screens/quiz_match_results_screen.dart` (major rewrite)
+- `lib/screens/you_or_me_match_results_screen.dart` (major rewrite)
+- Possibly: `lib/models/quiz_match.dart`, API routes
 
-**Therapeutic:** Includes conversation prompt
-```
-You guessed: Space alone
-Sarah said: Someone to listen
+**Tasks:**
+1. Create new results screen layout with score header + scrollable details
+2. Implement message copy logic based on score ranges
+3. Implement question list with match/mismatch styling
+4. Add conversation prompts for therapeutic mismatches
+5. Ensure API returns full question/answer data
+6. Handle Affirmation rating bars
+7. Handle You-or-Me pick display
 
-💬 "What helps most when you're stressed?"
+**Test:**
+- All score ranges show correct messages
+- Matches show green styling
+- Mismatches show appropriate styling (playful for casual, prompts for therapeutic)
+- Scrolling works with many questions
+- LP display is correct
+
+---
+
+### Phase 4: Content Creation
+
+**Effort:** ~4-6 hours
+
+**Files:**
+- `assets/brands/togetherremind/data/classic-quiz/connection/questions.json`
+- `assets/brands/togetherremind/data/affirmation/attachment/quizzes.json`
+- `assets/brands/togetherremind/data/you-or-me/growth/questions.json`
+- Manifest files for each new branch
+
+**Tasks:**
+1. Create Connection branch JSON from `docs/QUIZ_CONTENT_ANALYSIS.md`
+2. Create Attachment branch JSON (6 quizzes × 5 statements)
+3. Create Growth branch JSON (30 questions)
+4. Create manifest.json for each with video/image references
+5. Add conversation prompts for each therapeutic question (or use generic)
+
+**Reference:** See `docs/QUIZ_CONTENT_ANALYSIS.md` Part 2 for full question lists.
+
+---
+
+### Phase 5: Branch Rotation Update
+
+**Effort:** ~1-2 hours
+
+**Files:**
+- `lib/services/quest_type_manager.dart`
+- Possibly: branch configuration files
+
+**Tasks:**
+1. Add Connection, Attachment, Growth to branch rotation
+2. Update rotation formula: `currentBranch = totalCompletions % 4`
+3. Mark new branches as therapeutic in configuration
+
+---
+
+## Part 6: Mockup File Reference
+
+All mockups are located in `mockups/quiz_improvements/`:
+
+### Quest Cards
+| File | Description |
+|------|-------------|
+| `quest-cards/quest-card-comparison.html` | Side-by-side casual vs therapeutic with "Deeper" badge |
+
+### Intro Screens
+| File | Description |
+|------|-------------|
+| `intro-screens/intro-therapeutic-additions.html` | Shows badge additions to existing intro screen structure |
+
+### Results Screens
+| File | Description |
+|------|-------------|
+| `results-screens/results-classic-casual.html` | Classic quiz casual — high/mid/low score variants |
+| `results-screens/results-classic-therapeutic.html` | Classic quiz therapeutic — warm discovery framing |
+| `results-screens/results-affirmation-casual.html` | Affirmation casual — alignment dots display |
+| `results-screens/results-affirmation-therapeutic.html` | Affirmation therapeutic — validates both perspectives |
+| `results-screens/results-youorme-casual.html` | You-or-Me casual — playful debate framing |
+| `results-screens/results-youorme-therapeutic.html` | You-or-Me therapeutic — pattern exploration |
+
+### Details Screens (Question Breakdown)
+| File | Description |
+|------|-------------|
+| `details-screens/details-casual.html` | Question breakdown with playful comments for mismatches |
+| `details-screens/details-therapeutic.html` | Question breakdown with conversation prompts for mismatches |
+
+**Note:** The details screens show the **inline question list** portion that goes inside the new results screen (Option C), not a separate screen.
+
+---
+
+## Part 7: Open Questions — RESOLVED
+
+| Question | Decision |
+|----------|----------|
+| Badge wording | "Deeper" — confirmed |
+| Intro screen changes | Badge + copy only, keep video and structure |
+| Results screen approach | Option C — full redesign with details inline |
+| Conversation prompts | Start with generic per quiz type, iterate later |
+
+---
+
+## Appendix A: Therapeutic Branch Detection
+
+```dart
+/// Returns true if the branch is a therapeutic branch
+bool isTherapeuticBranch(String? branch) {
+  if (branch == null) return false;
+  const therapeuticBranches = ['connection', 'attachment', 'growth'];
+  return therapeuticBranches.contains(branch.toLowerCase());
+}
+
+/// Returns therapeutic description suffix for intro screens
+String? getTherapeuticDescription(String? branch) {
+  switch (branch?.toLowerCase()) {
+    case 'connection':
+      return 'These questions go a little deeper — discover what you truly know about each other\'s inner world.';
+    case 'attachment':
+      return 'This quiz explores how you each experience your connection — your sense of safety, trust, and closeness.';
+    case 'growth':
+      return 'These questions explore your patterns as a couple — how you support each other, handle challenges, and grow together.';
+    default:
+      return null;
+  }
+}
 ```
 
 ---
 
-## Part 3: New Therapeutic Content
+## Appendix B: Score Message Helper
 
-### 3.1 Content Summary
+```dart
+/// Returns the appropriate message for a score
+String getScoreMessage({
+  required int score,
+  required int total,
+  required bool isTherapeutic,
+  required String quizType,  // 'classic', 'affirmation', 'youorme'
+}) {
+  final percentage = (score / total * 100).round();
 
-| Activity | Branch | Questions | Status |
-|----------|--------|-----------|--------|
-| Classic Quiz | Connection | 50 | JSON complete in analysis doc |
-| Affirmation | Attachment | 30 (6 quizzes) | Table format in analysis doc |
-| You-or-Me | Growth | 30 | Table format in analysis doc |
-
-**Total new therapeutic content:** 110 items
-
-### 3.2 Content Creation Tasks
-
-- [ ] Create `classic-quiz/connection/questions.json` from analysis doc
-- [ ] Create `affirmation/attachment/quizzes.json` with full JSON structure
-- [ ] Create `you-or-me/growth/questions.json` with full JSON structure
-- [ ] Create manifest.json files for each new branch
-
-### 3.3 Branch Rotation Integration
-
-Therapeutic branches integrate into existing rotation:
-
-| Position | Classic Quiz | Affirmation | You-or-Me |
-|----------|--------------|-------------|-----------|
-| 0 | Lighthearted | Emotional | Playful |
-| 1 | Deeper | Practical | Reflective |
-| 2 | Spicy | Spiritual | Intimate |
-| 3 | **Connection** | **Attachment** | **Growth** |
-
-Formula: `currentBranch = totalCompletions % 4`
-
----
-
-## Part 4: Implementation Tasks
-
-### Phase 1: Design & Mockups
-
-- [ ] **Quest card mockups** — Casual vs therapeutic visual differentiation
-- [ ] **Intro screen mockups** — First-time therapeutic quest framing
-- [ ] **Results screen mockups** — All 6 quiz type variants
-  - [ ] Classic Casual results
-  - [ ] Classic Therapeutic results
-  - [ ] Affirmation Casual results
-  - [ ] Affirmation Therapeutic results
-  - [ ] You-or-Me Casual results
-  - [ ] You-or-Me Therapeutic results
-- [ ] **Details/mismatch screen mockups** — Casual vs therapeutic framing
-
-### Phase 2: Content Creation
-
-- [ ] Finalize Connection branch JSON (50 questions) — mostly done
-- [ ] Create Attachment branch JSON (30 statements, 6 quizzes)
-- [ ] Create Growth branch JSON (30 questions)
-- [ ] Write all score-range messages for each quiz type
-- [ ] Write conversation prompts for therapeutic mismatches
-
-### Phase 3: Backend Updates
-
-- [ ] Add `isTherapeutic` flag to branch configuration
-- [ ] Update results calculation to use new message copy
-- [ ] Add conversation prompt field to mismatch responses
-- [ ] Update branch rotation to include new branches (if not 4-branch already)
-
-### Phase 4: Frontend Updates
-
-- [ ] Update quest card component with therapeutic badge/styling
-- [ ] Create intro screen component for first therapeutic quest
-- [ ] Update results screen with new message logic
-- [ ] Update details screen with conversation prompts
-- [ ] Track "has seen intro" per therapeutic branch type
-
-### Phase 5: Testing
-
-- [ ] Test all score ranges show correct messages
-- [ ] Test therapeutic intro only shows once per branch type
-- [ ] Test branch rotation includes therapeutic branches
-- [ ] Test conversation prompts display correctly
-- [ ] User testing for emotional response to new framing
-
----
-
-## Part 5: Mockup Specifications
-
-### 5.1 Quest Card Mockups Needed
-
-| Mockup | Description |
-|--------|-------------|
-| `quest-card-casual.html` | Standard quest card (current design) |
-| `quest-card-therapeutic.html` | Quest card with "Deeper" badge and subtle differentiation |
-| `quest-card-comparison.html` | Side-by-side comparison of both styles |
-
-### 5.2 Intro Screen Mockups Needed
-
-| Mockup | Description |
-|--------|-------------|
-| `intro-connection.html` | First-time Connection quiz intro |
-| `intro-attachment.html` | First-time Attachment quiz intro |
-| `intro-growth.html` | First-time Growth quiz intro |
-
-### 5.3 Results Screen Mockups Needed
-
-| Mockup | Description |
-|--------|-------------|
-| `results-classic-casual.html` | Classic quiz casual results (high/mid/low scores) |
-| `results-classic-therapeutic.html` | Classic quiz therapeutic results |
-| `results-affirmation-casual.html` | Affirmation casual results |
-| `results-affirmation-therapeutic.html` | Affirmation therapeutic results |
-| `results-youorme-casual.html` | You-or-Me casual results |
-| `results-youorme-therapeutic.html` | You-or-Me therapeutic results |
-
-### 5.4 Details Screen Mockups Needed
-
-| Mockup | Description |
-|--------|-------------|
-| `details-casual.html` | Mismatch display for casual quizzes |
-| `details-therapeutic.html` | Mismatch display with conversation prompts |
-
----
-
-## Success Metrics
-
-After implementation, monitor:
-
-1. **Completion rates** — Do therapeutic quizzes have similar completion to casual?
-2. **Return engagement** — Do users return after low-score therapeutic quizzes?
-3. **Qualitative feedback** — Do users feel judged or curious after mismatches?
-4. **Conversation prompt engagement** — Do users tap "Explore" on therapeutic results?
-
----
-
-## Open Questions
-
-1. **Badge wording** — "Deeper" confirmed, but should it vary by quiz type?
-2. **Intro screen frequency** — Show once ever, or once per month?
-3. **Conversation prompts** — Pre-written per question, or generic per quiz type?
-4. **Score visibility** — Show numerical score on therapeutic, or just message?
-
----
-
-## Appendix: File Locations
-
-**Content files:**
-```
-app/assets/brands/togetherremind/data/
-├── classic-quiz/
-│   └── connection/questions.json  ← NEW
-├── affirmation/
-│   └── attachment/quizzes.json    ← NEW
-└── you-or-me/
-    └── growth/questions.json      ← NEW
-```
-
-**Mockup files:**
-```
-mockups/quiz-improvements/
-├── quest-cards/
-├── intro-screens/
-├── results-screens/
-└── details-screens/
+  if (quizType == 'classic') {
+    if (isTherapeutic) {
+      // Connection branch messages
+      if (percentage >= 90) return 'You really see each other';
+      if (percentage >= 70) return 'You know each other well — and learned even more today';
+      if (percentage >= 50) return 'Some beautiful discoveries here';
+      if (percentage >= 30) return 'You uncovered some new layers today';
+      return 'Lots to explore together — that\'s a gift';
+    } else {
+      // Casual branch messages
+      if (percentage >= 90) return 'You two are scary good';
+      if (percentage >= 70) return 'Solid! You\'ve been paying attention';
+      if (percentage >= 50) return 'A few surprises in there!';
+      if (percentage >= 30) return 'Looks like you learned something new today';
+      return 'Plot twist! Time to compare notes';
+    }
+  }
+  // ... similar for affirmation and youorme
+}
 ```
 
 ---
@@ -358,3 +796,5 @@ mockups/quiz-improvements/
 | Date | Change |
 |------|--------|
 | 2025-12-02 | Initial plan created |
+| 2025-12-02 | Updated with Option C decision — results screen full redesign |
+| 2025-12-02 | Added detailed implementation specs and mockup references |

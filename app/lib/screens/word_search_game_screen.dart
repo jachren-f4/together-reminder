@@ -566,6 +566,30 @@ class _WordSearchGameScreenState extends State<WordSearchGameScreen>
       return const Center(child: Text('No puzzle available'));
     }
 
+    // Calculate exact heights for predictable layout on all platforms
+    final mediaQuery = MediaQuery.of(context);
+    final screenWidth = mediaQuery.size.width;
+    final screenHeight = mediaQuery.size.height;
+    final safeAreaTop = mediaQuery.padding.top;
+    final safeAreaBottom = mediaQuery.padding.bottom;
+
+    // Fixed component heights
+    const headerHeight = 44.0; // header with padding and border
+    const bottomBarHeight = 54.0; // bottom bar with padding
+    final gridSize = screenWidth - 12; // 6px padding each side
+
+    // Calculate word bank height (what's left after fixed components)
+    final availableHeight = screenHeight - safeAreaTop - safeAreaBottom;
+    final usedHeight = headerHeight + gridSize + bottomBarHeight;
+    final wordBankHeight = (availableHeight - usedHeight).clamp(80.0, 300.0);
+
+    // Total content height (grid + word bank)
+    final contentHeight = gridSize + wordBankHeight;
+
+    // Calculate vertical centering offset
+    final centeringSpace = availableHeight - headerHeight - contentHeight - bottomBarHeight;
+    final topPadding = (centeringSpace / 2).clamp(0.0, double.infinity);
+
     return Stack(
       children: [
         // Main content
@@ -574,8 +598,17 @@ class _WordSearchGameScreenState extends State<WordSearchGameScreen>
           child: Column(
             children: [
               _buildHeader(),
-              _buildGameArea(), // Fixed size based on screen width
-              Expanded(child: _buildWordBank()), // Expands to fill remaining space
+              // Centering spacer (takes half of remaining space)
+              if (topPadding > 0) SizedBox(height: topPadding),
+              // Grid - fixed size based on screen width
+              _buildGameArea(),
+              // Word bank - calculated fixed height
+              SizedBox(
+                height: wordBankHeight,
+                child: _buildWordBank(),
+              ),
+              // Bottom spacer pushes bottom bar down
+              const Spacer(),
               _buildBottomBar(),
             ],
           ),
