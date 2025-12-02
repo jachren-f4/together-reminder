@@ -586,9 +586,51 @@ class QuestionResult {
 
 ## Part 5: Implementation Phases
 
-### Phase 1: Quest Card Badge (Small Change)
+### Phase 1: Fix Existing Content Bugs
 
-**Effort:** ~1 hour
+Before adding new content, fix the issues identified in `docs/QUIZ_CONTENT_ANALYSIS.md`:
+
+**Files:**
+- `app/assets/brands/togetherremind/data/classic-quiz/lighthearted/questions.json`
+- `app/assets/brands/togetherremind/data/classic-quiz/deeper/questions.json`
+- `app/assets/brands/togetherremind/data/you-or-me/*/questions.json`
+
+**Issues to fix:**
+
+#### 1a. Classic Quiz ID Gap (Lighthearted)
+
+The lighthearted branch has a gap in question IDs: q1-q15, then jumps to q51-q180.
+
+**Task:** Review if this is intentional. If not, renumber or fill the gap (q16-q50).
+
+#### 1b. Missing Questions in Deeper Branch
+
+The deeper branch is missing some questions that exist in lighthearted:
+- Missing q63 (scent/perfume type)
+- Missing q66 (comfort food)
+- Missing q69 (favorite way to learn)
+- Missing q72 (type of sandwich)
+- Missing q75 (guilty pleasure)
+
+**Task:** Add missing questions to deeper branch, or document why they're excluded.
+
+#### 1c. You-or-Me Thematic Overlap
+
+Similar questions appear across branches:
+
+| Question | Branch 1 | Branch 2 |
+|----------|----------|----------|
+| "Apologize first" | playful (yom_q019) | intimate (yom_intimate_013) |
+| "Stay up late talking" | playful (yom_q028) | intimate (yom_intimate_014) |
+| "Better listener" | reflective (yom_q049) | intimate (yom_intimate_018) |
+
+**Task:** Remove duplicates from one branch or differentiate the framing.
+
+**Reference:** `docs/QUIZ_CONTENT_ANALYSIS.md` → "Critical Issues" and "Minor Issues" sections
+
+---
+
+### Phase 2: Quest Card Badge
 
 **Files:**
 - `lib/widgets/quest_card.dart`
@@ -602,9 +644,7 @@ class QuestionResult {
 
 ---
 
-### Phase 2: Intro Screen Badge (Small Change)
-
-**Effort:** ~2 hours
+### Phase 3: Intro Screen Badge
 
 **Files:**
 - `lib/screens/quiz_intro_screen.dart`
@@ -621,9 +661,7 @@ class QuestionResult {
 
 ---
 
-### Phase 3: Results Screen Redesign (Major Change)
-
-**Effort:** ~8-12 hours
+### Phase 4: Results Screen Redesign
 
 **Files:**
 - `lib/screens/quiz_match_results_screen.dart` (major rewrite)
@@ -648,24 +686,121 @@ class QuestionResult {
 
 ---
 
-### Phase 4: Content Creation
+### Phase 5: Therapeutic Content Creation
 
-**Effort:** ~4-6 hours
+**Files to create:**
+```
+app/assets/brands/togetherremind/data/
+├── classic-quiz/connection/
+│   ├── questions.json    ← 50 questions
+│   └── manifest.json
+├── affirmation/attachment/
+│   ├── quizzes.json      ← 6 quizzes × 5 statements = 30
+│   └── manifest.json
+└── you-or-me/growth/
+    ├── questions.json    ← 30 questions
+    └── manifest.json
+```
 
-**Files:**
-- `assets/brands/togetherremind/data/classic-quiz/connection/questions.json`
-- `assets/brands/togetherremind/data/affirmation/attachment/quizzes.json`
-- `assets/brands/togetherremind/data/you-or-me/growth/questions.json`
-- Manifest files for each new branch
+#### 4a. Connection Branch (Classic Quiz) — READY
 
-**Tasks:**
-1. Create Connection branch JSON from `docs/QUIZ_CONTENT_ANALYSIS.md`
-2. Create Attachment branch JSON (6 quizzes × 5 statements)
-3. Create Growth branch JSON (30 questions)
-4. Create manifest.json for each with video/image references
-5. Add conversation prompts for each therapeutic question (or use generic)
+**Status:** Full JSON with 5 options per question already written in `docs/QUIZ_CONTENT_ANALYSIS.md`
 
-**Reference:** See `docs/QUIZ_CONTENT_ANALYSIS.md` Part 2 for full question lists.
+**Content:** 50 questions across 5 themes:
+- Theme 1: Dreams & Aspirations (conn_001 - conn_010)
+- Theme 2: Worries & Stresses (conn_011 - conn_020)
+- Theme 3: Values & Beliefs (conn_021 - conn_030)
+- Theme 4: Emotional Needs (conn_031 - conn_040)
+- Theme 5: History & Identity (conn_041 - conn_050)
+
+**Task:** Copy JSON from analysis doc into `questions.json` file.
+
+**Source:** `docs/QUIZ_CONTENT_ANALYSIS.md` → Search for "Theme 1: Dreams & Aspirations"
+
+#### 4b. Attachment Branch (Affirmation) — NEEDS EXPANSION
+
+**Status:** Table format in analysis doc, needs conversion to full JSON
+
+**Content:** 6 quizzes × 5 statements = 30 total:
+- Quiz 1: "Are You There For Me?" (Accessibility)
+- Quiz 2: "Can I Count On You?" (Responsiveness)
+- Quiz 3: "Do I Matter To You?" (Engagement)
+- Quiz 4: "Can We Repair?" (Repair)
+- Quiz 5: "Do I Trust You?" (Trust)
+- Quiz 6: "Am I Safe With You?" (Security)
+
+**Task:** Convert table format to full `quizzes.json` structure matching existing affirmation format.
+
+**Source:** `docs/QUIZ_CONTENT_ANALYSIS.md` → Search for "Affirmation: Attachment Branch"
+
+**JSON structure needed:**
+```json
+{
+  "quizzes": [
+    {
+      "id": "attachment_accessibility",
+      "title": "Are You There For Me?",
+      "subtitle": "Can I reach you when I need you?",
+      "category": "accessibility",
+      "statements": [
+        {
+          "id": "att_001",
+          "text": "My partner is emotionally available when I need them.",
+          "dimension": "responsiveness"
+        }
+        // ... 4 more statements
+      ]
+    }
+    // ... 5 more quizzes
+  ]
+}
+```
+
+#### 4c. Growth Branch (You-or-Me) — NEEDS EXPANSION
+
+**Status:** Table format in analysis doc, needs conversion to full JSON
+
+**Content:** 30 questions across themes:
+- Conflict & Repair patterns
+- Vulnerability & Support
+- Dreams & Growth
+- Daily Dynamics
+
+**Task:** Convert table format to full `questions.json` structure matching existing You-or-Me format.
+
+**Source:** `docs/QUIZ_CONTENT_ANALYSIS.md` → Search for "You-or-Me: Growth Branch"
+
+**JSON structure needed:**
+```json
+[
+  {
+    "id": "growth_001",
+    "question": "Who finds it harder to ask for help?",
+    "category": "vulnerability",
+    "difficulty": 2
+  }
+  // ... 29 more questions
+]
+```
+
+#### 4d. Manifest Files
+
+Each new branch needs a `manifest.json`:
+
+```json
+{
+  "displayName": "Connection",
+  "title": "Connection Quiz",
+  "description": "Discover each other's inner world",
+  "video": "connection-intro.mp4",
+  "fallbackEmoji": "💫",
+  "isTherapeutic": true
+}
+```
+
+**Videos:** Either create new videos or reuse existing branch videos initially.
+
+**Reference:** See `docs/QUIZ_CONTENT_ANALYSIS.md` Part 2 for full question/statement lists.
 
 ---
 
