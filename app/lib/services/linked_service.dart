@@ -1,10 +1,7 @@
-import 'dart:convert';
-import 'package:http/http.dart' as http;
-import '../config/supabase_config.dart';
 import '../models/linked.dart';
-import '../services/storage_service.dart';
-import '../services/auth_service.dart';
+import '../exceptions/game_exceptions.dart';
 import '../utils/logger.dart';
+import 'side_quest_service_base.dart';
 
 /// Game state returned from API
 class LinkedGameState {
@@ -35,61 +32,11 @@ class LinkedGameState {
 ///
 /// API-first architecture: Server is single source of truth.
 /// No local puzzle generation - all matches created server-side.
-class LinkedService {
-  final StorageService _storage = StorageService();
-  final AuthService _authService = AuthService();
-
+class LinkedService extends SideQuestServiceBase {
   static const int _completionPoints = 30;
 
-  /// Get API base URL - uses centralized config
-  String get _apiBaseUrl => SupabaseConfig.apiUrl;
-
-  /// Make API request with authentication headers
-  Future<Map<String, dynamic>> _apiRequest(
-    String method,
-    String path, {
-    Map<String, dynamic>? body,
-  }) async {
-    final url = Uri.parse('$_apiBaseUrl$path');
-    final headers = await _authService.getAuthHeaders();
-    headers['Content-Type'] = 'application/json';
-
-    http.Response response;
-
-    try {
-      switch (method) {
-        case 'GET':
-          response = await http.get(url, headers: headers);
-          break;
-        case 'POST':
-          response = await http.post(
-            url,
-            headers: headers,
-            body: body != null ? jsonEncode(body) : '{}',
-          );
-          break;
-        default:
-          throw Exception('Unsupported HTTP method: $method');
-      }
-
-      if (response.statusCode >= 200 && response.statusCode < 300) {
-        return jsonDecode(response.body);
-      } else {
-        final error = jsonDecode(response.body);
-        throw Exception(error['error'] ?? 'API request failed');
-      }
-    } catch (e) {
-      Logger.error('API request failed: $method $path',
-          error: e, service: 'linked');
-      rethrow;
-    }
-  }
-
-  /// Get local date in YYYY-MM-DD format for cooldown check
-  String _getLocalDate() {
-    final now = DateTime.now();
-    return '${now.year}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}';
-  }
+  @override
+  String get serviceName => 'linked';
 
   /// Get or create active match from API
   ///
@@ -98,19 +45,17 @@ class LinkedService {
   /// - Returning existing active match
   /// - All game state calculation (turns, scores, etc.)
   ///
-  /// Throws [LinkedCooldownActiveException] if puzzle cooldown is active.
+  /// Throws [CooldownActiveException] if puzzle cooldown is active.
   Future<LinkedGameState> getOrCreateMatch() async {
     try {
-      final response = await _apiRequest(
+      final response = await apiRequest(
         'POST',
         '/api/sync/linked',
-        body: {'localDate': _getLocalDate()},
+        body: {'localDate': getLocalDate()},
       );
 
       // Check for cooldown response
-      if (response['code'] == 'COOLDOWN_ACTIVE') {
-        throw LinkedCooldownActiveException(response['message'] ?? 'Next puzzle available tomorrow');
-      }
+      checkCooldownResponse(response);
 
       final matchData = response['match'];
       final puzzleData = response['puzzle'];
@@ -120,7 +65,7 @@ class LinkedService {
       final puzzle = puzzleData != null ? LinkedPuzzle.fromJson(puzzleData) : null;
 
       // Cache locally
-      await _storage.saveLinkedMatch(match);
+      await storage.saveLinkedMatch(match);
 
       return LinkedGameState(
         match: match,
@@ -133,14 +78,16 @@ class LinkedService {
         partnerVision: gameStateData['partnerVision'] ?? 2,
         progressPercent: gameStateData['progressPercent'] ?? 0,
       );
+    } on GameException {
+      rethrow;
     } catch (e) {
       Logger.error('Failed to get/create match from API',
-          error: e, service: 'linked');
+          error: e, service: serviceName);
 
       // Fall back to cached match if available (read-only mode)
-      final cached = _storage.getActiveLinkedMatch();
+      final cached = storage.getActiveLinkedMatch();
       if (cached != null) {
-        Logger.warn('Using cached match (offline mode)', service: 'linked');
+        Logger.warn('Using cached match (offline mode)', service: serviceName);
         return LinkedGameState(
           match: cached,
           puzzle: null,
@@ -158,11 +105,10 @@ class LinkedService {
     }
   }
 
-  /// Poll match state by ID (for 10-second polling during partner's turn)
+  /// Poll match state by ID (for polling during partner's turn)
   Future<LinkedGameState> pollMatchState(String matchId) async {
     try {
-      final response =
-          await _apiRequest('GET', '/api/sync/linked/$matchId');
+      final response = await apiRequest('GET', '/api/sync/linked/$matchId');
 
       final matchData = response['match'];
       final puzzleData = response['puzzle'];
@@ -172,7 +118,7 @@ class LinkedService {
       final puzzle = puzzleData != null ? LinkedPuzzle.fromJson(puzzleData) : null;
 
       // Update cache
-      await _storage.saveLinkedMatch(match);
+      await storage.saveLinkedMatch(match);
 
       return LinkedGameState(
         match: match,
@@ -186,7 +132,7 @@ class LinkedService {
         progressPercent: gameStateData['progressPercent'] ?? 0,
       );
     } catch (e) {
-      Logger.error('Failed to poll match state', error: e, service: 'linked');
+      Logger.error('Failed to poll match state', error: e, service: serviceName);
       rethrow;
     }
   }
@@ -243,7 +189,7 @@ class LinkedService {
     List<LinkedDraftPlacement> placements,
   ) async {
     try {
-      final response = await _apiRequest(
+      final response = await apiRequest(
         'POST',
         '/api/sync/linked/submit',
         body: {
@@ -254,7 +200,7 @@ class LinkedService {
 
       return LinkedTurnResult.fromJson(response);
     } catch (e) {
-      Logger.error('Failed to submit turn', error: e, service: 'linked');
+      Logger.error('Failed to submit turn', error: e, service: serviceName);
       throw Exception('Failed to submit turn: $e');
     }
   }
@@ -270,7 +216,7 @@ class LinkedService {
         body['remainingRack'] = remainingRack;
       }
 
-      final response = await _apiRequest(
+      final response = await apiRequest(
         'POST',
         '/api/sync/linked/hint',
         body: body,
@@ -278,7 +224,7 @@ class LinkedService {
 
       return LinkedHintResult.fromJson(response);
     } catch (e) {
-      Logger.error('Failed to use hint', error: e, service: 'linked');
+      Logger.error('Failed to use hint', error: e, service: serviceName);
       throw Exception('Failed to use hint: $e');
     }
   }
@@ -332,12 +278,8 @@ class LinkedService {
   }
 }
 
-/// Exception thrown when puzzle cooldown is active (next puzzle tomorrow)
-class LinkedCooldownActiveException implements Exception {
-  final String message;
-  LinkedCooldownActiveException(this.message);
-
-  @override
-  String toString() => message;
+/// Legacy exception - use [CooldownActiveException] from game_exceptions.dart instead
+@Deprecated('Use CooldownActiveException from game_exceptions.dart')
+class LinkedCooldownActiveException extends CooldownActiveException {
+  LinkedCooldownActiveException(super.message);
 }
-
