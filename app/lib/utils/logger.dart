@@ -69,6 +69,9 @@ class Logger {
     'country': false,           // Country detection and updates
     'sound': false,             // Sound playback
     'steps': false,             // Steps Together feature
+    'polling': true,            // HomePollingService - unified home screen polling
+    'word_search': true,        // Word Search game
+    'linked': true,             // Linked game
   };
 
   /// Log debug information (only in debug mode)

@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import '../exceptions/game_exceptions.dart';
 import '../services/linked_service.dart';
 import '../services/storage_service.dart';
 import '../services/haptic_service.dart';
@@ -127,7 +128,7 @@ class _LinkedGameScreenState extends State<LinkedGameScreen> {
         _startPolling();
         _checkGameCompletion();
       }
-    } on LinkedCooldownActiveException catch (e) {
+    } on CooldownActiveException catch (e) {
       if (mounted) {
         setState(() {
           _isCooldownActive = true;

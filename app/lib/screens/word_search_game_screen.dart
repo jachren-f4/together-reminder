@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'dart:math' as math;
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
+import '../exceptions/game_exceptions.dart';
 import '../services/word_search_service.dart';
 import '../services/storage_service.dart';
 import '../services/haptic_service.dart';
@@ -566,67 +568,21 @@ class _WordSearchGameScreenState extends State<WordSearchGameScreen>
       return const Center(child: Text('No puzzle available'));
     }
 
-    // Use LayoutBuilder to get actual available space (after SafeArea)
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        final availableWidth = constraints.maxWidth;
-        final availableHeight = constraints.maxHeight;
-
-        // Fixed component heights
-        const headerHeight = 44.0; // header with padding and border
-        const bottomBarHeight = 54.0; // bottom bar with padding
-        const minWordBankHeight = 100.0; // minimum space for word bank
-
-        // Available height for content (between header and bottom bar)
-        final contentAreaHeight = availableHeight - headerHeight - bottomBarHeight;
-
-        // Grid size: use available width, but cap it so word bank has minimum space
-        final maxGridSize = contentAreaHeight - minWordBankHeight;
-        final gridSize = (availableWidth - 12).clamp(0.0, maxGridSize); // 6px padding each side
-
-        // Word bank gets remaining space after grid
-        final wordBankHeight = (contentAreaHeight - gridSize).clamp(minWordBankHeight, 300.0);
-
-        // Total content height (grid + word bank)
-        final contentHeight = gridSize + wordBankHeight;
-
-        // Calculate vertical centering offset
-        final centeringSpace = contentAreaHeight - contentHeight;
-        final topPadding = (centeringSpace / 2).clamp(0.0, double.infinity);
-
-        return _buildMainContent(
-          gridSize: gridSize,
-          wordBankHeight: wordBankHeight,
-          topPadding: topPadding,
-        );
-      },
-    );
-  }
-
-  Widget _buildMainContent({
-    required double gridSize,
-    required double wordBankHeight,
-    required double topPadding,
-  }) {
+    // Use a simple Column with Expanded to avoid overflow issues
     return Stack(
       children: [
-        // Main content
+        // Main content - simple flex layout that can't overflow
         Container(
           color: BrandLoader().colors.surface,
           child: Column(
             children: [
+              // Header - fixed
               _buildHeader(),
-              // Centering spacer (takes half of remaining space)
-              if (topPadding > 0) SizedBox(height: topPadding),
-              // Grid - fixed size calculated from constraints
-              _buildGameArea(gridSize),
-              // Word bank - calculated fixed height
-              SizedBox(
-                height: wordBankHeight,
-                child: _buildWordBank(),
+              // Middle section - flexible, contains grid and word bank
+              Expanded(
+                child: _buildMiddleSection(),
               ),
-              // Bottom spacer pushes bottom bar down
-              const Spacer(),
+              // Bottom bar - fixed
               _buildBottomBar(),
             ],
           ),
@@ -671,6 +627,84 @@ class _WordSearchGameScreenState extends State<WordSearchGameScreen>
             onStay: () => setState(() => _showPartnerFirst = false),
           ),
       ],
+    );
+  }
+
+  /// Middle section containing grid and word bank
+  /// Uses LayoutBuilder to calculate sizes that fit within constraints
+  Widget _buildMiddleSection() {
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final availableWidth = constraints.maxWidth;
+        final availableHeight = constraints.maxHeight;
+
+        // Minimum height for word bank (header + 3 rows of words + padding)
+        const minWordBankHeight = 140.0;
+        // Maximum word bank height (cap it so we have extra space for centering)
+        const maxWordBankHeight = 180.0;
+
+        double gridSize;
+        double wordBankHeight;
+        double extraSpace;
+
+        if (kIsWeb) {
+          // Web/Chrome: Use fixed grid size (iPhone 14 Pro Max width ~430px)
+          // This prevents overflow issues on web
+          const webMaxGridSize = 380.0;
+          gridSize = math.min(webMaxGridSize, availableWidth - 12);
+
+          // Word bank gets remaining space
+          wordBankHeight = (availableHeight - gridSize - 12).clamp(minWordBankHeight, double.infinity);
+
+          // No centering on web - just fit content
+          extraSpace = 0;
+        } else {
+          // Mobile: Dynamic layout with centering
+          // Grid size: square, using full width minus padding
+          final desiredGridSize = availableWidth - 12; // 6px padding each side
+
+          // Cap grid size so word bank has minimum space
+          final maxGridSize = availableHeight - minWordBankHeight;
+          gridSize = desiredGridSize.clamp(100.0, maxGridSize);
+
+          // Word bank height: remaining space, but capped for centering
+          final remainingAfterGrid = availableHeight - gridSize - 12;
+          wordBankHeight = remainingAfterGrid.clamp(minWordBankHeight, maxWordBankHeight);
+
+          // Total content height
+          final totalContentHeight = gridSize + 12 + wordBankHeight;
+
+          // Extra space for centering (this is what's left over)
+          extraSpace = availableHeight - totalContentHeight;
+        }
+
+        // Use a Column with spacers to center content (mobile only)
+        return Column(
+          children: [
+            // Top spacer (half of extra space) - mobile only
+            if (extraSpace > 0) SizedBox(height: extraSpace / 2),
+            // Grid area with padding - fixed size
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 6),
+              child: SizedBox(
+                width: gridSize,
+                height: gridSize,
+                child: _buildGrid(),
+              ),
+            ),
+            // Word bank - expands on web, fixed on mobile
+            if (kIsWeb)
+              Expanded(child: _buildWordBank())
+            else
+              SizedBox(
+                height: wordBankHeight,
+                child: _buildWordBank(),
+              ),
+            // Bottom spacer (half of extra space) - mobile only
+            if (extraSpace > 0) SizedBox(height: extraSpace / 2),
+          ],
+        );
+      },
     );
   }
 
@@ -1048,89 +1082,91 @@ class _WordSearchGameScreenState extends State<WordSearchGameScreen>
     const int columnCount = 4;
     const double gapSize = 6;
 
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-      decoration: BoxDecoration(
-        color: BrandLoader().colors.surface,
-        border: Border(
-          top: BorderSide(color: const Color(0xFFE0E0E0)),
-        ),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Title row
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                'FIND THESE WORDS',
-                style: TextStyle(
-                  fontSize: 10,
-                  letterSpacing: 1,
-                  color: BrandLoader().colors.textSecondary,
-                ),
-              ),
-              Text(
-                '${match.totalWordsFound} / ${puzzle.words.length}',
-                style: TextStyle(
-                  fontSize: 10,
-                  letterSpacing: 1,
-                  color: BrandLoader().colors.textSecondary,
-                ),
-              ),
-            ],
+    return ClipRect(
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+        decoration: BoxDecoration(
+          color: BrandLoader().colors.surface,
+          border: Border(
+            top: BorderSide(color: const Color(0xFFE0E0E0)),
           ),
-          const SizedBox(height: 8),
-          // Word grid - expands to fill available space
-          Expanded(
-            child: GridView.builder(
-              physics: const NeverScrollableScrollPhysics(),
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: columnCount,
-                mainAxisSpacing: gapSize,
-                crossAxisSpacing: gapSize,
-                childAspectRatio: 2.2, // Width to height ratio for word items
-              ),
-              itemCount: puzzle.words.length,
-              itemBuilder: (context, index) {
-                final word = puzzle.words[index];
-                final found = match.isWordFound(word);
-                final foundWord = match.getFoundWord(word);
-                final color = foundWord != null
-                    ? _getWordColor(foundWord.colorIndex)
-                    : null;
-
-                return Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
-                  decoration: BoxDecoration(
-                    color: BrandLoader().colors.surface,
-                    border: Border.all(
-                      color: found ? color! : const Color(0xFFE0E0E0),
-                    ),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Title row - fixed height
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'FIND THESE WORDS',
+                  style: TextStyle(
+                    fontSize: 10,
+                    letterSpacing: 1,
+                    color: BrandLoader().colors.textSecondary,
                   ),
-                  child: Center(
-                    child: FittedBox(
-                      fit: BoxFit.scaleDown,
-                      child: Text(
-                        word.toUpperCase(),
-                        style: TextStyle(
-                          fontSize: 11,
-                          fontWeight: FontWeight.w600,
-                          letterSpacing: 0.5,
-                          color: found
-                              ? color!.withValues(alpha: 0.6)
-                              : BrandLoader().colors.textPrimary,
-                          decoration: found ? TextDecoration.lineThrough : null,
+                ),
+                Text(
+                  '${match.totalWordsFound} / ${puzzle.words.length}',
+                  style: TextStyle(
+                    fontSize: 10,
+                    letterSpacing: 1,
+                    color: BrandLoader().colors.textSecondary,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 8),
+            // Word grid - expands to fill available space
+            Expanded(
+              child: GridView.builder(
+                physics: const NeverScrollableScrollPhysics(),
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: columnCount,
+                  mainAxisSpacing: gapSize,
+                  crossAxisSpacing: gapSize,
+                  childAspectRatio: 2.2, // Width to height ratio for word items
+                ),
+                itemCount: puzzle.words.length,
+                itemBuilder: (context, index) {
+                  final word = puzzle.words[index];
+                  final found = match.isWordFound(word);
+                  final foundWord = match.getFoundWord(word);
+                  final color = foundWord != null
+                      ? _getWordColor(foundWord.colorIndex)
+                      : null;
+
+                  return Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
+                    decoration: BoxDecoration(
+                      color: BrandLoader().colors.surface,
+                      border: Border.all(
+                        color: found ? color! : const Color(0xFFE0E0E0),
+                      ),
+                    ),
+                    child: Center(
+                      child: FittedBox(
+                        fit: BoxFit.scaleDown,
+                        child: Text(
+                          word.toUpperCase(),
+                          style: TextStyle(
+                            fontSize: 11,
+                            fontWeight: FontWeight.w600,
+                            letterSpacing: 0.5,
+                            color: found
+                                ? color!.withValues(alpha: 0.6)
+                                : BrandLoader().colors.textPrimary,
+                            decoration: found ? TextDecoration.lineThrough : null,
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                );
-              },
+                  );
+                },
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

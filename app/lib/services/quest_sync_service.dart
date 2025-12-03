@@ -102,9 +102,22 @@ class QuestSyncService {
       }
 
       // No quests in Supabase yet
-      if (_storage.getTodayQuests().isNotEmpty) {
-        // Local quests exist but not in Supabase - already generated locally
-        Logger.debug('   ✅ Local quests exist but not in Supabase', service: 'quest');
+      final localQuests = _storage.getTodayQuests();
+      if (localQuests.isNotEmpty) {
+        // Local quests exist but not in Supabase - try to upload them
+        // This handles the case where initial upload failed
+        Logger.debug('   ⚠️  Local quests exist but not in Supabase - attempting upload...', service: 'quest');
+        try {
+          await saveQuestsToSupabase(
+            quests: localQuests,
+            currentUserId: currentUserId,
+            partnerUserId: partnerUserId,
+          );
+          Logger.debug('   ✅ Successfully uploaded local quests to Supabase', service: 'quest');
+        } catch (e) {
+          Logger.warn('   ⚠️  Failed to upload local quests: $e', service: 'quest');
+          // Continue anyway - local quests will work for this device
+        }
         return true;
       } else {
         // No quests anywhere - need to generate

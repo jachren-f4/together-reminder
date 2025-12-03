@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'dart:io';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
@@ -17,6 +16,7 @@ import '../services/love_point_service.dart';
 import '../services/haptic_service.dart';
 import '../services/sound_service.dart';
 import '../services/steps_feature_service.dart';
+import '../services/home_polling_service.dart';
 import '../animations/animation_config.dart';
 import '../theme/app_theme.dart';
 import '../widgets/poke_bottom_sheet.dart';
@@ -49,20 +49,17 @@ class _NewHomeScreenState extends State<NewHomeScreen> with TickerProviderStateM
   final WordSearchService _wordSearchService = WordSearchService();
   final LinkedService _linkedService = LinkedService();
   final QuizService _quizService = QuizService();
+  final HomePollingService _pollingService = HomePollingService();
 
   bool _isRefreshing = false;
   DateTime? _lastSyncTime;
   late AnimationController _pulseController;
   late AnimationController _lpPulseController;
   int _lastLPValue = 0;
-  Timer? _sideQuestPollingTimer;
 
   // Cached side quests Future to prevent FutureBuilder from rebuilding on every setState
   // Without this, the carousel blinks every time any setState is called (e.g., from DailyQuests polling)
   Future<List<DailyQuest>>? _sideQuestsFuture;
-
-  // Polling interval for side quest game state (5 seconds during dev)
-  static const Duration _sideQuestPollingInterval = Duration(seconds: 5);
 
   @override
   void initState() {
@@ -87,8 +84,21 @@ class _NewHomeScreenState extends State<NewHomeScreen> with TickerProviderStateM
     // Fetch LP from server on load to ensure sync
     _syncLPFromServer();
 
-    // Start polling for side quest game state (Linked, Word Search)
-    _startSideQuestPolling();
+    // Subscribe to unified polling service for side quest updates
+    _pollingService.subscribe();
+    _pollingService.subscribeToTopic('sideQuests', _onSideQuestUpdate);
+
+    // Initialize cached Future on first load
+    _refreshSideQuestsFuture();
+  }
+
+  /// Called when HomePollingService detects side quest updates (Linked/Word Search turn changes)
+  void _onSideQuestUpdate() {
+    if (mounted) {
+      Logger.debug('Side quest update from polling service', service: 'home');
+      _refreshSideQuestsFuture();
+      setState(() {});
+    }
   }
 
   /// Fetch LP from server on home screen load
@@ -132,84 +142,16 @@ class _NewHomeScreenState extends State<NewHomeScreen> with TickerProviderStateM
 
   @override
   void dispose() {
-    _sideQuestPollingTimer?.cancel();
+    _pollingService.unsubscribeFromTopic('sideQuests', _onSideQuestUpdate);
+    _pollingService.unsubscribe();
     _pulseController.dispose();
     _lpPulseController.dispose();
     super.dispose();
   }
 
-  /// Start polling for side quest game state updates
-  void _startSideQuestPolling() {
-    // Initialize cached Future on first load
-    _refreshSideQuestsFuture();
-
-    // Initial poll
-    _pollSideQuestGameState();
-
-    // Set up periodic polling
-    _sideQuestPollingTimer = Timer.periodic(_sideQuestPollingInterval, (_) {
-      _pollSideQuestGameState();
-    });
-  }
-
   /// Refresh the cached side quests Future (call when data changes)
   void _refreshSideQuestsFuture() {
     _sideQuestsFuture = _getSideQuests();
-  }
-
-  /// Poll server for Linked and Word Search game state updates
-  Future<void> _pollSideQuestGameState() async {
-    try {
-      // Capture state before polling to detect changes
-      final linkedBefore = _storage.getActiveLinkedMatch();
-      final wsBefore = _storage.getActiveWordSearchMatch();
-      final linkedTurnBefore = linkedBefore?.currentTurnUserId;
-      final wsTurnBefore = wsBefore?.currentTurnUserId;
-
-      // Check if there's an active Linked match to poll
-      if (linkedBefore != null && linkedBefore.status == 'active') {
-        try {
-          await _linkedService.pollMatchState(linkedBefore.matchId);
-          Logger.debug('Polled Linked match: ${linkedBefore.matchId}', service: 'home');
-        } catch (e) {
-          // Silently ignore - match may have been completed or doesn't exist
-        }
-      }
-
-      // Check if there's an active Word Search match to poll
-      if (wsBefore != null && wsBefore.status == 'active') {
-        try {
-          await _wordSearchService.pollMatchState(wsBefore.matchId);
-          Logger.debug('Polled Word Search match: ${wsBefore.matchId}', service: 'home');
-        } catch (e) {
-          // Silently ignore - match may have been completed or doesn't exist
-        }
-      }
-
-      // Check if anything changed
-      final linkedAfter = _storage.getActiveLinkedMatch();
-      final wsAfter = _storage.getActiveWordSearchMatch();
-      final linkedTurnAfter = linkedAfter?.currentTurnUserId;
-      final wsTurnAfter = wsAfter?.currentTurnUserId;
-
-      final hasChanges = linkedTurnBefore != linkedTurnAfter ||
-          wsTurnBefore != wsTurnAfter ||
-          linkedBefore?.status != linkedAfter?.status ||
-          wsBefore?.status != wsAfter?.status;
-
-      // Only rebuild if there were actual changes
-      if (hasChanges && mounted) {
-        Logger.debug(
-          'Side quest state changed - Linked: $linkedTurnBefore→$linkedTurnAfter, WS: $wsTurnBefore→$wsTurnAfter',
-          service: 'home',
-        );
-        // Refresh the cached Future with new data
-        _refreshSideQuestsFuture();
-        setState(() {});
-      }
-    } catch (e) {
-      Logger.error('Error polling side quest state', error: e, service: 'home');
-    }
   }
 
   @override
@@ -1152,7 +1094,7 @@ class _NewHomeScreenState extends State<NewHomeScreen> with TickerProviderStateM
     String wordSearchDesc;
     String wordSearchContentId;
     if (activeWordSearchMatch != null && activeWordSearchMatch.status == 'active') {
-      wordSearchDesc = '${activeWordSearchMatch.progressPercentInt}% complete';
+      wordSearchDesc = '${activeWordSearchMatch.progressPercent}% complete';
       wordSearchContentId = activeWordSearchMatch.matchId;
     } else {
       wordSearchDesc = 'Start new puzzle';

@@ -142,8 +142,10 @@ class WordSearchMatch extends HiveObject {
   bool get isActive => status == 'active';
   int get totalWordsFound => foundWords.length;
   int get wordsRemainingThisTurn => 3 - wordsFoundThisTurn;
-  double get progressPercent => totalWordsFound / 12.0;
-  int get progressPercentInt => (progressPercent * 100).round();
+  /// Progress as fraction (0.0 to 1.0) - matches Linked naming convention
+  double get progressPercentage => totalWordsFound / 12.0;
+  /// Progress as percentage (0 to 100) - matches Linked naming convention
+  int get progressPercent => (progressPercentage * 100).round();
 
   /// Check if this is the start of a turn (no words found yet this turn)
   bool get isTurnFresh => wordsFoundThisTurn == 0;
