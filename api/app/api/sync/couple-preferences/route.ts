@@ -4,14 +4,14 @@ import { NextResponse } from 'next/server';
 
 /**
  * GET /api/sync/couple-preferences
- * Fetch couple preferences including first_player_id
+ * Fetch couple preferences including first_player_id and anniversary_date
  * Returns user2_id as default if first_player_id is null
  */
 export const GET = withAuthOrDevBypass(async (req, userId) => {
     try {
         // 1. Find couple with all relevant fields
         const coupleResult = await query(
-            `SELECT id, user1_id, user2_id, first_player_id, created_at
+            `SELECT id, user1_id, user2_id, first_player_id, anniversary_date, created_at
              FROM couples
              WHERE user1_id = $1 OR user2_id = $1`,
             [userId]
@@ -31,7 +31,8 @@ export const GET = withAuthOrDevBypass(async (req, userId) => {
             user1Id: couple.user1_id,
             user2Id: couple.user2_id,
             firstPlayerId: firstPlayerId,
-            isDefaultValue: couple.first_player_id === null
+            isDefaultValue: couple.first_player_id === null,
+            anniversaryDate: couple.anniversary_date ? couple.anniversary_date.toISOString().split('T')[0] : null
         });
     } catch (error) {
         console.error('Error fetching couple preferences:', error);
@@ -41,21 +42,22 @@ export const GET = withAuthOrDevBypass(async (req, userId) => {
 
 /**
  * POST /api/sync/couple-preferences
- * Update couple preferences (first_player_id)
- * Body: { firstPlayerId: string }
+ * Update couple preferences (first_player_id and/or anniversary_date)
+ * Body: { firstPlayerId?: string, anniversaryDate?: string | null }
  */
 export const POST = withAuthOrDevBypass(async (req, userId) => {
     try {
         const body = await req.json();
-        const { firstPlayerId } = body;
+        const { firstPlayerId, anniversaryDate } = body;
 
-        if (!firstPlayerId) {
-            return NextResponse.json({ error: 'Missing firstPlayerId' }, { status: 400 });
+        // At least one field must be provided
+        if (firstPlayerId === undefined && anniversaryDate === undefined) {
+            return NextResponse.json({ error: 'Missing firstPlayerId or anniversaryDate' }, { status: 400 });
         }
 
         // 1. Find couple
         const coupleResult = await query(
-            `SELECT id, user1_id, user2_id FROM couples
+            `SELECT id, user1_id, user2_id, first_player_id, anniversary_date FROM couples
              WHERE user1_id = $1 OR user2_id = $1`,
             [userId]
         );
@@ -67,27 +69,55 @@ export const POST = withAuthOrDevBypass(async (req, userId) => {
         const couple = coupleResult.rows[0];
         const coupleId = couple.id;
 
-        // 2. Validate that firstPlayerId is either user1_id or user2_id
-        if (firstPlayerId !== couple.user1_id && firstPlayerId !== couple.user2_id) {
-            return NextResponse.json(
-                { error: 'Invalid player ID - must be one of the couple members' },
-                { status: 400 }
-            );
+        // 2. Validate firstPlayerId if provided
+        if (firstPlayerId !== undefined) {
+            if (firstPlayerId !== couple.user1_id && firstPlayerId !== couple.user2_id) {
+                return NextResponse.json(
+                    { error: 'Invalid player ID - must be one of the couple members' },
+                    { status: 400 }
+                );
+            }
         }
 
-        // 3. Update first_player_id in couples table
+        // 3. Build update query dynamically
+        const updates: string[] = [];
+        const values: (string | null | Date)[] = [];
+        let paramIndex = 1;
+
+        if (firstPlayerId !== undefined) {
+            updates.push(`first_player_id = $${paramIndex}`);
+            values.push(firstPlayerId);
+            paramIndex++;
+        }
+
+        if (anniversaryDate !== undefined) {
+            updates.push(`anniversary_date = $${paramIndex}`);
+            // anniversaryDate can be null (to delete) or a date string
+            values.push(anniversaryDate ? new Date(anniversaryDate) : null);
+            paramIndex++;
+        }
+
+        updates.push('updated_at = NOW()');
+        values.push(coupleId);
+
         await query(
-            `UPDATE couples
-             SET first_player_id = $1, updated_at = NOW()
-             WHERE id = $2`,
-            [firstPlayerId, coupleId]
+            `UPDATE couples SET ${updates.join(', ')} WHERE id = $${paramIndex}`,
+            values
         );
 
-        // 4. Return success with updated values
+        // 4. Fetch updated values
+        const updatedResult = await query(
+            `SELECT first_player_id, anniversary_date FROM couples WHERE id = $1`,
+            [coupleId]
+        );
+        const updated = updatedResult.rows[0];
+
+        // 5. Return success with updated values
         return NextResponse.json({
             success: true,
             coupleId: coupleId,
-            firstPlayerId: firstPlayerId
+            firstPlayerId: updated.first_player_id || couple.user2_id,
+            anniversaryDate: updated.anniversary_date ? updated.anniversary_date.toISOString().split('T')[0] : null
         });
     } catch (error) {
         console.error('Error updating couple preferences:', error);
