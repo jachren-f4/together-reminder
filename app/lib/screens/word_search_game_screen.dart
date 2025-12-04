@@ -427,12 +427,17 @@ class _WordSearchGameScreenState extends State<WordSearchGameScreen>
 
   @override
   Widget build(BuildContext context) {
-    return PopScope(
-      canPop: false,
-      child: Scaffold(
-        backgroundColor: BrandLoader().colors.background,
-        body: SafeArea(
-          child: _buildBody(),
+    // Disable iOS swipe-to-go-back by using a full-screen horizontal drag detector
+    // PopScope only handles Android back button, not iOS swipe gesture
+    return GestureDetector(
+      onHorizontalDragStart: (_) {},  // Absorb horizontal swipe to disable iOS back gesture
+      child: PopScope(
+        canPop: false,
+        child: Scaffold(
+          backgroundColor: BrandLoader().colors.background,
+          body: SafeArea(
+            child: _buildBody(),
+          ),
         ),
       ),
     );

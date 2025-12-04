@@ -254,10 +254,29 @@ class _QuizMatchGameScreenState extends State<QuizMatchGameScreen>
       // LP is now server-authoritative - synced via UnifiedGameService.submitAnswers()
       // No local awardLovePoints() needed (would cause double-counting)
       if (result.isCompleted) {
+        // Create updated match with answers from the submit result
+        // The original _gameState.match doesn't have answers populated
+        final user = StorageService().getUser();
+        final updatedMatch = QuizMatch(
+          id: _gameState!.match.id,
+          quizId: _gameState!.match.quizId,
+          quizType: _gameState!.match.quizType,
+          branch: _gameState!.match.branch,
+          status: 'completed',
+          player1Answers: result.userAnswers,
+          player2Answers: result.partnerAnswers,
+          matchPercentage: result.matchPercentage,
+          player1Id: user?.id ?? '',  // Set to current user so isPlayer1 check works
+          player2Id: '',
+          date: _gameState!.match.date,
+          createdAt: _gameState!.match.createdAt,
+          completedAt: DateTime.now(),
+        );
+
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(
             builder: (context) => QuizMatchResultsScreen(
-              match: _gameState!.match,
+              match: updatedMatch,
               quiz: _gameState!.quiz,
               matchPercentage: result.matchPercentage,
               lpEarned: result.lpEarned,

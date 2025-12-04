@@ -136,6 +136,8 @@ class QuizMatchSubmitResult {
   final bool isCompleted;
   final int? matchPercentage;
   final int? lpEarned;
+  final List<int> userAnswers;
+  final List<int> partnerAnswers;
 
   QuizMatchSubmitResult({
     required this.success,
@@ -143,6 +145,8 @@ class QuizMatchSubmitResult {
     required this.isCompleted,
     this.matchPercentage,
     this.lpEarned,
+    this.userAnswers = const [],
+    this.partnerAnswers = const [],
   });
 
   factory QuizMatchSubmitResult.fromJson(Map<String, dynamic> json) {
@@ -152,6 +156,8 @@ class QuizMatchSubmitResult {
       isCompleted: json['isCompleted'] ?? false,
       matchPercentage: json['matchPercentage'],
       lpEarned: json['lpEarned'],
+      userAnswers: List<int>.from(json['userAnswers'] ?? []),
+      partnerAnswers: List<int>.from(json['partnerAnswers'] ?? []),
     );
   }
 }

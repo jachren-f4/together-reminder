@@ -82,6 +82,8 @@ class QuizMatchService {
         isCompleted: response.state.isCompleted,
         matchPercentage: response.result?.matchPercentage,
         lpEarned: response.result?.lpEarned,
+        userAnswers: response.result?.userAnswers ?? [],
+        partnerAnswers: response.result?.partnerAnswers ?? [],
       );
     } catch (e) {
       Logger.error('Failed to submit quiz answers', error: e, service: 'quiz');
