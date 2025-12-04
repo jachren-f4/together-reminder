@@ -427,29 +427,14 @@ class _WordSearchGameScreenState extends State<WordSearchGameScreen>
 
   @override
   Widget build(BuildContext context) {
+    // PopScope handles Android back button
+    // iOS swipe-to-go-back is disabled at the route level (PageRouteBuilder in new_home_screen.dart)
     return PopScope(
       canPop: false,
       child: Scaffold(
         backgroundColor: BrandLoader().colors.background,
         body: SafeArea(
-          child: Stack(
-            children: [
-              _buildBody(),
-              // Edge gesture blocker - only blocks left edge swipe for iOS back gesture
-              // This allows word selection to work normally in the rest of the screen
-              Positioned(
-                left: 0,
-                top: 0,
-                bottom: 0,
-                width: 20, // iOS edge swipe detection zone is ~20px
-                child: GestureDetector(
-                  onHorizontalDragStart: (_) {}, // Absorb edge swipe
-                  onHorizontalDragUpdate: (_) {},
-                  behavior: HitTestBehavior.translucent,
-                ),
-              ),
-            ],
-          ),
+          child: _buildBody(),
         ),
       ),
     );
