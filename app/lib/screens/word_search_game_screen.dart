@@ -427,16 +427,28 @@ class _WordSearchGameScreenState extends State<WordSearchGameScreen>
 
   @override
   Widget build(BuildContext context) {
-    // Disable iOS swipe-to-go-back by using a full-screen horizontal drag detector
-    // PopScope only handles Android back button, not iOS swipe gesture
-    return GestureDetector(
-      onHorizontalDragStart: (_) {},  // Absorb horizontal swipe to disable iOS back gesture
-      child: PopScope(
-        canPop: false,
-        child: Scaffold(
-          backgroundColor: BrandLoader().colors.background,
-          body: SafeArea(
-            child: _buildBody(),
+    return PopScope(
+      canPop: false,
+      child: Scaffold(
+        backgroundColor: BrandLoader().colors.background,
+        body: SafeArea(
+          child: Stack(
+            children: [
+              _buildBody(),
+              // Edge gesture blocker - only blocks left edge swipe for iOS back gesture
+              // This allows word selection to work normally in the rest of the screen
+              Positioned(
+                left: 0,
+                top: 0,
+                bottom: 0,
+                width: 20, // iOS edge swipe detection zone is ~20px
+                child: GestureDetector(
+                  onHorizontalDragStart: (_) {}, // Absorb edge swipe
+                  onHorizontalDragUpdate: (_) {},
+                  behavior: HitTestBehavior.translucent,
+                ),
+              ),
+            ],
           ),
         ),
       ),
