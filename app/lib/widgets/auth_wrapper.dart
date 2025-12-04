@@ -116,6 +116,9 @@ class _AuthWrapperState extends State<AuthWrapper> {
       final existingCoupleId = await _secureStorage.read(key: 'couple_id');
       if (existingCoupleId != null) {
         debugPrint('✅ CoupleId already saved: $existingCoupleId');
+        // Still sync partner data from server (handles name changes)
+        // getStatus() now syncs partner name to Hive if changed
+        await _couplePairingService.getStatus();
         _hasCheckedPairingStatus = true;
         return;
       }
