@@ -923,7 +923,21 @@ class _NewHomeScreenState extends State<NewHomeScreen> with TickerProviderStateM
       case QuestType.wordSearch:
         await Navigator.push(
           context,
-          MaterialPageRoute(builder: (_) => const WordSearchGameScreen()),
+          // Use PageRouteBuilder to disable iOS swipe-to-go-back gesture
+          // Word Search needs full left edge for selecting leftmost column letters
+          PageRouteBuilder(
+            pageBuilder: (context, animation, secondaryAnimation) =>
+                const WordSearchGameScreen(),
+            transitionsBuilder: (context, animation, secondaryAnimation, child) {
+              return SlideTransition(
+                position: Tween<Offset>(
+                  begin: const Offset(1.0, 0.0),
+                  end: Offset.zero,
+                ).animate(animation),
+                child: child,
+              );
+            },
+          ),
         );
         // Refresh state after returning to show updated quest status
         if (mounted) {
