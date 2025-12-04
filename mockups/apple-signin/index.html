@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Apple Sign-In Mockups - Index</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            background: #f0ede8;
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 28px;
+            margin-bottom: 16px;
+            letter-spacing: 1px;
+        }
+
+        .subtitle {
+            text-align: center;
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 40px;
+            font-style: italic;
+        }
+
+        .variants-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .variant-card {
+            background: #fff;
+            border: 2px solid #1a1a1a;
+            padding: 24px;
+            text-decoration: none;
+            color: inherit;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .variant-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .variant-number {
+            font-size: 12px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: #999;
+            margin-bottom: 8px;
+        }
+
+        .variant-title {
+            font-size: 20px;
+            margin-bottom: 12px;
+        }
+
+        .variant-description {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 16px;
+        }
+
+        .variant-preview {
+            width: 100%;
+            height: 200px;
+            background: #f5f4ef;
+            border: 1px solid #ddd;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+            filter: grayscale(100%);
+        }
+
+        .view-link {
+            display: block;
+            text-align: center;
+            margin-top: 16px;
+            font-size: 13px;
+            color: #1a1a1a;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .pros-cons {
+            margin-top: 12px;
+            font-size: 12px;
+        }
+
+        .pros-cons dt {
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-top: 8px;
+        }
+
+        .pros-cons dd {
+            color: #666;
+            margin-left: 0;
+            line-height: 1.5;
+        }
+    </style>
+</head>
+<body>
+    <h1>Apple Sign-In Mockups</h1>
+    <p class="subtitle">Four placement and style variants for the onboarding screen</p>
+
+    <div class="variants-grid">
+        <a href="01-primary-apple-button.html" class="variant-card">
+            <div class="variant-number">Variant 1</div>
+            <h2 class="variant-title">Primary Apple Button</h2>
+            <p class="variant-description">
+                Apple Sign-In is the primary action with official rounded button style.
+                Email continues as secondary option with "or" divider.
+            </p>
+            <div class="variant-preview">🍎</div>
+            <dl class="pros-cons">
+                <dt>Pros:</dt>
+                <dd>Clear hierarchy, follows Apple HIG, familiar to users</dd>
+                <dt>Cons:</dt>
+                <dd>Apple button breaks newspaper aesthetic</dd>
+            </dl>
+            <span class="view-link">View Mockup →</span>
+        </a>
+
+        <a href="02-newspaper-style-apple.html" class="variant-card">
+            <div class="variant-number">Variant 2</div>
+            <h2 class="variant-title">Newspaper Style Integration</h2>
+            <p class="variant-description">
+                Both buttons use newspaper aesthetic with consistent typography.
+                Apple button keeps black color but uses serif font and uppercase.
+            </p>
+            <div class="variant-preview">📰</div>
+            <dl class="pros-cons">
+                <dt>Pros:</dt>
+                <dd>Cohesive visual design, maintains brand identity</dd>
+                <dt>Cons:</dt>
+                <dd>Less recognizable as Apple Sign-In, may confuse users</dd>
+            </dl>
+            <span class="view-link">View Mockup →</span>
+        </a>
+
+        <a href="03-apple-only-minimal.html" class="variant-card">
+            <div class="variant-number">Variant 3</div>
+            <h2 class="variant-title">Apple Only (Minimal)</h2>
+            <p class="variant-description">
+                Single Apple button as the only prominent CTA.
+                Email reduced to small text link for edge cases.
+            </p>
+            <div class="variant-preview">✨</div>
+            <dl class="pros-cons">
+                <dt>Pros:</dt>
+                <dd>Cleanest design, fastest path for iOS users</dd>
+                <dt>Cons:</dt>
+                <dd>Email option less discoverable, may feel limiting</dd>
+            </dl>
+            <span class="view-link">View Mockup →</span>
+        </a>
+
+        <a href="04-bottom-sheet-auth.html" class="variant-card">
+            <div class="variant-number">Variant 4</div>
+            <h2 class="variant-title">Bottom Sheet Auth</h2>
+            <p class="variant-description">
+                Keep "Begin Your Story" button, show auth options in a bottom sheet.
+                Defers auth decision for less intimidating first impression.
+            </p>
+            <div class="variant-preview">📄</div>
+            <dl class="pros-cons">
+                <dt>Pros:</dt>
+                <dd>Less intimidating, clean initial screen, modern UX pattern</dd>
+                <dt>Cons:</dt>
+                <dd>Extra tap required, may feel like unexpected popup</dd>
+            </dl>
+            <span class="view-link">View Mockup →</span>
+        </a>
+    </div>
+</body>
+</html>

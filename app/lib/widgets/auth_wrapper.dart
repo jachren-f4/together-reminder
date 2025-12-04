@@ -9,6 +9,8 @@ import '../models/partner.dart';
 import '../models/user.dart';
 import '../screens/auth_screen.dart';
 import '../screens/onboarding_screen.dart';
+import '../screens/name_entry_screen.dart';
+import '../screens/pairing_screen.dart';
 import '../screens/home_screen.dart';
 import '../services/notification_service.dart';
 import '../services/love_point_service.dart';
@@ -39,6 +41,10 @@ class _AuthWrapperState extends State<AuthWrapper> {
   bool _hasCheckedBypass = false;
   bool _shouldBypassAuth = false;
 
+  // First run check - determines if user should see onboarding first
+  bool _hasCheckedFirstRun = false;
+  bool _isFirstRun = true;
+
   @override
   void initState() {
     super.initState();
@@ -46,16 +52,32 @@ class _AuthWrapperState extends State<AuthWrapper> {
     // Check if we should bypass auth (async, but fast)
     _checkBypassStatus();
 
+    // Check if this is a first run (no onboarding completed yet)
+    _checkFirstRun();
+
     // Listen to auth state changes
     _authService.authStateStream.listen((state) {
       if (mounted) {
         // Reset pairing check when auth state changes
         if (state == AuthState.authenticated) {
           _hasCheckedPairingStatus = false;
+          // Re-check first run flag - user may have completed onboarding during auth flow
+          _checkFirstRun();
         }
         setState(() {});
       }
     });
+  }
+
+  /// Check if user has completed onboarding before
+  Future<void> _checkFirstRun() async {
+    final hasCompletedOnboarding = await _secureStorage.read(key: 'has_completed_onboarding');
+    if (mounted) {
+      setState(() {
+        _isFirstRun = hasCompletedOnboarding != 'true';
+        _hasCheckedFirstRun = true;
+      });
+    }
   }
 
   /// Check if auth should be bypassed (only on simulators/web, not physical devices)
@@ -175,8 +197,8 @@ class _AuthWrapperState extends State<AuthWrapper> {
       LovePointService.setAppContext(context);
     });
 
-    // Wait for bypass check to complete
-    if (!_hasCheckedBypass) {
+    // Wait for bypass and first run checks to complete
+    if (!_hasCheckedBypass || !_hasCheckedFirstRun) {
       return const Scaffold(
         body: Center(
           child: CircularProgressIndicator(),
@@ -194,8 +216,13 @@ class _AuthWrapperState extends State<AuthWrapper> {
       }
     }
 
-    // Check auth state
+    // Check auth state FIRST - if authenticated, skip first run check
+    // This handles the case where user completed OTP but app still has old first-run flag
     switch (_authService.authState) {
+      case AuthState.authenticated:
+        // User is authenticated - proceed to partner check (skip first run)
+        break; // Fall through to partner check below
+
       case AuthState.initial:
       case AuthState.loading:
         return const Scaffold(
@@ -205,38 +232,50 @@ class _AuthWrapperState extends State<AuthWrapper> {
         );
 
       case AuthState.unauthenticated:
-        return const AuthScreen();
-
-      case AuthState.authenticated:
-        // User is authenticated, check if they have a partner
-        if (_storageService.hasPartner()) {
-          // Also ensure coupleId is saved (for quest sync)
-          if (!_hasCheckedPairingStatus) {
-            _ensureCoupleIdSaved();
-          }
-          return const HomeScreen();
-        } else {
-          // No local partner - check if paired in database
-          if (!_hasCheckedPairingStatus) {
-            // Trigger async check
-            _checkAndRestorePairingStatus();
-            // Show loading while checking
-            return const Scaffold(
-              body: Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    CircularProgressIndicator(),
-                    SizedBox(height: 16),
-                    Text('Checking pairing status...'),
-                  ],
-                ),
-              ),
-            );
-          }
-          // Already checked - show onboarding
+        // Not authenticated - check if first run to show onboarding vs auth screen
+        if (_isFirstRun) {
           return const OnboardingScreen();
         }
+        return const AuthScreen();
+    }
+
+    // At this point, user is authenticated - check if user has a name
+    final user = _storageService.getUser();
+    final hasName = user != null && user.name != null && user.name!.isNotEmpty;
+
+    if (!hasName) {
+      // User is authenticated but has no name - show name entry screen
+      return const NameEntryScreen();
+    }
+
+    // Check partner status
+    if (_storageService.hasPartner()) {
+      // Also ensure coupleId is saved (for quest sync)
+      if (!_hasCheckedPairingStatus) {
+        _ensureCoupleIdSaved();
+      }
+      return const HomeScreen();
+    } else {
+      // No local partner - check if paired in database
+      if (!_hasCheckedPairingStatus) {
+        // Trigger async check
+        _checkAndRestorePairingStatus();
+        // Show loading while checking
+        return const Scaffold(
+          body: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                CircularProgressIndicator(),
+                SizedBox(height: 16),
+                Text('Checking pairing status...'),
+              ],
+            ),
+          ),
+        );
+      }
+      // Already checked and no partner - show pairing screen
+      return const PairingScreen();
     }
   }
 }

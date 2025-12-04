@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Apple Sign-In - Variant 2: Newspaper Style Integration</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            background: #f0ede8;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 20px;
+            margin-bottom: 10px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .description {
+            text-align: center;
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 40px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            line-height: 1.6;
+        }
+
+        .screens-container {
+            display: flex;
+            gap: 40px;
+            flex-wrap: wrap;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .screen-wrapper {
+            position: relative;
+            padding-top: 40px;
+        }
+
+        .screen-label {
+            position: absolute;
+            top: 10px;
+            left: 0;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #666;
+        }
+
+        .screen {
+            width: 375px;
+            height: 812px;
+            background: #fffef9;
+            border: 3px solid #1a1a1a;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Newspaper Header Style */
+        .masthead {
+            text-align: center;
+            padding: 20px 20px 16px;
+            border-bottom: 3px double #1a1a1a;
+        }
+
+        .masthead-date {
+            font-size: 10px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: #666;
+            margin-bottom: 8px;
+        }
+
+        .masthead-title {
+            font-size: 42px;
+            font-weight: 400;
+            font-style: italic;
+            letter-spacing: -1px;
+            line-height: 1;
+            margin-bottom: 8px;
+        }
+
+        .masthead-subtitle {
+            font-size: 11px;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: #666;
+        }
+
+        .edition-bar {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 20px;
+            border-bottom: 1px solid #1a1a1a;
+            font-size: 10px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        /* Welcome Screen */
+        .welcome-screen {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .hero-section {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 40px 30px;
+            text-align: center;
+        }
+
+        .hero-icon {
+            font-size: 100px;
+            margin-bottom: 30px;
+            filter: grayscale(100%);
+        }
+
+        .hero-headline {
+            font-size: 32px;
+            font-weight: 400;
+            line-height: 1.2;
+            margin-bottom: 20px;
+        }
+
+        .hero-subhead {
+            font-size: 16px;
+            font-style: italic;
+            color: #555;
+            line-height: 1.6;
+        }
+
+        .cta-section {
+            padding: 24px 30px 40px;
+            border-top: 1px solid #ddd;
+        }
+
+        /* Newspaper-styled Apple Button */
+        .apple-btn-newspaper {
+            width: 100%;
+            padding: 16px 24px;
+            background: #1a1a1a;
+            color: #fffef9;
+            border: none;
+            font-family: 'Georgia', serif;
+            font-size: 13px;
+            font-weight: 400;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .apple-icon {
+            font-size: 18px;
+        }
+
+        .email-btn-newspaper {
+            width: 100%;
+            padding: 16px 24px;
+            background: transparent;
+            color: #1a1a1a;
+            border: 1px solid #1a1a1a;
+            font-family: 'Georgia', serif;
+            font-size: 13px;
+            font-weight: 400;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        .email-icon {
+            font-size: 16px;
+        }
+
+        .sign-in-link {
+            display: block;
+            text-align: center;
+            margin-top: 16px;
+            font-size: 13px;
+            color: #666;
+        }
+
+        .sign-in-link a {
+            color: #1a1a1a;
+            font-weight: 600;
+        }
+
+        .method-note {
+            text-align: center;
+            font-size: 11px;
+            color: #999;
+            font-style: italic;
+            margin-top: 20px;
+            padding-top: 16px;
+            border-top: 1px solid #eee;
+        }
+    </style>
+</head>
+<body>
+    <h1>Variant 2: Newspaper Style Integration</h1>
+    <p class="description">
+        Both buttons use the newspaper aesthetic with consistent typography and styling.
+        Apple button remains black but uses newspaper fonts and uppercase treatment.
+    </p>
+
+    <div class="screens-container">
+        <div class="screen-wrapper">
+            <div class="screen-label">Onboarding Screen</div>
+            <div class="screen welcome-screen">
+                <div class="masthead">
+                    <div class="masthead-date">Est. 2024</div>
+                    <h1 class="masthead-title">TogetherRemind</h1>
+                    <div class="masthead-subtitle">The Couples' Daily Companion</div>
+                </div>
+                <div class="edition-bar">
+                    <span>First Edition</span>
+                    <span>Your Love Story Begins</span>
+                </div>
+                <div class="hero-section">
+                    <div class="hero-icon">💕</div>
+                    <h2 class="hero-headline">Send Caring Reminders<br>To Your Partner</h2>
+                    <p class="hero-subhead">Build stronger connections through<br>daily moments of thoughtfulness</p>
+                </div>
+                <div class="cta-section">
+                    <button class="apple-btn-newspaper">
+                        <span class="apple-icon"></span>
+                        Continue with Apple
+                    </button>
+                    <button class="email-btn-newspaper">
+                        <span class="email-icon">✉</span>
+                        Continue with Email
+                    </button>
+                    <p class="sign-in-link">Returning reader? <a href="#">Sign in here</a></p>
+                    <p class="method-note">Choose your preferred sign-in method</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

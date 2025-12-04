@@ -16,6 +16,15 @@ class DevConfig {
   /// NOTE: On physical iOS/Android devices, auth is NEVER bypassed (for testing real signup)
   static const bool skipAuthInDev = true;  // <-- Toggle this!
 
+  /// Skip OTP verification for faster development testing
+  /// When enabled, entering an email will create a user session directly without OTP
+  /// Set to true for rapid bug hunting on physical devices
+  /// Set to false when testing actual email verification flow
+  ///
+  /// QUICK TOGGLE: Change to `true` to skip OTP, `false` to require it
+  /// NOTE: This creates real Supabase users but bypasses email verification
+  static const bool skipOtpVerificationInDev = true;  // <-- Toggle this!
+
   /// Check if auth should actually be bypassed
   /// Returns true only on simulators/emulators/web, NEVER on physical devices
   /// This allows testing real signup flow on phones while keeping bypass for dev

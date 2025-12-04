@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "725871129285",
+    "firebase_url": "https://togetherremind-default-rtdb.firebaseio.com",
+    "project_id": "togetherremind",
+    "storage_bucket": "togetherremind.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:725871129285:android:fbf78b68b07590f327f6ac",
+        "android_client_info": {
+          "package_name": "com.togetherremind.togetherremind"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB3AyjWC1ibvRNaxeNfkj5Jtwgw6K6BnXs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

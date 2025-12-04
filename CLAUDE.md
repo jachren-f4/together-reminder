@@ -307,15 +307,55 @@ FutureBuilder(future: _cachedFuture ?? _fetchData(), ...)
 
 ## Development Setup
 
-### Dev Auth Bypass
-Skip email/OTP while using real Supabase data:
+### Dev Auth Bypass Toggles
 
-1. **API** (`api/.env.local`): `AUTH_DEV_BYPASS_ENABLED=true`
-2. **Flutter** (`lib/config/dev_config.dart`): `skipAuthInDev = true`
+All toggles in `lib/config/dev_config.dart`:
+
+| Toggle | Purpose | Default | Works in Release? |
+|--------|---------|---------|-------------------|
+| `skipAuthInDev` | Skip entire auth flow (simulator/emulator only) | `true` | No |
+| `skipOtpVerificationInDev` | Skip OTP code, use password auth | `true` | **Yes** |
+
+#### `skipAuthInDev` - Full Auth Bypass (Simulators Only)
+Skips the entire authentication flow on simulators/emulators/web. Never activates on physical devices.
+```dart
+static const bool skipAuthInDev = true;  // Toggle in dev_config.dart:17
+```
+- **Use case:** Fastest development on simulators
+- **Effect:** Goes directly to HomeScreen or OnboardingScreen without any login
+
+#### `skipOtpVerificationInDev` - OTP Bypass (All Devices)
+Collects email but skips OTP verification. Creates real Supabase users via password auth.
+```dart
+static const bool skipOtpVerificationInDev = true;  // Toggle in dev_config.dart:26
+```
+- **Use case:** Physical device bug hunting without email verification
+- **Effect:** Button shows "Continue (Dev Mode)", creates user directly
+- **Technical:** Uses deterministic password `DevPass_{email.hashCode}_2024!`
+- **WARNING:** Set to `false` before App Store release!
+
+#### Apple Sign-In Toggle
+Enable/disable "Continue with Apple" button on iOS. Requires Apple Developer Portal + Supabase configuration.
+```dart
+// In lib/screens/onboarding_screen.dart ~line 22
+bool get _isAppleSignInAvailable {
+  return false; // Set to: if (kIsWeb) return false; return Platform.isIOS;
+}
+```
+- **Current state:** Disabled (`return false`)
+- **To enable:** Change to `if (kIsWeb) return false; return Platform.isIOS;`
+- **Full setup guide:** `docs/APPLE_SIGNIN_SETUP.md`
+
+#### API-Side Bypass
+For API requests to bypass auth header checks:
+```bash
+# api/.env.local
+AUTH_DEV_BYPASS_ENABLED=true
+```
 
 **Quick start:** `/runtogether` launches Android + Chrome with clean state
 
-**Files:** `lib/services/dev_data_service.dart`, `api/app/api/dev/user-data/route.ts`
+**Files:** `lib/config/dev_config.dart`, `lib/services/auth_service.dart`, `lib/screens/auth_screen.dart`, `lib/screens/onboarding_screen.dart`
 
 ### Logger Verbosity
 All services disabled by default. Enable in `lib/utils/logger.dart`:
@@ -364,6 +404,18 @@ Check `lib/screens/new_home_screen.dart` bottom - increment on UI changes to ver
 pkill -9 -f "qemu-system-aarch64"
 ~/Library/Android/sdk/emulator/emulator -avd Pixel_5 &
 ~/Library/Android/sdk/platform-tools/adb devices
+```
+
+### iOS Multi-Device Deployment
+Flutter builds the **same iOS binary** regardless of target device. When deploying to multiple iPhones:
+```bash
+# ✅ CORRECT - Build once, install sequentially
+flutter run -d 00008110-00011D4A340A401E --release  # iPhone 14 first
+flutter run -d 00008101-001120A02230001E --release  # iPhone 12 second
+
+# ❌ WRONG - Parallel builds cause Xcode conflicts
+flutter run -d device1 --release &
+flutter run -d device2 --release &  # "Xcode build failed due to concurrent builds"
 ```
 
 ---
@@ -472,4 +524,4 @@ class _GameScreenState extends State<GameScreen> with GamePollingMixin {
 
 ---
 
-**Last Updated:** 2025-12-03
+**Last Updated:** 2025-12-04

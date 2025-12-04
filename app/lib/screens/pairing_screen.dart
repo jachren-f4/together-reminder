@@ -40,6 +40,7 @@ class _PairingScreenState extends State<PairingScreen> {
   bool _isWaitingForPartner = false;
   Timer? _countdownTimer;
   Timer? _pairingStatusTimer;
+  Timer? _globalPairingTimer; // For QR code flow detection
   bool _isVerifyingCode = false;
 
   @override
@@ -53,25 +54,33 @@ class _PairingScreenState extends State<PairingScreen> {
   /// Start polling for pairing status globally (not just for Remote tab)
   /// This allows detecting when partner scans our QR code and creates couple on server
   void _startGlobalPairingPolling() {
-    // Use a separate timer for global polling
-    Timer.periodic(const Duration(seconds: 5), (timer) async {
+    _globalPairingTimer?.cancel();
+    Logger.debug('Starting global pairing poll (every 5s)', service: 'pairing');
+
+    _globalPairingTimer = Timer.periodic(const Duration(seconds: 5), (timer) async {
       if (!mounted) {
         timer.cancel();
         return;
       }
 
       try {
+        Logger.debug('Polling for couple status...', service: 'pairing');
         final status = await _couplePairingService.getStatus();
+        Logger.debug('Couple status result: ${status != null ? 'PAIRED with ${status.partnerName}' : 'NOT PAIRED'}', service: 'pairing');
+
         if (status != null && mounted) {
+          Logger.success('Pairing detected via poll! Partner: ${status.partnerName}', service: 'pairing');
           timer.cancel();
           _countdownTimer?.cancel();
           _pairingStatusTimer?.cancel();
+          _globalPairingTimer = null;
 
           final partner = Partner(
             name: status.partnerName ?? status.partnerEmail?.split('@').first ?? 'Partner',
             pushToken: '',
             pairedAt: status.createdAt,
             avatarEmoji: '💕',
+            id: status.partnerId,
           );
 
           await _storageService.savePartner(partner);
@@ -87,6 +96,7 @@ class _PairingScreenState extends State<PairingScreen> {
   void dispose() {
     _countdownTimer?.cancel();
     _pairingStatusTimer?.cancel();
+    _globalPairingTimer?.cancel();
     super.dispose();
   }
 
