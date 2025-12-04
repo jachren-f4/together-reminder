@@ -140,6 +140,9 @@ async function getGlobalLeaderboard(
   coupleId: string,
   limit: number
 ): Promise<LeaderboardResponse> {
+  // Ensure user's couple exists in leaderboard (create if missing)
+  await ensureLeaderboardEntry(coupleId);
+
   // Get top N entries
   const topResult = await query(
     `SELECT
@@ -223,6 +226,9 @@ async function getCountryLeaderboard(
   countryCode: string,
   limit: number
 ): Promise<LeaderboardResponse> {
+  // Ensure user's couple exists in leaderboard (create if missing)
+  await ensureLeaderboardEntry(coupleId);
+
   // Determine which country rank to use based on user position in couple
   const rankColumn = isUser1 ? 'user1_country_rank' : 'user2_country_rank';
   const countryColumn = isUser1 ? 'user1_country' : 'user2_country';
@@ -311,6 +317,9 @@ async function getTierLeaderboard(
   coupleId: string,
   limit: number
 ): Promise<LeaderboardResponse> {
+  // Ensure user's couple exists in leaderboard (create if missing)
+  await ensureLeaderboardEntry(coupleId);
+
   // Get user's tier info
   const userTierResult = await query(
     `SELECT
@@ -401,4 +410,45 @@ async function getTierLeaderboard(
     total_couples: totalCouples,
     updated_at: new Date().toISOString()
   };
+}
+
+/**
+ * Ensures a couple has an entry in the leaderboard table.
+ * Creates one if missing, using data from couples and users tables.
+ */
+async function ensureLeaderboardEntry(coupleId: string): Promise<void> {
+  // Check if entry exists
+  const existsResult = await query(
+    `SELECT 1 FROM couple_leaderboard WHERE couple_id = $1`,
+    [coupleId]
+  );
+
+  if (existsResult.rows.length > 0) {
+    return; // Entry exists, nothing to do
+  }
+
+  // Entry doesn't exist, create it from couples table
+  await query(
+    `INSERT INTO couple_leaderboard (
+       couple_id,
+       user1_initial,
+       user2_initial,
+       total_lp,
+       arena_tier,
+       updated_at
+     )
+     SELECT
+       c.id,
+       UPPER(SUBSTRING(COALESCE(u1.raw_user_meta_data->>'full_name', 'A') FROM 1 FOR 1)),
+       UPPER(SUBSTRING(COALESCE(u2.raw_user_meta_data->>'full_name', 'B') FROM 1 FOR 1)),
+       COALESCE(c.total_lp, 0),
+       1,
+       NOW()
+     FROM couples c
+     LEFT JOIN auth.users u1 ON u1.id = c.user1_id
+     LEFT JOIN auth.users u2 ON u2.id = c.user2_id
+     WHERE c.id = $1
+     ON CONFLICT (couple_id) DO NOTHING`,
+    [coupleId]
+  );
 }

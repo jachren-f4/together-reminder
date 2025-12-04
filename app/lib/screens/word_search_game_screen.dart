@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'dart:math' as math;
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
@@ -14,6 +13,7 @@ import '../theme/app_theme.dart';
 import '../widgets/linked/turn_complete_dialog.dart';
 import '../widgets/linked/partner_first_dialog.dart';
 import '../animations/animation_config.dart';
+import '../mixins/game_polling_mixin.dart';
 import 'word_search_completion_screen.dart';
 
 /// Word Search game screen
@@ -34,7 +34,7 @@ class WordSearchGameScreen extends StatefulWidget {
 }
 
 class _WordSearchGameScreenState extends State<WordSearchGameScreen>
-    with TickerProviderStateMixin {
+    with TickerProviderStateMixin, GamePollingMixin {
   final WordSearchService _service = WordSearchService();
   final StorageService _storage = StorageService();
 
@@ -57,9 +57,23 @@ class _WordSearchGameScreenState extends State<WordSearchGameScreen>
   bool _showTurnComplete = false;
   bool _showPartnerFirst = false;
 
-  // Polling timer for partner's turn
-  Timer? _pollTimer;
-  static const _pollInterval = Duration(seconds: 10);
+  // GamePollingMixin overrides
+  @override
+  bool get shouldPoll => !_isLoading && !_isSubmitting && _gameState != null && !_gameState!.isMyTurn;
+
+  @override
+  Future<void> onPollUpdate() async {
+    final newState = await _service.pollMatchState(_gameState!.match.matchId);
+    if (mounted) {
+      final wasPartnerTurn = !_gameState!.isMyTurn;
+      setState(() => _gameState = newState);
+
+      if (wasPartnerTurn && newState.isMyTurn) {
+        _showToast("It's your turn!");
+      }
+      _checkGameCompletion();
+    }
+  }
 
   // Shake animation for invalid words
   late AnimationController _shakeController;
@@ -132,36 +146,10 @@ class _WordSearchGameScreenState extends State<WordSearchGameScreen>
 
   @override
   void dispose() {
-    _pollTimer?.cancel();
+    cancelPolling();
     _shakeController.dispose();
     _pulseController.dispose();
     super.dispose();
-  }
-
-  void _startPolling() {
-    _pollTimer?.cancel();
-    _pollTimer = Timer.periodic(_pollInterval, (_) {
-      if (!_isLoading && !_isSubmitting && _gameState != null && !_gameState!.isMyTurn) {
-        _pollForUpdate();
-      }
-    });
-  }
-
-  Future<void> _pollForUpdate() async {
-    try {
-      final newState = await _service.pollMatchState(_gameState!.match.matchId);
-      if (mounted) {
-        final wasPartnerTurn = !_gameState!.isMyTurn;
-        setState(() => _gameState = newState);
-
-        if (wasPartnerTurn && newState.isMyTurn) {
-          _showToast("It's your turn!");
-        }
-        _checkGameCompletion();
-      }
-    } catch (e) {
-      // Silent failure for polling
-    }
   }
 
   // Track if cooldown is active
@@ -177,10 +165,8 @@ class _WordSearchGameScreenState extends State<WordSearchGameScreen>
     try {
       final gameState = await _service.getOrCreateMatch();
       if (mounted) {
-        // Check if this is a new puzzle where partner goes first
-        // Show dialog if: not my turn AND no words have been found yet (fresh puzzle)
-        final isNewPuzzlePartnerFirst =
-            !gameState.isMyTurn && gameState.match.totalWordsFound == 0;
+        // Show dialog if it's not my turn when entering the game
+        final showPartnerTurnDialog = !gameState.isMyTurn;
 
         setState(() {
           _gameState = gameState;
@@ -188,9 +174,9 @@ class _WordSearchGameScreenState extends State<WordSearchGameScreen>
           _clearSelection();
           _hintPosition = null;
           _showTurnComplete = false;
-          _showPartnerFirst = isNewPuzzlePartnerFirst;
+          _showPartnerFirst = showPartnerTurnDialog;
         });
-        _startPolling();
+        startPolling();
         _checkGameCompletion();
       }
     } on CooldownActiveException catch (e) {
@@ -215,7 +201,7 @@ class _WordSearchGameScreenState extends State<WordSearchGameScreen>
     if (_gameState == null) return;
     final match = _gameState!.match;
     if (match.status == 'completed') {
-      _pollTimer?.cancel();
+      cancelPolling();
       _navigateToCompletionScreen();
     }
   }
@@ -337,7 +323,7 @@ class _WordSearchGameScreenState extends State<WordSearchGameScreen>
         // If game is complete, navigate directly to completion screen
         // Don't use refreshGameState() - that would create a new match!
         if (result.gameComplete) {
-          _pollTimer?.cancel();
+          cancelPolling();
           if (mounted) {
             _clearSelection();
             // Short delay to show the word found overlay
@@ -765,7 +751,7 @@ class _WordSearchGameScreenState extends State<WordSearchGameScreen>
                     'You: ${_gameState!.myScore}',
                     style: TextStyle(
                       fontSize: 12,
-                      fontWeight: isMyTurn ? FontWeight.w700 : FontWeight.w400,
+                      fontWeight: FontWeight.w700,
                       color: BrandLoader().colors.textPrimary,
                     ),
                   ),
@@ -789,7 +775,7 @@ class _WordSearchGameScreenState extends State<WordSearchGameScreen>
                     '${partner?.name ?? "Partner"}: ${_gameState!.partnerScore}',
                     style: TextStyle(
                       fontSize: 12,
-                      fontWeight: !isMyTurn ? FontWeight.w700 : FontWeight.w400,
+                      fontWeight: FontWeight.w700,
                       color: BrandLoader().colors.textPrimary,
                     ),
                   ),
