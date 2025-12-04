@@ -187,6 +187,19 @@ class CouplePairingService {
       }
 
       Logger.success('getStatus: Found couple! Partner: ${data['partnerName']}', service: 'pairing');
+
+      // Sync partner name from server to local storage
+      // This ensures partner name updates are reflected locally
+      final serverPartnerName = data['partnerName'] as String?;
+      if (serverPartnerName != null) {
+        final currentPartner = _storage.getPartner();
+        if (currentPartner != null && currentPartner.name != serverPartnerName) {
+          Logger.info('Updating partner name: ${currentPartner.name} -> $serverPartnerName', service: 'pairing');
+          currentPartner.name = serverPartnerName;
+          await _storage.savePartner(currentPartner);
+        }
+      }
+
       return CoupleStatus(
         coupleId: data['coupleId'] as String,
         partnerId: data['partnerId'] as String,

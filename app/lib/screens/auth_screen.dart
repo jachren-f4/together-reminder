@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import '../config/dev_config.dart';
 import '../services/auth_service.dart';
 import '../utils/logger.dart';
@@ -22,105 +21,6 @@ class _AuthScreenState extends State<AuthScreen> {
 
   bool _isLoading = false;
   String? _errorMessage;
-
-  // Debug log for dev mode
-  final List<String> _debugLogs = [];
-  bool _showDebugOverlay = false;
-
-  void _addLog(String message) {
-    setState(() {
-      _debugLogs.add('[${DateTime.now().toString().substring(11, 19)}] $message');
-      // Keep only last 20 logs
-      if (_debugLogs.length > 20) {
-        _debugLogs.removeAt(0);
-      }
-    });
-  }
-
-  void _copyLogs() {
-    final logsText = _debugLogs.join('\n');
-    Clipboard.setData(ClipboardData(text: logsText));
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Logs copied to clipboard'),
-        duration: Duration(seconds: 2),
-      ),
-    );
-  }
-
-  Widget _buildDebugOverlay() {
-    return Container(
-      margin: const EdgeInsets.all(16),
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: Colors.black87,
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const Text(
-                'Debug Logs',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 14,
-                ),
-              ),
-              Row(
-                children: [
-                  IconButton(
-                    icon: const Icon(Icons.copy, color: Colors.white, size: 20),
-                    onPressed: _copyLogs,
-                    padding: EdgeInsets.zero,
-                    constraints: const BoxConstraints(),
-                    tooltip: 'Copy to clipboard',
-                  ),
-                  const SizedBox(width: 8),
-                  IconButton(
-                    icon: const Icon(Icons.close, color: Colors.white, size: 20),
-                    onPressed: () => setState(() => _showDebugOverlay = false),
-                    padding: EdgeInsets.zero,
-                    constraints: const BoxConstraints(),
-                    tooltip: 'Close',
-                  ),
-                ],
-              ),
-            ],
-          ),
-          const SizedBox(height: 8),
-          Container(
-            constraints: const BoxConstraints(maxHeight: 200),
-            child: SingleChildScrollView(
-              child: Text(
-                _debugLogs.isEmpty ? 'No logs yet' : _debugLogs.join('\n'),
-                style: const TextStyle(
-                  color: Colors.greenAccent,
-                  fontFamily: 'monospace',
-                  fontSize: 10,
-                ),
-              ),
-            ),
-          ),
-          const SizedBox(height: 8),
-          SizedBox(
-            width: double.infinity,
-            child: ElevatedButton(
-              onPressed: _copyLogs,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.green,
-              ),
-              child: const Text('Copy All Logs'),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
 
   @override
   void dispose() {
@@ -156,41 +56,18 @@ class _AuthScreenState extends State<AuthScreen> {
       // Check if OTP bypass is enabled
       if (DevConfig.skipOtpVerificationInDev) {
         // Dev mode: Sign in directly without OTP
-        // Always show debug overlay in dev mode
-        setState(() {
-          _showDebugOverlay = true;
-          _debugLogs.clear(); // Clear old logs
-        });
-
-        _addLog('Dev mode enabled, calling devSignInWithEmail...');
-        _addLog('Email: $email');
-
-        final result = await _authService.devSignInWithEmailWithLogs(email);
-        final success = result['success'] as bool;
-        final logs = result['logs'] as List<String>;
-
-        // Add all logs from auth service
-        for (final log in logs) {
-          _addLog(log);
-        }
+        final success = await _authService.devSignInWithEmail(email);
 
         if (success) {
-          _addLog('SUCCESS! Navigating to / in 3 seconds...');
-          _addLog('(Double-tap header to copy logs before leaving)');
-          // Wait 3 seconds so user can see the logs before navigating
-          await Future.delayed(const Duration(seconds: 3));
           if (mounted) {
-            // Go directly to root - AuthWrapper will handle navigation
             Navigator.of(context).pushNamedAndRemoveUntil('/', (route) => false);
           }
         } else {
-          _addLog('FAILED - check logs above');
-          _addLog('Staying on screen so you can copy logs');
           setState(() {
-            _errorMessage = 'Dev sign-in failed. See debug logs above.';
+            _errorMessage = 'Dev sign-in failed. Please try again.';
             _isLoading = false;
           });
-          return; // Don't proceed to finally block's isLoading = false
+          return;
         }
       } else {
         // Normal mode: Send OTP and navigate to verification screen
@@ -228,25 +105,16 @@ class _AuthScreenState extends State<AuthScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Stack(
-        children: [
-          Container(
-            color: NewspaperColors.surface,
-            child: SafeArea(
+      body: Container(
+        color: NewspaperColors.surface,
+        child: SafeArea(
               child: Column(
                 children: [
-                  // Masthead - double-tap title to toggle debug overlay
-                  GestureDetector(
-                    onDoubleTap: () {
-                      if (DevConfig.skipOtpVerificationInDev) {
-                        setState(() => _showDebugOverlay = !_showDebugOverlay);
-                      }
-                    },
-                    child: const NewspaperMasthead(
-                      date: 'Verification',
-                      title: 'TogetherRemind',
-                      subtitle: 'Step 2 of 3',
-                    ),
+                  // Masthead
+                  const NewspaperMasthead(
+                    date: 'Verification',
+                    title: 'TogetherRemind',
+                    subtitle: 'Step 2 of 3',
                   ),
 
                   // Article header
@@ -311,22 +179,6 @@ class _AuthScreenState extends State<AuthScreen> {
                             title: "Editor's Note",
                             text: 'No password required. We use a magic code system for enhanced security.',
                           ),
-
-                          // Dev mode: Show Logs button
-                          if (DevConfig.skipOtpVerificationInDev && _debugLogs.isNotEmpty) ...[
-                            const SizedBox(height: 16),
-                            TextButton.icon(
-                              onPressed: () => setState(() => _showDebugOverlay = !_showDebugOverlay),
-                              icon: Icon(
-                                _showDebugOverlay ? Icons.visibility_off : Icons.visibility,
-                                size: 16,
-                              ),
-                              label: Text(_showDebugOverlay ? 'Hide Logs' : 'Show Logs (${_debugLogs.length})'),
-                              style: TextButton.styleFrom(
-                                foregroundColor: Colors.grey[600],
-                              ),
-                            ),
-                          ],
                         ],
                       ),
                     ),
@@ -355,16 +207,6 @@ class _AuthScreenState extends State<AuthScreen> {
               ),
             ),
           ),
-          // Debug overlay - double-tap masthead to toggle
-          if (_showDebugOverlay)
-            Positioned(
-              left: 0,
-              right: 0,
-              bottom: 100,
-              child: _buildDebugOverlay(),
-            ),
-        ],
-      ),
     );
   }
 }
