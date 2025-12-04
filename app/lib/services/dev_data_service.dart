@@ -26,13 +26,13 @@ class DevDataService {
   /// Load real user data from Supabase and store locally
   ///
   /// Only active when:
-  /// - Debug mode OR allowAuthBypassInRelease = true
+  /// - Running on simulator/emulator/web (not physical device)
   /// - skipAuthInDev = true
   /// - No existing user/partner data in local storage
   Future<bool> loadRealDataIfNeeded() async {
-    // Only with auth bypass enabled (debug mode or explicit release bypass)
-    final canBypass = kDebugMode || DevConfig.allowAuthBypassInRelease;
-    if (!canBypass || !DevConfig.skipAuthInDev) {
+    // Only with auth bypass enabled (on simulators/web, not physical devices)
+    final shouldBypass = await DevConfig.shouldBypassAuth();
+    if (!shouldBypass) {
       return false;
     }
 
@@ -251,8 +251,8 @@ class DevDataService {
   /// Refresh partner's push token (call periodically or on app resume)
   /// Updates the stored partner with the latest FCM token from Supabase
   Future<void> refreshPartnerPushToken() async {
-    final canBypass = kDebugMode || DevConfig.allowAuthBypassInRelease;
-    if (!canBypass || !DevConfig.skipAuthInDev) {
+    final shouldBypass = await DevConfig.shouldBypassAuth();
+    if (!shouldBypass) {
       return;
     }
 
@@ -276,8 +276,8 @@ class DevDataService {
   /// Sync push tokens on every app startup (even if data already exists)
   /// This ensures FCM tokens are always up-to-date in Supabase
   Future<void> syncPushTokensOnStartup() async {
-    final canBypass = kDebugMode || DevConfig.allowAuthBypassInRelease;
-    if (!canBypass || !DevConfig.skipAuthInDev) {
+    final shouldBypass = await DevConfig.shouldBypassAuth();
+    if (!shouldBypass) {
       return;
     }
 

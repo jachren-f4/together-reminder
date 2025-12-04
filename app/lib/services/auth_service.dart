@@ -82,9 +82,9 @@ class AuthService {
       _startRefreshTimer();
 
       // Cache dev user ID based on device (for dev auth bypass)
-      // Also cache in release mode if allowAuthBypassInRelease is enabled
-      final canBypass = kDebugMode || DevConfig.allowAuthBypassInRelease;
-      if (canBypass && DevConfig.skipAuthInDev) {
+      // Only on simulators/web, not physical devices
+      final shouldBypass = await DevConfig.shouldBypassAuth();
+      if (shouldBypass) {
         _cachedDevUserId = await _determineDevUserId();
         debugPrint('🔧 [DEV] Cached dev user ID: $_cachedDevUserId');
       }
@@ -251,15 +251,12 @@ class AuthService {
       headers['Authorization'] = 'Bearer $token';
     }
 
-    // In development mode (or with allowAuthBypassInRelease), add X-Dev-User-Id header for auth bypass
-    // This allows testing with different users on different devices
-    final canBypass = kDebugMode || DevConfig.allowAuthBypassInRelease;
-    if (canBypass && DevConfig.skipAuthInDev) {
-      final devUserId = _getDevUserId();
-      if (devUserId != null) {
-        headers['X-Dev-User-Id'] = devUserId;
-        debugPrint('🔧 [DEV] Adding X-Dev-User-Id header: $devUserId');
-      }
+    // In development mode, add X-Dev-User-Id header for auth bypass
+    // Only set if we cached a dev user ID (i.e., we're on simulator/web, not physical device)
+    final devUserId = _getDevUserId();
+    if (devUserId != null) {
+      headers['X-Dev-User-Id'] = devUserId;
+      debugPrint('🔧 [DEV] Adding X-Dev-User-Id header: $devUserId');
     }
 
     return headers;
