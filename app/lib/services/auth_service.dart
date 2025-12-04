@@ -1,12 +1,17 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io' show Platform;
+import 'dart:math';
+import 'package:crypto/crypto.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:http/http.dart' as http;
+import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import '../config/dev_config.dart';
+import '../config/supabase_config.dart';
 
 /// Authentication states
 enum AuthState {
@@ -168,20 +173,20 @@ class AuthService {
   Future<bool> verifyOTP(String email, String token) async {
     try {
       _updateAuthState(AuthState.loading);
-      
+
       final response = await _supabase!.auth.verifyOTP(
         email: email,
         token: token,
         type: OtpType.email,
       );
-      
+
       if (response.session != null) {
         await _saveSession(response.session!);
         _updateAuthState(AuthState.authenticated);
         debugPrint('✅ OTP verified successfully');
         return true;
       }
-      
+
       _updateAuthState(AuthState.unauthenticated);
       return false;
     } catch (e) {
@@ -189,6 +194,360 @@ class AuthService {
       _updateAuthState(AuthState.unauthenticated);
       return false;
     }
+  }
+
+  /// Development sign-in that bypasses OTP verification
+  /// Uses Supabase's signUp which auto-confirms when email confirmation is disabled
+  /// or uses a known test password for existing users
+  ///
+  /// WARNING: Only use this for development testing!
+  ///
+  /// REQUIRES: In Supabase Dashboard > Authentication > Providers > Email:
+  /// - Set "Confirm email" to DISABLED for this to work
+  Future<bool> devSignInWithEmail(String email) async {
+    try {
+      _updateAuthState(AuthState.loading);
+
+      // Use a deterministic password based on email for dev testing
+      final devPassword = 'DevPass_${email.hashCode.abs()}_2024!';
+
+      debugPrint('🔧 [DEV] Attempting dev sign-in for $email');
+      debugPrint('🔧 [DEV] Using password: $devPassword');
+
+      // First try to sign in (for existing users)
+      try {
+        debugPrint('🔧 [DEV] Trying signInWithPassword...');
+        final signInResponse = await _supabase!.auth.signInWithPassword(
+          email: email,
+          password: devPassword,
+        );
+
+        if (signInResponse.session != null) {
+          await _saveSession(signInResponse.session!);
+          _updateAuthState(AuthState.authenticated);
+          debugPrint('✅ [DEV] Signed in existing user: $email');
+          return true;
+        }
+        debugPrint('⚠️ [DEV] SignIn returned null session');
+      } on AuthException catch (signInError) {
+        debugPrint('ℹ️ [DEV] Sign-in failed: ${signInError.message}');
+        debugPrint('ℹ️ [DEV] Trying sign-up...');
+      }
+
+      // If sign-in fails, try to sign up (for new users)
+      try {
+        debugPrint('🔧 [DEV] Trying signUp...');
+        final signUpResponse = await _supabase!.auth.signUp(
+          email: email,
+          password: devPassword,
+          data: {'dev_mode': true},
+        );
+
+        debugPrint('🔧 [DEV] SignUp result - user: ${signUpResponse.user?.id}, hasSession: ${signUpResponse.session != null}');
+
+        if (signUpResponse.session != null) {
+          await _saveSession(signUpResponse.session!);
+          _updateAuthState(AuthState.authenticated);
+          debugPrint('✅ [DEV] Created and signed in new user: $email');
+          return true;
+        } else if (signUpResponse.user != null) {
+          // User created but no session - email confirmation is ENABLED in Supabase
+          debugPrint('⚠️ [DEV] User created but no session - EMAIL CONFIRMATION IS ENABLED');
+          debugPrint('⚠️ [DEV] To fix: Go to Supabase Dashboard > Authentication > Providers > Email');
+          debugPrint('⚠️ [DEV] Set "Confirm email" to DISABLED');
+
+          // Still try to sign in (might work if user was previously confirmed)
+          try {
+            debugPrint('🔧 [DEV] Trying signIn after signup...');
+            final retryResponse = await _supabase!.auth.signInWithPassword(
+              email: email,
+              password: devPassword,
+            );
+
+            if (retryResponse.session != null) {
+              await _saveSession(retryResponse.session!);
+              _updateAuthState(AuthState.authenticated);
+              debugPrint('✅ [DEV] Signed in after signup: $email');
+              return true;
+            }
+          } on AuthException catch (retryError) {
+            debugPrint('❌ [DEV] Retry sign-in failed: ${retryError.message}');
+          }
+        }
+      } on AuthException catch (signUpError) {
+        debugPrint('❌ [DEV] Sign-up failed: ${signUpError.message}');
+
+        // Check if user exists with different password (e.g., created via OTP before)
+        if (signUpError.message.contains('already registered') ||
+            signUpError.message.contains('already been registered')) {
+          debugPrint('ℹ️ [DEV] User exists - may need to confirm email or use different password');
+        }
+      }
+
+      _updateAuthState(AuthState.unauthenticated);
+      debugPrint('❌ [DEV] Dev sign-in failed for $email');
+      debugPrint('💡 [DEV] TIP: Disable "Confirm email" in Supabase Dashboard');
+      return false;
+    } catch (e) {
+      debugPrint('❌ [DEV] Dev sign-in error: $e');
+      _updateAuthState(AuthState.unauthenticated);
+      return false;
+    }
+  }
+
+  /// Development sign-in with detailed logs returned for UI display
+  /// Same as devSignInWithEmail but returns logs for debug overlay
+  ///
+  /// Returns: {'success': bool, 'logs': List<String>}
+  Future<Map<String, dynamic>> devSignInWithEmailWithLogs(String email) async {
+    final logs = <String>[];
+
+    void log(String message) {
+      logs.add(message);
+      debugPrint(message);
+    }
+
+    try {
+      _updateAuthState(AuthState.loading);
+
+      final devPassword = 'DevPass_${email.hashCode.abs()}_2024!';
+
+      log('Starting dev sign-in for $email');
+      log('Password: $devPassword');
+
+      // First try to sign in (for existing users)
+      try {
+        log('Trying signInWithPassword...');
+        final signInResponse = await _supabase!.auth.signInWithPassword(
+          email: email,
+          password: devPassword,
+        );
+
+        if (signInResponse.session != null) {
+          await _saveSession(signInResponse.session!);
+          _updateAuthState(AuthState.authenticated);
+          log('SUCCESS: Signed in existing user');
+          log('User ID: ${signInResponse.session!.user.id}');
+          return {'success': true, 'logs': logs};
+        }
+        log('signInWithPassword returned null session');
+      } on AuthException catch (signInError) {
+        log('signIn failed: ${signInError.message}');
+        log('statusCode: ${signInError.statusCode}');
+      }
+
+      // If sign-in fails, try to sign up (for new users)
+      try {
+        log('Trying signUp...');
+        final signUpResponse = await _supabase!.auth.signUp(
+          email: email,
+          password: devPassword,
+          data: {'dev_mode': true},
+        );
+
+        log('signUp result:');
+        log('  user id: ${signUpResponse.user?.id}');
+        log('  hasSession: ${signUpResponse.session != null}');
+        log('  email confirmed: ${signUpResponse.user?.emailConfirmedAt}');
+
+        if (signUpResponse.session != null) {
+          await _saveSession(signUpResponse.session!);
+          _updateAuthState(AuthState.authenticated);
+          log('SUCCESS: Created and signed in new user');
+          return {'success': true, 'logs': logs};
+        } else if (signUpResponse.user != null) {
+          log('WARNING: User created but NO SESSION');
+          log('This means EMAIL CONFIRMATION is ENABLED in Supabase');
+          log('Fix: Supabase Dashboard > Auth > Providers > Email');
+          log('     Set "Confirm email" to DISABLED');
+
+          // Try to sign in again
+          try {
+            log('Retrying signIn after signup...');
+            final retryResponse = await _supabase!.auth.signInWithPassword(
+              email: email,
+              password: devPassword,
+            );
+
+            if (retryResponse.session != null) {
+              await _saveSession(retryResponse.session!);
+              _updateAuthState(AuthState.authenticated);
+              log('SUCCESS: Signed in after signup');
+              return {'success': true, 'logs': logs};
+            }
+            log('Retry also returned null session');
+          } on AuthException catch (retryError) {
+            log('Retry signIn failed: ${retryError.message}');
+          }
+        }
+      } on AuthException catch (signUpError) {
+        log('signUp failed: ${signUpError.message}');
+        log('statusCode: ${signUpError.statusCode}');
+
+        if (signUpError.message.contains('already registered') ||
+            signUpError.message.contains('already been registered')) {
+          log('User exists with different password');
+          log('Calling API to update password...');
+
+          // User was created via OTP - call API to update password
+          final updated = await _updatePasswordViaApi(email, devPassword, log);
+
+          if (updated) {
+            log('Password updated, retrying signIn...');
+            try {
+              final retryResponse = await _supabase!.auth.signInWithPassword(
+                email: email,
+                password: devPassword,
+              );
+
+              if (retryResponse.session != null) {
+                await _saveSession(retryResponse.session!);
+                _updateAuthState(AuthState.authenticated);
+                log('SUCCESS: Signed in after password update');
+                log('User ID: ${retryResponse.session!.user.id}');
+                return {'success': true, 'logs': logs};
+              }
+              log('signIn after password update returned null session');
+            } on AuthException catch (retryError) {
+              log('signIn after password update failed: ${retryError.message}');
+            }
+          }
+        }
+      }
+
+      _updateAuthState(AuthState.unauthenticated);
+      log('FAILED: Dev sign-in unsuccessful');
+      return {'success': false, 'logs': logs};
+    } catch (e) {
+      log('ERROR: $e');
+      _updateAuthState(AuthState.unauthenticated);
+      return {'success': false, 'logs': logs};
+    }
+  }
+
+  /// Call API to update user password for existing OTP users
+  /// Only used in dev mode when sign-in fails because user was created via OTP
+  Future<bool> _updatePasswordViaApi(
+    String email,
+    String password,
+    void Function(String) log,
+  ) async {
+    try {
+      final apiUrl = SupabaseConfig.apiUrl;
+      log('API URL: $apiUrl');
+
+      final response = await http.post(
+        Uri.parse('$apiUrl/api/dev/update-password'),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({
+          'email': email,
+          'password': password,
+        }),
+      );
+
+      log('API response: ${response.statusCode}');
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        log('Password updated for user: ${data['userId']}');
+        return true;
+      } else {
+        final error = jsonDecode(response.body);
+        log('API error: ${error['error']}');
+        if (error['details'] != null) {
+          log('Details: ${error['details']}');
+        }
+        return false;
+      }
+    } catch (e) {
+      log('API call failed: $e');
+      return false;
+    }
+  }
+
+  /// Sign in with Apple
+  ///
+  /// Returns a map with 'success' bool and optional 'displayName' if provided by Apple
+  /// Apple only provides name on first sign-in, so we capture it for profile setup
+  Future<Map<String, dynamic>> signInWithApple() async {
+    try {
+      _updateAuthState(AuthState.loading);
+
+      // Generate a random nonce for security
+      final rawNonce = _generateNonce();
+      final hashedNonce = sha256.convert(utf8.encode(rawNonce)).toString();
+
+      // Request Apple credentials
+      final credential = await SignInWithApple.getAppleIDCredential(
+        scopes: [
+          AppleIDAuthorizationScopes.email,
+          AppleIDAuthorizationScopes.fullName,
+        ],
+        nonce: hashedNonce,
+      );
+
+      final idToken = credential.identityToken;
+      if (idToken == null) {
+        debugPrint('❌ Apple Sign-In: No ID token received');
+        _updateAuthState(AuthState.unauthenticated);
+        return {'success': false};
+      }
+
+      // Extract display name if provided (only on first sign-in)
+      String? displayName;
+      if (credential.givenName != null || credential.familyName != null) {
+        final parts = [credential.givenName, credential.familyName]
+            .where((p) => p != null && p.isNotEmpty)
+            .toList();
+        if (parts.isNotEmpty) {
+          displayName = parts.join(' ');
+          debugPrint('📝 Apple provided name: $displayName');
+        }
+      }
+
+      // Sign in to Supabase using the Apple ID token
+      final response = await _supabase!.auth.signInWithIdToken(
+        provider: OAuthProvider.apple,
+        idToken: idToken,
+        nonce: rawNonce,
+      );
+
+      if (response.session != null) {
+        await _saveSession(response.session!);
+        _updateAuthState(AuthState.authenticated);
+        debugPrint('✅ Apple Sign-In successful');
+
+        // If Apple provided a name, update the user metadata
+        if (displayName != null) {
+          await updateDisplayName(displayName);
+        }
+
+        return {
+          'success': true,
+          'displayName': displayName,
+        };
+      }
+
+      debugPrint('❌ Apple Sign-In: No session received from Supabase');
+      _updateAuthState(AuthState.unauthenticated);
+      return {'success': false};
+    } on SignInWithAppleAuthorizationException catch (e) {
+      // User cancelled or other Apple-specific error
+      debugPrint('⚠️ Apple Sign-In cancelled or failed: ${e.code} - ${e.message}');
+      _updateAuthState(AuthState.unauthenticated);
+      return {'success': false, 'cancelled': e.code == AuthorizationErrorCode.canceled};
+    } catch (e) {
+      debugPrint('❌ Apple Sign-In error: $e');
+      _updateAuthState(AuthState.unauthenticated);
+      return {'success': false};
+    }
+  }
+
+  /// Generate a cryptographically secure nonce
+  String _generateNonce([int length = 32]) {
+    const charset = '0123456789ABCDEFGHIJKLMNOPQRSTUVXYZabcdefghijklmnopqrstuvwxyz-._';
+    final random = Random.secure();
+    return List.generate(length, (_) => charset[random.nextInt(charset.length)]).join();
   }
 
   /// Refresh access token
