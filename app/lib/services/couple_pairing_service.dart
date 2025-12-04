@@ -228,6 +228,60 @@ class CouplePairingService {
     return status != null;
   }
 
+  /// Pair directly with a partner using their userId (from QR code)
+  /// Returns Partner object after successful pairing
+  Future<Partner> pairDirect(String partnerId, String partnerName) async {
+    // Use async token check to avoid race condition with auth state updates
+    final token = await _authService.getAccessToken();
+    if (token == null) {
+      throw Exception('Not authenticated. Please sign in.');
+    }
+
+    try {
+      final response = await _apiClient.post(
+        '/api/couples/pair-direct',
+        body: {'partnerId': partnerId},
+      );
+
+      if (!response.success) {
+        throw Exception(response.error ?? 'Failed to pair');
+      }
+
+      final data = response.data as Map<String, dynamic>;
+
+      // Parse createdAt from API response
+      DateTime pairedAt;
+      if (data['createdAt'] != null) {
+        pairedAt = DateTime.parse(data['createdAt'] as String);
+      } else {
+        pairedAt = DateTime.now();
+      }
+
+      // Create partner object using API response or fallback to QR data
+      final partner = Partner(
+        name: data['partnerName'] as String? ?? partnerName,
+        pushToken: '', // Will be set up separately
+        pairedAt: pairedAt,
+        avatarEmoji: '💕',
+        id: data['partnerId'] as String? ?? partnerId,
+      );
+
+      // Save partner to local storage
+      await _storage.savePartner(partner);
+
+      // Store couple ID for future API calls
+      final coupleId = data['coupleId'] as String;
+      await _secureStorage.write(key: _keyCoupleId, value: coupleId);
+
+      Logger.success('Direct paired with: ${partner.name}', service: 'pairing');
+
+      return partner;
+    } catch (e) {
+      Logger.error('Error in direct pairing', error: e, service: 'pairing');
+      rethrow;
+    }
+  }
+
   /// Get stored couple ID
   Future<String?> getCoupleId() async {
     return _secureStorage.read(key: _keyCoupleId);

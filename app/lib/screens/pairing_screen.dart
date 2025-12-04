@@ -12,6 +12,9 @@ import 'package:togetherremind/screens/home_screen.dart';
 import 'package:togetherremind/services/storage_service.dart';
 import 'package:togetherremind/services/notification_service.dart';
 import 'package:togetherremind/services/couple_pairing_service.dart';
+import 'package:togetherremind/services/daily_quest_service.dart';
+import 'package:togetherremind/services/quest_sync_service.dart';
+import 'package:togetherremind/services/quest_type_manager.dart';
 import 'package:togetherremind/theme/app_theme.dart';
 import 'package:togetherremind/widgets/newspaper/newspaper_widgets.dart';
 import '../utils/logger.dart';
@@ -44,6 +47,40 @@ class _PairingScreenState extends State<PairingScreen> {
     super.initState();
     _generateQRCode();
     _listenForPairingConfirmation();
+    _startGlobalPairingPolling(); // Poll for pairing status (works for QR code flow too)
+  }
+
+  /// Start polling for pairing status globally (not just for Remote tab)
+  /// This allows detecting when partner scans our QR code and creates couple on server
+  void _startGlobalPairingPolling() {
+    // Use a separate timer for global polling
+    Timer.periodic(const Duration(seconds: 5), (timer) async {
+      if (!mounted) {
+        timer.cancel();
+        return;
+      }
+
+      try {
+        final status = await _couplePairingService.getStatus();
+        if (status != null && mounted) {
+          timer.cancel();
+          _countdownTimer?.cancel();
+          _pairingStatusTimer?.cancel();
+
+          final partner = Partner(
+            name: status.partnerName ?? status.partnerEmail?.split('@').first ?? 'Partner',
+            pushToken: '',
+            pairedAt: status.createdAt,
+            avatarEmoji: '💕',
+          );
+
+          await _storageService.savePartner(partner);
+          await _initializeDailyQuestsAndNavigate();
+        }
+      } catch (e) {
+        Logger.error('Error in global pairing poll', error: e, service: 'pairing');
+      }
+    });
   }
 
   @override
@@ -51,6 +88,52 @@ class _PairingScreenState extends State<PairingScreen> {
     _countdownTimer?.cancel();
     _pairingStatusTimer?.cancel();
     super.dispose();
+  }
+
+  /// Initialize daily quests after pairing completes
+  /// This mirrors the logic from main.dart's _initializeDailyQuests()
+  Future<void> _initializeDailyQuestsAndNavigate() async {
+    try {
+      final user = _storageService.getUser();
+      final partner = _storageService.getPartner();
+
+      if (user != null && partner != null) {
+        final questService = DailyQuestService(storage: _storageService);
+        final syncService = QuestSyncService(storage: _storageService);
+        final questTypeManager = QuestTypeManager(
+          storage: _storageService,
+          questService: questService,
+          syncService: syncService,
+        );
+
+        // Sync or generate today's quests
+        final synced = await syncService.syncTodayQuests(
+          currentUserId: user.id,
+          partnerUserId: partner.pushToken,
+        );
+
+        if (!synced) {
+          // No quests found - generate new ones
+          await questTypeManager.generateDailyQuests(
+            currentUserId: user.id,
+            partnerUserId: partner.pushToken,
+          );
+          Logger.debug('Daily quests generated after pairing', service: 'pairing');
+        } else {
+          Logger.debug('Daily quests loaded from sync after pairing', service: 'pairing');
+        }
+      }
+    } catch (e) {
+      Logger.error('Error initializing daily quests after pairing', error: e, service: 'pairing');
+    }
+
+    if (mounted) {
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(
+          builder: (context) => const HomeScreen(),
+        ),
+      );
+    }
   }
 
   void _listenForPairingConfirmation() {
@@ -63,14 +146,7 @@ class _PairingScreenState extends State<PairingScreen> {
       );
 
       await _storageService.savePartner(partner);
-
-      if (mounted) {
-        Navigator.of(context).pushReplacement(
-          MaterialPageRoute(
-            builder: (context) => const HomeScreen(),
-          ),
-        );
-      }
+      await _initializeDailyQuestsAndNavigate();
     };
   }
 
@@ -109,38 +185,64 @@ class _PairingScreenState extends State<PairingScreen> {
 
       Logger.debug('Scanned QR data: $data', service: 'pairing');
 
-      final partner = Partner(
-        name: data['name'] ?? 'Partner',
-        pushToken: data['pushToken'] ?? '',
-        pairedAt: DateTime.now(),
-        avatarEmoji: '👤',
-      );
+      final partnerId = data['userId'] as String?;
+      final partnerName = data['name'] as String? ?? 'Partner';
 
-      await _storageService.savePartner(partner);
-
-      final user = _storageService.getUser();
-      final myPushToken = await NotificationService.getToken();
-
-      Logger.debug('My push token: $myPushToken', service: 'pairing');
-      Logger.debug('Partner push token: ${partner.pushToken}', service: 'pairing');
-      Logger.debug('My name: ${user?.name}', service: 'pairing');
-
-      if (user != null && myPushToken != null) {
-        await NotificationService.sendPairingConfirmation(
-          partnerToken: partner.pushToken,
-          myName: user.name ?? 'Partner',
-          myPushToken: myPushToken,
-        );
+      if (partnerId == null) {
+        throw Exception('Invalid QR code - no userId');
       }
 
-      if (mounted) {
-        Navigator.of(context).pushReplacement(
-          MaterialPageRoute(
-            builder: (context) => const HomeScreen(),
-          ),
+      // Create couple on server via API (this allows partner to poll and detect pairing)
+      try {
+        final partner = await _couplePairingService.pairDirect(partnerId, partnerName);
+        Logger.success('Server pairing successful: ${partner.name}', service: 'pairing');
+
+        // Also try to send push notification as backup (might not work in dev)
+        final user = _storageService.getUser();
+        final myPushToken = await NotificationService.getToken();
+        final partnerPushToken = data['pushToken'] as String?;
+
+        if (user != null && myPushToken != null && partnerPushToken != null && partnerPushToken.isNotEmpty) {
+          try {
+            await NotificationService.sendPairingConfirmation(
+              partnerToken: partnerPushToken,
+              myName: user.name ?? 'Partner',
+              myPushToken: myPushToken,
+            );
+            Logger.debug('Sent push notification to partner', service: 'pairing');
+          } catch (pushError) {
+            Logger.warn('Push notification failed (server pairing still works)', service: 'pairing');
+          }
+        }
+
+        await _initializeDailyQuestsAndNavigate();
+      } catch (apiError) {
+        Logger.error('API pairing failed, falling back to local-only', error: apiError, service: 'pairing');
+
+        // Fallback: save partner locally (original behavior)
+        final partner = Partner(
+          name: partnerName,
+          pushToken: data['pushToken'] ?? '',
+          pairedAt: DateTime.now(),
+          avatarEmoji: '👤',
         );
+        await _storageService.savePartner(partner);
+
+        // Try push notification as last resort
+        final user = _storageService.getUser();
+        final myPushToken = await NotificationService.getToken();
+        if (user != null && myPushToken != null) {
+          await NotificationService.sendPairingConfirmation(
+            partnerToken: partner.pushToken,
+            myName: user.name ?? 'Partner',
+            myPushToken: myPushToken,
+          );
+        }
+
+        await _initializeDailyQuestsAndNavigate();
       }
     } catch (e) {
+      Logger.error('Error handling scanned QR code', error: e, service: 'pairing');
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Invalid QR code. Please try again.')),
@@ -223,14 +325,7 @@ class _PairingScreenState extends State<PairingScreen> {
           );
 
           await _storageService.savePartner(partner);
-
-          if (mounted) {
-            Navigator.of(context).pushReplacement(
-              MaterialPageRoute(
-                builder: (context) => const HomeScreen(),
-              ),
-            );
-          }
+          await _initializeDailyQuestsAndNavigate();
         }
       } catch (e) {
         Logger.error('Error polling pairing status', error: e, service: 'pairing');
@@ -258,11 +353,7 @@ class _PairingScreenState extends State<PairingScreen> {
         );
 
         if (confirmed == true) {
-          Navigator.of(context).pushReplacement(
-            MaterialPageRoute(
-              builder: (context) => const HomeScreen(),
-            ),
-          );
+          await _initializeDailyQuestsAndNavigate();
         }
       }
     } catch (e) {
