@@ -5,63 +5,57 @@
   "questions": [
     {
       "id": "quiz_005_q1",
-      "text": "Do I prefer sweet or savory snacks?",
+      "text": "What's my favorite weather?",
       "choices": [
-        "Sweet",
-        "Savory",
-        "Both",
-        "Neither",
-        "Other / It depends"
+        "Sunny",
+        "Rainy",
+        "Snowy",
+        "Cloudy",
+        "Other / It varies"
       ],
-      "category": "preferences"
+      "category": "favorites"
     },
     {
       "id": "quiz_005_q2",
-      "text": "Do I prefer texting or calling?",
+      "text": "What's my preferred gift type?",
       "choices": [
-        "Texting",
-        "Calling",
-        "Video calls",
-        "In person only",
+        "Practical",
+        "Sentimental",
+        "Experience",
+        "Surprise me",
         "Other / It depends"
       ],
       "category": "preferences"
     },
     {
       "id": "quiz_005_q3",
-      "text": "What's my favorite sport to watch?",
+      "text": "Would I rather: Movie night or Game night?",
       "choices": [
-        "Football",
-        "Basketball",
-        "Soccer",
-        "Baseball",
-        "Other / Something else"
+        "Movie night",
+        "Game night"
       ],
-      "category": "favorites"
+      "category": "would_you_rather"
     },
     {
       "id": "quiz_005_q4",
-      "text": "Do I prefer planning or spontaneity?",
+      "text": "Would I rather: Live without internet or Live without TV?",
       "choices": [
-        "Always plan ahead",
-        "Mostly plan",
-        "Mostly spontaneous",
-        "Fully spontaneous",
-        "Other / It depends"
+        "Without internet",
+        "Without TV"
       ],
-      "category": "preferences"
+      "category": "would_you_rather"
     },
     {
       "id": "quiz_005_q5",
-      "text": "What's my preferred social group size?",
+      "text": "What's my favorite way to learn new things?",
       "choices": [
-        "One-on-one",
-        "Small group (3-5)",
-        "Medium group (6-10)",
-        "Large party",
-        "Other / It varies"
+        "Reading",
+        "Videos",
+        "Hands-on practice",
+        "Classes",
+        "Other / Something else"
       ],
-      "category": "preferences"
+      "category": "favorites"
     }
   ]
 }

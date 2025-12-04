@@ -1,0 +1,69 @@
+{
+  "quizId": "affirmation_004",
+  "title": "Love Languages",
+  "category": "connection",
+  "branch": "connection",
+  "description": "Rate how well you speak each other's love language",
+  "questions": [
+    {
+      "id": "affirmation_004_q1",
+      "text": "My partner expresses love in ways that resonate with me.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ]
+    },
+    {
+      "id": "affirmation_004_q2",
+      "text": "I feel appreciated when my partner shows affection in their unique way.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ]
+    },
+    {
+      "id": "affirmation_004_q3",
+      "text": "I understand what makes my partner feel most loved.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ]
+    },
+    {
+      "id": "affirmation_004_q4",
+      "text": "We both make effort to express love in ways the other needs.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ]
+    },
+    {
+      "id": "affirmation_004_q5",
+      "text": "Our different ways of showing love complement each other beautifully.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ]
+    }
+  ]
+}

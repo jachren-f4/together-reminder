@@ -1,0 +1,69 @@
+{
+  "quizId": "affirmation_003",
+  "title": "Learning Together",
+  "category": "growth",
+  "branch": "growth",
+  "description": "Rate your growth as a couple",
+  "questions": [
+    {
+      "id": "affirmation_003_q1",
+      "text": "We learn from our mistakes as a couple.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ]
+    },
+    {
+      "id": "affirmation_003_q2",
+      "text": "Our communication has improved over time.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ]
+    },
+    {
+      "id": "affirmation_003_q3",
+      "text": "We're better at handling challenges than we used to be.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ]
+    },
+    {
+      "id": "affirmation_003_q4",
+      "text": "We actively work on improving our relationship.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ]
+    },
+    {
+      "id": "affirmation_003_q5",
+      "text": "Each year together makes us stronger.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ]
+    }
+  ]
+}

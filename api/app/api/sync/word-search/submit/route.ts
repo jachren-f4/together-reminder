@@ -19,16 +19,35 @@ const DIRECTION_DELTAS: Record<string, number> = {
   'DR': 11, 'DL': 9, 'UR': -9, 'UL': -11
 };
 
+// Map branch index to folder name
+function getBranchFolderName(branchIndex: number): string {
+  const folders = ['everyday', 'passionate', 'naughty'];
+  return folders[branchIndex % folders.length];
+}
+
+// Get current branch folder for couple (accepts client for use within transactions)
+async function getCurrentBranchFolder(coupleId: string, client: any): Promise<string> {
+  const result = await client.query(
+    `SELECT current_branch FROM branch_progression
+     WHERE couple_id = $1 AND activity_type = 'wordSearch'`,
+    [coupleId]
+  );
+
+  if (result.rows.length === 0) {
+    return 'everyday'; // Default to first branch
+  }
+
+  return getBranchFolderName(result.rows[0].current_branch);
+}
+
 // Load puzzle data from branch-specific path (including word positions for validation)
-function loadPuzzle(puzzleId: string, branch?: string): any {
+function loadPuzzle(puzzleId: string, branch: string): any {
   try {
-    // Use branch path (default to 'everyday' if no branch specified)
-    const branchFolder = branch || 'everyday';
-    const puzzlePath = join(process.cwd(), 'data', 'puzzles', 'word-search', branchFolder, `${puzzleId}.json`);
+    const puzzlePath = join(process.cwd(), 'data', 'puzzles', 'word-search', branch, `${puzzleId}.json`);
     const puzzleData = readFileSync(puzzlePath, 'utf-8');
     return JSON.parse(puzzleData);
   } catch (error) {
-    console.error(`Failed to load word search puzzle ${puzzleId}:`, error);
+    console.error(`Failed to load word search puzzle ${puzzleId} from branch ${branch}:`, error);
     return null;
   }
 }
@@ -157,12 +176,15 @@ export const POST = withAuthOrDevBypass(async (req, userId, email) => {
       );
     }
 
-    // Load puzzle with positions
-    const puzzle = loadPuzzle(match.puzzle_id);
+    // Get current branch for this couple (needed to load correct puzzle file)
+    const branch = await getCurrentBranchFolder(coupleId, client);
+
+    // Load puzzle with positions from correct branch
+    const puzzle = loadPuzzle(match.puzzle_id, branch);
     if (!puzzle) {
       await client.query('ROLLBACK');
       return NextResponse.json(
-        { error: 'Puzzle not found' },
+        { error: `Puzzle not found: ${match.puzzle_id} in branch ${branch}` },
         { status: 500 }
       );
     }

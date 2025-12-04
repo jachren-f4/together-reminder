@@ -1,0 +1,37 @@
+{
+  "quizId": "quiz_004",
+  "title": "Connection Quiz 4",
+  "branch": "connection",
+  "questions": [
+    {
+      "id": "quiz_004_q1",
+      "category": "rituals",
+      "prompt": "Who values more...",
+      "content": "Daily rituals together"
+    },
+    {
+      "id": "quiz_004_q2",
+      "category": "availability",
+      "prompt": "Who is more...",
+      "content": "Emotionally available"
+    },
+    {
+      "id": "quiz_004_q3",
+      "category": "needs",
+      "prompt": "Who is quicker to...",
+      "content": "Ask for what they need"
+    },
+    {
+      "id": "quiz_004_q4",
+      "category": "appreciation",
+      "prompt": "Who expresses gratitude more...",
+      "content": "For everyday things"
+    },
+    {
+      "id": "quiz_004_q5",
+      "category": "comfort",
+      "prompt": "Who creates more...",
+      "content": "Moments of calm together"
+    }
+  ]
+}

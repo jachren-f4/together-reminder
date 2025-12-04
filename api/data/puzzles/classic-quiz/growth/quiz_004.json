@@ -1,0 +1,67 @@
+{
+  "quizId": "quiz_004",
+  "title": "Growth Quiz 4",
+  "branch": "growth",
+  "questions": [
+    {
+      "id": "quiz_004_q1",
+      "text": "Where do I see myself in five years?",
+      "choices": [
+        "Advanced in my career",
+        "Starting new adventures",
+        "Settled and stable",
+        "Growing a family",
+        "Living my best life"
+      ],
+      "category": "future_vision"
+    },
+    {
+      "id": "quiz_004_q2",
+      "text": "What do I admire most about how you've grown?",
+      "choices": [
+        "Your emotional awareness",
+        "Your persistence",
+        "Your openness to change",
+        "Your self-care journey",
+        "Your communication growth"
+      ],
+      "category": "partner_admiration"
+    },
+    {
+      "id": "quiz_004_q3",
+      "text": "What's one thing we should try together?",
+      "choices": [
+        "A new adventure or travel",
+        "A shared hobby or class",
+        "A wellness practice",
+        "A creative project",
+        "A challenge or goal"
+      ],
+      "category": "shared_growth"
+    },
+    {
+      "id": "quiz_004_q4",
+      "text": "How do I measure personal success?",
+      "choices": [
+        "By my happiness",
+        "By my achievements",
+        "By my relationships",
+        "By my growth journey",
+        "By my impact on others"
+      ],
+      "category": "success_definition"
+    },
+    {
+      "id": "quiz_004_q5",
+      "text": "What's the most important thing for our relationship's future?",
+      "choices": [
+        "Maintaining open communication",
+        "Continuing to have fun together",
+        "Supporting each other's dreams",
+        "Working through challenges together",
+        "Never taking each other for granted"
+      ],
+      "category": "relationship_future"
+    }
+  ]
+}

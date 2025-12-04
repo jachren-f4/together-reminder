@@ -147,6 +147,19 @@ export const POST = withAuthOrDevBypass(async (req, userId, email) => {
          VALUES ($1, $2, 'you_or_me_complete', $3, NOW()), ($4, $2, 'you_or_me_complete', $3, NOW())`,
         [user1_id, lpEarned, `you_or_me_complete (${sessionId})`, user2_id]
       );
+
+      // Advance branch progression for You or Me
+      await client.query(
+        `INSERT INTO branch_progression (couple_id, activity_type, current_branch, total_completions, max_branches)
+         VALUES ($1, 'youOrMe', 0, 1, 5)
+         ON CONFLICT (couple_id, activity_type)
+         DO UPDATE SET
+           total_completions = branch_progression.total_completions + 1,
+           current_branch = (branch_progression.total_completions + 1) % 5,
+           last_completed_at = NOW(),
+           updated_at = NOW()`,
+        [coupleId]
+      );
     }
 
     // Update session

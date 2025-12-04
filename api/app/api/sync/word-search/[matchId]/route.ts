@@ -12,16 +12,35 @@ import { join } from 'path';
 
 export const dynamic = 'force-dynamic';
 
+// Map branch index to folder name
+function getBranchFolderName(branchIndex: number): string {
+  const folders = ['everyday', 'passionate', 'naughty'];
+  return folders[branchIndex % folders.length];
+}
+
+// Get current branch folder for couple
+async function getCurrentBranchFolder(coupleId: string): Promise<string> {
+  const result = await query(
+    `SELECT current_branch FROM branch_progression
+     WHERE couple_id = $1 AND activity_type = 'wordSearch'`,
+    [coupleId]
+  );
+
+  if (result.rows.length === 0) {
+    return 'everyday'; // Default to first branch
+  }
+
+  return getBranchFolderName(result.rows[0].current_branch);
+}
+
 // Load puzzle data from branch-specific path
-function loadPuzzle(puzzleId: string, branch?: string): any {
+function loadPuzzle(puzzleId: string, branch: string): any {
   try {
-    // Use branch path (default to 'everyday' if no branch specified)
-    const branchFolder = branch || 'everyday';
-    const puzzlePath = join(process.cwd(), 'data', 'puzzles', 'word-search', branchFolder, `${puzzleId}.json`);
+    const puzzlePath = join(process.cwd(), 'data', 'puzzles', 'word-search', branch, `${puzzleId}.json`);
     const puzzleData = readFileSync(puzzlePath, 'utf-8');
     return JSON.parse(puzzleData);
   } catch (error) {
-    console.error(`Failed to load word search puzzle ${puzzleId}:`, error);
+    console.error(`Failed to load word search puzzle ${puzzleId} from branch ${branch}:`, error);
     return null;
   }
 }
@@ -91,8 +110,11 @@ export const GET = withAuthOrDevBypass(async (req, userId, email, context) => {
       ? JSON.parse(match.found_words)
       : match.found_words || [];
 
-    // Load puzzle for client
-    const puzzle = loadPuzzle(match.puzzle_id);
+    // Get current branch for this couple
+    const branch = await getCurrentBranchFolder(coupleId);
+
+    // Load puzzle for client from correct branch
+    const puzzle = loadPuzzle(match.puzzle_id, branch);
 
     return NextResponse.json({
       success: true,

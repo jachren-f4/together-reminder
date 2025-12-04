@@ -1,0 +1,37 @@
+{
+  "quizId": "quiz_011",
+  "title": "Playful Quiz 11",
+  "branch": "playful",
+  "questions": [
+    {
+      "id": "quiz_011_q1",
+      "category": "imagination",
+      "prompt": "Who would...",
+      "content": "Narrate their life like a nature documentary"
+    },
+    {
+      "id": "quiz_011_q2",
+      "category": "personality",
+      "prompt": "Who is more...",
+      "content": "Likely to try learning random party tricks"
+    },
+    {
+      "id": "quiz_011_q3",
+      "category": "humor",
+      "prompt": "Who would...",
+      "content": "Make up ridiculous conspiracy theories"
+    },
+    {
+      "id": "quiz_011_q4",
+      "category": "quirks",
+      "prompt": "Who is more...",
+      "content": "Likely to keep the toy from a cereal box"
+    },
+    {
+      "id": "quiz_011_q5",
+      "category": "social",
+      "prompt": "Who would...",
+      "content": "Wear something outrageous to get attention"
+    }
+  ]
+}

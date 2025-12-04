@@ -1,0 +1,69 @@
+{
+  "quizId": "affirmation_010",
+  "title": "Feeling Soothed",
+  "category": "attachment",
+  "branch": "attachment",
+  "description": "Rate how your partner soothes and supports you",
+  "questions": [
+    {
+      "id": "affirmation_010_q1",
+      "text": "Being with my partner helps me feel grounded when I'm stressed.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ]
+    },
+    {
+      "id": "affirmation_010_q2",
+      "text": "My partner's touch or embrace can calm my worries.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ]
+    },
+    {
+      "id": "affirmation_010_q3",
+      "text": "I turn to my partner first when I need emotional support.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ]
+    },
+    {
+      "id": "affirmation_010_q4",
+      "text": "My partner helps me regulate my emotions during challenging times.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ]
+    },
+    {
+      "id": "affirmation_010_q5",
+      "text": "I feel lighter and more at ease after spending time with my partner.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ]
+    }
+  ]
+}

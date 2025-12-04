@@ -1,0 +1,69 @@
+{
+  "quizId": "affirmation_001",
+  "title": "Personal Evolution",
+  "category": "growth",
+  "branch": "growth",
+  "description": "Rate your personal growth in love",
+  "questions": [
+    {
+      "id": "affirmation_001_q1",
+      "text": "This relationship has helped me become a better person.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ]
+    },
+    {
+      "id": "affirmation_001_q2",
+      "text": "I have grown emotionally since being with my partner.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ]
+    },
+    {
+      "id": "affirmation_001_q3",
+      "text": "My partner encourages me to be my best self.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ]
+    },
+    {
+      "id": "affirmation_001_q4",
+      "text": "I feel inspired to grow when I'm with my partner.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ]
+    },
+    {
+      "id": "affirmation_001_q5",
+      "text": "Love has taught me things about myself I didn't know.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ]
+    }
+  ]
+}

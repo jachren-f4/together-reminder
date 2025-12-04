@@ -427,10 +427,13 @@ class _WordSearchGameScreenState extends State<WordSearchGameScreen>
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: BrandLoader().colors.background,
-      body: SafeArea(
-        child: _buildBody(),
+    return PopScope(
+      canPop: false,
+      child: Scaffold(
+        backgroundColor: BrandLoader().colors.background,
+        body: SafeArea(
+          child: _buildBody(),
+        ),
       ),
     );
   }

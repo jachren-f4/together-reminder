@@ -5,7 +5,8 @@ import '../widgets/editorial/editorial.dart';
 
 /// Results screen for You-or-Me Match (bulk submission)
 ///
-/// Displays match percentage and completion status
+/// Displays match percentage with question-by-question comparison.
+/// Editorial design with clear match/mismatch indicators.
 class YouOrMeMatchResultsScreen extends StatelessWidget {
   final YouOrMeMatch match;
   final ServerYouOrMeQuiz? quiz;
@@ -37,11 +38,14 @@ class YouOrMeMatchResultsScreen extends StatelessWidget {
     final partnerName = partner?.name ?? 'Partner';
     final lp = lpEarned ?? 30;
 
+    // Use server-provided values directly (server is authoritative)
     final totalQuestions = quiz?.totalQuestions ?? 10;
-    // Use server-provided match percentage if available, otherwise calculate locally
-    final displayMatchPercentage = matchPercentage ?? (totalQuestions > 0
-        ? ((myScore + partnerScore) / (totalQuestions * 2) * 100).round()
-        : 0);
+    final displayMatchPercentage = matchPercentage ?? 0;
+
+    // Derive match count from server's percentage
+    final totalMatches = totalQuestions > 0
+        ? ((displayMatchPercentage / 100) * totalQuestions).round()
+        : 0;
 
     return Scaffold(
       backgroundColor: EditorialStyles.paper,
@@ -57,85 +61,96 @@ class YouOrMeMatchResultsScreen extends StatelessWidget {
             // Content
             Expanded(
               child: SingleChildScrollView(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 40),
-                  child: Column(
-                    children: [
-                      // Success icon
-                      Container(
-                        width: 80,
-                        height: 80,
-                        decoration: BoxDecoration(
-                          color: EditorialStyles.ink,
-                          shape: BoxShape.circle,
-                        ),
-                        child: Center(
-                          child: Icon(
-                            Icons.check,
-                            color: EditorialStyles.paper,
-                            size: 40,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Score summary section
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 32),
+                      child: Column(
+                        children: [
+                          // Large percentage display
+                          Text(
+                            '$displayMatchPercentage%',
+                            style: EditorialStyles.scoreLarge.copyWith(
+                              fontSize: 72,
+                              height: 1,
+                            ),
                           ),
-                        ),
-                      ),
-                      const SizedBox(height: 24),
+                          const SizedBox(height: 8),
+                          Text(
+                            'MATCH',
+                            style: EditorialStyles.labelUppercase,
+                          ),
+                          const SizedBox(height: 16),
+                          Text(
+                            _getMatchDescription(displayMatchPercentage),
+                            style: EditorialStyles.bodyTextItalic,
+                            textAlign: TextAlign.center,
+                          ),
+                          const SizedBox(height: 24),
 
-                      // Title
-                      Text(
-                        'Game Complete!',
-                        style: EditorialStyles.headline,
-                        textAlign: TextAlign.center,
-                      ),
-                      const SizedBox(height: 12),
-
-                      // Description
-                      Text(
-                        'See how well you and $partnerName matched!',
-                        style: EditorialStyles.bodyTextItalic,
-                        textAlign: TextAlign.center,
-                      ),
-                      const SizedBox(height: 40),
-
-                      // Score comparison card
-                      ConstrainedBox(
-                        constraints: const BoxConstraints(maxWidth: 320),
-                        child: Container(
-                          padding: const EdgeInsets.all(24),
-                          decoration: BoxDecoration(
-                            border: EditorialStyles.fullBorder,
-                            boxShadow: [
-                              BoxShadow(
-                                color: EditorialStyles.ink.withValues(alpha: 0.08),
-                                offset: const Offset(4, 4),
-                                blurRadius: 0,
-                              ),
+                          // Match count and LP earned row
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              _buildStatPill('$totalMatches/$totalQuestions matched'),
+                              const SizedBox(width: 12),
+                              _buildStatPill('+$lp LP'),
                             ],
                           ),
-                          child: Column(
-                            children: [
-                              Text(
-                                'MATCH SCORE',
-                                style: EditorialStyles.labelUppercaseSmall,
-                              ),
-                              const SizedBox(height: 16),
-                              Text(
-                                '$displayMatchPercentage%',
-                                style: EditorialStyles.scoreLarge,
-                              ),
-                              const SizedBox(height: 8),
-                              Text(
-                                _getMatchDescription(displayMatchPercentage),
-                                style: EditorialStyles.bodyTextItalic,
-                                textAlign: TextAlign.center,
-                              ),
-                              const SizedBox(height: 24),
-                              Container(
-                                height: 1,
-                                color: EditorialStyles.inkLight,
-                              ),
-                              const SizedBox(height: 24),
+                        ],
+                      ),
+                    ),
 
-                              // Individual scores
-                              Row(
+                    // Divider
+                    Container(
+                      height: 1,
+                      color: EditorialStyles.ink.withValues(alpha: 0.15),
+                    ),
+
+                    // Answer comparison header
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(20, 24, 20, 16),
+                      child: Text(
+                        'ANSWER COMPARISON',
+                        style: EditorialStyles.labelUppercase,
+                      ),
+                    ),
+
+                    // Question-by-question comparison
+                    if (quiz != null && quiz!.questions.isNotEmpty &&
+                        userAnswers != null && partnerAnswers != null)
+                      ...List.generate(quiz!.questions.length, (index) {
+                        final question = quiz!.questions[index];
+                        final userAnswer = index < userAnswers!.length ? userAnswers![index] : '';
+                        final partnerAnswer = index < partnerAnswers!.length ? partnerAnswers![index] : '';
+                        final isMatch = userAnswer.isNotEmpty && userAnswer == partnerAnswer;
+
+                        return _buildQuestionComparison(
+                          questionNumber: index + 1,
+                          prompt: question.prompt,
+                          content: question.content,
+                          userAnswer: userAnswer,
+                          partnerAnswer: partnerAnswer,
+                          userName: userName,
+                          partnerName: partnerName,
+                          isMatch: isMatch,
+                        );
+                      })
+                    else
+                      // Fallback when no detailed data available
+                      Padding(
+                        padding: const EdgeInsets.all(20),
+                        child: Column(
+                          children: [
+                            // Individual scores summary
+                            Container(
+                              padding: const EdgeInsets.all(20),
+                              decoration: BoxDecoration(
+                                border: EditorialStyles.fullBorder,
+                              ),
+                              child: Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                 children: [
                                   _buildScoreColumn(userName, myScore, totalQuestions),
@@ -147,32 +162,13 @@ class YouOrMeMatchResultsScreen extends StatelessWidget {
                                   _buildScoreColumn(partnerName, partnerScore, totalQuestions),
                                 ],
                               ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 24),
-
-                      // LP earned
-                      Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-                        decoration: BoxDecoration(
-                          border: EditorialStyles.fullBorder,
-                        ),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            const Text('💰', style: TextStyle(fontSize: 24)),
-                            const SizedBox(width: 12),
-                            Text(
-                              '+$lp LP earned',
-                              style: EditorialStyles.labelUppercase,
                             ),
                           ],
                         ),
                       ),
-                    ],
-                  ),
+
+                    const SizedBox(height: 24),
+                  ],
                 ),
               ),
             ),
@@ -192,6 +188,181 @@ class YouOrMeMatchResultsScreen extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildStatPill(String text) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      decoration: BoxDecoration(
+        border: EditorialStyles.fullBorder,
+      ),
+      child: Text(
+        text,
+        style: EditorialStyles.labelUppercaseSmall,
+      ),
+    );
+  }
+
+  Widget _buildQuestionComparison({
+    required int questionNumber,
+    required String prompt,
+    required String content,
+    required String userAnswer,
+    required String partnerAnswer,
+    required String userName,
+    required String partnerName,
+    required bool isMatch,
+  }) {
+    // Convert answer codes to display names
+    String formatAnswer(String answer, String userName, String partnerName) {
+      switch (answer.toLowerCase()) {
+        case 'me':
+        case 'self':
+          return userName;
+        case 'you':
+        case 'partner':
+          return partnerName;
+        default:
+          return answer.isNotEmpty ? answer : '—';
+      }
+    }
+
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+      decoration: BoxDecoration(
+        border: EditorialStyles.fullBorder,
+        color: isMatch
+            ? EditorialStyles.ink.withValues(alpha: 0.03)
+            : EditorialStyles.paper,
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Question header with match indicator
+          Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              border: Border(bottom: EditorialStyles.border),
+            ),
+            child: Row(
+              children: [
+                // Question number
+                Container(
+                  width: 28,
+                  height: 28,
+                  decoration: BoxDecoration(
+                    color: EditorialStyles.ink,
+                    shape: BoxShape.circle,
+                  ),
+                  child: Center(
+                    child: Text(
+                      '$questionNumber',
+                      style: TextStyle(
+                        color: EditorialStyles.paper,
+                        fontSize: 12,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 12),
+                // Question text
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        prompt,
+                        style: EditorialStyles.labelUppercaseSmall.copyWith(
+                          color: EditorialStyles.inkMuted,
+                        ),
+                      ),
+                      const SizedBox(height: 2),
+                      Text(
+                        content,
+                        style: EditorialStyles.bodySmall.copyWith(
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                // Match indicator
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  decoration: BoxDecoration(
+                    color: isMatch ? EditorialStyles.ink : Colors.transparent,
+                    border: Border.all(
+                      color: EditorialStyles.ink,
+                      width: 1,
+                    ),
+                  ),
+                  child: Text(
+                    isMatch ? 'MATCH' : 'DIFF',
+                    style: TextStyle(
+                      color: isMatch ? EditorialStyles.paper : EditorialStyles.ink,
+                      fontSize: 9,
+                      fontWeight: FontWeight.w700,
+                      letterSpacing: 1,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+
+          // Answer comparison rows
+          Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              children: [
+                _buildAnswerRow(
+                  label: '$userName said',
+                  answer: formatAnswer(userAnswer, userName, partnerName),
+                  isHighlighted: isMatch,
+                ),
+                const SizedBox(height: 8),
+                _buildAnswerRow(
+                  label: '$partnerName said',
+                  answer: formatAnswer(partnerAnswer, userName, partnerName),
+                  isHighlighted: isMatch,
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildAnswerRow({
+    required String label,
+    required String answer,
+    required bool isHighlighted,
+  }) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Expanded(
+          flex: 2,
+          child: Text(
+            label,
+            style: EditorialStyles.labelUppercaseSmall.copyWith(
+              color: EditorialStyles.inkMuted,
+            ),
+          ),
+        ),
+        Expanded(
+          flex: 3,
+          child: Text(
+            answer,
+            style: EditorialStyles.bodySmall.copyWith(
+              fontWeight: isHighlighted ? FontWeight.w600 : FontWeight.w400,
+            ),
+          ),
+        ),
+      ],
     );
   }
 

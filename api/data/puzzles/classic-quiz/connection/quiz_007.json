@@ -1,0 +1,67 @@
+{
+  "quizId": "quiz_007",
+  "title": "Connection Quiz 7",
+  "branch": "connection",
+  "questions": [
+    {
+      "id": "quiz_007_q1",
+      "text": "What do I need from you when I'm stressed?",
+      "choices": [
+        "Space to decompress alone first",
+        "Your presence even if we don't talk",
+        "To vent without interruption",
+        "Distraction and fun",
+        "Other / It depends"
+      ],
+      "category": "emotional"
+    },
+    {
+      "id": "quiz_007_q2",
+      "text": "How do I feel most emotionally connected to you?",
+      "choices": [
+        "During vulnerable conversations",
+        "When we work through conflict together",
+        "During moments of physical intimacy",
+        "Sharing everyday life experiences",
+        "Other / It depends"
+      ],
+      "category": "emotional"
+    },
+    {
+      "id": "quiz_007_q3",
+      "text": "What do I need from you on my hardest days?",
+      "choices": [
+        "Reassurance that everything will be okay",
+        "Help with practical tasks",
+        "Someone to just listen",
+        "Physical comfort and closeness",
+        "Other / It depends"
+      ],
+      "category": "emotional"
+    },
+    {
+      "id": "quiz_007_q4",
+      "text": "When do I feel most understood by you?",
+      "choices": [
+        "When you validate my feelings",
+        "When you remember what I've told you",
+        "When you know what I need without asking",
+        "When you support my perspective",
+        "Other / It depends"
+      ],
+      "category": "communication"
+    },
+    {
+      "id": "quiz_007_q5",
+      "text": "What makes me feel emotionally safe with you?",
+      "choices": [
+        "Being able to be completely myself",
+        "Knowing you won't judge me",
+        "Your consistent emotional availability",
+        "How gently you handle my vulnerabilities",
+        "Other / It depends"
+      ],
+      "category": "trust"
+    }
+  ]
+}

@@ -1,0 +1,37 @@
+{
+  "quizId": "quiz_003",
+  "title": "Attachment Quiz 3",
+  "branch": "attachment",
+  "questions": [
+    {
+      "id": "quiz_003_q1",
+      "category": "reassurance",
+      "prompt": "Who appreciates more...",
+      "content": "Hearing 'I love you' regularly"
+    },
+    {
+      "id": "quiz_003_q2",
+      "category": "presence",
+      "prompt": "Who feels more...",
+      "content": "Connected through physical presence"
+    },
+    {
+      "id": "quiz_003_q3",
+      "category": "vulnerability",
+      "prompt": "Who finds it harder to...",
+      "content": "Ask for help when struggling"
+    },
+    {
+      "id": "quiz_003_q4",
+      "category": "repair",
+      "prompt": "Who is better at...",
+      "content": "Making up after an argument"
+    },
+    {
+      "id": "quiz_003_q5",
+      "category": "independence",
+      "prompt": "Who is more comfortable...",
+      "content": "Spending a weekend apart"
+    }
+  ]
+}

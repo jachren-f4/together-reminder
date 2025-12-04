@@ -1,0 +1,69 @@
+{
+  "quizId": "affirmation_008",
+  "title": "Feeling Seen",
+  "category": "connection",
+  "branch": "connection",
+  "description": "Rate how well your partner truly sees you",
+  "questions": [
+    {
+      "id": "affirmation_008_q1",
+      "text": "My partner notices when something is bothering me, even when I hide it.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ]
+    },
+    {
+      "id": "affirmation_008_q2",
+      "text": "I feel my partner understands my dreams and aspirations.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ]
+    },
+    {
+      "id": "affirmation_008_q3",
+      "text": "My partner remembers small details about what matters to me.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ]
+    },
+    {
+      "id": "affirmation_008_q4",
+      "text": "I can be my authentic self without pretense around my partner.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ]
+    },
+    {
+      "id": "affirmation_008_q5",
+      "text": "My partner celebrates my quirks instead of trying to change them.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ]
+    }
+  ]
+}

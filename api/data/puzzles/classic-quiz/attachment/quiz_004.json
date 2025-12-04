@@ -1,0 +1,67 @@
+{
+  "quizId": "quiz_004",
+  "title": "Attachment Quiz 4",
+  "branch": "attachment",
+  "questions": [
+    {
+      "id": "quiz_004_q1",
+      "text": "What's my pattern when I feel overwhelmed by closeness?",
+      "choices": [
+        "I rarely feel overwhelmed",
+        "I need some alone time",
+        "I pull back a little",
+        "I might start small arguments",
+        "I communicate my need for space"
+      ],
+      "category": "closeness_overwhelm"
+    },
+    {
+      "id": "quiz_004_q2",
+      "text": "How do I recover after we've had a conflict?",
+      "choices": [
+        "I need verbal reassurance",
+        "Physical reconnection helps",
+        "I need time alone first",
+        "I want to discuss what happened",
+        "I'm ready to move on quickly"
+      ],
+      "category": "conflict_recovery"
+    },
+    {
+      "id": "quiz_004_q3",
+      "text": "What helps me feel that our bond is strong?",
+      "choices": [
+        "Regular affection and words",
+        "Handling stress as a team",
+        "Your commitment actions",
+        "Deep conversations",
+        "Consistency over time"
+      ],
+      "category": "bond_strength"
+    },
+    {
+      "id": "quiz_004_q4",
+      "text": "How do I balance needing you and being independent?",
+      "choices": [
+        "I lean toward needing you more",
+        "I lean toward independence",
+        "I've found a good balance",
+        "It shifts depending on stress",
+        "I'm still figuring it out"
+      ],
+      "category": "balance"
+    },
+    {
+      "id": "quiz_004_q5",
+      "text": "What would help me feel more securely attached to you?",
+      "choices": [
+        "More consistent communication",
+        "More physical affection",
+        "More quality time together",
+        "More verbal reassurance",
+        "I already feel very secure"
+      ],
+      "category": "security_building"
+    }
+  ]
+}

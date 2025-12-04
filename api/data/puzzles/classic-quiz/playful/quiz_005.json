@@ -1,0 +1,67 @@
+{
+  "quizId": "quiz_005",
+  "title": "Creative Expression",
+  "branch": "playful",
+  "questions": [
+    {
+      "id": "quiz_005_q1",
+      "text": "When I want to express myself creatively, I'm drawn to...",
+      "choices": [
+        "Visual arts like drawing or photography",
+        "Writing, journaling, or storytelling",
+        "Music, dancing, or performing",
+        "Cooking, crafting, or hands-on projects",
+        "Other / It depends"
+      ],
+      "category": "preferences"
+    },
+    {
+      "id": "quiz_005_q2",
+      "text": "My workspace or creative area is usually...",
+      "choices": [
+        "Organized chaos - I know where everything is",
+        "Minimalist and clean for clear thinking",
+        "Colorful and full of inspiration",
+        "Constantly changing based on my projects",
+        "Other / It depends"
+      ],
+      "category": "personality"
+    },
+    {
+      "id": "quiz_005_q3",
+      "text": "When starting a creative project, I prefer to...",
+      "choices": [
+        "Jump in and figure it out as I go",
+        "Sketch out a rough plan first",
+        "Research and prepare thoroughly",
+        "Collaborate and brainstorm with others",
+        "Other / It depends"
+      ],
+      "category": "personality"
+    },
+    {
+      "id": "quiz_005_q4",
+      "text": "The content I share on social media tends to be...",
+      "choices": [
+        "Humorous memes and funny observations",
+        "Thoughtful articles and ideas",
+        "Beautiful photos and aesthetic content",
+        "Personal updates and life moments",
+        "Other / It depends"
+      ],
+      "category": "social"
+    },
+    {
+      "id": "quiz_005_q5",
+      "text": "When giving a gift, I prefer to...",
+      "choices": [
+        "Make something personal and handmade",
+        "Find something unique and unexpected",
+        "Choose something practical they need",
+        "Give experiences rather than things",
+        "Other / It depends"
+      ],
+      "category": "preferences"
+    }
+  ]
+}

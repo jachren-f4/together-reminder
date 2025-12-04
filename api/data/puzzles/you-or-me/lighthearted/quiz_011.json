@@ -1,0 +1,37 @@
+{
+  "quizId": "quiz_011",
+  "title": "Lighthearted Quiz 11",
+  "branch": "lighthearted",
+  "questions": [
+    {
+      "id": "quiz_011_q1",
+      "category": "social",
+      "prompt": "Who is more",
+      "content": "Likely to send the first text after meeting someone new"
+    },
+    {
+      "id": "quiz_011_q2",
+      "category": "personality",
+      "prompt": "Who is more",
+      "content": "Likely to get goosebumps from good music"
+    },
+    {
+      "id": "quiz_011_q3",
+      "category": "preferences",
+      "prompt": "Who is more",
+      "content": "Likely to choose adventure over relaxation on vacation"
+    },
+    {
+      "id": "quiz_011_q4",
+      "category": "habits",
+      "prompt": "Who is more",
+      "content": "Likely to clean when stressed or anxious"
+    },
+    {
+      "id": "quiz_011_q5",
+      "category": "interests",
+      "prompt": "Who would rather",
+      "content": "Learn through hands-on experience or reading about it"
+    }
+  ]
+}

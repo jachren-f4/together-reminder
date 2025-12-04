@@ -1,0 +1,67 @@
+{
+  "quizId": "quiz_006",
+  "title": "Connection Quiz 6",
+  "branch": "connection",
+  "questions": [
+    {
+      "id": "quiz_006_q1",
+      "text": "What's my favorite love language to receive?",
+      "choices": [
+        "Words of affirmation",
+        "Acts of service",
+        "Receiving gifts",
+        "Quality time",
+        "Physical touch"
+      ],
+      "category": "emotional"
+    },
+    {
+      "id": "quiz_006_q2",
+      "text": "When I give you gifts, what matters most to me?",
+      "choices": [
+        "That it's something you really wanted",
+        "That it shows I was thinking of you",
+        "That it's a surprise",
+        "That it's meaningful or sentimental",
+        "Other / It depends"
+      ],
+      "category": "emotional"
+    },
+    {
+      "id": "quiz_006_q3",
+      "text": "What's my favorite way you show you care?",
+      "choices": [
+        "Remembering small details about my life",
+        "Making me laugh when I'm stressed",
+        "Taking care of me when I'm sick",
+        "Checking in on me throughout the day",
+        "Other / It depends"
+      ],
+      "category": "communication"
+    },
+    {
+      "id": "quiz_006_q4",
+      "text": "How do I prefer you to comfort me?",
+      "choices": [
+        "Just sit with me quietly",
+        "Give me a long hug",
+        "Listen and validate my feelings",
+        "Offer solutions or advice",
+        "Other / It depends"
+      ],
+      "category": "emotional"
+    },
+    {
+      "id": "quiz_006_q5",
+      "text": "What makes me feel most secure in your love?",
+      "choices": [
+        "Consistent daily affection",
+        "You introducing me to important people in your life",
+        "Making future plans together",
+        "How you talk about me to others",
+        "Other / It depends"
+      ],
+      "category": "trust"
+    }
+  ]
+}

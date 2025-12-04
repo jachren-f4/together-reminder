@@ -1,0 +1,250 @@
+{
+  "quizzes": [
+    {
+      "id": "feeling_secure",
+      "name": "Feeling Secure",
+      "category": "attachment",
+      "difficulty": 2,
+      "formatType": "affirmation",
+      "imagePath": "",
+      "description": "Rate your sense of security",
+      "questions": [
+        {
+          "question": "I trust that my partner will be there when I need them.",
+          "questionType": "scale",
+          "options": [],
+          "correctAnswer": null
+        },
+        {
+          "question": "I feel confident in my partner's commitment to our relationship.",
+          "questionType": "scale",
+          "options": [],
+          "correctAnswer": null
+        },
+        {
+          "question": "I don't worry about my partner leaving me.",
+          "questionType": "scale",
+          "options": [],
+          "correctAnswer": null
+        },
+        {
+          "question": "I feel emotionally safe in this relationship.",
+          "questionType": "scale",
+          "options": [],
+          "correctAnswer": null
+        },
+        {
+          "question": "Our relationship feels stable and dependable.",
+          "questionType": "scale",
+          "options": [],
+          "correctAnswer": null
+        }
+      ]
+    },
+    {
+      "id": "trust_foundation",
+      "name": "Trust Foundation",
+      "category": "attachment",
+      "difficulty": 2,
+      "formatType": "affirmation",
+      "imagePath": "",
+      "description": "Rate your trust in each other",
+      "questions": [
+        {
+          "question": "I can count on my partner to keep their promises.",
+          "questionType": "scale",
+          "options": [],
+          "correctAnswer": null
+        },
+        {
+          "question": "My partner is honest with me, even when it's difficult.",
+          "questionType": "scale",
+          "options": [],
+          "correctAnswer": null
+        },
+        {
+          "question": "I feel comfortable sharing secrets with my partner.",
+          "questionType": "scale",
+          "options": [],
+          "correctAnswer": null
+        },
+        {
+          "question": "I believe my partner has my best interests at heart.",
+          "questionType": "scale",
+          "options": [],
+          "correctAnswer": null
+        },
+        {
+          "question": "Our trust has grown stronger through challenges we've faced.",
+          "questionType": "scale",
+          "options": [],
+          "correctAnswer": null
+        }
+      ]
+    },
+    {
+      "id": "healthy_dependence",
+      "name": "Healthy Dependence",
+      "category": "attachment",
+      "difficulty": 2,
+      "formatType": "affirmation",
+      "imagePath": "",
+      "description": "Rate your comfort depending on each other",
+      "questions": [
+        {
+          "question": "I'm comfortable relying on my partner for emotional support.",
+          "questionType": "scale",
+          "options": [],
+          "correctAnswer": null
+        },
+        {
+          "question": "I can ask my partner for help without feeling weak.",
+          "questionType": "scale",
+          "options": [],
+          "correctAnswer": null
+        },
+        {
+          "question": "We support each other while maintaining our individuality.",
+          "questionType": "scale",
+          "options": [],
+          "correctAnswer": null
+        },
+        {
+          "question": "I appreciate that we can lean on each other.",
+          "questionType": "scale",
+          "options": [],
+          "correctAnswer": null
+        },
+        {
+          "question": "Our interdependence makes us both stronger.",
+          "questionType": "scale",
+          "options": [],
+          "correctAnswer": null
+        }
+      ]
+    },
+    {
+      "id": "conflict_repair",
+      "name": "Conflict & Repair",
+      "category": "attachment",
+      "difficulty": 2,
+      "formatType": "affirmation",
+      "imagePath": "",
+      "description": "Rate how you handle conflict",
+      "questions": [
+        {
+          "question": "I feel safe expressing disagreement with my partner.",
+          "questionType": "scale",
+          "options": [],
+          "correctAnswer": null
+        },
+        {
+          "question": "After conflicts, we can reconnect and repair our bond.",
+          "questionType": "scale",
+          "options": [],
+          "correctAnswer": null
+        },
+        {
+          "question": "Disagreements don't threaten my sense of security in us.",
+          "questionType": "scale",
+          "options": [],
+          "correctAnswer": null
+        },
+        {
+          "question": "We can work through problems without lasting hurt.",
+          "questionType": "scale",
+          "options": [],
+          "correctAnswer": null
+        },
+        {
+          "question": "I trust we can survive any storm together.",
+          "questionType": "scale",
+          "options": [],
+          "correctAnswer": null
+        }
+      ]
+    },
+    {
+      "id": "reassurance",
+      "name": "Reassurance",
+      "category": "attachment",
+      "difficulty": 2,
+      "formatType": "affirmation",
+      "imagePath": "",
+      "description": "Rate how reassured you feel",
+      "questions": [
+        {
+          "question": "My partner reassures me when I feel anxious about us.",
+          "questionType": "scale",
+          "options": [],
+          "correctAnswer": null
+        },
+        {
+          "question": "I feel comfortable asking for reassurance when I need it.",
+          "questionType": "scale",
+          "options": [],
+          "correctAnswer": null
+        },
+        {
+          "question": "My partner's words and actions make me feel wanted.",
+          "questionType": "scale",
+          "options": [],
+          "correctAnswer": null
+        },
+        {
+          "question": "I don't need constant reassurance to feel secure.",
+          "questionType": "scale",
+          "options": [],
+          "correctAnswer": null
+        },
+        {
+          "question": "I trust my partner's love even when they don't say it.",
+          "questionType": "scale",
+          "options": [],
+          "correctAnswer": null
+        }
+      ]
+    },
+    {
+      "id": "safe_haven",
+      "name": "Safe Haven",
+      "category": "attachment",
+      "difficulty": 2,
+      "formatType": "affirmation",
+      "imagePath": "",
+      "description": "Rate how safe your relationship feels",
+      "questions": [
+        {
+          "question": "My partner is my safe place in the world.",
+          "questionType": "scale",
+          "options": [],
+          "correctAnswer": null
+        },
+        {
+          "question": "I turn to my partner first when I'm upset or stressed.",
+          "questionType": "scale",
+          "options": [],
+          "correctAnswer": null
+        },
+        {
+          "question": "Being with my partner calms my nervous system.",
+          "questionType": "scale",
+          "options": [],
+          "correctAnswer": null
+        },
+        {
+          "question": "I can be my most vulnerable self with my partner.",
+          "questionType": "scale",
+          "options": [],
+          "correctAnswer": null
+        },
+        {
+          "question": "Our relationship is a source of peace in my life.",
+          "questionType": "scale",
+          "options": [],
+          "correctAnswer": null
+        }
+      ]
+    }
+  ]
+}

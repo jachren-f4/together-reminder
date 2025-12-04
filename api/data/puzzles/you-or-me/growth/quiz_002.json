@@ -1,0 +1,37 @@
+{
+  "quizId": "quiz_002",
+  "title": "Growth Quiz 2",
+  "branch": "growth",
+  "questions": [
+    {
+      "id": "quiz_002_q1",
+      "category": "planning",
+      "prompt": "Who thinks more about...",
+      "content": "Long-term plans"
+    },
+    {
+      "id": "quiz_002_q2",
+      "category": "emotional_intelligence",
+      "prompt": "Who has grown more in...",
+      "content": "Understanding their own emotions"
+    },
+    {
+      "id": "quiz_002_q3",
+      "category": "partnership",
+      "prompt": "Who invests more in...",
+      "content": "Making the relationship better"
+    },
+    {
+      "id": "quiz_002_q4",
+      "category": "learning",
+      "prompt": "Who is more eager to...",
+      "content": "Learn new skills"
+    },
+    {
+      "id": "quiz_002_q5",
+      "category": "ambition",
+      "prompt": "Who has bigger...",
+      "content": "Dreams for the future"
+    }
+  ]
+}

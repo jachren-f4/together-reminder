@@ -1,0 +1,67 @@
+{
+  "quizId": "quiz_007",
+  "title": "Growth Quiz 7",
+  "branch": "growth",
+  "questions": [
+    {
+      "id": "quiz_007_q1",
+      "text": "How do I most want you to support my goals?",
+      "choices": [
+        "Encourage me and believe in me",
+        "Give practical help and advice",
+        "Hold me accountable",
+        "Give me space to pursue them independently",
+        "Other / It depends"
+      ],
+      "category": "communication"
+    },
+    {
+      "id": "quiz_007_q2",
+      "text": "What's the best way you can help when I'm struggling with a goal?",
+      "choices": [
+        "Remind me why it matters to me",
+        "Help me problem-solve",
+        "Just listen and empathize",
+        "Celebrate small wins with me",
+        "Other / It depends"
+      ],
+      "category": "emotional"
+    },
+    {
+      "id": "quiz_007_q3",
+      "text": "How do I want you to react when I share a new dream or goal?",
+      "choices": [
+        "Get excited and enthusiastic with me",
+        "Ask thoughtful questions about it",
+        "Offer support without being directive",
+        "Help me make a plan to achieve it",
+        "Other / It depends"
+      ],
+      "category": "communication"
+    },
+    {
+      "id": "quiz_007_q4",
+      "text": "What do I need from you when I fail or face setbacks?",
+      "choices": [
+        "Reassurance that it's okay",
+        "Help seeing what I can learn",
+        "Space to process my feelings",
+        "Encouragement to keep trying",
+        "Other / It depends"
+      ],
+      "category": "emotional"
+    },
+    {
+      "id": "quiz_007_q5",
+      "text": "How can you best celebrate my achievements with me?",
+      "choices": [
+        "Make a big deal and celebrate publicly",
+        "Intimate acknowledgment just between us",
+        "Do something special together",
+        "Express how proud you are of me",
+        "Other / It depends"
+      ],
+      "category": "values"
+    }
+  ]
+}

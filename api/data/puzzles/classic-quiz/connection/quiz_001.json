@@ -1,0 +1,67 @@
+{
+  "quizId": "quiz_001",
+  "title": "Connection Quiz 1",
+  "branch": "connection",
+  "questions": [
+    {
+      "id": "quiz_001_q1",
+      "text": "What makes me feel most loved by you?",
+      "choices": [
+        "Words of affirmation",
+        "Physical touch",
+        "Quality time together",
+        "Acts of service",
+        "Receiving thoughtful gifts"
+      ],
+      "category": "love_languages"
+    },
+    {
+      "id": "quiz_001_q2",
+      "text": "When I'm feeling down, what do I need most from you?",
+      "choices": [
+        "Space to process alone",
+        "A hug and physical comfort",
+        "Someone to listen without fixing",
+        "Distraction and cheering up",
+        "Practical help with tasks"
+      ],
+      "category": "emotional_needs"
+    },
+    {
+      "id": "quiz_001_q3",
+      "text": "What's my favorite way to connect with you?",
+      "choices": [
+        "Deep conversations",
+        "Shared activities or hobbies",
+        "Physical intimacy",
+        "Quiet time together",
+        "Going on adventures"
+      ],
+      "category": "connection"
+    },
+    {
+      "id": "quiz_001_q4",
+      "text": "What part of our relationship makes me feel most secure?",
+      "choices": [
+        "Our daily routines together",
+        "How we handle disagreements",
+        "The way you show affection",
+        "Our shared future plans",
+        "Our open communication"
+      ],
+      "category": "security"
+    },
+    {
+      "id": "quiz_001_q5",
+      "text": "When do I feel closest to you?",
+      "choices": [
+        "After resolving a conflict",
+        "During intimate moments",
+        "When we laugh together",
+        "When you support my goals",
+        "During quiet everyday moments"
+      ],
+      "category": "intimacy"
+    }
+  ]
+}

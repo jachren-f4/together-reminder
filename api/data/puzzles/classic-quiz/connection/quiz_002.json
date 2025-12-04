@@ -1,0 +1,67 @@
+{
+  "quizId": "quiz_002",
+  "title": "Connection Quiz 2",
+  "branch": "connection",
+  "questions": [
+    {
+      "id": "quiz_002_q1",
+      "text": "What topic do I wish we talked about more?",
+      "choices": [
+        "Our dreams and aspirations",
+        "Our fears and worries",
+        "Our relationship itself",
+        "Memories and the past",
+        "Day-to-day feelings"
+      ],
+      "category": "communication"
+    },
+    {
+      "id": "quiz_002_q2",
+      "text": "What's my favorite memory of us?",
+      "choices": [
+        "Our first date or meeting",
+        "A trip we took together",
+        "A challenge we overcame",
+        "A quiet meaningful moment",
+        "A celebration or milestone"
+      ],
+      "category": "memories"
+    },
+    {
+      "id": "quiz_002_q3",
+      "text": "How do I show you that I care?",
+      "choices": [
+        "Saying 'I love you' often",
+        "Physical affection",
+        "Doing things for you",
+        "Giving you my full attention",
+        "Thoughtful surprises"
+      ],
+      "category": "love_languages"
+    },
+    {
+      "id": "quiz_002_q4",
+      "text": "What do I value most about our emotional connection?",
+      "choices": [
+        "Feeling understood",
+        "Being accepted as I am",
+        "The depth of our trust",
+        "Our ability to be vulnerable",
+        "The comfort of familiarity"
+      ],
+      "category": "emotional_bond"
+    },
+    {
+      "id": "quiz_002_q5",
+      "text": "What small gesture from you means the most to me?",
+      "choices": [
+        "Remembering little details",
+        "Checking in during the day",
+        "Making me laugh",
+        "Holding my hand",
+        "Making time just for us"
+      ],
+      "category": "appreciation"
+    }
+  ]
+}

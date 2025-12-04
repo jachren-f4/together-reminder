@@ -1,0 +1,37 @@
+{
+  "quizId": "quiz_010",
+  "title": "Growth Quiz 10",
+  "branch": "growth",
+  "questions": [
+    {
+      "id": "quiz_010_q1",
+      "category": "mutual_growth",
+      "prompt": "Who is more committed to...",
+      "content": "Working through difficulties together"
+    },
+    {
+      "id": "quiz_010_q2",
+      "category": "support",
+      "prompt": "Who gives more...",
+      "content": "Thoughtful advice and guidance"
+    },
+    {
+      "id": "quiz_010_q3",
+      "category": "learning",
+      "prompt": "Who is more willing to...",
+      "content": "Admit when they're wrong"
+    },
+    {
+      "id": "quiz_010_q4",
+      "category": "goals",
+      "prompt": "Who is more driven to...",
+      "content": "Accomplish their dreams"
+    },
+    {
+      "id": "quiz_010_q5",
+      "category": "future",
+      "prompt": "Who envisions more...",
+      "content": "Specific milestones for your future"
+    }
+  ]
+}

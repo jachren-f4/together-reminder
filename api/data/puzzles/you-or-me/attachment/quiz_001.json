@@ -1,0 +1,37 @@
+{
+  "quizId": "quiz_001",
+  "title": "Attachment Quiz 1",
+  "branch": "attachment",
+  "questions": [
+    {
+      "id": "quiz_001_q1",
+      "category": "reassurance",
+      "prompt": "Who needs more...",
+      "content": "Reassurance that everything is okay"
+    },
+    {
+      "id": "quiz_001_q2",
+      "category": "independence",
+      "prompt": "Who values more...",
+      "content": "Having alone time to recharge"
+    },
+    {
+      "id": "quiz_001_q3",
+      "category": "anxiety",
+      "prompt": "Who worries more...",
+      "content": "When they don't hear back right away"
+    },
+    {
+      "id": "quiz_001_q4",
+      "category": "conflict",
+      "prompt": "Who is more likely to...",
+      "content": "Want to talk things out immediately"
+    },
+    {
+      "id": "quiz_001_q5",
+      "category": "connection",
+      "prompt": "Who feels more...",
+      "content": "Secure in the relationship"
+    }
+  ]
+}

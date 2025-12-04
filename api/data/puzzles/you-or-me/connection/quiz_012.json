@@ -1,0 +1,37 @@
+{
+  "quizId": "quiz_012",
+  "title": "Connection Quiz 12",
+  "branch": "connection",
+  "questions": [
+    {
+      "id": "quiz_012_q1",
+      "category": "needs",
+      "prompt": "Who feels most loved through...",
+      "content": "Physical proximity and closeness"
+    },
+    {
+      "id": "quiz_012_q2",
+      "category": "expression",
+      "prompt": "Who is more...",
+      "content": "Playful and lighthearted in showing love"
+    },
+    {
+      "id": "quiz_012_q3",
+      "category": "connection",
+      "prompt": "Who prioritizes more...",
+      "content": "Making time for just the two of you"
+    },
+    {
+      "id": "quiz_012_q4",
+      "category": "vulnerability",
+      "prompt": "Who admits more when...",
+      "content": "They're feeling lonely or disconnected"
+    },
+    {
+      "id": "quiz_012_q5",
+      "category": "communication",
+      "prompt": "Who is better at...",
+      "content": "Articulating their emotional experience"
+    }
+  ]
+}

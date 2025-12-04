@@ -1,0 +1,37 @@
+{
+  "quizId": "quiz_010",
+  "title": "Lighthearted Quiz 10",
+  "branch": "lighthearted",
+  "questions": [
+    {
+      "id": "quiz_010_q1",
+      "category": "interests",
+      "prompt": "Who is more",
+      "content": "Likely to try a new hobby on a whim"
+    },
+    {
+      "id": "quiz_010_q2",
+      "category": "personality",
+      "prompt": "Who is more",
+      "content": "Likely to talk to themselves when alone"
+    },
+    {
+      "id": "quiz_010_q3",
+      "category": "habits",
+      "prompt": "Who is more",
+      "content": "Likely to double-check that the door is locked"
+    },
+    {
+      "id": "quiz_010_q4",
+      "category": "leisure",
+      "prompt": "Who would rather",
+      "content": "Spend a day exploring a new city or relaxing at home"
+    },
+    {
+      "id": "quiz_010_q5",
+      "category": "preferences",
+      "prompt": "Who is more",
+      "content": "Likely to prefer savory breakfast over sweet"
+    }
+  ]
+}

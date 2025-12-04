@@ -90,7 +90,7 @@ async function testSingleLetterCorrect() {
     return; // Not an error - just skip
   }
 
-  const rack = match.gameState?.rack || [];
+  const rack = (match.gameState as any)?.rack || [];
   if (rack.length === 0) {
     console.log('  ⏭️ Skipping: no letters in rack');
     return;
@@ -133,7 +133,7 @@ async function testSingleLetterIncorrect() {
     return;
   }
 
-  const rack = match.gameState?.rack || [];
+  const rack = (match.gameState as any)?.rack || [];
   if (rack.length === 0) return;
 
   const grid = match.puzzle?.grid || [];
@@ -167,7 +167,7 @@ async function testMultipleLetters() {
     return;
   }
 
-  const rack = match.gameState?.rack || [];
+  const rack = (match.gameState as any)?.rack || [];
   if (rack.length < 2) {
     console.log('  ⏭️ Skipping: need at least 2 letters');
     return;
@@ -212,7 +212,7 @@ async function testWordBonus() {
     return;
   }
 
-  const rack = match.gameState?.rack || [];
+  const rack = (match.gameState as any)?.rack || [];
   if (rack.length === 0) return;
 
   const grid = match.puzzle?.grid || [];
@@ -427,7 +427,7 @@ async function testDuplicateSubmission() {
     return;
   }
 
-  const rack = match.gameState?.rack || [];
+  const rack = (match.gameState as any)?.rack || [];
   if (rack.length === 0) return;
 
   const grid = match.puzzle?.grid || [];

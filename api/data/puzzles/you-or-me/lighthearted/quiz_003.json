@@ -1,0 +1,37 @@
+{
+  "quizId": "quiz_003",
+  "title": "Lighthearted Quiz 3",
+  "branch": "lighthearted",
+  "questions": [
+    {
+      "id": "quiz_003_q1",
+      "category": "personality",
+      "prompt": "Who is more",
+      "content": "Likely to laugh at their own jokes"
+    },
+    {
+      "id": "quiz_003_q2",
+      "category": "habits",
+      "prompt": "Who is more",
+      "content": "Likely to check their phone first thing in the morning"
+    },
+    {
+      "id": "quiz_003_q3",
+      "category": "preferences",
+      "prompt": "Who is more",
+      "content": "Likely to prefer sweet over salty snacks"
+    },
+    {
+      "id": "quiz_003_q4",
+      "category": "leisure",
+      "prompt": "Who would rather",
+      "content": "Spend a free afternoon gardening or gaming"
+    },
+    {
+      "id": "quiz_003_q5",
+      "category": "social",
+      "prompt": "Who is more",
+      "content": "Likely to remember everyone's birthday"
+    }
+  ]
+}

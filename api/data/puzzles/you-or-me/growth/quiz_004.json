@@ -1,0 +1,37 @@
+{
+  "quizId": "quiz_004",
+  "title": "Growth Quiz 4",
+  "branch": "growth",
+  "questions": [
+    {
+      "id": "quiz_004_q1",
+      "category": "courage",
+      "prompt": "Who takes more...",
+      "content": "Risks for growth"
+    },
+    {
+      "id": "quiz_004_q2",
+      "category": "balance",
+      "prompt": "Who is better at...",
+      "content": "Balancing work and relationship"
+    },
+    {
+      "id": "quiz_004_q3",
+      "category": "reflection",
+      "prompt": "Who spends more time...",
+      "content": "Reflecting on personal growth"
+    },
+    {
+      "id": "quiz_004_q4",
+      "category": "future",
+      "prompt": "Who is more excited about...",
+      "content": "What the future holds"
+    },
+    {
+      "id": "quiz_004_q5",
+      "category": "mutual_growth",
+      "prompt": "Who pushes more for...",
+      "content": "Growing together as a couple"
+    }
+  ]
+}

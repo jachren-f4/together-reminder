@@ -1,0 +1,37 @@
+{
+  "quizId": "quiz_012",
+  "title": "Growth Quiz 12",
+  "branch": "growth",
+  "questions": [
+    {
+      "id": "quiz_012_q1",
+      "category": "future",
+      "prompt": "Who is more optimistic about...",
+      "content": "What the future holds"
+    },
+    {
+      "id": "quiz_012_q2",
+      "category": "support",
+      "prompt": "Who believes more in...",
+      "content": "The other's potential"
+    },
+    {
+      "id": "quiz_012_q3",
+      "category": "resilience",
+      "prompt": "Who has developed more...",
+      "content": "Healthy coping mechanisms"
+    },
+    {
+      "id": "quiz_012_q4",
+      "category": "learning",
+      "prompt": "Who is more committed to...",
+      "content": "Continuous self-improvement"
+    },
+    {
+      "id": "quiz_012_q5",
+      "category": "mutual_growth",
+      "prompt": "Who contributes more to...",
+      "content": "The relationship becoming stronger"
+    }
+  ]
+}

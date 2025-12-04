@@ -1,0 +1,37 @@
+{
+  "quizId": "quiz_002",
+  "title": "Playful Quiz 2",
+  "branch": "playful",
+  "questions": [
+    {
+      "id": "quiz_002_q1",
+      "category": "imagination",
+      "prompt": "Who would...",
+      "content": "Be more excited about finding a secret door"
+    },
+    {
+      "id": "quiz_002_q2",
+      "category": "quirks",
+      "prompt": "Who is more...",
+      "content": "Likely to talk to animals like they understand"
+    },
+    {
+      "id": "quiz_002_q3",
+      "category": "personality",
+      "prompt": "Who would...",
+      "content": "Try a new hobby just for fun"
+    },
+    {
+      "id": "quiz_002_q4",
+      "category": "humor",
+      "prompt": "Who is more...",
+      "content": "Likely to make puns in serious situations"
+    },
+    {
+      "id": "quiz_002_q5",
+      "category": "social",
+      "prompt": "Who would...",
+      "content": "Start a conversation in an elevator"
+    }
+  ]
+}

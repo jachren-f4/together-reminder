@@ -1,0 +1,37 @@
+{
+  "quizId": "quiz_008",
+  "title": "Growth Quiz 8",
+  "branch": "growth",
+  "questions": [
+    {
+      "id": "quiz_008_q1",
+      "category": "learning",
+      "prompt": "Who has grown more in...",
+      "content": "Emotional intelligence"
+    },
+    {
+      "id": "quiz_008_q2",
+      "category": "support",
+      "prompt": "Who is better at...",
+      "content": "Being a cheerleader for the other"
+    },
+    {
+      "id": "quiz_008_q3",
+      "category": "future",
+      "prompt": "Who is more intentional about...",
+      "content": "Creating the future you want together"
+    },
+    {
+      "id": "quiz_008_q4",
+      "category": "resilience",
+      "prompt": "Who adapts better to...",
+      "content": "Major life transitions"
+    },
+    {
+      "id": "quiz_008_q5",
+      "category": "mutual_growth",
+      "prompt": "Who takes more responsibility for...",
+      "content": "Their role in relationship dynamics"
+    }
+  ]
+}

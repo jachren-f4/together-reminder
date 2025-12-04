@@ -8,16 +8,15 @@
  *
  * Response:
  * {
- *   games: [
- *     {
- *       type: "classic",
- *       matchId: "uuid",
- *       status: "active",
- *       userAnswered: true,
- *       partnerAnswered: false,
- *       ...
- *     }
- *   ],
+ *   games: [...],           // Today's matches
+ *   completedCounts: {      // Total completed per type (all time)
+ *     classic: 5,
+ *     affirmation: 3,
+ *     you_or_me: 4,
+ *     linked: 2,
+ *     word_search: 1
+ *   },
+ *   available: [...]        // What's available to play next
  *   totalLp: 1160
  * }
  */
@@ -25,9 +24,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { withAuthOrDevBypass } from '@/lib/auth/dev-middleware';
 import { query } from '@/lib/db/pool';
-import { getCouple, buildGameState, buildResult, loadQuiz, GameType, GameMatch } from '@/lib/game/handler';
+import { getCouple, buildGameState, buildResult, getCurrentBranch, loadQuizOrder, GameType, GameMatch } from '@/lib/game/handler';
 
 export const dynamic = 'force-dynamic';
+
+const GAME_TYPES: GameType[] = ['classic', 'affirmation', 'you_or_me'];
 
 export const GET = withAuthOrDevBypass(async (req: NextRequest, userId: string, email?: string) => {
   try {
@@ -90,9 +91,68 @@ export const GET = withAuthOrDevBypass(async (req: NextRequest, userId: string, 
       };
     });
 
+    // Get total completed counts per game type (all time)
+    const countsResult = await query(
+      `SELECT quiz_type, COUNT(*) as count
+       FROM quiz_matches
+       WHERE couple_id = $1 AND status = 'completed'
+       GROUP BY quiz_type`,
+      [couple.coupleId]
+    );
+
+    const completedCounts: Record<string, number> = {};
+    for (const row of countsResult.rows) {
+      completedCounts[row.quiz_type] = parseInt(row.count, 10);
+    }
+
+    // Also get linked and word_search counts
+    const linkedCount = await query(
+      `SELECT COUNT(*) as count FROM linked_matches WHERE couple_id = $1 AND status = 'completed'`,
+      [couple.coupleId]
+    );
+    const wordSearchCount = await query(
+      `SELECT COUNT(*) as count FROM word_search_matches WHERE couple_id = $1 AND status = 'completed'`,
+      [couple.coupleId]
+    );
+    completedCounts['linked'] = parseInt(linkedCount.rows[0]?.count || '0', 10);
+    completedCounts['word_search'] = parseInt(wordSearchCount.rows[0]?.count || '0', 10);
+
+    // Get what's available next for each game type
+    const available: any[] = [];
+    for (const gameType of GAME_TYPES) {
+      const branch = await getCurrentBranch(couple.coupleId, gameType);
+      const quizOrder = loadQuizOrder(gameType, branch);
+
+      // Find completed quizzes in this branch
+      const completedInBranch = await query(
+        `SELECT DISTINCT quiz_id FROM quiz_matches
+         WHERE couple_id = $1 AND quiz_type = $2 AND branch = $3 AND status = 'completed'`,
+        [couple.coupleId, gameType, branch]
+      );
+      const completedSet = new Set(completedInBranch.rows.map(r => r.quiz_id));
+
+      // Find next uncompleted quiz
+      const nextQuizId = quizOrder.find(id => !completedSet.has(id)) || quizOrder[0];
+
+      // Check if there's already an active match today
+      const activeToday = games.find(g => g.type === gameType && g.status === 'active');
+
+      available.push({
+        type: gameType,
+        branch,
+        nextQuizId,
+        completedInBranch: completedSet.size,
+        totalInBranch: quizOrder.length,
+        hasActiveMatch: !!activeToday,
+        activeMatchId: activeToday?.matchId || null,
+      });
+    }
+
     return NextResponse.json({
       success: true,
       games,
+      completedCounts,
+      available,
       totalLp: couple.totalLp,
       userId,
       partnerId: couple.partnerId,

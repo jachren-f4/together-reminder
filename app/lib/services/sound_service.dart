@@ -92,7 +92,6 @@ class SoundService {
   /// [soundId] should be one of the constants from [SoundId]
   /// Does nothing if sounds are disabled or on web platform.
   Future<void> play(String soundId) async {
-    // print('🔊 SoundService.play called: $soundId, isEnabled: $isEnabled');
     if (!isEnabled) return;
 
     try {
@@ -108,7 +107,6 @@ class SoundService {
       }
 
       await _player.play(source);
-      // Logger.debug('Playing sound: $soundId', service: 'sound');
     } catch (e) {
       // Silently fail - sounds are non-critical
       Logger.debug('Sound playback failed for $soundId: $e', service: 'sound');

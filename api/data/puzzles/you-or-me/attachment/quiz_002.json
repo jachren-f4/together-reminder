@@ -1,0 +1,37 @@
+{
+  "quizId": "quiz_002",
+  "title": "Attachment Quiz 2",
+  "branch": "attachment",
+  "questions": [
+    {
+      "id": "quiz_002_q1",
+      "category": "trust",
+      "prompt": "Who finds it easier to...",
+      "content": "Trust without needing proof"
+    },
+    {
+      "id": "quiz_002_q2",
+      "category": "pursuit",
+      "prompt": "Who is more likely to...",
+      "content": "Reach out first after a disagreement"
+    },
+    {
+      "id": "quiz_002_q3",
+      "category": "processing",
+      "prompt": "Who needs more...",
+      "content": "Time to process emotions before talking"
+    },
+    {
+      "id": "quiz_002_q4",
+      "category": "security",
+      "prompt": "Who feels more...",
+      "content": "Anxious when apart for long periods"
+    },
+    {
+      "id": "quiz_002_q5",
+      "category": "conflict",
+      "prompt": "Who is more likely to...",
+      "content": "Withdraw when feeling overwhelmed"
+    }
+  ]
+}

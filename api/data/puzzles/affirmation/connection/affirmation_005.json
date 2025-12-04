@@ -1,0 +1,69 @@
+{
+  "quizId": "affirmation_005",
+  "title": "Heart to Heart",
+  "category": "connection",
+  "branch": "connection",
+  "description": "Rate your heart connection",
+  "questions": [
+    {
+      "id": "affirmation_005_q1",
+      "text": "I can sense when my partner needs support without them saying.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ]
+    },
+    {
+      "id": "affirmation_005_q2",
+      "text": "Our hearts feel connected even when we're apart.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ]
+    },
+    {
+      "id": "affirmation_005_q3",
+      "text": "I feel my partner's emotions as if they were my own.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ]
+    },
+    {
+      "id": "affirmation_005_q4",
+      "text": "We share a deep understanding that goes beyond words.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ]
+    },
+    {
+      "id": "affirmation_005_q5",
+      "text": "My partner is the person I most want to share my life with.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ]
+    }
+  ]
+}

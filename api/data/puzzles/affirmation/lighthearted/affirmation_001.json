@@ -1,0 +1,39 @@
+{
+  "quizId": "affirmation_001",
+  "title": "Morning Vibes",
+  "category": "lighthearted",
+  "branch": "lighthearted",
+  "description": "How do you prefer to start your day?",
+  "questions": [
+    {
+      "id": "affirmation_001_q1",
+      "text": "I prefer quiet mornings over busy ones",
+      "type": "scale",
+      "scaleLabels": ["Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"]
+    },
+    {
+      "id": "affirmation_001_q2",
+      "text": "I need coffee or tea to truly wake up",
+      "type": "scale",
+      "scaleLabels": ["Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"]
+    },
+    {
+      "id": "affirmation_001_q3",
+      "text": "I like to plan my day before it starts",
+      "type": "scale",
+      "scaleLabels": ["Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"]
+    },
+    {
+      "id": "affirmation_001_q4",
+      "text": "Morning workouts energize me for the day",
+      "type": "scale",
+      "scaleLabels": ["Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"]
+    },
+    {
+      "id": "affirmation_001_q5",
+      "text": "I'm at my most productive in the morning hours",
+      "type": "scale",
+      "scaleLabels": ["Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"]
+    }
+  ]
+}

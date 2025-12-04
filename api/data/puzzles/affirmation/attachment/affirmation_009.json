@@ -1,0 +1,69 @@
+{
+  "quizId": "affirmation_009",
+  "title": "Reassurance & Comfort",
+  "category": "attachment",
+  "branch": "attachment",
+  "description": "Rate how reassured you feel in your relationship",
+  "questions": [
+    {
+      "id": "affirmation_009_q1",
+      "text": "My partner's presence brings me comfort and calm.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ]
+    },
+    {
+      "id": "affirmation_009_q2",
+      "text": "I feel reassured by my partner's consistent love for me.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ]
+    },
+    {
+      "id": "affirmation_009_q3",
+      "text": "My partner knows how to soothe me when I'm anxious or upset.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ]
+    },
+    {
+      "id": "affirmation_009_q4",
+      "text": "I don't need constant reassurance because I feel secure in our bond.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ]
+    },
+    {
+      "id": "affirmation_009_q5",
+      "text": "My partner provides emotional comfort when I need it most.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ]
+    }
+  ]
+}

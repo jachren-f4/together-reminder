@@ -1,0 +1,69 @@
+{
+  "quizId": "affirmation_011",
+  "title": "Secure Base",
+  "category": "attachment",
+  "branch": "attachment",
+  "description": "Rate how your partner serves as your secure base",
+  "questions": [
+    {
+      "id": "affirmation_011_q1",
+      "text": "My partner gives me the confidence to explore new opportunities.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ]
+    },
+    {
+      "id": "affirmation_011_q2",
+      "text": "I know I can always return to my partner's support after taking risks.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ]
+    },
+    {
+      "id": "affirmation_011_q3",
+      "text": "My partner cheers me on as I pursue my goals and dreams.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ]
+    },
+    {
+      "id": "affirmation_011_q4",
+      "text": "I feel braver in life knowing my partner has my back.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ]
+    },
+    {
+      "id": "affirmation_011_q5",
+      "text": "Our relationship is my safe harbor in life's storms.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ]
+    }
+  ]
+}

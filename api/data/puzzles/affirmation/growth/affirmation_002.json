@@ -1,0 +1,69 @@
+{
+  "quizId": "affirmation_002",
+  "title": "Supporting Dreams",
+  "category": "growth",
+  "branch": "growth",
+  "description": "Rate how you support each other's dreams",
+  "questions": [
+    {
+      "id": "affirmation_002_q1",
+      "text": "My partner genuinely supports my goals and dreams.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ]
+    },
+    {
+      "id": "affirmation_002_q2",
+      "text": "I feel encouraged to pursue what matters to me.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ]
+    },
+    {
+      "id": "affirmation_002_q3",
+      "text": "We celebrate each other's achievements.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ]
+    },
+    {
+      "id": "affirmation_002_q4",
+      "text": "My partner believes in my potential.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ]
+    },
+    {
+      "id": "affirmation_002_q5",
+      "text": "We help each other reach for our aspirations.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,37 @@
+{
+  "quizId": "quiz_010",
+  "title": "Connection Quiz 10",
+  "branch": "connection",
+  "questions": [
+    {
+      "id": "quiz_010_q1",
+      "category": "communication",
+      "prompt": "Who is better at...",
+      "content": "Expressing gratitude and appreciation"
+    },
+    {
+      "id": "quiz_010_q2",
+      "category": "attunement",
+      "prompt": "Who picks up more on...",
+      "content": "Unspoken emotional needs"
+    },
+    {
+      "id": "quiz_010_q3",
+      "category": "expression",
+      "prompt": "Who shows affection more...",
+      "content": "In public settings"
+    },
+    {
+      "id": "quiz_010_q4",
+      "category": "connection",
+      "prompt": "Who feels more connected through...",
+      "content": "Shared activities and hobbies"
+    },
+    {
+      "id": "quiz_010_q5",
+      "category": "needs",
+      "prompt": "Who needs more...",
+      "content": "Reassurance that they are loved"
+    }
+  ]
+}

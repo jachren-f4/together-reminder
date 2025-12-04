@@ -1,0 +1,37 @@
+{
+  "quizId": "quiz_004",
+  "title": "Lighthearted Quiz 4",
+  "branch": "lighthearted",
+  "questions": [
+    {
+      "id": "quiz_004_q1",
+      "category": "interests",
+      "prompt": "Who is more",
+      "content": "Likely to watch the same show multiple times"
+    },
+    {
+      "id": "quiz_004_q2",
+      "category": "personality",
+      "prompt": "Who is more",
+      "content": "Likely to dance when no one is watching"
+    },
+    {
+      "id": "quiz_004_q3",
+      "category": "habits",
+      "prompt": "Who is more",
+      "content": "Likely to make the bed every morning"
+    },
+    {
+      "id": "quiz_004_q4",
+      "category": "preferences",
+      "prompt": "Who would rather",
+      "content": "Have coffee or tea as their daily ritual"
+    },
+    {
+      "id": "quiz_004_q5",
+      "category": "leisure",
+      "prompt": "Who is more",
+      "content": "Likely to spend hours browsing online shopping"
+    }
+  ]
+}

@@ -1,0 +1,37 @@
+{
+  "quizId": "quiz_010",
+  "title": "Attachment Quiz 10",
+  "branch": "attachment",
+  "questions": [
+    {
+      "id": "quiz_010_q1",
+      "category": "comfort",
+      "prompt": "Who is more...",
+      "content": "Self-soothing when distressed"
+    },
+    {
+      "id": "quiz_010_q2",
+      "category": "security",
+      "prompt": "Who worries more when...",
+      "content": "The other seems distant or quiet"
+    },
+    {
+      "id": "quiz_010_q3",
+      "category": "conflict",
+      "prompt": "Who is more likely to...",
+      "content": "Bring up unresolved issues later"
+    },
+    {
+      "id": "quiz_010_q4",
+      "category": "independence",
+      "prompt": "Who prefers more...",
+      "content": "Separate social activities"
+    },
+    {
+      "id": "quiz_010_q5",
+      "category": "reassurance",
+      "prompt": "Who needs more confirmation that...",
+      "content": "They haven't done anything wrong"
+    }
+  ]
+}

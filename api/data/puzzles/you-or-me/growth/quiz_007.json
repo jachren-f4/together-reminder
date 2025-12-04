@@ -1,0 +1,37 @@
+{
+  "quizId": "quiz_007",
+  "title": "Growth Quiz 7",
+  "branch": "growth",
+  "questions": [
+    {
+      "id": "quiz_007_q1",
+      "category": "future",
+      "prompt": "Who is more excited about...",
+      "content": "Building a life together"
+    },
+    {
+      "id": "quiz_007_q2",
+      "category": "support",
+      "prompt": "Who makes more sacrifices for...",
+      "content": "The other's growth opportunities"
+    },
+    {
+      "id": "quiz_007_q3",
+      "category": "resilience",
+      "prompt": "Who is better at...",
+      "content": "Turning challenges into learning moments"
+    },
+    {
+      "id": "quiz_007_q4",
+      "category": "mutual_growth",
+      "prompt": "Who pushes more for...",
+      "content": "The relationship to evolve"
+    },
+    {
+      "id": "quiz_007_q5",
+      "category": "goals",
+      "prompt": "Who is more ambitious about...",
+      "content": "Their personal future"
+    }
+  ]
+}

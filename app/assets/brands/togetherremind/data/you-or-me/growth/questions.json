@@ -1,0 +1,124 @@
+{
+  "questions": [
+    {
+      "id": "yom_grow_q1",
+      "prompt": "Who has grown more...",
+      "content": "As a communicator in this relationship",
+      "category": "communication"
+    },
+    {
+      "id": "yom_grow_q2",
+      "prompt": "Who is more...",
+      "content": "Focused on personal development",
+      "category": "self_growth"
+    },
+    {
+      "id": "yom_grow_q3",
+      "prompt": "Who tends to...",
+      "content": "Push us to try new things",
+      "category": "adventure"
+    },
+    {
+      "id": "yom_grow_q4",
+      "prompt": "Who has become more...",
+      "content": "Patient since we've been together",
+      "category": "growth"
+    },
+    {
+      "id": "yom_grow_q5",
+      "prompt": "Who is more...",
+      "content": "Open to feedback and change",
+      "category": "adaptability"
+    },
+    {
+      "id": "yom_grow_q6",
+      "prompt": "Who tends to...",
+      "content": "Set goals for our relationship",
+      "category": "planning"
+    },
+    {
+      "id": "yom_grow_q7",
+      "prompt": "Who has grown more...",
+      "content": "Emotionally aware",
+      "category": "emotional_intelligence"
+    },
+    {
+      "id": "yom_grow_q8",
+      "prompt": "Who is more likely to...",
+      "content": "Suggest working on something together",
+      "category": "partnership"
+    },
+    {
+      "id": "yom_grow_q9",
+      "prompt": "Who tends to...",
+      "content": "Learn from past mistakes",
+      "category": "learning"
+    },
+    {
+      "id": "yom_grow_q10",
+      "prompt": "Who is more...",
+      "content": "Ambitious about the future",
+      "category": "ambition"
+    },
+    {
+      "id": "yom_grow_q11",
+      "prompt": "Who has become more...",
+      "content": "Comfortable with vulnerability",
+      "category": "growth"
+    },
+    {
+      "id": "yom_grow_q12",
+      "prompt": "Who tends to...",
+      "content": "Encourage the other to grow",
+      "category": "support"
+    },
+    {
+      "id": "yom_grow_q13",
+      "prompt": "Who is more...",
+      "content": "Resilient after setbacks",
+      "category": "resilience"
+    },
+    {
+      "id": "yom_grow_q14",
+      "prompt": "Who has improved more at...",
+      "content": "Handling conflict",
+      "category": "conflict"
+    },
+    {
+      "id": "yom_grow_q15",
+      "prompt": "Who tends to...",
+      "content": "Celebrate our relationship milestones",
+      "category": "appreciation"
+    },
+    {
+      "id": "yom_grow_q16",
+      "prompt": "Who is more...",
+      "content": "Willing to step outside their comfort zone",
+      "category": "courage"
+    },
+    {
+      "id": "yom_grow_q17",
+      "prompt": "Who has grown more...",
+      "content": "Independent while staying connected",
+      "category": "balance"
+    },
+    {
+      "id": "yom_grow_q18",
+      "prompt": "Who tends to...",
+      "content": "Reflect on how we've changed",
+      "category": "reflection"
+    },
+    {
+      "id": "yom_grow_q19",
+      "prompt": "Who is more...",
+      "content": "Excited about our shared future",
+      "category": "future"
+    },
+    {
+      "id": "yom_grow_q20",
+      "prompt": "Who has taught the other more...",
+      "content": "About themselves",
+      "category": "mutual_growth"
+    }
+  ]
+}

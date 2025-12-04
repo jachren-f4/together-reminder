@@ -9,7 +9,7 @@ import '../utils/logger.dart';
 /// Manages quiz question loading and retrieval with branch support.
 ///
 /// Supports branching content system where questions can be loaded from
-/// different branches (e.g., 'lighthearted' vs 'deeper') based on progression.
+/// different branches (e.g., 'lighthearted' vs 'meaningful') based on progression.
 class QuizQuestionBank {
   static final QuizQuestionBank _instance = QuizQuestionBank._internal();
   factory QuizQuestionBank() => _instance;
@@ -37,7 +37,7 @@ class QuizQuestionBank {
 
   /// Initialize quiz questions from a specific branch.
   ///
-  /// [branch] - Branch folder name (e.g., 'lighthearted', 'deeper')
+  /// [branch] - Branch folder name (e.g., 'lighthearted', 'meaningful')
   ///
   /// This clears existing questions and loads from the branch folder.
   /// Falls back to legacy file if branch folder doesn't exist.

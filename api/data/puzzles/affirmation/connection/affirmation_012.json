@@ -1,0 +1,69 @@
+{
+  "quizId": "affirmation_012",
+  "title": "Deep Connection",
+  "category": "connection",
+  "branch": "connection",
+  "description": "Rate the depth of your emotional connection",
+  "questions": [
+    {
+      "id": "affirmation_012_q1",
+      "text": "I feel a profound sense of belonging with my partner.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ]
+    },
+    {
+      "id": "affirmation_012_q2",
+      "text": "Our connection transcends words - we understand each other on a deeper level.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ]
+    },
+    {
+      "id": "affirmation_012_q3",
+      "text": "I can feel my partner's presence even when we're apart.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ]
+    },
+    {
+      "id": "affirmation_012_q4",
+      "text": "Our emotional intimacy brings meaning to my life.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ]
+    },
+    {
+      "id": "affirmation_012_q5",
+      "text": "This relationship has shown me what true connection feels like.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ]
+    }
+  ]
+}

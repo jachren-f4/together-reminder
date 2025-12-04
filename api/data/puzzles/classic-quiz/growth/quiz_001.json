@@ -1,0 +1,67 @@
+{
+  "quizId": "quiz_001",
+  "title": "Growth Quiz 1",
+  "branch": "growth",
+  "questions": [
+    {
+      "id": "quiz_001_q1",
+      "text": "What's my biggest personal goal right now?",
+      "choices": [
+        "Career advancement",
+        "Health and wellness",
+        "Personal development",
+        "Creative pursuits",
+        "Financial stability"
+      ],
+      "category": "personal_goals"
+    },
+    {
+      "id": "quiz_001_q2",
+      "text": "How has our relationship helped me grow?",
+      "choices": [
+        "Made me more patient",
+        "Helped me communicate better",
+        "Made me more confident",
+        "Taught me to be vulnerable",
+        "Helped me understand myself"
+      ],
+      "category": "relationship_growth"
+    },
+    {
+      "id": "quiz_001_q3",
+      "text": "What's something I want to learn or try?",
+      "choices": [
+        "A new skill or hobby",
+        "Travel to new places",
+        "Further education",
+        "A creative outlet",
+        "A physical challenge"
+      ],
+      "category": "aspirations"
+    },
+    {
+      "id": "quiz_001_q4",
+      "text": "What area of my life am I working to improve?",
+      "choices": [
+        "Work-life balance",
+        "Mental health",
+        "Physical health",
+        "Relationships with others",
+        "Self-confidence"
+      ],
+      "category": "self_improvement"
+    },
+    {
+      "id": "quiz_001_q5",
+      "text": "How do I prefer to receive support for my goals?",
+      "choices": [
+        "Encouragement and cheerleading",
+        "Practical help and actions",
+        "Space to figure it out",
+        "Accountability check-ins",
+        "Join me in the journey"
+      ],
+      "category": "support_style"
+    }
+  ]
+}

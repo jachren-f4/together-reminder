@@ -1,0 +1,39 @@
+{
+  "quizId": "affirmation_002",
+  "title": "Weekend Rhythms",
+  "category": "lighthearted",
+  "branch": "lighthearted",
+  "description": "What makes your ideal weekend?",
+  "questions": [
+    {
+      "id": "affirmation_002_q1",
+      "text": "I enjoy sleeping in on weekends",
+      "type": "scale",
+      "scaleLabels": ["Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"]
+    },
+    {
+      "id": "affirmation_002_q2",
+      "text": "A perfect weekend includes time outdoors",
+      "type": "scale",
+      "scaleLabels": ["Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"]
+    },
+    {
+      "id": "affirmation_002_q3",
+      "text": "I prefer structured plans over spontaneous weekends",
+      "type": "scale",
+      "scaleLabels": ["Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"]
+    },
+    {
+      "id": "affirmation_002_q4",
+      "text": "Weekends are for being social and seeing friends",
+      "type": "scale",
+      "scaleLabels": ["Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"]
+    },
+    {
+      "id": "affirmation_002_q5",
+      "text": "I need at least one lazy day to recharge",
+      "type": "scale",
+      "scaleLabels": ["Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"]
+    }
+  ]
+}

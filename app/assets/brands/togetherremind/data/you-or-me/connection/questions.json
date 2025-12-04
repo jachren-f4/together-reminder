@@ -1,0 +1,124 @@
+{
+  "questions": [
+    {
+      "id": "yom_conn_q1",
+      "prompt": "Who tends to...",
+      "content": "Express love more openly",
+      "category": "expression"
+    },
+    {
+      "id": "yom_conn_q2",
+      "prompt": "Who needs more...",
+      "content": "Physical affection daily",
+      "category": "needs"
+    },
+    {
+      "id": "yom_conn_q3",
+      "prompt": "Who is more likely to...",
+      "content": "Initiate deep conversations",
+      "category": "communication"
+    },
+    {
+      "id": "yom_conn_q4",
+      "prompt": "Who feels more...",
+      "content": "Energized by quality time together",
+      "category": "connection"
+    },
+    {
+      "id": "yom_conn_q5",
+      "prompt": "Who tends to...",
+      "content": "Notice when something is wrong first",
+      "category": "attunement"
+    },
+    {
+      "id": "yom_conn_q6",
+      "prompt": "Who is more...",
+      "content": "Comfortable with vulnerability",
+      "category": "vulnerability"
+    },
+    {
+      "id": "yom_conn_q7",
+      "prompt": "Who needs more...",
+      "content": "Words of affirmation",
+      "category": "love_language"
+    },
+    {
+      "id": "yom_conn_q8",
+      "prompt": "Who is more likely to...",
+      "content": "Remember emotional details from conversations",
+      "category": "attunement"
+    },
+    {
+      "id": "yom_conn_q9",
+      "prompt": "Who tends to...",
+      "content": "Share feelings more easily",
+      "category": "expression"
+    },
+    {
+      "id": "yom_conn_q10",
+      "prompt": "Who feels more...",
+      "content": "Connected through shared silence",
+      "category": "intimacy"
+    },
+    {
+      "id": "yom_conn_q11",
+      "prompt": "Who is more...",
+      "content": "Attuned to the other's moods",
+      "category": "attunement"
+    },
+    {
+      "id": "yom_conn_q12",
+      "prompt": "Who tends to...",
+      "content": "Seek closeness after a hard day",
+      "category": "comfort"
+    },
+    {
+      "id": "yom_conn_q13",
+      "prompt": "Who values more...",
+      "content": "Acts of service as love",
+      "category": "love_language"
+    },
+    {
+      "id": "yom_conn_q14",
+      "prompt": "Who is more likely to...",
+      "content": "Say 'I love you' first",
+      "category": "expression"
+    },
+    {
+      "id": "yom_conn_q15",
+      "prompt": "Who feels more...",
+      "content": "Understood in this relationship",
+      "category": "understanding"
+    },
+    {
+      "id": "yom_conn_q16",
+      "prompt": "Who tends to...",
+      "content": "Create rituals of connection",
+      "category": "rituals"
+    },
+    {
+      "id": "yom_conn_q17",
+      "prompt": "Who is more...",
+      "content": "Emotionally available when needed",
+      "category": "availability"
+    },
+    {
+      "id": "yom_conn_q18",
+      "prompt": "Who needs more...",
+      "content": "Undivided attention",
+      "category": "needs"
+    },
+    {
+      "id": "yom_conn_q19",
+      "prompt": "Who is more likely to...",
+      "content": "Express gratitude for the relationship",
+      "category": "appreciation"
+    },
+    {
+      "id": "yom_conn_q20",
+      "prompt": "Who feels more...",
+      "content": "At home in the other's arms",
+      "category": "comfort"
+    }
+  ]
+}

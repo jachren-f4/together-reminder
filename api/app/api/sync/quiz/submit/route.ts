@@ -161,6 +161,20 @@ export const POST = withAuthOrDevBypass(async (req, userId, email) => {
           [user1_id, lpEarned, `quiz_${session.format_type}`, `quiz_complete (${sessionId})`, user2_id]
         );
       }
+
+      // Advance branch progression for quiz activity
+      const activityType = session.format_type === 'affirmation' ? 'affirmation' : 'classicQuiz';
+      await client.query(
+        `INSERT INTO branch_progression (couple_id, activity_type, current_branch, total_completions, max_branches)
+         VALUES ($1, $2, 0, 1, 5)
+         ON CONFLICT (couple_id, activity_type)
+         DO UPDATE SET
+           total_completions = branch_progression.total_completions + 1,
+           current_branch = (branch_progression.total_completions + 1) % 5,
+           last_completed_at = NOW(),
+           updated_at = NOW()`,
+        [coupleId, activityType]
+      );
     }
 
     // Update session

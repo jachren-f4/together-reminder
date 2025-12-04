@@ -1,0 +1,67 @@
+{
+  "quizId": "quiz_008",
+  "title": "Conflict Style",
+  "branch": "playful",
+  "questions": [
+    {
+      "id": "quiz_008_q1",
+      "text": "When disagreements arise, I prefer to...",
+      "choices": [
+        "Address them directly and immediately",
+        "Take time to cool off before discussing",
+        "Find a compromise that works for everyone",
+        "Avoid conflict when possible",
+        "Other / It depends"
+      ],
+      "category": "personality"
+    },
+    {
+      "id": "quiz_008_q2",
+      "text": "During a heated discussion, I'm most likely to...",
+      "choices": [
+        "Stand firm on my principles",
+        "Focus on understanding the other perspective",
+        "Try to lighten the mood with humor",
+        "Need space to process my emotions",
+        "Other / It depends"
+      ],
+      "category": "personality"
+    },
+    {
+      "id": "quiz_008_q3",
+      "text": "After an argument, I typically...",
+      "choices": [
+        "Want to resolve it quickly and move on",
+        "Need time alone to think things through",
+        "Seek reassurance that everything's okay",
+        "Analyze what happened to prevent it next time",
+        "Other / It depends"
+      ],
+      "category": "personality"
+    },
+    {
+      "id": "quiz_008_q4",
+      "text": "When someone criticizes me, my first reaction is to...",
+      "choices": [
+        "Defend myself and explain my reasoning",
+        "Listen and consider if they have a point",
+        "Feel hurt but try not to show it",
+        "Ask for specific examples to understand better",
+        "Other / It depends"
+      ],
+      "category": "personality"
+    },
+    {
+      "id": "quiz_008_q5",
+      "text": "My approach to apologizing is...",
+      "choices": [
+        "Quick and sincere when I'm wrong",
+        "Difficult - I struggle to say sorry",
+        "Thoughtful and accompanied by changed behavior",
+        "I explain my perspective first, then apologize",
+        "Other / It depends"
+      ],
+      "category": "social"
+    }
+  ]
+}

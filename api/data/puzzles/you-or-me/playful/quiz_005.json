@@ -1,0 +1,37 @@
+{
+  "quizId": "quiz_005",
+  "title": "Playful Quiz 5",
+  "branch": "playful",
+  "questions": [
+    {
+      "id": "quiz_005_q1",
+      "category": "humor",
+      "prompt": "Who would...",
+      "content": "Do a silly walk across a parking lot"
+    },
+    {
+      "id": "quiz_005_q2",
+      "category": "personality",
+      "prompt": "Who is more...",
+      "content": "Likely to start a spontaneous pillow fight"
+    },
+    {
+      "id": "quiz_005_q3",
+      "category": "quirks",
+      "prompt": "Who would...",
+      "content": "Eat dessert before dinner"
+    },
+    {
+      "id": "quiz_005_q4",
+      "category": "social",
+      "prompt": "Who is more...",
+      "content": "Likely to wave at people driving by"
+    },
+    {
+      "id": "quiz_005_q5",
+      "category": "imagination",
+      "prompt": "Who would...",
+      "content": "Build a blanket fort as an adult"
+    }
+  ]
+}

@@ -1,0 +1,67 @@
+{
+  "quizId": "quiz_002",
+  "title": "Attachment Quiz 2",
+  "branch": "attachment",
+  "questions": [
+    {
+      "id": "quiz_002_q1",
+      "text": "When we disagree, what's my typical pattern?",
+      "choices": [
+        "I need to resolve it quickly",
+        "I tend to withdraw first",
+        "I want to talk it through immediately",
+        "I need time to process alone",
+        "I look for compromise fast"
+      ],
+      "category": "conflict_style"
+    },
+    {
+      "id": "quiz_002_q2",
+      "text": "How easy is it for me to trust you completely?",
+      "choices": [
+        "Very easy - I trust fully",
+        "Mostly easy with small doubts",
+        "It takes time but I get there",
+        "I struggle but I'm working on it",
+        "Trust comes and goes for me"
+      ],
+      "category": "trust"
+    },
+    {
+      "id": "quiz_002_q3",
+      "text": "What do I need when I feel insecure?",
+      "choices": [
+        "Verbal reassurance",
+        "Quality time together",
+        "Space to self-soothe",
+        "Physical comfort",
+        "Understanding without judgment"
+      ],
+      "category": "insecurity_needs"
+    },
+    {
+      "id": "quiz_002_q4",
+      "text": "How do I handle it when you're stressed or distant?",
+      "choices": [
+        "Give you space and wait",
+        "Try to help or fix things",
+        "Feel worried it's about us",
+        "Match your distance",
+        "Check in but not push"
+      ],
+      "category": "partner_stress"
+    },
+    {
+      "id": "quiz_002_q5",
+      "text": "What would I struggle with most if we broke up?",
+      "choices": [
+        "The loss of companionship",
+        "Feeling rejected or not enough",
+        "Rebuilding my independence",
+        "Missing our daily routines",
+        "The emotional pain of loss"
+      ],
+      "category": "loss_fear"
+    }
+  ]
+}

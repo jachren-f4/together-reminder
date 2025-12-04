@@ -1,0 +1,67 @@
+{
+  "quizId": "quiz_011",
+  "title": "Attachment Quiz 11",
+  "branch": "attachment",
+  "questions": [
+    {
+      "id": "quiz_011_q1",
+      "text": "What's my deepest relationship need?",
+      "choices": [
+        "Consistent love and acceptance",
+        "Freedom to be myself",
+        "Security and stability",
+        "Growth and partnership",
+        "Other / It depends"
+      ],
+      "category": "values"
+    },
+    {
+      "id": "quiz_011_q2",
+      "text": "How do past relationships affect how I show up with you?",
+      "choices": [
+        "I'm more cautious and protective",
+        "I seek more reassurance than before",
+        "I'm working to trust more fully",
+        "I've healed and feel more secure",
+        "Other / It depends"
+      ],
+      "category": "growth"
+    },
+    {
+      "id": "quiz_011_q3",
+      "text": "What helps me trust you more deeply over time?",
+      "choices": [
+        "Your consistent actions matching your words",
+        "How you handle my vulnerabilities",
+        "Your commitment during hard times",
+        "Open and honest communication",
+        "Other / It depends"
+      ],
+      "category": "trust"
+    },
+    {
+      "id": "quiz_011_q4",
+      "text": "What attachment wound am I still healing?",
+      "choices": [
+        "Fear of abandonment",
+        "Fear of being controlled or smothered",
+        "Fear of not being enough",
+        "Fear of being truly seen",
+        "Other / It depends"
+      ],
+      "category": "growth"
+    },
+    {
+      "id": "quiz_011_q5",
+      "text": "How can you best support my attachment healing?",
+      "choices": [
+        "Be patient with my insecurities",
+        "Respect my need for independence",
+        "Provide consistent reassurance",
+        "Create safe space for vulnerability",
+        "Other / It depends"
+      ],
+      "category": "emotional"
+    }
+  ]
+}

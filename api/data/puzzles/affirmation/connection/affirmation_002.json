@@ -1,0 +1,69 @@
+{
+  "quizId": "affirmation_002",
+  "title": "Feeling Seen",
+  "category": "connection",
+  "branch": "connection",
+  "description": "Rate how understood you feel",
+  "questions": [
+    {
+      "id": "affirmation_002_q1",
+      "text": "My partner notices the small things that matter to me.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ]
+    },
+    {
+      "id": "affirmation_002_q2",
+      "text": "I feel heard when I express my needs and feelings.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ]
+    },
+    {
+      "id": "affirmation_002_q3",
+      "text": "My partner remembers details about my life that I've shared.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ]
+    },
+    {
+      "id": "affirmation_002_q4",
+      "text": "I believe my partner genuinely cares about my inner world.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ]
+    },
+    {
+      "id": "affirmation_002_q5",
+      "text": "My partner makes me feel valued for who I truly am.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ]
+    }
+  ]
+}

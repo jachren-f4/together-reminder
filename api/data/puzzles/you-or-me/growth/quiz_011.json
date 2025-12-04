@@ -1,0 +1,37 @@
+{
+  "quizId": "quiz_011",
+  "title": "Growth Quiz 11",
+  "branch": "growth",
+  "questions": [
+    {
+      "id": "quiz_011_q1",
+      "category": "resilience",
+      "prompt": "Who has grown more in...",
+      "content": "Managing their emotions"
+    },
+    {
+      "id": "quiz_011_q2",
+      "category": "support",
+      "prompt": "Who is better at...",
+      "content": "Empowering the other to take risks"
+    },
+    {
+      "id": "quiz_011_q3",
+      "category": "learning",
+      "prompt": "Who reflects more on...",
+      "content": "How to be a better partner"
+    },
+    {
+      "id": "quiz_011_q4",
+      "category": "mutual_growth",
+      "prompt": "Who invests more time in...",
+      "content": "Strengthening the relationship"
+    },
+    {
+      "id": "quiz_011_q5",
+      "category": "goals",
+      "prompt": "Who prioritizes more...",
+      "content": "Shared goals over individual ones"
+    }
+  ]
+}

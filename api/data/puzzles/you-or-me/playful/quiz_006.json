@@ -1,0 +1,37 @@
+{
+  "quizId": "quiz_006",
+  "title": "Playful Quiz 6",
+  "branch": "playful",
+  "questions": [
+    {
+      "id": "quiz_006_q1",
+      "category": "competitive",
+      "prompt": "Who would...",
+      "content": "Celebrate a small victory like winning the lottery"
+    },
+    {
+      "id": "quiz_006_q2",
+      "category": "humor",
+      "prompt": "Who is more...",
+      "content": "Likely to do impressions of people"
+    },
+    {
+      "id": "quiz_006_q3",
+      "category": "personality",
+      "prompt": "Who would...",
+      "content": "Try to befriend a wild animal"
+    },
+    {
+      "id": "quiz_006_q4",
+      "category": "quirks",
+      "prompt": "Who is more...",
+      "content": "Likely to make sound effects for everyday actions"
+    },
+    {
+      "id": "quiz_006_q5",
+      "category": "social",
+      "prompt": "Who would...",
+      "content": "Compliment a total stranger out of nowhere"
+    }
+  ]
+}

@@ -5,57 +5,60 @@
   "questions": [
     {
       "id": "quiz_002_q1",
-      "text": "Would I rather: Text messaging or Phone calls?",
+      "text": "How do I prefer to receive news?",
       "choices": [
-        "Text messaging",
-        "Phone calls"
-      ],
-      "category": "would_you_rather"
-    },
-    {
-      "id": "quiz_002_q2",
-      "text": "What's my conflict resolution style?",
-      "choices": [
-        "Talk immediately",
-        "Need time to think",
-        "Avoid conflict",
-        "Seek compromise",
-        "Other / It depends"
+        "Social media",
+        "News apps",
+        "TV",
+        "Word of mouth",
+        "Other / Something else"
       ],
       "category": "preferences"
     },
     {
-      "id": "quiz_002_q3",
-      "text": "What's my favorite movie genre?",
+      "id": "quiz_002_q2",
+      "text": "What's my favorite social media?",
       "choices": [
-        "Action",
-        "Comedy",
-        "Romance",
-        "Horror",
+        "Instagram",
+        "TikTok",
+        "Twitter",
+        "Facebook",
+        "Other / Something else"
+      ],
+      "category": "favorites"
+    },
+    {
+      "id": "quiz_002_q3",
+      "text": "What's my favorite way to spend a rainy day?",
+      "choices": [
+        "Reading",
+        "Movies",
+        "Cooking",
+        "Sleeping",
         "Other / Something else"
       ],
       "category": "favorites"
     },
     {
       "id": "quiz_002_q4",
-      "text": "What's my secret guilty pleasure?",
+      "text": "How do I prefer to shop?",
       "choices": [
-        "Reality TV",
-        "Junk food",
-        "Video games",
-        "Romance novels",
-        "Other / Something else"
+        "Online",
+        "In-store",
+        "Mix of both",
+        "I don't like shopping",
+        "Other / It depends"
       ],
-      "category": "favorites"
+      "category": "preferences"
     },
     {
       "id": "quiz_002_q5",
-      "text": "What's my favorite holiday?",
+      "text": "What's my favorite childhood memory type?",
       "choices": [
-        "Christmas",
-        "Halloween",
-        "Birthday",
-        "New Year",
+        "Family vacations",
+        "Playing with friends",
+        "School events",
+        "Home activities",
         "Other / Something else"
       ],
       "category": "favorites"

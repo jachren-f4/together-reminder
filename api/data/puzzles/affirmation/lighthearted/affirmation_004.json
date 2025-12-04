@@ -1,0 +1,39 @@
+{
+  "quizId": "affirmation_004",
+  "title": "Dining Adventures",
+  "category": "lighthearted",
+  "branch": "lighthearted",
+  "description": "Your food and dining preferences",
+  "questions": [
+    {
+      "id": "affirmation_004_q1",
+      "text": "I enjoy trying new restaurants regularly",
+      "type": "scale",
+      "scaleLabels": ["Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"]
+    },
+    {
+      "id": "affirmation_004_q2",
+      "text": "I'm adventurous with trying new cuisines",
+      "type": "scale",
+      "scaleLabels": ["Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"]
+    },
+    {
+      "id": "affirmation_004_q3",
+      "text": "I have favorite dishes I order repeatedly",
+      "type": "scale",
+      "scaleLabels": ["Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"]
+    },
+    {
+      "id": "affirmation_004_q4",
+      "text": "Food is an important part of social experiences",
+      "type": "scale",
+      "scaleLabels": ["Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"]
+    },
+    {
+      "id": "affirmation_004_q5",
+      "text": "I prefer casual dining over fine dining",
+      "type": "scale",
+      "scaleLabels": ["Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"]
+    }
+  ]
+}

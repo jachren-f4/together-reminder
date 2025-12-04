@@ -175,7 +175,7 @@ async function resetCoupleProgress(coupleId: string) {
       'UPDATE couples SET total_lp = 0 WHERE id = $1 RETURNING total_lp',
       [coupleId]
     );
-    if (lpReset.rowCount > 0) {
+    if ((lpReset.rowCount ?? 0) > 0) {
       console.log(`   ✓ Reset couple total_lp to 0`);
     }
 

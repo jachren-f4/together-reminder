@@ -5,57 +5,60 @@
   "questions": [
     {
       "id": "quiz_008_q1",
-      "text": "What's my preferred meeting style?",
+      "text": "What's my love language?",
       "choices": [
-        "In person",
-        "Video call",
-        "Phone call",
-        "Email/async",
-        "Other / It depends"
+        "Words of affirmation",
+        "Quality time",
+        "Physical touch",
+        "Acts of service",
+        "Other / Something else"
       ],
       "category": "preferences"
     },
     {
       "id": "quiz_008_q2",
-      "text": "What time do I usually wake up?",
+      "text": "What's my favorite type of book?",
       "choices": [
-        "Before 7am",
-        "7-8am",
-        "8-9am",
-        "After 9am",
-        "Other / It varies"
-      ],
-      "category": "preferences"
-    },
-    {
-      "id": "quiz_008_q3",
-      "text": "What's my favorite way to exercise?",
-      "choices": [
-        "Running",
-        "Yoga",
-        "Gym",
-        "Swimming",
+        "Fiction",
+        "Mystery",
+        "Biography",
+        "Self-help",
         "Other / Something else"
       ],
       "category": "favorites"
     },
     {
-      "id": "quiz_008_q4",
-      "text": "Would I rather: Early morning or Late night?",
+      "id": "quiz_008_q3",
+      "text": "Would I rather: Dogs or Cats?",
       "choices": [
-        "Early morning",
-        "Late night"
+        "Dogs",
+        "Cats"
       ],
       "category": "would_you_rather"
     },
     {
-      "id": "quiz_008_q5",
-      "text": "Would I rather: Big city life or Quiet countryside?",
+      "id": "quiz_008_q4",
+      "text": "What's my ideal vacation?",
       "choices": [
-        "Big city life",
-        "Quiet countryside"
+        "Beach resort",
+        "Mountain cabin",
+        "City exploration",
+        "Adventure travel",
+        "Other / Something else"
       ],
-      "category": "would_you_rather"
+      "category": "preferences"
+    },
+    {
+      "id": "quiz_008_q5",
+      "text": "What's my favorite type of vacation activity?",
+      "choices": [
+        "Sightseeing",
+        "Beach relaxing",
+        "Adventure sports",
+        "Cultural experiences",
+        "Other / Something else"
+      ],
+      "category": "favorites"
     }
   ]
 }

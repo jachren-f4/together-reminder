@@ -1,0 +1,37 @@
+{
+  "quizId": "quiz_009",
+  "title": "Growth Quiz 9",
+  "branch": "growth",
+  "questions": [
+    {
+      "id": "quiz_009_q1",
+      "category": "goals",
+      "prompt": "Who is more focused on...",
+      "content": "Health and wellness goals"
+    },
+    {
+      "id": "quiz_009_q2",
+      "category": "support",
+      "prompt": "Who is more patient when...",
+      "content": "The other is struggling"
+    },
+    {
+      "id": "quiz_009_q3",
+      "category": "learning",
+      "prompt": "Who seeks out more...",
+      "content": "Resources to improve themselves"
+    },
+    {
+      "id": "quiz_009_q4",
+      "category": "future",
+      "prompt": "Who thinks more about...",
+      "content": "Financial planning and security"
+    },
+    {
+      "id": "quiz_009_q5",
+      "category": "resilience",
+      "prompt": "Who has overcome more...",
+      "content": "Personal obstacles and challenges"
+    }
+  ]
+}

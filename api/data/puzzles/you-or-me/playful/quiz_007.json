@@ -1,0 +1,37 @@
+{
+  "quizId": "quiz_007",
+  "title": "Playful Quiz 7",
+  "branch": "playful",
+  "questions": [
+    {
+      "id": "quiz_007_q1",
+      "category": "imagination",
+      "prompt": "Who would...",
+      "content": "Invent a silly game on the spot"
+    },
+    {
+      "id": "quiz_007_q2",
+      "category": "personality",
+      "prompt": "Who is more...",
+      "content": "Likely to skip instead of walk"
+    },
+    {
+      "id": "quiz_007_q3",
+      "category": "humor",
+      "prompt": "Who would...",
+      "content": "Use a fake accent just for fun"
+    },
+    {
+      "id": "quiz_007_q4",
+      "category": "quirks",
+      "prompt": "Who is more...",
+      "content": "Likely to collect random things"
+    },
+    {
+      "id": "quiz_007_q5",
+      "category": "competitive",
+      "prompt": "Who would...",
+      "content": "Make a bet about literally anything"
+    }
+  ]
+}

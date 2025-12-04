@@ -1,0 +1,69 @@
+{
+  "quizId": "affirmation_003",
+  "title": "Healthy Dependence",
+  "category": "attachment",
+  "branch": "attachment",
+  "description": "Rate your comfort depending on each other",
+  "questions": [
+    {
+      "id": "affirmation_003_q1",
+      "text": "I'm comfortable relying on my partner for emotional support.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ]
+    },
+    {
+      "id": "affirmation_003_q2",
+      "text": "I can ask my partner for help without feeling weak.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ]
+    },
+    {
+      "id": "affirmation_003_q3",
+      "text": "We support each other while maintaining our individuality.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ]
+    },
+    {
+      "id": "affirmation_003_q4",
+      "text": "I appreciate that we can lean on each other.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ]
+    },
+    {
+      "id": "affirmation_003_q5",
+      "text": "Our interdependence makes us both stronger.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ]
+    }
+  ]
+}

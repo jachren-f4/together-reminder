@@ -4,7 +4,7 @@
 /// stored as JSON files in brand-specific directories.
 ///
 /// Supports branching content system where each activity type has
-/// multiple content branches (e.g., 'lighthearted' vs 'deeper' for quizzes).
+/// multiple content branches (e.g., 'lighthearted' vs 'meaningful' for quizzes).
 class ContentPaths {
   final String _brandId;
 
@@ -42,7 +42,7 @@ class ContentPaths {
 
   /// Get classic quiz questions for a specific branch
   ///
-  /// [branch] - Branch folder name (e.g., 'lighthearted', 'deeper')
+  /// [branch] - Branch folder name (e.g., 'lighthearted', 'meaningful')
   String getClassicQuizPath(String branch) =>
       '$_dataPath/classic-quiz/$branch/questions.json';
 

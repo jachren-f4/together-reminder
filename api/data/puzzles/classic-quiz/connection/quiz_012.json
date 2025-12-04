@@ -1,0 +1,67 @@
+{
+  "quizId": "quiz_012",
+  "title": "Connection Quiz 12",
+  "branch": "connection",
+  "questions": [
+    {
+      "id": "quiz_012_q1",
+      "text": "What type of date feels most meaningful to me?",
+      "choices": [
+        "Something planned and special",
+        "Spontaneous and adventurous",
+        "Quiet and intimate at home",
+        "Active and fun together",
+        "Other / It depends"
+      ],
+      "category": "values"
+    },
+    {
+      "id": "quiz_012_q2",
+      "text": "When do I feel most emotionally intimate with you?",
+      "choices": [
+        "During vulnerable late-night talks",
+        "After we work through a conflict",
+        "When we're laughing together",
+        "During quiet, peaceful moments",
+        "Other / It depends"
+      ],
+      "category": "emotional"
+    },
+    {
+      "id": "quiz_012_q3",
+      "text": "How do I prefer to show you I'm thinking of you?",
+      "choices": [
+        "Send sweet texts throughout the day",
+        "Do small helpful things for you",
+        "Physical affection when we're together",
+        "Plan surprises or special moments",
+        "Other / It depends"
+      ],
+      "category": "communication"
+    },
+    {
+      "id": "quiz_012_q4",
+      "text": "What helps me feel most present and connected with you?",
+      "choices": [
+        "Putting phones away and focusing",
+        "Doing something engaging together",
+        "Physical touch while we talk",
+        "Making eye contact",
+        "Other / It depends"
+      ],
+      "category": "values"
+    },
+    {
+      "id": "quiz_012_q5",
+      "text": "What's my favorite way to end the day together?",
+      "choices": [
+        "Cuddling and talking about our day",
+        "Watching something together",
+        "Reading or doing separate activities nearby",
+        "Physical intimacy",
+        "Other / It depends"
+      ],
+      "category": "emotional"
+    }
+  ]
+}

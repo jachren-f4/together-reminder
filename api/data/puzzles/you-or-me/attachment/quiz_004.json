@@ -1,0 +1,37 @@
+{
+  "quizId": "quiz_004",
+  "title": "Attachment Quiz 4",
+  "branch": "attachment",
+  "questions": [
+    {
+      "id": "quiz_004_q1",
+      "category": "reassurance",
+      "prompt": "Who needs more...",
+      "content": "Verbal affirmation of commitment"
+    },
+    {
+      "id": "quiz_004_q2",
+      "category": "anxiety",
+      "prompt": "Who gets more...",
+      "content": "Worried about the relationship's future"
+    },
+    {
+      "id": "quiz_004_q3",
+      "category": "testing",
+      "prompt": "Who is more likely to...",
+      "content": "Test the other's loyalty or love"
+    },
+    {
+      "id": "quiz_004_q4",
+      "category": "dependence",
+      "prompt": "Who feels more...",
+      "content": "Complete when together"
+    },
+    {
+      "id": "quiz_004_q5",
+      "category": "comfort",
+      "prompt": "Who is better at...",
+      "content": "Providing comfort during hard times"
+    }
+  ]
+}

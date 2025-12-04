@@ -415,40 +415,61 @@ async function getTierLeaderboard(
 /**
  * Ensures a couple has an entry in the leaderboard table.
  * Creates one if missing, using data from couples and users tables.
+ * Also ensures the entry has a global_rank (required for visibility).
  */
 async function ensureLeaderboardEntry(coupleId: string): Promise<void> {
-  // Check if entry exists
+  // Check if entry exists with a rank
   const existsResult = await query(
-    `SELECT 1 FROM couple_leaderboard WHERE couple_id = $1`,
+    `SELECT global_rank FROM couple_leaderboard WHERE couple_id = $1`,
     [coupleId]
   );
 
-  if (existsResult.rows.length > 0) {
-    return; // Entry exists, nothing to do
+  if (existsResult.rows.length > 0 && existsResult.rows[0].global_rank !== null) {
+    return; // Entry exists with rank, nothing to do
   }
 
-  // Entry doesn't exist, create it from couples table
+  if (existsResult.rows.length === 0) {
+    // Entry doesn't exist, create it from couples table
+    await query(
+      `INSERT INTO couple_leaderboard (
+         couple_id,
+         user1_initial,
+         user2_initial,
+         total_lp,
+         arena_tier,
+         updated_at
+       )
+       SELECT
+         c.id,
+         UPPER(SUBSTRING(COALESCE(u1.raw_user_meta_data->>'full_name', 'A') FROM 1 FOR 1)),
+         UPPER(SUBSTRING(COALESCE(u2.raw_user_meta_data->>'full_name', 'B') FROM 1 FOR 1)),
+         COALESCE(c.total_lp, 0),
+         1,
+         NOW()
+       FROM couples c
+       LEFT JOIN auth.users u1 ON u1.id = c.user1_id
+       LEFT JOIN auth.users u2 ON u2.id = c.user2_id
+       WHERE c.id = $1
+       ON CONFLICT (couple_id) DO NOTHING`,
+      [coupleId]
+    );
+  }
+
+  // Calculate and set the global rank for this couple
+  // Rank is based on total_lp descending
   await query(
-    `INSERT INTO couple_leaderboard (
-       couple_id,
-       user1_initial,
-       user2_initial,
-       total_lp,
-       arena_tier,
-       updated_at
+    `UPDATE couple_leaderboard cl
+     SET global_rank = (
+       SELECT COUNT(*) + 1
+       FROM couple_leaderboard cl2
+       WHERE cl2.total_lp > cl.total_lp
+     ),
+     tier_rank = (
+       SELECT COUNT(*) + 1
+       FROM couple_leaderboard cl2
+       WHERE cl2.arena_tier = cl.arena_tier AND cl2.total_lp > cl.total_lp
      )
-     SELECT
-       c.id,
-       UPPER(SUBSTRING(COALESCE(u1.raw_user_meta_data->>'full_name', 'A') FROM 1 FOR 1)),
-       UPPER(SUBSTRING(COALESCE(u2.raw_user_meta_data->>'full_name', 'B') FROM 1 FOR 1)),
-       COALESCE(c.total_lp, 0),
-       1,
-       NOW()
-     FROM couples c
-     LEFT JOIN auth.users u1 ON u1.id = c.user1_id
-     LEFT JOIN auth.users u2 ON u2.id = c.user2_id
-     WHERE c.id = $1
-     ON CONFLICT (couple_id) DO NOTHING`,
+     WHERE cl.couple_id = $1`,
     [coupleId]
   );
 }

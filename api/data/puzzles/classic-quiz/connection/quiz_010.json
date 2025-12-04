@@ -1,0 +1,67 @@
+{
+  "quizId": "quiz_010",
+  "title": "Connection Quiz 10",
+  "branch": "connection",
+  "questions": [
+    {
+      "id": "quiz_010_q1",
+      "text": "What's most important to me when we're having a conversation?",
+      "choices": [
+        "That you make eye contact",
+        "That you listen without interrupting",
+        "That you remember what I say",
+        "That you ask follow-up questions",
+        "Other / It depends"
+      ],
+      "category": "communication"
+    },
+    {
+      "id": "quiz_010_q2",
+      "text": "How do I prefer to give you feedback or criticism?",
+      "choices": [
+        "Gently and indirectly",
+        "Directly but kindly",
+        "Through humor or lightheartedness",
+        "By asking questions instead of stating",
+        "Other / It depends"
+      ],
+      "category": "communication"
+    },
+    {
+      "id": "quiz_010_q3",
+      "text": "What's my preferred listening style when you share problems?",
+      "choices": [
+        "Listen and empathize without solving",
+        "Offer solutions and advice",
+        "Ask questions to understand better",
+        "Share similar experiences I've had",
+        "Other / It depends"
+      ],
+      "category": "communication"
+    },
+    {
+      "id": "quiz_010_q4",
+      "text": "How do I prefer you to communicate your needs to me?",
+      "choices": [
+        "Directly and clearly",
+        "With some context about why",
+        "Written down so I can process",
+        "At a specific time when we can talk",
+        "Other / It depends"
+      ],
+      "category": "communication"
+    },
+    {
+      "id": "quiz_010_q5",
+      "text": "What communication habit of yours means the most to me?",
+      "choices": [
+        "Checking in on me during the day",
+        "Really listening when I talk",
+        "Sharing your feelings openly",
+        "Remembering details I mention",
+        "Other / It depends"
+      ],
+      "category": "communication"
+    }
+  ]
+}

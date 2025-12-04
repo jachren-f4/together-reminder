@@ -1,0 +1,67 @@
+{
+  "quizId": "quiz_003",
+  "title": "Connection Quiz 3",
+  "branch": "connection",
+  "questions": [
+    {
+      "id": "quiz_003_q1",
+      "text": "When I need to feel reassured, what helps most?",
+      "choices": [
+        "Hearing you say you love me",
+        "Being held close",
+        "Talking through my worries",
+        "You taking action to help",
+        "Just being present with me"
+      ],
+      "category": "reassurance"
+    },
+    {
+      "id": "quiz_003_q2",
+      "text": "What makes our relationship feel unique to me?",
+      "choices": [
+        "How well we understand each other",
+        "Our shared sense of humor",
+        "The passion between us",
+        "How we support each other",
+        "Our history together"
+      ],
+      "category": "uniqueness"
+    },
+    {
+      "id": "quiz_003_q3",
+      "text": "What's the most meaningful thing you've done for me?",
+      "choices": [
+        "Supported me through a hard time",
+        "Made a sacrifice for us",
+        "Showed up when I needed you",
+        "Believed in me when I doubted",
+        "Accepted a part of me I hid"
+      ],
+      "category": "meaningful_moments"
+    },
+    {
+      "id": "quiz_003_q4",
+      "text": "How do I feel most comfortable expressing love?",
+      "choices": [
+        "Through words and compliments",
+        "Through physical closeness",
+        "Through helpful actions",
+        "Through quality time",
+        "Through gifts and surprises"
+      ],
+      "category": "love_expression"
+    },
+    {
+      "id": "quiz_003_q5",
+      "text": "What part of my personality do you bring out the most?",
+      "choices": [
+        "My playful side",
+        "My vulnerable side",
+        "My ambitious side",
+        "My caring side",
+        "My confident side"
+      ],
+      "category": "personal_growth"
+    }
+  ]
+}

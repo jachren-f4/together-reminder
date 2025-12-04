@@ -1,0 +1,37 @@
+{
+  "quizId": "quiz_003",
+  "title": "Growth Quiz 3",
+  "branch": "growth",
+  "questions": [
+    {
+      "id": "quiz_003_q1",
+      "category": "growth",
+      "prompt": "Who challenges the other to...",
+      "content": "Be a better person"
+    },
+    {
+      "id": "quiz_003_q2",
+      "category": "support",
+      "prompt": "Who is better at...",
+      "content": "Supporting the other's goals"
+    },
+    {
+      "id": "quiz_003_q3",
+      "category": "resilience",
+      "prompt": "Who bounces back faster from...",
+      "content": "Setbacks and disappointments"
+    },
+    {
+      "id": "quiz_003_q4",
+      "category": "conflict",
+      "prompt": "Who has improved more in...",
+      "content": "How they handle disagreements"
+    },
+    {
+      "id": "quiz_003_q5",
+      "category": "appreciation",
+      "prompt": "Who is better at...",
+      "content": "Celebrating small wins"
+    }
+  ]
+}

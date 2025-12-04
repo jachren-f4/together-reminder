@@ -104,21 +104,56 @@ Open http://localhost:3000/api/health to test the health check endpoint.
 api/
 ├── app/
 │   └── api/
-│       └── health/
-│           └── route.ts          # Health check endpoint
+│       ├── health/route.ts           # Health check endpoint
+│       ├── sync/                     # Game sync endpoints
+│       │   ├── daily-quests/         # Quest management
+│       │   ├── word-search/          # Word search game
+│       │   ├── quiz/                 # Quiz game
+│       │   └── ...
+│       └── dev/                      # Dev tools (auth bypass)
 ├── lib/
-│   ├── supabase/
-│   │   └── server.ts             # Supabase client (server-side)
-│   └── db/
-│       └── pool.ts               # PostgreSQL connection pool
+│   ├── couple/
+│   │   └── utils.ts                  # Couple fetching utilities
+│   ├── puzzle/
+│   │   └── loader.ts                 # Puzzle loading & branch management
+│   ├── db/
+│   │   ├── pool.ts                   # PostgreSQL connection pool
+│   │   └── transaction.ts            # Transaction wrappers
+│   ├── game/
+│   │   └── handler.ts                # Game completion logic
+│   ├── lp/
+│   │   └── award.ts                  # Love points utilities
+│   ├── auth/
+│   │   └── dev-middleware.ts         # Auth middleware
+│   └── supabase/
+│       └── server.ts                 # Supabase client
+├── data/
+│   └── puzzles/                      # Puzzle JSON files
+│       ├── linked/                   # Linked game puzzles
+│       └── word-search/              # Word search puzzles
 ├── supabase/
-│   └── migrations/
-│       └── 001_initial_schema.sql # Database schema
-├── next.config.ts                # Next.js configuration
-├── tsconfig.json                 # TypeScript configuration
-└── package.json                  # Dependencies
-
+│   └── migrations/                   # Database migrations
+├── next.config.ts
+├── tsconfig.json
+└── package.json
 ```
+
+### Shared Utilities
+
+**Couple Utilities** (`lib/couple/utils.ts`):
+- `getCouple(userId)` - Full couple data with partner IDs and firstPlayerId
+- `getCoupleBasic(userId)` - Minimal couple data (coupleId, isPlayer1)
+- `getCoupleId(userId)` - Just the couple ID
+
+**Puzzle Utilities** (`lib/puzzle/loader.ts`):
+- `loadPuzzle(type, puzzleId, branch)` - Load puzzle JSON from filesystem
+- `getNextPuzzle(coupleId, type)` - Get next puzzle (active or uncompleted)
+- `isCooldownActive(coupleId, type, localDate)` - Check daily cooldown
+- `getCurrentBranch(coupleId, type)` - Get couple's current branch
+
+**Transaction Utilities** (`lib/db/transaction.ts`):
+- `withTransaction(callback)` - Auto BEGIN/COMMIT/ROLLBACK wrapper
+- `withTransactionResult(callback)` - With early return support
 
 ---
 

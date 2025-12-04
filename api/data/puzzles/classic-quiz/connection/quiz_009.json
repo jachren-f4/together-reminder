@@ -1,0 +1,67 @@
+{
+  "quizId": "quiz_009",
+  "title": "Connection Quiz 9",
+  "branch": "connection",
+  "questions": [
+    {
+      "id": "quiz_009_q1",
+      "text": "How do I prefer to communicate important things to you?",
+      "choices": [
+        "Face-to-face conversation",
+        "During a walk or activity",
+        "Via text or written message",
+        "In the moment as they happen",
+        "Other / It depends"
+      ],
+      "category": "communication"
+    },
+    {
+      "id": "quiz_009_q2",
+      "text": "What's my communication style when I'm upset?",
+      "choices": [
+        "I need to talk it out immediately",
+        "I need space before I can discuss it",
+        "I get quiet and withdraw",
+        "I become more direct and assertive",
+        "Other / It depends"
+      ],
+      "category": "communication"
+    },
+    {
+      "id": "quiz_009_q3",
+      "text": "How do I prefer you to communicate with me when you're upset?",
+      "choices": [
+        "Tell me directly what's wrong",
+        "Take some time to process first",
+        "Express your feelings calmly",
+        "Write it out if it's too emotional",
+        "Other / It depends"
+      ],
+      "category": "communication"
+    },
+    {
+      "id": "quiz_009_q4",
+      "text": "What's the best way for you to get my attention when I'm distracted?",
+      "choices": [
+        "Gently touch my arm or shoulder",
+        "Say my name and wait for eye contact",
+        "Send me a text even if we're together",
+        "Wait for a natural break in what I'm doing",
+        "Other / It depends"
+      ],
+      "category": "communication"
+    },
+    {
+      "id": "quiz_009_q5",
+      "text": "How do I prefer to be asked to do something?",
+      "choices": [
+        "Direct request with reasons why",
+        "Gentle suggestion or question",
+        "Through appreciation for past help",
+        "With advance notice when possible",
+        "Other / It depends"
+      ],
+      "category": "communication"
+    }
+  ]
+}

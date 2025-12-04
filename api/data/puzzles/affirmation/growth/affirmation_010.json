@@ -1,0 +1,69 @@
+{
+  "quizId": "affirmation_010",
+  "title": "Shared Vision",
+  "category": "growth",
+  "branch": "growth",
+  "description": "Rate your alignment on future goals",
+  "questions": [
+    {
+      "id": "affirmation_010_q1",
+      "text": "We share a vision for our future together.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ]
+    },
+    {
+      "id": "affirmation_010_q2",
+      "text": "Our individual goals align with our goals as a couple.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ]
+    },
+    {
+      "id": "affirmation_010_q3",
+      "text": "We regularly discuss our dreams and plans for the future.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ]
+    },
+    {
+      "id": "affirmation_010_q4",
+      "text": "I'm excited about where we're heading together.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ]
+    },
+    {
+      "id": "affirmation_010_q5",
+      "text": "We make decisions with our shared future in mind.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ]
+    }
+  ]
+}

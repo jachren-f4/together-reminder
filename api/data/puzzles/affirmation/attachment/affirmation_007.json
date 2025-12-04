@@ -1,0 +1,69 @@
+{
+  "quizId": "affirmation_007",
+  "title": "Trust & Reliability",
+  "category": "attachment",
+  "branch": "attachment",
+  "description": "Rate how trust shows up in daily life",
+  "questions": [
+    {
+      "id": "affirmation_007_q1",
+      "text": "I can count on my partner to follow through on their commitments.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ]
+    },
+    {
+      "id": "affirmation_007_q2",
+      "text": "My partner is consistent in their actions and words.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ]
+    },
+    {
+      "id": "affirmation_007_q3",
+      "text": "I trust my partner with my deepest secrets.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ]
+    },
+    {
+      "id": "affirmation_007_q4",
+      "text": "My partner has proven their reliability through their actions.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ]
+    },
+    {
+      "id": "affirmation_007_q5",
+      "text": "I never question whether my partner has my best interests at heart.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ]
+    }
+  ]
+}

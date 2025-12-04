@@ -1,0 +1,37 @@
+{
+  "quizId": "quiz_008",
+  "title": "Playful Quiz 8",
+  "branch": "playful",
+  "questions": [
+    {
+      "id": "quiz_008_q1",
+      "category": "social",
+      "prompt": "Who is more...",
+      "content": "Likely to start a conga line at a party"
+    },
+    {
+      "id": "quiz_008_q2",
+      "category": "quirks",
+      "prompt": "Who would...",
+      "content": "Talk back to the TV while watching shows"
+    },
+    {
+      "id": "quiz_008_q3",
+      "category": "personality",
+      "prompt": "Who is more...",
+      "content": "Likely to try every flavor at an ice cream shop"
+    },
+    {
+      "id": "quiz_008_q4",
+      "category": "imagination",
+      "prompt": "Who would...",
+      "content": "Pretend the floor is lava"
+    },
+    {
+      "id": "quiz_008_q5",
+      "category": "humor",
+      "prompt": "Who is more...",
+      "content": "Likely to laugh at inappropriate times"
+    }
+  ]
+}

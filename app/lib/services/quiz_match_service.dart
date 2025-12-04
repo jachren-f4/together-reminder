@@ -1,4 +1,5 @@
 import '../models/quiz_match.dart';
+import '../services/storage_service.dart';
 import '../services/unified_game_service.dart';
 import '../utils/logger.dart';
 
@@ -133,6 +134,20 @@ class QuizMatchService {
 
   /// Convert unified API response to legacy QuizMatchGameState
   QuizMatchGameState _convertToGameState(GamePlayResponse response) {
+    // Get current user ID to determine which player we are
+    final storage = StorageService();
+    final user = storage.getUser();
+    final userId = user?.id ?? '';
+
+    // The API returns userAnswers/partnerAnswers from the current user's perspective.
+    // We need to map these to player1/player2 based on whether we're player1.
+    // Since player IDs aren't returned by unified API, we use a sentinel value
+    // to indicate that answers are already from user's perspective.
+    //
+    // Set player1Id to the current user's ID so that in the results screen:
+    // - isPlayer1 will be true
+    // - userAnswers will correctly be player1Answers (our answers)
+    // - partnerAnswers will correctly be player2Answers
     final match = QuizMatch(
       id: response.match.id,
       quizId: response.match.quizId,
@@ -142,8 +157,8 @@ class QuizMatchService {
       player1Answers: response.result?.userAnswers ?? [],
       player2Answers: response.result?.partnerAnswers ?? [],
       matchPercentage: response.result?.matchPercentage,
-      player1Id: '',  // Not needed for UI
-      player2Id: '',  // Not needed for UI
+      player1Id: userId,  // Set to current user so isPlayer1 check works
+      player2Id: '',
       date: response.match.date,
       createdAt: DateTime.tryParse(response.match.createdAt) ?? DateTime.now(),
       completedAt: response.match.completedAt != null

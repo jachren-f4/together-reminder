@@ -1,0 +1,37 @@
+{
+  "quizId": "quiz_002",
+  "title": "Connection Quiz 2",
+  "branch": "connection",
+  "questions": [
+    {
+      "id": "quiz_002_q1",
+      "category": "vulnerability",
+      "prompt": "Who finds it easier to...",
+      "content": "Open up about fears and insecurities"
+    },
+    {
+      "id": "quiz_002_q2",
+      "category": "love_language",
+      "prompt": "Who shows love more through...",
+      "content": "Physical touch and affection"
+    },
+    {
+      "id": "quiz_002_q3",
+      "category": "attunement",
+      "prompt": "Who remembers more...",
+      "content": "Small details about the other"
+    },
+    {
+      "id": "quiz_002_q4",
+      "category": "expression",
+      "prompt": "Who says 'I love you' more...",
+      "content": "Throughout the day"
+    },
+    {
+      "id": "quiz_002_q5",
+      "category": "intimacy",
+      "prompt": "Who craves more...",
+      "content": "Emotional closeness"
+    }
+  ]
+}

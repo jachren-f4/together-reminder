@@ -1,0 +1,69 @@
+{
+  "quizId": "affirmation_002",
+  "title": "Trust Foundation",
+  "category": "attachment",
+  "branch": "attachment",
+  "description": "Rate your trust in each other",
+  "questions": [
+    {
+      "id": "affirmation_002_q1",
+      "text": "I can count on my partner to keep their promises.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ]
+    },
+    {
+      "id": "affirmation_002_q2",
+      "text": "My partner is honest with me, even when it's difficult.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ]
+    },
+    {
+      "id": "affirmation_002_q3",
+      "text": "I feel comfortable sharing secrets with my partner.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ]
+    },
+    {
+      "id": "affirmation_002_q4",
+      "text": "I believe my partner has my best interests at heart.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ]
+    },
+    {
+      "id": "affirmation_002_q5",
+      "text": "Our trust has grown stronger through challenges we've faced.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ]
+    }
+  ]
+}

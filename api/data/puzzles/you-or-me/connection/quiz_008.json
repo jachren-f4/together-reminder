@@ -1,0 +1,37 @@
+{
+  "quizId": "quiz_008",
+  "title": "Connection Quiz 8",
+  "branch": "connection",
+  "questions": [
+    {
+      "id": "quiz_008_q1",
+      "category": "needs",
+      "prompt": "Who needs more...",
+      "content": "Words of affirmation"
+    },
+    {
+      "id": "quiz_008_q2",
+      "category": "expression",
+      "prompt": "Who shows love more through...",
+      "content": "Acts of service"
+    },
+    {
+      "id": "quiz_008_q3",
+      "category": "connection",
+      "prompt": "Who craves more...",
+      "content": "Deep eye contact and presence"
+    },
+    {
+      "id": "quiz_008_q4",
+      "category": "vulnerability",
+      "prompt": "Who opens up more about...",
+      "content": "Past hurts and disappointments"
+    },
+    {
+      "id": "quiz_008_q5",
+      "category": "communication",
+      "prompt": "Who is more...",
+      "content": "Comfortable with silence together"
+    }
+  ]
+}

@@ -5,63 +5,60 @@
   "questions": [
     {
       "id": "quiz_009_q1",
-      "text": "What's my ideal noise level at home?",
+      "text": "What's my favorite style of clothing?",
       "choices": [
-        "Complete silence",
-        "Background noise",
-        "Music/TV on",
-        "Doesn't matter",
-        "Other / It varies"
-      ],
-      "category": "preferences"
-    },
-    {
-      "id": "quiz_009_q2",
-      "text": "What's my favorite flower?",
-      "choices": [
-        "Rose",
-        "Tulip",
-        "Sunflower",
-        "Lily",
+        "Casual",
+        "Sporty",
+        "Elegant",
+        "Trendy",
         "Other / Something else"
       ],
       "category": "favorites"
     },
     {
-      "id": "quiz_009_q3",
-      "text": "What's my favorite way to celebrate?",
+      "id": "quiz_009_q2",
+      "text": "Do I prefer routine or variety?",
       "choices": [
-        "Big party",
-        "Intimate dinner",
-        "Quiet night in",
-        "Adventure activity",
-        "Other / Something else"
+        "Strict routine",
+        "Mostly routine",
+        "Mostly variety",
+        "Constant change",
+        "Other / It depends"
       ],
       "category": "preferences"
     },
     {
-      "id": "quiz_009_q4",
-      "text": "What's my favorite podcast or YouTube genre?",
+      "id": "quiz_009_q3",
+      "text": "What's my favorite way to relax?",
       "choices": [
-        "True crime",
-        "Comedy",
-        "Educational",
-        "Vlogs",
+        "Reading",
+        "Watching TV",
+        "Napping",
+        "Listening to music",
+        "Other / Something else"
+      ],
+      "category": "favorites"
+    },
+    {
+      "id": "quiz_009_q4",
+      "text": "What's my favorite pizza topping?",
+      "choices": [
+        "Pepperoni",
+        "Mushrooms",
+        "Olives",
+        "Extra cheese",
         "Other / Something else"
       ],
       "category": "favorites"
     },
     {
       "id": "quiz_009_q5",
-      "text": "What's my favorite way to start the day?",
+      "text": "Would I rather: Give a gift or Receive a gift?",
       "choices": [
-        "Coffee",
-        "Exercise",
-        "Shower",
-        "Breakfast",
-        "Other / Something else"
+        "Give a gift",
+        "Receive a gift"
       ],
-      "category": "preferences"
+      "category": "would_you_rather"
     }
   ]
 }

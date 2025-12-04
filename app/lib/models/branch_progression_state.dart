@@ -12,10 +12,23 @@ enum BranchableActivityType {
 }
 
 /// Branch folder names per activity type
+/// For classic quiz, affirmation, and you-or-me:
+///   - First 2 are playful branches (40%)
+///   - Next 3 are deep/therapeutic branches (60%)
+/// All three game types use unified branch names for consistency.
 const Map<BranchableActivityType, List<String>> branchFolderNames = {
-  BranchableActivityType.classicQuiz: ['lighthearted', 'deeper', 'spicy'],
-  BranchableActivityType.affirmation: ['emotional', 'practical', 'spiritual'],
-  BranchableActivityType.youOrMe: ['playful', 'reflective', 'intimate'],
+  BranchableActivityType.classicQuiz: [
+    'lighthearted', 'playful',  // playful (40%)
+    'connection', 'attachment', 'growth',  // deep (60%)
+  ],
+  BranchableActivityType.affirmation: [
+    'lighthearted', 'playful',  // playful (40%)
+    'connection', 'attachment', 'growth',  // deep (60%)
+  ],
+  BranchableActivityType.youOrMe: [
+    'lighthearted', 'playful',  // playful (40%)
+    'connection', 'attachment', 'growth',  // deep (60%)
+  ],
   BranchableActivityType.linked: ['casual', 'romantic', 'adult'],
   BranchableActivityType.wordSearch: ['everyday', 'passionate', 'naughty'],
 };
@@ -70,9 +83,14 @@ class BranchProgressionState extends HiveObject {
     String coupleId,
     BranchableActivityType activityType,
   ) {
+    // Get the actual number of branches for this activity type
+    final branches = branchFolderNames[activityType] ?? [];
+    final branchCount = branches.isNotEmpty ? branches.length : 2;
+
     return BranchProgressionState(
       coupleId: coupleId,
       activityTypeIndex: activityType.index,
+      maxBranches: branchCount,
     );
   }
 
@@ -84,7 +102,7 @@ class BranchProgressionState extends HiveObject {
   String get currentBranchLetter =>
       String.fromCharCode('A'.codeUnitAt(0) + currentBranch);
 
-  /// Get the current branch folder name (e.g., 'lighthearted', 'deeper')
+  /// Get the current branch folder name (e.g., 'lighthearted', 'meaningful')
   String get currentBranchFolder {
     final folders = branchFolderNames[activityType];
     if (folders == null || currentBranch >= folders.length) {

@@ -1,0 +1,67 @@
+{
+  "quizId": "quiz_010",
+  "title": "Spontaneity vs. Planning",
+  "branch": "playful",
+  "questions": [
+    {
+      "id": "quiz_010_q1",
+      "text": "On a free weekend with no plans, I feel...",
+      "choices": [
+        "Excited by the open possibilities",
+        "A bit anxious without structure",
+        "Relieved to have no obligations",
+        "Motivated to plan something fun",
+        "Other / It depends"
+      ],
+      "category": "lifestyle"
+    },
+    {
+      "id": "quiz_010_q2",
+      "text": "When packing for a trip, I...",
+      "choices": [
+        "Throw things in last minute",
+        "Pack days ahead with a checklist",
+        "Pack the night before with essentials",
+        "Obsessively plan every outfit and item",
+        "Other / It depends"
+      ],
+      "category": "personality"
+    },
+    {
+      "id": "quiz_010_q3",
+      "text": "If invited to something spontaneous, I'm most likely to...",
+      "choices": [
+        "Say yes immediately - sounds fun!",
+        "Check my schedule and energy first",
+        "Feel torn between going and staying in",
+        "Usually decline - I prefer notice",
+        "Other / It depends"
+      ],
+      "category": "lifestyle"
+    },
+    {
+      "id": "quiz_010_q4",
+      "text": "My calendar or planner is...",
+      "choices": [
+        "Packed with color-coded details",
+        "Has major events but flexible otherwise",
+        "Mostly empty - I go with the flow",
+        "Digital and synced across all devices",
+        "Other / It depends"
+      ],
+      "category": "preferences"
+    },
+    {
+      "id": "quiz_010_q5",
+      "text": "When trying a new restaurant, I prefer to...",
+      "choices": [
+        "Walk in and see if there's a table",
+        "Make a reservation well in advance",
+        "Go during off-hours to avoid waits",
+        "Research reviews before deciding",
+        "Other / It depends"
+      ],
+      "category": "lifestyle"
+    }
+  ]
+}

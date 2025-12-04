@@ -1,0 +1,37 @@
+{
+  "quizId": "quiz_006",
+  "title": "Connection Quiz 6",
+  "branch": "connection",
+  "questions": [
+    {
+      "id": "quiz_006_q1",
+      "category": "expression",
+      "prompt": "Who shows love more through...",
+      "content": "Physical touch and affection"
+    },
+    {
+      "id": "quiz_006_q2",
+      "category": "communication",
+      "prompt": "Who prefers...",
+      "content": "Verbal affirmations and compliments"
+    },
+    {
+      "id": "quiz_006_q3",
+      "category": "connection",
+      "prompt": "Who initiates more...",
+      "content": "Meaningful check-ins during the day"
+    },
+    {
+      "id": "quiz_006_q4",
+      "category": "attunement",
+      "prompt": "Who is better at...",
+      "content": "Reading between the lines"
+    },
+    {
+      "id": "quiz_006_q5",
+      "category": "needs",
+      "prompt": "Who needs more...",
+      "content": "Emotional validation and empathy"
+    }
+  ]
+}

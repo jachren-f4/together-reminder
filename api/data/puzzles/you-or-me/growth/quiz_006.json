@@ -1,0 +1,37 @@
+{
+  "quizId": "quiz_006",
+  "title": "Growth Quiz 6",
+  "branch": "growth",
+  "questions": [
+    {
+      "id": "quiz_006_q1",
+      "category": "mutual_growth",
+      "prompt": "Who initiates more...",
+      "content": "Conversations about improving the relationship"
+    },
+    {
+      "id": "quiz_006_q2",
+      "category": "support",
+      "prompt": "Who is better at...",
+      "content": "Celebrating the other's achievements"
+    },
+    {
+      "id": "quiz_006_q3",
+      "category": "resilience",
+      "prompt": "Who handles stress better by...",
+      "content": "Staying calm and solution-focused"
+    },
+    {
+      "id": "quiz_006_q4",
+      "category": "goals",
+      "prompt": "Who has clearer...",
+      "content": "Personal development goals"
+    },
+    {
+      "id": "quiz_006_q5",
+      "category": "learning",
+      "prompt": "Who is more open to...",
+      "content": "Constructive feedback"
+    }
+  ]
+}

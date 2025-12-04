@@ -1,0 +1,39 @@
+{
+  "quizId": "affirmation_006",
+  "title": "Early Bird vs Night Owl",
+  "category": "playful",
+  "branch": "playful",
+  "description": "When are you at your best?",
+  "questions": [
+    {
+      "id": "affirmation_006_q1",
+      "text": "I'm more of an early bird than a night owl",
+      "type": "scale",
+      "scaleLabels": ["Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"]
+    },
+    {
+      "id": "affirmation_006_q2",
+      "text": "I wake up naturally without an alarm most days",
+      "type": "scale",
+      "scaleLabels": ["Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"]
+    },
+    {
+      "id": "affirmation_006_q3",
+      "text": "I get a second wind of energy in the evening",
+      "type": "scale",
+      "scaleLabels": ["Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"]
+    },
+    {
+      "id": "affirmation_006_q4",
+      "text": "I struggle to stay up late even for special occasions",
+      "type": "scale",
+      "scaleLabels": ["Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"]
+    },
+    {
+      "id": "affirmation_006_q5",
+      "text": "Late-night conversations are when I open up most",
+      "type": "scale",
+      "scaleLabels": ["Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"]
+    }
+  ]
+}

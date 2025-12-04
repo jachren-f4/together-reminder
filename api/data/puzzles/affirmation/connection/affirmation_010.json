@@ -1,0 +1,69 @@
+{
+  "quizId": "affirmation_010",
+  "title": "Emotional Safety",
+  "category": "connection",
+  "branch": "connection",
+  "description": "Rate the emotional safety in your relationship",
+  "questions": [
+    {
+      "id": "affirmation_010_q1",
+      "text": "I feel safe expressing my fears and insecurities to my partner.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ]
+    },
+    {
+      "id": "affirmation_010_q2",
+      "text": "My partner creates a space where I can be emotionally honest.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ]
+    },
+    {
+      "id": "affirmation_010_q3",
+      "text": "I trust that my vulnerabilities won't be used against me.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ]
+    },
+    {
+      "id": "affirmation_010_q4",
+      "text": "We can discuss difficult topics without fear of emotional harm.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ]
+    },
+    {
+      "id": "affirmation_010_q5",
+      "text": "My partner responds to my emotions with care and compassion.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,37 @@
+{
+  "quizId": "quiz_002",
+  "title": "Lighthearted Quiz 2",
+  "branch": "lighthearted",
+  "questions": [
+    {
+      "id": "quiz_002_q1",
+      "category": "social",
+      "prompt": "Who is more",
+      "content": "Likely to be the life of the party"
+    },
+    {
+      "id": "quiz_002_q2",
+      "category": "habits",
+      "prompt": "Who is more",
+      "content": "Likely to leave dishes in the sink overnight"
+    },
+    {
+      "id": "quiz_002_q3",
+      "category": "personality",
+      "prompt": "Who is more",
+      "content": "Likely to cry during emotional movie scenes"
+    },
+    {
+      "id": "quiz_002_q4",
+      "category": "preferences",
+      "prompt": "Who would rather",
+      "content": "Spend a rainy day baking or watching movies"
+    },
+    {
+      "id": "quiz_002_q5",
+      "category": "interests",
+      "prompt": "Who is more",
+      "content": "Likely to know the latest music trends"
+    }
+  ]
+}

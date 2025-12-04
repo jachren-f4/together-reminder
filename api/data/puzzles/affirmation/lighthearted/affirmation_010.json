@@ -1,0 +1,39 @@
+{
+  "quizId": "affirmation_010",
+  "title": "Laughter & Joy",
+  "category": "lighthearted",
+  "branch": "lighthearted",
+  "description": "The fun side of your relationship",
+  "questions": [
+    {
+      "id": "affirmation_010_q1",
+      "text": "Laughing together is essential for our relationship",
+      "type": "scale",
+      "scaleLabels": ["Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"]
+    },
+    {
+      "id": "affirmation_010_q2",
+      "text": "I appreciate playful teasing and inside jokes",
+      "type": "scale",
+      "scaleLabels": ["Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"]
+    },
+    {
+      "id": "affirmation_010_q3",
+      "text": "Spontaneous fun is more enjoyable than planned activities",
+      "type": "scale",
+      "scaleLabels": ["Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"]
+    },
+    {
+      "id": "affirmation_010_q4",
+      "text": "I enjoy being silly and goofy with my partner",
+      "type": "scale",
+      "scaleLabels": ["Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"]
+    },
+    {
+      "id": "affirmation_010_q5",
+      "text": "Humor helps us navigate difficult moments together",
+      "type": "scale",
+      "scaleLabels": ["Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"]
+    }
+  ]
+}

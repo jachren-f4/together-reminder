@@ -1,0 +1,282 @@
+[
+  {
+    "id": "attach_q1",
+    "question": "When we're apart, how do I typically feel?",
+    "options": [
+      "Secure and trusting",
+      "A little anxious but okay",
+      "I enjoy the independence",
+      "I miss you constantly",
+      "It depends on how we parted"
+    ],
+    "category": "separation",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "attach_q2",
+    "question": "How do I react when I feel like you're pulling away?",
+    "options": [
+      "Give you space and wait",
+      "Reach out more to reconnect",
+      "Feel anxious and need reassurance",
+      "Pull back myself",
+      "Try to talk about it directly"
+    ],
+    "category": "distance_response",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "attach_q3",
+    "question": "What's my biggest fear in our relationship?",
+    "options": [
+      "Being abandoned or left",
+      "Losing my independence",
+      "Not being good enough",
+      "Being misunderstood",
+      "Growing apart over time"
+    ],
+    "category": "fears",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "attach_q4",
+    "question": "How do I feel about depending on you?",
+    "options": [
+      "Completely comfortable",
+      "Mostly okay but cautious",
+      "I prefer to be self-reliant",
+      "I want to but it's hard",
+      "It depends on the situation"
+    ],
+    "category": "dependency",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "attach_q5",
+    "question": "What makes me feel most secure in our relationship?",
+    "options": [
+      "Consistent daily contact",
+      "Knowing you'll always be honest",
+      "Physical presence and affection",
+      "Shared long-term plans",
+      "Weathering challenges together"
+    ],
+    "category": "security",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "attach_q6",
+    "question": "When we disagree, what's my typical pattern?",
+    "options": [
+      "I need to resolve it quickly",
+      "I tend to withdraw first",
+      "I want to talk it through immediately",
+      "I need time to process alone",
+      "I look for compromise fast"
+    ],
+    "category": "conflict_style",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "attach_q7",
+    "question": "How easy is it for me to trust you completely?",
+    "options": [
+      "Very easy - I trust fully",
+      "Mostly easy with small doubts",
+      "It takes time but I get there",
+      "I struggle but I'm working on it",
+      "Trust comes and goes for me"
+    ],
+    "category": "trust",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "attach_q8",
+    "question": "What do I need when I feel insecure?",
+    "options": [
+      "Verbal reassurance",
+      "Quality time together",
+      "Space to self-soothe",
+      "Physical comfort",
+      "Understanding without judgment"
+    ],
+    "category": "insecurity_needs",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "attach_q9",
+    "question": "How do I handle it when you're stressed or distant?",
+    "options": [
+      "Give you space and wait",
+      "Try to help or fix things",
+      "Feel worried it's about us",
+      "Match your distance",
+      "Check in but not push"
+    ],
+    "category": "partner_stress",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "attach_q10",
+    "question": "What would I struggle with most if we broke up?",
+    "options": [
+      "The loss of companionship",
+      "Feeling rejected or not enough",
+      "Rebuilding my independence",
+      "Missing our daily routines",
+      "The emotional pain of loss"
+    ],
+    "category": "loss_fear",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "attach_q11",
+    "question": "How do I show that I need more closeness?",
+    "options": [
+      "I directly ask for it",
+      "I initiate physical contact",
+      "I become more attentive to you",
+      "I feel anxious or clingy",
+      "I hint but don't always say"
+    ],
+    "category": "closeness_seeking",
+    "difficulty": 2,
+    "tier": 2
+  },
+  {
+    "id": "attach_q12",
+    "question": "What from my past affects how I attach to you?",
+    "options": [
+      "Previous relationship hurts",
+      "Family patterns growing up",
+      "Past abandonment or loss",
+      "Learning to be independent",
+      "I've worked through most of it"
+    ],
+    "category": "attachment_history",
+    "difficulty": 2,
+    "tier": 2
+  },
+  {
+    "id": "attach_q13",
+    "question": "How comfortable am I asking for what I need?",
+    "options": [
+      "Very comfortable and direct",
+      "Somewhat - depends on the need",
+      "I often hint instead",
+      "I struggle and hold back",
+      "I'm learning to be better at it"
+    ],
+    "category": "needs_expression",
+    "difficulty": 2,
+    "tier": 2
+  },
+  {
+    "id": "attach_q14",
+    "question": "What triggers my anxiety in relationships?",
+    "options": [
+      "Unanswered messages",
+      "Changes in your mood",
+      "Mentions of exes or others",
+      "Time spent apart",
+      "I don't get anxious easily"
+    ],
+    "category": "anxiety_triggers",
+    "difficulty": 2,
+    "tier": 2
+  },
+  {
+    "id": "attach_q15",
+    "question": "How do I feel about being vulnerable with you?",
+    "options": [
+      "Safe and willing",
+      "Nervous but I try",
+      "I hold back to protect myself",
+      "It takes me time to open up",
+      "I'm more vulnerable than I show"
+    ],
+    "category": "vulnerability",
+    "difficulty": 2,
+    "tier": 2
+  },
+  {
+    "id": "attach_q16",
+    "question": "What's my pattern when I feel overwhelmed by closeness?",
+    "options": [
+      "I rarely feel overwhelmed",
+      "I need some alone time",
+      "I pull back a little",
+      "I might start small arguments",
+      "I communicate my need for space"
+    ],
+    "category": "closeness_overwhelm",
+    "difficulty": 2,
+    "tier": 2
+  },
+  {
+    "id": "attach_q17",
+    "question": "How do I recover after we've had a conflict?",
+    "options": [
+      "I need verbal reassurance",
+      "Physical reconnection helps",
+      "I need time alone first",
+      "I want to discuss what happened",
+      "I'm ready to move on quickly"
+    ],
+    "category": "conflict_recovery",
+    "difficulty": 2,
+    "tier": 2
+  },
+  {
+    "id": "attach_q18",
+    "question": "What helps me feel that our bond is strong?",
+    "options": [
+      "Regular affection and words",
+      "Handling stress as a team",
+      "Your commitment actions",
+      "Deep conversations",
+      "Consistency over time"
+    ],
+    "category": "bond_strength",
+    "difficulty": 2,
+    "tier": 2
+  },
+  {
+    "id": "attach_q19",
+    "question": "How do I balance needing you and being independent?",
+    "options": [
+      "I lean toward needing you more",
+      "I lean toward independence",
+      "I've found a good balance",
+      "It shifts depending on stress",
+      "I'm still figuring it out"
+    ],
+    "category": "balance",
+    "difficulty": 2,
+    "tier": 2
+  },
+  {
+    "id": "attach_q20",
+    "question": "What would help me feel more securely attached to you?",
+    "options": [
+      "More consistent communication",
+      "More physical affection",
+      "More quality time together",
+      "More verbal reassurance",
+      "I already feel very secure"
+    ],
+    "category": "security_building",
+    "difficulty": 2,
+    "tier": 2
+  }
+]

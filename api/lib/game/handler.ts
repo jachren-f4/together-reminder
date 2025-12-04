@@ -75,22 +75,25 @@ const GAME_CONFIG: Record<GameType, {
   isTurnBased: boolean;
 }> = {
   classic: {
-    branches: ['lighthearted', 'deep', 'spicy'],
-    activityType: 'classic_quiz',
+    // First 2 are playful (40%), next 3 are deep/therapeutic (60%)
+    branches: ['lighthearted', 'playful', 'connection', 'attachment', 'growth'],
+    activityType: 'classicQuiz',  // Match Flutter's BranchableActivityType.classicQuiz.name
     folder: 'classic-quiz',
     lpReward: 30,
     isTurnBased: false,
   },
   affirmation: {
-    branches: ['practical', 'emotional', 'spiritual'],
-    activityType: 'affirmation_quiz',
+    // First 2 are playful (40%), next 3 are deep/therapeutic (60%)
+    branches: ['lighthearted', 'playful', 'connection', 'attachment', 'growth'],
+    activityType: 'affirmation',  // Match Flutter's BranchableActivityType.affirmation.name
     folder: 'affirmation',
     lpReward: 30,
     isTurnBased: false,
   },
   you_or_me: {
-    branches: ['playful', 'reflective', 'intimate'],
-    activityType: 'you_or_me',
+    // First 2 are playful (40%), next 3 are deep/therapeutic (60%)
+    branches: ['lighthearted', 'playful', 'connection', 'attachment', 'growth'],
+    activityType: 'youOrMe',  // Match Flutter's BranchableActivityType.youOrMe.name
     folder: 'you-or-me',
     lpReward: 30,
     isTurnBased: true,
@@ -199,6 +202,51 @@ export async function getCurrentBranch(coupleId: string, gameType: GameType): Pr
   return config.branches[branchIndex % config.branches.length];
 }
 
+/**
+ * Advance branch progression after a game is completed.
+ *
+ * Formula: current_branch = total_completions % max_branches
+ * - After 1st completion: total=1, branch=1%5=1 (playful)
+ * - After 2nd completion: total=2, branch=2%5=2 (connection)
+ * - After 5th completion: total=5, branch=5%5=0 (back to lighthearted)
+ *
+ * Uses UPSERT to handle first-time creation vs update.
+ */
+export async function advanceBranch(coupleId: string, gameType: GameType): Promise<{ newBranch: number; totalCompletions: number }> {
+  const config = GAME_CONFIG[gameType];
+  const numBranches = config.branches.length;
+
+  return advanceBranchGeneric(coupleId, config.activityType, numBranches);
+}
+
+/**
+ * Generic branch advancement for any activity type.
+ * Used by both quiz games (via advanceBranch) and puzzle games (linked, word_search).
+ */
+export async function advanceBranchGeneric(
+  coupleId: string,
+  activityType: string,
+  numBranches: number
+): Promise<{ newBranch: number; totalCompletions: number }> {
+  const result = await query(
+    `INSERT INTO branch_progression (couple_id, activity_type, current_branch, total_completions, max_branches)
+     VALUES ($1, $2, 1, 1, $3)
+     ON CONFLICT (couple_id, activity_type)
+     DO UPDATE SET
+       total_completions = branch_progression.total_completions + 1,
+       current_branch = (branch_progression.total_completions + 1) % $3,
+       last_completed_at = NOW(),
+       updated_at = NOW()
+     RETURNING current_branch, total_completions`,
+    [coupleId, activityType, numBranches]
+  );
+
+  return {
+    newBranch: result.rows[0].current_branch,
+    totalCompletions: result.rows[0].total_completions,
+  };
+}
+
 // =============================================================================
 // Match Management
 // =============================================================================
@@ -206,23 +254,26 @@ export async function getCurrentBranch(coupleId: string, gameType: GameType): Pr
 export async function getOrCreateMatch(
   couple: CoupleInfo,
   gameType: GameType,
-  localDate: string
+  localDate: string,
+  options?: { forceNew?: boolean }
 ): Promise<{ match: GameMatch; quiz: any; isNew: boolean }> {
   const branch = await getCurrentBranch(couple.coupleId, gameType);
   const config = GAME_CONFIG[gameType];
 
-  // Check for existing match today
-  const existingResult = await query(
-    `SELECT * FROM quiz_matches
-     WHERE couple_id = $1 AND quiz_type = $2 AND date = $3
-     ORDER BY created_at DESC LIMIT 1`,
-    [couple.coupleId, gameType, localDate]
-  );
+  // Check for existing active match today (skip if forceNew for dev testing)
+  if (!options?.forceNew) {
+    const existingResult = await query(
+      `SELECT * FROM quiz_matches
+       WHERE couple_id = $1 AND quiz_type = $2 AND date = $3 AND status = 'active'
+       ORDER BY created_at DESC LIMIT 1`,
+      [couple.coupleId, gameType, localDate]
+    );
 
-  if (existingResult.rows.length > 0) {
-    const match = parseMatch(existingResult.rows[0]);
-    const quiz = loadQuiz(gameType, match.branch, match.quizId);
-    return { match, quiz, isNew: false };
+    if (existingResult.rows.length > 0) {
+      const match = parseMatch(existingResult.rows[0]);
+      const quiz = loadQuiz(gameType, match.branch, match.quizId);
+      return { match, quiz, isNew: false };
+    }
   }
 
   // Find next quiz
@@ -340,6 +391,9 @@ export async function submitAnswers(
     newStatus = 'completed';
     lpEarned = config.lpReward;
     await awardLP(couple.coupleId, lpEarned, `${match.quizType}_complete`, match.id);
+
+    // Advance branch progression
+    await advanceBranch(couple.coupleId, match.quizType);
   }
 
   // Update database

@@ -1,0 +1,39 @@
+{
+  "quizId": "affirmation_012",
+  "title": "Growing Together",
+  "category": "lighthearted",
+  "branch": "lighthearted",
+  "description": "Supporting each other's growth",
+  "questions": [
+    {
+      "id": "affirmation_012_q1",
+      "text": "We encourage each other to pursue individual interests",
+      "type": "scale",
+      "scaleLabels": ["Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"]
+    },
+    {
+      "id": "affirmation_012_q2",
+      "text": "Learning new things together strengthens our bond",
+      "type": "scale",
+      "scaleLabels": ["Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"]
+    },
+    {
+      "id": "affirmation_012_q3",
+      "text": "I value my partner's feedback and perspective",
+      "type": "scale",
+      "scaleLabels": ["Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"]
+    },
+    {
+      "id": "affirmation_012_q4",
+      "text": "We celebrate each other's accomplishments enthusiastically",
+      "type": "scale",
+      "scaleLabels": ["Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"]
+    },
+    {
+      "id": "affirmation_012_q5",
+      "text": "Personal growth makes our relationship stronger",
+      "type": "scale",
+      "scaleLabels": ["Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"]
+    }
+  ]
+}

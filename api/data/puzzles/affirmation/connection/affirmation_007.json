@@ -1,0 +1,69 @@
+{
+  "quizId": "affirmation_007",
+  "title": "Words of Love",
+  "category": "connection",
+  "branch": "connection",
+  "description": "Rate how verbal affirmation strengthens your bond",
+  "questions": [
+    {
+      "id": "affirmation_007_q1",
+      "text": "Hearing 'I love you' from my partner never gets old.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ]
+    },
+    {
+      "id": "affirmation_007_q2",
+      "text": "My partner's compliments make me feel genuinely appreciated.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ]
+    },
+    {
+      "id": "affirmation_007_q3",
+      "text": "We verbally acknowledge each other's efforts and strengths.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ]
+    },
+    {
+      "id": "affirmation_007_q4",
+      "text": "Kind words from my partner can turn my whole day around.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ]
+    },
+    {
+      "id": "affirmation_007_q5",
+      "text": "I make a point to tell my partner what I admire about them.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ]
+    }
+  ]
+}

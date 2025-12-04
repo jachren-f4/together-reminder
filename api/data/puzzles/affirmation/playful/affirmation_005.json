@@ -1,0 +1,39 @@
+{
+  "quizId": "affirmation_005",
+  "title": "Active vs Relaxed",
+  "category": "playful",
+  "branch": "playful",
+  "description": "How you spend free time",
+  "questions": [
+    {
+      "id": "affirmation_005_q1",
+      "text": "I prefer active outings over relaxing at home",
+      "type": "scale",
+      "scaleLabels": ["Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"]
+    },
+    {
+      "id": "affirmation_005_q2",
+      "text": "I feel better when I'm moving and staying active",
+      "type": "scale",
+      "scaleLabels": ["Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"]
+    },
+    {
+      "id": "affirmation_005_q3",
+      "text": "A perfect day includes physical activity or exercise",
+      "type": "scale",
+      "scaleLabels": ["Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"]
+    },
+    {
+      "id": "affirmation_005_q4",
+      "text": "I recharge by slowing down and resting",
+      "type": "scale",
+      "scaleLabels": ["Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"]
+    },
+    {
+      "id": "affirmation_005_q5",
+      "text": "I enjoy competitive activities and games",
+      "type": "scale",
+      "scaleLabels": ["Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"]
+    }
+  ]
+}
