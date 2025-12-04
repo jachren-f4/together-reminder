@@ -165,22 +165,28 @@ class CouplePairingService {
     // Use async token check to avoid race condition with auth state updates
     final token = await _authService.getAccessToken();
     if (token == null) {
+      Logger.debug('getStatus: No auth token, returning null', service: 'pairing');
       return null;
     }
 
     try {
+      Logger.debug('getStatus: Calling /api/couples/status...', service: 'pairing');
       final response = await _apiClient.get('/api/couples/status');
 
       if (!response.success) {
+        Logger.debug('getStatus: API call failed - ${response.error}', service: 'pairing');
         return null;
       }
 
       final data = response.data as Map<String, dynamic>;
+      Logger.debug('getStatus: Response data: $data', service: 'pairing');
 
       if (data['isPaired'] != true) {
+        Logger.debug('getStatus: isPaired is not true', service: 'pairing');
         return null;
       }
 
+      Logger.success('getStatus: Found couple! Partner: ${data['partnerName']}', service: 'pairing');
       return CoupleStatus(
         coupleId: data['coupleId'] as String,
         partnerId: data['partnerId'] as String,

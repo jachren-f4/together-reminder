@@ -1,5 +1,10 @@
+import 'dart:io' show Platform;
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
+import 'package:sign_in_with_apple/sign_in_with_apple.dart';
+import 'package:togetherremind/screens/auth_screen.dart';
 import 'package:togetherremind/screens/name_entry_screen.dart';
+import 'package:togetherremind/services/auth_service.dart';
 import 'package:togetherremind/theme/app_theme.dart';
 import 'package:togetherremind/widgets/newspaper/newspaper_widgets.dart';
 
@@ -11,16 +16,38 @@ class OnboardingScreen extends StatefulWidget {
 }
 
 class _OnboardingScreenState extends State<OnboardingScreen> {
+  final AuthService _authService = AuthService();
   bool _isLoading = false;
 
-  Future<void> _handleGetStarted() async {
+  /// Check if Apple Sign-In is available (iOS only for now)
+  /// TODO: Set to true once Apple Developer Portal and Supabase are configured
+  bool get _isAppleSignInAvailable {
+    return false; // Disabled until portal configuration is complete
+    // if (kIsWeb) return false;
+    // return Platform.isIOS;
+  }
+
+  Future<void> _handleAppleSignIn() async {
     setState(() => _isLoading = true);
 
     try {
-      if (mounted) {
-        Navigator.of(context).push(
+      final result = await _authService.signInWithApple();
+
+      if (!mounted) return;
+
+      if (result['success'] == true) {
+        // Navigate to name entry screen (which will check if name is already set)
+        Navigator.of(context).pushReplacement(
           MaterialPageRoute(
             builder: (context) => const NameEntryScreen(),
+          ),
+        );
+      } else if (result['cancelled'] != true) {
+        // Show error only if not cancelled by user
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Sign in failed. Please try again.'),
+            backgroundColor: Colors.red,
           ),
         );
       }
@@ -31,12 +58,33 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     }
   }
 
+  Future<void> _handleEmailSignIn() async {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => const AuthScreen(),
+      ),
+    );
+  }
+
+  /// Build the Apple Sign-In button using the official Apple style
+  Widget _buildAppleSignInButton() {
+    return SizedBox(
+      width: double.infinity,
+      height: 50,
+      child: SignInWithAppleButton(
+        onPressed: _isLoading ? () {} : _handleAppleSignIn,
+        style: SignInWithAppleButtonStyle.black,
+        borderRadius: const BorderRadius.all(Radius.circular(8)),
+        text: 'Continue with Apple',
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        color: NewspaperColors.surface,
-        child: SafeArea(
+      backgroundColor: NewspaperColors.surface,
+      body: SafeArea(
           child: Column(
             children: [
               // Masthead
@@ -117,25 +165,40 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 ),
                 child: Column(
                   children: [
-                    NewspaperPrimaryButton(
-                      text: 'Begin Your Story',
-                      onPressed: _handleGetStarted,
-                      isLoading: _isLoading,
-                    ),
+                    // Apple Sign-In button (iOS only) or Email button (other platforms)
+                    if (_isAppleSignInAvailable)
+                      _buildAppleSignInButton()
+                    else
+                      NewspaperPrimaryButton(
+                        text: 'Continue with Email',
+                        onPressed: _handleEmailSignIn,
+                        isLoading: _isLoading,
+                      ),
                     const SizedBox(height: 16),
+
+                    // "Don't have Apple ID?" link (iOS only)
+                    if (_isAppleSignInAvailable)
+                      NewspaperSignInLink(
+                        text: "No Apple ID?",
+                        linkText: 'Use email instead',
+                        onTap: _handleEmailSignIn,
+                      ),
+
+                    // Spacing between the two links
+                    if (_isAppleSignInAvailable)
+                      const SizedBox(height: 8),
+
+                    // "Returning reader?" link
                     NewspaperSignInLink(
                       text: 'Returning reader?',
                       linkText: 'Sign in here',
-                      onTap: () {
-                        // TODO: Navigate to sign in flow
-                      },
+                      onTap: _handleEmailSignIn,
                     ),
                   ],
                 ),
               ),
             ],
           ),
-        ),
       ),
     );
   }

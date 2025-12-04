@@ -1,37 +1,35 @@
 #!/bin/bash
 
 # =============================================================================
-# FULL PROGRESS RESET - Wipes ALL progress for a couple
+# WIPE ALL ACCOUNTS & DATA - Nuclear option for complete reset
 # =============================================================================
 #
-# This script completely resets:
-#   1. Supabase tables (quests, games, LP, progression)
-#   2. Android Hive (uninstalls app)
-#   3. Chrome Hive (instructions provided)
+# This script wipes EVERYTHING except John & Jane dummy accounts:
+#   1. Deletes all users and their couples from Supabase
+#   2. Clears all game progress, quests, LP, etc.
+#   3. Clears Android app data (uninstalls)
+#   4. Clears Chrome IndexedDB
 #
-# Note: Firebase RTDB has been removed - all sync now uses Supabase
+# Protected accounts (NOT deleted):
+#   - john@test.local
+#   - jane@test.local
+#   - Their couple (11111111-1111-1111-1111-111111111111)
 #
 # Usage:
-#   ./scripts/reset_all_progress.sh [coupleId]
-#
-# If no coupleId provided, uses dev test couple: 11111111-1111-1111-1111-111111111111
+#   ./scripts/wipe_all.sh
 #
 # =============================================================================
 
-COUPLE_ID="${1:-11111111-1111-1111-1111-111111111111}"
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ROOT_DIR="$(dirname "$SCRIPT_DIR")"
 
 echo ""
 echo "╔════════════════════════════════════════════════════════════╗"
-echo "║           FULL PROGRESS RESET                              ║"
-echo "╠════════════════════════════════════════════════════════════╣"
-echo "║  Couple: $COUPLE_ID  ║"
+echo "║         WIPE ALL ACCOUNTS & DATA                           ║"
+echo "║         (except John & Jane dummy accounts)                ║"
 echo "╚════════════════════════════════════════════════════════════╝"
 echo ""
-echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-echo "STEP 1/3: Reset Supabase"
-echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+
 cd "$ROOT_DIR/api"
 
 # Source environment variables
@@ -39,7 +37,10 @@ if [ -f .env.local ]; then
     export $(grep -v '^#' .env.local | xargs)
 fi
 
-npx tsx scripts/reset_couple_progress.ts "$COUPLE_ID"
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+echo "STEP 1/3: Wipe All Accounts from Supabase"
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+npx tsx scripts/wipe_all_accounts.ts
 
 echo ""
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
@@ -97,27 +98,24 @@ fi
 
 echo ""
 echo "╔════════════════════════════════════════════════════════════╗"
-echo "║                    RESET COMPLETE                          ║"
+echo "║                    WIPE COMPLETE                           ║"
 echo "╚════════════════════════════════════════════════════════════╝"
 echo ""
-echo "✅ Supabase: Cleared"
-echo "✅ Android:  App uninstalled (Hive cleared)"
-echo "✅ Chrome:   IndexedDB cleared"
+echo "✅ All accounts wiped (except John & Jane)"
+echo "✅ All progress cleared"
+echo "✅ Android: App uninstalled"
+echo "✅ Chrome:  IndexedDB cleared"
 echo ""
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-echo "NEXT STEPS:"
+echo "REMAINING IN DATABASE:"
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 echo ""
-echo "Launch fresh apps:"
-echo "   cd $ROOT_DIR/app"
-echo "   flutter run -d emulator-5554 --flavor togetherremind --dart-define=BRAND=togetherRemind &"
-echo "   sleep 3"
-echo "   flutter run -d chrome --dart-define=BRAND=togetherRemind &"
+echo "   Users:"
+echo "   - john@test.local"
+echo "   - jane@test.local"
 echo ""
-echo "Or use: /runtogether"
+echo "   Couple:"
+echo "   - 11111111-1111-1111-1111-111111111111"
 echo ""
-echo "Verify in app:"
-echo "   - LP should show 0"
-echo "   - Daily quests should show 'Begin together'"
-echo "   - No completed games in history"
+echo "For iOS physical devices, uninstall the app manually."
 echo ""

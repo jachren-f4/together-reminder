@@ -62,7 +62,9 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
 
       if (success) {
         if (mounted) {
-          Navigator.of(context).popUntil((route) => route.isFirst);
+          // Clear entire navigation stack and return to root
+          // This lets AuthWrapper re-evaluate auth state and show correct screen
+          Navigator.of(context).pushNamedAndRemoveUntil('/', (route) => false);
         }
       } else {
         setState(() {

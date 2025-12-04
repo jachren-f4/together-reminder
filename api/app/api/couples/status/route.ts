@@ -24,6 +24,8 @@ export const GET = withRateLimit(
   RateLimitPresets.sync,
   withAuth(async (req, userId) => {
     try {
+      console.log(`[Couple Status] Checking status for user: ${userId}`);
+
       // Check if user is in a couple
       const coupleResult = await query(
         `SELECT
@@ -38,7 +40,10 @@ export const GET = withRateLimit(
         [userId]
       );
 
+      console.log(`[Couple Status] Query returned ${coupleResult.rows.length} rows for user ${userId}`);
+
       if (coupleResult.rows.length === 0) {
+        console.log(`[Couple Status] User ${userId} is NOT paired`);
         return NextResponse.json({
           isPaired: false,
         });

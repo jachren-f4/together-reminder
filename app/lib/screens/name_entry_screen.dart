@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:togetherremind/screens/auth_screen.dart';
 import 'package:togetherremind/services/storage_service.dart';
 import 'package:togetherremind/services/auth_service.dart';
@@ -16,6 +17,7 @@ class NameEntryScreen extends StatefulWidget {
 
 class _NameEntryScreenState extends State<NameEntryScreen> {
   final _nameController = TextEditingController();
+  final _secureStorage = const FlutterSecureStorage();
   bool _isLoading = false;
 
   @override
@@ -74,12 +76,21 @@ class _NameEntryScreenState extends State<NameEntryScreen> {
         await authService.updateDisplayName(name);
       }
 
+      // Mark onboarding as completed so user won't see it again
+      await _secureStorage.write(key: 'has_completed_onboarding', value: 'true');
+
       if (mounted) {
-        Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (context) => const AuthScreen(),
-          ),
-        );
+        // If user is already authenticated, go back to root (AuthWrapper will show PairingScreen)
+        // Otherwise, show AuthScreen for login
+        if (authService.isAuthenticated) {
+          Navigator.of(context).pushNamedAndRemoveUntil('/', (route) => false);
+        } else {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => const AuthScreen(),
+            ),
+          );
+        }
       }
     } finally {
       if (mounted) {

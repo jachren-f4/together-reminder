@@ -1,37 +1,30 @@
 #!/bin/bash
 
 # =============================================================================
-# FULL PROGRESS RESET - Wipes ALL progress for a couple
+# WIPE TEST ACCOUNTS & FULL RESET - Complete cleanup for testing
 # =============================================================================
 #
-# This script completely resets:
-#   1. Supabase tables (quests, games, LP, progression)
-#   2. Android Hive (uninstalls app)
-#   3. Chrome Hive (instructions provided)
-#
-# Note: Firebase RTDB has been removed - all sync now uses Supabase
+# This script does everything:
+#   1. Wipes test accounts (joakim.achren@fingersoft.net, joachren@gmail.com)
+#   2. Resets dev couple progress (11111111-1111-1111-1111-111111111111)
+#   3. Clears Android app data (uninstalls)
+#   4. Clears Chrome IndexedDB
 #
 # Usage:
-#   ./scripts/reset_all_progress.sh [coupleId]
-#
-# If no coupleId provided, uses dev test couple: 11111111-1111-1111-1111-111111111111
+#   ./scripts/wipe_and_reset.sh
 #
 # =============================================================================
 
-COUPLE_ID="${1:-11111111-1111-1111-1111-111111111111}"
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ROOT_DIR="$(dirname "$SCRIPT_DIR")"
+DEV_COUPLE_ID="11111111-1111-1111-1111-111111111111"
 
 echo ""
 echo "╔════════════════════════════════════════════════════════════╗"
-echo "║           FULL PROGRESS RESET                              ║"
-echo "╠════════════════════════════════════════════════════════════╣"
-echo "║  Couple: $COUPLE_ID  ║"
+echo "║         WIPE TEST ACCOUNTS & FULL RESET                    ║"
 echo "╚════════════════════════════════════════════════════════════╝"
 echo ""
-echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-echo "STEP 1/3: Reset Supabase"
-echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+
 cd "$ROOT_DIR/api"
 
 # Source environment variables
@@ -39,11 +32,21 @@ if [ -f .env.local ]; then
     export $(grep -v '^#' .env.local | xargs)
 fi
 
-npx tsx scripts/reset_couple_progress.ts "$COUPLE_ID"
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+echo "STEP 1/4: Wipe Test Accounts from Supabase"
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+npx tsx scripts/wipe_test_accounts.ts
 
 echo ""
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-echo "STEP 2/3: Clear Android Hive (Uninstall App)"
+echo "STEP 2/4: Reset Dev Couple Progress"
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+echo "   Couple: $DEV_COUPLE_ID"
+npx tsx scripts/reset_couple_progress.ts "$DEV_COUPLE_ID"
+
+echo ""
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+echo "STEP 3/4: Clear Android Hive (Uninstall App)"
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 echo ""
 ADB=~/Library/Android/sdk/platform-tools/adb
@@ -58,7 +61,7 @@ fi
 
 echo ""
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-echo "STEP 3/3: Clear Chrome Hive (IndexedDB)"
+echo "STEP 4/4: Clear Chrome Hive (IndexedDB)"
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 echo ""
 
@@ -100,24 +103,18 @@ echo "╔═══════════════════════�
 echo "║                    RESET COMPLETE                          ║"
 echo "╚════════════════════════════════════════════════════════════╝"
 echo ""
-echo "✅ Supabase: Cleared"
-echo "✅ Android:  App uninstalled (Hive cleared)"
-echo "✅ Chrome:   IndexedDB cleared"
+echo "✅ Test accounts: Wiped (if they existed)"
+echo "✅ Dev couple:    Progress reset to zero"
+echo "✅ Android:       App uninstalled (Hive cleared)"
+echo "✅ Chrome:        IndexedDB cleared"
 echo ""
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 echo "NEXT STEPS:"
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 echo ""
-echo "Launch fresh apps:"
-echo "   cd $ROOT_DIR/app"
-echo "   flutter run -d emulator-5554 --flavor togetherremind --dart-define=BRAND=togetherRemind &"
-echo "   sleep 3"
-echo "   flutter run -d chrome --dart-define=BRAND=togetherRemind &"
+echo "For iOS physical devices, uninstall the app manually."
 echo ""
-echo "Or use: /runtogether"
-echo ""
-echo "Verify in app:"
-echo "   - LP should show 0"
-echo "   - Daily quests should show 'Begin together'"
-echo "   - No completed games in history"
+echo "Test emails ready for fresh signup:"
+echo "   - joakim.achren@fingersoft.net"
+echo "   - joachren@gmail.com"
 echo ""
