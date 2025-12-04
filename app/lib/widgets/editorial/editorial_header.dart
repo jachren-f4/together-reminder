@@ -126,8 +126,8 @@ class _ProgressBar extends StatelessWidget {
     return Container(
       height: 4,
       color: EditorialStyles.inkLight,
+      alignment: Alignment.centerLeft,
       child: FractionallySizedBox(
-        alignment: Alignment.centerLeft,
         widthFactor: progress.clamp(0.0, 1.0),
         child: Container(
           color: EditorialStyles.ink,

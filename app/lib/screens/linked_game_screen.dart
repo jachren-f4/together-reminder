@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
 import '../exceptions/game_exceptions.dart';
 import '../services/linked_service.dart';
@@ -13,6 +12,7 @@ import '../widgets/linked/partner_first_dialog.dart';
 import 'linked_completion_screen.dart';
 import '../config/brand/brand_loader.dart';
 import '../theme/app_theme.dart';
+import '../mixins/game_polling_mixin.dart';
 
 /// Main game screen for Linked (arroword puzzle game)
 /// Design matches mockups/crossword/interactive-gameplay.html
@@ -23,7 +23,8 @@ class LinkedGameScreen extends StatefulWidget {
   State<LinkedGameScreen> createState() => _LinkedGameScreenState();
 }
 
-class _LinkedGameScreenState extends State<LinkedGameScreen> {
+class _LinkedGameScreenState extends State<LinkedGameScreen>
+    with GamePollingMixin {
   final LinkedService _service = LinkedService();
 
   LinkedGameState? _gameState;
@@ -52,9 +53,23 @@ class _LinkedGameScreenState extends State<LinkedGameScreen> {
   // Word completion animation state (show one at a time)
   int _currentWordIndex = -1; // -1 means no word showing
 
-  // Polling timer
-  Timer? _pollTimer;
-  static const _pollInterval = Duration(seconds: 10);
+  // GamePollingMixin overrides
+  @override
+  bool get shouldPoll => !_isLoading && !_isSubmitting && _gameState != null && !_gameState!.isMyTurn;
+
+  @override
+  Future<void> onPollUpdate() async {
+    final newState = await _service.pollMatchState(_gameState!.match.matchId);
+    if (mounted) {
+      final wasPartnerTurn = !_gameState!.isMyTurn;
+      setState(() => _gameState = newState);
+
+      if (wasPartnerTurn && newState.isMyTurn) {
+        _showToast("It's your turn!");
+      }
+      _checkGameCompletion();
+    }
+  }
 
   @override
   void initState() {
@@ -64,34 +79,8 @@ class _LinkedGameScreenState extends State<LinkedGameScreen> {
 
   @override
   void dispose() {
-    _pollTimer?.cancel();
+    cancelPolling();
     super.dispose();
-  }
-
-  void _startPolling() {
-    _pollTimer?.cancel();
-    _pollTimer = Timer.periodic(_pollInterval, (_) {
-      if (!_isLoading && !_isSubmitting && _gameState != null && !_gameState!.isMyTurn) {
-        _pollForUpdate();
-      }
-    });
-  }
-
-  Future<void> _pollForUpdate() async {
-    try {
-      final newState = await _service.pollMatchState(_gameState!.match.matchId);
-      if (mounted) {
-        final wasPartnerTurn = !_gameState!.isMyTurn;
-        setState(() => _gameState = newState);
-
-        if (wasPartnerTurn && newState.isMyTurn) {
-          _showToast("It's your turn!");
-        }
-        _checkGameCompletion();
-      }
-    } catch (e) {
-      // Silent failure for polling
-    }
   }
 
   // Track if cooldown is active
@@ -107,10 +96,8 @@ class _LinkedGameScreenState extends State<LinkedGameScreen> {
     try {
       final gameState = await _service.getOrCreateMatch();
       if (mounted) {
-        // Check if this is a new puzzle where partner goes first
-        // Show dialog if: not my turn AND turn number is 1 (fresh puzzle)
-        final isNewPuzzlePartnerFirst =
-            !gameState.isMyTurn && gameState.match.turnNumber == 1;
+        // Show dialog if it's not my turn when entering the game
+        final showPartnerTurnDialog = !gameState.isMyTurn;
 
         setState(() {
           _gameState = gameState;
@@ -121,11 +108,11 @@ class _LinkedGameScreenState extends State<LinkedGameScreen> {
           _highlightedCells.clear();
           _cellAnimations.clear();
           _showTurnComplete = false;
-          _showPartnerFirst = isNewPuzzlePartnerFirst;
+          _showPartnerFirst = showPartnerTurnDialog;
           _currentWordIndex = -1;
           _lastResult = null;
         });
-        _startPolling();
+        startPolling();
         _checkGameCompletion();
       }
     } on CooldownActiveException catch (e) {
@@ -150,7 +137,7 @@ class _LinkedGameScreenState extends State<LinkedGameScreen> {
     if (_gameState == null) return;
     final match = _gameState!.match;
     if (match.status == 'completed') {
-      _pollTimer?.cancel();
+      cancelPolling();
       _navigateToCompletionWithLPSync(match);
     }
   }
@@ -401,8 +388,9 @@ class _LinkedGameScreenState extends State<LinkedGameScreen> {
                 'You: ${_gameState!.myScore}',
                 style: TextStyle(
                   fontSize: 13,
-                  fontWeight: _gameState!.isMyTurn ? FontWeight.w700 : FontWeight.w400,
+                  fontWeight: FontWeight.w700,
                   fontFamily: 'Georgia',
+                  color: BrandLoader().colors.textPrimary,
                 ),
               ),
               const SizedBox(width: 12),
@@ -421,8 +409,9 @@ class _LinkedGameScreenState extends State<LinkedGameScreen> {
                 '$partnerName: ${_gameState!.partnerScore}',
                 style: TextStyle(
                   fontSize: 13,
-                  fontWeight: !_gameState!.isMyTurn ? FontWeight.w700 : FontWeight.w400,
+                  fontWeight: FontWeight.w700,
                   fontFamily: 'Georgia',
+                  color: BrandLoader().colors.textPrimary,
                 ),
               ),
             ],

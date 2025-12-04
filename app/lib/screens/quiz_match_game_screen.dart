@@ -7,6 +7,7 @@ import '../services/haptic_service.dart';
 import '../services/sound_service.dart';
 import '../utils/logger.dart';
 import '../widgets/editorial/editorial.dart';
+import '../widgets/daily_quests_widget.dart' show questRouteObserver;
 import 'quiz_match_waiting_screen.dart';
 import 'quiz_match_results_screen.dart';
 
@@ -31,8 +32,11 @@ class QuizMatchGameScreen extends StatefulWidget {
 }
 
 class _QuizMatchGameScreenState extends State<QuizMatchGameScreen>
-    with TickerProviderStateMixin {
+    with TickerProviderStateMixin, RouteAware {
   final QuizMatchService _service = QuizMatchService();
+
+  /// Track match ID to detect when server returns a different quiz
+  String? _currentMatchId;
 
   // Animation controllers
   late AnimationController _slideController;
@@ -78,7 +82,62 @@ class _QuizMatchGameScreenState extends State<QuizMatchGameScreen>
   }
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // Subscribe to route events to detect when returning from debug menu
+    final route = ModalRoute.of(context);
+    if (route != null) {
+      questRouteObserver.subscribe(this, route);
+    }
+  }
+
+  @override
+  void didPopNext() {
+    // Called when a route (e.g., debug dialog) has been popped off
+    // Reload game state in case branch was advanced via debug menu
+    Logger.debug('Route popped - reloading quiz state', service: 'quiz');
+    _reloadIfMatchChanged();
+  }
+
+  /// Check if server has a different match and reload if needed
+  Future<void> _reloadIfMatchChanged() async {
+    if (!mounted || _selectedAnswers.isNotEmpty) {
+      // Don't reload if user has already started answering
+      return;
+    }
+
+    try {
+      final newState = await _service.getOrCreateMatch(widget.quizType);
+      if (!mounted) return;
+
+      // If the match ID changed, the debug menu advanced to a new quiz
+      if (_currentMatchId != null && newState.match.id != _currentMatchId) {
+        Logger.info(
+          'Quiz match changed: $_currentMatchId -> ${newState.match.id}',
+          service: 'quiz',
+        );
+        // Reset UI state and reload
+        setState(() {
+          _gameState = newState;
+          _currentMatchId = newState.match.id;
+          _currentQuestionIndex = 0;
+          _selectedAnswers.clear();
+          _tempSelectedAnswer = null;
+          _isLoading = false;
+          _error = null;
+        });
+        // Restart entrance animation
+        _slideController.reset();
+        _slideController.forward();
+      }
+    } catch (e) {
+      Logger.warn('Failed to check for match changes: $e', service: 'quiz');
+    }
+  }
+
+  @override
   void dispose() {
+    questRouteObserver.unsubscribe(this);
     _slideController.dispose();
     _service.stopPolling();
     super.dispose();
@@ -122,6 +181,7 @@ class _QuizMatchGameScreenState extends State<QuizMatchGameScreen>
 
       setState(() {
         _gameState = gameState;
+        _currentMatchId = gameState.match.id;
         _isLoading = false;
       });
 
@@ -269,59 +329,65 @@ class _QuizMatchGameScreenState extends State<QuizMatchGameScreen>
   @override
   Widget build(BuildContext context) {
     if (_isLoading) {
-      return Scaffold(
-        backgroundColor: EditorialStyles.paper,
-        body: SafeArea(
-          child: Column(
-            children: [
-              EditorialHeader(
-                title: _getQuizTitle(),
-                onClose: () => Navigator.of(context).pop(),
-              ),
-              const Expanded(
-                child: Center(
-                  child: CircularProgressIndicator(),
+      return PopScope(
+        canPop: false,
+        child: Scaffold(
+          backgroundColor: EditorialStyles.paper,
+          body: SafeArea(
+            child: Column(
+              children: [
+                EditorialHeader(
+                  title: _getQuizTitle(),
+                  onClose: () => Navigator.of(context).pop(),
                 ),
-              ),
-            ],
+                const Expanded(
+                  child: Center(
+                    child: CircularProgressIndicator(),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       );
     }
 
     if (_error != null) {
-      return Scaffold(
-        backgroundColor: EditorialStyles.paper,
-        body: SafeArea(
-          child: Column(
-            children: [
-              EditorialHeader(
-                title: _getQuizTitle(),
-                onClose: () => Navigator.of(context).pop(),
-              ),
-              Expanded(
-                child: Center(
-                  child: Padding(
-                    padding: const EdgeInsets.all(20),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          _error!,
-                          style: EditorialStyles.bodyText,
-                          textAlign: TextAlign.center,
-                        ),
-                        const SizedBox(height: 20),
-                        EditorialPrimaryButton(
-                          label: 'Try Again',
-                          onPressed: _loadGameState,
-                        ),
-                      ],
+      return PopScope(
+        canPop: false,
+        child: Scaffold(
+          backgroundColor: EditorialStyles.paper,
+          body: SafeArea(
+            child: Column(
+              children: [
+                EditorialHeader(
+                  title: _getQuizTitle(),
+                  onClose: () => Navigator.of(context).pop(),
+                ),
+                Expanded(
+                  child: Center(
+                    child: Padding(
+                      padding: const EdgeInsets.all(20),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            _error!,
+                            style: EditorialStyles.bodyText,
+                            textAlign: TextAlign.center,
+                          ),
+                          const SizedBox(height: 20),
+                          EditorialPrimaryButton(
+                            label: 'Try Again',
+                            onPressed: _loadGameState,
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       );
@@ -329,21 +395,24 @@ class _QuizMatchGameScreenState extends State<QuizMatchGameScreen>
 
     final questions = _gameState?.quiz?.questions ?? [];
     if (questions.isEmpty) {
-      return Scaffold(
-        backgroundColor: EditorialStyles.paper,
-        body: SafeArea(
-          child: Column(
-            children: [
-              EditorialHeader(
-                title: _getQuizTitle(),
-                onClose: () => Navigator.of(context).pop(),
-              ),
-              const Expanded(
-                child: Center(
-                  child: Text('No questions available'),
+      return PopScope(
+        canPop: false,
+        child: Scaffold(
+          backgroundColor: EditorialStyles.paper,
+          body: SafeArea(
+            child: Column(
+              children: [
+                EditorialHeader(
+                  title: _getQuizTitle(),
+                  onClose: () => Navigator.of(context).pop(),
                 ),
-              ),
-            ],
+                const Expanded(
+                  child: Center(
+                    child: Text('No questions available'),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       );
@@ -353,9 +422,11 @@ class _QuizMatchGameScreenState extends State<QuizMatchGameScreen>
     final progress = (_currentQuestionIndex + 1) / questions.length;
     final isAffirmation = widget.quizType == 'affirmation';
 
-    return Scaffold(
-      backgroundColor: EditorialStyles.paper,
-      body: SafeArea(
+    return PopScope(
+      canPop: false,
+      child: Scaffold(
+        backgroundColor: EditorialStyles.paper,
+        body: SafeArea(
         child: Column(
           children: [
             // Combined header with progress
@@ -449,6 +520,7 @@ class _QuizMatchGameScreenState extends State<QuizMatchGameScreen>
             ),
           ],
         ),
+      ),
       ),
     );
   }

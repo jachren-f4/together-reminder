@@ -250,7 +250,7 @@ class LovePointService {
           _appContext!,
           title: 'Love Points Synced!',
           message: '+$lpDiff LP',
-          emoji: '💰',
+          emoji: '🤍',
         );
       }
 
