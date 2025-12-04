@@ -13,7 +13,43 @@ class DevConfig {
   /// Set to false when you need to test auth/onboarding functionality
   ///
   /// QUICK TOGGLE: Change to `true` to skip onboarding, `false` to test it
+  /// NOTE: On physical iOS/Android devices, auth is NEVER bypassed (for testing real signup)
   static const bool skipAuthInDev = true;  // <-- Toggle this!
+
+  /// Check if auth should actually be bypassed
+  /// Returns true only on simulators/emulators/web, NEVER on physical devices
+  /// This allows testing real signup flow on phones while keeping bypass for dev
+  static Future<bool> shouldBypassAuth() async {
+    if (!skipAuthInDev) return false;
+
+    // Web always bypasses (for quick dev testing)
+    if (kIsWeb) return true;
+
+    // Check if we're on a physical device
+    final isPhysical = await _isPhysicalDevice();
+
+    // Only bypass on simulators/emulators, never on physical devices
+    return !isPhysical;
+  }
+
+  /// Check if running on a physical device (not simulator/emulator)
+  static Future<bool> _isPhysicalDevice() async {
+    if (kIsWeb) return false;
+
+    try {
+      if (Platform.isIOS) {
+        final iosInfo = await _deviceInfo.iosInfo;
+        return iosInfo.isPhysicalDevice;
+      }
+      if (Platform.isAndroid) {
+        final androidInfo = await _deviceInfo.androidInfo;
+        return androidInfo.isPhysicalDevice;
+      }
+    } catch (e) {
+      Logger.warn('Error detecting physical device: $e', service: 'debug');
+    }
+    return false; // Default to simulator if detection fails
+  }
 
   /// Allow auth bypass in profile/release builds for physical device testing
   /// Set to true when you need to test on unplugged physical devices (e.g., walking outside)

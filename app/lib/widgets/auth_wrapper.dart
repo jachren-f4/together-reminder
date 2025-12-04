@@ -35,9 +35,17 @@ class _AuthWrapperState extends State<AuthWrapper> {
   bool _isCheckingPairingStatus = false;
   bool _hasCheckedPairingStatus = false;
 
+  // Dev bypass state - determined async in initState
+  bool _hasCheckedBypass = false;
+  bool _shouldBypassAuth = false;
+
   @override
   void initState() {
     super.initState();
+
+    // Check if we should bypass auth (async, but fast)
+    _checkBypassStatus();
+
     // Listen to auth state changes
     _authService.authStateStream.listen((state) {
       if (mounted) {
@@ -48,6 +56,17 @@ class _AuthWrapperState extends State<AuthWrapper> {
         setState(() {});
       }
     });
+  }
+
+  /// Check if auth should be bypassed (only on simulators/web, not physical devices)
+  Future<void> _checkBypassStatus() async {
+    final shouldBypass = await DevConfig.shouldBypassAuth();
+    if (mounted) {
+      setState(() {
+        _shouldBypassAuth = shouldBypass;
+        _hasCheckedBypass = true;
+      });
+    }
   }
 
   /// Ensure coupleId and User are saved (for quest sync)
@@ -156,10 +175,18 @@ class _AuthWrapperState extends State<AuthWrapper> {
       LovePointService.setAppContext(context);
     });
 
+    // Wait for bypass check to complete
+    if (!_hasCheckedBypass) {
+      return const Scaffold(
+        body: Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
+    }
+
     // Dev mode: Skip auth entirely for faster development
-    // Also supports profile builds for physical device testing (walking outside, etc.)
-    final canBypass = kDebugMode || DevConfig.allowAuthBypassInRelease;
-    if (canBypass && DevConfig.skipAuthInDev) {
+    // Only bypasses on simulators/emulators/web, NEVER on physical devices
+    if (_shouldBypassAuth) {
       if (_storageService.hasPartner()) {
         return const HomeScreen();
       } else {
