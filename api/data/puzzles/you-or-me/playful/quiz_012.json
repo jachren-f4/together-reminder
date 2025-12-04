@@ -1,0 +1,37 @@
+{
+  "quizId": "quiz_012",
+  "title": "Playful Quiz 12",
+  "branch": "playful",
+  "questions": [
+    {
+      "id": "quiz_012_q1",
+      "category": "competitive",
+      "prompt": "Who is more...",
+      "content": "Likely to keep score of silly arguments"
+    },
+    {
+      "id": "quiz_012_q2",
+      "category": "quirks",
+      "prompt": "Who would...",
+      "content": "Adopt a weird phrase and use it constantly"
+    },
+    {
+      "id": "quiz_012_q3",
+      "category": "imagination",
+      "prompt": "Who is more...",
+      "content": "Likely to imagine what superpower they'd want"
+    },
+    {
+      "id": "quiz_012_q4",
+      "category": "personality",
+      "prompt": "Who would...",
+      "content": "Try to learn a viral dance"
+    },
+    {
+      "id": "quiz_012_q5",
+      "category": "humor",
+      "prompt": "Who is more...",
+      "content": "Likely to create inside jokes with themselves"
+    }
+  ]
+}

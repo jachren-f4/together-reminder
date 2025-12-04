@@ -1,0 +1,67 @@
+{
+  "quizId": "quiz_004",
+  "title": "Connection Quiz 4",
+  "branch": "connection",
+  "questions": [
+    {
+      "id": "quiz_004_q1",
+      "text": "What do I need to hear from you more often?",
+      "choices": [
+        "That you're proud of me",
+        "That you find me attractive",
+        "That you appreciate me",
+        "That you're committed to us",
+        "That you enjoy being with me"
+      ],
+      "category": "validation"
+    },
+    {
+      "id": "quiz_004_q2",
+      "text": "What moment made me realize how much I love you?",
+      "choices": [
+        "When you were there in a crisis",
+        "A spontaneous loving moment",
+        "Seeing you with family/friends",
+        "A deep conversation we had",
+        "When you showed your true self"
+      ],
+      "category": "love_realization"
+    },
+    {
+      "id": "quiz_004_q3",
+      "text": "What do I wish you knew about how I experience love?",
+      "choices": [
+        "I need more reassurance than I show",
+        "Small things matter most to me",
+        "I express love differently than I receive it",
+        "I feel deeply even when quiet",
+        "Physical closeness is essential for me"
+      ],
+      "category": "love_insight"
+    },
+    {
+      "id": "quiz_004_q4",
+      "text": "What's my biggest emotional need in our relationship?",
+      "choices": [
+        "Feeling prioritized",
+        "Feeling safe to be myself",
+        "Feeling desired and wanted",
+        "Feeling respected and heard",
+        "Feeling like a team"
+      ],
+      "category": "core_needs"
+    },
+    {
+      "id": "quiz_004_q5",
+      "text": "How do I know when we're truly connected?",
+      "choices": [
+        "Comfortable silence together",
+        "Finishing each other's thoughts",
+        "Feeling completely at ease",
+        "Wanting to share everything",
+        "Physical and emotional sync"
+      ],
+      "category": "connection_signs"
+    }
+  ]
+}

@@ -1,0 +1,37 @@
+{
+  "quizId": "quiz_001",
+  "title": "Connection Quiz 1",
+  "branch": "connection",
+  "questions": [
+    {
+      "id": "quiz_001_q1",
+      "category": "expression",
+      "prompt": "Who is more...",
+      "content": "Expressive with their feelings"
+    },
+    {
+      "id": "quiz_001_q2",
+      "category": "needs",
+      "prompt": "Who is better at...",
+      "content": "Communicating what they need"
+    },
+    {
+      "id": "quiz_001_q3",
+      "category": "communication",
+      "prompt": "Who prefers...",
+      "content": "Talking through problems right away"
+    },
+    {
+      "id": "quiz_001_q4",
+      "category": "connection",
+      "prompt": "Who initiates more...",
+      "content": "Deep conversations"
+    },
+    {
+      "id": "quiz_001_q5",
+      "category": "attunement",
+      "prompt": "Who is better at...",
+      "content": "Sensing when something is wrong"
+    }
+  ]
+}

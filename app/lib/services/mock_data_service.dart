@@ -49,17 +49,10 @@ class MockDataService {
       // Create partner-specific data with deterministic IDs
       if (!_storage.hasPartner()) {
         await _injectDualEmulatorData();
-      } else {
-        // Removed verbose logging
-        // print('ℹ️  Deterministic mock data already exists');
       }
     } else {
       // SINGLE-DEVICE MODE: Use old mock data approach
-      if (_storage.hasPartner()) {
-        // Removed verbose logging
-        // print('ℹ️  Mock data already exists, skipping injection');
-        return;
-      }
+      if (_storage.hasPartner()) return;
       await _injectSingleDeviceMockData();
     }
   }
@@ -67,9 +60,6 @@ class MockDataService {
   /// Inject data for dual-emulator testing
   /// Each emulator gets a unique user (Alice or Bob) with real FCM token
   static Future<void> _injectDualEmulatorData() async {
-    // Removed verbose logging
-    // print('🧑‍💻 Dual-Emulator Mode: Setting up partner data...');
-
     final partnerIndex = await DevConfig.partnerIndex;
     final config = DevConfig.dualPartnerConfig[partnerIndex];
     final emulatorId = await DevConfig.emulatorId;
@@ -77,13 +67,6 @@ class MockDataService {
     // Get deterministic user IDs for this user and their partner
     final myUserId = DevConfig.dualPartnerUserIds[partnerIndex];
     final partnerUserId = DevConfig.dualPartnerUserIds[(partnerIndex + 1) % 2];
-
-    // Removed verbose logging
-    // print('   Emulator ID: $emulatorId');
-    // print('   This partner: ${config['name']} ${config['emoji']}');
-    // print('   My user ID: $myUserId');
-    // print('   Other partner: ${config['partnerName']} ${config['partnerEmoji']}');
-    // print('   Partner user ID: $partnerUserId');
 
     // Create THIS user with DETERMINISTIC user ID and REAL FCM token
     if (_storage.getUser() == null) {
@@ -101,19 +84,10 @@ class MockDataService {
       emoji: config['partnerEmoji']!,
       pushToken: partnerUserId,  // Use partner's user ID for couple ID generation
     );
-
-    // Removed verbose logging
-    // print('✅ Dual-emulator setup complete!');
-    // print('   User: ${config['name']} with deterministic ID and real FCM token');
-    // print('   Partner: ${config['partnerName']} with deterministic ID');
-    // print('   Couple ID will be consistent across both devices');
   }
 
   /// Inject old-style mock data for single device testing
   static Future<void> _injectSingleDeviceMockData() async {
-    // Removed verbose logging
-    // print('🧑‍💻 Dev Mode: Injecting mock data...');
-
     // Create mock user if needed
     if (_storage.getUser() == null) {
       await _createMockUser();
@@ -130,15 +104,6 @@ class MockDataService {
 
     // Inject mock quiz data
     await _injectMockQuizData();
-
-    // Removed verbose logging
-    // print('✅ Mock data injected successfully');
-    // print('   Partner: ${DevConfig.mockPartnerName} ${DevConfig.mockPartnerEmoji}');
-    // print('   Reminders: 10 (3 received pending, 2 received done, 1 snoozed, 3 sent, 1 sent done)');
-    // print('   Love Points: 1280 LP (Beach Villa tier)');
-    // print('   Transactions: 8 recent LP activities');
-    // print('   Quiz History: 3 completed quizzes');
-    // print('   Badges: 1 Perfect Sync badge');
   }
 
   /// Create a mock user with fake push token and LP data
@@ -155,8 +120,6 @@ class MockDataService {
     );
 
     await _storage.saveUser(user);
-    // Removed verbose logging
-    // print('   Created mock user: ${user.name} (1280 LP, Beach Villa)');
   }
 
   /// Inject mock partner with fake push token
@@ -460,9 +423,6 @@ class MockDataService {
     );
 
     await _storage.saveBadge(badge);
-
-    // Removed verbose logging
-    // print('   Created 3 mock quiz sessions and 1 badge');
   }
 
   /// Create a mock user with REAL FCM token (for dual-emulator testing)
@@ -473,10 +433,6 @@ class MockDataService {
   }) async {
     // Get REAL FCM token from Firebase (uses NotificationService which handles web)
     final fcmToken = await NotificationService.getToken();
-    // Removed verbose logging
-    // if (fcmToken == null) {
-    //   print('⚠️ Warning: Could not get FCM token, using placeholder');
-    // }
 
     final user = User(
       id: userId,  // Use deterministic user ID from DevConfig
@@ -490,9 +446,6 @@ class MockDataService {
     );
 
     await _storage.saveUser(user);
-    // Removed verbose logging
-    // print('   Created user: $name $emoji (ID: ${userId.substring(0, 30)}...)');
-    // print('   FCM token: ${fcmToken?.substring(0, 20)}...');
   }
 
   /// Create partner placeholder
@@ -511,9 +464,6 @@ class MockDataService {
     );
 
     await _storage.savePartner(partner);
-    // Removed verbose logging
-    // print('   Created partner: $name $emoji');
-    // print('   Partner token (user ID): ${pushToken.substring(0, 30)}...');
   }
 
   /// Clear all mock data (useful for dev menu in Phase 2)

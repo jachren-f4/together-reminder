@@ -1,0 +1,67 @@
+{
+  "quizId": "quiz_006",
+  "title": "Music & Rhythm",
+  "branch": "playful",
+  "questions": [
+    {
+      "id": "quiz_006_q1",
+      "text": "When I hear music I love, I typically...",
+      "choices": [
+        "Can't help but dance or move to it",
+        "Sing along enthusiastically",
+        "Listen intently to the lyrics or melody",
+        "Feel it emotionally but stay still",
+        "Other / It depends"
+      ],
+      "category": "personality"
+    },
+    {
+      "id": "quiz_006_q2",
+      "text": "My morning routine works best with...",
+      "choices": [
+        "Upbeat energizing music",
+        "Calm instrumental or ambient sounds",
+        "Podcasts or talk radio",
+        "Silence - I prefer quiet mornings",
+        "Other / It depends"
+      ],
+      "category": "lifestyle"
+    },
+    {
+      "id": "quiz_006_q3",
+      "text": "At a concert or live music event, I'm most likely...",
+      "choices": [
+        "Front row, fully immersed in the experience",
+        "Dancing and singing with the crowd",
+        "Somewhere with a good view and sound",
+        "Enjoying the vibe from the back",
+        "Other / It depends"
+      ],
+      "category": "social"
+    },
+    {
+      "id": "quiz_006_q4",
+      "text": "The lyrics I connect with most are about...",
+      "choices": [
+        "Love and relationships",
+        "Life struggles and overcoming them",
+        "Fun, partying, and good times",
+        "Deep philosophical or poetic themes",
+        "Other / It depends"
+      ],
+      "category": "preferences"
+    },
+    {
+      "id": "quiz_006_q5",
+      "text": "When working or focusing, I prefer...",
+      "choices": [
+        "Instrumental music or soundtracks",
+        "Familiar songs I can tune out",
+        "Lo-fi beats or ambient noise",
+        "Complete silence to concentrate",
+        "Other / It depends"
+      ],
+      "category": "personality"
+    }
+  ]
+}

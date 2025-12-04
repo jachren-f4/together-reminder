@@ -1,0 +1,67 @@
+{
+  "quizId": "quiz_012",
+  "title": "Life Philosophy",
+  "branch": "playful",
+  "questions": [
+    {
+      "id": "quiz_012_q1",
+      "text": "I believe happiness comes from...",
+      "choices": [
+        "Pursuing meaningful goals and growth",
+        "Strong relationships and connections",
+        "Living in the moment and enjoying life",
+        "Creating security and stability",
+        "Other / It depends"
+      ],
+      "category": "personality"
+    },
+    {
+      "id": "quiz_012_q2",
+      "text": "When setting goals, I focus on...",
+      "choices": [
+        "Ambitious dreams that excite me",
+        "Realistic milestones I can achieve",
+        "Personal growth and learning",
+        "Balance between work and enjoyment",
+        "Other / It depends"
+      ],
+      "category": "lifestyle"
+    },
+    {
+      "id": "quiz_012_q3",
+      "text": "My approach to work-life balance is...",
+      "choices": [
+        "Work hard, play hard - both deserve 100%",
+        "Work is part of life, not separate from it",
+        "Life comes first, work funds my passions",
+        "Find fulfillment in both equally",
+        "Other / It depends"
+      ],
+      "category": "lifestyle"
+    },
+    {
+      "id": "quiz_012_q4",
+      "text": "When reflecting on my life, I most value...",
+      "choices": [
+        "The experiences and memories I've collected",
+        "The impact I've had on others",
+        "The challenges I've overcome",
+        "The peace and contentment I've found",
+        "Other / It depends"
+      ],
+      "category": "personality"
+    },
+    {
+      "id": "quiz_012_q5",
+      "text": "My biggest motivator in life is...",
+      "choices": [
+        "Achieving success and recognition",
+        "Building deep meaningful relationships",
+        "Personal freedom and independence",
+        "Making a positive difference in the world",
+        "Other / It depends"
+      ],
+      "category": "personality"
+    }
+  ]
+}

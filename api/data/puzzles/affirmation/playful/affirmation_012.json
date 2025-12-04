@@ -1,0 +1,39 @@
+{
+  "quizId": "affirmation_012",
+  "title": "Problem-Solver vs Support-Giver",
+  "category": "playful",
+  "branch": "playful",
+  "description": "How you respond to challenges",
+  "questions": [
+    {
+      "id": "affirmation_012_q1",
+      "text": "When my partner has a problem, I focus on solutions",
+      "type": "scale",
+      "scaleLabels": ["Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"]
+    },
+    {
+      "id": "affirmation_012_q2",
+      "text": "I prefer emotional support over advice when struggling",
+      "type": "scale",
+      "scaleLabels": ["Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"]
+    },
+    {
+      "id": "affirmation_012_q3",
+      "text": "I tackle problems head-on rather than process feelings first",
+      "type": "scale",
+      "scaleLabels": ["Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"]
+    },
+    {
+      "id": "affirmation_012_q4",
+      "text": "Sometimes I just need to vent without looking for solutions",
+      "type": "scale",
+      "scaleLabels": ["Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"]
+    },
+    {
+      "id": "affirmation_012_q5",
+      "text": "We've learned what each other needs in difficult moments",
+      "type": "scale",
+      "scaleLabels": ["Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"]
+    }
+  ]
+}

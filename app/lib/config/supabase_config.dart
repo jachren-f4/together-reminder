@@ -25,6 +25,7 @@ class SupabaseConfig {
   // API base URL for the Next.js backend
   // Production: Vercel deployment
   // Development: localhost (Android emulator uses 10.0.2.2)
+  // Physical devices in debug mode: Use production API (can't reach localhost)
   static String get apiUrl {
     // Check for environment override first
     const envUrl = String.fromEnvironment('API_URL', defaultValue: '');
@@ -37,7 +38,13 @@ class SupabaseConfig {
         return productionApiUrl;
       }
 
-      // Use platform-specific localhost for local development
+      // Physical devices can't reach localhost - use production API
+      // DevConfig.isSimulatorSync is false for physical devices
+      if (!kIsWeb && !DevConfig.isSimulatorSync) {
+        return productionApiUrl;
+      }
+
+      // Use platform-specific localhost for local development (simulators only)
       if (kIsWeb) {
         return 'http://localhost:3000';
       } else if (Platform.isAndroid) {

@@ -1,0 +1,37 @@
+{
+  "quizId": "quiz_008",
+  "title": "Lighthearted Quiz 8",
+  "branch": "lighthearted",
+  "questions": [
+    {
+      "id": "quiz_008_q1",
+      "category": "social",
+      "prompt": "Who is more",
+      "content": "Likely to initiate plans with friends"
+    },
+    {
+      "id": "quiz_008_q2",
+      "category": "personality",
+      "prompt": "Who is more",
+      "content": "Likely to get emotional over nostalgic memories"
+    },
+    {
+      "id": "quiz_008_q3",
+      "category": "preferences",
+      "prompt": "Who is more",
+      "content": "Likely to prefer warm weather over cold"
+    },
+    {
+      "id": "quiz_008_q4",
+      "category": "habits",
+      "prompt": "Who is more",
+      "content": "Likely to keep a journal or diary"
+    },
+    {
+      "id": "quiz_008_q5",
+      "category": "interests",
+      "prompt": "Who would rather",
+      "content": "Attend a concert or a sports game"
+    }
+  ]
+}

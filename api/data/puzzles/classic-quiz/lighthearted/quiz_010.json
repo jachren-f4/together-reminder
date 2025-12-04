@@ -5,60 +5,57 @@
   "questions": [
     {
       "id": "quiz_010_q1",
-      "text": "What's my favorite way to celebrate my birthday?",
+      "text": "What's my favorite color?",
       "choices": [
-        "Big party",
-        "Dinner with close friends",
-        "Quiet day at home",
-        "Adventure/trip",
+        "Blue",
+        "Red",
+        "Green",
+        "Purple",
         "Other / Something else"
       ],
       "category": "favorites"
     },
     {
       "id": "quiz_010_q2",
-      "text": "What's my favorite type of cuisine?",
+      "text": "Would I rather: Road trip or Flight?",
       "choices": [
-        "Italian",
-        "Mexican",
-        "Asian",
-        "American",
-        "Other / Something else"
+        "Road trip",
+        "Flight"
       ],
-      "category": "favorites"
+      "category": "would_you_rather"
     },
     {
       "id": "quiz_010_q3",
-      "text": "Do I prefer hot or cold weather?",
+      "text": "How do I prefer to spend alone time?",
       "choices": [
-        "Hot",
-        "Cold",
-        "Mild",
-        "Varies",
-        "Other / No preference"
+        "Hobby",
+        "Relaxing",
+        "Productive tasks",
+        "Social media",
+        "Other / Something else"
       ],
       "category": "preferences"
     },
     {
       "id": "quiz_010_q4",
-      "text": "What's my favorite scent or perfume type?",
+      "text": "Would I rather: Read a book or Watch a movie?",
       "choices": [
-        "Floral",
-        "Citrus",
-        "Woody",
-        "Sweet",
-        "Other / Something else"
+        "Read a book",
+        "Watch a movie"
       ],
-      "category": "favorites"
+      "category": "would_you_rather"
     },
     {
       "id": "quiz_010_q5",
-      "text": "Would I rather: Save money or Spend on experiences?",
+      "text": "What's my favorite TV show genre?",
       "choices": [
-        "Save money",
-        "Spend on experiences"
+        "Drama",
+        "Comedy",
+        "Reality",
+        "Documentary",
+        "Other / Something else"
       ],
-      "category": "would_you_rather"
+      "category": "favorites"
     }
   ]
 }

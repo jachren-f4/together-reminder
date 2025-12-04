@@ -1,6 +1,8 @@
 # Firebase Configuration Files (SENSITIVE - DO NOT COMMIT)
 app/ios/Runner/GoogleService-Info.plist
 app/android/app/google-services.json
+app/android/app/src/*/google-services.json
+app/ios/Firebase/*/GoogleService-Info.plist
 
 # Assets (raw/unprocessed images)
 assets/raw_images/

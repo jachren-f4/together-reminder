@@ -1,0 +1,37 @@
+{
+  "quizId": "quiz_007",
+  "title": "Attachment Quiz 7",
+  "branch": "attachment",
+  "questions": [
+    {
+      "id": "quiz_007_q1",
+      "category": "trust",
+      "prompt": "Who is more comfortable with...",
+      "content": "The other having close friendships"
+    },
+    {
+      "id": "quiz_007_q2",
+      "category": "security",
+      "prompt": "Who needs more...",
+      "content": "Predictability and routine"
+    },
+    {
+      "id": "quiz_007_q3",
+      "category": "comfort",
+      "prompt": "Who turns more to...",
+      "content": "Their partner when upset"
+    },
+    {
+      "id": "quiz_007_q4",
+      "category": "conflict",
+      "prompt": "Who is better at...",
+      "content": "Making repair attempts after fights"
+    },
+    {
+      "id": "quiz_007_q5",
+      "category": "independence",
+      "prompt": "Who values more...",
+      "content": "Maintaining their individual identity"
+    }
+  ]
+}

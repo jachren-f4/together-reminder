@@ -1,0 +1,37 @@
+{
+  "quizId": "quiz_009",
+  "title": "Playful Quiz 9",
+  "branch": "playful",
+  "questions": [
+    {
+      "id": "quiz_009_q1",
+      "category": "competitive",
+      "prompt": "Who would...",
+      "content": "Do a victory dance after winning"
+    },
+    {
+      "id": "quiz_009_q2",
+      "category": "personality",
+      "prompt": "Who is more...",
+      "content": "Likely to make up silly songs about daily tasks"
+    },
+    {
+      "id": "quiz_009_q3",
+      "category": "social",
+      "prompt": "Who would...",
+      "content": "Organize a flash mob"
+    },
+    {
+      "id": "quiz_009_q4",
+      "category": "quirks",
+      "prompt": "Who is more...",
+      "content": "Likely to give inanimate objects personalities"
+    },
+    {
+      "id": "quiz_009_q5",
+      "category": "imagination",
+      "prompt": "Who would...",
+      "content": "Create an elaborate treasure hunt"
+    }
+  ]
+}

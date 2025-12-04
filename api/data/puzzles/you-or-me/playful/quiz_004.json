@@ -1,0 +1,37 @@
+{
+  "quizId": "quiz_004",
+  "title": "Playful Quiz 4",
+  "branch": "playful",
+  "questions": [
+    {
+      "id": "quiz_004_q1",
+      "category": "social",
+      "prompt": "Who is more...",
+      "content": "Likely to photobomb strangers' pictures"
+    },
+    {
+      "id": "quiz_004_q2",
+      "category": "personality",
+      "prompt": "Who would...",
+      "content": "Impulse buy something totally unnecessary"
+    },
+    {
+      "id": "quiz_004_q3",
+      "category": "imagination",
+      "prompt": "Who is more...",
+      "content": "Likely to name their car or plants"
+    },
+    {
+      "id": "quiz_004_q4",
+      "category": "quirks",
+      "prompt": "Who would...",
+      "content": "Wear a costume when it's not Halloween"
+    },
+    {
+      "id": "quiz_004_q5",
+      "category": "competitive",
+      "prompt": "Who is more...",
+      "content": "Likely to trash talk during friendly competition"
+    }
+  ]
+}

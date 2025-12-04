@@ -1,0 +1,67 @@
+{
+  "quizId": "quiz_009",
+  "title": "Attachment Quiz 9",
+  "branch": "attachment",
+  "questions": [
+    {
+      "id": "quiz_009_q1",
+      "text": "When we have a conflict, what's my typical response?",
+      "choices": [
+        "I pursue resolution immediately",
+        "I need space to calm down first",
+        "I try to fix it right away to feel secure again",
+        "I withdraw to protect myself",
+        "Other / It depends"
+      ],
+      "category": "communication"
+    },
+    {
+      "id": "quiz_009_q2",
+      "text": "What do I need from you during an argument?",
+      "choices": [
+        "Reassurance that we'll be okay",
+        "Space to process my emotions",
+        "Active listening and validation",
+        "Focus on finding a solution",
+        "Other / It depends"
+      ],
+      "category": "communication"
+    },
+    {
+      "id": "quiz_009_q3",
+      "text": "How long do I typically need to process after a disagreement?",
+      "choices": [
+        "I want to resolve it immediately",
+        "A few minutes to an hour",
+        "Several hours to a day",
+        "It depends on the severity",
+        "Other / It depends"
+      ],
+      "category": "emotional"
+    },
+    {
+      "id": "quiz_009_q4",
+      "text": "What helps me feel safe enough to resolve conflicts with you?",
+      "choices": [
+        "Knowing you're committed to working it out",
+        "Your calm and respectful approach",
+        "Feeling heard and understood",
+        "Physical proximity or touch",
+        "Other / It depends"
+      ],
+      "category": "trust"
+    },
+    {
+      "id": "quiz_009_q5",
+      "text": "What's my biggest fear during a conflict?",
+      "choices": [
+        "That it will damage our relationship",
+        "That you'll pull away from me",
+        "That we won't understand each other",
+        "That the issue won't truly get resolved",
+        "Other / It depends"
+      ],
+      "category": "trust"
+    }
+  ]
+}

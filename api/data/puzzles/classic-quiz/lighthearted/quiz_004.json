@@ -5,63 +5,60 @@
   "questions": [
     {
       "id": "quiz_004_q1",
-      "text": "What's my favorite fruit?",
+      "text": "What's my favorite way to celebrate my birthday?",
       "choices": [
-        "Apple",
-        "Banana",
-        "Strawberry",
-        "Orange",
+        "Big party",
+        "Dinner with close friends",
+        "Quiet day at home",
+        "Adventure/trip",
         "Other / Something else"
       ],
       "category": "favorites"
     },
     {
       "id": "quiz_004_q2",
-      "text": "What's my favorite drink?",
+      "text": "What's my favorite type of cuisine?",
       "choices": [
-        "Coffee",
-        "Tea",
-        "Juice",
-        "Soda",
+        "Italian",
+        "Mexican",
+        "Asian",
+        "American",
         "Other / Something else"
       ],
       "category": "favorites"
     },
     {
       "id": "quiz_004_q3",
-      "text": "What's my ideal Friday night?",
+      "text": "Do I prefer hot or cold weather?",
       "choices": [
-        "Going out",
-        "Staying in",
-        "Dinner with friends",
-        "Quiet evening",
-        "Other / It depends"
+        "Hot",
+        "Cold",
+        "Mild",
+        "Varies",
+        "Other / No preference"
       ],
       "category": "preferences"
     },
     {
       "id": "quiz_004_q4",
-      "text": "What's my risk tolerance?",
+      "text": "What's my favorite scent or perfume type?",
       "choices": [
-        "Very cautious",
-        "Somewhat cautious",
-        "Balanced",
-        "Risk-taker",
-        "Other / It depends"
+        "Floral",
+        "Citrus",
+        "Woody",
+        "Sweet",
+        "Other / Something else"
       ],
-      "category": "preferences"
+      "category": "favorites"
     },
     {
       "id": "quiz_004_q5",
-      "text": "Do I prefer saving or spending money?",
+      "text": "Would I rather: Save money or Spend on experiences?",
       "choices": [
-        "Strict saver",
-        "Mostly save",
-        "Balanced",
-        "Enjoy spending",
-        "Other / It depends"
+        "Save money",
+        "Spend on experiences"
       ],
-      "category": "preferences"
+      "category": "would_you_rather"
     }
   ]
 }

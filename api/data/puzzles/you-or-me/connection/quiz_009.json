@@ -1,0 +1,37 @@
+{
+  "quizId": "quiz_009",
+  "title": "Connection Quiz 9",
+  "branch": "connection",
+  "questions": [
+    {
+      "id": "quiz_009_q1",
+      "category": "attunement",
+      "prompt": "Who senses more when...",
+      "content": "The other needs a hug"
+    },
+    {
+      "id": "quiz_009_q2",
+      "category": "expression",
+      "prompt": "Who is more...",
+      "content": "Romantic and sentimental"
+    },
+    {
+      "id": "quiz_009_q3",
+      "category": "needs",
+      "prompt": "Who values more...",
+      "content": "Receiving thoughtful gifts"
+    },
+    {
+      "id": "quiz_009_q4",
+      "category": "connection",
+      "prompt": "Who initiates more...",
+      "content": "Intimate conversations at night"
+    },
+    {
+      "id": "quiz_009_q5",
+      "category": "vulnerability",
+      "prompt": "Who shares more about...",
+      "content": "Their dreams and aspirations"
+    }
+  ]
+}

@@ -1,0 +1,69 @@
+{
+  "quizId": "affirmation_006",
+  "title": "Safe Haven",
+  "category": "attachment",
+  "branch": "attachment",
+  "description": "Rate how safe your relationship feels",
+  "questions": [
+    {
+      "id": "affirmation_006_q1",
+      "text": "My partner is my safe place in the world.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ]
+    },
+    {
+      "id": "affirmation_006_q2",
+      "text": "I turn to my partner first when I'm upset or stressed.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ]
+    },
+    {
+      "id": "affirmation_006_q3",
+      "text": "Being with my partner calms my nervous system.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ]
+    },
+    {
+      "id": "affirmation_006_q4",
+      "text": "I can be my most vulnerable self with my partner.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ]
+    },
+    {
+      "id": "affirmation_006_q5",
+      "text": "Our relationship is a source of peace in my life.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ]
+    }
+  ]
+}

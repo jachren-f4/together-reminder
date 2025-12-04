@@ -1,0 +1,67 @@
+{
+  "quizId": "quiz_011",
+  "title": "Adventure & Comfort",
+  "branch": "playful",
+  "questions": [
+    {
+      "id": "quiz_011_q1",
+      "text": "My ideal definition of adventure is...",
+      "choices": [
+        "Exploring remote places off the beaten path",
+        "Trying new experiences in familiar settings",
+        "Learning and growing through challenges",
+        "Comfortable enjoyment with a touch of newness",
+        "Other / It depends"
+      ],
+      "category": "lifestyle"
+    },
+    {
+      "id": "quiz_011_q2",
+      "text": "When traveling, I'm most excited about...",
+      "choices": [
+        "Immersing myself in different cultures",
+        "Trying authentic local cuisine",
+        "Seeing famous landmarks and attractions",
+        "Relaxing in beautiful new surroundings",
+        "Other / It depends"
+      ],
+      "category": "preferences"
+    },
+    {
+      "id": "quiz_011_q3",
+      "text": "My comfort zone is something I...",
+      "choices": [
+        "Actively push myself to expand regularly",
+        "Step out of when the opportunity feels right",
+        "Appreciate but occasionally challenge",
+        "Value and protect - it exists for a reason",
+        "Other / It depends"
+      ],
+      "category": "personality"
+    },
+    {
+      "id": "quiz_011_q4",
+      "text": "When faced with something scary but exciting, I...",
+      "choices": [
+        "Feel the fear and do it anyway",
+        "Carefully assess if it's worth the risk",
+        "Need encouragement from others",
+        "Usually decide it's not for me",
+        "Other / It depends"
+      ],
+      "category": "personality"
+    },
+    {
+      "id": "quiz_011_q5",
+      "text": "My approach to trying new hobbies is...",
+      "choices": [
+        "Jump in enthusiastically with full commitment",
+        "Try it a few times to see if I like it",
+        "Research thoroughly before starting",
+        "Stick to hobbies I already know I enjoy",
+        "Other / It depends"
+      ],
+      "category": "lifestyle"
+    }
+  ]
+}

@@ -1,0 +1,67 @@
+{
+  "quizId": "quiz_006",
+  "title": "Growth Quiz 6",
+  "branch": "growth",
+  "questions": [
+    {
+      "id": "quiz_006_q1",
+      "text": "What would I do if I knew I couldn't fail?",
+      "choices": [
+        "Start my own business or creative venture",
+        "Make a major career change",
+        "Pursue an artistic or athletic goal",
+        "Transform a personal relationship",
+        "Other / It depends"
+      ],
+      "category": "growth"
+    },
+    {
+      "id": "quiz_006_q2",
+      "text": "Where do I see myself in 5 years?",
+      "choices": [
+        "Advanced in my career",
+        "In a different life stage or location",
+        "Having achieved a personal goal",
+        "More balanced and fulfilled",
+        "Other / It depends"
+      ],
+      "category": "growth"
+    },
+    {
+      "id": "quiz_006_q3",
+      "text": "What legacy do I want to leave?",
+      "choices": [
+        "Professional achievements",
+        "Impact on people I've helped",
+        "Creative works or contributions",
+        "A strong family and relationships",
+        "Other / It depends"
+      ],
+      "category": "values"
+    },
+    {
+      "id": "quiz_006_q4",
+      "text": "What passion have I put on hold that I want to revive?",
+      "choices": [
+        "A creative hobby or art form",
+        "Athletic or fitness pursuit",
+        "Learning or education goal",
+        "Travel or adventure dreams",
+        "Other / It depends"
+      ],
+      "category": "growth"
+    },
+    {
+      "id": "quiz_006_q5",
+      "text": "What motivates me most to grow and improve?",
+      "choices": [
+        "Achieving my full potential",
+        "Making you proud",
+        "Creating a better future for us",
+        "Personal satisfaction and fulfillment",
+        "Other / It depends"
+      ],
+      "category": "values"
+    }
+  ]
+}

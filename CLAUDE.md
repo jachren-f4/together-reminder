@@ -370,6 +370,65 @@ pkill -9 -f "qemu-system-aarch64"
 
 ## File Reference
 
+### API Shared Utilities
+
+| File | Purpose |
+|------|---------|
+| `api/lib/couple/utils.ts` | Couple fetching (`getCouple`, `getCoupleBasic`, `getCoupleId`) |
+| `api/lib/puzzle/loader.ts` | Puzzle loading (`loadPuzzle`, `getNextPuzzle`, `isCooldownActive`) |
+| `api/lib/db/transaction.ts` | Transaction wrapper (`withTransaction`, `withTransactionResult`) |
+| `api/lib/game/handler.ts` | Game completion logic, LP awards |
+
+**Usage:**
+```typescript
+// Couple utilities - use in API routes
+import { getCouple, getCoupleBasic, getCoupleId } from '@/lib/couple/utils';
+const couple = await getCouple(userId);           // Full couple data with firstPlayerId
+const basic = await getCoupleBasic(userId);       // coupleId + isPlayer1 only
+const coupleId = await getCoupleId(userId);       // Just the ID
+
+// Puzzle utilities - for Linked and Word Search
+import { loadPuzzle, getNextPuzzle, isCooldownActive } from '@/lib/puzzle/loader';
+const puzzle = loadPuzzle('wordSearch', 'ws_001', 'everyday');
+const { puzzleId, activeMatch, branch } = await getNextPuzzle(coupleId, 'linked');
+
+// Transaction wrapper - prevents forgotten rollback/release
+import { withTransaction } from '@/lib/db/transaction';
+await withTransaction(async (client) => {
+  await client.query('INSERT INTO ...', [...]);
+  await client.query('UPDATE ...', [...]);
+}); // Auto COMMIT on success, ROLLBACK on error
+```
+
+### Flutter Mixins
+
+| File | Purpose |
+|------|---------|
+| `app/lib/mixins/game_polling_mixin.dart` | Standardized polling for turn-based games |
+
+**Usage:**
+```dart
+class _GameScreenState extends State<GameScreen> with GamePollingMixin {
+  @override
+  Duration get pollInterval => const Duration(seconds: 10);
+
+  @override
+  bool get shouldPoll => !_isLoading && _gameState != null && !_gameState!.isMyTurn;
+
+  @override
+  Future<void> onPollUpdate() async {
+    final newState = await _service.pollMatchState(_matchId);
+    if (mounted) setState(() => _gameState = newState);
+  }
+
+  @override
+  void initState() { super.initState(); startPolling(); }
+
+  @override
+  void dispose() { cancelPolling(); super.dispose(); }
+}
+```
+
 ### Core Services
 | File | Purpose |
 |------|---------|
@@ -413,4 +472,4 @@ pkill -9 -f "qemu-system-aarch64"
 
 ---
 
-**Last Updated:** 2025-12-01
+**Last Updated:** 2025-12-03

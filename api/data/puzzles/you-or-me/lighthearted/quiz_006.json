@@ -1,0 +1,37 @@
+{
+  "quizId": "quiz_006",
+  "title": "Lighthearted Quiz 6",
+  "branch": "lighthearted",
+  "questions": [
+    {
+      "id": "quiz_006_q1",
+      "category": "leisure",
+      "prompt": "Who is more",
+      "content": "Likely to binge-watch an entire series in a weekend"
+    },
+    {
+      "id": "quiz_006_q2",
+      "category": "habits",
+      "prompt": "Who is more",
+      "content": "Likely to take the scenic route instead of the fastest one"
+    },
+    {
+      "id": "quiz_006_q3",
+      "category": "personality",
+      "prompt": "Who is more",
+      "content": "Likely to apologize first after a disagreement"
+    },
+    {
+      "id": "quiz_006_q4",
+      "category": "preferences",
+      "prompt": "Who would rather",
+      "content": "Receive flowers or chocolates as a gift"
+    },
+    {
+      "id": "quiz_006_q5",
+      "category": "social",
+      "prompt": "Who is more",
+      "content": "Likely to stay in touch with old friends"
+    }
+  ]
+}

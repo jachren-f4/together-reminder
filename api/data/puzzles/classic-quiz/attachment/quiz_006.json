@@ -1,0 +1,67 @@
+{
+  "quizId": "quiz_006",
+  "title": "Attachment Quiz 6",
+  "branch": "attachment",
+  "questions": [
+    {
+      "id": "quiz_006_q1",
+      "text": "What type of reassurance do I need most from you?",
+      "choices": [
+        "Hearing that you love me",
+        "Physical affection and touch",
+        "Seeing you make me a priority",
+        "Knowing you're thinking of me",
+        "Other / It depends"
+      ],
+      "category": "emotional"
+    },
+    {
+      "id": "quiz_006_q2",
+      "text": "How often do I need reassurance in our relationship?",
+      "choices": [
+        "Frequently throughout the day",
+        "Daily, but not constantly",
+        "Mostly during stressful times",
+        "Only when things feel uncertain",
+        "Other / It depends"
+      ],
+      "category": "emotional"
+    },
+    {
+      "id": "quiz_006_q3",
+      "text": "What's my biggest fear in our relationship?",
+      "choices": [
+        "That you'll stop loving me",
+        "That we'll grow apart over time",
+        "That I'm not enough for you",
+        "That something will come between us",
+        "Other / It depends"
+      ],
+      "category": "trust"
+    },
+    {
+      "id": "quiz_006_q4",
+      "text": "How do I prefer you to reassure me when I'm worried about us?",
+      "choices": [
+        "Talk through my concerns with me",
+        "Hold me and provide physical comfort",
+        "Remind me of your commitment",
+        "Show me through consistent actions",
+        "Other / It depends"
+      ],
+      "category": "communication"
+    },
+    {
+      "id": "quiz_006_q5",
+      "text": "What makes me feel most certain about your love?",
+      "choices": [
+        "You telling me regularly",
+        "The way you look at me",
+        "How you prioritize our relationship",
+        "Your consistency over time",
+        "Other / It depends"
+      ],
+      "category": "trust"
+    }
+  ]
+}

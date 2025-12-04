@@ -10,11 +10,35 @@
       "questionCount": 156
     },
     {
-      "id": "deeper",
-      "displayName": "Deeper",
+      "id": "meaningful",
+      "displayName": "Meaningful",
       "description": "More meaningful questions",
-      "folder": "deeper",
+      "folder": "meaningful",
       "questionCount": 133
+    },
+    {
+      "id": "connection",
+      "displayName": "Connection",
+      "description": "Explore emotional intimacy",
+      "folder": "connection",
+      "questionCount": 20,
+      "therapeutic": true
+    },
+    {
+      "id": "attachment",
+      "displayName": "Attachment",
+      "description": "Understand relationship patterns",
+      "folder": "attachment",
+      "questionCount": 20,
+      "therapeutic": true
+    },
+    {
+      "id": "growth",
+      "displayName": "Growth",
+      "description": "Personal and relationship growth",
+      "folder": "growth",
+      "questionCount": 20,
+      "therapeutic": true
     }
   ],
   "selectionMode": "quest_count_mod",

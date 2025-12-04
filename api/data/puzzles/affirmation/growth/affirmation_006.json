@@ -1,0 +1,69 @@
+{
+  "quizId": "affirmation_006",
+  "title": "Encouraging Growth",
+  "category": "growth",
+  "branch": "growth",
+  "description": "Rate how you encourage each other to grow",
+  "questions": [
+    {
+      "id": "affirmation_006_q1",
+      "text": "My partner pushes me to step outside my comfort zone in healthy ways.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ]
+    },
+    {
+      "id": "affirmation_006_q2",
+      "text": "I feel motivated to become a better version of myself because of this relationship.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ]
+    },
+    {
+      "id": "affirmation_006_q3",
+      "text": "We challenge each other to grow while remaining supportive.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ]
+    },
+    {
+      "id": "affirmation_006_q4",
+      "text": "My partner sees potential in me that I sometimes can't see in myself.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ]
+    },
+    {
+      "id": "affirmation_006_q5",
+      "text": "Our relationship creates space for both of us to evolve.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ]
+    }
+  ]
+}

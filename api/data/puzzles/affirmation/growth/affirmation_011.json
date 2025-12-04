@@ -1,0 +1,69 @@
+{
+  "quizId": "affirmation_011",
+  "title": "Building Resilience",
+  "category": "growth",
+  "branch": "growth",
+  "description": "Rate how you build resilience together",
+  "questions": [
+    {
+      "id": "affirmation_011_q1",
+      "text": "We've grown stronger through the challenges we've faced together.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ]
+    },
+    {
+      "id": "affirmation_011_q2",
+      "text": "My partner helps me bounce back from setbacks.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ]
+    },
+    {
+      "id": "affirmation_011_q3",
+      "text": "We adapt well to changes and transitions in life.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ]
+    },
+    {
+      "id": "affirmation_011_q4",
+      "text": "Difficult times have ultimately brought us closer together.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ]
+    },
+    {
+      "id": "affirmation_011_q5",
+      "text": "I trust in our ability to weather any storm as a team.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ]
+    }
+  ]
+}

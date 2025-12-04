@@ -5,57 +5,63 @@
   "questions": [
     {
       "id": "quiz_011_q1",
-      "text": "What's my ideal humidity level?",
+      "text": "What's your ideal way to start the morning?",
       "choices": [
-        "Dry",
-        "Low humidity",
-        "Moderate",
-        "Humid",
-        "Other / I don't notice"
+        "Hit snooze multiple times",
+        "Jump out of bed energized",
+        "Slowly ease into the day with coffee",
+        "Exercise or stretch first thing",
+        "Other / It depends"
+      ],
+      "category": "lifestyle"
+    },
+    {
+      "id": "quiz_011_q2",
+      "text": "When it comes to food, you prefer...",
+      "choices": [
+        "Trying new and exotic dishes",
+        "Sticking to familiar favorites",
+        "Home-cooked comfort food",
+        "Quick and convenient meals",
+        "Other / It depends"
       ],
       "category": "preferences"
     },
     {
-      "id": "quiz_011_q2",
-      "text": "What's my favorite breakfast food?",
-      "choices": [
-        "Pancakes",
-        "Eggs",
-        "Cereal",
-        "Toast",
-        "Other / Something else"
-      ],
-      "category": "favorites"
-    },
-    {
       "id": "quiz_011_q3",
-      "text": "Would I rather: Listen to music or Podcasts?",
+      "text": "Your perfect way to unwind after a long day?",
       "choices": [
-        "Music",
-        "Podcasts"
+        "Binge-watching a series",
+        "Reading a good book",
+        "Going for a walk or workout",
+        "Chatting with friends or family",
+        "Other / It depends"
       ],
-      "category": "would_you_rather"
+      "category": "lifestyle"
     },
     {
       "id": "quiz_011_q4",
-      "text": "What's my favorite superhero or fictional character?",
+      "text": "How do you handle household chores?",
       "choices": [
-        "Marvel hero",
-        "DC hero",
-        "Book character",
-        "Movie character",
-        "Other / Someone else"
+        "Do them right away to get them done",
+        "Procrastinate until absolutely necessary",
+        "Make a schedule and stick to it",
+        "Turn on music and make it fun",
+        "Other / It depends"
       ],
-      "category": "favorites"
+      "category": "lifestyle"
     },
     {
       "id": "quiz_011_q5",
-      "text": "Would I rather: Cook at home or Dine out?",
+      "text": "Your favorite type of weather?",
       "choices": [
-        "Cook at home",
-        "Dine out"
+        "Sunny and warm",
+        "Cool and crisp",
+        "Rainy and cozy",
+        "Snowy and peaceful",
+        "Other / It depends"
       ],
-      "category": "would_you_rather"
+      "category": "favorites"
     }
   ]
 }

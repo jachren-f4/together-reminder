@@ -1,0 +1,67 @@
+{
+  "quizId": "quiz_007",
+  "title": "Social Dynamics",
+  "branch": "playful",
+  "questions": [
+    {
+      "id": "quiz_007_q1",
+      "text": "In a group setting, I naturally tend to...",
+      "choices": [
+        "Take charge and lead the group",
+        "Support and encourage others",
+        "Contribute ideas but let others lead",
+        "Observe and participate when needed",
+        "Other / It depends"
+      ],
+      "category": "social"
+    },
+    {
+      "id": "quiz_007_q2",
+      "text": "When someone shares a problem with me, I usually...",
+      "choices": [
+        "Offer practical solutions immediately",
+        "Listen empathetically and validate feelings",
+        "Share a similar experience I've had",
+        "Ask questions to help them think it through",
+        "Other / It depends"
+      ],
+      "category": "personality"
+    },
+    {
+      "id": "quiz_007_q3",
+      "text": "At social gatherings, I prefer groups that are...",
+      "choices": [
+        "Large and lively with lots of energy",
+        "Medium-sized with a mix of people",
+        "Small and intimate with close friends",
+        "One-on-one conversations",
+        "Other / It depends"
+      ],
+      "category": "social"
+    },
+    {
+      "id": "quiz_007_q4",
+      "text": "When making group decisions, I believe we should...",
+      "choices": [
+        "Vote democratically",
+        "Defer to whoever cares most",
+        "Discuss until we find consensus",
+        "Let the most knowledgeable person decide",
+        "Other / It depends"
+      ],
+      "category": "personality"
+    },
+    {
+      "id": "quiz_007_q5",
+      "text": "My role in my friend group is usually...",
+      "choices": [
+        "The organizer who makes plans happen",
+        "The cheerleader who keeps spirits up",
+        "The wise advisor people come to",
+        "The fun one who brings the laughs",
+        "Other / It depends"
+      ],
+      "category": "social"
+    }
+  ]
+}

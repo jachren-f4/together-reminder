@@ -1,0 +1,67 @@
+{
+  "quizId": "quiz_012",
+  "title": "Growth Quiz 12",
+  "branch": "growth",
+  "questions": [
+    {
+      "id": "quiz_012_q1",
+      "text": "What does my ideal future with you look like?",
+      "choices": [
+        "Stable, comfortable life together",
+        "Adventurous and full of experiences",
+        "Focused on family and community",
+        "Balanced between stability and growth",
+        "Other / It depends"
+      ],
+      "category": "values"
+    },
+    {
+      "id": "quiz_012_q2",
+      "text": "What tradition or ritual do I want us to create together?",
+      "choices": [
+        "Regular date nights or quality time",
+        "Annual trips or adventures",
+        "Daily connection rituals",
+        "Special ways to celebrate milestones",
+        "Other / It depends"
+      ],
+      "category": "values"
+    },
+    {
+      "id": "quiz_012_q3",
+      "text": "What's the most important value I want us to share?",
+      "choices": [
+        "Commitment and loyalty",
+        "Growth and self-improvement",
+        "Adventure and spontaneity",
+        "Family and community",
+        "Other / It depends"
+      ],
+      "category": "values"
+    },
+    {
+      "id": "quiz_012_q4",
+      "text": "How do I envision us handling future challenges?",
+      "choices": [
+        "With open communication",
+        "As a unified team",
+        "Supporting each other's individual approaches",
+        "With flexibility and adaptation",
+        "Other / It depends"
+      ],
+      "category": "growth"
+    },
+    {
+      "id": "quiz_012_q5",
+      "text": "What legacy do I want us to build together?",
+      "choices": [
+        "A strong family",
+        "Impact on our community",
+        "Memories and experiences",
+        "A life well-lived with no regrets",
+        "Other / It depends"
+      ],
+      "category": "values"
+    }
+  ]
+}

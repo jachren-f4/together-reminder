@@ -116,16 +116,22 @@ flutter:
     # Brand-specific content (TogetherRemind) - Branch content
     - assets/brands/togetherremind/data/classic-quiz/
     - assets/brands/togetherremind/data/classic-quiz/lighthearted/
-    - assets/brands/togetherremind/data/classic-quiz/deeper/
-    - assets/brands/togetherremind/data/classic-quiz/spicy/
+    - assets/brands/togetherremind/data/classic-quiz/meaningful/
+    - assets/brands/togetherremind/data/classic-quiz/connection/
+    - assets/brands/togetherremind/data/classic-quiz/attachment/
+    - assets/brands/togetherremind/data/classic-quiz/growth/
     - assets/brands/togetherremind/data/affirmation/
     - assets/brands/togetherremind/data/affirmation/emotional/
     - assets/brands/togetherremind/data/affirmation/practical/
-    - assets/brands/togetherremind/data/affirmation/spiritual/
+    - assets/brands/togetherremind/data/affirmation/connection/
+    - assets/brands/togetherremind/data/affirmation/attachment/
+    - assets/brands/togetherremind/data/affirmation/growth/
     - assets/brands/togetherremind/data/you-or-me/
     - assets/brands/togetherremind/data/you-or-me/playful/
     - assets/brands/togetherremind/data/you-or-me/reflective/
-    - assets/brands/togetherremind/data/you-or-me/intimate/
+    - assets/brands/togetherremind/data/you-or-me/connection/
+    - assets/brands/togetherremind/data/you-or-me/attachment/
+    - assets/brands/togetherremind/data/you-or-me/growth/
     - assets/brands/togetherremind/data/linked/
     - assets/brands/togetherremind/data/linked/casual/
     - assets/brands/togetherremind/data/linked/romantic/
@@ -145,16 +151,22 @@ flutter:
     # Brand-specific content (HolyCouples) - Branch content
     - assets/brands/holycouples/data/classic-quiz/
     - assets/brands/holycouples/data/classic-quiz/lighthearted/
-    - assets/brands/holycouples/data/classic-quiz/deeper/
-    - assets/brands/holycouples/data/classic-quiz/spicy/
+    - assets/brands/holycouples/data/classic-quiz/meaningful/
+    - assets/brands/holycouples/data/classic-quiz/connection/
+    - assets/brands/holycouples/data/classic-quiz/attachment/
+    - assets/brands/holycouples/data/classic-quiz/growth/
     - assets/brands/holycouples/data/affirmation/
     - assets/brands/holycouples/data/affirmation/emotional/
     - assets/brands/holycouples/data/affirmation/practical/
-    - assets/brands/holycouples/data/affirmation/spiritual/
+    - assets/brands/holycouples/data/affirmation/connection/
+    - assets/brands/holycouples/data/affirmation/attachment/
+    - assets/brands/holycouples/data/affirmation/growth/
     - assets/brands/holycouples/data/you-or-me/
     - assets/brands/holycouples/data/you-or-me/playful/
     - assets/brands/holycouples/data/you-or-me/reflective/
-    - assets/brands/holycouples/data/you-or-me/intimate/
+    - assets/brands/holycouples/data/you-or-me/connection/
+    - assets/brands/holycouples/data/you-or-me/attachment/
+    - assets/brands/holycouples/data/you-or-me/growth/
     - assets/brands/holycouples/data/linked/
     - assets/brands/holycouples/data/linked/casual/
     - assets/brands/holycouples/data/linked/romantic/

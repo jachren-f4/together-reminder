@@ -1,0 +1,37 @@
+{
+  "quizId": "quiz_001",
+  "title": "Playful Quiz 1",
+  "branch": "playful",
+  "questions": [
+    {
+      "id": "quiz_001_q1",
+      "category": "personality",
+      "prompt": "Who is more...",
+      "content": "Likely to laugh at their own jokes"
+    },
+    {
+      "id": "quiz_001_q2",
+      "category": "quirks",
+      "prompt": "Who would...",
+      "content": "Dance in public without caring who's watching"
+    },
+    {
+      "id": "quiz_001_q3",
+      "category": "social",
+      "prompt": "Who is more...",
+      "content": "Likely to make friends with strangers"
+    },
+    {
+      "id": "quiz_001_q4",
+      "category": "competitive",
+      "prompt": "Who would...",
+      "content": "Get more competitive during board games"
+    },
+    {
+      "id": "quiz_001_q5",
+      "category": "humor",
+      "prompt": "Who is more...",
+      "content": "Likely to send memes at 2am"
+    }
+  ]
+}

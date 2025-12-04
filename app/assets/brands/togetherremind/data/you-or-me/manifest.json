@@ -15,6 +15,30 @@
       "description": "Deeper insights",
       "folder": "reflective",
       "questionCount": 30
+    },
+    {
+      "id": "connection",
+      "displayName": "Connection",
+      "description": "Closeness and intimacy patterns",
+      "folder": "connection",
+      "questionCount": 20,
+      "therapeutic": true
+    },
+    {
+      "id": "attachment",
+      "displayName": "Attachment",
+      "description": "Trust and security dynamics",
+      "folder": "attachment",
+      "questionCount": 20,
+      "therapeutic": true
+    },
+    {
+      "id": "growth",
+      "displayName": "Growth",
+      "description": "How you've evolved together",
+      "folder": "growth",
+      "questionCount": 20,
+      "therapeutic": true
     }
   ],
   "selectionMode": "quest_count_mod",

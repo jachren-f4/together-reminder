@@ -1,0 +1,69 @@
+{
+  "quizId": "affirmation_009",
+  "title": "Improving Together",
+  "category": "growth",
+  "branch": "growth",
+  "description": "Rate your commitment to mutual improvement",
+  "questions": [
+    {
+      "id": "affirmation_009_q1",
+      "text": "We work together to improve our communication skills.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ]
+    },
+    {
+      "id": "affirmation_009_q2",
+      "text": "My partner is open to feedback that helps us grow.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ]
+    },
+    {
+      "id": "affirmation_009_q3",
+      "text": "We hold each other accountable in loving, constructive ways.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ]
+    },
+    {
+      "id": "affirmation_009_q4",
+      "text": "I can admit my mistakes and work to do better.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ]
+    },
+    {
+      "id": "affirmation_009_q5",
+      "text": "Our relationship keeps getting better as we both put in effort.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ]
+    }
+  ]
+}

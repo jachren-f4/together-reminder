@@ -1,0 +1,69 @@
+{
+  "quizId": "affirmation_004",
+  "title": "Supporting Dreams",
+  "category": "growth",
+  "branch": "growth",
+  "description": "Rate how you support each other's aspirations",
+  "questions": [
+    {
+      "id": "affirmation_004_q1",
+      "text": "My partner actively supports my personal goals and dreams.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ]
+    },
+    {
+      "id": "affirmation_004_q2",
+      "text": "I feel encouraged to pursue what matters most to me.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ]
+    },
+    {
+      "id": "affirmation_004_q3",
+      "text": "We celebrate each other's individual achievements.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ]
+    },
+    {
+      "id": "affirmation_004_q4",
+      "text": "My partner helps me believe in my potential.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ]
+    },
+    {
+      "id": "affirmation_004_q5",
+      "text": "We make sacrifices to help each other reach our dreams.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ]
+    }
+  ]
+}

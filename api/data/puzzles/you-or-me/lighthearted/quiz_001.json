@@ -1,0 +1,37 @@
+{
+  "quizId": "quiz_001",
+  "title": "Lighthearted Quiz 1",
+  "branch": "lighthearted",
+  "questions": [
+    {
+      "id": "quiz_001_q1",
+      "category": "preferences",
+      "prompt": "Who is more",
+      "content": "Likely to try a new food without asking what's in it"
+    },
+    {
+      "id": "quiz_001_q2",
+      "category": "habits",
+      "prompt": "Who is more",
+      "content": "Likely to hit snooze multiple times in the morning"
+    },
+    {
+      "id": "quiz_001_q3",
+      "category": "personality",
+      "prompt": "Who is more",
+      "content": "Likely to strike up a conversation with a stranger"
+    },
+    {
+      "id": "quiz_001_q4",
+      "category": "leisure",
+      "prompt": "Who is more",
+      "content": "Likely to choose a cozy night in over going out"
+    },
+    {
+      "id": "quiz_001_q5",
+      "category": "interests",
+      "prompt": "Who is more",
+      "content": "Likely to get lost in a book for hours"
+    }
+  ]
+}

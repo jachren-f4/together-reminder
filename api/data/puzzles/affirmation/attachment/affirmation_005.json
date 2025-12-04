@@ -1,0 +1,69 @@
+{
+  "quizId": "affirmation_005",
+  "title": "Reassurance",
+  "category": "attachment",
+  "branch": "attachment",
+  "description": "Rate how reassured you feel",
+  "questions": [
+    {
+      "id": "affirmation_005_q1",
+      "text": "My partner reassures me when I feel anxious about us.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ]
+    },
+    {
+      "id": "affirmation_005_q2",
+      "text": "I feel comfortable asking for reassurance when I need it.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ]
+    },
+    {
+      "id": "affirmation_005_q3",
+      "text": "My partner's words and actions make me feel wanted.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ]
+    },
+    {
+      "id": "affirmation_005_q4",
+      "text": "I don't need constant reassurance to feel secure.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ]
+    },
+    {
+      "id": "affirmation_005_q5",
+      "text": "I trust my partner's love even when they don't say it.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ]
+    }
+  ]
+}

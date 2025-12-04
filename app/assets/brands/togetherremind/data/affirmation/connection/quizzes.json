@@ -1,0 +1,250 @@
+{
+  "quizzes": [
+    {
+      "id": "emotional_intimacy",
+      "name": "Emotional Intimacy",
+      "category": "connection",
+      "difficulty": 2,
+      "formatType": "affirmation",
+      "imagePath": "",
+      "description": "Rate your emotional closeness",
+      "questions": [
+        {
+          "question": "I feel emotionally safe sharing my deepest thoughts with my partner.",
+          "questionType": "scale",
+          "options": [],
+          "correctAnswer": null
+        },
+        {
+          "question": "My partner truly sees and understands the real me.",
+          "questionType": "scale",
+          "options": [],
+          "correctAnswer": null
+        },
+        {
+          "question": "I can be vulnerable with my partner without fear of judgment.",
+          "questionType": "scale",
+          "options": [],
+          "correctAnswer": null
+        },
+        {
+          "question": "Our emotional connection has deepened over time.",
+          "questionType": "scale",
+          "options": [],
+          "correctAnswer": null
+        },
+        {
+          "question": "I feel my partner's love even in our silences.",
+          "questionType": "scale",
+          "options": [],
+          "correctAnswer": null
+        }
+      ]
+    },
+    {
+      "id": "feeling_seen",
+      "name": "Feeling Seen",
+      "category": "connection",
+      "difficulty": 2,
+      "formatType": "affirmation",
+      "imagePath": "",
+      "description": "Rate how understood you feel",
+      "questions": [
+        {
+          "question": "My partner notices the small things that matter to me.",
+          "questionType": "scale",
+          "options": [],
+          "correctAnswer": null
+        },
+        {
+          "question": "I feel heard when I express my needs and feelings.",
+          "questionType": "scale",
+          "options": [],
+          "correctAnswer": null
+        },
+        {
+          "question": "My partner remembers details about my life that I've shared.",
+          "questionType": "scale",
+          "options": [],
+          "correctAnswer": null
+        },
+        {
+          "question": "I believe my partner genuinely cares about my inner world.",
+          "questionType": "scale",
+          "options": [],
+          "correctAnswer": null
+        },
+        {
+          "question": "My partner makes me feel valued for who I truly am.",
+          "questionType": "scale",
+          "options": [],
+          "correctAnswer": null
+        }
+      ]
+    },
+    {
+      "id": "love_expression",
+      "name": "Love Expression",
+      "category": "connection",
+      "difficulty": 2,
+      "formatType": "affirmation",
+      "imagePath": "",
+      "description": "Rate how love is expressed between you",
+      "questions": [
+        {
+          "question": "I feel loved in the way I need to receive love.",
+          "questionType": "scale",
+          "options": [],
+          "correctAnswer": null
+        },
+        {
+          "question": "My partner expresses affection in ways that resonate with me.",
+          "questionType": "scale",
+          "options": [],
+          "correctAnswer": null
+        },
+        {
+          "question": "I am comfortable expressing my love openly.",
+          "questionType": "scale",
+          "options": [],
+          "correctAnswer": null
+        },
+        {
+          "question": "We have found a rhythm of showing love that works for both of us.",
+          "questionType": "scale",
+          "options": [],
+          "correctAnswer": null
+        },
+        {
+          "question": "I feel our love expressed in both words and actions.",
+          "questionType": "scale",
+          "options": [],
+          "correctAnswer": null
+        }
+      ]
+    },
+    {
+      "id": "shared_moments",
+      "name": "Shared Moments",
+      "category": "connection",
+      "difficulty": 2,
+      "formatType": "affirmation",
+      "imagePath": "",
+      "description": "Rate the quality of your time together",
+      "questions": [
+        {
+          "question": "Our time together feels meaningful, not just routine.",
+          "questionType": "scale",
+          "options": [],
+          "correctAnswer": null
+        },
+        {
+          "question": "We create special moments even in ordinary days.",
+          "questionType": "scale",
+          "options": [],
+          "correctAnswer": null
+        },
+        {
+          "question": "I cherish our shared experiences and memories.",
+          "questionType": "scale",
+          "options": [],
+          "correctAnswer": null
+        },
+        {
+          "question": "Quality time with my partner recharges me emotionally.",
+          "questionType": "scale",
+          "options": [],
+          "correctAnswer": null
+        },
+        {
+          "question": "We are present with each other when we're together.",
+          "questionType": "scale",
+          "options": [],
+          "correctAnswer": null
+        }
+      ]
+    },
+    {
+      "id": "heart_to_heart",
+      "name": "Heart to Heart",
+      "category": "connection",
+      "difficulty": 2,
+      "formatType": "affirmation",
+      "imagePath": "",
+      "description": "Rate your heart connection",
+      "questions": [
+        {
+          "question": "I can sense when my partner needs support without them saying.",
+          "questionType": "scale",
+          "options": [],
+          "correctAnswer": null
+        },
+        {
+          "question": "Our hearts feel connected even when we're apart.",
+          "questionType": "scale",
+          "options": [],
+          "correctAnswer": null
+        },
+        {
+          "question": "I feel my partner's emotions as if they were my own.",
+          "questionType": "scale",
+          "options": [],
+          "correctAnswer": null
+        },
+        {
+          "question": "We share a deep understanding that goes beyond words.",
+          "questionType": "scale",
+          "options": [],
+          "correctAnswer": null
+        },
+        {
+          "question": "My partner is the person I most want to share my life with.",
+          "questionType": "scale",
+          "options": [],
+          "correctAnswer": null
+        }
+      ]
+    },
+    {
+      "id": "closeness_comfort",
+      "name": "Closeness & Comfort",
+      "category": "connection",
+      "difficulty": 2,
+      "formatType": "affirmation",
+      "imagePath": "",
+      "description": "Rate your comfort in closeness",
+      "questions": [
+        {
+          "question": "I feel at home when I'm with my partner.",
+          "questionType": "scale",
+          "options": [],
+          "correctAnswer": null
+        },
+        {
+          "question": "Physical closeness with my partner brings me peace.",
+          "questionType": "scale",
+          "options": [],
+          "correctAnswer": null
+        },
+        {
+          "question": "I can relax completely in my partner's presence.",
+          "questionType": "scale",
+          "options": [],
+          "correctAnswer": null
+        },
+        {
+          "question": "Our intimacy feels natural and comfortable.",
+          "questionType": "scale",
+          "options": [],
+          "correctAnswer": null
+        },
+        {
+          "question": "I look forward to simply being near my partner.",
+          "questionType": "scale",
+          "options": [],
+          "correctAnswer": null
+        }
+      ]
+    }
+  ]
+}

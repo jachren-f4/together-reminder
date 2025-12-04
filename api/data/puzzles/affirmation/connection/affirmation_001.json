@@ -1,0 +1,69 @@
+{
+  "quizId": "affirmation_001",
+  "title": "Emotional Intimacy",
+  "category": "connection",
+  "branch": "connection",
+  "description": "Rate your emotional closeness",
+  "questions": [
+    {
+      "id": "affirmation_001_q1",
+      "text": "I feel emotionally safe sharing my deepest thoughts with my partner.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ]
+    },
+    {
+      "id": "affirmation_001_q2",
+      "text": "My partner truly sees and understands the real me.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ]
+    },
+    {
+      "id": "affirmation_001_q3",
+      "text": "I can be vulnerable with my partner without fear of judgment.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ]
+    },
+    {
+      "id": "affirmation_001_q4",
+      "text": "Our emotional connection has deepened over time.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ]
+    },
+    {
+      "id": "affirmation_001_q5",
+      "text": "I feel my partner's love even in our silences.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ]
+    }
+  ]
+}

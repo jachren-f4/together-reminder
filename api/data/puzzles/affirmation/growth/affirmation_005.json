@@ -1,0 +1,69 @@
+{
+  "quizId": "affirmation_005",
+  "title": "Resilience",
+  "category": "growth",
+  "branch": "growth",
+  "description": "Rate your relationship resilience",
+  "questions": [
+    {
+      "id": "affirmation_005_q1",
+      "text": "We've become stronger through the hard times.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ]
+    },
+    {
+      "id": "affirmation_005_q2",
+      "text": "Challenges have deepened our bond rather than weakened it.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ]
+    },
+    {
+      "id": "affirmation_005_q3",
+      "text": "I trust we can handle whatever comes our way.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ]
+    },
+    {
+      "id": "affirmation_005_q4",
+      "text": "Our relationship has survived tests that make it more solid.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ]
+    },
+    {
+      "id": "affirmation_005_q5",
+      "text": "We bounce back from setbacks together.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ]
+    }
+  ]
+}

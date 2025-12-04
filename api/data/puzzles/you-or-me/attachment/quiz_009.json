@@ -1,0 +1,37 @@
+{
+  "quizId": "quiz_009",
+  "title": "Attachment Quiz 9",
+  "branch": "attachment",
+  "questions": [
+    {
+      "id": "quiz_009_q1",
+      "category": "independence",
+      "prompt": "Who is more comfortable with...",
+      "content": "Not knowing where the other is"
+    },
+    {
+      "id": "quiz_009_q2",
+      "category": "security",
+      "prompt": "Who overthinks more about...",
+      "content": "Small changes in behavior"
+    },
+    {
+      "id": "quiz_009_q3",
+      "category": "conflict",
+      "prompt": "Who needs more time to...",
+      "content": "Process and cool down after conflict"
+    },
+    {
+      "id": "quiz_009_q4",
+      "category": "reassurance",
+      "prompt": "Who seeks more...",
+      "content": "Eye contact and physical closeness"
+    },
+    {
+      "id": "quiz_009_q5",
+      "category": "trust",
+      "prompt": "Who is more relaxed about...",
+      "content": "The other's past relationships"
+    }
+  ]
+}

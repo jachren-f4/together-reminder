@@ -1,0 +1,67 @@
+{
+  "quizId": "quiz_001",
+  "title": "Social Energy",
+  "branch": "playful",
+  "questions": [
+    {
+      "id": "quiz_001_q1",
+      "text": "After a long week, I prefer to recharge by...",
+      "choices": [
+        "Going out with friends to a lively event",
+        "Having a small gathering with close friends",
+        "Spending quiet time at home alone",
+        "One-on-one time with my partner",
+        "Other / It depends"
+      ],
+      "category": "personality"
+    },
+    {
+      "id": "quiz_001_q2",
+      "text": "At a party, you'll most likely find me...",
+      "choices": [
+        "In the center of the room telling stories",
+        "Having deep conversations with a few people",
+        "Helping the host with tasks",
+        "Finding a quiet corner to observe",
+        "Other / It depends"
+      ],
+      "category": "social"
+    },
+    {
+      "id": "quiz_001_q3",
+      "text": "When meeting new people, I typically...",
+      "choices": [
+        "Introduce myself to everyone enthusiastically",
+        "Wait for others to approach me first",
+        "Stick with people I already know",
+        "Jump right into interesting conversations",
+        "Other / It depends"
+      ],
+      "category": "social"
+    },
+    {
+      "id": "quiz_001_q4",
+      "text": "My ideal weekend involves...",
+      "choices": [
+        "Multiple social activities and plans",
+        "One fun outing and lots of rest",
+        "Staying home with a good book or show",
+        "Spontaneous adventures as they come",
+        "Other / It depends"
+      ],
+      "category": "lifestyle"
+    },
+    {
+      "id": "quiz_001_q5",
+      "text": "After spending time in a crowd, I feel...",
+      "choices": [
+        "Energized and ready for more",
+        "Happy but needing some quiet time",
+        "Drained and eager to be alone",
+        "Depends on who was in the crowd",
+        "Other / It depends"
+      ],
+      "category": "personality"
+    }
+  ]
+}

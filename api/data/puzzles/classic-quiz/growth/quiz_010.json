@@ -1,0 +1,67 @@
+{
+  "quizId": "quiz_010",
+  "title": "Growth Quiz 10",
+  "branch": "growth",
+  "questions": [
+    {
+      "id": "quiz_010_q1",
+      "text": "What change are we facing that I'm most anxious about?",
+      "choices": [
+        "Career or financial changes",
+        "Relationship milestones or transitions",
+        "Family or living situation changes",
+        "Personal growth that affects our dynamic",
+        "Other / It depends"
+      ],
+      "category": "emotional"
+    },
+    {
+      "id": "quiz_010_q2",
+      "text": "How do I want us to grow together as a couple?",
+      "choices": [
+        "Build deeper emotional intimacy",
+        "Create more shared experiences",
+        "Develop better communication",
+        "Align our future goals and values",
+        "Other / It depends"
+      ],
+      "category": "growth"
+    },
+    {
+      "id": "quiz_010_q3",
+      "text": "What pattern or habit do I want to change about myself?",
+      "choices": [
+        "How I communicate or handle conflict",
+        "My emotional reactions or triggers",
+        "Work-life balance or priorities",
+        "Self-care and health habits",
+        "Other / It depends"
+      ],
+      "category": "growth"
+    },
+    {
+      "id": "quiz_010_q4",
+      "text": "What do I admire most about how you handle challenges?",
+      "choices": [
+        "Your resilience and positive attitude",
+        "Your problem-solving abilities",
+        "Your emotional strength",
+        "Your ability to stay calm",
+        "Other / It depends"
+      ],
+      "category": "values"
+    },
+    {
+      "id": "quiz_010_q5",
+      "text": "How can we support each other through change?",
+      "choices": [
+        "Check in regularly about how we're feeling",
+        "Be patient with each other's process",
+        "Focus on what's not changing",
+        "Adapt our routines and expectations",
+        "Other / It depends"
+      ],
+      "category": "communication"
+    }
+  ]
+}

@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import '../models/daily_quest.dart';
+import '../services/storage_service.dart';
 import 'quest_card.dart';
 import 'steps/steps_quest_card.dart';
 
@@ -181,9 +182,19 @@ class _QuestCarouselState extends State<QuestCarousel> {
     // Default: use generic QuestCard
     // Key includes completion count to force rebuild when quest status changes
     // (Hive returns same object instances, so without Key Flutter reuses State)
+    // For turn-based games (Linked, Word Search), also include currentTurnUserId
+    // so the card rebuilds when the turn changes
     final completionCount = quest.userCompletions?.length ?? 0;
+    String keyExtra = '';
+    if (quest.type == QuestType.linked) {
+      final match = StorageService().getActiveLinkedMatch();
+      keyExtra = '_${match?.currentTurnUserId ?? 'none'}';
+    } else if (quest.type == QuestType.wordSearch) {
+      final match = StorageService().getActiveWordSearchMatch();
+      keyExtra = '_${match?.currentTurnUserId ?? 'none'}';
+    }
     return QuestCard(
-      key: ValueKey('${quest.id}_$completionCount'),
+      key: ValueKey('${quest.id}_$completionCount$keyExtra'),
       quest: quest,
       currentUserId: widget.currentUserId,
       onTap: () => widget.onQuestTap(quest),

@@ -1,0 +1,69 @@
+{
+  "quizId": "affirmation_009",
+  "title": "Being Validated",
+  "category": "connection",
+  "branch": "connection",
+  "description": "Rate how validated you feel in your relationship",
+  "questions": [
+    {
+      "id": "affirmation_009_q1",
+      "text": "My partner validates my feelings, even when they don't fully understand them.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ]
+    },
+    {
+      "id": "affirmation_009_q2",
+      "text": "I feel heard when I share my concerns with my partner.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ]
+    },
+    {
+      "id": "affirmation_009_q3",
+      "text": "My partner acknowledges my perspective during disagreements.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ]
+    },
+    {
+      "id": "affirmation_009_q4",
+      "text": "I don't have to justify my emotions to my partner.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ]
+    },
+    {
+      "id": "affirmation_009_q5",
+      "text": "My partner's support makes me feel capable and strong.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ]
+    }
+  ]
+}

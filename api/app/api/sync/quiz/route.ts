@@ -9,6 +9,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { withAuthOrDevBypass } from '@/lib/auth/dev-middleware';
 import { query } from '@/lib/db/pool';
+import { getCoupleBasic } from '@/lib/couple/utils';
 
 export const dynamic = 'force-dynamic';
 
@@ -57,20 +58,15 @@ export const POST = withAuthOrDevBypass(async (req, userId, email) => {
     }
 
     // Get couple info
-    const coupleResult = await query(
-      `SELECT id, user1_id, user2_id FROM couples WHERE user1_id = $1 OR user2_id = $1 LIMIT 1`,
-      [userId]
-    );
-
-    if (coupleResult.rows.length === 0) {
+    const couple = await getCoupleBasic(userId);
+    if (!couple) {
       return NextResponse.json(
         { error: 'No couple found for user' },
         { status: 404 }
       );
     }
 
-    const { id: coupleId, user1_id, user2_id } = coupleResult.rows[0];
-    const partnerId = userId === user1_id ? user2_id : user1_id;
+    const { coupleId, user1Id: user1_id, user2Id: user2_id, partnerId } = couple;
 
     // Check for existing session for this couple/format/date
     const existingResult = await query(
@@ -153,19 +149,15 @@ export const GET = withAuthOrDevBypass(async (req, userId, email) => {
     const sessionId = searchParams.get('sessionId');
 
     // Get couple info
-    const coupleResult = await query(
-      `SELECT id, user1_id, user2_id FROM couples WHERE user1_id = $1 OR user2_id = $1 LIMIT 1`,
-      [userId]
-    );
-
-    if (coupleResult.rows.length === 0) {
+    const couple = await getCoupleBasic(userId);
+    if (!couple) {
       return NextResponse.json(
         { error: 'No couple found for user' },
         { status: 404 }
       );
     }
 
-    const { id: coupleId, user1_id, user2_id } = coupleResult.rows[0];
+    const { coupleId, user1Id: user1_id } = couple;
 
     let result;
 

@@ -1,0 +1,39 @@
+{
+  "quizId": "affirmation_001",
+  "title": "Adventure vs Comfort",
+  "category": "playful",
+  "branch": "playful",
+  "description": "Where do you fall on the spectrum?",
+  "questions": [
+    {
+      "id": "affirmation_001_q1",
+      "text": "I consider myself more adventurous than cautious",
+      "type": "scale",
+      "scaleLabels": ["Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"]
+    },
+    {
+      "id": "affirmation_001_q2",
+      "text": "I prefer trying new things over sticking to what I know",
+      "type": "scale",
+      "scaleLabels": ["Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"]
+    },
+    {
+      "id": "affirmation_001_q3",
+      "text": "I'm more likely to say yes to spontaneous plans",
+      "type": "scale",
+      "scaleLabels": ["Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"]
+    },
+    {
+      "id": "affirmation_001_q4",
+      "text": "I enjoy pushing myself out of my comfort zone",
+      "type": "scale",
+      "scaleLabels": ["Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"]
+    },
+    {
+      "id": "affirmation_001_q5",
+      "text": "Routine and familiarity help me feel grounded",
+      "type": "scale",
+      "scaleLabels": ["Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"]
+    }
+  ]
+}

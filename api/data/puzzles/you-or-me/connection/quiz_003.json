@@ -1,0 +1,37 @@
+{
+  "quizId": "quiz_003",
+  "title": "Connection Quiz 3",
+  "branch": "connection",
+  "questions": [
+    {
+      "id": "quiz_003_q1",
+      "category": "attunement",
+      "prompt": "Who notices first when...",
+      "content": "The other is having a hard day"
+    },
+    {
+      "id": "quiz_003_q2",
+      "category": "comfort",
+      "prompt": "Who is better at...",
+      "content": "Providing comfort without words"
+    },
+    {
+      "id": "quiz_003_q3",
+      "category": "love_language",
+      "prompt": "Who appreciates more...",
+      "content": "Acts of service and help"
+    },
+    {
+      "id": "quiz_003_q4",
+      "category": "expression",
+      "prompt": "Who is more...",
+      "content": "Verbally appreciative"
+    },
+    {
+      "id": "quiz_003_q5",
+      "category": "understanding",
+      "prompt": "Who works harder to...",
+      "content": "Understand the other's perspective"
+    }
+  ]
+}

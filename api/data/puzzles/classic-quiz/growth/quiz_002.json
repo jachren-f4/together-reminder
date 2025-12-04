@@ -1,0 +1,67 @@
+{
+  "quizId": "quiz_002",
+  "title": "Growth Quiz 2",
+  "branch": "growth",
+  "questions": [
+    {
+      "id": "quiz_002_q1",
+      "text": "What's my biggest dream for our future together?",
+      "choices": [
+        "Building a home together",
+        "Traveling the world",
+        "Starting a family",
+        "Growing old together",
+        "Achieving our goals side by side"
+      ],
+      "category": "shared_dreams"
+    },
+    {
+      "id": "quiz_002_q2",
+      "text": "What challenge have I overcome that shaped me?",
+      "choices": [
+        "A difficult relationship",
+        "Career or financial hardship",
+        "Health struggles",
+        "Family challenges",
+        "Personal loss or grief"
+      ],
+      "category": "resilience"
+    },
+    {
+      "id": "quiz_002_q3",
+      "text": "What's one thing I want to change about myself?",
+      "choices": [
+        "Being more patient",
+        "Communicating better",
+        "Taking better care of myself",
+        "Being more present",
+        "Managing stress better"
+      ],
+      "category": "personal_change"
+    },
+    {
+      "id": "quiz_002_q4",
+      "text": "How do I want our relationship to grow?",
+      "choices": [
+        "Deeper emotional connection",
+        "More adventure and fun",
+        "Better communication",
+        "More intimacy",
+        "Stronger partnership"
+      ],
+      "category": "relationship_goals"
+    },
+    {
+      "id": "quiz_002_q5",
+      "text": "What value do I want to live by more?",
+      "choices": [
+        "Authenticity",
+        "Kindness",
+        "Courage",
+        "Balance",
+        "Gratitude"
+      ],
+      "category": "values"
+    }
+  ]
+}

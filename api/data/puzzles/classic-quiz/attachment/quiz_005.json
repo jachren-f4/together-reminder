@@ -1,0 +1,67 @@
+{
+  "quizId": "quiz_005",
+  "title": "Attachment Quiz 5",
+  "branch": "attachment",
+  "questions": [
+    {
+      "id": "quiz_005_q1",
+      "text": "What makes me feel most secure in our relationship?",
+      "choices": [
+        "Consistent daily communication",
+        "Physical closeness and affection",
+        "Knowing you're committed to our future",
+        "Your reliability and follow-through",
+        "Other / It depends"
+      ],
+      "category": "trust"
+    },
+    {
+      "id": "quiz_005_q2",
+      "text": "When I feel insecure, what do I need from you?",
+      "choices": [
+        "Verbal reassurance of your love",
+        "Physical comfort and closeness",
+        "Quality time and attention",
+        "Consistent actions that show you care",
+        "Other / It depends"
+      ],
+      "category": "emotional"
+    },
+    {
+      "id": "quiz_005_q3",
+      "text": "What helps me feel safe to be vulnerable with you?",
+      "choices": [
+        "Knowing you won't judge me",
+        "Your gentle and patient responses",
+        "Feeling you truly understand me",
+        "Past experiences of you handling my vulnerability well",
+        "Other / It depends"
+      ],
+      "category": "trust"
+    },
+    {
+      "id": "quiz_005_q4",
+      "text": "How do I show you that I feel safe with you?",
+      "choices": [
+        "Opening up about my fears and worries",
+        "Being physically affectionate",
+        "Sharing my authentic self",
+        "Asking for your help or support",
+        "Other / It depends"
+      ],
+      "category": "emotional"
+    },
+    {
+      "id": "quiz_005_q5",
+      "text": "What threatens my sense of security in relationships?",
+      "choices": [
+        "Inconsistent communication or attention",
+        "Feeling emotionally distant from you",
+        "Uncertainty about the future",
+        "Unresolved conflicts",
+        "Other / It depends"
+      ],
+      "category": "trust"
+    }
+  ]
+}

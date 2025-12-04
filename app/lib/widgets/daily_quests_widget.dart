@@ -1,9 +1,8 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
 import '../models/daily_quest.dart';
 import '../services/storage_service.dart';
 import '../services/daily_quest_service.dart';
-import '../services/api_client.dart';
+import '../services/home_polling_service.dart';
 import '../services/love_point_service.dart';
 import '../theme/app_theme.dart';
 import '../config/brand/brand_loader.dart';
@@ -22,7 +21,7 @@ final RouteObserver<ModalRoute<void>> questRouteObserver = RouteObserver<ModalRo
 /// Widget displaying daily quests with completion tracking
 ///
 /// Shows 3 daily quests with visual progress tracker and completion banner.
-/// Uses Supabase polling (instead of Firebase RTDB) for partner completion sync.
+/// Uses HomePollingService for unified partner completion sync.
 class DailyQuestsWidget extends StatefulWidget {
   const DailyQuestsWidget({Key? key}) : super(key: key);
 
@@ -32,12 +31,8 @@ class DailyQuestsWidget extends StatefulWidget {
 
 class _DailyQuestsWidgetState extends State<DailyQuestsWidget> with RouteAware {
   final StorageService _storage = StorageService();
-  final ApiClient _apiClient = ApiClient();
+  final HomePollingService _pollingService = HomePollingService();
   late DailyQuestService _questService;
-  Timer? _pollingTimer;
-
-  // Polling interval for partner quest status (5 seconds during dev, increase for production)
-  static const Duration _pollingInterval = Duration(seconds: 5);
 
   @override
   void initState() {
@@ -46,8 +41,9 @@ class _DailyQuestsWidgetState extends State<DailyQuestsWidget> with RouteAware {
       storage: _storage,
     );
 
-    // Start polling for partner quest completions via Supabase
-    _startPolling();
+    // Subscribe to unified polling service for partner quest completions
+    _pollingService.subscribe();
+    _pollingService.subscribeToTopic('dailyQuests', _onQuestUpdate);
   }
 
   @override
@@ -65,108 +61,27 @@ class _DailyQuestsWidgetState extends State<DailyQuestsWidget> with RouteAware {
     // Called when a route has been popped off, and this route is now visible
     // This happens when returning from quiz/waiting/results screens
     if (mounted) {
-      setState(() {
-        // Force refresh from Hive - quest status should now be updated
-      });
+      // Force immediate poll when returning from a game screen
+      _pollingService.pollNow();
+      setState(() {});
       Logger.debug('Route popped - refreshing quest cards', service: 'quest');
     }
   }
 
-  /// Start polling for partner quest completions
-  void _startPolling() {
-    // Initial poll
-    _pollQuestStatus();
-
-    // Set up periodic polling
-    _pollingTimer = Timer.periodic(_pollingInterval, (_) {
-      _pollQuestStatus();
-    });
-  }
-
-  /// Poll Supabase for quest completion status
-  Future<void> _pollQuestStatus() async {
-    final user = _storage.getUser();
-    final partner = _storage.getPartner();
-
-    if (user == null || partner == null) {
-      return;
-    }
-
-    try {
-      final response = await _apiClient.get('/api/sync/quest-status');
-
-      if (!response.success || response.data == null) {
-        return;
-      }
-
-      final questsData = response.data['quests'] as List<dynamic>?;
-      if (questsData == null || questsData.isEmpty) {
-        return;
-      }
-
-      bool anyUpdates = false;
-
-      for (final questData in questsData) {
-        final questType = questData['questType'] as String?;
-        final partnerCompleted = questData['partnerCompleted'] as bool? ?? false;
-        final status = questData['status'] as String?;
-
-        if (questType == null) continue;
-
-        // Find local quest by matching formatType to questType
-        // API returns: 'classic', 'affirmation', 'you_or_me'
-        // Quest formatType: 'classic', 'affirmation', 'youOrMe'
-        final localQuests = _storage.getTodayQuests();
-        final normalizedQuestType = questType == 'you_or_me' ? 'youOrMe' : questType;
-        final matchingQuest = localQuests.where((q) => q.formatType == normalizedQuestType).firstOrNull;
-
-        Logger.debug(
-          'Poll: questType=$questType, normalized=$normalizedQuestType, partnerCompleted=$partnerCompleted, '
-          'localQuests=${localQuests.map((q) => "${q.type.name}:${q.formatType}").join(", ")}, '
-          'matched=${matchingQuest?.type.name}',
-          service: 'quest',
-        );
-
-        if (matchingQuest != null) {
-          // Update partner completion status
-          // Use partner.id (UUID) if available, fallback to pushToken for backward compatibility
-          final partnerKey = partner.id.isNotEmpty ? partner.id : partner.pushToken;
-          if (partnerCompleted && !matchingQuest.hasUserCompleted(partnerKey)) {
-            matchingQuest.userCompletions ??= {};
-            matchingQuest.userCompletions![partnerKey] = true;
-
-            // Update quest status
-            if (status == 'completed' || matchingQuest.areBothUsersCompleted()) {
-              matchingQuest.status = 'completed';
-              matchingQuest.completedAt = DateTime.now();
-            } else {
-              matchingQuest.status = 'in_progress';
-            }
-
-            _storage.updateDailyQuest(matchingQuest);
-            anyUpdates = true;
-
-            Logger.debug('Updated quest ${matchingQuest.type.name} with partner completion', service: 'quest');
-          }
-        }
-      }
-
-      // Trigger UI rebuild if there were updates
-      if (anyUpdates && mounted) {
-        setState(() {});
-
-        // Also sync LP from server - partner completion may have awarded LP
-        await LovePointService.fetchAndSyncFromServer();
-      }
-    } catch (e) {
-      Logger.error('Error polling quest status', error: e, service: 'quest');
+  /// Called when HomePollingService detects quest updates
+  void _onQuestUpdate() {
+    if (mounted) {
+      setState(() {});
+      // Also sync LP from server - partner completion may have awarded LP
+      LovePointService.fetchAndSyncFromServer();
     }
   }
 
   @override
   void dispose() {
     questRouteObserver.unsubscribe(this);
-    _pollingTimer?.cancel();
+    _pollingService.unsubscribeFromTopic('dailyQuests', _onQuestUpdate);
+    _pollingService.unsubscribe();
     super.dispose();
   }
 
@@ -227,9 +142,6 @@ class _DailyQuestsWidgetState extends State<DailyQuestsWidget> with RouteAware {
             currentUserId: user?.id,
             onQuestTap: _handleQuestTap,
           ),
-
-        // Completion banner
-        if (allCompleted) _buildCompletionBanner(),
 
         const SizedBox(height: 24),
         ],

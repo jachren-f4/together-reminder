@@ -5,60 +5,60 @@
   "questions": [
     {
       "id": "quiz_007_q1",
-      "text": "How do I prefer to receive news?",
+      "text": "Am I more of a morning person or night owl?",
       "choices": [
-        "Social media",
-        "News apps",
-        "TV",
-        "Word of mouth",
-        "Other / Something else"
-      ],
-      "category": "preferences"
-    },
-    {
-      "id": "quiz_007_q2",
-      "text": "What's my favorite social media?",
-      "choices": [
-        "Instagram",
-        "TikTok",
-        "Twitter",
-        "Facebook",
-        "Other / Something else"
-      ],
-      "category": "favorites"
-    },
-    {
-      "id": "quiz_007_q3",
-      "text": "What's my favorite way to spend a rainy day?",
-      "choices": [
-        "Reading",
-        "Movies",
-        "Cooking",
-        "Sleeping",
-        "Other / Something else"
-      ],
-      "category": "favorites"
-    },
-    {
-      "id": "quiz_007_q4",
-      "text": "How do I prefer to shop?",
-      "choices": [
-        "Online",
-        "In-store",
-        "Mix of both",
-        "I don't like shopping",
+        "Morning person",
+        "Night owl",
+        "Both",
+        "Neither",
         "Other / It depends"
       ],
       "category": "preferences"
     },
     {
-      "id": "quiz_007_q5",
-      "text": "What's my favorite childhood memory type?",
+      "id": "quiz_007_q2",
+      "text": "How do I recharge my energy?",
       "choices": [
-        "Family vacations",
-        "Playing with friends",
-        "School events",
-        "Home activities",
+        "Alone time",
+        "With people",
+        "Nature",
+        "Sleep",
+        "Other / Something else"
+      ],
+      "category": "preferences"
+    },
+    {
+      "id": "quiz_007_q3",
+      "text": "What's my communication style?",
+      "choices": [
+        "Direct",
+        "Gentle",
+        "Humorous",
+        "Thoughtful",
+        "Other / Something else"
+      ],
+      "category": "preferences"
+    },
+    {
+      "id": "quiz_007_q4",
+      "text": "What's my favorite food?",
+      "choices": [
+        "Pizza",
+        "Sushi",
+        "Pasta",
+        "Tacos",
+        "Other / Something else"
+      ],
+      "category": "favorites"
+    },
+    {
+      "id": "quiz_007_q5",
+      "text": "What's my favorite childhood cartoon or show?",
+      "choices": [
+        "Disney",
+        "Nickelodeon",
+        "Cartoon Network",
+        "Anime",
         "Other / Something else"
       ],
       "category": "favorites"

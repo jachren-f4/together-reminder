@@ -1,0 +1,37 @@
+{
+  "quizId": "quiz_006",
+  "title": "Attachment Quiz 6",
+  "branch": "attachment",
+  "questions": [
+    {
+      "id": "quiz_006_q1",
+      "category": "comfort",
+      "prompt": "Who seeks more...",
+      "content": "Physical comfort when stressed"
+    },
+    {
+      "id": "quiz_006_q2",
+      "category": "security",
+      "prompt": "Who worries more about...",
+      "content": "The relationship changing"
+    },
+    {
+      "id": "quiz_006_q3",
+      "category": "independence",
+      "prompt": "Who needs more...",
+      "content": "Autonomy in decision-making"
+    },
+    {
+      "id": "quiz_006_q4",
+      "category": "reassurance",
+      "prompt": "Who asks more...",
+      "content": "If everything is okay between you"
+    },
+    {
+      "id": "quiz_006_q5",
+      "category": "conflict",
+      "prompt": "Who is more likely to...",
+      "content": "Withdraw during disagreements"
+    }
+  ]
+}

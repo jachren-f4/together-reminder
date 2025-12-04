@@ -8,6 +8,15 @@ import '../widgets/editorial/editorial.dart';
 import '../config/brand/brand_loader.dart';
 import 'you_or_me_match_game_screen.dart';
 
+/// Therapeutic branch names that get the "Deeper" badge
+const List<String> _therapeuticBranches = ['connection', 'attachment', 'growth'];
+
+/// Returns true if the branch is a therapeutic branch
+bool _isTherapeuticBranch(String? branch) {
+  if (branch == null) return false;
+  return _therapeuticBranches.contains(branch.toLowerCase());
+}
+
 /// Intro screen for You or Me game (server-centric architecture)
 ///
 /// Editorial newspaper aesthetic with example card and instructions.
@@ -271,12 +280,32 @@ class _YouOrMeMatchIntroScreenState extends State<YouOrMeMatchIntroScreen>
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          // Badge (animated)
+                          // Badge(s) (animated)
                           _animatedContent(
                             _badgeAnimation,
-                            const EditorialBadge(
-                              label: 'You or Me',
-                              isInverted: true,
+                            Row(
+                              children: [
+                                const EditorialBadge(
+                                  label: 'You or Me',
+                                  isInverted: true,
+                                ),
+                                if (_isTherapeuticBranch(widget.branch)) ...[
+                                  const SizedBox(width: 8),
+                                  Container(
+                                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                                    color: BrandLoader().colors.textPrimary,
+                                    child: Text(
+                                      'DEEPER',
+                                      style: TextStyle(
+                                        color: BrandLoader().colors.textOnPrimary,
+                                        fontSize: 9,
+                                        fontWeight: FontWeight.w700,
+                                        letterSpacing: 1.5,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ],
                             ),
                           ),
                           const SizedBox(height: 16),
@@ -612,11 +641,11 @@ class _YouOrMeMatchIntroScreenState extends State<YouOrMeMatchIntroScreen>
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  '$_partnerName already answered',
+                  '$_partnerName has answered',
                   style: EditorialStyles.bodySmall.copyWith(fontWeight: FontWeight.w600),
                 ),
                 Text(
-                  'See how well you match!',
+                  "It's your turn!",
                   style: EditorialStyles.bodySmall.copyWith(
                     color: EditorialStyles.inkMuted,
                     fontStyle: FontStyle.italic,

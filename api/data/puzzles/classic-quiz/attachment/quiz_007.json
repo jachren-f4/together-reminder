@@ -1,0 +1,67 @@
+{
+  "quizId": "quiz_007",
+  "title": "Attachment Quiz 7",
+  "branch": "attachment",
+  "questions": [
+    {
+      "id": "quiz_007_q1",
+      "text": "How much independence do I need in our relationship?",
+      "choices": [
+        "A lot - I need significant personal space",
+        "Moderate - balance of together and apart time",
+        "Minimal - I prefer to share most activities",
+        "It varies based on circumstances",
+        "Other / It depends"
+      ],
+      "category": "values"
+    },
+    {
+      "id": "quiz_007_q2",
+      "text": "How do I feel when you need space or alone time?",
+      "choices": [
+        "Completely fine and supportive",
+        "Okay if you communicate about it",
+        "A bit insecure but I manage it",
+        "Worried that something's wrong",
+        "Other / It depends"
+      ],
+      "category": "emotional"
+    },
+    {
+      "id": "quiz_007_q3",
+      "text": "What's my ideal level of togetherness in our daily life?",
+      "choices": [
+        "Constant connection and sharing",
+        "Regular check-ins throughout the day",
+        "Quality time morning and evening",
+        "Meaningful connection a few times a week",
+        "Other / It depends"
+      ],
+      "category": "values"
+    },
+    {
+      "id": "quiz_007_q4",
+      "text": "How do I balance my individual identity with being a couple?",
+      "choices": [
+        "I maintain strong individual interests",
+        "I blend our lives while keeping some independence",
+        "I prioritize our couple identity",
+        "It's an ongoing process I'm working on",
+        "Other / It depends"
+      ],
+      "category": "growth"
+    },
+    {
+      "id": "quiz_007_q5",
+      "text": "What helps me feel secure when we're physically apart?",
+      "choices": [
+        "Frequent texts or calls",
+        "Knowing when we'll see each other next",
+        "Trust in our connection",
+        "Photos or voice messages",
+        "Other / It depends"
+      ],
+      "category": "trust"
+    }
+  ]
+}

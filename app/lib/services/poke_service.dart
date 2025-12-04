@@ -70,12 +70,6 @@ class PokeService {
       final pokeId = const Uuid().v4();
       final now = DateTime.now();
 
-      // Removed verbose logging
-      // print('💫 Sending poke to partner...');
-      // print('   Partner token: ${partner.pushToken}');
-      // print('   Sender: ${user.name ?? 'You'}');
-      // print('   Emoji: $emoji');
-
       // Create poke record (as Reminder with category='poke')
       final poke = Reminder(
         id: pokeId,
@@ -104,9 +98,6 @@ class PokeService {
         'pokeId': pokeId,
         'emoji': emoji,
       });
-
-      // Removed verbose logging
-      // Logger.success('Cloud Function response: ${result.data}', service: 'poke');
 
       // Update rate limit timestamp
       _lastPokeTime = now;
@@ -150,9 +141,6 @@ class PokeService {
 
       // Sync to Supabase (Dual-Write)
       await _syncPokeToSupabase(poke);
-
-      // Removed verbose logging
-      // print('💾 Saved received poke from $fromName');
     } catch (e) {
       Logger.error('Error handling received poke', error: e, service: 'poke');
     }

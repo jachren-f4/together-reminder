@@ -1,0 +1,67 @@
+{
+  "quizId": "quiz_004",
+  "title": "Entertainment Style",
+  "branch": "playful",
+  "questions": [
+    {
+      "id": "quiz_004_q1",
+      "text": "My ideal movie night features...",
+      "choices": [
+        "Action-packed thrillers that keep me on edge",
+        "Thought-provoking dramas or documentaries",
+        "Feel-good comedies that make me laugh",
+        "Romantic stories with emotional depth",
+        "Other / It depends"
+      ],
+      "category": "preferences"
+    },
+    {
+      "id": "quiz_004_q2",
+      "text": "When choosing what to watch, I prefer...",
+      "choices": [
+        "Something brand new I've never seen",
+        "Critically acclaimed shows everyone's talking about",
+        "Comfort rewatches of old favorites",
+        "Whatever matches my current mood",
+        "Other / It depends"
+      ],
+      "category": "preferences"
+    },
+    {
+      "id": "quiz_004_q3",
+      "text": "My music taste reveals that I'm...",
+      "choices": [
+        "Always discovering new artists and genres",
+        "Loyal to a few favorite artists or styles",
+        "Eclectic - I love everything",
+        "Nostalgic - drawn to music from my past",
+        "Other / It depends"
+      ],
+      "category": "personality"
+    },
+    {
+      "id": "quiz_004_q4",
+      "text": "At a game night, I'm most drawn to...",
+      "choices": [
+        "Competitive strategy games",
+        "Cooperative team games",
+        "Creative storytelling games",
+        "Quick party games with lots of laughs",
+        "Other / It depends"
+      ],
+      "category": "social"
+    },
+    {
+      "id": "quiz_004_q5",
+      "text": "When I have free time, I'm most likely to...",
+      "choices": [
+        "Dive into an engaging book or podcast",
+        "Watch the latest trending series",
+        "Play video games or apps",
+        "Create or make something artistic",
+        "Other / It depends"
+      ],
+      "category": "lifestyle"
+    }
+  ]
+}

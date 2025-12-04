@@ -1,0 +1,67 @@
+{
+  "quizId": "quiz_002",
+  "title": "Risk & Adventure",
+  "branch": "playful",
+  "questions": [
+    {
+      "id": "quiz_002_q1",
+      "text": "When faced with a new opportunity, my first instinct is to...",
+      "choices": [
+        "Jump in immediately - life's short!",
+        "Research thoroughly before deciding",
+        "Ask trusted friends for their opinions",
+        "Weigh the pros and cons carefully",
+        "Other / It depends"
+      ],
+      "category": "personality"
+    },
+    {
+      "id": "quiz_002_q2",
+      "text": "My ideal vacation would be...",
+      "choices": [
+        "Backpacking through unfamiliar countries",
+        "A planned itinerary in a new city",
+        "A relaxing resort with all amenities",
+        "Visiting familiar favorite destinations",
+        "Other / It depends"
+      ],
+      "category": "preferences"
+    },
+    {
+      "id": "quiz_002_q3",
+      "text": "When trying new foods, I typically...",
+      "choices": [
+        "Order the most unusual item on the menu",
+        "Try one new thing alongside familiar favorites",
+        "Stick to dishes I know I'll enjoy",
+        "Ask for recommendations first",
+        "Other / It depends"
+      ],
+      "category": "lifestyle"
+    },
+    {
+      "id": "quiz_002_q4",
+      "text": "If I could learn a new skill, I'd choose...",
+      "choices": [
+        "Skydiving or extreme sports",
+        "A creative art like painting or music",
+        "A practical skill like cooking or woodworking",
+        "An intellectual pursuit like a new language",
+        "Other / It depends"
+      ],
+      "category": "preferences"
+    },
+    {
+      "id": "quiz_002_q5",
+      "text": "My approach to financial decisions is...",
+      "choices": [
+        "Take calculated risks for big rewards",
+        "Balance security with some adventures",
+        "Prioritize stability and savings",
+        "Live in the moment, money comes and goes",
+        "Other / It depends"
+      ],
+      "category": "personality"
+    }
+  ]
+}

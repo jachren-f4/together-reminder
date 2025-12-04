@@ -1,0 +1,67 @@
+{
+  "quizId": "quiz_011",
+  "title": "Connection Quiz 11",
+  "branch": "connection",
+  "questions": [
+    {
+      "id": "quiz_011_q1",
+      "text": "What type of quality time together do I value most?",
+      "choices": [
+        "Doing activities we both enjoy",
+        "Deep one-on-one conversations",
+        "Just being in the same room together",
+        "Trying new experiences together",
+        "Other / It depends"
+      ],
+      "category": "values"
+    },
+    {
+      "id": "quiz_011_q2",
+      "text": "How much physical affection do I prefer in daily life?",
+      "choices": [
+        "Frequent touches, hugs, and kisses",
+        "Moderate - holding hands, occasional hugs",
+        "Minimal during day, more at night",
+        "It varies based on my mood",
+        "Other / It depends"
+      ],
+      "category": "emotional"
+    },
+    {
+      "id": "quiz_011_q3",
+      "text": "What's my ideal balance of together time vs. alone time?",
+      "choices": [
+        "Most of my free time with you",
+        "Daily connection with some solo time",
+        "Regular space for individual activities",
+        "It depends on what's happening in life",
+        "Other / It depends"
+      ],
+      "category": "values"
+    },
+    {
+      "id": "quiz_011_q4",
+      "text": "How do I prefer to maintain intimacy in our relationship?",
+      "choices": [
+        "Through physical touch and affection",
+        "Through deep conversations",
+        "Through shared experiences and memories",
+        "Through everyday acts of love",
+        "Other / It depends"
+      ],
+      "category": "emotional"
+    },
+    {
+      "id": "quiz_011_q5",
+      "text": "What makes me feel most connected during physical intimacy?",
+      "choices": [
+        "Eye contact and presence",
+        "Verbal affirmation and communication",
+        "Feeling desired and wanted",
+        "The emotional closeness after",
+        "Other / It depends"
+      ],
+      "category": "emotional"
+    }
+  ]
+}

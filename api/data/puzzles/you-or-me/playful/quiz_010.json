@@ -1,0 +1,37 @@
+{
+  "quizId": "quiz_010",
+  "title": "Playful Quiz 10",
+  "branch": "playful",
+  "questions": [
+    {
+      "id": "quiz_010_q1",
+      "category": "humor",
+      "prompt": "Who would...",
+      "content": "Pull a harmless prank on a friend"
+    },
+    {
+      "id": "quiz_010_q2",
+      "category": "quirks",
+      "prompt": "Who is more...",
+      "content": "Likely to collect silly souvenirs from trips"
+    },
+    {
+      "id": "quiz_010_q3",
+      "category": "personality",
+      "prompt": "Who would...",
+      "content": "Randomly break into song"
+    },
+    {
+      "id": "quiz_010_q4",
+      "category": "social",
+      "prompt": "Who is more...",
+      "content": "Likely to high-five strangers"
+    },
+    {
+      "id": "quiz_010_q5",
+      "category": "competitive",
+      "prompt": "Who would...",
+      "content": "Turn everything into a competition"
+    }
+  ]
+}

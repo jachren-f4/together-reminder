@@ -1,0 +1,39 @@
+{
+  "quizId": "affirmation_003",
+  "title": "Evening Routines",
+  "category": "lighthearted",
+  "branch": "lighthearted",
+  "description": "How do you like to wind down?",
+  "questions": [
+    {
+      "id": "affirmation_003_q1",
+      "text": "I have a consistent bedtime routine",
+      "type": "scale",
+      "scaleLabels": ["Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"]
+    },
+    {
+      "id": "affirmation_003_q2",
+      "text": "I prefer quiet evenings at home over going out",
+      "type": "scale",
+      "scaleLabels": ["Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"]
+    },
+    {
+      "id": "affirmation_003_q3",
+      "text": "Screen time helps me relax before bed",
+      "type": "scale",
+      "scaleLabels": ["Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"]
+    },
+    {
+      "id": "affirmation_003_q4",
+      "text": "I do my best thinking in the evening hours",
+      "type": "scale",
+      "scaleLabels": ["Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"]
+    },
+    {
+      "id": "affirmation_003_q5",
+      "text": "I need a clean space to fully relax at night",
+      "type": "scale",
+      "scaleLabels": ["Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"]
+    }
+  ]
+}

@@ -1,0 +1,39 @@
+{
+  "quizId": "affirmation_005",
+  "title": "Entertainment Choices",
+  "category": "lighthearted",
+  "branch": "lighthearted",
+  "description": "What captures your attention?",
+  "questions": [
+    {
+      "id": "affirmation_005_q1",
+      "text": "I prefer watching movies over TV series",
+      "type": "scale",
+      "scaleLabels": ["Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"]
+    },
+    {
+      "id": "affirmation_005_q2",
+      "text": "I enjoy discussing what we watch together",
+      "type": "scale",
+      "scaleLabels": ["Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"]
+    },
+    {
+      "id": "affirmation_005_q3",
+      "text": "I like background music or TV while doing tasks",
+      "type": "scale",
+      "scaleLabels": ["Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"]
+    },
+    {
+      "id": "affirmation_005_q4",
+      "text": "Comedies are my go-to for relaxation",
+      "type": "scale",
+      "scaleLabels": ["Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"]
+    },
+    {
+      "id": "affirmation_005_q5",
+      "text": "I enjoy discovering new music regularly",
+      "type": "scale",
+      "scaleLabels": ["Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"]
+    }
+  ]
+}

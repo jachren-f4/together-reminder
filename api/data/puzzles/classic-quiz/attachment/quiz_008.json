@@ -1,0 +1,67 @@
+{
+  "quizId": "quiz_008",
+  "title": "Attachment Quiz 8",
+  "branch": "attachment",
+  "questions": [
+    {
+      "id": "quiz_008_q1",
+      "text": "How do I handle it when you're busy or distracted?",
+      "choices": [
+        "I understand and give you space",
+        "I'm patient but miss you",
+        "I try to help so we can connect sooner",
+        "I struggle with feeling secondary",
+        "Other / It depends"
+      ],
+      "category": "emotional"
+    },
+    {
+      "id": "quiz_008_q2",
+      "text": "What's my attachment style when stressed?",
+      "choices": [
+        "I seek more closeness and reassurance",
+        "I withdraw and need space",
+        "I become more independent",
+        "I oscillate between seeking and withdrawing",
+        "Other / It depends"
+      ],
+      "category": "emotional"
+    },
+    {
+      "id": "quiz_008_q3",
+      "text": "How do I prefer to maintain our connection when life gets busy?",
+      "choices": [
+        "Quick check-ins throughout the day",
+        "Quality over quantity - focused time together",
+        "Physical presence even if we're doing separate things",
+        "Staying connected through shared routines",
+        "Other / It depends"
+      ],
+      "category": "values"
+    },
+    {
+      "id": "quiz_008_q4",
+      "text": "What do I need to feel valued when you have other commitments?",
+      "choices": [
+        "Knowing I'm still a priority",
+        "Being included in your plans when possible",
+        "Understanding why other things need attention",
+        "Making up for it with quality time later",
+        "Other / It depends"
+      ],
+      "category": "trust"
+    },
+    {
+      "id": "quiz_008_q5",
+      "text": "How do I show I'm secure in our relationship?",
+      "choices": [
+        "I give you space without anxiety",
+        "I communicate my needs clearly",
+        "I trust you without needing constant reassurance",
+        "I support your individual goals",
+        "Other / It depends"
+      ],
+      "category": "trust"
+    }
+  ]
+}

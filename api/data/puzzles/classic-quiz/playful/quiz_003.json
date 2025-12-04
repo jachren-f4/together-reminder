@@ -1,0 +1,67 @@
+{
+  "quizId": "quiz_003",
+  "title": "Decision Making",
+  "branch": "playful",
+  "questions": [
+    {
+      "id": "quiz_003_q1",
+      "text": "When making important decisions, I rely most on...",
+      "choices": [
+        "My gut feelings and intuition",
+        "Logic and careful analysis",
+        "Advice from people I trust",
+        "Past experiences and patterns",
+        "Other / It depends"
+      ],
+      "category": "personality"
+    },
+    {
+      "id": "quiz_003_q2",
+      "text": "When plans change unexpectedly, I typically...",
+      "choices": [
+        "Get excited about new possibilities",
+        "Feel stressed but adapt quickly",
+        "Prefer to stick to the original plan",
+        "Need time to process the change",
+        "Other / It depends"
+      ],
+      "category": "personality"
+    },
+    {
+      "id": "quiz_003_q3",
+      "text": "My approach to planning a date night is...",
+      "choices": [
+        "Completely spontaneous - see where the night takes us",
+        "A rough idea with room for flexibility",
+        "A well-researched plan with reservations",
+        "Following a tried-and-true favorite routine",
+        "Other / It depends"
+      ],
+      "category": "lifestyle"
+    },
+    {
+      "id": "quiz_003_q4",
+      "text": "When shopping for something important, I...",
+      "choices": [
+        "Buy what feels right in the moment",
+        "Compare a few options quickly",
+        "Research extensively for the best choice",
+        "Ask for recommendations from others",
+        "Other / It depends"
+      ],
+      "category": "preferences"
+    },
+    {
+      "id": "quiz_003_q5",
+      "text": "If I'm unsure about a choice, I'm most likely to...",
+      "choices": [
+        "Make a decision and adjust as needed",
+        "Sleep on it and decide tomorrow",
+        "Make a pros/cons list",
+        "Talk it through with someone",
+        "Other / It depends"
+      ],
+      "category": "personality"
+    }
+  ]
+}

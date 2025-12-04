@@ -1,0 +1,69 @@
+{
+  "quizId": "affirmation_012",
+  "title": "Safe Haven",
+  "category": "attachment",
+  "branch": "attachment",
+  "description": "Rate how your relationship is your safe haven",
+  "questions": [
+    {
+      "id": "affirmation_012_q1",
+      "text": "Coming home to my partner feels like coming home to myself.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ]
+    },
+    {
+      "id": "affirmation_012_q2",
+      "text": "My partner is my shelter from the chaos of the world.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ]
+    },
+    {
+      "id": "affirmation_012_q3",
+      "text": "I feel completely secure in my partner's love and commitment.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ]
+    },
+    {
+      "id": "affirmation_012_q4",
+      "text": "Our relationship provides a foundation of safety for me to grow.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ]
+    },
+    {
+      "id": "affirmation_012_q5",
+      "text": "I trust that no matter what happens, we'll face it together.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ]
+    }
+  ]
+}

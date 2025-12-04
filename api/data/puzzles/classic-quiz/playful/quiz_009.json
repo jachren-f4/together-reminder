@@ -1,0 +1,67 @@
+{
+  "quizId": "quiz_009",
+  "title": "Leadership & Teamwork",
+  "branch": "playful",
+  "questions": [
+    {
+      "id": "quiz_009_q1",
+      "text": "On a team project, I thrive when...",
+      "choices": [
+        "Leading the team toward our goal",
+        "Working independently on my part",
+        "Collaborating closely with teammates",
+        "Supporting others in their roles",
+        "Other / It depends"
+      ],
+      "category": "social"
+    },
+    {
+      "id": "quiz_009_q2",
+      "text": "When someone needs help, I prefer to...",
+      "choices": [
+        "Step in and take care of it myself",
+        "Guide them to find their own solution",
+        "Work alongside them to figure it out together",
+        "Connect them with someone better suited",
+        "Other / It depends"
+      ],
+      "category": "personality"
+    },
+    {
+      "id": "quiz_009_q3",
+      "text": "My ideal work environment is...",
+      "choices": [
+        "Fast-paced with lots of challenges",
+        "Collaborative with great team energy",
+        "Independent with clear expectations",
+        "Structured with predictable routines",
+        "Other / It depends"
+      ],
+      "category": "preferences"
+    },
+    {
+      "id": "quiz_009_q4",
+      "text": "When delegating tasks, I tend to...",
+      "choices": [
+        "Assign based on people's strengths",
+        "Take on the hardest parts myself",
+        "Divide everything equally",
+        "Let people choose what they want",
+        "Other / It depends"
+      ],
+      "category": "personality"
+    },
+    {
+      "id": "quiz_009_q5",
+      "text": "I feel most accomplished when...",
+      "choices": [
+        "Achieving a challenging personal goal",
+        "Helping someone else succeed",
+        "Leading a team to victory",
+        "Creating something meaningful",
+        "Other / It depends"
+      ],
+      "category": "personality"
+    }
+  ]
+}

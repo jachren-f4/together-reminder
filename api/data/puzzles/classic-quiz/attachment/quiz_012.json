@@ -1,0 +1,67 @@
+{
+  "quizId": "quiz_012",
+  "title": "Attachment Quiz 12",
+  "branch": "attachment",
+  "questions": [
+    {
+      "id": "quiz_012_q1",
+      "text": "What makes me feel most emotionally safe in our relationship?",
+      "choices": [
+        "Your predictability and consistency",
+        "Freedom to express all my emotions",
+        "Knowing you won't leave during hard times",
+        "Balance of closeness and independence",
+        "Other / It depends"
+      ],
+      "category": "trust"
+    },
+    {
+      "id": "quiz_012_q2",
+      "text": "How do I show that I trust you?",
+      "choices": [
+        "Opening up about my deepest fears",
+        "Giving you freedom without anxiety",
+        "Asking for help when I need it",
+        "Being vulnerable about my feelings",
+        "Other / It depends"
+      ],
+      "category": "trust"
+    },
+    {
+      "id": "quiz_012_q3",
+      "text": "What threatens my sense of trust most?",
+      "choices": [
+        "Inconsistency between words and actions",
+        "Feeling shut out or kept at distance",
+        "Lack of communication or transparency",
+        "Broken promises or commitments",
+        "Other / It depends"
+      ],
+      "category": "trust"
+    },
+    {
+      "id": "quiz_012_q4",
+      "text": "How am I working on becoming more securely attached?",
+      "choices": [
+        "Learning to self-soothe and regulate",
+        "Communicating needs instead of testing",
+        "Building trust through small steps",
+        "Balancing independence and connection",
+        "Other / It depends"
+      ],
+      "category": "growth"
+    },
+    {
+      "id": "quiz_012_q5",
+      "text": "What's the greatest gift you give me in our relationship?",
+      "choices": [
+        "Your unwavering presence and support",
+        "Space to grow as an individual",
+        "Patience with my healing journey",
+        "Consistent love through ups and downs",
+        "Other / It depends"
+      ],
+      "category": "values"
+    }
+  ]
+}

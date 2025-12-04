@@ -5,57 +5,63 @@
   "questions": [
     {
       "id": "quiz_012_q1",
-      "text": "What's my favorite weather?",
+      "text": "Would you rather have unlimited vacation time or unlimited money?",
       "choices": [
-        "Sunny",
-        "Rainy",
-        "Snowy",
-        "Cloudy",
-        "Other / It varies"
-      ],
-      "category": "favorites"
-    },
-    {
-      "id": "quiz_012_q2",
-      "text": "What's my preferred gift type?",
-      "choices": [
-        "Practical",
-        "Sentimental",
-        "Experience",
-        "Surprise me",
+        "Unlimited vacation time",
+        "Unlimited money",
+        "A balance of both somehow",
+        "Neither - just more free time daily",
         "Other / It depends"
       ],
       "category": "preferences"
     },
     {
-      "id": "quiz_012_q3",
-      "text": "Would I rather: Movie night or Game night?",
+      "id": "quiz_012_q2",
+      "text": "Would you rather always be 10 minutes late or 20 minutes early?",
       "choices": [
-        "Movie night",
-        "Game night"
+        "10 minutes late",
+        "20 minutes early",
+        "Exactly on time (not an option!)",
+        "It depends on the occasion",
+        "Other / It depends"
       ],
-      "category": "would_you_rather"
+      "category": "lifestyle"
+    },
+    {
+      "id": "quiz_012_q3",
+      "text": "Would you rather live in the city or the countryside?",
+      "choices": [
+        "Bustling city with everything nearby",
+        "Peaceful countryside with nature",
+        "Suburban sweet spot in between",
+        "Somewhere coastal by the water",
+        "Other / It depends"
+      ],
+      "category": "preferences"
     },
     {
       "id": "quiz_012_q4",
-      "text": "Would I rather: Live without internet or Live without TV?",
+      "text": "Would you rather always know what to say or always know what NOT to say?",
       "choices": [
-        "Without internet",
-        "Without TV"
+        "Know the perfect thing to say",
+        "Know what to avoid saying",
+        "I'm already good at both",
+        "I'm already bad at both",
+        "Other / It depends"
       ],
-      "category": "would_you_rather"
+      "category": "lifestyle"
     },
     {
       "id": "quiz_012_q5",
-      "text": "What's my favorite way to learn new things?",
+      "text": "Would you rather have a rewind button or a pause button for your life?",
       "choices": [
-        "Reading",
-        "Videos",
-        "Hands-on practice",
-        "Classes",
-        "Other / Something else"
+        "Rewind to fix mistakes",
+        "Pause to savor moments",
+        "Fast-forward through boring parts",
+        "Just let life play naturally",
+        "Other / It depends"
       ],
-      "category": "favorites"
+      "category": "preferences"
     }
   ]
 }

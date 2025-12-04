@@ -1,0 +1,67 @@
+{
+  "quizId": "quiz_009",
+  "title": "Growth Quiz 9",
+  "branch": "growth",
+  "questions": [
+    {
+      "id": "quiz_009_q1",
+      "text": "How do I typically respond to unexpected change?",
+      "choices": [
+        "I embrace it and adapt quickly",
+        "I need time to process and adjust",
+        "I resist initially but come around",
+        "I struggle and need extra support",
+        "Other / It depends"
+      ],
+      "category": "growth"
+    },
+    {
+      "id": "quiz_009_q2",
+      "text": "What helps me navigate difficult life transitions?",
+      "choices": [
+        "Your steady presence and support",
+        "Having a clear plan forward",
+        "Time to process emotions",
+        "Focusing on what I can control",
+        "Other / It depends"
+      ],
+      "category": "emotional"
+    },
+    {
+      "id": "quiz_009_q3",
+      "text": "When facing a major challenge, what do I need most?",
+      "choices": [
+        "Emotional support and encouragement",
+        "Practical help and problem-solving",
+        "Space to figure it out myself",
+        "Partnership in tackling it together",
+        "Other / It depends"
+      ],
+      "category": "communication"
+    },
+    {
+      "id": "quiz_009_q4",
+      "text": "How do I prefer we handle challenges that affect us both?",
+      "choices": [
+        "Face them as a united team",
+        "Divide and conquer based on strengths",
+        "Talk through options before acting",
+        "Support each other's individual coping",
+        "Other / It depends"
+      ],
+      "category": "values"
+    },
+    {
+      "id": "quiz_009_q5",
+      "text": "What's my relationship with failure and setbacks?",
+      "choices": [
+        "I see them as learning opportunities",
+        "They're hard but I eventually bounce back",
+        "I'm working on being more resilient",
+        "They shake my confidence significantly",
+        "Other / It depends"
+      ],
+      "category": "growth"
+    }
+  ]
+}

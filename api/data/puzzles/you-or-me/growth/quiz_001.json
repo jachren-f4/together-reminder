@@ -1,0 +1,37 @@
+{
+  "quizId": "quiz_001",
+  "title": "Growth Quiz 1",
+  "branch": "growth",
+  "questions": [
+    {
+      "id": "quiz_001_q1",
+      "category": "communication",
+      "prompt": "Who has grown more in...",
+      "content": "How they communicate"
+    },
+    {
+      "id": "quiz_001_q2",
+      "category": "self_growth",
+      "prompt": "Who is more focused on...",
+      "content": "Personal development"
+    },
+    {
+      "id": "quiz_001_q3",
+      "category": "adventure",
+      "prompt": "Who pushes more for...",
+      "content": "Trying new experiences together"
+    },
+    {
+      "id": "quiz_001_q4",
+      "category": "growth",
+      "prompt": "Who has changed the most since...",
+      "content": "You first got together"
+    },
+    {
+      "id": "quiz_001_q5",
+      "category": "adaptability",
+      "prompt": "Who adapts better to...",
+      "content": "Unexpected changes"
+    }
+  ]
+}

@@ -5,60 +5,60 @@
   "questions": [
     {
       "id": "quiz_001_q1",
-      "text": "What's my favorite type of phone app?",
+      "text": "Do I prefer sweet or savory snacks?",
       "choices": [
-        "Social media",
-        "Games",
-        "Productivity",
-        "Entertainment",
-        "Other / Something else"
-      ],
-      "category": "favorites"
-    },
-    {
-      "id": "quiz_001_q2",
-      "text": "What's my favorite time of day?",
-      "choices": [
-        "Early morning",
-        "Mid-morning",
-        "Afternoon",
-        "Evening",
-        "Other / It varies"
-      ],
-      "category": "favorites"
-    },
-    {
-      "id": "quiz_001_q3",
-      "text": "What's my preferred learning style?",
-      "choices": [
-        "Visual",
-        "Auditory",
-        "Hands-on",
-        "Reading",
+        "Sweet",
+        "Savory",
+        "Both",
+        "Neither",
         "Other / It depends"
       ],
       "category": "preferences"
     },
     {
-      "id": "quiz_001_q4",
-      "text": "What's my decision-making style?",
+      "id": "quiz_001_q2",
+      "text": "Do I prefer texting or calling?",
       "choices": [
-        "Quick/intuitive",
-        "Analytical",
-        "Ask others",
-        "Sleep on it",
+        "Texting",
+        "Calling",
+        "Video calls",
+        "In person only",
+        "Other / It depends"
+      ],
+      "category": "preferences"
+    },
+    {
+      "id": "quiz_001_q3",
+      "text": "What's my favorite sport to watch?",
+      "choices": [
+        "Football",
+        "Basketball",
+        "Soccer",
+        "Baseball",
+        "Other / Something else"
+      ],
+      "category": "favorites"
+    },
+    {
+      "id": "quiz_001_q4",
+      "text": "Do I prefer planning or spontaneity?",
+      "choices": [
+        "Always plan ahead",
+        "Mostly plan",
+        "Mostly spontaneous",
+        "Fully spontaneous",
         "Other / It depends"
       ],
       "category": "preferences"
     },
     {
       "id": "quiz_001_q5",
-      "text": "What's my ideal room temperature?",
+      "text": "What's my preferred social group size?",
       "choices": [
-        "Cool (65-68°F)",
-        "Comfortable (68-72°F)",
-        "Warm (72-75°F)",
-        "Hot (75°F+)",
+        "One-on-one",
+        "Small group (3-5)",
+        "Medium group (6-10)",
+        "Large party",
         "Other / It varies"
       ],
       "category": "preferences"

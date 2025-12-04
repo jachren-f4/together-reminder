@@ -1,0 +1,67 @@
+{
+  "quizId": "quiz_008",
+  "title": "Connection Quiz 8",
+  "branch": "connection",
+  "questions": [
+    {
+      "id": "quiz_008_q1",
+      "text": "What emotional need is most important to me in our relationship?",
+      "choices": [
+        "Feeling consistently loved and valued",
+        "Feeling heard and understood",
+        "Feeling supported in my goals",
+        "Feeling desired and wanted",
+        "Other / It depends"
+      ],
+      "category": "emotional"
+    },
+    {
+      "id": "quiz_008_q2",
+      "text": "When I'm upset, what helps me calm down?",
+      "choices": [
+        "Your reassuring words",
+        "Being held or touched",
+        "Time alone to process",
+        "Talking through it together",
+        "Other / It depends"
+      ],
+      "category": "emotional"
+    },
+    {
+      "id": "quiz_008_q3",
+      "text": "What makes me feel most prioritized in your life?",
+      "choices": [
+        "When you make time for me despite being busy",
+        "When you cancel other plans to be with me",
+        "When you ask about my day",
+        "When you include me in your decisions",
+        "Other / It depends"
+      ],
+      "category": "values"
+    },
+    {
+      "id": "quiz_008_q4",
+      "text": "How do I prefer to share my feelings with you?",
+      "choices": [
+        "In deep, planned conversations",
+        "Gradually, as things come up",
+        "Through actions more than words",
+        "Via text or writing first",
+        "Other / It depends"
+      ],
+      "category": "communication"
+    },
+    {
+      "id": "quiz_008_q5",
+      "text": "What helps me feel emotionally recharged after a hard day?",
+      "choices": [
+        "Quality time with you",
+        "Physical affection",
+        "Words of encouragement",
+        "Alone time followed by connection",
+        "Other / It depends"
+      ],
+      "category": "emotional"
+    }
+  ]
+}

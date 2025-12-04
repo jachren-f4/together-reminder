@@ -9,6 +9,15 @@ import '../theme/app_theme.dart';
 import '../animations/animation_config.dart';
 import 'animated_checkmark.dart';
 
+/// Therapeutic branch names that get the "Deeper" badge
+const List<String> _therapeuticBranches = ['connection', 'attachment', 'growth'];
+
+/// Returns true if the branch is a therapeutic branch
+bool _isTherapeuticBranch(String? branch) {
+  if (branch == null) return false;
+  return _therapeuticBranches.contains(branch.toLowerCase());
+}
+
 /// Card displaying a single daily quest with image, title, description, and status
 ///
 /// New carousel design with:
@@ -238,6 +247,7 @@ class _QuestCardState extends State<QuestCard>
           children: [
             // Image (top, full-width) with bottom border and white background
             // Dynamic height based on image aspect ratio (no cropping)
+            // Includes "Deeper" badge overlay for therapeutic branches
             if (imagePath != null)
               Container(
                 decoration: BoxDecoration(
@@ -249,42 +259,65 @@ class _QuestCardState extends State<QuestCard>
                     ),
                   ),
                 ),
-                child: ConstrainedBox(
-                  constraints: const BoxConstraints(
-                    maxHeight: 200, // Cap height for very tall images
-                  ),
-                  child: Image.asset(
-                    imagePath,
-                    width: double.infinity,
-                    fit: BoxFit.fitWidth, // Scale to card width, height follows aspect ratio
-                    alignment: Alignment.topCenter, // Start from top, don't center vertically
-                    // Note: No cacheWidth - use full resolution for crisp display on high-DPI screens
-                    errorBuilder: (context, error, stackTrace) {
-                      // Show fallback placeholder when image fails to load
-                      return Container(
-                        height: 120,
-                        color: const Color(0xFFF0F0F0),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(
-                              Icons.image_not_supported,
-                              size: 48,
-                              color: BrandLoader().colors.textTertiary,
+                child: Stack(
+                  children: [
+                    ConstrainedBox(
+                      constraints: const BoxConstraints(
+                        maxHeight: 200, // Cap height for very tall images
+                      ),
+                      child: Image.asset(
+                        imagePath,
+                        width: double.infinity,
+                        fit: BoxFit.fitWidth, // Scale to card width, height follows aspect ratio
+                        alignment: Alignment.topCenter, // Start from top, don't center vertically
+                        // Note: No cacheWidth - use full resolution for crisp display on high-DPI screens
+                        errorBuilder: (context, error, stackTrace) {
+                          // Show fallback placeholder when image fails to load
+                          return Container(
+                            height: 120,
+                            color: const Color(0xFFF0F0F0),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(
+                                  Icons.image_not_supported,
+                                  size: 48,
+                                  color: BrandLoader().colors.textTertiary,
+                                ),
+                                const SizedBox(height: 8),
+                                Text(
+                                  'Image not found',
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    color: BrandLoader().colors.textSecondary,
+                                  ),
+                                ),
+                              ],
                             ),
-                            const SizedBox(height: 8),
-                            Text(
-                              'Image not found',
-                              style: TextStyle(
-                                fontSize: 12,
-                                color: BrandLoader().colors.textSecondary,
-                              ),
+                          );
+                        },
+                      ),
+                    ),
+                    // "Deeper" badge for therapeutic branches
+                    if (_isTherapeuticBranch(widget.quest.branch))
+                      Positioned(
+                        top: 12,
+                        left: 12,
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                          color: BrandLoader().colors.textPrimary,
+                          child: Text(
+                            'DEEPER',
+                            style: TextStyle(
+                              color: BrandLoader().colors.textOnPrimary,
+                              fontSize: 9,
+                              fontWeight: FontWeight.w700,
+                              letterSpacing: 1.5,
                             ),
-                          ],
+                          ),
                         ),
-                      );
-                    },
-                  ),
+                      ),
+                  ],
                 ),
               ),
 

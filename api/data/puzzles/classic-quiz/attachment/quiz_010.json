@@ -1,0 +1,67 @@
+{
+  "quizId": "quiz_010",
+  "title": "Attachment Quiz 10",
+  "branch": "attachment",
+  "questions": [
+    {
+      "id": "quiz_010_q1",
+      "text": "How do I behave when I'm feeling disconnected from you?",
+      "choices": [
+        "I reach out and communicate about it",
+        "I wait for you to notice and reach out",
+        "I become more clingy or needy",
+        "I pull back to protect myself",
+        "Other / It depends"
+      ],
+      "category": "communication"
+    },
+    {
+      "id": "quiz_010_q2",
+      "text": "What helps me reconnect with you after feeling distant?",
+      "choices": [
+        "Deep conversation about what happened",
+        "Physical intimacy and closeness",
+        "Quality time doing something together",
+        "Hearing you express your love",
+        "Other / It depends"
+      ],
+      "category": "emotional"
+    },
+    {
+      "id": "quiz_010_q3",
+      "text": "When I feel you pulling away, I tend to:",
+      "choices": [
+        "Ask directly what's wrong",
+        "Give you space and wait",
+        "Pursue you more to reconnect",
+        "Match your distance to protect myself",
+        "Other / It depends"
+      ],
+      "category": "communication"
+    },
+    {
+      "id": "quiz_010_q4",
+      "text": "What pattern do I fall into during relationship stress?",
+      "choices": [
+        "Anxiously seeking reassurance",
+        "Withdrawing to avoid conflict",
+        "Trying to fix everything immediately",
+        "Oscillating between pursuing and withdrawing",
+        "Other / It depends"
+      ],
+      "category": "emotional"
+    },
+    {
+      "id": "quiz_010_q5",
+      "text": "What helps me regulate my emotions when I'm triggered?",
+      "choices": [
+        "Your presence and reassurance",
+        "Space to self-soothe first",
+        "Talking through my feelings",
+        "Physical grounding techniques",
+        "Other / It depends"
+      ],
+      "category": "emotional"
+    }
+  ]
+}

@@ -1,0 +1,39 @@
+{
+  "quizId": "affirmation_007",
+  "title": "What Matters Most",
+  "category": "lighthearted",
+  "branch": "lighthearted",
+  "description": "Your core relationship values",
+  "questions": [
+    {
+      "id": "affirmation_007_q1",
+      "text": "Quality time matters more than expensive gifts",
+      "type": "scale",
+      "scaleLabels": ["Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"]
+    },
+    {
+      "id": "affirmation_007_q2",
+      "text": "Small thoughtful gestures mean a lot to me",
+      "type": "scale",
+      "scaleLabels": ["Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"]
+    },
+    {
+      "id": "affirmation_007_q3",
+      "text": "I value experiences over material possessions",
+      "type": "scale",
+      "scaleLabels": ["Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"]
+    },
+    {
+      "id": "affirmation_007_q4",
+      "text": "Financial security is important for my peace of mind",
+      "type": "scale",
+      "scaleLabels": ["Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"]
+    },
+    {
+      "id": "affirmation_007_q5",
+      "text": "Celebrating milestones together is meaningful to me",
+      "type": "scale",
+      "scaleLabels": ["Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"]
+    }
+  ]
+}

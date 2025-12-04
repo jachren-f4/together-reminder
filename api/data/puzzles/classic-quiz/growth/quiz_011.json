@@ -1,0 +1,67 @@
+{
+  "quizId": "quiz_011",
+  "title": "Growth Quiz 11",
+  "branch": "growth",
+  "questions": [
+    {
+      "id": "quiz_011_q1",
+      "text": "What future milestone am I most excited about for us?",
+      "choices": [
+        "Living together or buying a home",
+        "Marriage or long-term commitment",
+        "Starting a family",
+        "Achieving our shared goals",
+        "Other / It depends"
+      ],
+      "category": "growth"
+    },
+    {
+      "id": "quiz_011_q2",
+      "text": "Where do I see us living in the future?",
+      "choices": [
+        "Where we are now",
+        "In a different city or state",
+        "Closer to family",
+        "Somewhere new and adventurous",
+        "Other / It depends"
+      ],
+      "category": "values"
+    },
+    {
+      "id": "quiz_011_q3",
+      "text": "What shared goal matters most to me for our future?",
+      "choices": [
+        "Financial security and stability",
+        "Building a family",
+        "Creating a home together",
+        "Traveling and having adventures",
+        "Other / It depends"
+      ],
+      "category": "values"
+    },
+    {
+      "id": "quiz_011_q4",
+      "text": "How important is it that we align on future plans?",
+      "choices": [
+        "Critical - we need to be on the same page",
+        "Important but we can compromise",
+        "We should each have some independence",
+        "It varies by the specific plan",
+        "Other / It depends"
+      ],
+      "category": "values"
+    },
+    {
+      "id": "quiz_011_q5",
+      "text": "What gives me confidence in our future together?",
+      "choices": [
+        "How we've overcome challenges",
+        "Our shared values and vision",
+        "The strength of our communication",
+        "How we support each other's growth",
+        "Other / It depends"
+      ],
+      "category": "trust"
+    }
+  ]
+}

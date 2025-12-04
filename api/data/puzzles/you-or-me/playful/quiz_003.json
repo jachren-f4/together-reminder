@@ -1,0 +1,37 @@
+{
+  "quizId": "quiz_003",
+  "title": "Playful Quiz 3",
+  "branch": "playful",
+  "questions": [
+    {
+      "id": "quiz_003_q1",
+      "category": "competitive",
+      "prompt": "Who would...",
+      "content": "Challenge a stranger to a race"
+    },
+    {
+      "id": "quiz_003_q2",
+      "category": "imagination",
+      "prompt": "Who is more...",
+      "content": "Likely to create elaborate backstories for people"
+    },
+    {
+      "id": "quiz_003_q3",
+      "category": "quirks",
+      "prompt": "Who would...",
+      "content": "Wear mismatched socks on purpose"
+    },
+    {
+      "id": "quiz_003_q4",
+      "category": "personality",
+      "prompt": "Who is more...",
+      "content": "Likely to sing in the shower"
+    },
+    {
+      "id": "quiz_003_q5",
+      "category": "humor",
+      "prompt": "Who would...",
+      "content": "Laugh so hard they snort"
+    }
+  ]
+}

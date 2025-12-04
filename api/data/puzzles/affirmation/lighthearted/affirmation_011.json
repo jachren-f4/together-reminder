@@ -1,0 +1,39 @@
+{
+  "quizId": "affirmation_011",
+  "title": "Connection Moments",
+  "category": "lighthearted",
+  "branch": "lighthearted",
+  "description": "How you stay connected",
+  "questions": [
+    {
+      "id": "affirmation_011_q1",
+      "text": "Daily check-ins help us stay connected",
+      "type": "scale",
+      "scaleLabels": ["Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"]
+    },
+    {
+      "id": "affirmation_011_q2",
+      "text": "Physical affection is important to me throughout the day",
+      "type": "scale",
+      "scaleLabels": ["Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"]
+    },
+    {
+      "id": "affirmation_011_q3",
+      "text": "I appreciate when my partner shares their day with me",
+      "type": "scale",
+      "scaleLabels": ["Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"]
+    },
+    {
+      "id": "affirmation_011_q4",
+      "text": "We need regular date nights to maintain our connection",
+      "type": "scale",
+      "scaleLabels": ["Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"]
+    },
+    {
+      "id": "affirmation_011_q5",
+      "text": "Comfortable silence together is a sign of closeness",
+      "type": "scale",
+      "scaleLabels": ["Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"]
+    }
+  ]
+}

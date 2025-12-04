@@ -1,0 +1,37 @@
+{
+  "quizId": "quiz_005",
+  "title": "Growth Quiz 5",
+  "branch": "growth",
+  "questions": [
+    {
+      "id": "quiz_005_q1",
+      "category": "support",
+      "prompt": "Who encourages more...",
+      "content": "The other to pursue their passions"
+    },
+    {
+      "id": "quiz_005_q2",
+      "category": "goals",
+      "prompt": "Who is more focused on...",
+      "content": "Achieving career goals"
+    },
+    {
+      "id": "quiz_005_q3",
+      "category": "resilience",
+      "prompt": "Who bounces back faster from...",
+      "content": "Setbacks and disappointments"
+    },
+    {
+      "id": "quiz_005_q4",
+      "category": "learning",
+      "prompt": "Who is more interested in...",
+      "content": "Learning new skills together"
+    },
+    {
+      "id": "quiz_005_q5",
+      "category": "future",
+      "prompt": "Who talks more about...",
+      "content": "Long-term plans and dreams"
+    }
+  ]
+}

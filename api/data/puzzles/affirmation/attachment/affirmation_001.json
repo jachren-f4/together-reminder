@@ -1,0 +1,69 @@
+{
+  "quizId": "affirmation_001",
+  "title": "Feeling Secure",
+  "category": "attachment",
+  "branch": "attachment",
+  "description": "Rate your sense of security",
+  "questions": [
+    {
+      "id": "affirmation_001_q1",
+      "text": "I trust that my partner will be there when I need them.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ]
+    },
+    {
+      "id": "affirmation_001_q2",
+      "text": "I feel confident in my partner's commitment to our relationship.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ]
+    },
+    {
+      "id": "affirmation_001_q3",
+      "text": "I don't worry about my partner leaving me.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ]
+    },
+    {
+      "id": "affirmation_001_q4",
+      "text": "I feel emotionally safe in this relationship.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ]
+    },
+    {
+      "id": "affirmation_001_q5",
+      "text": "Our relationship feels stable and dependable.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,37 @@
+{
+  "quizId": "quiz_005",
+  "title": "Connection Quiz 5",
+  "branch": "connection",
+  "questions": [
+    {
+      "id": "quiz_005_q1",
+      "category": "expression",
+      "prompt": "Who is more...",
+      "content": "Open about their emotions"
+    },
+    {
+      "id": "quiz_005_q2",
+      "category": "vulnerability",
+      "prompt": "Who finds it easier to...",
+      "content": "Share their fears and insecurities"
+    },
+    {
+      "id": "quiz_005_q3",
+      "category": "attunement",
+      "prompt": "Who notices more...",
+      "content": "Small changes in the other's mood"
+    },
+    {
+      "id": "quiz_005_q4",
+      "category": "needs",
+      "prompt": "Who is better at...",
+      "content": "Asking for what they need emotionally"
+    },
+    {
+      "id": "quiz_005_q5",
+      "category": "connection",
+      "prompt": "Who values more...",
+      "content": "Quality time together"
+    }
+  ]
+}

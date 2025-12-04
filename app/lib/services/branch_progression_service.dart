@@ -76,7 +76,7 @@ class BranchProgressionService {
 
   /// Get the current branch folder name for an activity type.
   ///
-  /// Returns folder name like 'lighthearted', 'deeper', 'emotional', etc.
+  /// Returns folder name like 'lighthearted', 'meaningful', 'emotional', etc.
   Future<String> getCurrentBranch({
     required String coupleId,
     required BranchableActivityType activityType,

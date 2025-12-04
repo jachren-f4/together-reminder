@@ -1,0 +1,67 @@
+{
+  "quizId": "quiz_001",
+  "title": "Attachment Quiz 1",
+  "branch": "attachment",
+  "questions": [
+    {
+      "id": "quiz_001_q1",
+      "text": "When we're apart, how do I typically feel?",
+      "choices": [
+        "Secure and trusting",
+        "A little anxious but okay",
+        "I enjoy the independence",
+        "I miss you constantly",
+        "It depends on how we parted"
+      ],
+      "category": "separation"
+    },
+    {
+      "id": "quiz_001_q2",
+      "text": "How do I react when I feel like you're pulling away?",
+      "choices": [
+        "Give you space and wait",
+        "Reach out more to reconnect",
+        "Feel anxious and need reassurance",
+        "Pull back myself",
+        "Try to talk about it directly"
+      ],
+      "category": "distance_response"
+    },
+    {
+      "id": "quiz_001_q3",
+      "text": "What's my biggest fear in our relationship?",
+      "choices": [
+        "Being abandoned or left",
+        "Losing my independence",
+        "Not being good enough",
+        "Being misunderstood",
+        "Growing apart over time"
+      ],
+      "category": "fears"
+    },
+    {
+      "id": "quiz_001_q4",
+      "text": "How do I feel about depending on you?",
+      "choices": [
+        "Completely comfortable",
+        "Mostly okay but cautious",
+        "I prefer to be self-reliant",
+        "I want to but it's hard",
+        "It depends on the situation"
+      ],
+      "category": "dependency"
+    },
+    {
+      "id": "quiz_001_q5",
+      "text": "What makes me feel most secure in our relationship?",
+      "choices": [
+        "Consistent daily contact",
+        "Knowing you'll always be honest",
+        "Physical presence and affection",
+        "Shared long-term plans",
+        "Weathering challenges together"
+      ],
+      "category": "security"
+    }
+  ]
+}

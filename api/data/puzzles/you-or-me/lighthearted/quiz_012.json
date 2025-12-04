@@ -1,0 +1,37 @@
+{
+  "quizId": "quiz_012",
+  "title": "Lighthearted Quiz 12",
+  "branch": "lighthearted",
+  "questions": [
+    {
+      "id": "quiz_012_q1",
+      "category": "leisure",
+      "prompt": "Who is more",
+      "content": "Likely to plan everything or go with the flow"
+    },
+    {
+      "id": "quiz_012_q2",
+      "category": "habits",
+      "prompt": "Who is more",
+      "content": "Likely to keep sentimental items from the past"
+    },
+    {
+      "id": "quiz_012_q3",
+      "category": "personality",
+      "prompt": "Who is more",
+      "content": "Likely to finish other people's sentences"
+    },
+    {
+      "id": "quiz_012_q4",
+      "category": "preferences",
+      "prompt": "Who would rather",
+      "content": "Live in a bustling city or a quiet countryside"
+    },
+    {
+      "id": "quiz_012_q5",
+      "category": "social",
+      "prompt": "Who is more",
+      "content": "Likely to host gatherings at their place"
+    }
+  ]
+}

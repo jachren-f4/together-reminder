@@ -1,0 +1,37 @@
+{
+  "quizId": "quiz_012",
+  "title": "Attachment Quiz 12",
+  "branch": "attachment",
+  "questions": [
+    {
+      "id": "quiz_012_q1",
+      "category": "reassurance",
+      "prompt": "Who needs more validation that...",
+      "content": "The relationship is going well"
+    },
+    {
+      "id": "quiz_012_q2",
+      "category": "security",
+      "prompt": "Who is more affected by...",
+      "content": "Changes in routine or plans"
+    },
+    {
+      "id": "quiz_012_q3",
+      "category": "conflict",
+      "prompt": "Who finds it harder to...",
+      "content": "Move on after arguments"
+    },
+    {
+      "id": "quiz_012_q4",
+      "category": "trust",
+      "prompt": "Who is more open to...",
+      "content": "Sharing passwords and private information"
+    },
+    {
+      "id": "quiz_012_q5",
+      "category": "comfort",
+      "prompt": "Who turns to the other more for...",
+      "content": "Comfort during difficult times"
+    }
+  ]
+}

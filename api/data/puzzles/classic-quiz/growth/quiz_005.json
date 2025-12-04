@@ -1,0 +1,67 @@
+{
+  "quizId": "quiz_005",
+  "title": "Growth Quiz 5",
+  "branch": "growth",
+  "questions": [
+    {
+      "id": "quiz_005_q1",
+      "text": "What personal goal am I most focused on right now?",
+      "choices": [
+        "Career advancement or professional growth",
+        "Health and fitness improvement",
+        "Developing a skill or hobby",
+        "Emotional or mental health",
+        "Other / It depends"
+      ],
+      "category": "growth"
+    },
+    {
+      "id": "quiz_005_q2",
+      "text": "What dream have I not shared with many people?",
+      "choices": [
+        "A career change or business idea",
+        "A creative project or passion",
+        "A personal transformation goal",
+        "A place I want to live or travel",
+        "Other / It depends"
+      ],
+      "category": "growth"
+    },
+    {
+      "id": "quiz_005_q3",
+      "text": "What area of my life do I most want to develop?",
+      "choices": [
+        "Professional skills and career",
+        "Personal relationships and social life",
+        "Creative expression and hobbies",
+        "Physical health and wellness",
+        "Other / It depends"
+      ],
+      "category": "growth"
+    },
+    {
+      "id": "quiz_005_q4",
+      "text": "What's holding me back from pursuing a dream?",
+      "choices": [
+        "Fear of failure or judgment",
+        "Lack of time or resources",
+        "Not knowing where to start",
+        "Competing priorities",
+        "Other / It depends"
+      ],
+      "category": "growth"
+    },
+    {
+      "id": "quiz_005_q5",
+      "text": "How do I define success for myself?",
+      "choices": [
+        "Achieving professional recognition",
+        "Having meaningful relationships",
+        "Making a positive impact on others",
+        "Personal happiness and fulfillment",
+        "Other / It depends"
+      ],
+      "category": "values"
+    }
+  ]
+}

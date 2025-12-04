@@ -1,0 +1,37 @@
+{
+  "quizId": "quiz_008",
+  "title": "Attachment Quiz 8",
+  "branch": "attachment",
+  "questions": [
+    {
+      "id": "quiz_008_q1",
+      "category": "reassurance",
+      "prompt": "Who needs more reminders that...",
+      "content": "They are appreciated and valued"
+    },
+    {
+      "id": "quiz_008_q2",
+      "category": "security",
+      "prompt": "Who feels more stable in...",
+      "content": "The relationship overall"
+    },
+    {
+      "id": "quiz_008_q3",
+      "category": "conflict",
+      "prompt": "Who fears more that...",
+      "content": "Arguments mean the relationship is in trouble"
+    },
+    {
+      "id": "quiz_008_q4",
+      "category": "trust",
+      "prompt": "Who is more open about...",
+      "content": "Their vulnerabilities and doubts"
+    },
+    {
+      "id": "quiz_008_q5",
+      "category": "comfort",
+      "prompt": "Who seeks more...",
+      "content": "Verbal reassurance when anxious"
+    }
+  ]
+}

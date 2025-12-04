@@ -1,0 +1,124 @@
+{
+  "questions": [
+    {
+      "id": "yom_attach_q1",
+      "prompt": "Who tends to...",
+      "content": "Need more reassurance in the relationship",
+      "category": "reassurance"
+    },
+    {
+      "id": "yom_attach_q2",
+      "prompt": "Who is more...",
+      "content": "Comfortable with alone time",
+      "category": "independence"
+    },
+    {
+      "id": "yom_attach_q3",
+      "prompt": "Who is more likely to...",
+      "content": "Worry when not hearing back quickly",
+      "category": "anxiety"
+    },
+    {
+      "id": "yom_attach_q4",
+      "prompt": "Who tends to...",
+      "content": "Withdraw during conflict",
+      "category": "conflict"
+    },
+    {
+      "id": "yom_attach_q5",
+      "prompt": "Who needs more...",
+      "content": "Consistent check-ins during the day",
+      "category": "connection"
+    },
+    {
+      "id": "yom_attach_q6",
+      "prompt": "Who is more...",
+      "content": "Trusting of the other's commitment",
+      "category": "trust"
+    },
+    {
+      "id": "yom_attach_q7",
+      "prompt": "Who tends to...",
+      "content": "Pursue when feeling disconnected",
+      "category": "pursuit"
+    },
+    {
+      "id": "yom_attach_q8",
+      "prompt": "Who is more likely to...",
+      "content": "Need space to process emotions",
+      "category": "processing"
+    },
+    {
+      "id": "yom_attach_q9",
+      "prompt": "Who feels more...",
+      "content": "Secure when apart",
+      "category": "security"
+    },
+    {
+      "id": "yom_attach_q10",
+      "prompt": "Who tends to...",
+      "content": "Seek resolution immediately after conflict",
+      "category": "conflict"
+    },
+    {
+      "id": "yom_attach_q11",
+      "prompt": "Who is more...",
+      "content": "Likely to ask 'Are we okay?'",
+      "category": "reassurance"
+    },
+    {
+      "id": "yom_attach_q12",
+      "prompt": "Who needs more...",
+      "content": "Physical presence to feel connected",
+      "category": "presence"
+    },
+    {
+      "id": "yom_attach_q13",
+      "prompt": "Who is more likely to...",
+      "content": "Express fears about the relationship",
+      "category": "vulnerability"
+    },
+    {
+      "id": "yom_attach_q14",
+      "prompt": "Who tends to...",
+      "content": "Be the first to apologize",
+      "category": "repair"
+    },
+    {
+      "id": "yom_attach_q15",
+      "prompt": "Who is more...",
+      "content": "Self-reliant emotionally",
+      "category": "independence"
+    },
+    {
+      "id": "yom_attach_q16",
+      "prompt": "Who needs more...",
+      "content": "Verbal affirmation of love",
+      "category": "reassurance"
+    },
+    {
+      "id": "yom_attach_q17",
+      "prompt": "Who is more likely to...",
+      "content": "Feel anxious about the future of us",
+      "category": "anxiety"
+    },
+    {
+      "id": "yom_attach_q18",
+      "prompt": "Who tends to...",
+      "content": "Test the relationship's strength",
+      "category": "testing"
+    },
+    {
+      "id": "yom_attach_q19",
+      "prompt": "Who is more...",
+      "content": "Comfortable depending on the other",
+      "category": "dependence"
+    },
+    {
+      "id": "yom_attach_q20",
+      "prompt": "Who feels more...",
+      "content": "Grounded by physical touch",
+      "category": "comfort"
+    }
+  ]
+}

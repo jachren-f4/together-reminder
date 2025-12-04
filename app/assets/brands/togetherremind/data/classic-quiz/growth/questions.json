@@ -1,0 +1,282 @@
+[
+  {
+    "id": "grow_q1",
+    "question": "What's my biggest personal goal right now?",
+    "options": [
+      "Career advancement",
+      "Health and wellness",
+      "Personal development",
+      "Creative pursuits",
+      "Financial stability"
+    ],
+    "category": "personal_goals",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "grow_q2",
+    "question": "How has our relationship helped me grow?",
+    "options": [
+      "Made me more patient",
+      "Helped me communicate better",
+      "Made me more confident",
+      "Taught me to be vulnerable",
+      "Helped me understand myself"
+    ],
+    "category": "relationship_growth",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "grow_q3",
+    "question": "What's something I want to learn or try?",
+    "options": [
+      "A new skill or hobby",
+      "Travel to new places",
+      "Further education",
+      "A creative outlet",
+      "A physical challenge"
+    ],
+    "category": "aspirations",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "grow_q4",
+    "question": "What area of my life am I working to improve?",
+    "options": [
+      "Work-life balance",
+      "Mental health",
+      "Physical health",
+      "Relationships with others",
+      "Self-confidence"
+    ],
+    "category": "self_improvement",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "grow_q5",
+    "question": "How do I prefer to receive support for my goals?",
+    "options": [
+      "Encouragement and cheerleading",
+      "Practical help and actions",
+      "Space to figure it out",
+      "Accountability check-ins",
+      "Join me in the journey"
+    ],
+    "category": "support_style",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "grow_q6",
+    "question": "What's my biggest dream for our future together?",
+    "options": [
+      "Building a home together",
+      "Traveling the world",
+      "Starting a family",
+      "Growing old together",
+      "Achieving our goals side by side"
+    ],
+    "category": "shared_dreams",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "grow_q7",
+    "question": "What challenge have I overcome that shaped me?",
+    "options": [
+      "A difficult relationship",
+      "Career or financial hardship",
+      "Health struggles",
+      "Family challenges",
+      "Personal loss or grief"
+    ],
+    "category": "resilience",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "grow_q8",
+    "question": "What's one thing I want to change about myself?",
+    "options": [
+      "Being more patient",
+      "Communicating better",
+      "Taking better care of myself",
+      "Being more present",
+      "Managing stress better"
+    ],
+    "category": "personal_change",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "grow_q9",
+    "question": "How do I want our relationship to grow?",
+    "options": [
+      "Deeper emotional connection",
+      "More adventure and fun",
+      "Better communication",
+      "More intimacy",
+      "Stronger partnership"
+    ],
+    "category": "relationship_goals",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "grow_q10",
+    "question": "What value do I want to live by more?",
+    "options": [
+      "Authenticity",
+      "Kindness",
+      "Courage",
+      "Balance",
+      "Gratitude"
+    ],
+    "category": "values",
+    "difficulty": 2,
+    "tier": 1
+  },
+  {
+    "id": "grow_q11",
+    "question": "What's holding me back from growing?",
+    "options": [
+      "Fear of failure",
+      "Not enough time",
+      "Self-doubt",
+      "Past experiences",
+      "Unclear direction"
+    ],
+    "category": "growth_barriers",
+    "difficulty": 2,
+    "tier": 2
+  },
+  {
+    "id": "grow_q12",
+    "question": "How do I handle setbacks or failure?",
+    "options": [
+      "I bounce back quickly",
+      "I need time to process",
+      "I get frustrated but push through",
+      "I tend to be hard on myself",
+      "I look for lessons learned"
+    ],
+    "category": "setback_response",
+    "difficulty": 2,
+    "tier": 2
+  },
+  {
+    "id": "grow_q13",
+    "question": "What would make me feel more fulfilled?",
+    "options": [
+      "Achieving a big goal",
+      "More meaningful connections",
+      "Better balance in life",
+      "Creative expression",
+      "Making a difference"
+    ],
+    "category": "fulfillment",
+    "difficulty": 2,
+    "tier": 2
+  },
+  {
+    "id": "grow_q14",
+    "question": "How do I want to grow as a partner?",
+    "options": [
+      "Be more supportive",
+      "Communicate more openly",
+      "Be more present",
+      "Show love more often",
+      "Handle conflict better"
+    ],
+    "category": "partner_growth",
+    "difficulty": 2,
+    "tier": 2
+  },
+  {
+    "id": "grow_q15",
+    "question": "What lesson has love taught me?",
+    "options": [
+      "Patience is essential",
+      "Vulnerability is strength",
+      "Communication matters most",
+      "Growth requires discomfort",
+      "Love is a daily choice"
+    ],
+    "category": "love_lessons",
+    "difficulty": 2,
+    "tier": 2
+  },
+  {
+    "id": "grow_q16",
+    "question": "Where do I see myself in five years?",
+    "options": [
+      "Advanced in my career",
+      "Starting new adventures",
+      "Settled and stable",
+      "Growing a family",
+      "Living my best life"
+    ],
+    "category": "future_vision",
+    "difficulty": 2,
+    "tier": 2
+  },
+  {
+    "id": "grow_q17",
+    "question": "What do I admire most about how you've grown?",
+    "options": [
+      "Your emotional awareness",
+      "Your persistence",
+      "Your openness to change",
+      "Your self-care journey",
+      "Your communication growth"
+    ],
+    "category": "partner_admiration",
+    "difficulty": 2,
+    "tier": 2
+  },
+  {
+    "id": "grow_q18",
+    "question": "What's one thing we should try together?",
+    "options": [
+      "A new adventure or travel",
+      "A shared hobby or class",
+      "A wellness practice",
+      "A creative project",
+      "A challenge or goal"
+    ],
+    "category": "shared_growth",
+    "difficulty": 2,
+    "tier": 2
+  },
+  {
+    "id": "grow_q19",
+    "question": "How do I measure personal success?",
+    "options": [
+      "By my happiness",
+      "By my achievements",
+      "By my relationships",
+      "By my growth journey",
+      "By my impact on others"
+    ],
+    "category": "success_definition",
+    "difficulty": 2,
+    "tier": 2
+  },
+  {
+    "id": "grow_q20",
+    "question": "What's the most important thing for our relationship's future?",
+    "options": [
+      "Maintaining open communication",
+      "Continuing to have fun together",
+      "Supporting each other's dreams",
+      "Working through challenges together",
+      "Never taking each other for granted"
+    ],
+    "category": "relationship_future",
+    "difficulty": 2,
+    "tier": 2
+  }
+]

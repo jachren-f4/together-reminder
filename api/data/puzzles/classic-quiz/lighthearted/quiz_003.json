@@ -5,60 +5,63 @@
   "questions": [
     {
       "id": "quiz_003_q1",
-      "text": "How do I show love?",
+      "text": "What's my ideal noise level at home?",
       "choices": [
-        "Words",
-        "Actions",
-        "Gifts",
-        "Time together",
-        "Other / Something else"
+        "Complete silence",
+        "Background noise",
+        "Music/TV on",
+        "Doesn't matter",
+        "Other / It varies"
       ],
       "category": "preferences"
     },
     {
       "id": "quiz_003_q2",
-      "text": "What's my ideal work environment?",
+      "text": "What's my favorite flower?",
       "choices": [
-        "Office",
-        "Remote",
-        "Hybrid",
-        "Co-working space",
+        "Rose",
+        "Tulip",
+        "Sunflower",
+        "Lily",
         "Other / Something else"
       ],
-      "category": "preferences"
+      "category": "favorites"
     },
     {
       "id": "quiz_003_q3",
-      "text": "Do I prefer email or instant messaging?",
+      "text": "What's my favorite way to celebrate?",
       "choices": [
-        "Email",
-        "Instant messaging",
-        "Both",
-        "Neither",
-        "Other / It depends"
+        "Big party",
+        "Intimate dinner",
+        "Quiet night in",
+        "Adventure activity",
+        "Other / Something else"
       ],
       "category": "preferences"
     },
     {
       "id": "quiz_003_q4",
-      "text": "Would I rather: Summer heat or Winter cold?",
+      "text": "What's my favorite podcast or YouTube genre?",
       "choices": [
-        "Summer heat",
-        "Winter cold"
-      ],
-      "category": "would_you_rather"
-    },
-    {
-      "id": "quiz_003_q5",
-      "text": "What's my favorite ice cream flavor?",
-      "choices": [
-        "Vanilla",
-        "Chocolate",
-        "Strawberry",
-        "Cookie dough",
+        "True crime",
+        "Comedy",
+        "Educational",
+        "Vlogs",
         "Other / Something else"
       ],
       "category": "favorites"
+    },
+    {
+      "id": "quiz_003_q5",
+      "text": "What's my favorite way to start the day?",
+      "choices": [
+        "Coffee",
+        "Exercise",
+        "Shower",
+        "Breakfast",
+        "Other / Something else"
+      ],
+      "category": "preferences"
     }
   ]
 }

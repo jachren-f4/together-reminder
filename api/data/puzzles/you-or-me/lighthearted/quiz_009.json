@@ -1,0 +1,37 @@
+{
+  "quizId": "quiz_009",
+  "title": "Lighthearted Quiz 9",
+  "branch": "lighthearted",
+  "questions": [
+    {
+      "id": "quiz_009_q1",
+      "category": "leisure",
+      "prompt": "Who is more",
+      "content": "Likely to take photos of everything during a trip"
+    },
+    {
+      "id": "quiz_009_q2",
+      "category": "habits",
+      "prompt": "Who is more",
+      "content": "Likely to prepare outfits the night before"
+    },
+    {
+      "id": "quiz_009_q3",
+      "category": "personality",
+      "prompt": "Who is more",
+      "content": "Likely to give people the benefit of the doubt"
+    },
+    {
+      "id": "quiz_009_q4",
+      "category": "preferences",
+      "prompt": "Who would rather",
+      "content": "Read the book or watch the movie adaptation"
+    },
+    {
+      "id": "quiz_009_q5",
+      "category": "social",
+      "prompt": "Who is more",
+      "content": "Likely to be the one others come to for advice"
+    }
+  ]
+}

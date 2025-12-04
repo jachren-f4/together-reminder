@@ -1,0 +1,67 @@
+{
+  "quizId": "quiz_005",
+  "title": "Connection Quiz 5",
+  "branch": "connection",
+  "questions": [
+    {
+      "id": "quiz_005_q1",
+      "text": "What's the most meaningful way you show me love?",
+      "choices": [
+        "Cooking my favorite meals",
+        "Sending sweet messages during the day",
+        "Planning special dates or surprises",
+        "Helping with tasks without being asked",
+        "Other / It depends"
+      ],
+      "category": "emotional"
+    },
+    {
+      "id": "quiz_005_q2",
+      "text": "When do I feel most appreciated by you?",
+      "choices": [
+        "When you notice small things I do",
+        "When you thank me publicly",
+        "When you show physical affection",
+        "When you make time for me despite being busy",
+        "Other / It depends"
+      ],
+      "category": "emotional"
+    },
+    {
+      "id": "quiz_005_q3",
+      "text": "What type of affection makes me feel most connected to you?",
+      "choices": [
+        "Holding hands or cuddling",
+        "Hearing 'I love you' and compliments",
+        "Receiving thoughtful surprises",
+        "Having you remember important details about me",
+        "Other / It depends"
+      ],
+      "category": "communication"
+    },
+    {
+      "id": "quiz_005_q4",
+      "text": "How do I prefer to receive encouragement from you?",
+      "choices": [
+        "Verbal praise and affirmation",
+        "A supportive hug or touch",
+        "You believing in me even when I doubt myself",
+        "Practical help to achieve my goals",
+        "Other / It depends"
+      ],
+      "category": "emotional"
+    },
+    {
+      "id": "quiz_005_q5",
+      "text": "What makes me feel like we're a team?",
+      "choices": [
+        "Working together on household tasks",
+        "Supporting each other's individual goals",
+        "Making decisions together",
+        "Facing challenges side by side",
+        "Other / It depends"
+      ],
+      "category": "values"
+    }
+  ]
+}

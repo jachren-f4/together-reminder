@@ -586,35 +586,46 @@ class QuestionResult {
 
 ## Part 5: Implementation Phases
 
-### Phase 1: Fix Existing Content Bugs
+### Phase 1: Fix Existing Content Bugs & Rename Branches
 
-Before adding new content, fix the issues identified in `docs/QUIZ_CONTENT_ANALYSIS.md`:
+Before adding new content, fix the issues identified in `docs/QUIZ_CONTENT_ANALYSIS.md` and rename branches to avoid "Deeper" collision.
 
 **Files:**
 - `app/assets/brands/togetherremind/data/classic-quiz/lighthearted/questions.json`
-- `app/assets/brands/togetherremind/data/classic-quiz/deeper/questions.json`
+- `app/assets/brands/togetherremind/data/classic-quiz/deeper/` → rename to `meaningful/`
 - `app/assets/brands/togetherremind/data/you-or-me/*/questions.json`
 
 **Issues to fix:**
 
-#### 1a. Classic Quiz ID Gap (Lighthearted)
+#### 1a. Rename "deeper" Branch to "meaningful"
+
+The casual Classic Quiz branch "deeper" collides with the therapeutic "Deeper" badge. Rename it:
+
+**Tasks:**
+1. Rename folder: `classic-quiz/deeper/` → `classic-quiz/meaningful/`
+2. Update `manifest.json` inside: `"branch": "meaningful"`, `"displayName": "Meaningful"`
+3. Update `classic-quiz/manifest.json` branches list
+4. Update any code references to "deeper" branch in `quest_type_manager.dart`
+5. Update `branch_progression_state.dart` if branch names are hardcoded
+
+#### 1b. Classic Quiz ID Gap (Lighthearted)
 
 The lighthearted branch has a gap in question IDs: q1-q15, then jumps to q51-q180.
 
 **Task:** Review if this is intentional. If not, renumber or fill the gap (q16-q50).
 
-#### 1b. Missing Questions in Deeper Branch
+#### 1c. Missing Questions in Meaningful Branch (formerly "deeper")
 
-The deeper branch is missing some questions that exist in lighthearted:
+The meaningful branch is missing some questions that exist in lighthearted:
 - Missing q63 (scent/perfume type)
 - Missing q66 (comfort food)
 - Missing q69 (favorite way to learn)
 - Missing q72 (type of sandwich)
 - Missing q75 (guilty pleasure)
 
-**Task:** Add missing questions to deeper branch, or document why they're excluded.
+**Task:** Add missing questions to meaningful branch, or document why they're excluded.
 
-#### 1c. You-or-Me Thematic Overlap
+#### 1d. You-or-Me Thematic Overlap
 
 Similar questions appear across branches:
 
@@ -663,24 +674,75 @@ Similar questions appear across branches:
 
 ### Phase 4: Results Screen Redesign
 
+**Architecture Note:** There are two result screen systems:
+- **Old widget-based:** `widgets/results_content/*.dart` — Already has question details
+- **New server-centric:** `screens/quiz_match_results_screen.dart` — Simple, NO question details
+
+The **new server-centric screens** are what need redesigning. The question/answer data is already available in the `QuizMatch` model — it just needs to be displayed.
+
 **Files:**
 - `lib/screens/quiz_match_results_screen.dart` (major rewrite)
 - `lib/screens/you_or_me_match_results_screen.dart` (major rewrite)
-- Possibly: `lib/models/quiz_match.dart`, API routes
+- `lib/screens/affirmation_match_results_screen.dart` (if exists, or create)
+- Reference: `lib/widgets/results_content/classic_quiz_results_content.dart` (has working question display)
 
 **Tasks:**
 1. Create new results screen layout with score header + scrollable details
-2. Implement message copy logic based on score ranges
+2. Implement message copy logic based on score ranges (see Part 4.4)
 3. Implement question list with match/mismatch styling
-4. Add conversation prompts for therapeutic mismatches
-5. Ensure API returns full question/answer data
-6. Handle Affirmation rating bars
-7. Handle You-or-Me pick display
+4. Add conversation prompts for therapeutic mismatches (see 4a below)
+5. Ensure match data includes question texts and both users' answers
+6. Handle Affirmation rating bars (side-by-side 1-5 scale display)
+7. Handle You-or-Me pick display (who said whom)
+
+#### 4a. Conversation Prompts Strategy
+
+For therapeutic mismatches, show a conversation prompt. **Recommendation:** Start with per-question prompts in the JSON (Option B) for therapeutic branches only.
+
+**JSON structure for therapeutic questions:**
+```json
+{
+  "id": "conn_012",
+  "question": "What do I need most when I'm stressed?",
+  "options": ["Space and time alone", "Someone to listen", "Physical comfort", "Distraction", "Help solving the problem"],
+  "category": "emotional_needs",
+  "conversationPrompt": {
+    "mismatch": "When you're stressed, what helps most? Has this changed over time?",
+    "note": "This isn't about being \"right\" — it's an invitation to understand."
+  }
+}
+```
+
+**For You-or-Me "both said themselves" case:**
+```json
+{
+  "id": "growth_005",
+  "question": "Who needs more reassurance?",
+  "category": "vulnerability",
+  "conversationPrompt": {
+    "bothSaidSelf": "You both feel you need more reassurance. What does reassurance look like for each of you?",
+    "note": "This is about understanding each other's needs."
+  }
+}
+```
+
+**Fallback for questions without prompts:**
+```dart
+String getDefaultPrompt(String branchType) {
+  switch (branchType) {
+    case 'connection': return "What would help you understand this about each other better?";
+    case 'attachment': return "What would help you feel more secure in this area?";
+    case 'growth': return "How does each of you experience this pattern?";
+    default: return "What can you learn from this difference?";
+  }
+}
+```
 
 **Test:**
 - All score ranges show correct messages
 - Matches show green styling
 - Mismatches show appropriate styling (playful for casual, prompts for therapeutic)
+- Conversation prompts appear only for therapeutic mismatches
 - Scrolling works with many questions
 - LP display is correct
 
@@ -702,7 +764,7 @@ app/assets/brands/togetherremind/data/
     └── manifest.json
 ```
 
-#### 4a. Connection Branch (Classic Quiz) — READY
+#### 5a. Connection Branch (Classic Quiz) — READY (needs conversation prompts)
 
 **Status:** Full JSON with 5 options per question already written in `docs/QUIZ_CONTENT_ANALYSIS.md`
 
@@ -713,11 +775,27 @@ app/assets/brands/togetherremind/data/
 - Theme 4: Emotional Needs (conn_031 - conn_040)
 - Theme 5: History & Identity (conn_041 - conn_050)
 
-**Task:** Copy JSON from analysis doc into `questions.json` file.
+**Tasks:**
+1. Copy JSON from analysis doc into `questions.json` file
+2. Add `conversationPrompt` object to each question for mismatch scenarios
 
 **Source:** `docs/QUIZ_CONTENT_ANALYSIS.md` → Search for "Theme 1: Dreams & Aspirations"
 
-#### 4b. Attachment Branch (Affirmation) — NEEDS EXPANSION
+**Example with conversation prompt:**
+```json
+{
+  "id": "conn_012",
+  "question": "What do I need most when I'm stressed?",
+  "options": ["Space and time alone", "Someone to listen", "Physical comfort", "Distraction", "Help solving the problem"],
+  "category": "emotional_needs",
+  "conversationPrompt": {
+    "mismatch": "When you're stressed, what helps most? Has this changed over time?",
+    "note": "This isn't about being \"right\" — it's an invitation to understand."
+  }
+}
+```
+
+#### 5b. Attachment Branch (Affirmation) — NEEDS EXPANSION
 
 **Status:** Table format in analysis doc, needs conversion to full JSON
 
@@ -729,7 +807,9 @@ app/assets/brands/togetherremind/data/
 - Quiz 5: "Do I Trust You?" (Trust)
 - Quiz 6: "Am I Safe With You?" (Security)
 
-**Task:** Convert table format to full `quizzes.json` structure matching existing affirmation format.
+**Tasks:**
+1. Convert table format to full `quizzes.json` structure matching existing affirmation format
+2. Add `conversationPrompt` to each statement for large difference scenarios (e.g., 3+ point gap)
 
 **Source:** `docs/QUIZ_CONTENT_ANALYSIS.md` → Search for "Affirmation: Attachment Branch"
 
@@ -745,8 +825,12 @@ app/assets/brands/togetherremind/data/
       "statements": [
         {
           "id": "att_001",
-          "text": "My partner is emotionally available when I need them.",
-          "dimension": "responsiveness"
+          "text": "I can reach my partner when I need them.",
+          "dimension": "accessibility",
+          "conversationPrompt": {
+            "largeDifference": "What would help you feel like you can reach me more easily?",
+            "note": "Neither of you is wrong. Both feelings are valid."
+          }
         }
         // ... 4 more statements
       ]
@@ -756,7 +840,7 @@ app/assets/brands/togetherremind/data/
 }
 ```
 
-#### 4c. Growth Branch (You-or-Me) — NEEDS EXPANSION
+#### 5c. Growth Branch (You-or-Me) — NEEDS EXPANSION
 
 **Status:** Table format in analysis doc, needs conversion to full JSON
 
@@ -766,7 +850,9 @@ app/assets/brands/togetherremind/data/
 - Dreams & Growth
 - Daily Dynamics
 
-**Task:** Convert table format to full `questions.json` structure matching existing You-or-Me format.
+**Tasks:**
+1. Convert table format to full `questions.json` structure matching existing You-or-Me format
+2. Add `conversationPrompt` with variants for different mismatch types (bothSaidSelf, bothSaidPartner, disagreed)
 
 **Source:** `docs/QUIZ_CONTENT_ANALYSIS.md` → Search for "You-or-Me: Growth Branch"
 
@@ -774,16 +860,22 @@ app/assets/brands/togetherremind/data/
 ```json
 [
   {
-    "id": "growth_001",
-    "question": "Who finds it harder to ask for help?",
+    "id": "growth_005",
+    "question": "Who needs more reassurance?",
     "category": "vulnerability",
-    "difficulty": 2
+    "difficulty": 2,
+    "conversationPrompt": {
+      "bothSaidSelf": "You both feel you need more reassurance. What does reassurance look like for each of you?",
+      "bothSaidPartner": "You both see the other as needing more reassurance. How can you give that to each other?",
+      "disagreed": "You see this differently. What does needing reassurance look like for each of you?",
+      "note": "This is about understanding each other's needs."
+    }
   }
   // ... 29 more questions
 ]
 ```
 
-#### 4d. Manifest Files
+#### 5d. Manifest Files
 
 Each new branch needs a `manifest.json`:
 
@@ -817,7 +909,259 @@ Each new branch needs a `manifest.json`:
 
 ---
 
-## Part 6: Mockup File Reference
+### Phase 7: Branch Videos & Images (Manual)
+
+**Owner:** Joakim (manual asset creation)
+
+This phase covers creating unique video and image assets for each branch. The code already supports per-branch assets via the manifest system — only the assets need to be created.
+
+#### 7a. Current Asset Inventory
+
+**Videos (3 exist):**
+| File | Used By |
+|------|---------|
+| `feel-good-foundations.mp4` | All Classic Quiz branches |
+| `affirmation.mp4` | All Affirmation branches |
+| `getting-comfortable.mp4` | All You-or-Me branches |
+
+**Images (3 used for daily quests):**
+| File | Used By |
+|------|---------|
+| `classic-quiz-default.png` | All Classic Quiz branches |
+| `affirmation-default.png` | All Affirmation branches |
+| `you-or-me.png` | All You-or-Me branches (fallback) |
+
+#### 7b. New Assets Needed
+
+**For therapeutic branches (minimum):**
+
+| Branch | Activity | Video Needed | Image Needed |
+|--------|----------|--------------|--------------|
+| connection | Classic Quiz | `connection.mp4` | `connection.png` |
+| attachment | Affirmation | `attachment.mp4` | `attachment.png` |
+| growth | You-or-Me | `growth.mp4` | `growth.png` |
+
+**Optional — unique assets for all branches:**
+
+| Branch | Activity | Video | Image |
+|--------|----------|-------|-------|
+| lighthearted | Classic Quiz | `lighthearted.mp4` | `lighthearted.png` |
+| deeper | Classic Quiz | `deeper.mp4` | `deeper.png` |
+| spicy | Classic Quiz | `spicy.mp4` | `spicy.png` |
+| connection | Classic Quiz | `connection.mp4` | `connection.png` |
+| emotional | Affirmation | `emotional.mp4` | `emotional.png` |
+| practical | Affirmation | `practical.mp4` | `practical.png` |
+| spiritual | Affirmation | `spiritual.mp4` | `spiritual.png` |
+| attachment | Affirmation | `attachment.mp4` | `attachment.png` |
+| playful | You-or-Me | `playful.mp4` | `playful.png` |
+| reflective | You-or-Me | `reflective.mp4` | `reflective.png` |
+| intimate | You-or-Me | `intimate.mp4` | `intimate.png` |
+| growth | You-or-Me | `growth.mp4` | `growth.png` |
+
+#### 7c. Where to Place Assets
+
+**Videos:**
+```
+app/assets/brands/togetherremind/videos/
+├── feel-good-foundations.mp4  (existing)
+├── affirmation.mp4            (existing)
+├── getting-comfortable.mp4    (existing)
+├── connection.mp4             ← NEW
+├── attachment.mp4             ← NEW
+├── growth.mp4                 ← NEW
+└── ... (optional: per-branch videos)
+```
+
+**Images:**
+```
+app/assets/brands/togetherremind/images/quests/
+├── classic-quiz-default.png   (existing)
+├── affirmation-default.png    (existing)
+├── you-or-me.png              (existing)
+├── connection.png             ← NEW
+├── attachment.png             ← NEW
+├── growth.png                 ← NEW
+└── ... (optional: per-branch images)
+```
+
+#### 7d. Manifest Files to Update
+
+After adding assets, update the manifest.json in each branch folder:
+
+**Connection branch** — `app/assets/brands/togetherremind/data/classic-quiz/connection/manifest.json`:
+```json
+{
+  "branch": "connection",
+  "activityType": "classicQuiz",
+  "videoPath": "assets/brands/togetherremind/videos/connection.mp4",
+  "imagePath": "assets/brands/togetherremind/images/quests/connection.png",
+  "fallbackEmoji": "💫",
+  "title": "Connection Quiz",
+  "displayName": "Connection",
+  "description": "Discover each other's inner world",
+  "isTherapeutic": true
+}
+```
+
+**Attachment branch** — `app/assets/brands/togetherremind/data/affirmation/attachment/manifest.json`:
+```json
+{
+  "branch": "attachment",
+  "activityType": "affirmation",
+  "videoPath": "assets/brands/togetherremind/videos/attachment.mp4",
+  "imagePath": "assets/brands/togetherremind/images/quests/attachment.png",
+  "fallbackEmoji": "💛",
+  "title": "Attachment Check-In",
+  "displayName": "Attachment",
+  "description": "Explore your sense of safety, trust, and closeness",
+  "isTherapeutic": true
+}
+```
+
+**Growth branch** — `app/assets/brands/togetherremind/data/you-or-me/growth/manifest.json`:
+```json
+{
+  "branch": "growth",
+  "activityType": "youOrMe",
+  "videoPath": "assets/brands/togetherremind/videos/growth.mp4",
+  "imagePath": "assets/brands/togetherremind/images/quests/growth.png",
+  "fallbackEmoji": "🌱",
+  "title": "Growth Patterns",
+  "displayName": "Growth",
+  "description": "Explore how you support each other and grow together",
+  "isTherapeutic": true
+}
+```
+
+#### 7e. Register Assets in pubspec.yaml
+
+After adding new video/image files, ensure they're included in `app/pubspec.yaml`:
+
+```yaml
+flutter:
+  assets:
+    - assets/brands/togetherremind/videos/
+    - assets/brands/togetherremind/images/quests/
+```
+
+The folder-level inclusion should automatically pick up new files, but run `flutter clean && flutter pub get` after adding assets.
+
+#### 7f. Video Specifications
+
+- **Format:** MP4 (H.264)
+- **Duration:** 3-5 seconds (plays once, fades to emoji)
+- **Resolution:** 720p or 1080p
+- **Aspect ratio:** Portrait (9:16) or square (1:1)
+- **Style:** Match existing videos — abstract, mood-setting, no text
+
+#### 7g. Image Specifications
+
+- **Format:** PNG
+- **Resolution:** 750x750px or similar
+- **Style:** Match existing images — editorial, grayscale-friendly
+- **Content:** Abstract or symbolic, fits in quest card (max 200px height displayed)
+
+---
+
+### Phase 8: Therapeutic Content Testing
+
+Before launching therapeutic branches, validate that the content aligns with the therapeutic principles outlined in `docs/QUIZ_CONTENT_ANALYSIS.md`.
+
+#### 8a. Content Review Checklist
+
+For each therapeutic question/statement, verify:
+
+**Connection Branch (Classic Quiz):**
+- [ ] Questions explore inner world (dreams, fears, needs, values)
+- [ ] Questions are open-ended enough that any answer is valid
+- [ ] No questions that could feel like "tests" with right/wrong answers
+- [ ] Balanced across 5 themes: Dreams, Worries, Values, Emotional Needs, History
+- [ ] Questions invite curiosity, not judgment
+
+**Attachment Branch (Affirmation):**
+- [ ] Statements map to ARE.E.S.T. dimensions (Accessibility, Responsiveness, Engagement, Repair, Security, Trust)
+- [ ] Wording is first-person ("I feel..." not "My partner should...")
+- [ ] Statements are specific enough to be meaningful
+- [ ] No statements that imply one partner is "failing"
+- [ ] Balanced — not all negative or all positive framing
+
+**Growth Branch (You-or-Me):**
+- [ ] Questions explore patterns, not blame
+- [ ] Questions about dynamics, not character judgments
+- [ ] Both "me" and "partner" are valid, non-judgmental answers
+- [ ] Questions cover: Conflict, Vulnerability, Dreams, Daily Dynamics
+- [ ] No questions that could trigger defensiveness
+
+#### 8b. Tone Validation
+
+Read through all therapeutic content and check:
+
+- [ ] No language that implies failure ("Who doesn't..." "Who fails to...")
+- [ ] No competitive framing ("Who's better at...")
+- [ ] No language that pathologizes normal differences
+- [ ] Warm, curious tone throughout
+- [ ] Invites reflection, not self-criticism
+
+#### 8c. Conversation Prompt Review
+
+For each mismatch scenario, verify the conversation prompt:
+
+- [ ] Validates both perspectives ("Neither is wrong")
+- [ ] Opens dialogue without assigning blame
+- [ ] Uses curious language ("What would help..." "How does...")
+- [ ] Doesn't imply one answer is "correct"
+
+#### 8d. Cross-Reference with Analysis Doc
+
+Compare final content against `docs/QUIZ_CONTENT_ANALYSIS.md`:
+
+- [ ] All 50 Connection questions match analysis doc themes
+- [ ] All 30 Attachment statements cover ARE.E.S.T. framework
+- [ ] All 30 Growth questions cover identified patterns
+- [ ] No duplicate questions across branches
+- [ ] No overlap with casual branch questions
+
+#### 8e. User Testing (Optional)
+
+Before full rollout:
+
+- [ ] Test with 2-3 couples outside development team
+- [ ] Gather feedback on tone and emotional safety
+- [ ] Check for any questions that felt uncomfortable
+- [ ] Validate that mismatches feel like "discoveries" not "problems"
+
+---
+
+## Part 6: Phase Dependencies & Recommended Order
+
+```
+Phase 1: Fix Bugs & Rename Branches
+    ↓
+Phase 2: Quest Card Badge ──────────────┐
+    ↓                                   │
+Phase 3: Intro Screen Badge             │ (UI changes - can be done in parallel)
+    ↓                                   │
+Phase 4: Results Screen Redesign ───────┘
+    ↓
+Phase 5: Therapeutic Content Creation (includes conversation prompts)
+    ↓
+Phase 7: Branch Videos & Images (can start after Phase 5 folders exist)
+    ↓
+Phase 6: Branch Rotation Update (MUST be after Phase 5 content is ready)
+    ↓
+Phase 8: Content Testing (MUST be after Phase 5 & 6)
+```
+
+**Notes:**
+- Phases 2, 3, 4 can be developed in parallel with each other
+- Phase 4 (Results redesign) should be done before Phase 5 so conversation prompts can be tested
+- Phase 6 (Branch rotation) is the "switch" that enables therapeutic branches — do last
+- Phase 7 (Videos/images) can happen anytime after Phase 5 creates the folder structure
+- Phase 8 (Testing) should be done before Phase 6 enables the branches
+
+---
+
+## Part 7: Mockup File Reference
 
 All mockups are located in `mockups/quiz_improvements/`:
 
@@ -851,7 +1195,7 @@ All mockups are located in `mockups/quiz_improvements/`:
 
 ---
 
-## Part 7: Open Questions — RESOLVED
+## Part 8: Open Questions — RESOLVED
 
 | Question | Decision |
 |----------|----------|
@@ -933,3 +1277,10 @@ String getScoreMessage({
 | 2025-12-02 | Added detailed implementation specs and mockup references |
 | 2025-12-02 | Added Phase 1: Fix Existing Content Bugs (renumbered phases 2-6) |
 | 2025-12-02 | Removed all time estimates from document |
+| 2025-12-02 | Added Phase 7: Branch Videos & Images with asset specs and manifest templates |
+| 2025-12-02 | Added Phase 8: Therapeutic Content Testing with review checklists |
+| 2025-12-02 | Renamed "deeper" branch to "meaningful" to avoid badge collision |
+| 2025-12-02 | Added conversation prompts JSON structure for therapeutic questions |
+| 2025-12-02 | Clarified results screen architecture (server-centric vs widget-based) |
+| 2025-12-02 | Added Phase Dependencies diagram and recommended execution order |
+| 2025-12-02 | Confirmed HolyCouples is out of scope for this plan |

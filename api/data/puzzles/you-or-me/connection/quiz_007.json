@@ -1,0 +1,37 @@
+{
+  "quizId": "quiz_007",
+  "title": "Connection Quiz 7",
+  "branch": "connection",
+  "questions": [
+    {
+      "id": "quiz_007_q1",
+      "category": "vulnerability",
+      "prompt": "Who is more comfortable...",
+      "content": "Crying in front of the other"
+    },
+    {
+      "id": "quiz_007_q2",
+      "category": "expression",
+      "prompt": "Who says 'I love you' more...",
+      "content": "Throughout the day"
+    },
+    {
+      "id": "quiz_007_q3",
+      "category": "connection",
+      "prompt": "Who values more...",
+      "content": "Shared rituals and traditions"
+    },
+    {
+      "id": "quiz_007_q4",
+      "category": "communication",
+      "prompt": "Who is better at...",
+      "content": "Listening without interrupting"
+    },
+    {
+      "id": "quiz_007_q5",
+      "category": "attunement",
+      "prompt": "Who remembers more...",
+      "content": "Little details the other shares"
+    }
+  ]
+}

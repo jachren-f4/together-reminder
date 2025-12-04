@@ -1,0 +1,69 @@
+{
+  "quizId": "affirmation_011",
+  "title": "Opening Up",
+  "category": "connection",
+  "branch": "connection",
+  "description": "Rate your comfort with emotional openness",
+  "questions": [
+    {
+      "id": "affirmation_011_q1",
+      "text": "I share my inner world with my partner more than anyone else.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ]
+    },
+    {
+      "id": "affirmation_011_q2",
+      "text": "My partner encourages me to express my true feelings.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ]
+    },
+    {
+      "id": "affirmation_011_q3",
+      "text": "I feel our emotional intimacy growing deeper over time.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ]
+    },
+    {
+      "id": "affirmation_011_q4",
+      "text": "We can talk about anything without holding back.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ]
+    },
+    {
+      "id": "affirmation_011_q5",
+      "text": "Being open with my partner has strengthened our bond.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ]
+    }
+  ]
+}
