@@ -11,19 +11,13 @@ import 'package:togetherremind/services/notification_service.dart';
 import 'package:togetherremind/services/quiz_question_bank.dart';
 import 'package:togetherremind/services/affirmation_quiz_bank.dart';
 import 'package:togetherremind/services/you_or_me_service.dart';
-import 'package:togetherremind/services/quest_sync_service.dart';
-import 'package:togetherremind/services/daily_quest_service.dart';
-import 'package:togetherremind/services/quest_type_manager.dart';
 import 'package:togetherremind/services/love_point_service.dart';
-import 'package:togetherremind/services/couple_preferences_service.dart';
 import 'package:togetherremind/services/steps_feature_service.dart';
-import 'package:togetherremind/services/quest_utilities.dart';
 import 'package:togetherremind/services/auth_service.dart';
 import 'dart:io' show Platform;
 import 'package:togetherremind/services/api_client.dart';
 import 'package:togetherremind/services/sound_service.dart';
 import 'package:togetherremind/services/haptic_service.dart';
-import 'package:togetherremind/models/daily_quest.dart';
 import 'package:togetherremind/config/dev_config.dart';
 import 'package:togetherremind/config/theme_config.dart';
 import 'package:togetherremind/config/supabase_config.dart';
@@ -112,12 +106,13 @@ void main() async {
     await DevPairingService().startAutoPairing();
   }
 
-  // 🎯 Generate daily quests if paired
+  // 🎯 Daily quests are now initialized by QuestInitializationService
+  // Called from: PairingScreen (after pairing) and NewHomeScreen (returning users)
+  // NOT called from main.dart (too early in lifecycle - User/Partner not restored yet)
   // Clear old mock quests first (dev mode only)
   if (kDebugMode) {
     await _clearOldMockQuests();
   }
-  await _initializeDailyQuests();
 
   runApp(const TogetherRemindApp());
 }
@@ -147,80 +142,6 @@ Future<void> _clearOldMockQuests() async {
     // print('🧹 Cleared $deletedCount old quests for testing');
   } catch (e) {
     Logger.error('Error clearing quests', error: e);
-  }
-}
-
-/// Initialize daily quests for today if needed
-Future<void> _initializeDailyQuests() async {
-  try {
-    final storage = StorageService();
-    final user = storage.getUser();
-    final partner = storage.getPartner();
-
-    // Only generate quests if user has a partner
-    if (!storage.hasPartner() || user == null || partner == null) {
-      // Removed verbose logging
-      // print('ℹ️  Skipping quest generation - no partner yet');
-      return;
-    }
-
-    // 💰 LP is now server-authoritative - synced via game status API
-    // No Firebase RTDB listener needed
-
-    // ⚙️ Start listening for couple preference updates
-    CouplePreferencesService.startListening();
-    Logger.debug('Couple preferences listener initialized', service: 'preferences');
-
-    // 👟 Initialize Steps Together feature (iOS only)
-    if (!kIsWeb && Platform.isIOS) {
-      final coupleId = QuestUtilities.generateCoupleId(user.id, partner.pushToken);
-      await StepsFeatureService().initialize(
-        coupleId: coupleId,
-        userId: user.id,
-      );
-      Logger.debug('Steps feature service initialized', service: 'steps');
-
-      // Sync steps on app launch (if connected to HealthKit)
-      await StepsFeatureService().syncSteps();
-      Logger.debug('Initial steps sync completed', service: 'steps');
-    }
-
-    // Initialize services
-    final questService = DailyQuestService(storage: storage);
-    final syncService = QuestSyncService(
-      storage: storage,
-    );
-    final questTypeManager = QuestTypeManager(
-      storage: storage,
-      questService: questService,
-      syncService: syncService,
-    );
-
-    // Sync or generate today's quests
-    // First try to load from Firebase
-    final synced = await syncService.syncTodayQuests(
-      currentUserId: user.id,
-      partnerUserId: partner.pushToken, // Using pushToken as partner ID
-    );
-
-    List<DailyQuest> quests;
-    if (synced) {
-      // Loaded from Firebase or already exist locally
-      quests = questService.getTodayQuests();
-      // Removed verbose logging
-      // print('✅ Daily quests loaded: ${quests.length} quests');
-    } else {
-      // No quests in Firebase - generate new ones
-      quests = await questTypeManager.generateDailyQuests(
-        currentUserId: user.id,
-        partnerUserId: partner.pushToken,
-      );
-      // Removed verbose logging
-      // print('✅ Daily quests generated: ${quests.length} quests');
-    }
-  } catch (e, stackTrace) {
-    Logger.error('Error generating daily quests', error: e, stackTrace: stackTrace);
-    // Don't block app startup on quest generation errors
   }
 }
 

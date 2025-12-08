@@ -637,12 +637,15 @@ class _QuestCardState extends State<QuestCard>
               ),
             ),
             const SizedBox(width: 8),
-            Text(
-              '${partner.name} has completed',
-              style: AppTheme.headlineFont.copyWith( // Serif font
-                fontSize: 11,
-                fontWeight: FontWeight.w600,
-                color: const Color(0xFF666666),
+            Flexible(
+              child: Text(
+                '${partner.name} has completed',
+                overflow: TextOverflow.ellipsis,
+                style: AppTheme.headlineFont.copyWith( // Serif font
+                  fontSize: 11,
+                  fontWeight: FontWeight.w600,
+                  color: const Color(0xFF666666),
+                ),
               ),
             ),
           ],

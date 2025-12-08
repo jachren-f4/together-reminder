@@ -1,0 +1,213 @@
+import 'dart:io';
+import 'package:flutter/foundation.dart' show kIsWeb;
+import '../utils/logger.dart';
+import '../models/daily_quest.dart';
+import 'storage_service.dart';
+import 'quest_sync_service.dart';
+import 'daily_quest_service.dart';
+import 'quest_type_manager.dart';
+import 'quest_utilities.dart';
+import 'couple_preferences_service.dart';
+import 'steps_feature_service.dart';
+
+/// Status of quest initialization operation
+enum QuestInitStatus {
+  /// Quests were synced from server or generated successfully
+  success,
+
+  /// Quests already existed locally for today
+  alreadyExists,
+
+  /// Cannot initialize - no user or partner paired yet
+  notPaired,
+
+  /// Network error during sync (may still have local quests)
+  networkError,
+
+  /// Unexpected error occurred
+  unknownError,
+}
+
+/// Result of quest initialization operation
+class QuestInitResult {
+  final QuestInitStatus status;
+  final int questCount;
+  final String? errorMessage;
+
+  /// Whether quests were newly synced/generated (not already existing)
+  final bool wasNewlyInitialized;
+
+  const QuestInitResult({
+    required this.status,
+    this.questCount = 0,
+    this.errorMessage,
+    this.wasNewlyInitialized = false,
+  });
+
+  bool get isSuccess =>
+      status == QuestInitStatus.success ||
+      status == QuestInitStatus.alreadyExists;
+
+  @override
+  String toString() =>
+      'QuestInitResult(status: $status, questCount: $questCount, wasNewlyInitialized: $wasNewlyInitialized)';
+}
+
+/// Centralized service for initializing daily quests
+///
+/// This service consolidates quest initialization logic that was previously
+/// scattered across main.dart, pairing_screen.dart, and new_home_screen.dart.
+///
+/// Usage:
+/// - Call from PairingScreen after successful pairing
+/// - Call from NewHomeScreen for returning users (empty local storage)
+/// - DO NOT call from main.dart (too early in lifecycle)
+///
+/// The service is idempotent - safe to call multiple times. If quests already
+/// exist locally for today, it returns [QuestInitStatus.alreadyExists] without
+/// making any network calls.
+class QuestInitializationService {
+  final StorageService _storage;
+
+  QuestInitializationService({StorageService? storage})
+      : _storage = storage ?? StorageService();
+
+  /// Ensures daily quests are initialized for today
+  ///
+  /// This method is idempotent - calling it multiple times is safe and efficient.
+  ///
+  /// Flow:
+  /// 1. Validate user and partner exist (return [notPaired] if not)
+  /// 2. Check if local quests exist for today (return [alreadyExists] if so)
+  /// 3. Try to sync from server
+  /// 4. If server has no quests, generate new ones
+  /// 5. Return success with quest count
+  ///
+  /// Also initializes related services:
+  /// - CouplePreferencesService (for "who goes first" settings)
+  /// - StepsFeatureService (iOS only)
+  Future<QuestInitResult> ensureQuestsInitialized() async {
+    try {
+      final user = _storage.getUser();
+      final partner = _storage.getPartner();
+
+      // Step 1: Validate user and partner exist
+      if (user == null || partner == null) {
+        Logger.debug('Quest init skipped - not paired yet', service: 'quest-init');
+        return const QuestInitResult(
+          status: QuestInitStatus.notPaired,
+          errorMessage: 'User or partner not found',
+        );
+      }
+
+      // Step 2: Check if quests already exist locally
+      final existingQuests = _storage.getTodayQuests();
+      if (existingQuests.isNotEmpty) {
+        Logger.debug(
+          'Quest init skipped - ${existingQuests.length} quests already exist',
+          service: 'quest-init',
+        );
+        return QuestInitResult(
+          status: QuestInitStatus.alreadyExists,
+          questCount: existingQuests.length,
+        );
+      }
+
+      // Initialize related services (moved from main.dart)
+      await _initializeRelatedServices(user.id, partner.pushToken);
+
+      // Step 3: Try to sync from server
+      Logger.debug('Attempting to sync quests from server...', service: 'quest-init');
+
+      final questService = DailyQuestService(storage: _storage);
+      final syncService = QuestSyncService(storage: _storage);
+      final questTypeManager = QuestTypeManager(
+        storage: _storage,
+        questService: questService,
+        syncService: syncService,
+      );
+
+      final synced = await syncService.syncTodayQuests(
+        currentUserId: user.id,
+        partnerUserId: partner.pushToken,
+      );
+
+      List<DailyQuest> quests;
+      if (synced) {
+        // Loaded from server
+        quests = questService.getTodayQuests();
+        Logger.success(
+          'Quests synced from server: ${quests.length} quests',
+          service: 'quest-init',
+        );
+      } else {
+        // Step 4: No quests on server - generate new ones
+        Logger.debug('No quests on server - generating new ones...', service: 'quest-init');
+        quests = await questTypeManager.generateDailyQuests(
+          currentUserId: user.id,
+          partnerUserId: partner.pushToken,
+        );
+        Logger.success(
+          'Quests generated: ${quests.length} quests',
+          service: 'quest-init',
+        );
+      }
+
+      return QuestInitResult(
+        status: QuestInitStatus.success,
+        questCount: quests.length,
+        wasNewlyInitialized: true,
+      );
+    } catch (e, stackTrace) {
+      Logger.error(
+        'Quest initialization failed',
+        error: e,
+        stackTrace: stackTrace,
+        service: 'quest-init',
+      );
+
+      // Check if we have any local quests despite the error
+      final localQuests = _storage.getTodayQuests();
+      if (localQuests.isNotEmpty) {
+        return QuestInitResult(
+          status: QuestInitStatus.networkError,
+          questCount: localQuests.length,
+          errorMessage: e.toString(),
+        );
+      }
+
+      return QuestInitResult(
+        status: QuestInitStatus.unknownError,
+        errorMessage: e.toString(),
+      );
+    }
+  }
+
+  /// Initialize related services that depend on having a partner
+  ///
+  /// This logic was previously in main.dart's _initializeDailyQuests()
+  Future<void> _initializeRelatedServices(String userId, String partnerToken) async {
+    try {
+      // Start listening for couple preference updates
+      CouplePreferencesService.startListening();
+      Logger.debug('Couple preferences listener initialized', service: 'quest-init');
+
+      // Initialize Steps Together feature (iOS only)
+      if (!kIsWeb && Platform.isIOS) {
+        final coupleId = QuestUtilities.generateCoupleId(userId, partnerToken);
+        await StepsFeatureService().initialize(
+          coupleId: coupleId,
+          userId: userId,
+        );
+        Logger.debug('Steps feature service initialized', service: 'quest-init');
+
+        // Sync steps on initialization
+        await StepsFeatureService().syncSteps();
+        Logger.debug('Initial steps sync completed', service: 'quest-init');
+      }
+    } catch (e) {
+      // Don't fail quest initialization if related services fail
+      Logger.error('Failed to initialize related services', error: e, service: 'quest-init');
+    }
+  }
+}

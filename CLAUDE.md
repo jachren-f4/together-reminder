@@ -126,6 +126,31 @@ return quest.quizName ?? 'Affirmation Quiz';
 
 **Files:** `lib/widgets/daily_quests_widget.dart` (RouteAware, polling)
 
+#### Quest Initialization (CRITICAL)
+Use `QuestInitializationService.ensureQuestsInitialized()` for all quest setup:
+
+```dart
+// ✅ CORRECT - Use centralized service
+final initService = QuestInitializationService();
+final result = await initService.ensureQuestsInitialized();
+if (result.isSuccess) { /* navigate to home */ }
+
+// ❌ WRONG - Direct sync service calls
+await questSyncService.syncTodayQuests(...);  // Scattered, hard to track
+```
+
+**Called from exactly 2 places:**
+| Location | Trigger | Purpose |
+|----------|---------|---------|
+| `PairingScreen._completeOnboarding()` | After successful pairing | Generate/sync quests for new couples |
+| `NewHomeScreen._syncDailyQuestsIfNeeded()` | HomeScreen mount | Restore quests for returning users (app reinstall) |
+
+**NOT called from:** `main.dart` (too early - User/Partner not restored yet)
+
+**Server-side idempotency:** API uses `ON CONFLICT DO NOTHING` to handle race conditions when both devices try to upload quests simultaneously. No arbitrary delays needed.
+
+**File:** `lib/services/quest_initialization_service.dart`
+
 ---
 
 ### Love Points System
@@ -500,6 +525,7 @@ class _GameScreenState extends State<GameScreen> with GamePollingMixin {
 | `lib/services/love_point_service.dart` | LP tracking |
 | `lib/services/quiz_service.dart` | Quiz logic |
 | `lib/services/couple_preferences_service.dart` | Who goes first |
+| `lib/services/quest_initialization_service.dart` | Centralized quest init (sync + generate) |
 
 ### Config
 | File | Purpose |
@@ -535,4 +561,4 @@ class _GameScreenState extends State<GameScreen> with GamePollingMixin {
 
 ---
 
-**Last Updated:** 2025-12-04
+**Last Updated:** 2025-12-08

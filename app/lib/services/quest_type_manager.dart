@@ -557,21 +557,13 @@ class QuestTypeManager {
       // Don't save progression advancement here - it will be saved when quests are completed
       Logger.debug('ℹ️  Progression state NOT advanced (waiting for quest completion)', service: 'quest');
 
-      // Save quests to Firebase (for partner to load)
-      await _syncService.saveQuestsToFirebase(
-        quests: quests,
-        currentUserId: currentUserId,
-        partnerUserId: partnerUserId,
-        progressionState: progressionState,
-      );
-
-      // Save quests to Supabase (dual-write)
+      // Save quests to Supabase (for partner to load)
       await _syncQuestsToSupabase(
         quests: quests,
         dateKey: dateKey,
       );
 
-      Logger.debug('Generated ${quests.length} daily quests for $dateKey (synced to Firebase & Supabase)', service: 'quest');
+      Logger.debug('Generated ${quests.length} daily quests for $dateKey (synced to Supabase)', service: 'quest');
 
       return quests;
     } catch (e) {
