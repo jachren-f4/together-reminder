@@ -148,6 +148,13 @@ export const POST = withRateLimit(
         [invite.id]
       );
 
+      // Get partner's push token (before releasing client)
+      const partnerTokenResult = await client.query(
+        `SELECT fcm_token FROM user_push_tokens WHERE user_id = $1`,
+        [partnerId]
+      );
+      const partnerPushToken = partnerTokenResult.rows[0]?.fcm_token || null;
+
       await client.query('COMMIT');
       client.release();
 
@@ -171,6 +178,14 @@ export const POST = withRateLimit(
         partnerEmail,
         partnerName,
         createdAt: coupleCreatedAt,
+        // New format: complete partner object
+        partner: {
+          id: partnerId,
+          name: partnerName,
+          email: partnerEmail,
+          pushToken: partnerPushToken,
+          avatarEmoji: '💕',
+        },
         message: 'Successfully paired!',
       });
     } catch (error) {

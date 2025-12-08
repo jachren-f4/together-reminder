@@ -12,6 +12,7 @@ import 'package:togetherremind/screens/home_screen.dart';
 import 'package:togetherremind/services/storage_service.dart';
 import 'package:togetherremind/services/notification_service.dart';
 import 'package:togetherremind/services/couple_pairing_service.dart';
+import 'package:togetherremind/services/auth_service.dart';
 import 'package:togetherremind/services/daily_quest_service.dart';
 import 'package:togetherremind/services/quest_sync_service.dart';
 import 'package:togetherremind/services/quest_type_manager.dart';
@@ -30,7 +31,7 @@ class _PairingScreenState extends State<PairingScreen> {
   final StorageService _storageService = StorageService();
   final CouplePairingService _couplePairingService = CouplePairingService();
 
-  int _selectedTabIndex = 0;
+  // QR scanner state - kept but hidden
   bool _showScanner = false;
   String? _qrData;
 
@@ -43,10 +44,18 @@ class _PairingScreenState extends State<PairingScreen> {
   Timer? _globalPairingTimer; // For QR code flow detection
   bool _isVerifyingCode = false;
 
+  // Controller for partner code input
+  final TextEditingController _partnerCodeController = TextEditingController();
+
+  // Pairing success state - show success message before navigation
+  bool _pairingSuccessful = false;
+  String? _pairedPartnerName;
+
   @override
   void initState() {
     super.initState();
     _generateQRCode();
+    _generateRemoteCode(); // Auto-generate pairing code on load
     _listenForPairingConfirmation();
     _startGlobalPairingPolling(); // Poll for pairing status (works for QR code flow too)
   }
@@ -75,15 +84,14 @@ class _PairingScreenState extends State<PairingScreen> {
           _pairingStatusTimer?.cancel();
           _globalPairingTimer = null;
 
-          final partner = Partner(
-            name: status.partnerName ?? status.partnerEmail?.split('@').first ?? 'Partner',
-            pushToken: '',
-            pairedAt: status.createdAt,
-            avatarEmoji: '💕',
-            id: status.partnerId,
-          );
+          // Show success state before navigating
+          setState(() {
+            _pairingSuccessful = true;
+            _pairedPartnerName = status.partnerName;
+          });
 
-          await _storageService.savePartner(partner);
+          // Partner already saved by getStatus() when it parses the partner object
+          // Just navigate to home
           await _initializeDailyQuestsAndNavigate();
         }
       } catch (e) {
@@ -97,6 +105,7 @@ class _PairingScreenState extends State<PairingScreen> {
     _countdownTimer?.cancel();
     _pairingStatusTimer?.cancel();
     _globalPairingTimer?.cancel();
+    _partnerCodeController.dispose();
     super.dispose();
   }
 
@@ -148,11 +157,26 @@ class _PairingScreenState extends State<PairingScreen> {
 
   void _listenForPairingConfirmation() {
     NotificationService.onPairingComplete = (partnerName, partnerToken) async {
+      // When receiving push notification about pairing, fetch status from server
+      // to get complete partner data instead of creating locally
+      try {
+        final status = await _couplePairingService.getStatus();
+        if (status != null) {
+          // Partner already saved by getStatus()
+          await _initializeDailyQuestsAndNavigate();
+          return;
+        }
+      } catch (e) {
+        Logger.error('Failed to fetch status after pairing notification', error: e, service: 'pairing');
+      }
+
+      // Fallback: create basic partner from notification data
+      // This should rarely be needed since getStatus() should work
       final partner = Partner(
         name: partnerName,
         pushToken: partnerToken,
         pairedAt: DateTime.now(),
-        avatarEmoji: '👤',
+        avatarEmoji: '💕',
       );
 
       await _storageService.savePartner(partner);
@@ -161,17 +185,24 @@ class _PairingScreenState extends State<PairingScreen> {
   }
 
   void _generateQRCode() async {
-    final user = _storageService.getUser();
-    if (user == null) return;
+    // Use auth service userId - single source of truth
+    final authService = AuthService();
+    final userId = await authService.getUserId();
 
+    if (userId == null) {
+      Logger.error('Not authenticated - cannot generate QR code', service: 'pairing');
+      return;
+    }
+
+    final user = _storageService.getUser();
     final pushToken = await NotificationService.getToken();
 
-    Logger.debug('Generating QR code with push token: $pushToken', service: 'pairing');
+    Logger.debug('Generating QR code for userId: $userId', service: 'pairing');
 
     final pairingData = {
-      'userId': user.id,
-      'name': user.name ?? 'Partner',
-      'pushToken': pushToken ?? user.pushToken,
+      'userId': userId,
+      'name': user?.name ?? 'Partner',
+      'pushToken': pushToken ?? '', // No fallback to placeholder - use empty string
       'platform': Platform.isIOS ? 'ios' : 'android',
       'timestamp': DateTime.now().millisecondsSinceEpoch,
     };
@@ -227,29 +258,16 @@ class _PairingScreenState extends State<PairingScreen> {
 
         await _initializeDailyQuestsAndNavigate();
       } catch (apiError) {
-        Logger.error('API pairing failed, falling back to local-only', error: apiError, service: 'pairing');
-
-        // Fallback: save partner locally (original behavior)
-        final partner = Partner(
-          name: partnerName,
-          pushToken: data['pushToken'] ?? '',
-          pairedAt: DateTime.now(),
-          avatarEmoji: '👤',
-        );
-        await _storageService.savePartner(partner);
-
-        // Try push notification as last resort
-        final user = _storageService.getUser();
-        final myPushToken = await NotificationService.getToken();
-        if (user != null && myPushToken != null) {
-          await NotificationService.sendPairingConfirmation(
-            partnerToken: partner.pushToken,
-            myName: user.name ?? 'Partner',
-            myPushToken: myPushToken,
+        Logger.error('API pairing failed', error: apiError, service: 'pairing');
+        // Don't fall back to local-only - server-side pairing is required
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Pairing failed: ${apiError.toString().replaceAll('Exception: ', '')}'),
+              backgroundColor: Colors.red,
+            ),
           );
         }
-
-        await _initializeDailyQuestsAndNavigate();
       }
     } catch (e) {
       Logger.error('Error handling scanned QR code', error: e, service: 'pairing');
@@ -323,18 +341,19 @@ class _PairingScreenState extends State<PairingScreen> {
 
       try {
         final status = await _couplePairingService.getStatus();
-        if (status != null) {
+        if (status != null && mounted) {
           timer.cancel();
           _countdownTimer?.cancel();
+          _globalPairingTimer?.cancel();
 
-          final partner = Partner(
-            name: status.partnerName ?? status.partnerEmail?.split('@').first ?? 'Partner',
-            pushToken: '',
-            pairedAt: status.createdAt,
-            avatarEmoji: '💕',
-          );
+          // Show success state before navigating
+          setState(() {
+            _pairingSuccessful = true;
+            _pairedPartnerName = status.partnerName;
+          });
 
-          await _storageService.savePartner(partner);
+          // Partner already saved by getStatus() when it parses the partner object
+          // Just navigate to home
           await _initializeDailyQuestsAndNavigate();
         }
       } catch (e) {
@@ -344,6 +363,9 @@ class _PairingScreenState extends State<PairingScreen> {
   }
 
   Future<void> _verifyCode(String code) async {
+    // Prevent double submission
+    if (_isVerifyingCode || _pairingSuccessful) return;
+
     setState(() {
       _isVerifyingCode = true;
     });
@@ -351,20 +373,22 @@ class _PairingScreenState extends State<PairingScreen> {
     try {
       final partner = await _couplePairingService.joinWithCode(code);
 
-      setState(() {
-        _isVerifyingCode = false;
-      });
+      // Show success state before navigation (keeps UI stable)
+      if (mounted) {
+        setState(() {
+          _pairingSuccessful = true;
+          _pairedPartnerName = partner.name;
+          _partnerCodeController.clear();
+        });
+      }
+
+      // Cancel all timers since we're paired
+      _countdownTimer?.cancel();
+      _pairingStatusTimer?.cancel();
+      _globalPairingTimer?.cancel();
 
       if (mounted) {
-        final confirmed = await showDialog<bool>(
-          context: context,
-          barrierDismissible: false,
-          builder: (context) => _buildConfirmationDialog(partner),
-        );
-
-        if (confirmed == true) {
-          await _initializeDailyQuestsAndNavigate();
-        }
+        await _initializeDailyQuestsAndNavigate();
       }
     } catch (e) {
       setState(() {
@@ -424,28 +448,359 @@ class _PairingScreenState extends State<PairingScreen> {
           subtitle: 'Step 3 of 3',
         ),
 
-        // Article header
-        const NewspaperArticleHeader(
-          kicker: 'Partner Setup',
-          headline: 'Connect with your partner',
-        ),
-
-        // Tab row
-        NewspaperTabRow(
-          tabs: const ['In Person', 'Remote'],
-          selectedIndex: _selectedTabIndex,
-          onTabSelected: (index) {
-            setState(() {
-              _selectedTabIndex = index;
-            });
-          },
-        ),
-
-        // Tab content
+        // Content - Option C Minimal Design OR Success State
         Expanded(
-          child: _selectedTabIndex == 0 ? _buildInPersonTab() : _buildRemoteTab(),
+          child: _pairingSuccessful
+              ? _buildSuccessState()
+              : SingleChildScrollView(
+                  padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
+                  child: Column(
+                    children: [
+                      // Your Code Section
+                      _buildYourCodeSection(),
+
+                      const SizedBox(height: 24),
+
+                      // Divider
+                      _buildOrDivider('or enter partner\'s code'),
+
+                      const SizedBox(height: 24),
+
+                      // Enter Partner's Code Section
+                      _buildEnterCodeSection(),
+
+                      // QR Code option is hidden but code is kept
+                      // To re-enable, uncomment below:
+                      // const SizedBox(height: 32),
+                      // _buildQrCodeLink(),
+                    ],
+                  ),
+                ),
         ),
       ],
+    );
+  }
+
+  Widget _buildSuccessState() {
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(32),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            // Success icon
+            Container(
+              width: 80,
+              height: 80,
+              decoration: BoxDecoration(
+                color: NewspaperColors.calloutBg,
+                border: Border.all(color: NewspaperColors.border, width: 2),
+              ),
+              child: const Icon(
+                Icons.favorite,
+                size: 40,
+                color: NewspaperColors.primary,
+              ),
+            ),
+            const SizedBox(height: 24),
+
+            // Success message
+            Text(
+              'Paired!',
+              style: AppTheme.headlineFont.copyWith(
+                fontSize: 32,
+                fontWeight: FontWeight.w700,
+                color: NewspaperColors.primary,
+              ),
+            ),
+            const SizedBox(height: 8),
+
+            if (_pairedPartnerName != null) ...[
+              Text(
+                'Connected with $_pairedPartnerName',
+                style: AppTheme.bodyFont.copyWith(
+                  fontSize: 16,
+                  color: NewspaperColors.secondary,
+                ),
+              ),
+              const SizedBox(height: 24),
+            ],
+
+            // Loading indicator
+            Text(
+              'Preparing your experience...',
+              style: AppTheme.bodyFont.copyWith(
+                fontSize: 13,
+                color: NewspaperColors.tertiary,
+                fontStyle: FontStyle.italic,
+              ),
+            ),
+            const SizedBox(height: 16),
+
+            const SizedBox(
+              width: 24,
+              height: 24,
+              child: CircularProgressIndicator(
+                strokeWidth: 2,
+                color: NewspaperColors.primary,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildYourCodeSection() {
+    return Column(
+      children: [
+        // Label
+        Text(
+          'YOUR CODE',
+          style: AppTheme.bodyFont.copyWith(
+            fontSize: 11,
+            letterSpacing: 3,
+            color: NewspaperColors.tertiary,
+          ),
+        ),
+        const SizedBox(height: 12),
+
+        // Big Code Display
+        if (_generatedCode != null) ...[
+          Text(
+            _generatedCode!.code,
+            style: AppTheme.headlineFont.copyWith(
+              fontSize: 48,
+              fontWeight: FontWeight.w700,
+              letterSpacing: 8,
+              color: NewspaperColors.primary,
+            ),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            'Expires in ${_generatedCode!.formattedTimeRemaining}',
+            style: AppTheme.bodyFont.copyWith(
+              fontSize: 12,
+              color: NewspaperColors.tertiary,
+            ),
+          ),
+          const SizedBox(height: 16),
+          // Copy/Share buttons
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              _buildIconButton(Icons.copy, 'Copy', _copyCode),
+              const SizedBox(width: 12),
+              _buildIconButton(Icons.share, 'Share', _shareCode),
+            ],
+          ),
+        ] else if (_isGeneratingCode) ...[
+          const SizedBox(height: 20),
+          const CircularProgressIndicator(
+            strokeWidth: 2,
+            color: NewspaperColors.primary,
+          ),
+          const SizedBox(height: 12),
+          Text(
+            'Generating code...',
+            style: AppTheme.bodyFont.copyWith(
+              fontSize: 13,
+              color: NewspaperColors.tertiary,
+            ),
+          ),
+        ] else ...[
+          // Error state - show retry
+          const SizedBox(height: 12),
+          Text(
+            'Could not generate code',
+            style: AppTheme.bodyFont.copyWith(
+              fontSize: 13,
+              color: NewspaperColors.secondary,
+            ),
+          ),
+          const SizedBox(height: 12),
+          GestureDetector(
+            onTap: _generateRemoteCode,
+            child: Text(
+              'Tap to retry',
+              style: AppTheme.bodyFont.copyWith(
+                fontSize: 13,
+                color: NewspaperColors.primary,
+                decoration: TextDecoration.underline,
+              ),
+            ),
+          ),
+        ],
+      ],
+    );
+  }
+
+  Widget _buildIconButton(IconData icon, String tooltip, VoidCallback onTap) {
+    return Tooltip(
+      message: tooltip,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(4),
+        child: Container(
+          width: 48,
+          height: 48,
+          decoration: BoxDecoration(
+            color: NewspaperColors.calloutBg,
+            border: Border.all(color: NewspaperColors.border, width: 1),
+          ),
+          child: Icon(
+            icon,
+            size: 20,
+            color: NewspaperColors.primary,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildOrDivider(String text) {
+    return Row(
+      children: [
+        Expanded(
+          child: Container(
+            height: 1,
+            color: NewspaperColors.tertiary,
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: Text(
+            text.toUpperCase(),
+            style: AppTheme.bodyFont.copyWith(
+              fontSize: 10,
+              letterSpacing: 2,
+              color: NewspaperColors.tertiary,
+            ),
+          ),
+        ),
+        Expanded(
+          child: Container(
+            height: 1,
+            color: NewspaperColors.tertiary,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildEnterCodeSection() {
+    return Column(
+      children: [
+        // Single input field
+        TextField(
+          controller: _partnerCodeController,
+          textAlign: TextAlign.center,
+          textCapitalization: TextCapitalization.characters,
+          maxLength: 6,
+          style: AppTheme.headlineFont.copyWith(
+            fontSize: 28,
+            fontWeight: FontWeight.w700,
+            letterSpacing: 10,
+            color: NewspaperColors.primary,
+          ),
+          decoration: InputDecoration(
+            hintText: '_ _ _ _ _ _',
+            hintStyle: AppTheme.headlineFont.copyWith(
+              fontSize: 28,
+              color: NewspaperColors.tertiary.withOpacity(0.4),
+              letterSpacing: 10,
+            ),
+            counterText: '',
+            contentPadding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.zero,
+              borderSide: BorderSide(color: NewspaperColors.border, width: 2),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.zero,
+              borderSide: BorderSide(color: NewspaperColors.border, width: 2),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.zero,
+              borderSide: BorderSide(color: NewspaperColors.primary, width: 2),
+            ),
+            filled: true,
+            fillColor: NewspaperColors.surface,
+          ),
+          onChanged: (value) {
+            // Auto-submit when 6 characters entered
+            if (value.length == 6) {
+              _verifyCode(value.toUpperCase());
+            }
+          },
+        ),
+        const SizedBox(height: 16),
+
+        // Join button
+        SizedBox(
+          width: double.infinity,
+          child: ElevatedButton(
+            onPressed: _isVerifyingCode
+                ? null
+                : () {
+                    final code = _partnerCodeController.text.trim();
+                    if (code.length == 6) {
+                      _verifyCode(code.toUpperCase());
+                    }
+                  },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: NewspaperColors.primary,
+              foregroundColor: NewspaperColors.surface,
+              padding: const EdgeInsets.symmetric(vertical: 16),
+              shape: const RoundedRectangleBorder(borderRadius: BorderRadius.zero),
+              disabledBackgroundColor: NewspaperColors.tertiary,
+            ),
+            child: _isVerifyingCode
+                ? const SizedBox(
+                    width: 20,
+                    height: 20,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2,
+                      color: NewspaperColors.surface,
+                    ),
+                  )
+                : Text(
+                    'JOIN PARTNER',
+                    style: AppTheme.bodyFont.copyWith(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w600,
+                      letterSpacing: 2,
+                    ),
+                  ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  // QR Code link - kept but hidden
+  // ignore: unused_element
+  Widget _buildQrCodeLink() {
+    return GestureDetector(
+      onTap: _openScanner,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            Icons.qr_code_scanner,
+            size: 16,
+            color: NewspaperColors.tertiary,
+          ),
+          const SizedBox(width: 8),
+          Text(
+            'Use QR Code Instead',
+            style: AppTheme.bodyFont.copyWith(
+              fontSize: 13,
+              color: NewspaperColors.tertiary,
+            ),
+          ),
+        ],
+      ),
     );
   }
 

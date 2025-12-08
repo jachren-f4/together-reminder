@@ -284,6 +284,13 @@ final token = await _authService.getAccessToken();
 if (token == null) throw Exception('Not auth');
 ```
 
+#### Logout Behavior
+- Clears: Hive local data + secure storage auth tokens
+- Does NOT clear: Supabase `auth.users` or `couples` table
+- User can log back in with same email → session restored, pairing intact
+- To fully reset a user: Manually delete from `auth.users` in Supabase
+- File: `lib/screens/profile_screen.dart:743-871`
+
 #### FutureBuilder with Polling (Anti-Blink)
 When using `FutureBuilder` in widgets that rebuild due to polling:
 ```dart
@@ -398,6 +405,10 @@ flutter run -d chrome --dart-define=BRAND=togetherRemind &
 
 ### Version Verification
 Check `lib/screens/new_home_screen.dart` bottom - increment on UI changes to verify hot reload worked.
+
+### iOS Build Issues
+- Firebase config symlink: `ios/Runner/GoogleService-Info.plist` → `../Firebase/TogetherRemind/GoogleService-Info.plist`
+- If build fails with "GoogleService-Info.plist not found": `git checkout ios/Firebase/TogetherRemind/GoogleService-Info.plist`
 
 ### Android Emulator Hangs
 ```bash

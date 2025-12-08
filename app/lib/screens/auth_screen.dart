@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import '../config/dev_config.dart';
 import '../services/auth_service.dart';
+import '../services/user_profile_service.dart';
+import '../services/notification_service.dart';
 import '../utils/logger.dart';
 import '../widgets/newspaper/newspaper_widgets.dart';
 import 'otp_verification_screen.dart';
@@ -59,6 +62,30 @@ class _AuthScreenState extends State<AuthScreen> {
         final success = await _authService.devSignInWithEmail(email);
 
         if (success) {
+          // Complete signup on server - same as OTP flow
+          try {
+            final pushToken = await NotificationService.getToken();
+            final userProfileService = UserProfileService();
+
+            // Get pending name from name entry screen (if any)
+            const secureStorage = FlutterSecureStorage();
+            final pendingName = await secureStorage.read(key: 'pending_user_name');
+
+            await userProfileService.completeSignup(
+              pushToken: pushToken,
+              name: pendingName,
+            );
+            Logger.success('Dev signup completed on server', service: 'auth');
+
+            // Clear the pending name after successful signup
+            if (pendingName != null) {
+              await secureStorage.delete(key: 'pending_user_name');
+            }
+          } catch (e) {
+            // Log but don't fail - user can still proceed
+            Logger.error('Failed to complete dev signup on server', error: e, service: 'auth');
+          }
+
           if (mounted) {
             Navigator.of(context).pushNamedAndRemoveUntil('/', (route) => false);
           }

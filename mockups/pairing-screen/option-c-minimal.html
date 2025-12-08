@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pairing Screen - Option C: Minimal Focus</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Source+Sans+Pro:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --background: #F0EDE8;
+      --surface: #FFFEF9;
+      --primary: #1A1A1A;
+      --secondary: #666666;
+      --tertiary: #999999;
+      --border: #1A1A1A;
+      --callout-bg: #F5F4EF;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Source Sans Pro', sans-serif;
+      background: var(--background);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .phone-frame {
+      width: 375px;
+      min-height: 812px;
+      background: var(--surface);
+      border-radius: 40px;
+      overflow: hidden;
+      box-shadow: 0 25px 50px rgba(0,0,0,0.15);
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Masthead */
+    .masthead {
+      padding: 20px;
+      border-bottom: 3px solid var(--border);
+      text-align: center;
+    }
+
+    .masthead-date {
+      font-size: 10px;
+      letter-spacing: 3px;
+      color: var(--secondary);
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    .masthead-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 42px;
+      font-style: italic;
+      font-weight: 400;
+      letter-spacing: -1px;
+      color: var(--primary);
+    }
+
+    .masthead-subtitle {
+      font-size: 11px;
+      letter-spacing: 4px;
+      color: var(--secondary);
+      text-transform: uppercase;
+      margin-top: 8px;
+    }
+
+    /* Content */
+    .content {
+      flex: 1;
+      padding: 40px 24px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    /* Your Code - Big and centered */
+    .your-code-section {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .your-code-label {
+      font-size: 12px;
+      letter-spacing: 3px;
+      color: var(--tertiary);
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+
+    .big-code {
+      font-family: 'Playfair Display', serif;
+      font-size: 56px;
+      font-weight: 700;
+      letter-spacing: 8px;
+      color: var(--primary);
+      margin-bottom: 8px;
+    }
+
+    .timer {
+      font-size: 13px;
+      color: var(--tertiary);
+      margin-bottom: 20px;
+    }
+
+    .code-actions {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+    }
+
+    .btn-icon {
+      width: 48px;
+      height: 48px;
+      background: var(--callout-bg);
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-icon:hover {
+      background: var(--primary);
+      color: var(--surface);
+    }
+
+    .btn-icon svg {
+      width: 20px;
+      height: 20px;
+    }
+
+    /* Divider */
+    .divider {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      color: var(--tertiary);
+      margin: 32px 0;
+    }
+
+    .divider-line {
+      flex: 1;
+      height: 1px;
+      background: var(--tertiary);
+    }
+
+    .divider-text {
+      font-size: 11px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+    }
+
+    /* Enter Code Section */
+    .enter-code-section {
+      width: 100%;
+      text-align: center;
+    }
+
+    .enter-code-label {
+      font-size: 12px;
+      letter-spacing: 3px;
+      color: var(--tertiary);
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+
+    .single-input {
+      width: 100%;
+      padding: 20px;
+      border: 2px solid var(--border);
+      text-align: center;
+      font-family: 'Playfair Display', serif;
+      font-size: 32px;
+      font-weight: 700;
+      letter-spacing: 12px;
+      margin-bottom: 16px;
+    }
+
+    .single-input:focus {
+      outline: none;
+      background: var(--callout-bg);
+    }
+
+    .single-input::placeholder {
+      color: var(--tertiary);
+      letter-spacing: 4px;
+    }
+
+    .btn-primary {
+      width: 100%;
+      padding: 18px;
+      background: var(--primary);
+      color: var(--surface);
+      border: none;
+      font-family: 'Source Sans Pro', sans-serif;
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      cursor: pointer;
+    }
+
+    /* QR Link */
+    .qr-link {
+      margin-top: auto;
+      padding-top: 32px;
+    }
+
+    .qr-link a {
+      font-size: 13px;
+      color: var(--tertiary);
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: color 0.2s;
+    }
+
+    .qr-link a:hover {
+      color: var(--primary);
+    }
+  </style>
+</head>
+<body>
+  <div class="phone-frame">
+    <!-- Masthead -->
+    <div class="masthead">
+      <div class="masthead-date">Connection</div>
+      <div class="masthead-title">TogetherRemind</div>
+      <div class="masthead-subtitle">Step 3 of 3</div>
+    </div>
+
+    <!-- Content -->
+    <div class="content">
+      <!-- Your Code - Big and prominent -->
+      <div class="your-code-section">
+        <div class="your-code-label">Your Code</div>
+        <div class="big-code">472815</div>
+        <div class="timer">Expires in 14:32</div>
+        <div class="code-actions">
+          <button class="btn-icon" title="Copy">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+            </svg>
+          </button>
+          <button class="btn-icon" title="Share">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="18" cy="5" r="3"></circle>
+              <circle cx="6" cy="12" r="3"></circle>
+              <circle cx="18" cy="19" r="3"></circle>
+              <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
+              <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Divider -->
+      <div class="divider">
+        <div class="divider-line"></div>
+        <div class="divider-text">or enter partner's code</div>
+        <div class="divider-line"></div>
+      </div>
+
+      <!-- Enter Code - Single input field -->
+      <div class="enter-code-section">
+        <input type="text" class="single-input" maxlength="6" placeholder="_ _ _ _ _ _">
+        <button class="btn-primary">Join Partner</button>
+      </div>
+
+      <!-- QR Link -->
+      <div class="qr-link">
+        <a href="#">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="3" width="7" height="7"></rect>
+            <rect x="14" y="3" width="7" height="7"></rect>
+            <rect x="3" y="14" width="7" height="7"></rect>
+            <rect x="14" y="14" width="7" height="7"></rect>
+          </svg>
+          Use QR Code Instead
+        </a>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

@@ -3,9 +3,8 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:togetherremind/screens/auth_screen.dart';
 import 'package:togetherremind/services/storage_service.dart';
 import 'package:togetherremind/services/auth_service.dart';
-import 'package:togetherremind/models/user.dart';
+import 'package:togetherremind/services/user_profile_service.dart';
 import 'package:togetherremind/widgets/newspaper/newspaper_widgets.dart';
-import 'package:uuid/uuid.dart';
 
 /// Full-screen name entry (Step 1 of 3) in newspaper style
 class NameEntryScreen extends StatefulWidget {
@@ -49,42 +48,39 @@ class _NameEntryScreenState extends State<NameEntryScreen> {
     setState(() => _isLoading = true);
 
     try {
-      // Save name to storage
-      final storageService = StorageService();
-      var user = storageService.getUser();
-
-      if (user == null) {
-        const uuid = Uuid();
-        final userId = uuid.v4();
-        final pushToken = 'placeholder_token_$userId';
-
-        user = User(
-          id: userId,
-          pushToken: pushToken,
-          createdAt: DateTime.now(),
-          name: name,
-        );
-      } else {
-        user.name = name;
-      }
-
-      await storageService.saveUser(user);
-
-      // Sync name to Supabase if authenticated
       final authService = AuthService();
+      final storageService = StorageService();
+
       if (authService.isAuthenticated) {
-        await authService.updateDisplayName(name);
-      }
+        // User is already authenticated (returning user with no name)
+        // Update name via API and local storage
+        final userProfileService = UserProfileService();
+        await userProfileService.updateName(name);
 
-      // Mark onboarding as completed so user won't see it again
-      await _secureStorage.write(key: 'has_completed_onboarding', value: 'true');
+        // Mark onboarding as completed
+        await _secureStorage.write(key: 'has_completed_onboarding', value: 'true');
 
-      if (mounted) {
-        // If user is already authenticated, go back to root (AuthWrapper will show PairingScreen)
-        // Otherwise, show AuthScreen for login
-        if (authService.isAuthenticated) {
+        if (mounted) {
+          // Go back to root - AuthWrapper will show appropriate screen
           Navigator.of(context).pushNamedAndRemoveUntil('/', (route) => false);
-        } else {
+        }
+      } else {
+        // New user - store name temporarily until auth completes
+        // Name will be passed to completeSignup() after OTP verification
+        await _secureStorage.write(key: 'pending_user_name', value: name);
+
+        // Also update local user if exists (for display purposes during auth)
+        var user = storageService.getUser();
+        if (user != null) {
+          user.name = name;
+          await storageService.saveUser(user);
+        }
+
+        // Mark onboarding as completed so user won't see it again
+        await _secureStorage.write(key: 'has_completed_onboarding', value: 'true');
+
+        if (mounted) {
+          // Navigate to AuthScreen for login
           Navigator.of(context).push(
             MaterialPageRoute(
               builder: (context) => const AuthScreen(),

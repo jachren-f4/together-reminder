@@ -57,6 +57,13 @@ export const GET = withRateLimit(
         [couple.partner_id]
       );
 
+      // Get partner's push token
+      const partnerTokenResult = await query(
+        `SELECT fcm_token FROM user_push_tokens WHERE user_id = $1`,
+        [couple.partner_id]
+      );
+      const partnerPushToken = partnerTokenResult.rows[0]?.fcm_token || null;
+
       // Extract partner name from metadata or email
       const partnerEmail = partnerResult.rows[0]?.email || null;
       const partnerMetadata = partnerResult.rows[0]?.raw_user_meta_data as Record<string, any> | null;
@@ -72,6 +79,14 @@ export const GET = withRateLimit(
         partnerEmail,
         partnerName,
         createdAt: couple.created_at,
+        // New format: complete partner object
+        partner: {
+          id: couple.partner_id,
+          name: partnerName,
+          email: partnerEmail,
+          pushToken: partnerPushToken,
+          avatarEmoji: '💕',
+        },
       });
     } catch (error) {
       console.error('Error fetching couple status:', error);

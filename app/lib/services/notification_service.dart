@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io' show Platform;
 import '../utils/logger.dart';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -8,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:togetherremind/services/storage_service.dart';
 import 'package:togetherremind/services/poke_service.dart';
+import 'package:togetherremind/services/user_profile_service.dart';
 import 'package:togetherremind/models/reminder.dart';
 import 'package:togetherremind/models/partner.dart';
 import 'package:togetherremind/widgets/foreground_notification_banner.dart';
@@ -155,8 +157,47 @@ class NotificationService {
     // Setup background handler
     FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
 
+    // Listen for token refresh and sync to server
+    _fcm.onTokenRefresh.listen(_onTokenRefresh);
+
     // Removed verbose logging
     // Logger.success('NotificationService initialized', service: 'notification');
+  }
+
+  /// Handle FCM token refresh - sync to server
+  static Future<void> _onTokenRefresh(String token) async {
+    Logger.info('FCM token refreshed, syncing to server', service: 'notification');
+    try {
+      final userProfileService = UserProfileService();
+      final platform = _getPlatform();
+      await userProfileService.syncPushToken(token, platform);
+      Logger.success('Push token synced to server', service: 'notification');
+    } catch (e) {
+      Logger.warn('Failed to sync refreshed push token: $e', service: 'notification');
+    }
+  }
+
+  /// Get platform string for push token sync
+  static String _getPlatform() {
+    if (kIsWeb) return 'web';
+    if (Platform.isIOS) return 'ios';
+    if (Platform.isAndroid) return 'android';
+    return 'unknown';
+  }
+
+  /// Sync current push token to server (call on app start if authenticated)
+  static Future<void> syncTokenToServer() async {
+    try {
+      final token = await getToken();
+      if (token != null) {
+        final userProfileService = UserProfileService();
+        final platform = _getPlatform();
+        await userProfileService.syncPushToken(token, platform);
+        Logger.debug('Push token synced on startup', service: 'notification');
+      }
+    } catch (e) {
+      Logger.warn('Failed to sync push token on startup: $e', service: 'notification');
+    }
   }
 
   static Future<String?> getToken() async {

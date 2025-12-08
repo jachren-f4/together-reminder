@@ -130,18 +130,24 @@ class CouplePairingService {
         pairedAt = DateTime.now();
       }
 
-      // Create partner object
-      // Use partnerName from API response (extracted from user metadata)
-      // Fall back to email parsing if name not available
-      final partner = Partner(
-        name: data['partnerName'] as String? ??
-              data['partnerEmail']?.split('@').first ??
-              'Partner',
-        pushToken: '', // Will be set up separately
-        pairedAt: pairedAt,
-        avatarEmoji: '💕',
-        id: data['partnerId'] as String? ?? '',
-      );
+      // Create partner object from API response
+      // Use new partner object format if available, fall back to legacy fields
+      Partner partner;
+      final partnerData = data['partner'] as Map<String, dynamic>?;
+      if (partnerData != null) {
+        partner = Partner.fromJson(partnerData, pairedAt);
+      } else {
+        // Legacy fallback for backward compatibility
+        partner = Partner(
+          name: data['partnerName'] as String? ??
+                data['partnerEmail']?.toString().split('@').first ??
+                'Partner',
+          pushToken: '',
+          pairedAt: pairedAt,
+          avatarEmoji: '💕',
+          id: data['partnerId'] as String? ?? '',
+        );
+      }
 
       // Save partner to local storage
       await _storage.savePartner(partner);
@@ -188,11 +194,27 @@ class CouplePairingService {
 
       Logger.success('getStatus: Found couple! Partner: ${data['partnerName']}', service: 'pairing');
 
-      // Sync partner name from server to local storage
-      // This ensures partner name updates are reflected locally
-      final serverPartnerName = data['partnerName'] as String?;
-      if (serverPartnerName != null) {
-        final currentPartner = _storage.getPartner();
+      // Parse partner from API response
+      final createdAt = DateTime.parse(data['createdAt'] as String);
+      Partner? partner;
+      final partnerData = data['partner'] as Map<String, dynamic>?;
+      if (partnerData != null) {
+        partner = Partner.fromJson(partnerData, createdAt);
+      }
+
+      // Sync partner data from server to local storage
+      // This ensures partner name/data updates are reflected locally
+      final currentPartner = _storage.getPartner();
+      if (partner != null) {
+        if (currentPartner == null ||
+            currentPartner.name != partner.name ||
+            currentPartner.id != partner.id) {
+          Logger.info('Syncing partner from server: ${partner.name}', service: 'pairing');
+          await _storage.savePartner(partner);
+        }
+      } else if (data['partnerName'] != null) {
+        // Legacy fallback: update just the name
+        final serverPartnerName = data['partnerName'] as String;
         if (currentPartner != null && currentPartner.name != serverPartnerName) {
           Logger.info('Updating partner name: ${currentPartner.name} -> $serverPartnerName', service: 'pairing');
           currentPartner.name = serverPartnerName;
@@ -205,7 +227,8 @@ class CouplePairingService {
         partnerId: data['partnerId'] as String,
         partnerEmail: data['partnerEmail'] as String?,
         partnerName: data['partnerName'] as String?,
-        createdAt: DateTime.parse(data['createdAt'] as String),
+        createdAt: createdAt,
+        partner: partner,
       );
     } catch (e) {
       Logger.error('Error fetching couple status', error: e, service: 'pairing');
@@ -276,14 +299,22 @@ class CouplePairingService {
         pairedAt = DateTime.now();
       }
 
-      // Create partner object using API response or fallback to QR data
-      final partner = Partner(
-        name: data['partnerName'] as String? ?? partnerName,
-        pushToken: '', // Will be set up separately
-        pairedAt: pairedAt,
-        avatarEmoji: '💕',
-        id: data['partnerId'] as String? ?? partnerId,
-      );
+      // Create partner object from API response
+      // Use new partner object format if available, fall back to legacy fields
+      Partner partner;
+      final partnerData = data['partner'] as Map<String, dynamic>?;
+      if (partnerData != null) {
+        partner = Partner.fromJson(partnerData, pairedAt);
+      } else {
+        // Legacy fallback for backward compatibility
+        partner = Partner(
+          name: data['partnerName'] as String? ?? partnerName,
+          pushToken: '',
+          pairedAt: pairedAt,
+          avatarEmoji: '💕',
+          id: data['partnerId'] as String? ?? partnerId,
+        );
+      }
 
       // Save partner to local storage
       await _storage.savePartner(partner);
@@ -314,6 +345,7 @@ class CoupleStatus {
   final String? partnerEmail;
   final String? partnerName;
   final DateTime createdAt;
+  final Partner? partner;
 
   CoupleStatus({
     required this.coupleId,
@@ -321,5 +353,6 @@ class CoupleStatus {
     this.partnerEmail,
     this.partnerName,
     required this.createdAt,
+    this.partner,
   });
 }
