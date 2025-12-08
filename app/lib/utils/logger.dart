@@ -49,7 +49,7 @@ class Logger {
     // === MAJOR FEATURES (Enable when working on these features) ===
     'quiz': true,               // Classic quiz gameplay, scoring, sync (36 uses)
     'you_or_me': true,          // You or Me dual-session game (32 uses)
-    'pairing': false,           // QR/Remote device pairing (19 uses)
+    'pairing': true,            // QR/Remote device pairing (19 uses)
 
     // === MINOR FEATURES (Enable only when developing specific feature) ===
     'reminder': false,          // Send reminder functionality (9 uses)

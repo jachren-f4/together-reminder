@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pairing Screen - Option B: Compact Card Design</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Source+Sans+Pro:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --background: #F0EDE8;
+      --surface: #FFFEF9;
+      --primary: #1A1A1A;
+      --secondary: #666666;
+      --tertiary: #999999;
+      --border: #1A1A1A;
+      --callout-bg: #F5F4EF;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Source Sans Pro', sans-serif;
+      background: var(--background);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .phone-frame {
+      width: 375px;
+      min-height: 812px;
+      background: var(--surface);
+      border-radius: 40px;
+      overflow: hidden;
+      box-shadow: 0 25px 50px rgba(0,0,0,0.15);
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Masthead */
+    .masthead {
+      padding: 20px;
+      border-bottom: 3px solid var(--border);
+      text-align: center;
+    }
+
+    .masthead-date {
+      font-size: 10px;
+      letter-spacing: 3px;
+      color: var(--secondary);
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    .masthead-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 42px;
+      font-style: italic;
+      font-weight: 400;
+      letter-spacing: -1px;
+      color: var(--primary);
+    }
+
+    .masthead-subtitle {
+      font-size: 11px;
+      letter-spacing: 4px;
+      color: var(--secondary);
+      text-transform: uppercase;
+      margin-top: 8px;
+    }
+
+    /* Article header */
+    .article-header {
+      padding: 24px 20px 16px;
+      text-align: center;
+    }
+
+    .kicker {
+      font-size: 11px;
+      letter-spacing: 2px;
+      color: var(--secondary);
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    .headline {
+      font-family: 'Playfair Display', serif;
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    /* Content */
+    .content {
+      flex: 1;
+      padding: 0 20px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    /* Card */
+    .card {
+      border: 2px solid var(--border);
+      padding: 16px;
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .card-title {
+      font-size: 12px;
+      letter-spacing: 2px;
+      color: var(--secondary);
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+
+    .card-timer {
+      font-size: 11px;
+      color: var(--tertiary);
+    }
+
+    /* Code Display */
+    .code-display {
+      display: flex;
+      justify-content: center;
+      gap: 6px;
+      margin-bottom: 12px;
+    }
+
+    .code-digit {
+      width: 40px;
+      height: 48px;
+      background: var(--callout-bg);
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Playfair Display', serif;
+      font-size: 24px;
+      font-weight: 700;
+    }
+
+    .code-actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    .btn-small {
+      flex: 1;
+      padding: 10px;
+      background: transparent;
+      border: 1px solid var(--border);
+      font-family: 'Source Sans Pro', sans-serif;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-small:hover {
+      background: var(--primary);
+      color: var(--surface);
+    }
+
+    /* Code Input */
+    .code-input-wrapper {
+      display: flex;
+      justify-content: center;
+      gap: 6px;
+      margin-bottom: 12px;
+    }
+
+    .code-input {
+      width: 40px;
+      height: 48px;
+      background: var(--surface);
+      border: 2px solid var(--border);
+      text-align: center;
+      font-family: 'Playfair Display', serif;
+      font-size: 24px;
+      font-weight: 700;
+    }
+
+    .code-input:focus {
+      outline: none;
+      border-color: var(--primary);
+      background: var(--callout-bg);
+    }
+
+    .btn-primary {
+      width: 100%;
+      padding: 14px;
+      background: var(--primary);
+      color: var(--surface);
+      border: none;
+      font-family: 'Source Sans Pro', sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      cursor: pointer;
+    }
+
+    /* Divider */
+    .divider {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: var(--tertiary);
+      padding: 4px 0;
+    }
+
+    .divider-line {
+      flex: 1;
+      height: 1px;
+      background: var(--tertiary);
+    }
+
+    .divider-text {
+      font-size: 11px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+
+    /* QR Section */
+    .qr-section {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      padding: 16px;
+      border: 1px dashed var(--tertiary);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .qr-section:hover {
+      border-color: var(--primary);
+      background: var(--callout-bg);
+    }
+
+    .qr-icon {
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--callout-bg);
+      border: 1px solid var(--border);
+    }
+
+    .qr-text {
+      font-size: 13px;
+      color: var(--secondary);
+    }
+
+    /* Help text */
+    .help-text {
+      text-align: center;
+      font-size: 12px;
+      color: var(--tertiary);
+      line-height: 1.5;
+      margin-top: auto;
+      padding-top: 16px;
+      border-top: 1px solid var(--callout-bg);
+    }
+  </style>
+</head>
+<body>
+  <div class="phone-frame">
+    <!-- Masthead -->
+    <div class="masthead">
+      <div class="masthead-date">Connection</div>
+      <div class="masthead-title">TogetherRemind</div>
+      <div class="masthead-subtitle">Step 3 of 3</div>
+    </div>
+
+    <!-- Article Header -->
+    <div class="article-header">
+      <div class="kicker">Partner Pairing</div>
+      <div class="headline">Connect with your partner</div>
+    </div>
+
+    <!-- Content -->
+    <div class="content">
+      <!-- Your Code Card -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Your Code</div>
+          <div class="card-timer">14:32 remaining</div>
+        </div>
+        <div class="code-display">
+          <div class="code-digit">4</div>
+          <div class="code-digit">7</div>
+          <div class="code-digit">2</div>
+          <div class="code-digit">8</div>
+          <div class="code-digit">1</div>
+          <div class="code-digit">5</div>
+        </div>
+        <div class="code-actions">
+          <button class="btn-small">Copy</button>
+          <button class="btn-small">Share</button>
+        </div>
+      </div>
+
+      <!-- Divider -->
+      <div class="divider">
+        <div class="divider-line"></div>
+        <div class="divider-text">or</div>
+        <div class="divider-line"></div>
+      </div>
+
+      <!-- Enter Code Card -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Enter Partner's Code</div>
+        </div>
+        <div class="code-input-wrapper">
+          <input type="text" class="code-input" maxlength="1" value="">
+          <input type="text" class="code-input" maxlength="1" value="">
+          <input type="text" class="code-input" maxlength="1" value="">
+          <input type="text" class="code-input" maxlength="1" value="">
+          <input type="text" class="code-input" maxlength="1" value="">
+          <input type="text" class="code-input" maxlength="1" value="">
+        </div>
+        <button class="btn-primary">Join Partner</button>
+      </div>
+
+      <!-- Divider -->
+      <div class="divider">
+        <div class="divider-line"></div>
+        <div class="divider-text">or</div>
+        <div class="divider-line"></div>
+      </div>
+
+      <!-- QR Code Option -->
+      <div class="qr-section">
+        <div class="qr-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="3" width="7" height="7"></rect>
+            <rect x="14" y="3" width="7" height="7"></rect>
+            <rect x="3" y="14" width="7" height="7"></rect>
+            <rect x="14" y="14" width="7" height="7"></rect>
+          </svg>
+        </div>
+        <div class="qr-text">Scan QR Code Instead</div>
+      </div>
+
+      <!-- Help Text -->
+      <div class="help-text">
+        Both partners see this screen.<br>
+        One shares their code, the other enters it.
+      </div>
+    </div>
+  </div>
+</body>
+</html>

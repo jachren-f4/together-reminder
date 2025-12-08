@@ -14,7 +14,7 @@ class DevConfig {
   ///
   /// QUICK TOGGLE: Change to `true` to skip onboarding, `false` to test it
   /// NOTE: On physical iOS/Android devices, auth is NEVER bypassed (for testing real signup)
-  static const bool skipAuthInDev = true;  // <-- Toggle this!
+  static const bool skipAuthInDev = false;  // <-- Toggle this!
 
   /// Skip OTP verification for faster development testing
   /// When enabled, entering an email will create a user session directly without OTP

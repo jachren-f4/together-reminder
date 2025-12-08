@@ -5,8 +5,7 @@ import '../config/dev_config.dart';
 import '../services/auth_service.dart';
 import '../services/storage_service.dart';
 import '../services/couple_pairing_service.dart';
-import '../models/partner.dart';
-import '../models/user.dart';
+import '../services/user_profile_service.dart';
 import '../screens/auth_screen.dart';
 import '../screens/onboarding_screen.dart';
 import '../screens/name_entry_screen.dart';
@@ -94,21 +93,18 @@ class _AuthWrapperState extends State<AuthWrapper> {
   /// Ensure coupleId and User are saved (for quest sync)
   Future<void> _ensureCoupleIdSaved() async {
     try {
-      // Ensure User object exists in storage (required for quest generation)
-      if (_storageService.getUser() == null) {
-        final userId = await _secureStorage.read(key: 'supabase_user_id');
-        final userEmail = await _secureStorage.read(key: 'supabase_user_email');
+      // Sync push token to server (handles token refresh between sessions)
+      NotificationService.syncTokenToServer();
 
-        if (userId != null) {
-          final pushToken = await NotificationService.getToken() ?? '';
-          final user = User(
-            id: userId,
-            pushToken: pushToken,
-            createdAt: DateTime.now(),
-            name: userEmail?.split('@').first ?? 'User',
-          );
-          await _storageService.saveUser(user);
-          debugPrint('✅ User restored: ${user.name} (${user.id})');
+      // Ensure User object exists in storage (required for quest generation)
+      // Use UserProfileService to fetch from server if missing
+      if (_storageService.getUser() == null) {
+        try {
+          final userProfileService = UserProfileService();
+          await userProfileService.getProfile();
+          debugPrint('✅ User restored from server');
+        } catch (e) {
+          debugPrint('⚠️ Could not restore user from server: $e');
         }
       }
 
@@ -117,7 +113,7 @@ class _AuthWrapperState extends State<AuthWrapper> {
       if (existingCoupleId != null) {
         debugPrint('✅ CoupleId already saved: $existingCoupleId');
         // Still sync partner data from server (handles name changes)
-        // getStatus() now syncs partner name to Hive if changed
+        // getStatus() now syncs partner to Hive if changed
         await _couplePairingService.getStatus();
         _hasCheckedPairingStatus = true;
         return;
@@ -145,40 +141,31 @@ class _AuthWrapperState extends State<AuthWrapper> {
     });
 
     try {
-      final status = await _couplePairingService.getStatus();
-      if (status != null && mounted) {
-        // User is paired in database - restore partner locally
-        final partner = Partner(
-          name: status.partnerName ?? status.partnerEmail?.split('@').first ?? 'Partner',
-          pushToken: '', // Will be set up separately
-          pairedAt: status.createdAt,
-          avatarEmoji: '💕',
-        );
-        await _storageService.savePartner(partner);
+      // First, ensure User is restored from server if missing
+      if (_storageService.getUser() == null) {
+        try {
+          final userProfileService = UserProfileService();
+          final result = await userProfileService.getProfile();
+          debugPrint('✅ User restored from server: ${result.user.name}');
 
-        // Store couple ID for quest generation and sync
-        await _secureStorage.write(key: 'couple_id', value: status.coupleId);
-
-        // Also create User object if missing (required for quest generation)
-        if (_storageService.getUser() == null) {
-          final userId = await _secureStorage.read(key: 'supabase_user_id');
-          final userEmail = await _secureStorage.read(key: 'supabase_user_email');
-
-          if (userId != null) {
-            final pushToken = await NotificationService.getToken() ?? '';
-            final user = User(
-              id: userId,
-              pushToken: pushToken,
-              createdAt: DateTime.now(),
-              name: userEmail?.split('@').first ?? 'User',
-            );
-            await _storageService.saveUser(user);
-            debugPrint('✅ User restored: ${user.name} (${user.id})');
+          // getProfile also restores partner if user is paired
+          if (result.isPaired && result.coupleId != null) {
+            await _secureStorage.write(key: 'couple_id', value: result.coupleId!);
+            debugPrint('✅ Partner restored from profile: ${result.partner?.name}');
+            debugPrint('✅ Restored couple ID: ${result.coupleId}');
           }
+        } catch (e) {
+          debugPrint('⚠️ Could not restore user from server: $e');
         }
-
-        debugPrint('✅ Restored partner from database: ${partner.name}');
-        debugPrint('✅ Restored couple ID: ${status.coupleId}');
+      } else {
+        // User exists but no partner - check pairing status
+        final status = await _couplePairingService.getStatus();
+        if (status != null && mounted) {
+          // getStatus() already saves Partner to Hive
+          await _secureStorage.write(key: 'couple_id', value: status.coupleId);
+          debugPrint('✅ Restored partner from status: ${status.partnerName}');
+          debugPrint('✅ Restored couple ID: ${status.coupleId}');
+        }
       }
     } catch (e) {
       debugPrint('❌ Error checking pairing status: $e');

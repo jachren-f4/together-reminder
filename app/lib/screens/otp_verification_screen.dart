@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import '../services/auth_service.dart';
+import '../services/user_profile_service.dart';
+import '../services/notification_service.dart';
 import '../utils/logger.dart';
 import '../widgets/newspaper/newspaper_widgets.dart';
 
@@ -61,6 +64,30 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
       final success = await _authService.verifyOTP(widget.email, otp);
 
       if (success) {
+        // Complete signup on server - creates user profile and restores couple if exists
+        try {
+          final pushToken = await NotificationService.getToken();
+          final userProfileService = UserProfileService();
+
+          // Get pending name from name entry screen (if any)
+          const secureStorage = FlutterSecureStorage();
+          final pendingName = await secureStorage.read(key: 'pending_user_name');
+
+          await userProfileService.completeSignup(
+            pushToken: pushToken,
+            name: pendingName,
+          );
+          Logger.success('Signup completed on server', service: 'auth');
+
+          // Clear the pending name after successful signup
+          if (pendingName != null) {
+            await secureStorage.delete(key: 'pending_user_name');
+          }
+        } catch (e) {
+          // Log but don't fail - user can still proceed
+          Logger.error('Failed to complete signup on server', error: e, service: 'auth');
+        }
+
         if (mounted) {
           // Clear entire navigation stack and return to root
           // This lets AuthWrapper re-evaluate auth state and show correct screen

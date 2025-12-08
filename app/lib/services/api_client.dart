@@ -71,6 +71,20 @@ class ApiClient {
     );
   }
 
+  /// PATCH request with authentication
+  Future<ApiResponse<T>> patch<T>(
+    String endpoint, {
+    Map<String, dynamic>? body,
+    T Function(Map<String, dynamic>)? parser,
+  }) async {
+    return _makeRequest(
+      method: 'PATCH',
+      endpoint: endpoint,
+      body: body,
+      parser: parser,
+    );
+  }
+
   /// DELETE request with authentication
   Future<ApiResponse<T>> delete<T>(
     String endpoint, {
@@ -120,6 +134,13 @@ class ApiClient {
           break;
         case 'PUT':
           response = await http.put(
+            uri,
+            headers: headers,
+            body: body != null ? jsonEncode(body) : null,
+          );
+          break;
+        case 'PATCH':
+          response = await http.patch(
             uri,
             headers: headers,
             body: body != null ? jsonEncode(body) : null,

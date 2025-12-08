@@ -38,13 +38,8 @@ class SupabaseConfig {
         return productionApiUrl;
       }
 
-      // Physical devices can't reach localhost - use production API
-      // DevConfig.isSimulatorSync is false for physical devices
-      if (!kIsWeb && !DevConfig.isSimulatorSync) {
-        return productionApiUrl;
-      }
-
-      // Use platform-specific localhost for local development (simulators only)
+      // Use platform-specific localhost for local development
+      // NOTE: Physical devices can't reach localhost - toggle useProductionApi for those
       if (kIsWeb) {
         return 'http://localhost:3000';
       } else if (Platform.isAndroid) {

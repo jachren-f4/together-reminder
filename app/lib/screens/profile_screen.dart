@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import '../services/storage_service.dart';
 import '../services/love_point_service.dart';
 import '../services/couple_stats_service.dart';
+import '../services/auth_service.dart';
 import '../theme/app_theme.dart';
 import '../utils/number_formatter.dart';
+import 'onboarding_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -15,6 +17,7 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreenState extends State<ProfileScreen> {
   final StorageService _storage = StorageService();
   final CoupleStatsService _coupleStatsService = CoupleStatsService();
+  final AuthService _authService = AuthService();
 
   CoupleStats? _coupleStats;
   bool _isLoadingStats = true;
@@ -55,6 +58,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
               _buildTogetherForSection(),
               const SizedBox(height: 16),
               _buildYourActivitySection(),
+              const SizedBox(height: 32),
+              _buildAccountSection(),
               const SizedBox(height: 32),
             ],
           ),
@@ -732,6 +737,138 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ),
       ),
     );
+  }
+
+  /// Section 7: Account Section (Sign Out)
+  Widget _buildAccountSection() {
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(left: 4, bottom: 12),
+            child: Text(
+              'Account',
+              style: AppTheme.headlineFont.copyWith(
+                fontSize: 18,
+                fontWeight: FontWeight.w600,
+                color: AppTheme.primaryBlack,
+              ),
+            ),
+          ),
+          InkWell(
+            onTap: _showLogoutConfirmation,
+            borderRadius: BorderRadius.circular(12),
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+              decoration: BoxDecoration(
+                border: Border.all(color: Colors.red[300]!, width: 1.5),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Row(
+                children: [
+                  Icon(
+                    Icons.logout,
+                    color: Colors.red[600],
+                    size: 22,
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Text(
+                      'Sign Out',
+                      style: AppTheme.bodyFont.copyWith(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.red[600],
+                      ),
+                    ),
+                  ),
+                  Icon(
+                    Icons.chevron_right,
+                    color: Colors.red[400],
+                    size: 20,
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// Show logout confirmation dialog
+  void _showLogoutConfirmation() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(
+          'Sign Out',
+          style: AppTheme.headlineFont.copyWith(
+            fontSize: 20,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        content: Text(
+          'Are you sure you want to sign out? This will clear all local data and you\'ll need to sign in again.',
+          style: AppTheme.bodyFont.copyWith(fontSize: 15),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text(
+              'Cancel',
+              style: AppTheme.bodyFont.copyWith(
+                color: AppTheme.textSecondary,
+              ),
+            ),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context);
+              _performLogout();
+            },
+            child: Text(
+              'Sign Out',
+              style: AppTheme.bodyFont.copyWith(
+                color: Colors.red[600],
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// Perform the actual logout
+  Future<void> _performLogout() async {
+    try {
+      // Clear auth tokens (Supabase session)
+      await _authService.signOut();
+
+      // Clear all Hive local data (user, partner, quests, sessions, etc.)
+      await _storage.clearAllData();
+
+      // Navigate to onboarding and clear navigation stack
+      if (mounted) {
+        Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (_) => const OnboardingScreen()),
+          (route) => false,
+        );
+      }
+    } catch (e) {
+      // Show error if something goes wrong
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error signing out: $e'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    }
   }
 
   /// Show modal to set anniversary date
