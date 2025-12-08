@@ -22,18 +22,14 @@ export const POST = withAuthOrDevBypass(async (req, userId) => {
         // Insert quests within transaction
         await withTransaction(async (client) => {
             for (const quest of quests) {
+                // Use DO NOTHING to preserve first-written quests (idempotent)
+                // This prevents race conditions when both devices try to upload
                 await client.query(
                     `INSERT INTO daily_quests (
                        id, couple_id, date, quest_type, content_id, sort_order, is_side_quest, metadata, expires_at
                      ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
                      ON CONFLICT (couple_id, date, quest_type, sort_order)
-                     DO UPDATE SET
-                       id = EXCLUDED.id,
-                       content_id = EXCLUDED.content_id,
-                       is_side_quest = EXCLUDED.is_side_quest,
-                       metadata = EXCLUDED.metadata,
-                       expires_at = EXCLUDED.expires_at,
-                       generated_at = NOW()`,
+                     DO NOTHING`,
                     [
                         quest.id,
                         coupleId,

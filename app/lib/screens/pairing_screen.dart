@@ -13,9 +13,7 @@ import 'package:togetherremind/services/storage_service.dart';
 import 'package:togetherremind/services/notification_service.dart';
 import 'package:togetherremind/services/couple_pairing_service.dart';
 import 'package:togetherremind/services/auth_service.dart';
-import 'package:togetherremind/services/daily_quest_service.dart';
-import 'package:togetherremind/services/quest_sync_service.dart';
-import 'package:togetherremind/services/quest_type_manager.dart';
+import 'package:togetherremind/services/quest_initialization_service.dart';
 import 'package:togetherremind/theme/app_theme.dart';
 import 'package:togetherremind/widgets/newspaper/newspaper_widgets.dart';
 import '../utils/logger.dart';
@@ -92,7 +90,7 @@ class _PairingScreenState extends State<PairingScreen> {
 
           // Partner already saved by getStatus() when it parses the partner object
           // Just navigate to home
-          await _initializeDailyQuestsAndNavigate();
+          await _completeOnboarding();
         }
       } catch (e) {
         Logger.error('Error in global pairing poll', error: e, service: 'pairing');
@@ -109,41 +107,16 @@ class _PairingScreenState extends State<PairingScreen> {
     super.dispose();
   }
 
-  /// Initialize daily quests after pairing completes
-  /// This mirrors the logic from main.dart's _initializeDailyQuests()
-  Future<void> _initializeDailyQuestsAndNavigate() async {
-    try {
-      final user = _storageService.getUser();
-      final partner = _storageService.getPartner();
+  /// Complete onboarding after pairing - initialize quests and navigate to home
+  Future<void> _completeOnboarding() async {
+    final initService = QuestInitializationService();
+    final result = await initService.ensureQuestsInitialized();
 
-      if (user != null && partner != null) {
-        final questService = DailyQuestService(storage: _storageService);
-        final syncService = QuestSyncService(storage: _storageService);
-        final questTypeManager = QuestTypeManager(
-          storage: _storageService,
-          questService: questService,
-          syncService: syncService,
-        );
-
-        // Sync or generate today's quests
-        final synced = await syncService.syncTodayQuests(
-          currentUserId: user.id,
-          partnerUserId: partner.pushToken,
-        );
-
-        if (!synced) {
-          // No quests found - generate new ones
-          await questTypeManager.generateDailyQuests(
-            currentUserId: user.id,
-            partnerUserId: partner.pushToken,
-          );
-          Logger.debug('Daily quests generated after pairing', service: 'pairing');
-        } else {
-          Logger.debug('Daily quests loaded from sync after pairing', service: 'pairing');
-        }
-      }
-    } catch (e) {
-      Logger.error('Error initializing daily quests after pairing', error: e, service: 'pairing');
+    if (result.isSuccess) {
+      Logger.debug('Quest init completed: $result', service: 'pairing');
+    } else {
+      Logger.error('Quest init failed: ${result.errorMessage}', service: 'pairing');
+      // Still navigate to home - quests will be synced later
     }
 
     if (mounted) {
@@ -163,7 +136,7 @@ class _PairingScreenState extends State<PairingScreen> {
         final status = await _couplePairingService.getStatus();
         if (status != null) {
           // Partner already saved by getStatus()
-          await _initializeDailyQuestsAndNavigate();
+          await _completeOnboarding();
           return;
         }
       } catch (e) {
@@ -180,7 +153,7 @@ class _PairingScreenState extends State<PairingScreen> {
       );
 
       await _storageService.savePartner(partner);
-      await _initializeDailyQuestsAndNavigate();
+      await _completeOnboarding();
     };
   }
 
@@ -256,7 +229,7 @@ class _PairingScreenState extends State<PairingScreen> {
           }
         }
 
-        await _initializeDailyQuestsAndNavigate();
+        await _completeOnboarding();
       } catch (apiError) {
         Logger.error('API pairing failed', error: apiError, service: 'pairing');
         // Don't fall back to local-only - server-side pairing is required
@@ -354,7 +327,7 @@ class _PairingScreenState extends State<PairingScreen> {
 
           // Partner already saved by getStatus() when it parses the partner object
           // Just navigate to home
-          await _initializeDailyQuestsAndNavigate();
+          await _completeOnboarding();
         }
       } catch (e) {
         Logger.error('Error polling pairing status', error: e, service: 'pairing');
@@ -388,7 +361,7 @@ class _PairingScreenState extends State<PairingScreen> {
       _globalPairingTimer?.cancel();
 
       if (mounted) {
-        await _initializeDailyQuestsAndNavigate();
+        await _completeOnboarding();
       }
     } catch (e) {
       setState(() {

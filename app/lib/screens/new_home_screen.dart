@@ -10,8 +10,7 @@ import '../services/daily_pulse_service.dart';
 import '../services/word_search_service.dart';
 import '../services/linked_service.dart';
 import '../services/quiz_service.dart';
-import '../services/daily_quest_service.dart';
-import '../services/quest_sync_service.dart';
+import '../services/quest_initialization_service.dart';
 import '../services/love_point_service.dart';
 import '../services/haptic_service.dart';
 import '../services/sound_service.dart';
@@ -84,6 +83,9 @@ class _NewHomeScreenState extends State<NewHomeScreen> with TickerProviderStateM
     // Fetch LP from server on load to ensure sync
     _syncLPFromServer();
 
+    // Sync daily quests on load (handles returning users after reinstall)
+    _syncDailyQuestsIfNeeded();
+
     // Subscribe to unified polling service for side quest updates
     _pollingService.subscribe();
     _pollingService.subscribeToTopic('sideQuests', _onSideQuestUpdate);
@@ -116,6 +118,28 @@ class _NewHomeScreenState extends State<NewHomeScreen> with TickerProviderStateM
       }
     } catch (e) {
       Logger.error('Failed to sync LP on home screen load', error: e, service: 'home');
+    }
+  }
+
+  /// Sync daily quests from server if none exist locally
+  /// This handles the case of returning users after reinstall
+  Future<void> _syncDailyQuestsIfNeeded() async {
+    // Check if quests already exist locally (fast path - no network call)
+    final existingQuests = _storage.getTodayQuests();
+    if (existingQuests.isNotEmpty) {
+      Logger.debug('Quest sync skipped - ${existingQuests.length} quests already exist', service: 'home');
+      return;
+    }
+
+    // No local quests - use centralized initialization service
+    final initService = QuestInitializationService();
+    final result = await initService.ensureQuestsInitialized();
+
+    if (result.isSuccess && result.wasNewlyInitialized && mounted) {
+      Logger.success('Quests restored for returning user: ${result.questCount} quests', service: 'home');
+      setState(() {}); // Trigger rebuild to show quests
+    } else if (!result.isSuccess) {
+      Logger.error('Quest init failed: ${result.errorMessage}', service: 'home');
     }
   }
 
@@ -176,33 +200,24 @@ class _NewHomeScreenState extends State<NewHomeScreen> with TickerProviderStateM
     setState(() => _isRefreshing = true);
 
     try {
-      final user = _storage.getUser();
-      final partner = _storage.getPartner();
+      // Use the centralized QuestInitializationService
+      final initService = QuestInitializationService();
+      final result = await initService.ensureQuestsInitialized();
 
-      if (user != null && partner != null) {
-        // Sync quests from Firebase
-        final questService = DailyQuestService(storage: _storage);
-        final syncService = QuestSyncService(
-          storage: _storage,
+      if (result.isSuccess && mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Quests synced!'),
+            duration: Duration(seconds: 2),
+          ),
         );
-
-        await syncService.syncTodayQuests(
-          currentUserId: user.id,
-          partnerUserId: partner.pushToken,
+      } else if (!result.isSuccess && mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Sync failed: ${result.errorMessage ?? result.status.name}'),
+            backgroundColor: BrandLoader().colors.error,
+          ),
         );
-
-        setState(() {
-          _lastSyncTime = DateTime.now();
-        });
-
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Updated from Firebase!'),
-              duration: Duration(seconds: 2),
-            ),
-          );
-        }
       }
     } catch (e) {
       Logger.error('Error refreshing', error: e, service: 'home');
@@ -598,7 +613,7 @@ class _NewHomeScreenState extends State<NewHomeScreen> with TickerProviderStateM
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         // Daily Quests
-        const DailyQuestsWidget(),
+        DailyQuestsWidget(key: ValueKey(_storage.getTodayQuests().length)),
 
         const SizedBox(height: 10),
 

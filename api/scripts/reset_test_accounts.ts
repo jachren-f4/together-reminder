@@ -93,6 +93,8 @@ async function main() {
             `DELETE FROM word_search_moves WHERE match_id IN (SELECT id FROM word_search_matches WHERE couple_id = $1)`,
             [couple.id]
           );
+        } else if (table === 'couples') {
+          await query(`DELETE FROM couples WHERE id = $1`, [couple.id]);
         } else {
           await query(`DELETE FROM ${table} WHERE couple_id = $1`, [couple.id]);
         }

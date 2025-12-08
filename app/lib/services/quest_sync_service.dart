@@ -36,14 +36,8 @@ class QuestSyncService {
       Logger.debug('🔄 Quest Sync Check (Supabase):', service: 'quest');
       Logger.debug('   Date Key: $dateKey', service: 'quest');
 
-      // Determine device priority (alphabetically first user ID generates)
-      final sortedIds = [currentUserId, partnerUserId]..sort();
-      final isSecondDevice = currentUserId == sortedIds[1];
-
-      if (isSecondDevice) {
-        Logger.debug('   ⏱️  Second device detected - waiting 3 seconds...', service: 'quest');
-        await Future.delayed(const Duration(seconds: 3));
-      }
+      // Server handles race conditions with ON CONFLICT DO NOTHING
+      // No need for arbitrary delays - both devices can safely try to upload
 
       // Try to fetch from Supabase
       Logger.debug('   📡 Checking Supabase for existing quests...', service: 'quest');
@@ -83,21 +77,6 @@ class QuestSyncService {
           Logger.debug('   ✅ Loading quests from Supabase...', service: 'quest');
           await _loadQuestsFromSupabase(questsData, dateKey);
           return true;
-        }
-      }
-
-      // If second device and still no quests, retry once
-      if (isSecondDevice) {
-        Logger.debug('   ⏱️  Supabase still empty - retrying in 2 seconds...', service: 'quest');
-        await Future.delayed(const Duration(seconds: 2));
-
-        final retryResponse = await _apiClient.get('/api/sync/daily-quests?date=$dateKey');
-        if (retryResponse.success && retryResponse.data != null) {
-          final questsData = retryResponse.data['quests'] as List?;
-          if (questsData != null && questsData.isNotEmpty) {
-            await _loadQuestsFromSupabase(questsData, dateKey);
-            return true;
-          }
         }
       }
 
@@ -308,34 +287,5 @@ class QuestSyncService {
     } catch (e) {
       Logger.error('Error cleaning up old quests', error: e, service: 'quest');
     }
-  }
-
-  // ============================================================================
-  // DEPRECATED METHODS (kept for backward compatibility during migration)
-  // ============================================================================
-
-  /// @deprecated Use saveQuestsToSupabase instead
-  Future<void> saveQuestsToFirebase({
-    required List<DailyQuest> quests,
-    required String currentUserId,
-    required String partnerUserId,
-    QuizProgressionState? progressionState,
-  }) async {
-    // Redirect to Supabase
-    return saveQuestsToSupabase(
-      quests: quests,
-      currentUserId: currentUserId,
-      partnerUserId: partnerUserId,
-      progressionState: progressionState,
-    );
-  }
-
-  /// @deprecated Partner completions are now fetched via polling API
-  Stream<Map<String, dynamic>> listenForPartnerCompletions({
-    required String currentUserId,
-    required String partnerUserId,
-  }) {
-    // Return empty stream - completions are now polled via API
-    return const Stream.empty();
   }
 }
