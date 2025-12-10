@@ -38,6 +38,9 @@ export interface CoupleBasicInfo {
  * Get full couple info including LP and first player preference.
  * Use this when you need all couple data including game preferences.
  *
+ * Uses optimized lookup via user_couples table (O(1) index lookup)
+ * instead of OR-based query on couples table.
+ *
  * @param userId - The user ID to look up couple for
  * @param client - Optional database client (for use within transactions)
  * @returns CoupleInfo or null if no couple found
@@ -55,11 +58,12 @@ export async function getCouple(
 ): Promise<CoupleInfo | null> {
   const queryFn = client ? client.query.bind(client) : query;
 
+  // Optimized: JOIN through user_couples lookup table (primary key lookup)
   const result = await queryFn(
-    `SELECT id, user1_id, user2_id, first_player_id, total_lp
-     FROM couples
-     WHERE user1_id = $1 OR user2_id = $1
-     LIMIT 1`,
+    `SELECT c.id, c.user1_id, c.user2_id, c.first_player_id, c.total_lp
+     FROM user_couples uc
+     JOIN couples c ON c.id = uc.couple_id
+     WHERE uc.user_id = $1`,
     [userId]
   );
 
@@ -82,7 +86,9 @@ export async function getCouple(
 /**
  * Get basic couple info (just IDs).
  * Use this when you only need couple/partner IDs, not LP or preferences.
- * Slightly more efficient query than getCouple().
+ *
+ * Uses optimized lookup via user_couples table (O(1) index lookup)
+ * instead of OR-based query on couples table.
  *
  * @param userId - The user ID to look up couple for
  * @param client - Optional database client (for use within transactions)
@@ -100,11 +106,12 @@ export async function getCoupleBasic(
 ): Promise<CoupleBasicInfo | null> {
   const queryFn = client ? client.query.bind(client) : query;
 
+  // Optimized: JOIN through user_couples lookup table (primary key lookup)
   const result = await queryFn(
-    `SELECT id, user1_id, user2_id
-     FROM couples
-     WHERE user1_id = $1 OR user2_id = $1
-     LIMIT 1`,
+    `SELECT c.id, c.user1_id, c.user2_id
+     FROM user_couples uc
+     JOIN couples c ON c.id = uc.couple_id
+     WHERE uc.user_id = $1`,
     [userId]
   );
 
@@ -126,6 +133,9 @@ export async function getCoupleBasic(
  * Get just the couple ID for a user.
  * Use this when you only need the couple ID, nothing else.
  *
+ * Uses optimized lookup via user_couples table (O(1) primary key lookup)
+ * instead of OR-based query on couples table.
+ *
  * @param userId - The user ID to look up couple for
  * @param client - Optional database client (for use within transactions)
  * @returns couple ID string or null if no couple found
@@ -136,12 +146,13 @@ export async function getCoupleId(
 ): Promise<string | null> {
   const queryFn = client ? client.query.bind(client) : query;
 
+  // Optimized: Direct primary key lookup on user_couples
   const result = await queryFn(
-    `SELECT id FROM couples WHERE user1_id = $1 OR user2_id = $1 LIMIT 1`,
+    `SELECT couple_id FROM user_couples WHERE user_id = $1`,
     [userId]
   );
 
-  return result.rows.length > 0 ? result.rows[0].id : null;
+  return result.rows.length > 0 ? result.rows[0].couple_id : null;
 }
 
 // =============================================================================

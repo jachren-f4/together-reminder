@@ -14,13 +14,17 @@ import { AuthenticatedRequest, RouteContext, withAuth } from './middleware';
  * Check if development bypass is enabled
  *
  * Requirements:
- * AUTH_DEV_BYPASS_ENABLED must be explicitly 'true'
+ * - NODE_ENV must be 'development'
+ * - AUTH_DEV_BYPASS_ENABLED must be explicitly 'true'
  *
- * WARNING: Only enable this in Vercel for testing environments,
- * never for production deployments!
+ * Both conditions must be true for bypass to activate.
+ * This prevents accidental activation in production.
  */
 function isDevBypassEnabled(): boolean {
-  return process.env.AUTH_DEV_BYPASS_ENABLED === 'true';
+  const isDevelopment = process.env.NODE_ENV === 'development';
+  const bypassEnabled = process.env.AUTH_DEV_BYPASS_ENABLED === 'true';
+
+  return isDevelopment && bypassEnabled;
 }
 
 /**
@@ -72,7 +76,15 @@ export function withAuthOrDevBypass(
   handler: (req: AuthenticatedRequest, userId: string, email?: string, context?: RouteContext) => Promise<NextResponse>
 ) {
   return async (req: NextRequest, context?: RouteContext): Promise<NextResponse> => {
-    // Check if dev bypass is enabled
+    // Warn if bypass is configured but blocked due to non-development environment
+    if (process.env.AUTH_DEV_BYPASS_ENABLED === 'true' && process.env.NODE_ENV !== 'development') {
+      console.error(
+        `[DEV AUTH BYPASS] BLOCKED - AUTH_DEV_BYPASS_ENABLED is true but NODE_ENV=${process.env.NODE_ENV}. ` +
+        `Bypass only works in development mode. Falling back to JWT auth.`
+      );
+    }
+
+    // Check if dev bypass is enabled (requires both NODE_ENV=development AND AUTH_DEV_BYPASS_ENABLED=true)
     if (isDevBypassEnabled()) {
       const credentials = getDevCredentials(req);
 
