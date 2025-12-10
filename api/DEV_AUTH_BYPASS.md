@@ -76,10 +76,18 @@ All sync endpoints now use the dev bypass:
 
 ### This is 100% Safe for Production
 
-1. **Requires `NODE_ENV=development`** - Won't activate in production even if enabled
-2. **Requires explicit opt-in** - Must set `AUTH_DEV_BYPASS_ENABLED=true`
-3. **Clear logging** - Warning logs make it obvious when bypass is active
-4. **No code changes in production** - Production still uses normal JWT auth
+The bypass requires **both** conditions to be true:
+1. `NODE_ENV=development` - Must be in development mode
+2. `AUTH_DEV_BYPASS_ENABLED=true` - Must explicitly opt-in
+
+**If misconfigured in production:**
+- If someone accidentally sets `AUTH_DEV_BYPASS_ENABLED=true` in Vercel, the bypass is **blocked**
+- An error log is emitted: `[DEV AUTH BYPASS] BLOCKED - AUTH_DEV_BYPASS_ENABLED is true but NODE_ENV=production`
+- Normal JWT authentication is used instead
+
+**Additional safeguards:**
+- Clear WARN-level logging when bypass is active
+- Error-level logging when bypass is blocked due to environment mismatch
 
 ### Disabling the Bypass
 
@@ -144,4 +152,4 @@ The bypass uses the userId you specify. If you're seeing data for the wrong user
 
 ---
 
-**Last Updated:** 2025-11-20
+**Last Updated:** 2025-12-09

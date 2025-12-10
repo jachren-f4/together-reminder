@@ -1,0 +1,428 @@
+-- WARNING: This schema is for context only and is not meant to be run.
+-- Table order and constraints may not be valid for execution.
+
+CREATE TABLE public.api_performance_metrics (
+  id uuid NOT NULL DEFAULT gen_random_uuid(),
+  timestamp timestamp with time zone NOT NULL DEFAULT now(),
+  endpoint text NOT NULL,
+  method text NOT NULL,
+  status_code integer NOT NULL CHECK (status_code >= 100 AND status_code < 600),
+  duration_ms integer NOT NULL CHECK (duration_ms >= 0),
+  user_id uuid,
+  error_message text,
+  CONSTRAINT api_performance_metrics_pkey PRIMARY KEY (id),
+  CONSTRAINT api_performance_metrics_user_id_fkey FOREIGN KEY (user_id) REFERENCES auth.users(id)
+);
+CREATE TABLE public.branch_progression (
+  id uuid NOT NULL DEFAULT gen_random_uuid(),
+  couple_id uuid NOT NULL,
+  activity_type text NOT NULL CHECK (activity_type = ANY (ARRAY['classicQuiz'::text, 'affirmation'::text, 'youOrMe'::text, 'linked'::text, 'wordSearch'::text])),
+  current_branch integer NOT NULL DEFAULT 0,
+  total_completions integer NOT NULL DEFAULT 0,
+  max_branches integer NOT NULL DEFAULT 3,
+  last_completed_at timestamp with time zone,
+  created_at timestamp with time zone NOT NULL DEFAULT now(),
+  updated_at timestamp with time zone NOT NULL DEFAULT now(),
+  CONSTRAINT branch_progression_pkey PRIMARY KEY (id),
+  CONSTRAINT branch_progression_couple_id_fkey FOREIGN KEY (couple_id) REFERENCES public.couples(id)
+);
+CREATE TABLE public.connection_pool_metrics (
+  id uuid NOT NULL DEFAULT gen_random_uuid(),
+  timestamp timestamp with time zone NOT NULL DEFAULT now(),
+  total_connections integer NOT NULL,
+  idle_connections integer NOT NULL,
+  active_connections integer NOT NULL,
+  waiting_connections integer DEFAULT 0,
+  environment text DEFAULT 'production'::text,
+  CONSTRAINT connection_pool_metrics_pkey PRIMARY KEY (id)
+);
+CREATE TABLE public.couple_invites (
+  id uuid NOT NULL DEFAULT gen_random_uuid(),
+  code text NOT NULL UNIQUE CHECK (code ~ '^[0-9]{6}$'::text),
+  created_by uuid NOT NULL,
+  created_at timestamp with time zone NOT NULL DEFAULT now(),
+  expires_at timestamp with time zone NOT NULL,
+  used_at timestamp with time zone,
+  used_by uuid,
+  couple_id uuid,
+  creator_push_token text,
+  brand_id text NOT NULL DEFAULT 'togetherremind'::text,
+  CONSTRAINT couple_invites_pkey PRIMARY KEY (id),
+  CONSTRAINT couple_invites_created_by_fkey FOREIGN KEY (created_by) REFERENCES auth.users(id),
+  CONSTRAINT couple_invites_used_by_fkey FOREIGN KEY (used_by) REFERENCES auth.users(id),
+  CONSTRAINT couple_invites_couple_id_fkey FOREIGN KEY (couple_id) REFERENCES public.couples(id)
+);
+CREATE TABLE public.couple_leaderboard (
+  couple_id uuid NOT NULL,
+  user1_initial character,
+  user2_initial character,
+  total_lp integer DEFAULT 0,
+  global_rank integer,
+  user1_country character,
+  user2_country character,
+  user1_country_rank integer,
+  user2_country_rank integer,
+  updated_at timestamp with time zone NOT NULL DEFAULT now(),
+  arena_tier integer DEFAULT 1 CHECK (arena_tier >= 1 AND arena_tier <= 5),
+  tier_rank integer,
+  CONSTRAINT couple_leaderboard_pkey PRIMARY KEY (couple_id),
+  CONSTRAINT couple_leaderboard_couple_id_fkey FOREIGN KEY (couple_id) REFERENCES public.couples(id)
+);
+CREATE TABLE public.couples (
+  id uuid NOT NULL DEFAULT gen_random_uuid(),
+  user1_id uuid NOT NULL,
+  user2_id uuid NOT NULL,
+  created_at timestamp with time zone NOT NULL DEFAULT now(),
+  updated_at timestamp with time zone NOT NULL DEFAULT now(),
+  first_player_id uuid,
+  brand_id text NOT NULL DEFAULT 'togetherremind'::text,
+  total_lp integer DEFAULT 0 CHECK (total_lp >= 0),
+  anniversary_date date,
+  CONSTRAINT couples_pkey PRIMARY KEY (id),
+  CONSTRAINT couples_user1_id_fkey FOREIGN KEY (user1_id) REFERENCES auth.users(id),
+  CONSTRAINT couples_user2_id_fkey FOREIGN KEY (user2_id) REFERENCES auth.users(id),
+  CONSTRAINT couples_first_player_id_fkey FOREIGN KEY (first_player_id) REFERENCES auth.users(id)
+);
+CREATE TABLE public.daily_quests (
+  id text NOT NULL,
+  couple_id uuid NOT NULL,
+  date date NOT NULL,
+  quest_type text NOT NULL,
+  content_id text NOT NULL,
+  sort_order integer NOT NULL,
+  is_side_quest boolean DEFAULT false,
+  metadata jsonb DEFAULT '{}'::jsonb,
+  generated_at timestamp with time zone NOT NULL DEFAULT now(),
+  expires_at timestamp with time zone NOT NULL,
+  brand_id text NOT NULL DEFAULT 'togetherremind'::text,
+  CONSTRAINT daily_quests_pkey PRIMARY KEY (id),
+  CONSTRAINT daily_quests_couple_id_fkey FOREIGN KEY (couple_id) REFERENCES public.couples(id)
+);
+CREATE TABLE public.linked_matches (
+  id uuid NOT NULL DEFAULT gen_random_uuid(),
+  couple_id uuid NOT NULL,
+  puzzle_id text NOT NULL,
+  status text DEFAULT 'active'::text CHECK (status = ANY (ARRAY['active'::text, 'completed'::text])),
+  board_state jsonb DEFAULT '{}'::jsonb,
+  current_rack ARRAY DEFAULT '{}'::text[],
+  current_turn_user_id uuid,
+  turn_number integer DEFAULT 1,
+  player1_score integer DEFAULT 0,
+  player2_score integer DEFAULT 0,
+  player1_vision integer DEFAULT 2,
+  player2_vision integer DEFAULT 2,
+  locked_cell_count integer DEFAULT 0,
+  total_answer_cells integer NOT NULL,
+  player1_id uuid,
+  player2_id uuid,
+  winner_id uuid,
+  created_at timestamp with time zone DEFAULT now(),
+  completed_at timestamp with time zone,
+  CONSTRAINT linked_matches_pkey PRIMARY KEY (id),
+  CONSTRAINT linked_matches_couple_id_fkey FOREIGN KEY (couple_id) REFERENCES public.couples(id)
+);
+CREATE TABLE public.linked_moves (
+  id uuid NOT NULL DEFAULT gen_random_uuid(),
+  match_id uuid NOT NULL,
+  player_id uuid NOT NULL,
+  placements jsonb NOT NULL,
+  points_earned integer NOT NULL DEFAULT 0,
+  words_completed jsonb DEFAULT '[]'::jsonb,
+  turn_number integer NOT NULL,
+  created_at timestamp with time zone DEFAULT now(),
+  CONSTRAINT linked_moves_pkey PRIMARY KEY (id),
+  CONSTRAINT linked_moves_match_id_fkey FOREIGN KEY (match_id) REFERENCES public.linked_matches(id)
+);
+CREATE TABLE public.love_point_awards (
+  id uuid NOT NULL,
+  couple_id uuid NOT NULL,
+  amount integer NOT NULL CHECK (amount > 0),
+  reason text NOT NULL,
+  related_id uuid,
+  multiplier integer DEFAULT 1,
+  created_at timestamp with time zone NOT NULL DEFAULT now(),
+  brand_id text NOT NULL DEFAULT 'togetherremind'::text,
+  CONSTRAINT love_point_awards_pkey PRIMARY KEY (id),
+  CONSTRAINT love_point_awards_couple_id_fkey FOREIGN KEY (couple_id) REFERENCES public.couples(id)
+);
+CREATE TABLE public.love_point_transactions (
+  id uuid NOT NULL DEFAULT gen_random_uuid(),
+  user_id uuid NOT NULL,
+  amount integer NOT NULL,
+  source character varying NOT NULL,
+  description text,
+  created_at timestamp with time zone NOT NULL DEFAULT now(),
+  CONSTRAINT love_point_transactions_pkey PRIMARY KEY (id),
+  CONSTRAINT love_point_transactions_user_id_fkey FOREIGN KEY (user_id) REFERENCES auth.users(id)
+);
+CREATE TABLE public.memory_moves (
+  id uuid NOT NULL DEFAULT gen_random_uuid(),
+  puzzle_id text,
+  player_id uuid,
+  card1_id character varying NOT NULL,
+  card2_id character varying NOT NULL,
+  card1_position integer NOT NULL,
+  card2_position integer NOT NULL,
+  match_found boolean NOT NULL,
+  pair_id character varying,
+  turn_number integer NOT NULL,
+  flips_remaining_after integer NOT NULL,
+  created_at timestamp with time zone DEFAULT now(),
+  CONSTRAINT memory_moves_pkey PRIMARY KEY (id),
+  CONSTRAINT memory_moves_puzzle_id_fkey FOREIGN KEY (puzzle_id) REFERENCES public.memory_puzzles(id),
+  CONSTRAINT memory_moves_player_id_fkey FOREIGN KEY (player_id) REFERENCES auth.users(id)
+);
+CREATE TABLE public.memory_puzzles (
+  id text NOT NULL DEFAULT gen_random_uuid(),
+  couple_id uuid NOT NULL,
+  date date NOT NULL,
+  total_pairs integer NOT NULL,
+  matched_pairs integer DEFAULT 0,
+  cards jsonb NOT NULL,
+  status text DEFAULT 'active'::text,
+  completion_quote text,
+  created_at timestamp with time zone NOT NULL DEFAULT now(),
+  completed_at timestamp with time zone,
+  current_player_id uuid,
+  turn_number integer DEFAULT 0,
+  turn_started_at timestamp with time zone,
+  turn_expires_at timestamp with time zone,
+  player1_pairs integer DEFAULT 0,
+  player2_pairs integer DEFAULT 0,
+  game_phase text DEFAULT 'waiting'::text,
+  player1_flips_remaining integer DEFAULT 6,
+  player1_flips_reset_at timestamp with time zone,
+  player2_flips_remaining integer DEFAULT 6,
+  player2_flips_reset_at timestamp with time zone,
+  brand_id text NOT NULL DEFAULT 'togetherremind'::text,
+  CONSTRAINT memory_puzzles_pkey PRIMARY KEY (id),
+  CONSTRAINT memory_puzzles_couple_id_fkey FOREIGN KEY (couple_id) REFERENCES public.couples(id),
+  CONSTRAINT memory_puzzles_current_player_id_fkey FOREIGN KEY (current_player_id) REFERENCES auth.users(id)
+);
+CREATE TABLE public.quest_completions (
+  quest_id text NOT NULL,
+  user_id uuid NOT NULL,
+  completed_at timestamp with time zone NOT NULL DEFAULT now(),
+  brand_id text NOT NULL DEFAULT 'togetherremind'::text,
+  CONSTRAINT quest_completions_pkey PRIMARY KEY (quest_id, user_id),
+  CONSTRAINT quest_completions_user_id_fkey FOREIGN KEY (user_id) REFERENCES auth.users(id),
+  CONSTRAINT quest_completions_quest_id_fkey FOREIGN KEY (quest_id) REFERENCES public.daily_quests(id)
+);
+CREATE TABLE public.quiz_answers (
+  id uuid NOT NULL DEFAULT gen_random_uuid(),
+  session_id uuid NOT NULL,
+  user_id uuid NOT NULL,
+  question_id text NOT NULL,
+  selected_index integer NOT NULL,
+  is_correct boolean NOT NULL,
+  answered_at timestamp with time zone NOT NULL DEFAULT now(),
+  brand_id text NOT NULL DEFAULT 'togetherremind'::text,
+  CONSTRAINT quiz_answers_pkey PRIMARY KEY (id),
+  CONSTRAINT quiz_answers_session_id_fkey FOREIGN KEY (session_id) REFERENCES public.quiz_sessions(id),
+  CONSTRAINT quiz_answers_user_id_fkey FOREIGN KEY (user_id) REFERENCES auth.users(id)
+);
+CREATE TABLE public.quiz_matches (
+  id uuid NOT NULL DEFAULT gen_random_uuid(),
+  couple_id uuid NOT NULL,
+  quiz_id text NOT NULL,
+  quiz_type text NOT NULL,
+  branch text NOT NULL,
+  status text DEFAULT 'active'::text,
+  player1_answers jsonb DEFAULT '[]'::jsonb,
+  player2_answers jsonb DEFAULT '[]'::jsonb,
+  player1_answer_count integer DEFAULT 0,
+  player2_answer_count integer DEFAULT 0,
+  current_turn_user_id uuid,
+  turn_number integer DEFAULT 0,
+  match_percentage integer,
+  player1_score integer DEFAULT 0,
+  player2_score integer DEFAULT 0,
+  player1_id uuid NOT NULL,
+  player2_id uuid NOT NULL,
+  date date NOT NULL,
+  created_at timestamp with time zone DEFAULT now(),
+  completed_at timestamp with time zone,
+  CONSTRAINT quiz_matches_pkey PRIMARY KEY (id),
+  CONSTRAINT quiz_matches_couple_id_fkey FOREIGN KEY (couple_id) REFERENCES public.couples(id)
+);
+CREATE TABLE public.quiz_progression (
+  couple_id uuid NOT NULL,
+  current_track integer DEFAULT 0,
+  current_position integer DEFAULT 0,
+  total_quizzes_completed integer DEFAULT 0,
+  completed_quizzes jsonb DEFAULT '[]'::jsonb,
+  has_completed_all_tracks boolean DEFAULT false,
+  created_at timestamp with time zone NOT NULL DEFAULT now(),
+  updated_at timestamp with time zone NOT NULL DEFAULT now(),
+  brand_id text NOT NULL DEFAULT 'togetherremind'::text,
+  CONSTRAINT quiz_progression_pkey PRIMARY KEY (couple_id),
+  CONSTRAINT quiz_progression_couple_id_fkey FOREIGN KEY (couple_id) REFERENCES public.couples(id)
+);
+CREATE TABLE public.quiz_sessions (
+  id uuid NOT NULL DEFAULT gen_random_uuid(),
+  couple_id uuid NOT NULL,
+  created_by uuid NOT NULL,
+  format_type text NOT NULL,
+  category text,
+  difficulty integer,
+  status text DEFAULT 'waiting_for_answers'::text,
+  questions jsonb NOT NULL,
+  quiz_name text,
+  is_daily_quest boolean DEFAULT false,
+  created_at timestamp with time zone NOT NULL DEFAULT now(),
+  expires_at timestamp with time zone,
+  completed_at timestamp with time zone,
+  brand_id text NOT NULL DEFAULT 'togetherremind'::text,
+  subject_user_id uuid,
+  initiated_by uuid,
+  daily_quest_id text,
+  answers jsonb DEFAULT '{}'::jsonb,
+  predictions jsonb DEFAULT '{}'::jsonb,
+  match_percentage integer,
+  lp_earned integer,
+  alignment_matches integer DEFAULT 0,
+  prediction_scores jsonb DEFAULT '{}'::jsonb,
+  branch text,
+  date date,
+  CONSTRAINT quiz_sessions_pkey PRIMARY KEY (id),
+  CONSTRAINT quiz_sessions_subject_user_id_fkey FOREIGN KEY (subject_user_id) REFERENCES auth.users(id),
+  CONSTRAINT quiz_sessions_initiated_by_fkey FOREIGN KEY (initiated_by) REFERENCES auth.users(id),
+  CONSTRAINT quiz_sessions_couple_id_fkey FOREIGN KEY (couple_id) REFERENCES public.couples(id),
+  CONSTRAINT quiz_sessions_created_by_fkey FOREIGN KEY (created_by) REFERENCES auth.users(id)
+);
+CREATE TABLE public.reminders (
+  id uuid NOT NULL,
+  couple_id uuid NOT NULL,
+  type text NOT NULL,
+  from_user_id uuid NOT NULL,
+  to_user_id uuid NOT NULL,
+  from_name text NOT NULL,
+  to_name text NOT NULL,
+  text text NOT NULL,
+  category text DEFAULT 'reminder'::text,
+  emoji text,
+  scheduled_for timestamp with time zone NOT NULL,
+  status text DEFAULT 'pending'::text,
+  created_at timestamp with time zone NOT NULL DEFAULT now(),
+  sent_at timestamp with time zone,
+  delivered_at timestamp with time zone,
+  brand_id text NOT NULL DEFAULT 'togetherremind'::text,
+  CONSTRAINT reminders_pkey PRIMARY KEY (id),
+  CONSTRAINT reminders_couple_id_fkey FOREIGN KEY (couple_id) REFERENCES public.couples(id),
+  CONSTRAINT reminders_from_user_id_fkey FOREIGN KEY (from_user_id) REFERENCES auth.users(id),
+  CONSTRAINT reminders_to_user_id_fkey FOREIGN KEY (to_user_id) REFERENCES auth.users(id)
+);
+CREATE TABLE public.sync_metrics (
+  id uuid NOT NULL DEFAULT gen_random_uuid(),
+  timestamp timestamp with time zone NOT NULL DEFAULT now(),
+  couple_id uuid NOT NULL,
+  sync_type text NOT NULL CHECK (sync_type = ANY (ARRAY['daily_quests'::text, 'quiz'::text, 'you_or_me'::text, 'memory_flip'::text, 'love_points'::text])),
+  success boolean NOT NULL,
+  duration_ms integer NOT NULL,
+  items_synced integer DEFAULT 0,
+  error_message text,
+  CONSTRAINT sync_metrics_pkey PRIMARY KEY (id),
+  CONSTRAINT sync_metrics_couple_id_fkey FOREIGN KEY (couple_id) REFERENCES public.couples(id)
+);
+CREATE TABLE public.user_love_points (
+  user_id uuid NOT NULL,
+  total_points integer DEFAULT 0 CHECK (total_points >= 0),
+  arena_tier integer DEFAULT 1 CHECK (arena_tier >= 1 AND arena_tier <= 5),
+  floor integer DEFAULT 0 CHECK (floor >= 0),
+  last_activity_date timestamp with time zone,
+  updated_at timestamp with time zone NOT NULL DEFAULT now(),
+  brand_id text NOT NULL DEFAULT 'togetherremind'::text,
+  country_code character,
+  CONSTRAINT user_love_points_pkey PRIMARY KEY (user_id),
+  CONSTRAINT user_love_points_user_id_fkey FOREIGN KEY (user_id) REFERENCES auth.users(id)
+);
+CREATE TABLE public.user_push_tokens (
+  user_id uuid NOT NULL,
+  fcm_token text NOT NULL,
+  platform text NOT NULL CHECK (platform = ANY (ARRAY['ios'::text, 'android'::text, 'web'::text])),
+  device_name text,
+  updated_at timestamp with time zone NOT NULL DEFAULT now(),
+  created_at timestamp with time zone NOT NULL DEFAULT now(),
+  CONSTRAINT user_push_tokens_pkey PRIMARY KEY (user_id),
+  CONSTRAINT user_push_tokens_user_id_fkey FOREIGN KEY (user_id) REFERENCES auth.users(id)
+);
+CREATE TABLE public.word_search_matches (
+  id uuid NOT NULL DEFAULT gen_random_uuid(),
+  couple_id uuid NOT NULL,
+  puzzle_id text NOT NULL,
+  status text NOT NULL DEFAULT 'active'::text CHECK (status = ANY (ARRAY['active'::text, 'completed'::text])),
+  found_words jsonb NOT NULL DEFAULT '[]'::jsonb,
+  current_turn_user_id uuid,
+  turn_number integer NOT NULL DEFAULT 1,
+  words_found_this_turn integer NOT NULL DEFAULT 0,
+  player1_words_found integer NOT NULL DEFAULT 0,
+  player2_words_found integer NOT NULL DEFAULT 0,
+  player1_hints integer NOT NULL DEFAULT 3,
+  player2_hints integer NOT NULL DEFAULT 3,
+  player1_id uuid NOT NULL,
+  player2_id uuid NOT NULL,
+  winner_id uuid,
+  created_at timestamp with time zone NOT NULL DEFAULT now(),
+  updated_at timestamp with time zone NOT NULL DEFAULT now(),
+  completed_at timestamp with time zone,
+  player1_score integer NOT NULL DEFAULT 0,
+  player2_score integer NOT NULL DEFAULT 0,
+  CONSTRAINT word_search_matches_pkey PRIMARY KEY (id),
+  CONSTRAINT word_search_matches_couple_id_fkey FOREIGN KEY (couple_id) REFERENCES public.couples(id)
+);
+CREATE TABLE public.word_search_moves (
+  id uuid NOT NULL DEFAULT gen_random_uuid(),
+  match_id uuid NOT NULL,
+  player_id uuid NOT NULL,
+  word text NOT NULL,
+  positions jsonb NOT NULL,
+  turn_number integer NOT NULL,
+  created_at timestamp with time zone NOT NULL DEFAULT now(),
+  CONSTRAINT word_search_moves_pkey PRIMARY KEY (id),
+  CONSTRAINT word_search_moves_match_id_fkey FOREIGN KEY (match_id) REFERENCES public.word_search_matches(id)
+);
+CREATE TABLE public.you_or_me_answers (
+  id uuid NOT NULL DEFAULT gen_random_uuid(),
+  session_id text NOT NULL,
+  user_id uuid NOT NULL,
+  question_id text NOT NULL,
+  answer text NOT NULL,
+  answered_at timestamp with time zone NOT NULL DEFAULT now(),
+  brand_id text NOT NULL DEFAULT 'togetherremind'::text,
+  CONSTRAINT you_or_me_answers_pkey PRIMARY KEY (id),
+  CONSTRAINT you_or_me_answers_user_id_fkey FOREIGN KEY (user_id) REFERENCES auth.users(id),
+  CONSTRAINT you_or_me_answers_session_id_fkey FOREIGN KEY (session_id) REFERENCES public.you_or_me_sessions(id)
+);
+CREATE TABLE public.you_or_me_progression (
+  couple_id uuid NOT NULL,
+  used_question_ids jsonb DEFAULT '[]'::jsonb,
+  updated_at timestamp with time zone NOT NULL DEFAULT now(),
+  brand_id text NOT NULL DEFAULT 'togetherremind'::text,
+  CONSTRAINT you_or_me_progression_pkey PRIMARY KEY (couple_id),
+  CONSTRAINT you_or_me_progression_couple_id_fkey FOREIGN KEY (couple_id) REFERENCES public.couples(id)
+);
+CREATE TABLE public.you_or_me_sessions (
+  id text NOT NULL DEFAULT gen_random_uuid(),
+  couple_id uuid NOT NULL,
+  questions jsonb NOT NULL,
+  created_at timestamp with time zone NOT NULL DEFAULT now(),
+  expires_at timestamp with time zone,
+  brand_id text NOT NULL DEFAULT 'togetherremind'::text,
+  user_id uuid,
+  partner_id uuid,
+  quest_id uuid,
+  answers jsonb DEFAULT '{}'::jsonb,
+  status text DEFAULT 'in_progress'::text CHECK (status = ANY (ARRAY['in_progress'::text, 'completed'::text])),
+  completed_at timestamp with time zone,
+  lp_earned integer,
+  initiated_by uuid,
+  subject_user_id uuid,
+  date date,
+  branch text,
+  CONSTRAINT you_or_me_sessions_pkey PRIMARY KEY (id),
+  CONSTRAINT you_or_me_sessions_user_id_fkey FOREIGN KEY (user_id) REFERENCES auth.users(id),
+  CONSTRAINT you_or_me_sessions_partner_id_fkey FOREIGN KEY (partner_id) REFERENCES auth.users(id),
+  CONSTRAINT you_or_me_sessions_initiated_by_fkey FOREIGN KEY (initiated_by) REFERENCES auth.users(id),
+  CONSTRAINT you_or_me_sessions_subject_user_id_fkey FOREIGN KEY (subject_user_id) REFERENCES auth.users(id),
+  CONSTRAINT you_or_me_sessions_couple_id_fkey FOREIGN KEY (couple_id) REFERENCES public.couples(id)
+);
