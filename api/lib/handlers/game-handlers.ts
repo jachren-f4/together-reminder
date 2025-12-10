@@ -358,18 +358,18 @@ export function handleGamePlayPOST(gameType: string) {
 /**
  * Route game requests to appropriate handlers
  */
-export function routeGameGET(req: NextRequest, subPath: string) {
+export function routeGameGET(req: NextRequest, subPath: string): Promise<NextResponse> {
   if (subPath === 'status') {
     return handleGameStatusGET(req);
   }
 
-  return NextResponse.json(
+  return Promise.resolve(NextResponse.json(
     { error: `Unknown GET path: /api/sync/game/${subPath}` },
     { status: 404 }
-  );
+  ));
 }
 
-export function routeGamePOST(req: NextRequest, subPath: string) {
+export function routeGamePOST(req: NextRequest, subPath: string): Promise<NextResponse> {
   // subPath format: "{type}/play" e.g. "classic/play", "affirmation/play", "you_or_me/play"
   const parts = subPath.split('/');
   if (parts.length === 2 && parts[1] === 'play') {
@@ -377,8 +377,8 @@ export function routeGamePOST(req: NextRequest, subPath: string) {
     return handleGamePlayPOST(gameType)(req);
   }
 
-  return NextResponse.json(
+  return Promise.resolve(NextResponse.json(
     { error: `Unknown POST path: /api/sync/game/${subPath}` },
     { status: 404 }
-  );
+  ));
 }

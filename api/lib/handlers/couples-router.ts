@@ -1,11 +1,10 @@
 /**
- * Consolidated Couples Routes - Catch-all handler
+ * Couples Router - Route functions for the couples domain
  *
- * Handles all /api/couples/* routes:
- * - /api/couples/invite (GET/POST)
- * - /api/couples/join (POST)
- * - /api/couples/pair-direct (POST)
- * - /api/couples/status (GET/DELETE)
+ * Exports route functions that dispatch to internal handlers:
+ * - routeCouplesGET(req, subPath)
+ * - routeCouplesPOST(req, subPath)
+ * - routeCouplesDELETE(req, subPath)
  */
 
 import { NextRequest, NextResponse } from 'next/server';
@@ -14,33 +13,15 @@ import { RateLimitPresets, withRateLimit } from '@/lib/auth/rate-limit';
 import { query, getClient } from '@/lib/db/pool';
 import { randomUUID } from 'crypto';
 
-export const dynamic = 'force-dynamic';
-
 // ============================================================================
-// CORS HANDLER
+// ROUTER FUNCTIONS
 // ============================================================================
 
-export async function OPTIONS() {
-  return new NextResponse(null, {
-    status: 200,
-    headers: {
-      'Access-Control-Allow-Origin': '*',
-      'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
-      'Access-Control-Allow-Headers': 'Content-Type, Authorization',
-    },
-  });
-}
-
-// ============================================================================
-// MAIN ROUTE HANDLERS
-// ============================================================================
-
-export async function GET(
-  req: NextRequest,
-  { params }: { params: Promise<{ slug: string[] }> }
-) {
-  const { slug } = await params;
-  const path = slug?.join('/') || '';
+/**
+ * Route GET requests for couples domain
+ */
+export function routeCouplesGET(req: NextRequest, subPath: string[]) {
+  const path = subPath.join('/');
 
   switch (path) {
     case 'invite':
@@ -58,12 +39,11 @@ export async function GET(
   }
 }
 
-export async function POST(
-  req: NextRequest,
-  { params }: { params: Promise<{ slug: string[] }> }
-) {
-  const { slug } = await params;
-  const path = slug?.join('/') || '';
+/**
+ * Route POST requests for couples domain
+ */
+export function routeCouplesPOST(req: NextRequest, subPath: string[]) {
+  const path = subPath.join('/');
 
   switch (path) {
     case 'invite':
@@ -86,12 +66,11 @@ export async function POST(
   }
 }
 
-export async function DELETE(
-  req: NextRequest,
-  { params }: { params: Promise<{ slug: string[] }> }
-) {
-  const { slug } = await params;
-  const path = slug?.join('/') || '';
+/**
+ * Route DELETE requests for couples domain
+ */
+export function routeCouplesDELETE(req: NextRequest, subPath: string[]) {
+  const path = subPath.join('/');
 
   switch (path) {
     case 'status':

@@ -1,17 +1,10 @@
 /**
- * Consolidated Puzzle Routes (Catch-All)
- *
- * Handles all puzzle-related endpoints:
- * - GET /api/puzzles/images/{puzzleId}/{filename} - Serve puzzle images
- *
- * This catch-all route consolidates puzzle functionality into a single endpoint.
+ * Puzzles Router - Routes /api/puzzles/* requests
  */
 
 import { NextRequest, NextResponse } from 'next/server';
 import { readFileSync, existsSync } from 'fs';
 import { join } from 'path';
-
-export const dynamic = 'force-dynamic';
 
 // MIME types for common image formats
 const MIME_TYPES: Record<string, string> = {
@@ -23,16 +16,14 @@ const MIME_TYPES: Record<string, string> = {
   '.svg': 'image/svg+xml',
 };
 
-export async function GET(
-  req: NextRequest,
-  { params }: { params: Promise<{ slug: string[] }> }
-) {
+/**
+ * Route GET requests for puzzle endpoints
+ */
+export async function routePuzzlesGET(req: NextRequest, subPath: string[]): Promise<NextResponse> {
   try {
-    const { slug } = await params;
-
     // Route: /api/puzzles/images/{puzzleId}/{filename}
-    if (slug[0] === 'images' && slug.length === 3) {
-      return handleImageRequest(slug[1], slug[2]);
+    if (subPath[0] === 'images' && subPath.length === 3) {
+      return handleImageRequest(subPath[1], subPath[2]);
     }
 
     return NextResponse.json(

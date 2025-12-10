@@ -1,9 +1,11 @@
-import { NextResponse } from 'next/server';
+/**
+ * Health Handler - Handles /api/health requests
+ */
+
+import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import { getPool } from '@/lib/db/pool';
 import { metrics } from '@/lib/monitoring/metrics';
-
-export const dynamic = 'force-dynamic';
 
 interface HealthStatus {
   status: 'healthy' | 'degraded' | 'unhealthy';
@@ -33,7 +35,7 @@ interface HealthStatus {
   };
 }
 
-export async function GET() {
+export async function handleHealthGET(req: NextRequest): Promise<NextResponse> {
   const startTime = Date.now();
   const health: HealthStatus = {
     status: 'healthy',
@@ -56,12 +58,12 @@ export async function GET() {
     // Check Supabase connection
     const supabase = createClient();
     const dbCheckStart = Date.now();
-    
+
     const { data, error } = await supabase
       .from('_health_check')
       .select('*')
       .limit(1);
-    
+
     const dbResponseTime = Date.now() - dbCheckStart;
 
     if (error && error.code !== 'PGRST116') {
@@ -113,11 +115,11 @@ export async function GET() {
     }
 
     const statusCode = health.status === 'healthy' ? 200 : 503;
-    
+
     return NextResponse.json(health, { status: statusCode });
   } catch (error) {
     console.error('Health check failed:', error);
-    
+
     return NextResponse.json(
       {
         status: 'unhealthy',

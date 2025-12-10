@@ -1,14 +1,16 @@
-import { NextResponse } from 'next/server';
-import { metrics } from '@/lib/monitoring/metrics';
+/**
+ * Metrics Handler - Handles /api/metrics requests
+ */
 
-export const dynamic = 'force-dynamic';
+import { NextRequest, NextResponse } from 'next/server';
+import { metrics } from '@/lib/monitoring/metrics';
 
 /**
  * Metrics Endpoint - Prometheus-compatible format
- * 
+ *
  * Provides performance metrics for monitoring dashboards
  */
-export async function GET() {
+export async function handleMetricsGET(req: NextRequest): Promise<NextResponse> {
   try {
     const summary = metrics.getSummary();
 

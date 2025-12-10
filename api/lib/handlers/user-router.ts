@@ -1,7 +1,8 @@
 /**
- * User API Catch-All Route
+ * User Router
  *
- * Consolidates all user endpoints into a single route handler.
+ * Exports route functions for the user domain.
+ * Handlers are extracted from the user catch-all route.
  *
  * Routes:
  * - POST /api/user/complete-signup - Complete user signup and return full state
@@ -18,8 +19,6 @@ import { withAuth } from '@/lib/auth/middleware';
 import { withAuthOrDevBypass } from '@/lib/auth/dev-middleware';
 import { RateLimitPresets, withRateLimit } from '@/lib/auth/rate-limit';
 import { query } from '@/lib/db/pool';
-
-export const dynamic = 'force-dynamic';
 
 // Valid ISO 3166-1 alpha-2 country codes (common ones for validation)
 const VALID_COUNTRY_CODES = new Set([
@@ -49,82 +48,8 @@ const VALID_COUNTRY_CODES = new Set([
   'ZM', 'ZW'
 ]);
 
-// Handle CORS preflight
-export async function OPTIONS() {
-  return new NextResponse(null, {
-    status: 200,
-    headers: {
-      'Access-Control-Allow-Origin': '*',
-      'Access-Control-Allow-Methods': 'GET, POST, PUT, PATCH, DELETE, OPTIONS',
-      'Access-Control-Allow-Headers': 'Content-Type, Authorization',
-    },
-  });
-}
-
-/**
- * GET handler - Routes based on path
- */
-export async function GET(
-  req: NextRequest,
-  { params }: { params: Promise<{ slug: string[] }> }
-) {
-  const { slug } = await params;
-  const path = slug[0];
-
-  switch (path) {
-    case 'profile':
-      return handleGetProfile(req);
-    case 'country':
-      return handleGetCountry(req);
-    case 'push-token':
-      return handleGetPushToken(req);
-    default:
-      return NextResponse.json({ error: 'Not found' }, { status: 404 });
-  }
-}
-
-/**
- * POST handler - Routes based on path
- */
-export async function POST(
-  req: NextRequest,
-  { params }: { params: Promise<{ slug: string[] }> }
-) {
-  const { slug } = await params;
-  const path = slug[0];
-
-  switch (path) {
-    case 'complete-signup':
-      return handleCompleteSignup(req);
-    case 'country':
-      return handlePostCountry(req);
-    case 'push-token':
-      return handlePostPushToken(req);
-    default:
-      return NextResponse.json({ error: 'Not found' }, { status: 404 });
-  }
-}
-
-/**
- * PATCH handler - Routes based on path
- */
-export async function PATCH(
-  req: NextRequest,
-  { params }: { params: Promise<{ slug: string[] }> }
-) {
-  const { slug } = await params;
-  const path = slug[0];
-
-  switch (path) {
-    case 'name':
-      return handlePatchName(req);
-    default:
-      return NextResponse.json({ error: 'Not found' }, { status: 404 });
-  }
-}
-
 // ========================================
-// GET HANDLERS
+// INTERNAL HANDLERS
 // ========================================
 
 /**
@@ -304,10 +229,6 @@ const handleGetPushToken = withRateLimit(
     }
   })
 );
-
-// ========================================
-// POST HANDLERS
-// ========================================
 
 /**
  * Complete user signup and return full state
@@ -567,10 +488,6 @@ const handlePostPushToken = withRateLimit(
   })
 );
 
-// ========================================
-// PATCH HANDLERS
-// ========================================
-
 /**
  * Update user's display name
  *
@@ -647,3 +564,57 @@ const handlePatchName = withRateLimit(
     }
   })
 );
+
+// ========================================
+// EXPORTED ROUTER FUNCTIONS
+// ========================================
+
+/**
+ * Routes GET requests for the user domain
+ */
+export async function routeUserGET(req: NextRequest, subPath: string[]): Promise<NextResponse> {
+  const path = subPath[0];
+
+  switch (path) {
+    case 'profile':
+      return handleGetProfile(req);
+    case 'country':
+      return handleGetCountry(req);
+    case 'push-token':
+      return handleGetPushToken(req);
+    default:
+      return NextResponse.json({ error: 'Not found' }, { status: 404 });
+  }
+}
+
+/**
+ * Routes POST requests for the user domain
+ */
+export async function routeUserPOST(req: NextRequest, subPath: string[]): Promise<NextResponse> {
+  const path = subPath[0];
+
+  switch (path) {
+    case 'complete-signup':
+      return handleCompleteSignup(req);
+    case 'country':
+      return handlePostCountry(req);
+    case 'push-token':
+      return handlePostPushToken(req);
+    default:
+      return NextResponse.json({ error: 'Not found' }, { status: 404 });
+  }
+}
+
+/**
+ * Routes PATCH requests for the user domain
+ */
+export async function routeUserPATCH(req: NextRequest, subPath: string[]): Promise<NextResponse> {
+  const path = subPath[0];
+
+  switch (path) {
+    case 'name':
+      return handlePatchName(req);
+    default:
+      return NextResponse.json({ error: 'Not found' }, { status: 404 });
+  }
+}

@@ -1152,7 +1152,7 @@ async function handleHintPost(req: NextRequest, userId: string): Promise<NextRes
 /**
  * Route linked GET requests to appropriate handlers
  */
-export function routeLinkedGET(req: NextRequest, subPath: string) {
+export function routeLinkedGET(req: NextRequest, subPath: string): Promise<NextResponse> {
   // Empty path → get active session
   if (!subPath || subPath === '') {
     return withAuthOrDevBypass(async (req: NextRequest, userId: string) => {
@@ -1168,16 +1168,16 @@ export function routeLinkedGET(req: NextRequest, subPath: string) {
   }
 
   // Unknown GET path
-  return NextResponse.json(
+  return Promise.resolve(NextResponse.json(
     { error: `Unknown GET path: /api/sync/linked/${subPath}` },
     { status: 404 }
-  );
+  ));
 }
 
 /**
  * Route linked POST requests to appropriate handlers
  */
-export function routeLinkedPOST(req: NextRequest, subPath: string) {
+export function routeLinkedPOST(req: NextRequest, subPath: string): Promise<NextResponse> {
   // Empty path → create/get session
   if (!subPath || subPath === '') {
     return withAuthOrDevBypass(async (req: NextRequest, userId: string) => {
@@ -1200,8 +1200,8 @@ export function routeLinkedPOST(req: NextRequest, subPath: string) {
   }
 
   // Unknown POST path
-  return NextResponse.json(
+  return Promise.resolve(NextResponse.json(
     { error: `Unknown POST path: /api/sync/linked/${subPath}` },
     { status: 404 }
-  );
+  ));
 }

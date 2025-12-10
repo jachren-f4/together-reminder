@@ -1,23 +1,13 @@
 /**
- * Consolidated Sync Routes - Catch-all handler
+ * Sync Router - Routes all /api/sync/* requests to appropriate handlers
  *
- * Handles ALL /api/sync/* routes including:
- * - /api/sync/daily-quests (GET/POST/PATCH)
- * - /api/sync/daily-quests/completion (POST)
- * - /api/sync/love-points (GET/POST)
- * - /api/sync/steps (GET/POST)
- * - /api/sync/quest-status (GET)
- * - /api/sync/quiz-sessions (GET/POST)
- * - /api/sync/couple-preferences (GET/POST)
- * - /api/sync/couple-stats (GET)
- * - /api/sync/branch-progression (GET/POST)
- * - /api/sync/reminders (POST)
- * - /api/sync/push-token (GET/POST)
- * - /api/sync/quiz/* (quiz handlers)
- * - /api/sync/you-or-me/* (you-or-me handlers)
- * - /api/sync/game/* (game handlers)
- * - /api/sync/linked/* (linked game handlers)
- * - /api/sync/word-search/* (word-search handlers)
+ * This router consolidates all sync endpoint logic and delegates to:
+ * - quiz-handlers for /api/sync/quiz/*
+ * - you-or-me-handlers for /api/sync/you-or-me/*
+ * - game-handlers for /api/sync/game/*
+ * - linked-handlers for /api/sync/linked/*
+ * - word-search-handlers for /api/sync/word-search/*
+ * - Individual handlers for other sync routes
  */
 
 import { NextRequest, NextResponse } from 'next/server';
@@ -26,55 +16,50 @@ import { query, getClient } from '@/lib/db/pool';
 import { getCoupleId } from '@/lib/couple/utils';
 import { withTransaction } from '@/lib/db/transaction';
 import { awardLP, getUserLP } from '@/lib/lp/award';
-import { routeQuizGET, routeQuizPOST } from '@/lib/handlers/quiz-handlers';
-import { routeYouOrMeGET, routeYouOrMePOST } from '@/lib/handlers/you-or-me-handlers';
-import { routeGameGET, routeGamePOST } from '@/lib/handlers/game-handlers';
-import { routeLinkedGET, routeLinkedPOST } from '@/lib/handlers/linked-handlers';
-import { routeWordSearchGET, routeWordSearchPOST } from '@/lib/handlers/word-search-handlers';
-
-export const dynamic = 'force-dynamic';
+import { routeQuizGET, routeQuizPOST } from './quiz-handlers';
+import { routeYouOrMeGET, routeYouOrMePOST } from './you-or-me-handlers';
+import { routeGameGET, routeGamePOST } from './game-handlers';
+import { routeLinkedGET, routeLinkedPOST } from './linked-handlers';
+import { routeWordSearchGET, routeWordSearchPOST } from './word-search-handlers';
 
 // ============================================================================
-// MAIN ROUTE HANDLERS
+// ROUTER FUNCTIONS
 // ============================================================================
 
-export async function GET(
-  req: NextRequest,
-  { params }: { params: Promise<{ slug: string[] }> }
-) {
-  const { slug } = await params;
-  const path = slug?.join('/') || '';
+export function routeSyncGET(req: NextRequest, subPath: string[]): Promise<NextResponse> {
+  const path = subPath.join('/');
 
   // Route quiz/* paths to quiz handlers
   if (path === 'quiz' || path.startsWith('quiz/')) {
-    const subPath = path === 'quiz' ? '' : path.substring(5); // Remove 'quiz/'
-    return routeQuizGET(req, subPath);
+    const quizPath = path === 'quiz' ? '' : path.substring(5); // Remove 'quiz/'
+    return routeQuizGET(req, quizPath);
   }
 
   // Route you-or-me/* paths to you-or-me handlers
   if (path === 'you-or-me' || path.startsWith('you-or-me/')) {
-    const subPath = path === 'you-or-me' ? '' : path.substring(10); // Remove 'you-or-me/'
-    return routeYouOrMeGET(req, subPath);
+    const youOrMePath = path === 'you-or-me' ? '' : path.substring(10); // Remove 'you-or-me/'
+    return routeYouOrMeGET(req, youOrMePath);
   }
 
   // Route game/* paths to game handlers
   if (path.startsWith('game/')) {
-    const subPath = path.substring(5); // Remove 'game/'
-    return routeGameGET(req, subPath);
+    const gamePath = path.substring(5); // Remove 'game/'
+    return routeGameGET(req, gamePath);
   }
 
   // Route linked/* paths to linked handlers
   if (path === 'linked' || path.startsWith('linked/')) {
-    const subPath = path === 'linked' ? '' : path.substring(7); // Remove 'linked/'
-    return routeLinkedGET(req, subPath);
+    const linkedPath = path === 'linked' ? '' : path.substring(7); // Remove 'linked/'
+    return routeLinkedGET(req, linkedPath);
   }
 
   // Route word-search/* paths to word-search handlers
   if (path === 'word-search' || path.startsWith('word-search/')) {
-    const subPath = path === 'word-search' ? '' : path.substring(12); // Remove 'word-search/'
-    return routeWordSearchGET(req, subPath);
+    const wordSearchPath = path === 'word-search' ? '' : path.substring(12); // Remove 'word-search/'
+    return routeWordSearchGET(req, wordSearchPath);
   }
 
+  // Handle sync-specific routes
   switch (path) {
     case 'daily-quests':
       return withAuthOrDevBypass(handleDailyQuestsGET)(req);
@@ -95,47 +80,46 @@ export async function GET(
     case 'push-token':
       return withAuthOrDevBypass(handlePushTokenGET)(req);
     default:
-      return NextResponse.json({ error: `Unknown sync route: ${path}` }, { status: 404 });
+      return Promise.resolve(
+        NextResponse.json({ error: `Unknown sync route: ${path}` }, { status: 404 })
+      );
   }
 }
 
-export async function POST(
-  req: NextRequest,
-  { params }: { params: Promise<{ slug: string[] }> }
-) {
-  const { slug } = await params;
-  const path = slug?.join('/') || '';
+export function routeSyncPOST(req: NextRequest, subPath: string[]): Promise<NextResponse> {
+  const path = subPath.join('/');
 
   // Route quiz/* paths to quiz handlers
   if (path === 'quiz' || path.startsWith('quiz/')) {
-    const subPath = path === 'quiz' ? '' : path.substring(5); // Remove 'quiz/'
-    return routeQuizPOST(req, subPath);
+    const quizPath = path === 'quiz' ? '' : path.substring(5); // Remove 'quiz/'
+    return routeQuizPOST(req, quizPath);
   }
 
   // Route you-or-me/* paths to you-or-me handlers
   if (path === 'you-or-me' || path.startsWith('you-or-me/')) {
-    const subPath = path === 'you-or-me' ? '' : path.substring(10); // Remove 'you-or-me/'
-    return routeYouOrMePOST(req, subPath);
+    const youOrMePath = path === 'you-or-me' ? '' : path.substring(10); // Remove 'you-or-me/'
+    return routeYouOrMePOST(req, youOrMePath);
   }
 
   // Route game/* paths to game handlers
   if (path.startsWith('game/')) {
-    const subPath = path.substring(5); // Remove 'game/'
-    return routeGamePOST(req, subPath);
+    const gamePath = path.substring(5); // Remove 'game/'
+    return routeGamePOST(req, gamePath);
   }
 
   // Route linked/* paths to linked handlers
   if (path === 'linked' || path.startsWith('linked/')) {
-    const subPath = path === 'linked' ? '' : path.substring(7); // Remove 'linked/'
-    return routeLinkedPOST(req, subPath);
+    const linkedPath = path === 'linked' ? '' : path.substring(7); // Remove 'linked/'
+    return routeLinkedPOST(req, linkedPath);
   }
 
   // Route word-search/* paths to word-search handlers
   if (path === 'word-search' || path.startsWith('word-search/')) {
-    const subPath = path === 'word-search' ? '' : path.substring(12); // Remove 'word-search/'
-    return routeWordSearchPOST(req, subPath);
+    const wordSearchPath = path === 'word-search' ? '' : path.substring(12); // Remove 'word-search/'
+    return routeWordSearchPOST(req, wordSearchPath);
   }
 
+  // Handle sync-specific routes
   switch (path) {
     case 'daily-quests':
       return withAuthOrDevBypass(handleDailyQuestsPOST)(req);
@@ -156,30 +140,38 @@ export async function POST(
     case 'push-token':
       return withAuthOrDevBypass(handlePushTokenPOST)(req);
     default:
-      return NextResponse.json({ error: `Unknown sync route: ${path}` }, { status: 404 });
+      return Promise.resolve(
+        NextResponse.json({ error: `Unknown sync route: ${path}` }, { status: 404 })
+      );
   }
 }
 
-export async function PATCH(
-  req: NextRequest,
-  { params }: { params: Promise<{ slug: string[] }> }
-) {
-  const { slug } = await params;
-  const path = slug?.join('/') || '';
+export function routeSyncPATCH(req: NextRequest, subPath: string[]): Promise<NextResponse> {
+  const path = subPath.join('/');
 
   switch (path) {
     case 'daily-quests':
       return withAuthOrDevBypass(handleDailyQuestsPATCH)(req);
     default:
-      return NextResponse.json({ error: `Unknown sync route: ${path}` }, { status: 404 });
+      return Promise.resolve(
+        NextResponse.json({ error: `Unknown sync route: ${path}` }, { status: 404 })
+      );
   }
+}
+
+export function routeSyncDELETE(req: NextRequest, subPath: string[]): Promise<NextResponse> {
+  const path = subPath.join('/');
+
+  return Promise.resolve(
+    NextResponse.json({ error: `No DELETE routes defined for: ${path}` }, { status: 404 })
+  );
 }
 
 // ============================================================================
 // DAILY QUESTS HANDLERS
 // ============================================================================
 
-async function handleDailyQuestsGET(req: NextRequest, userId: string) {
+export async function handleDailyQuestsGET(req: NextRequest, userId: string) {
   try {
     const { searchParams } = new URL(req.url);
     const date = searchParams.get('date');
@@ -207,7 +199,7 @@ async function handleDailyQuestsGET(req: NextRequest, userId: string) {
   }
 }
 
-async function handleDailyQuestsPOST(req: NextRequest, userId: string) {
+export async function handleDailyQuestsPOST(req: NextRequest, userId: string) {
   try {
     const body = await req.json();
     const { quests, dateKey } = body;
@@ -254,7 +246,7 @@ async function handleDailyQuestsPOST(req: NextRequest, userId: string) {
   }
 }
 
-async function handleDailyQuestsPATCH(req: NextRequest, userId: string) {
+export async function handleDailyQuestsPATCH(req: NextRequest, userId: string) {
   try {
     const body = await req.json();
     const { questId, contentId } = body;
@@ -288,7 +280,7 @@ async function handleDailyQuestsPATCH(req: NextRequest, userId: string) {
   }
 }
 
-async function handleDailyQuestsCompletionPOST(req: NextRequest, userId: string) {
+export async function handleDailyQuestsCompletionPOST(req: NextRequest, userId: string) {
   try {
     const body = await req.json();
     const { quest_id, timestamp } = body;
@@ -315,7 +307,7 @@ async function handleDailyQuestsCompletionPOST(req: NextRequest, userId: string)
 // LOVE POINTS HANDLERS
 // ============================================================================
 
-async function handleLovePointsGET(req: NextRequest, userId: string) {
+export async function handleLovePointsGET(req: NextRequest, userId: string) {
   try {
     const coupleResult = await query(
       `SELECT id FROM couples WHERE user1_id = $1 OR user2_id = $1`,
@@ -347,7 +339,7 @@ async function handleLovePointsGET(req: NextRequest, userId: string) {
   }
 }
 
-async function handleLovePointsPOST(req: NextRequest, userId: string) {
+export async function handleLovePointsPOST(req: NextRequest, userId: string) {
   try {
     const body = await req.json();
     const { amount, reason, relatedId, multiplier } = body;
@@ -385,7 +377,7 @@ async function handleLovePointsPOST(req: NextRequest, userId: string) {
 // STEPS HANDLERS
 // ============================================================================
 
-async function handleStepsGET(req: NextRequest, userId: string) {
+export async function handleStepsGET(req: NextRequest, userId: string) {
   try {
     const coupleResult = await query(
       `SELECT id, user1_id, user2_id FROM couples WHERE user1_id = $1 OR user2_id = $1`,
@@ -470,7 +462,7 @@ async function handleStepsGET(req: NextRequest, userId: string) {
   }
 }
 
-async function handleStepsPOST(req: NextRequest, userId: string) {
+export async function handleStepsPOST(req: NextRequest, userId: string) {
   try {
     const body = await req.json();
     const { operation } = body;
@@ -588,7 +580,7 @@ async function handleClaimSync(
 // QUEST STATUS HANDLER
 // ============================================================================
 
-async function handleQuestStatusGET(req: NextRequest, userId: string) {
+export async function handleQuestStatusGET(req: NextRequest, userId: string) {
   try {
     const { searchParams } = new URL(req.url);
     const dateParam = searchParams.get('date');
@@ -658,7 +650,7 @@ async function handleQuestStatusGET(req: NextRequest, userId: string) {
 // QUIZ SESSIONS HANDLERS
 // ============================================================================
 
-async function handleQuizSessionsGET(req: NextRequest, userId: string) {
+export async function handleQuizSessionsGET(req: NextRequest, userId: string) {
   try {
     const coupleResult = await query(
       `SELECT id FROM couples WHERE user1_id = $1 OR user2_id = $1`,
@@ -685,7 +677,7 @@ async function handleQuizSessionsGET(req: NextRequest, userId: string) {
   }
 }
 
-async function handleQuizSessionsPOST(req: NextRequest, userId: string) {
+export async function handleQuizSessionsPOST(req: NextRequest, userId: string) {
   try {
     const body = await req.json();
     const {
@@ -783,7 +775,7 @@ async function handleQuizSessionsPOST(req: NextRequest, userId: string) {
 // COUPLE PREFERENCES HANDLERS
 // ============================================================================
 
-async function handleCouplePreferencesGET(req: NextRequest, userId: string) {
+export async function handleCouplePreferencesGET(req: NextRequest, userId: string) {
   try {
     const coupleResult = await query(
       `SELECT id, user1_id, user2_id, first_player_id, anniversary_date, created_at
@@ -813,7 +805,7 @@ async function handleCouplePreferencesGET(req: NextRequest, userId: string) {
   }
 }
 
-async function handleCouplePreferencesPOST(req: NextRequest, userId: string) {
+export async function handleCouplePreferencesPOST(req: NextRequest, userId: string) {
   try {
     const body = await req.json();
     const { firstPlayerId, anniversaryDate } = body;
@@ -890,7 +882,7 @@ async function handleCouplePreferencesPOST(req: NextRequest, userId: string) {
 // COUPLE STATS HANDLER
 // ============================================================================
 
-async function handleCoupleStatsGET(req: NextRequest, userId: string) {
+export async function handleCoupleStatsGET(req: NextRequest, userId: string) {
   try {
     const coupleResult = await query(
       `SELECT
@@ -1040,7 +1032,7 @@ async function calculateStreak(coupleId: string, userId: string): Promise<number
 
 const VALID_ACTIVITY_TYPES = ['classicQuiz', 'affirmation', 'youOrMe', 'linked', 'wordSearch'];
 
-async function handleBranchProgressionGET(req: NextRequest, userId: string) {
+export async function handleBranchProgressionGET(req: NextRequest, userId: string) {
   const searchParams = req.nextUrl.searchParams;
   const coupleId = searchParams.get('couple_id');
   const activityType = searchParams.get('activity_type');
@@ -1092,7 +1084,7 @@ async function handleBranchProgressionGET(req: NextRequest, userId: string) {
   }
 }
 
-async function handleBranchProgressionPOST(req: NextRequest, userId: string) {
+export async function handleBranchProgressionPOST(req: NextRequest, userId: string) {
   try {
     const body = await req.json();
     const {
@@ -1165,7 +1157,7 @@ function formatBranchStateForResponse(row: any) {
 // REMINDERS HANDLER
 // ============================================================================
 
-async function handleRemindersPOST(req: NextRequest, userId: string) {
+export async function handleRemindersPOST(req: NextRequest, userId: string) {
   try {
     const body = await req.json();
     const {
@@ -1230,7 +1222,7 @@ async function handleRemindersPOST(req: NextRequest, userId: string) {
 // PUSH TOKEN HANDLERS
 // ============================================================================
 
-async function handlePushTokenGET(req: NextRequest, userId: string) {
+export async function handlePushTokenGET(req: NextRequest, userId: string) {
   try {
     const coupleResult = await query(
       `SELECT user1_id, user2_id FROM couples WHERE user1_id = $1 OR user2_id = $1`,
@@ -1265,7 +1257,7 @@ async function handlePushTokenGET(req: NextRequest, userId: string) {
   }
 }
 
-async function handlePushTokenPOST(req: NextRequest, userId: string) {
+export async function handlePushTokenPOST(req: NextRequest, userId: string) {
   try {
     const body = await req.json();
     const { fcmToken, platform, deviceName } = body;

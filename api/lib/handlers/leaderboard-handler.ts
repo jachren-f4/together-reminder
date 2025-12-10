@@ -1,5 +1,5 @@
 /**
- * Leaderboard API Endpoint
+ * Leaderboard Handler - Handles /api/leaderboard requests
  *
  * GET /api/leaderboard - Get global, country, or tier leaderboard data
  * Query params:
@@ -70,7 +70,7 @@ const TIER_INFO: Record<number, { name: string; emoji: string; min: number; max:
   5: { name: 'Castle Retreat', emoji: '🏰', min: 10000, max: 999999 },
 };
 
-export const GET = withAuthOrDevBypass(async (req: NextRequest, userId: string) => {
+export const handleLeaderboardGET = withAuthOrDevBypass(async (req: NextRequest, userId: string) => {
   try {
     const url = new URL(req.url);
     const view = url.searchParams.get('view') || 'global';

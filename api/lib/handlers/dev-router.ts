@@ -1,9 +1,11 @@
 /**
- * Consolidated Dev Endpoints - Catch-all Route
+ * Dev Router - Centralized routing for development endpoints
  *
- * Handles all development-only endpoints under /api/dev/* via Next.js 15 catch-all routing.
+ * This file exports routing functions for the /api/dev/* endpoints.
+ * All handler logic is internal to this file, and the router functions
+ * dispatch to the appropriate handlers based on the path.
  *
- * Security: All endpoints require AUTH_DEV_BYPASS_ENABLED=true
+ * Security: All routes require AUTH_DEV_BYPASS_ENABLED=true
  *
  * Routes:
  * - GET  /api/dev/user-data?userId=<uuid>           - Fetch user and couple data for dev auth bypass
@@ -23,353 +25,15 @@ import { readFileSync } from 'fs';
 import { join } from 'path';
 import { LP_REWARDS } from '@/lib/lp/config';
 
-export const dynamic = 'force-dynamic';
+// ============================================================================
+// Environment & Config
+// ============================================================================
 
 const supabaseUrl = process.env.SUPABASE_URL!;
 const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
 
 // Security check - only allow when dev bypass is enabled
 const isDevModeEnabled = process.env.NODE_ENV === 'development' || process.env.AUTH_DEV_BYPASS_ENABLED === 'true';
-
-// ============================================================================
-// Shared Helper Functions
-// ============================================================================
-
-function createSupabaseAdminClient() {
-  return createClient(supabaseUrl, supabaseServiceRoleKey, {
-    auth: {
-      autoRefreshToken: false,
-      persistSession: false,
-    },
-  });
-}
-
-// ============================================================================
-// Route: GET /api/dev/user-data
-// ============================================================================
-
-async function handleUserData(request: NextRequest) {
-  try {
-    const { searchParams } = new URL(request.url);
-    const userId = searchParams.get('userId');
-
-    if (!userId) {
-      return NextResponse.json(
-        { error: 'userId query parameter required' },
-        { status: 400 }
-      );
-    }
-
-    const supabase = createSupabaseAdminClient();
-
-    // 1. Get user data from Supabase Auth
-    const { data: authUser, error: authError } = await supabase.auth.admin.getUserById(userId);
-
-    if (authError || !authUser) {
-      return NextResponse.json(
-        { error: `User not found: ${userId}` },
-        { status: 404 }
-      );
-    }
-
-    // 2. Get couple relationship
-    const { data: couples, error: coupleError } = await supabase
-      .from('couples')
-      .select('*')
-      .or(`user1_id.eq.${userId},user2_id.eq.${userId}`)
-      .limit(1);
-
-    if (coupleError) {
-      console.error('Error fetching couple:', coupleError);
-    }
-
-    let partnerData = null;
-    let coupleData = null;
-
-    if (couples && couples.length > 0) {
-      coupleData = couples[0];
-      const partnerId = coupleData.user1_id === userId ? coupleData.user2_id : coupleData.user1_id;
-
-      // 3. Get partner's data
-      const { data: partner, error: partnerError } = await supabase.auth.admin.getUserById(partnerId);
-
-      if (partner && !partnerError) {
-        partnerData = {
-          id: partner.user.id,
-          email: partner.user.email,
-          name: partner.user.user_metadata?.full_name || partner.user.email?.split('@')[0] || 'Partner',
-          avatarEmoji: partner.user.user_metadata?.avatar_emoji || '👤',
-          createdAt: partner.user.created_at,
-        };
-      }
-    }
-
-    // 4. Return formatted data for Flutter app
-    return NextResponse.json({
-      user: {
-        id: authUser.user.id,
-        email: authUser.user.email,
-        name: authUser.user.user_metadata?.full_name || authUser.user.email?.split('@')[0] || 'User',
-        avatarEmoji: authUser.user.user_metadata?.avatar_emoji || '👤',
-        createdAt: authUser.user.created_at,
-      },
-      partner: partnerData,
-      couple: coupleData ? {
-        id: coupleData.id,
-        user1Id: coupleData.user1_id,
-        user2Id: coupleData.user2_id,
-        createdAt: coupleData.created_at,
-      } : null,
-    });
-
-  } catch (error: any) {
-    console.error('Error in /api/dev/user-data:', error);
-    return NextResponse.json(
-      { error: 'Internal server error', details: error.message },
-      { status: 500 }
-    );
-  }
-}
-
-// ============================================================================
-// Route: POST /api/dev/reset-games
-// ============================================================================
-
-async function handleResetGames(request: NextRequest) {
-  try {
-    const body = await request.json();
-    let { coupleId } = body;
-    const { userId } = body;
-
-    const supabase = createSupabaseAdminClient();
-
-    // If userId provided, look up couple ID
-    if (userId && !coupleId) {
-      const { data: couple, error: coupleError } = await supabase
-        .from('couples')
-        .select('id')
-        .or(`user1_id.eq.${userId},user2_id.eq.${userId}`)
-        .single();
-
-      if (coupleError || !couple) {
-        return NextResponse.json(
-          { error: 'No couple found for userId', userId },
-          { status: 404 }
-        );
-      }
-      coupleId = couple.id;
-      console.log(`[reset-games] Looked up couple ID ${coupleId} from userId ${userId}`);
-    }
-
-    if (!coupleId) {
-      return NextResponse.json(
-        { error: 'Either coupleId or userId is required in request body' },
-        { status: 400 }
-      );
-    }
-
-    // Delete quiz_matches for this couple
-    const { data: deletedQuizMatches, error: quizError } = await supabase
-      .from('quiz_matches')
-      .delete()
-      .eq('couple_id', coupleId)
-      .select('id');
-
-    if (quizError) {
-      console.error('Error deleting quiz_matches:', quizError);
-    }
-
-    // Delete you_or_me_sessions for this couple
-    const { data: deletedYomSessions, error: yomError } = await supabase
-      .from('you_or_me_sessions')
-      .delete()
-      .eq('couple_id', coupleId)
-      .select('id');
-
-    if (yomError) {
-      console.error('Error deleting you_or_me_sessions:', yomError);
-    }
-
-    const quizCount = deletedQuizMatches?.length ?? 0;
-    const yomCount = deletedYomSessions?.length ?? 0;
-
-    console.log(`[reset-games] Deleted ${quizCount} quiz matches and ${yomCount} you-or-me sessions for couple ${coupleId}`);
-
-    return NextResponse.json({
-      success: true,
-      coupleId,
-      deleted: {
-        quizMatches: quizCount,
-        youOrMeSessions: yomCount,
-      },
-    });
-
-  } catch (error: any) {
-    console.error('Error in /api/dev/reset-games:', error);
-    return NextResponse.json(
-      { error: 'Internal server error', details: error.message },
-      { status: 500 }
-    );
-  }
-}
-
-// ============================================================================
-// Route: POST /api/dev/reset-couple-progress
-// ============================================================================
-
-async function handleResetCoupleProgress(request: NextRequest) {
-  const client = await getClient();
-
-  try {
-    const body = await request.json();
-    const { coupleId } = body;
-
-    if (!coupleId) {
-      return NextResponse.json(
-        { error: 'coupleId required' },
-        { status: 400 }
-      );
-    }
-
-    console.log(`\n🧹 [TEST] Resetting progress for couple: ${coupleId}\n`);
-
-    await client.query('BEGIN');
-
-    const results: Record<string, number> = {};
-
-    // 1. Linked matches & moves
-    const linkedMoves = await client.query(
-      `DELETE FROM linked_moves
-       WHERE match_id IN (SELECT id FROM linked_matches WHERE couple_id = $1)
-       RETURNING id`,
-      [coupleId]
-    );
-    results.linkedMoves = linkedMoves.rowCount || 0;
-
-    const linkedMatches = await client.query(
-      'DELETE FROM linked_matches WHERE couple_id = $1 RETURNING id',
-      [coupleId]
-    );
-    results.linkedMatches = linkedMatches.rowCount || 0;
-
-    // 2. Word search matches & moves
-    const wsMoves = await client.query(
-      `DELETE FROM word_search_moves
-       WHERE match_id IN (SELECT id FROM word_search_matches WHERE couple_id = $1)
-       RETURNING id`,
-      [coupleId]
-    );
-    results.wordSearchMoves = wsMoves.rowCount || 0;
-
-    const wsMatches = await client.query(
-      'DELETE FROM word_search_matches WHERE couple_id = $1 RETURNING id',
-      [coupleId]
-    );
-    results.wordSearchMatches = wsMatches.rowCount || 0;
-
-    // 3. Quiz matches
-    const quizMatches = await client.query(
-      'DELETE FROM quiz_matches WHERE couple_id = $1 RETURNING id',
-      [coupleId]
-    );
-    results.quizMatches = quizMatches.rowCount || 0;
-
-    // 4. You-or-Me progression
-    const yomProg = await client.query(
-      'DELETE FROM you_or_me_progression WHERE couple_id = $1 RETURNING couple_id',
-      [coupleId]
-    );
-    results.youOrMeProgression = yomProg.rowCount || 0;
-
-    // 5. Branch progression
-    const branchProg = await client.query(
-      'DELETE FROM branch_progression WHERE couple_id = $1 RETURNING id',
-      [coupleId]
-    );
-    results.branchProgression = branchProg.rowCount || 0;
-
-    // 6. Quiz progression
-    const quizProg = await client.query(
-      'DELETE FROM quiz_progression WHERE couple_id = $1 RETURNING couple_id',
-      [coupleId]
-    );
-    results.quizProgression = quizProg.rowCount || 0;
-
-    // 7. Daily quests & completions
-    const completions = await client.query(
-      `DELETE FROM quest_completions
-       WHERE quest_id IN (SELECT id FROM daily_quests WHERE couple_id = $1)
-       RETURNING quest_id`,
-      [coupleId]
-    );
-    results.questCompletions = completions.rowCount || 0;
-
-    const quests = await client.query(
-      'DELETE FROM daily_quests WHERE couple_id = $1 RETURNING id',
-      [coupleId]
-    );
-    results.dailyQuests = quests.rowCount || 0;
-
-    // 8. Love point awards (deprecated table)
-    const lpAwards = await client.query(
-      'DELETE FROM love_point_awards WHERE couple_id = $1 RETURNING id',
-      [coupleId]
-    );
-    results.lovePointAwards = lpAwards.rowCount || 0;
-
-    // 9. Love point transactions (get user IDs first)
-    const coupleUsers = await client.query(
-      'SELECT user1_id, user2_id FROM couples WHERE id = $1',
-      [coupleId]
-    );
-
-    if (coupleUsers.rows.length > 0) {
-      const { user1_id, user2_id } = coupleUsers.rows[0];
-      const lpTxns = await client.query(
-        'DELETE FROM love_point_transactions WHERE user_id IN ($1, $2) RETURNING id',
-        [user1_id, user2_id]
-      );
-      results.lovePointTransactions = lpTxns.rowCount || 0;
-    }
-
-    // 10. Reset couple's total_lp to 0
-    await client.query(
-      'UPDATE couples SET total_lp = 0 WHERE id = $1',
-      [coupleId]
-    );
-    results.lpReset = 1;
-
-    // 11. Leaderboard entry
-    const leaderboard = await client.query(
-      'DELETE FROM couple_leaderboard WHERE couple_id = $1 RETURNING couple_id',
-      [coupleId]
-    );
-    results.leaderboard = leaderboard.rowCount || 0;
-
-    await client.query('COMMIT');
-
-    console.log('✅ [TEST] Reset complete:', results);
-
-    return NextResponse.json({
-      success: true,
-      coupleId,
-      deleted: results,
-    });
-  } catch (error) {
-    await client.query('ROLLBACK');
-    console.error('❌ [TEST] Reset failed:', error);
-    return NextResponse.json(
-      { error: 'Failed to reset couple progress' },
-      { status: 500 }
-    );
-  } finally {
-    client.release();
-  }
-}
-
-// ============================================================================
-// Route: POST /api/dev/complete-games
-// ============================================================================
 
 // Game config for branch advancement
 const GAME_CONFIG: Record<string, { activityType: string; numBranches: number; table?: string }> = {
@@ -394,6 +58,19 @@ interface CompletedGame {
   branch: string;
   matchPercentage?: number;
   lpEarned: number;
+}
+
+// ============================================================================
+// Shared Helper Functions
+// ============================================================================
+
+function createSupabaseAdminClient() {
+  return createClient(supabaseUrl, supabaseServiceRoleKey, {
+    auth: {
+      autoRefreshToken: false,
+      persistSession: false,
+    },
+  });
 }
 
 // Load puzzle from file
@@ -565,6 +242,337 @@ async function completeWordSearchMatch(
   return { matchId, gameType: 'word_search', puzzleId, branch, lpEarned };
 }
 
+// ============================================================================
+// Route Handlers
+// ============================================================================
+
+/**
+ * GET /api/dev/user-data
+ * Fetch user and couple data for dev auth bypass
+ */
+async function handleUserData(request: NextRequest) {
+  try {
+    const { searchParams } = new URL(request.url);
+    const userId = searchParams.get('userId');
+
+    if (!userId) {
+      return NextResponse.json(
+        { error: 'userId query parameter required' },
+        { status: 400 }
+      );
+    }
+
+    const supabase = createSupabaseAdminClient();
+
+    // 1. Get user data from Supabase Auth
+    const { data: authUser, error: authError } = await supabase.auth.admin.getUserById(userId);
+
+    if (authError || !authUser) {
+      return NextResponse.json(
+        { error: `User not found: ${userId}` },
+        { status: 404 }
+      );
+    }
+
+    // 2. Get couple relationship
+    const { data: couples, error: coupleError } = await supabase
+      .from('couples')
+      .select('*')
+      .or(`user1_id.eq.${userId},user2_id.eq.${userId}`)
+      .limit(1);
+
+    if (coupleError) {
+      console.error('Error fetching couple:', coupleError);
+    }
+
+    let partnerData = null;
+    let coupleData = null;
+
+    if (couples && couples.length > 0) {
+      coupleData = couples[0];
+      const partnerId = coupleData.user1_id === userId ? coupleData.user2_id : coupleData.user1_id;
+
+      // 3. Get partner's data
+      const { data: partner, error: partnerError } = await supabase.auth.admin.getUserById(partnerId);
+
+      if (partner && !partnerError) {
+        partnerData = {
+          id: partner.user.id,
+          email: partner.user.email,
+          name: partner.user.user_metadata?.full_name || partner.user.email?.split('@')[0] || 'Partner',
+          avatarEmoji: partner.user.user_metadata?.avatar_emoji || '👤',
+          createdAt: partner.user.created_at,
+        };
+      }
+    }
+
+    // 4. Return formatted data for Flutter app
+    return NextResponse.json({
+      user: {
+        id: authUser.user.id,
+        email: authUser.user.email,
+        name: authUser.user.user_metadata?.full_name || authUser.user.email?.split('@')[0] || 'User',
+        avatarEmoji: authUser.user.user_metadata?.avatar_emoji || '👤',
+        createdAt: authUser.user.created_at,
+      },
+      partner: partnerData,
+      couple: coupleData ? {
+        id: coupleData.id,
+        user1Id: coupleData.user1_id,
+        user2Id: coupleData.user2_id,
+        createdAt: coupleData.created_at,
+      } : null,
+    });
+
+  } catch (error: any) {
+    console.error('Error in /api/dev/user-data:', error);
+    return NextResponse.json(
+      { error: 'Internal server error', details: error.message },
+      { status: 500 }
+    );
+  }
+}
+
+/**
+ * POST /api/dev/reset-games
+ * Reset game data for a couple
+ */
+async function handleResetGames(request: NextRequest) {
+  try {
+    const body = await request.json();
+    let { coupleId } = body;
+    const { userId } = body;
+
+    const supabase = createSupabaseAdminClient();
+
+    // If userId provided, look up couple ID
+    if (userId && !coupleId) {
+      const { data: couple, error: coupleError } = await supabase
+        .from('couples')
+        .select('id')
+        .or(`user1_id.eq.${userId},user2_id.eq.${userId}`)
+        .single();
+
+      if (coupleError || !couple) {
+        return NextResponse.json(
+          { error: 'No couple found for userId', userId },
+          { status: 404 }
+        );
+      }
+      coupleId = couple.id;
+      console.log(`[reset-games] Looked up couple ID ${coupleId} from userId ${userId}`);
+    }
+
+    if (!coupleId) {
+      return NextResponse.json(
+        { error: 'Either coupleId or userId is required in request body' },
+        { status: 400 }
+      );
+    }
+
+    // Delete quiz_matches for this couple
+    const { data: deletedQuizMatches, error: quizError } = await supabase
+      .from('quiz_matches')
+      .delete()
+      .eq('couple_id', coupleId)
+      .select('id');
+
+    if (quizError) {
+      console.error('Error deleting quiz_matches:', quizError);
+    }
+
+    // Delete you_or_me_sessions for this couple
+    const { data: deletedYomSessions, error: yomError } = await supabase
+      .from('you_or_me_sessions')
+      .delete()
+      .eq('couple_id', coupleId)
+      .select('id');
+
+    if (yomError) {
+      console.error('Error deleting you_or_me_sessions:', yomError);
+    }
+
+    const quizCount = deletedQuizMatches?.length ?? 0;
+    const yomCount = deletedYomSessions?.length ?? 0;
+
+    console.log(`[reset-games] Deleted ${quizCount} quiz matches and ${yomCount} you-or-me sessions for couple ${coupleId}`);
+
+    return NextResponse.json({
+      success: true,
+      coupleId,
+      deleted: {
+        quizMatches: quizCount,
+        youOrMeSessions: yomCount,
+      },
+    });
+
+  } catch (error: any) {
+    console.error('Error in /api/dev/reset-games:', error);
+    return NextResponse.json(
+      { error: 'Internal server error', details: error.message },
+      { status: 500 }
+    );
+  }
+}
+
+/**
+ * POST /api/dev/reset-couple-progress
+ * Reset all progress for a couple (comprehensive)
+ */
+async function handleResetCoupleProgress(request: NextRequest) {
+  const client = await getClient();
+
+  try {
+    const body = await request.json();
+    const { coupleId } = body;
+
+    if (!coupleId) {
+      return NextResponse.json(
+        { error: 'coupleId required' },
+        { status: 400 }
+      );
+    }
+
+    console.log(`\n🧹 [TEST] Resetting progress for couple: ${coupleId}\n`);
+
+    await client.query('BEGIN');
+
+    const results: Record<string, number> = {};
+
+    // 1. Linked matches & moves
+    const linkedMoves = await client.query(
+      `DELETE FROM linked_moves
+       WHERE match_id IN (SELECT id FROM linked_matches WHERE couple_id = $1)
+       RETURNING id`,
+      [coupleId]
+    );
+    results.linkedMoves = linkedMoves.rowCount || 0;
+
+    const linkedMatches = await client.query(
+      'DELETE FROM linked_matches WHERE couple_id = $1 RETURNING id',
+      [coupleId]
+    );
+    results.linkedMatches = linkedMatches.rowCount || 0;
+
+    // 2. Word search matches & moves
+    const wsMoves = await client.query(
+      `DELETE FROM word_search_moves
+       WHERE match_id IN (SELECT id FROM word_search_matches WHERE couple_id = $1)
+       RETURNING id`,
+      [coupleId]
+    );
+    results.wordSearchMoves = wsMoves.rowCount || 0;
+
+    const wsMatches = await client.query(
+      'DELETE FROM word_search_matches WHERE couple_id = $1 RETURNING id',
+      [coupleId]
+    );
+    results.wordSearchMatches = wsMatches.rowCount || 0;
+
+    // 3. Quiz matches
+    const quizMatches = await client.query(
+      'DELETE FROM quiz_matches WHERE couple_id = $1 RETURNING id',
+      [coupleId]
+    );
+    results.quizMatches = quizMatches.rowCount || 0;
+
+    // 4. You-or-Me progression
+    const yomProg = await client.query(
+      'DELETE FROM you_or_me_progression WHERE couple_id = $1 RETURNING couple_id',
+      [coupleId]
+    );
+    results.youOrMeProgression = yomProg.rowCount || 0;
+
+    // 5. Branch progression
+    const branchProg = await client.query(
+      'DELETE FROM branch_progression WHERE couple_id = $1 RETURNING id',
+      [coupleId]
+    );
+    results.branchProgression = branchProg.rowCount || 0;
+
+    // 6. Quiz progression
+    const quizProg = await client.query(
+      'DELETE FROM quiz_progression WHERE couple_id = $1 RETURNING couple_id',
+      [coupleId]
+    );
+    results.quizProgression = quizProg.rowCount || 0;
+
+    // 7. Daily quests & completions
+    const completions = await client.query(
+      `DELETE FROM quest_completions
+       WHERE quest_id IN (SELECT id FROM daily_quests WHERE couple_id = $1)
+       RETURNING quest_id`,
+      [coupleId]
+    );
+    results.questCompletions = completions.rowCount || 0;
+
+    const quests = await client.query(
+      'DELETE FROM daily_quests WHERE couple_id = $1 RETURNING id',
+      [coupleId]
+    );
+    results.dailyQuests = quests.rowCount || 0;
+
+    // 8. Love point awards (deprecated table)
+    const lpAwards = await client.query(
+      'DELETE FROM love_point_awards WHERE couple_id = $1 RETURNING id',
+      [coupleId]
+    );
+    results.lovePointAwards = lpAwards.rowCount || 0;
+
+    // 9. Love point transactions (get user IDs first)
+    const coupleUsers = await client.query(
+      'SELECT user1_id, user2_id FROM couples WHERE id = $1',
+      [coupleId]
+    );
+
+    if (coupleUsers.rows.length > 0) {
+      const { user1_id, user2_id } = coupleUsers.rows[0];
+      const lpTxns = await client.query(
+        'DELETE FROM love_point_transactions WHERE user_id IN ($1, $2) RETURNING id',
+        [user1_id, user2_id]
+      );
+      results.lovePointTransactions = lpTxns.rowCount || 0;
+    }
+
+    // 10. Reset couple's total_lp to 0
+    await client.query(
+      'UPDATE couples SET total_lp = 0 WHERE id = $1',
+      [coupleId]
+    );
+    results.lpReset = 1;
+
+    // 11. Leaderboard entry
+    const leaderboard = await client.query(
+      'DELETE FROM couple_leaderboard WHERE couple_id = $1 RETURNING couple_id',
+      [coupleId]
+    );
+    results.leaderboard = leaderboard.rowCount || 0;
+
+    await client.query('COMMIT');
+
+    console.log('✅ [TEST] Reset complete:', results);
+
+    return NextResponse.json({
+      success: true,
+      coupleId,
+      deleted: results,
+    });
+  } catch (error) {
+    await client.query('ROLLBACK');
+    console.error('❌ [TEST] Reset failed:', error);
+    return NextResponse.json(
+      { error: 'Failed to reset couple progress' },
+      { status: 500 }
+    );
+  } finally {
+    client.release();
+  }
+}
+
+/**
+ * POST /api/dev/complete-games
+ * Complete games with dummy answers
+ */
 async function handleCompleteGames(request: NextRequest) {
   try {
     const body = await request.json();
@@ -756,10 +764,10 @@ async function handleCompleteGames(request: NextRequest) {
   }
 }
 
-// ============================================================================
-// Route: POST /api/dev/update-password
-// ============================================================================
-
+/**
+ * POST /api/dev/update-password
+ * Update user password for dev sign-in
+ */
 async function handleUpdatePassword(request: NextRequest) {
   try {
     const body = await request.json();
@@ -835,13 +843,15 @@ async function handleUpdatePassword(request: NextRequest) {
 }
 
 // ============================================================================
-// Main Route Handler
+// Exported Router Functions
 // ============================================================================
 
-export async function GET(
-  request: NextRequest,
-  { params }: { params: Promise<{ slug: string[] }> }
-) {
+/**
+ * Routes GET requests to dev endpoints
+ * @param req - NextRequest object
+ * @param subPath - Array of path segments (e.g., ['user-data'])
+ */
+export async function routeDevGET(req: NextRequest, subPath: string[]): Promise<NextResponse> {
   // Security check
   if (!isDevModeEnabled) {
     return NextResponse.json(
@@ -850,13 +860,12 @@ export async function GET(
     );
   }
 
-  const { slug } = await params;
-  const path = slug[0];
+  const path = subPath[0];
 
   // Route to appropriate handler
   switch (path) {
     case 'user-data':
-      return handleUserData(request);
+      return handleUserData(req);
     default:
       return NextResponse.json(
         { error: `GET method not supported for /api/dev/${path}` },
@@ -865,10 +874,12 @@ export async function GET(
   }
 }
 
-export async function POST(
-  request: NextRequest,
-  { params }: { params: Promise<{ slug: string[] }> }
-) {
+/**
+ * Routes POST requests to dev endpoints
+ * @param req - NextRequest object
+ * @param subPath - Array of path segments (e.g., ['reset-games'])
+ */
+export async function routeDevPOST(req: NextRequest, subPath: string[]): Promise<NextResponse> {
   // Security check
   if (!isDevModeEnabled) {
     return NextResponse.json(
@@ -877,19 +888,18 @@ export async function POST(
     );
   }
 
-  const { slug } = await params;
-  const path = slug[0];
+  const path = subPath[0];
 
   // Route to appropriate handler
   switch (path) {
     case 'reset-games':
-      return handleResetGames(request);
+      return handleResetGames(req);
     case 'reset-couple-progress':
-      return handleResetCoupleProgress(request);
+      return handleResetCoupleProgress(req);
     case 'complete-games':
-      return handleCompleteGames(request);
+      return handleCompleteGames(req);
     case 'update-password':
-      return handleUpdatePassword(request);
+      return handleUpdatePassword(req);
     default:
       return NextResponse.json(
         { error: `POST method not supported for /api/dev/${path}` },

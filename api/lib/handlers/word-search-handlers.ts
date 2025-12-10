@@ -828,7 +828,7 @@ async function handleUseHint(req: NextRequest, userId: string, email?: string) {
 /**
  * Route word-search GET requests to appropriate handlers
  */
-export function routeWordSearchGET(req: NextRequest, subPath: string) {
+export function routeWordSearchGET(req: NextRequest, subPath: string): Promise<NextResponse> {
   // Empty path → get active session
   if (!subPath || subPath === '') {
     return withAuthOrDevBypass(async (req: NextRequest, userId: string, email?: string) => {
@@ -844,16 +844,16 @@ export function routeWordSearchGET(req: NextRequest, subPath: string) {
   }
 
   // Unknown GET path
-  return NextResponse.json(
+  return Promise.resolve(NextResponse.json(
     { error: `Unknown GET path: /api/sync/word-search/${subPath}` },
     { status: 404 }
-  );
+  ));
 }
 
 /**
  * Route word-search POST requests to appropriate handlers
  */
-export function routeWordSearchPOST(req: NextRequest, subPath: string) {
+export function routeWordSearchPOST(req: NextRequest, subPath: string): Promise<NextResponse> {
   // Empty path → create/get session
   if (!subPath || subPath === '') {
     return withAuthOrDevBypass(async (req: NextRequest, userId: string, email?: string) => {
@@ -876,8 +876,8 @@ export function routeWordSearchPOST(req: NextRequest, subPath: string) {
   }
 
   // Unknown POST path
-  return NextResponse.json(
+  return Promise.resolve(NextResponse.json(
     { error: `Unknown POST path: /api/sync/word-search/${subPath}` },
     { status: 404 }
-  );
+  ));
 }
