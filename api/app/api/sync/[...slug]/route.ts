@@ -2,7 +2,6 @@
  * Consolidated Sync Routes - Catch-all handler
  *
  * Handles all /api/sync/* routes except:
- * - /api/sync/game/* (handled by separate catch-all)
  * - /api/sync/linked/* (handled by separate catch-all)
  * - /api/sync/word-search/* (handled by separate catch-all)
  *
@@ -20,6 +19,7 @@
  * - /api/sync/push-token (GET/POST)
  * - /api/sync/quiz/* (quiz handlers)
  * - /api/sync/you-or-me/* (you-or-me handlers)
+ * - /api/sync/game/* (game handlers)
  */
 
 import { NextRequest, NextResponse } from 'next/server';
@@ -30,6 +30,7 @@ import { withTransaction } from '@/lib/db/transaction';
 import { awardLP, getUserLP } from '@/lib/lp/award';
 import { routeQuizGET, routeQuizPOST } from '@/lib/handlers/quiz-handlers';
 import { routeYouOrMeGET, routeYouOrMePOST } from '@/lib/handlers/you-or-me-handlers';
+import { routeGameGET, routeGamePOST } from '@/lib/handlers/game-handlers';
 
 export const dynamic = 'force-dynamic';
 
@@ -54,6 +55,12 @@ export async function GET(
   if (path === 'you-or-me' || path.startsWith('you-or-me/')) {
     const subPath = path === 'you-or-me' ? '' : path.substring(10); // Remove 'you-or-me/'
     return routeYouOrMeGET(req, subPath);
+  }
+
+  // Route game/* paths to game handlers
+  if (path.startsWith('game/')) {
+    const subPath = path.substring(5); // Remove 'game/'
+    return routeGameGET(req, subPath);
   }
 
   switch (path) {
@@ -97,6 +104,12 @@ export async function POST(
   if (path === 'you-or-me' || path.startsWith('you-or-me/')) {
     const subPath = path === 'you-or-me' ? '' : path.substring(10); // Remove 'you-or-me/'
     return routeYouOrMePOST(req, subPath);
+  }
+
+  // Route game/* paths to game handlers
+  if (path.startsWith('game/')) {
+    const subPath = path.substring(5); // Remove 'game/'
+    return routeGamePOST(req, subPath);
   }
 
   switch (path) {
