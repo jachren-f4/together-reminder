@@ -1,7 +1,7 @@
 /**
- * Word Search Consolidated Catch-All Route
+ * Word Search Game Handlers
  *
- * Handles all word-search endpoints through a single route:
+ * Handles all word-search endpoints:
  * - GET/POST `` (empty) → word-search session
  * - GET `{matchId}` → specific match polling (UUID)
  * - POST `submit` → submit found word
@@ -21,8 +21,6 @@ import {
 import { LP_REWARDS, SCORING } from '@/lib/lp/config';
 import { readFileSync } from 'fs';
 import { join } from 'path';
-
-export const dynamic = 'force-dynamic';
 
 // Direction deltas for a 10-column grid
 const DIRECTION_DELTAS: Record<string, number> = {
@@ -168,6 +166,10 @@ function buildMatchResponse(match: any, puzzle: any, userId: string, isPlayer1: 
     }
   };
 }
+
+// ============================================================================
+// Session Handlers
+// ============================================================================
 
 /**
  * POST /api/sync/word-search (empty slug)
@@ -379,6 +381,10 @@ async function handleGetSpecificMatch(req: NextRequest, userId: string, email: s
     );
   }
 }
+
+// ============================================================================
+// Submit Handler
+// ============================================================================
 
 /**
  * POST /api/sync/word-search/submit
@@ -658,6 +664,10 @@ async function handleSubmitWord(req: NextRequest, userId: string, email?: string
   }
 }
 
+// ============================================================================
+// Hint Handler
+// ============================================================================
+
 /**
  * POST /api/sync/word-search/hint
  *
@@ -811,57 +821,63 @@ async function handleUseHint(req: NextRequest, userId: string, email?: string) {
   }
 }
 
-/**
- * Route handlers - dispatch to appropriate handler based on slug
- */
-export const GET = withAuthOrDevBypass(async (req, userId, email, context) => {
-  const { slug } = await context!.params;
+// ============================================================================
+// Route Dispatch Functions (exported for use in main sync route)
+// ============================================================================
 
-  // Empty slug or undefined → get active session
-  if (!slug || slug.length === 0) {
-    return handleGetActiveSession(req, userId, email);
+/**
+ * Route word-search GET requests to appropriate handlers
+ */
+export function routeWordSearchGET(req: NextRequest, subPath: string) {
+  // Empty path → get active session
+  if (!subPath || subPath === '') {
+    return withAuthOrDevBypass(async (req: NextRequest, userId: string, email?: string) => {
+      return handleGetActiveSession(req, userId, email);
+    })(req);
   }
 
-  // Single segment that looks like a UUID → specific match polling
-  if (slug.length === 1) {
-    const matchId = slug[0];
-    // Basic UUID format check (8-4-4-4-12 hex chars)
-    if (/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(matchId)) {
-      return handleGetSpecificMatch(req, userId, email, matchId);
-    }
+  // UUID format → specific match polling
+  if (/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(subPath)) {
+    return withAuthOrDevBypass(async (req: NextRequest, userId: string, email?: string) => {
+      return handleGetSpecificMatch(req, userId, email, subPath);
+    })(req);
   }
 
   // Unknown GET path
   return NextResponse.json(
-    { error: 'Not found' },
+    { error: `Unknown GET path: /api/sync/word-search/${subPath}` },
     { status: 404 }
   );
-});
+}
 
-export const POST = withAuthOrDevBypass(async (req, userId, email, context) => {
-  const { slug } = await context!.params;
-
-  // Empty slug or undefined → create/get session
-  if (!slug || slug.length === 0) {
-    return handleCreateOrGetSession(req, userId, email);
+/**
+ * Route word-search POST requests to appropriate handlers
+ */
+export function routeWordSearchPOST(req: NextRequest, subPath: string) {
+  // Empty path → create/get session
+  if (!subPath || subPath === '') {
+    return withAuthOrDevBypass(async (req: NextRequest, userId: string, email?: string) => {
+      return handleCreateOrGetSession(req, userId, email);
+    })(req);
   }
 
-  // Single segment routes
-  if (slug.length === 1) {
-    const action = slug[0];
-
-    if (action === 'submit') {
+  // submit endpoint
+  if (subPath === 'submit') {
+    return withAuthOrDevBypass(async (req: NextRequest, userId: string, email?: string) => {
       return handleSubmitWord(req, userId, email);
-    }
+    })(req);
+  }
 
-    if (action === 'hint') {
+  // hint endpoint
+  if (subPath === 'hint') {
+    return withAuthOrDevBypass(async (req: NextRequest, userId: string, email?: string) => {
       return handleUseHint(req, userId, email);
-    }
+    })(req);
   }
 
   // Unknown POST path
   return NextResponse.json(
-    { error: 'Not found' },
+    { error: `Unknown POST path: /api/sync/word-search/${subPath}` },
     { status: 404 }
   );
-});
+}

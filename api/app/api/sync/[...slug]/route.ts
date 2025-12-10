@@ -1,11 +1,7 @@
 /**
  * Consolidated Sync Routes - Catch-all handler
  *
- * Handles all /api/sync/* routes except:
- * - /api/sync/linked/* (handled by separate catch-all)
- * - /api/sync/word-search/* (handled by separate catch-all)
- *
- * Routes handled:
+ * Handles ALL /api/sync/* routes including:
  * - /api/sync/daily-quests (GET/POST/PATCH)
  * - /api/sync/daily-quests/completion (POST)
  * - /api/sync/love-points (GET/POST)
@@ -20,6 +16,8 @@
  * - /api/sync/quiz/* (quiz handlers)
  * - /api/sync/you-or-me/* (you-or-me handlers)
  * - /api/sync/game/* (game handlers)
+ * - /api/sync/linked/* (linked game handlers)
+ * - /api/sync/word-search/* (word-search handlers)
  */
 
 import { NextRequest, NextResponse } from 'next/server';
@@ -31,6 +29,8 @@ import { awardLP, getUserLP } from '@/lib/lp/award';
 import { routeQuizGET, routeQuizPOST } from '@/lib/handlers/quiz-handlers';
 import { routeYouOrMeGET, routeYouOrMePOST } from '@/lib/handlers/you-or-me-handlers';
 import { routeGameGET, routeGamePOST } from '@/lib/handlers/game-handlers';
+import { routeLinkedGET, routeLinkedPOST } from '@/lib/handlers/linked-handlers';
+import { routeWordSearchGET, routeWordSearchPOST } from '@/lib/handlers/word-search-handlers';
 
 export const dynamic = 'force-dynamic';
 
@@ -61,6 +61,18 @@ export async function GET(
   if (path.startsWith('game/')) {
     const subPath = path.substring(5); // Remove 'game/'
     return routeGameGET(req, subPath);
+  }
+
+  // Route linked/* paths to linked handlers
+  if (path === 'linked' || path.startsWith('linked/')) {
+    const subPath = path === 'linked' ? '' : path.substring(7); // Remove 'linked/'
+    return routeLinkedGET(req, subPath);
+  }
+
+  // Route word-search/* paths to word-search handlers
+  if (path === 'word-search' || path.startsWith('word-search/')) {
+    const subPath = path === 'word-search' ? '' : path.substring(12); // Remove 'word-search/'
+    return routeWordSearchGET(req, subPath);
   }
 
   switch (path) {
@@ -110,6 +122,18 @@ export async function POST(
   if (path.startsWith('game/')) {
     const subPath = path.substring(5); // Remove 'game/'
     return routeGamePOST(req, subPath);
+  }
+
+  // Route linked/* paths to linked handlers
+  if (path === 'linked' || path.startsWith('linked/')) {
+    const subPath = path === 'linked' ? '' : path.substring(7); // Remove 'linked/'
+    return routeLinkedPOST(req, subPath);
+  }
+
+  // Route word-search/* paths to word-search handlers
+  if (path === 'word-search' || path.startsWith('word-search/')) {
+    const subPath = path === 'word-search' ? '' : path.substring(12); // Remove 'word-search/'
+    return routeWordSearchPOST(req, subPath);
   }
 
   switch (path) {

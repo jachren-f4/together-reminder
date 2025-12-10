@@ -1,8 +1,8 @@
 /**
- * Consolidated Linked Game API Endpoint
+ * Linked Game Handlers
  *
- * Catch-all route handling all linked game operations:
- * - GET/POST `` (empty slug) → Session management (create/get active match)
+ * Handles all linked game operations:
+ * - GET/POST `` (empty) → Session management (create/get active match)
  * - GET `{matchId}` → Specific match state (polling)
  * - POST `submit` → Submit letter placements
  * - POST `hint` → Use hint power-up
@@ -14,8 +14,6 @@ import { query, getClient } from '@/lib/db/pool';
 import { LP_REWARDS, SCORING } from '@/lib/lp/config';
 import { readFileSync } from 'fs';
 import { join } from 'path';
-
-export const dynamic = 'force-dynamic';
 
 // Check if cooldown is enabled (defaults to true in production)
 const COOLDOWN_ENABLED = process.env.PUZZLE_COOLDOWN_ENABLED !== 'false';
@@ -379,65 +377,6 @@ function findValidCells(
 
   return validCells;
 }
-
-// ============================================================================
-// Route Handlers
-// ============================================================================
-
-/**
- * POST Handler - Routes to different operations based on slug
- */
-export const POST = withAuthOrDevBypass(async (req, userId, email, context) => {
-  const { slug = [] } = await context!.params;
-
-  // Empty slug → Create/get session
-  if (slug.length === 0) {
-    return handleSessionPost(req, userId);
-  }
-
-  // Single slug
-  if (slug.length === 1) {
-    const operation = slug[0];
-
-    if (operation === 'submit') {
-      return handleSubmitPost(req, userId);
-    }
-
-    if (operation === 'hint') {
-      return handleHintPost(req, userId);
-    }
-  }
-
-  // Unknown route
-  return NextResponse.json(
-    { error: 'Invalid endpoint' },
-    { status: 404 }
-  );
-});
-
-/**
- * GET Handler - Routes to different operations based on slug
- */
-export const GET = withAuthOrDevBypass(async (req, userId, email, context) => {
-  const { slug = [] } = await context!.params;
-
-  // Empty slug → Get active match
-  if (slug.length === 0) {
-    return handleSessionGet(req, userId);
-  }
-
-  // Single slug → Get specific match by ID
-  if (slug.length === 1) {
-    const matchId = slug[0];
-    return handleMatchGet(req, userId, matchId);
-  }
-
-  // Unknown route
-  return NextResponse.json(
-    { error: 'Invalid endpoint' },
-    { status: 404 }
-  );
-});
 
 // ============================================================================
 // Session Handlers (Empty Slug)
@@ -1204,4 +1143,65 @@ async function handleHintPost(req: NextRequest, userId: string): Promise<NextRes
   } finally {
     client.release();
   }
+}
+
+// ============================================================================
+// Route Dispatch Functions (exported for use in main sync route)
+// ============================================================================
+
+/**
+ * Route linked GET requests to appropriate handlers
+ */
+export function routeLinkedGET(req: NextRequest, subPath: string) {
+  // Empty path → get active session
+  if (!subPath || subPath === '') {
+    return withAuthOrDevBypass(async (req: NextRequest, userId: string) => {
+      return handleSessionGet(req, userId);
+    })(req);
+  }
+
+  // UUID format → specific match polling
+  if (/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(subPath)) {
+    return withAuthOrDevBypass(async (req: NextRequest, userId: string) => {
+      return handleMatchGet(req, userId, subPath);
+    })(req);
+  }
+
+  // Unknown GET path
+  return NextResponse.json(
+    { error: `Unknown GET path: /api/sync/linked/${subPath}` },
+    { status: 404 }
+  );
+}
+
+/**
+ * Route linked POST requests to appropriate handlers
+ */
+export function routeLinkedPOST(req: NextRequest, subPath: string) {
+  // Empty path → create/get session
+  if (!subPath || subPath === '') {
+    return withAuthOrDevBypass(async (req: NextRequest, userId: string) => {
+      return handleSessionPost(req, userId);
+    })(req);
+  }
+
+  // submit endpoint
+  if (subPath === 'submit') {
+    return withAuthOrDevBypass(async (req: NextRequest, userId: string) => {
+      return handleSubmitPost(req, userId);
+    })(req);
+  }
+
+  // hint endpoint
+  if (subPath === 'hint') {
+    return withAuthOrDevBypass(async (req: NextRequest, userId: string) => {
+      return handleHintPost(req, userId);
+    })(req);
+  }
+
+  // Unknown POST path
+  return NextResponse.json(
+    { error: `Unknown POST path: /api/sync/linked/${subPath}` },
+    { status: 404 }
+  );
 }
