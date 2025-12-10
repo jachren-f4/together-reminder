@@ -1,7 +1,7 @@
 /**
- * Consolidated Quiz API Routes
+ * Quiz API Handlers
  *
- * Handles all /api/sync/quiz/* routes:
+ * Exported handlers for quiz routes:
  * - GET/POST /api/sync/quiz - Session creation and retrieval
  * - POST /api/sync/quiz/submit - Answer submission
  * - GET /api/sync/quiz/{sessionId} - Specific session polling
@@ -14,56 +14,41 @@ import { query, getClient } from '@/lib/db/pool';
 import { getCoupleBasic } from '@/lib/couple/utils';
 import { LP_REWARDS, LP_BONUSES } from '@/lib/lp/config';
 
-export const dynamic = 'force-dynamic';
+const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
 /**
- * GET handler for quiz routes
+ * Route quiz GET requests based on path
+ * @param req - Request
+ * @param subPath - Path after 'quiz/' (e.g., '', 'submit', '{sessionId}')
  */
-export async function GET(
-  req: NextRequest,
-  context: { params: Promise<{ slug: string[] }> }
-) {
-  const { slug = [] } = await context.params;
-  const path = slug.join('/');
-
-  // Route to appropriate handler
-  if (path === '' || slug.length === 0) {
-    // GET /api/sync/quiz - get session
+export async function routeQuizGET(req: NextRequest, subPath: string): Promise<NextResponse> {
+  if (subPath === '') {
     return handleQuizGET(req);
   }
 
-  // Check if slug[0] is a UUID (sessionId)
-  const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
-  if (slug.length === 1 && uuidRegex.test(slug[0])) {
-    // GET /api/sync/quiz/{sessionId} - pass sessionId via context
-    return handleQuizSessionGET(req, { params: Promise.resolve({ slug, sessionId: slug[0] }) });
+  // Check if path is a UUID (sessionId)
+  if (UUID_REGEX.test(subPath)) {
+    return handleQuizSessionGET(req, { params: Promise.resolve({ slug: [subPath], sessionId: subPath }) });
   }
 
-  return NextResponse.json({ error: 'Unknown path' }, { status: 404 });
+  return NextResponse.json({ error: 'Unknown quiz path' }, { status: 404 });
 }
 
 /**
- * POST handler for quiz routes
+ * Route quiz POST requests based on path
+ * @param req - Request
+ * @param subPath - Path after 'quiz/' (e.g., '', 'submit')
  */
-export async function POST(
-  req: NextRequest,
-  { params }: { params: Promise<{ slug: string[] }> }
-) {
-  const { slug = [] } = await params;
-  const path = slug.join('/');
-
-  // Route to appropriate handler
-  if (path === '' || slug.length === 0) {
-    // POST /api/sync/quiz - create session
+export async function routeQuizPOST(req: NextRequest, subPath: string): Promise<NextResponse> {
+  if (subPath === '') {
     return handleQuizPOST(req);
   }
 
-  if (path === 'submit') {
-    // POST /api/sync/quiz/submit
+  if (subPath === 'submit') {
     return handleQuizSubmitPOST(req);
   }
 
-  return NextResponse.json({ error: 'Unknown path' }, { status: 404 });
+  return NextResponse.json({ error: 'Unknown quiz path' }, { status: 404 });
 }
 
 /**

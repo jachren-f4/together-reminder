@@ -1,7 +1,7 @@
 /**
- * Consolidated You or Me API Routes
+ * You or Me API Handlers
  *
- * Handles all /api/sync/you-or-me/* routes:
+ * Exported handlers for you-or-me routes:
  * - GET/POST /api/sync/you-or-me - Session creation and retrieval
  * - POST /api/sync/you-or-me/submit - Answer submission
  * - GET /api/sync/you-or-me/{sessionId} - Specific session polling
@@ -13,56 +13,41 @@ import { RouteContext } from '@/lib/auth/middleware';
 import { query, getClient } from '@/lib/db/pool';
 import { LP_REWARDS } from '@/lib/lp/config';
 
-export const dynamic = 'force-dynamic';
+const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
-// ============================================================================
-// GET Handler - Route dispatcher
-// ============================================================================
-
-export async function GET(
-  req: NextRequest,
-  context: { params: Promise<{ slug?: string[] }> }
-) {
-  const { slug = [] } = await context.params;
-  const path = slug.join('/');
-
-  // GET /api/sync/you-or-me - get session
-  if (path === '' || slug.length === 0) {
+/**
+ * Route you-or-me GET requests based on path
+ * @param req - Request
+ * @param subPath - Path after 'you-or-me/' (e.g., '', '{sessionId}')
+ */
+export async function routeYouOrMeGET(req: NextRequest, subPath: string): Promise<NextResponse> {
+  if (subPath === '') {
     return handleYouOrMeGET(req);
   }
 
-  // Check if slug[0] is a UUID (sessionId)
-  const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
-  if (slug.length === 1 && uuidRegex.test(slug[0])) {
-    // GET /api/sync/you-or-me/{sessionId} - pass sessionId via context
-    return handleYouOrMeSessionGET(req, { params: Promise.resolve({ slug, sessionId: slug[0] }) });
+  // Check if path is a UUID (sessionId)
+  if (UUID_REGEX.test(subPath)) {
+    return handleYouOrMeSessionGET(req, { params: Promise.resolve({ slug: [subPath], sessionId: subPath }) });
   }
 
-  return NextResponse.json({ error: 'Unknown path' }, { status: 404 });
+  return NextResponse.json({ error: 'Unknown you-or-me path' }, { status: 404 });
 }
 
-// ============================================================================
-// POST Handler - Route dispatcher
-// ============================================================================
-
-export async function POST(
-  req: NextRequest,
-  { params }: { params: Promise<{ slug?: string[] }> }
-) {
-  const { slug = [] } = await params;
-  const path = slug.join('/');
-
-  // POST /api/sync/you-or-me - create session
-  if (path === '' || slug.length === 0) {
+/**
+ * Route you-or-me POST requests based on path
+ * @param req - Request
+ * @param subPath - Path after 'you-or-me/' (e.g., '', 'submit')
+ */
+export async function routeYouOrMePOST(req: NextRequest, subPath: string): Promise<NextResponse> {
+  if (subPath === '') {
     return handleYouOrMePOST(req);
   }
 
-  // POST /api/sync/you-or-me/submit
-  if (path === 'submit') {
+  if (subPath === 'submit') {
     return handleYouOrMeSubmitPOST(req);
   }
 
-  return NextResponse.json({ error: 'Unknown path' }, { status: 404 });
+  return NextResponse.json({ error: 'Unknown you-or-me path' }, { status: 404 });
 }
 
 // ============================================================================

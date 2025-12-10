@@ -5,8 +5,6 @@
  * - /api/sync/game/* (handled by separate catch-all)
  * - /api/sync/linked/* (handled by separate catch-all)
  * - /api/sync/word-search/* (handled by separate catch-all)
- * - /api/sync/quiz/* (handled by game catch-all)
- * - /api/sync/you-or-me/* (handled by game catch-all)
  *
  * Routes handled:
  * - /api/sync/daily-quests (GET/POST/PATCH)
@@ -20,6 +18,8 @@
  * - /api/sync/branch-progression (GET/POST)
  * - /api/sync/reminders (POST)
  * - /api/sync/push-token (GET/POST)
+ * - /api/sync/quiz/* (quiz handlers)
+ * - /api/sync/you-or-me/* (you-or-me handlers)
  */
 
 import { NextRequest, NextResponse } from 'next/server';
@@ -28,6 +28,8 @@ import { query, getClient } from '@/lib/db/pool';
 import { getCoupleId } from '@/lib/couple/utils';
 import { withTransaction } from '@/lib/db/transaction';
 import { awardLP, getUserLP } from '@/lib/lp/award';
+import { routeQuizGET, routeQuizPOST } from '@/lib/handlers/quiz-handlers';
+import { routeYouOrMeGET, routeYouOrMePOST } from '@/lib/handlers/you-or-me-handlers';
 
 export const dynamic = 'force-dynamic';
 
@@ -41,6 +43,18 @@ export async function GET(
 ) {
   const { slug } = await params;
   const path = slug?.join('/') || '';
+
+  // Route quiz/* paths to quiz handlers
+  if (path === 'quiz' || path.startsWith('quiz/')) {
+    const subPath = path === 'quiz' ? '' : path.substring(5); // Remove 'quiz/'
+    return routeQuizGET(req, subPath);
+  }
+
+  // Route you-or-me/* paths to you-or-me handlers
+  if (path === 'you-or-me' || path.startsWith('you-or-me/')) {
+    const subPath = path === 'you-or-me' ? '' : path.substring(10); // Remove 'you-or-me/'
+    return routeYouOrMeGET(req, subPath);
+  }
 
   switch (path) {
     case 'daily-quests':
@@ -72,6 +86,18 @@ export async function POST(
 ) {
   const { slug } = await params;
   const path = slug?.join('/') || '';
+
+  // Route quiz/* paths to quiz handlers
+  if (path === 'quiz' || path.startsWith('quiz/')) {
+    const subPath = path === 'quiz' ? '' : path.substring(5); // Remove 'quiz/'
+    return routeQuizPOST(req, subPath);
+  }
+
+  // Route you-or-me/* paths to you-or-me handlers
+  if (path === 'you-or-me' || path.startsWith('you-or-me/')) {
+    const subPath = path === 'you-or-me' ? '' : path.substring(10); // Remove 'you-or-me/'
+    return routeYouOrMePOST(req, subPath);
+  }
 
   switch (path) {
     case 'daily-quests':
