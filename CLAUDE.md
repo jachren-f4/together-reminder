@@ -25,7 +25,7 @@
 | Layer | Technology |
 |-------|------------|
 | **Frontend** | Flutter 3.16+, Dart 3.2+, Material Design 3 |
-| **Backend** | Next.js API (Vercel) + Firebase Cloud Functions (Node.js 20) |
+| **Backend** | Next.js API (Vercel, single catch-all function) |
 | **Database** | Supabase (Postgres) |
 | **Storage** | Hive (local NoSQL) |
 | **Notifications** | FCM (Android), APNs (iOS) |
@@ -35,6 +35,30 @@
 - **Production API:** `https://api-joakim-achrens-projects.vercel.app`
 - **Supabase:** `https://naqzdqdncdzxpxbdysgq.supabase.co`
 - **Config:** `lib/config/supabase_config.dart`
+
+### API Architecture (Consolidated Routes)
+
+All API routes are consolidated into a **single catch-all serverless function**:
+- **Route file:** `api/app/api/[...slug]/route.ts`
+- **Vercel Root Directory:** Must be set to `api` in Vercel dashboard
+
+Handler files in `api/lib/handlers/`:
+| Handler | Endpoints |
+|---------|-----------|
+| `sync-router.ts` | `/api/sync/*` (daily-quests, love-points, steps, etc.) |
+| `game-handlers.ts` | `/api/sync/game/*` (unified game play) |
+| `quiz-handlers.ts` | `/api/sync/quiz/*` |
+| `you-or-me-handlers.ts` | `/api/sync/you-or-me/*` |
+| `linked-handlers.ts` | `/api/sync/linked/*` |
+| `word-search-handlers.ts` | `/api/sync/word-search/*` |
+| `couples-router.ts` | `/api/couples/*` |
+| `user-router.ts` | `/api/user/*` |
+| `dev-router.ts` | `/api/dev/*` |
+| `auth-router.ts` | `/api/auth/*` |
+| `puzzles-router.ts` | `/api/puzzles/*` |
+| `health-handler.ts` | `/api/health` |
+| `leaderboard-handler.ts` | `/api/leaderboard` |
+| `metrics-handler.ts` | `/api/metrics` |
 
 ### Bundle IDs
 - **iOS:** `com.togetherremind.togetherremind2`
@@ -277,7 +301,7 @@ See `docs/BRANCH_MANIFEST_GUIDE.md`
 ```
 android/app/google-services.json
 ios/Runner/GoogleService-Info.plist
-.env, functions/.env, functions/serviceAccountKey.json
+.env, api/.env.local
 ```
 
 If committed: Remove from history, rotate ALL Firebase credentials.
@@ -286,17 +310,6 @@ If committed: Remove from history, rotate ALL Firebase credentials.
 - Use `NotificationService.getToken()` not `FirebaseMessaging.instance.getToken()`
 - Web doesn't support FCM service workers in debug → blank screen crash
 - New assets require `flutter clean && flutter run`
-
-#### Cloud Functions v2
-```javascript
-// ✅ CORRECT (v2)
-exports.fn = functions.https.onCall(async (request) => {
-  const { param } = request.data;
-});
-
-// ❌ WRONG (v1)
-exports.fn = functions.https.onCall(async (data, context) => {});
-```
 
 #### Auth Token Checks
 Never use sync `isAuthenticated` in async flows:
