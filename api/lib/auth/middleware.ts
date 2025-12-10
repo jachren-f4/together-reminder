@@ -15,9 +15,10 @@ export interface AuthenticatedRequest extends NextRequest {
 
 /**
  * Context type for dynamic route parameters
+ * Supports both regular dynamic routes (string) and catch-all routes (string[])
  */
 export interface RouteContext {
-  params: Promise<Record<string, string>> | Record<string, string>;
+  params: Promise<Record<string, string | string[]>> | Record<string, string | string[]>;
 }
 
 /**
