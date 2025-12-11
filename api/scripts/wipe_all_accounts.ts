@@ -10,13 +10,16 @@
  * Tables cleared (in FK-safe order):
  *   - quest_completions, daily_quests
  *   - quiz_progression, branch_progression, you_or_me_progression
- *   - quiz_matches
+ *   - quiz_matches, quiz_sessions, quiz_answers
+ *   - you_or_me_sessions, you_or_me_answers
  *   - linked_moves, linked_matches
  *   - word_search_moves, word_search_matches
  *   - memory_moves, memory_puzzles
  *   - steps_daily, steps_rewards, steps_connections
- *   - love_point_awards, couple_leaderboard
- *   - pairing_codes, push_tokens, user_push_tokens, couple_invites
+ *   - love_point_awards, love_point_transactions, user_love_points, couple_leaderboard
+ *   - couple_unlocks, welcome_quiz_answers
+ *   - reminders
+ *   - pairing_codes, push_tokens, user_push_tokens, couple_invites, user_couples
  *   - couples
  *   - auth.users
  *
@@ -129,12 +132,40 @@ async function deleteCoupleData(client: any, coupleId: string, userIds: string[]
     if (count > 0) console.log(`      ✓ ${table}: ${count}`);
   }
 
-  // 4. Quiz matches
+  // 4a. Quiz answers (FK to quiz_sessions)
+  count = await safeDelete(client, 'quiz_answers',
+    `DELETE FROM quiz_answers WHERE session_id IN (SELECT id FROM quiz_sessions WHERE couple_id = $1)`,
+    [coupleId]
+  );
+  if (count > 0) console.log(`      ✓ quiz_answers: ${count}`);
+
+  // 4b. Quiz sessions
+  count = await safeDelete(client, 'quiz_sessions',
+    `DELETE FROM quiz_sessions WHERE couple_id = $1`,
+    [coupleId]
+  );
+  if (count > 0) console.log(`      ✓ quiz_sessions: ${count}`);
+
+  // 4c. Quiz matches
   count = await safeDelete(client, 'quiz_matches',
     `DELETE FROM quiz_matches WHERE couple_id = $1`,
     [coupleId]
   );
   if (count > 0) console.log(`      ✓ quiz_matches: ${count}`);
+
+  // 4d. You-or-me answers (FK to you_or_me_sessions)
+  count = await safeDelete(client, 'you_or_me_answers',
+    `DELETE FROM you_or_me_answers WHERE session_id IN (SELECT id FROM you_or_me_sessions WHERE couple_id = $1)`,
+    [coupleId]
+  );
+  if (count > 0) console.log(`      ✓ you_or_me_answers: ${count}`);
+
+  // 4e. You-or-me sessions
+  count = await safeDelete(client, 'you_or_me_sessions',
+    `DELETE FROM you_or_me_sessions WHERE couple_id = $1`,
+    [coupleId]
+  );
+  if (count > 0) console.log(`      ✓ you_or_me_sessions: ${count}`);
 
   // 5. Linked moves (FK to linked_matches)
   count = await safeDelete(client, 'linked_moves',
@@ -207,6 +238,24 @@ async function deleteCoupleData(client: any, coupleId: string, userIds: string[]
   );
   if (count > 0) console.log(`      ✓ love_point_awards: ${count}`);
 
+  // 13b. Love point transactions (user-based)
+  for (const userId of userIds) {
+    count = await safeDelete(client, 'love_point_transactions',
+      `DELETE FROM love_point_transactions WHERE user_id = $1`,
+      [userId]
+    );
+    if (count > 0) console.log(`      ✓ love_point_transactions (${userId.slice(0, 8)}...): ${count}`);
+  }
+
+  // 13c. User love points (user-based, within couple)
+  for (const userId of userIds) {
+    count = await safeDelete(client, 'user_love_points',
+      `DELETE FROM user_love_points WHERE user_id = $1`,
+      [userId]
+    );
+    if (count > 0) console.log(`      ✓ user_love_points (${userId.slice(0, 8)}...): ${count}`);
+  }
+
   // 14. Leaderboard
   count = await safeDelete(client, 'couple_leaderboard',
     `DELETE FROM couple_leaderboard WHERE couple_id = $1`,
@@ -214,7 +263,30 @@ async function deleteCoupleData(client: any, coupleId: string, userIds: string[]
   );
   if (count > 0) console.log(`      ✓ couple_leaderboard: ${count}`);
 
-  // 15. Delete the couple itself
+  // 15. Couple unlocks
+  count = await safeDelete(client, 'couple_unlocks',
+    `DELETE FROM couple_unlocks WHERE couple_id = $1`,
+    [coupleId]
+  );
+  if (count > 0) console.log(`      ✓ couple_unlocks: ${count}`);
+
+  // 16. Welcome quiz answers
+  count = await safeDelete(client, 'welcome_quiz_answers',
+    `DELETE FROM welcome_quiz_answers WHERE couple_id = $1`,
+    [coupleId]
+  );
+  if (count > 0) console.log(`      ✓ welcome_quiz_answers: ${count}`);
+
+  // 17. Reminders (user-based)
+  for (const userId of userIds) {
+    count = await safeDelete(client, 'reminders',
+      `DELETE FROM reminders WHERE from_user_id = $1 OR to_user_id = $1`,
+      [userId]
+    );
+    if (count > 0) console.log(`      ✓ reminders (${userId.slice(0, 8)}...): ${count}`);
+  }
+
+  // 18. Delete the couple itself
   count = await safeDelete(client, 'couples',
     `DELETE FROM couples WHERE id = $1`,
     [coupleId]
@@ -229,6 +301,7 @@ async function deleteUserData(client: any, userId: string): Promise<void> {
     { table: 'user_push_tokens', column: 'user_id' },
     { table: 'couple_invites', column: 'created_by' },
     { table: 'couple_invites', column: 'claimed_by' },
+    { table: 'user_couples', column: 'user_id' },
   ];
 
   for (const { table, column } of userTables) {

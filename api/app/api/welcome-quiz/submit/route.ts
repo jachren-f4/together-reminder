@@ -58,6 +58,25 @@ function normalizeAnswer(answer: string, userId: string, partnerId: string): str
   return answer;
 }
 
+/**
+ * Convert a normalized answer (user ID) back to display format.
+ * Used for legacy data that doesn't have originalAnswer stored.
+ */
+function denormalizeAnswer(answer: string, viewerUserId: string, partnerId: string): string {
+  // Check if the answer looks like a UUID (normalized user ID)
+  const uuidPattern = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+  if (uuidPattern.test(answer)) {
+    // Convert back to relative answer from viewer's perspective
+    if (answer === viewerUserId) {
+      return 'Me';
+    } else if (answer === partnerId) {
+      return 'My partner';
+    }
+  }
+  // Return as-is (it's either a non-relative answer or already human-readable)
+  return answer;
+}
+
 export const POST = withAuthOrDevBypass(async (req, userId) => {
   try {
     console.log('[welcome-quiz/submit] Starting submit for userId:', userId);
@@ -185,12 +204,21 @@ export const POST = withAuthOrDevBypass(async (req, userId) => {
           is_match: boolean;
         }) => {
           const questionDef = WELCOME_QUIZ_QUESTIONS.find(q => q.id === row.question_id);
+
+          // Get the raw answer (might be originalAnswer or normalized UUID)
+          let user1Answer = answersByUser[row.user1_id]?.[row.question_id] || row.user1_answer;
+          let user2Answer = answersByUser[row.user2_id]?.[row.question_id] || row.user2_answer;
+
+          // Denormalize UUIDs back to human-readable format for the viewer
+          // From viewer's perspective: viewer is "Me", partner is "My partner"
+          user1Answer = denormalizeAnswer(user1Answer, userId, partnerId);
+          user2Answer = denormalizeAnswer(user2Answer, userId, partnerId);
+
           return {
             questionId: row.question_id,
             question: questionDef?.question || '', // Add question text for Bug 2
-            // Use originalAnswer for display (not the normalized user ID)
-            user1Answer: answersByUser[row.user1_id]?.[row.question_id] || row.user1_answer,
-            user2Answer: answersByUser[row.user2_id]?.[row.question_id] || row.user2_answer,
+            user1Answer,
+            user2Answer,
             isMatch: row.is_match,
           };
         });
