@@ -115,20 +115,28 @@ export const GET = withAuthOrDevBypass(async (_req, userId) => {
         }) => {
           const questionDef = WELCOME_QUIZ_QUESTIONS.find((q) => q.id === row.question_id);
 
-          // Get the raw answer (might be originalAnswer or normalized UUID)
-          let user1Answer = answersByUser[row.user1_id]?.[row.question_id] || row.user1_answer;
-          let user2Answer = answersByUser[row.user2_id]?.[row.question_id] || row.user2_answer;
+          // Determine which user in the database row is the viewer vs partner
+          const viewerIsUser1 = row.user1_id === userId;
 
-          // Denormalize UUIDs back to human-readable format for the viewer (userId)
-          // From viewer's perspective: viewer is "Me", partner is "My partner"
-          user1Answer = denormalizeAnswer(user1Answer, userId, partnerId);
-          user2Answer = denormalizeAnswer(user2Answer, userId, partnerId);
+          // Get the raw answers (might be originalAnswer or normalized UUID)
+          const rawUser1Answer = answersByUser[row.user1_id]?.[row.question_id] || row.user1_answer;
+          const rawUser2Answer = answersByUser[row.user2_id]?.[row.question_id] || row.user2_answer;
+
+          // Map to viewer-relative order: userAnswer = viewer's answer, partnerAnswer = partner's answer
+          const rawUserAnswer = viewerIsUser1 ? rawUser1Answer : rawUser2Answer;
+          const rawPartnerAnswer = viewerIsUser1 ? rawUser2Answer : rawUser1Answer;
+
+          // Denormalize UUIDs back to human-readable format for the viewer
+          // From viewer's perspective: viewer's ID → "Me", partner's ID → "My partner"
+          const userAnswer = denormalizeAnswer(rawUserAnswer, userId, partnerId);
+          const partnerAnswer = denormalizeAnswer(rawPartnerAnswer, userId, partnerId);
 
           return {
             questionId: row.question_id,
             question: questionDef?.question || '',
-            user1Answer,
-            user2Answer,
+            // Return viewer-relative answers (user1Answer = viewer, user2Answer = partner)
+            user1Answer: userAnswer,
+            user2Answer: partnerAnswer,
             isMatch: row.is_match,
           };
         }),
