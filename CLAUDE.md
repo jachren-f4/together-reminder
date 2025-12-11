@@ -181,13 +181,13 @@ await questSyncService.syncTodayQuests(...);  // Scattered, hard to track
 
 **Single Source of Truth:** `couples.total_lp` (couple-level, not per-user)
 
-| Activity | LP | File |
-|----------|-----|------|
-| Classic/Affirmation Quiz | 30 | `quiz-match/submit/route.ts` |
-| You or Me | 30 | `you-or-me-match/submit/route.ts` |
-| Linked | 30 | `linked/submit/route.ts` |
-| Word Search | 30 | `word-search/submit/route.ts` |
-| Steps Together | 15-30 | `steps/route.ts` |
+| Activity | LP | Handler |
+|----------|-----|---------|
+| Classic/Affirmation Quiz | 30 | `lib/handlers/quiz-handlers.ts` |
+| You or Me | 30 | `lib/handlers/you-or-me-handlers.ts` |
+| Linked | 30 | `lib/handlers/linked-handlers.ts` |
+| Word Search | 30 | `lib/handlers/word-search-handlers.ts` |
+| Steps Together | 15-30 | `lib/handlers/sync-router.ts` |
 
 **Max daily:** 165-180 LP
 
