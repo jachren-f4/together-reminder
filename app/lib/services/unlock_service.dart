@@ -90,15 +90,15 @@ class UnlockState {
         return 'Available now';
       case UnlockableFeature.classicQuiz:
       case UnlockableFeature.affirmationQuiz:
-        return 'Complete the Welcome Quiz to unlock';
+        return 'Complete Welcome Quiz first';
       case UnlockableFeature.youOrMe:
-        return 'Complete a Daily Quest to unlock';
+        return 'Complete a quest first';
       case UnlockableFeature.linked:
-        return 'Complete You or Me to unlock';
+        return 'Complete You or Me first';
       case UnlockableFeature.wordSearch:
-        return 'Complete Linked to unlock';
+        return 'Complete Linked first';
       case UnlockableFeature.steps:
-        return 'Complete Word Search to unlock';
+        return 'Complete Word Search first';
     }
   }
 

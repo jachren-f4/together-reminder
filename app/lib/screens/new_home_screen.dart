@@ -932,15 +932,15 @@ class _NewHomeScreenState extends State<NewHomeScreen> with TickerProviderStateM
     switch (quest.type) {
       case QuestType.linked:
         feature = UnlockableFeature.linked;
-        criteria = 'Complete You or Me to unlock';
+        criteria = 'Complete You or Me first';
         break;
       case QuestType.wordSearch:
         feature = UnlockableFeature.wordSearch;
-        criteria = 'Complete Linked to unlock';
+        criteria = 'Complete Linked first';
         break;
       case QuestType.steps:
         feature = UnlockableFeature.steps;
-        criteria = 'Complete Word Search to unlock';
+        criteria = 'Complete Word Search first';
         break;
       default:
         // Daily quests (quiz, youOrMe) handled elsewhere
