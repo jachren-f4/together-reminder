@@ -100,10 +100,12 @@ class _LpIntroOverlayState extends State<LpIntroOverlay>
 
   @override
   Widget build(BuildContext context) {
-    return FadeTransition(
-      opacity: _fadeAnimation,
-      child: Material(
-        color: Colors.white,
+    // Wrap with opaque background that's always visible (prevents home screen flash)
+    // Only the content fades in, not the background
+    return Material(
+      color: Colors.white, // Opaque white background - NO animation
+      child: FadeTransition(
+        opacity: _fadeAnimation,
         child: SafeArea(
           child: Padding(
             padding: const EdgeInsets.all(32),

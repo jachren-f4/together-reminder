@@ -36,6 +36,10 @@ class _DailyQuestsWidgetState extends State<DailyQuestsWidget> with RouteAware {
   late DailyQuestService _questService;
   UnlockState? _unlockState;
 
+  // Track whether we're still waiting for initial quest load
+  // This prevents showing the ugly "No Daily Quests Yet" flash
+  bool _isInitialLoad = true;
+
   @override
   void initState() {
     super.initState();
@@ -49,6 +53,35 @@ class _DailyQuestsWidgetState extends State<DailyQuestsWidget> with RouteAware {
 
     // Fetch unlock state for You or Me locking
     _fetchUnlockState();
+
+    // Mark initial load complete after a brief delay
+    // This gives QuestInitializationService time to sync if needed
+    _waitForQuestsToLoad();
+  }
+
+  /// Wait for quests to appear (either from Hive or server sync)
+  /// Shows a brief loading state instead of "No Daily Quests Yet"
+  Future<void> _waitForQuestsToLoad() async {
+    // Check immediately - quests might already be in Hive
+    if (_questService.getMainDailyQuests().isNotEmpty) {
+      if (mounted) setState(() => _isInitialLoad = false);
+      return;
+    }
+
+    // Give time for QuestInitializationService to sync from server
+    // Check every 200ms for up to 3 seconds
+    for (int i = 0; i < 15; i++) {
+      await Future.delayed(const Duration(milliseconds: 200));
+      if (!mounted) return;
+
+      if (_questService.getMainDailyQuests().isNotEmpty) {
+        setState(() => _isInitialLoad = false);
+        return;
+      }
+    }
+
+    // After 3 seconds, stop waiting and show whatever state we have
+    if (mounted) setState(() => _isInitialLoad = false);
   }
 
   Future<void> _fetchUnlockState() async {
@@ -155,7 +188,10 @@ class _DailyQuestsWidgetState extends State<DailyQuestsWidget> with RouteAware {
         const SizedBox(height: 20),
 
         // Carousel (replaces vertical list)
-        if (quests.isEmpty)
+        // Show loading state during initial load to prevent "No Daily Quests Yet" flash
+        if (_isInitialLoad && quests.isEmpty)
+          _buildLoadingState()
+        else if (quests.isEmpty)
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20),
             child: _buildEmptyState(),
@@ -206,6 +242,51 @@ class _DailyQuestsWidgetState extends State<DailyQuestsWidget> with RouteAware {
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  /// Loading state shown during initial quest sync
+  /// This prevents the "No Daily Quests Yet" flash
+  Widget _buildLoadingState() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: Container(
+        height: 340, // Match carousel card height
+        padding: const EdgeInsets.all(24),
+        decoration: BoxDecoration(
+          color: BrandLoader().colors.background,
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(
+            color: BrandLoader().colors.borderLight,
+            width: 2,
+          ),
+        ),
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              SizedBox(
+                width: 32,
+                height: 32,
+                child: CircularProgressIndicator(
+                  strokeWidth: 3,
+                  valueColor: AlwaysStoppedAnimation<Color>(
+                    BrandLoader().colors.textTertiary,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 16),
+              Text(
+                'Loading quests...',
+                style: TextStyle(
+                  fontSize: 14,
+                  color: BrandLoader().colors.textSecondary,
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
