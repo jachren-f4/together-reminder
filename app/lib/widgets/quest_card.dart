@@ -30,6 +30,8 @@ class QuestCard extends StatefulWidget {
   final VoidCallback onTap;
   final String? currentUserId;
   final bool showShadow; // Controlled by carousel for active card
+  final bool isLocked; // When true, shows grayscale + lock icon + unlock criteria
+  final String? unlockCriteria; // e.g., "Complete a Daily Quest to unlock"
 
   const QuestCard({
     super.key,
@@ -37,6 +39,8 @@ class QuestCard extends StatefulWidget {
     required this.onTap,
     this.currentUserId,
     this.showShadow = false,
+    this.isLocked = false,
+    this.unlockCriteria,
   });
 
   @override
@@ -166,26 +170,38 @@ class _QuestCardState extends State<QuestCard>
   }
 
   void _handleTapDown(TapDownDetails details) {
-    if (_isExpired) return;
+    if (_isExpired || widget.isLocked) return;
     setState(() => _isPressed = true);
     _pressController.forward();
     HapticService().tap();
   }
 
   void _handleTapUp(TapUpDetails details) {
-    if (_isExpired) return;
+    if (_isExpired || widget.isLocked) return;
     setState(() => _isPressed = false);
     _pressController.reverse();
   }
 
   void _handleTapCancel() {
-    if (_isExpired) return;
+    if (_isExpired || widget.isLocked) return;
     setState(() => _isPressed = false);
     _pressController.reverse();
   }
 
   void _handleTap() {
     if (_isExpired) return;
+    if (widget.isLocked) {
+      // Show toast for locked quests
+      HapticService().trigger(HapticType.light);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(widget.unlockCriteria ?? 'Complete other activities to unlock'),
+          duration: const Duration(seconds: 2),
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+      return;
+    }
     SoundService().tap();
     widget.onTap();
   }
@@ -210,6 +226,14 @@ class _QuestCardState extends State<QuestCard>
     // Get image path based on quest type
     final imagePath = _getQuestImage();
 
+    // Grayscale matrix for locked state
+    const grayscaleMatrix = <double>[
+      0.2126, 0.7152, 0.0722, 0, 0,
+      0.2126, 0.7152, 0.0722, 0, 0,
+      0.2126, 0.7152, 0.0722, 0, 0,
+      0, 0, 0, 1, 0,
+    ];
+
     return GestureDetector(
       onTapDown: _handleTapDown,
       onTapUp: _handleTapUp,
@@ -218,10 +242,10 @@ class _QuestCardState extends State<QuestCard>
       child: AnimatedBuilder(
         animation: _pressController,
         builder: (context, child) {
-          return Transform.scale(
+          Widget cardWidget = Transform.scale(
             scale: _scaleAnimation.value,
             child: Opacity(
-              opacity: isExpired ? 0.5 : (_isPressed ? 0.9 : 1.0),
+              opacity: isExpired ? 0.5 : (widget.isLocked ? 0.7 : (_isPressed ? 0.9 : 1.0)),
               child: Container(
                 decoration: BoxDecoration(
                   color: BrandLoader().colors.surface,
@@ -241,6 +265,16 @@ class _QuestCardState extends State<QuestCard>
               ),
             ),
           );
+
+          // Apply grayscale filter when locked
+          if (widget.isLocked) {
+            cardWidget = ColorFiltered(
+              colorFilter: const ColorFilter.matrix(grayscaleMatrix),
+              child: cardWidget,
+            );
+          }
+
+          return cardWidget;
         },
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -317,6 +351,34 @@ class _QuestCardState extends State<QuestCard>
                           ),
                         ),
                       ),
+                    // Lock icon overlay for locked quests
+                    if (widget.isLocked)
+                      Positioned.fill(
+                        child: Container(
+                          color: Colors.black.withOpacity(0.3),
+                          child: Center(
+                            child: Container(
+                              padding: const EdgeInsets.all(12),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                shape: BoxShape.circle,
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black.withOpacity(0.2),
+                                    blurRadius: 8,
+                                    offset: const Offset(0, 2),
+                                  ),
+                                ],
+                              ),
+                              child: Icon(
+                                Icons.lock_outline,
+                                size: 28,
+                                color: BrandLoader().colors.textPrimary,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
                   ],
                 ),
               ),
@@ -377,7 +439,7 @@ class _QuestCardState extends State<QuestCard>
                   ),
                   const SizedBox(height: 12),
 
-                  // Footer: Status badges
+                  // Footer: Status badges (or unlock criteria if locked)
                   Container(
                     padding: const EdgeInsets.only(top: 12),
                     decoration: const BoxDecoration(
@@ -385,7 +447,9 @@ class _QuestCardState extends State<QuestCard>
                         top: BorderSide(color: Color(0xFFE0E0E0), width: 1),
                       ),
                     ),
-                    child: _buildStatusBadge(user, partner, userCompleted, bothCompleted),
+                    child: widget.isLocked
+                        ? _buildLockedBadge()
+                        : _buildStatusBadge(user, partner, userCompleted, bothCompleted),
                   ),
                 ],
               ),
@@ -473,6 +537,36 @@ class _QuestCardState extends State<QuestCard>
       return user.name[0].toUpperCase();
     }
     return '•'; // Fallback dot if no name available
+  }
+
+  /// Build badge for locked quests showing unlock criteria
+  Widget _buildLockedBadge() {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+      decoration: BoxDecoration(
+        color: BrandLoader().colors.textPrimary,
+        border: Border.all(color: BrandLoader().colors.textPrimary, width: 1),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(
+            Icons.lock_outline,
+            size: 14,
+            color: BrandLoader().colors.textOnPrimary,
+          ),
+          const SizedBox(width: 6),
+          Text(
+            widget.unlockCriteria ?? 'Locked',
+            style: AppTheme.headlineFont.copyWith(
+              fontSize: 11,
+              fontWeight: FontWeight.w600,
+              color: BrandLoader().colors.textOnPrimary,
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   Widget _buildStatusBadge(dynamic user, dynamic partner, bool userCompleted, bool bothCompleted) {

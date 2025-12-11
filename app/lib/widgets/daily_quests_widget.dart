@@ -4,15 +4,15 @@ import '../services/storage_service.dart';
 import '../services/daily_quest_service.dart';
 import '../services/home_polling_service.dart';
 import '../services/love_point_service.dart';
+import '../services/unlock_service.dart';
 import '../theme/app_theme.dart';
 import '../config/brand/brand_loader.dart';
 import '../utils/logger.dart';
 import '../widgets/quest_carousel.dart';
+import '../widgets/animations/dramatic_entrance_widgets.dart';
 import '../screens/quiz_intro_screen.dart';
 import '../screens/affirmation_intro_screen.dart';
-import '../screens/quiz_match_game_screen.dart';
 import '../screens/you_or_me_match_intro_screen.dart';
-import '../screens/you_or_me_match_game_screen.dart';
 
 /// Global RouteObserver for tracking navigation events
 /// This should be added to MaterialApp's navigatorObservers
@@ -32,7 +32,9 @@ class DailyQuestsWidget extends StatefulWidget {
 class _DailyQuestsWidgetState extends State<DailyQuestsWidget> with RouteAware {
   final StorageService _storage = StorageService();
   final HomePollingService _pollingService = HomePollingService();
+  final UnlockService _unlockService = UnlockService();
   late DailyQuestService _questService;
+  UnlockState? _unlockState;
 
   @override
   void initState() {
@@ -44,6 +46,22 @@ class _DailyQuestsWidgetState extends State<DailyQuestsWidget> with RouteAware {
     // Subscribe to unified polling service for partner quest completions
     _pollingService.subscribe();
     _pollingService.subscribeToTopic('dailyQuests', _onQuestUpdate);
+
+    // Fetch unlock state for You or Me locking
+    _fetchUnlockState();
+  }
+
+  Future<void> _fetchUnlockState() async {
+    try {
+      final state = await _unlockService.getUnlockState();
+      if (mounted && state != null) {
+        setState(() {
+          _unlockState = state;
+        });
+      }
+    } catch (e) {
+      Logger.error('Failed to fetch unlock state', error: e, service: 'quest');
+    }
   }
 
   @override
@@ -101,33 +119,39 @@ class _DailyQuestsWidgetState extends State<DailyQuestsWidget> with RouteAware {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const SizedBox(height: 20),
-          // Section header (swipe hint commented out)
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  'DAILY QUESTS',
-                  style: AppTheme.headlineFont.copyWith(
-                    fontSize: 28,
-                    fontWeight: FontWeight.w700,
-                    letterSpacing: -0.5,
-                    color: BrandLoader().colors.textPrimary,
+          // Section header with bounce animation (swipe hint commented out)
+          BounceInWidget(
+            delay: const Duration(milliseconds: 400),
+            initialScale: 0.9,
+            initialTranslateY: 30.0,
+            trackingKey: 'daily_quests_header',
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'DAILY QUESTS',
+                    style: AppTheme.headlineFont.copyWith(
+                      fontSize: 28,
+                      fontWeight: FontWeight.w700,
+                      letterSpacing: -0.5,
+                      color: BrandLoader().colors.textPrimary,
+                    ),
                   ),
-                ),
-              // Text(
-              //   '← SWIPE →', // Match HTML mockup exactly (always LTR, uppercase)
-              //   style: AppTheme.headlineFont.copyWith( // Use serif font like HTML mockup
-              //     fontSize: 13, // Increased from 11 to match visual size of HTML mockup
-              //     color: const Color(0xFF999999),
-              //     fontWeight: FontWeight.w600,
-              //     letterSpacing: 1,
-              //   ),
-              // ),
-            ],
+                // Text(
+                //   '← SWIPE →', // Match HTML mockup exactly (always LTR, uppercase)
+                //   style: AppTheme.headlineFont.copyWith( // Use serif font like HTML mockup
+                //     fontSize: 13, // Increased from 11 to match visual size of HTML mockup
+                //     color: const Color(0xFF999999),
+                //     fontWeight: FontWeight.w600,
+                //     letterSpacing: 1,
+                //   ),
+                // ),
+              ],
+            ),
           ),
-        ),
+          ),
         const SizedBox(height: 20),
 
         // Carousel (replaces vertical list)
@@ -141,6 +165,7 @@ class _DailyQuestsWidgetState extends State<DailyQuestsWidget> with RouteAware {
             quests: quests,
             currentUserId: user?.id,
             onQuestTap: _handleQuestTap,
+            isLockedBuilder: _getQuestLockState,
           ),
 
         const SizedBox(height: 24),
@@ -226,6 +251,26 @@ class _DailyQuestsWidgetState extends State<DailyQuestsWidget> with RouteAware {
     );
   }
 
+  /// Determine if a daily quest is locked based on unlock state
+  ({bool isLocked, String? unlockCriteria}) _getQuestLockState(DailyQuest quest) {
+    // If unlock state hasn't loaded yet, show everything as unlocked
+    if (_unlockState == null) {
+      return (isLocked: false, unlockCriteria: null);
+    }
+
+    // Only You or Me can be locked in daily quests
+    if (quest.type == QuestType.youOrMe) {
+      final isLocked = !_unlockState!.isFeatureUnlocked(UnlockableFeature.youOrMe);
+      return (
+        isLocked: isLocked,
+        unlockCriteria: isLocked ? 'Complete a Daily Quest to unlock' : null,
+      );
+    }
+
+    // Daily quizzes (classic, affirmation) are never locked
+    return (isLocked: false, unlockCriteria: null);
+  }
+
   void _handleQuestTap(DailyQuest quest) async {
     // Navigate based on quest type
     switch (quest.type) {
@@ -271,26 +316,11 @@ class _DailyQuestsWidgetState extends State<DailyQuestsWidget> with RouteAware {
   }
 
   Future<void> _handleQuizQuestTap(DailyQuest quest) async {
-    final user = _storage.getUser();
-    final userCompleted = user != null && quest.hasUserCompleted(user.id);
-
-    // If user has already completed their part, go directly to game screen
-    // (which will show waiting or results screen)
-    if (userCompleted) {
-      final quizType = quest.formatType == 'affirmation' ? 'affirmation' : 'classic';
-      await Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => QuizMatchGameScreen(
-            quizType: quizType,
-            questId: quest.id,
-          ),
-        ),
-      );
-      return;
-    }
-
-    // User hasn't completed yet - show intro screen first
+    // Always show intro screen first
+    // The game screen will handle redirecting to waiting/results if user has already answered
+    // NOTE: We don't skip intro based on local userCompletions because:
+    // 1. With cooldown disabled, server may create a new match even after "completion"
+    // 2. The game screen properly handles all states (new, in-progress, waiting, completed)
     if (quest.formatType == 'affirmation') {
       await Navigator.push(
         context,
@@ -316,24 +346,7 @@ class _DailyQuestsWidgetState extends State<DailyQuestsWidget> with RouteAware {
   }
 
   Future<void> _handleYouOrMeQuestTap(DailyQuest quest) async {
-    final user = _storage.getUser();
-    final userCompleted = user != null && quest.hasUserCompleted(user.id);
-
-    // If user has already completed their part, go directly to game screen
-    // (which will show waiting or results screen)
-    if (userCompleted) {
-      await Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => YouOrMeMatchGameScreen(
-            questId: quest.id,
-          ),
-        ),
-      );
-      return;
-    }
-
-    // User hasn't completed yet - show intro screen first
+    // Always show intro screen first (same reasoning as quiz quests)
     await Navigator.push(
       context,
       MaterialPageRoute(

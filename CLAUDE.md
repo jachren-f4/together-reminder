@@ -1,22 +1,82 @@
-# TogetherRemind - Technical Development Guide
+# CLAUDE.md
 
-**AI Assistant Reference for Development**
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
 ---
 
 ## Table of Contents
 
-1. [Stack Overview](#stack-overview)
-2. [Architecture Rules](#architecture-rules)
+1. [Common Commands](#common-commands)
+2. [Stack Overview](#stack-overview)
+3. [Architecture Rules](#architecture-rules)
    - [Initialization & Storage](#initialization--storage)
    - [Sync & Data Flow](#sync--data-flow)
    - [Love Points System](#love-points-system)
    - [Game-Specific Rules](#game-specific-rules)
    - [UI Patterns](#ui-patterns)
    - [Security & Platform](#security--platform)
-3. [Development Setup](#development-setup)
-4. [Testing & Debugging](#testing--debugging)
-5. [File Reference](#file-reference)
+4. [Development Setup](#development-setup)
+5. [Testing & Debugging](#testing--debugging)
+6. [File Reference](#file-reference)
+
+---
+
+## Common Commands
+
+### Flutter App (run from `app/` directory)
+
+```bash
+# Run on Android emulator (requires --flavor for Android)
+flutter run -d emulator-5554 --flavor togetherremind --dart-define=BRAND=togetherRemind
+
+# Run on iOS physical device (no --flavor, use --release)
+flutter run -d 00008110-00011D4A340A401E --dart-define=BRAND=togetherRemind --release
+
+# Run on Chrome (web)
+flutter run -d chrome --dart-define=BRAND=togetherRemind
+
+# Analyze code for errors
+flutter analyze
+
+# Run all unit tests
+flutter test
+
+# Run a single test file
+flutter test test/unit/word_search_model_test.dart
+
+# Run integration tests (requires running device)
+flutter test integration_test/linked/normal_flow_test.dart
+
+# Regenerate Hive adapters after model changes
+flutter pub run build_runner build --delete-conflicting-outputs
+```
+
+### Next.js API (run from `api/` directory)
+
+```bash
+# Start development server
+npm run dev
+
+# Build for production
+npm run build
+
+# Lint code
+npm run lint
+
+# Run database scripts
+npx tsx scripts/reset_couple_progress.ts
+npx tsx scripts/wipe_all_accounts.ts
+
+# Push database migrations
+npm run db:push
+```
+
+### Quick Development Start
+
+```bash
+# Launch Android emulator + Chrome for couple testing
+/runtogether
+```
 
 ---
 
@@ -25,7 +85,7 @@
 | Layer | Technology |
 |-------|------------|
 | **Frontend** | Flutter 3.16+, Dart 3.2+, Material Design 3 |
-| **Backend** | Next.js API (Vercel, 46 route files) |
+| **Backend** | Next.js API (Vercel) + Firebase Cloud Functions (Node.js 20) |
 | **Database** | Supabase (Postgres) |
 | **Storage** | Hive (local NoSQL) |
 | **Notifications** | FCM (Android), APNs (iOS) |
@@ -35,23 +95,6 @@
 - **Production API:** `https://api-joakim-achrens-projects.vercel.app`
 - **Supabase:** `https://naqzdqdncdzxpxbdysgq.supabase.co`
 - **Config:** `lib/config/supabase_config.dart`
-
-### API Architecture (Multi-Route)
-
-Each API endpoint has its own `route.ts` file in `api/app/api/`:
-- **Route convention:** URL path maps directly to file path (e.g., `/api/sync/quiz` → `api/app/api/sync/quiz/route.ts`)
-- **Total routes:** 46 route files
-- **Vercel Root Directory:** Must be set to `api` in Vercel dashboard
-
-**Key route categories:**
-| Category | Path Pattern | Examples |
-|----------|--------------|----------|
-| Sync | `/api/sync/*` | `daily-quests`, `love-points`, `steps`, `quiz/*`, `linked/*`, `word-search/*`, `you-or-me/*` |
-| Couples | `/api/couples/*` | `invite`, `join`, `pair-direct`, `status` |
-| User | `/api/user/*` | `profile`, `name`, `country`, `push-token`, `complete-signup` |
-| Dev | `/api/dev/*` | `reset-couple-progress`, `user-data`, `complete-games` |
-| Auth | `/api/auth/*` | `verify` |
-| Other | `/api/*` | `health`, `leaderboard`, `metrics`, `puzzles/images/*` |
 
 ### Bundle IDs
 - **iOS:** `com.togetherremind.togetherremind2`
@@ -174,13 +217,13 @@ await questSyncService.syncTodayQuests(...);  // Scattered, hard to track
 
 **Single Source of Truth:** `couples.total_lp` (couple-level, not per-user)
 
-| Activity | LP | Route File |
-|----------|-----|------------|
-| Classic/Affirmation Quiz | 30 | `api/app/api/sync/quiz/submit/route.ts` |
-| You or Me | 30 | `api/app/api/sync/you-or-me/submit/route.ts` |
-| Linked | 30 | `api/app/api/sync/linked/submit/route.ts` |
-| Word Search | 30 | `api/app/api/sync/word-search/submit/route.ts` |
-| Steps Together | 15-30 | `api/app/api/sync/steps/route.ts` |
+| Activity | LP | File |
+|----------|-----|------|
+| Classic/Affirmation Quiz | 30 | `quiz-match/submit/route.ts` |
+| You or Me | 30 | `you-or-me-match/submit/route.ts` |
+| Linked | 30 | `linked/submit/route.ts` |
+| Word Search | 30 | `word-search/submit/route.ts` |
+| Steps Together | 15-30 | `steps/route.ts` |
 
 **Max daily:** 165-180 LP
 
@@ -205,6 +248,21 @@ LovePointService.setLPChangeCallback(() {
 ---
 
 ### Game-Specific Rules
+
+#### Onboarding Unlock System
+Unlock chain: `Pairing → Welcome Quiz → Classic + Affirmation → You or Me → Linked → Word Search → Steps`
+
+**Key files:**
+- `lib/services/unlock_service.dart` - Server-only state (no Hive)
+- `lib/screens/welcome_quiz_*.dart` - Intro, game, waiting, results
+- `lib/widgets/unlock_celebration.dart` - Post-unlock celebration overlay
+- `lib/widgets/lp_intro_overlay.dart` - First-time LP introduction (shown on home)
+
+**Rules:**
+- Navigate to `HomeScreen(showLpIntro: true)` after quiz results (NOT `NewHomeScreen` - missing bottom nav)
+- Welcome Quiz screens use `PopScope(canPop: false)` - users cannot go back
+- LP is introduced on HOME screen after quiz, NOT on quiz intro screen
+- Unlock triggers fire from result screens (check `_checkForUnlock()` pattern)
 
 #### Daily Quest Generation
 Exactly 3 quests per day:
@@ -294,7 +352,7 @@ See `docs/BRANCH_MANIFEST_GUIDE.md`
 ```
 android/app/google-services.json
 ios/Runner/GoogleService-Info.plist
-.env, api/.env.local
+.env, functions/.env, functions/serviceAccountKey.json
 ```
 
 If committed: Remove from history, rotate ALL Firebase credentials.
@@ -303,6 +361,17 @@ If committed: Remove from history, rotate ALL Firebase credentials.
 - Use `NotificationService.getToken()` not `FirebaseMessaging.instance.getToken()`
 - Web doesn't support FCM service workers in debug → blank screen crash
 - New assets require `flutter clean && flutter run`
+
+#### Cloud Functions v2
+```javascript
+// ✅ CORRECT (v2)
+exports.fn = functions.https.onCall(async (request) => {
+  const { param } = request.data;
+});
+
+// ❌ WRONG (v1)
+exports.fn = functions.https.onCall(async (data, context) => {});
+```
 
 #### Auth Token Checks
 Never use sync `isAuthenticated` in async flows:
@@ -408,8 +477,8 @@ Logger.debug('msg');                    // ❌ Always logs (bypasses config)
 
 ### Quick Reset
 ```bash
-./scripts/reset_all_progress.sh  # Clears Supabase + instructions
-/runtogether                      # Launches both devices
+cd api && npx tsx scripts/reset_couple_progress.ts  # Clears Supabase couple data
+/runtogether                                         # Launches Android + Chrome
 ```
 
 ### Manual Reset Steps
@@ -420,6 +489,11 @@ cd api && npx tsx scripts/reset_couple_progress.ts
 # Chrome: DevTools → Application → Clear site data
 flutter run -d emulator-5554 --flavor togetherremind --dart-define=BRAND=togetherRemind &
 flutter run -d chrome --dart-define=BRAND=togetherRemind &
+```
+
+### Wipe All Test Accounts
+```bash
+cd api && npx tsx scripts/wipe_all_accounts.ts  # Nuclear option - removes all test data
 ```
 
 ### Debug Menu

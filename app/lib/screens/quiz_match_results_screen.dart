@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
+import '../config/animation_constants.dart';
 import '../models/quiz_match.dart';
 import '../services/storage_service.dart';
+import '../services/unlock_service.dart';
+import '../widgets/animations/animations.dart';
 import '../widgets/editorial/editorial.dart';
+import '../widgets/unlock_celebration.dart';
 
 /// Results screen for Quiz Match (server-centric architecture)
 ///
 /// Displays match percentage with question-by-question comparison.
 /// Editorial design with clear match/mismatch indicators.
-class QuizMatchResultsScreen extends StatelessWidget {
+class QuizMatchResultsScreen extends StatefulWidget {
   final QuizMatch match;
   final ServerQuiz? quiz;
   final int? matchPercentage;
@@ -22,6 +26,37 @@ class QuizMatchResultsScreen extends StatelessWidget {
   });
 
   @override
+  State<QuizMatchResultsScreen> createState() => _QuizMatchResultsScreenState();
+}
+
+class _QuizMatchResultsScreenState extends State<QuizMatchResultsScreen>
+    with TickerProviderStateMixin, DramaticScreenMixin {
+  @override
+  void initState() {
+    super.initState();
+    // Trigger celebration confetti after a brief delay
+    Future.delayed(AnimationConstants.confettiDelay, () {
+      if (mounted) triggerConfetti();
+    });
+
+    // Check for unlock progression (daily quiz → You or Me)
+    _checkForUnlock();
+  }
+
+  Future<void> _checkForUnlock() async {
+    final unlockService = UnlockService();
+    final result = await unlockService.notifyCompletion(UnlockTrigger.dailyQuiz);
+
+    if (result != null && result.hasNewUnlocks && mounted) {
+      // Show unlock celebration after a brief delay for confetti to settle
+      await Future.delayed(const Duration(milliseconds: 800));
+      if (mounted) {
+        await UnlockCelebrations.showYouOrMeUnlocked(context, result.lpAwarded);
+      }
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     final storage = StorageService();
     final user = storage.getUser();
@@ -30,29 +65,33 @@ class QuizMatchResultsScreen extends StatelessWidget {
     final partnerName = partner?.name ?? 'Partner';
 
     // Use server-provided values directly (server is authoritative)
-    final percentage = matchPercentage ?? match.matchPercentage ?? 0;
-    final lp = lpEarned ?? 30;
+    final percentage = widget.matchPercentage ?? widget.match.matchPercentage ?? 0;
+    final lp = widget.lpEarned ?? 30;
 
     // Determine which answers belong to whom
-    final isPlayer1 = user?.id == match.player1Id;
-    final userAnswers = isPlayer1 ? match.player1Answers : match.player2Answers;
-    final partnerAnswers = isPlayer1 ? match.player2Answers : match.player1Answers;
+    final isPlayer1 = user?.id == widget.match.player1Id;
+    final userAnswers = isPlayer1 ? widget.match.player1Answers : widget.match.player2Answers;
+    final partnerAnswers = isPlayer1 ? widget.match.player2Answers : widget.match.player1Answers;
 
     // Derive match count from server's percentage (server calculates this)
-    final totalQuestions = quiz?.questions.length ?? userAnswers.length;
+    final totalQuestions = widget.quiz?.questions.length ?? userAnswers.length;
     final matchCount = totalQuestions > 0
         ? ((percentage / 100) * totalQuestions).round()
         : 0;
 
-    return Scaffold(
+    return wrapWithDramaticEffects(
+      Scaffold(
       backgroundColor: EditorialStyles.paper,
       body: SafeArea(
         child: Column(
           children: [
-            // Header
-            EditorialHeaderSimple(
-              title: quiz?.title ?? 'Quiz Results',
-              onClose: () => Navigator.of(context).popUntil((route) => route.isFirst),
+            // Header with animated drop
+            AnimatedHeaderDrop(
+              delay: AnimationConstants.headerDropDelay,
+              child: EditorialHeaderSimple(
+                title: widget.quiz?.title ?? 'Quiz Results',
+                onClose: () => Navigator.of(context).popUntil((route) => route.isFirst),
+              ),
             ),
 
             // Content
@@ -61,42 +100,45 @@ class QuizMatchResultsScreen extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Score summary section
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 32),
-                      child: Column(
-                        children: [
-                          // Large percentage display
-                          Text(
-                            '$percentage%',
-                            style: EditorialStyles.scoreLarge.copyWith(
-                              fontSize: 72,
-                              height: 1,
+                    // Score summary section with bounce entrance
+                    BounceInWidget(
+                      delay: AnimationConstants.cardEntranceDelay,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 32),
+                        child: Column(
+                          children: [
+                            // Large percentage display
+                            Text(
+                              '$percentage%',
+                              style: EditorialStyles.scoreLarge.copyWith(
+                                fontSize: 72,
+                                height: 1,
+                              ),
                             ),
-                          ),
-                          const SizedBox(height: 8),
-                          Text(
-                            'MATCH',
-                            style: EditorialStyles.labelUppercase,
-                          ),
-                          const SizedBox(height: 16),
-                          Text(
-                            _getMatchDescription(percentage),
-                            style: EditorialStyles.bodyTextItalic,
-                            textAlign: TextAlign.center,
-                          ),
-                          const SizedBox(height: 24),
+                            const SizedBox(height: 8),
+                            Text(
+                              'MATCH',
+                              style: EditorialStyles.labelUppercase,
+                            ),
+                            const SizedBox(height: 16),
+                            Text(
+                              _getMatchDescription(percentage),
+                              style: EditorialStyles.bodyTextItalic,
+                              textAlign: TextAlign.center,
+                            ),
+                            const SizedBox(height: 24),
 
-                          // Match count and LP earned row
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              _buildStatPill('$matchCount/$totalQuestions matched'),
-                              const SizedBox(width: 12),
-                              _buildStatPill('+$lp LP'),
-                            ],
-                          ),
-                        ],
+                            // Match count and LP earned row
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                _buildStatPill('$matchCount/$totalQuestions matched'),
+                                const SizedBox(width: 12),
+                                _buildStatPill('+$lp LP'),
+                              ],
+                            ),
+                          ],
+                        ),
                       ),
                     ),
 
@@ -116,9 +158,9 @@ class QuizMatchResultsScreen extends StatelessWidget {
                     ),
 
                     // Question-by-question comparison
-                    if (quiz != null && quiz!.questions.isNotEmpty)
-                      ...List.generate(quiz!.questions.length, (index) {
-                        final question = quiz!.questions[index];
+                    if (widget.quiz != null && widget.quiz!.questions.isNotEmpty)
+                      ...List.generate(widget.quiz!.questions.length, (index) {
+                        final question = widget.quiz!.questions[index];
                         final userAnswer = index < userAnswers.length ? userAnswers[index] : -1;
                         final partnerAnswer = index < partnerAnswers.length ? partnerAnswers[index] : -1;
                         final isMatch = userAnswer == partnerAnswer && userAnswer >= 0;
@@ -166,6 +208,7 @@ class QuizMatchResultsScreen extends StatelessWidget {
             ),
           ],
         ),
+      ),
       ),
     );
   }

@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import '../config/brand/brand_loader.dart';
+import '../config/animation_constants.dart';
 import '../utils/logger.dart';
 import '../utils/number_formatter.dart';
 import '../services/storage_service.dart';
@@ -16,6 +17,7 @@ import '../services/haptic_service.dart';
 import '../services/sound_service.dart';
 import '../services/steps_feature_service.dart';
 import '../services/home_polling_service.dart';
+import '../services/unlock_service.dart';
 import '../animations/animation_config.dart';
 import '../theme/app_theme.dart';
 import '../widgets/poke_bottom_sheet.dart';
@@ -25,17 +27,27 @@ import '../widgets/daily_quests_widget.dart';
 import '../widgets/quest_carousel.dart';
 import '../widgets/debug/debug_menu.dart';
 import '../widgets/leaderboard_bottom_sheet.dart';
+import '../widgets/animations/dramatic_entrance_widgets.dart';
 import '../models/daily_quest.dart';
 import 'daily_pulse_screen.dart';
 import 'linked_game_screen.dart';
+import 'linked_intro_screen.dart';
 import 'word_search_game_screen.dart';
+import 'word_search_intro_screen.dart';
 import 'quiz_match_game_screen.dart';
 import 'inbox_screen.dart';
 import 'steps_intro_screen.dart';
 import 'steps_counter_screen.dart';
+import '../widgets/lp_intro_overlay.dart';
 
 class NewHomeScreen extends StatefulWidget {
-  const NewHomeScreen({super.key});
+  /// If true, shows the LP intro overlay after Welcome Quiz completion
+  final bool showLpIntro;
+
+  const NewHomeScreen({
+    super.key,
+    this.showLpIntro = false,
+  });
 
   @override
   State<NewHomeScreen> createState() => _NewHomeScreenState();
@@ -49,8 +61,10 @@ class _NewHomeScreenState extends State<NewHomeScreen> with TickerProviderStateM
   final LinkedService _linkedService = LinkedService();
   final QuizService _quizService = QuizService();
   final HomePollingService _pollingService = HomePollingService();
+  final UnlockService _unlockService = UnlockService();
 
   bool _isRefreshing = false;
+  UnlockState? _unlockState; // Cached unlock state for rendering
   DateTime? _lastSyncTime;
   late AnimationController _pulseController;
   late AnimationController _lpPulseController;
@@ -59,6 +73,9 @@ class _NewHomeScreenState extends State<NewHomeScreen> with TickerProviderStateM
   // Cached side quests Future to prevent FutureBuilder from rebuilding on every setState
   // Without this, the carousel blinks every time any setState is called (e.g., from DailyQuests polling)
   Future<List<DailyQuest>>? _sideQuestsFuture;
+
+  // LP intro overlay state
+  bool _showingLpIntro = false;
 
   @override
   void initState() {
@@ -86,12 +103,20 @@ class _NewHomeScreenState extends State<NewHomeScreen> with TickerProviderStateM
     // Sync daily quests on load (handles returning users after reinstall)
     _syncDailyQuestsIfNeeded();
 
+    // Fetch unlock state for locked quest rendering
+    _fetchUnlockState();
+
     // Subscribe to unified polling service for side quest updates
     _pollingService.subscribe();
     _pollingService.subscribeToTopic('sideQuests', _onSideQuestUpdate);
 
     // Initialize cached Future on first load
     _refreshSideQuestsFuture();
+
+    // Show LP intro overlay if requested (after Welcome Quiz completion)
+    if (widget.showLpIntro) {
+      _showingLpIntro = true;
+    }
   }
 
   /// Called when HomePollingService detects side quest updates (Linked/Word Search turn changes)
@@ -118,6 +143,22 @@ class _NewHomeScreenState extends State<NewHomeScreen> with TickerProviderStateM
       }
     } catch (e) {
       Logger.error('Failed to sync LP on home screen load', error: e, service: 'home');
+    }
+  }
+
+  /// Fetch unlock state for rendering locked quests
+  Future<void> _fetchUnlockState() async {
+    try {
+      final state = await _unlockService.getUnlockState();
+      if (mounted && state != null) {
+        setState(() {
+          _unlockState = state;
+        });
+        // Refresh side quests carousel if state changed
+        _refreshSideQuestsFuture();
+      }
+    } catch (e) {
+      Logger.error('Failed to fetch unlock state', error: e, service: 'home');
     }
   }
 
@@ -180,19 +221,32 @@ class _NewHomeScreenState extends State<NewHomeScreen> with TickerProviderStateM
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppTheme.backgroundGray,
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              _buildSimplifiedHeader(),
-              _buildMainContent(),
-            ],
+    return Stack(
+      children: [
+        Scaffold(
+          backgroundColor: AppTheme.backgroundGray,
+          body: SafeArea(
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  _buildSimplifiedHeader(),
+                  _buildMainContent(),
+                ],
+              ),
+            ),
           ),
         ),
-      ),
+        // LP intro overlay (shown after Welcome Quiz completion)
+        if (_showingLpIntro)
+          LpIntroOverlay(
+            onDismiss: () {
+              if (mounted) {
+                setState(() => _showingLpIntro = false);
+              }
+            },
+          ),
+      ],
     );
   }
 
@@ -617,33 +671,39 @@ class _NewHomeScreenState extends State<NewHomeScreen> with TickerProviderStateM
 
         const SizedBox(height: 10),
 
-        // Side Quests section header with action buttons
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                'SIDE QUESTS',
-                style: AppTheme.headlineFont.copyWith(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w400,
-                  letterSpacing: 2,
+        // Side Quests section header with action buttons - animated
+        BounceInWidget(
+          delay: const Duration(milliseconds: 800),
+          initialScale: 0.9,
+          initialTranslateY: 25.0,
+          trackingKey: 'home_side_quests_header',
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'SIDE QUESTS',
+                  style: AppTheme.headlineFont.copyWith(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w400,
+                    letterSpacing: 2,
+                  ),
                 ),
-              ),
-              Flexible(
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    _buildActionButton('POKE', false, _showPokeBottomSheet),
-                    const SizedBox(width: 8),
-                    _buildActionButton('REMIND', false, _showRemindBottomSheet),
-                    const SizedBox(width: 8),
-                    _buildActionButton('RANKING', false, _showLeaderboardBottomSheet),
-                  ],
+                Flexible(
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      _buildActionButton('POKE', false, _showPokeBottomSheet),
+                      const SizedBox(width: 8),
+                      _buildActionButton('REMIND', false, _showRemindBottomSheet),
+                      const SizedBox(width: 8),
+                      _buildActionButton('RANKING', false, _showLeaderboardBottomSheet),
+                    ],
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
         const SizedBox(height: 20),
@@ -656,7 +716,7 @@ class _NewHomeScreenState extends State<NewHomeScreen> with TickerProviderStateM
         // Version number for debugging hot reload
         Center(
           child: Text(
-            'v1.0.63',
+            'v1.0.64',
             style: TextStyle(
               fontSize: 10,
               color: BrandLoader().colors.textTertiary,
@@ -852,9 +912,43 @@ class _NewHomeScreenState extends State<NewHomeScreen> with TickerProviderStateM
           onQuestTap: _handleSideQuestTap,
           cardWidthPercent: 0.6, // 60% width to match Daily Quests
           showProgressBar: true,
+          isLockedBuilder: _getQuestLockState,
         );
       },
     );
+  }
+
+  /// Determine if a quest is locked based on unlock state
+  ({bool isLocked, String? unlockCriteria}) _getQuestLockState(DailyQuest quest) {
+    // If unlock state hasn't loaded yet, show everything as unlocked
+    if (_unlockState == null) {
+      return (isLocked: false, unlockCriteria: null);
+    }
+
+    // Map quest type to unlockable feature
+    UnlockableFeature? feature;
+    String? criteria;
+
+    switch (quest.type) {
+      case QuestType.linked:
+        feature = UnlockableFeature.linked;
+        criteria = 'Complete You or Me to unlock';
+        break;
+      case QuestType.wordSearch:
+        feature = UnlockableFeature.wordSearch;
+        criteria = 'Complete Linked to unlock';
+        break;
+      case QuestType.steps:
+        feature = UnlockableFeature.steps;
+        criteria = 'Complete Word Search to unlock';
+        break;
+      default:
+        // Daily quests (quiz, youOrMe) handled elsewhere
+        return (isLocked: false, unlockCriteria: null);
+    }
+
+    final isLocked = !_unlockState!.isFeatureUnlocked(feature);
+    return (isLocked: isLocked, unlockCriteria: isLocked ? criteria : null);
   }
 
   void _showPokeBottomSheet() {
@@ -927,7 +1021,7 @@ class _NewHomeScreenState extends State<NewHomeScreen> with TickerProviderStateM
       case QuestType.linked:
         await Navigator.push(
           context,
-          MaterialPageRoute(builder: (_) => const LinkedGameScreen()),
+          MaterialPageRoute(builder: (_) => const LinkedIntroScreen()),
         );
         // Refresh state after returning to show updated quest status
         if (mounted) {
@@ -938,21 +1032,7 @@ class _NewHomeScreenState extends State<NewHomeScreen> with TickerProviderStateM
       case QuestType.wordSearch:
         await Navigator.push(
           context,
-          // Use PageRouteBuilder to disable iOS swipe-to-go-back gesture
-          // Word Search needs full left edge for selecting leftmost column letters
-          PageRouteBuilder(
-            pageBuilder: (context, animation, secondaryAnimation) =>
-                const WordSearchGameScreen(),
-            transitionsBuilder: (context, animation, secondaryAnimation, child) {
-              return SlideTransition(
-                position: Tween<Offset>(
-                  begin: const Offset(1.0, 0.0),
-                  end: Offset.zero,
-                ).animate(animation),
-                child: child,
-              );
-            },
-          ),
+          MaterialPageRoute(builder: (_) => const WordSearchIntroScreen()),
         );
         // Refresh state after returning to show updated quest status
         if (mounted) {
@@ -1208,64 +1288,92 @@ class _NewHomeScreenState extends State<NewHomeScreen> with TickerProviderStateM
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          // Title section (no border needed - border is on stats section below)
-          Padding(
-            padding: const EdgeInsets.fromLTRB(20, 24, 20, 20),
-            child: Column(
-              children: [
-                // "LOVE QUEST" title with debug menu access
-                GestureDetector(
-                  onDoubleTap: () {
-                    showDialog(
-                      context: context,
-                      builder: (context) => const DebugMenu(),
-                    );
-                  },
-                  child: Text(
-                    'LOVE QUEST',
-                    style: AppTheme.headlineFont.copyWith(
-                      fontSize: 32,
-                      fontWeight: FontWeight.w400,
-                      letterSpacing: 2,
-                      color: BrandLoader().colors.textPrimary,
+          // Title section with dramatic header drop animation
+          AnimatedHeaderDrop(
+            delay: const Duration(milliseconds: 100),
+            trackingKey: 'home_header_drop',
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(20, 24, 20, 20),
+              child: Column(
+                children: [
+                  // "LOVE QUEST" title with debug menu access
+                  GestureDetector(
+                    onDoubleTap: () {
+                      showDialog(
+                        context: context,
+                        builder: (context) => const DebugMenu(),
+                      );
+                    },
+                    child: Text(
+                      'LOVE QUEST',
+                      style: AppTheme.headlineFont.copyWith(
+                        fontSize: 32,
+                        fontWeight: FontWeight.w400,
+                        letterSpacing: 2,
+                        color: BrandLoader().colors.textPrimary,
+                      ),
                     ),
                   ),
-                ),
-                const SizedBox(height: 8),
+                  const SizedBox(height: 8),
 
-                // "Day Forty-Two" subtitle
-                Text(
-                  'Day ${NumberFormatter.toWords(daysTogether)}',
-                  style: AppTheme.bodyFont.copyWith(
-                    fontSize: 14,
-                    color: const Color(0xFF666666),
-                    fontStyle: FontStyle.italic,
+                  // "Day Forty-Two" subtitle
+                  Text(
+                    'Day ${NumberFormatter.toWords(daysTogether)}',
+                    style: AppTheme.bodyFont.copyWith(
+                      fontSize: 14,
+                      color: const Color(0xFF666666),
+                      fontStyle: FontStyle.italic,
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
 
-          // Stats section with top border (full width, edge-to-edge)
-          Container(
-            decoration: BoxDecoration(
-              border: Border(
-                top: BorderSide(color: BrandLoader().colors.primary, width: 2),
+          // Stats section with slide-in animation
+          BounceInWidget(
+            delay: const Duration(milliseconds: 300),
+            initialScale: 0.95,
+            initialTranslateY: 20.0,
+            trackingKey: 'home_stats_section',
+            child: Container(
+              decoration: BoxDecoration(
+                border: Border(
+                  top: BorderSide(color: BrandLoader().colors.primary, width: 2),
+                ),
               ),
-            ),
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(20, 20, 20, 16),
-              child: Column(
-                children: [
-                  // Stats rows
-                  _buildStatRow('PARTY', 'You & ${partner?.name ?? "Partner"}'),
-                  const SizedBox(height: 16),
-                  _buildStatRow('LOVE POINTS', lovePoints.toString()),
-                  const SizedBox(height: 16),
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(20, 20, 20, 16),
+                child: Column(
+                  children: [
+                    // Stats rows with staggered animation
+                    StaggeredSlideIn(
+                      index: 0,
+                      baseDelay: const Duration(milliseconds: 400),
+                      staggerDelay: const Duration(milliseconds: 100),
+                      trackingKey: 'home_stat_party',
+                      child: _buildStatRow('PARTY', 'You & ${partner?.name ?? "Partner"}'),
+                    ),
+                    const SizedBox(height: 16),
+                    StaggeredSlideIn(
+                      index: 1,
+                      baseDelay: const Duration(milliseconds: 400),
+                      staggerDelay: const Duration(milliseconds: 100),
+                      trackingKey: 'home_stat_lp',
+                      child: _buildStatRow('LOVE POINTS', lovePoints.toString()),
+                    ),
+                    const SizedBox(height: 16),
 
-                  // Progress bar
-                  _buildProgressBar(),
-                ],
+                    // Progress bar with fade in
+                    BounceInWidget(
+                      delay: const Duration(milliseconds: 650),
+                      initialScale: 1.0,
+                      initialTranslateY: 10.0,
+                      trackingKey: 'home_progress_bar',
+                      child: _buildProgressBar(),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),

@@ -2,8 +2,10 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import '../models/daily_quest.dart';
 import '../services/storage_service.dart';
+// import '../config/animation_constants.dart';  // Disabled with Card3DEntrance
 import 'quest_card.dart';
 import 'steps/steps_quest_card.dart';
+// import 'animations/dramatic_entrance_widgets.dart';  // Disabled - animation causing flicker bugs
 
 /// Reusable horizontal carousel widget with scroll tracking and active card detection
 ///
@@ -15,12 +17,16 @@ import 'steps/steps_quest_card.dart';
 /// - Peek effect for adjacent cards
 /// - Performance optimizations (RepaintBoundary)
 /// - Scroll position restoration
+/// Callback to determine if a quest is locked and what criteria is needed to unlock
+typedef QuestLockCallback = ({bool isLocked, String? unlockCriteria}) Function(DailyQuest quest);
+
 class QuestCarousel extends StatefulWidget {
   final List<DailyQuest> quests;
   final String? currentUserId;
   final Function(DailyQuest) onQuestTap;
   final double cardWidthPercent; // Default: 0.6 (60%)
   final bool showProgressBar; // Default: true
+  final QuestLockCallback? isLockedBuilder; // Optional: determines locked state per quest
 
   const QuestCarousel({
     super.key,
@@ -29,6 +35,7 @@ class QuestCarousel extends StatefulWidget {
     required this.onQuestTap,
     this.cardWidthPercent = 0.6,
     this.showProgressBar = true,
+    this.isLockedBuilder,
   });
 
   @override
@@ -123,20 +130,12 @@ class _QuestCarouselState extends State<QuestCarousel> {
               final isActive = index == _activeCardIndex;
 
               // Add RepaintBoundary for performance (Phase 2 optimization)
+              // Card3DEntrance animation DISABLED - was causing flicker/re-render bugs
+              // TODO: Re-enable once animation tracking is fixed
               return RepaintBoundary(
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 4), // Small gap between cards
-                  child: AnimatedOpacity(
-                    duration: const Duration(milliseconds: 300),
-                    curve: Curves.easeInOut,
-                    opacity: 1.0, // All cards same visibility
-                    child: AnimatedScale(
-                      duration: const Duration(milliseconds: 300),
-                      curve: Curves.easeInOut,
-                      scale: 1.0, // All cards same size
-                      child: _buildQuestCard(quest, isActive),
-                    ),
-                  ),
+                  child: _buildQuestCard(quest, isActive),
                 ),
               );
             },
@@ -171,6 +170,11 @@ class _QuestCarouselState extends State<QuestCarousel> {
 
   /// Build appropriate card widget based on quest type
   Widget _buildQuestCard(DailyQuest quest, bool isActive) {
+    // Check if quest is locked
+    final lockState = widget.isLockedBuilder?.call(quest);
+    final isLocked = lockState?.isLocked ?? false;
+    final unlockCriteria = lockState?.unlockCriteria;
+
     // Use specialized StepsQuestCard for steps quests (iOS only)
     if (quest.type == QuestType.steps && Platform.isIOS) {
       return StepsQuestCard(
@@ -194,11 +198,13 @@ class _QuestCarouselState extends State<QuestCarousel> {
       keyExtra = '_${match?.currentTurnUserId ?? 'none'}';
     }
     return QuestCard(
-      key: ValueKey('${quest.id}_$completionCount$keyExtra'),
+      key: ValueKey('${quest.id}_$completionCount${keyExtra}_$isLocked'),
       quest: quest,
       currentUserId: widget.currentUserId,
       onTap: () => widget.onQuestTap(quest),
       showShadow: isActive,
+      isLocked: isLocked,
+      unlockCriteria: unlockCriteria,
     );
   }
 

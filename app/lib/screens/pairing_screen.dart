@@ -14,6 +14,9 @@ import 'package:togetherremind/services/notification_service.dart';
 import 'package:togetherremind/services/couple_pairing_service.dart';
 import 'package:togetherremind/services/auth_service.dart';
 import 'package:togetherremind/services/quest_initialization_service.dart';
+import 'package:togetherremind/services/unlock_service.dart';
+import 'welcome_quiz_intro_screen.dart';
+import 'package:togetherremind/test/test_keys.dart';
 import 'package:togetherremind/theme/app_theme.dart';
 import 'package:togetherremind/widgets/newspaper/newspaper_widgets.dart';
 import '../utils/logger.dart';
@@ -107,24 +110,39 @@ class _PairingScreenState extends State<PairingScreen> {
     super.dispose();
   }
 
-  /// Complete onboarding after pairing - initialize quests and navigate to home
+  /// Complete onboarding after pairing - check unlock state and navigate
   Future<void> _completeOnboarding() async {
-    final initService = QuestInitializationService();
-    final result = await initService.ensureQuestsInitialized();
-
-    if (result.isSuccess) {
-      Logger.debug('Quest init completed: $result', service: 'pairing');
-    } else {
-      Logger.error('Quest init failed: ${result.errorMessage}', service: 'pairing');
-      // Still navigate to home - quests will be synced later
-    }
+    // Check if Welcome Quiz has been completed
+    final unlockService = UnlockService();
+    final unlockState = await unlockService.getUnlockState();
 
     if (mounted) {
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(
-          builder: (context) => const HomeScreen(),
-        ),
-      );
+      if (unlockState != null && unlockState.welcomeQuizCompleted) {
+        // Welcome Quiz already completed - initialize quests and go to home
+        final initService = QuestInitializationService();
+        final result = await initService.ensureQuestsInitialized();
+
+        if (result.isSuccess) {
+          Logger.debug('Quest init completed: $result', service: 'pairing');
+        } else {
+          Logger.error('Quest init failed: ${result.errorMessage}', service: 'pairing');
+          // Still navigate to home - quests will be synced later
+        }
+
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(
+            builder: (context) => const HomeScreen(),
+          ),
+        );
+      } else {
+        // Welcome Quiz not completed - go to Welcome Quiz intro
+        Logger.debug('Navigating to Welcome Quiz intro', service: 'pairing');
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(
+            builder: (context) => const WelcomeQuizIntroScreen(),
+          ),
+        );
+      }
     }
   }
 
@@ -541,6 +559,7 @@ class _PairingScreenState extends State<PairingScreen> {
         // Big Code Display
         if (_generatedCode != null) ...[
           Text(
+            key: TestKeys.yourCodeDisplay,
             _generatedCode!.code,
             style: AppTheme.headlineFont.copyWith(
               fontSize: 48,
@@ -666,6 +685,7 @@ class _PairingScreenState extends State<PairingScreen> {
       children: [
         // Single input field
         TextField(
+          key: TestKeys.partnerCodeTextField,
           controller: _partnerCodeController,
           textAlign: TextAlign.center,
           textCapitalization: TextCapitalization.characters,
@@ -713,6 +733,7 @@ class _PairingScreenState extends State<PairingScreen> {
         SizedBox(
           width: double.infinity,
           child: ElevatedButton(
+            key: TestKeys.joinPartnerButton,
             onPressed: _isVerifyingCode
                 ? null
                 : () {

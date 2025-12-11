@@ -10,7 +10,12 @@ import 'package:togetherremind/services/sound_service.dart';
 import 'package:togetherremind/services/haptic_service.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+  final bool showLpIntro;
+
+  const HomeScreen({
+    super.key,
+    this.showLpIntro = false,
+  });
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -19,11 +24,11 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   int _currentIndex = 0;
 
-  final List<Widget> _screens = const [
-    NewHomeScreen(),
-    ActivityHubScreen(),
-    ProfileScreen(),
-    SettingsScreen(),
+  List<Widget> get _screens => [
+    NewHomeScreen(showLpIntro: widget.showLpIntro),
+    const ActivityHubScreen(),
+    const ProfileScreen(),
+    const SettingsScreen(),
   ];
 
   void _showPokeBottomSheet() {

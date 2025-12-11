@@ -5,10 +5,12 @@ import '../services/storage_service.dart';
 import '../services/haptic_service.dart';
 import '../services/sound_service.dart';
 import '../services/love_point_service.dart';
+import '../services/unlock_service.dart';
 import '../models/linked.dart';
 import '../widgets/linked/answer_cell.dart';
 import '../widgets/linked/turn_complete_dialog.dart';
 import '../widgets/linked/partner_first_dialog.dart';
+import '../widgets/unlock_celebration.dart';
 import 'linked_completion_screen.dart';
 import '../config/brand/brand_loader.dart';
 import '../theme/app_theme.dart';
@@ -175,8 +177,31 @@ class _LinkedGameScreenState extends State<LinkedGameScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: BrandLoader().colors.background,
-      body: SafeArea(
-        child: _buildBody(),
+      body: Stack(
+        children: [
+          // Main content inside SafeArea
+          SafeArea(
+            child: _buildBody(),
+          ),
+          // Full-screen overlay dialogs (outside SafeArea to cover status bar)
+          if (_showTurnComplete)
+            Positioned.fill(
+              child: TurnCompleteDialog(
+                partnerName: StorageService().getPartner()?.name ?? 'Partner',
+                onLeave: () => Navigator.of(context).pop(),
+                onStay: () => setState(() => _showTurnComplete = false),
+              ),
+            ),
+          if (_showPartnerFirst)
+            Positioned.fill(
+              child: PartnerFirstDialog(
+                partnerName: StorageService().getPartner()?.name ?? 'Partner',
+                puzzleType: 'puzzle',
+                onGoBack: () => Navigator.of(context).pop(),
+                onStay: () => setState(() => _showPartnerFirst = false),
+              ),
+            ),
+        ],
       ),
     );
   }
@@ -310,35 +335,16 @@ class _LinkedGameScreenState extends State<LinkedGameScreen>
       return const Center(child: Text('No puzzle available'));
     }
 
-    return Stack(
-      children: [
-        // Game content
-        Container(
-          color: BrandLoader().colors.surface,
-          child: Column(
-            children: [
-              _buildHeader(),
-              Expanded(child: _buildGridWithOverlay()),
-              _buildBottomSection(),
-            ],
-          ),
-        ),
-        // Turn complete dialog overlay
-        if (_showTurnComplete)
-          TurnCompleteDialog(
-            partnerName: StorageService().getPartner()?.name ?? 'Partner',
-            onLeave: () => Navigator.of(context).pop(),
-            onStay: () => setState(() => _showTurnComplete = false),
-          ),
-        // Partner first dialog overlay (shown when entering new puzzle where partner starts)
-        if (_showPartnerFirst)
-          PartnerFirstDialog(
-            partnerName: StorageService().getPartner()?.name ?? 'Partner',
-            puzzleType: 'puzzle',
-            onGoBack: () => Navigator.of(context).pop(),
-            onStay: () => setState(() => _showPartnerFirst = false),
-          ),
-      ],
+    // Dialogs moved to build() Stack to cover full screen including status bar
+    return Container(
+      color: BrandLoader().colors.surface,
+      child: Column(
+        children: [
+          _buildHeader(),
+          Expanded(child: _buildGridWithOverlay()),
+          _buildBottomSection(),
+        ],
+      ),
     );
   }
 
@@ -625,8 +631,15 @@ class _LinkedGameScreenState extends State<LinkedGameScreen>
     // Calculate font size based on text length
     final textLength = displayText.length;
     final hasSpace = displayText.contains(' ');
+
+    // Detect if content is actually an emoji (single character or emoji sequence)
+    // This handles cases where type is "emoji" but content is regular text
+    final isActuallyEmoji = clue.type == 'emoji' &&
+        textLength <= 2 &&
+        !RegExp(r'^[a-zA-Z0-9\s]+$').hasMatch(clue.content);
+
     double fontSize;
-    if (clue.type == 'emoji') {
+    if (isActuallyEmoji) {
       fontSize = 28; // Large emoji
     } else if (textLength <= 4) {
       fontSize = 16;
@@ -647,10 +660,10 @@ class _LinkedGameScreenState extends State<LinkedGameScreen>
           children: [
             Center(
               child: Text(
-                clue.type == 'emoji' ? clue.content : displayText,
+                isActuallyEmoji ? clue.content : displayText,
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                  fontFamily: clue.type == 'emoji' ? null : 'Arial',
+                  fontFamily: isActuallyEmoji ? null : 'Arial',
                   fontSize: fontSize,
                   fontWeight: FontWeight.w800,
                   letterSpacing: 0,
@@ -1445,6 +1458,9 @@ class _LinkedGameScreenState extends State<LinkedGameScreen>
         if (_gameState != null) {
           await StorageService().saveLinkedMatch(_gameState!.match);
         }
+
+        // Check for unlock progression (Linked → Word Search)
+        _checkForUnlock();
       }
     } catch (e) {
       if (mounted) {
@@ -1452,6 +1468,19 @@ class _LinkedGameScreenState extends State<LinkedGameScreen>
           _isSubmitting = false;
         });
         _showToast('Error: ${e.toString()}');
+      }
+    }
+  }
+
+  Future<void> _checkForUnlock() async {
+    final unlockService = UnlockService();
+    final result = await unlockService.notifyCompletion(UnlockTrigger.linked);
+
+    if (result != null && result.hasNewUnlocks && mounted) {
+      // Show unlock celebration after a brief delay
+      await Future.delayed(const Duration(milliseconds: 500));
+      if (mounted) {
+        await UnlockCelebrations.showWordSearchUnlocked(context, result.lpAwarded);
       }
     }
   }

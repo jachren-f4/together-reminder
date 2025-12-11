@@ -7,11 +7,13 @@ import '../services/storage_service.dart';
 import '../services/haptic_service.dart';
 import '../services/sound_service.dart';
 import '../services/love_point_service.dart';
+import '../services/unlock_service.dart';
 import '../models/word_search.dart';
 import '../config/brand/brand_loader.dart';
 import '../theme/app_theme.dart';
 import '../widgets/linked/turn_complete_dialog.dart';
 import '../widgets/linked/partner_first_dialog.dart';
+import '../widgets/unlock_celebration.dart';
 import '../animations/animation_config.dart';
 import '../mixins/game_polling_mixin.dart';
 import 'word_search_completion_screen.dart';
@@ -320,6 +322,9 @@ class _WordSearchGameScreenState extends State<WordSearchGameScreen>
 
         _showWordFoundOverlay(_selectedWord.toUpperCase(), result.pointsEarned);
 
+        // Check for unlock progression (Word Search → Steps)
+        _checkForUnlock();
+
         // If game is complete, navigate directly to completion screen
         // Don't use refreshGameState() - that would create a new match!
         if (result.gameComplete) {
@@ -384,6 +389,19 @@ class _WordSearchGameScreenState extends State<WordSearchGameScreen>
     Future.delayed(const Duration(milliseconds: 1600), () => overlay.remove());
   }
 
+  Future<void> _checkForUnlock() async {
+    final unlockService = UnlockService();
+    final result = await unlockService.notifyCompletion(UnlockTrigger.wordSearch);
+
+    if (result != null && result.hasNewUnlocks && mounted) {
+      // Show unlock celebration after a brief delay for word found overlay
+      await Future.delayed(const Duration(milliseconds: 1800));
+      if (mounted) {
+        await UnlockCelebrations.showStepsUnlocked(context, result.lpAwarded);
+      }
+    }
+  }
+
   Future<void> _useHint() async {
     if (_gameState == null || !_gameState!.isMyTurn) return;
     if (_gameState!.myHints <= 0) {
@@ -433,8 +451,31 @@ class _WordSearchGameScreenState extends State<WordSearchGameScreen>
       canPop: false,
       child: Scaffold(
         backgroundColor: BrandLoader().colors.background,
-        body: SafeArea(
-          child: _buildBody(),
+        body: Stack(
+          children: [
+            // Main content inside SafeArea
+            SafeArea(
+              child: _buildBody(),
+            ),
+            // Full-screen overlay dialogs (outside SafeArea to cover status bar)
+            if (_showTurnComplete)
+              Positioned.fill(
+                child: TurnCompleteDialog(
+                  partnerName: _storage.getPartner()?.name ?? 'Partner',
+                  onLeave: () => Navigator.of(context).pop(),
+                  onStay: () => setState(() => _showTurnComplete = false),
+                ),
+              ),
+            if (_showPartnerFirst)
+              Positioned.fill(
+                child: PartnerFirstDialog(
+                  partnerName: _storage.getPartner()?.name ?? 'Partner',
+                  puzzleType: 'word search',
+                  onGoBack: () => Navigator.of(context).pop(),
+                  onStay: () => setState(() => _showPartnerFirst = false),
+                ),
+              ),
+          ],
         ),
       ),
     );
@@ -602,21 +643,7 @@ class _WordSearchGameScreenState extends State<WordSearchGameScreen>
               ),
             ),
           ),
-        // Turn complete dialog overlay
-        if (_showTurnComplete)
-          TurnCompleteDialog(
-            partnerName: _storage.getPartner()?.name ?? 'Partner',
-            onLeave: () => Navigator.of(context).pop(),
-            onStay: () => setState(() => _showTurnComplete = false),
-          ),
-        // Partner first dialog overlay (shown when entering new puzzle where partner starts)
-        if (_showPartnerFirst)
-          PartnerFirstDialog(
-            partnerName: _storage.getPartner()?.name ?? 'Partner',
-            puzzleType: 'word search',
-            onGoBack: () => Navigator.of(context).pop(),
-            onStay: () => setState(() => _showPartnerFirst = false),
-          ),
+        // Dialogs moved to build() Stack to cover full screen including status bar
       ],
     );
   }

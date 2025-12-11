@@ -69,7 +69,7 @@ class DevConfig {
   /// Force production API (Vercel) even in debug builds
   /// Set to true when testing on physical devices that can't reach localhost
   /// Set to false for emulator/simulator development with local API
-  static const bool useProductionApi = false;
+  static const bool useProductionApi = true;
 
   // ============================================================================
   // PHASE 4 MIGRATION FEATURE FLAGS
