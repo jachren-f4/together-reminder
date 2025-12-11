@@ -222,11 +222,10 @@ class _AuthWrapperState extends State<AuthWrapper> {
         );
 
       case AuthState.unauthenticated:
-        // Not authenticated - check if first run to show onboarding vs auth screen
-        if (_isFirstRun) {
-          return const OnboardingScreen();
-        }
-        return const AuthScreen();
+        // Not authenticated - always show OnboardingScreen
+        // Note: We don't use _isFirstRun here because iOS Keychain persists
+        // after app uninstall, causing stale flags to skip onboarding
+        return const OnboardingScreen();
     }
 
     // At this point, user is authenticated - check if user has a name
