@@ -72,13 +72,16 @@ export const POST = withAuthOrDevBypass(async (
 
     // Case 1: matchId provided - fetch existing match
     if (hasMatchId) {
+      console.log(`🎯 PLAY ROUTE: Fetching match by ID: ${matchId}`);
       match = await getMatchById(matchId);
       if (!match) {
+        console.log(`🎯 PLAY ROUTE: Match NOT found for ID: ${matchId}`);
         return NextResponse.json(
           { error: 'Match not found' },
           { status: 404 }
         );
       }
+      console.log(`🎯 PLAY ROUTE: Match found - status=${match.status}, p1AnswerCount=${(match as any).player1AnswerCount}, p2AnswerCount=${(match as any).player2AnswerCount}`);
       // Verify match type matches request type
       if (match.quizType !== gameType) {
         return NextResponse.json(
@@ -118,7 +121,9 @@ export const POST = withAuthOrDevBypass(async (
     }
 
     // Build game state
+    console.log(`🎯 PLAY ROUTE: Building game state - userId=${userId}, couple.isPlayer1=${couple.isPlayer1}, couple.user1Id=${couple.user1Id}, couple.user2Id=${couple.user2Id}`);
     const state = buildGameState(match, couple);
+    console.log(`🎯 PLAY ROUTE: Game state built - userAnswered=${state.userAnswered}, partnerAnswered=${state.partnerAnswered}, isCompleted=${state.isCompleted}`);
 
     // Build response
     const response: any = {
