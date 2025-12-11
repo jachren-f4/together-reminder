@@ -27,6 +27,9 @@ class StepsSyncService {
   String? _currentCoupleId;
   String? _currentUserId;
 
+  /// Check if the service is initialized
+  bool get isInitialized => _currentCoupleId != null && _currentUserId != null;
+
   /// Initialize sync service with couple and user IDs
   void initialize({
     required String coupleId,
@@ -35,6 +38,28 @@ class StepsSyncService {
     _currentCoupleId = coupleId;
     _currentUserId = userId;
     Logger.debug('StepsSyncService initialized for couple: $coupleId, user: $userId', service: 'steps');
+  }
+
+  /// Try to auto-initialize from stored user/partner data
+  /// Returns true if initialization succeeded, false otherwise
+  bool tryAutoInitialize() {
+    if (isInitialized) return true;
+
+    final user = _storage.getUser();
+    final partner = _storage.getPartner();
+
+    if (user == null || partner == null) {
+      Logger.warn('Cannot auto-initialize StepsSyncService - no user or partner in storage', service: 'steps');
+      return false;
+    }
+
+    // Generate couple ID using sorted user IDs (same logic as other services)
+    final coupleId = generateCoupleId(user.id, partner.id);
+    _currentCoupleId = coupleId;
+    _currentUserId = user.id;
+
+    Logger.info('StepsSyncService auto-initialized from storage for user: ${user.id}', service: 'steps');
+    return true;
   }
 
   /// Start polling for partner's step updates
@@ -151,11 +176,18 @@ class StepsSyncService {
     }
   }
 
-  /// Full sync: read from HealthKit and push to Supabase
-  Future<void> performFullSync() async {
+  /// Full sync: read from HealthKit, push to Supabase, and fetch partner data
+  /// Returns true if sync completed successfully, false if initialization failed
+  Future<bool> performFullSync() async {
     if (!StepsHealthService.isSupported) {
       Logger.debug('Steps sync skipped - not iOS', service: 'steps');
-      return;
+      return false;
+    }
+
+    // Try to auto-initialize if not already initialized
+    if (!isInitialized && !tryAutoInitialize()) {
+      Logger.warn('performFullSync aborted - cannot initialize StepsSyncService', service: 'steps');
+      return false;
     }
 
     // 1. Sync from HealthKit to local storage
@@ -167,7 +199,11 @@ class StepsSyncService {
     await syncYesterdayToServer();
     await syncConnectionStatus();
 
+    // 3. Fetch partner's data from Supabase (CRITICAL: without this, partner steps never update!)
+    await loadPartnerDataFromServer();
+
     Logger.info('Full steps sync completed', service: 'steps');
+    return true;
   }
 
   /// Mark a day's reward as claimed in Supabase
