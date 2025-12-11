@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../services/unlock_service.dart';
 import '../services/haptic_service.dart';
 import '../services/sound_service.dart';
+import '../services/notification_service.dart';
 import '../widgets/editorial/editorial.dart';
 import '../widgets/animations/animations.dart';
 
@@ -84,6 +85,10 @@ class _LpIntroOverlayState extends State<LpIntroOverlay>
 
     // Mark LP intro as shown on server
     await UnlockService().markLpIntroShown();
+
+    // Request notification permission now that user has seen the value
+    // This shows the system permission dialog (gray overlay is expected here)
+    await NotificationService.requestPermission();
 
     // Fade out
     await _fadeController.reverse();

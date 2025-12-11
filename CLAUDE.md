@@ -78,6 +78,40 @@ npm run db:push
 /runtogether
 ```
 
+### TestFlight Deployment (iOS)
+
+```bash
+cd /Users/joakimachren/Desktop/togetherremind/app
+
+# 1. Build the IPA
+flutter build ipa --release --dart-define=BRAND=togetherRemind
+
+# 2. Ensure API key is in place
+mkdir -p ~/.private_keys
+cp keys/connect/AuthKey_54R6QHKMB4.p8 ~/.private_keys/
+
+# 3. Upload to App Store Connect
+xcrun altool --upload-app --type ios \
+  -f build/ios/ipa/togetherremind.ipa \
+  --apiKey 54R6QHKMB4 \
+  --apiIssuer e43a1b2a-f0d3-4d40-af64-a987db2c850a
+```
+
+**After upload:**
+1. Go to [App Store Connect](https://appstoreconnect.apple.com) → TogetherRemind → TestFlight
+2. Wait 5-15 min for processing
+3. Complete "Export Compliance" (select "None of the algorithms mentioned above")
+4. Build becomes available to testers automatically
+
+**Version bumping:** Edit `app/pubspec.yaml` line `version: 1.0.0+1`
+- Format: `major.minor.patch+buildNumber`
+- Increment build number for each TestFlight upload
+
+**API Key Credentials:**
+- API Key ID: `54R6QHKMB4`
+- Issuer ID: `e43a1b2a-f0d3-4d40-af64-a987db2c850a`
+- Key file: `keys/connect/AuthKey_54R6QHKMB4.p8` (also `~/.private_keys/AuthKey_54R6QHKMB4.p8`)
+
 ---
 
 ## Stack Overview
@@ -438,7 +472,8 @@ static const bool skipOtpVerificationInDev = true;  // Toggle in dev_config.dart
 ```
 - **Use case:** Physical device bug hunting without email verification
 - **Effect:** Button shows "Continue (Dev Mode)", creates user directly
-- **Technical:** Uses deterministic password `DevPass_{email.hashCode}_2024!`
+- **Technical:** Uses deterministic password `DevPass_{sha256(email).substring(0,12)}_2024!`
+- **Note:** SHA256 hash used instead of Dart's `hashCode` because hashCode is NOT stable across devices
 - **WARNING:** Set to `false` before App Store release!
 
 #### Apple Sign-In Toggle

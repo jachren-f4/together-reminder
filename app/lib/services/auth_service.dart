@@ -209,7 +209,12 @@ class AuthService {
       _updateAuthState(AuthState.loading);
 
       // Use a deterministic password based on email for dev testing
-      final devPassword = 'DevPass_${email.hashCode.abs()}_2024!';
+      // IMPORTANT: Use SHA256 hash instead of String.hashCode because
+      // hashCode is NOT stable across different devices/platforms in Dart
+      final emailBytes = utf8.encode(email);
+      final hash = sha256.convert(emailBytes);
+      final shortHash = hash.toString().substring(0, 12);
+      final devPassword = 'DevPass_${shortHash}_2024!';
 
       debugPrint('🔧 [DEV] Attempting dev sign-in for $email');
       debugPrint('🔧 [DEV] Using password: $devPassword');
@@ -310,7 +315,11 @@ class AuthService {
     try {
       _updateAuthState(AuthState.loading);
 
-      final devPassword = 'DevPass_${email.hashCode.abs()}_2024!';
+      // Use SHA256 for stable hash across devices (hashCode is not stable in Dart)
+      final emailBytes = utf8.encode(email);
+      final hash = sha256.convert(emailBytes);
+      final shortHash = hash.toString().substring(0, 12);
+      final devPassword = 'DevPass_${shortHash}_2024!';
 
       log('Starting dev sign-in for $email');
       log('Password: $devPassword');
@@ -847,23 +856,38 @@ class AuthService {
         _updateAuthState(AuthState.unauthenticated);
         return;
       }
-      
-      // Check if token is expired
-      if (await isTokenExpiringSoon()) {
-        debugPrint('🔄 Token expiring soon, refreshing...');
-        final refreshed = await refreshToken();
-        
-        if (refreshed) {
+
+      // CRITICAL: Validate session with Supabase server
+      // iOS Keychain persists tokens after app uninstall, so we must verify
+      // with the server that these tokens are still valid
+      debugPrint('🔄 Validating stored session with server...');
+
+      try {
+        // First, try to set the session with the stored refresh token
+        // This tells Supabase client about our stored tokens
+        final response = await _supabase!.auth.setSession(storedRefreshToken);
+
+        if (response.session != null) {
+          // Session is valid - save the new tokens and mark authenticated
+          await _saveSession(response.session!);
+          debugPrint('✅ Session validated and restored from storage');
           _updateAuthState(AuthState.authenticated);
         } else {
+          // Session invalid - clear stale tokens
+          debugPrint('⚠️ Stored session is no longer valid on server');
+          await _clearSession();
           _updateAuthState(AuthState.unauthenticated);
         }
-      } else {
-        debugPrint('✅ Session restored from storage');
-        _updateAuthState(AuthState.authenticated);
+      } on AuthException catch (authError) {
+        // Auth error means the session is invalid (user deleted, token revoked, etc.)
+        debugPrint('⚠️ Auth error validating session: ${authError.message}');
+        await _clearSession();
+        _updateAuthState(AuthState.unauthenticated);
       }
     } catch (e) {
       debugPrint('❌ Error restoring session: $e');
+      // On any error, clear potentially stale tokens and require fresh login
+      await _clearSession();
       _updateAuthState(AuthState.unauthenticated);
     }
   }

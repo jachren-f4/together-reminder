@@ -69,13 +69,43 @@ class _AuthWrapperState extends State<AuthWrapper> {
   }
 
   /// Check if user has completed onboarding before
+  /// Also validates Keychain state against auth state to handle iOS Keychain persistence
   Future<void> _checkFirstRun() async {
     final hasCompletedOnboarding = await _secureStorage.read(key: 'has_completed_onboarding');
+
+    // iOS Keychain survives app uninstalls. If Keychain says "completed" but user
+    // is not authenticated, clear the stale Keychain data to ensure fresh onboarding.
+    if (hasCompletedOnboarding == 'true' && _authService.authState == AuthState.unauthenticated) {
+      debugPrint('🔄 Clearing stale Keychain data (onboarding flag but no auth)');
+      await _clearStaleKeychainData();
+      if (mounted) {
+        setState(() {
+          _isFirstRun = true;
+          _hasCheckedFirstRun = true;
+        });
+      }
+      return;
+    }
+
     if (mounted) {
       setState(() {
         _isFirstRun = hasCompletedOnboarding != 'true';
         _hasCheckedFirstRun = true;
       });
+    }
+  }
+
+  /// Clear stale Keychain data that persisted after app uninstall
+  Future<void> _clearStaleKeychainData() async {
+    try {
+      await _secureStorage.delete(key: 'has_completed_onboarding');
+      await _secureStorage.delete(key: 'couple_id');
+      // Clear any other onboarding-related keys
+      await _secureStorage.delete(key: 'supabase_access_token');
+      await _secureStorage.delete(key: 'supabase_refresh_token');
+      debugPrint('✅ Stale Keychain data cleared');
+    } catch (e) {
+      debugPrint('⚠️ Error clearing stale Keychain data: $e');
     }
   }
 

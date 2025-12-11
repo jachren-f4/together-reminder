@@ -3,12 +3,35 @@
  *
  * GET /api/welcome-quiz - Get welcome quiz questions and status
  * Returns questions and current completion status for the couple.
+ *
+ * Answer Denormalization:
+ * Answers are stored as normalized user IDs ("Me" → userId, "My partner" → partnerId).
+ * When returning results, we convert back to human-readable format from the viewer's perspective.
  */
 
 import { withAuthOrDevBypass } from '@/lib/auth/dev-middleware';
 import { query } from '@/lib/db/pool';
 import { NextResponse } from 'next/server';
 import { getCoupleBasic } from '@/lib/couple/utils';
+
+/**
+ * Convert a normalized answer (user ID) back to display format.
+ * Viewer-relative: if answer is viewer's ID → "Me", if partner's ID → "My partner"
+ */
+function denormalizeAnswer(answer: string, viewerUserId: string, partnerId: string): string {
+  // Check if the answer looks like a UUID (normalized user ID)
+  const uuidPattern = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+  if (uuidPattern.test(answer)) {
+    // Convert back to relative answer from viewer's perspective
+    if (answer === viewerUserId) {
+      return 'Me';
+    } else if (answer === partnerId) {
+      return 'My partner';
+    }
+  }
+  // Return as-is (it's either a non-relative answer or already human-readable)
+  return answer;
+}
 
 // Welcome quiz questions - hardcoded for consistency
 const WELCOME_QUIZ_QUESTIONS = [
@@ -61,15 +84,55 @@ export const GET = withAuthOrDevBypass(async (_req, userId) => {
         [coupleId]
       );
 
+      // Also fetch the raw stored answers to get originalAnswer for display
+      const answersQuery = await query(
+        `SELECT user_id, answers FROM welcome_quiz_answers WHERE couple_id = $1`,
+        [coupleId]
+      );
+
+      // Build lookup: visitorUserId -> { questionId -> originalAnswer }
+      const answersByUser: Record<string, Record<string, string>> = {};
+      for (const row of answersQuery.rows) {
+        const userAnswers: Record<string, string> = {};
+        const parsedAnswers = typeof row.answers === 'string'
+          ? JSON.parse(row.answers)
+          : row.answers;
+        for (const a of parsedAnswers) {
+          // Use originalAnswer if available (new format), otherwise use answer (old format)
+          userAnswers[a.questionId] = a.originalAnswer || a.answer;
+        }
+        answersByUser[row.user_id] = userAnswers;
+      }
+
       results = {
-        questions: resultsQuery.rows.map((row) => ({
-          questionId: row.question_id,
-          question: WELCOME_QUIZ_QUESTIONS.find((q) => q.id === row.question_id)?.question || '',
-          user1Answer: row.user1_answer,
-          user2Answer: row.user2_answer,
-          isMatch: row.is_match,
-        })),
-        matchCount: resultsQuery.rows.filter((r) => r.is_match).length,
+        questions: resultsQuery.rows.map((row: {
+          question_id: string;
+          user1_id: string;
+          user1_answer: string;
+          user2_id: string;
+          user2_answer: string;
+          is_match: boolean;
+        }) => {
+          const questionDef = WELCOME_QUIZ_QUESTIONS.find((q) => q.id === row.question_id);
+
+          // Get the raw answer (might be originalAnswer or normalized UUID)
+          let user1Answer = answersByUser[row.user1_id]?.[row.question_id] || row.user1_answer;
+          let user2Answer = answersByUser[row.user2_id]?.[row.question_id] || row.user2_answer;
+
+          // Denormalize UUIDs back to human-readable format for the viewer (userId)
+          // From viewer's perspective: viewer is "Me", partner is "My partner"
+          user1Answer = denormalizeAnswer(user1Answer, userId, partnerId);
+          user2Answer = denormalizeAnswer(user2Answer, userId, partnerId);
+
+          return {
+            questionId: row.question_id,
+            question: questionDef?.question || '',
+            user1Answer,
+            user2Answer,
+            isMatch: row.is_match,
+          };
+        }),
+        matchCount: resultsQuery.rows.filter((r: { is_match: boolean }) => r.is_match).length,
         totalQuestions: resultsQuery.rows.length,
       };
     }

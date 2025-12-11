@@ -1102,6 +1102,10 @@ class _NewHomeScreenState extends State<NewHomeScreen> with TickerProviderStateM
     // Steps Together - FIRST card (iOS only, skip on web)
     if (!kIsWeb && Platform.isIOS) {
       final stepsService = StepsFeatureService();
+
+      // Refresh partner status from server to ensure we have latest connection state
+      await stepsService.refreshPartnerStatus();
+
       final stepsState = stepsService.getCurrentState();
 
       // Only add card if supported (not notSupported state)

@@ -181,15 +181,22 @@ class _TogetherRemindAppState extends State<TogetherRemindApp> with WidgetsBindi
     // Only sync on iOS
     if (kIsWeb || !Platform.isIOS) return;
 
-    // Only sync if user is connected
+    // Need partner to sync
     final storage = StorageService();
     if (!storage.hasPartner()) return;
 
+    final stepsService = StepsFeatureService();
     final connection = storage.getStepsConnection();
-    if (connection == null || !connection.isConnected) return;
 
-    Logger.debug('App resumed - syncing steps', service: 'steps');
-    await StepsFeatureService().syncSteps();
+    if (connection != null && connection.isConnected) {
+      // User is connected - full sync
+      Logger.debug('App resumed - syncing steps (user connected)', service: 'steps');
+      await stepsService.syncSteps();
+    } else {
+      // User not connected - still refresh partner status to update card state
+      Logger.debug('App resumed - refreshing partner status only', service: 'steps');
+      await stepsService.refreshPartnerStatus();
+    }
   }
 
   @override

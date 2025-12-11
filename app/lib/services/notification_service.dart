@@ -74,6 +74,9 @@ class NotificationService {
   // BuildContext for showing foreground notifications
   static BuildContext? _appContext;
 
+  // Track if permission has been requested
+  static bool _permissionRequested = false;
+
   static Future<void> initialize() async {
     // On web, skip FCM initialization (service workers not supported in debug mode)
     if (kIsWeb) {
@@ -83,30 +86,8 @@ class NotificationService {
       return;
     }
 
-    // Request permissions
-    NotificationSettings? settings;
-    try {
-      settings = await _fcm.requestPermission(
-        alert: true,
-        badge: true,
-        sound: true,
-      ).timeout(
-        const Duration(seconds: 5),
-        onTimeout: () {
-          Logger.warn('FCM permission request timed out (network issue)', service: 'notification');
-          throw TimeoutException('FCM permission request timed out');
-        },
-      );
-
-      if (settings.authorizationStatus == AuthorizationStatus.authorized) {
-        Logger.success('User granted notification permission', service: 'notification');
-      } else {
-        Logger.warn('User declined notification permission', service: 'notification');
-      }
-    } catch (e) {
-      Logger.warn('Failed to request FCM permissions: $e', service: 'notification');
-      Logger.success('Continuing without FCM (using local notifications only)', service: 'notification');
-    }
+    // DON'T request permissions here - defer until after LP intro
+    // Permission will be requested via requestPermission() from LpIntroOverlay
 
     // Initialize local notifications
     const AndroidInitializationSettings androidSettings =
@@ -197,6 +178,45 @@ class NotificationService {
       }
     } catch (e) {
       Logger.warn('Failed to sync push token on startup: $e', service: 'notification');
+    }
+  }
+
+  /// Request notification permission - called from LP intro overlay after user sees value
+  /// This is deferred from initialize() to provide better UX (no gray overlay on first launch)
+  static Future<bool> requestPermission() async {
+    // Skip on web
+    if (kIsWeb) return true;
+
+    // Don't request again if already requested
+    if (_permissionRequested) return true;
+
+    _permissionRequested = true;
+
+    try {
+      final settings = await _fcm.requestPermission(
+        alert: true,
+        badge: true,
+        sound: true,
+      ).timeout(
+        const Duration(seconds: 5),
+        onTimeout: () {
+          Logger.warn('FCM permission request timed out (network issue)', service: 'notification');
+          throw TimeoutException('FCM permission request timed out');
+        },
+      );
+
+      if (settings.authorizationStatus == AuthorizationStatus.authorized) {
+        Logger.success('User granted notification permission', service: 'notification');
+        // Sync token to server now that we have permission
+        await syncTokenToServer();
+        return true;
+      } else {
+        Logger.warn('User declined notification permission', service: 'notification');
+        return false;
+      }
+    } catch (e) {
+      Logger.warn('Failed to request FCM permissions: $e', service: 'notification');
+      return false;
     }
   }
 

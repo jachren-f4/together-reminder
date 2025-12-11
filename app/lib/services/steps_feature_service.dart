@@ -53,20 +53,58 @@ class StepsFeatureService {
     // Initialize sync service
     _syncService.initialize(coupleId: coupleId, userId: userId);
 
-    // Load partner data from Firebase
-    await _syncService.loadPartnerDataFromFirebase();
+    // Load partner data from server
+    await _syncService.loadPartnerDataFromServer();
 
-    // Start listening for updates
-    _syncService.startListening();
+    // Start polling for updates
+    _syncService.startPolling();
 
     _isInitialized = true;
     Logger.info('StepsFeatureService initialized', service: 'steps');
+  }
+
+  /// Auto-initialize from storage if user/partner are available
+  /// Returns true if initialization succeeded, false otherwise
+  Future<bool> ensureInitialized() async {
+    if (_isInitialized) return true;
+    if (!isSupported) return false;
+
+    // Try to auto-initialize from storage
+    final user = _storage.getUser();
+    final partner = _storage.getPartner();
+
+    if (user == null || partner == null) {
+      Logger.warn('Cannot auto-initialize StepsFeatureService - no user or partner in storage', service: 'steps');
+      return false;
+    }
+
+    // Generate couple ID using the same logic as other services
+    final coupleId = StepsSyncService.generateCoupleId(user.id, partner.id);
+
+    await initialize(coupleId: coupleId, userId: user.id);
+    return _isInitialized;
   }
 
   /// Dispose of resources
   void dispose() {
     _syncService.dispose();
     _isInitialized = false;
+  }
+
+  /// Refresh partner's connection status from server.
+  /// This is a lightweight operation that doesn't require the user to be connected.
+  /// Useful for updating the Steps card state when the user hasn't connected yet.
+  Future<void> refreshPartnerStatus() async {
+    if (!isSupported) return;
+
+    // Try to auto-initialize sync service for API calls
+    if (!_syncService.isInitialized && !_syncService.tryAutoInitialize()) {
+      Logger.warn('refreshPartnerStatus: Could not initialize sync service', service: 'steps');
+      return;
+    }
+
+    // Fetch partner data from server (updates partnerConnected in storage)
+    await _syncService.loadPartnerDataFromServer();
   }
 
   /// Check if the Steps feature should be shown on this platform
@@ -147,6 +185,15 @@ class StepsFeatureService {
   Future<bool> connectHealthKit() async {
     if (!isSupported) return false;
 
+    // Ensure service is initialized before syncing
+    if (!_isInitialized) {
+      final initialized = await ensureInitialized();
+      if (!initialized) {
+        Logger.warn('connectHealthKit: Could not initialize StepsFeatureService', service: 'steps');
+        // Continue anyway - local HealthKit connection will work, just can't sync yet
+      }
+    }
+
     final granted = await _healthService.requestPermission();
     if (granted) {
       Logger.success('HealthKit connected successfully', service: 'steps');
@@ -157,20 +204,33 @@ class StepsFeatureService {
       await _healthService.syncTodaySteps(skipPermissionCheck: true);
       await _healthService.syncYesterdaySteps(skipPermissionCheck: true);
 
-      // Sync to Firebase
+      // Sync to server
       await _syncService.syncConnectionStatus();
-      await _syncService.syncStepsToFirebase();
-      await _syncService.syncYesterdayToFirebase();
+      await _syncService.syncStepsToServer();
+      await _syncService.syncYesterdayToServer();
+
+      // Fetch partner's data in case they already connected
+      await _syncService.loadPartnerDataFromServer();
     }
     return granted;
   }
 
-  /// Sync step data from HealthKit and to Firebase
-  Future<void> syncSteps() async {
-    if (!isSupported) return;
+  /// Sync step data from HealthKit and to server
+  /// Returns true if sync completed successfully
+  Future<bool> syncSteps() async {
+    if (!isSupported) return false;
 
-    // Full sync: HealthKit -> Local -> Firebase
-    await _syncService.performFullSync();
+    // Ensure service is initialized before syncing
+    if (!_isInitialized) {
+      final initialized = await ensureInitialized();
+      if (!initialized) {
+        Logger.warn('syncSteps aborted - could not initialize StepsFeatureService', service: 'steps');
+        return false;
+      }
+    }
+
+    // Full sync: HealthKit -> Local -> Server
+    return await _syncService.performFullSync();
   }
 
   /// Mark yesterday's reward as claimed
@@ -178,7 +238,7 @@ class StepsFeatureService {
     final yesterday = _storage.getYesterdaySteps();
     if (yesterday != null && yesterday.canClaim) {
       await _healthService.markAsClaimed(yesterday.dateKey);
-      await _syncService.markClaimedInFirebase(yesterday.dateKey);
+      await _syncService.markClaimedInServer(yesterday.dateKey);
     }
   }
 
