@@ -25,7 +25,7 @@
 | Layer | Technology |
 |-------|------------|
 | **Frontend** | Flutter 3.16+, Dart 3.2+, Material Design 3 |
-| **Backend** | Next.js API (Vercel, single catch-all function) |
+| **Backend** | Next.js API (Vercel, 46 route files) |
 | **Database** | Supabase (Postgres) |
 | **Storage** | Hive (local NoSQL) |
 | **Notifications** | FCM (Android), APNs (iOS) |
@@ -36,29 +36,22 @@
 - **Supabase:** `https://naqzdqdncdzxpxbdysgq.supabase.co`
 - **Config:** `lib/config/supabase_config.dart`
 
-### API Architecture (Consolidated Routes)
+### API Architecture (Multi-Route)
 
-All API routes are consolidated into a **single catch-all serverless function**:
-- **Route file:** `api/app/api/[...slug]/route.ts`
+Each API endpoint has its own `route.ts` file in `api/app/api/`:
+- **Route convention:** URL path maps directly to file path (e.g., `/api/sync/quiz` → `api/app/api/sync/quiz/route.ts`)
+- **Total routes:** 46 route files
 - **Vercel Root Directory:** Must be set to `api` in Vercel dashboard
 
-Handler files in `api/lib/handlers/`:
-| Handler | Endpoints |
-|---------|-----------|
-| `sync-router.ts` | `/api/sync/*` (daily-quests, love-points, steps, etc.) |
-| `game-handlers.ts` | `/api/sync/game/*` (unified game play) |
-| `quiz-handlers.ts` | `/api/sync/quiz/*` |
-| `you-or-me-handlers.ts` | `/api/sync/you-or-me/*` |
-| `linked-handlers.ts` | `/api/sync/linked/*` |
-| `word-search-handlers.ts` | `/api/sync/word-search/*` |
-| `couples-router.ts` | `/api/couples/*` |
-| `user-router.ts` | `/api/user/*` |
-| `dev-router.ts` | `/api/dev/*` |
-| `auth-router.ts` | `/api/auth/*` |
-| `puzzles-router.ts` | `/api/puzzles/*` |
-| `health-handler.ts` | `/api/health` |
-| `leaderboard-handler.ts` | `/api/leaderboard` |
-| `metrics-handler.ts` | `/api/metrics` |
+**Key route categories:**
+| Category | Path Pattern | Examples |
+|----------|--------------|----------|
+| Sync | `/api/sync/*` | `daily-quests`, `love-points`, `steps`, `quiz/*`, `linked/*`, `word-search/*`, `you-or-me/*` |
+| Couples | `/api/couples/*` | `invite`, `join`, `pair-direct`, `status` |
+| User | `/api/user/*` | `profile`, `name`, `country`, `push-token`, `complete-signup` |
+| Dev | `/api/dev/*` | `reset-couple-progress`, `user-data`, `complete-games` |
+| Auth | `/api/auth/*` | `verify` |
+| Other | `/api/*` | `health`, `leaderboard`, `metrics`, `puzzles/images/*` |
 
 ### Bundle IDs
 - **iOS:** `com.togetherremind.togetherremind2`
@@ -181,13 +174,13 @@ await questSyncService.syncTodayQuests(...);  // Scattered, hard to track
 
 **Single Source of Truth:** `couples.total_lp` (couple-level, not per-user)
 
-| Activity | LP | Handler |
-|----------|-----|---------|
-| Classic/Affirmation Quiz | 30 | `lib/handlers/quiz-handlers.ts` |
-| You or Me | 30 | `lib/handlers/you-or-me-handlers.ts` |
-| Linked | 30 | `lib/handlers/linked-handlers.ts` |
-| Word Search | 30 | `lib/handlers/word-search-handlers.ts` |
-| Steps Together | 15-30 | `lib/handlers/sync-router.ts` |
+| Activity | LP | Route File |
+|----------|-----|------------|
+| Classic/Affirmation Quiz | 30 | `api/app/api/sync/quiz/submit/route.ts` |
+| You or Me | 30 | `api/app/api/sync/you-or-me/submit/route.ts` |
+| Linked | 30 | `api/app/api/sync/linked/submit/route.ts` |
+| Word Search | 30 | `api/app/api/sync/word-search/submit/route.ts` |
+| Steps Together | 15-30 | `api/app/api/sync/steps/route.ts` |
 
 **Max daily:** 165-180 LP
 
