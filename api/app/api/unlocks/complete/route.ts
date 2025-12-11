@@ -72,6 +72,12 @@ export const POST = withAuthOrDevBypass(async (req, userId) => {
       );
       const current = currentResult.rows[0];
 
+      // Safety check - if no row found, something went wrong with the insert
+      if (!current) {
+        console.error(`No couple_unlocks row found for couple ${coupleId} after INSERT`);
+        throw new Error('Failed to initialize unlock state');
+      }
+
       let lpAwarded = 0;
       const newlyUnlocked: string[] = [];
 
@@ -161,11 +167,11 @@ export const POST = withAuthOrDevBypass(async (req, userId) => {
           [lpAwarded, coupleId]
         );
 
-        // Log the LP transaction
+        // Log the LP transaction (use user_id to match table schema)
         await client.query(
-          `INSERT INTO love_point_transactions (couple_id, amount, source, description)
+          `INSERT INTO love_point_transactions (user_id, amount, source, description)
            VALUES ($1, $2, $3, $4)`,
-          [coupleId, lpAwarded, 'unlock', `Unlocked: ${newlyUnlocked.join(', ')}`]
+          [userId, lpAwarded, 'unlock', `Unlocked: ${newlyUnlocked.join(', ')}`]
         );
       }
 
@@ -195,7 +201,14 @@ export const POST = withAuthOrDevBypass(async (req, userId) => {
 
     return NextResponse.json(result);
   } catch (error) {
-    console.error('Error completing unlock:', error);
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+    const errorStack = error instanceof Error ? error.stack : '';
+    console.error('Error completing unlock:', {
+      error: errorMessage,
+      stack: errorStack,
+      userId,
+      trigger: (await req.clone().json().catch(() => ({}))).trigger,
+    });
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 });
