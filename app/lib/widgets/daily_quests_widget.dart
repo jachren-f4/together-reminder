@@ -263,7 +263,7 @@ class _DailyQuestsWidgetState extends State<DailyQuestsWidget> with RouteAware {
       final isLocked = !_unlockState!.isFeatureUnlocked(UnlockableFeature.youOrMe);
       return (
         isLocked: isLocked,
-        unlockCriteria: isLocked ? 'Complete a Daily Quest to unlock' : null,
+        unlockCriteria: isLocked ? 'Complete a quest first' : null,
       );
     }
 
