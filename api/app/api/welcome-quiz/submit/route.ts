@@ -3,6 +3,14 @@
  *
  * Submit answers for the welcome quiz.
  * If both partners have submitted, triggers the unlock for daily quizzes.
+ *
+ * Match Logic:
+ * Questions like "Who said I love you first?" have options: "Me", "My partner", "Both"
+ * When User A says "Me" and User B says "My partner", they're both pointing to User A.
+ * We normalize these answers to user IDs before comparing:
+ * - "Me" → the submitter's user_id
+ * - "My partner" → the partner's user_id
+ * - Other options (like "Both" or "We said it at the same time") stay as-is
  */
 
 import { withAuthOrDevBypass } from '@/lib/auth/dev-middleware';
@@ -11,9 +19,43 @@ import { NextResponse } from 'next/server';
 import { getCoupleBasic } from '@/lib/couple/utils';
 import { withTransaction } from '@/lib/db/transaction';
 
+// Welcome quiz questions - must match route.ts
+const WELCOME_QUIZ_QUESTIONS = [
+  {
+    id: 'wq1',
+    question: 'Who said "I love you" first?',
+    options: ['Me', 'My partner', 'We said it at the same time'],
+  },
+  {
+    id: 'wq2',
+    question: 'Who usually apologizes first after a disagreement?',
+    options: ['Me', 'My partner', 'We both apologize equally'],
+  },
+  {
+    id: 'wq3',
+    question: 'Who is more likely to plan a surprise date?',
+    options: ['Me', 'My partner', 'We both love planning surprises'],
+  },
+];
+
 interface Answer {
   questionId: string;
   answer: string;
+}
+
+/**
+ * Normalize relative answers ("Me"/"My partner") to user IDs for comparison.
+ * This allows correct matching when User A says "Me" and User B says "My partner"
+ * (both pointing to User A).
+ */
+function normalizeAnswer(answer: string, userId: string, partnerId: string): string {
+  if (answer === 'Me') {
+    return userId;
+  } else if (answer === 'My partner') {
+    return partnerId;
+  }
+  // For answers like "We said it at the same time" or "We both...", keep as-is
+  return answer;
 }
 
 export const POST = withAuthOrDevBypass(async (req, userId) => {
@@ -39,14 +81,22 @@ export const POST = withAuthOrDevBypass(async (req, userId) => {
 
     const { coupleId, partnerId } = couple;
 
+    // Normalize answers: convert "Me"/"My partner" to user IDs for correct matching
+    const normalizedAnswers = answers.map(a => ({
+      questionId: a.questionId,
+      answer: normalizeAnswer(a.answer, userId, partnerId),
+      originalAnswer: a.answer, // Keep original for display
+    }));
+    console.log('[welcome-quiz/submit] Normalized answers:', JSON.stringify(normalizedAnswers));
+
     const result = await withTransaction(async (client) => {
-      // Insert or update user's answers
+      // Insert or update user's answers (store normalized version)
       await client.query(
         `INSERT INTO welcome_quiz_answers (couple_id, user_id, answers)
          VALUES ($1, $2, $3)
          ON CONFLICT (couple_id, user_id)
          DO UPDATE SET answers = $3, completed_at = NOW()`,
-        [coupleId, userId, JSON.stringify(answers)]
+        [coupleId, userId, JSON.stringify(normalizedAnswers)]
       );
 
       // Check if partner has also answered
@@ -99,13 +149,33 @@ export const POST = withAuthOrDevBypass(async (req, userId) => {
           );
         }
 
-        // Get results
+        // Get results from PostgreSQL
         const resultsQuery = await client.query(
           `SELECT * FROM get_welcome_quiz_results($1)`,
           [coupleId]
         );
 
-        // Transform snake_case from PostgreSQL to camelCase for Flutter
+        // Also fetch the raw stored answers to get originalAnswer for display
+        const answersQuery = await client.query(
+          `SELECT user_id, answers FROM welcome_quiz_answers WHERE couple_id = $1`,
+          [coupleId]
+        );
+
+        // Build lookup: userId -> { questionId -> originalAnswer }
+        const answersByUser: Record<string, Record<string, string>> = {};
+        for (const row of answersQuery.rows) {
+          const userAnswers: Record<string, string> = {};
+          const parsedAnswers = typeof row.answers === 'string'
+            ? JSON.parse(row.answers)
+            : row.answers;
+          for (const a of parsedAnswers) {
+            // Use originalAnswer if available (new format), otherwise use answer (old format)
+            userAnswers[a.questionId] = a.originalAnswer || a.answer;
+          }
+          answersByUser[row.user_id] = userAnswers;
+        }
+
+        // Transform results: add question text and display-friendly answers
         const questions = resultsQuery.rows.map((row: {
           question_id: string;
           user1_id: string;
@@ -113,12 +183,17 @@ export const POST = withAuthOrDevBypass(async (req, userId) => {
           user2_id: string;
           user2_answer: string;
           is_match: boolean;
-        }) => ({
-          questionId: row.question_id,
-          user1Answer: row.user1_answer,
-          user2Answer: row.user2_answer,
-          isMatch: row.is_match,
-        }));
+        }) => {
+          const questionDef = WELCOME_QUIZ_QUESTIONS.find(q => q.id === row.question_id);
+          return {
+            questionId: row.question_id,
+            question: questionDef?.question || '', // Add question text for Bug 2
+            // Use originalAnswer for display (not the normalized user ID)
+            user1Answer: answersByUser[row.user1_id]?.[row.question_id] || row.user1_answer,
+            user2Answer: answersByUser[row.user2_id]?.[row.question_id] || row.user2_answer,
+            isMatch: row.is_match,
+          };
+        });
 
         return {
           submitted: true,

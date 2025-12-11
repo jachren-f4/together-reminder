@@ -218,20 +218,25 @@ export const GET = withAuthOrDevBypass(async (req, userId) => {
       }
     }
 
+    // Return flat structure that Flutter client expects
+    const todayData = stepsMap[today] || { user: { steps: 0 }, partner: { steps: 0 } };
+    const yesterdayData = stepsMap[yesterday] || { user: { steps: 0 }, partner: { steps: 0 } };
+    const claim = claimResult.rows[0] || null;
+
     return NextResponse.json({
-      connection: {
-        user: {
-          isConnected: userConnection?.is_connected || false,
-          connectedAt: userConnection?.connected_at || null,
-        },
-        partner: {
-          isConnected: partnerConnection?.is_connected || false,
-          connectedAt: partnerConnection?.connected_at || null,
-        },
-      },
-      today: stepsMap[today] || { user: { steps: 0 }, partner: { steps: 0 } },
-      yesterday: stepsMap[yesterday] || { user: { steps: 0 }, partner: { steps: 0 } },
-      claim: claimResult.rows[0] || null,
+      // Partner connection status (flat keys for Flutter)
+      partnerConnected: partnerConnection?.is_connected || false,
+      partnerConnectedAt: partnerConnection?.connected_at || null,
+      // Partner steps (flat keys for Flutter)
+      partnerTodaySteps: todayData.partner.steps,
+      partnerYesterdaySteps: yesterdayData.partner.steps,
+      // Claim status
+      yesterdayClaimedBy: claim?.claimed_by || null,
+      // Also include user's own data for completeness
+      userConnected: userConnection?.is_connected || false,
+      userConnectedAt: userConnection?.connected_at || null,
+      userTodaySteps: todayData.user.steps,
+      userYesterdaySteps: yesterdayData.user.steps,
     });
   } catch (error) {
     console.error('Error fetching steps:', error);
