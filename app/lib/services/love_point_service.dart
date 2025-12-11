@@ -243,9 +243,10 @@ class LovePointService {
 
       await _storage.saveUser(user);
 
-      // Show notification if LP increased
+      // Show notification if LP increased during active session
+      // Skip notification if localLp was 0 (fresh login/reinstall - just restoring state)
       final lpDiff = serverTotalLp - localLp;
-      if (lpDiff > 0 && _appContext != null && _appContext!.mounted) {
+      if (lpDiff > 0 && localLp > 0 && _appContext != null && _appContext!.mounted) {
         ForegroundNotificationBanner.show(
           _appContext!,
           title: 'Love Points Synced!',
