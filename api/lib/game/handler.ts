@@ -113,10 +113,15 @@ export async function getCouple(userId: string): Promise<CoupleInfo | null> {
     [userId]
   );
 
-  if (result.rows.length === 0) return null;
+  if (result.rows.length === 0) {
+    console.log(`🎯 getCouple: No couple found for userId=${userId}`);
+    return null;
+  }
 
   const row = result.rows[0];
   const isPlayer1 = userId === row.user1_id;
+
+  console.log(`🎯 getCouple: userId=${userId}, coupleId=${row.id}, user1_id=${row.user1_id}, user2_id=${row.user2_id}, isPlayer1=${isPlayer1}`);
 
   return {
     coupleId: row.id,
@@ -325,8 +330,14 @@ export async function getMatchById(matchId: string): Promise<GameMatch | null> {
     [matchId]
   );
 
-  if (result.rows.length === 0) return null;
-  return parseMatch(result.rows[0]);
+  if (result.rows.length === 0) {
+    console.log(`🎯 getMatchById: No match found for id=${matchId}`);
+    return null;
+  }
+
+  const match = parseMatch(result.rows[0]);
+  console.log(`🎯 getMatchById: Found match id=${matchId}, status=${match.status}, p1Count=${match.player1AnswerCount}, p2Count=${match.player2AnswerCount}`);
+  return match;
 }
 
 function parseMatch(row: any): GameMatch {
@@ -366,18 +377,24 @@ export async function submitAnswers(
 ): Promise<{ match: GameMatch; result: GameResult | null }> {
   const config = GAME_CONFIG[match.quizType];
 
+  console.log(`🎯 submitAnswers: matchId=${match.id}, isPlayer1=${couple.isPlayer1}, incomingAnswerCount=${answers.length}`);
+  console.log(`🎯 submitAnswers: BEFORE - p1Count=${match.player1AnswerCount}, p2Count=${match.player2AnswerCount}, status=${match.status}`);
+
   // Check if user already answered
   const userAnswered = couple.isPlayer1
     ? match.player1AnswerCount > 0
     : match.player2AnswerCount > 0;
 
   if (userAnswered) {
+    console.log(`🎯 submitAnswers: User already answered! isPlayer1=${couple.isPlayer1}`);
     throw new Error('Already submitted answers');
   }
 
   // Update answers
   const updatedPlayer1Answers = couple.isPlayer1 ? answers : match.player1Answers;
   const updatedPlayer2Answers = couple.isPlayer1 ? match.player2Answers : answers;
+
+  console.log(`🎯 submitAnswers: Updated p1Len=${updatedPlayer1Answers.length}, p2Len=${updatedPlayer2Answers.length}`);
 
   // Check if both answered
   const bothAnswered = updatedPlayer1Answers.length > 0 && updatedPlayer2Answers.length > 0;
@@ -421,6 +438,8 @@ export async function submitAnswers(
   );
 
   const updatedMatch = parseMatch(updateResult.rows[0]);
+
+  console.log(`🎯 submitAnswers: AFTER UPDATE - status=${updatedMatch.status}, p1Count=${updatedMatch.player1AnswerCount}, p2Count=${updatedMatch.player2AnswerCount}, bothAnswered=${bothAnswered}`);
 
   const gameResult: GameResult | null = bothAnswered ? {
     matchPercentage: matchPercentage!,
