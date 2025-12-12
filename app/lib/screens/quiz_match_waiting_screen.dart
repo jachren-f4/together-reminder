@@ -35,6 +35,7 @@ class _QuizMatchWaitingScreenState extends State<QuizMatchWaitingScreen>
   final StorageService _storage = StorageService();
   bool _isChecking = false;
   bool _isSendingPoke = false;
+  bool _isHandlingCompletion = false;  // Guard against multiple completion attempts
 
   // Animation controllers
   late AnimationController _breatheController;
@@ -51,9 +52,20 @@ class _QuizMatchWaitingScreenState extends State<QuizMatchWaitingScreen>
     'The wait will be worth it...',
   ];
 
+  // Debug heartbeat timer
+  Timer? _debugHeartbeat;
+  int _heartbeatCount = 0;
+
   @override
   void initState() {
     super.initState();
+    print('🚀 WAITING SCREEN: initState() called');
+
+    // Debug heartbeat - should print every 3 seconds if screen is alive
+    _debugHeartbeat = Timer.periodic(const Duration(seconds: 3), (_) {
+      _heartbeatCount++;
+      print('💓 HEARTBEAT #$_heartbeatCount - screen alive, mounted=$mounted');
+    });
 
     // Breathing animation for partner card (subtle scale)
     _breatheController = AnimationController(
@@ -77,17 +89,37 @@ class _QuizMatchWaitingScreenState extends State<QuizMatchWaitingScreen>
   }
 
   void _startPolling() {
+    print('🚀 WAITING SCREEN: _startPolling() called! matchId=${widget.matchId}, quizType=${widget.quizType}');
+    Logger.info('🎯 WaitingScreen._startPolling called for matchId=${widget.matchId}, quizType=${widget.quizType}', service: 'quiz');
+
     _service.startPolling(
       widget.matchId,
       onUpdate: (state) {
-        if (!mounted) return;
+        print('🎯 WAITING: callback received! isCompleted=${state.isCompleted}, hasUserAnswered=${state.hasUserAnswered}, hasPartnerAnswered=${state.hasPartnerAnswered}');
 
-        if (state.isCompleted) {
+        if (!mounted) {
+          print('🎯 WAITING: widget not mounted, ignoring callback');
+          return;
+        }
+
+        if (_isHandlingCompletion) {
+          print('🎯 WAITING: already handling completion, ignoring callback');
+          return;
+        }
+
+        // Check both isCompleted (status == 'completed') and partner answered (in case status wasn't updated yet)
+        // This provides redundancy in case there's a database sync issue
+        if (state.isCompleted || (state.hasUserAnswered && state.hasPartnerAnswered)) {
+          print('🎯 WAITING: quiz completed! (isCompleted=${state.isCompleted}, bothAnswered=${state.hasUserAnswered && state.hasPartnerAnswered}) Navigating to results');
+          _isHandlingCompletion = true;
           _service.stopPolling();
           _handleCompletion(state);
+        } else {
+          print('🎯 WAITING: not completed yet, continuing to poll');
         }
       },
       intervalSeconds: 5,
+      quizType: widget.quizType,
     );
   }
 
@@ -167,7 +199,8 @@ class _QuizMatchWaitingScreenState extends State<QuizMatchWaitingScreen>
 
   @override
   void dispose() {
-    _service.stopPolling();
+    _debugHeartbeat?.cancel();
+    _service.stopPolling(matchId: widget.matchId);
     _breatheController.dispose();
     _dotsController.dispose();
     _messageController.dispose();
@@ -175,16 +208,19 @@ class _QuizMatchWaitingScreenState extends State<QuizMatchWaitingScreen>
   }
 
   Future<void> _checkStatus() async {
-    if (_isChecking) return;
+    if (_isChecking || _isHandlingCompletion) return;
 
     setState(() => _isChecking = true);
 
     try {
-      final state = await _service.pollMatchState(widget.matchId);
+      final state = await _service.pollMatchState(widget.matchId, quizType: widget.quizType);
 
       if (!mounted) return;
 
-      if (state.isCompleted) {
+      // Check both isCompleted and bothAnswered for redundancy
+      if (state.isCompleted || (state.hasUserAnswered && state.hasPartnerAnswered)) {
+        Logger.info('Manual check detected completion: isCompleted=${state.isCompleted}, bothAnswered=${state.hasUserAnswered && state.hasPartnerAnswered}', service: 'quiz');
+        _isHandlingCompletion = true;
         _service.stopPolling();
         await _handleCompletion(state);
       }

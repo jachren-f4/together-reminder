@@ -75,8 +75,16 @@ class _AuthWrapperState extends State<AuthWrapper> {
 
     // iOS Keychain survives app uninstalls. If Keychain says "completed" but user
     // is not authenticated, clear the stale Keychain data to ensure fresh onboarding.
-    if (hasCompletedOnboarding == 'true' && _authService.authState == AuthState.unauthenticated) {
-      debugPrint('🔄 Clearing stale Keychain data (onboarding flag but no auth)');
+    // BUT: Check for valid tokens first - if tokens exist, user just authenticated
+    // and we shouldn't clear them (auth state might still be transitioning).
+    // SKIP on web: Page refresh can cause race conditions where auth isn't restored yet.
+    final hasTokens = await _secureStorage.read(key: 'supabase_access_token');
+    final isWeb = kIsWeb;
+
+    // Only clear stale data on native platforms (iOS/Android), not on web
+    // Web page refresh should preserve session from localStorage
+    if (!isWeb && hasCompletedOnboarding == 'true' && _authService.authState == AuthState.unauthenticated && hasTokens == null) {
+      debugPrint('🔄 Clearing stale Keychain data (onboarding flag but no auth and no tokens)');
       await _clearStaleKeychainData();
       if (mounted) {
         setState(() {
@@ -228,7 +236,8 @@ class _AuthWrapperState extends State<AuthWrapper> {
 
     // Dev mode: Skip auth entirely for faster development
     // Only bypasses on simulators/emulators/web, NEVER on physical devices
-    if (_shouldBypassAuth) {
+    // IMPORTANT: Only use bypass if user is NOT already authenticated (real auth takes priority)
+    if (_shouldBypassAuth && _authService.authState != AuthState.authenticated) {
       if (_storageService.hasPartner()) {
         return const HomeScreen();
       } else {

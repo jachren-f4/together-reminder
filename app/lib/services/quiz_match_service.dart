@@ -103,30 +103,43 @@ class QuizMatchService {
     int intervalSeconds = 5,
     String quizType = 'classic',
   }) {
-    _onStateUpdate = onUpdate;
-    stopPolling();
+    Logger.info('🎯 QuizMatchService.startPolling called for match: $matchId, quizType: $quizType', service: 'quiz');
 
-    Logger.info('Starting polling for quiz match: $matchId', service: 'quiz');
+    // Set callback FIRST (before any cleanup that might trigger early)
+    _onStateUpdate = onUpdate;
 
     final gameType = quizType == 'affirmation'
         ? GameType.affirmation
         : GameType.classic;
 
+    Logger.info('🎯 QuizMatchService: calling _unifiedService.startPolling', service: 'quiz');
+
     _unifiedService.startPolling(
       gameType: gameType,
       matchId: matchId,
       onUpdate: (response) {
+        Logger.debug('🎯 QuizMatchService: received callback from UnifiedGameService, isCompleted=${response.state.isCompleted}', service: 'quiz');
         final state = _convertToGameState(response);
-        _onStateUpdate?.call(state);
+        if (_onStateUpdate != null) {
+          Logger.debug('🎯 QuizMatchService: forwarding to waiting screen callback', service: 'quiz');
+          _onStateUpdate?.call(state);
+        } else {
+          Logger.error('🎯 QuizMatchService: _onStateUpdate is NULL, cannot forward!', service: 'quiz');
+        }
       },
       intervalSeconds: intervalSeconds,
     );
   }
 
   /// Stop polling
-  void stopPolling() {
-    _unifiedService.stopPolling();
-    _onStateUpdate = null;
+  /// [matchId] - If provided, only stops polling if this matches the current polling match
+  void stopPolling({String? matchId}) {
+    final wasStopped = _unifiedService.stopPolling(matchId: matchId);
+    // Only clear callback if polling was actually stopped
+    // This prevents game screen dispose from clearing waiting screen's callback
+    if (wasStopped) {
+      _onStateUpdate = null;
+    }
   }
 
   /// Dispose resources

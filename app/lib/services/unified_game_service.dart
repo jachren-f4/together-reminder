@@ -304,6 +304,9 @@ class UnifiedGameService {
   /// Polling timer for waiting screens
   Timer? _pollTimer;
 
+  /// Currently polling match ID (to prevent other screens from killing active polling)
+  String? _currentPollingMatchId;
+
   /// Callback for state updates during polling
   void Function(GamePlayResponse)? _onStateUpdate;
 
@@ -526,10 +529,19 @@ class UnifiedGameService {
     required void Function(GamePlayResponse) onUpdate,
     int intervalSeconds = 5,
   }) {
-    _onStateUpdate = onUpdate;
-    stopPolling();
+    Logger.info('🎯 UnifiedGameService.startPolling called for match: $matchId, gameType: ${gameType.apiPath}', service: 'quiz');
 
-    Logger.info('Starting polling for game match: $matchId', service: 'game');
+    // Stop any previous polling first (cancels timer but we'll set callback after)
+    _pollTimer?.cancel();
+    _pollTimer = null;
+
+    // Track which match is being polled
+    _currentPollingMatchId = matchId;
+
+    // Set callback AFTER stopping previous timer (stopPolling() clears the callback)
+    _onStateUpdate = onUpdate;
+
+    Logger.info('🎯 Callback set, starting timer with interval ${intervalSeconds}s', service: 'quiz');
 
     // Immediate poll
     _pollOnce(gameType, matchId);
@@ -539,32 +551,57 @@ class UnifiedGameService {
       Duration(seconds: intervalSeconds),
       (_) => _pollOnce(gameType, matchId),
     );
+    print('🎯 TIMER CREATED: _pollTimer is now ${_pollTimer != null ? "active" : "NULL"}, interval=${intervalSeconds}s, matchId=$matchId');
   }
 
   void _pollOnce(GameType gameType, String matchId) async {
+    // Use Logger.error for critical debug info so it shows in release builds
+    print('🎯 POLL: starting for match $matchId (timer active: ${_pollTimer != null})');
     try {
       final state = await getMatchState(gameType: gameType, matchId: matchId);
-      _onStateUpdate?.call(state);
+      print('🎯 POLL: got state - isCompleted=${state.state.isCompleted}, userAnswered=${state.state.userAnswered}, partnerAnswered=${state.state.partnerAnswered}');
+
+      if (_onStateUpdate != null) {
+        print('🎯 POLL: firing callback');
+        _onStateUpdate?.call(state);
+      } else {
+        print('🎯 POLL ERROR: callback is NULL - cannot notify waiting screen!');
+      }
 
       // Stop polling if completed
       if (state.state.isCompleted) {
-        Logger.info('Match completed, stopping polling', service: 'game');
-        stopPolling();
+        print('🎯 POLL: match completed, stopping polling');
+        stopPolling(force: true);
       }
     } catch (e) {
-      Logger.error('Polling error', error: e, service: 'game');
+      print('🎯 POLL ERROR: $e');
     }
   }
 
   /// Stop polling
-  void stopPolling() {
-    _pollTimer?.cancel();
-    _pollTimer = null;
-    _onStateUpdate = null;
+  /// [matchId] - If provided, only stops polling if this matches the current polling match
+  /// [force] - If true, stops polling regardless of match ID
+  /// Returns true if polling was actually stopped, false if ignored
+  bool stopPolling({String? matchId, bool force = false}) {
+    // Only stop if:
+    // 1. force is true (explicit stop request)
+    // 2. matchId matches current polling match
+    // 3. No matchId provided AND no current polling (cleanup case)
+    if (force || matchId == _currentPollingMatchId || (matchId == null && _currentPollingMatchId == null)) {
+      print('🛑 STOP POLLING: Stopping (matchId=$matchId, current=$_currentPollingMatchId, force=$force)');
+      _pollTimer?.cancel();
+      _pollTimer = null;
+      _onStateUpdate = null;
+      _currentPollingMatchId = null;
+      return true;
+    } else {
+      print('🔵 STOP POLLING IGNORED: Request for $matchId but currently polling $_currentPollingMatchId');
+      return false;
+    }
   }
 
   /// Dispose resources
   void dispose() {
-    stopPolling();
+    stopPolling(force: true);
   }
 }
