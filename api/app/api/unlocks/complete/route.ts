@@ -2,14 +2,15 @@
  * POST /api/unlocks/complete
  *
  * Called when a user completes a feature that triggers an unlock.
- * Updates the unlock state and awards LP for the unlock.
+ * Updates the unlock state (NO LP awarded - LP comes from game completion only).
  *
  * Triggers:
- * - 'welcome_quiz' -> Unlocks classic_quiz + affirmation_quiz (+30 LP)
- * - 'daily_quiz' -> Unlocks you_or_me (+30 LP)
- * - 'you_or_me' -> Unlocks linked (+30 LP)
- * - 'linked' -> Unlocks word_search (+30 LP)
- * - 'word_search' -> Unlocks steps (+30 LP, marks onboarding complete)
+ * - 'welcome_quiz' -> Unlocks classic_quiz + affirmation_quiz
+ * - 'daily_quiz' -> Marks classic/affirmation as completed based on quizType param
+ *                   Unlocks you_or_me only when BOTH are completed
+ * - 'you_or_me' -> Unlocks linked
+ * - 'linked' -> Unlocks word_search
+ * - 'word_search' -> Unlocks steps (marks onboarding complete)
  */
 
 import { withAuthOrDevBypass } from '@/lib/auth/dev-middleware';
@@ -22,12 +23,13 @@ type UnlockTrigger = 'welcome_quiz' | 'daily_quiz' | 'you_or_me' | 'linked' | 'w
 
 interface UnlockResult {
   success: boolean;
-  lpAwarded: number;
   newlyUnlocked: string[];
   unlockState: {
     welcomeQuizCompleted: boolean;
     classicQuizUnlocked: boolean;
+    classicQuizCompleted: boolean;
     affirmationQuizUnlocked: boolean;
+    affirmationQuizCompleted: boolean;
     youOrMeUnlocked: boolean;
     linkedUnlocked: boolean;
     wordSearchUnlocked: boolean;
@@ -36,12 +38,10 @@ interface UnlockResult {
   };
 }
 
-const UNLOCK_LP = 30;
-
 export const POST = withAuthOrDevBypass(async (req, userId) => {
   try {
     const body = await req.json();
-    const { trigger } = body as { trigger: UnlockTrigger };
+    const { trigger, quizType } = body as { trigger: UnlockTrigger; quizType?: 'classic' | 'affirmation' };
 
     if (!trigger) {
       return NextResponse.json({ error: 'Missing trigger' }, { status: 400 });
@@ -78,10 +78,10 @@ export const POST = withAuthOrDevBypass(async (req, userId) => {
         throw new Error('Failed to initialize unlock state');
       }
 
-      let lpAwarded = 0;
       const newlyUnlocked: string[] = [];
 
       // Determine what to unlock based on trigger
+      // NOTE: No LP is awarded for unlocking - LP comes from game completion only
       switch (trigger) {
         case 'welcome_quiz':
           // Only unlock if not already unlocked
@@ -94,22 +94,70 @@ export const POST = withAuthOrDevBypass(async (req, userId) => {
                WHERE couple_id = $1`,
               [coupleId]
             );
-            lpAwarded = UNLOCK_LP;
             newlyUnlocked.push('classic_quiz', 'affirmation_quiz');
           }
           break;
 
         case 'daily_quiz':
-          // Only unlock if not already unlocked
-          if (!current.you_or_me_unlocked) {
+          // Track which quiz type was completed
+          // You or Me only unlocks when BOTH Classic AND Affirmation are completed
+          if (quizType === 'classic' && !current.classic_quiz_completed) {
             await client.query(
               `UPDATE couple_unlocks
-               SET you_or_me_unlocked = true
+               SET classic_quiz_completed = true
                WHERE couple_id = $1`,
               [coupleId]
             );
-            lpAwarded = UNLOCK_LP;
-            newlyUnlocked.push('you_or_me');
+            // Refetch to get updated state
+            const afterClassic = await client.query(
+              `SELECT * FROM couple_unlocks WHERE couple_id = $1`,
+              [coupleId]
+            );
+            // Check if both are now completed and you_or_me not yet unlocked
+            if (afterClassic.rows[0].affirmation_quiz_completed && !afterClassic.rows[0].you_or_me_unlocked) {
+              await client.query(
+                `UPDATE couple_unlocks
+                 SET you_or_me_unlocked = true
+                 WHERE couple_id = $1`,
+                [coupleId]
+              );
+              newlyUnlocked.push('you_or_me');
+            }
+          } else if (quizType === 'affirmation' && !current.affirmation_quiz_completed) {
+            await client.query(
+              `UPDATE couple_unlocks
+               SET affirmation_quiz_completed = true
+               WHERE couple_id = $1`,
+              [coupleId]
+            );
+            // Refetch to get updated state
+            const afterAffirmation = await client.query(
+              `SELECT * FROM couple_unlocks WHERE couple_id = $1`,
+              [coupleId]
+            );
+            // Check if both are now completed and you_or_me not yet unlocked
+            if (afterAffirmation.rows[0].classic_quiz_completed && !afterAffirmation.rows[0].you_or_me_unlocked) {
+              await client.query(
+                `UPDATE couple_unlocks
+                 SET you_or_me_unlocked = true
+                 WHERE couple_id = $1`,
+                [coupleId]
+              );
+              newlyUnlocked.push('you_or_me');
+            }
+          } else if (!quizType) {
+            // Fallback for old clients that don't send quizType
+            // Old behavior: unlock immediately (to not break existing functionality)
+            console.warn('daily_quiz trigger without quizType - using legacy behavior');
+            if (!current.you_or_me_unlocked) {
+              await client.query(
+                `UPDATE couple_unlocks
+                 SET you_or_me_unlocked = true
+                 WHERE couple_id = $1`,
+                [coupleId]
+              );
+              newlyUnlocked.push('you_or_me');
+            }
           }
           break;
 
@@ -122,7 +170,6 @@ export const POST = withAuthOrDevBypass(async (req, userId) => {
                WHERE couple_id = $1`,
               [coupleId]
             );
-            lpAwarded = UNLOCK_LP;
             newlyUnlocked.push('linked');
           }
           break;
@@ -136,7 +183,6 @@ export const POST = withAuthOrDevBypass(async (req, userId) => {
                WHERE couple_id = $1`,
               [coupleId]
             );
-            lpAwarded = UNLOCK_LP;
             newlyUnlocked.push('word_search');
           }
           break;
@@ -151,28 +197,12 @@ export const POST = withAuthOrDevBypass(async (req, userId) => {
                WHERE couple_id = $1`,
               [coupleId]
             );
-            lpAwarded = UNLOCK_LP;
             newlyUnlocked.push('steps');
           }
           break;
 
         default:
           throw new Error(`Unknown trigger: ${trigger}`);
-      }
-
-      // Award LP if any unlock happened
-      if (lpAwarded > 0) {
-        await client.query(
-          `UPDATE couples SET total_lp = total_lp + $1 WHERE id = $2`,
-          [lpAwarded, coupleId]
-        );
-
-        // Log the LP transaction (use user_id to match table schema)
-        await client.query(
-          `INSERT INTO love_point_transactions (user_id, amount, source, description)
-           VALUES ($1, $2, $3, $4)`,
-          [userId, lpAwarded, 'unlock', `Unlocked: ${newlyUnlocked.join(', ')}`]
-        );
       }
 
       // Get updated state
@@ -184,12 +214,13 @@ export const POST = withAuthOrDevBypass(async (req, userId) => {
 
       return {
         success: true,
-        lpAwarded,
         newlyUnlocked,
         unlockState: {
           welcomeQuizCompleted: updated.welcome_quiz_completed,
           classicQuizUnlocked: updated.classic_quiz_unlocked,
+          classicQuizCompleted: updated.classic_quiz_completed ?? false,
           affirmationQuizUnlocked: updated.affirmation_quiz_unlocked,
+          affirmationQuizCompleted: updated.affirmation_quiz_completed ?? false,
           youOrMeUnlocked: updated.you_or_me_unlocked,
           linkedUnlocked: updated.linked_unlocked,
           wordSearchUnlocked: updated.word_search_unlocked,

@@ -32,16 +32,20 @@ class UnlockCelebrationOverlay extends StatefulWidget {
     required String featureDescription,
     required int lpEarned,
   }) {
-    return showDialog(
+    return showGeneralDialog(
       context: context,
       barrierDismissible: false,
       barrierColor: Colors.transparent,
-      builder: (context) => UnlockCelebrationOverlay(
-        featureName: featureName,
-        featureDescription: featureDescription,
-        lpEarned: lpEarned,
-        onContinue: () => Navigator.of(context).pop(),
-      ),
+      barrierLabel: 'Unlock Celebration',
+      transitionDuration: Duration.zero,
+      pageBuilder: (context, animation, secondaryAnimation) {
+        return UnlockCelebrationOverlay(
+          featureName: featureName,
+          featureDescription: featureDescription,
+          lpEarned: lpEarned,
+          onContinue: () => Navigator.of(context).pop(),
+        );
+      },
     );
   }
 
@@ -94,8 +98,8 @@ class _UnlockCelebrationOverlayState extends State<UnlockCelebrationOverlay>
       ),
     );
 
-    // Start animations
-    _pulseController.repeat();
+    // Start animations - play once, don't repeat (prevents looping/blinking)
+    _pulseController.forward();
 
     // Trigger haptic and sound
     Future.delayed(const Duration(milliseconds: 100), () {
@@ -119,10 +123,13 @@ class _UnlockCelebrationOverlayState extends State<UnlockCelebrationOverlay>
       child: AnimatedBuilder(
         animation: _pulseController,
         builder: (context, child) {
-          return Container(
-            color: Colors.black.withOpacity(0.95 * _fadeAnimation.value),
-            child: SafeArea(
-              child: Opacity(
+          return SizedBox.expand(
+            child: Container(
+              // Apply background to entire screen including safe area
+              color: Colors.black.withOpacity(0.95 * _fadeAnimation.value),
+              child: SafeArea(
+                // Keep content in safe area, but background extends edge-to-edge
+                child: Opacity(
                 opacity: _fadeAnimation.value,
                 child: Transform.translate(
                   offset: Offset(0, _slideAnimation.value),
@@ -236,7 +243,8 @@ class _UnlockCelebrationOverlayState extends State<UnlockCelebrationOverlay>
                 ),
               ),
             ),
-          );
+          ),
+        );
         },
       ),
     );

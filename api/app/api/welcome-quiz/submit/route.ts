@@ -141,9 +141,8 @@ export const POST = withAuthOrDevBypass(async (req, userId) => {
           [coupleId]
         );
 
-        let lpAwarded = 0;
         if (!unlockResult.rows[0]?.classic_quiz_unlocked) {
-          // Unlock daily quizzes
+          // Unlock daily quizzes (no LP awarded - LP comes from game completion only)
           await client.query(
             `UPDATE couple_unlocks
              SET welcome_quiz_completed = true,
@@ -151,20 +150,6 @@ export const POST = withAuthOrDevBypass(async (req, userId) => {
                  affirmation_quiz_unlocked = true
              WHERE couple_id = $1`,
             [coupleId]
-          );
-
-          // Award LP
-          lpAwarded = 30;
-          await client.query(
-            `UPDATE couples SET total_lp = total_lp + $1 WHERE id = $2`,
-            [lpAwarded, coupleId]
-          );
-
-          // Log transaction (user_id is the one who triggered the unlock)
-          await client.query(
-            `INSERT INTO love_point_transactions (user_id, amount, source, description)
-             VALUES ($1, $2, $3, $4)`,
-            [userId, lpAwarded, 'unlock', 'Unlocked: classic_quiz, affirmation_quiz']
           );
         }
 
@@ -226,7 +211,6 @@ export const POST = withAuthOrDevBypass(async (req, userId) => {
         return {
           submitted: true,
           bothCompleted: true,
-          lpAwarded,
           results: {
             matchCount: questions.filter((q: { isMatch: boolean }) => q.isMatch).length,
             totalQuestions: questions.length,
