@@ -8,6 +8,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { withAuthOrDevBypass } from '@/lib/auth/dev-middleware';
 import { query, getClient } from '@/lib/db/pool';
 import { LP_REWARDS, SCORING } from '@/lib/lp/config';
+import { tryAwardDailyLp, LpGrantResult } from '@/lib/lp/grant-service';
 import { readFileSync } from 'fs';
 import { join } from 'path';
 
@@ -296,6 +297,7 @@ export const POST = withAuthOrDevBypass(async (req, userId, email) => {
     // Determine winner if game complete
     let winnerId = null;
     let nextBranch = null;
+    let lpGrantResult: LpGrantResult | null = null;
     if (gameComplete) {
       if (newPlayer1Score > newPlayer2Score) {
         winnerId = user1_id;
@@ -304,18 +306,9 @@ export const POST = withAuthOrDevBypass(async (req, userId, email) => {
       }
       // If tied, winnerId stays null
 
-      // Award LP directly using the same client (avoids connection pool issues)
-      await client.query(
-        `UPDATE couples SET total_lp = COALESCE(total_lp, 0) + $1 WHERE id = $2`,
-        [LP_REWARDS.LINKED, coupleId]
-      );
-
-      // Record LP transaction for audit trail
-      await client.query(
-        `INSERT INTO love_point_transactions (user_id, amount, source, description, created_at)
-         VALUES ($1, $2, 'linked_complete', $3, NOW()), ($4, $2, 'linked_complete', $3, NOW())`,
-        [user1_id, LP_REWARDS.LINKED, `linked_complete (${matchId})`, user2_id]
-      );
+      // Use new daily LP grant system
+      lpGrantResult = await tryAwardDailyLp(client, coupleId, 'linked', matchId);
+      console.log(`🎯 Linked LP Grant Result: lpAwarded=${lpGrantResult.lpAwarded}, alreadyGrantedToday=${lpGrantResult.alreadyGrantedToday}`);
 
       // Advance branch progression for Linked activity
       // This makes the next puzzle come from the next branch (casual -> romantic -> adult -> casual)
@@ -393,6 +386,11 @@ export const POST = withAuthOrDevBypass(async (req, userId, email) => {
       winnerId,
       newLockedCount,
       nextBranch: gameComplete ? nextBranch : null,  // Branch for next puzzle (0=casual, 1=romantic, 2=adult)
+      // LP status from daily grant system
+      lpEarned: lpGrantResult?.lpAwarded ?? 0,
+      alreadyGrantedToday: lpGrantResult?.alreadyGrantedToday ?? false,
+      resetInMs: lpGrantResult?.resetInMs ?? 0,
+      canPlayMore: lpGrantResult?.canPlayMore ?? true,
     });
   } catch (error) {
     await client.query('ROLLBACK');

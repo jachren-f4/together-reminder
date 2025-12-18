@@ -1,61 +1,67 @@
 {
   "quizId": "quiz_005",
-  "title": "Lighthearted Quiz 5",
+  "title": "Decisions & Planning",
   "branch": "lighthearted",
   "questions": [
     {
       "id": "quiz_005_q1",
-      "text": "What's my favorite weather?",
+      "text": "When making a big decision, I usually...",
       "choices": [
-        "Sunny",
-        "Rainy",
-        "Snowy",
-        "Cloudy",
-        "Other / It varies"
+        "Research thoroughly first",
+        "Go with my gut instinct",
+        "Talk it through with you",
+        "Take my time, no rushing",
+        "Other / It depends on the decision"
       ],
-      "category": "favorites"
+      "category": "together"
     },
     {
       "id": "quiz_005_q2",
-      "text": "What's my preferred gift type?",
+      "text": "For everyday choices (dinner, weekend plans), I prefer...",
       "choices": [
-        "Practical",
-        "Sentimental",
-        "Experience",
-        "Surprise me",
-        "Other / It depends"
+        "You decide, I'm easy",
+        "We decide together",
+        "Take turns choosing",
+        "I usually have opinions",
+        "Other / Whoever cares more decides"
       ],
-      "category": "preferences"
+      "category": "together"
     },
     {
       "id": "quiz_005_q3",
-      "text": "Would I rather: Movie night or Game night?",
+      "text": "When it comes to trying new things, I'm usually...",
       "choices": [
-        "Movie night",
-        "Game night"
+        "Excited and up for it",
+        "Cautious but open",
+        "Need convincing first",
+        "Prefer sticking to what I know",
+        "Other / Depends on the thing"
       ],
-      "category": "would_you_rather"
+      "category": "lifestyle"
     },
     {
       "id": "quiz_005_q4",
-      "text": "Would I rather: Live without internet or Live without TV?",
+      "text": "How do I feel about surprises?",
       "choices": [
-        "Without internet",
-        "Without TV"
+        "Love them - the more the better",
+        "Like small surprises, not big ones",
+        "Prefer to know what's coming",
+        "Depends who it's from",
+        "Other / Mixed feelings"
       ],
-      "category": "would_you_rather"
+      "category": "lifestyle"
     },
     {
       "id": "quiz_005_q5",
-      "text": "What's my favorite way to learn new things?",
+      "text": "When we disagree on plans, I'd rather...",
       "choices": [
-        "Reading",
-        "Videos",
-        "Hands-on practice",
-        "Classes",
-        "Other / Something else"
+        "Compromise and meet in the middle",
+        "Take turns getting our way",
+        "Go with whoever feels stronger",
+        "Find a third option we both like",
+        "Other / Talk it out until we agree"
       ],
-      "category": "favorites"
+      "category": "together"
     }
   ]
 }

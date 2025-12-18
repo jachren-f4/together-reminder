@@ -1,61 +1,67 @@
 {
   "quizId": "quiz_006",
-  "title": "Lighthearted Quiz 6",
+  "title": "Morning & Evening",
   "branch": "lighthearted",
   "questions": [
     {
       "id": "quiz_006_q1",
-      "text": "Would I rather: Coffee or Tea?",
+      "text": "In the morning, I need...",
       "choices": [
-        "Coffee",
-        "Tea"
+        "Quiet time to wake up slowly",
+        "Conversation and connection",
+        "Coffee/tea before anything else",
+        "To get moving right away",
+        "Other / Just don't rush me"
       ],
-      "category": "would_you_rather"
+      "category": "lifestyle"
     },
     {
       "id": "quiz_006_q2",
-      "text": "What's my ideal date night?",
+      "text": "My ideal evening together looks like...",
       "choices": [
-        "Fancy restaurant",
-        "Cozy home dinner",
-        "Fun activity",
-        "Adventure outing",
-        "Other / Something else"
+        "Watching something together",
+        "Going out (dinner, activity)",
+        "Doing our own things nearby",
+        "Deep conversation",
+        "Other / Varies by mood"
       ],
-      "category": "preferences"
+      "category": "together"
     },
     {
       "id": "quiz_006_q3",
-      "text": "What's my favorite type of sandwich?",
+      "text": "Before bed, I usually need...",
       "choices": [
-        "Turkey",
-        "BLT",
-        "Grilled cheese",
-        "Veggie",
-        "Other / Something else"
+        "Wind-down time (reading, phone)",
+        "To talk about tomorrow",
+        "Physical closeness",
+        "The room to be just right",
+        "Other / I just crash"
       ],
-      "category": "favorites"
+      "category": "lifestyle"
     },
     {
       "id": "quiz_006_q4",
-      "text": "What's my favorite type of music?",
+      "text": "On weekend mornings, I'd rather...",
       "choices": [
-        "Pop",
-        "Rock",
-        "Hip-Hop",
-        "Classical",
-        "Other / Something else"
+        "Sleep in as late as possible",
+        "Wake up naturally, no alarm",
+        "Get up early and enjoy the day",
+        "Lazy morning in bed together",
+        "Other / Depends on plans"
       ],
-      "category": "favorites"
+      "category": "lifestyle"
     },
     {
       "id": "quiz_006_q5",
-      "text": "Would I rather: Lead or Follow?",
+      "text": "I'm more productive when I...",
       "choices": [
-        "Lead",
-        "Follow"
+        "Have the whole day planned",
+        "Have a loose structure",
+        "Work in focused bursts",
+        "Go with the flow",
+        "Other / Depends on the task"
       ],
-      "category": "would_you_rather"
+      "category": "energy"
     }
   ]
 }

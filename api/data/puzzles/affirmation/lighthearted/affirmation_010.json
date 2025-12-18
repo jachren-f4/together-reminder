@@ -1,37 +1,37 @@
 {
   "quizId": "affirmation_010",
-  "title": "Laughter & Joy",
+  "title": "Stress & Coping",
   "category": "lighthearted",
   "branch": "lighthearted",
-  "description": "The fun side of your relationship",
+  "description": "How you handle pressure",
   "questions": [
     {
       "id": "affirmation_010_q1",
-      "text": "Laughing together is essential for our relationship",
+      "text": "When stressed, I tend to withdraw and get quiet",
       "type": "scale",
       "scaleLabels": ["Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"]
     },
     {
       "id": "affirmation_010_q2",
-      "text": "I appreciate playful teasing and inside jokes",
+      "text": "Talking about my stress helps me feel better",
       "type": "scale",
       "scaleLabels": ["Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"]
     },
     {
       "id": "affirmation_010_q3",
-      "text": "Spontaneous fun is more enjoyable than planned activities",
+      "text": "I need extra patience and understanding when I'm overwhelmed",
       "type": "scale",
       "scaleLabels": ["Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"]
     },
     {
       "id": "affirmation_010_q4",
-      "text": "I enjoy being silly and goofy with my partner",
+      "text": "I can usually manage my stress without it affecting my mood at home",
       "type": "scale",
       "scaleLabels": ["Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"]
     },
     {
       "id": "affirmation_010_q5",
-      "text": "Humor helps us navigate difficult moments together",
+      "text": "Physical activity is my go-to stress reliever",
       "type": "scale",
       "scaleLabels": ["Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"]
     }

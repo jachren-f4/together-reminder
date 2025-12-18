@@ -1,37 +1,37 @@
 {
   "quizId": "affirmation_009",
-  "title": "Future Dreams",
+  "title": "Affection & Connection",
   "category": "lighthearted",
   "branch": "lighthearted",
-  "description": "Looking ahead together",
+  "description": "How you show and receive love",
   "questions": [
     {
       "id": "affirmation_009_q1",
-      "text": "I enjoy planning future trips and experiences",
+      "text": "Physical touch throughout the day is important to me",
       "type": "scale",
       "scaleLabels": ["Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"]
     },
     {
       "id": "affirmation_009_q2",
-      "text": "I prefer to live in the moment rather than plan ahead",
+      "text": "Words of appreciation mean more to me than actions",
       "type": "scale",
       "scaleLabels": ["Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"]
     },
     {
       "id": "affirmation_009_q3",
-      "text": "Having shared goals brings us closer together",
+      "text": "I show love through doing things for my partner",
       "type": "scale",
       "scaleLabels": ["Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"]
     },
     {
       "id": "affirmation_009_q4",
-      "text": "I value tradition and familiar routines",
+      "text": "I need regular reassurance that I'm loved",
       "type": "scale",
       "scaleLabels": ["Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"]
     },
     {
       "id": "affirmation_009_q5",
-      "text": "I'm open to making big changes if they improve our life",
+      "text": "Small thoughtful gestures mean more to me than grand romantic ones",
       "type": "scale",
       "scaleLabels": ["Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"]
     }

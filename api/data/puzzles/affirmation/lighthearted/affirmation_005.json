@@ -1,37 +1,37 @@
 {
   "quizId": "affirmation_005",
-  "title": "Entertainment Choices",
+  "title": "Social Life",
   "category": "lighthearted",
   "branch": "lighthearted",
-  "description": "What captures your attention?",
+  "description": "Navigating social situations together",
   "questions": [
     {
       "id": "affirmation_005_q1",
-      "text": "I prefer watching movies over TV series",
+      "text": "I enjoy meeting new people and making conversation",
       "type": "scale",
       "scaleLabels": ["Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"]
     },
     {
       "id": "affirmation_005_q2",
-      "text": "I enjoy discussing what we watch together",
+      "text": "I prefer small gatherings over large parties",
       "type": "scale",
       "scaleLabels": ["Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"]
     },
     {
       "id": "affirmation_005_q3",
-      "text": "I like background music or TV while doing tasks",
+      "text": "I like having my partner nearby at social events",
       "type": "scale",
       "scaleLabels": ["Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"]
     },
     {
       "id": "affirmation_005_q4",
-      "text": "Comedies are my go-to for relaxation",
+      "text": "I enjoy hosting people at our home",
       "type": "scale",
       "scaleLabels": ["Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"]
     },
     {
       "id": "affirmation_005_q5",
-      "text": "I enjoy discovering new music regularly",
+      "text": "I need advance notice before social commitments",
       "type": "scale",
       "scaleLabels": ["Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"]
     }

@@ -1,67 +1,67 @@
 {
   "quizId": "quiz_012",
-  "title": "Lighthearted Quiz 12",
+  "title": "Dreams & Goals",
   "branch": "lighthearted",
   "questions": [
     {
       "id": "quiz_012_q1",
-      "text": "Would you rather have unlimited vacation time or unlimited money?",
+      "text": "Where do I see us in 5 years?",
       "choices": [
-        "Unlimited vacation time",
-        "Unlimited money",
-        "A balance of both somehow",
-        "Neither - just more free time daily",
-        "Other / It depends"
+        "Similar to now, but deeper",
+        "Big changes (home, family, location)",
+        "More adventures and experiences",
+        "More stable and settled",
+        "Other / I don't plan that far"
       ],
-      "category": "preferences"
+      "category": "together"
     },
     {
       "id": "quiz_012_q2",
-      "text": "Would you rather always be 10 minutes late or 20 minutes early?",
+      "text": "Something on my bucket list is...",
       "choices": [
-        "10 minutes late",
-        "20 minutes early",
-        "Exactly on time (not an option!)",
-        "It depends on the occasion",
-        "Other / It depends"
+        "Traveling somewhere specific",
+        "Learning a new skill",
+        "A career or personal achievement",
+        "An adventurous experience",
+        "Other / I don't keep a bucket list"
       ],
       "category": "lifestyle"
     },
     {
       "id": "quiz_012_q3",
-      "text": "Would you rather live in the city or the countryside?",
+      "text": "When I think about the future, I feel...",
       "choices": [
-        "Bustling city with everything nearby",
-        "Peaceful countryside with nature",
-        "Suburban sweet spot in between",
-        "Somewhere coastal by the water",
-        "Other / It depends"
-      ],
-      "category": "preferences"
-    },
-    {
-      "id": "quiz_012_q4",
-      "text": "Would you rather always know what to say or always know what NOT to say?",
-      "choices": [
-        "Know the perfect thing to say",
-        "Know what to avoid saying",
-        "I'm already good at both",
-        "I'm already bad at both",
-        "Other / It depends"
+        "Excited and optimistic",
+        "Calm and content",
+        "A mix of hope and uncertainty",
+        "I prefer to focus on today",
+        "Other / It varies"
       ],
       "category": "lifestyle"
     },
     {
-      "id": "quiz_012_q5",
-      "text": "Would you rather have a rewind button or a pause button for your life?",
+      "id": "quiz_012_q4",
+      "text": "The thing I most want to build together is...",
       "choices": [
-        "Rewind to fix mistakes",
-        "Pause to savor moments",
-        "Fast-forward through boring parts",
-        "Just let life play naturally",
-        "Other / It depends"
+        "A home and family",
+        "Shared experiences and memories",
+        "Financial stability",
+        "A life of adventure",
+        "Other / Just growing together"
       ],
-      "category": "preferences"
+      "category": "together"
+    },
+    {
+      "id": "quiz_012_q5",
+      "text": "What motivates me most in life is...",
+      "choices": [
+        "Family and relationships",
+        "Career and achievement",
+        "Experiences and enjoyment",
+        "Making a difference",
+        "Other / Personal growth"
+      ],
+      "category": "lifestyle"
     }
   ]
 }

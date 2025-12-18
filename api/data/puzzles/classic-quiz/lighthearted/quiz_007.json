@@ -1,67 +1,67 @@
 {
   "quizId": "quiz_007",
-  "title": "Lighthearted Quiz 7",
+  "title": "Quality Time",
   "branch": "lighthearted",
   "questions": [
     {
       "id": "quiz_007_q1",
-      "text": "Am I more of a morning person or night owl?",
+      "text": "My ideal date night is...",
       "choices": [
-        "Morning person",
-        "Night owl",
-        "Both",
-        "Neither",
-        "Other / It depends"
+        "A nice dinner out",
+        "Something active or adventurous",
+        "Cozy night in together",
+        "Trying something new",
+        "Other / Surprise me"
       ],
-      "category": "preferences"
+      "category": "together"
     },
     {
       "id": "quiz_007_q2",
-      "text": "How do I recharge my energy?",
+      "text": "When we have free time together, I most enjoy...",
       "choices": [
-        "Alone time",
-        "With people",
-        "Nature",
-        "Sleep",
-        "Other / Something else"
+        "Doing an activity together",
+        "Relaxing side by side",
+        "Going somewhere new",
+        "Deep conversation",
+        "Other / Mix of everything"
       ],
-      "category": "preferences"
+      "category": "together"
     },
     {
       "id": "quiz_007_q3",
-      "text": "What's my communication style?",
+      "text": "I feel closest to you when we're...",
       "choices": [
-        "Direct",
-        "Gentle",
-        "Humorous",
-        "Thoughtful",
-        "Other / Something else"
+        "Laughing together",
+        "Having a meaningful talk",
+        "Physically close",
+        "Working on something together",
+        "Just being in the same space"
       ],
-      "category": "preferences"
+      "category": "connection"
     },
     {
       "id": "quiz_007_q4",
-      "text": "What's my favorite food?",
+      "text": "How much alone time do I need?",
       "choices": [
-        "Pizza",
-        "Sushi",
-        "Pasta",
-        "Tacos",
-        "Other / Something else"
+        "A lot - I recharge solo",
+        "Some - but I prefer being together",
+        "Not much - I'd rather be with you",
+        "It varies week to week",
+        "Other / Depends on life stress"
       ],
-      "category": "favorites"
+      "category": "self_care"
     },
     {
       "id": "quiz_007_q5",
-      "text": "What's my favorite childhood cartoon or show?",
+      "text": "The activity I'd most want us to try together is...",
       "choices": [
-        "Disney",
-        "Nickelodeon",
-        "Cartoon Network",
-        "Anime",
-        "Other / Something else"
+        "Taking a class or learning something",
+        "Outdoor adventure",
+        "Creative project",
+        "Fitness or sports",
+        "Other / Traveling somewhere"
       ],
-      "category": "favorites"
+      "category": "together"
     }
   ]
 }

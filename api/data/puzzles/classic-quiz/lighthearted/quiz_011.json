@@ -1,67 +1,67 @@
 {
   "quizId": "quiz_011",
-  "title": "Lighthearted Quiz 11",
+  "title": "Money & Priorities",
   "branch": "lighthearted",
   "questions": [
     {
       "id": "quiz_011_q1",
-      "text": "What's your ideal way to start the morning?",
+      "text": "When it comes to spending money, I'm usually...",
       "choices": [
-        "Hit snooze multiple times",
-        "Jump out of bed energized",
-        "Slowly ease into the day with coffee",
-        "Exercise or stretch first thing",
-        "Other / It depends"
+        "Careful and budget-conscious",
+        "Balanced - save some, spend some",
+        "More of a spender than saver",
+        "It depends on what it's for",
+        "Other / I don't track closely"
       ],
       "category": "lifestyle"
     },
     {
       "id": "quiz_011_q2",
-      "text": "When it comes to food, you prefer...",
+      "text": "I'd rather spend money on...",
       "choices": [
-        "Trying new and exotic dishes",
-        "Sticking to familiar favorites",
-        "Home-cooked comfort food",
-        "Quick and convenient meals",
-        "Other / It depends"
-      ],
-      "category": "preferences"
-    },
-    {
-      "id": "quiz_011_q3",
-      "text": "Your perfect way to unwind after a long day?",
-      "choices": [
-        "Binge-watching a series",
-        "Reading a good book",
-        "Going for a walk or workout",
-        "Chatting with friends or family",
-        "Other / It depends"
+        "Experiences (travel, dining out)",
+        "Things for the home",
+        "Personal items or hobbies",
+        "Saving for the future",
+        "Other / Treating people I love"
       ],
       "category": "lifestyle"
     },
     {
-      "id": "quiz_011_q4",
-      "text": "How do you handle household chores?",
+      "id": "quiz_011_q3",
+      "text": "My approach to big purchases is...",
       "choices": [
-        "Do them right away to get them done",
-        "Procrastinate until absolutely necessary",
-        "Make a schedule and stick to it",
-        "Turn on music and make it fun",
-        "Other / It depends"
+        "Research extensively first",
+        "Go with what feels right",
+        "Sleep on it before deciding",
+        "Ask for opinions (yours, others)",
+        "Other / Avoid them if possible"
+      ],
+      "category": "together"
+    },
+    {
+      "id": "quiz_011_q4",
+      "text": "How important is financial security to me?",
+      "choices": [
+        "Very - it's a top priority",
+        "Important but not everything",
+        "I try not to worry about it",
+        "I focus on the present more",
+        "Other / It's complicated"
       ],
       "category": "lifestyle"
     },
     {
       "id": "quiz_011_q5",
-      "text": "Your favorite type of weather?",
+      "text": "When we have different spending priorities, I prefer to...",
       "choices": [
-        "Sunny and warm",
-        "Cool and crisp",
-        "Rainy and cozy",
-        "Snowy and peaceful",
-        "Other / It depends"
+        "Discuss and find compromise",
+        "Keep some money separate",
+        "Defer to whoever cares more",
+        "Take turns on big decisions",
+        "Other / Haven't figured it out"
       ],
-      "category": "favorites"
+      "category": "together"
     }
   ]
 }

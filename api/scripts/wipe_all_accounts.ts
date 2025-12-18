@@ -34,7 +34,6 @@ import { query, getClient } from '../lib/db/pool';
 import { createClient } from '@supabase/supabase-js';
 import * as dotenv from 'dotenv';
 import * as path from 'path';
-import * as readline from 'readline';
 
 dotenv.config({ path: path.join(__dirname, '..', '.env.local') });
 
@@ -66,22 +65,8 @@ interface CoupleRow {
 }
 
 async function confirmDeletion(): Promise<boolean> {
-  // Check for --yes flag
-  if (process.argv.includes('--yes') || process.argv.includes('-y')) {
-    return true;
-  }
-
-  const rl = readline.createInterface({
-    input: process.stdin,
-    output: process.stdout,
-  });
-
-  return new Promise((resolve) => {
-    rl.question('\n⚠️  This will DELETE ALL users and data (except protected accounts).\n   Type "DELETE" to confirm: ', (answer) => {
-      rl.close();
-      resolve(answer === 'DELETE');
-    });
-  });
+  // Skip confirmation entirely - just proceed with deletion
+  return true;
 }
 
 async function safeDelete(client: any, tableName: string, sql: string, params: any[] = []): Promise<number> {

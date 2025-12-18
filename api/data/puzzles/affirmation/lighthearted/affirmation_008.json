@@ -1,37 +1,37 @@
 {
   "quizId": "affirmation_008",
-  "title": "Home Life",
+  "title": "Handling Conflict",
   "category": "lighthearted",
   "branch": "lighthearted",
-  "description": "Creating your shared space",
+  "description": "How you navigate disagreements",
   "questions": [
     {
       "id": "affirmation_008_q1",
-      "text": "A clean and organized home helps me feel calm",
+      "text": "I prefer to address issues right away rather than let them simmer",
       "type": "scale",
       "scaleLabels": ["Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"]
     },
     {
       "id": "affirmation_008_q2",
-      "text": "I enjoy decorating and personalizing our space",
+      "text": "I need time to cool down before discussing something that upset me",
       "type": "scale",
       "scaleLabels": ["Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"]
     },
     {
       "id": "affirmation_008_q3",
-      "text": "I prefer a minimalist aesthetic over cozy clutter",
+      "text": "I tend to avoid conflict when possible",
       "type": "scale",
       "scaleLabels": ["Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"]
     },
     {
       "id": "affirmation_008_q4",
-      "text": "Sharing household tasks equally is important to me",
+      "text": "I can disagree without it affecting how I feel about you",
       "type": "scale",
       "scaleLabels": ["Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"]
     },
     {
       "id": "affirmation_008_q5",
-      "text": "I like having designated spaces for different activities",
+      "text": "Resolving an argument quickly is more important than being right",
       "type": "scale",
       "scaleLabels": ["Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"]
     }

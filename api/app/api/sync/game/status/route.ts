@@ -64,11 +64,11 @@ export const GET = withAuthOrDevBypass(async (req: NextRequest, userId: string, 
 
     const matchesResult = await query(matchQuery, params);
 
-    // Build game status for each match
-    const games = matchesResult.rows.map((row: any) => {
+    // Build game status for each match (buildResult is async, so use Promise.all)
+    const games = await Promise.all(matchesResult.rows.map(async (row: any) => {
       const match = parseMatch(row);
       const state = buildGameState(match, couple);
-      const result = buildResult(match, couple);
+      const result = await buildResult(match, couple);
 
       return {
         type: match.quizType,
@@ -89,7 +89,7 @@ export const GET = withAuthOrDevBypass(async (req: NextRequest, userId: string, 
           lpEarned: result.lpEarned,
         }),
       };
-    });
+    }));
 
     // Get total completed counts per game type (all time)
     const countsResult = await query(

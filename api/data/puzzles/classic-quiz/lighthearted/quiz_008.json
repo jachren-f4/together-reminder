@@ -1,64 +1,67 @@
 {
   "quizId": "quiz_008",
-  "title": "Lighthearted Quiz 8",
+  "title": "Home Life",
   "branch": "lighthearted",
   "questions": [
     {
       "id": "quiz_008_q1",
-      "text": "What's my love language?",
+      "text": "My tolerance for mess at home is...",
       "choices": [
-        "Words of affirmation",
-        "Quality time",
-        "Physical touch",
-        "Acts of service",
-        "Other / Something else"
+        "Low - I like things tidy",
+        "Medium - some mess is fine",
+        "High - I don't notice much",
+        "It depends on the room",
+        "Other / I have specific pet peeves"
       ],
-      "category": "preferences"
+      "category": "lifestyle"
     },
     {
       "id": "quiz_008_q2",
-      "text": "What's my favorite type of book?",
+      "text": "When it comes to household tasks, I prefer...",
       "choices": [
-        "Fiction",
-        "Mystery",
-        "Biography",
-        "Self-help",
-        "Other / Something else"
+        "Splitting them evenly",
+        "Each doing what we're good at",
+        "Tackling them together",
+        "Trading off who does what",
+        "Other / Hiring help if possible"
       ],
-      "category": "favorites"
+      "category": "together"
     },
     {
       "id": "quiz_008_q3",
-      "text": "Would I rather: Dogs or Cats?",
+      "text": "My ideal home environment is...",
       "choices": [
-        "Dogs",
-        "Cats"
+        "Calm and peaceful",
+        "Lively with activity",
+        "Cozy and warm",
+        "Organized and functional",
+        "Other / Depends on my mood"
       ],
-      "category": "would_you_rather"
+      "category": "lifestyle"
     },
     {
       "id": "quiz_008_q4",
-      "text": "What's my ideal vacation?",
+      "text": "Having guests over is something I...",
       "choices": [
-        "Beach resort",
-        "Mountain cabin",
-        "City exploration",
-        "Adventure travel",
-        "Other / Something else"
+        "Love and do often",
+        "Enjoy occasionally",
+        "Need advance notice for",
+        "Find draining",
+        "Other / Depends on who"
       ],
-      "category": "preferences"
+      "category": "social"
     },
     {
       "id": "quiz_008_q5",
-      "text": "What's my favorite type of vacation activity?",
+      "text": "When I work from home, I need...",
       "choices": [
-        "Sightseeing",
-        "Beach relaxing",
-        "Adventure sports",
-        "Cultural experiences",
-        "Other / Something else"
+        "Quiet and minimal interruption",
+        "Occasional breaks together",
+        "Background presence is fine",
+        "I can work anywhere, any conditions",
+        "Other / I don't work from home"
       ],
-      "category": "favorites"
+      "category": "lifestyle"
     }
   ]
 }

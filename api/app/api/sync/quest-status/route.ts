@@ -63,13 +63,18 @@ export const GET = withAuthOrDevBypass(async (req, userId, email) => {
 
     // Get quiz matches for today (includes both classic/affirmation quizzes and you_or_me)
     // All game types use the quiz_matches table
+    // Use DISTINCT ON to get only ONE match per quiz_type, preferring active matches
     const quizMatchesResult = await query(
-      `SELECT id, quiz_type, quiz_id, status,
+      `SELECT DISTINCT ON (quiz_type)
+              id, quiz_type, quiz_id, status,
               player1_answer_count, player2_answer_count,
               player1_score, player2_score,
               match_percentage, completed_at
        FROM quiz_matches
-       WHERE couple_id = $1 AND DATE(created_at) = $2`,
+       WHERE couple_id = $1 AND DATE(created_at) = $2
+       ORDER BY quiz_type,
+                CASE WHEN status = 'active' THEN 0 ELSE 1 END,
+                created_at DESC`,
       [coupleId, date]
     );
 

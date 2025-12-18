@@ -1,67 +1,67 @@
 {
   "quizId": "quiz_002",
-  "title": "Lighthearted Quiz 2",
+  "title": "Energy & Support",
   "branch": "lighthearted",
   "questions": [
     {
       "id": "quiz_002_q1",
-      "text": "How do I prefer to receive news?",
+      "text": "What time of day am I usually at my best?",
       "choices": [
-        "Social media",
-        "News apps",
-        "TV",
-        "Word of mouth",
-        "Other / Something else"
+        "Early morning",
+        "Mid-morning to noon",
+        "Afternoon",
+        "Evening or night",
+        "It varies day to day"
       ],
-      "category": "preferences"
+      "category": "energy"
     },
     {
       "id": "quiz_002_q2",
-      "text": "What's my favorite social media?",
+      "text": "How do I recharge after being around people?",
       "choices": [
-        "Instagram",
-        "TikTok",
-        "Twitter",
-        "Facebook",
-        "Other / Something else"
+        "I need alone time to reset",
+        "Being with people actually energizes me",
+        "Quiet time with just you",
+        "A physical activity or walk",
+        "Other / It depends on the people"
       ],
-      "category": "favorites"
+      "category": "self_care"
     },
     {
       "id": "quiz_002_q3",
-      "text": "What's my favorite way to spend a rainy day?",
+      "text": "When something's bothering me, what helps most?",
       "choices": [
-        "Reading",
-        "Movies",
-        "Cooking",
-        "Sleeping",
-        "Other / Something else"
+        "Talking it through with you",
+        "Space to process on my own first",
+        "A distraction to take my mind off it",
+        "Physical comfort (hug, being close)",
+        "Practical help or advice"
       ],
-      "category": "favorites"
+      "category": "support"
     },
     {
       "id": "quiz_002_q4",
-      "text": "How do I prefer to shop?",
+      "text": "How do I usually handle a stressful week?",
       "choices": [
-        "Online",
-        "In-store",
-        "Mix of both",
-        "I don't like shopping",
-        "Other / It depends"
+        "Push through and deal with it later",
+        "Need extra downtime each day",
+        "Talk about it frequently",
+        "Exercise or stay active",
+        "Comfort activities (food, shows, etc.)"
       ],
-      "category": "preferences"
+      "category": "self_care"
     },
     {
       "id": "quiz_002_q5",
-      "text": "What's my favorite childhood memory type?",
+      "text": "When I'm tired, I'd rather you...",
       "choices": [
-        "Family vacations",
-        "Playing with friends",
-        "School events",
-        "Home activities",
-        "Other / Something else"
+        "Give me space and quiet",
+        "Keep me company without expectations",
+        "Take care of things so I can rest",
+        "Distract me with something fun",
+        "Other / Just ask me in the moment"
       ],
-      "category": "favorites"
+      "category": "support"
     }
   ]
 }

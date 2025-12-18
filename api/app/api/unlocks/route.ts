@@ -14,7 +14,9 @@ export interface UnlockState {
   coupleId: string;
   welcomeQuizCompleted: boolean;
   classicQuizUnlocked: boolean;
+  classicQuizCompleted: boolean;
   affirmationQuizUnlocked: boolean;
+  affirmationQuizCompleted: boolean;
   youOrMeUnlocked: boolean;
   linkedUnlocked: boolean;
   wordSearchUnlocked: boolean;
@@ -62,7 +64,9 @@ export const GET = withAuthOrDevBypass(async (_req, userId) => {
       coupleId: row.couple_id,
       welcomeQuizCompleted: row.welcome_quiz_completed,
       classicQuizUnlocked: row.classic_quiz_unlocked,
+      classicQuizCompleted: row.classic_quiz_completed ?? false,
       affirmationQuizUnlocked: row.affirmation_quiz_unlocked,
+      affirmationQuizCompleted: row.affirmation_quiz_completed ?? false,
       youOrMeUnlocked: row.you_or_me_unlocked,
       linkedUnlocked: row.linked_unlocked,
       wordSearchUnlocked: row.word_search_unlocked,
@@ -121,7 +125,9 @@ export const PATCH = withAuthOrDevBypass(async (req, userId) => {
       coupleId: row.couple_id,
       welcomeQuizCompleted: row.welcome_quiz_completed,
       classicQuizUnlocked: row.classic_quiz_unlocked,
+      classicQuizCompleted: row.classic_quiz_completed ?? false,
       affirmationQuizUnlocked: row.affirmation_quiz_unlocked,
+      affirmationQuizCompleted: row.affirmation_quiz_completed ?? false,
       youOrMeUnlocked: row.you_or_me_unlocked,
       linkedUnlocked: row.linked_unlocked,
       wordSearchUnlocked: row.word_search_unlocked,

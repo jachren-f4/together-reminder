@@ -1,67 +1,67 @@
 {
   "quizId": "quiz_001",
-  "title": "Lighthearted Quiz 1",
+  "title": "Daily Life Patterns",
   "branch": "lighthearted",
   "questions": [
     {
       "id": "quiz_001_q1",
-      "text": "Do I prefer sweet or savory snacks?",
+      "text": "When I've had a long day, what helps me unwind?",
       "choices": [
-        "Sweet",
-        "Savory",
-        "Both",
-        "Neither",
-        "Other / It depends"
+        "Quiet time alone",
+        "Talking about my day",
+        "Physical activity or movement",
+        "Comfort food or a treat",
+        "Distraction (TV, games, scrolling)"
       ],
-      "category": "preferences"
+      "category": "self_care"
     },
     {
       "id": "quiz_001_q2",
-      "text": "Do I prefer texting or calling?",
+      "text": "How do I prefer us to stay connected during busy days?",
       "choices": [
-        "Texting",
-        "Calling",
-        "Video calls",
-        "In person only",
+        "Quick check-in texts",
+        "A phone call, even if brief",
+        "Save it for quality time later",
+        "Sharing memes or funny things",
         "Other / It depends"
       ],
-      "category": "preferences"
+      "category": "connection"
     },
     {
       "id": "quiz_001_q3",
-      "text": "What's my favorite sport to watch?",
+      "text": "What kind of weekend sounds best to me?",
       "choices": [
-        "Football",
-        "Basketball",
-        "Soccer",
-        "Baseball",
-        "Other / Something else"
+        "Adventure and exploring",
+        "Social plans with friends/family",
+        "Cozy and low-key at home",
+        "Productive (errands, projects)",
+        "A mix - no strong preference"
       ],
-      "category": "favorites"
+      "category": "lifestyle"
     },
     {
       "id": "quiz_001_q4",
-      "text": "Do I prefer planning or spontaneity?",
+      "text": "When we're making plans together, I usually prefer to...",
       "choices": [
-        "Always plan ahead",
-        "Mostly plan",
-        "Mostly spontaneous",
-        "Fully spontaneous",
+        "Plan everything in advance",
+        "Have a loose plan, stay flexible",
+        "Decide in the moment",
+        "Let you take the lead",
         "Other / It depends"
       ],
-      "category": "preferences"
+      "category": "together"
     },
     {
       "id": "quiz_001_q5",
-      "text": "What's my preferred social group size?",
+      "text": "In social situations, I'm most comfortable when...",
       "choices": [
-        "One-on-one",
-        "Small group (3-5)",
-        "Medium group (6-10)",
-        "Large party",
+        "It's just the two of us",
+        "We're with a few close friends",
+        "There's a bigger group with energy",
+        "I can come and go as I please",
         "Other / It varies"
       ],
-      "category": "preferences"
+      "category": "social"
     }
   ]
 }

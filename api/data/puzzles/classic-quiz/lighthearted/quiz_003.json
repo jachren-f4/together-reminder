@@ -1,67 +1,67 @@
 {
   "quizId": "quiz_003",
-  "title": "Lighthearted Quiz 3",
+  "title": "Communication Styles",
   "branch": "lighthearted",
   "questions": [
     {
       "id": "quiz_003_q1",
-      "text": "What's my ideal noise level at home?",
+      "text": "When I'm upset, I prefer to...",
       "choices": [
-        "Complete silence",
-        "Background noise",
-        "Music/TV on",
-        "Doesn't matter",
-        "Other / It varies"
+        "Talk about it right away",
+        "Cool down first, then talk",
+        "Write out my thoughts before discussing",
+        "Process it myself and move on",
+        "Other / It depends on the situation"
       ],
-      "category": "preferences"
+      "category": "communication"
     },
     {
       "id": "quiz_003_q2",
-      "text": "What's my favorite flower?",
+      "text": "How do I usually express that I'm happy?",
       "choices": [
-        "Rose",
-        "Tulip",
-        "Sunflower",
-        "Lily",
-        "Other / Something else"
+        "I say it directly",
+        "Through physical affection",
+        "By being extra playful or silly",
+        "Doing thoughtful things for you",
+        "I'm more quiet/content than expressive"
       ],
-      "category": "favorites"
+      "category": "communication"
     },
     {
       "id": "quiz_003_q3",
-      "text": "What's my favorite way to celebrate?",
+      "text": "When I need something from you, I typically...",
       "choices": [
-        "Big party",
-        "Intimate dinner",
-        "Quiet night in",
-        "Adventure activity",
-        "Other / Something else"
+        "Ask directly and clearly",
+        "Hint and hope you pick up on it",
+        "Wait for you to notice",
+        "Feel awkward asking at all",
+        "Other / It depends what it is"
       ],
-      "category": "preferences"
+      "category": "communication"
     },
     {
       "id": "quiz_003_q4",
-      "text": "What's my favorite podcast or YouTube genre?",
+      "text": "During disagreements, I tend to...",
       "choices": [
-        "True crime",
-        "Comedy",
-        "Educational",
-        "Vlogs",
-        "Other / Something else"
+        "Want to resolve it immediately",
+        "Need time to think before continuing",
+        "Focus on finding a compromise",
+        "Get quiet and withdraw",
+        "Other / It varies"
       ],
-      "category": "favorites"
+      "category": "communication"
     },
     {
       "id": "quiz_003_q5",
-      "text": "What's my favorite way to start the day?",
+      "text": "I feel most heard when you...",
       "choices": [
-        "Coffee",
-        "Exercise",
-        "Shower",
-        "Breakfast",
-        "Other / Something else"
+        "Give me your full attention",
+        "Ask follow-up questions",
+        "Validate how I'm feeling",
+        "Offer solutions or help",
+        "Just listen without responding"
       ],
-      "category": "preferences"
+      "category": "communication"
     }
   ]
 }

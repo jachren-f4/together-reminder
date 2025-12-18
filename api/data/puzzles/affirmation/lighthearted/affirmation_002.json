@@ -1,37 +1,37 @@
 {
   "quizId": "affirmation_002",
-  "title": "Weekend Rhythms",
+  "title": "Support & Comfort",
   "category": "lighthearted",
   "branch": "lighthearted",
-  "description": "What makes your ideal weekend?",
+  "description": "What helps when you're struggling",
   "questions": [
     {
       "id": "affirmation_002_q1",
-      "text": "I enjoy sleeping in on weekends",
+      "text": "When I'm upset, I want comfort before solutions",
       "type": "scale",
       "scaleLabels": ["Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"]
     },
     {
       "id": "affirmation_002_q2",
-      "text": "A perfect weekend includes time outdoors",
+      "text": "I need to process difficult feelings on my own before talking about them",
       "type": "scale",
       "scaleLabels": ["Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"]
     },
     {
       "id": "affirmation_002_q3",
-      "text": "I prefer structured plans over spontaneous weekends",
+      "text": "Physical comfort (hugs, closeness) helps me feel better when I'm down",
       "type": "scale",
       "scaleLabels": ["Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"]
     },
     {
       "id": "affirmation_002_q4",
-      "text": "Weekends are for being social and seeing friends",
+      "text": "I find it easy to ask for help when I need it",
       "type": "scale",
       "scaleLabels": ["Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"]
     },
     {
       "id": "affirmation_002_q5",
-      "text": "I need at least one lazy day to recharge",
+      "text": "Distraction helps me more than talking through problems",
       "type": "scale",
       "scaleLabels": ["Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"]
     }

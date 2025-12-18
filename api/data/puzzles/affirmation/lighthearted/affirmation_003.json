@@ -1,37 +1,37 @@
 {
   "quizId": "affirmation_003",
-  "title": "Evening Routines",
+  "title": "Communication Styles",
   "category": "lighthearted",
   "branch": "lighthearted",
-  "description": "How do you like to wind down?",
+  "description": "How you express yourself and process thoughts",
   "questions": [
     {
       "id": "affirmation_003_q1",
-      "text": "I have a consistent bedtime routine",
+      "text": "I think out loud and process by talking",
       "type": "scale",
       "scaleLabels": ["Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"]
     },
     {
       "id": "affirmation_003_q2",
-      "text": "I prefer quiet evenings at home over going out",
+      "text": "I prefer to think things through before sharing my opinion",
       "type": "scale",
       "scaleLabels": ["Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"]
     },
     {
       "id": "affirmation_003_q3",
-      "text": "Screen time helps me relax before bed",
+      "text": "I'm comfortable expressing negative emotions directly",
       "type": "scale",
       "scaleLabels": ["Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"]
     },
     {
       "id": "affirmation_003_q4",
-      "text": "I do my best thinking in the evening hours",
+      "text": "I often hint at what I need rather than stating it clearly",
       "type": "scale",
       "scaleLabels": ["Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"]
     },
     {
       "id": "affirmation_003_q5",
-      "text": "I need a clean space to fully relax at night",
+      "text": "I feel heard when my partner gives me their full attention",
       "type": "scale",
       "scaleLabels": ["Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"]
     }

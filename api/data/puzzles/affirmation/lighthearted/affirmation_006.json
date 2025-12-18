@@ -1,37 +1,37 @@
 {
   "quizId": "affirmation_006",
-  "title": "Social Settings",
+  "title": "Home & Space",
   "category": "lighthearted",
   "branch": "lighthearted",
-  "description": "Your social energy and preferences",
+  "description": "Your living environment needs",
   "questions": [
     {
       "id": "affirmation_006_q1",
-      "text": "Large gatherings energize me more than drain me",
+      "text": "A tidy space helps me think clearly and feel calm",
       "type": "scale",
       "scaleLabels": ["Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"]
     },
     {
       "id": "affirmation_006_q2",
-      "text": "I prefer deep conversations with a few people",
+      "text": "I need a quiet environment to fully relax",
       "type": "scale",
       "scaleLabels": ["Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"]
     },
     {
       "id": "affirmation_006_q3",
-      "text": "I'm comfortable meeting new people in social settings",
+      "text": "I like having my own space or corner at home",
       "type": "scale",
       "scaleLabels": ["Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"]
     },
     {
       "id": "affirmation_006_q4",
-      "text": "I need alone time after being social",
+      "text": "The temperature and lighting affect my mood significantly",
       "type": "scale",
       "scaleLabels": ["Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"]
     },
     {
       "id": "affirmation_006_q5",
-      "text": "I enjoy hosting gatherings at our place",
+      "text": "I prefer tackling chores together rather than dividing them up",
       "type": "scale",
       "scaleLabels": ["Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"]
     }

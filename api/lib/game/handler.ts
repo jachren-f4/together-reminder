@@ -7,6 +7,12 @@
 
 import { query } from '@/lib/db/pool';
 import { awardLP } from '@/lib/lp/award';
+import {
+  tryAwardDailyLpStandalone,
+  getLpStatusStandalone,
+  gameTypeToContentType,
+  LpGrantResult,
+} from '@/lib/lp/grant-service';
 import { readFileSync } from 'fs';
 import { join } from 'path';
 
@@ -61,6 +67,10 @@ export interface GameResult {
   partnerAnswers: number[];
   userScore?: number;
   partnerScore?: number;
+  // LP Daily Reset status
+  alreadyGrantedToday?: boolean;
+  resetInMs?: number;
+  canPlayMore?: boolean;
 }
 
 // =============================================================================
@@ -161,11 +171,20 @@ export function loadQuiz(gameType: GameType, branch: string, quizId: string): an
       };
     }
 
-    // For classic and affirmation, return as-is but ensure consistent structure
+    // For classic and affirmation, normalize to consistent structure
+    // Affirmation uses scaleLabels while classic uses choices - normalize to choices
+    const normalizedQuestions = (rawQuiz.questions || []).map((q: any) => ({
+      id: q.id,
+      text: q.text,
+      // Use choices if present, otherwise map scaleLabels to choices
+      choices: q.choices || q.scaleLabels || [],
+      category: q.category || '',
+    }));
+
     return {
       id: rawQuiz.quizId || rawQuiz.id || quizId,
       name: rawQuiz.title || rawQuiz.name || 'Quiz',
-      questions: rawQuiz.questions || [],
+      questions: normalizedQuestions,
     };
   } catch (error) {
     console.error(`Failed to load quiz ${quizId} from ${gameType}/${branch}:`, error);
@@ -402,12 +421,18 @@ export async function submitAnswers(
   let matchPercentage: number | null = null;
   let lpEarned = 0;
   let newStatus = 'active';
+  let lpGrantResult: LpGrantResult | null = null;
 
   if (bothAnswered) {
     matchPercentage = calculateMatchPercentage(updatedPlayer1Answers, updatedPlayer2Answers, match.quizType);
     newStatus = 'completed';
-    lpEarned = config.lpReward;
-    await awardLP(couple.coupleId, lpEarned, `${match.quizType}_complete`, match.id);
+
+    // Use new daily LP grant system
+    const contentType = gameTypeToContentType(match.quizType);
+    lpGrantResult = await tryAwardDailyLpStandalone(couple.coupleId, contentType, match.id);
+    lpEarned = lpGrantResult.lpAwarded;
+
+    console.log(`🎯 LP Grant Result: lpAwarded=${lpGrantResult.lpAwarded}, alreadyGrantedToday=${lpGrantResult.alreadyGrantedToday}, contentType=${contentType}`);
 
     // Advance branch progression
     await advanceBranch(couple.coupleId, match.quizType);
@@ -446,6 +471,10 @@ export async function submitAnswers(
     lpEarned,
     userAnswers: couple.isPlayer1 ? updatedPlayer1Answers : updatedPlayer2Answers,
     partnerAnswers: couple.isPlayer1 ? updatedPlayer2Answers : updatedPlayer1Answers,
+    // Include LP status from daily grant system
+    alreadyGrantedToday: lpGrantResult?.alreadyGrantedToday,
+    resetInMs: lpGrantResult?.resetInMs,
+    canPlayMore: lpGrantResult?.canPlayMore,
   } : null;
 
   return { match: updatedMatch, result: gameResult };
@@ -502,17 +531,49 @@ export function buildGameState(match: GameMatch, couple: CoupleInfo): GameState 
   };
 }
 
-export function buildResult(match: GameMatch, couple: CoupleInfo): GameResult | null {
+/**
+ * Build game result for a completed match.
+ *
+ * @param match - The completed match
+ * @param couple - Couple info
+ * @param options - Optional settings
+ * @param options.checkLpStatus - If true, checks daily LP grant status (async)
+ * @returns GameResult or null if not completed
+ */
+export async function buildResult(
+  match: GameMatch,
+  couple: CoupleInfo,
+  options?: { checkLpStatus?: boolean }
+): Promise<GameResult | null> {
   if (match.status !== 'completed') return null;
 
   const config = GAME_CONFIG[match.quizType];
 
-  return {
+  // Base result
+  const result: GameResult = {
     matchPercentage: match.matchPercentage || 0,
-    lpEarned: config.lpReward,
+    lpEarned: config.lpReward, // Default to full reward
     userAnswers: couple.isPlayer1 ? match.player1Answers : match.player2Answers,
     partnerAnswers: couple.isPlayer1 ? match.player2Answers : match.player1Answers,
     userScore: couple.isPlayer1 ? match.player1Score : match.player2Score,
     partnerScore: couple.isPlayer1 ? match.player2Score : match.player1Score,
   };
+
+  // Optionally check LP grant status for "already earned today" info
+  if (options?.checkLpStatus) {
+    try {
+      const contentType = gameTypeToContentType(match.quizType);
+      // Get current LP status without awarding (read-only check)
+      const lpStatus = await getLpStatusStandalone(couple.coupleId, contentType);
+
+      result.alreadyGrantedToday = lpStatus.alreadyGrantedToday;
+      result.resetInMs = lpStatus.resetInMs;
+      result.canPlayMore = lpStatus.canPlayMore;
+    } catch (error) {
+      console.error('Failed to check LP status:', error);
+      // Don't fail the result - just omit LP status
+    }
+  }
+
+  return result;
 }

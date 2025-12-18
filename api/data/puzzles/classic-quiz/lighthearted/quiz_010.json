@@ -1,61 +1,67 @@
 {
   "quizId": "quiz_010",
-  "title": "Lighthearted Quiz 10",
+  "title": "Travel & Adventure",
   "branch": "lighthearted",
   "questions": [
     {
       "id": "quiz_010_q1",
-      "text": "What's my favorite color?",
+      "text": "My ideal vacation style is...",
       "choices": [
-        "Blue",
-        "Red",
-        "Green",
-        "Purple",
-        "Other / Something else"
+        "Relaxing beach or resort",
+        "Exploring cities and culture",
+        "Outdoor adventure",
+        "Road trip with flexibility",
+        "Other / Staycation at home"
       ],
-      "category": "favorites"
+      "category": "lifestyle"
     },
     {
       "id": "quiz_010_q2",
-      "text": "Would I rather: Road trip or Flight?",
+      "text": "When traveling, I prefer to...",
       "choices": [
-        "Road trip",
-        "Flight"
+        "Plan everything in advance",
+        "Have key things planned, wing the rest",
+        "Be mostly spontaneous",
+        "Let someone else plan",
+        "Other / Depends on destination"
       ],
-      "category": "would_you_rather"
+      "category": "together"
     },
     {
       "id": "quiz_010_q3",
-      "text": "How do I prefer to spend alone time?",
+      "text": "My comfort level with adventure is...",
       "choices": [
-        "Hobby",
-        "Relaxing",
-        "Productive tasks",
-        "Social media",
-        "Other / Something else"
+        "High - I love thrills",
+        "Medium - calculated risks",
+        "Low - I prefer safety",
+        "It depends on the activity",
+        "Other / I'll try anything once"
       ],
-      "category": "preferences"
+      "category": "lifestyle"
     },
     {
       "id": "quiz_010_q4",
-      "text": "Would I rather: Read a book or Watch a movie?",
+      "text": "On a trip, the most important thing to me is...",
       "choices": [
-        "Read a book",
-        "Watch a movie"
+        "Good food experiences",
+        "Seeing major sights",
+        "Relaxation and downtime",
+        "Local/authentic experiences",
+        "Other / Quality time together"
       ],
-      "category": "would_you_rather"
+      "category": "lifestyle"
     },
     {
       "id": "quiz_010_q5",
-      "text": "What's my favorite TV show genre?",
+      "text": "After traveling, I usually need...",
       "choices": [
-        "Drama",
-        "Comedy",
-        "Reality",
-        "Documentary",
-        "Other / Something else"
+        "A day to recover at home",
+        "To jump right back into routine",
+        "Time to process and reminisce",
+        "To already plan the next trip",
+        "Other / Depends on the trip"
       ],
-      "category": "favorites"
+      "category": "self_care"
     }
   ]
 }

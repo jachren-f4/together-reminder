@@ -1,37 +1,37 @@
 {
   "quizId": "affirmation_011",
-  "title": "Connection Moments",
+  "title": "Growth & Change",
   "category": "lighthearted",
   "branch": "lighthearted",
-  "description": "How you stay connected",
+  "description": "Your attitudes toward personal development",
   "questions": [
     {
       "id": "affirmation_011_q1",
-      "text": "Daily check-ins help us stay connected",
+      "text": "I'm always looking for ways to improve myself",
       "type": "scale",
       "scaleLabels": ["Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"]
     },
     {
       "id": "affirmation_011_q2",
-      "text": "Physical affection is important to me throughout the day",
+      "text": "I'm comfortable with who I am and don't feel the need to change",
       "type": "scale",
       "scaleLabels": ["Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"]
     },
     {
       "id": "affirmation_011_q3",
-      "text": "I appreciate when my partner shares their day with me",
+      "text": "I appreciate when my partner encourages me to grow",
       "type": "scale",
       "scaleLabels": ["Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"]
     },
     {
       "id": "affirmation_011_q4",
-      "text": "We need regular date nights to maintain our connection",
+      "text": "I find it hard to accept criticism, even constructive feedback",
       "type": "scale",
       "scaleLabels": ["Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"]
     },
     {
       "id": "affirmation_011_q5",
-      "text": "Comfortable silence together is a sign of closeness",
+      "text": "I believe we should challenge each other to be better",
       "type": "scale",
       "scaleLabels": ["Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"]
     }

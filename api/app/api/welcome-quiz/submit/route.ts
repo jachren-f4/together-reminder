@@ -18,6 +18,7 @@ import { query } from '@/lib/db/pool';
 import { NextResponse } from 'next/server';
 import { getCoupleBasic } from '@/lib/couple/utils';
 import { withTransaction } from '@/lib/db/transaction';
+import { awardLP } from '@/lib/lp/award';
 
 // Welcome quiz questions - must match route.ts
 const WELCOME_QUIZ_QUESTIONS = [
@@ -142,7 +143,7 @@ export const POST = withAuthOrDevBypass(async (req, userId) => {
         );
 
         if (!unlockResult.rows[0]?.classic_quiz_unlocked) {
-          // Unlock daily quizzes (no LP awarded - LP comes from game completion only)
+          // Unlock daily quizzes (LP awarded after transaction commits)
           await client.query(
             `UPDATE couple_unlocks
              SET welcome_quiz_completed = true,
@@ -228,6 +229,19 @@ export const POST = withAuthOrDevBypass(async (req, userId) => {
     });
 
     console.log('[welcome-quiz/submit] Transaction result:', JSON.stringify(result));
+
+    // Award LP when both partners complete (30 LP for welcome quiz)
+    // This is outside the transaction but uses idempotency via relatedId
+    if (result.bothCompleted) {
+      try {
+        const lpResult = await awardLP(coupleId, 30, 'welcome_quiz', coupleId);
+        console.log('[welcome-quiz/submit] LP award result:', lpResult);
+      } catch (lpError) {
+        // Log but don't fail the request - quiz completion is more important
+        console.error('[welcome-quiz/submit] LP award error (non-fatal):', lpError);
+      }
+    }
+
     return NextResponse.json(result);
   } catch (error) {
     console.error('[welcome-quiz/submit] Error:', error);

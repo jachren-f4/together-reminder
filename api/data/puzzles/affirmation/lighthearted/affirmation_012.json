@@ -1,37 +1,37 @@
 {
   "quizId": "affirmation_012",
-  "title": "Growing Together",
+  "title": "Relationship Priorities",
   "category": "lighthearted",
   "branch": "lighthearted",
-  "description": "Supporting each other's growth",
+  "description": "What matters most in your relationship",
   "questions": [
     {
       "id": "affirmation_012_q1",
-      "text": "We encourage each other to pursue individual interests",
+      "text": "Feeling understood is more important to me than being agreed with",
       "type": "scale",
       "scaleLabels": ["Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"]
     },
     {
       "id": "affirmation_012_q2",
-      "text": "Learning new things together strengthens our bond",
+      "text": "Having fun together is as important as the serious stuff",
       "type": "scale",
       "scaleLabels": ["Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"]
     },
     {
       "id": "affirmation_012_q3",
-      "text": "I value my partner's feedback and perspective",
+      "text": "I value reliability and consistency in our relationship",
       "type": "scale",
       "scaleLabels": ["Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"]
     },
     {
       "id": "affirmation_012_q4",
-      "text": "We celebrate each other's accomplishments enthusiastically",
+      "text": "Maintaining our individual identities is important to me",
       "type": "scale",
       "scaleLabels": ["Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"]
     },
     {
       "id": "affirmation_012_q5",
-      "text": "Personal growth makes our relationship stronger",
+      "text": "I believe the little everyday moments matter more than big gestures",
       "type": "scale",
       "scaleLabels": ["Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"]
     }

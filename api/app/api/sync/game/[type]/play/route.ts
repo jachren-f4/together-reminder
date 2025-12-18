@@ -24,6 +24,7 @@ import {
   submitAnswers,
   buildGameState,
   buildResult,
+  loadQuiz,
 } from '@/lib/game/handler';
 
 export const dynamic = 'force-dynamic';
@@ -89,6 +90,8 @@ export const POST = withAuthOrDevBypass(async (
           { status: 400 }
         );
       }
+      // Load quiz data for the match (needed for results comparison)
+      quiz = loadQuiz(gameType as GameType, match.branch, match.quizId);
     }
     // Case 2: No matchId - create or get today's match
     else if (hasLocalDate) {
@@ -147,8 +150,10 @@ export const POST = withAuthOrDevBypass(async (
       isNew,
     };
 
-    // Include quiz questions if this is a new match or user hasn't answered
-    if (quiz && !state.userAnswered) {
+    // Include quiz questions if:
+    // - User hasn't answered yet (needs to play)
+    // - OR match is completed (needed for results comparison)
+    if (quiz && (!state.userAnswered || match.status === 'completed')) {
       response.quiz = {
         id: quiz.id,
         name: quiz.name,
@@ -170,13 +175,17 @@ export const POST = withAuthOrDevBypass(async (
 
     // Include completion data if match is completed
     if (match.status === 'completed') {
-      const completedResult = buildResult(match, couple);
+      const completedResult = await buildResult(match, couple, { checkLpStatus: true });
       if (completedResult) {
         response.result = {
           matchPercentage: completedResult.matchPercentage,
           lpEarned: completedResult.lpEarned,
           userAnswers: completedResult.userAnswers,
           partnerAnswers: completedResult.partnerAnswers,
+          // Include LP status for completed matches
+          alreadyGrantedToday: completedResult.alreadyGrantedToday,
+          resetInMs: completedResult.resetInMs,
+          canPlayMore: completedResult.canPlayMore,
         };
       }
     }

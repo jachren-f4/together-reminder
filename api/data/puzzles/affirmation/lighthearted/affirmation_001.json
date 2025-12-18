@@ -1,37 +1,37 @@
 {
   "quizId": "affirmation_001",
-  "title": "Morning Vibes",
+  "title": "Energy & Recharging",
   "category": "lighthearted",
   "branch": "lighthearted",
-  "description": "How do you prefer to start your day?",
+  "description": "How you restore and maintain your energy",
   "questions": [
     {
       "id": "affirmation_001_q1",
-      "text": "I prefer quiet mornings over busy ones",
+      "text": "I need alone time to recharge, even from people I love",
       "type": "scale",
       "scaleLabels": ["Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"]
     },
     {
       "id": "affirmation_001_q2",
-      "text": "I need coffee or tea to truly wake up",
+      "text": "Being around my partner energizes me rather than drains me",
       "type": "scale",
       "scaleLabels": ["Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"]
     },
     {
       "id": "affirmation_001_q3",
-      "text": "I like to plan my day before it starts",
+      "text": "I can tell when I'm running low on energy before it becomes a problem",
       "type": "scale",
       "scaleLabels": ["Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"]
     },
     {
       "id": "affirmation_001_q4",
-      "text": "Morning workouts energize me for the day",
+      "text": "I need downtime after social events, even fun ones",
       "type": "scale",
       "scaleLabels": ["Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"]
     },
     {
       "id": "affirmation_001_q5",
-      "text": "I'm at my most productive in the morning hours",
+      "text": "Physical activity helps restore my energy more than rest does",
       "type": "scale",
       "scaleLabels": ["Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"]
     }

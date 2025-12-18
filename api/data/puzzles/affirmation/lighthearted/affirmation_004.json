@@ -1,37 +1,37 @@
 {
   "quizId": "affirmation_004",
-  "title": "Dining Adventures",
+  "title": "Quality Time",
   "category": "lighthearted",
   "branch": "lighthearted",
-  "description": "Your food and dining preferences",
+  "description": "How you prefer to spend time together",
   "questions": [
     {
       "id": "affirmation_004_q1",
-      "text": "I enjoy trying new restaurants regularly",
+      "text": "Doing activities together feels more connecting than just talking",
       "type": "scale",
       "scaleLabels": ["Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"]
     },
     {
       "id": "affirmation_004_q2",
-      "text": "I'm adventurous with trying new cuisines",
+      "text": "I value quiet time together as much as active adventures",
       "type": "scale",
       "scaleLabels": ["Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"]
     },
     {
       "id": "affirmation_004_q3",
-      "text": "I have favorite dishes I order repeatedly",
+      "text": "Regular date nights are important to me",
       "type": "scale",
       "scaleLabels": ["Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"]
     },
     {
       "id": "affirmation_004_q4",
-      "text": "Food is an important part of social experiences",
+      "text": "I feel connected even when we're doing separate things in the same room",
       "type": "scale",
       "scaleLabels": ["Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"]
     },
     {
       "id": "affirmation_004_q5",
-      "text": "I prefer casual dining over fine dining",
+      "text": "I need dedicated one-on-one time without distractions",
       "type": "scale",
       "scaleLabels": ["Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"]
     }

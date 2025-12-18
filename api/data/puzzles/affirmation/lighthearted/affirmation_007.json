@@ -1,37 +1,37 @@
 {
   "quizId": "affirmation_007",
-  "title": "What Matters Most",
+  "title": "Planning & Structure",
   "category": "lighthearted",
   "branch": "lighthearted",
-  "description": "Your core relationship values",
+  "description": "Your approach to organizing life",
   "questions": [
     {
       "id": "affirmation_007_q1",
-      "text": "Quality time matters more than expensive gifts",
+      "text": "I feel more relaxed when I have a plan",
       "type": "scale",
       "scaleLabels": ["Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"]
     },
     {
       "id": "affirmation_007_q2",
-      "text": "Small thoughtful gestures mean a lot to me",
+      "text": "I enjoy spontaneous changes to our plans",
       "type": "scale",
       "scaleLabels": ["Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"]
     },
     {
       "id": "affirmation_007_q3",
-      "text": "I value experiences over material possessions",
+      "text": "I like to research and prepare before making decisions",
       "type": "scale",
       "scaleLabels": ["Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"]
     },
     {
       "id": "affirmation_007_q4",
-      "text": "Financial security is important for my peace of mind",
+      "text": "Last-minute plans stress me out",
       "type": "scale",
       "scaleLabels": ["Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"]
     },
     {
       "id": "affirmation_007_q5",
-      "text": "Celebrating milestones together is meaningful to me",
+      "text": "I prefer going with the flow over strict schedules",
       "type": "scale",
       "scaleLabels": ["Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"]
     }

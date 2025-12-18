@@ -1,64 +1,67 @@
 {
   "quizId": "quiz_004",
-  "title": "Lighthearted Quiz 4",
+  "title": "Showing Care",
   "branch": "lighthearted",
   "questions": [
     {
       "id": "quiz_004_q1",
-      "text": "What's my favorite way to celebrate my birthday?",
+      "text": "I feel most loved when you...",
       "choices": [
-        "Big party",
-        "Dinner with close friends",
-        "Quiet day at home",
-        "Adventure/trip",
-        "Other / Something else"
+        "Tell me in words",
+        "Show physical affection",
+        "Do something helpful for me",
+        "Give me your undivided time",
+        "Surprise me with something thoughtful"
       ],
-      "category": "favorites"
+      "category": "support"
     },
     {
       "id": "quiz_004_q2",
-      "text": "What's my favorite type of cuisine?",
+      "text": "When I'm sick, I prefer...",
       "choices": [
-        "Italian",
-        "Mexican",
-        "Asian",
-        "American",
-        "Other / Something else"
+        "Being taken care of and pampered",
+        "Being left alone to rest",
+        "Company but low expectations",
+        "Distraction (movies, shows)",
+        "Other / Just check on me occasionally"
       ],
-      "category": "favorites"
+      "category": "support"
     },
     {
       "id": "quiz_004_q3",
-      "text": "Do I prefer hot or cold weather?",
+      "text": "The kind of compliment that means most to me is about...",
       "choices": [
-        "Hot",
-        "Cold",
-        "Mild",
-        "Varies",
-        "Other / No preference"
+        "My appearance",
+        "My personality or character",
+        "Something I accomplished",
+        "How I make you feel",
+        "My skills or abilities"
       ],
-      "category": "preferences"
+      "category": "support"
     },
     {
       "id": "quiz_004_q4",
-      "text": "What's my favorite scent or perfume type?",
+      "text": "When I've had a win (good news, achievement), I want you to...",
       "choices": [
-        "Floral",
-        "Citrus",
-        "Woody",
-        "Sweet",
-        "Other / Something else"
+        "Celebrate enthusiastically with me",
+        "Acknowledge it warmly but calmly",
+        "Ask me all about it",
+        "Just be happy for me, no big deal",
+        "Other / Help me share it with others"
       ],
-      "category": "favorites"
+      "category": "support"
     },
     {
       "id": "quiz_004_q5",
-      "text": "Would I rather: Save money or Spend on experiences?",
+      "text": "A small gesture that would brighten my day is...",
       "choices": [
-        "Save money",
-        "Spend on experiences"
+        "A sweet text out of nowhere",
+        "Making me food or coffee",
+        "Physical affection (hug, kiss)",
+        "Handling a task I was dreading",
+        "Planning something fun for us"
       ],
-      "category": "would_you_rather"
+      "category": "support"
     }
   ]
 }
