@@ -25,7 +25,12 @@
     "17": { "type": "text", "content": "SCR_W", "arrow": "across", "target_index": 50 },
     "18": { "type": "text", "content": "After J", "arrow": "across", "target_index": 52 },
     "19": { "type": "text", "content": "Sound of pleasure", "arrow": "across", "target_index": 54 },
-    "20": { "type": "text", "content": "Drink in", "arrow": "across", "target_index": 60 }
+    "20": { "type": "text", "content": "Drink in", "arrow": "across", "target_index": 60 },
+    "21": {
+      "across": { "type": "text", "content": "_OMANCE", "target_index": 17 },
+      "down": { "type": "text", "content": "_EASE", "target_index": 24 }
+    },
+    "22": { "type": "text", "content": "_ISS", "arrow": "across", "target_index": 36 }
   },
   "date": "2025-11-27",
   "grid": [
@@ -42,10 +47,10 @@
   "gridnums": [
     0, 0, 1, 2, 3, 0, 4,
     5, 0, 0, 0, 0, 6, 0,
-    0, 7, 0, 0, 8, 0, 0,
+    0, 7, 21, 0, 8, 0, 0,
     9, 0, 0, 10, 0, 0, 0,
     12, 0, 0, 0, 0, 0, 13,
-    0, 0, 14, 0, 0, 0, 0,
+    22, 0, 14, 0, 0, 0, 0,
     15, 0, 0, 0, 0, 16, 0,
     17, 0, 18, 0, 19, 0, 0,
     0, 0, 0, 20, 0, 0, 0

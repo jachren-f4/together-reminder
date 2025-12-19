@@ -21,7 +21,9 @@
     "13": { "type": "text", "content": "Take me", "arrow": "down", "target_index": 55 },
     "14": { "type": "emoji", "content": "📳", "arrow": "across", "target_index": 50 },
     "15": { "type": "text", "content": "Before N", "arrow": "across", "target_index": 55 },
-    "16": { "type": "text", "content": "Building up", "arrow": "across", "target_index": 58 }
+    "16": { "type": "text", "content": "Building up", "arrow": "across", "target_index": 58 },
+    "17": { "type": "text", "content": "_S", "arrow": "down", "target_index": 12 },
+    "18": { "type": "emoji", "content": "🍑", "text": "_SS", "arrow": "down", "target_index": 17 }
   },
   "date": "2025-11-27",
   "grid": [
@@ -36,7 +38,7 @@
     ".", ".", "T", "E", "N", "S", "E"
   ],
   "gridnums": [
-    0, 1, 0, 0, 2, 0, 3,
+    0, 1, 0, 18, 2, 17, 3,
     0, 0, 0, 4, 0, 0, 0,
     6, 0, 0, 0, 0, 7, 0,
     0, 0, 8, 0, 0, 9, 0,

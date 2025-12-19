@@ -21,7 +21,9 @@
     "13": { "type": "text", "content": "_LAW", "arrow": "down", "target_index": 50 },
     "14": { "type": "text", "content": "State of being", "arrow": "across", "target_index": 47 },
     "15": { "type": "text", "content": "Nipple toy", "arrow": "across", "target_index": 50 },
-    "16": { "type": "text", "content": "Consent given", "arrow": "across", "target_index": 58 }
+    "16": { "type": "text", "content": "Consent given", "arrow": "across", "target_index": 58 },
+    "17": { "type": "text", "content": "MO_N", "arrow": "across", "target_index": 17 },
+    "18": { "type": "text", "content": "_NTIMATE", "arrow": "across", "target_index": 20 }
   },
   "date": "2025-11-27",
   "grid": [
@@ -38,7 +40,7 @@
   "gridnums": [
     0, 1, 0, 2, 3, 0, 4,
     5, 0, 0, 0, 0, 0, 0,
-    6, 0, 0, 0, 0, 0, 0,
+    6, 0, 17, 0, 0, 18, 0,
     0, 0, 0, 0, 0, 7, 0,
     0, 0, 0, 8, 0, 9, 0,
     0, 0, 10, 0, 0, 0, 12,
