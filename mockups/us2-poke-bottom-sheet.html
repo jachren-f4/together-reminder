@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Us 2.0 - Poke Bottom Sheet</title>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-gradient-start: #FFD1C1;
+            --bg-gradient-end: #FFF5F0;
+            --primary-pink: #FF5E62;
+            --gradient-start: #FF6B6B;
+            --gradient-end: #FF9F43;
+            --cream: #FFF8F0;
+            --beige: #F5E6D8;
+            --text-dark: #2D2D2D;
+            --text-medium: #6B6B6B;
+            --text-light: #9B9B9B;
+            --glow-pink: rgba(255, 107, 107, 0.5);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            min-height: 100vh;
+            background: linear-gradient(180deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .phone-frame {
+            width: 390px;
+            height: 844px;
+            background: linear-gradient(180deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
+            border-radius: 40px;
+            overflow: hidden;
+            box-shadow: 0 25px 80px rgba(0, 0, 0, 0.15);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        /* Darkened overlay */
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.4);
+            z-index: 10;
+        }
+
+        /* Bottom sheet */
+        .bottom-sheet {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            border-radius: 24px 24px 0 0;
+            padding: 16px 20px 40px;
+            z-index: 20;
+            animation: slideUp 0.3s ease-out;
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(100%); }
+            to { transform: translateY(0); }
+        }
+
+        /* Drag handle */
+        .drag-handle {
+            width: 40px;
+            height: 4px;
+            background: var(--beige);
+            border-radius: 2px;
+            margin: 0 auto 20px;
+        }
+
+        /* Header */
+        .sheet-header {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .sheet-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 28px;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .partner-name {
+            font-style: italic;
+            background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .sheet-subtitle {
+            font-size: 14px;
+            color: var(--text-medium);
+            margin-top: 4px;
+        }
+
+        /* Emoji grid */
+        .emoji-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .emoji-option {
+            aspect-ratio: 1;
+            background: var(--cream);
+            border: 2px solid var(--beige);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .emoji-option:hover {
+            border-color: var(--gradient-start);
+            transform: scale(1.05);
+        }
+
+        .emoji-option.selected {
+            background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+            border-color: transparent;
+            box-shadow: 0 4px 15px var(--glow-pink);
+        }
+
+        /* Send button */
+        .send-button {
+            width: 100%;
+            height: 56px;
+            background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+            border: none;
+            border-radius: 16px;
+            font-family: 'Nunito', sans-serif;
+            font-size: 16px;
+            font-weight: 700;
+            color: white;
+            cursor: pointer;
+            box-shadow: 0 8px 25px var(--glow-pink);
+            transition: all 0.2s ease;
+        }
+
+        .send-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 30px var(--glow-pink);
+        }
+
+        /* Rate limit notice */
+        .rate-limit {
+            text-align: center;
+            font-size: 12px;
+            color: var(--text-light);
+            margin-top: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="phone-frame">
+        <div class="overlay"></div>
+
+        <div class="bottom-sheet">
+            <div class="drag-handle"></div>
+
+            <div class="sheet-header">
+                <div class="sheet-title">
+                    Poke <span class="partner-name">Alex</span>
+                </div>
+                <div class="sheet-subtitle">Send a quick reminder you're thinking of them</div>
+            </div>
+
+            <div class="emoji-grid">
+                <div class="emoji-option selected">👋</div>
+                <div class="emoji-option">❤️</div>
+                <div class="emoji-option">😘</div>
+                <div class="emoji-option">🥰</div>
+                <div class="emoji-option">😊</div>
+                <div class="emoji-option">🤗</div>
+                <div class="emoji-option">💕</div>
+                <div class="emoji-option">✨</div>
+            </div>
+
+            <button class="send-button">Send Poke 👋</button>
+
+            <div class="rate-limit">You can poke once every 15 minutes</div>
+        </div>
+    </div>
+</body>
+</html>

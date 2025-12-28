@@ -1,6 +1,6 @@
 {
   "quizId": "quiz_005",
-  "title": "Attachment Quiz 5",
+  "title": "Boundaries",
   "branch": "attachment",
   "questions": [
     {
@@ -33,5 +33,6 @@
       "prompt": "Who seeks more...",
       "content": "Immediate resolution after disagreements"
     }
-  ]
+  ],
+  "description": "Personal space and limits—explore your boundary styles."
 }

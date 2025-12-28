@@ -1,6 +1,6 @@
 {
   "quizId": "quiz_011",
-  "title": "Lighthearted Quiz 11",
+  "title": "Comfort Zone",
   "branch": "lighthearted",
   "questions": [
     {
@@ -33,5 +33,6 @@
       "prompt": "Who would rather",
       "content": "Learn through hands-on experience or reading about it"
     }
-  ]
+  ],
+  "description": "Who pushes boundaries and who plays it safe? Find out your comfort levels."
 }

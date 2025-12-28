@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Us 2.0 - LP Intro Overlay</title>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-gradient-start: #FFD1C1;
+            --bg-gradient-end: #FFF5F0;
+            --primary-pink: #FF5E62;
+            --gradient-start: #FF6B6B;
+            --gradient-end: #FF9F43;
+            --cream: #FFF8F0;
+            --beige: #F5E6D8;
+            --text-dark: #2D2D2D;
+            --text-medium: #6B6B6B;
+            --text-light: #9B9B9B;
+            --glow-pink: rgba(255, 107, 107, 0.5);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            min-height: 100vh;
+            background: linear-gradient(180deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .phone-frame {
+            width: 390px;
+            height: 844px;
+            background: linear-gradient(180deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
+            border-radius: 40px;
+            overflow: hidden;
+            box-shadow: 0 25px 80px rgba(0, 0, 0, 0.15);
+            position: relative;
+        }
+
+        /* Full-screen overlay */
+        .lp-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(180deg, rgba(255, 107, 107, 0.95) 0%, rgba(255, 159, 67, 0.95) 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 30px;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .lp-content {
+            text-align: center;
+            animation: bounceIn 0.6s ease-out 0.2s both;
+        }
+
+        @keyframes bounceIn {
+            0% { transform: scale(0.3); opacity: 0; }
+            50% { transform: scale(1.05); }
+            70% { transform: scale(0.95); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        /* Diamond icon with glow */
+        .diamond-container {
+            margin-bottom: 24px;
+            position: relative;
+        }
+
+        .diamond {
+            font-size: 80px;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .diamond-glow {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 120px;
+            height: 120px;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.4) 0%, transparent 70%);
+            border-radius: 50%;
+            animation: glowPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes glowPulse {
+            0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.6; }
+            50% { transform: translate(-50%, -50%) scale(1.3); opacity: 1; }
+        }
+
+        .intro-label {
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 3px;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 12px;
+        }
+
+        .intro-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 36px;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 8px;
+            text-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .intro-subtitle {
+            font-size: 16px;
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 32px;
+            line-height: 1.5;
+        }
+
+        /* LP meter */
+        .lp-meter {
+            width: 100%;
+            max-width: 280px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 32px;
+        }
+
+        .meter-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .meter-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.8);
+            letter-spacing: 1px;
+        }
+
+        .meter-value {
+            font-family: 'Playfair Display', serif;
+            font-size: 24px;
+            font-weight: 700;
+            color: white;
+        }
+
+        .meter-track {
+            height: 12px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 6px;
+            overflow: hidden;
+        }
+
+        .meter-fill {
+            height: 100%;
+            background: white;
+            border-radius: 6px;
+            width: 20%;
+            animation: fillIn 1s ease-out 0.8s both;
+        }
+
+        @keyframes fillIn {
+            from { width: 0%; }
+            to { width: 20%; }
+        }
+
+        .meter-footer {
+            margin-top: 8px;
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.7);
+            text-align: right;
+        }
+
+        /* Info cards */
+        .info-cards {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            width: 100%;
+            max-width: 300px;
+            margin-bottom: 40px;
+        }
+
+        .info-card {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            padding: 14px 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .info-icon {
+            font-size: 24px;
+        }
+
+        .info-text {
+            font-size: 14px;
+            color: white;
+            font-weight: 500;
+        }
+
+        /* Continue button */
+        .continue-button {
+            width: 100%;
+            max-width: 280px;
+            height: 56px;
+            background: white;
+            border: none;
+            border-radius: 16px;
+            font-family: 'Nunito', sans-serif;
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--gradient-start);
+            cursor: pointer;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            transition: all 0.2s ease;
+        }
+
+        .continue-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
+        }
+    </style>
+</head>
+<body>
+    <div class="phone-frame">
+        <div class="lp-overlay">
+            <div class="lp-content">
+                <div class="diamond-container">
+                    <div class="diamond-glow"></div>
+                    <div class="diamond">💎</div>
+                </div>
+
+                <div class="intro-label">INTRODUCING</div>
+                <div class="intro-title">Love Points</div>
+                <div class="intro-subtitle">
+                    Complete quests together to earn points<br>
+                    and strengthen your connection
+                </div>
+
+                <div class="lp-meter">
+                    <div class="meter-header">
+                        <span class="meter-label">YOUR CONNECTION</span>
+                        <span class="meter-value">+30</span>
+                    </div>
+                    <div class="meter-track">
+                        <div class="meter-fill"></div>
+                    </div>
+                    <div class="meter-footer">30 / 150 to next tier</div>
+                </div>
+
+                <div class="info-cards">
+                    <div class="info-card">
+                        <span class="info-icon">✨</span>
+                        <span class="info-text">Complete daily quests to earn LP</span>
+                    </div>
+                    <div class="info-card">
+                        <span class="info-icon">🎯</span>
+                        <span class="info-text">Reach milestones to unlock rewards</span>
+                    </div>
+                    <div class="info-card">
+                        <span class="info-icon">💕</span>
+                        <span class="info-text">Build your connection score together</span>
+                    </div>
+                </div>
+
+                <button class="continue-button">Let's Go!</button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,6 +1,6 @@
 {
   "quizId": "quiz_007",
-  "title": "Playful Quiz 7",
+  "title": "Inner Child",
   "branch": "playful",
   "questions": [
     {
@@ -33,5 +33,6 @@
       "prompt": "Who would...",
       "content": "Make a bet about literally anything"
     }
-  ]
+  ],
+  "description": "Embrace your childlike sides—from cartoons to candy preferences."
 }

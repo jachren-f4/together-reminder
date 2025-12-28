@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Us 2.0 - Home Screen v2</title>
+  <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Playfair+Display:wght@700;800&family=Nunito:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    /* ========================================
+       1. GLOBAL DESIGN TOKENS
+       ======================================== */
+    :root {
+      /* Color Palette */
+      --bg-gradient-start: #FFD1C1;
+      --bg-gradient-end: #FFF5F0;
+      --primary-brand-pink: #FF5E62;
+      --gradient-accent-start: #FF6B6B;
+      --gradient-accent-end: #FF9F43;
+      --text-dark: #2D2D2D;
+      --text-light: #FFFFFF;
+      --nav-text: #4A4A4A;
+      --card-salmon: #FF7B6B;
+      --card-salmon-dark: #FF6B5B;
+      --cream: #FFF8F0;
+      --beige: #F5E6D8;
+
+      /* Glow Effects */
+      --glow-pink: rgba(255, 107, 107, 0.8);
+      --glow-orange: rgba(255, 159, 67, 0.6);
+
+      /* Typography */
+      --font-logo: 'Pacifico', cursive;
+      --font-heading: 'Playfair Display', serif;
+      --font-body: 'Nunito', sans-serif;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: var(--font-body);
+      background: linear-gradient(180deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
+      min-height: 100vh;
+      max-width: 430px;
+      margin: 0 auto;
+      position: relative;
+      padding-bottom: 100px;
+    }
+
+    /* ========================================
+       2A. HEADER (User & Partner Status)
+       ======================================== */
+    .header {
+      padding: 15px 20px 0;
+      text-align: center;
+    }
+
+    .logo {
+      font-family: var(--font-logo);
+      font-size: 52px;
+      color: var(--text-light);
+      position: relative;
+      display: inline-block;
+      text-shadow:
+        0 0 10px var(--glow-pink),
+        0 0 20px var(--glow-pink),
+        0 0 30px var(--glow-pink),
+        0 0 40px var(--glow-orange);
+      filter: drop-shadow(0 0 8px var(--glow-pink));
+      margin-left: -5px;
+    }
+
+    .logo::after {
+      content: "♥";
+      position: absolute;
+      top: -8px;
+      right: -18px;
+      font-size: 18px;
+      color: var(--primary-brand-pink);
+      text-shadow: 0 0 10px var(--glow-pink);
+    }
+
+    .day-label {
+      font-family: var(--font-heading);
+      font-size: 16px;
+      color: #8B7355;
+      margin-top: 2px;
+      font-style: italic;
+    }
+
+    /* Avatars Section */
+    .avatars-section {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      padding: 0 15px;
+      position: relative;
+      z-index: 10;
+      margin-top: -150px;
+    }
+
+    .avatar-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+    }
+
+    .avatar-container:first-child {
+      align-items: flex-start;
+    }
+
+    .avatar-container:last-child {
+      align-items: flex-end;
+      margin-right: 15px;
+    }
+
+    .avatar-badge {
+      font-family: var(--font-body);
+      font-weight: 700;
+      font-size: 15px;
+      color: #1a1a1a;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      text-shadow:
+        0 0 6px rgba(255, 255, 255, 1),
+        0 0 10px rgba(255, 255, 255, 1),
+        0 0 14px rgba(255, 220, 200, 1),
+        0 0 20px rgba(255, 200, 180, 0.9);
+      position: absolute;
+      bottom: 10px;
+      white-space: nowrap;
+      z-index: 11;
+    }
+
+    .avatar-container:first-child .avatar-badge {
+      left: 18px;
+    }
+
+    .avatar-container:last-child .avatar-badge {
+      right: 0px;
+    }
+
+    .avatar-badge.highlight {
+      color: #ffffff;
+      text-shadow:
+        0 0 8px rgba(30, 30, 30, 1),
+        0 0 12px rgba(20, 20, 20, 0.9),
+        0 0 16px rgba(10, 10, 10, 0.7);
+    }
+
+    .avatar {
+      width: 193px;
+      height: 235px;
+    }
+
+    .avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      object-position: bottom center;
+    }
+
+    .center-spacer {
+      flex: 1;
+    }
+
+    /* ========================================
+       2B. CONNECTION BAR (The HUD)
+       ======================================== */
+    .connection-bar {
+      margin: 0 0 25px;
+      background: linear-gradient(90deg, var(--gradient-accent-start) 0%, var(--gradient-accent-end) 100%);
+      border-radius: 18px 18px 0 0;
+      padding: 14px 18px 24px;
+      position: relative;
+      z-index: 5;
+      box-shadow:
+        0 4px 20px rgba(255, 107, 107, 0.4),
+        0 0 30px rgba(255, 107, 107, 0.2);
+    }
+
+    .connection-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+    }
+
+    .connection-label {
+      font-family: var(--font-heading);
+      color: var(--text-light);
+      font-weight: 700;
+      font-size: 13px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+    }
+
+    .connection-score {
+      font-family: var(--font-body);
+      color: var(--text-light);
+      font-weight: 700;
+      font-size: 20px;
+    }
+
+    .progress-container {
+      position: relative;
+      height: 10px;
+      background: rgba(0, 0, 0, 0.2);
+      border-radius: 5px;
+      overflow: visible;
+    }
+
+    .progress-fill {
+      height: 100%;
+      width: 80%;
+      background: linear-gradient(90deg, #FFE066 0%, #FFB347 100%);
+      border-radius: 5px;
+      box-shadow: 0 0 10px rgba(255, 224, 102, 0.6);
+    }
+
+    .progress-heart {
+      position: absolute;
+      right: 18%;
+      top: 50%;
+      transform: translate(50%, -50%);
+      width: 44px;
+      height: 44px;
+      background: linear-gradient(135deg, #FF6B8A 0%, #FF8A65 100%);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      border: 3px solid white;
+      box-shadow:
+        0 0 15px rgba(255, 255, 255, 0.8),
+        0 0 25px var(--glow-pink),
+        0 4px 10px rgba(0, 0, 0, 0.2);
+    }
+
+    .sparkle {
+      position: absolute;
+      font-size: 12px;
+      animation: sparkle 1.5s ease-in-out infinite;
+    }
+
+    .sparkle-1 { top: -10px; right: -5px; animation-delay: 0s; }
+    .sparkle-2 { top: -5px; right: -12px; animation-delay: 0.5s; }
+    .sparkle-3 { top: 2px; right: -8px; animation-delay: 1s; }
+
+    @keyframes sparkle {
+      0%, 100% { opacity: 0.3; transform: scale(0.8); }
+      50% { opacity: 1; transform: scale(1.2); }
+    }
+
+    /* ========================================
+       2C. DAILY QUESTS (Scrollable Content)
+       ======================================== */
+
+    /* Ribbon-style Section Header */
+    .section-header {
+      display: flex;
+      align-items: center;
+      margin: 0 15px 20px;
+    }
+
+    .ribbon {
+      background: var(--beige);
+      padding: 10px 25px 10px 20px;
+      position: relative;
+      display: inline-block;
+      box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .ribbon::after {
+      content: '';
+      position: absolute;
+      right: -20px;
+      top: 0;
+      width: 0;
+      height: 0;
+      border-top: 22px solid transparent;
+      border-bottom: 22px solid transparent;
+      border-left: 20px solid var(--beige);
+    }
+
+    .ribbon-line {
+      flex: 1;
+      height: 2px;
+      background: linear-gradient(90deg, var(--beige) 0%, transparent 100%);
+      margin-left: 25px;
+    }
+
+    .section-title {
+      font-family: var(--font-heading);
+      font-weight: 800;
+      font-size: 18px;
+      color: var(--text-dark);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+
+    /* Quest Cards Carousel */
+    .quests-carousel {
+      display: flex;
+      gap: 16px;
+      padding: 0 15px 25px;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .quests-carousel::-webkit-scrollbar {
+      display: none;
+    }
+
+    .quest-card {
+      flex: 0 0 82%;
+      max-width: 320px;
+      border-radius: 20px;
+      overflow: hidden;
+      scroll-snap-align: start;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+    }
+
+    .quest-image {
+      height: 180px;
+      background: linear-gradient(135deg, #FFDDD2 0%, #FFCABA 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 70px;
+    }
+
+    .quest-content {
+      background: linear-gradient(180deg, var(--card-salmon) 0%, var(--card-salmon-dark) 100%);
+      padding: 18px 20px 22px;
+    }
+
+    .quest-title {
+      font-family: var(--font-heading);
+      font-weight: 700;
+      font-size: 22px;
+      color: var(--text-light);
+      margin-bottom: 4px;
+    }
+
+    .quest-description {
+      font-family: var(--font-body);
+      font-size: 14px;
+      color: rgba(255, 255, 255, 0.85);
+      font-style: italic;
+      margin-bottom: 18px;
+    }
+
+    .quest-divider {
+      height: 1px;
+      background: rgba(255, 255, 255, 0.25);
+      margin-bottom: 18px;
+    }
+
+    /* Glowing Pill Button */
+    .quest-button {
+      background: linear-gradient(180deg, #FFFFFF 0%, #FFF5E6 100%);
+      border: 2px solid var(--gradient-accent-start);
+      border-radius: 50px;
+      padding: 14px 24px;
+      color: var(--text-dark);
+      font-family: var(--font-body);
+      font-weight: 600;
+      font-size: 14px;
+      cursor: pointer;
+      width: 100%;
+      box-shadow:
+        0 0 15px var(--glow-pink),
+        0 4px 10px rgba(0, 0, 0, 0.1);
+      transition: all 0.2s;
+    }
+
+    .quest-button:hover {
+      transform: translateY(-2px);
+      box-shadow:
+        0 0 25px var(--glow-pink),
+        0 6px 15px rgba(0, 0, 0, 0.15);
+    }
+
+    .quest-button .points {
+      color: var(--gradient-accent-end);
+      font-weight: 700;
+    }
+
+    /* Side Quests - Smaller variant */
+    .side-quests-section {
+      margin-top: 5px;
+    }
+
+    .side-quest-card {
+      flex: 0 0 65%;
+      max-width: 250px;
+    }
+
+    .side-quest-card .quest-image {
+      height: 130px;
+      font-size: 50px;
+    }
+
+    .side-quest-card .quest-content {
+      padding: 14px 16px 18px;
+    }
+
+    .side-quest-card .quest-title {
+      font-size: 18px;
+    }
+
+    .side-quest-card .quest-description {
+      font-size: 13px;
+      margin-bottom: 14px;
+    }
+
+    .side-quest-card .quest-button {
+      padding: 12px 18px;
+      font-size: 13px;
+    }
+
+    /* ========================================
+       2D. BOTTOM NAVIGATION BAR
+       ======================================== */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100%;
+      max-width: 430px;
+      background: white;
+      display: flex;
+      justify-content: space-around;
+      padding: 10px 0 28px;
+      box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.08);
+    }
+
+    .nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+
+    .nav-item:hover {
+      transform: translateY(-2px);
+    }
+
+    .nav-icon {
+      width: 30px;
+      height: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      color: var(--nav-text);
+    }
+
+    .nav-item.active .nav-icon {
+      background: linear-gradient(135deg, var(--gradient-accent-start) 0%, var(--gradient-accent-end) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      filter: drop-shadow(0 0 4px var(--glow-pink));
+    }
+
+    .nav-label {
+      font-family: var(--font-body);
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--nav-text);
+    }
+
+    .nav-item.active .nav-label {
+      background: linear-gradient(135deg, var(--gradient-accent-start) 0%, var(--gradient-accent-end) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    /* Center Poke button special styling */
+    .nav-item.poke .nav-icon {
+      background: linear-gradient(135deg, var(--gradient-accent-start) 0%, var(--gradient-accent-end) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+  </style>
+</head>
+<body>
+  <!-- ========================================
+       SECTION A: HEADER
+       ======================================== -->
+  <header class="header">
+    <div class="logo">Us 2.0</div>
+    <div class="day-label">Day Two</div>
+  </header>
+
+  <!-- Avatars Section -->
+  <section class="avatars-section">
+    <div class="avatar-container">
+      <div class="avatar-badge">PARTY</div>
+      <div class="avatar">
+        <img src="new_character_female.png" alt="Partner avatar">
+      </div>
+    </div>
+
+    <div class="avatar-container">
+      <div class="avatar-badge highlight">You & Kilu</div>
+      <div class="avatar">
+        <img src="new_character_male.png" alt="Your avatar">
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================
+       SECTION B: CONNECTION BAR
+       ======================================== -->
+  <section class="connection-bar">
+    <div class="connection-header">
+      <span class="connection-label">Connection Bar</span>
+      <span class="connection-score">120/150</span>
+    </div>
+    <div class="progress-container">
+      <div class="progress-fill"></div>
+      <div class="progress-heart">
+        💗
+        <span class="sparkle sparkle-1">✨</span>
+        <span class="sparkle sparkle-2">✨</span>
+        <span class="sparkle sparkle-3">✨</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================
+       SECTION C: DAILY QUESTS
+       ======================================== -->
+  <section class="daily-quests-section">
+    <div class="section-header">
+      <div class="ribbon">
+        <h2 class="section-title">Daily Quests</h2>
+      </div>
+      <div class="ribbon-line"></div>
+    </div>
+
+    <div class="quests-carousel">
+      <!-- Quest Card 1: Lighthearted Quiz -->
+      <article class="quest-card">
+        <div class="quest-image">👫🏾</div>
+        <div class="quest-content">
+          <h3 class="quest-title">Lighthearted Quiz</h3>
+          <p class="quest-description">Answer five questions together</p>
+          <div class="quest-divider"></div>
+          <button class="quest-button">
+            Start Quest <span class="points">(Earn 150 Points!)</span>
+          </button>
+        </div>
+      </article>
+
+      <!-- Quest Card 2: Affirmation Quiz -->
+      <article class="quest-card">
+        <div class="quest-image">💑</div>
+        <div class="quest-content">
+          <h3 class="quest-title">Affirmation Quiz</h3>
+          <p class="quest-description">Rate your feelings together</p>
+          <div class="quest-divider"></div>
+          <button class="quest-button">
+            Begin Together
+          </button>
+        </div>
+      </article>
+
+      <!-- Quest Card 3: You or Me -->
+      <article class="quest-card">
+        <div class="quest-image">🤔💭</div>
+        <div class="quest-content">
+          <h3 class="quest-title">You or Me</h3>
+          <p class="quest-description">Who does what in your relationship?</p>
+          <div class="quest-divider"></div>
+          <button class="quest-button">
+            Play Now
+          </button>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- ========================================
+       SECTION C2: SIDE QUESTS
+       ======================================== -->
+  <section class="side-quests-section">
+    <div class="section-header">
+      <div class="ribbon">
+        <h2 class="section-title">Side Quests</h2>
+      </div>
+      <div class="ribbon-line"></div>
+    </div>
+
+    <div class="quests-carousel">
+      <!-- Side Quest 1: Linked -->
+      <article class="quest-card side-quest-card">
+        <div class="quest-image">🔗</div>
+        <div class="quest-content">
+          <h3 class="quest-title">Linked</h3>
+          <p class="quest-description">Crossword puzzle together</p>
+          <div class="quest-divider"></div>
+          <button class="quest-button">Continue</button>
+        </div>
+      </article>
+
+      <!-- Side Quest 2: Word Search -->
+      <article class="quest-card side-quest-card">
+        <div class="quest-image">🔍</div>
+        <div class="quest-content">
+          <h3 class="quest-title">Word Search</h3>
+          <p class="quest-description">Find hidden words</p>
+          <div class="quest-divider"></div>
+          <button class="quest-button">Start</button>
+        </div>
+      </article>
+
+      <!-- Side Quest 3: Steps Together -->
+      <article class="quest-card side-quest-card">
+        <div class="quest-image">👟</div>
+        <div class="quest-content">
+          <h3 class="quest-title">Steps Together</h3>
+          <p class="quest-description">Walk together, earn points</p>
+          <div class="quest-divider"></div>
+          <button class="quest-button">Connect</button>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- ========================================
+       SECTION D: BOTTOM NAVIGATION
+       ======================================== -->
+  <nav class="bottom-nav">
+    <div class="nav-item active">
+      <div class="nav-icon">🏠</div>
+      <span class="nav-label">Home</span>
+    </div>
+    <div class="nav-item">
+      <div class="nav-icon">✉️</div>
+      <span class="nav-label">Inbox</span>
+    </div>
+    <div class="nav-item poke">
+      <div class="nav-icon">💫</div>
+      <span class="nav-label">Poke</span>
+    </div>
+    <div class="nav-item">
+      <div class="nav-icon">👤</div>
+      <span class="nav-label">Profile</span>
+    </div>
+    <div class="nav-item">
+      <div class="nav-icon">⚙️</div>
+      <span class="nav-label">Settings</span>
+    </div>
+  </nav>
+</body>
+</html>

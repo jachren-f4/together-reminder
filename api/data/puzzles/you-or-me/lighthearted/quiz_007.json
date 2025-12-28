@@ -1,6 +1,6 @@
 {
   "quizId": "quiz_007",
-  "title": "Lighthearted Quiz 7",
+  "title": "Food & Cravings",
   "branch": "lighthearted",
   "questions": [
     {
@@ -33,5 +33,6 @@
       "prompt": "Who is more",
       "content": "Likely to prefer cats over dogs"
     }
-  ]
+  ],
+  "description": "From midnight snacks to favorite cuisines, explore your culinary compatibility."
 }

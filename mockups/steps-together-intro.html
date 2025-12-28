@@ -1,0 +1,1010 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Steps Together - Unlock Flow Mockup</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            background: #fafafa;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .demo-controls {
+            max-width: 420px;
+            margin: 0 auto 20px;
+            padding: 16px;
+            background: #fff3cd;
+            border: 2px solid #000;
+            border-radius: 8px;
+        }
+
+        .demo-controls h3 {
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 12px;
+        }
+
+        .demo-btn {
+            padding: 12px 20px;
+            font-family: inherit;
+            font-size: 14px;
+            font-weight: 600;
+            border: 2px solid #000;
+            background: #fff;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-right: 8px;
+            margin-bottom: 8px;
+        }
+
+        .demo-btn:hover {
+            background: #000;
+            color: #fff;
+        }
+
+        .demo-btn.active {
+            background: #000;
+            color: #fff;
+        }
+
+        .container {
+            max-width: 420px;
+            margin: 0 auto;
+            background: #fff;
+            border: 2px solid #000;
+            box-shadow: 8px 8px 0 rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+
+        .header {
+            border-bottom: 2px solid #000;
+            padding: 24px 20px;
+            text-align: center;
+        }
+
+        .title {
+            font-size: 32px;
+            font-weight: 400;
+            letter-spacing: 2px;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+        }
+
+        .subtitle {
+            font-size: 14px;
+            color: #666;
+            font-style: italic;
+        }
+
+        .stats {
+            border-bottom: 1px solid #000;
+            padding: 20px;
+        }
+
+        .stat-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .stat-value {
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .progress-bg {
+            height: 2px;
+            background: #e0e0e0;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: #000;
+            width: 65%;
+        }
+
+        .section {
+            padding: 20px;
+            padding-bottom: 0;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .section-heading {
+            font-size: 16px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .swipe-hint {
+            font-size: 11px;
+            color: #999;
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+
+        .carousel-container {
+            position: relative;
+            margin: 0 -20px;
+            padding-bottom: 20px;
+        }
+
+        .carousel {
+            display: flex;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            gap: 16px;
+            padding: 0 20px;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+
+        .carousel::-webkit-scrollbar {
+            display: none;
+        }
+
+        .quest-card {
+            flex: 0 0 calc(60%);
+            scroll-snap-align: center;
+            border: 1px solid #000;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: #fff;
+            overflow: hidden;
+            opacity: 0.6;
+            transform: scale(0.95);
+        }
+
+        .quest-card.active {
+            opacity: 1;
+            transform: scale(1);
+            box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.15);
+        }
+
+        .quest-card:hover {
+            opacity: 1;
+        }
+
+        /* Special Bonus Card Styling (before HealthKit connected) */
+        .quest-card.bonus-card {
+            border: 2px dashed #000;
+            background: #fff;
+            position: relative;
+        }
+
+        .quest-card.bonus-card.active {
+            box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.2);
+        }
+
+        /* After connected - normal card styling */
+        .quest-card.bonus-card.connected {
+            border: 1px solid #000;
+        }
+
+        .bonus-ribbon {
+            position: absolute;
+            top: 12px;
+            left: 0;
+            background: #000;
+            color: #fff;
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 6px 12px;
+            z-index: 10;
+        }
+
+        /* Hide ribbon when connected */
+        .quest-card.bonus-card.connected .bonus-ribbon {
+            display: none;
+        }
+
+        .quest-image {
+            width: 100%;
+            height: 170px;
+            object-fit: cover;
+            border-bottom: 1px solid #000;
+            display: block;
+        }
+
+        /* Steps card uses emoji illustration */
+        .steps-illustration {
+            width: 100%;
+            height: 170px;
+            border-bottom: 2px dashed #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f5f5f5;
+            font-size: 48px;
+            gap: 8px;
+            /* Grayscale filter for monochrome look */
+            filter: grayscale(100%);
+        }
+
+        .quest-card.bonus-card.connected .steps-illustration {
+            border-bottom: 1px solid #000;
+        }
+
+        .steps-illustration .walking {
+            animation: walk 1s ease-in-out infinite;
+        }
+
+        .steps-illustration .walking:nth-child(2) {
+            animation-delay: 0.5s;
+        }
+
+        @keyframes walk {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
+        }
+
+        .steps-illustration .heart {
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+        }
+
+        .quest-content {
+            padding: 16px;
+        }
+
+        .quest-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 12px;
+        }
+
+        .quest-info {
+            flex: 1;
+        }
+
+        .quest-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .quest-desc {
+            font-size: 12px;
+            color: #666;
+            font-style: italic;
+        }
+
+        .reward {
+            font-size: 14px;
+            font-weight: 700;
+            border: 1px solid #000;
+            padding: 4px 10px;
+            background: #000;
+            color: #fff;
+        }
+
+        .reward.passive {
+            background: #fff;
+            color: #000;
+            border: 1px solid #000;
+        }
+
+        .quest-footer {
+            padding-top: 12px;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .status-badge {
+            display: inline-block;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 6px 12px;
+            border: 1px solid #000;
+        }
+
+        .your-turn {
+            background: #fff;
+            color: #000;
+        }
+
+        .connect-badge {
+            background: #fff;
+            color: #000;
+            border: 1px solid #000;
+        }
+
+        /* Connected state badge */
+        .steps-status {
+            background: #f0f0f0;
+            color: #666;
+            border: 1px solid #ccc;
+        }
+
+        .partner-done {
+            background: #f0f0f0;
+            color: #666;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .initial {
+            width: 18px;
+            height: 18px;
+            background: #000;
+            color: #fff;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            font-weight: 700;
+        }
+
+        .completed {
+            background: #000;
+            color: #fff;
+        }
+
+        .progress-bar-container {
+            padding: 16px 20px 20px;
+            margin: 0 -20px;
+        }
+
+        .scroll-progress {
+            height: 3px;
+            background: #e0e0e0;
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .scroll-progress-fill {
+            height: 100%;
+            background: #000;
+            width: 33.33%;
+            transition: width 0.3s ease;
+            border-radius: 2px;
+        }
+
+        .section-side {
+            padding: 20px;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+
+        .actions {
+            padding: 20px;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+
+        .action {
+            border: 1px solid #000;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .action:hover {
+            background: #000;
+            color: #fff;
+        }
+
+        .action-icon {
+            font-size: 32px;
+            margin-bottom: 8px;
+        }
+
+        .action-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+        }
+
+        /* ============================================
+           UNLOCK CELEBRATION OVERLAY (Option 1)
+           ============================================ */
+        .unlock-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .unlock-overlay.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .unlock-modal {
+            background: #fff;
+            border: 3px solid #000;
+            max-width: 360px;
+            width: 90%;
+            text-align: center;
+            transform: scale(0.8) translateY(20px);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .unlock-overlay.visible .unlock-modal {
+            transform: scale(1) translateY(0);
+        }
+
+        .unlock-confetti {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 100px;
+            background: linear-gradient(180deg,
+                rgba(0, 0, 0, 0.05) 0%,
+                transparent 100%);
+            pointer-events: none;
+        }
+
+        .unlock-header {
+            padding: 32px 24px 16px;
+            position: relative;
+        }
+
+        .unlock-badge {
+            display: inline-block;
+            background: #000;
+            color: #fff;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            padding: 8px 16px;
+            margin-bottom: 16px;
+        }
+
+        .unlock-emoji {
+            font-size: 64px;
+            margin-bottom: 16px;
+            display: block;
+            filter: grayscale(100%);
+        }
+
+        .unlock-emoji .walking {
+            display: inline-block;
+            animation: walk 1s ease-in-out infinite;
+        }
+
+        .unlock-emoji .walking:nth-child(2) {
+            animation-delay: 0.5s;
+        }
+
+        .unlock-title {
+            font-size: 28px;
+            font-weight: 400;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+
+        .unlock-subtitle {
+            font-size: 14px;
+            color: #666;
+            font-style: italic;
+        }
+
+        .unlock-body {
+            padding: 0 24px 24px;
+        }
+
+        .unlock-description {
+            font-size: 15px;
+            line-height: 1.6;
+            color: #333;
+            margin-bottom: 24px;
+        }
+
+        .unlock-benefits {
+            text-align: left;
+            margin-bottom: 24px;
+            padding: 16px;
+            background: #f9f9f9;
+            border: 1px solid #e0e0e0;
+        }
+
+        .unlock-benefit {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+            font-size: 14px;
+        }
+
+        .unlock-benefit:last-child {
+            margin-bottom: 0;
+        }
+
+        .unlock-benefit-icon {
+            font-size: 20px;
+        }
+
+        .unlock-lp {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: #000;
+            color: #fff;
+            padding: 8px 16px;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 24px;
+        }
+
+        .unlock-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .unlock-btn {
+            padding: 16px 24px;
+            font-family: inherit;
+            font-size: 14px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border: 2px solid #000;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .unlock-btn-primary {
+            background: #000;
+            color: #fff;
+        }
+
+        .unlock-btn-primary:hover {
+            background: #333;
+        }
+
+        .unlock-btn-secondary {
+            background: #fff;
+            color: #000;
+        }
+
+        .unlock-btn-secondary:hover {
+            background: #f5f5f5;
+        }
+
+        /* Confetti animation */
+        .confetti-piece {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: #FFD700;
+            animation: confetti-fall 3s ease-out forwards;
+        }
+
+        @keyframes confetti-fall {
+            0% {
+                transform: translateY(-100px) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(400px) rotate(720deg);
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Demo Controls -->
+    <div class="demo-controls">
+        <h3>Interactive Demo</h3>
+        <button class="demo-btn" onclick="showUnlockCelebration()">Show Connect Overlay</button>
+        <button class="demo-btn" onclick="scrollToStepsCard()">Scroll to Steps Card</button>
+        <button class="demo-btn" id="toggleConnected" onclick="toggleConnectedState()">Toggle: Connected</button>
+        <p style="margin-top: 12px; font-size: 12px; color: #666;">
+            <strong>Before connect:</strong> Dashed border + "BONUS" ribbon + "Tap to Connect"<br>
+            <strong>After connect:</strong> Normal card, ribbon hidden, shows step count
+        </p>
+    </div>
+
+    <div class="container">
+        <div class="header">
+            <div class="title">Love Quest</div>
+            <div class="subtitle">Day Forty-Two</div>
+        </div>
+
+        <div class="stats">
+            <div class="stat-row">
+                <div class="stat-label">Party</div>
+                <div class="stat-value">You & Taija</div>
+            </div>
+            <div class="stat-row">
+                <div class="stat-label">Love Points</div>
+                <div class="stat-value">2,450</div>
+            </div>
+            <div class="progress-bg">
+                <div class="progress-bar"></div>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-heading">
+                <span>Daily Quests</span>
+                <span class="swipe-hint">← Swipe →</span>
+            </div>
+
+            <div class="carousel-container">
+                <div class="carousel" id="questCarousel">
+                    <div class="quest-card active">
+                        <img src="carousel-variants/Feel-Good Foundations.png" alt="Trust & Honesty" class="quest-image">
+                        <div class="quest-content">
+                            <div class="quest-header">
+                                <div class="quest-info">
+                                    <div class="quest-title">Trust & Honesty Quiz</div>
+                                    <div class="quest-desc">Answer ten questions together</div>
+                                </div>
+                                <div class="reward">+30</div>
+                            </div>
+                            <div class="quest-footer">
+                                <span class="status-badge completed">Completed</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="quest-card">
+                        <img src="carousel-variants/Playful Moments.png" alt="Affirmation" class="quest-image">
+                        <div class="quest-content">
+                            <div class="quest-header">
+                                <div class="quest-info">
+                                    <div class="quest-title">Affirmation Quiz</div>
+                                    <div class="quest-desc">Share what you appreciate</div>
+                                </div>
+                                <div class="reward">+30</div>
+                            </div>
+                            <div class="quest-footer">
+                                <span class="status-badge completed">Completed</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="quest-card">
+                        <img src="carousel-variants/Getting Comfortable.png" alt="You or Me" class="quest-image">
+                        <div class="quest-content">
+                            <div class="quest-header">
+                                <div class="quest-info">
+                                    <div class="quest-title">You or Me</div>
+                                    <div class="quest-desc">Who does it better?</div>
+                                </div>
+                                <div class="reward">+30</div>
+                            </div>
+                            <div class="quest-footer">
+                                <span class="status-badge completed">Completed</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="progress-bar-container">
+                    <div class="scroll-progress">
+                        <div class="scroll-progress-fill" id="scrollProgress"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section-side">
+            <div class="section-heading">
+                <span>Side Quests</span>
+                <span class="swipe-hint">← Swipe →</span>
+            </div>
+
+            <div class="carousel-container">
+                <div class="carousel" id="sideQuestCarousel">
+                    <div class="quest-card active">
+                        <img src="carousel-variants/Connection Basics.png" alt="Linked" class="quest-image">
+                        <div class="quest-content">
+                            <div class="quest-header">
+                                <div class="quest-info">
+                                    <div class="quest-title">Linked</div>
+                                    <div class="quest-desc">Collaborative crossword</div>
+                                </div>
+                                <div class="reward">+30</div>
+                            </div>
+                            <div class="quest-footer">
+                                <span class="status-badge completed">Completed</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="quest-card">
+                        <img src="carousel-variants/Staying Curious.png" alt="Word Search" class="quest-image">
+                        <div class="quest-content">
+                            <div class="quest-header">
+                                <div class="quest-info">
+                                    <div class="quest-title">Word Search</div>
+                                    <div class="quest-desc">Find hidden words together</div>
+                                </div>
+                                <div class="reward">+30</div>
+                            </div>
+                            <div class="quest-footer">
+                                <span class="status-badge completed">Completed</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- BONUS CARD: Steps Together (Option 2) -->
+                    <div class="quest-card bonus-card" id="stepsCard">
+                        <div class="bonus-ribbon">Bonus</div>
+                        <div class="steps-illustration">
+                            <span class="walking">🚶‍♂️</span>
+                            <span class="heart">❤️</span>
+                            <span class="walking">🚶‍♀️</span>
+                        </div>
+                        <div class="quest-content">
+                            <div class="quest-header">
+                                <div class="quest-info">
+                                    <div class="quest-title">Steps Together</div>
+                                    <div class="quest-desc" id="stepsDesc">Earn LP just by walking!</div>
+                                </div>
+                                <div class="reward passive" id="stepsReward">+15/day</div>
+                            </div>
+                            <div class="quest-footer">
+                                <span class="status-badge connect-badge" id="stepsBadge">Tap to Connect</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="progress-bar-container">
+                    <div class="scroll-progress">
+                        <div class="scroll-progress-fill" id="sideScrollProgress"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="actions">
+            <div class="action">
+                <div class="action-icon">💌</div>
+                <div class="action-label">Send Reminder</div>
+            </div>
+            <div class="action">
+                <div class="action-icon">👆</div>
+                <div class="action-label">Poke Partner</div>
+            </div>
+            <div class="action">
+                <div class="action-icon">📥</div>
+                <div class="action-label">View Inbox</div>
+            </div>
+            <div class="action">
+                <div class="action-icon">🎮</div>
+                <div class="action-label">All Activities</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- UNLOCK CELEBRATION OVERLAY (Option 1) -->
+    <div class="unlock-overlay" id="unlockOverlay" onclick="closeOverlayOnBackdrop(event)">
+        <div class="unlock-modal">
+            <div class="unlock-confetti" id="confettiContainer"></div>
+
+            <div class="unlock-header">
+                <div class="unlock-badge">Bonus Feature Unlocked</div>
+                <span class="unlock-emoji">
+                    <span class="walking">🚶‍♂️</span>
+                    <span style="font-size: 48px;">❤️</span>
+                    <span class="walking">🚶‍♀️</span>
+                </span>
+                <div class="unlock-title">Steps Together</div>
+                <div class="unlock-subtitle">A new way to connect</div>
+            </div>
+
+            <div class="unlock-body">
+                <p class="unlock-description">
+                    Earn Love Points passively just by walking! Connect your health app and start earning together.
+                </p>
+
+                <div class="unlock-benefits">
+                    <div class="unlock-benefit">
+                        <span class="unlock-benefit-icon">🚶</span>
+                        <span>Walk 5,000+ steps daily to earn LP</span>
+                    </div>
+                    <div class="unlock-benefit">
+                        <span class="unlock-benefit-icon">👫</span>
+                        <span>Both partners earn when both walk</span>
+                    </div>
+                    <div class="unlock-benefit">
+                        <span class="unlock-benefit-icon">🔒</span>
+                        <span>Your data stays private & secure</span>
+                    </div>
+                </div>
+
+                <div class="unlock-lp">
+                    <span>Earn up to</span>
+                    <span style="font-size: 18px;">+30 LP</span>
+                    <span>per day</span>
+                </div>
+
+                <div class="unlock-actions">
+                    <button class="unlock-btn unlock-btn-primary" onclick="connectSteps()">
+                        Connect Health App
+                    </button>
+                    <button class="unlock-btn unlock-btn-secondary" onclick="closeOverlay()">
+                        Maybe Later
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Carousel functionality
+        function setupCarousel(carouselId, progressId) {
+            const carousel = document.getElementById(carouselId);
+            const cards = carousel.querySelectorAll('.quest-card');
+            const progressFill = document.getElementById(progressId);
+
+            function updateActiveCard() {
+                const scrollLeft = carousel.scrollLeft;
+                const cardWidth = cards[0].offsetWidth + 16;
+                const centerPosition = scrollLeft + (carousel.offsetWidth / 2);
+
+                cards.forEach((card, index) => {
+                    const cardLeft = (cardWidth * index) + 20;
+                    const cardCenter = cardLeft + (card.offsetWidth / 2);
+                    const distance = Math.abs(centerPosition - cardCenter);
+
+                    if (distance < cardWidth / 2) {
+                        card.classList.add('active');
+                    } else {
+                        card.classList.remove('active');
+                    }
+                });
+
+                const maxScroll = carousel.scrollWidth - carousel.clientWidth;
+                const scrollPercentage = maxScroll > 0 ? (scrollLeft / maxScroll) * 100 : 0;
+                progressFill.style.width = scrollPercentage + '%';
+            }
+
+            carousel.addEventListener('scroll', updateActiveCard);
+            updateActiveCard();
+        }
+
+        setupCarousel('questCarousel', 'scrollProgress');
+        setupCarousel('sideQuestCarousel', 'sideScrollProgress');
+
+        // Unlock celebration overlay
+        function showUnlockCelebration() {
+            const overlay = document.getElementById('unlockOverlay');
+            overlay.classList.add('visible');
+            createConfetti();
+        }
+
+        function closeOverlay() {
+            const overlay = document.getElementById('unlockOverlay');
+            overlay.classList.remove('visible');
+        }
+
+        function closeOverlayOnBackdrop(event) {
+            if (event.target.id === 'unlockOverlay') {
+                closeOverlay();
+            }
+        }
+
+        function connectSteps() {
+            // Simulate successful connection
+            closeOverlay();
+            // Set to connected state
+            if (!isConnected) {
+                toggleConnectedState();
+            }
+            // Scroll to show the updated card
+            setTimeout(() => scrollToStepsCard(), 300);
+        }
+
+        function scrollToStepsCard() {
+            const carousel = document.getElementById('sideQuestCarousel');
+            const stepsCard = document.getElementById('stepsCard');
+            const cardWidth = stepsCard.offsetWidth + 16;
+
+            // Scroll to show the steps card
+            carousel.scrollTo({
+                left: cardWidth * 2,
+                behavior: 'smooth'
+            });
+        }
+
+        // Confetti animation (monochrome)
+        function createConfetti() {
+            const container = document.getElementById('confettiContainer');
+            container.innerHTML = '';
+
+            const colors = ['#000', '#333', '#666', '#999', '#ccc'];
+
+            for (let i = 0; i < 50; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti-piece';
+                confetti.style.left = Math.random() * 100 + '%';
+                confetti.style.background = colors[Math.floor(Math.random() * colors.length)];
+                confetti.style.animationDelay = Math.random() * 0.5 + 's';
+                confetti.style.animationDuration = (2 + Math.random() * 2) + 's';
+                container.appendChild(confetti);
+            }
+        }
+
+        // Steps card click handler (only when not connected)
+        document.getElementById('stepsCard').addEventListener('click', function() {
+            if (!this.classList.contains('connected')) {
+                showUnlockCelebration();
+            }
+        });
+
+        // Toggle connected state for demo
+        let isConnected = false;
+        function toggleConnectedState() {
+            isConnected = !isConnected;
+            const card = document.getElementById('stepsCard');
+            const badge = document.getElementById('stepsBadge');
+            const desc = document.getElementById('stepsDesc');
+            const reward = document.getElementById('stepsReward');
+            const toggleBtn = document.getElementById('toggleConnected');
+
+            if (isConnected) {
+                card.classList.add('connected');
+                badge.textContent = '4,230 steps today';
+                badge.className = 'status-badge steps-status';
+                desc.textContent = 'You: 4,230 · Taija: 6,102';
+                reward.textContent = '+15';
+                reward.classList.remove('passive');
+                toggleBtn.textContent = 'Toggle: Not Connected';
+                toggleBtn.classList.add('active');
+            } else {
+                card.classList.remove('connected');
+                badge.textContent = 'Tap to Connect';
+                badge.className = 'status-badge connect-badge';
+                desc.textContent = 'Earn LP just by walking!';
+                reward.textContent = '+15/day';
+                reward.classList.add('passive');
+                toggleBtn.textContent = 'Toggle: Connected';
+                toggleBtn.classList.remove('active');
+            }
+        }
+    </script>
+</body>
+</html>

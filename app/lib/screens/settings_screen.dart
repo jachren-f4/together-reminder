@@ -1,6 +1,7 @@
 import 'dart:io' show Platform;
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:togetherremind/services/storage_service.dart';
 import 'package:togetherremind/services/couple_preferences_service.dart';
 import 'package:togetherremind/services/api_client.dart';
@@ -8,6 +9,10 @@ import 'package:togetherremind/services/sound_service.dart';
 import 'package:togetherremind/services/haptic_service.dart';
 import 'package:togetherremind/services/steps_health_service.dart';
 import 'package:togetherremind/theme/app_theme.dart';
+import 'package:togetherremind/widgets/brand/brand_widget_factory.dart';
+import 'package:togetherremind/config/brand/brand_loader.dart';
+import 'package:togetherremind/config/brand/brand_config.dart';
+import 'package:togetherremind/config/brand/us2_theme.dart';
 import 'package:intl/intl.dart';
 import 'debug/data_validation_screen.dart';
 
@@ -23,6 +28,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
   final CouplePreferencesService _preferencesService = CouplePreferencesService();
   final SoundService _soundService = SoundService();
   final HapticService _hapticService = HapticService();
+
+  bool get _isUs2 => BrandLoader().config.brand == Brand.us2;
 
   String? _firstPlayerId;
   String? _user1Id;
@@ -261,8 +268,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
     final partner = _storageService.getPartner();
     final user = _storageService.getUser();
 
+    if (_isUs2) {
+      return _buildUs2Screen(user, partner);
+    }
+
     return Container(
-      color: AppTheme.primaryWhite,
+      decoration: BoxDecoration(color: AppTheme.primaryWhite),
       child: SafeArea(
         child: SingleChildScrollView(
           child: Column(
@@ -616,6 +627,603 @@ class _SettingsScreenState extends State<SettingsScreen> {
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  // ==================== Us 2.0 Screen ====================
+
+  Widget _buildUs2Screen(user, partner) {
+    return Container(
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [Us2Theme.bgGradientStart, Us2Theme.bgGradientEnd],
+        ),
+      ),
+      child: SafeArea(
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Header
+              Padding(
+                padding: const EdgeInsets.fromLTRB(24, 40, 24, 24),
+                child: ShaderMask(
+                  shaderCallback: (bounds) => const LinearGradient(
+                    colors: [Us2Theme.gradientAccentStart, Us2Theme.gradientAccentEnd],
+                  ).createShader(bounds),
+                  child: Text(
+                    'Settings',
+                    style: GoogleFonts.playfairDisplay(
+                      fontSize: 32,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+              ),
+
+              // Partner Banner
+              if (partner != null) _buildUs2PartnerBanner(partner),
+
+              // Profile Section
+              if (user != null)
+                _buildUs2SettingsGroup(
+                  title: 'PROFILE',
+                  children: [
+                    _buildUs2SettingRow(
+                      label: 'Name',
+                      value: user.name ?? 'Not set',
+                      onTap: _editName,
+                    ),
+                    _buildUs2SettingRow(
+                      label: 'Avatar',
+                      value: 'Tap to change',
+                      onTap: _editAvatar,
+                      showDivider: false,
+                    ),
+                  ],
+                ),
+
+              // Sound Section
+              _buildUs2SettingsGroup(
+                title: 'SOUND',
+                children: [
+                  _buildUs2ToggleRow(
+                    label: 'Sound Effects',
+                    value: _soundEnabled,
+                    onChanged: (value) async {
+                      if (_soundEnabled) {
+                        await _soundService.play(value ? SoundId.toggleOn : SoundId.toggleOff);
+                      }
+                      setState(() => _soundEnabled = value);
+                      await _soundService.setEnabled(value);
+                      if (value) {
+                        await _soundService.play(SoundId.toggleOn);
+                      }
+                      _hapticService.trigger(HapticType.selection);
+                    },
+                  ),
+                  _buildUs2ToggleRow(
+                    label: 'Haptic Feedback',
+                    value: _hapticEnabled,
+                    onChanged: (value) async {
+                      _hapticService.trigger(HapticType.selection);
+                      setState(() => _hapticEnabled = value);
+                      await _hapticService.setEnabled(value);
+                      _soundService.play(value ? SoundId.toggleOn : SoundId.toggleOff);
+                    },
+                    showDivider: false,
+                  ),
+                ],
+              ),
+
+              // Games Section
+              if (user != null && partner != null)
+                _buildUs2SettingsGroup(
+                  title: 'GAMES',
+                  children: [
+                    _buildUs2PickerSection(user, partner),
+                  ],
+                ),
+
+              // Steps Section (iOS only)
+              if (!kIsWeb && Platform.isIOS)
+                _buildUs2SettingsGroup(
+                  title: 'STEPS TOGETHER',
+                  children: [
+                    _buildUs2StepsSection(),
+                  ],
+                ),
+
+              // Footer
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 32),
+                child: Center(
+                  child: GestureDetector(
+                    onLongPress: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => const DataValidationScreen(),
+                        ),
+                      );
+                    },
+                    child: Text(
+                      'US 2.0 V1.0.0',
+                      style: GoogleFonts.nunito(
+                        fontSize: 11,
+                        color: Us2Theme.textLight,
+                        letterSpacing: 1,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildUs2PartnerBanner(partner) {
+    return Container(
+      margin: const EdgeInsets.fromLTRB(20, 0, 20, 24),
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.08),
+            blurRadius: 32,
+            offset: const Offset(0, 8),
+          ),
+        ],
+      ),
+      child: Row(
+        children: [
+          Container(
+            width: 52,
+            height: 52,
+            decoration: BoxDecoration(
+              gradient: Us2Theme.accentGradient,
+              shape: BoxShape.circle,
+              boxShadow: [
+                BoxShadow(
+                  color: Us2Theme.glowPink,
+                  blurRadius: 20,
+                  offset: const Offset(0, 6),
+                ),
+              ],
+            ),
+            child: Center(
+              child: Text(
+                partner.name.isNotEmpty ? partner.name[0].toUpperCase() : 'P',
+                style: GoogleFonts.nunito(
+                  fontSize: 20,
+                  fontWeight: FontWeight.w700,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(width: 16),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  partner.name,
+                  style: GoogleFonts.playfairDisplay(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w600,
+                    color: Us2Theme.textDark,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  'PARTNER SINCE ${DateFormat('MMM yyyy').format(partner.pairedAt).toUpperCase()}',
+                  style: GoogleFonts.nunito(
+                    fontSize: 11,
+                    color: Us2Theme.textLight,
+                    letterSpacing: 1,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const Text('💕', style: TextStyle(fontSize: 24)),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildUs2SettingsGroup({
+    required String title,
+    required List<Widget> children,
+  }) {
+    return Container(
+      margin: const EdgeInsets.fromLTRB(20, 0, 20, 20),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.08),
+            blurRadius: 32,
+            offset: const Offset(0, 8),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.fromLTRB(20, 16, 20, 10),
+            child: Text(
+              title,
+              style: GoogleFonts.nunito(
+                fontSize: 11,
+                fontWeight: FontWeight.w700,
+                letterSpacing: 2,
+                color: Us2Theme.textLight,
+              ),
+            ),
+          ),
+          ...children,
+        ],
+      ),
+    );
+  }
+
+  Widget _buildUs2SettingRow({
+    required String label,
+    required String value,
+    required VoidCallback onTap,
+    bool showDivider = true,
+  }) {
+    return GestureDetector(
+      onTap: onTap,
+      behavior: HitTestBehavior.opaque,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+        decoration: BoxDecoration(
+          border: showDivider
+              ? Border(bottom: BorderSide(color: Us2Theme.beige))
+              : null,
+        ),
+        child: Row(
+          children: [
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    label,
+                    style: GoogleFonts.nunito(
+                      fontSize: 15,
+                      color: Us2Theme.textDark,
+                    ),
+                  ),
+                  const SizedBox(height: 2),
+                  Text(
+                    value,
+                    style: GoogleFonts.nunito(
+                      fontSize: 12,
+                      color: Us2Theme.textMedium,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Text(
+              '›',
+              style: TextStyle(fontSize: 18, color: Us2Theme.beige),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildUs2ToggleRow({
+    required String label,
+    required bool value,
+    required ValueChanged<bool> onChanged,
+    bool showDivider = true,
+  }) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+      decoration: BoxDecoration(
+        border: showDivider
+            ? Border(bottom: BorderSide(color: Us2Theme.beige))
+            : null,
+      ),
+      child: Row(
+        children: [
+          Expanded(
+            child: Text(
+              label,
+              style: GoogleFonts.nunito(
+                fontSize: 15,
+                color: Us2Theme.textDark,
+              ),
+            ),
+          ),
+          _buildUs2Toggle(value: value, onChanged: onChanged),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildUs2Toggle({
+    required bool value,
+    required ValueChanged<bool> onChanged,
+  }) {
+    return GestureDetector(
+      onTap: () => onChanged(!value),
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
+        width: 48,
+        height: 28,
+        decoration: BoxDecoration(
+          gradient: value ? Us2Theme.accentGradient : null,
+          color: value ? null : Us2Theme.beige,
+          borderRadius: BorderRadius.circular(14),
+        ),
+        child: AnimatedAlign(
+          duration: const Duration(milliseconds: 200),
+          alignment: value ? Alignment.centerRight : Alignment.centerLeft,
+          child: Container(
+            margin: const EdgeInsets.all(3),
+            width: 22,
+            height: 22,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              shape: BoxShape.circle,
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.15),
+                  blurRadius: 6,
+                  offset: const Offset(0, 2),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildUs2PickerSection(user, partner) {
+    return Padding(
+      padding: const EdgeInsets.all(20),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Who goes first?',
+            style: GoogleFonts.nunito(
+              fontSize: 14,
+              color: Us2Theme.textDark,
+            ),
+          ),
+          const SizedBox(height: 12),
+          if (_user1Id != null && _user2Id != null)
+            Row(
+              children: [
+                Expanded(
+                  child: _buildUs2PickerOption(
+                    label: 'YOU',
+                    isSelected: _firstPlayerId == (_user1Id == user.id ? _user1Id : _user2Id),
+                    onTap: () => _updateFirstPlayer(
+                      _user1Id == user.id ? _user1Id! : _user2Id!,
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: _buildUs2PickerOption(
+                    label: partner.name.toUpperCase(),
+                    isSelected: _firstPlayerId == (_user1Id == user.id ? _user2Id : _user1Id),
+                    onTap: () => _updateFirstPlayer(
+                      _user1Id == user.id ? _user2Id! : _user1Id!,
+                    ),
+                  ),
+                ),
+              ],
+            )
+          else if (_loadingPreferences)
+            const Center(
+              child: Padding(
+                padding: EdgeInsets.all(12),
+                child: SizedBox(
+                  width: 20,
+                  height: 20,
+                  child: CircularProgressIndicator(strokeWidth: 2),
+                ),
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildUs2PickerOption({
+    required String label,
+    required bool isSelected,
+    required VoidCallback onTap,
+  }) {
+    return GestureDetector(
+      onTap: onTap,
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 150),
+        padding: const EdgeInsets.symmetric(vertical: 14),
+        decoration: BoxDecoration(
+          gradient: isSelected ? Us2Theme.accentGradient : null,
+          color: isSelected ? null : Colors.white,
+          border: isSelected ? null : Border.all(color: Us2Theme.beige, width: 2),
+          borderRadius: BorderRadius.circular(12),
+          boxShadow: isSelected
+              ? [
+                  BoxShadow(
+                    color: Us2Theme.glowPink,
+                    blurRadius: 20,
+                    offset: const Offset(0, 6),
+                  ),
+                ]
+              : null,
+        ),
+        child: Center(
+          child: Text(
+            label,
+            style: GoogleFonts.nunito(
+              fontSize: 13,
+              fontWeight: FontWeight.w600,
+              letterSpacing: 0.5,
+              color: isSelected ? Colors.white : Us2Theme.textDark,
+            ),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildUs2StepsSection() {
+    if (_loadingSteps) {
+      return const Padding(
+        padding: EdgeInsets.all(20),
+        child: Center(
+          child: SizedBox(
+            width: 20,
+            height: 20,
+            child: CircularProgressIndicator(strokeWidth: 2),
+          ),
+        ),
+      );
+    }
+
+    if (_stepsConnected) {
+      return Padding(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                const Icon(Icons.check_circle, color: Color(0xFF4CAF50), size: 18),
+                const SizedBox(width: 8),
+                Text(
+                  'Apple Health Connected',
+                  style: GoogleFonts.nunito(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                    color: const Color(0xFF4CAF50),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 16),
+            Container(
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                color: Us2Theme.cream,
+                borderRadius: BorderRadius.circular(16),
+              ),
+              child: Row(
+                children: [
+                  const Text('👟', style: TextStyle(fontSize: 36)),
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "TODAY'S STEPS",
+                          style: GoogleFonts.nunito(
+                            fontSize: 10,
+                            color: Us2Theme.textLight,
+                            letterSpacing: 1,
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          NumberFormat('#,###').format(_todaySteps),
+                          style: GoogleFonts.playfairDisplay(
+                            fontSize: 28,
+                            fontWeight: FontWeight.w600,
+                            color: Us2Theme.textDark,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.refresh),
+                    onPressed: _loadStepsData,
+                    color: Us2Theme.textLight,
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+
+    return Padding(
+      padding: const EdgeInsets.all(20),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Connect Apple Health to track your daily steps together.',
+            style: GoogleFonts.nunito(
+              fontSize: 14,
+              color: Us2Theme.textMedium,
+              height: 1.5,
+            ),
+          ),
+          const SizedBox(height: 16),
+          GestureDetector(
+            onTap: _connectHealthKit,
+            child: Container(
+              padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 24),
+              decoration: BoxDecoration(
+                gradient: Us2Theme.accentGradient,
+                borderRadius: BorderRadius.circular(12),
+                boxShadow: [
+                  BoxShadow(
+                    color: Us2Theme.glowPink,
+                    blurRadius: 20,
+                    offset: const Offset(0, 6),
+                  ),
+                ],
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Text('❤️', style: TextStyle(fontSize: 16)),
+                  const SizedBox(width: 10),
+                  Text(
+                    'CONNECT APPLE HEALTH',
+                    style: GoogleFonts.nunito(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w700,
+                      color: Colors.white,
+                      letterSpacing: 1,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

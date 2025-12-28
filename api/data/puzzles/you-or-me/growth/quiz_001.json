@@ -1,6 +1,6 @@
 {
   "quizId": "quiz_001",
-  "title": "Growth Quiz 1",
+  "title": "Evolution",
   "branch": "growth",
   "questions": [
     {
@@ -33,5 +33,6 @@
       "prompt": "Who adapts better to...",
       "content": "Unexpected changes"
     }
-  ]
+  ],
+  "description": "How have you both changed since you got together? Celebrate your growth!"
 }

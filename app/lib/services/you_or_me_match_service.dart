@@ -110,9 +110,10 @@ class YouOrMeMatchService {
   }
 
   /// Stop polling
-  void stopPolling() {
-    _unifiedService.stopPolling();
-    _onStateUpdate = null;
+  /// [matchId] - If provided, only stops polling for that specific match
+  void stopPolling({String? matchId}) {
+    _unifiedService.stopPolling(matchId: matchId);
+    // UnifiedGameService now manages callbacks per matchId, so we just delegate
   }
 
   /// Dispose resources
@@ -155,6 +156,7 @@ class YouOrMeMatchService {
       quiz = ServerYouOrMeQuiz(
         quizId: response.quiz!.id,
         title: response.quiz!.name,
+        description: response.quiz!.description,
         branch: response.match.branch,
         questions: response.quiz!.questions.map((q) => ServerYouOrMeQuestion(
           id: q.id,
@@ -169,7 +171,20 @@ class YouOrMeMatchService {
     final myAnswerCount = response.state.userAnswered ? 10 : 0; // Simplified
     final partnerAnswerCount = response.state.partnerAnswered ? 10 : 0;
 
-    return YouOrMeGameState(
+    // Extract result data for completed matches (needed for results screen)
+    List<String>? userAnswers;
+    List<String>? partnerAnswers;
+    if (response.result != null) {
+      // Convert int answers (0=you, 1=me) to string format
+      userAnswers = response.result!.userAnswers
+          .map((i) => i == 1 ? 'me' : 'you')
+          .toList();
+      partnerAnswers = response.result!.partnerAnswers
+          .map((i) => i == 1 ? 'me' : 'you')
+          .toList();
+    }
+
+    final gameState = YouOrMeGameState(
       match: match,
       quiz: quiz,
       isMyTurn: response.state.isMyTurn ?? false,
@@ -181,6 +196,11 @@ class YouOrMeMatchService {
       partnerScore: matchCount, // Both see the same match count
       isCompleted: response.state.isCompleted,
       totalQuestions: response.quiz?.questions.length ?? 10,
+      matchPercentage: response.result?.matchPercentage,
+      userAnswers: userAnswers,
+      partnerAnswers: partnerAnswers,
     );
+
+    return gameState;
   }
 }

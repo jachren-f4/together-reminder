@@ -157,6 +157,7 @@ export const POST = withAuthOrDevBypass(async (
       response.quiz = {
         id: quiz.id,
         name: quiz.name,
+        description: quiz.description,
         questions: quiz.questions,
       };
     }

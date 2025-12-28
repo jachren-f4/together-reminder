@@ -14,7 +14,7 @@
  *
  * Test Users:
  *   - Pertsa: test7001@dev.test
- *   - Kilu: test9472@dev.test
+ *   - Kilu: test8001@dev.test
  *
  * Passwords use deterministic dev format: DevPass_{sha256(email).substring(0,12)}_2024!
  *
@@ -50,7 +50,7 @@ const TEST_USERS = {
     username: 'Pertsa',
   },
   kilu: {
-    email: 'test9472@dev.test',
+    email: 'test8001@dev.test',
     username: 'Kilu',
   },
 };

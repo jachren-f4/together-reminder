@@ -32,7 +32,10 @@
     },
     "19": { "type": "emoji", "content": "👅", "text": "_ICK", "arrow": "across", "target_index": 40 },
     "20": { "type": "text", "content": "Date night is ___", "arrow": "across", "target_index": 44 },
-    "21": { "type": "text", "content": "Before W", "arrow": "across", "target_index": 47 },
+    "21": {
+      "across": { "type": "text", "content": "Before W", "target_index": 47 },
+      "down": { "type": "text", "content": "_SCAPE", "target_index": 53 }
+    },
     "22": { "type": "text", "content": "Take action", "arrow": "down", "target_index": 55 },
     "23": { "type": "text", "content": "SHO_", "arrow": "down", "target_index": 57 },
     "24": {

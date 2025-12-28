@@ -162,6 +162,7 @@ export function loadQuiz(gameType: GameType, branch: string, quizId: string): an
       return {
         id: rawQuiz.quizId || quizId,
         name: rawQuiz.title || 'You or Me',
+        description: rawQuiz.description || null,
         questions: (rawQuiz.questions || []).map((q: any) => ({
           id: q.id,
           // Combine prompt and content into text format expected by Flutter
@@ -184,6 +185,7 @@ export function loadQuiz(gameType: GameType, branch: string, quizId: string): an
     return {
       id: rawQuiz.quizId || rawQuiz.id || quizId,
       name: rawQuiz.title || rawQuiz.name || 'Quiz',
+      description: rawQuiz.description || null,
       questions: normalizedQuestions,
     };
   } catch (error) {
@@ -202,6 +204,73 @@ export function loadQuizOrder(gameType: GameType, branch: string): string[] {
   } catch (error) {
     console.error(`Failed to load quiz order for ${gameType}/${branch}:`, error);
     return [];
+  }
+}
+
+// =============================================================================
+// Quiz Info (without creating match)
+// =============================================================================
+
+/**
+ * Get info about the next quiz that would be played, without creating a match.
+ * Used for displaying quiz metadata on home screen before game starts.
+ */
+export async function getNextQuizInfo(
+  coupleId: string,
+  gameType: GameType,
+  date: string
+): Promise<{ quizId: string; branch: string; name: string; description: string | null } | null> {
+  try {
+    const branch = await getCurrentBranch(coupleId, gameType);
+
+    // Check for existing match today
+    const existingResult = await query(
+      `SELECT quiz_id, branch FROM quiz_matches
+       WHERE couple_id = $1 AND quiz_type = $2 AND date = $3
+       ORDER BY created_at DESC LIMIT 1`,
+      [coupleId, gameType, date]
+    );
+
+    let quizId: string;
+    let quizBranch: string;
+
+    if (existingResult.rows.length > 0) {
+      // Use existing match's quiz
+      quizId = existingResult.rows[0].quiz_id;
+      quizBranch = existingResult.rows[0].branch;
+    } else {
+      // Determine next quiz from progression
+      const quizOrder = loadQuizOrder(gameType, branch);
+      const completedResult = await query(
+        `SELECT DISTINCT quiz_id FROM quiz_matches
+         WHERE couple_id = $1 AND quiz_type = $2 AND branch = $3 AND status = 'completed'`,
+        [coupleId, gameType, branch]
+      );
+
+      const completedQuizzes = new Set(completedResult.rows.map(r => r.quiz_id));
+      quizId = quizOrder.find(id => !completedQuizzes.has(id)) || quizOrder[0];
+      quizBranch = branch;
+
+      if (!quizId) {
+        return null;
+      }
+    }
+
+    // Load quiz metadata
+    const quiz = loadQuiz(gameType, quizBranch, quizId);
+    if (!quiz) {
+      return null;
+    }
+
+    return {
+      quizId,
+      branch: quizBranch,
+      name: quiz.name,
+      description: quiz.description,
+    };
+  } catch (error) {
+    console.error(`Failed to get next quiz info for ${gameType}:`, error);
+    return null;
   }
 }
 

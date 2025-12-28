@@ -11,8 +11,10 @@
     "3": { "type": "emoji", "content": "🎵", "arrow": "down", "target_index": 13 },
     "4": { "type": "text", "content": "___ one", "arrow": "across", "target_index": 8 },
     "5": { "type": "text", "content": "FA_L", "arrow": "across", "target_index": 13 },
-    "6": { "type": "emoji", "content": "💕", "arrow": "down", "target_index": 23 },
-    "7": { "type": "text", "content": "___ it", "arrow": "across", "target_index": 17 },
+    "6": {
+      "across": { "type": "text", "content": "___ it", "target_index": 17 },
+      "down": { "type": "emoji", "content": "💕", "target_index": 23 }
+    },
     "8": { "type": "text", "content": "After X", "arrow": "across", "target_index": 20 },
     "9": { "type": "text", "content": "Take ___", "arrow": "down", "target_index": 29 },
     "10": { "type": "text", "content": "After @", "arrow": "across", "target_index": 25 },

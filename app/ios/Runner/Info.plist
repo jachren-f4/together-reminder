@@ -9,7 +9,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
-	<string>Togetherremind</string>
+	<string>Us 2.0</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -17,7 +17,7 @@
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
-	<string>togetherremind</string>
+	<string>Us 2.0</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
@@ -33,9 +33,9 @@
 	<key>NSCameraUsageDescription</key>
 	<string>Camera access is required to scan QR codes for pairing with your partner</string>
 	<key>NSHealthShareUsageDescription</key>
-	<string>TogetherRemind reads your step count to help you and your partner earn Love Points together by staying active.</string>
+	<string>Us 2.0 reads your step count to help you and your partner earn Love Points together by staying active.</string>
 	<key>NSHealthUpdateUsageDescription</key>
-	<string>TogetherRemind does not write health data, only reads step counts.</string>
+	<string>Us 2.0 does not write health data, only reads step counts.</string>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 	<key>UIBackgroundModes</key>

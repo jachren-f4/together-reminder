@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Us 2.0 - Unlock Celebration</title>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-gradient-start: #FFD1C1;
+            --bg-gradient-end: #FFF5F0;
+            --primary-pink: #FF5E62;
+            --gradient-start: #FF6B6B;
+            --gradient-end: #FF9F43;
+            --cream: #FFF8F0;
+            --beige: #F5E6D8;
+            --text-dark: #2D2D2D;
+            --text-medium: #6B6B6B;
+            --text-light: #9B9B9B;
+            --glow-pink: rgba(255, 107, 107, 0.5);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            min-height: 100vh;
+            background: linear-gradient(180deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .phone-frame {
+            width: 390px;
+            height: 844px;
+            background: linear-gradient(180deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
+            border-radius: 40px;
+            overflow: hidden;
+            box-shadow: 0 25px 80px rgba(0, 0, 0, 0.15);
+            position: relative;
+        }
+
+        /* Dark overlay */
+        .celebration-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(45, 45, 45, 0.95);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 30px;
+        }
+
+        /* Confetti */
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            animation: confettiFall 3s linear infinite;
+        }
+
+        .confetti:nth-child(1) { left: 10%; animation-delay: 0s; background: var(--gradient-start); }
+        .confetti:nth-child(2) { left: 20%; animation-delay: 0.4s; background: var(--gradient-end); }
+        .confetti:nth-child(3) { left: 30%; animation-delay: 0.8s; background: #FFD700; }
+        .confetti:nth-child(4) { left: 40%; animation-delay: 0.2s; background: var(--gradient-start); }
+        .confetti:nth-child(5) { left: 50%; animation-delay: 0.6s; background: var(--gradient-end); }
+        .confetti:nth-child(6) { left: 60%; animation-delay: 1s; background: #FFD700; }
+        .confetti:nth-child(7) { left: 70%; animation-delay: 0.3s; background: var(--gradient-start); }
+        .confetti:nth-child(8) { left: 80%; animation-delay: 0.7s; background: var(--gradient-end); }
+        .confetti:nth-child(9) { left: 90%; animation-delay: 0.5s; background: #FFD700; }
+
+        @keyframes confettiFall {
+            0% { transform: translateY(-50px) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(900px) rotate(720deg); opacity: 0; }
+        }
+
+        /* Content */
+        .celebration-content {
+            text-align: center;
+            z-index: 10;
+        }
+
+        /* Unlocked icon with pulse */
+        .unlock-icon-container {
+            position: relative;
+            margin-bottom: 32px;
+        }
+
+        .unlock-icon {
+            font-size: 100px;
+            animation: bounceIn 0.8s ease-out, pulse 2s ease-in-out 0.8s infinite;
+        }
+
+        @keyframes bounceIn {
+            0% { transform: scale(0); opacity: 0; }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .unlock-glow {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 150px;
+            height: 150px;
+            background: radial-gradient(circle, var(--glow-pink) 0%, transparent 70%);
+            border-radius: 50%;
+            animation: glowPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes glowPulse {
+            0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.5; }
+            50% { transform: translate(-50%, -50%) scale(1.4); opacity: 0.8; }
+        }
+
+        .unlock-label {
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 3px;
+            color: var(--gradient-end);
+            margin-bottom: 12px;
+        }
+
+        .unlock-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 32px;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 8px;
+        }
+
+        .feature-name {
+            background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .unlock-description {
+            font-size: 16px;
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 40px;
+            line-height: 1.5;
+        }
+
+        /* Feature preview card */
+        .feature-card {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            padding: 24px;
+            margin-bottom: 40px;
+            width: 100%;
+            max-width: 300px;
+        }
+
+        .feature-preview {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .feature-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            flex-shrink: 0;
+        }
+
+        .feature-info {
+            text-align: left;
+        }
+
+        .feature-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 18px;
+            font-weight: 600;
+            color: white;
+            margin-bottom: 4px;
+        }
+
+        .feature-subtitle {
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        /* Buttons */
+        .button-group {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            width: 100%;
+            max-width: 280px;
+        }
+
+        .primary-button {
+            width: 100%;
+            height: 56px;
+            background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+            border: none;
+            border-radius: 16px;
+            font-family: 'Nunito', sans-serif;
+            font-size: 16px;
+            font-weight: 700;
+            color: white;
+            cursor: pointer;
+            box-shadow: 0 8px 25px var(--glow-pink);
+            transition: all 0.2s ease;
+        }
+
+        .primary-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 30px var(--glow-pink);
+        }
+
+        .secondary-button {
+            background: transparent;
+            border: none;
+            font-family: 'Nunito', sans-serif;
+            font-size: 14px;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.6);
+            cursor: pointer;
+            padding: 12px;
+        }
+
+        .secondary-button:hover {
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="phone-frame">
+        <div class="celebration-overlay">
+            <!-- Confetti -->
+            <div class="confetti"></div>
+            <div class="confetti"></div>
+            <div class="confetti"></div>
+            <div class="confetti"></div>
+            <div class="confetti"></div>
+            <div class="confetti"></div>
+            <div class="confetti"></div>
+            <div class="confetti"></div>
+            <div class="confetti"></div>
+
+            <div class="celebration-content">
+                <div class="unlock-icon-container">
+                    <div class="unlock-glow"></div>
+                    <div class="unlock-icon">🔓</div>
+                </div>
+
+                <div class="unlock-label">NEW FEATURE UNLOCKED</div>
+                <div class="unlock-title">
+                    <span class="feature-name">You or Me</span>
+                </div>
+                <div class="unlock-description">
+                    Discover who does what in your relationship<br>
+                    with fun questions about each other
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-preview">
+                        <div class="feature-icon">🤔</div>
+                        <div class="feature-info">
+                            <div class="feature-title">You or Me</div>
+                            <div class="feature-subtitle">5 questions about your relationship</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="button-group">
+                    <button class="primary-button">Try It Now</button>
+                    <button class="secondary-button">Maybe Later</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

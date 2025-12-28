@@ -1,6 +1,6 @@
 {
   "quizId": "quiz_001",
-  "title": "Connection Quiz 1",
+  "title": "Heart to Heart",
   "branch": "connection",
   "questions": [
     {
@@ -33,5 +33,6 @@
       "prompt": "Who is better at...",
       "content": "Sensing when something is wrong"
     }
-  ]
+  ],
+  "description": "Explore how you express feelings and connect on a deeper emotional level."
 }

@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Us 2.0 - Leaderboard Bottom Sheet</title>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-gradient-start: #FFD1C1;
+            --bg-gradient-end: #FFF5F0;
+            --primary-pink: #FF5E62;
+            --gradient-start: #FF6B6B;
+            --gradient-end: #FF9F43;
+            --cream: #FFF8F0;
+            --beige: #F5E6D8;
+            --text-dark: #2D2D2D;
+            --text-medium: #6B6B6B;
+            --text-light: #9B9B9B;
+            --glow-pink: rgba(255, 107, 107, 0.5);
+            --gold: #FFD700;
+            --silver: #C0C0C0;
+            --bronze: #CD7F32;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            min-height: 100vh;
+            background: linear-gradient(180deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .phone-frame {
+            width: 390px;
+            height: 844px;
+            background: linear-gradient(180deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
+            border-radius: 40px;
+            overflow: hidden;
+            box-shadow: 0 25px 80px rgba(0, 0, 0, 0.15);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.4);
+            z-index: 10;
+        }
+
+        .bottom-sheet {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            border-radius: 24px 24px 0 0;
+            z-index: 20;
+            display: flex;
+            flex-direction: column;
+            max-height: 80%;
+        }
+
+        .drag-handle {
+            width: 40px;
+            height: 4px;
+            background: var(--beige);
+            border-radius: 2px;
+            margin: 12px auto;
+            flex-shrink: 0;
+        }
+
+        .sheet-header {
+            text-align: center;
+            padding: 0 20px 20px;
+            flex-shrink: 0;
+        }
+
+        .sheet-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 28px;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 4px;
+        }
+
+        .sheet-subtitle {
+            font-size: 14px;
+            color: var(--text-medium);
+        }
+
+        /* Tab toggle */
+        .tab-toggle {
+            display: flex;
+            background: var(--cream);
+            border-radius: 12px;
+            padding: 4px;
+            margin: 0 20px 16px;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 10px;
+            text-align: center;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-medium);
+            background: transparent;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .tab-btn.active {
+            background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+            color: white;
+            box-shadow: 0 4px 12px var(--glow-pink);
+        }
+
+        /* Rankings list */
+        .rankings-list {
+            flex: 1;
+            overflow-y: auto;
+            padding: 0 20px 40px;
+        }
+
+        .ranking-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 16px;
+            background: var(--cream);
+            border-radius: 16px;
+            margin-bottom: 10px;
+            transition: all 0.2s ease;
+        }
+
+        .ranking-item.current-user {
+            background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+        }
+
+        .ranking-item.current-user .couple-name,
+        .ranking-item.current-user .lp-value {
+            color: white;
+        }
+
+        .rank-badge {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 700;
+            color: white;
+            flex-shrink: 0;
+        }
+
+        .rank-1 { background: linear-gradient(135deg, var(--gold), #FFA500); }
+        .rank-2 { background: linear-gradient(135deg, var(--silver), #A0A0A0); }
+        .rank-3 { background: linear-gradient(135deg, var(--bronze), #8B4513); }
+        .rank-other {
+            background: var(--beige);
+            color: var(--text-dark);
+        }
+
+        .couple-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .couple-name {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text-dark);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .couple-streak {
+            font-size: 12px;
+            color: var(--text-light);
+        }
+
+        .ranking-item.current-user .couple-streak {
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .lp-value {
+            font-family: 'Playfair Display', serif;
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-dark);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .lp-icon {
+            font-size: 16px;
+        }
+
+        /* Your position card */
+        .your-position {
+            margin: 0 20px 16px;
+            padding: 16px;
+            background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+            border-radius: 16px;
+            box-shadow: 0 8px 25px var(--glow-pink);
+        }
+
+        .your-position-label {
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 4px;
+        }
+
+        .your-position-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .your-rank {
+            font-family: 'Playfair Display', serif;
+            font-size: 32px;
+            font-weight: 700;
+            color: white;
+        }
+
+        .your-lp {
+            text-align: right;
+        }
+
+        .your-lp-value {
+            font-family: 'Playfair Display', serif;
+            font-size: 20px;
+            font-weight: 700;
+            color: white;
+        }
+
+        .your-lp-label {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.8);
+        }
+    </style>
+</head>
+<body>
+    <div class="phone-frame">
+        <div class="overlay"></div>
+
+        <div class="bottom-sheet">
+            <div class="drag-handle"></div>
+
+            <div class="sheet-header">
+                <div class="sheet-title">Leaderboard</div>
+                <div class="sheet-subtitle">See how you compare to other couples</div>
+            </div>
+
+            <div class="tab-toggle">
+                <button class="tab-btn active">Global</button>
+                <button class="tab-btn">Country</button>
+                <button class="tab-btn">Tier</button>
+            </div>
+
+            <div class="your-position">
+                <div class="your-position-label">YOUR POSITION</div>
+                <div class="your-position-content">
+                    <div class="your-rank">#42</div>
+                    <div class="your-lp">
+                        <div class="your-lp-value">💎 1,250</div>
+                        <div class="your-lp-label">Love Points</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="rankings-list">
+                <div class="ranking-item">
+                    <div class="rank-badge rank-1">1</div>
+                    <div class="couple-info">
+                        <div class="couple-name">Sarah & Mike</div>
+                        <div class="couple-streak">🔥 45 day streak</div>
+                    </div>
+                    <div class="lp-value"><span class="lp-icon">💎</span> 5,420</div>
+                </div>
+
+                <div class="ranking-item">
+                    <div class="rank-badge rank-2">2</div>
+                    <div class="couple-info">
+                        <div class="couple-name">Emma & James</div>
+                        <div class="couple-streak">🔥 38 day streak</div>
+                    </div>
+                    <div class="lp-value"><span class="lp-icon">💎</span> 4,890</div>
+                </div>
+
+                <div class="ranking-item">
+                    <div class="rank-badge rank-3">3</div>
+                    <div class="couple-info">
+                        <div class="couple-name">Olivia & Noah</div>
+                        <div class="couple-streak">🔥 32 day streak</div>
+                    </div>
+                    <div class="lp-value"><span class="lp-icon">💎</span> 4,210</div>
+                </div>
+
+                <div class="ranking-item">
+                    <div class="rank-badge rank-other">4</div>
+                    <div class="couple-info">
+                        <div class="couple-name">Ava & Liam</div>
+                        <div class="couple-streak">🔥 28 day streak</div>
+                    </div>
+                    <div class="lp-value"><span class="lp-icon">💎</span> 3,850</div>
+                </div>
+
+                <div class="ranking-item">
+                    <div class="rank-badge rank-other">5</div>
+                    <div class="couple-info">
+                        <div class="couple-name">Mia & Ethan</div>
+                        <div class="couple-streak">🔥 25 day streak</div>
+                    </div>
+                    <div class="lp-value"><span class="lp-icon">💎</span> 3,540</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

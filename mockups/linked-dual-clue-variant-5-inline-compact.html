@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Linked Dual Clue - Variant 5: Inline Compact</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #f5f5f5;
+      padding: 20px;
+      min-height: 100vh;
+    }
+
+    h1 {
+      font-family: Georgia, serif;
+      font-size: 24px;
+      margin-bottom: 8px;
+      color: #1a1a1a;
+    }
+
+    .description {
+      color: #666;
+      margin-bottom: 20px;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .grid-container {
+      background: #f8f6f1;
+      padding: 12px;
+      display: inline-block;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(7, 48px);
+      grid-template-rows: repeat(5, 48px);
+      gap: 2px;
+      background: #1a1a1a;
+      padding: 2px;
+    }
+
+    .cell {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: Arial, sans-serif;
+      font-weight: 800;
+      position: relative;
+    }
+
+    .cell.void {
+      background: rgba(26, 26, 26, 0.13);
+    }
+
+    .cell.answer {
+      background: #ffffff;
+    }
+
+    .cell.answer.filled {
+      background: rgba(76, 175, 80, 0.15);
+    }
+
+    .cell.answer span {
+      font-size: 22px;
+      color: rgba(26, 26, 26, 0.87);
+    }
+
+    .cell.clue {
+      background: #e8e4d9;
+      padding: 3px;
+      flex-direction: column;
+    }
+
+    .cell.clue .content {
+      font-size: 10px;
+      text-align: center;
+      color: #1a1a1a;
+      text-transform: uppercase;
+      line-height: 1.05;
+    }
+
+    .cell.clue .content.emoji {
+      font-size: 28px;
+      text-transform: none;
+    }
+
+    .cell.clue .arrow {
+      position: absolute;
+      font-size: 6px;
+      color: #888;
+    }
+
+    .cell.clue .arrow.right {
+      top: 0;
+      right: 1px;
+    }
+
+    .cell.clue .arrow.down {
+      bottom: 1px;
+      left: 0;
+    }
+
+    /* VARIANT 5: Inline Compact - Arrow prefixes inline with content */
+    .cell.dual-clue {
+      background: #e8e4d9;
+      flex-direction: column;
+      padding: 2px;
+      justify-content: space-around;
+    }
+
+    .cell.dual-clue .clue-row {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      width: 100%;
+      padding: 0 1px;
+    }
+
+    .cell.dual-clue .clue-row .arrow {
+      font-size: 6px;
+      color: #666;
+      margin-right: 2px;
+      flex-shrink: 0;
+    }
+
+    .cell.dual-clue .clue-row .content {
+      font-size: 7px;
+      font-weight: 800;
+      color: #1a1a1a;
+      text-transform: uppercase;
+      line-height: 1;
+      font-family: Arial, sans-serif;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .cell.dual-clue .clue-row .content.emoji {
+      font-size: 11px;
+      text-transform: none;
+    }
+
+    /* Alternative with vertical layout and larger arrows */
+    .cell.dual-clue-alt {
+      background: #e8e4d9;
+      flex-direction: column;
+      padding: 2px;
+      gap: 1px;
+    }
+
+    .cell.dual-clue-alt .clue-item {
+      display: flex;
+      align-items: center;
+      flex: 1;
+      width: 100%;
+      background: rgba(255,255,255,0.3);
+      border-radius: 2px;
+      padding: 1px 2px;
+    }
+
+    .cell.dual-clue-alt .clue-item .arrow {
+      font-size: 8px;
+      color: #555;
+      margin-right: 3px;
+    }
+
+    .cell.dual-clue-alt .clue-item .content {
+      font-size: 8px;
+      font-weight: 800;
+      color: #1a1a1a;
+      text-transform: uppercase;
+      font-family: Arial, sans-serif;
+    }
+
+    .legend {
+      margin-top: 20px;
+      padding: 16px;
+      background: white;
+      border: 1px solid #ddd;
+      max-width: 500px;
+    }
+
+    .legend h3 {
+      font-size: 14px;
+      margin-bottom: 12px;
+      color: #1a1a1a;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 12px;
+      font-size: 13px;
+    }
+
+    .pros-cons {
+      margin-top: 20px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      max-width: 600px;
+    }
+
+    .pros, .cons {
+      padding: 12px;
+      background: white;
+      border: 1px solid #ddd;
+    }
+
+    .pros h4 { color: #4caf50; }
+    .cons h4 { color: #f44336; }
+
+    .pros ul, .cons ul {
+      margin-top: 8px;
+      padding-left: 20px;
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    .variants-row {
+      display: flex;
+      gap: 40px;
+      margin-top: 20px;
+    }
+
+    .variant-section h4 {
+      font-size: 13px;
+      margin-bottom: 8px;
+      color: #666;
+    }
+  </style>
+</head>
+<body>
+  <h1>Variant 5: Inline Compact</h1>
+  <p class="description">
+    Arrows appear as inline prefixes before each clue text, similar to a bullet list.
+    Both clues are stacked vertically with arrows leading the text.
+    This approach reads naturally: "▶ SAFE" and "▼ CLOSE".
+  </p>
+
+  <div class="grid-container">
+    <div class="grid">
+      <!-- Row 1 -->
+      <div class="cell void"></div>
+      <div class="cell clue">
+        <span class="content">WARM</span>
+        <span class="arrow down">▼</span>
+      </div>
+      <div class="cell clue">
+        <span class="content emoji">🌙</span>
+        <span class="arrow down">▼</span>
+      </div>
+      <div class="cell void"></div>
+      <div class="cell clue">
+        <span class="content">BOND</span>
+        <span class="arrow down">▼</span>
+      </div>
+      <div class="cell void"></div>
+      <div class="cell void"></div>
+
+      <!-- Row 2 -->
+      <div class="cell clue">
+        <span class="content">FEEL</span>
+        <span class="arrow right">▶</span>
+      </div>
+      <div class="cell answer"><span>L</span></div>
+      <div class="cell answer"><span>O</span></div>
+      <div class="cell answer"><span>V</span></div>
+      <div class="cell answer"><span>E</span></div>
+      <div class="cell void"></div>
+      <div class="cell void"></div>
+
+      <!-- Row 3 -->
+      <div class="cell void"></div>
+      <div class="cell answer"><span>U</span></div>
+      <div class="cell answer"><span>N</span></div>
+
+      <!-- DUAL CLUE CELL - Variant 5: Inline Compact -->
+      <div class="cell dual-clue">
+        <div class="clue-row">
+          <span class="arrow">▶</span>
+          <span class="content">SAFE</span>
+        </div>
+        <div class="clue-row">
+          <span class="arrow">▼</span>
+          <span class="content">CLOSE</span>
+        </div>
+      </div>
+
+      <div class="cell answer"><span>O</span></div>
+      <div class="cell answer"><span>M</span></div>
+      <div class="cell answer"><span>E</span></div>
+
+      <!-- Row 4 -->
+      <div class="cell void"></div>
+      <div class="cell answer filled"><span>G</span></div>
+      <div class="cell answer"><span>I</span></div>
+      <div class="cell answer"><span>G</span></div>
+      <div class="cell answer"><span>H</span></div>
+      <div class="cell answer"><span>T</span></div>
+      <div class="cell void"></div>
+
+      <!-- Row 5 -->
+      <div class="cell void"></div>
+      <div class="cell void"></div>
+      <div class="cell answer"><span>T</span></div>
+      <div class="cell answer"><span>E</span></div>
+      <div class="cell answer"><span>A</span></div>
+      <div class="cell void"></div>
+      <div class="cell void"></div>
+    </div>
+  </div>
+
+  <div class="variants-row">
+    <div class="variant-section">
+      <h4>Basic Inline</h4>
+      <div class="grid" style="grid-template-columns: 48px; grid-template-rows: 48px; padding: 2px; display: inline-grid;">
+        <div class="cell dual-clue">
+          <div class="clue-row">
+            <span class="arrow">▶</span>
+            <span class="content">SAFE</span>
+          </div>
+          <div class="clue-row">
+            <span class="arrow">▼</span>
+            <span class="content">CLOSE</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="variant-section">
+      <h4>With Background Pills</h4>
+      <div class="grid" style="grid-template-columns: 48px; grid-template-rows: 48px; padding: 2px; display: inline-grid;">
+        <div class="cell dual-clue-alt">
+          <div class="clue-item">
+            <span class="arrow">▶</span>
+            <span class="content">SAFE</span>
+          </div>
+          <div class="clue-item">
+            <span class="arrow">▼</span>
+            <span class="content">CLOSE</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="variant-section">
+      <h4>Emoji Version</h4>
+      <div class="grid" style="grid-template-columns: 48px; grid-template-rows: 48px; padding: 2px; display: inline-grid;">
+        <div class="cell dual-clue">
+          <div class="clue-row">
+            <span class="arrow">▶</span>
+            <span class="content emoji">❤️</span>
+          </div>
+          <div class="clue-row">
+            <span class="arrow">▼</span>
+            <span class="content emoji">💕</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="legend">
+    <h3>How It Works</h3>
+    <div class="legend-item">
+      <div class="grid" style="grid-template-columns: 48px; grid-template-rows: 48px; padding: 2px;">
+        <div class="cell dual-clue">
+          <div class="clue-row">
+            <span class="arrow">▶</span>
+            <span class="content">SAFE</span>
+          </div>
+          <div class="clue-row">
+            <span class="arrow">▼</span>
+            <span class="content">CLOSE</span>
+          </div>
+        </div>
+      </div>
+      <div>
+        <strong>Format:</strong> Arrow + Text on each row<br>
+        <strong>Reading:</strong> "▶ SAFE" = across, "▼ CLOSE" = down<br>
+        <em>Natural left-to-right reading order</em>
+      </div>
+    </div>
+  </div>
+
+  <div class="pros-cons">
+    <div class="pros">
+      <h4>Pros</h4>
+      <ul>
+        <li>Reads naturally (arrow → text)</li>
+        <li>No separator lines needed</li>
+        <li>Familiar list-style format</li>
+        <li>Works with emojis</li>
+        <li>Left-aligned feels organized</li>
+      </ul>
+    </div>
+    <div class="cons">
+      <h4>Cons</h4>
+      <ul>
+        <li>Text still quite small</li>
+        <li>Long clues truncate</li>
+        <li>Less visual distinction than color</li>
+        <li>Arrows take up horizontal space</li>
+      </ul>
+    </div>
+  </div>
+</body>
+</html>

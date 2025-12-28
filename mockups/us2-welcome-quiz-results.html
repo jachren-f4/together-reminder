@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Us 2.0 - Welcome Quiz Results</title>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-gradient-start: #FFD1C1;
+            --bg-gradient-end: #FFF5F0;
+            --primary-pink: #FF5E62;
+            --gradient-start: #FF6B6B;
+            --gradient-end: #FF9F43;
+            --card-salmon: #FF7B6B;
+            --cream: #FFF8F0;
+            --beige: #F5E6D8;
+            --text-dark: #2D2D2D;
+            --text-medium: #6B6B6B;
+            --text-light: #9B9B9B;
+            --glow-pink: rgba(255, 107, 107, 0.5);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            min-height: 100vh;
+            background: linear-gradient(180deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .phone-frame {
+            width: 390px;
+            height: 844px;
+            background: linear-gradient(180deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
+            border-radius: 40px;
+            overflow: hidden;
+            box-shadow: 0 25px 80px rgba(0, 0, 0, 0.15);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            padding: 60px 24px 20px;
+            text-align: center;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 8px 20px;
+            background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            color: white;
+            margin-bottom: 12px;
+        }
+
+        .header-subtitle {
+            font-size: 15px;
+            color: var(--text-medium);
+        }
+
+        .score-section {
+            text-align: center;
+            padding: 24px;
+        }
+
+        .score-emoji {
+            font-size: 48px;
+            margin-bottom: 16px;
+        }
+
+        .score-display {
+            display: flex;
+            align-items: baseline;
+            justify-content: center;
+            gap: 4px;
+        }
+
+        .score-number {
+            font-family: 'Playfair Display', serif;
+            font-size: 72px;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .score-total {
+            font-family: 'Playfair Display', serif;
+            font-size: 28px;
+            color: var(--text-light);
+        }
+
+        .score-label {
+            font-size: 18px;
+            color: var(--text-light);
+        }
+
+        .content {
+            flex: 1;
+            padding: 0 24px;
+            overflow-y: auto;
+        }
+
+        .section-label {
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            color: var(--text-light);
+            margin-bottom: 16px;
+        }
+
+        .question-card {
+            background: white;
+            border-radius: 16px;
+            padding: 16px;
+            margin-bottom: 12px;
+        }
+
+        .question-card.matched {
+            background: linear-gradient(135deg, rgba(255, 107, 107, 0.1), rgba(255, 159, 67, 0.1));
+            border: 2px solid var(--primary-pink);
+        }
+
+        .question-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .question-text {
+            font-family: 'Playfair Display', serif;
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-dark);
+            line-height: 1.4;
+            flex: 1;
+        }
+
+        .match-badge {
+            padding: 4px 10px;
+            background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+            border-radius: 12px;
+            font-size: 10px;
+            font-weight: 700;
+            color: white;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            flex-shrink: 0;
+        }
+
+        .match-badge svg {
+            width: 10px;
+            height: 10px;
+        }
+
+        .answer-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+
+        .answer-name {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text-dark);
+            width: 60px;
+            flex-shrink: 0;
+        }
+
+        .answer-value {
+            flex: 1;
+            padding: 8px 12px;
+            background: var(--cream);
+            border-radius: 8px;
+            font-size: 14px;
+            color: var(--text-dark);
+        }
+
+        .footer {
+            padding: 20px 24px 40px;
+        }
+
+        .primary-button {
+            width: 100%;
+            padding: 18px 32px;
+            background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+            border: none;
+            border-radius: 30px;
+            font-family: 'Nunito', sans-serif;
+            font-size: 17px;
+            font-weight: 700;
+            color: white;
+            cursor: pointer;
+            box-shadow: 0 8px 25px var(--glow-pink);
+            transition: all 0.2s ease;
+        }
+
+        .primary-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 35px var(--glow-pink);
+        }
+    </style>
+</head>
+<body>
+    <div class="phone-frame">
+        <div class="header">
+            <div class="badge">QUIZ COMPLETE!</div>
+            <p class="header-subtitle">Here's how you two answered</p>
+        </div>
+
+        <div class="score-section">
+            <div class="score-emoji">🎯</div>
+            <div class="score-display">
+                <span class="score-number">4</span>
+                <span class="score-total">out of 5</span>
+            </div>
+            <p class="score-label">matched!</p>
+        </div>
+
+        <div class="content">
+            <p class="section-label">QUESTION BREAKDOWN</p>
+
+            <div class="question-card matched">
+                <div class="question-header">
+                    <p class="question-text">What's your favorite way to spend a lazy Sunday?</p>
+                    <div class="match-badge">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                            <polyline points="20 6 9 17 4 12"></polyline>
+                        </svg>
+                        Match!
+                    </div>
+                </div>
+                <div class="answer-row">
+                    <span class="answer-name">You</span>
+                    <span class="answer-value">Brunch at our favorite spot</span>
+                </div>
+                <div class="answer-row">
+                    <span class="answer-name">Alex</span>
+                    <span class="answer-value">Brunch at our favorite spot</span>
+                </div>
+            </div>
+
+            <div class="question-card">
+                <div class="question-header">
+                    <p class="question-text">Who usually makes the first move for a hug?</p>
+                </div>
+                <div class="answer-row">
+                    <span class="answer-name">You</span>
+                    <span class="answer-value">I do!</span>
+                </div>
+                <div class="answer-row">
+                    <span class="answer-name">Alex</span>
+                    <span class="answer-value">We both do equally</span>
+                </div>
+            </div>
+
+            <div class="question-card matched">
+                <div class="question-header">
+                    <p class="question-text">What's the best gift you've received?</p>
+                    <div class="match-badge">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                            <polyline points="20 6 9 17 4 12"></polyline>
+                        </svg>
+                        Match!
+                    </div>
+                </div>
+                <div class="answer-row">
+                    <span class="answer-name">You</span>
+                    <span class="answer-value">Something thoughtful and personal</span>
+                </div>
+                <div class="answer-row">
+                    <span class="answer-name">Alex</span>
+                    <span class="answer-value">Something thoughtful and personal</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <button class="primary-button">Continue</button>
+        </div>
+    </div>
+</body>
+</html>

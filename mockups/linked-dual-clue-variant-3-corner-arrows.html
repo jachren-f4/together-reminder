@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Linked Dual Clue - Variant 3: Corner Arrows</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #f5f5f5;
+      padding: 20px;
+      min-height: 100vh;
+    }
+
+    h1 {
+      font-family: Georgia, serif;
+      font-size: 24px;
+      margin-bottom: 8px;
+      color: #1a1a1a;
+    }
+
+    .description {
+      color: #666;
+      margin-bottom: 20px;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .grid-container {
+      background: #f8f6f1;
+      padding: 12px;
+      display: inline-block;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(7, 48px);
+      grid-template-rows: repeat(5, 48px);
+      gap: 2px;
+      background: #1a1a1a;
+      padding: 2px;
+    }
+
+    .cell {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: Arial, sans-serif;
+      font-weight: 800;
+      position: relative;
+    }
+
+    .cell.void {
+      background: rgba(26, 26, 26, 0.13);
+    }
+
+    .cell.answer {
+      background: #ffffff;
+    }
+
+    .cell.answer.filled {
+      background: rgba(76, 175, 80, 0.15);
+    }
+
+    .cell.answer span {
+      font-size: 22px;
+      color: rgba(26, 26, 26, 0.87);
+    }
+
+    .cell.clue {
+      background: #e8e4d9;
+      padding: 3px;
+      flex-direction: column;
+    }
+
+    .cell.clue .content {
+      font-size: 10px;
+      text-align: center;
+      color: #1a1a1a;
+      text-transform: uppercase;
+      line-height: 1.05;
+    }
+
+    .cell.clue .content.emoji {
+      font-size: 28px;
+      text-transform: none;
+    }
+
+    .cell.clue .arrow {
+      position: absolute;
+      font-size: 6px;
+      color: #888;
+    }
+
+    .cell.clue .arrow.right {
+      top: 0;
+      right: 1px;
+    }
+
+    .cell.clue .arrow.down {
+      bottom: 1px;
+      left: 0;
+    }
+
+    /* VARIANT 3: Corner Arrows - Single content with arrows in both corners */
+    .cell.dual-clue {
+      background: #e8e4d9;
+      padding: 3px;
+    }
+
+    .cell.dual-clue .content {
+      font-size: 24px;
+      text-align: center;
+      color: #1a1a1a;
+    }
+
+    .cell.dual-clue .content.text {
+      font-size: 9px;
+      font-weight: 800;
+      text-transform: uppercase;
+      line-height: 1.1;
+      font-family: Arial, sans-serif;
+    }
+
+    .cell.dual-clue .arrow {
+      position: absolute;
+      font-size: 7px;
+      color: #888;
+      background: rgba(232, 228, 217, 0.9);
+      padding: 1px 2px;
+      border-radius: 2px;
+    }
+
+    .cell.dual-clue .arrow.right {
+      top: 1px;
+      right: 1px;
+    }
+
+    .cell.dual-clue .arrow.down {
+      bottom: 1px;
+      left: 1px;
+    }
+
+    /* Dual indicator badge */
+    .cell.dual-clue .dual-badge {
+      position: absolute;
+      top: 1px;
+      left: 1px;
+      width: 8px;
+      height: 8px;
+      background: #1a1a1a;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .cell.dual-clue .dual-badge::after {
+      content: "2";
+      color: white;
+      font-size: 6px;
+      font-weight: bold;
+    }
+
+    .legend {
+      margin-top: 20px;
+      padding: 16px;
+      background: white;
+      border: 1px solid #ddd;
+      max-width: 450px;
+    }
+
+    .legend h3 {
+      font-size: 14px;
+      margin-bottom: 12px;
+      color: #1a1a1a;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 8px;
+      font-size: 13px;
+    }
+
+    .legend-cell {
+      width: 48px;
+      height: 48px;
+      flex-shrink: 0;
+    }
+
+    .pros-cons {
+      margin-top: 20px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      max-width: 600px;
+    }
+
+    .pros, .cons {
+      padding: 12px;
+      background: white;
+      border: 1px solid #ddd;
+    }
+
+    .pros h4 { color: #4caf50; }
+    .cons h4 { color: #f44336; }
+
+    .pros ul, .cons ul {
+      margin-top: 8px;
+      padding-left: 20px;
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    .note {
+      margin-top: 20px;
+      padding: 12px;
+      background: #fff3cd;
+      border: 1px solid #ffc107;
+      border-radius: 4px;
+      font-size: 13px;
+      max-width: 600px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Variant 3: Corner Arrows (Emoji-Optimized)</h1>
+  <p class="description">
+    For emoji clues: Display single large emoji in center with arrows in opposite corners
+    (▶ top-right, ▼ bottom-left). A small "2" badge indicates dual clue. Tap to reveal both clue texts.
+    Best suited when both clues share the same emoji/short content.
+  </p>
+
+  <div class="grid-container">
+    <div class="grid">
+      <!-- Row 1 -->
+      <div class="cell void"></div>
+      <div class="cell clue">
+        <span class="content">WARM</span>
+        <span class="arrow down">▼</span>
+      </div>
+      <div class="cell clue">
+        <span class="content emoji">🌙</span>
+        <span class="arrow down">▼</span>
+      </div>
+      <div class="cell void"></div>
+      <div class="cell clue">
+        <span class="content">BOND</span>
+        <span class="arrow down">▼</span>
+      </div>
+      <div class="cell void"></div>
+      <div class="cell void"></div>
+
+      <!-- Row 2 -->
+      <div class="cell clue">
+        <span class="content">FEEL</span>
+        <span class="arrow right">▶</span>
+      </div>
+      <div class="cell answer"><span>L</span></div>
+      <div class="cell answer"><span>O</span></div>
+      <div class="cell answer"><span>V</span></div>
+      <div class="cell answer"><span>E</span></div>
+      <div class="cell void"></div>
+      <div class="cell void"></div>
+
+      <!-- Row 3 -->
+      <div class="cell void"></div>
+      <div class="cell answer"><span>U</span></div>
+      <div class="cell answer"><span>N</span></div>
+
+      <!-- DUAL CLUE CELL - Variant 3: Corner Arrows with Emoji -->
+      <div class="cell dual-clue">
+        <div class="dual-badge"></div>
+        <span class="content">❤️</span>
+        <span class="arrow right">▶</span>
+        <span class="arrow down">▼</span>
+      </div>
+
+      <div class="cell answer"><span>O</span></div>
+      <div class="cell answer"><span>M</span></div>
+      <div class="cell answer"><span>E</span></div>
+
+      <!-- Row 4 -->
+      <div class="cell void"></div>
+      <div class="cell answer filled"><span>G</span></div>
+      <div class="cell answer"><span>I</span></div>
+      <div class="cell answer"><span>G</span></div>
+      <div class="cell answer"><span>H</span></div>
+      <div class="cell answer"><span>T</span></div>
+      <div class="cell void"></div>
+
+      <!-- Row 5 -->
+      <div class="cell void"></div>
+      <div class="cell void"></div>
+      <div class="cell answer"><span>T</span></div>
+      <div class="cell answer"><span>E</span></div>
+      <div class="cell answer"><span>A</span></div>
+      <div class="cell void"></div>
+      <div class="cell void"></div>
+    </div>
+  </div>
+
+  <div class="legend">
+    <h3>Dual Clue Cell (Highlighted)</h3>
+    <div class="legend-item">
+      <div class="grid" style="grid-template-columns: 48px; grid-template-rows: 48px; padding: 2px;">
+        <div class="cell dual-clue">
+          <div class="dual-badge"></div>
+          <span class="content">❤️</span>
+          <span class="arrow right">▶</span>
+          <span class="arrow down">▼</span>
+        </div>
+      </div>
+      <div>
+        <strong>Center:</strong> Shared emoji "❤️"<br>
+        <strong>Badge "2":</strong> Indicates dual clue<br>
+        <strong>Corners:</strong> ▶ (right) and ▼ (down)<br>
+        <em>Tap to see: "SAFE" → and "CLOSE" ↓</em>
+      </div>
+    </div>
+    <div class="legend-item" style="margin-top: 12px;">
+      <div class="grid" style="grid-template-columns: 48px; grid-template-rows: 48px; padding: 2px;">
+        <div class="cell dual-clue">
+          <div class="dual-badge"></div>
+          <span class="content text">LOVE</span>
+          <span class="arrow right">▶</span>
+          <span class="arrow down">▼</span>
+        </div>
+      </div>
+      <div>
+        <strong>Text variant:</strong> Short shared word<br>
+        <em>Tap reveals different full clues</em>
+      </div>
+    </div>
+  </div>
+
+  <div class="note">
+    <strong>Note:</strong> This variant works best when both clues can share the same visual
+    (emoji or short word). The "2" badge signals users to tap for full clue details.
+    Not ideal when across/down clues have completely different content.
+  </div>
+
+  <div class="pros-cons">
+    <div class="pros">
+      <h4>Pros</h4>
+      <ul>
+        <li>Large, clear emoji/content</li>
+        <li>Clean, uncluttered look</li>
+        <li>Both arrows visible</li>
+        <li>Works great for themed puzzles</li>
+      </ul>
+    </div>
+    <div class="cons">
+      <h4>Cons</h4>
+      <ul>
+        <li>Requires tap to see full clues</li>
+        <li>Only works for shared content</li>
+        <li>Badge adds visual complexity</li>
+        <li>Not suitable for text-based clues</li>
+      </ul>
+    </div>
+  </div>
+</body>
+</html>

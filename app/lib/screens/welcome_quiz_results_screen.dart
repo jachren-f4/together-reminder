@@ -1,16 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import '../config/brand/brand_loader.dart';
+import '../config/brand/brand_config.dart';
+import '../config/brand/us2_theme.dart';
 import '../services/welcome_quiz_service.dart';
 import '../services/storage_service.dart';
 import '../services/haptic_service.dart';
 import '../services/sound_service.dart';
+import '../services/app_bootstrap_service.dart';
 import '../widgets/animations/animations.dart';
 import '../widgets/editorial/editorial.dart';
-import 'home_screen.dart';
+import '../widgets/lp_intro_overlay.dart';
+import 'main_screen.dart';
 
 /// Results screen for Welcome Quiz.
 /// Shows match score and answer breakdown.
 ///
-/// After user taps Continue, navigates to HomeScreen where LP intro will show.
+/// After user taps Continue, shows LP intro overlay on top of this screen.
+/// When LP intro is dismissed, navigates to MainScreen.
 class WelcomeQuizResultsScreen extends StatefulWidget {
   final WelcomeQuizResults results;
 
@@ -26,6 +33,9 @@ class WelcomeQuizResultsScreen extends StatefulWidget {
 
 class _WelcomeQuizResultsScreenState extends State<WelcomeQuizResultsScreen>
     with DramaticScreenMixin {
+  bool get _isUs2 => BrandLoader().config.brand == Brand.us2;
+  bool _showLpIntroOverlay = false;
+
   @override
   bool get enableConfetti => true;
 
@@ -40,31 +50,49 @@ class _WelcomeQuizResultsScreenState extends State<WelcomeQuizResultsScreen>
     });
   }
 
-  void _continue() {
+  void _continue() async {
     HapticService().trigger(HapticType.light);
     triggerFlash();
 
-    Future.delayed(const Duration(milliseconds: 200), () {
-      if (!mounted) return;
-      // Navigate to home screen shell, which will show LP intro overlay
-      Navigator.of(context).pushAndRemoveUntil(
-        MaterialPageRoute(
-          builder: (context) => const HomeScreen(showLpIntro: true),
-        ),
-        (route) => false,
-      );
+    await Future.delayed(const Duration(milliseconds: 200));
+    if (!mounted) return;
+
+    // Bootstrap before showing LP intro
+    await AppBootstrapService.instance.bootstrap();
+
+    if (!mounted) return;
+
+    // Show LP intro overlay on top of this screen
+    setState(() {
+      _showLpIntroOverlay = true;
     });
+  }
+
+  void _onLpIntroDismissed() {
+    if (!mounted) return;
+
+    // Navigate to main screen (without LP intro since we just showed it)
+    Navigator.of(context).pushAndRemoveUntil(
+      MaterialPageRoute(
+        builder: (context) => const MainScreen(showLpIntro: false),
+      ),
+      (route) => false,
+    );
   }
 
   @override
   Widget build(BuildContext context) {
+    if (_isUs2) return _buildUs2Screen();
+
     final user = StorageService().getUser();
     final partner = StorageService().getPartner();
     final userName = user?.name ?? 'You';
     final partnerName = partner?.name ?? 'Partner';
 
     return wrapWithDramaticEffects(
-      Scaffold(
+      Stack(
+        children: [
+          Scaffold(
         backgroundColor: EditorialStyles.paper,
         body: SafeArea(
           child: Column(
@@ -217,6 +245,13 @@ class _WelcomeQuizResultsScreenState extends State<WelcomeQuizResultsScreen>
           ),
         ),
       ),
+          // LP Intro Overlay on top
+          if (_showLpIntroOverlay)
+            LpIntroOverlay(
+              onDismiss: _onLpIntroDismissed,
+            ),
+        ],
+      ),
     );
   }
 
@@ -327,6 +362,307 @@ class _WelcomeQuizResultsScreenState extends State<WelcomeQuizResultsScreen>
           ),
         ),
       ],
+    );
+  }
+
+  // ===========================================
+  // Us 2.0 Implementation
+  // ===========================================
+
+  Widget _buildUs2Screen() {
+    final user = StorageService().getUser();
+    final partner = StorageService().getPartner();
+    final userName = user?.name ?? 'You';
+    final partnerName = partner?.name ?? 'Partner';
+
+    return wrapWithDramaticEffects(
+      Stack(
+        children: [
+          Scaffold(
+            body: Container(
+              decoration: const BoxDecoration(
+                gradient: Us2Theme.backgroundGradient,
+              ),
+              child: SafeArea(
+                child: Column(
+                  children: [
+                    // Header
+                    _buildUs2Header(),
+
+                    // Score section
+                    _buildUs2ScoreSection(),
+
+                    // Question breakdown
+                    Expanded(
+                      child: SingleChildScrollView(
+                        padding: const EdgeInsets.symmetric(horizontal: 24),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            Text(
+                              'QUESTION BREAKDOWN',
+                              style: GoogleFonts.nunito(
+                                fontSize: 11,
+                                fontWeight: FontWeight.w700,
+                                letterSpacing: 2,
+                                color: Us2Theme.textLight,
+                              ),
+                            ),
+                            const SizedBox(height: 16),
+                            ...widget.results.questions.asMap().entries.map((entry) {
+                              final result = entry.value;
+                              return _buildUs2QuestionResult(result, userName, partnerName);
+                            }),
+                            const SizedBox(height: 24),
+                          ],
+                        ),
+                      ),
+                    ),
+
+                    // Continue button
+                    _buildUs2Footer(),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          // LP Intro Overlay on top
+          if (_showLpIntroOverlay)
+            LpIntroOverlay(
+              onDismiss: _onLpIntroDismissed,
+            ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildUs2Header() {
+    return Container(
+      padding: const EdgeInsets.fromLTRB(24, 20, 24, 20),
+      child: Column(
+        children: [
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+            decoration: BoxDecoration(
+              gradient: Us2Theme.accentGradient,
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: Text(
+              'QUIZ COMPLETE!',
+              style: GoogleFonts.nunito(
+                fontSize: 11,
+                fontWeight: FontWeight.w700,
+                letterSpacing: 2,
+                color: Colors.white,
+              ),
+            ),
+          ),
+          const SizedBox(height: 12),
+          Text(
+            "Here's how you two answered",
+            style: GoogleFonts.nunito(
+              fontSize: 15,
+              color: Us2Theme.textMedium,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildUs2ScoreSection() {
+    return Container(
+      padding: const EdgeInsets.all(24),
+      child: Column(
+        children: [
+          const Text('🎯', style: TextStyle(fontSize: 48)),
+          const SizedBox(height: 16),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.baseline,
+            textBaseline: TextBaseline.alphabetic,
+            children: [
+              TweenAnimationBuilder<int>(
+                tween: IntTween(begin: 0, end: widget.results.matchCount),
+                duration: const Duration(milliseconds: 800),
+                builder: (context, value, child) {
+                  return ShaderMask(
+                    shaderCallback: (bounds) => Us2Theme.accentGradient.createShader(bounds),
+                    child: Text(
+                      '$value',
+                      style: GoogleFonts.playfairDisplay(
+                        fontSize: 72,
+                        fontWeight: FontWeight.w700,
+                        color: Colors.white,
+                      ),
+                    ),
+                  );
+                },
+              ),
+              Text(
+                ' out of ${widget.results.totalQuestions}',
+                style: GoogleFonts.playfairDisplay(
+                  fontSize: 28,
+                  color: Us2Theme.textLight,
+                ),
+              ),
+            ],
+          ),
+          Text(
+            'matched!',
+            style: GoogleFonts.nunito(
+              fontSize: 18,
+              color: Us2Theme.textLight,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildUs2QuestionResult(
+    WelcomeQuizResult result,
+    String userName,
+    String partnerName,
+  ) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 12),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: result.isMatch
+            ? Us2Theme.primaryBrandPink.withOpacity(0.1)
+            : Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        border: result.isMatch
+            ? Border.all(color: Us2Theme.primaryBrandPink, width: 2)
+            : null,
+        boxShadow: result.isMatch
+            ? null
+            : [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.05),
+                  blurRadius: 10,
+                  offset: const Offset(0, 2),
+                ),
+              ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Question text with match badge
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                child: Text(
+                  result.question,
+                  style: GoogleFonts.playfairDisplay(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                    color: Us2Theme.textDark,
+                    height: 1.4,
+                  ),
+                ),
+              ),
+              if (result.isMatch) ...[
+                const SizedBox(width: 8),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                  decoration: BoxDecoration(
+                    gradient: Us2Theme.accentGradient,
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Icon(Icons.check, size: 10, color: Colors.white),
+                      const SizedBox(width: 4),
+                      Text(
+                        'Match!',
+                        style: GoogleFonts.nunito(
+                          fontSize: 10,
+                          fontWeight: FontWeight.w700,
+                          color: Colors.white,
+                          letterSpacing: 1,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ],
+          ),
+          const SizedBox(height: 12),
+          // Answers
+          _buildUs2AnswerRow(userName, result.user1Answer ?? '—'),
+          const SizedBox(height: 8),
+          _buildUs2AnswerRow(partnerName, result.user2Answer ?? '—'),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildUs2AnswerRow(String name, String answer) {
+    return Row(
+      children: [
+        SizedBox(
+          width: 60,
+          child: Text(
+            name,
+            style: GoogleFonts.nunito(
+              fontSize: 13,
+              fontWeight: FontWeight.w700,
+              color: Us2Theme.textDark,
+            ),
+            overflow: TextOverflow.ellipsis,
+          ),
+        ),
+        const SizedBox(width: 8),
+        Expanded(
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+            decoration: BoxDecoration(
+              color: Us2Theme.cream,
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Text(
+              answer,
+              style: GoogleFonts.nunito(
+                fontSize: 14,
+                color: Us2Theme.textDark,
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildUs2Footer() {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(24, 0, 24, 40),
+      child: GestureDetector(
+        onTap: _continue,
+        child: Container(
+          width: double.infinity,
+          padding: const EdgeInsets.symmetric(vertical: 18),
+          decoration: BoxDecoration(
+            gradient: Us2Theme.accentGradient,
+            borderRadius: BorderRadius.circular(30),
+            boxShadow: Us2Theme.buttonGlowShadow,
+          ),
+          child: Center(
+            child: Text(
+              'Continue',
+              style: GoogleFonts.nunito(
+                fontSize: 17,
+                fontWeight: FontWeight.w700,
+                color: Colors.white,
+              ),
+            ),
+          ),
+        ),
+      ),
     );
   }
 }

@@ -1,6 +1,6 @@
 {
   "quizId": "quiz_001",
-  "title": "Playful Quiz 1",
+  "title": "Silly Side",
   "branch": "playful",
   "questions": [
     {
@@ -33,5 +33,6 @@
       "prompt": "Who is more...",
       "content": "Likely to send memes at 2am"
     }
-  ]
+  ],
+  "description": "Who dances in public? Who laughs at their own jokes? Embrace your playful sides!"
 }

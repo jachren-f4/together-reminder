@@ -1,0 +1,250 @@
+{
+  "quizzes": [
+    {
+      "id": "spiritual_gratitude",
+      "name": "Gratitude Together",
+      "category": "gratitude",
+      "difficulty": 1,
+      "formatType": "affirmation",
+      "imagePath": "assets/images/quests/feel-good-foundations.png",
+      "description": "Rate your feelings together",
+      "questions": [
+        {
+          "question": "We express gratitude for each other regularly.",
+          "questionType": "scale",
+          "options": [],
+          "correctAnswer": null
+        },
+        {
+          "question": "I feel thankful for the little things my partner does.",
+          "questionType": "scale",
+          "options": [],
+          "correctAnswer": null
+        },
+        {
+          "question": "We take time to appreciate what we have together.",
+          "questionType": "scale",
+          "options": [],
+          "correctAnswer": null
+        },
+        {
+          "question": "I feel blessed to have my partner in my life.",
+          "questionType": "scale",
+          "options": [],
+          "correctAnswer": null
+        },
+        {
+          "question": "We notice and celebrate each other's good qualities.",
+          "questionType": "scale",
+          "options": [],
+          "correctAnswer": null
+        }
+      ]
+    },
+    {
+      "id": "spiritual_growth",
+      "name": "Growing Together",
+      "category": "growth",
+      "difficulty": 1,
+      "formatType": "affirmation",
+      "imagePath": "assets/images/quests/feel-good-foundations.png",
+      "description": "Rate your feelings together",
+      "questions": [
+        {
+          "question": "We encourage each other to become better versions of ourselves.",
+          "questionType": "scale",
+          "options": [],
+          "correctAnswer": null
+        },
+        {
+          "question": "I feel we're growing in the same direction.",
+          "questionType": "scale",
+          "options": [],
+          "correctAnswer": null
+        },
+        {
+          "question": "We support each other's personal development.",
+          "questionType": "scale",
+          "options": [],
+          "correctAnswer": null
+        },
+        {
+          "question": "Our relationship helps me become a better person.",
+          "questionType": "scale",
+          "options": [],
+          "correctAnswer": null
+        },
+        {
+          "question": "We learn from each other's perspectives.",
+          "questionType": "scale",
+          "options": [],
+          "correctAnswer": null
+        }
+      ]
+    },
+    {
+      "id": "spiritual_values",
+      "name": "Shared Values",
+      "category": "values",
+      "difficulty": 1,
+      "formatType": "affirmation",
+      "imagePath": "assets/images/quests/feel-good-foundations.png",
+      "description": "Rate your feelings together",
+      "questions": [
+        {
+          "question": "We share similar core values.",
+          "questionType": "scale",
+          "options": [],
+          "correctAnswer": null
+        },
+        {
+          "question": "Our beliefs about what matters in life align well.",
+          "questionType": "scale",
+          "options": [],
+          "correctAnswer": null
+        },
+        {
+          "question": "We respect each other's personal beliefs.",
+          "questionType": "scale",
+          "options": [],
+          "correctAnswer": null
+        },
+        {
+          "question": "I feel connected to my partner on a deeper level.",
+          "questionType": "scale",
+          "options": [],
+          "correctAnswer": null
+        },
+        {
+          "question": "We support each other's spiritual or personal journey.",
+          "questionType": "scale",
+          "options": [],
+          "correctAnswer": null
+        }
+      ]
+    },
+    {
+      "id": "spiritual_purpose",
+      "name": "Shared Purpose",
+      "category": "purpose",
+      "difficulty": 1,
+      "formatType": "affirmation",
+      "imagePath": "assets/images/quests/feel-good-foundations.png",
+      "description": "Rate your feelings together",
+      "questions": [
+        {
+          "question": "I feel we're on a meaningful journey together.",
+          "questionType": "scale",
+          "options": [],
+          "correctAnswer": null
+        },
+        {
+          "question": "We have a shared sense of what we want to build together.",
+          "questionType": "scale",
+          "options": [],
+          "correctAnswer": null
+        },
+        {
+          "question": "Our relationship gives my life more meaning.",
+          "questionType": "scale",
+          "options": [],
+          "correctAnswer": null
+        },
+        {
+          "question": "We talk about our hopes and dreams together.",
+          "questionType": "scale",
+          "options": [],
+          "correctAnswer": null
+        },
+        {
+          "question": "I believe we're meant to be together.",
+          "questionType": "scale",
+          "options": [],
+          "correctAnswer": null
+        }
+      ]
+    },
+    {
+      "id": "spiritual_support",
+      "name": "Soulful Support",
+      "category": "support",
+      "difficulty": 1,
+      "formatType": "affirmation",
+      "imagePath": "assets/images/quests/feel-good-foundations.png",
+      "description": "Rate your feelings together",
+      "questions": [
+        {
+          "question": "I feel my partner truly understands me at a deep level.",
+          "questionType": "scale",
+          "options": [],
+          "correctAnswer": null
+        },
+        {
+          "question": "We help each other find peace during difficult times.",
+          "questionType": "scale",
+          "options": [],
+          "correctAnswer": null
+        },
+        {
+          "question": "My partner supports my need for reflection and quiet time.",
+          "questionType": "scale",
+          "options": [],
+          "correctAnswer": null
+        },
+        {
+          "question": "We lift each other up when one of us is struggling.",
+          "questionType": "scale",
+          "options": [],
+          "correctAnswer": null
+        },
+        {
+          "question": "I feel safe sharing my deepest thoughts with my partner.",
+          "questionType": "scale",
+          "options": [],
+          "correctAnswer": null
+        }
+      ]
+    },
+    {
+      "id": "spiritual_rituals",
+      "name": "Meaningful Rituals",
+      "category": "rituals",
+      "difficulty": 1,
+      "formatType": "affirmation",
+      "imagePath": "assets/images/quests/feel-good-foundations.png",
+      "description": "Rate your feelings together",
+      "questions": [
+        {
+          "question": "We have meaningful traditions that bring us closer.",
+          "questionType": "scale",
+          "options": [],
+          "correctAnswer": null
+        },
+        {
+          "question": "I value the special moments we create together.",
+          "questionType": "scale",
+          "options": [],
+          "correctAnswer": null
+        },
+        {
+          "question": "We make time for what truly matters in our relationship.",
+          "questionType": "scale",
+          "options": [],
+          "correctAnswer": null
+        },
+        {
+          "question": "Our rituals and routines strengthen our bond.",
+          "questionType": "scale",
+          "options": [],
+          "correctAnswer": null
+        },
+        {
+          "question": "We celebrate life's moments together in meaningful ways.",
+          "questionType": "scale",
+          "options": [],
+          "correctAnswer": null
+        }
+      ]
+    }
+  ]
+}

@@ -1,6 +1,6 @@
 {
   "quizId": "quiz_010",
-  "title": "Playful Quiz 10",
+  "title": "Dream Life",
   "branch": "playful",
   "questions": [
     {
@@ -33,5 +33,6 @@
       "prompt": "Who would...",
       "content": "Turn everything into a competition"
     }
-  ]
+  ],
+  "description": "Fantasy careers, dream homes, and wild aspirations—dream together!"
 }

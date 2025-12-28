@@ -1,6 +1,6 @@
 {
   "quizId": "quiz_006",
-  "title": "Attachment Quiz 6",
+  "title": "Anxious Moments",
   "branch": "attachment",
   "questions": [
     {
@@ -33,5 +33,6 @@
       "prompt": "Who is more likely to...",
       "content": "Withdraw during disagreements"
     }
-  ]
+  ],
+  "description": "When worry creeps in, how do you each cope? Understand your patterns."
 }

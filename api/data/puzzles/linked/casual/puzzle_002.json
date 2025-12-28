@@ -14,12 +14,15 @@
       "across": { "type": "text", "content": "_EX", "target_index": 11 },
       "down": { "type": "text", "content": "After @", "target_index": 17 }
     },
-    "6": { "type": "text", "content": "_AR", "arrow": "across", "target_index": 15 },
+    "6": { "type": "emoji", "content": "👂", "text": "_AR", "arrow": "across", "target_index": 15 },
     "7": { "type": "text", "content": "Meeting point", "arrow": "across", "target_index": 17 },
     "8": { "type": "emoji", "content": "🍑", "text": "_SS", "arrow": "across", "target_index": 20 },
-    "9": { "type": "text", "content": "_O", "arrow": "across", "target_index": 22 },
+    "9": { "type": "emoji", "content": "🚫", "text": "_O", "arrow": "across", "target_index": 22 },
     "10": { "type": "emoji", "content": "❤️", "text": "LO_E", "arrow": "down", "target_index": 30 },
-    "11": { "type": "text", "content": "_T", "arrow": "down", "target_index": 31 },
+    "11": {
+      "across": { "type": "text", "content": "Before V", "target_index": 25 },
+      "down": { "type": "text", "content": "_T", "target_index": 31 }
+    },
     "12": { "type": "text", "content": "TID_", "arrow": "across", "target_index": 27 },
     "13": {
       "across": { "type": "emoji", "content": "🎥", "target_index": 30 },
@@ -36,7 +39,10 @@
       "down": { "type": "text", "content": "Playful wager", "target_index": 47 }
     },
     "18": { "type": "text", "content": "After G", "arrow": "across", "target_index": 43 },
-    "19": { "type": "emoji", "content": "🛏️", "text": "_ED", "arrow": "down", "target_index": 51 },
+    "19": {
+      "across": { "type": "text", "content": "Before I", "target_index": 45 },
+      "down": { "type": "emoji", "content": "🛏️", "text": "_ED", "target_index": 51 }
+    },
     "20": {
       "across": { "type": "text", "content": "Side ___ side", "target_index": 47 },
       "down": { "type": "emoji", "content": "❤️", "text": "LO_E", "target_index": 53 }
@@ -45,7 +51,8 @@
     "22": { "type": "text", "content": "Before P", "arrow": "down", "target_index": 62 },
     "23": { "type": "text", "content": "_EASE", "arrow": "across", "target_index": 57 },
     "24": { "type": "emoji", "content": "💦", "text": "_ET", "arrow": "across", "target_index": 59 },
-    "25": { "type": "text", "content": "Going ___ dinner", "arrow": "across", "target_index": 61 }
+    "25": { "type": "text", "content": "Going ___ dinner", "arrow": "across", "target_index": 61 },
+    "26": { "type": "text", "content": "After O", "arrow": "across", "target_index": 13 }
   },
   "date": "2025-12-19",
   "grid": [
@@ -61,7 +68,7 @@
   ],
   "gridnums": [
     0, 1, 0, 0, 2, 0, 3,
-    4, 0, 0, 5, 0, 0, 0,
+    4, 0, 0, 5, 0, 26, 0,
     6, 0, 7, 0, 0, 8, 0,
     9, 0, 10, 11, 0, 12, 0,
     0, 13, 0, 0, 0, 0, 14,

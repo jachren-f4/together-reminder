@@ -64,6 +64,9 @@ class _LinkedCompletionScreenState extends State<LinkedCompletionScreen>
       confettiController: _confettiController,
     );
 
+    // Clear pending results flag - user is viewing results
+    StorageService().clearPendingResultsMatchId('linked');
+
     // LP is now server-authoritative - awarded via awardLP() in linked/submit route
     // LP sync happens before navigation to this screen (in linked_game_screen.dart)
     // No local awardPoints() needed (would cause double-counting)

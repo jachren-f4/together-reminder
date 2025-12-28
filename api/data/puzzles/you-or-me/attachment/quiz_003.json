@@ -1,6 +1,6 @@
 {
   "quizId": "quiz_003",
-  "title": "Attachment Quiz 3",
+  "title": "Reassurance",
   "branch": "attachment",
   "questions": [
     {
@@ -33,5 +33,6 @@
       "prompt": "Who is more comfortable...",
       "content": "Spending a weekend apart"
     }
-  ]
+  ],
+  "description": "Who needs more comfort? Understand your reassurance patterns."
 }

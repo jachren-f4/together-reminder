@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Loading Screen - V1 Minimal</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Georgia, 'Times New Roman', serif;
+      background: #FAFAFA;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #1A1A1A;
+    }
+
+    .container {
+      text-align: center;
+      padding: 40px;
+    }
+
+    .status-text {
+      font-size: 18px;
+      font-weight: 400;
+      letter-spacing: 0.5px;
+      color: #1A1A1A;
+    }
+
+    .dots {
+      display: inline-block;
+      width: 24px;
+      text-align: left;
+    }
+
+    .dots::after {
+      content: '';
+      animation: dots 1.5s steps(4, end) infinite;
+    }
+
+    @keyframes dots {
+      0%, 20% { content: ''; }
+      40% { content: '.'; }
+      60% { content: '..'; }
+      80%, 100% { content: '...'; }
+    }
+
+    /* Simulate different states */
+    .states {
+      margin-top: 60px;
+      padding-top: 40px;
+      border-top: 1px solid #DDD;
+    }
+
+    .states h3 {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: #666;
+      margin-bottom: 20px;
+    }
+
+    .state-preview {
+      margin: 16px 0;
+      font-size: 16px;
+      color: #666;
+    }
+
+    .state-preview.active {
+      color: #1A1A1A;
+      font-weight: 500;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <p class="status-text">Syncing quests<span class="dots"></span></p>
+
+    <div class="states">
+      <h3>All States Preview</h3>
+      <p class="state-preview">Restoring your data...</p>
+      <p class="state-preview active">Syncing quests...</p>
+      <p class="state-preview">Almost ready...</p>
+    </div>
+  </div>
+</body>
+</html>

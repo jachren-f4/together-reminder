@@ -4,8 +4,11 @@ import '../config/brand/brand_loader.dart';
 import '../models/branch_progression_state.dart';
 import '../services/branch_manifest_service.dart';
 import '../services/quiz_match_service.dart';
+import '../services/love_point_service.dart';
 import '../services/storage_service.dart';
 import '../widgets/editorial/editorial.dart';
+import '../widgets/brand/brand_widget_factory.dart';
+import '../widgets/brand/us2/us2_intro_screen.dart';
 import 'quiz_match_game_screen.dart';
 
 /// Therapeutic branch names that get the "Deeper" badge
@@ -40,6 +43,13 @@ class _AffirmationIntroScreenState extends State<AffirmationIntroScreen>
   bool _partnerCompleted = false;
   String? _partnerName;
 
+  // Quiz metadata from API/Quest
+  String? _quizTitle;
+  String? _quizDescription;
+
+  // LP status for reward display
+  LpContentStatus? _lpStatus;
+
   // Video player state
   VideoPlayerController? _videoController;
   late AnimationController _fadeController;
@@ -60,6 +70,9 @@ class _AffirmationIntroScreenState extends State<AffirmationIntroScreen>
   @override
   void initState() {
     super.initState();
+
+    // Load quiz metadata from DailyQuest immediately (already synced)
+    _loadQuizMetadataFromQuest();
 
     _fadeController = AnimationController(
       duration: const Duration(milliseconds: 800),
@@ -120,6 +133,7 @@ class _AffirmationIntroScreenState extends State<AffirmationIntroScreen>
 
     _initializeVideo();
     _checkPartnerStatus();
+    _checkLpStatus();
 
     // Start content animation immediately (don't wait for video)
     // Video is a visual enhancement, not a blocker
@@ -128,11 +142,45 @@ class _AffirmationIntroScreenState extends State<AffirmationIntroScreen>
     });
   }
 
+  /// Load quiz metadata directly from DailyQuest (already synced from home screen)
+  void _loadQuizMetadataFromQuest() {
+    if (widget.questId == null) return;
+
+    final quest = _storage.getDailyQuest(widget.questId!);
+
+    if (quest != null) {
+      _quizTitle = quest.quizName;
+      _quizDescription = quest.description;
+      _partnerName = _storage.getPartner()?.name;
+    }
+  }
+
   /// Check if partner has already completed this quiz
   Future<void> _checkPartnerStatus() async {
+    // Skip if quest is already completed - both already answered
+    // This avoids calling getOrCreateMatch which would create a new match
+    if (widget.questId != null) {
+      final quest = _storage.getDailyQuest(widget.questId!);
+      if (quest != null && quest.isCompleted) {
+        return;
+      }
+    }
+
     try {
       final service = QuizMatchService();
       final gameState = await service.getOrCreateMatch('affirmation');
+
+      // Update DailyQuest with quiz metadata if available
+      if (widget.questId != null && gameState.quiz != null) {
+        final quest = _storage.getDailyQuest(widget.questId!);
+        if (quest != null &&
+            (quest.quizName == null || quest.quizName == 'Affirmation Quiz')) {
+          // Update quest with quiz title and description
+          quest.quizName = gameState.quiz!.title;
+          quest.description = gameState.quiz!.description;
+          await _storage.saveDailyQuest(quest);
+        }
+      }
 
       if (mounted) {
         setState(() {
@@ -140,10 +188,23 @@ class _AffirmationIntroScreenState extends State<AffirmationIntroScreen>
           // and partner has actually answered
           _partnerCompleted = !gameState.isCompleted && gameState.hasPartnerAnswered;
           _partnerName = _storage.getPartner()?.name;
+          // Store quiz metadata for display
+          _quizTitle ??= gameState.quiz?.title;
+          _quizDescription ??= gameState.quiz?.description;
         });
       }
     } catch (e) {
       // Silently fail - banner is optional enhancement
+    }
+  }
+
+  /// Check LP status for this content type
+  Future<void> _checkLpStatus() async {
+    final status = await LovePointService.checkLpStatus('affirmation_quiz');
+    if (mounted) {
+      setState(() {
+        _lpStatus = status;
+      });
     }
   }
 
@@ -252,6 +313,11 @@ class _AffirmationIntroScreenState extends State<AffirmationIntroScreen>
   Widget build(BuildContext context) {
     final partnerName = _storage.getPartner()?.name ?? 'your partner';
 
+    // Us 2.0 brand uses simplified intro screen
+    if (BrandWidgetFactory.isUs2) {
+      return _buildUs2Intro(partnerName);
+    }
+
     return Scaffold(
       backgroundColor: EditorialStyles.paper,
       body: SafeArea(
@@ -308,34 +374,35 @@ class _AffirmationIntroScreenState extends State<AffirmationIntroScreen>
                           ),
                           const SizedBox(height: 16),
 
-                          // Title (animated)
+                          // Quiz Info Card (animated) - shows today's theme
                           _animatedContent(
                             _titleAnimation,
-                            Text(
-                              'Affirmation Quiz',
-                              style: EditorialStyles.headline,
-                            ),
+                            _buildQuizInfoCard(),
                           ),
-                          const SizedBox(height: 12),
+                          const SizedBox(height: 16),
 
-                          // Description (animated)
+                          // Generic instruction (animated)
                           _animatedContent(
                             _descAnimation,
                             Text(
-                              'Rate how strongly you agree with statements about your relationship. Then compare with $partnerName to discover new insights!',
-                              style: EditorialStyles.bodyTextItalic,
+                              'Rate how strongly you agree with statements about yourself. Then compare with $partnerName to discover where you align!',
+                              style: EditorialStyles.bodySmall.copyWith(
+                                color: EditorialStyles.inkMuted,
+                              ),
                             ),
                           ),
-                          const SizedBox(height: 32),
+                          const SizedBox(height: 24),
 
                           // Stats card (animated)
                           _animatedContent(
                             _statsAnimation,
-                            const EditorialStatsCard(
+                            EditorialStatsCard(
                               rows: [
                                 ('Statements', '5'),
                                 ('Time', '~3 minutes'),
-                                ('Reward', '+30 LP'),
+                                ('Reward', _lpStatus?.alreadyGrantedToday == true
+                                    ? 'Earned today'
+                                    : '+30 LP'),
                               ],
                             ),
                           ),
@@ -368,6 +435,96 @@ class _AffirmationIntroScreenState extends State<AffirmationIntroScreen>
             _animatedContent(_footerAnimation, _buildFooter()),
           ],
         ),
+      ),
+    );
+  }
+
+  /// Build Us 2.0 styled intro screen using reusable component
+  Widget _buildUs2Intro(String partnerName) {
+    final alreadyEarned = _lpStatus?.alreadyGrantedToday == true;
+
+    // Build badges list
+    final badges = <String>['AFFIRMATION'];
+    if (_isTherapeuticBranch(widget.branch)) {
+      badges.add('DEEPER');
+    }
+
+    // Build stats with highlight for reward
+    final stats = <(String, String, bool)>[
+      ('Statements', '5', false),
+      ('Time', '~3 minutes', false),
+      ('Reward', alreadyEarned ? 'Earned today' : '+30 LP', !alreadyEarned),
+    ];
+
+    return Us2IntroScreen.withQuizCard(
+      buttonLabel: 'Begin',
+      onStart: _startQuiz,
+      onBack: () => Navigator.of(context).pop(),
+      heroEmoji: '💑',
+      badges: badges,
+      quizTitle: _quizTitle ?? 'Affirmation Quiz',
+      quizDescription: _quizDescription,
+      stats: stats,
+      instructionText: 'Rate how strongly you agree with statements about yourself. Then compare with $partnerName to discover where you align!',
+    );
+  }
+
+  /// Build the Quiz Info Card showing today's theme (Liia style)
+  Widget _buildQuizInfoCard() {
+    final hasQuizData = _quizTitle != null && _quizTitle!.isNotEmpty;
+
+    return Container(
+      decoration: BoxDecoration(
+        color: EditorialStyles.paper,
+        border: Border(
+          left: BorderSide(
+            color: BrandLoader().colors.primary,
+            width: 4,
+          ),
+          top: EditorialStyles.border,
+          right: EditorialStyles.border,
+          bottom: EditorialStyles.border,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: EditorialStyles.ink.withValues(alpha: 0.06),
+            offset: const Offset(0, 2),
+            blurRadius: 8,
+          ),
+        ],
+      ),
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // "Today's Theme" label
+          Text(
+            "TODAY'S THEME",
+            style: EditorialStyles.labelUppercaseSmall.copyWith(
+              color: BrandLoader().colors.primary,
+              letterSpacing: 1.5,
+            ),
+          ),
+          const SizedBox(height: 6),
+          // Quiz title
+          Text(
+            hasQuizData ? _quizTitle! : 'Affirmation Quiz',
+            style: EditorialStyles.headlineSmall.copyWith(
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          // Quiz description (if available)
+          if (hasQuizData && _quizDescription != null && _quizDescription!.isNotEmpty) ...[
+            const SizedBox(height: 8),
+            Text(
+              _quizDescription!,
+              style: EditorialStyles.bodyTextItalic.copyWith(
+                fontSize: 14,
+                color: EditorialStyles.inkMuted,
+              ),
+            ),
+          ],
+        ],
       ),
     );
   }
@@ -605,6 +762,9 @@ class _AffirmationIntroScreenState extends State<AffirmationIntroScreen>
   }
 
   Widget _buildFooter() {
+    final alreadyEarned = _lpStatus?.alreadyGrantedToday == true;
+    final resetTime = _lpStatus?.resetTimeFormatted ?? '';
+
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
@@ -619,7 +779,9 @@ class _AffirmationIntroScreenState extends State<AffirmationIntroScreen>
           ),
           const SizedBox(height: 12),
           Text(
-            'Complete to earn +30 Love Points',
+            alreadyEarned
+                ? 'LP already earned today · Resets in $resetTime'
+                : 'Complete to earn +30 Love Points',
             style: EditorialStyles.bodySmall.copyWith(
               color: EditorialStyles.inkMuted,
             ),

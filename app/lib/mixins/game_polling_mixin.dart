@@ -15,7 +15,7 @@ import 'package:flutter/material.dart';
 ///     with GamePollingMixin {
 ///
 ///   @override
-///   Duration get pollInterval => const Duration(seconds: 10);
+///   Duration get pollInterval => const Duration(seconds: 5);
 ///
 ///   @override
 ///   bool get shouldPoll => !_isLoading && !_isSubmitting && _gameState != null && !_gameState!.isMyTurn;
@@ -45,8 +45,8 @@ mixin GamePollingMixin<T extends StatefulWidget> on State<T> {
   Timer? _pollTimer;
 
   /// The interval between poll requests.
-  /// Default is 10 seconds, override to customize.
-  Duration get pollInterval => const Duration(seconds: 10);
+  /// Default is 5 seconds for consistent UX across all game screens.
+  Duration get pollInterval => const Duration(seconds: 5);
 
   /// Whether polling should be active.
   /// Override this to define when polling should occur.

@@ -1,6 +1,6 @@
 {
   "quizId": "quiz_002",
-  "title": "Playful Quiz 2",
+  "title": "Game Night",
   "branch": "playful",
   "questions": [
     {
@@ -33,5 +33,6 @@
       "prompt": "Who would...",
       "content": "Start a conversation in an elevator"
     }
-  ]
+  ],
+  "description": "Discover who's the competitive gamer and who's just there for the snacks."
 }

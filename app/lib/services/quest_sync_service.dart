@@ -159,10 +159,24 @@ class QuestSyncService {
         final questMap = questData as Map<String, dynamic>;
         final questId = questMap['id'] as String;
 
+        // Check if quest already exists locally with completion data
+        final existingQuest = _storage.getDailyQuest(questId);
+        if (existingQuest != null &&
+            (existingQuest.status == 'completed' ||
+             (existingQuest.userCompletions?.isNotEmpty ?? false))) {
+          // Preserve existing quest with completion data - don't overwrite
+          Logger.debug(
+            'Preserving existing quest $questId with status=${existingQuest.status}',
+            service: 'quest',
+          );
+          continue;
+        }
+
         // Parse metadata
         final metadata = questMap['metadata'] as Map<String, dynamic>?;
         final formatType = metadata?['formatType'] as String? ?? 'classic';
         final quizName = metadata?['quizName'] as String?;
+        final quizDescription = metadata?['quizDescription'] as String?;
 
         // Parse quest type from string
         final questTypeStr = questMap['quest_type'] as String;
@@ -181,6 +195,7 @@ class QuestSyncService {
           isSideQuest: questMap['is_side_quest'] as bool? ?? false,
           formatType: formatType,
           quizName: quizName,
+          description: quizDescription,
           userCompletions: null,
         );
 

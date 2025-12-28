@@ -55,17 +55,16 @@ class QuestInitResult {
 
 /// Centralized service for initializing daily quests
 ///
-/// This service consolidates quest initialization logic that was previously
-/// scattered across main.dart, pairing_screen.dart, and new_home_screen.dart.
-///
-/// Usage:
-/// - Call from PairingScreen after successful pairing
-/// - Call from NewHomeScreen for returning users (empty local storage)
-/// - DO NOT call from main.dart (too early in lifecycle)
+/// Handles syncing/generating quests from server. Called by AppBootstrapService
+/// as part of the app initialization flow.
 ///
 /// The service is idempotent - safe to call multiple times. If quests already
 /// exist locally for today, it returns [QuestInitStatus.alreadyExists] without
 /// making any network calls.
+///
+/// Also initializes related services:
+/// - CouplePreferencesService (for "who goes first" settings)
+/// - StepsFeatureService (iOS only)
 class QuestInitializationService {
   final StorageService _storage;
 
@@ -101,62 +100,61 @@ class QuestInitializationService {
       }
 
       // Step 2: Check if quests already exist locally
-      final existingQuests = _storage.getTodayQuests();
-      if (existingQuests.isNotEmpty) {
+      var existingQuests = _storage.getTodayQuests();
+      final questsAlreadyExisted = existingQuests.isNotEmpty;
+
+      if (questsAlreadyExisted) {
         Logger.debug(
-          'Quest init skipped - ${existingQuests.length} quests already exist',
-          service: 'quest-init',
-        );
-        return QuestInitResult(
-          status: QuestInitStatus.alreadyExists,
-          questCount: existingQuests.length,
-        );
-      }
-
-      // Initialize related services (moved from main.dart)
-      await _initializeRelatedServices(user.id, partner.pushToken);
-
-      // Step 3: Try to sync from server
-      Logger.debug('Attempting to sync quests from server...', service: 'quest-init');
-
-      final questService = DailyQuestService(storage: _storage);
-      final syncService = QuestSyncService(storage: _storage);
-      final questTypeManager = QuestTypeManager(
-        storage: _storage,
-        questService: questService,
-        syncService: syncService,
-      );
-
-      final synced = await syncService.syncTodayQuests(
-        currentUserId: user.id,
-        partnerUserId: partner.pushToken,
-      );
-
-      List<DailyQuest> quests;
-      if (synced) {
-        // Loaded from server
-        quests = questService.getTodayQuests();
-        Logger.success(
-          'Quests synced from server: ${quests.length} quests',
+          'Quest init: ${existingQuests.length} quests already exist locally',
           service: 'quest-init',
         );
       } else {
-        // Step 4: No quests on server - generate new ones
-        Logger.debug('No quests on server - generating new ones...', service: 'quest-init');
-        quests = await questTypeManager.generateDailyQuests(
+        // Initialize related services (moved from main.dart)
+        await _initializeRelatedServices(user.id, partner.pushToken);
+
+        // Step 3: Try to sync from server
+        Logger.debug('Attempting to sync quests from server...', service: 'quest-init');
+
+        final questService = DailyQuestService(storage: _storage);
+        final syncService = QuestSyncService(storage: _storage);
+        final questTypeManager = QuestTypeManager(
+          storage: _storage,
+          questService: questService,
+          syncService: syncService,
+        );
+
+        final synced = await syncService.syncTodayQuests(
           currentUserId: user.id,
           partnerUserId: partner.pushToken,
         );
-        Logger.success(
-          'Quests generated: ${quests.length} quests',
-          service: 'quest-init',
-        );
+
+        if (synced) {
+          existingQuests = questService.getTodayQuests();
+          Logger.success(
+            'Quests synced from server: ${existingQuests.length} quests',
+            service: 'quest-init',
+          );
+        } else {
+          // Step 4: No quests on server - generate new ones
+          Logger.debug('No quests on server - generating new ones...', service: 'quest-init');
+          existingQuests = await questTypeManager.generateDailyQuests(
+            currentUserId: user.id,
+            partnerUserId: partner.pushToken,
+          );
+          Logger.success(
+            'Quests generated: ${existingQuests.length} quests',
+            service: 'quest-init',
+          );
+        }
       }
 
+      // Note: Polling for completion status is now handled by AppBootstrapService
+      // which calls this service then polls afterwards
+
       return QuestInitResult(
-        status: QuestInitStatus.success,
-        questCount: quests.length,
-        wasNewlyInitialized: true,
+        status: questsAlreadyExisted ? QuestInitStatus.alreadyExists : QuestInitStatus.success,
+        questCount: existingQuests.length,
+        wasNewlyInitialized: !questsAlreadyExisted,
       );
     } catch (e, stackTrace) {
       Logger.error(

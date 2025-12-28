@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Us 2.0 - Word Search Game</title>
+  <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Playfair+Display:ital,wght@0,700;1,400&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      /* Us 2.0 Design System */
+      --bg-gradient-start: #FFD1C1;
+      --bg-gradient-end: #FFF5F0;
+      --gradient-accent-start: #FF6B6B;
+      --gradient-accent-end: #FF9F43;
+      --glow-pink: rgba(255, 107, 107, 0.6);
+      --text-dark: #2D2D2D;
+      --text-medium: #6B6B6B;
+
+      /* Game-specific */
+      --gold-light: #F5E6D0;
+      --gold-mid: #E8D5B8;
+      --gold-dark: #D4B896;
+      --gold-border: #C9A875;
+      --cell-cream: #FFFBF5;
+      --cell-border: #E8DDD0;
+
+      /* Word colors for found words */
+      --word-color-1: #5C6BC0;
+      --word-color-2: #66BB6A;
+      --word-color-3: #FFA726;
+      --word-color-4: #AB47BC;
+      --word-color-5: #EF5350;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Nunito', sans-serif;
+      background: linear-gradient(180deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
+      min-height: 100vh;
+      max-width: 430px;
+      margin: 0 auto;
+      position: relative;
+    }
+
+    /* Floating hearts/bubbles background effect */
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-image:
+        radial-gradient(ellipse at 15% 25%, rgba(255,200,200,0.4) 0%, transparent 40%),
+        radial-gradient(ellipse at 85% 35%, rgba(255,180,180,0.3) 0%, transparent 35%),
+        radial-gradient(ellipse at 50% 70%, rgba(255,190,190,0.25) 0%, transparent 40%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .game-container {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ========================================
+       HEADER - Compact gradient style
+       ======================================== */
+    .header {
+      background: transparent;
+      padding: 12px 12px 8px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .back-btn {
+      width: 30px;
+      height: 30px;
+      background: linear-gradient(135deg, var(--gradient-accent-start) 0%, var(--gradient-accent-end) 100%);
+      border: none;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      color: white;
+      cursor: pointer;
+      box-shadow: 0 2px 6px rgba(255, 107, 107, 0.3);
+    }
+
+    .header-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text-dark);
+      letter-spacing: 1.5px;
+    }
+
+    .header-scores {
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .score-badge {
+      background: linear-gradient(135deg, var(--gradient-accent-start) 0%, var(--gradient-accent-end) 100%);
+      padding: 4px 8px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      color: white;
+      font-size: 11px;
+      font-weight: 700;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.15);
+    }
+
+    .score-badge.active {
+      box-shadow: 0 2px 8px rgba(255, 107, 107, 0.4);
+    }
+
+    .score-badge .heart {
+      font-size: 11px;
+    }
+
+    /* ========================================
+       FLOATING SELECTION BUBBLE
+       ======================================== */
+    .selection-bubble {
+      position: absolute;
+      top: 52px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: linear-gradient(135deg, var(--gradient-accent-start) 0%, var(--gradient-accent-end) 100%);
+      padding: 6px 16px;
+      border-radius: 16px;
+      color: white;
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      box-shadow: 0 3px 12px rgba(255, 107, 107, 0.4);
+      z-index: 10;
+    }
+
+    /* ========================================
+       GRID CONTAINER - Gold beveled frame
+       ======================================== */
+    .grid-section {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 8px;
+    }
+
+    .grid-container {
+      background: linear-gradient(180deg, var(--gold-light) 0%, var(--gold-mid) 50%, var(--gold-dark) 100%);
+      border-radius: 12px;
+      padding: 6px;
+      border: 1.5px solid var(--gold-border);
+      box-shadow:
+        0 4px 16px rgba(0,0,0,0.12),
+        inset 0 1px 0 rgba(255,255,255,0.4);
+    }
+
+    .grid-inner {
+      background: var(--gold-mid);
+      border-radius: 8px;
+      padding: 4px;
+      box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(10, 1fr);
+      gap: 2px;
+    }
+
+    /* ========================================
+       LETTER CELLS
+       ======================================== */
+    .cell {
+      aspect-ratio: 1;
+      border-radius: 3px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(180deg, #FFFFFF 0%, #FFF8F8 100%);
+      border: 1px solid var(--cell-border);
+      font-family: 'Playfair Display', serif;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text-dark);
+      cursor: pointer;
+      transition: all 0.15s ease;
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.9),
+        0 1px 2px rgba(0,0,0,0.05);
+    }
+
+    .cell:hover {
+      background: linear-gradient(180deg, #FFF5F0 0%, #FFEBE5 100%);
+    }
+
+    /* Selected cell during drag */
+    .cell.selected {
+      background: linear-gradient(180deg, #FFE8A0 0%, #D4A855 100%);
+      border-color: var(--gold-border);
+      color: #5D4E37;
+      box-shadow:
+        0 2px 6px rgba(0,0,0,0.15),
+        inset 0 1px 0 rgba(255,255,255,0.5);
+    }
+
+    /* Found word highlight */
+    .cell.found-1 { background: linear-gradient(180deg, rgba(92, 107, 192, 0.25) 0%, rgba(92, 107, 192, 0.35) 100%); }
+    .cell.found-2 { background: linear-gradient(180deg, rgba(102, 187, 106, 0.25) 0%, rgba(102, 187, 106, 0.35) 100%); }
+    .cell.found-3 { background: linear-gradient(180deg, rgba(255, 167, 38, 0.25) 0%, rgba(255, 167, 38, 0.35) 100%); }
+    .cell.found-4 { background: linear-gradient(180deg, rgba(171, 71, 188, 0.25) 0%, rgba(171, 71, 188, 0.35) 100%); }
+    .cell.found-5 { background: linear-gradient(180deg, rgba(239, 83, 80, 0.25) 0%, rgba(239, 83, 80, 0.35) 100%); }
+
+    /* Hint highlight */
+    .cell.hint {
+      background: linear-gradient(180deg, #E3F2FD 0%, #BBDEFB 100%);
+      border-color: #2196F3;
+      animation: hint-pulse 1.5s ease-in-out infinite;
+    }
+
+    @keyframes hint-pulse {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(33, 150, 243, 0.4); }
+      50% { box-shadow: 0 0 0 4px rgba(33, 150, 243, 0.2); }
+    }
+
+    /* ========================================
+       WORD BANK
+       ======================================== */
+    .word-bank {
+      background: linear-gradient(180deg, #FFFBF5 0%, #FFF5EE 100%);
+      border-radius: 12px 12px 0 0;
+      padding: 10px 12px;
+      border: 1px solid rgba(201, 168, 117, 0.3);
+      border-bottom: none;
+    }
+
+    .word-bank-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .word-bank-title {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      color: var(--text-medium);
+    }
+
+    .word-bank-count {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      color: var(--gradient-accent-start);
+    }
+
+    .word-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 6px;
+    }
+
+    .word-item {
+      padding: 6px 4px;
+      border-radius: 6px;
+      background: white;
+      border: 1px solid var(--cell-border);
+      text-align: center;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      color: var(--text-dark);
+      transition: all 0.2s ease;
+    }
+
+    .word-item.found {
+      text-decoration: line-through;
+      opacity: 0.6;
+    }
+
+    .word-item.found-1 { border-color: var(--word-color-1); color: var(--word-color-1); }
+    .word-item.found-2 { border-color: var(--word-color-2); color: var(--word-color-2); }
+    .word-item.found-3 { border-color: var(--word-color-3); color: var(--word-color-3); }
+    .word-item.found-4 { border-color: var(--word-color-4); color: var(--word-color-4); }
+    .word-item.found-5 { border-color: var(--word-color-5); color: var(--word-color-5); }
+
+    /* ========================================
+       BOTTOM ACTION BAR - Compact
+       ======================================== */
+    .action-bar {
+      display: flex;
+      gap: 10px;
+      padding: 6px 12px 16px;
+      background: linear-gradient(180deg, #FFFBF5 0%, #FFF5EE 100%);
+    }
+
+    .hint-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      padding: 8px 14px;
+      background: linear-gradient(135deg, var(--gradient-accent-start) 0%, var(--gradient-accent-end) 100%);
+      border: none;
+      border-radius: 18px;
+      color: white;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 2px 8px rgba(255, 107, 107, 0.3);
+    }
+
+    .hint-btn .emoji {
+      font-size: 14px;
+    }
+
+    .turn-progress {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 8px 16px;
+      background: linear-gradient(135deg, var(--gradient-accent-start) 0%, var(--gradient-accent-end) 100%);
+      border-radius: 18px;
+      color: white;
+      box-shadow: 0 2px 8px rgba(255, 107, 107, 0.3);
+    }
+
+    .turn-progress.waiting {
+      background: linear-gradient(180deg, #E0E0E0 0%, #BDBDBD 100%);
+      box-shadow: none;
+    }
+
+    .progress-dots {
+      display: flex;
+      gap: 4px;
+    }
+
+    .progress-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.4);
+    }
+
+    .progress-dot.filled {
+      background: white;
+    }
+
+    .turn-progress.waiting .progress-dot {
+      background: rgba(0, 0, 0, 0.2);
+    }
+
+    .turn-progress.waiting .progress-dot.filled {
+      background: rgba(0, 0, 0, 0.4);
+    }
+
+    .turn-text {
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+    }
+
+    /* ========================================
+       VARIANT: Partner's Turn
+       ======================================== */
+    .variant-label {
+      text-align: center;
+      font-size: 12px;
+      color: #888;
+      padding: 20px 0 10px;
+      border-top: 1px dashed #ccc;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="game-container">
+    <!-- Header -->
+    <div class="header">
+      <button class="back-btn">←</button>
+      <span class="header-title">WORD SEARCH</span>
+      <div class="header-scores">
+        <div class="score-badge active">
+          <span class="heart">💗</span>
+          <span>You: 45</span>
+        </div>
+        <div class="score-badge">
+          <span>Kilu: 30</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Selection Bubble (shows current selection) -->
+    <div class="selection-bubble">LOVE</div>
+
+    <!-- Grid Section -->
+    <div class="grid-section">
+      <div class="grid-container">
+        <div class="grid-inner">
+          <div class="grid">
+            <!-- Row 1 -->
+            <div class="cell">H</div>
+            <div class="cell found-1">L</div>
+            <div class="cell found-1">O</div>
+            <div class="cell found-1">V</div>
+            <div class="cell found-1">E</div>
+            <div class="cell">R</div>
+            <div class="cell">T</div>
+            <div class="cell">S</div>
+            <div class="cell">A</div>
+            <div class="cell">M</div>
+            <!-- Row 2 -->
+            <div class="cell">E</div>
+            <div class="cell">A</div>
+            <div class="cell">K</div>
+            <div class="cell">I</div>
+            <div class="cell">S</div>
+            <div class="cell">S</div>
+            <div class="cell">E</div>
+            <div class="cell">S</div>
+            <div class="cell">B</div>
+            <div class="cell">O</div>
+            <!-- Row 3 -->
+            <div class="cell">A</div>
+            <div class="cell">R</div>
+            <div class="cell hint">T</div>
+            <div class="cell">O</div>
+            <div class="cell">G</div>
+            <div class="cell">E</div>
+            <div class="cell">T</div>
+            <div class="cell">H</div>
+            <div class="cell">E</div>
+            <div class="cell">R</div>
+            <!-- Row 4 -->
+            <div class="cell">R</div>
+            <div class="cell">P</div>
+            <div class="cell">A</div>
+            <div class="cell">S</div>
+            <div class="cell">S</div>
+            <div class="cell">I</div>
+            <div class="cell">O</div>
+            <div class="cell">N</div>
+            <div class="cell">D</div>
+            <div class="cell">E</div>
+            <!-- Row 5 -->
+            <div class="cell">T</div>
+            <div class="cell selected">L</div>
+            <div class="cell selected">O</div>
+            <div class="cell selected">V</div>
+            <div class="cell selected">E</div>
+            <div class="cell">C</div>
+            <div class="cell">A</div>
+            <div class="cell">R</div>
+            <div class="cell">E</div>
+            <div class="cell">S</div>
+            <!-- Row 6 -->
+            <div class="cell">S</div>
+            <div class="cell">H</div>
+            <div class="cell">A</div>
+            <div class="cell">R</div>
+            <div class="cell">E</div>
+            <div class="cell">D</div>
+            <div class="cell">F</div>
+            <div class="cell">U</div>
+            <div class="cell">N</div>
+            <div class="cell">T</div>
+            <!-- Row 7 -->
+            <div class="cell found-2">C</div>
+            <div class="cell found-2">U</div>
+            <div class="cell found-2">D</div>
+            <div class="cell found-2">D</div>
+            <div class="cell found-2">L</div>
+            <div class="cell found-2">E</div>
+            <div class="cell">T</div>
+            <div class="cell">R</div>
+            <div class="cell">U</div>
+            <div class="cell">S</div>
+            <!-- Row 8 -->
+            <div class="cell">D</div>
+            <div class="cell">R</div>
+            <div class="cell">E</div>
+            <div class="cell">A</div>
+            <div class="cell">M</div>
+            <div class="cell">S</div>
+            <div class="cell">P</div>
+            <div class="cell">A</div>
+            <div class="cell">R</div>
+            <div class="cell">K</div>
+            <!-- Row 9 -->
+            <div class="cell">J</div>
+            <div class="cell">O</div>
+            <div class="cell">Y</div>
+            <div class="cell">F</div>
+            <div class="cell">U</div>
+            <div class="cell">L</div>
+            <div class="cell">W</div>
+            <div class="cell">A</div>
+            <div class="cell">R</div>
+            <div class="cell">M</div>
+            <!-- Row 10 -->
+            <div class="cell">B</div>
+            <div class="cell">L</div>
+            <div class="cell">I</div>
+            <div class="cell">S</div>
+            <div class="cell">S</div>
+            <div class="cell">F</div>
+            <div class="cell">U</div>
+            <div class="cell">L</div>
+            <div class="cell">Y</div>
+            <div class="cell">Z</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Word Bank -->
+    <div class="word-bank">
+      <div class="word-bank-header">
+        <span class="word-bank-title">FIND THESE WORDS</span>
+        <span class="word-bank-count">2 / 12</span>
+      </div>
+      <div class="word-grid">
+        <div class="word-item found found-1">LOVE</div>
+        <div class="word-item found found-2">CUDDLE</div>
+        <div class="word-item">KISSES</div>
+        <div class="word-item">TOGETHER</div>
+        <div class="word-item">PASSION</div>
+        <div class="word-item">CARESS</div>
+        <div class="word-item">SHARED</div>
+        <div class="word-item">DREAMS</div>
+        <div class="word-item">JOYFUL</div>
+        <div class="word-item">WARM</div>
+        <div class="word-item">BLISS</div>
+        <div class="word-item">SPARK</div>
+      </div>
+    </div>
+
+    <!-- Action Bar -->
+    <div class="action-bar">
+      <button class="hint-btn">
+        <span class="emoji">💡</span>
+        <span>Hint (2)</span>
+      </button>
+      <div class="turn-progress">
+        <div class="progress-dots">
+          <div class="progress-dot filled"></div>
+          <div class="progress-dot"></div>
+          <div class="progress-dot"></div>
+        </div>
+        <span class="turn-text">1/3 FOUND</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Variant: Partner's Turn -->
+  <div class="variant-label">Partner's Turn State</div>
+
+  <div class="game-container" style="min-height: auto; padding-bottom: 20px;">
+    <div class="header">
+      <button class="back-btn">←</button>
+      <span class="header-title">WORD SEARCH</span>
+      <div class="header-scores">
+        <div class="score-badge">
+          <span>You: 45</span>
+        </div>
+        <div class="score-badge active">
+          <span class="heart">💗</span>
+          <span>Kilu: 30</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="action-bar" style="margin-top: 10px;">
+      <button class="hint-btn" style="opacity: 0.5;">
+        <span class="emoji">💡</span>
+        <span>Hint (2)</span>
+      </button>
+      <div class="turn-progress waiting">
+        <div class="progress-dots">
+          <div class="progress-dot"></div>
+          <div class="progress-dot"></div>
+          <div class="progress-dot"></div>
+        </div>
+        <span class="turn-text">PARTNER'S TURN</span>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

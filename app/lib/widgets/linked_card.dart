@@ -84,7 +84,7 @@ class _LinkedCardState extends State<LinkedCard> {
 
     // Only poll during partner's turn (when we're waiting)
     if (_gameState != null && !_gameState!.isMyTurn && !_gameState!.match.isCompleted) {
-      _pollingTimer = Timer.periodic(const Duration(seconds: 10), (_) {
+      _pollingTimer = Timer.periodic(const Duration(seconds: 5), (_) {
         if (mounted) {
           _loadGameState(silent: true);
         }

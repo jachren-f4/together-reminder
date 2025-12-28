@@ -10,8 +10,10 @@
     "2": { "type": "emoji", "content": "😊", "arrow": "down", "target_index": 13 },
     "3": { "type": "emoji", "content": "🤝", "arrow": "across", "target_index": 8 },
     "4": { "type": "text", "content": "After M", "arrow": "down", "target_index": 19 },
-    "5": { "type": "emoji", "content": "🧺", "arrow": "down", "target_index": 23 },
-    "6": { "type": "text", "content": "Voice quality", "arrow": "across", "target_index": 17 },
+    "5": {
+      "across": { "type": "text", "content": "Voice quality", "target_index": 17 },
+      "down": { "type": "emoji", "content": "🧺", "target_index": 23 }
+    },
     "7": { "type": "text", "content": "BA_L", "arrow": "down", "target_index": 32 },
     "8": { "type": "emoji", "content": "💃", "arrow": "across", "target_index": 29 },
     "9": { "type": "text", "content": "Before T", "arrow": "down", "target_index": 43 },

@@ -11,6 +11,7 @@ import 'firebase_config.dart';
 enum Brand {
   togetherRemind,
   holyCouples,
+  us2,
   // Future brands:
   // spicyCouples,
 }
@@ -99,6 +100,8 @@ class BrandConfig {
         return 'togetherremind';
       case Brand.holyCouples:
         return 'holycouples';
+      case Brand.us2:
+        return 'us2';
     }
   }
 }

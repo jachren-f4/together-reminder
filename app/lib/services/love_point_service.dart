@@ -287,4 +287,145 @@ class LovePointService {
       Logger.error('Error fetching LP from server', error: e, service: 'lovepoint');
     }
   }
+
+  // ============================================================================
+  // LP DAILY RESET STATUS
+  // ============================================================================
+
+  /// Fetch LP grant status for all content types
+  ///
+  /// Returns which activities have already earned LP today and when reset occurs.
+  /// Use this on intro screens to show accurate reward information.
+  static Future<LpDailyStatus?> fetchLpStatus() async {
+    try {
+      final response = await _apiClient.get('/api/sync/lp/status');
+
+      if (!response.success) {
+        Logger.error('Failed to fetch LP status', service: 'lovepoint');
+        return null;
+      }
+
+      final data = response.data;
+      if (data == null) return null;
+
+      return LpDailyStatus.fromJson(data);
+    } catch (e) {
+      Logger.error('Error fetching LP status', error: e, service: 'lovepoint');
+      return null;
+    }
+  }
+
+  /// Check if LP has been earned today for a specific content type
+  ///
+  /// Convenience method for intro screens.
+  /// [contentType] should be one of: classic_quiz, affirmation_quiz, you_or_me, linked, word_search
+  static Future<LpContentStatus> checkLpStatus(String contentType) async {
+    final status = await fetchLpStatus();
+    if (status == null) {
+      // Default to showing reward (fail open)
+      return LpContentStatus(
+        alreadyGrantedToday: false,
+        canPlayMore: true,
+        resetInMs: 0,
+      );
+    }
+
+    final contentStatus = status.status[contentType];
+    return LpContentStatus(
+      alreadyGrantedToday: contentStatus?.alreadyGrantedToday ?? false,
+      canPlayMore: contentStatus?.canPlayMore ?? true,
+      resetInMs: status.resetInMs,
+    );
+  }
+}
+
+/// LP grant status for all content types
+class LpDailyStatus {
+  final Map<String, LpContentTypeStatus> status;
+  final int resetInMs;
+  final String resetAt;
+
+  LpDailyStatus({
+    required this.status,
+    required this.resetInMs,
+    required this.resetAt,
+  });
+
+  factory LpDailyStatus.fromJson(Map<String, dynamic> json) {
+    final statusMap = <String, LpContentTypeStatus>{};
+    final rawStatus = json['status'] as Map<String, dynamic>? ?? {};
+
+    for (final entry in rawStatus.entries) {
+      statusMap[entry.key] = LpContentTypeStatus.fromJson(entry.value);
+    }
+
+    return LpDailyStatus(
+      status: statusMap,
+      resetInMs: json['resetInMs'] ?? 0,
+      resetAt: json['resetAt'] ?? '',
+    );
+  }
+
+  /// Format reset time as human-readable string (e.g., "5h 30m")
+  String get resetTimeFormatted {
+    if (resetInMs <= 0) return 'now';
+
+    final hours = resetInMs ~/ (1000 * 60 * 60);
+    final minutes = (resetInMs % (1000 * 60 * 60)) ~/ (1000 * 60);
+
+    if (hours > 0 && minutes > 0) {
+      return '${hours}h ${minutes}m';
+    } else if (hours > 0) {
+      return '${hours}h';
+    } else {
+      return '${minutes}m';
+    }
+  }
+}
+
+/// Status for a single content type
+class LpContentTypeStatus {
+  final bool alreadyGrantedToday;
+  final bool canPlayMore;
+
+  LpContentTypeStatus({
+    required this.alreadyGrantedToday,
+    required this.canPlayMore,
+  });
+
+  factory LpContentTypeStatus.fromJson(Map<String, dynamic> json) {
+    return LpContentTypeStatus(
+      alreadyGrantedToday: json['alreadyGrantedToday'] ?? false,
+      canPlayMore: json['canPlayMore'] ?? true,
+    );
+  }
+}
+
+/// Simple status for a specific content type (used by intro screens)
+class LpContentStatus {
+  final bool alreadyGrantedToday;
+  final bool canPlayMore;
+  final int resetInMs;
+
+  LpContentStatus({
+    required this.alreadyGrantedToday,
+    required this.canPlayMore,
+    required this.resetInMs,
+  });
+
+  /// Format reset time as human-readable string
+  String get resetTimeFormatted {
+    if (resetInMs <= 0) return 'now';
+
+    final hours = resetInMs ~/ (1000 * 60 * 60);
+    final minutes = (resetInMs % (1000 * 60 * 60)) ~/ (1000 * 60);
+
+    if (hours > 0 && minutes > 0) {
+      return '${hours}h ${minutes}m';
+    } else if (hours > 0) {
+      return '${hours}h';
+    } else {
+      return '${minutes}m';
+    }
+  }
 }

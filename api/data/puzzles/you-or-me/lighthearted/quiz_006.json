@@ -1,6 +1,6 @@
 {
   "quizId": "quiz_006",
-  "title": "Lighthearted Quiz 6",
+  "title": "Pet Peeves",
   "branch": "lighthearted",
   "questions": [
     {
@@ -33,5 +33,6 @@
       "prompt": "Who is more",
       "content": "Likely to stay in touch with old friends"
     }
-  ]
+  ],
+  "description": "Everyone has quirks that bug their partner. Find out where you each stand!"
 }

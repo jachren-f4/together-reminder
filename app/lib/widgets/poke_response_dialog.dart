@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:togetherremind/services/poke_service.dart';
 import 'package:togetherremind/services/poke_animation_service.dart';
 import 'package:togetherremind/services/storage_service.dart';
 import 'package:togetherremind/theme/app_theme.dart';
 import '../config/brand/brand_loader.dart';
+import '../config/brand/brand_config.dart';
+import '../config/brand/us2_theme.dart';
 
 class PokeResponseDialog extends StatelessWidget {
   final String pokeId;
@@ -81,8 +84,15 @@ class PokeResponseDialog extends StatelessWidget {
     }
   }
 
+  bool get _isUs2 => BrandLoader().config.brand == Brand.us2;
+
   @override
   Widget build(BuildContext context) {
+    if (_isUs2) return _buildUs2Dialog(context);
+    return _buildLiiaDialog(context);
+  }
+
+  Widget _buildLiiaDialog(BuildContext context) {
     return Center(
       child: Material(
         color: Colors.transparent,
@@ -173,6 +183,112 @@ class PokeResponseDialog extends StatelessWidget {
       ),
     );
   }
+
+  Widget _buildUs2Dialog(BuildContext context) {
+    return Center(
+      child: Material(
+        color: Colors.transparent,
+        child: Container(
+          margin: const EdgeInsets.symmetric(horizontal: 30),
+          padding: const EdgeInsets.all(30),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(24),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.15),
+                blurRadius: 60,
+                offset: const Offset(0, 20),
+              ),
+            ],
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // Emoji with elastic animation
+              TweenAnimationBuilder<double>(
+                tween: Tween(begin: 0.0, end: 1.0),
+                duration: const Duration(milliseconds: 600),
+                curve: Curves.elasticOut,
+                builder: (context, value, child) {
+                  return Transform.scale(
+                    scale: value,
+                    child: child,
+                  );
+                },
+                child: Text(
+                  emoji,
+                  style: const TextStyle(fontSize: 80),
+                ),
+              ),
+              const SizedBox(height: 20),
+
+              // Title with gradient partner name
+              RichText(
+                textAlign: TextAlign.center,
+                text: TextSpan(
+                  style: GoogleFonts.playfairDisplay(
+                    fontSize: 24,
+                    fontWeight: FontWeight.w600,
+                    color: Us2Theme.textDark,
+                  ),
+                  children: [
+                    TextSpan(
+                      text: fromName,
+                      style: GoogleFonts.playfairDisplay(
+                        fontSize: 24,
+                        fontWeight: FontWeight.w600,
+                        foreground: Paint()
+                          ..shader = const LinearGradient(
+                            colors: [Us2Theme.gradientAccentStart, Us2Theme.gradientAccentEnd],
+                          ).createShader(const Rect.fromLTWH(0, 0, 100, 30)),
+                      ),
+                    ),
+                    const TextSpan(text: ' poked you!'),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 12),
+
+              // Subtitle
+              Text(
+                'How do you want to respond?',
+                style: GoogleFonts.nunito(
+                  fontSize: 15,
+                  color: Us2Theme.textMedium,
+                ),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 30),
+
+              // Response buttons
+              Row(
+                children: [
+                  Expanded(
+                    child: _Us2ResponseButton(
+                      emoji: '❤️',
+                      label: 'Send Back',
+                      onTap: () => _sendPokeBack(context),
+                      isPrimary: true,
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: _Us2ResponseButton(
+                      emoji: '🙂',
+                      label: 'Smile',
+                      onTap: () => _acknowledge(context),
+                      isPrimary: false,
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
 }
 
 class _ResponseButton extends StatelessWidget {
@@ -212,6 +328,62 @@ class _ResponseButton extends StatelessWidget {
                 fontSize: 14,
                 fontWeight: FontWeight.w600,
                 color: isPrimary ? BrandLoader().colors.textOnPrimary : AppTheme.textPrimary,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _Us2ResponseButton extends StatelessWidget {
+  final String emoji;
+  final String label;
+  final VoidCallback onTap;
+  final bool isPrimary;
+
+  const _Us2ResponseButton({
+    required this.emoji,
+    required this.label,
+    required this.onTap,
+    required this.isPrimary,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 16),
+        decoration: BoxDecoration(
+          gradient: isPrimary ? Us2Theme.accentGradient : null,
+          color: isPrimary ? null : Us2Theme.cream,
+          border: isPrimary ? null : Border.all(color: Us2Theme.beige, width: 2),
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: isPrimary
+              ? [
+                  BoxShadow(
+                    color: Us2Theme.glowPink,
+                    blurRadius: 20,
+                    offset: const Offset(0, 6),
+                  ),
+                ]
+              : null,
+        ),
+        child: Column(
+          children: [
+            Text(
+              emoji,
+              style: const TextStyle(fontSize: 32),
+            ),
+            const SizedBox(height: 4),
+            Text(
+              label,
+              style: GoogleFonts.nunito(
+                fontSize: 14,
+                fontWeight: FontWeight.w600,
+                color: isPrimary ? Colors.white : Us2Theme.textDark,
               ),
             ),
           ],

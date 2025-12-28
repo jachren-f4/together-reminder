@@ -16,7 +16,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
 # In Windows, build-name is used as the major, minor, and patch parts
 # of the product and file versions while build-number is used as the build suffix.
-version: 1.0.0+8
+version: 1.0.0+25
 
 environment:
   sdk: ^3.9.2
@@ -184,6 +184,45 @@ flutter:
     - assets/brands/holycouples/images/quests/
     - assets/brands/holycouples/words/
     - assets/brands/holycouples/videos/
+    # Brand-specific content (Us 2.0) - Legacy flat files
+    - assets/brands/us2/data/
+    - assets/brands/us2/data/_legacy/
+    # Brand-specific content (Us 2.0) - Branch content
+    - assets/brands/us2/data/classic-quiz/
+    - assets/brands/us2/data/classic-quiz/lighthearted/
+    - assets/brands/us2/data/classic-quiz/meaningful/
+    - assets/brands/us2/data/classic-quiz/spicy/
+    - assets/brands/us2/data/classic-quiz/connection/
+    - assets/brands/us2/data/classic-quiz/attachment/
+    - assets/brands/us2/data/classic-quiz/growth/
+    - assets/brands/us2/data/affirmation/
+    - assets/brands/us2/data/affirmation/emotional/
+    - assets/brands/us2/data/affirmation/practical/
+    - assets/brands/us2/data/affirmation/spiritual/
+    - assets/brands/us2/data/affirmation/connection/
+    - assets/brands/us2/data/affirmation/attachment/
+    - assets/brands/us2/data/affirmation/growth/
+    - assets/brands/us2/data/you-or-me/
+    - assets/brands/us2/data/you-or-me/playful/
+    - assets/brands/us2/data/you-or-me/reflective/
+    - assets/brands/us2/data/you-or-me/intimate/
+    - assets/brands/us2/data/you-or-me/connection/
+    - assets/brands/us2/data/you-or-me/attachment/
+    - assets/brands/us2/data/you-or-me/growth/
+    - assets/brands/us2/data/linked/
+    - assets/brands/us2/data/linked/casual/
+    - assets/brands/us2/data/linked/romantic/
+    - assets/brands/us2/data/linked/adult/
+    - assets/brands/us2/data/word-search/
+    - assets/brands/us2/data/word-search/everyday/
+    - assets/brands/us2/data/word-search/passionate/
+    - assets/brands/us2/data/word-search/naughty/
+    # Brand-specific assets (Us 2.0)
+    - assets/brands/us2/animations/
+    - assets/brands/us2/images/
+    - assets/brands/us2/images/quests/
+    - assets/brands/us2/words/
+    - assets/brands/us2/videos/
     # Shared assets (same across all brands)
     - assets/shared/gfx/
     - assets/shared/sounds/

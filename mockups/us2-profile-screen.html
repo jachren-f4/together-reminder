@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=390, height=844, initial-scale=1.0">
+    <title>Us 2.0 - Profile Screen</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Nunito:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-gradient-start: #FFD1C1;
+            --bg-gradient-end: #FFF5F0;
+            --accent-start: #FF6B6B;
+            --accent-end: #FF9F43;
+            --cream: #FFF8F0;
+            --beige: #F5E6D8;
+            --text-dark: #2D2D2D;
+            --text-medium: #666666;
+            --text-light: #999999;
+            --gold: #C9A875;
+            --glow-pink: rgba(255, 107, 107, 0.4);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            background: linear-gradient(180deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
+            min-height: 100vh;
+            padding-bottom: 40px;
+        }
+
+        .container {
+            max-width: 390px;
+            margin: 0 auto;
+        }
+
+        /* Header */
+        .header {
+            padding: 60px 24px 28px;
+            text-align: center;
+        }
+
+        .header-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 32px;
+            font-weight: 600;
+            background: linear-gradient(135deg, var(--accent-start), var(--accent-end));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 8px;
+        }
+
+        .header-subtitle {
+            font-size: 14px;
+            color: var(--text-medium);
+            font-style: italic;
+        }
+
+        .header-subtitle span {
+            font-family: 'Playfair Display', serif;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        /* Hero Stats Card */
+        .hero-stats {
+            margin: 0 20px 20px;
+            background: white;
+            border-radius: 24px;
+            padding: 28px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+        }
+
+        .hero-stats-row {
+            display: flex;
+            align-items: center;
+        }
+
+        .hero-stat {
+            flex: 1;
+            text-align: center;
+        }
+
+        .hero-stat-value {
+            font-family: 'Playfair Display', serif;
+            font-size: 48px;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--accent-start), var(--accent-end));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-stat-label {
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            color: var(--text-light);
+            margin-top: 4px;
+        }
+
+        .hero-divider {
+            width: 2px;
+            height: 60px;
+            background: linear-gradient(180deg, var(--accent-start), var(--accent-end));
+            border-radius: 1px;
+            margin: 0 20px;
+        }
+
+        /* Current Arena Card */
+        .arena-card {
+            margin: 0 20px 20px;
+            background: white;
+            border-radius: 24px;
+            padding: 24px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .arena-emoji {
+            font-size: 64px;
+        }
+
+        .arena-info {
+            flex: 1;
+        }
+
+        .arena-tier-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--accent-start), var(--accent-end));
+            color: white;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            padding: 4px 10px;
+            border-radius: 4px;
+            margin-bottom: 8px;
+        }
+
+        .arena-name {
+            font-family: 'Playfair Display', serif;
+            font-size: 26px;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        /* Progress Section */
+        .progress-section {
+            margin: 0 20px 20px;
+            background: white;
+            border-radius: 24px;
+            padding: 24px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+        }
+
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .progress-next {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .progress-remaining {
+            font-size: 12px;
+            color: var(--text-medium);
+        }
+
+        .progress-row {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .progress-bar-container {
+            flex: 1;
+            height: 16px;
+            background: var(--beige);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            width: 65%;
+            background: linear-gradient(90deg, var(--accent-start), var(--accent-end));
+            border-radius: 8px;
+        }
+
+        .progress-target-emoji {
+            font-size: 32px;
+        }
+
+        /* Together For Card */
+        .together-card {
+            margin: 0 20px 20px;
+            background: linear-gradient(135deg, var(--accent-start), var(--accent-end));
+            border-radius: 24px;
+            padding: 24px;
+            box-shadow: 0 12px 40px var(--glow-pink);
+        }
+
+        .together-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .together-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 22px;
+            font-weight: 600;
+            color: white;
+        }
+
+        .together-edit {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 20px;
+            cursor: pointer;
+        }
+
+        .duration-boxes {
+            display: flex;
+            gap: 12px;
+        }
+
+        .duration-box {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 16px;
+            padding: 20px 12px;
+            text-align: center;
+        }
+
+        .duration-value {
+            font-family: 'Playfair Display', serif;
+            font-size: 36px;
+            font-weight: 700;
+            color: white;
+        }
+
+        .duration-label {
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.8);
+            margin-top: 4px;
+        }
+
+        /* Activity Card */
+        .activity-card {
+            margin: 0 20px 20px;
+            background: white;
+            border-radius: 24px;
+            padding: 24px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+        }
+
+        .activity-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 22px;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 20px;
+        }
+
+        .activity-headers {
+            display: flex;
+            margin-bottom: 16px;
+            padding-left: 48px;
+        }
+
+        .activity-header {
+            flex: 1;
+            text-align: center;
+        }
+
+        .activity-header-icon {
+            font-size: 20px;
+            margin-bottom: 6px;
+            opacity: 0.5;
+        }
+
+        .activity-header-label {
+            font-size: 10px;
+            color: var(--text-light);
+            line-height: 1.3;
+        }
+
+        .activity-row {
+            display: flex;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .activity-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 700;
+            margin-right: 12px;
+        }
+
+        .activity-avatar.user {
+            background: linear-gradient(135deg, var(--accent-start), var(--accent-end));
+            color: white;
+        }
+
+        .activity-avatar.partner {
+            background: var(--beige);
+            color: var(--text-dark);
+        }
+
+        .activity-stat {
+            flex: 1;
+            text-align: center;
+        }
+
+        .activity-pill {
+            display: inline-block;
+            padding: 10px 0;
+            width: 90%;
+            border-radius: 20px;
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .activity-pill.user {
+            background: linear-gradient(135deg, var(--accent-start), var(--accent-end));
+            color: white;
+        }
+
+        .activity-pill.partner {
+            background: var(--beige);
+            color: var(--text-dark);
+        }
+
+        /* Account Section */
+        .account-section {
+            margin: 0 20px 20px;
+        }
+
+        .account-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 12px;
+        }
+
+        .signout-button {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 16px 20px;
+            background: white;
+            border: 2px solid #FF6B6B;
+            border-radius: 16px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .signout-button:hover {
+            background: #FFF0F0;
+        }
+
+        .signout-icon {
+            font-size: 20px;
+        }
+
+        .signout-text {
+            flex: 1;
+            font-size: 16px;
+            font-weight: 500;
+            color: #FF6B6B;
+        }
+
+        .signout-arrow {
+            color: #FFB3B3;
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="header-title">Progress</div>
+            <div class="header-subtitle"><span>Joakim</span> & <span>Taija</span></div>
+        </div>
+
+        <!-- Hero Stats -->
+        <div class="hero-stats">
+            <div class="hero-stats-row">
+                <div class="hero-stat">
+                    <div class="hero-stat-value">1,240</div>
+                    <div class="hero-stat-label">LOVE POINTS</div>
+                </div>
+                <div class="hero-divider"></div>
+                <div class="hero-stat">
+                    <div class="hero-stat-value">12</div>
+                    <div class="hero-stat-label">DAY STREAK</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Current Arena -->
+        <div class="arena-card">
+            <div class="arena-emoji">💕</div>
+            <div class="arena-info">
+                <div class="arena-tier-badge">TIER 2 OF 5</div>
+                <div class="arena-name">Sweethearts</div>
+            </div>
+        </div>
+
+        <!-- Progress to Next -->
+        <div class="progress-section">
+            <div class="progress-header">
+                <div class="progress-next">Next: Lovebirds</div>
+                <div class="progress-remaining">260 LP remaining</div>
+            </div>
+            <div class="progress-row">
+                <div class="progress-bar-container">
+                    <div class="progress-bar-fill"></div>
+                </div>
+                <div class="progress-target-emoji">🐦</div>
+            </div>
+        </div>
+
+        <!-- Together For -->
+        <div class="together-card">
+            <div class="together-header">
+                <div class="together-title">Together for</div>
+                <div class="together-edit">✏️</div>
+            </div>
+            <div class="duration-boxes">
+                <div class="duration-box">
+                    <div class="duration-value">2</div>
+                    <div class="duration-label">Years</div>
+                </div>
+                <div class="duration-box">
+                    <div class="duration-value">5</div>
+                    <div class="duration-label">Months</div>
+                </div>
+                <div class="duration-box">
+                    <div class="duration-value">18</div>
+                    <div class="duration-label">Days</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Your Activity -->
+        <div class="activity-card">
+            <div class="activity-title">Your Activity</div>
+
+            <div class="activity-headers">
+                <div class="activity-header">
+                    <div class="activity-header-icon">✓</div>
+                    <div class="activity-header-label">Activities<br>completed</div>
+                </div>
+                <div class="activity-header">
+                    <div class="activity-header-icon">🔥</div>
+                    <div class="activity-header-label">Current streak<br>days</div>
+                </div>
+                <div class="activity-header">
+                    <div class="activity-header-icon">🏆</div>
+                    <div class="activity-header-label">Couple games<br>won</div>
+                </div>
+            </div>
+
+            <div class="activity-row">
+                <div class="activity-avatar user">J</div>
+                <div class="activity-stat"><span class="activity-pill user">42</span></div>
+                <div class="activity-stat"><span class="activity-pill user">12</span></div>
+                <div class="activity-stat"><span class="activity-pill user">8</span></div>
+            </div>
+
+            <div class="activity-row">
+                <div class="activity-avatar partner">T</div>
+                <div class="activity-stat"><span class="activity-pill partner">38</span></div>
+                <div class="activity-stat"><span class="activity-pill partner">10</span></div>
+                <div class="activity-stat"><span class="activity-pill partner">6</span></div>
+            </div>
+        </div>
+
+        <!-- Account Section -->
+        <div class="account-section">
+            <div class="account-title">Account</div>
+            <div class="signout-button">
+                <span class="signout-icon">🚪</span>
+                <span class="signout-text">Sign Out</span>
+                <span class="signout-arrow">›</span>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

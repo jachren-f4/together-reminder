@@ -164,7 +164,7 @@ QuestType (Enum)
 | **Format Type** | `'classic'` | `'affirmation'` | `'speed_round'` |
 | **Answer Type** | Multiple choice (4 options) | 5-point Likert scale | Multiple choice (4 options) |
 | **Answer Storage** | `[0, 2, 1, 3]` (option indices) | `[3, 4, 2, 5, 1]` (scale values 1-5) | `[0, 2, 1, 3]` (option indices) |
-| **Question Count** | 5 questions | 5 questions | 10 questions |
+| **Question Count** | 5 questions | 5 questions | 5 questions |
 | **Scoring** | Match percentage (compare partners) | Individual score (self-assessment) | Match % + time bonus |
 | **UI Widget** | Option buttons | Heart-based scale widget | Option buttons + timer |
 | **LP Reward** | 30 LP (both complete) | 30 LP (both complete) | 30 LP base + streak bonus |

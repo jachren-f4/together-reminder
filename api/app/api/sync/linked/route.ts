@@ -359,15 +359,15 @@ export const POST = withAuthOrDevBypass(async (req, userId, email) => {
 
       const insertResult = await query(
         `INSERT INTO linked_matches (
-          couple_id, puzzle_id, status, board_state, current_rack,
+          couple_id, puzzle_id, branch, status, board_state, current_rack,
           current_turn_user_id, turn_number, player1_score, player2_score,
           player1_vision, player2_vision, locked_cell_count, total_answer_cells,
           player1_id, player2_id, created_at
         )
-        VALUES ($1, $2, 'active', $3, $4, $5, 1, 0, 0, 2, 2, 0, $6, $7, $8, NOW())
+        VALUES ($1, $2, $3, 'active', $4, $5, $6, 1, 0, 0, 2, 2, 0, $7, $8, $9, NOW())
         RETURNING *`,
         [
-          coupleId, puzzleId, JSON.stringify(boardState), initialRack,
+          coupleId, puzzleId, branch, JSON.stringify(boardState), initialRack,
           firstPlayer, totalAnswerCells, user1_id, user2_id
         ]
       );
@@ -474,8 +474,8 @@ export const GET = withAuthOrDevBypass(async (req, userId, email) => {
       ? JSON.parse(match.board_state)
       : match.board_state || {};
 
-    // Load puzzle for client
-    const puzzle = loadPuzzle(match.puzzle_id);
+    // Load puzzle for client (use stored branch, fallback to casual for old matches)
+    const puzzle = loadPuzzle(match.puzzle_id, match.branch || 'casual');
 
     return NextResponse.json({
       success: true,

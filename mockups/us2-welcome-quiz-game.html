@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Us 2.0 - Welcome Quiz Game</title>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-gradient-start: #FFD1C1;
+            --bg-gradient-end: #FFF5F0;
+            --primary-pink: #FF5E62;
+            --gradient-start: #FF6B6B;
+            --gradient-end: #FF9F43;
+            --card-salmon: #FF7B6B;
+            --card-salmon-dark: #FF6B5B;
+            --cream: #FFF8F0;
+            --beige: #F5E6D8;
+            --text-dark: #2D2D2D;
+            --text-medium: #6B6B6B;
+            --text-light: #9B9B9B;
+            --glow-pink: rgba(255, 107, 107, 0.5);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            min-height: 100vh;
+            background: linear-gradient(180deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .phone-frame {
+            width: 390px;
+            height: 844px;
+            background: linear-gradient(180deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
+            border-radius: 40px;
+            overflow: hidden;
+            box-shadow: 0 25px 80px rgba(0, 0, 0, 0.15);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            padding: 60px 20px 16px;
+            background: rgba(255, 255, 255, 0.5);
+        }
+
+        .header-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 12px;
+        }
+
+        .progress-text {
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            color: var(--text-medium);
+        }
+
+        .header-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .counter-badge {
+            padding: 6px 14px;
+            background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+            border-radius: 15px;
+            font-size: 13px;
+            font-weight: 700;
+            color: white;
+        }
+
+        .progress-bar {
+            height: 6px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            width: 40%;
+            background: linear-gradient(90deg, var(--gradient-start), var(--gradient-end));
+            border-radius: 3px;
+        }
+
+        .content {
+            flex: 1;
+            padding: 32px 24px;
+            overflow-y: auto;
+        }
+
+        .question-text {
+            font-family: 'Playfair Display', serif;
+            font-size: 24px;
+            font-weight: 600;
+            color: var(--text-dark);
+            text-align: center;
+            line-height: 1.4;
+            margin-bottom: 32px;
+        }
+
+        .option {
+            padding: 16px;
+            background: var(--cream);
+            border: 1px solid var(--beige);
+            border-radius: 16px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .option:hover {
+            background: white;
+            border-color: var(--primary-pink);
+        }
+
+        .option.selected {
+            background: linear-gradient(135deg, var(--card-salmon), var(--card-salmon-dark));
+            border: none;
+            box-shadow: 0 6px 20px rgba(255, 107, 107, 0.35);
+        }
+
+        .option-circle {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.5);
+            border: 2px solid var(--text-medium);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--text-dark);
+            flex-shrink: 0;
+        }
+
+        .option.selected .option-circle {
+            background: rgba(255, 255, 255, 0.3);
+            border-color: white;
+            color: white;
+        }
+
+        .option-text {
+            font-size: 15px;
+            color: var(--text-dark);
+            line-height: 1.4;
+            flex: 1;
+        }
+
+        .option.selected .option-text {
+            color: white;
+            font-weight: 600;
+        }
+
+        .option-check {
+            width: 22px;
+            height: 22px;
+            display: none;
+        }
+
+        .option.selected .option-check {
+            display: block;
+            color: white;
+        }
+
+        .footer {
+            padding: 20px 24px 40px;
+        }
+
+        .primary-button {
+            width: 100%;
+            padding: 18px 32px;
+            background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+            border: none;
+            border-radius: 30px;
+            font-family: 'Nunito', sans-serif;
+            font-size: 17px;
+            font-weight: 700;
+            color: white;
+            cursor: pointer;
+            box-shadow: 0 8px 25px var(--glow-pink);
+            transition: all 0.2s ease;
+        }
+
+        .primary-button:disabled {
+            background: var(--beige);
+            color: var(--text-light);
+            box-shadow: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="phone-frame">
+        <div class="header">
+            <div class="header-row">
+                <span class="progress-text">2/5</span>
+                <span class="header-title">Welcome Quiz</span>
+                <span class="counter-badge">2 of 5</span>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill"></div>
+            </div>
+        </div>
+
+        <div class="content">
+            <p class="question-text">
+                What's your favorite way to spend a lazy Sunday together?
+            </p>
+
+            <div class="option">
+                <div class="option-circle">A</div>
+                <span class="option-text">Netflix and chill at home</span>
+                <svg class="option-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+            </div>
+
+            <div class="option selected">
+                <div class="option-circle">B</div>
+                <span class="option-text">Brunch at our favorite spot</span>
+                <svg class="option-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+            </div>
+
+            <div class="option">
+                <div class="option-circle">C</div>
+                <span class="option-text">Going for a hike or walk</span>
+                <svg class="option-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+            </div>
+
+            <div class="option">
+                <div class="option-circle">D</div>
+                <span class="option-text">Cooking a big meal together</span>
+                <svg class="option-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+            </div>
+        </div>
+
+        <div class="footer">
+            <button class="primary-button">Next</button>
+        </div>
+    </div>
+</body>
+</html>

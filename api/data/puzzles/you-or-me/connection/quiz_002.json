@@ -1,6 +1,6 @@
 {
   "quizId": "quiz_002",
-  "title": "Connection Quiz 2",
+  "title": "Love Language",
   "branch": "connection",
   "questions": [
     {
@@ -33,5 +33,6 @@
       "prompt": "Who craves more...",
       "content": "Emotional closeness"
     }
-  ]
+  ],
+  "description": "Discover how you each give and receive love in your relationship."
 }

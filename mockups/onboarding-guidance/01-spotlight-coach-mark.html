@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Onboarding Variant 1: Spotlight Coach Mark</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            background: #fafafa;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 420px;
+            margin: 0 auto;
+            background: #fff;
+            border: 2px solid #000;
+            box-shadow: 8px 8px 0 rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+
+        .header {
+            border-bottom: 2px solid #000;
+            padding: 24px 20px;
+            text-align: center;
+        }
+
+        .title {
+            font-size: 32px;
+            font-weight: 400;
+            letter-spacing: 2px;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+        }
+
+        .subtitle {
+            font-size: 14px;
+            color: #666;
+            font-style: italic;
+        }
+
+        .stats {
+            border-bottom: 1px solid #000;
+            padding: 20px;
+        }
+
+        .stat-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .stat-value {
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .progress-bg {
+            height: 2px;
+            background: #e0e0e0;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: #000;
+            width: 0%;
+        }
+
+        .section {
+            padding: 20px;
+            padding-bottom: 0;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .section-heading {
+            font-size: 16px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .carousel-container {
+            position: relative;
+            margin: 0 -20px;
+            padding-bottom: 20px;
+        }
+
+        .carousel {
+            display: flex;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            gap: 16px;
+            padding: 0 20px;
+            scrollbar-width: none;
+        }
+
+        .carousel::-webkit-scrollbar {
+            display: none;
+        }
+
+        .quest-card {
+            flex: 0 0 calc(60%);
+            scroll-snap-align: center;
+            border: 1px solid #000;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: #fff;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .quest-card.highlighted {
+            z-index: 1001;
+            box-shadow: 0 0 0 4px #fff, 0 0 30px rgba(0,0,0,0.3);
+        }
+
+        .quest-image {
+            width: 100%;
+            height: 170px;
+            object-fit: cover;
+            border-bottom: 1px solid #000;
+            display: block;
+            background: linear-gradient(135deg, #f5f5f5 0%, #e0e0e0 100%);
+        }
+
+        .quest-content {
+            padding: 16px;
+        }
+
+        .quest-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 12px;
+        }
+
+        .quest-info {
+            flex: 1;
+        }
+
+        .quest-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .quest-desc {
+            font-size: 12px;
+            color: #666;
+            font-style: italic;
+        }
+
+        .reward {
+            font-size: 14px;
+            font-weight: 700;
+            border: 1px solid #000;
+            padding: 4px 10px;
+            background: #000;
+            color: #fff;
+        }
+
+        .quest-footer {
+            padding-top: 12px;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .status-badge {
+            display: inline-block;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 6px 12px;
+            border: 1px solid #000;
+            background: #fff;
+        }
+
+        /* ==========================================
+           SPOTLIGHT COACH MARK OVERLAY
+           ========================================== */
+
+        .coach-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 1000;
+            pointer-events: auto;
+        }
+
+        .coach-backdrop {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.85);
+            /* Spotlight cutout using radial gradient */
+            mask-image: radial-gradient(
+                ellipse 180px 280px at 50% 420px,
+                transparent 0%,
+                transparent 100%,
+                black 100%
+            );
+            -webkit-mask-image: radial-gradient(
+                ellipse 180px 280px at 50% 420px,
+                transparent 0%,
+                transparent 100%,
+                black 100%
+            );
+        }
+
+        .coach-content {
+            position: absolute;
+            top: 120px;
+            left: 50%;
+            transform: translateX(-50%);
+            text-align: center;
+            color: #fff;
+            max-width: 300px;
+            padding: 0 20px;
+        }
+
+        .coach-title {
+            font-size: 24px;
+            font-weight: 400;
+            margin-bottom: 12px;
+            letter-spacing: 1px;
+        }
+
+        .coach-message {
+            font-size: 16px;
+            line-height: 1.5;
+            opacity: 0.9;
+            margin-bottom: 20px;
+        }
+
+        .coach-arrow {
+            font-size: 48px;
+            animation: bounce 1s ease-in-out infinite;
+            margin-top: 10px;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(10px); }
+        }
+
+        .coach-hint {
+            position: absolute;
+            bottom: 100px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: rgba(255,255,255,0.6);
+            font-size: 14px;
+            font-style: italic;
+        }
+
+        .coach-dismiss {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            color: rgba(255,255,255,0.5);
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .coach-dismiss:hover {
+            color: #fff;
+        }
+
+        /* Step indicator dots */
+        .coach-steps {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+            margin-top: 16px;
+        }
+
+        .coach-step {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.3);
+        }
+
+        .coach-step.active {
+            background: #fff;
+            width: 24px;
+            border-radius: 4px;
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="title">Love Quest</div>
+            <div class="subtitle">Your Journey Begins</div>
+        </div>
+
+        <div class="stats">
+            <div class="stat-row">
+                <div class="stat-label">Party</div>
+                <div class="stat-value">You & Partner</div>
+            </div>
+            <div class="stat-row">
+                <div class="stat-label">Love Points</div>
+                <div class="stat-value">0</div>
+            </div>
+            <div class="progress-bg">
+                <div class="progress-bar"></div>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-heading">
+                <span>Daily Quests</span>
+            </div>
+
+            <div class="carousel-container">
+                <div class="carousel">
+                    <div class="quest-card highlighted" id="firstQuest">
+                        <div class="quest-image"></div>
+                        <div class="quest-content">
+                            <div class="quest-header">
+                                <div class="quest-info">
+                                    <div class="quest-title">Classic Quiz</div>
+                                    <div class="quest-desc">Answer five questions together</div>
+                                </div>
+                                <div class="reward">+30</div>
+                            </div>
+                            <div class="quest-footer">
+                                <span class="status-badge">Your Turn</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="quest-card" style="opacity: 0.3;">
+                        <div class="quest-image"></div>
+                        <div class="quest-content">
+                            <div class="quest-header">
+                                <div class="quest-info">
+                                    <div class="quest-title">Affirmation Quiz</div>
+                                    <div class="quest-desc">Coming soon...</div>
+                                </div>
+                                <div class="reward">+30</div>
+                            </div>
+                            <div class="quest-footer">
+                                <span class="status-badge" style="opacity: 0.5;">Locked</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- COACH MARK OVERLAY -->
+    <div class="coach-overlay" id="coachOverlay">
+        <div class="coach-backdrop"></div>
+
+        <div class="coach-content">
+            <div class="coach-title">Let's Start Here!</div>
+            <div class="coach-message">
+                Tap the <strong>Classic Quiz</strong> to begin your first quest together. Answer questions about each other and earn Love Points!
+            </div>
+            <div class="coach-arrow">↓</div>
+            <div class="coach-steps">
+                <div class="coach-step active"></div>
+                <div class="coach-step"></div>
+                <div class="coach-step"></div>
+            </div>
+        </div>
+
+        <div class="coach-hint">Tap the card to continue</div>
+        <div class="coach-dismiss" onclick="dismissCoach()">Skip Tutorial</div>
+    </div>
+
+    <script>
+        function dismissCoach() {
+            document.getElementById('coachOverlay').classList.add('hidden');
+            document.getElementById('firstQuest').classList.remove('highlighted');
+        }
+
+        document.getElementById('firstQuest').addEventListener('click', function() {
+            dismissCoach();
+            // Would navigate to quiz
+        });
+    </script>
+</body>
+</html>

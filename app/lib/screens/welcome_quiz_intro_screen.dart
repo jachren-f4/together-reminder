@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import '../config/brand/brand_loader.dart';
+import '../config/brand/brand_config.dart';
+import '../config/brand/us2_theme.dart';
 import '../widgets/editorial/editorial.dart';
 import '../widgets/animations/animations.dart';
 import '../services/storage_service.dart';
@@ -19,6 +23,8 @@ class WelcomeQuizIntroScreen extends StatefulWidget {
 class _WelcomeQuizIntroScreenState extends State<WelcomeQuizIntroScreen>
     with DramaticScreenMixin {
   bool _isLoading = false;
+
+  bool get _isUs2 => BrandLoader().config.brand == Brand.us2;
 
   @override
   bool get enableConfetti => false;
@@ -41,6 +47,8 @@ class _WelcomeQuizIntroScreenState extends State<WelcomeQuizIntroScreen>
 
   @override
   Widget build(BuildContext context) {
+    if (_isUs2) return _buildUs2Screen();
+
     final partner = StorageService().getPartner();
     final partnerName = partner?.name ?? 'your partner';
 
@@ -222,6 +230,216 @@ class _WelcomeQuizIntroScreenState extends State<WelcomeQuizIntroScreen>
             ],
           ),
         ),
+        ),
+      ),
+    );
+  }
+
+  // ===========================================
+  // Us 2.0 Implementation
+  // ===========================================
+
+  Widget _buildUs2Screen() {
+    return wrapWithDramaticEffects(
+      PopScope(
+        canPop: false,
+        child: Scaffold(
+          body: Container(
+            decoration: const BoxDecoration(
+              gradient: Us2Theme.backgroundGradient,
+            ),
+            child: SafeArea(
+              child: Column(
+                children: [
+                  // Header
+                  _buildUs2Header(),
+
+                  // Content
+                  Expanded(
+                    child: SingleChildScrollView(
+                      padding: const EdgeInsets.all(24),
+                      child: Column(
+                        children: [
+                          const SizedBox(height: 20),
+
+                          // Heart emoji circle
+                          _buildUs2EmojiCircle(),
+
+                          const SizedBox(height: 24),
+
+                          // Subtitle
+                          Text(
+                            "Let's start with some fun icebreaker questions about your relationship",
+                            textAlign: TextAlign.center,
+                            style: GoogleFonts.nunito(
+                              fontSize: 16,
+                              color: Us2Theme.textMedium,
+                              height: 1.6,
+                            ),
+                          ),
+
+                          const SizedBox(height: 32),
+
+                          // How It Works info card
+                          _buildUs2InfoCard(),
+
+                          const SizedBox(height: 24),
+
+                          // Unlock preview
+                          Text(
+                            'COMPLETING THIS UNLOCKS: DAILY QUESTS',
+                            textAlign: TextAlign.center,
+                            style: GoogleFonts.nunito(
+                              fontSize: 12,
+                              fontWeight: FontWeight.w600,
+                              letterSpacing: 1.5,
+                              color: Us2Theme.textLight,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+
+                  // Footer with button
+                  _buildUs2Footer(),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildUs2Header() {
+    return Container(
+      padding: const EdgeInsets.fromLTRB(24, 20, 24, 20),
+      child: Column(
+        children: [
+          // Badge
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+            decoration: BoxDecoration(
+              gradient: Us2Theme.accentGradient,
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: Text(
+              'WELCOME',
+              style: GoogleFonts.nunito(
+                fontSize: 11,
+                fontWeight: FontWeight.w700,
+                letterSpacing: 2,
+                color: Colors.white,
+              ),
+            ),
+          ),
+          const SizedBox(height: 16),
+          Text(
+            'Welcome Quiz',
+            style: GoogleFonts.playfairDisplay(
+              fontSize: 32,
+              fontWeight: FontWeight.w600,
+              color: Us2Theme.textDark,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildUs2EmojiCircle() {
+    return Container(
+      width: 100,
+      height: 100,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        shape: BoxShape.circle,
+        boxShadow: [
+          BoxShadow(
+            color: Us2Theme.glowPink.withOpacity(0.2),
+            blurRadius: 30,
+            offset: const Offset(0, 8),
+          ),
+        ],
+      ),
+      child: const Center(
+        child: Text(
+          '💕',
+          style: TextStyle(fontSize: 48),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildUs2InfoCard() {
+    return Container(
+      padding: const EdgeInsets.all(24),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 20,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              const Text('🎯', style: TextStyle(fontSize: 24)),
+              const SizedBox(width: 12),
+              Text(
+                'How It Works',
+                style: GoogleFonts.playfairDisplay(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600,
+                  color: Us2Theme.textDark,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+          Text(
+            'Answer questions separately, then see how your answers compare. Do you really know each other?',
+            style: GoogleFonts.nunito(
+              fontSize: 15,
+              color: Us2Theme.textMedium,
+              height: 1.6,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildUs2Footer() {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(24, 0, 24, 40),
+      child: GestureDetector(
+        onTap: _isLoading ? null : _startQuiz,
+        child: Container(
+          width: double.infinity,
+          padding: const EdgeInsets.symmetric(vertical: 18),
+          decoration: BoxDecoration(
+            gradient: Us2Theme.accentGradient,
+            borderRadius: BorderRadius.circular(30),
+            boxShadow: Us2Theme.buttonGlowShadow,
+          ),
+          child: Center(
+            child: Text(
+              _isLoading ? 'Starting...' : 'Fill Out Quiz',
+              style: GoogleFonts.nunito(
+                fontSize: 17,
+                fontWeight: FontWeight.w700,
+                color: Colors.white,
+              ),
+            ),
+          ),
         ),
       ),
     );

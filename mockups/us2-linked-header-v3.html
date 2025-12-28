@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Us 2.0 - Linked Header Variant 3: Elegant Minimal</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-gradient-start: #FFD1C1;
+      --bg-gradient-end: #FFF5F0;
+      --gradient-accent-start: #FF6B6B;
+      --gradient-accent-end: #FF9F43;
+      --gold-light: #F5E6D0;
+      --gold-mid: #E8D5B8;
+      --gold-border: #C9A875;
+      --text-dark: #2D2D2D;
+      --letter-pink: #E91E63;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Nunito', sans-serif;
+      background: linear-gradient(180deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
+      min-height: 100vh;
+      max-width: 430px;
+      margin: 0 auto;
+      padding: 40px 0;
+    }
+
+    h3 {
+      text-align: center;
+      color: #666;
+      margin-bottom: 20px;
+      font-size: 14px;
+    }
+
+    /* ========================================
+       VARIANT 3: Elegant Minimal
+       - Cream background with subtle border
+       - Decorative title with hearts
+       - Inline scores with gradient text
+       ======================================== */
+    .header-v3 {
+      margin: 0 12px 40px;
+      background: linear-gradient(180deg, #FFFBF5 0%, #FFF5EE 100%);
+      border-radius: 16px;
+      padding: 14px 16px;
+      border: 1px solid rgba(201, 168, 117, 0.4);
+      box-shadow:
+        0 4px 16px rgba(0,0,0,0.08),
+        inset 0 1px 0 rgba(255,255,255,0.9);
+    }
+
+    .header-v3 .top-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 10px;
+    }
+
+    .header-v3 .back-btn {
+      width: 34px;
+      height: 34px;
+      background: linear-gradient(135deg, var(--gradient-accent-start) 0%, var(--gradient-accent-end) 100%);
+      border: none;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      color: white;
+      cursor: pointer;
+      box-shadow: 0 3px 8px rgba(255, 107, 107, 0.3);
+    }
+
+    .header-v3 .title-section {
+      flex: 1;
+      text-align: center;
+    }
+
+    .header-v3 .title {
+      font-family: 'Playfair Display', serif;
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--text-dark);
+      letter-spacing: 3px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .header-v3 .title .heart {
+      color: var(--letter-pink);
+      font-size: 14px;
+    }
+
+    .header-v3 .spacer {
+      width: 34px;
+    }
+
+    .header-v3 .divider {
+      height: 1px;
+      background: linear-gradient(90deg, transparent 0%, var(--gold-border) 20%, var(--gold-border) 80%, transparent 100%);
+      margin-bottom: 10px;
+    }
+
+    .header-v3 .scores-row {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 24px;
+    }
+
+    .header-v3 .score-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .header-v3 .score-item .label {
+      color: #888;
+    }
+
+    .header-v3 .score-item .value {
+      font-size: 18px;
+      background: linear-gradient(135deg, var(--gradient-accent-start) 0%, var(--gradient-accent-end) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .header-v3 .score-item.active {
+      position: relative;
+    }
+
+    .header-v3 .score-item.active::before {
+      content: '💗';
+      font-size: 12px;
+      margin-right: 4px;
+    }
+
+    .header-v3 .vs {
+      font-size: 12px;
+      color: #aaa;
+      font-style: italic;
+    }
+  </style>
+</head>
+<body>
+  <h3>Variant 3: Elegant Minimal with Gradient Scores</h3>
+
+  <div class="header-v3">
+    <div class="top-row">
+      <div class="back-btn">←</div>
+      <div class="title-section">
+        <span class="title">
+          <span class="heart">♥</span>
+          CROSSWORD
+          <span class="heart">♥</span>
+        </span>
+      </div>
+      <div class="spacer"></div>
+    </div>
+    <div class="divider"></div>
+    <div class="scores-row">
+      <div class="score-item active">
+        <span class="label">You</span>
+        <span class="value">50</span>
+      </div>
+      <span class="vs">vs</span>
+      <div class="score-item">
+        <span class="label">Kilu</span>
+        <span class="value">50</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Show with different turn state -->
+  <h3>Partner's Turn State</h3>
+
+  <div class="header-v3">
+    <div class="top-row">
+      <div class="back-btn">←</div>
+      <div class="title-section">
+        <span class="title">
+          <span class="heart">♥</span>
+          CROSSWORD
+          <span class="heart">♥</span>
+        </span>
+      </div>
+      <div class="spacer"></div>
+    </div>
+    <div class="divider"></div>
+    <div class="scores-row">
+      <div class="score-item">
+        <span class="label">You</span>
+        <span class="value">50</span>
+      </div>
+      <span class="vs">vs</span>
+      <div class="score-item active">
+        <span class="label">Kilu</span>
+        <span class="value">50</span>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

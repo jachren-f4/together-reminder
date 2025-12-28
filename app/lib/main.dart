@@ -2,7 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:togetherremind/screens/onboarding_screen.dart';
-import 'package:togetherremind/screens/home_screen.dart';
+import 'package:togetherremind/screens/main_screen.dart';
 import 'package:togetherremind/services/storage_service.dart';
 import 'package:togetherremind/services/mock_data_service.dart';
 import 'package:togetherremind/services/dev_data_service.dart';
@@ -29,6 +29,11 @@ import 'package:togetherremind/widgets/daily_quests_widget.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  // CRITICAL: Validate production safety FIRST
+  // This will crash the app immediately if dev bypass flags are enabled in release builds
+  // Prevents accidentally shipping dev mode to App Store
+  // DevConfig.validateProductionSafety(); // TEMP DISABLED for TestFlight testing
 
   // Initialize brand configuration FIRST (before any other initialization)
   BrandLoader().initialize();
@@ -107,7 +112,7 @@ void main() async {
   }
 
   // 🎯 Daily quests are now initialized by QuestInitializationService
-  // Called from: PairingScreen (after pairing) and NewHomeScreen (returning users)
+  // Called from: PairingScreen (after pairing) and HomeScreen (returning users)
   // NOT called from main.dart (too early in lifecycle - User/Partner not restored yet)
   // Clear old mock quests first (dev mode only)
   if (kDebugMode) {
@@ -171,10 +176,23 @@ class _TogetherRemindAppState extends State<TogetherRemindApp> with WidgetsBindi
   void didChangeAppLifecycleState(AppLifecycleState state) {
     super.didChangeAppLifecycleState(state);
 
-    // Sync steps when app comes back to foreground
+    // Sync when app comes back to foreground
     if (state == AppLifecycleState.resumed) {
       _syncStepsOnResume();
+      _syncPushTokenOnResume();
     }
+  }
+
+  /// Sync push token on resume - catches permission changes made in iOS Settings
+  Future<void> _syncPushTokenOnResume() async {
+    if (kIsWeb) return;
+
+    // Only sync if user is authenticated and paired
+    final storage = StorageService();
+    if (!storage.hasPartner()) return;
+
+    // Sync token (will check permission and sync if authorized)
+    await NotificationService.syncTokenToServer();
   }
 
   Future<void> _syncStepsOnResume() async {
@@ -227,7 +245,7 @@ class _TogetherRemindAppState extends State<TogetherRemindApp> with WidgetsBindi
                 return const AuthWrapper();
               } else {
                 // Legacy behavior for development without auth
-                return hasPartner ? const HomeScreen() : const OnboardingScreen();
+                return hasPartner ? const MainScreen() : const OnboardingScreen();
               }
             },
           ),

@@ -132,14 +132,10 @@ class QuizMatchService {
   }
 
   /// Stop polling
-  /// [matchId] - If provided, only stops polling if this matches the current polling match
+  /// [matchId] - If provided, only stops polling for that specific match
   void stopPolling({String? matchId}) {
-    final wasStopped = _unifiedService.stopPolling(matchId: matchId);
-    // Only clear callback if polling was actually stopped
-    // This prevents game screen dispose from clearing waiting screen's callback
-    if (wasStopped) {
-      _onStateUpdate = null;
-    }
+    _unifiedService.stopPolling(matchId: matchId);
+    // UnifiedGameService now manages callbacks per matchId, so we just delegate
   }
 
   /// Dispose resources
@@ -186,6 +182,7 @@ class QuizMatchService {
       quiz = ServerQuiz(
         quizId: response.quiz!.id,
         title: response.quiz!.name,
+        description: response.quiz!.description,
         branch: response.match.branch,
         questions: response.quiz!.questions.map((q) => ServerQuizQuestion(
           id: q.id,

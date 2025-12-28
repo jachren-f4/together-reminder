@@ -16,8 +16,10 @@
     "8": { "type": "emoji", "content": "🏖️", "arrow": "across", "target_index": 29 },
     "9": { "type": "text", "content": "Before S", "arrow": "across", "target_index": 34 },
     "10": { "type": "text", "content": "Side ___ side", "arrow": "across", "target_index": 40 },
-    "11": { "type": "text", "content": "Conditional word", "arrow": "across", "target_index": 44 },
-    "12": { "type": "text", "content": "Significant other (abbr.)", "arrow": "down", "target_index": 50 },
+    "11": {
+      "across": { "type": "text", "content": "Conditional word", "target_index": 44 },
+      "down": { "type": "text", "content": "Significant other (abbr.)", "target_index": 50 }
+    },
     "13": { "type": "text", "content": "Learn together", "arrow": "across", "target_index": 50 },
     "14": { "type": "text", "content": "Require", "arrow": "across", "target_index": 59 }
   },

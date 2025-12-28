@@ -8,12 +8,33 @@ Scripts for resetting the database with test data at specific game states. Usefu
 
 | Script | State | LP | Use Case |
 |--------|-------|-----|----------|
+| `reset_test_couple_quizzes_done.ts` | You or Me ready | 90 | Test You or Me from fresh start |
+| `reset_test_couple_youorme_ready.ts` | Pertsa answered You or Me | 90 | Test You or Me results |
 | `reset_test_couple_linked_ready.ts` | Linked just unlocked | 120 | Test Linked from fresh start |
 | `reset_test_couple_wordsearch_ready.ts` | Word Search in progress | 150 | Test Word Search mid-game |
 
 ---
 
 ## Available Scripts
+
+### `reset_test_couple_quizzes_done.ts`
+
+Creates test couple ready to play You or Me for the first time.
+
+```bash
+npx tsx scripts/reset_test_couple_quizzes_done.ts
+```
+
+**State:**
+- Welcome Quiz: completed
+- Classic Quiz: completed (both users)
+- Affirmation Quiz: completed (both users)
+- You or Me: **unlocked, ready to start**
+- Linked: locked
+- Word Search: locked
+- LP: 90
+
+---
 
 ### `reset_test_couple_linked_ready.ts`
 
@@ -60,7 +81,7 @@ All scripts create the same test couple:
 | User | Email | Password |
 |------|-------|----------|
 | Pertsa | `test7001@dev.test` | `DevPass_6354844221f1_2024!` |
-| Kilu | `test9472@dev.test` | `DevPass_1a21063e9593_2024!` |
+| Kilu | `test8001@dev.test` | `DevPass_92556dc3ec04_2024!` |
 
 **Couple ID:** `d9ffe5a8-325b-43b1-8819-11c6d8fa8e98`
 

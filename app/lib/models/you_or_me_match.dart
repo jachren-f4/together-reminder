@@ -93,6 +93,7 @@ class ServerYouOrMeQuestion {
 class ServerYouOrMeQuiz {
   final String quizId;
   final String title;
+  final String? description;
   final String branch;
   final List<ServerYouOrMeQuestion> questions;
   final int totalQuestions;
@@ -100,6 +101,7 @@ class ServerYouOrMeQuiz {
   ServerYouOrMeQuiz({
     required this.quizId,
     required this.title,
+    this.description,
     required this.branch,
     required this.questions,
     required this.totalQuestions,
@@ -109,6 +111,7 @@ class ServerYouOrMeQuiz {
     return ServerYouOrMeQuiz(
       quizId: json['quizId'] ?? '',
       title: json['title'] ?? '',
+      description: json['description'],
       branch: json['branch'] ?? '',
       questions: (json['questions'] as List?)
               ?.map((q) => ServerYouOrMeQuestion.fromJson(q))
@@ -133,6 +136,11 @@ class YouOrMeGameState {
   final bool isCompleted;
   final int totalQuestions;
 
+  /// Result data (available when match is completed)
+  final int? matchPercentage;
+  final List<String>? userAnswers;
+  final List<String>? partnerAnswers;
+
   YouOrMeGameState({
     required this.match,
     this.quiz,
@@ -145,6 +153,9 @@ class YouOrMeGameState {
     required this.partnerScore,
     required this.isCompleted,
     required this.totalQuestions,
+    this.matchPercentage,
+    this.userAnswers,
+    this.partnerAnswers,
   });
 }
 

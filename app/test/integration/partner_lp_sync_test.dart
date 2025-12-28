@@ -61,7 +61,7 @@ void main() {
         var callbackFired = false;
         var lpValue = 0;
 
-        // Set up callback (simulates NewHomeScreen's callback)
+        // Set up callback (simulates HomeScreen's callback)
         LovePointService.setLPChangeCallback(() {
           callbackFired = true;
           lpValue = 30; // In real code, this reads from storage
@@ -87,7 +87,7 @@ void main() {
         // 4. If anyUpdates && mounted: LovePointService.fetchAndSyncFromServer()
         // 5. fetchAndSyncFromServer() gets totalLp from /api/sync/game/status
         // 6. syncTotalLP() updates Hive and calls notifyLPChanged()
-        // 7. Callback triggers setState() in NewHomeScreen
+        // 7. Callback triggers setState() in HomeScreen
         // 8. LP counter updates
 
         var step7Reached = false;

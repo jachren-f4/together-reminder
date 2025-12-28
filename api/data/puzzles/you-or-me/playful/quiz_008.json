@@ -1,6 +1,6 @@
 {
   "quizId": "quiz_008",
-  "title": "Playful Quiz 8",
+  "title": "Hypotheticals",
   "branch": "playful",
   "questions": [
     {
@@ -33,5 +33,6 @@
       "prompt": "Who is more...",
       "content": "Likely to laugh at inappropriate times"
     }
-  ]
+  ],
+  "description": "Would you rather questions that reveal your quirky decision-making."
 }

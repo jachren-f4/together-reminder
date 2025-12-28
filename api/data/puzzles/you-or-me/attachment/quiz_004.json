@@ -1,6 +1,6 @@
 {
   "quizId": "quiz_004",
-  "title": "Attachment Quiz 4",
+  "title": "Conflict Style",
   "branch": "attachment",
   "questions": [
     {
@@ -33,5 +33,6 @@
       "prompt": "Who is better at...",
       "content": "Providing comfort during hard times"
     }
-  ]
+  ],
+  "description": "Fight or flight? Discover how you each handle disagreements."
 }

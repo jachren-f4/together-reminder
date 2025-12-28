@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Us 2.0 - Daily Pulse</title>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-gradient-start: #FFD1C1;
+            --bg-gradient-end: #FFF5F0;
+            --primary-pink: #FF5E62;
+            --gradient-start: #FF6B6B;
+            --gradient-end: #FF9F43;
+            --card-salmon: #FF7B6B;
+            --cream: #FFF8F0;
+            --beige: #F5E6D8;
+            --text-dark: #2D2D2D;
+            --text-medium: #6B6B6B;
+            --text-light: #9B9B9B;
+            --glow-pink: rgba(255, 107, 107, 0.5);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            min-height: 100vh;
+            background: linear-gradient(180deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .phone-frame {
+            width: 390px;
+            height: 844px;
+            background: linear-gradient(180deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
+            border-radius: 40px;
+            overflow: hidden;
+            box-shadow: 0 25px 80px rgba(0, 0, 0, 0.15);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            padding: 60px 24px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .back-button {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: white;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            color: var(--text-dark);
+            cursor: pointer;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .header-center {
+            text-align: center;
+        }
+
+        .header-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text-dark);
+        }
+
+        .header-subtitle {
+            font-size: 13px;
+            color: var(--text-medium);
+        }
+
+        .streak-badge {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            padding: 8px 12px;
+            background: white;
+            border-radius: 20px;
+            font-weight: 700;
+            color: var(--primary-pink);
+            font-size: 14px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .streak-icon {
+            font-size: 16px;
+        }
+
+        .progress-bar {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 16px 24px;
+        }
+
+        .progress-step {
+            flex: 1;
+            height: 4px;
+            background: var(--beige);
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .progress-step.active .progress-fill {
+            width: 100%;
+        }
+
+        .progress-step.current .progress-fill {
+            width: 50%;
+        }
+
+        .progress-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, var(--gradient-start), var(--gradient-end));
+            border-radius: 2px;
+            transition: width 0.3s ease;
+        }
+
+        .question-section {
+            flex: 1;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .phase-badge {
+            display: inline-block;
+            padding: 8px 16px;
+            background: linear-gradient(135deg, rgba(255, 107, 107, 0.15), rgba(255, 159, 67, 0.15));
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            color: var(--primary-pink);
+            margin-bottom: 16px;
+            align-self: flex-start;
+        }
+
+        .question-card {
+            background: white;
+            border-radius: 24px;
+            padding: 28px 24px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+            margin-bottom: 24px;
+        }
+
+        .question-text {
+            font-family: 'Playfair Display', serif;
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--text-dark);
+            line-height: 1.4;
+            text-align: center;
+        }
+
+        .options-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            flex: 1;
+        }
+
+        .option-button {
+            padding: 18px 24px;
+            background: white;
+            border: 2px solid var(--beige);
+            border-radius: 16px;
+            font-family: 'Nunito', sans-serif;
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-dark);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: left;
+        }
+
+        .option-button:hover {
+            border-color: var(--primary-pink);
+            background: linear-gradient(135deg, rgba(255, 107, 107, 0.05), rgba(255, 159, 67, 0.05));
+        }
+
+        .option-button.selected {
+            border-color: var(--primary-pink);
+            background: linear-gradient(135deg, rgba(255, 107, 107, 0.15), rgba(255, 159, 67, 0.15));
+        }
+
+        .option-button.selected::before {
+            content: '✓';
+            display: inline-block;
+            margin-right: 8px;
+            color: var(--primary-pink);
+            font-weight: 700;
+        }
+
+        .footer {
+            padding: 20px 24px 40px;
+        }
+
+        .primary-button {
+            width: 100%;
+            padding: 18px 32px;
+            background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+            border: none;
+            border-radius: 30px;
+            font-family: 'Nunito', sans-serif;
+            font-size: 17px;
+            font-weight: 700;
+            color: white;
+            cursor: pointer;
+            box-shadow: 0 8px 25px var(--glow-pink);
+            transition: all 0.2s ease;
+        }
+
+        .primary-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 35px var(--glow-pink);
+        }
+
+        .primary-button:disabled {
+            background: var(--beige);
+            color: var(--text-light);
+            box-shadow: none;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body>
+    <div class="phone-frame">
+        <div class="header">
+            <button class="back-button">←</button>
+            <div class="header-center">
+                <div class="header-title">Daily Pulse</div>
+                <div class="header-subtitle">Question 1 of 3</div>
+            </div>
+            <div class="streak-badge">
+                <span class="streak-icon">🔥</span>
+                <span>5</span>
+            </div>
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-step active">
+                <div class="progress-fill"></div>
+            </div>
+            <div class="progress-step current">
+                <div class="progress-fill"></div>
+            </div>
+            <div class="progress-step">
+                <div class="progress-fill"></div>
+            </div>
+        </div>
+
+        <div class="question-section">
+            <div class="phase-badge">ABOUT YOU</div>
+
+            <div class="question-card">
+                <p class="question-text">How are you feeling about our relationship today?</p>
+            </div>
+
+            <div class="options-list">
+                <button class="option-button">Amazing! I feel so connected 💕</button>
+                <button class="option-button selected">Good, feeling grateful 😊</button>
+                <button class="option-button">Okay, pretty normal day 😐</button>
+                <button class="option-button">Could be better, feeling distant 😔</button>
+            </div>
+        </div>
+
+        <div class="footer">
+            <button class="primary-button">Next Question</button>
+        </div>
+    </div>
+</body>
+</html>

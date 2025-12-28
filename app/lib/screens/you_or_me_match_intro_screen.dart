@@ -4,7 +4,10 @@ import '../models/branch_progression_state.dart';
 import '../services/storage_service.dart';
 import '../services/branch_manifest_service.dart';
 import '../services/you_or_me_match_service.dart';
+import '../services/love_point_service.dart';
 import '../widgets/editorial/editorial.dart';
+import '../widgets/brand/brand_widget_factory.dart';
+import '../widgets/brand/us2/us2_intro_screen.dart';
 import '../config/brand/brand_loader.dart';
 import 'you_or_me_match_game_screen.dart';
 
@@ -44,6 +47,13 @@ class _YouOrMeMatchIntroScreenState extends State<YouOrMeMatchIntroScreen>
   bool _partnerCompleted = false;
   String? _partnerName;
 
+  // Quiz metadata from API
+  String? _quizTitle;
+  String? _quizDescription;
+
+  // LP status for reward display
+  LpContentStatus? _lpStatus;
+
   // Video player state
   VideoPlayerController? _videoController;
   late AnimationController _fadeController;
@@ -57,7 +67,6 @@ class _YouOrMeMatchIntroScreenState extends State<YouOrMeMatchIntroScreen>
   late Animation<double> _titleAnimation;
   late Animation<double> _descAnimation;
   late Animation<double> _statsAnimation;
-  late Animation<double> _exampleAnimation;
   late Animation<double> _stepsAnimation;
   late Animation<double> _footerAnimation;
   bool _contentAnimationStarted = false;
@@ -65,6 +74,9 @@ class _YouOrMeMatchIntroScreenState extends State<YouOrMeMatchIntroScreen>
   @override
   void initState() {
     super.initState();
+
+    // Load quiz metadata from DailyQuest immediately (already synced)
+    _loadQuizMetadataFromQuest();
 
     _fadeController = AnimationController(
       duration: const Duration(milliseconds: 800),
@@ -110,12 +122,6 @@ class _YouOrMeMatchIntroScreenState extends State<YouOrMeMatchIntroScreen>
         curve: const Interval(0.21, 0.46, curve: Curves.easeOut),
       ),
     );
-    _exampleAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
-      CurvedAnimation(
-        parent: _contentController,
-        curve: const Interval(0.28, 0.53, curve: Curves.easeOut),
-      ),
-    );
     _stepsAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
       CurvedAnimation(
         parent: _contentController,
@@ -131,12 +137,37 @@ class _YouOrMeMatchIntroScreenState extends State<YouOrMeMatchIntroScreen>
 
     _initializeVideo();
     _checkPartnerStatus();
+    _checkLpStatus();
 
     // Start content animation immediately (don't wait for video)
     // Video is a visual enhancement, not a blocker
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _startContentAnimation();
     });
+  }
+
+  /// Load quiz metadata directly from DailyQuest (already synced from home screen)
+  void _loadQuizMetadataFromQuest() {
+    if (widget.questId == null) return;
+
+    final storage = StorageService();
+    final quest = storage.getDailyQuest(widget.questId!);
+
+    if (quest != null) {
+      _quizTitle = quest.quizName;
+      _quizDescription = quest.description;
+      _partnerName = storage.getPartner()?.name;
+    }
+  }
+
+  /// Check LP status for this content type
+  Future<void> _checkLpStatus() async {
+    final status = await LovePointService.checkLpStatus('you_or_me');
+    if (mounted) {
+      setState(() {
+        _lpStatus = status;
+      });
+    }
   }
 
   /// Check if partner has already completed this game
@@ -146,12 +177,27 @@ class _YouOrMeMatchIntroScreenState extends State<YouOrMeMatchIntroScreen>
       final service = YouOrMeMatchService();
       final gameState = await service.getOrCreateMatch();
 
+      // Update DailyQuest with quiz metadata if available
+      if (widget.questId != null && gameState.quiz != null) {
+        final quest = storage.getDailyQuest(widget.questId!);
+        if (quest != null &&
+            (quest.quizName == null || quest.quizName == 'You or Me')) {
+          // Update quest with quiz title and description
+          quest.quizName = gameState.quiz!.title;
+          quest.description = gameState.quiz!.description;
+          await storage.saveDailyQuest(quest);
+        }
+      }
+
       if (mounted) {
         setState(() {
           // Only show partner status if match is active (not completed)
           // and partner has actually answered
           _partnerCompleted = !gameState.isCompleted && gameState.partnerAnswerCount > 0;
           _partnerName = storage.getPartner()?.name;
+          // Store quiz metadata for display
+          _quizTitle = gameState.quiz?.title;
+          _quizDescription = gameState.quiz?.description;
         });
       }
     } catch (e) {
@@ -254,6 +300,11 @@ class _YouOrMeMatchIntroScreenState extends State<YouOrMeMatchIntroScreen>
     final partner = storage.getPartner();
     final partnerName = partner?.name ?? 'Partner';
 
+    // Us 2.0 brand uses simplified intro screen
+    if (BrandWidgetFactory.isUs2) {
+      return _buildUs2Intro(partnerName);
+    }
+
     return Scaffold(
       backgroundColor: EditorialStyles.paper,
       body: SafeArea(
@@ -310,51 +361,35 @@ class _YouOrMeMatchIntroScreenState extends State<YouOrMeMatchIntroScreen>
                           ),
                           const SizedBox(height: 16),
 
-                          // Title (animated)
+                          // Quiz Info Card (animated) - shows today's theme
                           _animatedContent(
                             _titleAnimation,
-                            Text(
-                              'Who Does It Best?',
-                              style: EditorialStyles.headline,
-                            ),
+                            _buildQuizInfoCard(),
                           ),
-                          const SizedBox(height: 12),
+                          const SizedBox(height: 16),
 
-                          // Description (animated)
+                          // Generic instruction (animated)
                           _animatedContent(
                             _descAnimation,
                             Text(
-                              'For each trait or behavior, decide who it describes better—you or $partnerName. See how well you know each other!',
-                              style: EditorialStyles.bodyTextItalic,
+                              'For each trait, decide who it describes better—you or $partnerName.',
+                              style: EditorialStyles.bodySmall.copyWith(
+                                color: EditorialStyles.inkMuted,
+                              ),
                             ),
                           ),
-                          const SizedBox(height: 32),
+                          const SizedBox(height: 24),
 
-                          // Stats card (animated) - using static values since we don't have session yet
+                          // Stats card (animated)
                           _animatedContent(
                             _statsAnimation,
-                            const EditorialStatsCard(
+                            EditorialStatsCard(
                               rows: [
-                                ('Questions', '10'),
-                                ('Time', '~3 minutes'),
-                                ('Reward', '+30 LP'),
-                              ],
-                            ),
-                          ),
-                          const SizedBox(height: 32),
-
-                          // Example section (animated)
-                          _animatedContent(
-                            _exampleAnimation,
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  'EXAMPLE',
-                                  style: EditorialStyles.labelUppercase,
-                                ),
-                                const SizedBox(height: 16),
-                                _buildExampleCard(partnerName),
+                                ('Questions', '5'),
+                                ('Time', '~2 minutes'),
+                                ('Reward', _lpStatus?.alreadyGrantedToday == true
+                                    ? 'Earned today'
+                                    : '+30 LP'),
                               ],
                             ),
                           ),
@@ -384,6 +419,44 @@ class _YouOrMeMatchIntroScreenState extends State<YouOrMeMatchIntroScreen>
           ],
         ),
       ),
+    );
+  }
+
+  /// Build Us 2.0 styled intro screen using reusable component
+  Widget _buildUs2Intro(String partnerName) {
+    final alreadyEarned = _lpStatus?.alreadyGrantedToday == true;
+
+    // Build badges list
+    final badges = <String>['YOU OR ME'];
+    if (_isTherapeuticBranch(widget.branch)) {
+      badges.add('DEEPER');
+    }
+
+    // Build stats with highlight for reward
+    final stats = <(String, String, bool)>[
+      ('Questions', '5', false),
+      ('Time', '~2 minutes', false),
+      ('Reward', alreadyEarned ? 'Earned today' : '+30 LP', !alreadyEarned),
+    ];
+
+    return Us2IntroScreen.withQuizCard(
+      buttonLabel: 'Start Game',
+      onStart: () {
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => YouOrMeMatchGameScreen(
+              questId: widget.questId,
+            ),
+          ),
+        );
+      },
+      onBack: () => Navigator.of(context).pop(),
+      heroEmoji: '🤔',
+      badges: badges,
+      quizTitle: _quizTitle ?? 'You or Me',
+      quizDescription: _quizDescription,
+      stats: stats,
+      instructionText: 'For each trait, decide who it describes better—you or $partnerName.',
     );
   }
 
@@ -417,6 +490,66 @@ class _YouOrMeMatchIntroScreenState extends State<YouOrMeMatchIntroScreen>
             'DAILY QUEST',
             style: EditorialStyles.labelUppercase,
           ),
+        ],
+      ),
+    );
+  }
+
+  /// Build the Quiz Info Card showing today's theme (variant 2 style)
+  Widget _buildQuizInfoCard() {
+    final hasQuizData = _quizTitle != null && _quizTitle!.isNotEmpty;
+
+    return Container(
+      decoration: BoxDecoration(
+        color: EditorialStyles.paper,
+        border: Border(
+          left: BorderSide(
+            color: BrandLoader().colors.primary,
+            width: 4,
+          ),
+          top: EditorialStyles.border,
+          right: EditorialStyles.border,
+          bottom: EditorialStyles.border,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: EditorialStyles.ink.withValues(alpha: 0.06),
+            offset: const Offset(0, 2),
+            blurRadius: 8,
+          ),
+        ],
+      ),
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // "Today's Theme" label
+          Text(
+            "TODAY'S THEME",
+            style: EditorialStyles.labelUppercaseSmall.copyWith(
+              color: BrandLoader().colors.primary,
+              letterSpacing: 1.5,
+            ),
+          ),
+          const SizedBox(height: 6),
+          // Quiz title
+          Text(
+            hasQuizData ? _quizTitle! : 'You or Me',
+            style: EditorialStyles.headlineSmall.copyWith(
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          // Quiz description (if available)
+          if (hasQuizData && _quizDescription != null && _quizDescription!.isNotEmpty) ...[
+            const SizedBox(height: 8),
+            Text(
+              _quizDescription!,
+              style: EditorialStyles.bodyTextItalic.copyWith(
+                fontSize: 14,
+                color: EditorialStyles.inkMuted,
+              ),
+            ),
+          ],
         ],
       ),
     );
@@ -660,6 +793,9 @@ class _YouOrMeMatchIntroScreenState extends State<YouOrMeMatchIntroScreen>
   }
 
   Widget _buildFooter(BuildContext context) {
+    final alreadyEarned = _lpStatus?.alreadyGrantedToday == true;
+    final resetTime = _lpStatus?.resetTimeFormatted ?? '';
+
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
@@ -683,7 +819,9 @@ class _YouOrMeMatchIntroScreenState extends State<YouOrMeMatchIntroScreen>
           ),
           const SizedBox(height: 12),
           Text(
-            'Complete to earn +30 Love Points',
+            alreadyEarned
+                ? 'LP already earned today · Resets in $resetTime'
+                : 'Complete to earn +30 Love Points',
             style: EditorialStyles.bodySmall.copyWith(
               color: EditorialStyles.inkMuted,
             ),

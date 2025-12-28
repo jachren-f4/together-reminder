@@ -206,11 +206,15 @@ class EditorialPartnerCard extends StatelessWidget {
   /// Status text (e.g., "In progress...")
   final String status;
 
+  /// Whether to render the emoji in grayscale (for waiting states)
+  final bool grayscale;
+
   const EditorialPartnerCard({
     super.key,
     required this.avatarEmoji,
     required this.name,
     required this.status,
+    this.grayscale = false,
   });
 
   @override
@@ -233,10 +237,23 @@ class EditorialPartnerCard extends StatelessWidget {
               ),
             ),
             child: Center(
-              child: Text(
-                avatarEmoji,
-                style: const TextStyle(fontSize: 26),
-              ),
+              child: grayscale
+                  ? ColorFiltered(
+                      colorFilter: const ColorFilter.matrix(<double>[
+                        0.2126, 0.7152, 0.0722, 0, 0,
+                        0.2126, 0.7152, 0.0722, 0, 0,
+                        0.2126, 0.7152, 0.0722, 0, 0,
+                        0, 0, 0, 1, 0,
+                      ]),
+                      child: Text(
+                        avatarEmoji,
+                        style: const TextStyle(fontSize: 26),
+                      ),
+                    )
+                  : Text(
+                      avatarEmoji,
+                      style: const TextStyle(fontSize: 26),
+                    ),
             ),
           ),
           const SizedBox(width: 16),

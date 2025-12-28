@@ -1,6 +1,6 @@
 {
   "quizId": "quiz_003",
-  "title": "Growth Quiz 3",
+  "title": "New Adventures",
   "branch": "growth",
   "questions": [
     {
@@ -33,5 +33,6 @@
       "prompt": "Who is better at...",
       "content": "Celebrating small wins"
     }
-  ]
+  ],
+  "description": "Who pushes for new experiences? Explore your adventurous sides."
 }

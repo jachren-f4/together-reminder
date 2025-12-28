@@ -16,8 +16,10 @@
     "8": { "type": "text", "content": "___ only", "arrow": "across", "target_index": 22 },
     "9": { "type": "text", "content": "Before M", "arrow": "across", "target_index": 29 },
     "10": { "type": "text", "content": "_AY", "arrow": "across", "target_index": 36 },
-    "11": { "type": "emoji", "content": "❤️", "arrow": "across", "target_index": 38 },
-    "12": { "type": "text", "content": "___ close", "arrow": "down", "target_index": 44 },
+    "11": {
+      "across": { "type": "emoji", "content": "❤️", "target_index": 38 },
+      "down": { "type": "text", "content": "___ close", "target_index": 44 }
+    },
     "13": { "type": "text", "content": "Let's ___", "arrow": "down", "target_index": 55 },
     "14": { "type": "emoji", "content": "🔍", "arrow": "across", "target_index": 50 },
     "15": { "type": "text", "content": "Head to ___", "arrow": "across", "target_index": 58 }

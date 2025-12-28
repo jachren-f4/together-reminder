@@ -3,6 +3,7 @@ import { query } from '@/lib/db/pool';
 import { NextResponse } from 'next/server';
 import { getCoupleId } from '@/lib/couple/utils';
 import { withTransaction } from '@/lib/db/transaction';
+import { getNextQuizInfo, GameType } from '@/lib/game/handler';
 
 export const POST = withAuthOrDevBypass(async (req, userId) => {
     try {
@@ -109,13 +110,33 @@ export const GET = withAuthOrDevBypass(async (req, userId) => {
 
         // Fetch quests
         const questsResult = await query(
-            `SELECT * FROM daily_quests 
+            `SELECT * FROM daily_quests
              WHERE couple_id = $1 AND date = $2
              ORDER BY sort_order ASC`,
             [coupleId, date]
         );
 
-        return NextResponse.json({ quests: questsResult.rows });
+        // Enrich quests with quiz metadata for game types that need it
+        const enrichedQuests = await Promise.all(
+            questsResult.rows.map(async (quest: any) => {
+                // For You or Me quests, look up quiz metadata
+                if (quest.quest_type === 'youOrMe' || quest.quest_type === 'you_or_me') {
+                    const quizInfo = await getNextQuizInfo(coupleId, 'you_or_me' as GameType, date);
+                    if (quizInfo) {
+                        // Merge quiz metadata into the quest's metadata
+                        const existingMetadata = quest.metadata || {};
+                        quest.metadata = {
+                            ...existingMetadata,
+                            quizName: quizInfo.name,
+                            quizDescription: quizInfo.description,
+                        };
+                    }
+                }
+                return quest;
+            })
+        );
+
+        return NextResponse.json({ quests: enrichedQuests });
     } catch (error) {
         console.error('Error fetching quests:', error);
         return NextResponse.json({ error: 'Internal server error' }, { status: 500 });

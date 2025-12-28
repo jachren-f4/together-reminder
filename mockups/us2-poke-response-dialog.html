@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Us 2.0 - Poke Response Dialog</title>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-gradient-start: #FFD1C1;
+            --bg-gradient-end: #FFF5F0;
+            --primary-pink: #FF5E62;
+            --gradient-start: #FF6B6B;
+            --gradient-end: #FF9F43;
+            --cream: #FFF8F0;
+            --beige: #F5E6D8;
+            --text-dark: #2D2D2D;
+            --text-medium: #6B6B6B;
+            --text-light: #9B9B9B;
+            --glow-pink: rgba(255, 107, 107, 0.5);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            min-height: 100vh;
+            background: linear-gradient(180deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .phone-frame {
+            width: 390px;
+            height: 844px;
+            background: linear-gradient(180deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
+            border-radius: 40px;
+            overflow: hidden;
+            box-shadow: 0 25px 80px rgba(0, 0, 0, 0.15);
+            position: relative;
+        }
+
+        /* Overlay */
+        .dialog-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 30px;
+        }
+
+        /* Dialog card */
+        .dialog-card {
+            background: white;
+            border-radius: 24px;
+            padding: 30px;
+            width: 100%;
+            max-width: 320px;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+            animation: slideUp 0.4s ease-out;
+        }
+
+        @keyframes slideUp {
+            0% { transform: translateY(50px); opacity: 0; }
+            100% { transform: translateY(0); opacity: 1; }
+        }
+
+        /* Poke emoji */
+        .poke-emoji {
+            font-size: 80px;
+            margin-bottom: 20px;
+            animation: elasticIn 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+
+        @keyframes elasticIn {
+            0% { transform: scale(0); }
+            100% { transform: scale(1); }
+        }
+
+        .dialog-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 24px;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 12px;
+        }
+
+        .partner-name {
+            background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .dialog-subtitle {
+            font-size: 15px;
+            color: var(--text-medium);
+            margin-bottom: 30px;
+        }
+
+        /* Response buttons */
+        .response-buttons {
+            display: flex;
+            gap: 12px;
+        }
+
+        .response-btn {
+            flex: 1;
+            padding: 16px;
+            border-radius: 16px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .response-btn.primary {
+            background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+            box-shadow: 0 6px 20px var(--glow-pink);
+        }
+
+        .response-btn.primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px var(--glow-pink);
+        }
+
+        .response-btn.secondary {
+            background: var(--cream);
+            border: 2px solid var(--beige);
+        }
+
+        .response-btn.secondary:hover {
+            border-color: var(--gradient-start);
+        }
+
+        .btn-emoji {
+            font-size: 32px;
+            margin-bottom: 4px;
+        }
+
+        .btn-label {
+            font-family: 'Nunito', sans-serif;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .response-btn.primary .btn-label {
+            color: white;
+        }
+
+        .response-btn.secondary .btn-label {
+            color: var(--text-dark);
+        }
+    </style>
+</head>
+<body>
+    <div class="phone-frame">
+        <div class="dialog-overlay">
+            <div class="dialog-card">
+                <div class="poke-emoji">👋</div>
+
+                <div class="dialog-title">
+                    <span class="partner-name">Alex</span> poked you!
+                </div>
+
+                <div class="dialog-subtitle">How do you want to respond?</div>
+
+                <div class="response-buttons">
+                    <button class="response-btn primary">
+                        <div class="btn-emoji">❤️</div>
+                        <div class="btn-label">Send Back</div>
+                    </button>
+                    <button class="response-btn secondary">
+                        <div class="btn-emoji">🙂</div>
+                        <div class="btn-label">Smile</div>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

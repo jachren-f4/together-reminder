@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Us 2.0 - Partner First Dialog</title>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-gradient-start: #FFD1C1;
+            --bg-gradient-end: #FFF5F0;
+            --primary-pink: #FF5E62;
+            --gradient-start: #FF6B6B;
+            --gradient-end: #FF9F43;
+            --cream: #FFF8F0;
+            --beige: #F5E6D8;
+            --text-dark: #2D2D2D;
+            --text-medium: #6B6B6B;
+            --text-light: #9B9B9B;
+            --glow-pink: rgba(255, 107, 107, 0.5);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            min-height: 100vh;
+            background: linear-gradient(180deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .phone-frame {
+            width: 390px;
+            height: 844px;
+            background: linear-gradient(180deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
+            border-radius: 40px;
+            overflow: hidden;
+            box-shadow: 0 25px 80px rgba(0, 0, 0, 0.15);
+            position: relative;
+        }
+
+        /* Overlay */
+        .dialog-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(45, 45, 45, 0.6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 30px;
+        }
+
+        /* Framed dialog card */
+        .dialog-card {
+            background: var(--cream);
+            border-radius: 4px;
+            padding: 8px;
+            width: 280px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            animation: fadeSlideUp 0.3s ease-out;
+        }
+
+        @keyframes fadeSlideUp {
+            0% { opacity: 0; transform: translateY(20px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        .dialog-inner {
+            border: 1px solid var(--text-dark);
+            padding: 32px 24px;
+            text-align: center;
+        }
+
+        /* Label */
+        .dialog-label {
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 2px;
+            color: var(--text-light);
+            margin-bottom: 12px;
+        }
+
+        /* Title */
+        .dialog-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 26px;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 16px;
+        }
+
+        /* Divider */
+        .divider {
+            width: 40px;
+            height: 1px;
+            background: var(--text-dark);
+            margin: 0 auto 16px;
+        }
+
+        /* Subtitle */
+        .dialog-subtitle {
+            font-size: 14px;
+            color: var(--text-medium);
+            line-height: 1.5;
+            margin-bottom: 28px;
+        }
+
+        .partner-name {
+            font-family: 'Playfair Display', serif;
+            font-weight: 600;
+            font-style: italic;
+            color: var(--text-dark);
+        }
+
+        /* Buttons */
+        .primary-button {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+            border: none;
+            font-family: 'Nunito', sans-serif;
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            color: white;
+            cursor: pointer;
+            margin-bottom: 12px;
+            box-shadow: 0 4px 15px var(--glow-pink);
+            transition: all 0.2s ease;
+        }
+
+        .primary-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px var(--glow-pink);
+        }
+
+        .secondary-button {
+            background: transparent;
+            border: none;
+            font-family: 'Nunito', sans-serif;
+            font-size: 13px;
+            color: var(--text-medium);
+            cursor: pointer;
+            padding: 8px;
+        }
+
+        .secondary-button:hover {
+            color: var(--gradient-start);
+        }
+    </style>
+</head>
+<body>
+    <div class="phone-frame">
+        <div class="dialog-overlay">
+            <div class="dialog-card">
+                <div class="dialog-inner">
+                    <div class="dialog-label">NEW PUZZLE</div>
+                    <div class="dialog-title">Waiting to start</div>
+                    <div class="divider"></div>
+                    <div class="dialog-subtitle">
+                        <span class="partner-name">Alex</span> goes first<br>
+                        on this puzzle.
+                    </div>
+                    <button class="primary-button">GO BACK</button>
+                    <button class="secondary-button">Stay and preview</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

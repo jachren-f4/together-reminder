@@ -2,6 +2,8 @@ import 'dart:async';
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import '../config/brand/brand_loader.dart';
+import '../config/brand/brand_config.dart';
+import '../config/brand/us2_theme.dart';
 import '../theme/app_theme.dart';
 import '../services/storage_service.dart';
 import '../services/steps_feature_service.dart';
@@ -28,6 +30,8 @@ class _StepsCounterScreenState extends State<StepsCounterScreen>
     with TickerProviderStateMixin {
   final StepsFeatureService _stepsService = StepsFeatureService();
   final StorageService _storage = StorageService();
+
+  bool get _isUs2 => BrandLoader().config.brand == Brand.us2;
 
   late AnimationController _ringAnimationController;
   late Animation<double> _userRingAnimation;
@@ -136,41 +140,102 @@ class _StepsCounterScreenState extends State<StepsCounterScreen>
     final isPastGoal = combinedSteps >= 20000;
 
     return Scaffold(
-      backgroundColor: BrandLoader().colors.surface,
+      backgroundColor: _isUs2 ? Us2Theme.bgGradientEnd : BrandLoader().colors.surface,
+      extendBodyBehindAppBar: _isUs2,
       appBar: AppBar(
-        backgroundColor: BrandLoader().colors.surface,
+        backgroundColor: _isUs2 ? Colors.transparent : BrandLoader().colors.surface,
         elevation: 0,
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: BrandLoader().colors.textPrimary),
-          onPressed: () => Navigator.pop(context),
-        ),
+        leading: _isUs2
+            ? Padding(
+                padding: const EdgeInsets.only(left: 16),
+                child: GestureDetector(
+                  onTap: () => Navigator.pop(context),
+                  child: Container(
+                    width: 40,
+                    height: 40,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      shape: BoxShape.circle,
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.1),
+                          blurRadius: 10,
+                          offset: const Offset(0, 2),
+                        ),
+                      ],
+                    ),
+                    child: const Icon(Icons.arrow_back, color: Us2Theme.textDark, size: 20),
+                  ),
+                ),
+              )
+            : IconButton(
+                icon: Icon(Icons.arrow_back, color: BrandLoader().colors.textPrimary),
+                onPressed: () => Navigator.pop(context),
+              ),
         title: Text(
           'Steps Together',
-          style: AppTheme.headlineFont.copyWith(
-            fontSize: 18,
-            fontWeight: FontWeight.w600,
-            color: BrandLoader().colors.textPrimary,
-          ),
+          style: _isUs2
+              ? const TextStyle(
+                  fontFamily: Us2Theme.fontHeading,
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600,
+                  color: Us2Theme.textDark,
+                )
+              : AppTheme.headlineFont.copyWith(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600,
+                  color: BrandLoader().colors.textPrimary,
+                ),
         ),
         centerTitle: true,
         actions: [
           if (_isRefreshing)
-            const Padding(
-              padding: EdgeInsets.all(16),
+            Padding(
+              padding: const EdgeInsets.all(16),
               child: SizedBox(
                 width: 20,
                 height: 20,
-                child: CircularProgressIndicator(strokeWidth: 2),
+                child: CircularProgressIndicator(
+                  strokeWidth: 2,
+                  color: _isUs2 ? Us2Theme.gradientAccentStart : null,
+                ),
               ),
             )
           else
-            IconButton(
-              icon: Icon(Icons.refresh, color: BrandLoader().colors.textPrimary),
-              onPressed: _refreshData,
-            ),
+            _isUs2
+                ? Padding(
+                    padding: const EdgeInsets.only(right: 16),
+                    child: GestureDetector(
+                      onTap: _refreshData,
+                      child: Container(
+                        width: 40,
+                        height: 40,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          shape: BoxShape.circle,
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.1),
+                              blurRadius: 10,
+                              offset: const Offset(0, 2),
+                            ),
+                          ],
+                        ),
+                        child: const Icon(Icons.refresh, color: Us2Theme.textDark, size: 18),
+                      ),
+                    ),
+                  )
+                : IconButton(
+                    icon: Icon(Icons.refresh, color: BrandLoader().colors.textPrimary),
+                    onPressed: _refreshData,
+                  ),
         ],
       ),
-      body: SafeArea(
+      body: Container(
+        decoration: _isUs2
+            ? const BoxDecoration(gradient: Us2Theme.backgroundGradient)
+            : null,
+        child: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(24),
           child: Column(
@@ -194,6 +259,7 @@ class _StepsCounterScreenState extends State<StepsCounterScreen>
             ],
           ),
         ),
+        ),
       ),
     );
   }
@@ -202,7 +268,8 @@ class _StepsCounterScreenState extends State<StepsCounterScreen>
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: BrandLoader().colors.textPrimary,
+        color: _isUs2 ? null : BrandLoader().colors.textPrimary,
+        gradient: _isUs2 ? Us2Theme.accentGradient : null,
         borderRadius: BorderRadius.circular(16),
       ),
       child: Column(
@@ -213,10 +280,16 @@ class _StepsCounterScreenState extends State<StepsCounterScreen>
             children: [
               Text(
                 'Yesterday',
-                style: AppTheme.headlineFont.copyWith(
-                  fontSize: 14,
-                  color: Colors.white.withOpacity(0.7),
-                ),
+                style: _isUs2
+                    ? TextStyle(
+                        fontFamily: Us2Theme.fontHeading,
+                        fontSize: 14,
+                        color: Colors.white.withOpacity(0.8),
+                      )
+                    : AppTheme.headlineFont.copyWith(
+                        fontSize: 14,
+                        color: Colors.white.withOpacity(0.7),
+                      ),
               ),
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
@@ -229,7 +302,7 @@ class _StepsCounterScreenState extends State<StepsCounterScreen>
                   style: TextStyle(
                     fontSize: 12,
                     fontWeight: FontWeight.w700,
-                    color: BrandLoader().colors.textPrimary,
+                    color: _isUs2 ? Us2Theme.primaryBrandPink : BrandLoader().colors.textPrimary,
                   ),
                 ),
               ),
@@ -245,28 +318,43 @@ class _StepsCounterScreenState extends State<StepsCounterScreen>
                 children: [
                   Text(
                     _formatNumber(yesterday.combinedSteps),
-                    style: AppTheme.headlineFont.copyWith(
-                      fontSize: 32,
-                      fontWeight: FontWeight.w700,
-                      color: Colors.white,
-                    ),
+                    style: _isUs2
+                        ? const TextStyle(
+                            fontFamily: Us2Theme.fontHeading,
+                            fontSize: 32,
+                            fontWeight: FontWeight.w700,
+                            color: Colors.white,
+                          )
+                        : AppTheme.headlineFont.copyWith(
+                            fontSize: 32,
+                            fontWeight: FontWeight.w700,
+                            color: Colors.white,
+                          ),
                   ),
                   Text(
                     'combined steps',
                     style: TextStyle(
+                      fontFamily: _isUs2 ? Us2Theme.fontBody : null,
                       fontSize: 14,
-                      color: Colors.white.withOpacity(0.7),
+                      color: Colors.white.withOpacity(_isUs2 ? 0.8 : 0.7),
                     ),
                   ),
                 ],
               ),
               Text(
                 '+${yesterday.earnedLP} LP',
-                style: AppTheme.headlineFont.copyWith(
-                  fontSize: 24,
-                  fontWeight: FontWeight.w700,
-                  color: Colors.white,
-                ),
+                style: _isUs2
+                    ? const TextStyle(
+                        fontFamily: Us2Theme.fontHeading,
+                        fontSize: 24,
+                        fontWeight: FontWeight.w700,
+                        color: Colors.white,
+                      )
+                    : AppTheme.headlineFont.copyWith(
+                        fontSize: 24,
+                        fontWeight: FontWeight.w700,
+                        color: Colors.white,
+                      ),
               ),
             ],
           ),
@@ -278,7 +366,7 @@ class _StepsCounterScreenState extends State<StepsCounterScreen>
               onPressed: () => _navigateToClaim(yesterday),
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.white,
-                foregroundColor: BrandLoader().colors.textPrimary,
+                foregroundColor: _isUs2 ? Us2Theme.primaryBrandPink : BrandLoader().colors.textPrimary,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
@@ -286,11 +374,18 @@ class _StepsCounterScreenState extends State<StepsCounterScreen>
               ),
               child: Text(
                 'Claim +${yesterday.earnedLP} Love Points',
-                style: AppTheme.headlineFont.copyWith(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w600,
-                  color: BrandLoader().colors.textPrimary,
-                ),
+                style: _isUs2
+                    ? const TextStyle(
+                        fontFamily: Us2Theme.fontBody,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
+                        color: Us2Theme.primaryBrandPink,
+                      )
+                    : AppTheme.headlineFont.copyWith(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
+                        color: BrandLoader().colors.textPrimary,
+                      ),
               ),
             ),
           ),
@@ -303,7 +398,8 @@ class _StepsCounterScreenState extends State<StepsCounterScreen>
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: BrandLoader().colors.textPrimary,
+        color: _isUs2 ? null : BrandLoader().colors.textPrimary,
+        gradient: _isUs2 ? Us2Theme.accentGradient : null,
         borderRadius: BorderRadius.circular(16),
       ),
       child: Row(
@@ -318,9 +414,10 @@ class _StepsCounterScreenState extends State<StepsCounterScreen>
                     color: Colors.white.withOpacity(0.2),
                     borderRadius: BorderRadius.circular(12),
                   ),
-                  child: const Text(
+                  child: Text(
                     'Max Tier Reached!',
                     style: TextStyle(
+                      fontFamily: _isUs2 ? Us2Theme.fontBody : null,
                       fontSize: 12,
                       fontWeight: FontWeight.w600,
                       color: Colors.white,
@@ -331,8 +428,9 @@ class _StepsCounterScreenState extends State<StepsCounterScreen>
                 Text(
                   'Tomorrow you\'ll earn',
                   style: TextStyle(
+                    fontFamily: _isUs2 ? Us2Theme.fontBody : null,
                     fontSize: 14,
-                    color: Colors.white.withOpacity(0.7),
+                    color: Colors.white.withOpacity(_isUs2 ? 0.8 : 0.7),
                   ),
                 ),
               ],
@@ -340,11 +438,18 @@ class _StepsCounterScreenState extends State<StepsCounterScreen>
           ),
           Text(
             '+30 LP',
-            style: AppTheme.headlineFont.copyWith(
-              fontSize: 36,
-              fontWeight: FontWeight.w700,
-              color: Colors.white,
-            ),
+            style: _isUs2
+                ? const TextStyle(
+                    fontFamily: Us2Theme.fontHeading,
+                    fontSize: 36,
+                    fontWeight: FontWeight.w700,
+                    color: Colors.white,
+                  )
+                : AppTheme.headlineFont.copyWith(
+                    fontSize: 36,
+                    fontWeight: FontWeight.w700,
+                    color: Colors.white,
+                  ),
           ),
         ],
       ),
@@ -355,6 +460,8 @@ class _StepsCounterScreenState extends State<StepsCounterScreen>
       StepsDay? today, StepsConnection connection, String partnerName) {
     final userSteps = today?.userSteps ?? 0;
     final partnerSteps = today?.partnerSteps ?? 0;
+    // Check if partner data is still loading (connected but no sync yet for today)
+    final isPartnerLoading = connection.partnerConnected && today?.partnerLastSync == null;
     final combinedSteps = userSteps + partnerSteps;
     final isPastGoal = combinedSteps >= 20000;
     final projectedLP = _stepsService.getProjectedLP();
@@ -362,8 +469,17 @@ class _StepsCounterScreenState extends State<StepsCounterScreen>
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: const Color(0xFFF5F5F5),
+        color: _isUs2 ? Colors.white : const Color(0xFFF5F5F5),
         borderRadius: BorderRadius.circular(16),
+        boxShadow: _isUs2
+            ? [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.05),
+                  blurRadius: 10,
+                  offset: const Offset(0, 2),
+                ),
+              ]
+            : null,
       ),
       child: Column(
         children: [
@@ -373,11 +489,18 @@ class _StepsCounterScreenState extends State<StepsCounterScreen>
             children: [
               Text(
                 isPastGoal ? 'Today · Goal Exceeded!' : 'Today · In Progress',
-                style: AppTheme.headlineFont.copyWith(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w600,
-                  color: BrandLoader().colors.textPrimary,
-                ),
+                style: _isUs2
+                    ? const TextStyle(
+                        fontFamily: Us2Theme.fontHeading,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
+                        color: Us2Theme.textDark,
+                      )
+                    : AppTheme.headlineFont.copyWith(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
+                        color: BrandLoader().colors.textPrimary,
+                      ),
               ),
             ],
           ),
@@ -394,7 +517,8 @@ class _StepsCounterScreenState extends State<StepsCounterScreen>
                   painter: DualRingPainter(
                     userProgress: _userRingAnimation.value,
                     partnerProgress: _partnerRingAnimation.value,
-                    userColor: BrandLoader().colors.textPrimary,
+                    userColor: _isUs2 ? Us2Theme.gradientAccentStart : BrandLoader().colors.textPrimary,
+                    userColorEnd: _isUs2 ? Us2Theme.gradientAccentEnd : null,
                     partnerColor: const Color(0xFF999999),
                     backgroundColor: const Color(0xFFE0E0E0),
                   ),
@@ -404,34 +528,44 @@ class _StepsCounterScreenState extends State<StepsCounterScreen>
                       children: [
                         Text(
                           _formatNumber(combinedSteps),
-                          style: AppTheme.headlineFont.copyWith(
-                            fontSize: 36,
-                            fontWeight: FontWeight.w700,
-                            color: BrandLoader().colors.textPrimary,
-                          ),
+                          style: _isUs2
+                              ? const TextStyle(
+                                  fontFamily: Us2Theme.fontHeading,
+                                  fontSize: 36,
+                                  fontWeight: FontWeight.w700,
+                                  color: Us2Theme.textDark,
+                                )
+                              : AppTheme.headlineFont.copyWith(
+                                  fontSize: 36,
+                                  fontWeight: FontWeight.w700,
+                                  color: BrandLoader().colors.textPrimary,
+                                ),
                         ),
                         if (isPastGoal) ...[
                           Text(
                             '+${_formatNumber(combinedSteps - 20000)} over goal',
                             style: TextStyle(
+                              fontFamily: _isUs2 ? Us2Theme.fontBody : null,
                               fontSize: 14,
-                              color: BrandLoader().colors.success,
+                              color: _isUs2 ? const Color(0xFF4CAF50) : BrandLoader().colors.success,
                               fontWeight: FontWeight.w600,
                             ),
                           ),
                           Text(
                             'Goal: 20,000',
                             style: TextStyle(
+                              fontFamily: _isUs2 ? Us2Theme.fontBody : null,
                               fontSize: 12,
-                              color: BrandLoader().colors.textTertiary,
+                              color: _isUs2 ? Us2Theme.textLight : BrandLoader().colors.textTertiary,
                             ),
                           ),
                         ] else ...[
                           Text(
                             '/ 20,000',
                             style: TextStyle(
+                              fontFamily: _isUs2 ? Us2Theme.fontBody : null,
                               fontSize: 16,
-                              color: BrandLoader().colors.textTertiary,
+                              color: _isUs2 ? Us2Theme.textLight : BrandLoader().colors.textTertiary,
                             ),
                           ),
                           const SizedBox(height: 4),
@@ -439,8 +573,9 @@ class _StepsCounterScreenState extends State<StepsCounterScreen>
                             Text(
                               'Tomorrow: +$projectedLP LP',
                               style: TextStyle(
+                                fontFamily: _isUs2 ? Us2Theme.fontBody : null,
                                 fontSize: 14,
-                                color: BrandLoader().colors.textSecondary,
+                                color: _isUs2 ? Us2Theme.textMedium : BrandLoader().colors.textSecondary,
                                 fontWeight: FontWeight.w600,
                               ),
                             ),
@@ -459,9 +594,13 @@ class _StepsCounterScreenState extends State<StepsCounterScreen>
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               _buildLegendItem(
-                  'You', userSteps, BrandLoader().colors.textPrimary),
+                  'You',
+                  userSteps,
+                  _isUs2 ? Us2Theme.gradientAccentStart : BrandLoader().colors.textPrimary,
+                  isLoading: false,
+                  isGradient: _isUs2),
               const SizedBox(width: 32),
-              _buildLegendItem(partnerName, partnerSteps, const Color(0xFF999999)),
+              _buildLegendItem(partnerName, partnerSteps, const Color(0xFF999999), isLoading: isPartnerLoading),
             ],
           ),
           const SizedBox(height: 20),
@@ -479,14 +618,16 @@ class _StepsCounterScreenState extends State<StepsCounterScreen>
     );
   }
 
-  Widget _buildLegendItem(String label, int steps, Color color) {
+  Widget _buildLegendItem(String label, int steps, Color color,
+      {bool isLoading = false, bool isGradient = false}) {
     return Row(
       children: [
         Container(
           width: 12,
           height: 12,
           decoration: BoxDecoration(
-            color: color,
+            color: isGradient ? null : color,
+            gradient: isGradient ? Us2Theme.accentGradient : null,
             borderRadius: BorderRadius.circular(2),
           ),
         ),
@@ -497,18 +638,36 @@ class _StepsCounterScreenState extends State<StepsCounterScreen>
             Text(
               label,
               style: TextStyle(
+                fontFamily: _isUs2 ? Us2Theme.fontBody : null,
                 fontSize: 12,
-                color: BrandLoader().colors.textSecondary,
+                color: _isUs2 ? Us2Theme.textMedium : BrandLoader().colors.textSecondary,
               ),
             ),
-            Text(
-              _formatNumber(steps),
-              style: AppTheme.headlineFont.copyWith(
-                fontSize: 16,
-                fontWeight: FontWeight.w600,
-                color: BrandLoader().colors.textPrimary,
+            if (isLoading)
+              SizedBox(
+                width: 16,
+                height: 16,
+                child: CircularProgressIndicator(
+                  strokeWidth: 2,
+                  color: _isUs2 ? Us2Theme.textLight : BrandLoader().colors.textTertiary,
+                ),
+              )
+            else
+              Text(
+                _formatNumber(steps),
+                style: _isUs2
+                    ? const TextStyle(
+                        fontFamily: Us2Theme.fontHeading,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                        color: Us2Theme.textDark,
+                      )
+                    : AppTheme.headlineFont.copyWith(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                        color: BrandLoader().colors.textPrimary,
+                      ),
               ),
-            ),
           ],
         ),
       ],
@@ -527,7 +686,7 @@ class _StepsCounterScreenState extends State<StepsCounterScreen>
             Icon(
               Icons.sync,
               size: 14,
-              color: BrandLoader().colors.textTertiary,
+              color: _isUs2 ? Us2Theme.textLight : BrandLoader().colors.textTertiary,
             ),
             const SizedBox(width: 4),
             Text(
@@ -535,8 +694,9 @@ class _StepsCounterScreenState extends State<StepsCounterScreen>
                   ? 'Last synced ${_formatTimeSince(lastSync)}'
                   : 'Not synced yet',
               style: TextStyle(
+                fontFamily: _isUs2 ? Us2Theme.fontBody : null,
                 fontSize: 12,
-                color: BrandLoader().colors.textTertiary,
+                color: _isUs2 ? Us2Theme.textLight : BrandLoader().colors.textTertiary,
               ),
             ),
           ],
@@ -547,8 +707,9 @@ class _StepsCounterScreenState extends State<StepsCounterScreen>
             child: Text(
               'Partner synced ${_formatTimeSince(partnerSync)}',
               style: TextStyle(
+                fontFamily: _isUs2 ? Us2Theme.fontBody : null,
                 fontSize: 12,
-                color: BrandLoader().colors.textTertiary,
+                color: _isUs2 ? Us2Theme.textLight : BrandLoader().colors.textTertiary,
               ),
             ),
           ),
@@ -558,6 +719,7 @@ class _StepsCounterScreenState extends State<StepsCounterScreen>
 
   Widget _buildOverflowIndicator(int combinedSteps) {
     final percentage = ((combinedSteps / 20000) * 100).round();
+    final successColor = _isUs2 ? const Color(0xFF4CAF50) : BrandLoader().colors.success;
 
     return Column(
       children: [
@@ -572,7 +734,7 @@ class _StepsCounterScreenState extends State<StepsCounterScreen>
               // Base 100% fill
               Container(
                 decoration: BoxDecoration(
-                  color: BrandLoader().colors.success,
+                  color: successColor,
                   borderRadius: BorderRadius.circular(4),
                 ),
               ),
@@ -582,7 +744,7 @@ class _StepsCounterScreenState extends State<StepsCounterScreen>
                   borderRadius: BorderRadius.circular(4),
                   child: CustomPaint(
                     painter: StripedPainter(
-                      color: BrandLoader().colors.success.withOpacity(0.3),
+                      color: successColor.withOpacity(0.3),
                     ),
                   ),
                 ),
@@ -594,8 +756,9 @@ class _StepsCounterScreenState extends State<StepsCounterScreen>
         Text(
           '$percentage% of daily goal · Keep going!',
           style: TextStyle(
+            fontFamily: _isUs2 ? Us2Theme.fontBody : null,
             fontSize: 12,
-            color: BrandLoader().colors.textSecondary,
+            color: _isUs2 ? Us2Theme.textMedium : BrandLoader().colors.textSecondary,
           ),
         ),
       ],
@@ -611,22 +774,23 @@ class _StepsCounterScreenState extends State<StepsCounterScreen>
       return Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          border: Border.all(color: BrandLoader().colors.borderLight),
+          border: Border.all(color: _isUs2 ? Us2Theme.beige : BrandLoader().colors.borderLight),
           borderRadius: BorderRadius.circular(12),
         ),
         child: Row(
           children: [
             Icon(
               Icons.directions_walk,
-              color: BrandLoader().colors.textTertiary,
+              color: _isUs2 ? Us2Theme.textLight : BrandLoader().colors.textTertiary,
             ),
             const SizedBox(width: 12),
             Expanded(
               child: Text(
                 'Walk ${_formatNumber(neededSteps)} more steps together to start earning LP!',
                 style: TextStyle(
+                  fontFamily: _isUs2 ? Us2Theme.fontBody : null,
                   fontSize: 14,
-                  color: BrandLoader().colors.textSecondary,
+                  color: _isUs2 ? Us2Theme.textMedium : BrandLoader().colors.textSecondary,
                 ),
               ),
             ),
@@ -638,7 +802,7 @@ class _StepsCounterScreenState extends State<StepsCounterScreen>
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        border: Border.all(color: BrandLoader().colors.borderLight),
+        border: Border.all(color: _isUs2 ? Us2Theme.beige : BrandLoader().colors.borderLight),
         borderRadius: BorderRadius.circular(12),
       ),
       child: Row(
@@ -650,15 +814,17 @@ class _StepsCounterScreenState extends State<StepsCounterScreen>
               Text(
                 'Tomorrow\'s Reward',
                 style: TextStyle(
+                  fontFamily: _isUs2 ? Us2Theme.fontBody : null,
                   fontSize: 12,
-                  color: BrandLoader().colors.textTertiary,
+                  color: _isUs2 ? Us2Theme.textLight : BrandLoader().colors.textTertiary,
                 ),
               ),
               Text(
                 'Current tier: ${_getTierName(combinedSteps)}',
                 style: TextStyle(
+                  fontFamily: _isUs2 ? Us2Theme.fontBody : null,
                   fontSize: 14,
-                  color: BrandLoader().colors.textSecondary,
+                  color: _isUs2 ? Us2Theme.textMedium : BrandLoader().colors.textSecondary,
                 ),
               ),
             ],
@@ -666,7 +832,8 @@ class _StepsCounterScreenState extends State<StepsCounterScreen>
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
             decoration: BoxDecoration(
-              color: BrandLoader().colors.textPrimary,
+              color: _isUs2 ? null : BrandLoader().colors.textPrimary,
+              gradient: _isUs2 ? Us2Theme.accentGradient : null,
               borderRadius: BorderRadius.circular(12),
             ),
             child: Text(
@@ -732,6 +899,7 @@ class DualRingPainter extends CustomPainter {
   final double userProgress;
   final double partnerProgress;
   final Color userColor;
+  final Color? userColorEnd; // For gradient support (Us 2.0)
   final Color partnerColor;
   final Color backgroundColor;
 
@@ -739,6 +907,7 @@ class DualRingPainter extends CustomPainter {
     required this.userProgress,
     required this.partnerProgress,
     required this.userColor,
+    this.userColorEnd,
     required this.partnerColor,
     required this.backgroundColor,
   });
@@ -757,12 +926,22 @@ class DualRingPainter extends CustomPainter {
       ..strokeWidth = strokeWidth
       ..strokeCap = StrokeCap.round;
 
-    // User ring paint (outer)
+    // User ring paint (outer) - with optional gradient
     final userPaint = Paint()
-      ..color = userColor
       ..style = PaintingStyle.stroke
       ..strokeWidth = strokeWidth
       ..strokeCap = StrokeCap.round;
+
+    if (userColorEnd != null) {
+      // Use sweep gradient for Us 2.0
+      userPaint.shader = SweepGradient(
+        startAngle: -math.pi / 2,
+        endAngle: 3 * math.pi / 2,
+        colors: [userColor, userColorEnd!],
+      ).createShader(Rect.fromCircle(center: center, radius: outerRadius));
+    } else {
+      userPaint.color = userColor;
+    }
 
     // Partner ring paint (inner)
     final partnerPaint = Paint()
@@ -806,7 +985,8 @@ class DualRingPainter extends CustomPainter {
   @override
   bool shouldRepaint(DualRingPainter oldDelegate) {
     return oldDelegate.userProgress != userProgress ||
-        oldDelegate.partnerProgress != partnerProgress;
+        oldDelegate.partnerProgress != partnerProgress ||
+        oldDelegate.userColorEnd != userColorEnd;
   }
 }
 

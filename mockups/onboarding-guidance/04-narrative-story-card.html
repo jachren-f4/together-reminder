@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Onboarding Variant 4: Narrative Story Card</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            background: #fafafa;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 420px;
+            margin: 0 auto;
+            background: #fff;
+            border: 2px solid #000;
+            box-shadow: 8px 8px 0 rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+
+        .header {
+            border-bottom: 2px solid #000;
+            padding: 24px 20px;
+            text-align: center;
+        }
+
+        .title {
+            font-size: 32px;
+            font-weight: 400;
+            letter-spacing: 2px;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+        }
+
+        .subtitle {
+            font-size: 14px;
+            color: #666;
+            font-style: italic;
+        }
+
+        .stats {
+            border-bottom: 1px solid #000;
+            padding: 20px;
+        }
+
+        .stat-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .stat-value {
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .progress-bg {
+            height: 2px;
+            background: #e0e0e0;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: #000;
+            width: 0%;
+        }
+
+        .section {
+            padding: 20px;
+            padding-bottom: 0;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .section-heading {
+            font-size: 16px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 20px;
+        }
+
+        .carousel-container {
+            position: relative;
+            margin: 0 -20px;
+            padding-bottom: 20px;
+        }
+
+        .carousel {
+            display: flex;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            gap: 16px;
+            padding: 0 20px;
+            scrollbar-width: none;
+        }
+
+        .carousel::-webkit-scrollbar {
+            display: none;
+        }
+
+        .quest-card {
+            flex: 0 0 calc(60%);
+            scroll-snap-align: center;
+            border: 1px solid #000;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: #fff;
+            overflow: hidden;
+        }
+
+        .quest-image {
+            width: 100%;
+            height: 170px;
+            object-fit: cover;
+            border-bottom: 1px solid #000;
+            display: block;
+            background: linear-gradient(135deg, #f5f5f5 0%, #e0e0e0 100%);
+        }
+
+        .quest-content {
+            padding: 16px;
+        }
+
+        .quest-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 12px;
+        }
+
+        .quest-info {
+            flex: 1;
+        }
+
+        .quest-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .quest-desc {
+            font-size: 12px;
+            color: #666;
+            font-style: italic;
+        }
+
+        .reward {
+            font-size: 14px;
+            font-weight: 700;
+            border: 1px solid #000;
+            padding: 4px 10px;
+            background: #000;
+            color: #fff;
+        }
+
+        .quest-footer {
+            padding-top: 12px;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .status-badge {
+            display: inline-block;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 6px 12px;
+            border: 1px solid #000;
+            background: #fff;
+        }
+
+        /* ==========================================
+           NARRATIVE STORY OVERLAY
+           ========================================== */
+
+        .story-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: #000;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 40px 30px;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .story-content {
+            max-width: 340px;
+            text-align: center;
+            color: #fff;
+        }
+
+        .story-chapter {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            opacity: 0.5;
+            margin-bottom: 20px;
+            animation: fadeInUp 0.6s ease-out 0.2s both;
+        }
+
+        .story-title {
+            font-size: 36px;
+            font-weight: 400;
+            margin-bottom: 30px;
+            line-height: 1.2;
+            animation: fadeInUp 0.6s ease-out 0.4s both;
+        }
+
+        .story-divider {
+            width: 60px;
+            height: 2px;
+            background: rgba(255,255,255,0.3);
+            margin: 0 auto 30px;
+            animation: fadeInUp 0.6s ease-out 0.5s both;
+        }
+
+        .story-text {
+            font-size: 18px;
+            line-height: 1.7;
+            opacity: 0.85;
+            margin-bottom: 40px;
+            font-style: italic;
+            animation: fadeInUp 0.6s ease-out 0.6s both;
+        }
+
+        .story-highlight {
+            color: #fff;
+            font-weight: 600;
+            font-style: normal;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .story-cta {
+            animation: fadeInUp 0.6s ease-out 0.8s both;
+        }
+
+        .story-button {
+            display: inline-block;
+            background: #fff;
+            color: #000;
+            border: none;
+            padding: 16px 40px;
+            font-family: inherit;
+            font-size: 14px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .story-button:hover {
+            background: #f0f0f0;
+            transform: scale(1.02);
+        }
+
+        .story-skip {
+            margin-top: 24px;
+            font-size: 12px;
+            opacity: 0.4;
+            cursor: pointer;
+            transition: opacity 0.2s;
+            animation: fadeInUp 0.6s ease-out 1s both;
+        }
+
+        .story-skip:hover {
+            opacity: 0.8;
+        }
+
+        /* Decorative elements */
+        .story-decoration {
+            position: absolute;
+            font-size: 120px;
+            opacity: 0.03;
+            pointer-events: none;
+        }
+
+        .story-decoration.top-left {
+            top: 20px;
+            left: 20px;
+        }
+
+        .story-decoration.bottom-right {
+            bottom: 20px;
+            right: 20px;
+            transform: rotate(180deg);
+        }
+
+        /* Progress dots */
+        .story-progress {
+            position: absolute;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 12px;
+        }
+
+        .progress-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.2);
+        }
+
+        .progress-dot.active {
+            background: #fff;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+    </style>
+</head>
+<body>
+    <!-- NARRATIVE STORY OVERLAY -->
+    <div class="story-overlay" id="storyOverlay">
+        <div class="story-decoration top-left">❦</div>
+        <div class="story-decoration bottom-right">❦</div>
+
+        <div class="story-content">
+            <div class="story-chapter">Chapter One</div>
+            <div class="story-title">The Journey<br>Begins</div>
+            <div class="story-divider"></div>
+            <div class="story-text">
+                Every great love story starts with a single step.
+                Your first quest awaits—<span class="story-highlight">five simple questions</span>
+                to discover how well you truly know each other.
+            </div>
+            <div class="story-cta">
+                <button class="story-button" onclick="dismissStory()">
+                    Begin Your Quest
+                </button>
+            </div>
+            <div class="story-skip" onclick="dismissStory()">
+                Skip intro
+            </div>
+        </div>
+
+        <div class="story-progress">
+            <div class="progress-dot active"></div>
+            <div class="progress-dot"></div>
+            <div class="progress-dot"></div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="header">
+            <div class="title">Love Quest</div>
+            <div class="subtitle">Your Journey Begins</div>
+        </div>
+
+        <div class="stats">
+            <div class="stat-row">
+                <div class="stat-label">Party</div>
+                <div class="stat-value">You & Partner</div>
+            </div>
+            <div class="stat-row">
+                <div class="stat-label">Love Points</div>
+                <div class="stat-value">0</div>
+            </div>
+            <div class="progress-bg">
+                <div class="progress-bar"></div>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-heading">
+                <span>Daily Quests</span>
+            </div>
+
+            <div class="carousel-container">
+                <div class="carousel">
+                    <div class="quest-card" id="firstQuest">
+                        <div class="quest-image"></div>
+                        <div class="quest-content">
+                            <div class="quest-header">
+                                <div class="quest-info">
+                                    <div class="quest-title">Classic Quiz</div>
+                                    <div class="quest-desc">Answer five questions together</div>
+                                </div>
+                                <div class="reward">+30</div>
+                            </div>
+                            <div class="quest-footer">
+                                <span class="status-badge">Your Turn</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="quest-card" style="opacity: 0.4;">
+                        <div class="quest-image"></div>
+                        <div class="quest-content">
+                            <div class="quest-header">
+                                <div class="quest-info">
+                                    <div class="quest-title">Affirmation Quiz</div>
+                                    <div class="quest-desc">Coming soon...</div>
+                                </div>
+                                <div class="reward">+30</div>
+                            </div>
+                            <div class="quest-footer">
+                                <span class="status-badge">Locked</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function dismissStory() {
+            const overlay = document.getElementById('storyOverlay');
+            overlay.style.animation = 'fadeOut 0.3s ease-out forwards';
+            setTimeout(() => {
+                overlay.classList.add('hidden');
+                // After story, could show a subtle highlight on the quest card
+                document.getElementById('firstQuest').style.boxShadow = '0 0 0 3px #000';
+            }, 300);
+        }
+
+        // Add fadeOut animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes fadeOut {
+                from { opacity: 1; }
+                to { opacity: 0; }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>

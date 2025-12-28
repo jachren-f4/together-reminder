@@ -1,6 +1,6 @@
 {
   "quizId": "quiz_003",
-  "title": "Lighthearted Quiz 3",
+  "title": "Home Life",
   "branch": "lighthearted",
   "questions": [
     {
@@ -33,5 +33,6 @@
       "prompt": "Who is more",
       "content": "Likely to remember everyone's birthday"
     }
-  ]
+  ],
+  "description": "Explore your domestic dynamics—from cooking to cleaning to who controls the thermostat."
 }

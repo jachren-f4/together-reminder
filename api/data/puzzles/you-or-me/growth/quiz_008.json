@@ -1,6 +1,6 @@
 {
   "quizId": "quiz_008",
-  "title": "Growth Quiz 8",
+  "title": "Dream Chasing",
   "branch": "growth",
   "questions": [
     {
@@ -33,5 +33,6 @@
       "prompt": "Who takes more responsibility for...",
       "content": "Their role in relationship dynamics"
     }
-  ]
+  ],
+  "description": "Who encourages dreams? Who makes them happen? Find your dynamic."
 }

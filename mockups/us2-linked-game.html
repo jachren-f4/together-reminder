@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Us 2.0 - Linked Game</title>
+  <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Playfair+Display:ital,wght@0,700;1,400&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      /* Us 2.0 Design System */
+      --bg-gradient-start: #FFD1C1;
+      --bg-gradient-end: #FFF5F0;
+      --gradient-accent-start: #FF6B6B;
+      --gradient-accent-end: #FF9F43;
+      --glow-pink: rgba(255, 107, 107, 0.6);
+
+      /* Game-specific */
+      --gold-light: #F5E6D0;
+      --gold-mid: #E8D5B8;
+      --gold-dark: #D4B896;
+      --gold-border: #C9A875;
+      --cell-cream: #FFFBF5;
+      --cell-border: #E8DDD0;
+      --void-dark: #4A2C2A;
+      --letter-pink: #E91E63;
+
+      /* Letter tiles */
+      --tile-gold-light: #FFE8A0;
+      --tile-gold-dark: #D4A855;
+      --tile-text: #5D4E37;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Nunito', sans-serif;
+      background: linear-gradient(180deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
+      min-height: 100vh;
+      max-width: 430px;
+      margin: 0 auto;
+      position: relative;
+      padding-bottom: 90px;
+    }
+
+    /* Floating hearts/bubbles background effect */
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-image:
+        radial-gradient(ellipse at 15% 25%, rgba(255,200,200,0.4) 0%, transparent 40%),
+        radial-gradient(ellipse at 85% 35%, rgba(255,180,180,0.3) 0%, transparent 35%),
+        radial-gradient(ellipse at 50% 70%, rgba(255,190,190,0.25) 0%, transparent 40%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ========================================
+       HEADER - Gradient Banner (V2)
+       ======================================== */
+    .header {
+      background: transparent;
+      padding: 14px 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .back-btn {
+      width: 34px;
+      height: 34px;
+      background: linear-gradient(135deg, var(--gradient-accent-start) 0%, var(--gradient-accent-end) 100%);
+      border: none;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      color: white;
+      cursor: pointer;
+      box-shadow: 0 3px 8px rgba(255, 107, 107, 0.3);
+    }
+
+    .header-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--text-dark);
+      letter-spacing: 2px;
+    }
+
+    .header-scores {
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .score-badge {
+      background: linear-gradient(135deg, var(--gradient-accent-start) 0%, var(--gradient-accent-end) 100%);
+      padding: 6px 12px;
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: white;
+      font-size: 13px;
+      font-weight: 700;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.15);
+      box-shadow: 0 2px 6px rgba(255, 107, 107, 0.3);
+    }
+
+    .score-badge.active {
+      box-shadow: 0 3px 10px rgba(255, 107, 107, 0.4);
+    }
+
+    .score-badge .heart {
+      font-size: 14px;
+    }
+
+    /* ========================================
+       GRID CONTAINER - Gold beveled frame
+       ======================================== */
+    .grid-container {
+      margin: 0 12px 16px;
+      background: linear-gradient(180deg, var(--gold-light) 0%, var(--gold-mid) 50%, var(--gold-dark) 100%);
+      border-radius: 16px;
+      padding: 10px;
+      border: 2px solid var(--gold-border);
+      box-shadow:
+        0 6px 20px rgba(0,0,0,0.15),
+        inset 0 2px 0 rgba(255,255,255,0.4),
+        inset 0 -2px 0 rgba(0,0,0,0.1);
+    }
+
+    .grid-inner {
+      background: var(--gold-mid);
+      border-radius: 10px;
+      padding: 6px;
+      box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 3px;
+    }
+
+    /* ========================================
+       CELLS - Base styles
+       ======================================== */
+    .cell {
+      aspect-ratio: 1;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      font-weight: 700;
+    }
+
+    /* Void/Dark cells - burgundy */
+    .cell.void {
+      background: linear-gradient(135deg, #5D3A3A 0%, var(--void-dark) 100%);
+      box-shadow: inset 0 2px 4px rgba(0,0,0,0.4);
+    }
+
+    /* Clue cells - cream with subtle bevel */
+    .cell.clue {
+      background: linear-gradient(180deg, #FFFDF8 0%, #FFF5E6 100%);
+      border: 1px solid var(--cell-border);
+      flex-direction: column;
+      padding: 2px;
+      text-align: center;
+      line-height: 1.05;
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.9),
+        0 1px 2px rgba(0,0,0,0.08);
+    }
+
+    .cell.clue .clue-text {
+      font-family: Arial, sans-serif;
+      font-size: 8px;
+      font-weight: 800;
+      color: #555;
+      letter-spacing: -0.3px;
+    }
+
+    .cell.clue .clue-emoji { font-size: 18px; }
+
+    .cell.clue .clue-hint {
+      font-family: Arial, sans-serif;
+      font-size: 13px;
+      font-weight: 800;
+      color: var(--letter-pink);
+    }
+
+    .cell .arrow {
+      position: absolute;
+      font-size: 7px;
+      color: #999;
+    }
+    .cell .arrow.down { bottom: 1px; left: 1px; }
+    .cell .arrow.right { right: 1px; top: 1px; }
+
+    /* Answer cells - bright white with pink accent border */
+    .cell.answer {
+      background: linear-gradient(180deg, #FFFFFF 0%, #FFF8F8 100%);
+      border: 2px solid rgba(255, 107, 107, 0.4);
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,1),
+        0 2px 6px rgba(255, 107, 107, 0.2);
+    }
+
+    .cell.answer .letter {
+      font-family: Georgia, serif;
+      font-size: 26px;
+      font-weight: 700;
+      color: var(--letter-pink);
+      text-shadow: 0 1px 1px rgba(0,0,0,0.1);
+    }
+
+    /* Empty answer cells - ready for letter placement */
+    .cell.answer.empty {
+      background: linear-gradient(180deg, #FFFFFF 0%, #FFFAF8 100%);
+      border: 2px dashed rgba(255, 107, 107, 0.5);
+    }
+
+    /* ========================================
+       YOUR LETTERS - Gold gradient tiles
+       ======================================== */
+    .letters-section {
+      margin: 0 16px 14px;
+      text-align: center;
+    }
+
+    .letters-label {
+      font-size: 11px;
+      font-weight: 700;
+      color: #8B7355;
+      letter-spacing: 2px;
+      margin-bottom: 10px;
+    }
+
+    .letter-tiles {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .letter-tile {
+      width: 56px;
+      height: 56px;
+      background: linear-gradient(180deg, var(--tile-gold-light) 0%, var(--tile-gold-dark) 100%);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Nunito', sans-serif;
+      font-size: 30px;
+      font-weight: 800;
+      color: var(--tile-text);
+      box-shadow:
+        0 4px 8px rgba(0,0,0,0.2),
+        0 2px 4px rgba(0,0,0,0.1),
+        inset 0 2px 0 rgba(255,255,255,0.5),
+        inset 0 -2px 0 rgba(0,0,0,0.15);
+      cursor: grab;
+      text-shadow: 0 1px 0 rgba(255,255,255,0.3);
+      transition: transform 0.1s, box-shadow 0.1s;
+    }
+
+    .letter-tile:hover {
+      transform: translateY(-2px);
+      box-shadow:
+        0 6px 12px rgba(0,0,0,0.25),
+        0 3px 6px rgba(0,0,0,0.15),
+        inset 0 2px 0 rgba(255,255,255,0.5),
+        inset 0 -2px 0 rgba(0,0,0,0.15);
+    }
+
+    /* ========================================
+       ACTION BUTTONS - Gradient pills
+       ======================================== */
+    .action-buttons {
+      display: flex;
+      gap: 12px;
+      margin: 0 16px 20px;
+    }
+
+    .hint-btn {
+      background: linear-gradient(135deg, var(--gradient-accent-start) 0%, var(--gradient-accent-end) 100%);
+      border: none;
+      border-radius: 25px;
+      padding: 14px 20px;
+      color: white;
+      font-weight: 700;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      box-shadow:
+        0 4px 12px rgba(255, 107, 107, 0.4),
+        inset 0 1px 0 rgba(255,255,255,0.3);
+      text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+    }
+
+    .hint-btn .icon { font-size: 16px; }
+
+    .turn-btn {
+      flex: 1;
+      background: linear-gradient(135deg, #FF7B6B 0%, #FF9F6B 100%);
+      border: none;
+      border-radius: 25px;
+      padding: 14px 24px;
+      color: white;
+      font-weight: 800;
+      font-size: 15px;
+      letter-spacing: 0.5px;
+      cursor: pointer;
+      box-shadow:
+        0 4px 12px rgba(255, 127, 107, 0.4),
+        inset 0 1px 0 rgba(255,255,255,0.3);
+      text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+    }
+
+    /* ========================================
+       BOTTOM NAVIGATION
+       ======================================== */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100%;
+      max-width: 430px;
+      background: white;
+      display: flex;
+      justify-content: space-around;
+      padding: 10px 0 24px;
+      box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.08);
+    }
+
+    .nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      cursor: pointer;
+    }
+
+    .nav-icon { font-size: 24px; }
+    .nav-label { font-size: 11px; font-weight: 600; color: #4A4A4A; }
+
+    .nav-item.active .nav-icon,
+    .nav-item.active .nav-label {
+      background: linear-gradient(135deg, var(--gradient-accent-start), var(--gradient-accent-end));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .nav-item.poke .nav-icon {
+      background: linear-gradient(135deg, var(--gradient-accent-start), var(--gradient-accent-end));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+  </style>
+</head>
+<body>
+  <!-- Header - Gradient Banner (V2) -->
+  <header class="header">
+    <div class="back-btn">←</div>
+    <span class="header-title">CROSSWORD</span>
+    <div class="header-scores">
+      <div class="score-badge active">
+        <span class="heart">💗</span>
+        <span>You: 50</span>
+      </div>
+      <div class="score-badge">
+        <span>Kilu: 50</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Grid Container -->
+  <div class="grid-container">
+    <div class="grid-inner">
+      <div class="grid">
+        <!-- Row 1 -->
+        <div class="cell clue"><span class="clue-hint">_ATE</span><span class="arrow down">▼</span></div>
+        <div class="cell answer empty"></div>
+        <div class="cell void"></div>
+        <div class="cell clue"><span class="clue-hint">_EX</span><span class="clue-text">AFTER @</span><span class="arrow down">▼</span></div>
+        <div class="cell answer empty"></div>
+        <div class="cell clue"><span class="clue-emoji">🗞️</span></div>
+
+        <!-- Row 2 -->
+        <div class="cell clue"><span class="clue-hint">_AR</span><span class="arrow down">▼</span></div>
+        <div class="cell answer empty"></div>
+        <div class="cell answer"><span class="letter">T</span></div>
+        <div class="cell answer empty"></div>
+        <div class="cell void"></div>
+        <div class="cell void"></div>
+
+        <!-- Row 3 -->
+        <div class="cell clue"><span class="clue-hint">_O</span><span class="arrow down">▼</span></div>
+        <div class="cell answer empty"></div>
+        <div class="cell answer empty"></div>
+        <div class="cell answer"><span class="letter">U</span></div>
+        <div class="cell answer empty"></div>
+        <div class="cell void"></div>
+
+        <!-- Row 4 -->
+        <div class="cell void"></div>
+        <div class="cell clue"><span class="clue-emoji">🎬</span><span class="clue-text">__ DO YOU</span></div>
+        <div class="cell answer"><span class="letter">V</span></div>
+        <div class="cell void"></div>
+        <div class="cell clue"><span class="clue-text">BELONGI</span><span class="clue-text">NG TO</span><span class="clue-text">ME</span></div>
+        <div class="cell void"></div>
+
+        <!-- Row 5 -->
+        <div class="cell clue"><span class="clue-hint">_RAP</span><span class="arrow down">▼</span></div>
+        <div class="cell void"></div>
+        <div class="cell clue"><span class="clue-hint">WH_</span><span class="clue-text">__ ARE YOU?</span><span class="arrow down">▼</span></div>
+        <div class="cell answer"><span class="letter">Y</span></div>
+        <div class="cell clue"><span class="clue-hint">_E</span><span class="clue-text">PLAYFUL WA...</span><span class="arrow down">▼</span></div>
+        <div class="cell void"></div>
+
+        <!-- Row 6 -->
+        <div class="cell clue"><span class="clue-text">AFTER</span><span class="clue-text">G</span></div>
+        <div class="cell clue"><span class="clue-emoji">🛁</span></div>
+        <div class="cell clue"><span class="clue-text">SIDE __ SIDE</span><span class="clue-emoji">💗</span><span class="clue-hint">LO_E</span></div>
+        <div class="cell answer"><span class="letter">B</span></div>
+        <div class="cell void"></div>
+        <div class="cell void"></div>
+
+        <!-- Row 7 -->
+        <div class="cell clue"><span class="clue-text">UP __</span></div>
+        <div class="cell void"></div>
+        <div class="cell answer"><span class="letter">V</span></div>
+        <div class="cell answer"><span class="letter">E</span></div>
+        <div class="cell clue"><span class="clue-text">BEFOR</span><span class="clue-text">EP</span></div>
+        <div class="cell void"></div>
+
+        <!-- Row 8 -->
+        <div class="cell clue"><span class="clue-hint">_EASE</span><span class="arrow right">▶</span></div>
+        <div class="cell answer"><span class="letter">T</span></div>
+        <div class="cell clue"><span class="clue-emoji">🍑</span><span class="clue-hint">_ET</span></div>
+        <div class="cell clue"><span class="clue-text">GOING</span><span class="clue-text">DINNER</span></div>
+        <div class="cell answer"><span class="letter">O</span></div>
+        <div class="cell void"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Your Letters -->
+  <div class="letters-section">
+    <div class="letters-label">YOUR LETTERS</div>
+    <div class="letter-tiles">
+      <div class="letter-tile">B</div>
+      <div class="letter-tile">E</div>
+      <div class="letter-tile">H</div>
+      <div class="letter-tile">G</div>
+      <div class="letter-tile">O</div>
+    </div>
+  </div>
+
+  <!-- Action Buttons -->
+  <div class="action-buttons">
+    <button class="hint-btn">
+      <span class="icon">💡</span>
+      Hint (1)
+    </button>
+    <button class="turn-btn">KILU'S TURN</button>
+  </div>
+
+  <!-- Bottom Navigation -->
+  <nav class="bottom-nav">
+    <div class="nav-item active">
+      <div class="nav-icon">🏠</div>
+      <span class="nav-label">Home</span>
+    </div>
+    <div class="nav-item">
+      <div class="nav-icon">✉️</div>
+      <span class="nav-label">Inbox</span>
+    </div>
+    <div class="nav-item poke">
+      <div class="nav-icon">💫</div>
+      <span class="nav-label">Poke</span>
+    </div>
+    <div class="nav-item">
+      <div class="nav-icon">👤</div>
+      <span class="nav-label">Profile</span>
+    </div>
+    <div class="nav-item">
+      <div class="nav-icon">⚙️</div>
+      <span class="nav-label">Settings</span>
+    </div>
+  </nav>
+</body>
+</html>

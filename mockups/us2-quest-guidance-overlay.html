@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Us 2.0 - Quest Guidance Overlay</title>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-gradient-start: #FFD1C1;
+            --bg-gradient-end: #FFF5F0;
+            --primary-pink: #FF5E62;
+            --gradient-start: #FF6B6B;
+            --gradient-end: #FF9F43;
+            --cream: #FFF8F0;
+            --beige: #F5E6D8;
+            --text-dark: #2D2D2D;
+            --text-medium: #6B6B6B;
+            --text-light: #9B9B9B;
+            --glow-pink: rgba(255, 107, 107, 0.5);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            min-height: 100vh;
+            background: linear-gradient(180deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .phone-frame {
+            width: 390px;
+            height: 844px;
+            background: linear-gradient(180deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
+            border-radius: 40px;
+            overflow: hidden;
+            box-shadow: 0 25px 80px rgba(0, 0, 0, 0.15);
+            position: relative;
+        }
+
+        /* Content beneath overlay - simulated home screen */
+        .home-content {
+            padding: 60px 20px 20px;
+            opacity: 0.3;
+        }
+
+        .home-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .logo-placeholder {
+            font-family: 'Pacifico', cursive;
+            font-size: 36px;
+            color: white;
+            text-shadow: 0 0 10px var(--glow-pink);
+        }
+
+        .quest-card-placeholder {
+            background: white;
+            border-radius: 20px;
+            height: 180px;
+            margin-bottom: 20px;
+        }
+
+        /* Dark overlay */
+        .guidance-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(45, 45, 45, 0.85);
+            display: flex;
+            flex-direction: column;
+            z-index: 10;
+        }
+
+        /* Ribbon tooltip */
+        .ribbon-container {
+            position: absolute;
+            top: 300px;
+            left: 20px;
+            right: 20px;
+            animation: fadeIn 0.4s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .ribbon {
+            background: var(--beige);
+            padding: 20px 24px;
+            position: relative;
+        }
+
+        /* Ribbon tail */
+        .ribbon::after {
+            content: '';
+            position: absolute;
+            right: -16px;
+            top: 0;
+            bottom: 0;
+            width: 16px;
+            background: var(--beige);
+            clip-path: polygon(0 0, 0 100%, 100% 50%);
+        }
+
+        .ribbon-text {
+            font-family: 'Playfair Display', serif;
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-dark);
+            line-height: 1.4;
+        }
+
+        .ribbon-text em {
+            font-style: italic;
+            background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Floating hand pointer */
+        .pointer-container {
+            position: absolute;
+            top: 400px;
+            left: 50%;
+            transform: translateX(-50%);
+            animation: float 1.5s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateX(-50%) translateY(0); }
+            50% { transform: translateX(-50%) translateY(10px); }
+        }
+
+        .pointer {
+            font-size: 48px;
+            filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+        }
+
+        /* Highlighted quest card cutout */
+        .highlight-area {
+            position: absolute;
+            top: 440px;
+            left: 20px;
+            right: 20px;
+            height: 160px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 0 0 4px var(--gradient-start), 0 10px 40px rgba(255, 107, 107, 0.4);
+            overflow: hidden;
+        }
+
+        .highlight-card {
+            padding: 16px;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card-image {
+            height: 80px;
+            background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            margin-bottom: 12px;
+        }
+
+        .card-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 4px;
+        }
+
+        .card-subtitle {
+            font-size: 12px;
+            color: var(--text-medium);
+        }
+
+        /* Dismiss button */
+        .dismiss-button {
+            position: absolute;
+            bottom: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: transparent;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 24px;
+            padding: 12px 32px;
+            font-family: 'Nunito', sans-serif;
+            font-size: 14px;
+            font-weight: 600;
+            color: white;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .dismiss-button:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.5);
+        }
+    </style>
+</head>
+<body>
+    <div class="phone-frame">
+        <!-- Dimmed home content -->
+        <div class="home-content">
+            <div class="home-header">
+                <div class="logo-placeholder">Us 2.0</div>
+            </div>
+            <div class="quest-card-placeholder"></div>
+            <div class="quest-card-placeholder"></div>
+        </div>
+
+        <!-- Guidance overlay -->
+        <div class="guidance-overlay">
+            <!-- Ribbon tooltip -->
+            <div class="ribbon-container">
+                <div class="ribbon">
+                    <div class="ribbon-text">
+                        Tap a <em>Quest Card</em> to start<br>
+                        your daily activity together!
+                    </div>
+                </div>
+            </div>
+
+            <!-- Floating pointer -->
+            <div class="pointer-container">
+                <div class="pointer">👆</div>
+            </div>
+
+            <!-- Highlighted quest card -->
+            <div class="highlight-area">
+                <div class="highlight-card">
+                    <div class="card-image">💕</div>
+                    <div class="card-title">Affirmation Quiz</div>
+                    <div class="card-subtitle">Rate your feelings together</div>
+                </div>
+            </div>
+
+            <button class="dismiss-button">Got it!</button>
+        </div>
+    </div>
+</body>
+</html>

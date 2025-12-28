@@ -1,0 +1,17 @@
+// Us 2.0 flavor configuration
+// Used for both Debug and Release builds
+
+// App identity
+// Uses same Firebase project as togetherremind for now
+// TODO: Create separate Firebase app for Us 2.0 production
+PRODUCT_BUNDLE_IDENTIFIER = com.togetherremind.togetherremind2
+PRODUCT_NAME = Us 2.0
+
+// Brand identifier (passed to Dart via --dart-define)
+BRAND = us2
+
+// App icon (uses AppIcon-us2 asset catalog)
+ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon-us2
+
+// Firebase config path (relative to ios/)
+GOOGLE_SERVICE_INFO_PLIST = Firebase/TogetherRemind/GoogleService-Info.plist

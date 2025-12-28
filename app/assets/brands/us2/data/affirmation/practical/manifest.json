@@ -1,0 +1,9 @@
+{
+  "branch": "practical",
+  "activityType": "affirmation",
+  "videoPath": "assets/brands/togetherremind/videos/affirmation.mp4",
+  "imagePath": "assets/brands/togetherremind/images/quests/affirmation-default.png",
+  "fallbackEmoji": "❤️",
+  "displayName": "Practical",
+  "description": "Down-to-earth affirmations for daily life"
+}

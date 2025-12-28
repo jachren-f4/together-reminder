@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:uuid/uuid.dart';
 import '../models/reminder.dart';
 import '../services/storage_service.dart';
 import '../services/reminder_service.dart';
 import '../utils/logger.dart';
 import '../theme/app_theme.dart';
+import '../config/brand/brand_loader.dart';
+import '../config/brand/brand_config.dart';
+import '../config/brand/us2_theme.dart';
 
 class RemindBottomSheet extends StatefulWidget {
   const RemindBottomSheet({super.key});
@@ -25,6 +29,8 @@ class RemindBottomSheet extends StatefulWidget {
 }
 
 class _RemindBottomSheetState extends State<RemindBottomSheet> {
+  bool get _isUs2 => BrandLoader().config.brand == Brand.us2;
+
   final TextEditingController _messageController = TextEditingController();
   String? _selectedTime;
 
@@ -44,6 +50,11 @@ class _RemindBottomSheetState extends State<RemindBottomSheet> {
 
   @override
   Widget build(BuildContext context) {
+    if (_isUs2) return _buildUs2Sheet();
+    return _buildLiiaSheet();
+  }
+
+  Widget _buildLiiaSheet() {
     final partner = StorageService().getPartner();
     final partnerName = partner?.name ?? 'Partner';
 
@@ -325,6 +336,332 @@ class _RemindBottomSheetState extends State<RemindBottomSheet> {
           ),
         );
       },
+    );
+  }
+
+  Widget _buildUs2Sheet() {
+    final partner = StorageService().getPartner();
+    final partnerName = partner?.name ?? 'Partner';
+
+    return DraggableScrollableSheet(
+      initialChildSize: 0.65,
+      minChildSize: 0.4,
+      maxChildSize: 0.85,
+      builder: (context, scrollController) {
+        return Container(
+          decoration: const BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+          ),
+          child: Column(
+            children: [
+              // Drag handle
+              Container(
+                margin: const EdgeInsets.only(top: 12, bottom: 8),
+                width: 40,
+                height: 4,
+                decoration: BoxDecoration(
+                  color: Us2Theme.beige,
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              ),
+
+              // Header
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+                decoration: BoxDecoration(
+                  border: Border(
+                    bottom: BorderSide(color: Us2Theme.beige, width: 1),
+                  ),
+                ),
+                child: Center(
+                  child: RichText(
+                    textAlign: TextAlign.center,
+                    text: TextSpan(
+                      style: GoogleFonts.playfairDisplay(
+                        fontSize: 28,
+                        fontWeight: FontWeight.w600,
+                        color: Us2Theme.textDark,
+                      ),
+                      children: [
+                        const TextSpan(text: 'Remind '),
+                        TextSpan(
+                          text: partnerName,
+                          style: GoogleFonts.playfairDisplay(
+                            fontSize: 28,
+                            fontWeight: FontWeight.w600,
+                            fontStyle: FontStyle.italic,
+                            foreground: Paint()
+                              ..shader = const LinearGradient(
+                                colors: [Us2Theme.gradientAccentStart, Us2Theme.gradientAccentEnd],
+                              ).createShader(const Rect.fromLTWH(0, 0, 100, 30)),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+
+              // Content
+              Expanded(
+                child: SingleChildScrollView(
+                  controller: scrollController,
+                  child: Padding(
+                    padding: const EdgeInsets.all(20),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // Message field label
+                        Text(
+                          'MESSAGE',
+                          style: GoogleFonts.nunito(
+                            fontSize: 11,
+                            fontWeight: FontWeight.w600,
+                            letterSpacing: 1.5,
+                            color: Us2Theme.textLight,
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+
+                        // Message input
+                        TextField(
+                          controller: _messageController,
+                          autofocus: true,
+                          textCapitalization: TextCapitalization.sentences,
+                          style: GoogleFonts.nunito(
+                            fontSize: 15,
+                            color: Us2Theme.textDark,
+                          ),
+                          decoration: InputDecoration(
+                            hintText: 'What would you like to remind them...',
+                            hintStyle: GoogleFonts.nunito(
+                              fontSize: 15,
+                              color: Us2Theme.textLight,
+                            ),
+                            contentPadding: const EdgeInsets.symmetric(
+                              horizontal: 16,
+                              vertical: 14,
+                            ),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                              borderSide: BorderSide(color: Us2Theme.beige, width: 2),
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                              borderSide: BorderSide(color: Us2Theme.beige, width: 2),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                              borderSide: const BorderSide(
+                                color: Us2Theme.gradientAccentStart,
+                                width: 2,
+                              ),
+                            ),
+                          ),
+                          onSubmitted: (value) {
+                            FocusScope.of(context).unfocus();
+                          },
+                        ),
+
+                        // Quick messages
+                        const SizedBox(height: 12),
+                        SizedBox(
+                          height: 40,
+                          child: ListView.separated(
+                            scrollDirection: Axis.horizontal,
+                            itemCount: _quickMessages.length,
+                            separatorBuilder: (context, index) =>
+                                const SizedBox(width: 8),
+                            itemBuilder: (context, index) {
+                              final msg = _quickMessages[index];
+                              return _buildUs2QuickChip(msg);
+                            },
+                          ),
+                        ),
+
+                        const SizedBox(height: 20),
+
+                        // Delivery time label
+                        Text(
+                          'DELIVERY TIME',
+                          style: GoogleFonts.nunito(
+                            fontSize: 11,
+                            fontWeight: FontWeight.w600,
+                            letterSpacing: 1.5,
+                            color: Us2Theme.textLight,
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+
+                        // Time options grid
+                        Row(
+                          children: _timeOptions.asMap().entries.map((entry) {
+                            final index = entry.key;
+                            final option = entry.value;
+                            return Expanded(
+                              child: Padding(
+                                padding: EdgeInsets.only(
+                                  right: index < _timeOptions.length - 1 ? 8 : 0,
+                                ),
+                                child: _buildUs2TimeOption(option),
+                              ),
+                            );
+                          }).toList(),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+
+              // Footer
+              Container(
+                padding: const EdgeInsets.all(20),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  border: Border(
+                    top: BorderSide(color: Us2Theme.beige, width: 1),
+                  ),
+                ),
+                child: SafeArea(
+                  top: false,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      // Send button
+                      GestureDetector(
+                        onTap: _sendReminder,
+                        child: Container(
+                          width: double.infinity,
+                          height: 56,
+                          decoration: BoxDecoration(
+                            gradient: Us2Theme.accentGradient,
+                            borderRadius: BorderRadius.circular(16),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Us2Theme.glowPink,
+                                blurRadius: 25,
+                                offset: const Offset(0, 8),
+                              ),
+                            ],
+                          ),
+                          child: Center(
+                            child: Text(
+                              'Send Reminder',
+                              style: GoogleFonts.nunito(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w700,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 12),
+                      Text(
+                        'Your partner will be notified at the scheduled time',
+                        style: GoogleFonts.nunito(
+                          fontSize: 12,
+                          fontStyle: FontStyle.italic,
+                          color: Us2Theme.textLight,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildUs2QuickChip(Map<String, dynamic> msg) {
+    return GestureDetector(
+      onTap: () {
+        HapticFeedback.selectionClick();
+        _messageController.text = msg['text'];
+      },
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+        decoration: BoxDecoration(
+          color: Us2Theme.cream,
+          border: Border.all(color: Us2Theme.beige, width: 1),
+          borderRadius: BorderRadius.circular(20),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              msg['emoji'],
+              style: const TextStyle(fontSize: 14),
+            ),
+            const SizedBox(width: 6),
+            Text(
+              msg['text'],
+              style: GoogleFonts.nunito(
+                fontSize: 13,
+                color: Us2Theme.textDark,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildUs2TimeOption(Map<String, dynamic> option) {
+    final isSelected = _selectedTime == option['label'];
+
+    return GestureDetector(
+      onTap: () {
+        HapticFeedback.selectionClick();
+        setState(() {
+          _selectedTime = option['label'] as String;
+        });
+      },
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 150),
+        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
+        decoration: BoxDecoration(
+          color: isSelected ? null : Us2Theme.cream,
+          gradient: isSelected ? Us2Theme.accentGradient : null,
+          border: Border.all(
+            color: isSelected ? Colors.transparent : Us2Theme.beige,
+            width: 2,
+          ),
+          borderRadius: BorderRadius.circular(12),
+          boxShadow: isSelected
+              ? [
+                  BoxShadow(
+                    color: Us2Theme.glowPink,
+                    blurRadius: 15,
+                    offset: const Offset(0, 4),
+                  ),
+                ]
+              : null,
+        ),
+        child: Column(
+          children: [
+            Text(
+              option['emoji'] as String,
+              style: const TextStyle(fontSize: 20),
+            ),
+            const SizedBox(height: 4),
+            Text(
+              option['label'] as String,
+              style: GoogleFonts.nunito(
+                fontSize: 11,
+                fontWeight: FontWeight.w600,
+                color: isSelected ? Colors.white : Us2Theme.textDark,
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 

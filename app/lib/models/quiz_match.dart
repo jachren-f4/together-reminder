@@ -138,6 +138,10 @@ class QuizMatchSubmitResult {
   final int? lpEarned;
   final List<int> userAnswers;
   final List<int> partnerAnswers;
+  // LP Daily Reset status
+  final bool? alreadyGrantedToday;
+  final int? resetInMs;
+  final bool? canPlayMore;
 
   QuizMatchSubmitResult({
     required this.success,
@@ -147,6 +151,9 @@ class QuizMatchSubmitResult {
     this.lpEarned,
     this.userAnswers = const [],
     this.partnerAnswers = const [],
+    this.alreadyGrantedToday,
+    this.resetInMs,
+    this.canPlayMore,
   });
 
   factory QuizMatchSubmitResult.fromJson(Map<String, dynamic> json) {
@@ -158,6 +165,9 @@ class QuizMatchSubmitResult {
       lpEarned: json['lpEarned'],
       userAnswers: List<int>.from(json['userAnswers'] ?? []),
       partnerAnswers: List<int>.from(json['partnerAnswers'] ?? []),
+      alreadyGrantedToday: json['alreadyGrantedToday'],
+      resetInMs: json['resetInMs'],
+      canPlayMore: json['canPlayMore'],
     );
   }
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:confetti/confetti.dart';
 import '../models/word_search.dart';
+import '../services/storage_service.dart';
 import '../services/celebration_service.dart';
 import '../config/brand/brand_loader.dart';
 
@@ -63,6 +64,9 @@ class _WordSearchCompletionScreenState extends State<WordSearchCompletionScreen>
       CelebrationType.questComplete,
       confettiController: _confettiController,
     );
+
+    // Clear pending results flag - user is viewing results
+    StorageService().clearPendingResultsMatchId('word_search');
 
     // LP is now server-authoritative - awarded via awardLP() in word-search/submit route
     // LP sync happens before navigation to this screen (in word_search_game_screen.dart)

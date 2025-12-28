@@ -1,6 +1,6 @@
 {
   "quizId": "quiz_009",
-  "title": "Growth Quiz 9",
+  "title": "Feedback",
   "branch": "growth",
   "questions": [
     {
@@ -33,5 +33,6 @@
       "prompt": "Who has overcome more...",
       "content": "Personal obstacles and challenges"
     }
-  ]
+  ],
+  "description": "How do you give and receive constructive feedback as a couple?"
 }

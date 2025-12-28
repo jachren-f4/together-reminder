@@ -1,6 +1,6 @@
 {
   "quizId": "quiz_004",
-  "title": "Lighthearted Quiz 4",
+  "title": "Little Things",
   "branch": "lighthearted",
   "questions": [
     {
@@ -33,5 +33,6 @@
       "prompt": "Who is more",
       "content": "Likely to spend hours browsing online shopping"
     }
-  ]
+  ],
+  "description": "It's the small stuff that counts! See who remembers dates, who's always running late, and more."
 }

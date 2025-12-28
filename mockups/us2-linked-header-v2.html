@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Us 2.0 - Linked Header Variant 2: Gradient Banner</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-gradient-start: #FFD1C1;
+      --bg-gradient-end: #FFF5F0;
+      --gradient-accent-start: #FF6B6B;
+      --gradient-accent-end: #FF9F43;
+      --gold-light: #F5E6D0;
+      --text-dark: #2D2D2D;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Nunito', sans-serif;
+      background: linear-gradient(180deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
+      min-height: 100vh;
+      max-width: 430px;
+      margin: 0 auto;
+      padding: 40px 0;
+    }
+
+    h3 {
+      text-align: center;
+      color: #666;
+      margin-bottom: 20px;
+      font-size: 14px;
+    }
+
+    /* ========================================
+       VARIANT 2: Gradient Banner Style
+       - Coral/orange gradient header
+       - White text, centered title
+       - Scores as separate floating badges
+       ======================================== */
+    .header-v2 {
+      margin: 0 0 40px;
+      background: linear-gradient(135deg, var(--gradient-accent-start) 0%, var(--gradient-accent-end) 100%);
+      padding: 14px 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      box-shadow:
+        0 4px 15px rgba(255, 107, 107, 0.4),
+        inset 0 1px 0 rgba(255,255,255,0.2);
+    }
+
+    .header-v2 .back-btn {
+      width: 32px;
+      height: 32px;
+      background: rgba(255,255,255,0.2);
+      border: none;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      color: white;
+      cursor: pointer;
+      backdrop-filter: blur(4px);
+    }
+
+    .header-v2 .title {
+      font-family: 'Playfair Display', serif;
+      font-size: 20px;
+      font-weight: 700;
+      color: white;
+      letter-spacing: 2px;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.15);
+    }
+
+    .header-v2 .scores {
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .header-v2 .score-badge {
+      background: rgba(255,255,255,0.25);
+      backdrop-filter: blur(4px);
+      padding: 6px 12px;
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: white;
+      font-size: 13px;
+      font-weight: 700;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.15);
+    }
+
+    .header-v2 .score-badge.active {
+      background: rgba(255,255,255,0.95);
+      color: var(--gradient-accent-start);
+      text-shadow: none;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    }
+
+    .header-v2 .score-badge .heart {
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+  <h3>Variant 2: Gradient Banner with Badge Scores</h3>
+
+  <div class="header-v2">
+    <div class="back-btn">←</div>
+    <span class="title">CROSSWORD</span>
+    <div class="scores">
+      <div class="score-badge active">
+        <span class="heart">💗</span>
+        <span>You: 50</span>
+      </div>
+      <div class="score-badge">
+        <span>Kilu: 50</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Show with different turn state -->
+  <h3>Partner's Turn State</h3>
+
+  <div class="header-v2">
+    <div class="back-btn">←</div>
+    <span class="title">CROSSWORD</span>
+    <div class="scores">
+      <div class="score-badge">
+        <span>You: 50</span>
+      </div>
+      <div class="score-badge active">
+        <span class="heart">💗</span>
+        <span>Kilu: 50</span>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

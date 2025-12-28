@@ -98,6 +98,21 @@ class StorageService {
       await Hive.openBox<StepsConnection>(_stepsConnectionBox);
 
       Logger.info('Hive storage initialized successfully (25 boxes opened)', service: 'storage');
+
+      // Debug: Log daily quest state at startup to diagnose persistence issues
+      final questsBox = Hive.box<DailyQuest>(_dailyQuestsBox);
+      final today = DateTime.now();
+      final dateKey = '${today.year}-${today.month.toString().padLeft(2, '0')}-${today.day.toString().padLeft(2, '0')}';
+      final todayQuests = questsBox.values.where((q) => q.dateKey == dateKey).toList();
+      for (final quest in todayQuests) {
+        Logger.debug(
+          '🚀 STARTUP: Quest ${quest.formatType} status=${quest.status} completions=${quest.userCompletions}',
+          service: 'quest-debug',
+        );
+      }
+      if (todayQuests.isEmpty) {
+        Logger.debug('🚀 STARTUP: No quests found in Hive for today ($dateKey)', service: 'quest-debug');
+      }
     } catch (e, stackTrace) {
       Logger.error('Failed to initialize Hive storage', error: e, stackTrace: stackTrace, service: 'storage');
       rethrow;
@@ -442,6 +457,8 @@ class StorageService {
 
   Future<void> saveDailyQuest(DailyQuest quest) async {
     await dailyQuestsBox.put(quest.id, quest);
+    // Force flush to disk to ensure data persists across app restarts
+    await dailyQuestsBox.flush();
   }
 
   DailyQuest? getDailyQuest(String id) {
@@ -469,7 +486,8 @@ class StorageService {
   }
 
   Future<void> updateDailyQuest(DailyQuest quest) async {
-    await quest.save();
+    // Use saveDailyQuest which includes flush() for reliable persistence
+    await saveDailyQuest(quest);
   }
 
   // Daily Quest Completion operations
@@ -674,5 +692,54 @@ class StorageService {
   Future<void> clearAllStepsData() async {
     await stepsDaysBox.clear();
     await stepsConnectionBox.clear();
+  }
+
+  // ============================================================
+  // Pending Results Tracking
+  // ============================================================
+  // Tracks matches where user has answered but hasn't seen results yet.
+  // Used when user goes to waiting screen, then kills app before seeing results.
+
+  static const String _pendingResultsKey = 'pending_results_match_ids';
+
+  /// Get all pending results match IDs (Map of contentType -> matchId)
+  Map<String, String> getPendingResultsMatchIds() {
+    final box = Hive.box(_appMetadataBox);
+    final data = box.get(_pendingResultsKey);
+    if (data == null) return {};
+    return Map<String, String>.from(data);
+  }
+
+  /// Set a pending results match ID for a content type
+  /// Called when user submits answers and goes to waiting screen
+  Future<void> setPendingResultsMatchId(String contentType, String matchId) async {
+    final box = Hive.box(_appMetadataBox);
+    final pending = getPendingResultsMatchIds();
+    pending[contentType] = matchId;
+    await box.put(_pendingResultsKey, pending);
+  }
+
+  /// Get pending results match ID for a specific content type
+  String? getPendingResultsMatchId(String contentType) {
+    return getPendingResultsMatchIds()[contentType];
+  }
+
+  /// Check if there are pending results for a content type
+  bool hasPendingResults(String contentType) {
+    return getPendingResultsMatchId(contentType) != null;
+  }
+
+  /// Clear pending results for a content type (after user has seen results)
+  Future<void> clearPendingResultsMatchId(String contentType) async {
+    final box = Hive.box(_appMetadataBox);
+    final pending = getPendingResultsMatchIds();
+    pending.remove(contentType);
+    await box.put(_pendingResultsKey, pending);
+  }
+
+  /// Clear all pending results (for testing/reset)
+  Future<void> clearAllPendingResults() async {
+    final box = Hive.box(_appMetadataBox);
+    await box.delete(_pendingResultsKey);
   }
 }

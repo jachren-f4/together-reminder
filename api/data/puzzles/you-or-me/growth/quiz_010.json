@@ -1,6 +1,6 @@
 {
   "quizId": "quiz_010",
-  "title": "Growth Quiz 10",
+  "title": "Challenges",
   "branch": "growth",
   "questions": [
     {
@@ -33,5 +33,6 @@
       "prompt": "Who envisions more...",
       "content": "Specific milestones for your future"
     }
-  ]
+  ],
+  "description": "When life gets hard, who steps up? Explore your resilience."
 }

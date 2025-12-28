@@ -1,6 +1,6 @@
 {
   "quizId": "quiz_005",
-  "title": "Growth Quiz 5",
+  "title": "Adaptability",
   "branch": "growth",
   "questions": [
     {
@@ -33,5 +33,6 @@
       "prompt": "Who talks more about...",
       "content": "Long-term plans and dreams"
     }
-  ]
+  ],
+  "description": "Life throws curveballs. See who adapts faster to change."
 }

@@ -24,7 +24,8 @@
     "16": { "type": "text", "content": "Grab quickly", "arrow": "across", "target_index": 52 },
     "17": { "type": "text", "content": "Sex worker term", "arrow": "across", "target_index": 57 },
     "18": { "type": "text", "content": "_UST", "arrow": "down", "target_index": 9 },
-    "19": { "type": "text", "content": "_EASE", "arrow": "down", "target_index": 12 }
+    "19": { "type": "text", "content": "_EASE", "arrow": "down", "target_index": 12 },
+    "20": { "type": "text", "content": "_M", "arrow": "across", "target_index": 47 }
   },
   "date": "2025-11-27",
   "grid": [
@@ -45,7 +46,7 @@
     0, 0, 0, 9, 0, 0, 0,
     10, 0, 0, 0, 0, 11, 0,
     0, 12, 0, 0, 0, 0, 0,
-    0, 13, 0, 14, 0, 0, 0,
+    0, 13, 0, 14, 20, 0, 0,
     15, 0, 16, 0, 0, 0, 0,
     17, 0, 0, 0, 0, 0, 0
   ],

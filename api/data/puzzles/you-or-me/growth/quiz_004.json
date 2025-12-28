@@ -1,6 +1,6 @@
 {
   "quizId": "quiz_004",
-  "title": "Growth Quiz 4",
+  "title": "Goal Getters",
   "branch": "growth",
   "questions": [
     {
@@ -33,5 +33,6 @@
       "prompt": "Who pushes more for...",
       "content": "Growing together as a couple"
     }
-  ]
+  ],
+  "description": "Personal and shared goals—discover your ambitions as a couple."
 }

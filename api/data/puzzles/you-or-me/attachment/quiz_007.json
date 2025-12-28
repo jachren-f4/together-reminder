@@ -1,6 +1,6 @@
 {
   "quizId": "quiz_007",
-  "title": "Attachment Quiz 7",
+  "title": "Comfort Seeking",
   "branch": "attachment",
   "questions": [
     {
@@ -33,5 +33,6 @@
       "prompt": "Who values more...",
       "content": "Maintaining their individual identity"
     }
-  ]
+  ],
+  "description": "How do you find comfort in each other during tough times?"
 }

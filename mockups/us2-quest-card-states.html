@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=390, height=844, initial-scale=1.0">
+    <title>Us 2.0 - Quest Card States</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Nunito:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-gradient-start: #FFD1C1;
+            --bg-gradient-end: #FFF5F0;
+            --accent-start: #FF6B6B;
+            --accent-end: #FF9F43;
+            --card-salmon: #FF7B6B;
+            --card-salmon-dark: #FF6B5B;
+            --cream: #FFF8F0;
+            --beige: #F5E6D8;
+            --text-dark: #2D2D2D;
+            --text-medium: #666666;
+            --text-light: #999999;
+            --glow-pink: rgba(255, 107, 107, 0.4);
+            --success-green: #4CAF50;
+            --waiting-amber: #FFA726;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            background: linear-gradient(180deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 28px;
+            color: var(--text-dark);
+            margin-bottom: 8px;
+            text-align: center;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: var(--text-medium);
+            margin-bottom: 40px;
+            font-style: italic;
+        }
+
+        .section-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 20px;
+            color: var(--text-dark);
+            margin: 40px 0 20px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid var(--accent-start);
+        }
+
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+
+        .card-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .card-label {
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            color: var(--text-light);
+            margin-bottom: 12px;
+            text-transform: uppercase;
+        }
+
+        /* Quest Card */
+        .quest-card {
+            width: 280px;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+        }
+
+        .card-image {
+            height: 140px;
+            background: linear-gradient(135deg, #FFDDD2 0%, #FFCABA 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .card-image .emoji {
+            font-size: 60px;
+        }
+
+        /* Deeper badge */
+        .deeper-badge {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            background: linear-gradient(135deg, var(--accent-start), var(--accent-end));
+            color: white;
+            font-size: 9px;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            padding: 4px 10px;
+            border-radius: 4px;
+        }
+
+        .card-content {
+            background: linear-gradient(180deg, var(--card-salmon) 0%, var(--card-salmon-dark) 100%);
+            padding: 18px 20px 22px;
+        }
+
+        .card-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 20px;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 4px;
+        }
+
+        .card-description {
+            font-size: 13px;
+            font-style: italic;
+            color: rgba(255, 255, 255, 0.85);
+            margin-bottom: 16px;
+        }
+
+        .card-divider {
+            height: 1px;
+            background: rgba(255, 255, 255, 0.25);
+            margin-bottom: 16px;
+        }
+
+        /* Status Badges */
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 16px;
+            border-radius: 25px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        /* Fresh / Begin Together */
+        .status-fresh {
+            background: rgba(255, 255, 255, 0.25);
+            color: white;
+        }
+
+        .status-fresh .icon {
+            font-size: 14px;
+        }
+
+        /* Who Goes First */
+        .status-first-player {
+            background: rgba(255, 255, 255, 0.25);
+            color: white;
+        }
+
+        /* Partner Started / Waiting for You */
+        .status-your-turn {
+            background: white;
+            color: var(--card-salmon);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .status-your-turn .pulse-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--accent-start);
+            border-radius: 50%;
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.7; transform: scale(1.2); }
+        }
+
+        /* Your Turn (Urgent) */
+        .status-urgent {
+            background: linear-gradient(135deg, var(--accent-start), var(--accent-end));
+            color: white;
+            box-shadow: 0 4px 20px var(--glow-pink);
+        }
+
+        /* User Initial Circle */
+        .user-initial {
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        .user-initial.partner {
+            background: linear-gradient(135deg, var(--accent-start), var(--accent-end));
+            color: white;
+        }
+
+        .user-initial.self {
+            background: white;
+            color: var(--card-salmon);
+            border: 2px solid var(--card-salmon);
+        }
+
+        .user-initial.white-bg {
+            background: var(--card-salmon);
+            color: white;
+        }
+
+        /* Waiting for Partner */
+        .status-waiting {
+            background: rgba(255, 255, 255, 0.25);
+            color: white;
+        }
+
+        .status-waiting .dots {
+            display: flex;
+            gap: 3px;
+        }
+
+        .status-waiting .dot {
+            width: 4px;
+            height: 4px;
+            background: white;
+            border-radius: 50%;
+            animation: bounce 1.4s ease-in-out infinite;
+        }
+
+        .status-waiting .dot:nth-child(2) { animation-delay: 0.2s; }
+        .status-waiting .dot:nth-child(3) { animation-delay: 0.4s; }
+
+        @keyframes bounce {
+            0%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-4px); }
+        }
+
+        /* Results Ready */
+        .status-results {
+            background: white;
+            color: var(--card-salmon);
+            box-shadow: 0 4px 20px rgba(255, 107, 107, 0.3);
+            animation: glow-pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes glow-pulse {
+            0%, 100% { box-shadow: 0 4px 20px rgba(255, 107, 107, 0.3); }
+            50% { box-shadow: 0 4px 30px rgba(255, 107, 107, 0.5); }
+        }
+
+        .status-results .sparkle {
+            font-size: 14px;
+        }
+
+        /* Completed */
+        .status-completed {
+            background: white;
+            color: var(--success-green);
+        }
+
+        .status-completed .checkmark {
+            width: 18px;
+            height: 18px;
+            background: var(--success-green);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 10px;
+        }
+
+        /* Locked State */
+        .card-locked .card-image {
+            filter: grayscale(100%);
+            opacity: 0.7;
+        }
+
+        .card-locked .card-content {
+            background: linear-gradient(180deg, #A0A0A0 0%, #909090 100%);
+        }
+
+        .status-locked {
+            background: rgba(0, 0, 0, 0.2);
+            color: white;
+        }
+
+        .lock-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .lock-icon {
+            width: 48px;
+            height: 48px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        /* CTA Button (default state) */
+        .cta-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 12px 24px;
+            background: linear-gradient(180deg, white 0%, #FFF5E6 100%);
+            border: 2px solid var(--accent-start);
+            border-radius: 50px;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-dark);
+            cursor: pointer;
+            box-shadow: 0 6px 20px var(--glow-pink), 0 4px 10px rgba(0, 0, 0, 0.1);
+            transition: all 0.2s;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px var(--glow-pink), 0 6px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Notes */
+        .notes {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            margin-top: 40px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .notes h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 18px;
+            margin-bottom: 16px;
+            color: var(--text-dark);
+        }
+
+        .notes ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .notes li {
+            padding: 8px 0;
+            border-bottom: 1px solid var(--beige);
+            font-size: 14px;
+            color: var(--text-medium);
+        }
+
+        .notes li:last-child {
+            border-bottom: none;
+        }
+
+        .notes code {
+            background: var(--cream);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 12px;
+            color: var(--accent-start);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Quest Card States</h1>
+        <p class="subtitle">All possible states for Us 2.0 quest cards</p>
+
+        <!-- SECTION: Fresh / Not Started -->
+        <h2 class="section-title">1. Fresh Quest (Not Started)</h2>
+        <div class="cards-grid">
+            <!-- Begin Together (Standard) -->
+            <div class="card-wrapper">
+                <div class="card-label">Standard Quest</div>
+                <div class="quest-card">
+                    <div class="card-image">
+                        <span class="emoji">💕</span>
+                    </div>
+                    <div class="card-content">
+                        <div class="card-title">Classic Quiz</div>
+                        <div class="card-description">Answer five questions together</div>
+                        <div class="card-divider"></div>
+                        <div class="status-badge status-fresh">
+                            <span class="icon">✨</span>
+                            <span>Begin together</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Who Goes First (Turn-based) -->
+            <div class="card-wrapper">
+                <div class="card-label">Turn-Based Quest</div>
+                <div class="quest-card">
+                    <div class="card-image">
+                        <span class="emoji">🧩</span>
+                    </div>
+                    <div class="card-content">
+                        <div class="card-title">Crossword Puzzle</div>
+                        <div class="card-description">Solve clues together</div>
+                        <div class="card-divider"></div>
+                        <div class="status-badge status-first-player">
+                            <div class="user-initial partner">T</div>
+                            <span>Taija goes first</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SECTION: Partner Started -->
+        <h2 class="section-title">2. Partner Has Started (Your Turn)</h2>
+        <div class="cards-grid">
+            <!-- Partner Completed Quiz -->
+            <div class="card-wrapper">
+                <div class="card-label">Partner Completed Quiz</div>
+                <div class="quest-card">
+                    <div class="card-image">
+                        <span class="emoji">💕</span>
+                    </div>
+                    <div class="card-content">
+                        <div class="card-title">Classic Quiz</div>
+                        <div class="card-description">Answer five questions together</div>
+                        <div class="card-divider"></div>
+                        <div class="status-badge status-your-turn">
+                            <div class="user-initial white-bg">T</div>
+                            <span>Taija has finished</span>
+                            <div class="pulse-dot"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Partner Waiting (Turn-based) - Urgent -->
+            <div class="card-wrapper">
+                <div class="card-label">Your Turn (Turn-Based)</div>
+                <div class="quest-card">
+                    <div class="card-image">
+                        <span class="emoji">🧩</span>
+                    </div>
+                    <div class="card-content">
+                        <div class="card-title">Crossword Puzzle</div>
+                        <div class="card-description">Solve clues together</div>
+                        <div class="card-divider"></div>
+                        <div class="status-badge status-urgent">
+                            <div class="user-initial" style="background: white; color: var(--accent-start);">T</div>
+                            <span>Taija is waiting</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SECTION: Waiting for Partner -->
+        <h2 class="section-title">3. Waiting for Partner</h2>
+        <div class="cards-grid">
+            <!-- User Completed Quiz -->
+            <div class="card-wrapper">
+                <div class="card-label">You Completed Quiz</div>
+                <div class="quest-card">
+                    <div class="card-image">
+                        <span class="emoji">💕</span>
+                    </div>
+                    <div class="card-content">
+                        <div class="card-title">Classic Quiz</div>
+                        <div class="card-description">Answer five questions together</div>
+                        <div class="card-divider"></div>
+                        <div class="status-badge status-waiting">
+                            <div class="user-initial self" style="background: white; border: none; color: var(--card-salmon);">J</div>
+                            <span>Waiting for Taija</span>
+                            <div class="dots">
+                                <div class="dot"></div>
+                                <div class="dot"></div>
+                                <div class="dot"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Partner's Turn (Turn-based) -->
+            <div class="card-wrapper">
+                <div class="card-label">Partner's Turn (Turn-Based)</div>
+                <div class="quest-card">
+                    <div class="card-image">
+                        <span class="emoji">🔍</span>
+                    </div>
+                    <div class="card-content">
+                        <div class="card-title">Word Search</div>
+                        <div class="card-description">Find hidden words together</div>
+                        <div class="card-divider"></div>
+                        <div class="status-badge status-waiting">
+                            <div class="user-initial self" style="background: white; border: none; color: var(--card-salmon);">J</div>
+                            <span>Taija's turn</span>
+                            <div class="dots">
+                                <div class="dot"></div>
+                                <div class="dot"></div>
+                                <div class="dot"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SECTION: Results Ready -->
+        <h2 class="section-title">4. Results Ready (Both Completed)</h2>
+        <div class="cards-grid">
+            <!-- Results Ready -->
+            <div class="card-wrapper">
+                <div class="card-label">Tap to See Results</div>
+                <div class="quest-card">
+                    <div class="card-image">
+                        <span class="emoji">💕</span>
+                    </div>
+                    <div class="card-content">
+                        <div class="card-title">Classic Quiz</div>
+                        <div class="card-description">Answer five questions together</div>
+                        <div class="card-divider"></div>
+                        <div class="status-badge status-results">
+                            <span class="sparkle">✨</span>
+                            <span>Results are ready!</span>
+                            <span class="sparkle">✨</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SECTION: Completed -->
+        <h2 class="section-title">5. Completed</h2>
+        <div class="cards-grid">
+            <!-- Completed -->
+            <div class="card-wrapper">
+                <div class="card-label">Quest Complete</div>
+                <div class="quest-card">
+                    <div class="card-image">
+                        <span class="emoji">💕</span>
+                    </div>
+                    <div class="card-content">
+                        <div class="card-title">Classic Quiz</div>
+                        <div class="card-description">Answer five questions together</div>
+                        <div class="card-divider"></div>
+                        <div class="status-badge status-completed">
+                            <div class="checkmark">✓</div>
+                            <span>Completed</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SECTION: Locked -->
+        <h2 class="section-title">6. Locked</h2>
+        <div class="cards-grid">
+            <!-- Locked -->
+            <div class="card-wrapper">
+                <div class="card-label">Unlock Required</div>
+                <div class="quest-card card-locked">
+                    <div class="card-image">
+                        <span class="emoji">🎯</span>
+                        <div class="lock-overlay">
+                            <div class="lock-icon">🔒</div>
+                        </div>
+                    </div>
+                    <div class="card-content">
+                        <div class="card-title">You or Me?</div>
+                        <div class="card-description">Guess who said what</div>
+                        <div class="card-divider"></div>
+                        <div class="status-badge status-locked">
+                            <span>🔒</span>
+                            <span>Complete a quiz to unlock</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SECTION: With CTA Button -->
+        <h2 class="section-title">7. With CTA Button (Alternative)</h2>
+        <div class="cards-grid">
+            <!-- Fresh with Button -->
+            <div class="card-wrapper">
+                <div class="card-label">Fresh Quest with Button</div>
+                <div class="quest-card">
+                    <div class="card-image">
+                        <span class="emoji">💕</span>
+                        <div class="deeper-badge">DEEPER</div>
+                    </div>
+                    <div class="card-content">
+                        <div class="card-title">Classic Quiz</div>
+                        <div class="card-description">Answer five questions together</div>
+                        <div class="card-divider"></div>
+                        <button class="cta-button">Begin Quest</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Your Turn with Button -->
+            <div class="card-wrapper">
+                <div class="card-label">Your Turn with Button</div>
+                <div class="quest-card">
+                    <div class="card-image">
+                        <span class="emoji">💕</span>
+                    </div>
+                    <div class="card-content">
+                        <div class="card-title">Classic Quiz</div>
+                        <div class="card-description">Answer five questions together</div>
+                        <div class="card-divider"></div>
+                        <div style="display: flex; flex-direction: column; gap: 12px;">
+                            <div class="status-badge status-your-turn" style="align-self: flex-start;">
+                                <div class="user-initial white-bg">T</div>
+                                <span>Taija has finished</span>
+                            </div>
+                            <button class="cta-button">Your Turn!</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Notes -->
+        <div class="notes">
+            <h3>Implementation Notes</h3>
+            <ul>
+                <li><code>status-fresh</code> - Used for quests that haven't been started by either partner</li>
+                <li><code>status-first-player</code> - Used for turn-based games (Linked, Word Search) showing who goes first based on couple preferences</li>
+                <li><code>status-your-turn</code> - Partner has completed their part, waiting for you. Shows pulsing indicator for urgency.</li>
+                <li><code>status-urgent</code> - For turn-based games when partner is actively waiting. Uses gradient background for emphasis.</li>
+                <li><code>status-waiting</code> - You've completed, waiting for partner. Shows animated dots.</li>
+                <li><code>status-results</code> - Both completed but results not yet viewed. Glowing animation draws attention.</li>
+                <li><code>status-completed</code> - Quest fully complete with green checkmark.</li>
+                <li><code>status-locked</code> - Quest is locked until unlock criteria is met. Card is grayscale.</li>
+                <li>Turn-based games (Linked, Word Search) use <code>currentTurnUserId</code> from active match to determine whose turn it is.</li>
+                <li>Standard quests use <code>userCompletions</code> array to track who has completed.</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>

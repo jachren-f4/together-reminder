@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Loading Screen - V5 Editorial Card</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Georgia, 'Times New Roman', serif;
+      background: #FAFAFA;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #1A1A1A;
+    }
+
+    .container {
+      padding: 40px;
+    }
+
+    .card {
+      background: #FFFFFF;
+      border: 2px solid #1A1A1A;
+      box-shadow: 8px 8px 0 #1A1A1A;
+      padding: 32px;
+      max-width: 280px;
+      text-align: center;
+    }
+
+    .card-label {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: #666;
+      margin-bottom: 16px;
+    }
+
+    .card-icon {
+      width: 48px;
+      height: 48px;
+      margin: 0 auto 20px;
+      position: relative;
+    }
+
+    /* Animated heart/connection icon */
+    .icon-ring {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      border: 2px solid #1A1A1A;
+      border-radius: 50%;
+      animation: ring-pulse 2s ease-in-out infinite;
+    }
+
+    .icon-ring:nth-child(2) {
+      animation-delay: 0.5s;
+    }
+
+    @keyframes ring-pulse {
+      0%, 100% { transform: scale(0.8); opacity: 1; }
+      50% { transform: scale(1.2); opacity: 0; }
+    }
+
+    .icon-center {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 12px;
+      height: 12px;
+      background: #1A1A1A;
+      border-radius: 50%;
+    }
+
+    .card-title {
+      font-size: 20px;
+      font-weight: 400;
+      margin-bottom: 8px;
+      line-height: 1.3;
+    }
+
+    .card-subtitle {
+      font-size: 14px;
+      font-style: italic;
+      color: #666;
+      margin-bottom: 24px;
+    }
+
+    .progress-track {
+      height: 4px;
+      background: #E5E5E5;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      position: absolute;
+      height: 100%;
+      background: #1A1A1A;
+      animation: load-progress 3s ease-in-out infinite;
+    }
+
+    @keyframes load-progress {
+      0% { left: -30%; width: 30%; }
+      50% { left: 50%; width: 30%; }
+      100% { left: 100%; width: 30%; }
+    }
+
+    /* Alternative simpler card */
+    .simple-card-demo {
+      margin-top: 40px;
+    }
+
+    .simple-card {
+      background: #FFFFFF;
+      border: 2px solid #1A1A1A;
+      box-shadow: 6px 6px 0 #1A1A1A;
+      padding: 24px 32px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .simple-spinner {
+      width: 20px;
+      height: 20px;
+      border: 2px solid #E5E5E5;
+      border-top-color: #1A1A1A;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      flex-shrink: 0;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .simple-text {
+      font-size: 16px;
+    }
+
+    /* States preview */
+    .states-demo {
+      margin-top: 60px;
+      padding-top: 40px;
+      border-top: 1px solid #DDD;
+      text-align: center;
+    }
+
+    .states-demo h3 {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: #666;
+      margin-bottom: 20px;
+      font-weight: 400;
+    }
+
+    .state-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .state-item {
+      font-size: 14px;
+      color: #999;
+    }
+
+    .state-item.active {
+      color: #1A1A1A;
+      font-weight: 500;
+    }
+
+    .state-item::before {
+      content: '○ ';
+    }
+
+    .state-item.completed::before {
+      content: '● ';
+    }
+
+    .state-item.active::before {
+      content: '◐ ';
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="card">
+      <p class="card-label">Loading</p>
+
+      <div class="card-icon">
+        <div class="icon-ring"></div>
+        <div class="icon-ring"></div>
+        <div class="icon-center"></div>
+      </div>
+
+      <h2 class="card-title">Syncing Quests</h2>
+      <p class="card-subtitle">Preparing your daily activities</p>
+
+      <div class="progress-track">
+        <div class="progress-fill"></div>
+      </div>
+    </div>
+
+    <div class="simple-card-demo">
+      <div class="simple-card">
+        <div class="simple-spinner"></div>
+        <span class="simple-text">Syncing quests...</span>
+      </div>
+    </div>
+
+    <div class="states-demo">
+      <h3>State Indicators</h3>
+      <div class="state-list">
+        <span class="state-item completed">Restoring data</span>
+        <span class="state-item active">Syncing quests</span>
+        <span class="state-item">Almost ready</span>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

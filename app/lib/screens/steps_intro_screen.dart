@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import '../config/brand/brand_loader.dart';
+import '../config/brand/brand_config.dart';
+import '../config/brand/us2_theme.dart';
 import '../theme/app_theme.dart';
 import '../services/storage_service.dart';
 import '../services/steps_feature_service.dart';
@@ -27,6 +29,8 @@ class _StepsIntroScreenState extends State<StepsIntroScreen> {
   bool _isConnecting = false;
   bool _isSendingReminder = false;
 
+  bool get _isUs2 => BrandLoader().config.brand == Brand.us2;
+
   @override
   Widget build(BuildContext context) {
     final state = _stepsService.getCurrentState();
@@ -34,56 +38,92 @@ class _StepsIntroScreenState extends State<StepsIntroScreen> {
     final partnerName = partner?.name ?? 'Partner';
 
     return Scaffold(
-      backgroundColor: BrandLoader().colors.surface,
+      backgroundColor: _isUs2 ? Us2Theme.bgGradientEnd : BrandLoader().colors.surface,
+      extendBodyBehindAppBar: _isUs2,
       appBar: AppBar(
-        backgroundColor: BrandLoader().colors.surface,
+        backgroundColor: _isUs2 ? Colors.transparent : BrandLoader().colors.surface,
         elevation: 0,
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: BrandLoader().colors.textPrimary),
-          onPressed: () => Navigator.pop(context),
-        ),
+        leading: _isUs2
+            ? Padding(
+                padding: const EdgeInsets.only(left: 16),
+                child: GestureDetector(
+                  onTap: () => Navigator.pop(context),
+                  child: Container(
+                    width: 40,
+                    height: 40,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      shape: BoxShape.circle,
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.1),
+                          blurRadius: 10,
+                          offset: const Offset(0, 2),
+                        ),
+                      ],
+                    ),
+                    child: const Icon(Icons.arrow_back, color: Us2Theme.textDark, size: 20),
+                  ),
+                ),
+              )
+            : IconButton(
+                icon: Icon(Icons.arrow_back, color: BrandLoader().colors.textPrimary),
+                onPressed: () => Navigator.pop(context),
+              ),
         title: Text(
           'Steps Together',
-          style: AppTheme.headlineFont.copyWith(
-            fontSize: 18,
-            fontWeight: FontWeight.w600,
-            color: BrandLoader().colors.textPrimary,
-          ),
+          style: _isUs2
+              ? const TextStyle(
+                  fontFamily: Us2Theme.fontHeading,
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600,
+                  color: Us2Theme.textDark,
+                )
+              : AppTheme.headlineFont.copyWith(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600,
+                  color: BrandLoader().colors.textPrimary,
+                ),
         ),
         centerTitle: true,
       ),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(24),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              // Footprints illustration
-              _buildFootprintsIllustration(state),
-              const SizedBox(height: 32),
+      body: Container(
+        decoration: _isUs2
+            ? const BoxDecoration(gradient: Us2Theme.backgroundGradient)
+            : null,
+        child: SafeArea(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(24),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                // Footprints illustration
+                _buildFootprintsIllustration(state),
+                const SizedBox(height: 32),
 
-              // Avatar circles with status
-              _buildAvatarSection(state, partnerName),
-              const SizedBox(height: 24),
+                // Avatar circles with status
+                _buildAvatarSection(state, partnerName),
+                const SizedBox(height: 24),
 
-              // Equals row with LP bubble
-              _buildRewardRow(),
-              const SizedBox(height: 32),
+                // Equals row with LP bubble
+                _buildRewardRow(),
+                const SizedBox(height: 32),
 
-              // Title and description
-              _buildTitleSection(state, partnerName),
-              const SizedBox(height: 32),
+                // Title and description
+                _buildTitleSection(state, partnerName),
+                const SizedBox(height: 32),
 
-              // How it works / Reward tiers section
-              if (state == StepsFeatureState.waitingForPartner)
-                _buildRewardTiersSection()
-              else
-                _buildHowItWorksSection(),
-              const SizedBox(height: 32),
+                // How it works / Reward tiers section
+                if (state == StepsFeatureState.waitingForPartner)
+                  _buildRewardTiersSection()
+                else
+                  _buildHowItWorksSection(),
+                const SizedBox(height: 32),
 
-              // Action buttons
-              _buildActionButtons(state, partnerName),
-            ],
+                // Action buttons
+                _buildActionButtons(state, partnerName),
+              ],
+            ),
           ),
         ),
       ),
@@ -185,8 +225,9 @@ class _StepsIntroScreenState extends State<StepsIntroScreen> {
               height: 64,
               decoration: BoxDecoration(
                 color: isConnected
-                    ? BrandLoader().colors.textPrimary
+                    ? (_isUs2 ? null : BrandLoader().colors.textPrimary)
                     : const Color(0xFFE0E0E0),
+                gradient: isConnected && _isUs2 ? Us2Theme.accentGradient : null,
                 shape: BoxShape.circle,
               ),
               child: Center(
@@ -194,13 +235,22 @@ class _StepsIntroScreenState extends State<StepsIntroScreen> {
                     ? const Text('⏳', style: TextStyle(fontSize: 24))
                     : Text(
                         initial,
-                        style: AppTheme.headlineFont.copyWith(
-                          fontSize: 24,
-                          fontWeight: FontWeight.w700,
-                          color: isConnected
-                              ? Colors.white
-                              : BrandLoader().colors.textTertiary,
-                        ),
+                        style: _isUs2
+                            ? TextStyle(
+                                fontFamily: Us2Theme.fontHeading,
+                                fontSize: 24,
+                                fontWeight: FontWeight.w700,
+                                color: isConnected
+                                    ? Colors.white
+                                    : Us2Theme.textLight,
+                              )
+                            : AppTheme.headlineFont.copyWith(
+                                fontSize: 24,
+                                fontWeight: FontWeight.w700,
+                                color: isConnected
+                                    ? Colors.white
+                                    : BrandLoader().colors.textTertiary,
+                              ),
                       ),
               ),
             ),
@@ -212,7 +262,7 @@ class _StepsIntroScreenState extends State<StepsIntroScreen> {
                   width: 24,
                   height: 24,
                   decoration: BoxDecoration(
-                    color: BrandLoader().colors.success,
+                    color: _isUs2 ? const Color(0xFF4CAF50) : BrandLoader().colors.success,
                     shape: BoxShape.circle,
                     border: Border.all(color: Colors.white, width: 2),
                   ),
@@ -228,19 +278,26 @@ class _StepsIntroScreenState extends State<StepsIntroScreen> {
         const SizedBox(height: 8),
         Text(
           name,
-          style: AppTheme.headlineFont.copyWith(
-            fontSize: 14,
-            fontWeight: FontWeight.w600,
-            color: BrandLoader().colors.textPrimary,
-          ),
+          style: _isUs2
+              ? const TextStyle(
+                  fontFamily: Us2Theme.fontHeading,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
+                  color: Us2Theme.textDark,
+                )
+              : AppTheme.headlineFont.copyWith(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
+                  color: BrandLoader().colors.textPrimary,
+                ),
         ),
         Text(
           statusText,
           style: TextStyle(
             fontSize: 12,
             color: isConnected
-                ? BrandLoader().colors.success
-                : BrandLoader().colors.textTertiary,
+                ? (_isUs2 ? const Color(0xFF4CAF50) : BrandLoader().colors.success)
+                : (_isUs2 ? Us2Theme.textLight : BrandLoader().colors.textTertiary),
           ),
         ),
       ],
@@ -254,29 +311,37 @@ class _StepsIntroScreenState extends State<StepsIntroScreen> {
         Container(
           width: 40,
           height: 2,
-          color: BrandLoader().colors.borderLight,
+          color: _isUs2 ? Us2Theme.beige : BrandLoader().colors.borderLight,
         ),
         const SizedBox(width: 16),
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           decoration: BoxDecoration(
-            color: BrandLoader().colors.textPrimary,
+            color: _isUs2 ? null : BrandLoader().colors.textPrimary,
+            gradient: _isUs2 ? Us2Theme.accentGradient : null,
             borderRadius: BorderRadius.circular(20),
           ),
           child: Text(
             'Up to +30 LP',
-            style: AppTheme.headlineFont.copyWith(
-              fontSize: 14,
-              fontWeight: FontWeight.w700,
-              color: Colors.white,
-            ),
+            style: _isUs2
+                ? const TextStyle(
+                    fontFamily: Us2Theme.fontHeading,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w700,
+                    color: Colors.white,
+                  )
+                : AppTheme.headlineFont.copyWith(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w700,
+                    color: Colors.white,
+                  ),
           ),
         ),
         const SizedBox(width: 16),
         Container(
           width: 40,
           height: 2,
-          color: BrandLoader().colors.borderLight,
+          color: _isUs2 ? Us2Theme.beige : BrandLoader().colors.borderLight,
         ),
       ],
     );
@@ -311,19 +376,27 @@ class _StepsIntroScreenState extends State<StepsIntroScreen> {
       children: [
         Text(
           title,
-          style: AppTheme.headlineFont.copyWith(
-            fontSize: 28,
-            fontWeight: FontWeight.w700,
-            color: BrandLoader().colors.textPrimary,
-          ),
+          style: _isUs2
+              ? const TextStyle(
+                  fontFamily: Us2Theme.fontHeading,
+                  fontSize: 28,
+                  fontWeight: FontWeight.w700,
+                  color: Us2Theme.textDark,
+                )
+              : AppTheme.headlineFont.copyWith(
+                  fontSize: 28,
+                  fontWeight: FontWeight.w700,
+                  color: BrandLoader().colors.textPrimary,
+                ),
           textAlign: TextAlign.center,
         ),
         const SizedBox(height: 12),
         Text(
           description,
           style: TextStyle(
+            fontFamily: _isUs2 ? Us2Theme.fontBody : null,
             fontSize: 16,
-            color: BrandLoader().colors.textSecondary,
+            color: _isUs2 ? Us2Theme.textMedium : BrandLoader().colors.textSecondary,
             height: 1.5,
           ),
           textAlign: TextAlign.center,
@@ -351,19 +424,35 @@ class _StepsIntroScreenState extends State<StepsIntroScreen> {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: const Color(0xFFF5F5F5),
+        color: _isUs2 ? Colors.white : const Color(0xFFF5F5F5),
         borderRadius: BorderRadius.circular(16),
+        boxShadow: _isUs2
+            ? [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.05),
+                  blurRadius: 10,
+                  offset: const Offset(0, 2),
+                ),
+              ]
+            : null,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
             'How it works',
-            style: AppTheme.headlineFont.copyWith(
-              fontSize: 16,
-              fontWeight: FontWeight.w700,
-              color: BrandLoader().colors.textPrimary,
-            ),
+            style: _isUs2
+                ? const TextStyle(
+                    fontFamily: Us2Theme.fontHeading,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w700,
+                    color: Us2Theme.textDark,
+                  )
+                : AppTheme.headlineFont.copyWith(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w700,
+                    color: BrandLoader().colors.textPrimary,
+                  ),
           ),
           const SizedBox(height: 16),
           ...steps.map((step) => Padding(
@@ -375,7 +464,8 @@ class _StepsIntroScreenState extends State<StepsIntroScreen> {
                       width: 24,
                       height: 24,
                       decoration: BoxDecoration(
-                        color: BrandLoader().colors.textPrimary,
+                        color: _isUs2 ? null : BrandLoader().colors.textPrimary,
+                        gradient: _isUs2 ? Us2Theme.accentGradient : null,
                         shape: BoxShape.circle,
                       ),
                       child: Center(
@@ -394,8 +484,11 @@ class _StepsIntroScreenState extends State<StepsIntroScreen> {
                       child: Text(
                         step['text']!,
                         style: TextStyle(
+                          fontFamily: _isUs2 ? Us2Theme.fontBody : null,
                           fontSize: 14,
-                          color: BrandLoader().colors.textSecondary,
+                          color: _isUs2
+                              ? Us2Theme.textMedium
+                              : BrandLoader().colors.textSecondary,
                           height: 1.4,
                         ),
                       ),
@@ -421,19 +514,35 @@ class _StepsIntroScreenState extends State<StepsIntroScreen> {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: const Color(0xFFF5F5F5),
+        color: _isUs2 ? Colors.white : const Color(0xFFF5F5F5),
         borderRadius: BorderRadius.circular(16),
+        boxShadow: _isUs2
+            ? [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.05),
+                  blurRadius: 10,
+                  offset: const Offset(0, 2),
+                ),
+              ]
+            : null,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
             'Reward Tiers',
-            style: AppTheme.headlineFont.copyWith(
-              fontSize: 16,
-              fontWeight: FontWeight.w700,
-              color: BrandLoader().colors.textPrimary,
-            ),
+            style: _isUs2
+                ? const TextStyle(
+                    fontFamily: Us2Theme.fontHeading,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w700,
+                    color: Us2Theme.textDark,
+                  )
+                : AppTheme.headlineFont.copyWith(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w700,
+                    color: BrandLoader().colors.textPrimary,
+                  ),
           ),
           const SizedBox(height: 16),
           ...tiers.map((tier) => Padding(
@@ -444,15 +553,19 @@ class _StepsIntroScreenState extends State<StepsIntroScreen> {
                     Text(
                       '${tier['steps']} combined steps',
                       style: TextStyle(
+                        fontFamily: _isUs2 ? Us2Theme.fontBody : null,
                         fontSize: 14,
-                        color: BrandLoader().colors.textSecondary,
+                        color: _isUs2
+                            ? Us2Theme.textMedium
+                            : BrandLoader().colors.textSecondary,
                       ),
                     ),
                     Container(
                       padding: const EdgeInsets.symmetric(
                           horizontal: 10, vertical: 4),
                       decoration: BoxDecoration(
-                        color: BrandLoader().colors.textPrimary,
+                        color: _isUs2 ? null : BrandLoader().colors.textPrimary,
+                        gradient: _isUs2 ? Us2Theme.accentGradient : null,
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: Text(
@@ -471,9 +584,10 @@ class _StepsIntroScreenState extends State<StepsIntroScreen> {
           Text(
             'Your steps are being tracked in the meantime!',
             style: TextStyle(
+              fontFamily: _isUs2 ? Us2Theme.fontBody : null,
               fontSize: 12,
               fontStyle: FontStyle.italic,
-              color: BrandLoader().colors.textTertiary,
+              color: _isUs2 ? Us2Theme.textLight : BrandLoader().colors.textTertiary,
             ),
           ),
         ],
@@ -486,38 +600,44 @@ class _StepsIntroScreenState extends State<StepsIntroScreen> {
       return Column(
         children: [
           // Primary: Remind partner
-          SizedBox(
-            width: double.infinity,
-            height: 56,
-            child: ElevatedButton(
-              onPressed: _isSendingReminder ? null : _sendReminder,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: BrandLoader().colors.textPrimary,
-                foregroundColor: Colors.white,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                elevation: 0,
-              ),
-              child: _isSendingReminder
-                  ? const SizedBox(
-                      width: 24,
-                      height: 24,
-                      child: CircularProgressIndicator(
-                        color: Colors.white,
-                        strokeWidth: 2,
+          _isUs2
+              ? _buildUs2PrimaryButton(
+                  onPressed: _isSendingReminder ? null : _sendReminder,
+                  isLoading: _isSendingReminder,
+                  label: 'Remind $partnerName',
+                )
+              : SizedBox(
+                  width: double.infinity,
+                  height: 56,
+                  child: ElevatedButton(
+                    onPressed: _isSendingReminder ? null : _sendReminder,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: BrandLoader().colors.textPrimary,
+                      foregroundColor: Colors.white,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
                       ),
-                    )
-                  : Text(
-                      'Remind $partnerName',
-                      style: AppTheme.headlineFont.copyWith(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.white,
-                      ),
+                      elevation: 0,
                     ),
-            ),
-          ),
+                    child: _isSendingReminder
+                        ? const SizedBox(
+                            width: 24,
+                            height: 24,
+                            child: CircularProgressIndicator(
+                              color: Colors.white,
+                              strokeWidth: 2,
+                            ),
+                          )
+                        : Text(
+                            'Remind $partnerName',
+                            style: AppTheme.headlineFont.copyWith(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.white,
+                            ),
+                          ),
+                  ),
+                ),
           const SizedBox(height: 12),
           // Secondary: Done
           SizedBox(
@@ -526,15 +646,23 @@ class _StepsIntroScreenState extends State<StepsIntroScreen> {
             child: TextButton(
               onPressed: () => Navigator.pop(context),
               style: TextButton.styleFrom(
-                foregroundColor: BrandLoader().colors.textSecondary,
+                foregroundColor:
+                    _isUs2 ? Us2Theme.textMedium : BrandLoader().colors.textSecondary,
               ),
               child: Text(
                 'Done',
-                style: AppTheme.headlineFont.copyWith(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                  color: BrandLoader().colors.textSecondary,
-                ),
+                style: _isUs2
+                    ? const TextStyle(
+                        fontFamily: Us2Theme.fontBody,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                        color: Us2Theme.textMedium,
+                      )
+                    : AppTheme.headlineFont.copyWith(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                        color: BrandLoader().colors.textSecondary,
+                      ),
               ),
             ),
           ),
@@ -545,45 +673,52 @@ class _StepsIntroScreenState extends State<StepsIntroScreen> {
     return Column(
       children: [
         // Primary: Connect Apple Health
-        SizedBox(
-          width: double.infinity,
-          height: 56,
-          child: ElevatedButton(
-            onPressed: _isConnecting ? null : _connectHealthKit,
-            style: ElevatedButton.styleFrom(
-              backgroundColor: BrandLoader().colors.textPrimary,
-              foregroundColor: Colors.white,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-              elevation: 0,
-            ),
-            child: _isConnecting
-                ? const SizedBox(
-                    width: 24,
-                    height: 24,
-                    child: CircularProgressIndicator(
-                      color: Colors.white,
-                      strokeWidth: 2,
+        _isUs2
+            ? _buildUs2PrimaryButton(
+                onPressed: _isConnecting ? null : _connectHealthKit,
+                isLoading: _isConnecting,
+                label: 'Connect Apple Health',
+                icon: Icons.favorite,
+              )
+            : SizedBox(
+                width: double.infinity,
+                height: 56,
+                child: ElevatedButton(
+                  onPressed: _isConnecting ? null : _connectHealthKit,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: BrandLoader().colors.textPrimary,
+                    foregroundColor: Colors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
                     ),
-                  )
-                : Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Icon(Icons.favorite, size: 20),
-                      const SizedBox(width: 8),
-                      Text(
-                        'Connect Apple Health',
-                        style: AppTheme.headlineFont.copyWith(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ],
+                    elevation: 0,
                   ),
-          ),
-        ),
+                  child: _isConnecting
+                      ? const SizedBox(
+                          width: 24,
+                          height: 24,
+                          child: CircularProgressIndicator(
+                            color: Colors.white,
+                            strokeWidth: 2,
+                          ),
+                        )
+                      : Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const Icon(Icons.favorite, size: 20),
+                            const SizedBox(width: 8),
+                            Text(
+                              'Connect Apple Health',
+                              style: AppTheme.headlineFont.copyWith(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ],
+                        ),
+                ),
+              ),
         const SizedBox(height: 12),
         // Secondary: Maybe later
         SizedBox(
@@ -592,19 +727,86 @@ class _StepsIntroScreenState extends State<StepsIntroScreen> {
           child: TextButton(
             onPressed: () => Navigator.pop(context),
             style: TextButton.styleFrom(
-              foregroundColor: BrandLoader().colors.textSecondary,
+              foregroundColor:
+                  _isUs2 ? Us2Theme.textMedium : BrandLoader().colors.textSecondary,
             ),
             child: Text(
               'Maybe later',
-              style: AppTheme.headlineFont.copyWith(
-                fontSize: 16,
-                fontWeight: FontWeight.w600,
-                color: BrandLoader().colors.textSecondary,
-              ),
+              style: _isUs2
+                  ? const TextStyle(
+                      fontFamily: Us2Theme.fontBody,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                      color: Us2Theme.textMedium,
+                    )
+                  : AppTheme.headlineFont.copyWith(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                      color: BrandLoader().colors.textSecondary,
+                    ),
             ),
           ),
         ),
       ],
+    );
+  }
+
+  /// Us 2.0 styled primary button with gradient and glow
+  Widget _buildUs2PrimaryButton({
+    required VoidCallback? onPressed,
+    required bool isLoading,
+    required String label,
+    IconData? icon,
+  }) {
+    return GestureDetector(
+      onTap: onPressed,
+      child: Container(
+        width: double.infinity,
+        height: 56,
+        decoration: BoxDecoration(
+          gradient: onPressed != null ? Us2Theme.accentGradient : null,
+          color: onPressed == null ? Colors.grey.shade300 : null,
+          borderRadius: BorderRadius.circular(12),
+          boxShadow: onPressed != null
+              ? [
+                  BoxShadow(
+                    color: Us2Theme.glowPink,
+                    blurRadius: 25,
+                    offset: const Offset(0, 8),
+                  ),
+                ]
+              : null,
+        ),
+        child: Center(
+          child: isLoading
+              ? const SizedBox(
+                  width: 24,
+                  height: 24,
+                  child: CircularProgressIndicator(
+                    color: Colors.white,
+                    strokeWidth: 2,
+                  ),
+                )
+              : Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    if (icon != null) ...[
+                      Icon(icon, size: 20, color: Colors.white),
+                      const SizedBox(width: 8),
+                    ],
+                    Text(
+                      label,
+                      style: const TextStyle(
+                        fontFamily: Us2Theme.fontBody,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ],
+                ),
+        ),
+      ),
     );
   }
 

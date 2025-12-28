@@ -3,17 +3,21 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:togetherremind/config/brand/brand_config.dart';
+import 'package:togetherremind/config/brand/brand_loader.dart';
+import 'package:togetherremind/config/brand/us2_theme.dart';
 import 'package:togetherremind/models/partner.dart';
 import 'package:togetherremind/models/pairing_code.dart';
-import 'package:togetherremind/screens/home_screen.dart';
+import 'package:togetherremind/screens/main_screen.dart';
 import 'package:togetherremind/services/storage_service.dart';
 import 'package:togetherremind/services/notification_service.dart';
 import 'package:togetherremind/services/couple_pairing_service.dart';
 import 'package:togetherremind/services/auth_service.dart';
-import 'package:togetherremind/services/quest_initialization_service.dart';
+import 'package:togetherremind/services/app_bootstrap_service.dart';
 import 'package:togetherremind/services/unlock_service.dart';
 import 'welcome_quiz_intro_screen.dart';
 import 'package:togetherremind/test/test_keys.dart';
@@ -29,6 +33,8 @@ class PairingScreen extends StatefulWidget {
 }
 
 class _PairingScreenState extends State<PairingScreen> {
+  bool get _isUs2 => BrandLoader().config.brand == Brand.us2;
+
   final StorageService _storageService = StorageService();
   final CouplePairingService _couplePairingService = CouplePairingService();
 
@@ -118,20 +124,13 @@ class _PairingScreenState extends State<PairingScreen> {
 
     if (mounted) {
       if (unlockState != null && unlockState.welcomeQuizCompleted) {
-        // Welcome Quiz already completed - initialize quests and go to home
-        final initService = QuestInitializationService();
-        final result = await initService.ensureQuestsInitialized();
-
-        if (result.isSuccess) {
-          Logger.debug('Quest init completed: $result', service: 'pairing');
-        } else {
-          Logger.error('Quest init failed: ${result.errorMessage}', service: 'pairing');
-          // Still navigate to home - quests will be synced later
-        }
+        // Welcome Quiz already completed - bootstrap and go to home
+        await AppBootstrapService.instance.bootstrap();
+        Logger.debug('Bootstrap completed after pairing', service: 'pairing');
 
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(
-            builder: (context) => const HomeScreen(),
+            builder: (context) => const MainScreen(),
           ),
         );
       } else {
@@ -411,14 +410,16 @@ class _PairingScreenState extends State<PairingScreen> {
   void _shareCode() {
     if (_generatedCode != null) {
       Share.share(
-        'My TogetherRemind pairing code: ${_generatedCode!.code}\n\nThis code expires in ${_generatedCode!.formattedTimeRemaining}.',
-        subject: 'TogetherRemind Pairing Code',
+        'My Liia pairing code: ${_generatedCode!.code}\n\nThis code expires in ${_generatedCode!.formattedTimeRemaining}.',
+        subject: 'Liia Pairing Code',
       );
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    if (_isUs2) return _buildUs2Screen();
+
     return Scaffold(
       body: Container(
         color: NewspaperColors.surface,
@@ -435,7 +436,7 @@ class _PairingScreenState extends State<PairingScreen> {
         // Masthead
         const NewspaperMasthead(
           date: 'Connection',
-          title: 'TogetherRemind',
+          title: 'Liia',
           subtitle: 'Step 3 of 3',
         ),
 
@@ -1283,6 +1284,484 @@ class _PairingScreenState extends State<PairingScreen> {
           ),
         ),
       ],
+    );
+  }
+
+  // ============================================
+  // Us 2.0 Brand Implementation
+  // ============================================
+
+  Widget _buildUs2Screen() {
+    return Scaffold(
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: Us2Theme.backgroundGradient,
+        ),
+        child: SafeArea(
+          child: _showScanner ? _buildScanner() : _buildUs2MainView(),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildUs2MainView() {
+    return Column(
+      children: [
+        // Header
+        _buildUs2Header(),
+
+        // Content
+        Expanded(
+          child: _pairingSuccessful
+              ? _buildUs2SuccessState()
+              : Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                  child: Column(
+                    children: [
+                      // Title section - more compact
+                      const Text('💕', style: TextStyle(fontSize: 36)),
+                      const SizedBox(height: 8),
+                      Text(
+                        'Connect with your partner',
+                        style: GoogleFonts.playfairDisplay(
+                          fontSize: 24,
+                          fontWeight: FontWeight.w600,
+                          color: Us2Theme.textDark,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+
+                      const SizedBox(height: 20),
+
+                      // Your Code Section
+                      _buildUs2YourCodeSection(),
+
+                      const SizedBox(height: 16),
+
+                      // Divider
+                      _buildUs2Divider("OR ENTER PARTNER'S CODE"),
+
+                      const SizedBox(height: 16),
+
+                      // Enter Partner's Code Section
+                      Expanded(child: _buildUs2EnterCodeSection()),
+                    ],
+                  ),
+                ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildUs2Header() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+      child: Row(
+        children: [
+          const SizedBox(width: 40), // Balance for center alignment
+          const Spacer(),
+          // Step indicator
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+            decoration: BoxDecoration(
+              color: Colors.white.withValues(alpha: 0.8),
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: Text(
+              'Step 3 of 3',
+              style: GoogleFonts.nunito(
+                fontSize: 12,
+                fontWeight: FontWeight.w600,
+                color: Us2Theme.textMedium,
+              ),
+            ),
+          ),
+          const Spacer(),
+          const SizedBox(width: 40), // Balance
+        ],
+      ),
+    );
+  }
+
+  Widget _buildUs2YourCodeSection() {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: [
+          BoxShadow(
+            color: Us2Theme.glowPink.withValues(alpha: 0.15),
+            blurRadius: 30,
+            offset: const Offset(0, 8),
+          ),
+        ],
+      ),
+      child: Column(
+        children: [
+          // Label
+          Text(
+            'YOUR CODE',
+            style: GoogleFonts.nunito(
+              fontSize: 10,
+              fontWeight: FontWeight.w700,
+              letterSpacing: 2,
+              color: Us2Theme.textLight,
+            ),
+          ),
+          const SizedBox(height: 10),
+
+          if (_generatedCode != null) ...[
+            // Big Code Display with gradient
+            ShaderMask(
+              shaderCallback: (bounds) => const LinearGradient(
+                colors: [Us2Theme.gradientAccentStart, Us2Theme.gradientAccentEnd],
+              ).createShader(bounds),
+              child: Text(
+                key: TestKeys.yourCodeDisplay,
+                _generatedCode!.code,
+                style: GoogleFonts.nunito(
+                  fontSize: 36,
+                  fontWeight: FontWeight.w800,
+                  letterSpacing: 6,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+            const SizedBox(height: 6),
+            Text(
+              'Expires in ${_generatedCode!.formattedTimeRemaining}',
+              style: GoogleFonts.nunito(
+                fontSize: 11,
+                color: Us2Theme.textLight,
+              ),
+            ),
+            const SizedBox(height: 12),
+            // Copy/Share buttons
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                _buildUs2IconButton(Icons.copy_outlined, 'Copy', _copyCode),
+                const SizedBox(width: 12),
+                _buildUs2IconButton(Icons.share_outlined, 'Share', _shareCode),
+              ],
+            ),
+          ] else if (_isGeneratingCode) ...[
+            const SizedBox(height: 16),
+            const CircularProgressIndicator(
+              strokeWidth: 2,
+              color: Us2Theme.primaryBrandPink,
+            ),
+            const SizedBox(height: 10),
+            Text(
+              'Generating code...',
+              style: GoogleFonts.nunito(
+                fontSize: 12,
+                color: Us2Theme.textLight,
+              ),
+            ),
+          ] else ...[
+            // Error state - show retry
+            const SizedBox(height: 8),
+            Text(
+              'Could not generate code',
+              style: GoogleFonts.nunito(
+                fontSize: 12,
+                color: Us2Theme.textMedium,
+              ),
+            ),
+            const SizedBox(height: 8),
+            GestureDetector(
+              onTap: _generateRemoteCode,
+              child: Text(
+                'Tap to retry',
+                style: GoogleFonts.nunito(
+                  fontSize: 12,
+                  fontWeight: FontWeight.w600,
+                  color: Us2Theme.primaryBrandPink,
+                ),
+              ),
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+
+  Widget _buildUs2IconButton(IconData icon, String tooltip, VoidCallback onTap) {
+    return Tooltip(
+      message: tooltip,
+      child: GestureDetector(
+        onTap: onTap,
+        child: Container(
+          width: 48,
+          height: 48,
+          decoration: BoxDecoration(
+            color: Us2Theme.cream,
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(
+              color: Us2Theme.primaryBrandPink.withValues(alpha: 0.2),
+            ),
+          ),
+          child: Icon(
+            icon,
+            size: 20,
+            color: Us2Theme.primaryBrandPink,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildUs2Divider(String text) {
+    return Row(
+      children: [
+        Expanded(
+          child: Container(
+            height: 1,
+            color: Us2Theme.textLight.withValues(alpha: 0.3),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: Text(
+            text,
+            style: GoogleFonts.nunito(
+              fontSize: 11,
+              fontWeight: FontWeight.w600,
+              letterSpacing: 1,
+              color: Us2Theme.textLight,
+            ),
+          ),
+        ),
+        Expanded(
+          child: Container(
+            height: 1,
+            color: Us2Theme.textLight.withValues(alpha: 0.3),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildUs2EnterCodeSection() {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.05),
+            blurRadius: 20,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          // Partner code input
+          TextField(
+            key: TestKeys.partnerCodeTextField,
+            controller: _partnerCodeController,
+            textAlign: TextAlign.center,
+            textCapitalization: TextCapitalization.characters,
+            maxLength: 6,
+            style: GoogleFonts.nunito(
+              fontSize: 24,
+              fontWeight: FontWeight.w700,
+              letterSpacing: 8,
+              color: Us2Theme.textDark,
+            ),
+            decoration: InputDecoration(
+              hintText: '_ _ _ _ _ _',
+              hintStyle: GoogleFonts.nunito(
+                fontSize: 24,
+                color: Us2Theme.textLight.withValues(alpha: 0.4),
+                letterSpacing: 8,
+              ),
+              counterText: '',
+              contentPadding: const EdgeInsets.symmetric(
+                vertical: 14,
+                horizontal: 16,
+              ),
+              filled: true,
+              fillColor: Us2Theme.cream,
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+                borderSide: BorderSide.none,
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+                borderSide: BorderSide.none,
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+                borderSide: const BorderSide(
+                  color: Us2Theme.primaryBrandPink,
+                  width: 2,
+                ),
+              ),
+            ),
+            onChanged: (value) {
+              // Auto-submit when 6 characters entered
+              if (value.length == 6) {
+                _verifyCode(value.toUpperCase());
+              }
+            },
+          ),
+          const SizedBox(height: 12),
+
+          // Join button - use muted gradient for loading state
+          GestureDetector(
+            key: TestKeys.joinPartnerButton,
+            onTap: _isVerifyingCode
+                ? null
+                : () {
+                    final code = _partnerCodeController.text.trim();
+                    if (code.length == 6) {
+                      _verifyCode(code.toUpperCase());
+                    }
+                  },
+            child: Container(
+              width: double.infinity,
+              padding: const EdgeInsets.symmetric(vertical: 14),
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: _isVerifyingCode
+                      ? [
+                          Us2Theme.gradientAccentStart.withValues(alpha: 0.5),
+                          Us2Theme.gradientAccentEnd.withValues(alpha: 0.5),
+                        ]
+                      : [Us2Theme.gradientAccentStart, Us2Theme.gradientAccentEnd],
+                ),
+                borderRadius: BorderRadius.circular(14),
+                boxShadow: _isVerifyingCode
+                    ? null
+                    : [
+                        BoxShadow(
+                          color: Us2Theme.glowPink.withValues(alpha: 0.5),
+                          blurRadius: 20,
+                          offset: const Offset(0, 6),
+                        ),
+                      ],
+              ),
+              child: _isVerifyingCode
+                  ? const Center(
+                      child: SizedBox(
+                        width: 20,
+                        height: 20,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          color: Colors.white,
+                        ),
+                      ),
+                    )
+                  : Text(
+                      'JOIN PARTNER',
+                      textAlign: TextAlign.center,
+                      style: GoogleFonts.nunito(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w700,
+                        color: Colors.white,
+                        letterSpacing: 1,
+                      ),
+                    ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildUs2SuccessState() {
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(40),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            // Success icon
+            Container(
+              width: 100,
+              height: 100,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                shape: BoxShape.circle,
+                boxShadow: [
+                  BoxShadow(
+                    color: Us2Theme.glowPink.withValues(alpha: 0.2),
+                    blurRadius: 30,
+                    offset: const Offset(0, 8),
+                  ),
+                ],
+              ),
+              child: const Center(
+                child: Text('💕', style: TextStyle(fontSize: 48)),
+              ),
+            ),
+            const SizedBox(height: 24),
+
+            // Success message with gradient
+            ShaderMask(
+              shaderCallback: (bounds) => const LinearGradient(
+                colors: [Us2Theme.gradientAccentStart, Us2Theme.gradientAccentEnd],
+              ).createShader(bounds),
+              child: Text(
+                'Paired!',
+                style: GoogleFonts.playfairDisplay(
+                  fontSize: 36,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+            const SizedBox(height: 12),
+
+            if (_pairedPartnerName != null) ...[
+              Text(
+                'Connected with $_pairedPartnerName',
+                style: GoogleFonts.nunito(
+                  fontSize: 16,
+                  color: Us2Theme.textMedium,
+                ),
+              ),
+              const SizedBox(height: 32),
+            ],
+
+            // Loading dots
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: List.generate(3, (index) {
+                return Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 4),
+                  child: Container(
+                    width: 8,
+                    height: 8,
+                    decoration: const BoxDecoration(
+                      color: Us2Theme.primaryBrandPink,
+                      shape: BoxShape.circle,
+                    ),
+                  ),
+                );
+              }),
+            ),
+            const SizedBox(height: 16),
+
+            Text(
+              'Preparing your experience...',
+              style: GoogleFonts.nunito(
+                fontSize: 13,
+                fontStyle: FontStyle.italic,
+                color: Us2Theme.textLight,
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

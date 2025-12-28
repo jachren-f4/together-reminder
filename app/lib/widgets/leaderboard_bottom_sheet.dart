@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:google_fonts/google_fonts.dart';
 import '../services/leaderboard_service.dart';
 import '../services/country_service.dart';
 import '../theme/app_theme.dart';
 import '../config/brand/brand_loader.dart';
+import '../config/brand/brand_config.dart';
+import '../config/brand/us2_theme.dart';
 
 class LeaderboardBottomSheet extends StatefulWidget {
   const LeaderboardBottomSheet({super.key});
@@ -25,6 +28,8 @@ class LeaderboardBottomSheet extends StatefulWidget {
 enum LeaderboardView { global, country, tier }
 
 class _LeaderboardBottomSheetState extends State<LeaderboardBottomSheet> {
+  bool get _isUs2 => BrandLoader().config.brand == Brand.us2;
+
   final LeaderboardService _leaderboardService = LeaderboardService();
   final CountryService _countryService = CountryService();
 
@@ -87,6 +92,11 @@ class _LeaderboardBottomSheetState extends State<LeaderboardBottomSheet> {
 
   @override
   Widget build(BuildContext context) {
+    if (_isUs2) return _buildUs2Sheet();
+    return _buildLiiaSheet();
+  }
+
+  Widget _buildLiiaSheet() {
     return DraggableScrollableSheet(
       initialChildSize: 0.75,
       minChildSize: 0.5,
@@ -133,6 +143,416 @@ class _LeaderboardBottomSheetState extends State<LeaderboardBottomSheet> {
           ),
         );
       },
+    );
+  }
+
+  Widget _buildUs2Sheet() {
+    return DraggableScrollableSheet(
+      initialChildSize: 0.75,
+      minChildSize: 0.5,
+      maxChildSize: 0.95,
+      builder: (context, scrollController) {
+        return Container(
+          decoration: const BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+          ),
+          child: Column(
+            children: [
+              // Drag handle
+              Container(
+                margin: const EdgeInsets.only(top: 12, bottom: 8),
+                width: 40,
+                height: 4,
+                decoration: BoxDecoration(
+                  color: Us2Theme.beige,
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              ),
+
+              // Header
+              _buildUs2Header(),
+
+              // Tab Toggle
+              _buildUs2TabToggle(),
+
+              // Your Position Card (if data loaded)
+              if (!_isLoading && _currentData?.userRank != null)
+                _buildUs2YourPosition(),
+
+              // Content
+              Expanded(
+                child: _isLoading
+                    ? _buildUs2LoadingState()
+                    : _errorMessage != null
+                        ? _buildUs2ErrorState()
+                        : _buildUs2LeaderboardContent(scrollController),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildUs2Header() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+      child: Column(
+        children: [
+          Text(
+            'Leaderboard',
+            style: GoogleFonts.playfairDisplay(
+              fontSize: 28,
+              fontWeight: FontWeight.w600,
+              color: Us2Theme.textDark,
+            ),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            'See how you compare to other couples',
+            style: GoogleFonts.nunito(
+              fontSize: 14,
+              color: Us2Theme.textMedium,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildUs2TabToggle() {
+    return Container(
+      margin: const EdgeInsets.fromLTRB(20, 0, 20, 16),
+      padding: const EdgeInsets.all(4),
+      decoration: BoxDecoration(
+        color: Us2Theme.cream,
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Row(
+        children: [
+          _buildUs2Tab('Global', LeaderboardView.global),
+          _buildUs2Tab('Country', LeaderboardView.country),
+          _buildUs2Tab('Tier', LeaderboardView.tier),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildUs2Tab(String label, LeaderboardView view) {
+    final isActive = _currentView == view;
+    return Expanded(
+      child: GestureDetector(
+        onTap: () {
+          HapticFeedback.selectionClick();
+          setState(() => _currentView = view);
+        },
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 150),
+          padding: const EdgeInsets.symmetric(vertical: 10),
+          decoration: BoxDecoration(
+            gradient: isActive ? Us2Theme.accentGradient : null,
+            borderRadius: BorderRadius.circular(10),
+            boxShadow: isActive
+                ? [
+                    BoxShadow(
+                      color: Us2Theme.glowPink,
+                      blurRadius: 12,
+                      offset: const Offset(0, 4),
+                    ),
+                  ]
+                : null,
+          ),
+          child: Center(
+            child: Text(
+              label,
+              style: GoogleFonts.nunito(
+                fontSize: 13,
+                fontWeight: FontWeight.w600,
+                color: isActive ? Colors.white : Us2Theme.textMedium,
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildUs2YourPosition() {
+    final data = _currentData;
+    if (data == null || data.userRank == null) return const SizedBox.shrink();
+
+    // Find user's LP
+    final userEntry = data.entries.where((e) => e.isCurrentUser).firstOrNull;
+    final userLp = userEntry?.totalLp ?? 0;
+
+    return Container(
+      margin: const EdgeInsets.fromLTRB(20, 0, 20, 16),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        gradient: Us2Theme.accentGradient,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: Us2Theme.glowPink,
+            blurRadius: 25,
+            offset: const Offset(0, 8),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'YOUR POSITION',
+            style: GoogleFonts.nunito(
+              fontSize: 11,
+              fontWeight: FontWeight.w600,
+              letterSpacing: 1,
+              color: Colors.white.withOpacity(0.8),
+            ),
+          ),
+          const SizedBox(height: 4),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                '#${data.userRank}',
+                style: GoogleFonts.playfairDisplay(
+                  fontSize: 32,
+                  fontWeight: FontWeight.w700,
+                  color: Colors.white,
+                ),
+              ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Text(
+                    '💎 ${_formatNumber(userLp)}',
+                    style: GoogleFonts.playfairDisplay(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w700,
+                      color: Colors.white,
+                    ),
+                  ),
+                  Text(
+                    'Love Points',
+                    style: GoogleFonts.nunito(
+                      fontSize: 12,
+                      color: Colors.white.withOpacity(0.8),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildUs2LoadingState() {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          SizedBox(
+            width: 24,
+            height: 24,
+            child: CircularProgressIndicator(
+              strokeWidth: 2,
+              valueColor: const AlwaysStoppedAnimation<Color>(
+                Us2Theme.gradientAccentStart,
+              ),
+            ),
+          ),
+          const SizedBox(height: 16),
+          Text(
+            'Loading rankings...',
+            style: GoogleFonts.nunito(
+              fontSize: 14,
+              color: Us2Theme.textMedium,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildUs2ErrorState() {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const Text('😢', style: TextStyle(fontSize: 48)),
+          const SizedBox(height: 16),
+          Text(
+            _errorMessage ?? 'Something went wrong',
+            style: GoogleFonts.nunito(
+              fontSize: 14,
+              color: Us2Theme.textMedium,
+            ),
+          ),
+          const SizedBox(height: 24),
+          GestureDetector(
+            onTap: _loadData,
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+              decoration: BoxDecoration(
+                gradient: Us2Theme.accentGradient,
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Text(
+                'Try Again',
+                style: GoogleFonts.nunito(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildUs2LeaderboardContent(ScrollController scrollController) {
+    final data = _currentData;
+    if (data == null || data.entries.isEmpty) {
+      return _buildUs2EmptyState();
+    }
+
+    return ListView.separated(
+      controller: scrollController,
+      padding: const EdgeInsets.fromLTRB(20, 0, 20, 40),
+      itemCount: data.entries.length.clamp(0, 10),
+      separatorBuilder: (context, index) => const SizedBox(height: 10),
+      itemBuilder: (context, index) {
+        final entry = data.entries[index];
+        return _buildUs2RankingItem(entry);
+      },
+    );
+  }
+
+  Widget _buildUs2RankingItem(LeaderboardEntry entry) {
+    final isCurrentUser = entry.isCurrentUser;
+
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+      decoration: BoxDecoration(
+        gradient: isCurrentUser ? Us2Theme.accentGradient : null,
+        color: isCurrentUser ? null : Us2Theme.cream,
+        borderRadius: BorderRadius.circular(16),
+      ),
+      child: Row(
+        children: [
+          // Rank badge
+          Container(
+            width: 32,
+            height: 32,
+            decoration: BoxDecoration(
+              gradient: _getUs2RankGradient(entry.rank),
+              color: entry.rank > 3 ? Us2Theme.beige : null,
+              shape: BoxShape.circle,
+            ),
+            child: Center(
+              child: Text(
+                '${entry.rank}',
+                style: GoogleFonts.nunito(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w700,
+                  color: entry.rank <= 3 ? Colors.white : Us2Theme.textDark,
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(width: 12),
+
+          // Couple info
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  entry.initials,
+                  style: GoogleFonts.nunito(
+                    fontSize: 15,
+                    fontWeight: FontWeight.w600,
+                    color: isCurrentUser ? Colors.white : Us2Theme.textDark,
+                  ),
+                ),
+              ],
+            ),
+          ),
+
+          // LP value
+          Row(
+            children: [
+              Text(
+                '💎',
+                style: TextStyle(fontSize: 16),
+              ),
+              const SizedBox(width: 4),
+              Text(
+                _formatNumber(entry.totalLp),
+                style: GoogleFonts.playfairDisplay(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w700,
+                  color: isCurrentUser ? Colors.white : Us2Theme.textDark,
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  LinearGradient? _getUs2RankGradient(int rank) {
+    switch (rank) {
+      case 1:
+        return const LinearGradient(
+          colors: [Color(0xFFFFD700), Color(0xFFFFA500)],
+        );
+      case 2:
+        return const LinearGradient(
+          colors: [Color(0xFFC0C0C0), Color(0xFFA0A0A0)],
+        );
+      case 3:
+        return const LinearGradient(
+          colors: [Color(0xFFCD7F32), Color(0xFF8B4513)],
+        );
+      default:
+        return null;
+    }
+  }
+
+  Widget _buildUs2EmptyState() {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const Text('🏆', style: TextStyle(fontSize: 64)),
+          const SizedBox(height: 16),
+          Text(
+            'No rankings yet',
+            style: GoogleFonts.playfairDisplay(
+              fontSize: 20,
+              fontWeight: FontWeight.w600,
+              color: Us2Theme.textDark,
+            ),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            'Complete activities to earn Love Points',
+            style: GoogleFonts.nunito(
+              fontSize: 14,
+              color: Us2Theme.textMedium,
+            ),
+          ),
+        ],
+      ),
     );
   }
 

@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Us 2.0 - Welcome Quiz Waiting</title>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-gradient-start: #FFD1C1;
+            --bg-gradient-end: #FFF5F0;
+            --primary-pink: #FF5E62;
+            --gradient-start: #FF6B6B;
+            --gradient-end: #FF9F43;
+            --card-salmon: #FF7B6B;
+            --cream: #FFF8F0;
+            --beige: #F5E6D8;
+            --text-dark: #2D2D2D;
+            --text-medium: #6B6B6B;
+            --text-light: #9B9B9B;
+            --glow-pink: rgba(255, 107, 107, 0.5);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            min-height: 100vh;
+            background: linear-gradient(180deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .phone-frame {
+            width: 390px;
+            height: 844px;
+            background: linear-gradient(180deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
+            border-radius: 40px;
+            overflow: hidden;
+            box-shadow: 0 25px 80px rgba(0, 0, 0, 0.15);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .content {
+            flex: 1;
+            padding: 80px 24px 24px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .emoji-circle {
+            width: 100px;
+            height: 100px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 32px;
+            box-shadow: 0 8px 30px rgba(255, 107, 107, 0.2);
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .emoji-circle span {
+            font-size: 48px;
+        }
+
+        .title {
+            font-family: 'Playfair Display', serif;
+            font-size: 28px;
+            font-weight: 600;
+            color: var(--text-dark);
+            text-align: center;
+            margin-bottom: 16px;
+        }
+
+        .subtitle {
+            font-size: 15px;
+            color: var(--text-medium);
+            text-align: center;
+            line-height: 1.6;
+            max-width: 300px;
+            margin-bottom: 40px;
+        }
+
+        .checklist {
+            width: 100%;
+            max-width: 320px;
+            background: white;
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            margin-bottom: 32px;
+        }
+
+        .checklist-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 8px 0;
+        }
+
+        .checklist-item + .checklist-item {
+            margin-top: 8px;
+        }
+
+        .check-circle {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            border: 2px solid var(--primary-pink);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .check-circle.complete {
+            background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+            border: none;
+        }
+
+        .check-circle svg {
+            width: 14px;
+            height: 14px;
+            color: white;
+        }
+
+        .checklist-text {
+            font-size: 15px;
+            color: var(--text-dark);
+            flex: 1;
+        }
+
+        .checklist-text.pending {
+            color: var(--text-light);
+        }
+
+        .spinner {
+            width: 18px;
+            height: 18px;
+            border: 2px solid var(--beige);
+            border-top-color: var(--primary-pink);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .coming-up {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .coming-up-label {
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            color: var(--text-light);
+            margin-bottom: 16px;
+        }
+
+        .feature-preview {
+            padding: 12px 16px;
+            border-left: 3px solid var(--primary-pink);
+            text-align: left;
+            margin-bottom: 8px;
+        }
+
+        .feature-preview h4 {
+            font-family: 'Playfair Display', serif;
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 4px;
+        }
+
+        .feature-preview p {
+            font-size: 13px;
+            color: var(--text-medium);
+        }
+
+        .tip-box {
+            background: white;
+            border-radius: 16px;
+            padding: 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            max-width: 320px;
+        }
+
+        .tip-box span {
+            font-size: 20px;
+        }
+
+        .tip-box p {
+            font-size: 14px;
+            color: var(--text-medium);
+        }
+    </style>
+</head>
+<body>
+    <div class="phone-frame">
+        <div class="content">
+            <div class="emoji-circle">
+                <span>⏳</span>
+            </div>
+
+            <h1 class="title">Waiting for Alex</h1>
+
+            <p class="subtitle">
+                You've completed your part! Alex needs to finish the Welcome Quiz to unlock your first activities together.
+            </p>
+
+            <div class="checklist">
+                <div class="checklist-item">
+                    <div class="check-circle complete">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                            <polyline points="20 6 9 17 4 12"></polyline>
+                        </svg>
+                    </div>
+                    <span class="checklist-text">You completed</span>
+                </div>
+                <div class="checklist-item">
+                    <div class="check-circle"></div>
+                    <span class="checklist-text pending">Alex in progress...</span>
+                    <div class="spinner"></div>
+                </div>
+            </div>
+
+            <div class="coming-up">
+                <p class="coming-up-label">COMING UP NEXT</p>
+                <div class="feature-preview">
+                    <h4>Classic Quiz</h4>
+                    <p>Test how well you know each other</p>
+                </div>
+                <div class="feature-preview">
+                    <h4>Affirmation Quiz</h4>
+                    <p>Celebrate your relationship</p>
+                </div>
+            </div>
+
+            <div class="tip-box">
+                <span>💡</span>
+                <p>Send a gentle reminder to complete the quiz</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

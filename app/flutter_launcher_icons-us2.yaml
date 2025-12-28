@@ -1,0 +1,19 @@
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path: "assets/brands/us2/icon1.png"
+  min_sdk_android: 21
+
+  # iOS specific settings
+  remove_alpha_ios: true
+
+  # Web
+  web:
+    generate: true
+    image_path: "assets/brands/us2/icon1.png"
+
+  # Disable other platforms
+  windows:
+    generate: false
+  macos:
+    generate: false

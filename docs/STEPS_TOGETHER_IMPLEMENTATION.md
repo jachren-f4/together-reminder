@@ -76,6 +76,7 @@ These cards appear in the daily quests carousel on the home screen.
 **When shown:** iOS user has not connected Apple Health
 
 **Visual elements:**
+- **"BONUS" ribbon** at top-left corner (black background, white text, 10px font, 700 weight)
 - Grayed-out sneaker emoji (👟) with `filter: grayscale(100%)` and `opacity: 0.4`
 - "Connect HealthKit" prompt text
 - "Earn up to +30 LP daily" subtitle
@@ -83,6 +84,14 @@ These cards appear in the daily quests carousel on the home screen.
 - Card subtitle: "Walk together, earn together"
 - Reward badge: "+30" (grayed out)
 - Action badge: "Connect"
+
+**BONUS Ribbon Behavior:**
+- Ribbon appears when the **current user** has not connected HealthKit
+- Ribbon is hidden once the current user connects (partner's status doesn't matter)
+- Positioned at `top: 12px, left: 0` overlaying the card
+- Uses `Stack` with `clipBehavior: Clip.none` to allow ribbon to sit at edge
+
+**Implementation:** `lib/widgets/steps/steps_quest_card.dart` - `_BonusRibbon` widget wraps `_buildNotConnectedCard()`
 
 **Tap action:** Navigate to intro screen (neither connected or partner connected variant)
 
@@ -548,10 +557,15 @@ class StepsLPCalculator {
 
 #### Phase 3 Testing Checklist:
 - [ ] Not connected card shows when health not connected
+- [ ] **BONUS ribbon** shows on not-connected card
+- [ ] BONUS ribbon disappears after user connects HealthKit
+- [ ] Partner's connection status does NOT affect ribbon visibility
 - [ ] Progress card shows correct combined steps
 - [ ] Progress card shows correct projected LP
+- [ ] Progress card does NOT show BONUS ribbon
 - [ ] Claim ready card shows when yesterday's reward available
 - [ ] Claim ready card has dark/inverted theme
+- [ ] Claim ready card does NOT show BONUS ribbon
 - [ ] Tap navigates to correct screen based on state
 - [ ] Card updates in real-time when partner steps change
 - [ ] Card displays partner name correctly
@@ -920,8 +934,13 @@ All UI mockups are located in `/mockups/steps/selected/`:
 ### Index Page
 `/mockups/steps/selected/index.html` - Overview of all 9 screens with navigation
 
+### Additional Mockups
+| Screen | File | Description |
+|--------|------|-------------|
+| BONUS Ribbon Demo | `/mockups/steps-together-intro.html` | Interactive demo showing BONUS ribbon on not-connected state with toggle |
+
 ---
 
 **Document Created:** 2025-11-28
-**Last Updated:** 2025-11-28
+**Last Updated:** 2025-12-17
 **Author:** Claude Code

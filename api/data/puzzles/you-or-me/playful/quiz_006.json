@@ -1,6 +1,6 @@
 {
   "quizId": "quiz_006",
-  "title": "Playful Quiz 6",
+  "title": "Party Mode",
   "branch": "playful",
   "questions": [
     {
@@ -33,5 +33,6 @@
       "prompt": "Who would...",
       "content": "Compliment a total stranger out of nowhere"
     }
-  ]
+  ],
+  "description": "Find out who's the DJ, who's the dancer, and who's raiding the fridge."
 }

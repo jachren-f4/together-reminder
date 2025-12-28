@@ -95,3 +95,4 @@ lib/generated_plugin_registrant.dart
 !**/ios/**/default.perspectivev3
 builds/
 functions/
+.vercel

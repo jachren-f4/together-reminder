@@ -38,6 +38,8 @@ class PokeService {
   /// Send a poke to partner
   static Future<bool> sendPoke({String emoji = '💫'}) async {
     try {
+      Logger.debug('📤 sendPoke() called with emoji: $emoji', service: 'poke');
+
       // Check rate limit
       if (!canSendPoke()) {
         final remaining = getRemainingSeconds();
@@ -48,6 +50,8 @@ class PokeService {
       // Get partner and user info
       final partner = _storage.getPartner();
       final user = _storage.getUser();
+
+      Logger.debug('Partner: ${partner?.name ?? "NULL"}, User: ${user?.name ?? "NULL"}', service: 'poke');
 
       if (partner == null) {
         Logger.error('No partner found, cannot send poke', service: 'poke');
@@ -61,11 +65,19 @@ class PokeService {
 
       // Refresh partner's FCM token from Supabase before sending
       // This ensures we have the latest token (solves startup race condition)
+      Logger.debug('Refreshing partner push token...', service: 'poke');
       await DevDataService().refreshPartnerPushToken();
 
       // Re-fetch partner to get updated token
       final updatedPartner = _storage.getPartner();
       final partnerToken = updatedPartner?.pushToken ?? partner.pushToken;
+
+      Logger.debug('Partner token: ${partnerToken != null ? "${partnerToken.substring(0, 20)}..." : "NULL"}', service: 'poke');
+
+      if (partnerToken == null || partnerToken.isEmpty) {
+        Logger.error('Partner has no push token - they may not have notifications enabled', service: 'poke');
+        return false;
+      }
 
       final pokeId = const Uuid().v4();
       final now = DateTime.now();
@@ -85,12 +97,15 @@ class PokeService {
       );
 
       // Save locally
+      Logger.debug('Saving poke locally...', service: 'poke');
       await _storage.saveReminder(poke);
 
       // Sync to Supabase (Dual-Write)
+      Logger.debug('Syncing to Supabase...', service: 'poke');
       await _syncPokeToSupabase(poke);
 
       // Call Cloud Function
+      Logger.debug('Calling sendPoke Cloud Function...', service: 'poke');
       final callable = _functions.httpsCallable('sendPoke');
       final result = await callable.call({
         'partnerToken': partnerToken,
@@ -98,6 +113,8 @@ class PokeService {
         'pokeId': pokeId,
         'emoji': emoji,
       });
+
+      Logger.debug('Cloud Function result: ${result.data}', service: 'poke');
 
       // Update rate limit timestamp
       _lastPokeTime = now;
@@ -107,9 +124,10 @@ class PokeService {
       // Record activity for streak tracking
       await GeneralActivityStreakService().recordActivity();
 
+      Logger.success('Poke sent successfully!', service: 'poke');
       return true;
-    } catch (e) {
-      Logger.error('Error sending poke', error: e, service: 'poke');
+    } catch (e, stackTrace) {
+      Logger.error('Error sending poke', error: e, stackTrace: stackTrace, service: 'poke');
       return false;
     }
   }

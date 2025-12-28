@@ -15,8 +15,10 @@
     "7": { "type": "text", "content": "_UY", "arrow": "across", "target_index": 13 },
     "8": { "type": "emoji", "content": "🥘", "arrow": "down", "target_index": 23 },
     "9": { "type": "text", "content": "Before V", "arrow": "across", "target_index": 18 },
-    "10": { "type": "text", "content": "Frying ___", "arrow": "across", "target_index": 23 },
-    "11": { "type": "text", "content": "Breakfast spread", "arrow": "down", "target_index": 29 },
+    "10": {
+      "across": { "type": "text", "content": "Frying ___", "target_index": 23 },
+      "down": { "type": "text", "content": "Breakfast spread", "target_index": 29 }
+    },
     "12": { "type": "text", "content": "Porch relaxation", "arrow": "down", "target_index": 33 },
     "13": { "type": "emoji", "content": "😊", "arrow": "across", "target_index": 29 },
     "14": { "type": "text", "content": "Quirky together", "arrow": "down", "target_index": 41 },

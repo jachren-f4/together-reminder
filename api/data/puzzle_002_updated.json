@@ -1,0 +1,74 @@
+{
+  "author": "Crossword Maker GPT",
+  "title": "Adult Intimacy Puzzle #2",
+  "size": {
+    "rows": 9,
+    "cols": 7
+  },
+  "clues": {
+    "1": { "type": "emoji", "content": "🛋️", "arrow": "down", "target_index": 8 },
+    "2": { "type": "emoji", "content": "📖", "arrow": "down", "target_index": 11 },
+    "3": { "type": "emoji", "content": "💳", "arrow": "down", "target_index": 13 },
+    "4": { "type": "text", "content": "_ATE", "arrow": "across", "target_index": 8 },
+    "5": {
+      "across": { "type": "text", "content": "_EX", "target_index": 11 },
+      "down": { "type": "text", "content": "After @", "target_index": 17 }
+    },
+    "6": { "type": "text", "content": "_AR", "arrow": "across", "target_index": 15 },
+    "7": { "type": "text", "content": "Meeting point", "arrow": "across", "target_index": 17 },
+    "8": { "type": "emoji", "content": "🍑", "text": "_SS", "arrow": "across", "target_index": 20 },
+    "9": { "type": "text", "content": "_O", "arrow": "across", "target_index": 22 },
+    "10": { "type": "emoji", "content": "❤️", "text": "LO_E", "arrow": "down", "target_index": 30 },
+    "11": { "type": "text", "content": "_T", "arrow": "down", "target_index": 31 },
+    "12": { "type": "text", "content": "TID_", "arrow": "across", "target_index": 27 },
+    "13": {
+      "across": { "type": "emoji", "content": "🎥", "target_index": 30 },
+      "down": { "type": "text", "content": "___ do you want?", "target_index": 36 }
+    },
+    "14": { "type": "text", "content": "Belonging to me", "arrow": "down", "target_index": 41 },
+    "15": { "type": "text", "content": "_RAP", "arrow": "across", "target_index": 36 },
+    "16": {
+      "across": { "type": "text", "content": "WH_", "target_index": 39 },
+      "down": { "type": "text", "content": "___ are you?", "target_index": 45 }
+    },
+    "17": {
+      "across": { "type": "text", "content": "_E", "target_index": 41 },
+      "down": { "type": "text", "content": "Playful wager", "target_index": 47 }
+    },
+    "18": { "type": "text", "content": "After G", "arrow": "across", "target_index": 43 },
+    "19": { "type": "emoji", "content": "🛏️", "text": "_ED", "arrow": "down", "target_index": 51 },
+    "20": {
+      "across": { "type": "text", "content": "Side ___ side", "target_index": 47 },
+      "down": { "type": "emoji", "content": "❤️", "text": "LO_E", "target_index": 53 }
+    },
+    "21": { "type": "text", "content": "Up ___", "arrow": "across", "target_index": 50 },
+    "22": { "type": "text", "content": "Before P", "arrow": "down", "target_index": 62 },
+    "23": { "type": "text", "content": "_EASE", "arrow": "across", "target_index": 57 },
+    "24": { "type": "emoji", "content": "💦", "text": "_ET", "arrow": "across", "target_index": 59 },
+    "25": { "type": "text", "content": "Going ___ dinner", "arrow": "across", "target_index": 61 }
+  },
+  "date": "2025-12-19",
+  "grid": [
+    ".", ".", ".", ".", ".", ".", ".",
+    ".", "D", ".", ".", "S", ".", "P",
+    ".", "E", ".", "A", "T", ".", "A",
+    ".", "N", ".", ".", "U", ".", "Y",
+    ".", ".", "V", "I", "D", ".", ".",
+    ".", "W", ".", ".", "Y", ".", "M",
+    ".", "H", ".", "H", ".", "B", "Y",
+    ".", "A", "B", "O", "V", "E", ".",
+    ".", "T", ".", "W", ".", "T", "O"
+  ],
+  "gridnums": [
+    0, 1, 0, 0, 2, 0, 3,
+    4, 0, 0, 5, 0, 0, 0,
+    6, 0, 7, 0, 0, 8, 0,
+    9, 0, 10, 11, 0, 12, 0,
+    0, 13, 0, 0, 0, 0, 14,
+    15, 0, 0, 16, 0, 17, 0,
+    18, 0, 19, 0, 20, 0, 0,
+    21, 0, 0, 0, 0, 0, 22,
+    23, 0, 24, 0, 25, 0, 0
+  ],
+  "puzzleId": "puzzle_002"
+}

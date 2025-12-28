@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import '../config/animation_constants.dart';
 import '../widgets/animations/animations.dart';
 import '../widgets/editorial/editorial.dart';
+import '../widgets/brand/brand_widget_factory.dart';
+import '../widgets/brand/us2/us2_intro_screen.dart';
 import '../services/linked_service.dart';
+import '../services/love_point_service.dart';
 import '../services/storage_service.dart';
 import 'linked_game_screen.dart';
 
@@ -20,6 +23,7 @@ class _LinkedIntroScreenState extends State<LinkedIntroScreen>
   final LinkedService _service = LinkedService();
   bool _isLoading = false;
   bool _isMyTurn = true;
+  LpContentStatus? _lpStatus;
 
   @override
   bool get enableConfetti => false;
@@ -28,6 +32,16 @@ class _LinkedIntroScreenState extends State<LinkedIntroScreen>
   void initState() {
     super.initState();
     _checkTurnStatus();
+    _checkLpStatus();
+  }
+
+  Future<void> _checkLpStatus() async {
+    final status = await LovePointService.checkLpStatus('linked');
+    if (mounted) {
+      setState(() {
+        _lpStatus = status;
+      });
+    }
   }
 
   Future<void> _checkTurnStatus() async {
@@ -64,7 +78,12 @@ class _LinkedIntroScreenState extends State<LinkedIntroScreen>
     final user = StorageService().getUser();
     final partner = StorageService().getPartner();
     final userName = user?.name;
-    final partnerName = partner?.name;
+    final partnerName = partner?.name ?? 'Partner';
+
+    // Us 2.0 brand uses simplified intro screen
+    if (BrandWidgetFactory.isUs2) {
+      return _buildUs2Intro(userName, partnerName);
+    }
 
     return wrapWithDramaticEffects(
       Scaffold(
@@ -211,7 +230,9 @@ class _LinkedIntroScreenState extends State<LinkedIntroScreen>
                             ),
                             const SizedBox(width: 8),
                             Text(
-                              '+30 LP on completion',
+                              _lpStatus?.alreadyGrantedToday == true
+                                  ? 'LP earned today · Resets in ${_lpStatus?.resetTimeFormatted ?? ''}'
+                                  : '+30 LP on completion',
                               style: EditorialStyles.bodySmall,
                             ),
                           ],
@@ -242,6 +263,33 @@ class _LinkedIntroScreenState extends State<LinkedIntroScreen>
           ),
         ),
       ),
+    );
+  }
+
+  /// Build Us 2.0 styled intro screen
+  Widget _buildUs2Intro(String? userName, String partnerName) {
+    final alreadyEarned = _lpStatus?.alreadyGrantedToday == true;
+
+    return Us2IntroScreen(
+      title: 'Linked',
+      description: 'Take turns solving crossword clues. Connect your words and see how in sync your minds are with $partnerName.',
+      emoji: '🔗',
+      buttonLabel: _isLoading ? 'Loading...' : 'Start Playing',
+      onStart: _isLoading ? () {} : _startGame,
+      onBack: () => Navigator.of(context).pop(),
+      additionalContent: [
+        // Reward badge
+        Us2RewardBadge(
+          text: alreadyEarned ? 'LP earned today' : '+30 LP',
+          icon: Icons.favorite,
+        ),
+        const SizedBox(height: 12),
+        // Turn indicator
+        Us2RewardBadge(
+          text: _isMyTurn ? "It's your turn!" : "Waiting for $partnerName",
+          icon: _isMyTurn ? Icons.play_arrow : Icons.hourglass_empty,
+        ),
+      ],
     );
   }
 

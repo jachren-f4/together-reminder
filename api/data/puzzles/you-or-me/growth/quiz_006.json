@@ -1,6 +1,6 @@
 {
   "quizId": "quiz_006",
-  "title": "Growth Quiz 6",
+  "title": "Self-Growth",
   "branch": "growth",
   "questions": [
     {
@@ -33,5 +33,6 @@
       "prompt": "Who is more open to...",
       "content": "Constructive feedback"
     }
-  ]
+  ],
+  "description": "Who's more focused on personal development? Explore your growth mindsets."
 }

@@ -9,43 +9,66 @@
     "1": { "type": "text", "content": "Exclamation", "arrow": "down", "target_index": 10 },
     "2": { "type": "text", "content": "HE_P", "arrow": "down", "target_index": 11 },
     "3": { "type": "text", "content": "Casual yes", "arrow": "down", "target_index": 13 },
-    "4": { "type": "emoji", "content": "🛡️", "arrow": "down", "target_index": 15 },
-    "5": { "type": "emoji", "content": "🎅", "arrow": "across", "target_index": 9 },
-    "6": { "type": "text", "content": "After G", "arrow": "across", "target_index": 17 },
+    "4": {
+      "across": { "type": "text", "content": "HAPPY", "target_index": 9 },
+      "down": { "type": "text", "content": "VAULT", "target_index": 15 }
+    },
+    "5": { "type": "text", "content": "Before V", "arrow": "down", "target_index": 14 },
+    "6": {
+      "across": { "type": "text", "content": "After G", "target_index": 17 },
+      "down": { "type": "text", "content": "_U", "target_index": 23 }
+    },
     "7": { "type": "text", "content": "Hold ___", "arrow": "down", "target_index": 25 },
     "8": { "type": "text", "content": "Belonging to me", "arrow": "down", "target_index": 26 },
-    "9": { "type": "text", "content": "After @", "arrow": "across", "target_index": 22 },
-    "10": { "type": "text", "content": "Child carer", "arrow": "down", "target_index": 31 },
+    "9": { "type": "emoji", "content": "🌴", "text": "_L_HA!", "arrow": "across", "target_index": 22 },
+    "10": {
+      "across": { "type": "emoji", "content": "🤰", "text": "M__", "target_index": 25 },
+      "down": { "type": "text", "content": "HELPER", "target_index": 31 }
+    },
     "11": { "type": "emoji", "content": "😂", "arrow": "across", "target_index": 29 },
-    "12": { "type": "emoji", "content": "👍", "arrow": "down", "target_index": 41 },
     "13": { "type": "text", "content": "After D", "arrow": "across", "target_index": 36 },
-    "14": { "type": "text", "content": "Meeting point", "arrow": "across", "target_index": 38 },
+    "14": {
+      "across": { "type": "text", "content": "Meeting point", "target_index": 38 },
+      "down": { "type": "emoji", "content": "⚛️", "text": "___MIC", "target_index": 44 }
+    },
     "15": { "type": "text", "content": "SH_E", "arrow": "across", "target_index": 41 },
-    "16": { "type": "text", "content": "Take action", "arrow": "down", "target_index": 54 },
-    "17": { "type": "text", "content": "Playfully modest", "arrow": "across", "target_index": 57 }
+    "16": {
+      "across": { "type": "emoji", "content": "💥", "text": "_ABOOM", "target_index": 48 },
+      "down": { "type": "text", "content": "Take action", "target_index": 54 }
+    },
+    "17": { "type": "text", "content": "Playfully modest", "arrow": "across", "target_index": 57 },
+    "18": { "type": "emoji", "content": "👌", "arrow": "down", "target_index": 41 },
+    "19": { "type": "text", "content": "___NYMOUS", "arrow": "across", "target_index": 44 },
+    "20": {
+      "across": { "type": "emoji", "content": "🧨", "text": "__T", "target_index": 51 },
+      "down": { "type": "text", "content": "_HICKEN", "target_index": 57 }
+    },
+    "21": { "type": "emoji", "content": "👴🏼", "text": "__D", "arrow": "across", "target_index": 54 },
+    "22": { "type": "emoji", "content": "👦🏻", "text": "B__", "arrow": "across", "target_index": 61 },
+    "23": { "type": "emoji", "content": "👮", "text": "_AIL", "arrow": "down", "target_index": 9 }
   },
   "date": "2025-11-27",
   "grid": [
     ".", ".", ".", ".", ".", ".", ".",
     ".", ".", "J", "O", "L", "L", "Y",
-    ".", "S", ".", "H", ".", ".", "A",
-    ".", "A", ".", ".", "O", "M", ".",
+    "U", "S", ".", "H", ".", ".", "A",
+    ".", "A", "O", ".", "O", "M", ".",
     ".", "F", "U", "N", "N", "Y", ".",
     ".", "E", ".", "A", "T", ".", "O",
-    ".", ".", ".", "N", "O", ".", "K",
-    ".", ".", ".", "N", ".", "D", "A",
+    ".", ".", "A", "N", "O", ".", "K",
+    ".", ".", "T", "N", ".", "D", "A",
     ".", "C", "O", "Y", ".", "O", "Y"
   ],
   "gridnums": [
-    0, 0, 0, 1, 2, 0, 3,
-    0, 4, 0, 0, 0, 0, 0,
+    0, 0, 23, 1, 2, 0, 3,
+    5, 4, 0, 0, 0, 0, 0,
     0, 0, 6, 0, 7, 8, 0,
     9, 0, 0, 10, 0, 0, 0,
-    11, 0, 0, 0, 0, 0, 12,
+    11, 0, 0, 0, 0, 0, 18,
     13, 0, 14, 0, 0, 15, 0,
-    0, 0, 0, 0, 0, 16, 0,
-    0, 0, 0, 0, 0, 0, 0,
-    17, 0, 0, 0, 0, 0, 0
+    0, 19, 0, 0, 0, 16, 0,
+    0, 20, 0, 0, 21, 0, 0,
+    17, 0, 0, 0, 22, 0, 0
   ],
   "puzzleId": "puzzle_013"
 }

@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Option C: Discovery Framing</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Georgia, 'Times New Roman', serif;
+      background: #FAFAFA;
+      color: #1A1A1A;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+    }
+
+    .phone-frame {
+      width: 390px;
+      min-height: 844px;
+      background: #FAFAFA;
+      border: 1px solid #E0E0E0;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Header */
+    .header {
+      display: flex;
+      align-items: center;
+      padding: 16px;
+      border-bottom: 2px solid #1A1A1A;
+      background: #FAFAFA;
+    }
+
+    .back-btn {
+      width: 40px;
+      height: 40px;
+      border: 2px solid #1A1A1A;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      cursor: pointer;
+    }
+
+    .header-title {
+      margin-left: 16px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+    }
+
+    /* Content */
+    .content {
+      flex: 1;
+      overflow-y: auto;
+    }
+
+    /* Score Summary */
+    .score-summary {
+      padding: 32px 20px;
+      text-align: center;
+    }
+
+    .discovery-header {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: #666;
+      margin-bottom: 16px;
+    }
+
+    .discovery-title {
+      font-size: 28px;
+      font-weight: 400;
+      margin-bottom: 24px;
+    }
+
+    .discovery-items {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      max-width: 280px;
+      margin: 0 auto 24px;
+    }
+
+    .discovery-item {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 16px;
+      border: 2px solid #1A1A1A;
+      text-align: left;
+    }
+
+    .discovery-item.alignments {
+      background: rgba(26, 26, 26, 0.03);
+    }
+
+    .discovery-number {
+      font-size: 32px;
+      font-weight: 700;
+      width: 48px;
+      text-align: center;
+      flex-shrink: 0;
+    }
+
+    .discovery-label {
+      font-size: 15px;
+      line-height: 1.4;
+    }
+
+    .discovery-label strong {
+      font-weight: 600;
+    }
+
+    .stat-pills {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+    }
+
+    .stat-pill {
+      padding: 8px 16px;
+      border: 2px solid #1A1A1A;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+    }
+
+    /* Divider */
+    .divider {
+      height: 1px;
+      background: rgba(26, 26, 26, 0.15);
+    }
+
+    /* Section Header */
+    .section-header {
+      padding: 24px 20px 16px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+    }
+
+    /* Question Cards */
+    .question-card {
+      margin: 0 20px 16px;
+      border: 2px solid #1A1A1A;
+    }
+
+    .question-card.matched {
+      background: rgba(26, 26, 26, 0.03);
+    }
+
+    .question-header {
+      display: flex;
+      align-items: center;
+      padding: 16px;
+      border-bottom: 2px solid #1A1A1A;
+      gap: 12px;
+    }
+
+    .question-number {
+      width: 28px;
+      height: 28px;
+      background: #1A1A1A;
+      color: #FAFAFA;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    .question-text {
+      flex: 1;
+      font-size: 14px;
+      font-weight: 600;
+      line-height: 1.4;
+    }
+
+    .match-badge {
+      padding: 4px 8px;
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      border: 1px solid #1A1A1A;
+      flex-shrink: 0;
+    }
+
+    .match-badge.matched {
+      background: #1A1A1A;
+      color: #FAFAFA;
+    }
+
+    .answers {
+      padding: 16px;
+    }
+
+    .answer-row {
+      display: flex;
+      margin-bottom: 8px;
+    }
+
+    .answer-row:last-child {
+      margin-bottom: 0;
+    }
+
+    .answer-label {
+      width: 80px;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: #666;
+      flex-shrink: 0;
+    }
+
+    .answer-text {
+      font-size: 14px;
+      line-height: 1.4;
+    }
+
+    .answer-text.highlighted {
+      font-weight: 600;
+    }
+
+    /* Footer */
+    .footer {
+      padding: 20px;
+      border-top: 2px solid #1A1A1A;
+      background: #FAFAFA;
+    }
+
+    .primary-btn {
+      width: 100%;
+      padding: 16px;
+      background: #1A1A1A;
+      color: #FAFAFA;
+      border: 2px solid #1A1A1A;
+      font-family: Georgia, serif;
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      cursor: pointer;
+    }
+
+    /* Option Label */
+    .option-label {
+      position: fixed;
+      top: 16px;
+      right: 16px;
+      background: #1A1A1A;
+      color: #FAFAFA;
+      padding: 8px 16px;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 1px;
+    }
+  </style>
+</head>
+<body>
+  <div class="option-label">OPTION C: DISCOVERY</div>
+
+  <div class="phone-frame">
+    <div class="header">
+      <div class="back-btn">&times;</div>
+      <div class="header-title">Quiz Results</div>
+    </div>
+
+    <div class="content">
+      <div class="score-summary">
+        <div class="discovery-header">Today's Quiz</div>
+        <div class="discovery-title">You discovered...</div>
+
+        <div class="discovery-items">
+          <div class="discovery-item alignments">
+            <div class="discovery-number">3</div>
+            <div class="discovery-label"><strong>Alignments</strong><br>where you naturally agree</div>
+          </div>
+          <div class="discovery-item">
+            <div class="discovery-number">2</div>
+            <div class="discovery-label"><strong>New insights</strong><br>about each other</div>
+          </div>
+        </div>
+
+        <div class="stat-pills">
+          <span class="stat-pill">5 Questions</span>
+          <span class="stat-pill">+30 LP</span>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="section-header">Your Discoveries</div>
+
+      <!-- Question 1 - Match -->
+      <div class="question-card matched">
+        <div class="question-header">
+          <div class="question-number">1</div>
+          <div class="question-text">When I've had a long day, what helps me unwind?</div>
+          <div class="match-badge matched">ALIGNED</div>
+        </div>
+        <div class="answers">
+          <div class="answer-row">
+            <span class="answer-label">You</span>
+            <span class="answer-text highlighted">Quiet time alone</span>
+          </div>
+          <div class="answer-row">
+            <span class="answer-label">Emma</span>
+            <span class="answer-text highlighted">Quiet time alone</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Question 2 - Different -->
+      <div class="question-card">
+        <div class="question-header">
+          <div class="question-number">2</div>
+          <div class="question-text">When something's bothering me, what helps most?</div>
+          <div class="match-badge">INSIGHT</div>
+        </div>
+        <div class="answers">
+          <div class="answer-row">
+            <span class="answer-label">You</span>
+            <span class="answer-text">Talking it through</span>
+          </div>
+          <div class="answer-row">
+            <span class="answer-label">Emma</span>
+            <span class="answer-text">Time to process alone</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Question 3 - Match -->
+      <div class="question-card matched">
+        <div class="question-header">
+          <div class="question-number">3</div>
+          <div class="question-text">How do I prefer us to stay connected during busy days?</div>
+          <div class="match-badge matched">ALIGNED</div>
+        </div>
+        <div class="answers">
+          <div class="answer-row">
+            <span class="answer-label">You</span>
+            <span class="answer-text highlighted">Quick check-in texts</span>
+          </div>
+          <div class="answer-row">
+            <span class="answer-label">Emma</span>
+            <span class="answer-text highlighted">Quick check-in texts</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Question 4 - Different -->
+      <div class="question-card">
+        <div class="question-header">
+          <div class="question-number">4</div>
+          <div class="question-text">When we're making plans together, I usually prefer to...</div>
+          <div class="match-badge">INSIGHT</div>
+        </div>
+        <div class="answers">
+          <div class="answer-row">
+            <span class="answer-label">You</span>
+            <span class="answer-text">Plan ahead with details</span>
+          </div>
+          <div class="answer-row">
+            <span class="answer-label">Emma</span>
+            <span class="answer-text">Decide spontaneously</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Question 5 - Match -->
+      <div class="question-card matched">
+        <div class="question-header">
+          <div class="question-number">5</div>
+          <div class="question-text">In social situations, I'm most comfortable when...</div>
+          <div class="match-badge matched">ALIGNED</div>
+        </div>
+        <div class="answers">
+          <div class="answer-row">
+            <span class="answer-label">You</span>
+            <span class="answer-text highlighted">We arrive and leave together</span>
+          </div>
+          <div class="answer-row">
+            <span class="answer-label">Emma</span>
+            <span class="answer-text highlighted">We arrive and leave together</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer">
+      <button class="primary-btn">Return Home</button>
+    </div>
+  </div>
+</body>
+</html>

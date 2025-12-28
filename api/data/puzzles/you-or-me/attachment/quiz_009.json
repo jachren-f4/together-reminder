@@ -1,6 +1,6 @@
 {
   "quizId": "quiz_009",
-  "title": "Attachment Quiz 9",
+  "title": "Vulnerability",
   "branch": "attachment",
   "questions": [
     {
@@ -33,5 +33,6 @@
       "prompt": "Who is more relaxed about...",
       "content": "The other's past relationships"
     }
-  ]
+  ],
+  "description": "Who opens up first? Explore your comfort with being vulnerable."
 }

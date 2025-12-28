@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Onboarding Variant 5: Journey Progress Checklist</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            background: #fafafa;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 420px;
+            margin: 0 auto;
+            background: #fff;
+            border: 2px solid #000;
+            box-shadow: 8px 8px 0 rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+
+        .header {
+            border-bottom: 2px solid #000;
+            padding: 24px 20px;
+            text-align: center;
+        }
+
+        .title {
+            font-size: 32px;
+            font-weight: 400;
+            letter-spacing: 2px;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+        }
+
+        .subtitle {
+            font-size: 14px;
+            color: #666;
+            font-style: italic;
+        }
+
+        .stats {
+            border-bottom: 1px solid #000;
+            padding: 20px;
+        }
+
+        .stat-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .stat-value {
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .progress-bg {
+            height: 2px;
+            background: #e0e0e0;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: #000;
+            width: 0%;
+        }
+
+        .section {
+            padding: 20px;
+            padding-bottom: 0;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .section-heading {
+            font-size: 16px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 20px;
+        }
+
+        .carousel-container {
+            position: relative;
+            margin: 0 -20px;
+            padding-bottom: 20px;
+        }
+
+        .carousel {
+            display: flex;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            gap: 16px;
+            padding: 0 20px;
+            scrollbar-width: none;
+        }
+
+        .carousel::-webkit-scrollbar {
+            display: none;
+        }
+
+        .quest-card {
+            flex: 0 0 calc(60%);
+            scroll-snap-align: center;
+            border: 1px solid #000;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: #fff;
+            overflow: hidden;
+        }
+
+        .quest-image {
+            width: 100%;
+            height: 170px;
+            object-fit: cover;
+            border-bottom: 1px solid #000;
+            display: block;
+            background: linear-gradient(135deg, #f5f5f5 0%, #e0e0e0 100%);
+        }
+
+        .quest-content {
+            padding: 16px;
+        }
+
+        .quest-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 12px;
+        }
+
+        .quest-info {
+            flex: 1;
+        }
+
+        .quest-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .quest-desc {
+            font-size: 12px;
+            color: #666;
+            font-style: italic;
+        }
+
+        .reward {
+            font-size: 14px;
+            font-weight: 700;
+            border: 1px solid #000;
+            padding: 4px 10px;
+            background: #000;
+            color: #fff;
+        }
+
+        .quest-footer {
+            padding-top: 12px;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .status-badge {
+            display: inline-block;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 6px 12px;
+            border: 1px solid #000;
+            background: #fff;
+        }
+
+        /* ==========================================
+           JOURNEY PROGRESS CHECKLIST
+           ========================================== */
+
+        .journey-panel {
+            background: #000;
+            color: #fff;
+            border-bottom: 2px solid #000;
+        }
+
+        .journey-header {
+            padding: 16px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .journey-title {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .journey-badge {
+            background: #fff;
+            color: #000;
+            font-size: 10px;
+            padding: 2px 8px;
+            font-weight: 700;
+        }
+
+        .journey-progress-text {
+            font-size: 12px;
+            opacity: 0.6;
+        }
+
+        .journey-steps {
+            padding: 16px 20px;
+        }
+
+        .journey-step {
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+            padding: 12px 0;
+            position: relative;
+        }
+
+        .journey-step:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            left: 11px;
+            top: 36px;
+            width: 2px;
+            height: calc(100% - 24px);
+            background: rgba(255,255,255,0.2);
+        }
+
+        .step-indicator {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            border: 2px solid rgba(255,255,255,0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 700;
+            flex-shrink: 0;
+            background: transparent;
+            position: relative;
+            z-index: 1;
+        }
+
+        .step-indicator.completed {
+            background: #fff;
+            color: #000;
+            border-color: #fff;
+        }
+
+        .step-indicator.current {
+            border-color: #fff;
+            animation: currentPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes currentPulse {
+            0%, 100% {
+                box-shadow: 0 0 0 0 rgba(255,255,255,0.4);
+            }
+            50% {
+                box-shadow: 0 0 0 8px rgba(255,255,255,0);
+            }
+        }
+
+        .step-content {
+            flex: 1;
+            padding-top: 2px;
+        }
+
+        .step-title {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .step-title.completed {
+            opacity: 0.5;
+            text-decoration: line-through;
+        }
+
+        .step-title.current {
+            color: #fff;
+        }
+
+        .step-desc {
+            font-size: 12px;
+            opacity: 0.5;
+        }
+
+        .step-action {
+            display: inline-block;
+            margin-top: 8px;
+            padding: 6px 12px;
+            background: #fff;
+            color: #000;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .step-action:hover {
+            background: #f0f0f0;
+        }
+
+        .journey-minimize {
+            font-size: 20px;
+            cursor: pointer;
+            opacity: 0.6;
+            transition: opacity 0.2s;
+        }
+
+        .journey-minimize:hover {
+            opacity: 1;
+        }
+
+        /* Collapsed state */
+        .journey-panel.collapsed .journey-steps {
+            display: none;
+        }
+
+        .journey-panel.collapsed .journey-minimize {
+            transform: rotate(180deg);
+        }
+
+        /* Connection to quest card */
+        .quest-card.highlighted {
+            border: 2px solid #000;
+            box-shadow: 0 0 0 4px rgba(0,0,0,0.1);
+        }
+
+        .quest-card.dimmed {
+            opacity: 0.4;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- JOURNEY PROGRESS PANEL -->
+        <div class="journey-panel" id="journeyPanel">
+            <div class="journey-header">
+                <div class="journey-title">
+                    Your Journey
+                    <span class="journey-badge">New</span>
+                </div>
+                <div class="journey-progress-text">1 of 4 complete</div>
+                <div class="journey-minimize" onclick="toggleJourney()">▲</div>
+            </div>
+
+            <div class="journey-steps">
+                <div class="journey-step">
+                    <div class="step-indicator completed">✓</div>
+                    <div class="step-content">
+                        <div class="step-title completed">Welcome Quiz</div>
+                        <div class="step-desc">Get to know the basics</div>
+                    </div>
+                </div>
+
+                <div class="journey-step">
+                    <div class="step-indicator current">2</div>
+                    <div class="step-content">
+                        <div class="step-title current">Classic Quiz</div>
+                        <div class="step-desc">Answer five questions about each other</div>
+                        <div class="step-action" onclick="scrollToQuest()">Start Now →</div>
+                    </div>
+                </div>
+
+                <div class="journey-step">
+                    <div class="step-indicator">3</div>
+                    <div class="step-content">
+                        <div class="step-title">Affirmation Quiz</div>
+                        <div class="step-desc">Share positive affirmations</div>
+                    </div>
+                </div>
+
+                <div class="journey-step">
+                    <div class="step-indicator">4</div>
+                    <div class="step-content">
+                        <div class="step-title">Unlock Side Quests</div>
+                        <div class="step-desc">Discover more activities</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="header">
+            <div class="title">Love Quest</div>
+            <div class="subtitle">Your Journey Begins</div>
+        </div>
+
+        <div class="stats">
+            <div class="stat-row">
+                <div class="stat-label">Party</div>
+                <div class="stat-value">You & Partner</div>
+            </div>
+            <div class="stat-row">
+                <div class="stat-label">Love Points</div>
+                <div class="stat-value">30</div>
+            </div>
+            <div class="progress-bg">
+                <div class="progress-bar" style="width: 5%;"></div>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-heading">
+                <span>Daily Quests</span>
+            </div>
+
+            <div class="carousel-container">
+                <div class="carousel">
+                    <div class="quest-card highlighted" id="classicQuest">
+                        <div class="quest-image"></div>
+                        <div class="quest-content">
+                            <div class="quest-header">
+                                <div class="quest-info">
+                                    <div class="quest-title">Classic Quiz</div>
+                                    <div class="quest-desc">Answer five questions together</div>
+                                </div>
+                                <div class="reward">+30</div>
+                            </div>
+                            <div class="quest-footer">
+                                <span class="status-badge">Your Turn</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="quest-card dimmed">
+                        <div class="quest-image"></div>
+                        <div class="quest-content">
+                            <div class="quest-header">
+                                <div class="quest-info">
+                                    <div class="quest-title">Affirmation Quiz</div>
+                                    <div class="quest-desc">Coming soon...</div>
+                                </div>
+                                <div class="reward">+30</div>
+                            </div>
+                            <div class="quest-footer">
+                                <span class="status-badge">Locked</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleJourney() {
+            document.getElementById('journeyPanel').classList.toggle('collapsed');
+        }
+
+        function scrollToQuest() {
+            document.getElementById('classicQuest').scrollIntoView({
+                behavior: 'smooth',
+                block: 'center'
+            });
+            // Flash the card
+            const card = document.getElementById('classicQuest');
+            card.style.transition = 'box-shadow 0.3s';
+            card.style.boxShadow = '0 0 0 8px rgba(0,0,0,0.2)';
+            setTimeout(() => {
+                card.style.boxShadow = '0 0 0 4px rgba(0,0,0,0.1)';
+            }, 500);
+        }
+    </script>
+</body>
+</html>

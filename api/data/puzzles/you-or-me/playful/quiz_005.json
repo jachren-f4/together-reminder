@@ -1,6 +1,6 @@
 {
   "quizId": "quiz_005",
-  "title": "Playful Quiz 5",
+  "title": "Dare or Dare",
   "branch": "playful",
   "questions": [
     {
@@ -33,5 +33,6 @@
       "prompt": "Who would...",
       "content": "Build a blanket fort as an adult"
     }
-  ]
+  ],
+  "description": "Who would do the craziest things? Test your adventurous spirits!"
 }

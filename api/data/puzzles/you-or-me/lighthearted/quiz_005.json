@@ -1,6 +1,6 @@
 {
   "quizId": "quiz_005",
-  "title": "Lighthearted Quiz 5",
+  "title": "Weekend Modes",
   "branch": "lighthearted",
   "questions": [
     {
@@ -33,5 +33,6 @@
       "prompt": "Who would rather",
       "content": "Learn a new language or a new instrument"
     }
-  ]
+  ],
+  "description": "Are you the planner or the spontaneous one? Discover your weekend personalities."
 }

@@ -11,9 +11,15 @@ import '../../../services/quest_type_manager.dart';
 import '../../../services/quest_sync_service.dart';
 import '../../../services/auth_service.dart';
 import '../../../services/love_point_service.dart';
+import '../../../services/poke_service.dart';
+import '../../../services/dev_data_service.dart';
 import '../../../models/branch_progression_state.dart';
 import '../../../models/linked.dart';
 import '../../../models/word_search.dart';
+import '../../../models/partner.dart';
+import '../../../services/api_client.dart';
+import '../../../services/notification_service.dart';
+import '../../../services/user_profile_service.dart';
 import '../../../config/supabase_config.dart';
 import '../../../utils/logger.dart';
 import '../../../config/theme_config.dart';
@@ -1094,9 +1100,459 @@ class _ActionsTabState extends State<ActionsTab> {
             title: '🧩 SIDE QUESTS DEBUG',
             child: _buildSideQuestsDebug(),
           ),
+
+          // Poke Debug
+          DebugSectionCard(
+            title: '📤 POKE DEBUG',
+            child: _buildPokeDebug(),
+          ),
         ],
       ),
     );
+  }
+
+  /// Build poke debug section showing partner token status and test button
+  Widget _buildPokeDebug() {
+    final partner = _storage.getPartner();
+    final user = _storage.getUser();
+    final partnerToken = partner?.pushToken;
+    final canSend = PokeService.canSendPoke();
+    final remainingSeconds = PokeService.getRemainingSeconds();
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        // Partner Info
+        Container(
+          padding: const EdgeInsets.all(12),
+          decoration: BoxDecoration(
+            color: Colors.grey.shade100,
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _buildPokeInfoRow('Your Name', user?.name ?? 'NOT SET'),
+              _buildPokeInfoRow('Partner Name', partner?.name ?? 'NOT SET'),
+              const Divider(height: 16),
+              _buildPokeInfoRow(
+                'Partner Push Token',
+                partnerToken == null || partnerToken.isEmpty
+                    ? '❌ MISSING'
+                    : '✅ ${partnerToken.substring(0, 20)}...',
+              ),
+              if (partnerToken != null && partnerToken.isNotEmpty) ...[
+                const SizedBox(height: 4),
+                Text(
+                  'Full token: ${partnerToken.length} chars',
+                  style: TextStyle(fontSize: 9, color: Colors.grey.shade600),
+                ),
+              ],
+              const Divider(height: 16),
+              _buildPokeInfoRow(
+                'Rate Limit',
+                canSend ? '✅ Can send' : '⏳ Wait ${remainingSeconds}s',
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(height: 12),
+
+        // Test Poke Button
+        ElevatedButton.icon(
+          onPressed: _isProcessing ? null : _testSendPoke,
+          icon: const Icon(Icons.send, size: 16),
+          label: Text(_isProcessing ? 'Sending...' : 'Test Send Poke'),
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.deepPurple,
+            foregroundColor: Colors.white,
+            padding: const EdgeInsets.symmetric(vertical: 12),
+          ),
+        ),
+        const SizedBox(height: 8),
+
+        // Refresh Partner Token Button
+        OutlinedButton.icon(
+          onPressed: _isProcessing ? null : _refreshPartnerToken,
+          icon: const Icon(Icons.refresh, size: 16),
+          label: const Text('Refresh Partner Push Token'),
+          style: OutlinedButton.styleFrom(
+            foregroundColor: Colors.deepPurple,
+            side: const BorderSide(color: Colors.deepPurple),
+            padding: const EdgeInsets.symmetric(vertical: 10),
+          ),
+        ),
+        const SizedBox(height: 8),
+
+        // Register MY Push Token Button
+        ElevatedButton.icon(
+          onPressed: _isProcessing ? null : _registerMyPushToken,
+          icon: const Icon(Icons.upload, size: 16),
+          label: const Text('Register MY Push Token to Server'),
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.green,
+            foregroundColor: Colors.white,
+            padding: const EdgeInsets.symmetric(vertical: 10),
+          ),
+        ),
+        const SizedBox(height: 12),
+
+        // Info box
+        Container(
+          padding: const EdgeInsets.all(10),
+          decoration: BoxDecoration(
+            color: Colors.blue.shade50,
+            borderRadius: BorderRadius.circular(6),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Icon(Icons.info_outline, size: 14, color: Colors.blue.shade700),
+                  const SizedBox(width: 6),
+                  Text(
+                    'Poke Flow',
+                    style: TextStyle(
+                      fontSize: 10,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.blue.shade700,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 6),
+              Text(
+                '1. Check rate limit (30s cooldown)\n'
+                '2. Get partner push token from Hive\n'
+                '3. Refresh token from Supabase\n'
+                '4. Save poke locally\n'
+                '5. Sync to Supabase\n'
+                '6. Call Firebase Cloud Function "sendPoke"',
+                style: TextStyle(fontSize: 9, color: Colors.blue.shade800),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildPokeInfoRow(String label, String value) {
+    final isError = value.contains('NOT SET') || value.contains('MISSING');
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 2),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(
+            width: 120,
+            child: Text(
+              '$label:',
+              style: TextStyle(
+                fontSize: 10,
+                color: Colors.grey.shade600,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ),
+          Expanded(
+            child: Text(
+              value,
+              style: TextStyle(
+                fontSize: 10,
+                fontFamily: 'monospace',
+                color: isError ? Colors.red : Colors.black87,
+                fontWeight: isError ? FontWeight.bold : FontWeight.normal,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future<void> _testSendPoke() async {
+    setState(() => _isProcessing = true);
+
+    final results = StringBuffer();
+    results.writeln('=== POKE TEST RESULTS ===');
+    results.writeln('Time: ${DateTime.now().toIso8601String()}');
+    results.writeln('');
+
+    try {
+      // Check prerequisites
+      final partner = _storage.getPartner();
+      final user = _storage.getUser();
+
+      results.writeln('--- Prerequisites ---');
+      results.writeln('User: ${user?.name ?? "NULL"} (${user?.id ?? "no id"})');
+      results.writeln('Partner: ${partner?.name ?? "NULL"}');
+      final token = partner?.pushToken;
+      if (token == null || token.isEmpty) {
+        results.writeln('Partner Token: NULL or EMPTY');
+      } else {
+        results.writeln('Partner Token: ${token.length > 20 ? "${token.substring(0, 20)}..." : token} (${token.length} chars)');
+      }
+      results.writeln('Can Send (rate limit): ${PokeService.canSendPoke()}');
+      results.writeln('');
+
+      if (partner?.pushToken == null || partner!.pushToken!.isEmpty) {
+        results.writeln('--- FAILED ---');
+        results.writeln('Reason: No partner push token');
+        results.writeln('');
+        results.writeln('Possible causes:');
+        results.writeln('• Partner has not enabled notifications');
+        results.writeln('• Partner token not synced from server');
+        results.writeln('• Try "Refresh Partner Push Token" button');
+      } else {
+        // Attempt to send poke
+        results.writeln('--- Sending Poke ---');
+        final success = await PokeService.sendPoke(emoji: '💫');
+
+        if (success) {
+          results.writeln('Result: ✅ SUCCESS');
+          results.writeln('');
+          results.writeln('The poke was sent successfully!');
+          results.writeln('Check partner device for push notification.');
+        } else {
+          results.writeln('Result: ❌ FAILED');
+          results.writeln('');
+          results.writeln('Possible causes:');
+          results.writeln('• Rate limited (30s cooldown)');
+          results.writeln('• Firebase Cloud Function error');
+          results.writeln('• Invalid push token');
+          results.writeln('• Network error');
+        }
+      }
+    } catch (e, stackTrace) {
+      results.writeln('--- EXCEPTION ---');
+      results.writeln('Error: $e');
+      results.writeln('');
+      results.writeln('Stack trace:');
+      results.writeln(stackTrace.toString().split('\n').take(5).join('\n'));
+    }
+
+    setState(() => _isProcessing = false);
+
+    if (mounted) {
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text('Poke Test Results'),
+          content: SingleChildScrollView(
+            child: SelectableText(
+              results.toString(),
+              style: const TextStyle(fontSize: 11, fontFamily: 'monospace'),
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () async {
+                await ClipboardService.copyToClipboard(
+                  context,
+                  results.toString(),
+                  message: 'Poke test results copied',
+                );
+              },
+              child: const Text('Copy'),
+            ),
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('Close'),
+            ),
+          ],
+        ),
+      );
+    }
+  }
+
+  Future<void> _refreshPartnerToken() async {
+    setState(() => _isProcessing = true);
+
+    final results = StringBuffer();
+    results.writeln('=== TOKEN REFRESH RESULTS ===');
+    results.writeln('Time: ${DateTime.now().toIso8601String()}');
+    results.writeln('');
+
+    try {
+      // Fetch partner token directly from API (bypasses dev bypass check)
+      final apiClient = ApiClient();
+
+      results.writeln('--- Fetching from API ---');
+      results.writeln('Endpoint: /api/sync/push-token');
+
+      final response = await apiClient.get('/api/sync/push-token');
+
+      results.writeln('Response success: ${response.success}');
+      results.writeln('Response data: ${response.data}');
+      results.writeln('');
+
+      if (response.success && response.data != null) {
+        final partnerToken = response.data['partnerToken'] as String?;
+
+        if (partnerToken != null && partnerToken.isNotEmpty) {
+          results.writeln('--- Token Found ---');
+          results.writeln('Token length: ${partnerToken.length}');
+          results.writeln('Token preview: ${partnerToken.length > 30 ? "${partnerToken.substring(0, 30)}..." : partnerToken}');
+
+          // Update partner in storage
+          final partner = _storage.getPartner();
+          if (partner != null) {
+            final updatedPartner = Partner(
+              name: partner.name,
+              pushToken: partnerToken,
+              pairedAt: partner.pairedAt,
+              avatarEmoji: partner.avatarEmoji,
+              id: partner.id,
+            );
+            await _storage.savePartner(updatedPartner);
+            results.writeln('');
+            results.writeln('✅ Partner token updated in storage!');
+          }
+        } else {
+          results.writeln('--- No Token ---');
+          results.writeln('Partner token is null or empty');
+          results.writeln('');
+          results.writeln('Possible causes:');
+          results.writeln('• Partner device has not registered for notifications');
+          results.writeln('• Partner denied notification permissions');
+          results.writeln('• Partner token not yet synced to server');
+        }
+      } else {
+        results.writeln('--- API Error ---');
+        results.writeln('Response was not successful');
+        if (response.error != null) {
+          results.writeln('Error: ${response.error}');
+        }
+      }
+    } catch (e, stackTrace) {
+      results.writeln('--- EXCEPTION ---');
+      results.writeln('Error: $e');
+      results.writeln('');
+      results.writeln('Stack trace:');
+      results.writeln(stackTrace.toString().split('\n').take(5).join('\n'));
+    }
+
+    setState(() => _isProcessing = false);
+
+    if (mounted) {
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text('Token Refresh Results'),
+          content: SingleChildScrollView(
+            child: SelectableText(
+              results.toString(),
+              style: const TextStyle(fontSize: 11, fontFamily: 'monospace'),
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () async {
+                await ClipboardService.copyToClipboard(
+                  context,
+                  results.toString(),
+                  message: 'Token refresh results copied',
+                );
+              },
+              child: const Text('Copy'),
+            ),
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('Close'),
+            ),
+          ],
+        ),
+      );
+    }
+  }
+
+  Future<void> _registerMyPushToken() async {
+    setState(() => _isProcessing = true);
+
+    final results = StringBuffer();
+    results.writeln('=== REGISTER MY PUSH TOKEN ===');
+    results.writeln('Time: ${DateTime.now().toIso8601String()}');
+    results.writeln('');
+
+    try {
+      // Step 1: Get FCM token from device
+      results.writeln('--- Step 1: Get FCM Token ---');
+      final fcmToken = await NotificationService.getToken();
+
+      if (fcmToken == null || fcmToken.isEmpty) {
+        results.writeln('❌ No FCM token available!');
+        results.writeln('');
+        results.writeln('Possible causes:');
+        results.writeln('• Notification permissions denied');
+        results.writeln('• Firebase not initialized');
+        results.writeln('• Running on simulator without push support');
+      } else {
+        results.writeln('✅ FCM Token obtained');
+        results.writeln('Token length: ${fcmToken.length}');
+        results.writeln('Token preview: ${fcmToken.length > 40 ? "${fcmToken.substring(0, 40)}..." : fcmToken}');
+        results.writeln('');
+
+        // Step 2: Detect platform
+        results.writeln('--- Step 2: Detect Platform ---');
+        String platform = 'ios';
+        if (Theme.of(context).platform == TargetPlatform.android) {
+          platform = 'android';
+        }
+        results.writeln('Platform: $platform');
+        results.writeln('');
+
+        // Step 3: Send to server
+        results.writeln('--- Step 3: Register to Server ---');
+        final userProfileService = UserProfileService();
+        await userProfileService.syncPushToken(fcmToken, platform);
+
+        results.writeln('✅ Token sent to server!');
+        results.writeln('');
+        results.writeln('Now ask your partner to do the same on their device.');
+        results.writeln('Then tap "Refresh Partner Push Token" to get their token.');
+      }
+    } catch (e, stackTrace) {
+      results.writeln('--- EXCEPTION ---');
+      results.writeln('Error: $e');
+      results.writeln('');
+      results.writeln('Stack trace:');
+      results.writeln(stackTrace.toString().split('\n').take(5).join('\n'));
+    }
+
+    setState(() => _isProcessing = false);
+
+    if (mounted) {
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text('Register Push Token'),
+          content: SingleChildScrollView(
+            child: SelectableText(
+              results.toString(),
+              style: const TextStyle(fontSize: 11, fontFamily: 'monospace'),
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () async {
+                await ClipboardService.copyToClipboard(
+                  context,
+                  results.toString(),
+                  message: 'Results copied',
+                );
+              },
+              child: const Text('Copy'),
+            ),
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('Close'),
+            ),
+          ],
+        ),
+      );
+    }
   }
 
   /// Build debug info for Linked and Word Search matches

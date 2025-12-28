@@ -1,6 +1,6 @@
 {
   "quizId": "quiz_005",
-  "title": "Connection Quiz 5",
+  "title": "Dream Together",
   "branch": "connection",
   "questions": [
     {
@@ -33,5 +33,6 @@
       "prompt": "Who values more...",
       "content": "Quality time together"
     }
-  ]
+  ],
+  "description": "Explore your shared hopes, dreams, and visions for the future."
 }

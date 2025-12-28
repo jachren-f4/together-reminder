@@ -1,6 +1,6 @@
 {
   "quizId": "quiz_006",
-  "title": "Connection Quiz 6",
+  "title": "Listening Skills",
   "branch": "connection",
   "questions": [
     {
@@ -33,5 +33,6 @@
       "prompt": "Who needs more...",
       "content": "Emotional validation and empathy"
     }
-  ]
+  ],
+  "description": "Who really hears what the other is saying? Test your attentiveness."
 }

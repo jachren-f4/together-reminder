@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quiz Results Screen - Mockup Options</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Georgia, 'Times New Roman', serif;
+      background: #F5F5F5;
+      color: #1A1A1A;
+      padding: 40px;
+    }
+
+    h1 {
+      font-size: 32px;
+      font-weight: 400;
+      margin-bottom: 16px;
+    }
+
+    .subtitle {
+      font-size: 16px;
+      color: #666;
+      font-style: italic;
+      margin-bottom: 40px;
+      max-width: 600px;
+      line-height: 1.6;
+    }
+
+    .options-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 32px;
+      max-width: 1400px;
+    }
+
+    .option-card {
+      background: white;
+      border: 2px solid #1A1A1A;
+      padding: 24px;
+      text-decoration: none;
+      color: inherit;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .option-card:hover {
+      transform: translate(-4px, -4px);
+      box-shadow: 8px 8px 0 #1A1A1A;
+    }
+
+    .option-label {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: #666;
+      margin-bottom: 8px;
+    }
+
+    .option-title {
+      font-size: 22px;
+      font-weight: 400;
+      margin-bottom: 12px;
+    }
+
+    .option-description {
+      font-size: 14px;
+      color: #666;
+      line-height: 1.5;
+      margin-bottom: 16px;
+    }
+
+    .option-preview {
+      background: #FAFAFA;
+      border: 1px solid #E0E0E0;
+      padding: 16px;
+      text-align: center;
+      font-size: 13px;
+      color: #999;
+    }
+
+    .key-change {
+      font-size: 12px;
+      background: #1A1A1A;
+      color: white;
+      padding: 8px 12px;
+      display: inline-block;
+      margin-top: 12px;
+    }
+
+    .recommendation {
+      background: #1A1A1A;
+      color: white;
+      padding: 4px 8px;
+      font-size: 9px;
+      font-weight: 600;
+      letter-spacing: 1px;
+      margin-left: 8px;
+      vertical-align: middle;
+    }
+  </style>
+</head>
+<body>
+  <h1>Quiz Results Screen Options</h1>
+  <p class="subtitle">
+    The current design shows a percentage score (e.g., "60% MATCH"), which implies 100% is the goal.
+    But the real value is discovering alignment AND differences—neither is better.
+    Here are 5 alternative approaches.
+  </p>
+
+  <div class="options-grid">
+    <a href="option-a-counts.html" class="option-card">
+      <div class="option-label">Option A</div>
+      <div class="option-title">Counts Only</div>
+      <div class="option-description">
+        Replace percentage with simple counts: "3 aligned · 2 different".
+        No percentage means no implicit score or judgment.
+      </div>
+      <div class="option-preview">
+        <strong style="font-size: 32px;">3</strong> aligned
+        <span style="color: #CCC; margin: 0 8px;">·</span>
+        <strong style="font-size: 32px;">2</strong> different
+      </div>
+      <div class="key-change">Removes percentage entirely</div>
+    </a>
+
+    <a href="option-b-two-sided.html" class="option-card">
+      <div class="option-label">Option B <span class="recommendation">RECOMMENDED</span></div>
+      <div class="option-title">Two-Sided Celebration</div>
+      <div class="option-description">
+        Celebrate both outcomes equally: "3 things you share" and "2 things to explore together".
+        Differences become opportunities, not failures.
+      </div>
+      <div class="option-preview">
+        <div style="display: flex; gap: 12px; justify-content: center;">
+          <div style="border: 1px solid #CCC; padding: 12px; flex: 1;">
+            <strong>3</strong><br><small>Things you share</small>
+          </div>
+          <div style="border: 1px solid #CCC; padding: 12px; flex: 1;">
+            <strong>2</strong><br><small>To explore together</small>
+          </div>
+        </div>
+      </div>
+      <div class="key-change">Both categories get positive framing</div>
+    </a>
+
+    <a href="option-c-discovery.html" class="option-card">
+      <div class="option-label">Option C</div>
+      <div class="option-title">Discovery Framing</div>
+      <div class="option-description">
+        Reframe as discoveries: "You discovered 3 alignments and 2 new insights about each other."
+        Emphasizes learning over scoring.
+      </div>
+      <div class="option-preview">
+        <div style="font-size: 18px; margin-bottom: 8px;">You discovered...</div>
+        <div><strong>3</strong> alignments</div>
+        <div><strong>2</strong> new insights</div>
+      </div>
+      <div class="key-change">Differences = "insights" not "mismatches"</div>
+    </a>
+
+    <a href="option-d-no-summary.html" class="option-card">
+      <div class="option-label">Option D</div>
+      <div class="option-title">No Summary</div>
+      <div class="option-description">
+        Remove aggregate scoring entirely. Just show the question-by-question comparison
+        and let the details speak for themselves.
+      </div>
+      <div class="option-preview">
+        <div style="font-size: 16px; margin-bottom: 4px;">Your Answers Compared</div>
+        <small style="color: #999;">See where you align and differ</small>
+      </div>
+      <div class="key-change">No numbers at all—just the comparison</div>
+    </a>
+
+    <a href="option-e-spectrum.html" class="option-card">
+      <div class="option-label">Option E</div>
+      <div class="option-title">Alignment Spectrum</div>
+      <div class="option-description">
+        Visual bar showing the distribution without value judgment.
+        Both segments presented equally.
+      </div>
+      <div class="option-preview">
+        <div style="display: flex; height: 32px; border: 1px solid #1A1A1A; max-width: 200px; margin: 0 auto;">
+          <div style="width: 60%; background: #1A1A1A; color: white; font-size: 10px; display: flex; align-items: center; justify-content: center;">ALIGNED</div>
+          <div style="width: 40%; font-size: 10px; display: flex; align-items: center; justify-content: center;">DIFF</div>
+        </div>
+      </div>
+      <div class="key-change">Visual representation, neutral framing</div>
+    </a>
+  </div>
+</body>
+</html>

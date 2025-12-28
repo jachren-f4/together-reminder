@@ -79,11 +79,18 @@ class DailyQuestService {
     required String userId,
     String? partnerUserId,
   }) async {
+    Logger.debug('🔧 completeQuestForUser called: questId=$questId userId=$userId', service: 'quest-debug');
+
     final quest = _storage.getDailyQuest(questId);
     if (quest == null) {
-      Logger.debug('Quest not found: $questId', service: 'quest');
+      Logger.debug('🔧 Quest NOT FOUND: $questId', service: 'quest-debug');
+      // Try to find by iterating all quests
+      final allQuests = _storage.getTodayQuests();
+      Logger.debug('🔧 Today quests: ${allQuests.map((q) => q.id).toList()}', service: 'quest-debug');
       return false;
     }
+
+    Logger.debug('🔧 Quest found: ${quest.id} format=${quest.formatType} current completions=${quest.userCompletions}', service: 'quest-debug');
 
     // Check if already completed by this user
     if (quest.hasUserCompleted(userId)) {
@@ -123,6 +130,11 @@ class DailyQuestService {
     // Use saveDailyQuest() instead of updateDailyQuest() to ensure the quest
     // is saved by ID, even if it's a detached Hive object (Phase 5 fix)
     await _storage.saveDailyQuest(quest);
+    Logger.debug('🔧 Quest saved! New completions=${quest.userCompletions} status=${quest.status}', service: 'quest-debug');
+
+    // Verify save by reading back
+    final savedQuest = _storage.getDailyQuest(questId);
+    Logger.debug('🔧 Verify read-back: completions=${savedQuest?.userCompletions} status=${savedQuest?.status}', service: 'quest-debug');
 
     // Sync completion to Firebase if sync service is available
     if (_questSyncService != null && partnerUserId != null) {

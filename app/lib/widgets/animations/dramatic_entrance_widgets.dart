@@ -1,5 +1,6 @@
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
+import '../../animations/animation_config.dart';
 import '../../config/animation_constants.dart';
 
 /// Tracks which widgets have already animated to prevent re-animation on rebuild.
@@ -932,6 +933,131 @@ class _WaveInWidgetState extends State<WaveInWidget>
       builder: (context, child) {
         return Transform.scale(
           scale: _scale.value,
+          child: Opacity(
+            opacity: _opacity.value,
+            child: child,
+          ),
+        );
+      },
+      child: widget.child,
+    );
+  }
+}
+
+/// Staggered entrance animation for home screen sections.
+/// Provides a unified, coordinated entrance with fade + slide.
+///
+/// Respects [AnimationConfig.enableHomeEntranceAnimation] for easy rollback.
+/// When disabled, simply renders the child without animation.
+///
+/// Usage:
+/// ```dart
+/// HomeStaggeredEntrance(
+///   index: 0,  // 0 = first, 1 = second, etc.
+///   child: MyWidget(),
+/// )
+/// ```
+class HomeStaggeredEntrance extends StatefulWidget {
+  final Widget child;
+
+  /// Index in the stagger sequence (0 = first, 1 = second, etc.)
+  final int index;
+
+  /// Base delay before first item starts animating
+  final Duration baseDelay;
+
+  /// Delay between each item in the sequence
+  final Duration staggerDelay;
+
+  /// Optional key to prevent re-animation on rebuild
+  final String? trackingKey;
+
+  const HomeStaggeredEntrance({
+    super.key,
+    required this.child,
+    required this.index,
+    this.baseDelay = const Duration(milliseconds: 50),
+    this.staggerDelay = const Duration(milliseconds: 80),
+    this.trackingKey,
+  });
+
+  @override
+  State<HomeStaggeredEntrance> createState() => _HomeStaggeredEntranceState();
+}
+
+class _HomeStaggeredEntranceState extends State<HomeStaggeredEntrance>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> _opacity;
+  late Animation<double> _translateY;
+  bool _shouldSkipAnimation = false;
+
+  @override
+  void initState() {
+    super.initState();
+
+    // Check feature flag
+    if (!AnimationConfig.enableHomeEntranceAnimation) {
+      _shouldSkipAnimation = true;
+    }
+
+    // Check if already animated (prevents re-animation on rebuild)
+    if (widget.trackingKey != null && !_shouldSkipAnimation) {
+      final tracker = AnimationSessionTracker();
+      if (tracker.hasAnimated(widget.trackingKey!)) {
+        _shouldSkipAnimation = true;
+      } else {
+        tracker.markAnimated(widget.trackingKey!);
+      }
+    }
+
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 400),
+    );
+
+    _opacity = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(
+        parent: _controller,
+        curve: const Interval(0.0, 0.6, curve: Curves.easeOut),
+      ),
+    );
+
+    _translateY = Tween<double>(begin: 20.0, end: 0.0).animate(
+      CurvedAnimation(
+        parent: _controller,
+        curve: Curves.easeOutCubic,
+      ),
+    );
+
+    if (_shouldSkipAnimation) {
+      _controller.value = 1.0;
+    } else {
+      final totalDelay = widget.baseDelay + (widget.staggerDelay * widget.index);
+      Future.delayed(totalDelay, () {
+        if (mounted) _controller.forward();
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    // Skip animation if disabled or reduce motion is enabled
+    if (_shouldSkipAnimation || AnimationConstants.shouldReduceMotion(context)) {
+      return widget.child;
+    }
+
+    return AnimatedBuilder(
+      animation: _controller,
+      builder: (context, child) {
+        return Transform.translate(
+          offset: Offset(0, _translateY.value),
           child: Opacity(
             opacity: _opacity.value,
             child: child,

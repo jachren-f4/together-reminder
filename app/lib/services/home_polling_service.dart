@@ -41,6 +41,7 @@ class HomePollingService extends ChangeNotifier {
   String? _lastWsTurnUserId;
   String? _lastWsStatus;
   Map<String, bool> _lastQuestCompletions = {};
+  Map<String, String> _lastQuestMatchIds = {}; // Track matchId per quest type
 
   // Topic-specific callbacks (for widgets that need fine-grained updates)
   final Map<String, Set<VoidCallback>> _topicListeners = {
@@ -86,8 +87,55 @@ class HomePollingService extends ChangeNotifier {
   }
 
   /// Force an immediate poll (e.g., when returning from a game screen)
+  /// This bypasses the _isPolling check to work even before subscribers join
   Future<void> pollNow() async {
-    await _poll();
+    await _pollOnce();
+  }
+
+  /// Single poll that always executes (doesn't check _isPolling)
+  Future<void> _pollOnce() async {
+    Logger.debug('⏱️ pollNow() executing...', service: 'polling');
+
+    try {
+      bool hasQuestChanges = false;
+      bool hasLinkedChanges = false;
+      bool hasWsChanges = false;
+
+      // Poll daily quests
+      hasQuestChanges = await _pollDailyQuests();
+
+      // Poll Linked game state
+      hasLinkedChanges = await _pollLinkedGame();
+
+      // Poll Word Search game state
+      hasWsChanges = await _pollWordSearchGame();
+
+      Logger.debug('⏱️ pollNow() results: quests=$hasQuestChanges, linked=$hasLinkedChanges, ws=$hasWsChanges', service: 'polling');
+
+      // Notify listeners based on what changed (same as _poll())
+      if (hasQuestChanges) {
+        _notifyTopic('dailyQuests');
+      }
+
+      if (hasLinkedChanges) {
+        _notifyTopic('linked');
+        _notifyTopic('sideQuests');
+      }
+
+      if (hasWsChanges) {
+        _notifyTopic('wordSearch');
+        _notifyTopic('sideQuests');
+      }
+
+      // Always notify general listeners if anything changed
+      if (hasQuestChanges || hasLinkedChanges || hasWsChanges) {
+        notifyListeners();
+      }
+
+      Logger.debug('⏱️ pollNow() completed', service: 'polling');
+    } catch (e) {
+      Logger.error('pollNow() error', error: e, service: 'polling');
+    }
   }
 
   void _startPolling() {
@@ -120,6 +168,7 @@ class HomePollingService extends ChangeNotifier {
     _lastWsTurnUserId = null;
     _lastWsStatus = null;
     _lastQuestCompletions = {};
+    _lastQuestMatchIds = {};
   }
 
   /// Main polling function - fetches all state and notifies on changes
@@ -192,44 +241,128 @@ class HomePollingService extends ChangeNotifier {
       bool anyChanges = false;
       final newCompletions = <String, bool>{};
 
+      final newMatchIds = <String, String>{};
+
       for (final questData in questsData) {
         final questType = questData['questType'] as String?;
         final partnerCompleted = questData['partnerCompleted'] as bool? ?? false;
+        final userCompleted = questData['userCompleted'] as bool? ?? false;
+        final matchId = questData['matchId'] as String?;
+        final matchStatus = questData['status'] as String?;
+
+        Logger.debug(
+          '📊 Poll received: $questType status=$matchStatus user=$userCompleted partner=$partnerCompleted matchId=$matchId',
+          service: 'polling',
+        );
 
         if (questType == null) continue;
 
         final key = '${questType}_partner';
         newCompletions[key] = partnerCompleted;
 
+        // Track matchId for this quest type
+        if (matchId != null) {
+          newMatchIds[questType] = matchId;
+        }
+
         // Check if partner completion changed
         if (_lastQuestCompletions[key] != partnerCompleted) {
           anyChanges = true;
         }
 
-        // Update local quest if partner completed
-        if (partnerCompleted) {
-          final localQuests = _storage.getTodayQuests();
-          final normalizedQuestType = questType == 'you_or_me' ? 'youOrMe' : questType;
-          final matchingQuest = localQuests.where((q) => q.formatType == normalizedQuestType).firstOrNull;
+        // Get local quest
+        final localQuests = _storage.getTodayQuests();
+        final normalizedQuestType = questType == 'you_or_me' ? 'youOrMe' : questType;
+        final matchingQuest = localQuests.where((q) => q.formatType == normalizedQuestType).firstOrNull;
 
-          if (matchingQuest != null) {
-            final completions = matchingQuest.userCompletions ?? {};
-            if (completions[partner.id] != true) {
-              completions[partner.id] = true;
-              matchingQuest.userCompletions = completions;
+        if (matchingQuest == null) continue;
 
-              // Check if both completed
-              if (completions[user.id] == true && completions[partner.id] == true) {
-                matchingQuest.status = 'completed';
-              }
+        // Check if this is a NEW match (different matchId than before)
+        // This happens when couple starts a new quiz after completing the previous one
+        final previousMatchId = _lastQuestMatchIds[questType];
+        final isNewMatch = matchId != null && previousMatchId != null && matchId != previousMatchId;
 
-              await matchingQuest.save();
-              anyChanges = true;
-              Logger.debug('HomePollingService: updated quest $questType - partner completed', service: 'polling');
+        if (isNewMatch) {
+          Logger.debug('HomePollingService: NEW MATCH detected for $questType - resetting completions (was: $previousMatchId, now: $matchId)', service: 'polling');
+          // Reset local quest state for the new match
+          matchingQuest.userCompletions = {};
+          matchingQuest.status = 'pending';
+          // Use explicit box.put() instead of HiveObject.save() to ensure persistence
+          await _storage.saveDailyQuest(matchingQuest);
+          anyChanges = true;
+        }
+
+        // Now sync completion states from server
+        final completions = matchingQuest.userCompletions ?? {};
+        bool questUpdated = false;
+
+        // Check if user was already tracked as completed locally BEFORE any syncing
+        // This distinguishes between:
+        // 1. "Partner just completed while user was waiting" (user was already locally marked)
+        // 2. "First sync after login with already-completed quests" (nothing was locally marked)
+        final wasUserAlreadyLocallyCompleted = completions[user.id] == true;
+
+        // Sync user completion (in case it got out of sync)
+        if (userCompleted && completions[user.id] != true) {
+          completions[user.id] = true;
+          questUpdated = true;
+        }
+
+        // Sync partner completion
+        // Track if partner JUST completed (for pending results flag)
+        final partnerJustCompleted = partnerCompleted && completions[partner.id] != true;
+        if (partnerJustCompleted) {
+          completions[partner.id] = true;
+          questUpdated = true;
+        }
+
+        // Update status based on match status from server
+        if (matchStatus == 'completed' && matchingQuest.status != 'completed') {
+          matchingQuest.status = 'completed';
+          questUpdated = true;
+        } else if (completions[user.id] == true && completions[partner.id] == true && matchingQuest.status != 'completed') {
+          matchingQuest.status = 'completed';
+          questUpdated = true;
+        }
+
+        if (questUpdated) {
+          matchingQuest.userCompletions = completions;
+          // Use explicit box.put() instead of HiveObject.save() to ensure persistence
+          await _storage.saveDailyQuest(matchingQuest);
+          anyChanges = true;
+          Logger.debug('HomePollingService: updated quest $questType - user:$userCompleted partner:$partnerCompleted status:${matchingQuest.status}', service: 'polling');
+        }
+
+        // CRITICAL: If user was ALREADY locally marked as done and partner JUST completed, set pending results flag
+        // This ensures "RESULTS ARE READY!" shows even if the waiting screen didn't set it
+        // (e.g., user went back to home before waiting screen's async setPending completed)
+        //
+        // IMPORTANT: We use wasUserAlreadyLocallyCompleted (not just userCompleted) to avoid
+        // setting the flag on initial sync after login. On first sync, both completions are being
+        // synced from server - this is NOT a "partner just completed while user was waiting" scenario.
+        if (wasUserAlreadyLocallyCompleted && partnerJustCompleted && matchId != null) {
+          // Map quest type to content type key used for pending results
+          String? contentType;
+          if (questType == 'classic') {
+            contentType = 'classic_quiz';
+          } else if (questType == 'affirmation') {
+            contentType = 'affirmation_quiz';
+          } else if (questType == 'you_or_me') {
+            contentType = 'you_or_me';
+          }
+
+          if (contentType != null) {
+            // Only set if not already set (don't overwrite)
+            final existingPending = _storage.getPendingResultsMatchId(contentType);
+            if (existingPending == null) {
+              await _storage.setPendingResultsMatchId(contentType, matchId);
+              Logger.debug('HomePollingService: SET PENDING FLAG for $contentType (partner just completed, matchId=$matchId)', service: 'polling');
             }
           }
         }
       }
+
+      _lastQuestMatchIds = newMatchIds;
 
       _lastQuestCompletions = newCompletions;
       return anyChanges;

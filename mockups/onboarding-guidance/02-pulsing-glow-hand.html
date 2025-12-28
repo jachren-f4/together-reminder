@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Onboarding Variant 2: Pulsing Glow + Floating Hand</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            background: #fafafa;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 420px;
+            margin: 0 auto;
+            background: #fff;
+            border: 2px solid #000;
+            box-shadow: 8px 8px 0 rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+
+        .header {
+            border-bottom: 2px solid #000;
+            padding: 24px 20px;
+            text-align: center;
+        }
+
+        .title {
+            font-size: 32px;
+            font-weight: 400;
+            letter-spacing: 2px;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+        }
+
+        .subtitle {
+            font-size: 14px;
+            color: #666;
+            font-style: italic;
+        }
+
+        .stats {
+            border-bottom: 1px solid #000;
+            padding: 20px;
+        }
+
+        .stat-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .stat-value {
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .progress-bg {
+            height: 2px;
+            background: #e0e0e0;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: #000;
+            width: 0%;
+        }
+
+        .section {
+            padding: 20px;
+            padding-bottom: 0;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .section-heading {
+            font-size: 16px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 20px;
+        }
+
+        .carousel-container {
+            position: relative;
+            margin: 0 -20px;
+            padding-bottom: 20px;
+        }
+
+        .carousel {
+            display: flex;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            gap: 16px;
+            padding: 0 20px;
+            scrollbar-width: none;
+        }
+
+        .carousel::-webkit-scrollbar {
+            display: none;
+        }
+
+        .quest-card {
+            flex: 0 0 calc(60%);
+            scroll-snap-align: center;
+            border: 1px solid #000;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: #fff;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* ==========================================
+           PULSING GLOW EFFECT
+           ========================================== */
+
+        .quest-card.pulsing {
+            animation: pulseGlow 2s ease-in-out infinite;
+            border-color: #000;
+            border-width: 2px;
+        }
+
+        @keyframes pulseGlow {
+            0%, 100% {
+                box-shadow:
+                    0 0 0 0 rgba(0, 0, 0, 0.4),
+                    0 0 20px rgba(0, 0, 0, 0.1);
+            }
+            50% {
+                box-shadow:
+                    0 0 0 8px rgba(0, 0, 0, 0.1),
+                    0 0 40px rgba(0, 0, 0, 0.2);
+            }
+        }
+
+        /* Golden ring pulse variant */
+        .quest-card.pulsing::before {
+            content: '';
+            position: absolute;
+            top: -4px;
+            left: -4px;
+            right: -4px;
+            bottom: -4px;
+            border: 3px solid transparent;
+            border-radius: 2px;
+            animation: ringPulse 2s ease-in-out infinite;
+            pointer-events: none;
+        }
+
+        @keyframes ringPulse {
+            0%, 100% {
+                border-color: rgba(0, 0, 0, 0);
+                transform: scale(1);
+            }
+            50% {
+                border-color: rgba(0, 0, 0, 0.3);
+                transform: scale(1.02);
+            }
+        }
+
+        .quest-image {
+            width: 100%;
+            height: 170px;
+            object-fit: cover;
+            border-bottom: 1px solid #000;
+            display: block;
+            background: linear-gradient(135deg, #f5f5f5 0%, #e0e0e0 100%);
+        }
+
+        .quest-content {
+            padding: 16px;
+        }
+
+        .quest-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 12px;
+        }
+
+        .quest-info {
+            flex: 1;
+        }
+
+        .quest-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .quest-desc {
+            font-size: 12px;
+            color: #666;
+            font-style: italic;
+        }
+
+        .reward {
+            font-size: 14px;
+            font-weight: 700;
+            border: 1px solid #000;
+            padding: 4px 10px;
+            background: #000;
+            color: #fff;
+        }
+
+        .quest-footer {
+            padding-top: 12px;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .status-badge {
+            display: inline-block;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 6px 12px;
+            border: 1px solid #000;
+            background: #fff;
+        }
+
+        /* ==========================================
+           FLOATING HAND POINTER
+           ========================================== */
+
+        .floating-hand {
+            position: absolute;
+            font-size: 48px;
+            z-index: 100;
+            pointer-events: none;
+            animation: floatAndTap 2s ease-in-out infinite;
+            filter: drop-shadow(2px 4px 6px rgba(0,0,0,0.3));
+            /* Position near the quest card */
+            top: 380px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        @keyframes floatAndTap {
+            0%, 100% {
+                transform: translateX(-50%) translateY(0) rotate(-10deg);
+            }
+            30% {
+                transform: translateX(-50%) translateY(15px) rotate(-5deg) scale(0.95);
+            }
+            50% {
+                transform: translateX(-50%) translateY(0) rotate(-10deg);
+            }
+        }
+
+        /* ==========================================
+           TOOLTIP BUBBLE
+           ========================================== */
+
+        .tooltip-bubble {
+            position: absolute;
+            top: 200px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #000;
+            color: #fff;
+            padding: 16px 24px;
+            border-radius: 8px;
+            max-width: 280px;
+            text-align: center;
+            z-index: 101;
+            animation: fadeInDown 0.5s ease-out;
+        }
+
+        .tooltip-bubble::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 10px solid transparent;
+            border-top-color: #000;
+            border-bottom: none;
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateX(-50%) translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(-50%) translateY(0);
+            }
+        }
+
+        .tooltip-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .tooltip-message {
+            font-size: 14px;
+            line-height: 1.4;
+            opacity: 0.9;
+        }
+
+        .tooltip-dismiss {
+            margin-top: 12px;
+            font-size: 12px;
+            opacity: 0.6;
+            cursor: pointer;
+        }
+
+        .tooltip-dismiss:hover {
+            opacity: 1;
+        }
+
+        /* Dimmed other cards */
+        .quest-card.dimmed {
+            opacity: 0.4;
+            filter: grayscale(50%);
+        }
+
+        .hidden {
+            display: none !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="title">Love Quest</div>
+            <div class="subtitle">Your Journey Begins</div>
+        </div>
+
+        <div class="stats">
+            <div class="stat-row">
+                <div class="stat-label">Party</div>
+                <div class="stat-value">You & Partner</div>
+            </div>
+            <div class="stat-row">
+                <div class="stat-label">Love Points</div>
+                <div class="stat-value">0</div>
+            </div>
+            <div class="progress-bg">
+                <div class="progress-bar"></div>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-heading">
+                <span>Daily Quests</span>
+            </div>
+
+            <div class="carousel-container">
+                <div class="carousel">
+                    <div class="quest-card pulsing" id="firstQuest">
+                        <div class="quest-image"></div>
+                        <div class="quest-content">
+                            <div class="quest-header">
+                                <div class="quest-info">
+                                    <div class="quest-title">Classic Quiz</div>
+                                    <div class="quest-desc">Answer five questions together</div>
+                                </div>
+                                <div class="reward">+30</div>
+                            </div>
+                            <div class="quest-footer">
+                                <span class="status-badge">Your Turn</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="quest-card dimmed">
+                        <div class="quest-image"></div>
+                        <div class="quest-content">
+                            <div class="quest-header">
+                                <div class="quest-info">
+                                    <div class="quest-title">Affirmation Quiz</div>
+                                    <div class="quest-desc">Coming soon...</div>
+                                </div>
+                                <div class="reward">+30</div>
+                            </div>
+                            <div class="quest-footer">
+                                <span class="status-badge">Locked</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TOOLTIP BUBBLE -->
+        <div class="tooltip-bubble" id="tooltip">
+            <div class="tooltip-title">Start Your First Quest!</div>
+            <div class="tooltip-message">
+                Tap here to begin the Classic Quiz and discover how well you know each other.
+            </div>
+            <div class="tooltip-dismiss" onclick="dismissGuide()">Got it</div>
+        </div>
+
+        <!-- FLOATING HAND -->
+        <div class="floating-hand" id="hand">👆</div>
+    </div>
+
+    <script>
+        function dismissGuide() {
+            document.getElementById('tooltip').classList.add('hidden');
+            document.getElementById('hand').classList.add('hidden');
+            document.getElementById('firstQuest').classList.remove('pulsing');
+            document.querySelectorAll('.dimmed').forEach(el => el.classList.remove('dimmed'));
+        }
+
+        document.getElementById('firstQuest').addEventListener('click', function() {
+            dismissGuide();
+            // Would navigate to quiz
+        });
+    </script>
+</body>
+</html>

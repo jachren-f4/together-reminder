@@ -1,6 +1,6 @@
 {
   "quizId": "quiz_010",
-  "title": "Attachment Quiz 10",
+  "title": "Jealousy",
   "branch": "attachment",
   "questions": [
     {
@@ -33,5 +33,6 @@
       "prompt": "Who needs more confirmation that...",
       "content": "They haven't done anything wrong"
     }
-  ]
+  ],
+  "description": "The green-eyed monster—understand your relationship with jealousy."
 }

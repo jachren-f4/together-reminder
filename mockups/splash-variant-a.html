@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Liia – Splash Screen (Variant A: Warm Serif)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html, body {
+      height: 100%;
+      width: 100%;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #FAF9F7;
+      color: #2C2825;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 48px 32px;
+      animation: fadeIn 280ms ease-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    .container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      flex: 1;
+      max-width: 360px;
+      width: 100%;
+    }
+
+    .content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+
+    /* Brand Header */
+    .brand {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: 56px;
+      font-weight: 500;
+      letter-spacing: -0.02em;
+      color: #2C2825;
+      margin-bottom: 12px;
+    }
+
+    /* Positioning Line */
+    .tagline {
+      font-size: 14px;
+      font-weight: 300;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: #8A8279;
+      margin-bottom: 56px;
+    }
+
+    /* Abstract Symbol - Two overlapping circles */
+    .symbol {
+      position: relative;
+      width: 120px;
+      height: 80px;
+      margin-bottom: 56px;
+    }
+
+    .symbol-circle {
+      position: absolute;
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      border: 2px solid #C4BDB4;
+      background: transparent;
+    }
+
+    .symbol-circle:first-child {
+      left: 12px;
+      top: 8px;
+    }
+
+    .symbol-circle:last-child {
+      right: 12px;
+      top: 8px;
+    }
+
+    /* Supporting Copy */
+    .supporting {
+      font-size: 16px;
+      font-weight: 300;
+      color: #6B6560;
+      line-height: 1.5;
+      margin-bottom: 48px;
+    }
+
+    /* Actions Container */
+    .actions {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+      gap: 24px;
+    }
+
+    /* Primary CTA */
+    .btn-primary {
+      width: 100%;
+      max-width: 280px;
+      padding: 18px 32px;
+      font-family: 'Inter', sans-serif;
+      font-size: 15px;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      color: #FAF9F7;
+      background: #2C2825;
+      border: none;
+      border-radius: 32px;
+      cursor: pointer;
+      transition: background 200ms ease;
+    }
+
+    .btn-primary:hover {
+      background: #3D3833;
+    }
+
+    .btn-primary:active {
+      background: #1A1816;
+    }
+
+    /* Secondary Action */
+    .secondary {
+      font-size: 13px;
+      font-weight: 400;
+      color: #A09890;
+    }
+
+    .secondary a {
+      color: #6B6560;
+      text-decoration: none;
+      border-bottom: 1px solid transparent;
+      transition: border-color 200ms ease;
+    }
+
+    .secondary a:hover {
+      border-bottom-color: #6B6560;
+    }
+
+    /* Mobile adjustments */
+    @media (max-height: 700px) {
+      .symbol {
+        margin-bottom: 40px;
+      }
+      .tagline {
+        margin-bottom: 40px;
+      }
+      .supporting {
+        margin-bottom: 36px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="content">
+      <!-- Brand Header -->
+      <h1 class="brand">Liia</h1>
+
+      <!-- Positioning Line -->
+      <p class="tagline">A shared daily ritual</p>
+
+      <!-- Abstract Symbol -->
+      <div class="symbol" role="img" aria-label="Two overlapping circles representing togetherness">
+        <div class="symbol-circle"></div>
+        <div class="symbol-circle"></div>
+      </div>
+
+      <!-- Supporting Copy -->
+      <p class="supporting">For the small moments that matter</p>
+
+      <!-- Actions -->
+      <div class="actions">
+        <button class="btn-primary">Begin</button>
+        <p class="secondary">Returning reader? <a href="#">Sign in</a></p>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

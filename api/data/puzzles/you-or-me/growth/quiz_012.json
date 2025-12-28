@@ -1,6 +1,6 @@
 {
   "quizId": "quiz_012",
-  "title": "Growth Quiz 12",
+  "title": "Future Self",
   "branch": "growth",
   "questions": [
     {
@@ -33,5 +33,6 @@
       "prompt": "Who contributes more to...",
       "content": "The relationship becoming stronger"
     }
-  ]
+  ],
+  "description": "Where do you see yourselves in 5 years? Dream about your future."
 }

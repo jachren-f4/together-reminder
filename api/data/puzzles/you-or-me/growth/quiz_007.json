@@ -1,6 +1,6 @@
 {
   "quizId": "quiz_007",
-  "title": "Growth Quiz 7",
+  "title": "Breaking Habits",
   "branch": "growth",
   "questions": [
     {
@@ -33,5 +33,6 @@
       "prompt": "Who is more ambitious about...",
       "content": "Their personal future"
     }
-  ]
+  ],
+  "description": "Old habits die hard. See who's better at making positive changes."
 }

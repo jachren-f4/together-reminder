@@ -13,6 +13,8 @@ import '../widgets/linked/partner_first_dialog.dart';
 import '../widgets/unlock_celebration.dart';
 import 'linked_completion_screen.dart';
 import '../config/brand/brand_loader.dart';
+import '../config/brand/brand_config.dart';
+import '../config/brand/us2_theme.dart';
 import '../theme/app_theme.dart';
 import '../mixins/game_polling_mixin.dart';
 
@@ -28,6 +30,9 @@ class LinkedGameScreen extends StatefulWidget {
 class _LinkedGameScreenState extends State<LinkedGameScreen>
     with GamePollingMixin {
   final LinkedService _service = LinkedService();
+
+  /// Check if we're running the Us2 brand
+  bool get _isUs2 => BrandLoader().config.brand == Brand.us2;
 
   LinkedGameState? _gameState;
   bool _isLoading = true;
@@ -145,6 +150,10 @@ class _LinkedGameScreenState extends State<LinkedGameScreen>
   }
 
   Future<void> _navigateToCompletionWithLPSync(LinkedMatch match) async {
+    // Set pending results flag FIRST - if app is killed before navigation,
+    // user will see "RESULTS ARE READY!" on home screen
+    await StorageService().setPendingResultsMatchId('linked', match.matchId);
+
     // LP is server-authoritative - sync from server before showing completion
     // Server already awarded LP via awardLP() in linked/submit route
     await LovePointService.fetchAndSyncFromServer();
@@ -176,13 +185,17 @@ class _LinkedGameScreenState extends State<LinkedGameScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: BrandLoader().colors.background,
-      body: Stack(
-        children: [
-          // Main content inside SafeArea
-          SafeArea(
-            child: _buildBody(),
-          ),
+      backgroundColor: _isUs2 ? null : BrandLoader().colors.background,
+      body: Container(
+        decoration: _isUs2
+            ? const BoxDecoration(gradient: Us2Theme.backgroundGradient)
+            : null,
+        child: Stack(
+          children: [
+            // Main content inside SafeArea
+            SafeArea(
+              child: _buildBody(),
+            ),
           // Full-screen overlay dialogs (outside SafeArea to cover status bar)
           if (_showTurnComplete)
             Positioned.fill(
@@ -201,7 +214,8 @@ class _LinkedGameScreenState extends State<LinkedGameScreen>
                 onStay: () => setState(() => _showPartnerFirst = false),
               ),
             ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -352,6 +366,10 @@ class _LinkedGameScreenState extends State<LinkedGameScreen>
   Widget _buildHeader() {
     final partnerName = StorageService().getPartner()?.name ?? 'Partner';
 
+    if (_isUs2) {
+      return _buildUs2Header(partnerName);
+    }
+
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       decoration: BoxDecoration(
@@ -427,6 +445,102 @@ class _LinkedGameScreenState extends State<LinkedGameScreen>
     );
   }
 
+  /// Us2 styled header with gradient back button and score badges
+  Widget _buildUs2Header(String partnerName) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      child: Row(
+        children: [
+          // Gradient back button - compact
+          GestureDetector(
+            onTap: () => Navigator.of(context).pop(),
+            child: Container(
+              width: 30,
+              height: 30,
+              decoration: BoxDecoration(
+                gradient: Us2Theme.accentGradient,
+                borderRadius: BorderRadius.circular(8),
+                boxShadow: [
+                  BoxShadow(
+                    color: Us2Theme.glowPink.withOpacity(0.3),
+                    blurRadius: 6,
+                    offset: const Offset(0, 2),
+                  ),
+                ],
+              ),
+              child: const Center(
+                child: Text(
+                  '←',
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(width: 10),
+          // Title - compact
+          Text(
+            'CROSSWORD',
+            style: TextStyle(
+              fontFamily: Us2Theme.fontHeading,
+              fontSize: 16,
+              fontWeight: FontWeight.w700,
+              color: Us2Theme.textDark,
+              letterSpacing: 1.5,
+            ),
+          ),
+          const Spacer(),
+          // Score badges - compact
+          Row(
+            children: [
+              _buildUs2ScoreBadge(
+                'You: ${_gameState!.myScore}',
+                isActive: _gameState!.isMyTurn,
+              ),
+              const SizedBox(width: 6),
+              _buildUs2ScoreBadge(
+                '$partnerName: ${_gameState!.partnerScore}',
+                isActive: !_gameState!.isMyTurn,
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// Us2 styled score badge - compact
+  Widget _buildUs2ScoreBadge(String text, {required bool isActive}) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      decoration: BoxDecoration(
+        gradient: Us2Theme.accentGradient,
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: isActive ? Us2Theme.scoreBadgeShadow : null,
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          if (isActive) ...[
+            const Text('💗', style: TextStyle(fontSize: 11)),
+            const SizedBox(width: 4),
+          ],
+          Text(
+            text,
+            style: const TextStyle(
+              fontSize: 11,
+              fontWeight: FontWeight.w700,
+              color: Colors.white,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   /// Grid container with animation overlay
   Widget _buildGridWithOverlay() {
     return GestureDetector(
@@ -446,12 +560,16 @@ class _LinkedGameScreenState extends State<LinkedGameScreen>
     );
   }
 
-  /// Grid container with dark background
+  /// Grid container with dark background (or gold frame for Us2)
   Widget _buildGrid() {
     final puzzle = _gameState!.puzzle!;
     final cols = puzzle.cols;
     final rows = puzzle.rows;
     final boardState = _gameState!.match.boardState;
+
+    if (_isUs2) {
+      return _buildUs2Grid(puzzle, cols, rows, boardState);
+    }
 
     return Container(
       key: _gridKey,
@@ -476,6 +594,66 @@ class _LinkedGameScreenState extends State<LinkedGameScreen>
               itemBuilder: (context, index) {
                 return _buildCell(index, puzzle, boardState);
               },
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  /// Us2 styled grid with gold beveled frame - compact
+  Widget _buildUs2Grid(LinkedPuzzle puzzle, int cols, int rows, Map<String, String> boardState) {
+    return Container(
+      key: _gridKey,
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      child: Center(
+        child: AspectRatio(
+          aspectRatio: cols / rows,
+          child: Container(
+            decoration: BoxDecoration(
+              gradient: Us2Theme.gridFrameGradient,
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(color: Us2Theme.goldBorder, width: 1.5),
+              boxShadow: [
+                ...Us2Theme.gridFrameShadow,
+                // Inset highlight for bevel effect
+                const BoxShadow(
+                  color: Color(0x66FFFFFF),
+                  blurRadius: 0,
+                  spreadRadius: 0,
+                  offset: Offset(0, 1),
+                ),
+              ],
+            ),
+            padding: const EdgeInsets.all(6),
+            child: Container(
+              decoration: BoxDecoration(
+                color: Us2Theme.goldMid,
+                borderRadius: BorderRadius.circular(8),
+                boxShadow: const [
+                  BoxShadow(
+                    color: Color(0x1A000000),
+                    blurRadius: 3,
+                    offset: Offset(0, 1),
+                  ),
+                ],
+              ),
+              padding: const EdgeInsets.all(4),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(4),
+                child: GridView.builder(
+                  physics: const NeverScrollableScrollPhysics(),
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: cols,
+                    mainAxisSpacing: 2,
+                    crossAxisSpacing: 2,
+                  ),
+                  itemCount: cols * rows,
+                  itemBuilder: (context, index) {
+                    return _buildCell(index, puzzle, boardState);
+                  },
+                ),
+              ),
             ),
           ),
         ),
@@ -577,6 +755,21 @@ class _LinkedGameScreenState extends State<LinkedGameScreen>
   Widget _buildCell(int index, LinkedPuzzle puzzle, Map<String, String> boardState) {
     // Use cellTypes from API to determine cell type
     if (puzzle.isVoidCell(index)) {
+      if (_isUs2) {
+        return Container(
+          decoration: BoxDecoration(
+            gradient: Us2Theme.voidCellGradient,
+            borderRadius: BorderRadius.circular(4),
+            boxShadow: const [
+              BoxShadow(
+                color: Color(0x66000000),
+                blurRadius: 4,
+                offset: Offset(0, 2),
+              ),
+            ],
+          ),
+        );
+      }
       return Container(color: BrandLoader().colors.textPrimary.withOpacity(0.13));
     }
 
@@ -638,6 +831,11 @@ class _LinkedGameScreenState extends State<LinkedGameScreen>
         textLength <= 2 &&
         !RegExp(r'^[a-zA-Z0-9\s]+$').hasMatch(clue.content);
 
+    // Check if this is an emoji with a text hint (e.g., 🍑 with "_SS")
+    if (clue.hasTextHint && isActuallyEmoji) {
+      return _buildEmojiTextClueCell(clue, isDown);
+    }
+
     double fontSize;
     if (isActuallyEmoji) {
       fontSize = 28; // Large emoji
@@ -654,7 +852,27 @@ class _LinkedGameScreenState extends State<LinkedGameScreen>
     return GestureDetector(
       onTap: () => _showClueDialog(clue),
       child: Container(
-        color: BrandLoader().colors.selected,
+        decoration: _isUs2
+            ? BoxDecoration(
+                gradient: Us2Theme.clueCellGradient,
+                borderRadius: BorderRadius.circular(4),
+                border: Border.all(color: Us2Theme.cellBorder, width: 1),
+                boxShadow: const [
+                  BoxShadow(
+                    color: Color(0xE6FFFFFF),
+                    blurRadius: 0,
+                    spreadRadius: 0,
+                    offset: Offset(0, 1),
+                  ),
+                  BoxShadow(
+                    color: Color(0x14000000),
+                    blurRadius: 2,
+                    offset: Offset(0, 1),
+                  ),
+                ],
+              )
+            : null,
+        color: _isUs2 ? null : BrandLoader().colors.selected,
         padding: const EdgeInsets.all(3),
         child: Stack(
           children: [
@@ -668,7 +886,7 @@ class _LinkedGameScreenState extends State<LinkedGameScreen>
                   fontWeight: FontWeight.w800,
                   letterSpacing: 0,
                   height: 1.05,
-                  color: BrandLoader().colors.textPrimary,
+                  color: _isUs2 ? Us2Theme.textDark : BrandLoader().colors.textPrimary,
                 ),
               ),
             ),
@@ -681,7 +899,92 @@ class _LinkedGameScreenState extends State<LinkedGameScreen>
                 isDown ? '▼' : '▶',
                 style: TextStyle(
                   fontSize: 6,
-                  color: BrandLoader().colors.textSecondary,
+                  color: _isUs2 ? Us2Theme.textLight : BrandLoader().colors.textSecondary,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  /// Build a clue cell with emoji on top (left-aligned) and text hint on bottom (right-aligned)
+  /// Used for emoji clues that point to single letters (e.g., 🍑 _SS for "A")
+  Widget _buildEmojiTextClueCell(LinkedClue clue, bool isDown) {
+    return GestureDetector(
+      onTap: () => _showClueDialog(clue),
+      child: Container(
+        decoration: _isUs2
+            ? BoxDecoration(
+                gradient: Us2Theme.clueCellGradient,
+                borderRadius: BorderRadius.circular(4),
+                border: Border.all(color: Us2Theme.cellBorder, width: 1),
+                boxShadow: const [
+                  BoxShadow(
+                    color: Color(0xE6FFFFFF),
+                    blurRadius: 0,
+                    offset: Offset(0, 1),
+                  ),
+                  BoxShadow(
+                    color: Color(0x14000000),
+                    blurRadius: 2,
+                    offset: Offset(0, 1),
+                  ),
+                ],
+              )
+            : null,
+        color: _isUs2 ? null : BrandLoader().colors.selected,
+        padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 3),
+        child: Stack(
+          children: [
+            // Main content: emoji top-left, text bottom-right
+            Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                // Emoji row - left aligned
+                Expanded(
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      clue.content,
+                      style: const TextStyle(
+                        fontSize: 22,
+                        height: 1,
+                      ),
+                    ),
+                  ),
+                ),
+                // Text hint row - right aligned
+                Expanded(
+                  child: Align(
+                    alignment: Alignment.centerRight,
+                    child: Text(
+                      clue.text!.toUpperCase(),
+                      style: TextStyle(
+                        fontFamily: 'Arial',
+                        fontSize: 14,
+                        fontWeight: FontWeight.w800,
+                        letterSpacing: -0.5,
+                        color: _isUs2 ? Us2Theme.letterPink : BrandLoader().colors.textPrimary,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            // Arrow indicator
+            Positioned(
+              bottom: isDown ? 1 : null,
+              right: isDown ? null : 1,
+              left: isDown ? 0 : null,
+              top: isDown ? null : 0,
+              child: Text(
+                isDown ? '▼' : '▶',
+                style: TextStyle(
+                  fontSize: 6,
+                  color: _isUs2 ? Us2Theme.textLight : BrandLoader().colors.textSecondary,
                 ),
               ),
             ),
@@ -738,6 +1041,55 @@ class _LinkedGameScreenState extends State<LinkedGameScreen>
   Widget _buildSplitClueHalf(LinkedClue clue, {required bool isTop}) {
     final isDown = clue.arrow == 'down';
     final displayText = clue.content.toUpperCase();
+
+    // Check if this is an emoji with text hint - use inline layout for split cells
+    if (clue.hasTextHint && clue.type == 'emoji') {
+      return Stack(
+        children: [
+          // Inline emoji + text (compact for split cell)
+          Center(
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  clue.content,
+                  style: const TextStyle(fontSize: 14, height: 1),
+                ),
+                const SizedBox(width: 2),
+                Text(
+                  clue.text!.toUpperCase(),
+                  style: TextStyle(
+                    fontFamily: 'Arial',
+                    fontSize: 9,
+                    fontWeight: FontWeight.w800,
+                    letterSpacing: -0.3,
+                    color: BrandLoader().colors.textPrimary,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          // Arrow indicator
+          Positioned(
+            bottom: isDown ? 0 : null,
+            top: isDown ? null : 0,
+            right: isDown ? null : 0,
+            left: isDown ? 0 : null,
+            child: Padding(
+              padding: const EdgeInsets.all(1),
+              child: Text(
+                isDown ? '▼' : '▶',
+                style: TextStyle(
+                  fontSize: 5,
+                  color: BrandLoader().colors.textSecondary,
+                ),
+              ),
+            ),
+          ),
+        ],
+      );
+    }
 
     // Smaller font sizes for split cells (half the height)
     final textLength = displayText.length;
@@ -897,37 +1249,72 @@ class _LinkedGameScreenState extends State<LinkedGameScreen>
       builder: (context, candidateData, rejectedData) {
         final isDragTarget = candidateData.isNotEmpty;
 
-        Color bgColor;
+        Color bgColor = Colors.white;  // Default, may be overridden
         Color textColor = BrandLoader().colors.textPrimary.withOpacity(0.87);
         Color? glowColor;
         Color? borderColor;
+        BorderRadius? borderRadius;
+        Gradient? gradient;
+        bool useDashedBorder = false;
 
-        // Use Color.alphaBlend to create SOLID colors (not transparent)
-        // This prevents the dark grid background from showing through
-        final surface = BrandLoader().colors.surface;
+        // Us2-specific styling
+        // Track if this is a golden tile (draft state keeps rack tile style)
+        bool isGoldenTile = false;
 
-        switch (state) {
-          case AnswerCellState.empty:
-            bgColor = isDragTarget
-                ? Color.alphaBlend(BrandLoader().colors.info.withOpacity(0.1), surface)
-                : surface;
-            // Highlight hint cells with light blue background + glow
-            if (isHighlighted) {
-              bgColor = Color.alphaBlend(BrandLoader().colors.info.withOpacity(0.2), surface);
-              borderColor = BrandLoader().colors.info;
-              glowColor = BrandLoader().colors.info;
-            }
-          case AnswerCellState.draft:
-            bgColor = isDragTarget
-                ? Color.alphaBlend(BrandLoader().colors.info.withOpacity(0.15), surface)
-                : Color.alphaBlend(BrandLoader().colors.warning.withOpacity(0.2), surface);
-          case AnswerCellState.locked:
-            bgColor = Color.alphaBlend(BrandLoader().colors.success.withOpacity(0.15), surface);
-            textColor = BrandLoader().colors.textPrimary;
-            if (showGlow) glowColor = BrandLoader().colors.success;
-          case AnswerCellState.incorrect:
-            bgColor = Color.alphaBlend(BrandLoader().colors.error.withOpacity(0.7), surface);
-            textColor = BrandLoader().colors.textOnPrimary;
+        if (_isUs2) {
+          borderRadius = BorderRadius.circular(4);
+          textColor = Us2Theme.letterPink;
+
+          switch (state) {
+            case AnswerCellState.empty:
+              gradient = Us2Theme.answerCellGradient;
+              borderColor = Us2Theme.gradientAccentStart.withOpacity(isDragTarget ? 0.8 : 0.4);
+              useDashedBorder = !isDragTarget;
+              if (isHighlighted) {
+                borderColor = Us2Theme.gradientAccentStart;
+                glowColor = Us2Theme.glowPink;
+              }
+            case AnswerCellState.draft:
+              // Keep golden tile style for placed letters
+              isGoldenTile = true;
+              gradient = Us2Theme.letterTileGradient;
+              textColor = Us2Theme.tileText;
+              borderRadius = BorderRadius.circular(6);
+            case AnswerCellState.locked:
+              gradient = Us2Theme.answerCellGradient;
+              borderColor = Us2Theme.gradientAccentStart.withOpacity(0.4);
+              if (showGlow) glowColor = Us2Theme.glowPink;
+            case AnswerCellState.incorrect:
+              bgColor = const Color(0xFFFFCCCC);
+              borderColor = Colors.red;
+              textColor = Colors.red.shade900;
+          }
+        } else {
+          // Original brand styling
+          final surface = BrandLoader().colors.surface;
+
+          switch (state) {
+            case AnswerCellState.empty:
+              bgColor = isDragTarget
+                  ? Color.alphaBlend(BrandLoader().colors.info.withOpacity(0.1), surface)
+                  : surface;
+              if (isHighlighted) {
+                bgColor = Color.alphaBlend(BrandLoader().colors.info.withOpacity(0.2), surface);
+                borderColor = BrandLoader().colors.info;
+                glowColor = BrandLoader().colors.info;
+              }
+            case AnswerCellState.draft:
+              bgColor = isDragTarget
+                  ? Color.alphaBlend(BrandLoader().colors.info.withOpacity(0.15), surface)
+                  : Color.alphaBlend(BrandLoader().colors.warning.withOpacity(0.2), surface);
+            case AnswerCellState.locked:
+              bgColor = Color.alphaBlend(BrandLoader().colors.success.withOpacity(0.15), surface);
+              textColor = BrandLoader().colors.textPrimary;
+              if (showGlow) glowColor = BrandLoader().colors.success;
+            case AnswerCellState.incorrect:
+              bgColor = Color.alphaBlend(BrandLoader().colors.error.withOpacity(0.7), surface);
+              textColor = BrandLoader().colors.textOnPrimary;
+          }
         }
 
         // Store cell position for floating points animation
@@ -938,15 +1325,32 @@ class _LinkedGameScreenState extends State<LinkedGameScreen>
         final baseCellContent = AnimatedContainer(
           duration: const Duration(milliseconds: 300),
           decoration: BoxDecoration(
-            color: bgColor,
+            color: gradient == null ? bgColor : null,
+            gradient: gradient,
+            borderRadius: borderRadius,
             border: isDragTarget
-                ? Border.all(color: BrandLoader().colors.info, width: 2)
+                ? Border.all(color: _isUs2 ? Us2Theme.gradientAccentStart : BrandLoader().colors.info, width: 2)
                 : borderColor != null
-                    ? Border.all(color: borderColor, width: 3)
-                    : null,
+                    ? Border.all(color: borderColor, width: useDashedBorder ? 2 : 2)
+                    : (_isUs2 ? Border.all(color: Us2Theme.cellBorder, width: 1) : null),
             boxShadow: [
               if (glowColor != null)
-                BoxShadow(color: glowColor.withValues(alpha: 0.6), blurRadius: 12, spreadRadius: 2),
+                BoxShadow(color: glowColor.withOpacity(0.6), blurRadius: 12, spreadRadius: 2),
+              if (_isUs2 && isGoldenTile) ...[
+                // Golden tile shadow for draft letters
+                ...Us2Theme.letterTileShadow,
+              ] else if (_isUs2) ...[
+                const BoxShadow(
+                  color: Color(0xE6FFFFFF),
+                  blurRadius: 0,
+                  offset: Offset(0, 1),
+                ),
+                BoxShadow(
+                  color: Us2Theme.glowPink.withOpacity(0.2),
+                  blurRadius: 6,
+                  offset: const Offset(0, 2),
+                ),
+              ],
             ],
           ),
           child: Center(
@@ -954,10 +1358,13 @@ class _LinkedGameScreenState extends State<LinkedGameScreen>
                 ? Text(
                     letter,
                     style: TextStyle(
-                      fontSize: 22,
+                      fontSize: isGoldenTile ? 18 : 22,
                       fontWeight: FontWeight.w700,
-                      fontFamily: 'Georgia',
+                      fontFamily: isGoldenTile ? Us2Theme.fontBody : 'Georgia',
                       color: textColor,
+                      shadows: isGoldenTile
+                          ? [const Shadow(color: Color(0x4DFFFFFF), offset: Offset(0, 1))]
+                          : null,
                     ),
                   )
                 : null,
@@ -1073,8 +1480,8 @@ class _LinkedGameScreenState extends State<LinkedGameScreen>
   Widget _buildBottomSection() {
     return Container(
       decoration: BoxDecoration(
-        color: BrandLoader().colors.surface,
-        border: Border(top: BorderSide(color: BrandLoader().colors.textPrimary, width: 2)),
+        color: _isUs2 ? null : BrandLoader().colors.surface,
+        border: _isUs2 ? null : Border(top: BorderSide(color: BrandLoader().colors.textPrimary, width: 2)),
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -1108,28 +1515,40 @@ class _LinkedGameScreenState extends State<LinkedGameScreen>
         final isDragTarget = candidateData.isNotEmpty;
 
         return Container(
-          padding: const EdgeInsets.all(12),
-          decoration: BoxDecoration(
-            color: isDragTarget ? BrandLoader().colors.info.withOpacity(0.1) : null,
-            border: Border(
-              bottom: BorderSide(color: BrandLoader().colors.divider),
-              top: isDragTarget ? BorderSide(color: BrandLoader().colors.info, width: 2) : BorderSide.none,
-            ),
+          padding: EdgeInsets.symmetric(
+            horizontal: _isUs2 ? 12 : 12,
+            vertical: _isUs2 ? 6 : 12,
           ),
+          decoration: _isUs2
+              ? BoxDecoration(
+                  color: isDragTarget ? Us2Theme.gradientAccentStart.withOpacity(0.1) : null,
+                  border: isDragTarget ? Border(top: BorderSide(color: Us2Theme.gradientAccentStart, width: 2)) : null,
+                )
+              : BoxDecoration(
+                  color: isDragTarget ? BrandLoader().colors.info.withOpacity(0.1) : null,
+                  border: Border(
+                    bottom: BorderSide(color: BrandLoader().colors.divider),
+                    top: isDragTarget ? BorderSide(color: BrandLoader().colors.info, width: 2) : BorderSide.none,
+                  ),
+                ),
           child: Opacity(
             opacity: isDisabled ? 0.5 : 1.0,
             child: Column(
               children: [
-                Text(
-                  isDragTarget ? 'DROP TO RETURN' : 'YOUR LETTERS',
-                  style: TextStyle(
-                    fontSize: 10,
-                    letterSpacing: 1,
-                    color: isDragTarget ? BrandLoader().colors.info : BrandLoader().colors.textSecondary,
-                    fontWeight: isDragTarget ? FontWeight.bold : FontWeight.normal,
+                // Us2: Only show text when dragging back, otherwise hide for compact layout
+                if (!_isUs2 || isDragTarget)
+                  Text(
+                    isDragTarget ? 'DROP TO RETURN' : 'YOUR LETTERS',
+                    style: TextStyle(
+                      fontSize: _isUs2 ? 11 : 10,
+                      letterSpacing: _isUs2 ? 2 : 1,
+                      fontWeight: _isUs2 ? FontWeight.w700 : (isDragTarget ? FontWeight.bold : FontWeight.normal),
+                      color: _isUs2
+                          ? (isDragTarget ? Us2Theme.gradientAccentStart : const Color(0xFF8B7355))
+                          : (isDragTarget ? BrandLoader().colors.info : BrandLoader().colors.textSecondary),
+                    ),
                   ),
-                ),
-                const SizedBox(height: 8),
+                SizedBox(height: _isUs2 ? (isDragTarget ? 8 : 4) : 10),
                 // Always show 5 tile slots to prevent layout shift
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -1155,6 +1574,18 @@ class _LinkedGameScreenState extends State<LinkedGameScreen>
 
   /// Empty rack slot - used when waiting for partner or when letter has been placed
   Widget _buildEmptyRackSlot() {
+    if (_isUs2) {
+      return Container(
+        margin: const EdgeInsets.symmetric(horizontal: 3),
+        width: 40,
+        height: 40,
+        decoration: BoxDecoration(
+          color: Us2Theme.goldLight.withOpacity(0.3),
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(color: Us2Theme.goldBorder.withOpacity(0.5), width: 1.5),
+        ),
+      );
+    }
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 4),
       width: 42,
@@ -1175,22 +1606,29 @@ class _LinkedGameScreenState extends State<LinkedGameScreen>
       return _buildEmptyRackSlot();
     }
 
+    final tileSize = _isUs2 ? 40.0 : 42.0;
+    final tileMargin = _isUs2 ? 3.0 : 4.0;
+
     final tile = Container(
-      margin: const EdgeInsets.symmetric(horizontal: 4),
-      width: 42,
-      height: 42,
+      margin: EdgeInsets.symmetric(horizontal: tileMargin),
+      width: tileSize,
+      height: tileSize,
       decoration: BoxDecoration(
-        color: BrandLoader().colors.warning.withOpacity(0.15),
-        border: Border.all(color: BrandLoader().colors.textPrimary, width: 2),
+        gradient: _isUs2 ? Us2Theme.letterTileGradient : null,
+        color: _isUs2 ? null : BrandLoader().colors.warning.withOpacity(0.15),
+        borderRadius: _isUs2 ? BorderRadius.circular(8) : null,
+        border: _isUs2 ? null : Border.all(color: BrandLoader().colors.textPrimary, width: 2),
+        boxShadow: _isUs2 ? Us2Theme.letterTileShadow : null,
       ),
       child: Center(
         child: Text(
           letter,
           style: TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.w700,
-            fontFamily: 'Georgia',
-            color: BrandLoader().colors.textPrimary,
+            fontSize: _isUs2 ? 20 : 20,
+            fontWeight: FontWeight.w800,
+            fontFamily: _isUs2 ? Us2Theme.fontBody : 'Georgia',
+            color: _isUs2 ? Us2Theme.tileText : BrandLoader().colors.textPrimary,
+            shadows: _isUs2 ? [const Shadow(color: Color(0x4DFFFFFF), offset: Offset(0, 1))] : null,
           ),
         ),
       ),
@@ -1205,40 +1643,57 @@ class _LinkedGameScreenState extends State<LinkedGameScreen>
       data: _RackDragData(letter: letter, rackIndex: rackIndex),
       feedback: Material(
         elevation: 8,
+        color: Colors.transparent,
         child: Container(
-          width: 42,
-          height: 42,
+          width: tileSize,
+          height: tileSize,
           decoration: BoxDecoration(
-            color: BrandLoader().colors.warning.withOpacity(0.15),
-            border: Border.all(color: BrandLoader().colors.textPrimary, width: 2),
-            boxShadow: [
-              BoxShadow(
-                color: BrandLoader().colors.textPrimary.withOpacity(0.3),
-                blurRadius: 12,
-                offset: const Offset(0, 4),
-              ),
-            ],
+            gradient: _isUs2 ? Us2Theme.letterTileGradient : null,
+            color: _isUs2 ? null : BrandLoader().colors.warning.withOpacity(0.15),
+            borderRadius: _isUs2 ? BorderRadius.circular(8) : null,
+            border: _isUs2 ? null : Border.all(color: BrandLoader().colors.textPrimary, width: 2),
+            boxShadow: _isUs2
+                ? [
+                    const BoxShadow(
+                      color: Color(0x40000000),
+                      blurRadius: 16,
+                      offset: Offset(0, 8),
+                    ),
+                    ...Us2Theme.letterTileShadow,
+                  ]
+                : [
+                    BoxShadow(
+                      color: BrandLoader().colors.textPrimary.withOpacity(0.3),
+                      blurRadius: 12,
+                      offset: const Offset(0, 4),
+                    ),
+                  ],
           ),
           child: Center(
             child: Text(
               letter,
               style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.w700,
-                fontFamily: 'Georgia',
-                color: BrandLoader().colors.textPrimary,
+                fontSize: _isUs2 ? 20 : 20,
+                fontWeight: FontWeight.w800,
+                fontFamily: _isUs2 ? Us2Theme.fontBody : 'Georgia',
+                color: _isUs2 ? Us2Theme.tileText : BrandLoader().colors.textPrimary,
+                shadows: _isUs2 ? [const Shadow(color: Color(0x4DFFFFFF), offset: Offset(0, 1))] : null,
               ),
             ),
           ),
         ),
       ),
       childWhenDragging: Container(
-        margin: const EdgeInsets.symmetric(horizontal: 4),
-        width: 42,
-        height: 42,
+        margin: EdgeInsets.symmetric(horizontal: tileMargin),
+        width: tileSize,
+        height: tileSize,
         decoration: BoxDecoration(
-          color: BrandLoader().colors.background,
-          border: Border.all(color: BrandLoader().colors.borderLight, width: 2),
+          color: _isUs2 ? Us2Theme.goldLight.withOpacity(0.3) : BrandLoader().colors.background,
+          borderRadius: _isUs2 ? BorderRadius.circular(10) : null,
+          border: Border.all(
+            color: _isUs2 ? Us2Theme.goldBorder.withOpacity(0.5) : BrandLoader().colors.borderLight,
+            width: 2,
+          ),
         ),
       ),
       child: tile,
@@ -1278,6 +1733,15 @@ class _LinkedGameScreenState extends State<LinkedGameScreen>
       buttonEnabled = false;
       buttonBgColor = BrandLoader().colors.divider;
       buttonTextColor = BrandLoader().colors.disabled;
+    }
+
+    if (_isUs2) {
+      return _buildUs2ActionBar(
+        buttonText: buttonText,
+        buttonEnabled: buttonEnabled,
+        hintsRemaining: hintsRemaining,
+        isDisabled: isDisabled,
+      );
     }
 
     return Padding(
@@ -1347,6 +1811,101 @@ class _LinkedGameScreenState extends State<LinkedGameScreen>
                       fontWeight: FontWeight.w600,
                       letterSpacing: 1,
                       color: buttonTextColor,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// Us2 styled action bar with gradient buttons
+  Widget _buildUs2ActionBar({
+    required String buttonText,
+    required bool buttonEnabled,
+    required int hintsRemaining,
+    required bool isDisabled,
+  }) {
+    return Padding(
+      padding: EdgeInsets.fromLTRB(16, 6, 16, MediaQuery.of(context).padding.bottom + 8),
+      child: Row(
+        children: [
+          // Hint button - compact
+          Opacity(
+            opacity: isDisabled ? 0.5 : 1.0,
+            child: GestureDetector(
+              onTap: !isDisabled && hintsRemaining > 0 ? _useHint : null,
+              child: Container(
+                padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 14),
+                decoration: BoxDecoration(
+                  gradient: Us2Theme.accentGradient,
+                  borderRadius: BorderRadius.circular(18),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Us2Theme.glowPink.withOpacity(0.3),
+                      blurRadius: 8,
+                      offset: const Offset(0, 2),
+                    ),
+                  ],
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Text('💡', style: TextStyle(fontSize: 14)),
+                    const SizedBox(width: 4),
+                    Text(
+                      'Hint ($hintsRemaining)',
+                      style: const TextStyle(
+                        fontSize: 13,
+                        fontWeight: FontWeight.w700,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(width: 10),
+          // Main action button - compact
+          Expanded(
+            child: GestureDetector(
+              onTap: buttonEnabled ? _submitTurn : null,
+              child: Opacity(
+                opacity: buttonEnabled ? 1.0 : 0.6,
+                child: Container(
+                  padding: const EdgeInsets.symmetric(vertical: 8),
+                  decoration: BoxDecoration(
+                    gradient: buttonEnabled
+                        ? const LinearGradient(
+                            colors: [Color(0xFFFF7B6B), Color(0xFFFF9F6B)],
+                          )
+                        : LinearGradient(
+                            colors: [Colors.grey.shade300, Colors.grey.shade400],
+                          ),
+                    borderRadius: BorderRadius.circular(18),
+                    boxShadow: buttonEnabled
+                        ? [
+                            BoxShadow(
+                              color: Us2Theme.glowPink.withOpacity(0.3),
+                              blurRadius: 8,
+                              offset: const Offset(0, 2),
+                            ),
+                          ]
+                        : null,
+                  ),
+                  child: Center(
+                    child: Text(
+                      buttonText,
+                      style: TextStyle(
+                        fontSize: 13,
+                        fontWeight: FontWeight.w800,
+                        letterSpacing: 0.5,
+                        color: buttonEnabled ? Colors.white : Colors.grey.shade600,
+                      ),
                     ),
                   ),
                 ),
@@ -1453,6 +2012,9 @@ class _LinkedGameScreenState extends State<LinkedGameScreen>
           // Update game state incrementally from submit result
           _updateStateFromResult(result);
         });
+
+        // NOTE: Pending results flag is set in _navigateToCompletionWithLPSync when game completes
+        // We don't set it here because the game hasn't completed yet - just a turn ended
 
         // Save updated match to local storage after setState (for quest card turn display)
         if (_gameState != null) {

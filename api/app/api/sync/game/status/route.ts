@@ -24,7 +24,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { withAuthOrDevBypass } from '@/lib/auth/dev-middleware';
 import { query } from '@/lib/db/pool';
-import { getCouple, buildGameState, buildResult, getCurrentBranch, loadQuizOrder, GameType, GameMatch } from '@/lib/game/handler';
+import { getCouple, buildGameState, buildResult, getCurrentBranch, loadQuizOrder, loadQuiz, GameType, GameMatch } from '@/lib/game/handler';
 
 export const dynamic = 'force-dynamic';
 
@@ -70,6 +70,9 @@ export const GET = withAuthOrDevBypass(async (req: NextRequest, userId: string, 
       const state = buildGameState(match, couple);
       const result = await buildResult(match, couple);
 
+      // Load quiz metadata for display (title/description)
+      const quiz = loadQuiz(match.quizType as GameType, match.branch, match.quizId);
+
       return {
         type: match.quizType,
         matchId: match.id,
@@ -83,6 +86,9 @@ export const GET = withAuthOrDevBypass(async (req: NextRequest, userId: string, 
         isCompleted: state.isCompleted,
         createdAt: match.createdAt,
         completedAt: match.completedAt,
+        // Include quiz metadata for display
+        quizName: quiz?.name || null,
+        quizDescription: quiz?.description || null,
         // Include result data if completed
         ...(result && {
           matchPercentage: result.matchPercentage,

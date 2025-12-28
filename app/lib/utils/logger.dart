@@ -47,16 +47,17 @@ class Logger {
     'lovepoint': false,         // Love Points awards, tier progression (11 uses)
 
     // === MAJOR FEATURES (Enable when working on these features) ===
-    'quiz': true,               // Classic quiz gameplay, scoring, sync (36 uses)
-    'you_or_me': true,          // You or Me dual-session game (32 uses)
-    'pairing': true,            // QR/Remote device pairing (19 uses)
+    'quiz': false,              // Classic quiz gameplay, scoring, sync (36 uses)
+    'you_or_me': false,         // You or Me dual-session game (32 uses)
+    'pairing': false,           // QR/Remote device pairing (19 uses)
 
     // === MINOR FEATURES (Enable only when developing specific feature) ===
     'reminder': false,          // Send reminder functionality (9 uses)
     'poke': false,              // Poke send/receive interactions (7 uses)
     'daily_pulse': false,       // Daily Pulse synchronized activities (14 uses)
     'affirmation': false,       // Affirmation quiz variant (5 uses)
-    'quest': true,              // Daily quest sync, generation, completion, Firebase operations (47 uses)
+    'quest': false,             // Daily quest sync, generation, completion, Firebase operations (47 uses)
+    'guidance': false,          // Onboarding guidance hand/ribbon logic
 
     // === INFRASTRUCTURE/DEBUG (Rarely needed - only for deep debugging) ===
     'debug': false,             // Debug menu operations, device detection (38 uses)
@@ -69,9 +70,11 @@ class Logger {
     'country': false,           // Country detection and updates
     'sound': false,             // Sound playback
     'steps': false,             // Steps Together feature
-    'polling': true,            // HomePollingService - unified home screen polling
-    'word_search': true,        // Word Search game
-    'linked': true,             // Linked game
+    'polling': false,           // HomePollingService - unified home screen polling
+    'word_search': false,       // Word Search game
+    'linked': false,            // Linked game
+    'welcome_quiz': false,      // Welcome Quiz polling
+    'quest-debug': false,       // Quest card build debugging
   };
 
   /// Log debug information (only in debug mode)

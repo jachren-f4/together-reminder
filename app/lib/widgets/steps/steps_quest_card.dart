@@ -153,19 +153,16 @@ class _StepsQuestCardState extends State<StepsQuestCard>
   }
 
   /// Not connected state - grayed sneaker emoji, connect prompt (matches mockup 01)
+  /// Wrapped with BONUS ribbon overlay until user connects HealthKit
   Widget _buildNotConnectedCard() {
-    return Column(
+    final cardContent = Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        // Image section - gray gradient background with sneaker emoji
+        // Image section - sneaker emoji centered
         Container(
           height: 170,
           decoration: BoxDecoration(
-            gradient: const LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [Color(0xFFF5F5F5), Color(0xFFE8E8E8)],
-            ),
+            color: Colors.white,
             border: Border(
               bottom: BorderSide(
                 color: BrandLoader().colors.textPrimary,
@@ -300,15 +297,32 @@ class _StepsQuestCardState extends State<StepsQuestCard>
         ),
       ],
     );
+
+    // Wrap with BONUS ribbon overlay
+    return Stack(
+      clipBehavior: Clip.none,
+      children: [
+        cardContent,
+        // BONUS ribbon at top-left
+        const Positioned(
+          top: 12,
+          left: 0,
+          child: _BonusRibbon(),
+        ),
+      ],
+    );
   }
 
   /// Progress state - big step count with single progress bar (matches mockup)
   Widget _buildProgressCard() {
     final today = _stepsService.getTodayData();
     final partner = _storage.getPartner();
+    final connection = _stepsService.getConnectionStatus();
 
     final userSteps = today?.userSteps ?? 0;
     final partnerSteps = today?.partnerSteps ?? 0;
+    // Check if partner data is still loading (connected but no sync yet for today)
+    final isPartnerLoading = connection.partnerConnected && today?.partnerLastSync == null;
     final combinedSteps = userSteps + partnerSteps;
     final projectedLP = _stepsService.getProjectedLP();
 
@@ -339,19 +353,45 @@ class _StepsQuestCardState extends State<StepsQuestCard>
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                // Big step count
-                Text(
-                  _formatNumberWithCommas(combinedSteps),
-                  style: AppTheme.headlineFont.copyWith(
-                    fontSize: 36,
-                    fontWeight: FontWeight.w700,
-                    letterSpacing: -2,
+                // Big step count - show loading if partner data not yet synced
+                if (isPartnerLoading)
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.baseline,
+                    textBaseline: TextBaseline.alphabetic,
+                    children: [
+                      Text(
+                        _formatNumberWithCommas(userSteps),
+                        style: AppTheme.headlineFont.copyWith(
+                          fontSize: 36,
+                          fontWeight: FontWeight.w700,
+                          letterSpacing: -2,
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      SizedBox(
+                        width: 16,
+                        height: 16,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          color: BrandLoader().colors.textTertiary,
+                        ),
+                      ),
+                    ],
+                  )
+                else
+                  Text(
+                    _formatNumberWithCommas(combinedSteps),
+                    style: AppTheme.headlineFont.copyWith(
+                      fontSize: 36,
+                      fontWeight: FontWeight.w700,
+                      letterSpacing: -2,
+                    ),
                   ),
-                ),
                 const SizedBox(height: 4),
                 // Goal text
                 Text(
-                  'of 20,000 today',
+                  isPartnerLoading ? 'waiting for partner...' : 'of 20,000 today',
                   style: AppTheme.bodyFont.copyWith(
                     fontSize: 12,
                     color: const Color(0xFF666666),
@@ -678,5 +718,30 @@ class _StepsQuestCardState extends State<StepsQuestCard>
       result.write(str[i]);
     }
     return result.toString();
+  }
+}
+
+/// "BONUS" ribbon for the not-connected state
+/// Shows at top-left of the Steps card until user connects HealthKit
+class _BonusRibbon extends StatelessWidget {
+  const _BonusRibbon();
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+      decoration: const BoxDecoration(
+        color: Colors.black,
+      ),
+      child: const Text(
+        'BONUS',
+        style: TextStyle(
+          color: Colors.white,
+          fontSize: 10,
+          fontWeight: FontWeight.w700,
+          letterSpacing: 1,
+        ),
+      ),
+    );
   }
 }

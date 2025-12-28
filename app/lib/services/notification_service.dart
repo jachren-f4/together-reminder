@@ -167,14 +167,58 @@ class NotificationService {
   }
 
   /// Sync current push token to server (call on app start if authenticated)
+  ///
+  /// This handles both cases:
+  /// 1. User already has permission - sync immediately
+  /// 2. User doesn't have permission yet - skip (will sync after LP intro grants permission)
   static Future<void> syncTokenToServer() async {
+    if (kIsWeb) return;
+
     try {
-      final token = await getToken();
-      if (token != null) {
-        final userProfileService = UserProfileService();
-        final platform = _getPlatform();
-        await userProfileService.syncPushToken(token, platform);
-        Logger.debug('Push token synced on startup', service: 'notification');
+      // First check if we already have permission (without showing dialog)
+      final settings = await _fcm.getNotificationSettings();
+
+      if (settings.authorizationStatus != AuthorizationStatus.authorized) {
+        // Permission not granted yet - skip silently
+        // Token will be synced when user grants permission via LP intro
+        Logger.debug('Push token sync skipped - permission not granted yet', service: 'notification');
+        return;
+      }
+
+      // Permission granted - get and sync token
+      // Retry a few times since APNs token might not be ready immediately
+      String? token;
+      for (int attempt = 0; attempt < 3; attempt++) {
+        token = await getToken();
+        if (token != null) break;
+
+        // Wait a bit for APNs token to arrive
+        await Future.delayed(const Duration(milliseconds: 500));
+        Logger.debug('Push token retry ${attempt + 1}/3', service: 'notification');
+      }
+
+      if (token == null) {
+        Logger.warn('Push token sync failed - token is null after retries', service: 'notification');
+        return;
+      }
+
+      // Sync token to server with retry logic for network failures
+      final userProfileService = UserProfileService();
+      final platform = _getPlatform();
+
+      for (int apiAttempt = 0; apiAttempt < 3; apiAttempt++) {
+        try {
+          await userProfileService.syncPushToken(token, platform);
+          Logger.success('Push token synced to server', service: 'notification');
+          return; // Success - exit
+        } catch (e) {
+          if (apiAttempt < 2) {
+            Logger.debug('Push token API retry ${apiAttempt + 1}/3: $e', service: 'notification');
+            await Future.delayed(const Duration(seconds: 1));
+          } else {
+            Logger.warn('Push token sync failed after 3 attempts: $e', service: 'notification');
+          }
+        }
       }
     } catch (e) {
       Logger.warn('Failed to sync push token on startup: $e', service: 'notification');

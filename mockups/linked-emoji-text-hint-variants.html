@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Linked Emoji + Text Hint Variants</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #f5f5f5;
+      padding: 20px;
+      min-height: 100vh;
+    }
+
+    h1 {
+      font-family: Georgia, serif;
+      font-size: 24px;
+      margin-bottom: 8px;
+      color: #1a1a1a;
+    }
+
+    .description {
+      color: #666;
+      margin-bottom: 30px;
+      font-size: 14px;
+      line-height: 1.5;
+      max-width: 600px;
+    }
+
+    .variants-container {
+      display: flex;
+      gap: 60px;
+      flex-wrap: wrap;
+    }
+
+    .variant {
+      background: white;
+      padding: 20px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+    }
+
+    .variant h2 {
+      font-size: 16px;
+      margin-bottom: 8px;
+      color: #1a1a1a;
+    }
+
+    .variant-description {
+      font-size: 12px;
+      color: #666;
+      margin-bottom: 16px;
+      line-height: 1.4;
+    }
+
+    .grid-container {
+      background: #f8f6f1;
+      padding: 8px;
+      display: inline-block;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(4, 48px);
+      grid-template-rows: repeat(2, 48px);
+      gap: 2px;
+      background: #1a1a1a;
+      padding: 2px;
+    }
+
+    .cell {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: Arial, sans-serif;
+      font-weight: 800;
+      position: relative;
+    }
+
+    .cell.void {
+      background: rgba(26, 26, 26, 0.13);
+    }
+
+    .cell.answer {
+      background: #ffffff;
+    }
+
+    .cell.answer span {
+      font-size: 22px;
+      color: rgba(26, 26, 26, 0.87);
+    }
+
+    /* Base clue cell style */
+    .cell.clue {
+      background: #e8e4d9;
+      padding: 2px;
+      flex-direction: column;
+    }
+
+    .cell.clue .arrow {
+      position: absolute;
+      font-size: 6px;
+      color: #888;
+    }
+
+    .cell.clue .arrow.right {
+      top: 1px;
+      right: 2px;
+    }
+
+    .cell.clue .arrow.down {
+      bottom: 1px;
+      left: 2px;
+    }
+
+    /* ========================================
+       VARIANT 1: Stacked Left-Right Offset
+       Emoji left-aligned top, text right-aligned bottom
+       ======================================== */
+    .variant1 .cell.clue.emoji-text {
+      justify-content: space-between;
+      align-items: stretch;
+      padding: 3px 4px;
+    }
+
+    .variant1 .cell.clue.emoji-text .emoji-row {
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      flex: 1;
+    }
+
+    .variant1 .cell.clue.emoji-text .emoji-row .emoji {
+      font-size: 18px;
+      line-height: 1;
+    }
+
+    .variant1 .cell.clue.emoji-text .text-row {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      flex: 1;
+    }
+
+    .variant1 .cell.clue.emoji-text .text-row .text {
+      font-size: 10px;
+      font-weight: 800;
+      color: #1a1a1a;
+      text-transform: uppercase;
+      font-family: Arial, sans-serif;
+      letter-spacing: -0.5px;
+    }
+
+    /* ========================================
+       VARIANT 2: Centered Stack with Divider
+       Both centered, subtle line between
+       ======================================== */
+    .variant2 .cell.clue.emoji-text {
+      justify-content: center;
+      align-items: center;
+      padding: 2px;
+      gap: 1px;
+    }
+
+    .variant2 .cell.clue.emoji-text .emoji-row {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex: 1;
+    }
+
+    .variant2 .cell.clue.emoji-text .emoji-row .emoji {
+      font-size: 16px;
+      line-height: 1;
+    }
+
+    .variant2 .cell.clue.emoji-text .divider {
+      width: 70%;
+      height: 1px;
+      background: rgba(0, 0, 0, 0.15);
+    }
+
+    .variant2 .cell.clue.emoji-text .text-row {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex: 1;
+    }
+
+    .variant2 .cell.clue.emoji-text .text-row .text {
+      font-size: 9px;
+      font-weight: 800;
+      color: #1a1a1a;
+      text-transform: uppercase;
+      font-family: Arial, sans-serif;
+      letter-spacing: 0.5px;
+    }
+
+    /* ========================================
+       VARIANT 3: Diagonal Layout
+       Emoji top-left, text bottom-right
+       ======================================== */
+    .variant3 .cell.clue.emoji-text {
+      justify-content: space-between;
+      align-items: stretch;
+      padding: 3px;
+    }
+
+    .variant3 .cell.clue.emoji-text .emoji-row {
+      display: flex;
+      justify-content: flex-start;
+      align-items: flex-start;
+    }
+
+    .variant3 .cell.clue.emoji-text .emoji-row .emoji {
+      font-size: 16px;
+      line-height: 1;
+    }
+
+    .variant3 .cell.clue.emoji-text .text-row {
+      display: flex;
+      justify-content: flex-end;
+      align-items: flex-end;
+    }
+
+    .variant3 .cell.clue.emoji-text .text-row .text {
+      font-size: 10px;
+      font-weight: 800;
+      color: #555;
+      text-transform: uppercase;
+      font-family: Arial, sans-serif;
+      letter-spacing: -0.3px;
+      background: rgba(255, 255, 255, 0.5);
+      padding: 1px 3px;
+      border-radius: 2px;
+    }
+
+    /* Regular emoji-only clue for comparison */
+    .cell.clue.emoji-only {
+      justify-content: center;
+      align-items: center;
+    }
+
+    .cell.clue.emoji-only .emoji {
+      font-size: 28px;
+    }
+
+    /* Regular text clue for comparison */
+    .cell.clue.text-only {
+      justify-content: center;
+      align-items: center;
+    }
+
+    .cell.clue.text-only .text {
+      font-size: 10px;
+      font-weight: 800;
+      color: #1a1a1a;
+      text-transform: uppercase;
+      text-align: center;
+      line-height: 1.1;
+    }
+
+    .pros-cons {
+      margin-top: 16px;
+      font-size: 11px;
+    }
+
+    .pros-cons .pro {
+      color: #4caf50;
+    }
+
+    .pros-cons .con {
+      color: #f44336;
+    }
+
+    .comparison {
+      margin-top: 40px;
+      padding: 20px;
+      background: white;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      max-width: 500px;
+    }
+
+    .comparison h3 {
+      font-size: 14px;
+      margin-bottom: 16px;
+    }
+
+    .comparison-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 48px);
+      gap: 8px;
+    }
+
+    .comparison-item {
+      text-align: center;
+    }
+
+    .comparison-item .label {
+      font-size: 10px;
+      color: #666;
+      margin-top: 4px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Emoji + Text Hint Variants</h1>
+  <p class="description">
+    When an emoji clue points to a single letter, an optional text hint shows which letter is needed.
+    Example: "🍑 _SS" means the solver needs "A" (from ASS). The emoji goes on top, text on bottom.
+  </p>
+
+  <div class="variants-container">
+    <!-- VARIANT 1 -->
+    <div class="variant variant1">
+      <h2>Variant 1: Offset Stack</h2>
+      <p class="variant-description">
+        Emoji left-aligned on top row<br>
+        Text right-aligned on bottom row<br>
+        Creates diagonal visual flow
+      </p>
+
+      <div class="grid-container">
+        <div class="grid">
+          <!-- Row 1: clue cells -->
+          <div class="cell clue emoji-text">
+            <div class="emoji-row"><span class="emoji">🍑</span></div>
+            <div class="text-row"><span class="text">_SS</span></div>
+            <span class="arrow right">▶</span>
+          </div>
+          <div class="cell clue emoji-text">
+            <div class="emoji-row"><span class="emoji">❤️</span></div>
+            <div class="text-row"><span class="text">LO_E</span></div>
+            <span class="arrow down">▼</span>
+          </div>
+          <div class="cell clue emoji-text">
+            <div class="emoji-row"><span class="emoji">🛏️</span></div>
+            <div class="text-row"><span class="text">_ED</span></div>
+            <span class="arrow right">▶</span>
+          </div>
+          <div class="cell clue emoji-only">
+            <span class="emoji">🌟</span>
+            <span class="arrow down">▼</span>
+          </div>
+          <!-- Row 2: answer cells -->
+          <div class="cell answer"><span>A</span></div>
+          <div class="cell answer"><span>V</span></div>
+          <div class="cell answer"><span>B</span></div>
+          <div class="cell answer"><span></span></div>
+        </div>
+      </div>
+
+      <div class="pros-cons">
+        <span class="pro">+ Good space usage</span><br>
+        <span class="pro">+ Clear visual hierarchy</span><br>
+        <span class="con">- Asymmetric look</span>
+      </div>
+    </div>
+
+    <!-- VARIANT 2 -->
+    <div class="variant variant2">
+      <h2>Variant 2: Centered + Divider</h2>
+      <p class="variant-description">
+        Both emoji and text centered<br>
+        Subtle horizontal divider between<br>
+        Clean, symmetrical appearance
+      </p>
+
+      <div class="grid-container">
+        <div class="grid">
+          <!-- Row 1: clue cells -->
+          <div class="cell clue emoji-text">
+            <div class="emoji-row"><span class="emoji">🍑</span></div>
+            <div class="divider"></div>
+            <div class="text-row"><span class="text">_SS</span></div>
+            <span class="arrow right">▶</span>
+          </div>
+          <div class="cell clue emoji-text">
+            <div class="emoji-row"><span class="emoji">❤️</span></div>
+            <div class="divider"></div>
+            <div class="text-row"><span class="text">LO_E</span></div>
+            <span class="arrow down">▼</span>
+          </div>
+          <div class="cell clue emoji-text">
+            <div class="emoji-row"><span class="emoji">🛏️</span></div>
+            <div class="divider"></div>
+            <div class="text-row"><span class="text">_ED</span></div>
+            <span class="arrow right">▶</span>
+          </div>
+          <div class="cell clue emoji-only">
+            <span class="emoji">🌟</span>
+            <span class="arrow down">▼</span>
+          </div>
+          <!-- Row 2: answer cells -->
+          <div class="cell answer"><span>A</span></div>
+          <div class="cell answer"><span>V</span></div>
+          <div class="cell answer"><span>B</span></div>
+          <div class="cell answer"><span></span></div>
+        </div>
+      </div>
+
+      <div class="pros-cons">
+        <span class="pro">+ Clean, organized look</span><br>
+        <span class="pro">+ Similar to split clue style</span><br>
+        <span class="con">- Slightly smaller elements</span>
+      </div>
+    </div>
+
+    <!-- VARIANT 3 -->
+    <div class="variant variant3">
+      <h2>Variant 3: Diagonal Corners</h2>
+      <p class="variant-description">
+        Emoji in top-left corner<br>
+        Text in bottom-right with pill background<br>
+        Maximum visual separation
+      </p>
+
+      <div class="grid-container">
+        <div class="grid">
+          <!-- Row 1: clue cells -->
+          <div class="cell clue emoji-text">
+            <div class="emoji-row"><span class="emoji">🍑</span></div>
+            <div class="text-row"><span class="text">_SS</span></div>
+            <span class="arrow right">▶</span>
+          </div>
+          <div class="cell clue emoji-text">
+            <div class="emoji-row"><span class="emoji">❤️</span></div>
+            <div class="text-row"><span class="text">LO_E</span></div>
+            <span class="arrow down">▼</span>
+          </div>
+          <div class="cell clue emoji-text">
+            <div class="emoji-row"><span class="emoji">🛏️</span></div>
+            <div class="text-row"><span class="text">_ED</span></div>
+            <span class="arrow right">▶</span>
+          </div>
+          <div class="cell clue emoji-only">
+            <span class="emoji">🌟</span>
+            <span class="arrow down">▼</span>
+          </div>
+          <!-- Row 2: answer cells -->
+          <div class="cell answer"><span>A</span></div>
+          <div class="cell answer"><span>V</span></div>
+          <div class="cell answer"><span>B</span></div>
+          <div class="cell answer"><span></span></div>
+        </div>
+      </div>
+
+      <div class="pros-cons">
+        <span class="pro">+ Text stands out with pill</span><br>
+        <span class="pro">+ Clear separation</span><br>
+        <span class="con">- More visual complexity</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Comparison section -->
+  <div class="comparison">
+    <h3>Comparison: Emoji+Text vs Regular Clues</h3>
+    <p style="font-size: 12px; color: #666; margin-bottom: 12px;">
+      Left: Emoji with text hint (single letter)<br>
+      Middle: Emoji only (full word)<br>
+      Right: Text only clue
+    </p>
+    <div class="comparison-grid">
+      <div class="comparison-item">
+        <div class="grid-container" style="padding: 4px;">
+          <div class="grid variant1" style="grid-template-columns: 48px; grid-template-rows: 48px;">
+            <div class="cell clue emoji-text">
+              <div class="emoji-row"><span class="emoji">🍑</span></div>
+              <div class="text-row"><span class="text">_SS</span></div>
+              <span class="arrow right">▶</span>
+            </div>
+          </div>
+        </div>
+        <div class="label">Emoji + Text</div>
+      </div>
+      <div class="comparison-item">
+        <div class="grid-container" style="padding: 4px;">
+          <div class="grid" style="grid-template-columns: 48px; grid-template-rows: 48px;">
+            <div class="cell clue emoji-only">
+              <span class="emoji">🌟</span>
+              <span class="arrow right">▶</span>
+            </div>
+          </div>
+        </div>
+        <div class="label">Emoji Only</div>
+      </div>
+      <div class="comparison-item">
+        <div class="grid-container" style="padding: 4px;">
+          <div class="grid" style="grid-template-columns: 48px; grid-template-rows: 48px;">
+            <div class="cell clue text-only">
+              <span class="text">COME<br>___</span>
+              <span class="arrow right">▶</span>
+            </div>
+          </div>
+        </div>
+        <div class="label">Text Only</div>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>

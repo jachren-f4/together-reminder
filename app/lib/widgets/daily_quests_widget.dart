@@ -5,6 +5,7 @@ import '../services/daily_quest_service.dart';
 import '../services/home_polling_service.dart';
 import '../services/love_point_service.dart';
 import '../services/unlock_service.dart';
+import '../services/you_or_me_match_service.dart';
 import '../theme/app_theme.dart';
 import '../config/brand/brand_loader.dart';
 import '../utils/logger.dart';
@@ -13,6 +14,12 @@ import '../widgets/animations/dramatic_entrance_widgets.dart';
 import '../screens/quiz_intro_screen.dart';
 import '../screens/affirmation_intro_screen.dart';
 import '../screens/you_or_me_match_intro_screen.dart';
+import '../screens/quiz_match_results_screen.dart';
+import '../screens/quiz_match_waiting_screen.dart';
+import '../screens/you_or_me_match_results_screen.dart';
+import '../screens/game_waiting_screen.dart';
+import '../services/quiz_match_service.dart';
+import '../services/unified_game_service.dart';
 
 /// Global RouteObserver for tracking navigation events
 /// This should be added to MaterialApp's navigatorObservers
@@ -36,6 +43,10 @@ class _DailyQuestsWidgetState extends State<DailyQuestsWidget> with RouteAware {
   late DailyQuestService _questService;
   UnlockState? _unlockState;
 
+  // Optimistic guidance override - takes precedence over server state
+  // Set when returning from a quest, cleared when server state is fetched
+  GuidanceTarget? _guidanceTargetOverride;
+
   // Track whether we're still waiting for initial quest load
   // This prevents showing the ugly "No Daily Quests Yet" flash
   bool _isInitialLoad = true;
@@ -53,6 +64,9 @@ class _DailyQuestsWidgetState extends State<DailyQuestsWidget> with RouteAware {
 
     // Fetch unlock state for You or Me locking
     _fetchUnlockState();
+
+    // Register unlock change callback to refresh when features are unlocked
+    _unlockService.addOnUnlockChanged(_onUnlockChanged);
 
     // Mark initial load complete after a brief delay
     // This gives QuestInitializationService time to sync if needed
@@ -90,6 +104,8 @@ class _DailyQuestsWidgetState extends State<DailyQuestsWidget> with RouteAware {
       if (mounted && state != null) {
         setState(() {
           _unlockState = state;
+          // Clear optimistic override now that we have real server state
+          _guidanceTargetOverride = null;
         });
       }
     } catch (e) {
@@ -108,15 +124,53 @@ class _DailyQuestsWidgetState extends State<DailyQuestsWidget> with RouteAware {
   }
 
   @override
-  void didPopNext() {
+  void didPopNext() async {
     // Called when a route has been popped off, and this route is now visible
     // This happens when returning from quiz/waiting/results screens
     if (mounted) {
       // Force immediate poll when returning from a game screen
-      _pollingService.pollNow();
+      // MUST await before setState to prevent flash (stale data → fresh data)
+      await _pollingService.pollNow();
+      if (!mounted) return;
+
+      // Optimistically update guidance to point to next incomplete quest
+      // This ensures quest cards and hand position update together instantly
+      _updateGuidanceOptimistically();
       setState(() {});
-      Logger.debug('Route popped - refreshing quest cards', service: 'quest');
+
+      // Then fetch real unlock state in background (for accuracy)
+      _fetchUnlockState();
+      Logger.debug('Route popped - refreshing quest cards with optimistic guidance', service: 'quest');
     }
+  }
+
+  /// Optimistically update guidance target based on local quest completion state
+  /// Points to the first incomplete quest (both partners must have completed previous ones)
+  void _updateGuidanceOptimistically() {
+    final quests = _questService.getMainDailyQuests();
+
+    // Find first incomplete quest (both partners completed = isCompleted)
+    GuidanceTarget? newTarget;
+    for (final quest in quests) {
+      if (!quest.isCompleted) {
+        // This is the first incomplete quest - point here
+        if (quest.type == QuestType.quiz && quest.formatType == 'classic') {
+          newTarget = GuidanceTarget.classicQuiz;
+        } else if (quest.type == QuestType.quiz && quest.formatType == 'affirmation') {
+          newTarget = GuidanceTarget.affirmationQuiz;
+        } else if (quest.type == QuestType.youOrMe) {
+          newTarget = GuidanceTarget.youOrMe;
+        }
+        break;
+      }
+    }
+
+    // If all daily quests completed, point to side quests (linked)
+    newTarget ??= GuidanceTarget.linked;
+
+    // Set the override - this takes precedence until server state arrives
+    _guidanceTargetOverride = newTarget;
+    Logger.debug('Optimistic guidance update: pointing to $newTarget', service: 'guidance');
   }
 
   /// Called when HomePollingService detects quest updates
@@ -128,11 +182,26 @@ class _DailyQuestsWidgetState extends State<DailyQuestsWidget> with RouteAware {
     }
   }
 
+  /// Called when UnlockService detects new unlocks (e.g., after quiz completion)
+  void _onUnlockChanged() {
+    if (mounted) {
+      Logger.debug('Unlock state changed - refreshing from service cache', service: 'quest');
+      // Get the updated state from service's cache (already updated by notifyCompletion)
+      final updatedState = _unlockService.cachedState;
+      if (updatedState != null) {
+        setState(() {
+          _unlockState = updatedState;
+        });
+      }
+    }
+  }
+
   @override
   void dispose() {
     questRouteObserver.unsubscribe(this);
     _pollingService.unsubscribeFromTopic('dailyQuests', _onQuestUpdate);
     _pollingService.unsubscribe();
+    _unlockService.removeOnUnlockChanged(_onUnlockChanged); // Remove unlock callback
     super.dispose();
   }
 
@@ -141,6 +210,15 @@ class _DailyQuestsWidgetState extends State<DailyQuestsWidget> with RouteAware {
     final user = _storage.getUser();
     final quests = _questService.getMainDailyQuests();
     final allCompleted = _questService.areAllMainQuestsCompleted();
+
+    // Debug: Log quest completion state on every build
+    for (final quest in quests) {
+      Logger.debug(
+        '🎯 Quest build: ${quest.formatType} status=${quest.status} '
+        'completions=${quest.userCompletions} userId=${user?.id}',
+        service: 'quest-debug',
+      );
+    }
 
     return Container(
       decoration: BoxDecoration(
@@ -202,6 +280,7 @@ class _DailyQuestsWidgetState extends State<DailyQuestsWidget> with RouteAware {
             currentUserId: user?.id,
             onQuestTap: _handleQuestTap,
             isLockedBuilder: _getQuestLockState,
+            guidanceBuilder: _getGuidanceState,
           ),
 
         const SizedBox(height: 24),
@@ -344,12 +423,89 @@ class _DailyQuestsWidgetState extends State<DailyQuestsWidget> with RouteAware {
       final isLocked = !_unlockState!.isFeatureUnlocked(UnlockableFeature.youOrMe);
       return (
         isLocked: isLocked,
-        unlockCriteria: isLocked ? 'Complete a quest first' : null,
+        unlockCriteria: isLocked ? 'Complete quizzes first' : null,
       );
     }
 
     // Daily quizzes (classic, affirmation) are never locked
     return (isLocked: false, unlockCriteria: null);
+  }
+
+  /// Determine if a daily quest should show onboarding guidance
+  ({bool showGuidance, String? guidanceText}) _getGuidanceState(DailyQuest quest) {
+    // If unlock state hasn't loaded yet, don't show guidance
+    if (_unlockState == null) {
+      return (showGuidance: false, guidanceText: null);
+    }
+
+    final storage = StorageService();
+    final user = storage.getUser();
+    final userId = user?.id;
+
+    // Check if any quest is in "waiting for partner" state
+    // If user completed but partner hasn't, suppress all guidance - user should wait for results
+    if (userId != null) {
+      final allQuests = _questService.getMainDailyQuests();
+      final anyWaitingForPartner = allQuests.any((q) {
+        final userCompleted = q.hasUserCompleted(userId);
+        final bothCompleted = q.isCompleted;
+        return userCompleted && !bothCompleted;
+      });
+      if (anyWaitingForPartner) {
+        Logger.debug('_getGuidanceState: SUPPRESSING all guidance (waiting for partner)', service: 'guidance');
+        return (showGuidance: false, guidanceText: null);
+      }
+    }
+
+    // Check for pending results - user needs to see results before moving on
+    // Order: classic_quiz (1) → affirmation_quiz (2) → you_or_me (3)
+    final hasClassicPending = storage.hasPendingResults('classic_quiz');
+    final hasAffirmationPending = storage.hasPendingResults('affirmation_quiz');
+    final hasYouOrMePending = storage.hasPendingResults('you_or_me');
+    final anyPending = hasClassicPending || hasAffirmationPending || hasYouOrMePending;
+
+    Logger.debug('_getGuidanceState: quest=${quest.type.name} format=${quest.formatType} '
+        'pending=[classic:$hasClassicPending, affirmation:$hasAffirmationPending, youOrMe:$hasYouOrMePending]',
+        service: 'guidance');
+
+    // If any quest has pending results, only that quest shows guidance
+    // Earlier quests take priority - all others are suppressed
+    if (anyPending) {
+      if (quest.type == QuestType.quiz && quest.formatType == 'classic' && hasClassicPending) {
+        Logger.debug('_getGuidanceState: showing guidance on CLASSIC (pending)', service: 'guidance');
+        return (showGuidance: true, guidanceText: 'Continue Here');
+      }
+      if (quest.type == QuestType.quiz && quest.formatType == 'affirmation' && hasAffirmationPending && !hasClassicPending) {
+        Logger.debug('_getGuidanceState: showing guidance on AFFIRMATION (pending)', service: 'guidance');
+        return (showGuidance: true, guidanceText: 'Continue Here');
+      }
+      if (quest.type == QuestType.youOrMe && hasYouOrMePending && !hasClassicPending && !hasAffirmationPending) {
+        Logger.debug('_getGuidanceState: showing guidance on YOU_OR_ME (pending)', service: 'guidance');
+        return (showGuidance: true, guidanceText: 'Continue Here');
+      }
+      // Some other quest has pending results - suppress guidance on this quest
+      Logger.debug('_getGuidanceState: SUPPRESSING guidance on ${quest.type.name} (other quest has pending)', service: 'guidance');
+      return (showGuidance: false, guidanceText: null);
+    }
+
+    // Use optimistic override if set, otherwise use server state
+    final target = _guidanceTargetOverride ?? _unlockState!.currentGuidanceTarget;
+    final text = _unlockState!.guidanceText;
+
+    // Match quest type to guidance target
+    if (quest.type == QuestType.quiz) {
+      if (quest.formatType == 'classic' && target == GuidanceTarget.classicQuiz) {
+        return (showGuidance: true, guidanceText: text);
+      }
+      if (quest.formatType == 'affirmation' && target == GuidanceTarget.affirmationQuiz) {
+        return (showGuidance: true, guidanceText: text);
+      }
+    }
+    if (quest.type == QuestType.youOrMe && target == GuidanceTarget.youOrMe) {
+      return (showGuidance: true, guidanceText: text);
+    }
+
+    return (showGuidance: false, guidanceText: null);
   }
 
   void _handleQuestTap(DailyQuest quest) async {
@@ -397,11 +553,80 @@ class _DailyQuestsWidgetState extends State<DailyQuestsWidget> with RouteAware {
   }
 
   Future<void> _handleQuizQuestTap(DailyQuest quest) async {
-    // Always show intro screen first
-    // The game screen will handle redirecting to waiting/results if user has already answered
-    // NOTE: We don't skip intro based on local userCompletions because:
-    // 1. With cooldown disabled, server may create a new match even after "completion"
-    // 2. The game screen properly handles all states (new, in-progress, waiting, completed)
+    final storage = StorageService();
+    final contentType = quest.formatType == 'affirmation' ? 'affirmation_quiz' : 'classic_quiz';
+    final quizType = quest.formatType == 'affirmation' ? 'affirmation' : 'classic';
+    final user = storage.getUser();
+    final userId = user?.id;
+
+    // Check for pending results (user was on waiting screen and killed app)
+    final pendingMatchId = storage.getPendingResultsMatchId(contentType);
+
+    // Check if user has completed but partner hasn't (waiting for partner state)
+    final userCompleted = userId != null && quest.hasUserCompleted(userId);
+    final bothCompleted = quest.isCompleted;
+    final waitingForPartner = userCompleted && !bothCompleted;
+
+    Logger.debug('Quiz tap: contentType=$contentType userCompleted=$userCompleted '
+        'bothCompleted=$bothCompleted pendingMatchId=$pendingMatchId',
+        service: 'quest');
+
+    // Case 1: Both completed AND we have pendingMatchId → show results
+    // If no pendingMatchId, user already saw results - fall through to start new game
+    if (bothCompleted && pendingMatchId != null) {
+      await Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => QuizMatchResultsScreen(
+            matchId: pendingMatchId,
+            quizType: quizType,
+            fromPendingResults: true,
+          ),
+        ),
+      );
+      return;
+    }
+
+    // Case 2: User completed, waiting for partner → go directly to waiting screen
+    if (waitingForPartner) {
+      String matchId;
+
+      if (pendingMatchId != null) {
+        // Use stored matchId
+        matchId = pendingMatchId;
+      } else {
+        // No stored matchId - fetch active match from server
+        // getOrCreateMatch returns existing match if user already submitted
+        try {
+          final state = await QuizMatchService().getOrCreateMatch(quizType);
+          matchId = state.match.id;
+
+          // Store it for future use
+          await storage.setPendingResultsMatchId(contentType, matchId);
+          Logger.debug('Restored matchId from server: $matchId', service: 'quest');
+        } catch (e) {
+          Logger.error('Failed to get active match, falling back to intro', error: e, service: 'quest');
+          // Fall through to intro screen
+          matchId = '';
+        }
+      }
+
+      if (matchId.isNotEmpty) {
+        await Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => QuizMatchWaitingScreen(
+              matchId: matchId,
+              quizType: quizType,
+              questId: quest.id,
+            ),
+          ),
+        );
+        return;
+      }
+    }
+
+    // Case 3: Normal flow - show intro screen
     if (quest.formatType == 'affirmation') {
       await Navigator.push(
         context,
@@ -427,7 +652,89 @@ class _DailyQuestsWidgetState extends State<DailyQuestsWidget> with RouteAware {
   }
 
   Future<void> _handleYouOrMeQuestTap(DailyQuest quest) async {
-    // Always show intro screen first (same reasoning as quiz quests)
+    final storage = StorageService();
+    const contentType = 'you_or_me';
+    final user = storage.getUser();
+    final userId = user?.id;
+
+    // Check for pending results (user was on waiting screen and killed app)
+    final pendingMatchId = storage.getPendingResultsMatchId(contentType);
+
+    // Check if user has completed but partner hasn't (waiting for partner state)
+    final userCompleted = userId != null && quest.hasUserCompleted(userId);
+    final bothCompleted = quest.isCompleted;
+    final waitingForPartner = userCompleted && !bothCompleted;
+
+    Logger.debug('YouOrMe tap: userCompleted=$userCompleted '
+        'bothCompleted=$bothCompleted pendingMatchId=$pendingMatchId',
+        service: 'quest');
+
+    // Case 1: Both completed AND we have pendingMatchId → show results
+    // If no pendingMatchId, user already saw results - fall through to start new game
+    if (bothCompleted && pendingMatchId != null) {
+      try {
+        final state = await YouOrMeMatchService().pollMatchState(pendingMatchId);
+
+        if (mounted && state.isCompleted) {
+          await Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => YouOrMeMatchResultsScreen(
+                match: state.match,
+                quiz: state.quiz,
+                myScore: state.myScore,
+                partnerScore: state.partnerScore,
+                fromPendingResults: true,
+                matchPercentage: state.matchPercentage,
+                userAnswers: state.userAnswers,
+                partnerAnswers: state.partnerAnswers,
+              ),
+            ),
+          );
+          return;
+        }
+      } catch (e) {
+        Logger.error('Failed to fetch completed results', error: e, service: 'you_or_me');
+        await storage.clearPendingResultsMatchId(contentType);
+        // Fall through to intro screen
+      }
+    }
+
+    // Case 2: User completed, waiting for partner → go directly to waiting screen
+    if (waitingForPartner) {
+      String matchId;
+
+      if (pendingMatchId != null) {
+        matchId = pendingMatchId;
+      } else {
+        // No stored matchId - fetch active match from server
+        try {
+          final state = await YouOrMeMatchService().getOrCreateMatch();
+          matchId = state.match.id;
+          await storage.setPendingResultsMatchId(contentType, matchId);
+          Logger.debug('Restored YouOrMe matchId from server: $matchId', service: 'quest');
+        } catch (e) {
+          Logger.error('Failed to get active YouOrMe match, falling back to intro', error: e, service: 'quest');
+          matchId = '';
+        }
+      }
+
+      if (matchId.isNotEmpty) {
+        await Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => GameWaitingScreen(
+              matchId: matchId,
+              gameType: GameType.you_or_me,
+              questId: quest.id,
+            ),
+          ),
+        );
+        return;
+      }
+    }
+
+    // Case 3: Normal flow - show intro screen
     await Navigator.push(
       context,
       MaterialPageRoute(

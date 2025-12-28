@@ -1,6 +1,6 @@
 {
   "quizId": "quiz_009",
-  "title": "Playful Quiz 9",
+  "title": "Embarrassing!",
   "branch": "playful",
   "questions": [
     {
@@ -33,5 +33,6 @@
       "prompt": "Who would...",
       "content": "Create an elaborate treasure hunt"
     }
-  ]
+  ],
+  "description": "Who's more likely to trip in public or call someone the wrong name?"
 }

@@ -1,6 +1,8 @@
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import '../config/brand/brand_loader.dart';
+import '../config/brand/brand_config.dart';
+import '../config/brand/us2_theme.dart';
 import '../theme/app_theme.dart';
 import '../services/storage_service.dart';
 import '../services/steps_feature_service.dart';
@@ -32,6 +34,8 @@ class _StepsClaimScreenState extends State<StepsClaimScreen>
     with TickerProviderStateMixin {
   final StepsFeatureService _stepsService = StepsFeatureService();
   final StorageService _storage = StorageService();
+
+  bool get _isUs2 => BrandLoader().config.brand == Brand.us2;
 
   late AnimationController _confettiController;
   late AnimationController _scaleController;
@@ -85,93 +89,135 @@ class _StepsClaimScreenState extends State<StepsClaimScreen>
     final tierName = _getTierName(widget.stepsDay.combinedSteps);
 
     return Scaffold(
-      backgroundColor: BrandLoader().colors.surface,
-      body: Stack(
-        children: [
-          // Main content
-          SafeArea(
-            child: Column(
-              children: [
-                // App bar
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-                  child: Row(
-                    children: [
-                      IconButton(
-                        icon: Icon(Icons.arrow_back,
-                            color: BrandLoader().colors.textPrimary),
-                        onPressed: () => Navigator.pop(context),
-                      ),
-                      Expanded(
-                        child: Text(
-                          'Claim Reward',
-                          style: AppTheme.headlineFont.copyWith(
-                            fontSize: 18,
-                            fontWeight: FontWeight.w600,
-                            color: BrandLoader().colors.textPrimary,
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
-                      ),
-                      const SizedBox(width: 48), // Balance the back button
-                    ],
-                  ),
-                ),
-
-                // Hero section
-                Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.symmetric(vertical: 48),
-                  decoration: BoxDecoration(
-                    color: BrandLoader().colors.textPrimary,
-                  ),
-                  child: Column(
-                    children: [
-                      // Animated reward amount
-                      AnimatedBuilder(
-                        animation: _scaleAnimation,
-                        builder: (context, child) {
-                          return Transform.scale(
-                            scale: _scaleAnimation.value,
-                            child: Text(
-                              '+$earnedLP',
-                              style: AppTheme.headlineFont.copyWith(
-                                fontSize: 72,
-                                fontWeight: FontWeight.w700,
-                                color: Colors.white,
+      backgroundColor: _isUs2 ? Us2Theme.bgGradientEnd : BrandLoader().colors.surface,
+      body: Container(
+        decoration: _isUs2
+            ? const BoxDecoration(gradient: Us2Theme.backgroundGradient)
+            : null,
+        child: Stack(
+          children: [
+            // Main content
+            SafeArea(
+              child: Column(
+                children: [
+                  // App bar
+                  Padding(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: _isUs2 ? 8 : 8,
+                      vertical: _isUs2 ? 60 : 8,
+                    ),
+                    child: Row(
+                      children: [
+                        _isUs2
+                            ? GestureDetector(
+                                onTap: () => Navigator.pop(context),
+                                child: Container(
+                                  width: 40,
+                                  height: 40,
+                                  decoration: BoxDecoration(
+                                    color: Colors.transparent,
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: const Icon(Icons.arrow_back, color: Us2Theme.textDark, size: 24),
+                                ),
+                              )
+                            : IconButton(
+                                icon: Icon(Icons.arrow_back,
+                                    color: BrandLoader().colors.textPrimary),
+                                onPressed: () => Navigator.pop(context),
                               ),
-                            ),
-                          );
-                        },
-                      ),
-                      Text(
-                        'Love Points',
-                        style: AppTheme.headlineFont.copyWith(
-                          fontSize: 18,
-                          color: Colors.white.withOpacity(0.8),
-                        ),
-                      ),
-                      const SizedBox(height: 16),
-                      // Tier badge
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 16, vertical: 8),
-                        decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.2),
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        child: Text(
-                          '$tierName Tier Reached',
-                          style: const TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w600,
-                            color: Colors.white,
+                        Expanded(
+                          child: Text(
+                            'Claim Reward',
+                            style: _isUs2
+                                ? const TextStyle(
+                                    fontFamily: Us2Theme.fontHeading,
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w600,
+                                    color: Us2Theme.textDark,
+                                  )
+                                : AppTheme.headlineFont.copyWith(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w600,
+                                    color: BrandLoader().colors.textPrimary,
+                                  ),
+                            textAlign: TextAlign.center,
                           ),
                         ),
-                      ),
-                    ],
+                        const SizedBox(width: 48), // Balance the back button
+                      ],
+                    ),
                   ),
-                ),
+
+                  // Hero section
+                  Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.symmetric(vertical: 48),
+                    decoration: BoxDecoration(
+                      color: _isUs2 ? null : BrandLoader().colors.textPrimary,
+                      gradient: _isUs2 ? Us2Theme.accentGradient : null,
+                    ),
+                    child: Column(
+                      children: [
+                        // Animated reward amount
+                        AnimatedBuilder(
+                          animation: _scaleAnimation,
+                          builder: (context, child) {
+                            return Transform.scale(
+                              scale: _scaleAnimation.value,
+                              child: Text(
+                                '+$earnedLP',
+                                style: _isUs2
+                                    ? const TextStyle(
+                                        fontFamily: Us2Theme.fontHeading,
+                                        fontSize: 72,
+                                        fontWeight: FontWeight.w700,
+                                        color: Colors.white,
+                                      )
+                                    : AppTheme.headlineFont.copyWith(
+                                        fontSize: 72,
+                                        fontWeight: FontWeight.w700,
+                                        color: Colors.white,
+                                      ),
+                              ),
+                            );
+                          },
+                        ),
+                        Text(
+                          'Love Points',
+                          style: _isUs2
+                              ? TextStyle(
+                                  fontFamily: Us2Theme.fontHeading,
+                                  fontSize: 18,
+                                  color: Colors.white.withOpacity(0.8),
+                                )
+                              : AppTheme.headlineFont.copyWith(
+                                  fontSize: 18,
+                                  color: Colors.white.withOpacity(0.8),
+                                ),
+                        ),
+                        const SizedBox(height: 16),
+                        // Tier badge
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 16, vertical: 8),
+                          decoration: BoxDecoration(
+                            color: Colors.white.withOpacity(0.2),
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: Text(
+                            '$tierName Tier Reached',
+                            style: TextStyle(
+                              fontFamily: _isUs2 ? Us2Theme.fontBody : null,
+                              fontSize: 14,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
 
                 // Content section
                 Expanded(
@@ -223,6 +269,7 @@ class _StepsClaimScreenState extends State<StepsClaimScreen>
               ),
             ),
         ],
+        ),
       ),
     );
   }
@@ -246,17 +293,25 @@ class _StepsClaimScreenState extends State<StepsClaimScreen>
       children: [
         Text(
           'Yesterday',
-          style: AppTheme.headlineFont.copyWith(
-            fontSize: 16,
-            fontWeight: FontWeight.w600,
-            color: BrandLoader().colors.textPrimary,
-          ),
+          style: _isUs2
+              ? const TextStyle(
+                  fontFamily: Us2Theme.fontHeading,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                  color: Us2Theme.textDark,
+                )
+              : AppTheme.headlineFont.copyWith(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                  color: BrandLoader().colors.textPrimary,
+                ),
         ),
         Text(
           '${months[date.month - 1]} ${date.day}, ${date.year}',
           style: TextStyle(
+            fontFamily: _isUs2 ? Us2Theme.fontBody : null,
             fontSize: 14,
-            color: BrandLoader().colors.textSecondary,
+            color: _isUs2 ? Us2Theme.textMedium : BrandLoader().colors.textSecondary,
           ),
         ),
       ],
@@ -293,8 +348,17 @@ class _StepsClaimScreenState extends State<StepsClaimScreen>
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: const Color(0xFFF5F5F5),
+        color: _isUs2 ? Colors.white : const Color(0xFFF5F5F5),
         borderRadius: BorderRadius.circular(12),
+        boxShadow: _isUs2
+            ? [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.05),
+                  blurRadius: 10,
+                  offset: const Offset(0, 2),
+                ),
+              ]
+            : null,
       ),
       child: Column(
         children: [
@@ -302,13 +366,15 @@ class _StepsClaimScreenState extends State<StepsClaimScreen>
             width: 48,
             height: 48,
             decoration: BoxDecoration(
-              color: BrandLoader().colors.textPrimary,
+              color: _isUs2 ? null : BrandLoader().colors.textPrimary,
+              gradient: _isUs2 ? Us2Theme.accentGradient : null,
               shape: BoxShape.circle,
             ),
             child: Center(
               child: Text(
                 initial,
-                style: const TextStyle(
+                style: TextStyle(
+                  fontFamily: _isUs2 ? Us2Theme.fontHeading : null,
                   fontSize: 20,
                   fontWeight: FontWeight.w700,
                   color: Colors.white,
@@ -319,17 +385,25 @@ class _StepsClaimScreenState extends State<StepsClaimScreen>
           const SizedBox(height: 12),
           Text(
             _formatNumber(steps),
-            style: AppTheme.headlineFont.copyWith(
-              fontSize: 20,
-              fontWeight: FontWeight.w700,
-              color: BrandLoader().colors.textPrimary,
-            ),
+            style: _isUs2
+                ? const TextStyle(
+                    fontFamily: Us2Theme.fontHeading,
+                    fontSize: 20,
+                    fontWeight: FontWeight.w700,
+                    color: Us2Theme.textDark,
+                  )
+                : AppTheme.headlineFont.copyWith(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w700,
+                    color: BrandLoader().colors.textPrimary,
+                  ),
           ),
           Text(
             name,
             style: TextStyle(
+              fontFamily: _isUs2 ? Us2Theme.fontBody : null,
               fontSize: 14,
-              color: BrandLoader().colors.textSecondary,
+              color: _isUs2 ? Us2Theme.textMedium : BrandLoader().colors.textSecondary,
             ),
           ),
         ],
@@ -344,7 +418,7 @@ class _StepsClaimScreenState extends State<StepsClaimScreen>
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        border: Border.all(color: BrandLoader().colors.borderLight),
+        border: Border.all(color: _isUs2 ? Us2Theme.beige : BrandLoader().colors.borderLight, width: 2),
         borderRadius: BorderRadius.circular(12),
       ),
       child: Column(
@@ -352,24 +426,33 @@ class _StepsClaimScreenState extends State<StepsClaimScreen>
           Text(
             'Combined Steps',
             style: TextStyle(
+              fontFamily: _isUs2 ? Us2Theme.fontBody : null,
               fontSize: 12,
-              color: BrandLoader().colors.textTertiary,
+              color: _isUs2 ? Us2Theme.textLight : BrandLoader().colors.textTertiary,
             ),
           ),
           const SizedBox(height: 8),
           Text(
             _formatNumber(combinedSteps),
-            style: AppTheme.headlineFont.copyWith(
-              fontSize: 32,
-              fontWeight: FontWeight.w700,
-              color: BrandLoader().colors.textPrimary,
-            ),
+            style: _isUs2
+                ? const TextStyle(
+                    fontFamily: Us2Theme.fontHeading,
+                    fontSize: 32,
+                    fontWeight: FontWeight.w700,
+                    color: Us2Theme.textDark,
+                  )
+                : AppTheme.headlineFont.copyWith(
+                    fontSize: 32,
+                    fontWeight: FontWeight.w700,
+                    color: BrandLoader().colors.textPrimary,
+                  ),
           ),
           Text(
             'of 20,000 goal ($percentage%)',
             style: TextStyle(
+              fontFamily: _isUs2 ? Us2Theme.fontBody : null,
               fontSize: 14,
-              color: BrandLoader().colors.textSecondary,
+              color: _isUs2 ? Us2Theme.textMedium : BrandLoader().colors.textSecondary,
             ),
           ),
         ],
@@ -383,7 +466,7 @@ class _StepsClaimScreenState extends State<StepsClaimScreen>
         width: double.infinity,
         height: 56,
         decoration: BoxDecoration(
-          color: BrandLoader().colors.success,
+          color: _isUs2 ? const Color(0xFF4CAF50) : BrandLoader().colors.success,
           borderRadius: BorderRadius.circular(12),
         ),
         child: Row(
@@ -393,13 +476,64 @@ class _StepsClaimScreenState extends State<StepsClaimScreen>
             const SizedBox(width: 8),
             Text(
               'Claimed!',
-              style: AppTheme.headlineFont.copyWith(
-                fontSize: 16,
-                fontWeight: FontWeight.w600,
-                color: Colors.white,
-              ),
+              style: _isUs2
+                  ? const TextStyle(
+                      fontFamily: Us2Theme.fontBody,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.white,
+                    )
+                  : AppTheme.headlineFont.copyWith(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.white,
+                    ),
             ),
           ],
+        ),
+      );
+    }
+
+    if (_isUs2) {
+      return GestureDetector(
+        onTap: _isClaiming ? null : _claimReward,
+        child: Container(
+          width: double.infinity,
+          height: 56,
+          decoration: BoxDecoration(
+            gradient: _isClaiming ? null : Us2Theme.accentGradient,
+            color: _isClaiming ? Colors.grey.shade300 : null,
+            borderRadius: BorderRadius.circular(12),
+            boxShadow: _isClaiming
+                ? null
+                : [
+                    BoxShadow(
+                      color: Us2Theme.glowPink,
+                      blurRadius: 25,
+                      offset: const Offset(0, 8),
+                    ),
+                  ],
+          ),
+          child: Center(
+            child: _isClaiming
+                ? const SizedBox(
+                    width: 24,
+                    height: 24,
+                    child: CircularProgressIndicator(
+                      color: Colors.white,
+                      strokeWidth: 2,
+                    ),
+                  )
+                : const Text(
+                    'Claim Reward',
+                    style: TextStyle(
+                      fontFamily: Us2Theme.fontBody,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.white,
+                    ),
+                  ),
+          ),
         ),
       );
     }
@@ -453,6 +587,8 @@ class _StepsClaimScreenState extends State<StepsClaimScreen>
       }
     }
 
+    final textColor = _isUs2 ? Us2Theme.textLight : BrandLoader().colors.textTertiary;
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -460,23 +596,25 @@ class _StepsClaimScreenState extends State<StepsClaimScreen>
           Text(
             expiryText,
             style: TextStyle(
+              fontFamily: _isUs2 ? Us2Theme.fontBody : null,
               fontSize: 12,
-              color: BrandLoader().colors.textTertiary,
+              color: textColor,
             ),
           ),
           Text(
             ' | ',
             style: TextStyle(
               fontSize: 12,
-              color: BrandLoader().colors.textTertiary,
+              color: textColor,
             ),
           ),
         ],
         Text(
           'Both synced',
           style: TextStyle(
+            fontFamily: _isUs2 ? Us2Theme.fontBody : null,
             fontSize: 12,
-            color: BrandLoader().colors.textTertiary,
+            color: textColor,
           ),
         ),
       ],

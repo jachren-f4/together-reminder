@@ -1,6 +1,6 @@
 {
   "quizId": "quiz_009",
-  "title": "Connection Quiz 9",
+  "title": "Intimacy",
   "branch": "connection",
   "questions": [
     {
@@ -33,5 +33,6 @@
       "prompt": "Who shares more about...",
       "content": "Their dreams and aspirations"
     }
-  ]
+  ],
+  "description": "Beyond the physical—discover your emotional intimacy styles."
 }

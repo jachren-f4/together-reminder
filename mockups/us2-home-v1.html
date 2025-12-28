@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Us 2.0 - Home Screen Mockup</title>
+  <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, sans-serif;
+      background: linear-gradient(180deg, #FFF5F0 0%, #FFF0EB 50%, #FFEAE3 100%);
+      min-height: 100vh;
+      max-width: 430px;
+      margin: 0 auto;
+      position: relative;
+      padding-bottom: 90px;
+    }
+
+    /* Header Section */
+    .header {
+      padding: 20px 20px 0;
+      text-align: center;
+    }
+
+    .logo {
+      font-family: 'Pacifico', cursive;
+      font-size: 48px;
+      color: #E85A6B;
+      position: relative;
+      display: inline-block;
+    }
+
+    .logo::after {
+      content: "♥";
+      position: absolute;
+      top: -5px;
+      right: -15px;
+      font-size: 16px;
+      color: #E85A6B;
+    }
+
+    .day-label {
+      font-family: 'Pacifico', cursive;
+      font-size: 18px;
+      color: #8B7355;
+      margin-top: -5px;
+    }
+
+    /* Avatars Section */
+    .avatars-section {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      padding: 10px 20px 20px;
+      position: relative;
+    }
+
+    .avatar-container {
+      text-align: center;
+      flex: 1;
+    }
+
+    .avatar-container.left {
+      text-align: left;
+    }
+
+    .avatar-container.right {
+      text-align: right;
+    }
+
+    .avatar {
+      width: 120px;
+      height: 150px;
+      background: linear-gradient(135deg, #FFD4C4 0%, #FFBEA8 100%);
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 60px;
+      margin-bottom: 8px;
+    }
+
+    .avatar-name {
+      font-weight: 600;
+      font-size: 14px;
+      color: #4A4A4A;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .avatar-name.highlight {
+      color: #E85A6B;
+    }
+
+    .center-info {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+    }
+
+    /* Connection Bar */
+    .connection-bar {
+      margin: 0 20px 25px;
+      background: linear-gradient(90deg, #E85A6B 0%, #F5A623 100%);
+      border-radius: 16px;
+      padding: 12px 16px 20px;
+      position: relative;
+    }
+
+    .connection-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .connection-label {
+      color: white;
+      font-weight: 700;
+      font-size: 13px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    .connection-score {
+      color: white;
+      font-weight: 700;
+      font-size: 18px;
+    }
+
+    .progress-container {
+      position: relative;
+      height: 8px;
+      background: rgba(255, 255, 255, 0.3);
+      border-radius: 4px;
+    }
+
+    .progress-fill {
+      height: 100%;
+      width: 80%;
+      background: white;
+      border-radius: 4px;
+    }
+
+    .progress-heart {
+      position: absolute;
+      right: 18%;
+      top: 50%;
+      transform: translate(50%, -50%);
+      width: 40px;
+      height: 40px;
+      background: linear-gradient(135deg, #FF6B8A 0%, #FF8A65 100%);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      box-shadow: 0 4px 15px rgba(255, 107, 138, 0.5);
+      border: 3px solid white;
+    }
+
+    .progress-heart::after {
+      content: "✨";
+      position: absolute;
+      top: -8px;
+      right: -8px;
+      font-size: 14px;
+    }
+
+    /* Daily Quests Section */
+    .section-header {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 20px 20px;
+      gap: 15px;
+    }
+
+    .section-line {
+      flex: 1;
+      height: 2px;
+      background: linear-gradient(90deg, transparent 0%, #D4A574 50%, transparent 100%);
+    }
+
+    .section-title {
+      font-weight: 800;
+      font-size: 22px;
+      color: #2D2D2D;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      font-style: italic;
+    }
+
+    /* Quest Cards Carousel */
+    .quests-carousel {
+      display: flex;
+      gap: 16px;
+      padding: 0 20px 20px;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .quests-carousel::-webkit-scrollbar {
+      display: none;
+    }
+
+    .quest-card {
+      flex: 0 0 85%;
+      max-width: 340px;
+      background: linear-gradient(180deg, #FFF5F0 0%, #FFE4DB 100%);
+      border-radius: 24px;
+      overflow: hidden;
+      scroll-snap-align: start;
+      box-shadow: 0 8px 30px rgba(232, 90, 107, 0.15);
+    }
+
+    .quest-image {
+      height: 200px;
+      background: linear-gradient(135deg, #FFCDB8 0%, #FFB4A2 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 80px;
+    }
+
+    .quest-content {
+      background: linear-gradient(180deg, #FF8A7A 0%, #FF7A6A 100%);
+      padding: 20px;
+      border-radius: 0 0 24px 24px;
+    }
+
+    .quest-title {
+      font-weight: 700;
+      font-size: 20px;
+      color: white;
+      margin-bottom: 6px;
+    }
+
+    .quest-description {
+      font-size: 14px;
+      color: rgba(255, 255, 255, 0.9);
+      margin-bottom: 16px;
+    }
+
+    .quest-divider {
+      height: 1px;
+      background: rgba(255, 255, 255, 0.3);
+      margin-bottom: 16px;
+    }
+
+    .quest-button {
+      background: rgba(255, 255, 255, 0.2);
+      border: 2px solid rgba(255, 255, 255, 0.5);
+      border-radius: 25px;
+      padding: 12px 20px;
+      color: white;
+      font-weight: 600;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.2s;
+      width: 100%;
+    }
+
+    .quest-button:hover {
+      background: rgba(255, 255, 255, 0.3);
+    }
+
+    .quest-button .points {
+      color: #FFE4A0;
+    }
+
+    /* Bottom Navigation */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100%;
+      max-width: 430px;
+      background: white;
+      display: flex;
+      justify-content: space-around;
+      padding: 12px 0 25px;
+      border-top: 1px solid #F0E8E4;
+    }
+
+    .nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      cursor: pointer;
+    }
+
+    .nav-icon {
+      width: 28px;
+      height: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+    }
+
+    .nav-icon.gradient {
+      background: linear-gradient(135deg, #E85A6B 0%, #F5A623 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .nav-label {
+      font-size: 11px;
+      font-weight: 500;
+      color: #8B8B8B;
+    }
+
+    .nav-item.active .nav-label {
+      color: #E85A6B;
+    }
+
+    /* Side Quests Section */
+    .side-quests-header {
+      margin-top: 10px;
+    }
+
+    .side-quest-card {
+      flex: 0 0 70%;
+      max-width: 280px;
+    }
+
+    .side-quest-card .quest-image {
+      height: 140px;
+    }
+
+    .side-quest-card .quest-content {
+      padding: 16px;
+    }
+
+    .side-quest-card .quest-title {
+      font-size: 18px;
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <div class="header">
+    <div class="logo">Liia</div>
+    <div class="day-label">Day Two</div>
+  </div>
+
+  <!-- Avatars Section -->
+  <div class="avatars-section">
+    <div class="avatar-container left">
+      <div class="avatar">👩🏾</div>
+      <div class="avatar-name">PARTY</div>
+    </div>
+    <div class="avatar-container right">
+      <div class="avatar">👨🏾</div>
+      <div class="avatar-name highlight">You & Kilu</div>
+    </div>
+  </div>
+
+  <!-- Connection Bar -->
+  <div class="connection-bar">
+    <div class="connection-header">
+      <span class="connection-label">Connection Bar</span>
+      <span class="connection-score">120/150</span>
+    </div>
+    <div class="progress-container">
+      <div class="progress-fill"></div>
+      <div class="progress-heart">💗</div>
+    </div>
+  </div>
+
+  <!-- Daily Quests Section -->
+  <div class="section-header">
+    <div class="section-line"></div>
+    <h2 class="section-title">Daily Quests</h2>
+    <div class="section-line"></div>
+  </div>
+
+  <div class="quests-carousel">
+    <!-- Quest Card 1 -->
+    <div class="quest-card">
+      <div class="quest-image">👫🏾</div>
+      <div class="quest-content">
+        <h3 class="quest-title">Lighthearted Quiz</h3>
+        <p class="quest-description">Answer five questions together</p>
+        <div class="quest-divider"></div>
+        <button class="quest-button">
+          Start Quest <span class="points">(Earn 150 Points!)</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Quest Card 2 -->
+    <div class="quest-card">
+      <div class="quest-image">💑</div>
+      <div class="quest-content">
+        <h3 class="quest-title">Affirmation Quiz</h3>
+        <p class="quest-description">Rate your feelings together</p>
+        <div class="quest-divider"></div>
+        <button class="quest-button">
+          Begin together
+        </button>
+      </div>
+    </div>
+
+    <!-- Quest Card 3 -->
+    <div class="quest-card">
+      <div class="quest-image">🤔</div>
+      <div class="quest-content">
+        <h3 class="quest-title">You or Me</h3>
+        <p class="quest-description">Who does what in your relationship?</p>
+        <div class="quest-divider"></div>
+        <button class="quest-button">
+          Play Now
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Side Quests Section -->
+  <div class="section-header side-quests-header">
+    <div class="section-line"></div>
+    <h2 class="section-title">Side Quests</h2>
+    <div class="section-line"></div>
+  </div>
+
+  <div class="quests-carousel">
+    <!-- Side Quest Card 1 -->
+    <div class="quest-card side-quest-card">
+      <div class="quest-image">🔗</div>
+      <div class="quest-content">
+        <h3 class="quest-title">Linked</h3>
+        <p class="quest-description">Crossword puzzle together</p>
+        <div class="quest-divider"></div>
+        <button class="quest-button">Continue</button>
+      </div>
+    </div>
+
+    <!-- Side Quest Card 2 -->
+    <div class="quest-card side-quest-card">
+      <div class="quest-image">🔍</div>
+      <div class="quest-content">
+        <h3 class="quest-title">Word Search</h3>
+        <p class="quest-description">Find hidden words</p>
+        <div class="quest-divider"></div>
+        <button class="quest-button">Start</button>
+      </div>
+    </div>
+
+    <!-- Side Quest Card 3 -->
+    <div class="quest-card side-quest-card">
+      <div class="quest-image">👟</div>
+      <div class="quest-content">
+        <h3 class="quest-title">Steps Together</h3>
+        <p class="quest-description">Walk together, earn points</p>
+        <div class="quest-divider"></div>
+        <button class="quest-button">Connect</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bottom Navigation -->
+  <nav class="bottom-nav">
+    <div class="nav-item active">
+      <div class="nav-icon gradient">🏠</div>
+      <span class="nav-label">Home</span>
+    </div>
+    <div class="nav-item">
+      <div class="nav-icon">✉️</div>
+      <span class="nav-label">Inbox</span>
+    </div>
+    <div class="nav-item">
+      <div class="nav-icon">👋</div>
+      <span class="nav-label">Poke</span>
+    </div>
+    <div class="nav-item">
+      <div class="nav-icon">👤</div>
+      <span class="nav-label">Profile</span>
+    </div>
+    <div class="nav-item">
+      <div class="nav-icon">⚙️</div>
+      <span class="nav-label">Settings</span>
+    </div>
+  </nav>
+</body>
+</html>

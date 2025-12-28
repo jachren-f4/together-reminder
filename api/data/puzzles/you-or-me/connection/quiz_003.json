@@ -1,6 +1,6 @@
 {
   "quizId": "quiz_003",
-  "title": "Connection Quiz 3",
+  "title": "Quality Time",
   "branch": "connection",
   "questions": [
     {
@@ -33,5 +33,6 @@
       "prompt": "Who works harder to...",
       "content": "Understand the other's perspective"
     }
-  ]
+  ],
+  "description": "How do you spend meaningful moments together? Find your connection style."
 }

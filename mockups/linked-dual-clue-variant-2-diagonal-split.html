@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Linked Dual Clue - Variant 2: Diagonal Split</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #f5f5f5;
+      padding: 20px;
+      min-height: 100vh;
+    }
+
+    h1 {
+      font-family: Georgia, serif;
+      font-size: 24px;
+      margin-bottom: 8px;
+      color: #1a1a1a;
+    }
+
+    .description {
+      color: #666;
+      margin-bottom: 20px;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .grid-container {
+      background: #f8f6f1;
+      padding: 12px;
+      display: inline-block;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(7, 48px);
+      grid-template-rows: repeat(5, 48px);
+      gap: 2px;
+      background: #1a1a1a;
+      padding: 2px;
+    }
+
+    .cell {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: Arial, sans-serif;
+      font-weight: 800;
+      position: relative;
+    }
+
+    .cell.void {
+      background: rgba(26, 26, 26, 0.13);
+    }
+
+    .cell.answer {
+      background: #ffffff;
+    }
+
+    .cell.answer.filled {
+      background: rgba(76, 175, 80, 0.15);
+    }
+
+    .cell.answer span {
+      font-size: 22px;
+      color: rgba(26, 26, 26, 0.87);
+    }
+
+    .cell.clue {
+      background: #e8e4d9;
+      padding: 3px;
+      flex-direction: column;
+    }
+
+    .cell.clue .content {
+      font-size: 10px;
+      text-align: center;
+      color: #1a1a1a;
+      text-transform: uppercase;
+      line-height: 1.05;
+    }
+
+    .cell.clue .content.emoji {
+      font-size: 28px;
+      text-transform: none;
+    }
+
+    .cell.clue .arrow {
+      position: absolute;
+      font-size: 6px;
+      color: #888;
+    }
+
+    .cell.clue .arrow.right {
+      top: 0;
+      right: 1px;
+    }
+
+    .cell.clue .arrow.down {
+      bottom: 1px;
+      left: 0;
+    }
+
+    /* VARIANT 2: Diagonal Split */
+    .cell.dual-clue {
+      background: #e8e4d9;
+      overflow: hidden;
+      padding: 0;
+    }
+
+    .cell.dual-clue .diagonal-line {
+      position: absolute;
+      width: 141%; /* sqrt(2) * 100% to cover diagonal */
+      height: 1px;
+      background: rgba(136, 136, 136, 0.5);
+      transform-origin: 0 0;
+      transform: rotate(45deg);
+      top: 0;
+      left: 0;
+    }
+
+    .cell.dual-clue .top-right {
+      position: absolute;
+      top: 2px;
+      right: 2px;
+      text-align: right;
+    }
+
+    .cell.dual-clue .bottom-left {
+      position: absolute;
+      bottom: 2px;
+      left: 2px;
+      text-align: left;
+    }
+
+    .cell.dual-clue .content {
+      font-size: 7px;
+      font-weight: 800;
+      color: #1a1a1a;
+      text-transform: uppercase;
+      line-height: 1;
+      font-family: Arial, sans-serif;
+      display: block;
+    }
+
+    .cell.dual-clue .content.emoji {
+      font-size: 12px;
+      text-transform: none;
+    }
+
+    .cell.dual-clue .arrow {
+      font-size: 5px;
+      color: #888;
+      display: block;
+      margin-top: 1px;
+    }
+
+    .legend {
+      margin-top: 20px;
+      padding: 16px;
+      background: white;
+      border: 1px solid #ddd;
+      max-width: 400px;
+    }
+
+    .legend h3 {
+      font-size: 14px;
+      margin-bottom: 12px;
+      color: #1a1a1a;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 8px;
+      font-size: 13px;
+    }
+
+    .legend-cell {
+      width: 48px;
+      height: 48px;
+      flex-shrink: 0;
+    }
+
+    .pros-cons {
+      margin-top: 20px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      max-width: 600px;
+    }
+
+    .pros, .cons {
+      padding: 12px;
+      background: white;
+      border: 1px solid #ddd;
+    }
+
+    .pros h4 { color: #4caf50; }
+    .cons h4 { color: #f44336; }
+
+    .pros ul, .cons ul {
+      margin-top: 8px;
+      padding-left: 20px;
+      font-size: 13px;
+      line-height: 1.6;
+    }
+  </style>
+</head>
+<body>
+  <h1>Variant 2: Diagonal Split</h1>
+  <p class="description">
+    Cell is divided diagonally from top-left to bottom-right. The "across" clue (▶) appears in
+    the top-right triangle, and the "down" clue (▼) appears in the bottom-left triangle.
+    Classic crossword style used in many newspapers.
+  </p>
+
+  <div class="grid-container">
+    <div class="grid">
+      <!-- Row 1 -->
+      <div class="cell void"></div>
+      <div class="cell clue">
+        <span class="content">WARM</span>
+        <span class="arrow down">▼</span>
+      </div>
+      <div class="cell clue">
+        <span class="content emoji">🌙</span>
+        <span class="arrow down">▼</span>
+      </div>
+      <div class="cell void"></div>
+      <div class="cell clue">
+        <span class="content">BOND</span>
+        <span class="arrow down">▼</span>
+      </div>
+      <div class="cell void"></div>
+      <div class="cell void"></div>
+
+      <!-- Row 2 -->
+      <div class="cell clue">
+        <span class="content">FEEL</span>
+        <span class="arrow right">▶</span>
+      </div>
+      <div class="cell answer"><span>L</span></div>
+      <div class="cell answer"><span>O</span></div>
+      <div class="cell answer"><span>V</span></div>
+      <div class="cell answer"><span>E</span></div>
+      <div class="cell void"></div>
+      <div class="cell void"></div>
+
+      <!-- Row 3 -->
+      <div class="cell void"></div>
+      <div class="cell answer"><span>U</span></div>
+      <div class="cell answer"><span>N</span></div>
+
+      <!-- DUAL CLUE CELL - Variant 2: Diagonal Split -->
+      <div class="cell dual-clue">
+        <div class="diagonal-line"></div>
+        <div class="top-right">
+          <span class="content">SAFE</span>
+          <span class="arrow">▶</span>
+        </div>
+        <div class="bottom-left">
+          <span class="arrow">▼</span>
+          <span class="content">CLOSE</span>
+        </div>
+      </div>
+
+      <div class="cell answer"><span>O</span></div>
+      <div class="cell answer"><span>M</span></div>
+      <div class="cell answer"><span>E</span></div>
+
+      <!-- Row 4 -->
+      <div class="cell void"></div>
+      <div class="cell answer filled"><span>G</span></div>
+      <div class="cell answer"><span>I</span></div>
+      <div class="cell answer"><span>G</span></div>
+      <div class="cell answer"><span>H</span></div>
+      <div class="cell answer"><span>T</span></div>
+      <div class="cell void"></div>
+
+      <!-- Row 5 -->
+      <div class="cell void"></div>
+      <div class="cell void"></div>
+      <div class="cell answer"><span>T</span></div>
+      <div class="cell answer"><span>E</span></div>
+      <div class="cell answer"><span>A</span></div>
+      <div class="cell void"></div>
+      <div class="cell void"></div>
+    </div>
+  </div>
+
+  <div class="legend">
+    <h3>Dual Clue Cell (Highlighted)</h3>
+    <div class="legend-item">
+      <div class="grid" style="grid-template-columns: 48px; grid-template-rows: 48px; padding: 2px;">
+        <div class="cell dual-clue">
+          <div class="diagonal-line"></div>
+          <div class="top-right">
+            <span class="content">SAFE</span>
+            <span class="arrow">▶</span>
+          </div>
+          <div class="bottom-left">
+            <span class="arrow">▼</span>
+            <span class="content">CLOSE</span>
+          </div>
+        </div>
+      </div>
+      <div>
+        <strong>Top-right:</strong> "SAFE" points right (▶)<br>
+        <strong>Bottom-left:</strong> "CLOSE" points down (▼)
+      </div>
+    </div>
+  </div>
+
+  <div class="pros-cons">
+    <div class="pros">
+      <h4>Pros</h4>
+      <ul>
+        <li>Classic crossword convention</li>
+        <li>Arrows naturally point to target</li>
+        <li>Visual separation is elegant</li>
+        <li>Familiar to puzzle enthusiasts</li>
+      </ul>
+    </div>
+    <div class="cons">
+      <h4>Cons</h4>
+      <ul>
+        <li>Text very small in triangles</li>
+        <li>Long clues won't fit</li>
+        <li>Emojis get cut off by diagonal</li>
+        <li>Harder to read at a glance</li>
+      </ul>
+    </div>
+  </div>
+</body>
+</html>

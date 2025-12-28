@@ -1,6 +1,6 @@
 {
   "quizId": "quiz_008",
-  "title": "Lighthearted Quiz 8",
+  "title": "Morning Person?",
   "branch": "lighthearted",
   "questions": [
     {
@@ -33,5 +33,6 @@
       "prompt": "Who would rather",
       "content": "Attend a concert or a sports game"
     }
-  ]
+  ],
+  "description": "Early bird or night owl? Discover your sleep and wake patterns as a couple."
 }

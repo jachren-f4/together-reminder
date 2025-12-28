@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'api_client.dart';
 import '../utils/logger.dart';
 
@@ -10,7 +11,9 @@ class UnlockState {
   final String coupleId;
   final bool welcomeQuizCompleted;
   final bool classicQuizUnlocked;
+  final bool classicQuizCompleted;
   final bool affirmationQuizUnlocked;
+  final bool affirmationQuizCompleted;
   final bool youOrMeUnlocked;
   final bool linkedUnlocked;
   final bool wordSearchUnlocked;
@@ -22,7 +25,9 @@ class UnlockState {
     required this.coupleId,
     this.welcomeQuizCompleted = false,
     this.classicQuizUnlocked = false,
+    this.classicQuizCompleted = false,
     this.affirmationQuizUnlocked = false,
+    this.affirmationQuizCompleted = false,
     this.youOrMeUnlocked = false,
     this.linkedUnlocked = false,
     this.wordSearchUnlocked = false,
@@ -37,7 +42,9 @@ class UnlockState {
       coupleId: json['coupleId'] as String? ?? '',
       welcomeQuizCompleted: json['welcomeQuizCompleted'] as bool? ?? false,
       classicQuizUnlocked: json['classicQuizUnlocked'] as bool? ?? false,
+      classicQuizCompleted: json['classicQuizCompleted'] as bool? ?? false,
       affirmationQuizUnlocked: json['affirmationQuizUnlocked'] as bool? ?? false,
+      affirmationQuizCompleted: json['affirmationQuizCompleted'] as bool? ?? false,
       youOrMeUnlocked: json['youOrMeUnlocked'] as bool? ?? false,
       linkedUnlocked: json['linkedUnlocked'] as bool? ?? false,
       wordSearchUnlocked: json['wordSearchUnlocked'] as bool? ?? false,
@@ -53,7 +60,9 @@ class UnlockState {
       coupleId: coupleId,
       welcomeQuizCompleted: true,
       classicQuizUnlocked: true,
+      classicQuizCompleted: true,
       affirmationQuizUnlocked: true,
+      affirmationQuizCompleted: true,
       youOrMeUnlocked: true,
       linkedUnlocked: true,
       wordSearchUnlocked: true,
@@ -92,14 +101,48 @@ class UnlockState {
       case UnlockableFeature.affirmationQuiz:
         return 'Complete Welcome Quiz first';
       case UnlockableFeature.youOrMe:
-        return 'Complete a quest first';
+        return 'Complete quizzes first';
       case UnlockableFeature.linked:
         return 'Complete You or Me first';
       case UnlockableFeature.wordSearch:
-        return 'Complete Linked first';
+        return 'Complete crossword first';
       case UnlockableFeature.steps:
         return 'Complete Word Search first';
     }
+  }
+
+  /// Get the current guidance target (next uncompleted activity in the onboarding chain).
+  ///
+  /// Returns [GuidanceTarget.none] if all activities are complete or if
+  /// the next activity isn't unlocked yet.
+  ///
+  /// Progression: Classic → Affirmation → You or Me → Linked → Word Search
+  /// (Steps is skipped in guidance)
+  GuidanceTarget get currentGuidanceTarget {
+    // Daily quizzes - completion directly tracked
+    if (!classicQuizCompleted) return GuidanceTarget.classicQuiz;
+    if (!affirmationQuizCompleted) return GuidanceTarget.affirmationQuiz;
+
+    // Side quests - derive completion from unlock chain
+    // If youOrMe is unlocked but linked is not, user needs to do youOrMe
+    if (!youOrMeUnlocked) return GuidanceTarget.none; // Not unlocked yet, wait
+    if (!linkedUnlocked) return GuidanceTarget.youOrMe;
+    if (!wordSearchUnlocked) return GuidanceTarget.linked;
+    if (!onboardingCompleted) return GuidanceTarget.wordSearch;
+
+    return GuidanceTarget.none; // All done!
+  }
+
+  /// Get the guidance ribbon text for the current target.
+  ///
+  /// Returns "Start Here" for Classic Quiz (first activity),
+  /// "Continue Here" for all subsequent activities,
+  /// or null if no guidance needed.
+  String? get guidanceText {
+    final target = currentGuidanceTarget;
+    if (target == GuidanceTarget.none) return null;
+    if (target == GuidanceTarget.classicQuiz) return 'Start Here';
+    return 'Continue Here';
   }
 
   @override
@@ -120,6 +163,16 @@ enum UnlockableFeature {
   linked,
   wordSearch,
   steps,
+}
+
+/// Target for onboarding guidance (ribbon + floating hand)
+enum GuidanceTarget {
+  classicQuiz, // "Start Here"
+  affirmationQuiz, // "Continue Here"
+  youOrMe, // "Continue Here"
+  linked, // "Continue Here"
+  wordSearch, // "Continue Here"
+  none, // All done, no guidance needed
 }
 
 /// Triggers that unlock features
@@ -175,12 +228,38 @@ class UnlockService {
   /// Cached unlock state (in-memory only, no Hive)
   UnlockState? _cachedState;
 
-  /// Callback for UI updates when unlock state changes
-  VoidCallback? _onUnlockChanged;
+  /// Callbacks for UI updates when unlock state changes
+  /// Multiple widgets can register to be notified (e.g., DailyQuestsWidget, HomeScreen)
+  final List<VoidCallback> _onUnlockChangedCallbacks = [];
 
-  /// Set callback for unlock state changes
+  /// Add a callback for unlock state changes
+  /// Remember to call removeOnUnlockChanged in dispose()
+  void addOnUnlockChanged(VoidCallback callback) {
+    if (!_onUnlockChangedCallbacks.contains(callback)) {
+      _onUnlockChangedCallbacks.add(callback);
+    }
+  }
+
+  /// Remove a callback for unlock state changes
+  void removeOnUnlockChanged(VoidCallback callback) {
+    _onUnlockChangedCallbacks.remove(callback);
+  }
+
+  /// @deprecated Use addOnUnlockChanged/removeOnUnlockChanged instead
+  /// Kept for backwards compatibility during migration
   void setOnUnlockChanged(VoidCallback? callback) {
-    _onUnlockChanged = callback;
+    // Clear all and set single callback (legacy behavior)
+    _onUnlockChangedCallbacks.clear();
+    if (callback != null) {
+      _onUnlockChangedCallbacks.add(callback);
+    }
+  }
+
+  /// Notify all registered callbacks
+  void _notifyUnlockChanged() {
+    for (final callback in _onUnlockChangedCallbacks) {
+      callback();
+    }
   }
 
   /// Get unlock state (from cache or server)
@@ -254,14 +333,21 @@ class UnlockService {
   /// Notify server of a completion and get unlock result
   ///
   /// Returns the unlock result with any newly unlocked features and LP awarded.
-  Future<UnlockResult?> notifyCompletion(UnlockTrigger trigger) async {
+  /// For [UnlockTrigger.dailyQuiz], provide the [quizType] ('classic' or 'affirmation')
+  /// to track which quiz type was completed.
+  Future<UnlockResult?> notifyCompletion(UnlockTrigger trigger, {String? quizType}) async {
     try {
       final triggerName = _triggerToString(trigger);
-      Logger.debug('Notifying completion: $triggerName', service: 'unlock');
+      Logger.debug('Notifying completion: $triggerName${quizType != null ? ' (type: $quizType)' : ''}', service: 'unlock');
+
+      final body = <String, dynamic>{'trigger': triggerName};
+      if (quizType != null) {
+        body['quizType'] = quizType;
+      }
 
       final response = await _apiClient.post<UnlockResult>(
         '/api/unlocks/complete',
-        body: {'trigger': triggerName},
+        body: body,
         parser: (json) => UnlockResult.fromJson(json),
       );
 
@@ -271,12 +357,12 @@ class UnlockService {
         // Update cached state
         _cachedState = result.unlockState;
 
-        // Notify listeners
+        // Notify all listeners
         if (result.hasNewUnlocks) {
           Logger.info(
               'Unlocked: ${result.newlyUnlocked.join(', ')} (+${result.lpAwarded} LP)',
               service: 'unlock');
-          _onUnlockChanged?.call();
+          _notifyUnlockChanged();
         }
 
         return result;
@@ -298,6 +384,49 @@ class UnlockService {
 
   /// Get cached state synchronously (may be null)
   UnlockState? get cachedState => _cachedState;
+
+  /// Track which unlock celebrations this user has seen (stored locally in Hive)
+  /// This is per-user because both partners should see the celebration
+  static const String _seenCelebrationsKey = 'seen_unlock_celebrations';
+
+  /// Check if user has seen a specific unlock celebration
+  bool hasSeenCelebration(String unlockName) {
+    try {
+      final box = Hive.box('app_metadata');
+      final seen = box.get(_seenCelebrationsKey, defaultValue: <String>[]);
+      return (seen as List).contains(unlockName);
+    } catch (e) {
+      Logger.error('Error checking seen celebration: $e', service: 'unlock');
+      return false;
+    }
+  }
+
+  /// Mark a celebration as seen for this user
+  Future<void> markCelebrationSeen(String unlockName) async {
+    try {
+      final box = Hive.box('app_metadata');
+      final seen = List<String>.from(
+          box.get(_seenCelebrationsKey, defaultValue: <String>[]) as List);
+      if (!seen.contains(unlockName)) {
+        seen.add(unlockName);
+        await box.put(_seenCelebrationsKey, seen);
+        Logger.debug('Marked celebration as seen: $unlockName',
+            service: 'unlock');
+      }
+    } catch (e) {
+      Logger.error('Error marking celebration seen: $e', service: 'unlock');
+    }
+  }
+
+  /// Check if You or Me unlock should show celebration
+  /// Returns true if feature is unlocked but user hasn't seen the celebration yet
+  Future<bool> shouldShowYouOrMeCelebration() async {
+    final state = await getUnlockState(forceRefresh: true);
+    if (state == null) return false;
+
+    // Check if You or Me is unlocked but user hasn't seen the celebration
+    return state.youOrMeUnlocked && !hasSeenCelebration('you_or_me');
+  }
 
   String _triggerToString(UnlockTrigger trigger) {
     switch (trigger) {

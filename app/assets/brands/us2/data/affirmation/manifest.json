@@ -1,0 +1,46 @@
+{
+  "activity": "affirmation",
+  "brand": "togetherremind",
+  "branches": [
+    {
+      "id": "emotional",
+      "displayName": "Emotional",
+      "description": "Heart-focused affirmations",
+      "folder": "emotional",
+      "questionCount": 6
+    },
+    {
+      "id": "practical",
+      "displayName": "Practical",
+      "description": "Action-oriented affirmations",
+      "folder": "practical",
+      "questionCount": 6
+    },
+    {
+      "id": "connection",
+      "displayName": "Connection",
+      "description": "Intimacy and closeness affirmations",
+      "folder": "connection",
+      "questionCount": 6,
+      "therapeutic": true
+    },
+    {
+      "id": "attachment",
+      "displayName": "Attachment",
+      "description": "Trust and security affirmations",
+      "folder": "attachment",
+      "questionCount": 6,
+      "therapeutic": true
+    },
+    {
+      "id": "growth",
+      "displayName": "Growth",
+      "description": "Evolution and development affirmations",
+      "folder": "growth",
+      "questionCount": 6,
+      "therapeutic": true
+    }
+  ],
+  "selectionMode": "quest_count_mod",
+  "version": "1.0.0"
+}

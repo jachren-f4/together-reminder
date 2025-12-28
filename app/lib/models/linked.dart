@@ -305,13 +305,41 @@ class LinkedPuzzle {
     final size = json['size'] as Map<String, dynamic>;
     final cluesJson = json['clues'] as Map<String, dynamic>;
 
-    final clues = cluesJson.map((key, value) {
-      final clueNum = int.tryParse(key) ?? 0;
-      return MapEntry(
-        key,
-        LinkedClue.fromJson(value as Map<String, dynamic>, clueNumber: clueNum),
-      );
-    });
+    // Parse clues - handles both single-direction and dual-direction formats
+    // Single-direction: { "type": "...", "content": "...", "arrow": "across", "target_index": N }
+    // Dual-direction: { "across": { ... }, "down": { ... } }
+    final Map<String, LinkedClue> clues = {};
+
+    for (final entry in cluesJson.entries) {
+      final clueNumStr = entry.key;
+      final clueNum = int.tryParse(clueNumStr) ?? 0;
+      final clueData = entry.value as Map<String, dynamic>;
+
+      // Detect format: single-direction has 'arrow' key, dual has 'across'/'down' keys
+      if (clueData.containsKey('arrow')) {
+        // Single-direction format (original)
+        clues[clueNumStr] = LinkedClue.fromJson(clueData, clueNumber: clueNum);
+      } else {
+        // Dual-direction format (new) - may have 'across' and/or 'down'
+        // Create separate clue entries with direction suffix for internal tracking
+        if (clueData.containsKey('across')) {
+          final acrossData = clueData['across'] as Map<String, dynamic>;
+          clues['${clueNumStr}_across'] = LinkedClue.fromJsonDirection(
+            acrossData,
+            clueNumber: clueNum,
+            direction: 'across',
+          );
+        }
+        if (clueData.containsKey('down')) {
+          final downData = clueData['down'] as Map<String, dynamic>;
+          clues['${clueNumStr}_down'] = LinkedClue.fromJsonDirection(
+            downData,
+            clueNumber: clueNum,
+            direction: 'down',
+          );
+        }
+      }
+    }
 
     return LinkedPuzzle(
       puzzleId: json['puzzleId'] ?? 'unknown',
@@ -328,8 +356,9 @@ class LinkedPuzzle {
 /// Clue data structure
 class LinkedClue {
   final int number; // Clue number
-  final String type; // 'text'
-  final String content; // Clue text
+  final String type; // 'text' or 'emoji'
+  final String content; // Clue text or emoji
+  final String? text; // Optional text hint for emoji clues (e.g., "_SS" for 🍑)
   final String arrow; // 'across' or 'down'
   final int targetIndex; // Grid index where answer starts
   final int length; // Number of letters in answer
@@ -338,6 +367,7 @@ class LinkedClue {
     required this.number,
     required this.type,
     required this.content,
+    this.text,
     required this.arrow,
     required this.targetIndex,
     required this.length,
@@ -346,12 +376,35 @@ class LinkedClue {
   bool get isAcross => arrow == 'across';
   bool get isDown => arrow == 'down';
 
+  /// Check if this is an emoji clue with a text hint
+  bool get hasTextHint => type == 'emoji' && text != null && text!.isNotEmpty;
+
+  /// Parse from single-direction format (has 'arrow' field at top level)
   factory LinkedClue.fromJson(Map<String, dynamic> json, {int? clueNumber}) {
     return LinkedClue(
       number: clueNumber ?? json['number'] as int? ?? 0,
       type: json['type'] as String? ?? 'text',
       content: json['content'] as String? ?? '',
+      text: json['text'] as String?,
       arrow: json['arrow'] as String? ?? 'across',
+      targetIndex: json['target_index'] as int? ?? 0,
+      length: json['length'] as int? ?? 0,
+    );
+  }
+
+  /// Parse from dual-direction format (no 'arrow' field, direction provided separately)
+  /// Used when parsing clues that have 'across' and/or 'down' sub-objects
+  factory LinkedClue.fromJsonDirection(
+    Map<String, dynamic> json, {
+    required int clueNumber,
+    required String direction,
+  }) {
+    return LinkedClue(
+      number: clueNumber,
+      type: json['type'] as String? ?? 'text',
+      content: json['content'] as String? ?? '',
+      text: json['text'] as String?,
+      arrow: direction, // 'across' or 'down'
       targetIndex: json['target_index'] as int? ?? 0,
       length: json['length'] as int? ?? 0,
     );

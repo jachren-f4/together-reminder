@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import '../services/haptic_service.dart';
 import '../services/sound_service.dart';
 import '../widgets/editorial/editorial.dart';
+import '../config/brand/brand_loader.dart';
+import '../config/brand/brand_config.dart';
+import '../config/brand/us2_theme.dart';
 
 /// Celebration overlay shown when a feature is unlocked.
 ///
@@ -56,6 +60,8 @@ class UnlockCelebrationOverlay extends StatefulWidget {
 
 class _UnlockCelebrationOverlayState extends State<UnlockCelebrationOverlay>
     with SingleTickerProviderStateMixin {
+  bool get _isUs2 => BrandLoader().config.brand == Brand.us2;
+
   late AnimationController _pulseController;
   late Animation<double> _pulseAnimation;
   late Animation<double> _fadeAnimation;
@@ -118,6 +124,11 @@ class _UnlockCelebrationOverlayState extends State<UnlockCelebrationOverlay>
 
   @override
   Widget build(BuildContext context) {
+    if (_isUs2) return _buildUs2Overlay();
+    return _buildLiiaOverlay();
+  }
+
+  Widget _buildLiiaOverlay() {
     return Material(
       color: Colors.transparent,
       child: AnimatedBuilder(
@@ -245,6 +256,225 @@ class _UnlockCelebrationOverlayState extends State<UnlockCelebrationOverlay>
             ),
           ),
         );
+        },
+      ),
+    );
+  }
+
+  String _getFeatureEmoji() {
+    switch (widget.featureName.toLowerCase()) {
+      case 'you or me':
+        return '🤔';
+      case 'linked':
+        return '🔗';
+      case 'word search':
+        return '🔍';
+      case 'steps together':
+        return '👟';
+      default:
+        return '✨';
+    }
+  }
+
+  Widget _buildUs2Overlay() {
+    return Material(
+      color: Colors.transparent,
+      child: AnimatedBuilder(
+        animation: _pulseController,
+        builder: (context, child) {
+          return SizedBox.expand(
+            child: Container(
+              color: const Color(0xF22D2D2D), // Dark overlay 95% opacity
+              child: SafeArea(
+                child: Opacity(
+                  opacity: _fadeAnimation.value,
+                  child: Transform.translate(
+                    offset: Offset(0, _slideAnimation.value),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 30),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Spacer(),
+
+                          // Unlock icon with glow
+                          ScaleTransition(
+                            scale: _pulseAnimation,
+                            child: Stack(
+                              alignment: Alignment.center,
+                              children: [
+                                // Glow effect
+                                Container(
+                                  width: 150,
+                                  height: 150,
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    gradient: RadialGradient(
+                                      colors: [
+                                        Us2Theme.glowPink,
+                                        Colors.transparent,
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                                // Icon
+                                const Text(
+                                  '🔓',
+                                  style: TextStyle(fontSize: 100),
+                                ),
+                              ],
+                            ),
+                          ),
+
+                          const SizedBox(height: 32),
+
+                          // "NEW FEATURE UNLOCKED" label
+                          Text(
+                            'NEW FEATURE UNLOCKED',
+                            style: GoogleFonts.nunito(
+                              fontSize: 12,
+                              fontWeight: FontWeight.w700,
+                              letterSpacing: 3,
+                              color: Us2Theme.gradientAccentEnd,
+                            ),
+                          ),
+
+                          const SizedBox(height: 12),
+
+                          // Feature name with gradient
+                          ShaderMask(
+                            shaderCallback: (bounds) => const LinearGradient(
+                              colors: [Us2Theme.gradientAccentStart, Us2Theme.gradientAccentEnd],
+                            ).createShader(bounds),
+                            child: Text(
+                              widget.featureName,
+                              style: GoogleFonts.playfairDisplay(
+                                fontSize: 32,
+                                fontWeight: FontWeight.w700,
+                                color: Colors.white,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+
+                          const SizedBox(height: 16),
+
+                          // Description
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 20),
+                            child: Text(
+                              widget.featureDescription,
+                              style: GoogleFonts.nunito(
+                                fontSize: 16,
+                                color: Colors.white.withOpacity(0.7),
+                                height: 1.5,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+
+                          const SizedBox(height: 40),
+
+                          // Feature preview card
+                          Container(
+                            width: double.infinity,
+                            constraints: const BoxConstraints(maxWidth: 300),
+                            padding: const EdgeInsets.all(24),
+                            decoration: BoxDecoration(
+                              color: Colors.white.withOpacity(0.1),
+                              border: Border.all(
+                                color: Colors.white.withOpacity(0.2),
+                              ),
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            child: Row(
+                              children: [
+                                // Feature icon
+                                Container(
+                                  width: 60,
+                                  height: 60,
+                                  decoration: BoxDecoration(
+                                    gradient: Us2Theme.accentGradient,
+                                    borderRadius: BorderRadius.circular(16),
+                                  ),
+                                  child: Center(
+                                    child: Text(
+                                      _getFeatureEmoji(),
+                                      style: const TextStyle(fontSize: 28),
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(width: 16),
+                                // Feature info
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        widget.featureName,
+                                        style: GoogleFonts.playfairDisplay(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.w600,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 4),
+                                      Text(
+                                        'New game unlocked!',
+                                        style: GoogleFonts.nunito(
+                                          fontSize: 13,
+                                          color: Colors.white.withOpacity(0.6),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+
+                          const Spacer(),
+
+                          // Primary button - "Try It Now"
+                          GestureDetector(
+                            onTap: widget.onContinue,
+                            child: Container(
+                              width: double.infinity,
+                              constraints: const BoxConstraints(maxWidth: 280),
+                              height: 56,
+                              decoration: BoxDecoration(
+                                gradient: Us2Theme.accentGradient,
+                                borderRadius: BorderRadius.circular(16),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Us2Theme.glowPink,
+                                    blurRadius: 25,
+                                    offset: const Offset(0, 8),
+                                  ),
+                                ],
+                              ),
+                              child: Center(
+                                child: Text(
+                                  'Continue',
+                                  style: GoogleFonts.nunito(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w700,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+
+                          const SizedBox(height: 40),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          );
         },
       ),
     );

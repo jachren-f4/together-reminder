@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=375, initial-scale=1.0">
+    <title>You or Me Intro - Variant 4: Ribbon Theme Card</title>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            background: linear-gradient(180deg, #FFD1C1 0%, #FFF5F0 100%);
+            min-height: 100vh;
+            max-width: 375px;
+            margin: 0 auto;
+        }
+
+        .screen {
+            padding: 20px;
+            padding-top: 60px;
+        }
+
+        /* Header */
+        .header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .back-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: white;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        /* Hero Card - Matching mockup card style */
+        .hero-card {
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 8px 30px rgba(255, 107, 107, 0.25);
+            margin-bottom: 20px;
+        }
+
+        .hero-image {
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(135deg, #FFB4A2 0%, #FFCDB2 50%, #FFE5D0 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 100px;
+            position: relative;
+        }
+
+        .hero-content {
+            background: linear-gradient(180deg, #FF7B6B 0%, #FF6B5B 100%);
+            padding: 20px;
+        }
+
+        /* Ribbon Header - Matching mockup style */
+        .ribbon-header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 12px;
+        }
+
+        .ribbon {
+            background: #F5E6D8;
+            padding: 6px 20px;
+            font-family: 'Playfair Display', serif;
+            font-size: 12px;
+            font-weight: 700;
+            font-style: italic;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: #2D2D2D;
+            position: relative;
+        }
+
+        .ribbon::before,
+        .ribbon::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            border-style: solid;
+            border-width: 14px 8px;
+        }
+
+        .ribbon::before {
+            left: -16px;
+            border-color: #F5E6D8 #F5E6D8 #F5E6D8 transparent;
+        }
+
+        .ribbon::after {
+            right: -16px;
+            border-color: #F5E6D8 transparent #F5E6D8 #F5E6D8;
+        }
+
+        /* Quiz Title */
+        .quiz-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 24px;
+            font-weight: 700;
+            color: white;
+            text-align: center;
+            margin-bottom: 8px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        /* Quiz Description */
+        .quiz-description {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.95);
+            text-align: center;
+            line-height: 1.5;
+            font-style: italic;
+            margin-bottom: 16px;
+        }
+
+        /* Divider */
+        .divider {
+            height: 1px;
+            background: rgba(255, 255, 255, 0.3);
+            margin: 16px 0;
+        }
+
+        /* Glow Button - Matching mockup */
+        .glow-btn {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(180deg, #FFFFFF 0%, #FFF8F0 100%);
+            border: 2px solid rgba(255, 107, 107, 0.3);
+            border-radius: 25px;
+            color: #FF6B6B;
+            font-family: 'Nunito', sans-serif;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow:
+                0 0 20px rgba(255, 107, 107, 0.4),
+                0 0 40px rgba(255, 159, 67, 0.2);
+            transition: all 0.2s ease;
+        }
+
+        .glow-btn:hover {
+            transform: translateY(-2px);
+            box-shadow:
+                0 0 25px rgba(255, 107, 107, 0.5),
+                0 0 50px rgba(255, 159, 67, 0.3);
+        }
+
+        .btn-subtext {
+            font-size: 12px;
+            color: #FF9F43;
+            font-weight: 600;
+        }
+
+        /* Stats Row - Inline style */
+        .stats-inline {
+            display: flex;
+            justify-content: center;
+            gap: 24px;
+            margin-bottom: 20px;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 18px;
+            font-weight: 700;
+            color: #2D2D2D;
+        }
+
+        .stat-value.highlight {
+            color: #FF6B6B;
+        }
+
+        .stat-label {
+            font-size: 11px;
+            color: #888;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Instruction */
+        .instruction {
+            font-size: 14px;
+            color: #666;
+            text-align: center;
+            line-height: 1.5;
+            margin-bottom: 20px;
+            padding: 0 10px;
+        }
+
+        /* Annotation */
+        .annotation {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            right: 20px;
+            background: #2D2D2D;
+            color: white;
+            padding: 12px 16px;
+            border-radius: 8px;
+            font-size: 12px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="screen">
+        <!-- Header -->
+        <div class="header">
+            <button class="back-btn">←</button>
+        </div>
+
+        <!-- Hero Card -->
+        <div class="hero-card">
+            <!-- Image Section -->
+            <div class="hero-image">🤔</div>
+
+            <!-- Content Section -->
+            <div class="hero-content">
+                <!-- Ribbon Theme Label -->
+                <div class="ribbon-header">
+                    <div class="ribbon">Today's Theme</div>
+                </div>
+
+                <!-- Quiz Title (dynamic) -->
+                <h1 class="quiz-title">Daily Habits</h1>
+
+                <!-- Quiz Description (dynamic) -->
+                <p class="quiz-description">
+                    Discover who's the adventurous eater, the snooze button champion, and the social butterfly in your relationship.
+                </p>
+
+                <div class="divider"></div>
+
+                <!-- Glow Button -->
+                <button class="glow-btn">
+                    Start Quest <span class="btn-subtext">(Earn 30 Points!)</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Stats -->
+        <div class="stats-inline">
+            <div class="stat-item">
+                <div class="stat-value">5</div>
+                <div class="stat-label">Questions</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value">~2 min</div>
+                <div class="stat-label">Time</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value highlight">+30 LP</div>
+                <div class="stat-label">Reward</div>
+            </div>
+        </div>
+
+        <!-- Instruction -->
+        <p class="instruction">
+            For each trait, decide who it describes better—you or your partner.
+        </p>
+    </div>
+
+    <div class="annotation">
+        <strong>Variant 4: Ribbon Theme Card</strong><br>
+        Card style matching home screen with ribbon header and glow button
+    </div>
+</body>
+</html>

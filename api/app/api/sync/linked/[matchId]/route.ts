@@ -149,8 +149,8 @@ export const GET = withAuthOrDevBypass(async (req, userId, email, context) => {
       ? JSON.parse(match.board_state)
       : match.board_state || {};
 
-    // Load puzzle for client
-    const puzzle = loadPuzzle(match.puzzle_id);
+    // Load puzzle for client (use stored branch, fallback to casual for old matches)
+    const puzzle = loadPuzzle(match.puzzle_id, match.branch || 'casual');
 
     return NextResponse.json({
       success: true,

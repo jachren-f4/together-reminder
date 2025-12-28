@@ -40,6 +40,20 @@ class BrandColors {
   final Color highlight;
   final Color selected;
 
+  // Brand-specific gradients (optional - defaults to solid colors)
+  final List<Color>? _backgroundGradientColors;
+  final List<Color>? _accentGradientColors;
+  final List<Color>? _progressGradientColors;
+
+  // Glow effects (optional - for brands with glow styling)
+  final Color? glowPrimary;
+  final Color? glowSecondary;
+
+  // Card-specific colors (optional - defaults to surface/primary)
+  final Color? cardBackground;
+  final Color? cardBackgroundDark;
+  final Color? ribbonBackground;
+
   const BrandColors({
     required this.primary,
     required this.primaryLight,
@@ -64,19 +78,63 @@ class BrandColors {
     required this.disabled,
     required this.highlight,
     required this.selected,
-  });
+    // Optional gradient/glow properties
+    List<Color>? backgroundGradientColors,
+    List<Color>? accentGradientColors,
+    List<Color>? progressGradientColors,
+    this.glowPrimary,
+    this.glowSecondary,
+    this.cardBackground,
+    this.cardBackgroundDark,
+    this.ribbonBackground,
+  })  : _backgroundGradientColors = backgroundGradientColors,
+        _accentGradientColors = accentGradientColors,
+        _progressGradientColors = progressGradientColors;
 
-  /// Computed gradients (matching current AppTheme pattern)
-  /// Solid color gradients for consistency with current design
+  /// Computed gradients
+  /// Uses custom gradient colors if provided, otherwise defaults to solid colors.
   LinearGradient get primaryGradient => LinearGradient(
     colors: [primary, primary],
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
   );
 
+  /// Background gradient (vertical, top to bottom)
+  /// Us 2.0: Peach gradient. Others: Solid background color.
   LinearGradient get backgroundGradient => LinearGradient(
-    colors: [background, background],
+    colors: _backgroundGradientColors ?? [background, background],
     begin: Alignment.topCenter,
     end: Alignment.bottomCenter,
   );
+
+  /// Accent gradient (horizontal, for connection bar, buttons)
+  /// Us 2.0: Pink to orange. Others: Solid primary color.
+  LinearGradient get accentGradient => LinearGradient(
+    colors: _accentGradientColors ?? [primary, primary],
+    begin: Alignment.centerLeft,
+    end: Alignment.centerRight,
+  );
+
+  /// Progress gradient (horizontal, for progress bars)
+  /// Us 2.0: Pink to orange with white. Others: Solid accent.
+  LinearGradient get progressGradient => LinearGradient(
+    colors: _progressGradientColors ?? [accentGreen, accentGreen],
+    begin: Alignment.centerLeft,
+    end: Alignment.centerRight,
+  );
+
+  /// Whether this brand uses gradient styling
+  bool get hasGradientStyling =>
+      _backgroundGradientColors != null ||
+      _accentGradientColors != null ||
+      glowPrimary != null;
+
+  /// Get card background with fallback
+  Color get effectiveCardBackground => cardBackground ?? surface;
+
+  /// Get card background dark with fallback
+  Color get effectiveCardBackgroundDark => cardBackgroundDark ?? primary;
+
+  /// Get ribbon background with fallback
+  Color get effectiveRibbonBackground => ribbonBackground ?? highlight;
 }

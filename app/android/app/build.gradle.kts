@@ -37,12 +37,19 @@ android {
         create("togetherremind") {
             dimension = "brand"
             applicationId = "com.togetherremind.togetherremind"
-            resValue("string", "app_name", "TogetherRemind")
+            resValue("string", "app_name", "Liia")
         }
         create("holycouples") {
             dimension = "brand"
             applicationId = "com.togetherremind.holycouples"
             resValue("string", "app_name", "Holy Couples")
+        }
+        create("us2") {
+            dimension = "brand"
+            // Uses same Firebase project as togetherremind for now
+            // TODO: Create separate Firebase app for Us 2.0 production
+            applicationId = "com.togetherremind.togetherremind"
+            resValue("string", "app_name", "Us 2.0")
         }
     }
 

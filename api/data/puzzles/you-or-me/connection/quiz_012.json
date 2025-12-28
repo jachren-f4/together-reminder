@@ -1,6 +1,6 @@
 {
   "quizId": "quiz_012",
-  "title": "Connection Quiz 12",
+  "title": "Deep Talks",
   "branch": "connection",
   "questions": [
     {
@@ -33,5 +33,6 @@
       "prompt": "Who is better at...",
       "content": "Articulating their emotional experience"
     }
-  ]
+  ],
+  "description": "Who initiates the meaningful conversations? Explore your depth."
 }

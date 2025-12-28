@@ -1,6 +1,6 @@
 {
   "quizId": "quiz_012",
-  "title": "Playful Quiz 12",
+  "title": "Time Machine",
   "branch": "playful",
   "questions": [
     {
@@ -33,5 +33,6 @@
       "prompt": "Who is more...",
       "content": "Likely to create inside jokes with themselves"
     }
-  ]
+  ],
+  "description": "Past or future? Explore where you'd go if time travel were real."
 }

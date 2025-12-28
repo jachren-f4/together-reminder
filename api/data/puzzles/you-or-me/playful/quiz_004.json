@@ -1,6 +1,6 @@
 {
   "quizId": "quiz_004",
-  "title": "Playful Quiz 4",
+  "title": "Guilty Pleasures",
   "branch": "playful",
   "questions": [
     {
@@ -33,5 +33,6 @@
       "prompt": "Who is more...",
       "content": "Likely to trash talk during friendly competition"
     }
-  ]
+  ],
+  "description": "Reality TV binges? Singing in the shower? Share your secret indulgences."
 }

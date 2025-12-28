@@ -1,6 +1,6 @@
 {
   "quizId": "quiz_004",
-  "title": "Connection Quiz 4",
+  "title": "Support System",
   "branch": "connection",
   "questions": [
     {
@@ -33,5 +33,6 @@
       "prompt": "Who creates more...",
       "content": "Moments of calm together"
     }
-  ]
+  ],
+  "description": "Who's the rock? Who needs the hug? Understand your support dynamics."
 }

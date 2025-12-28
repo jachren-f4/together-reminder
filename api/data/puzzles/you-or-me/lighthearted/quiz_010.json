@@ -1,6 +1,6 @@
 {
   "quizId": "quiz_010",
-  "title": "Lighthearted Quiz 10",
+  "title": "Travel Style",
   "branch": "lighthearted",
   "questions": [
     {
@@ -33,5 +33,6 @@
       "prompt": "Who is more",
       "content": "Likely to prefer savory breakfast over sweet"
     }
-  ]
+  ],
+  "description": "Planner vs. wanderer, beach vs. mountains—discover how you'd travel together."
 }

@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import '../config/animation_constants.dart';
 import '../widgets/animations/animations.dart';
 import '../widgets/editorial/editorial.dart';
+import '../widgets/brand/brand_widget_factory.dart';
+import '../widgets/brand/us2/us2_intro_screen.dart';
 import '../services/word_search_service.dart';
+import '../services/love_point_service.dart';
 import '../services/storage_service.dart';
 import 'word_search_game_screen.dart';
 
@@ -21,6 +24,7 @@ class _WordSearchIntroScreenState extends State<WordSearchIntroScreen>
   bool _isLoading = false;
   bool _isMyTurn = true;
   int _partnerFoundCount = 0;
+  LpContentStatus? _lpStatus;
 
   @override
   bool get enableConfetti => false;
@@ -29,6 +33,16 @@ class _WordSearchIntroScreenState extends State<WordSearchIntroScreen>
   void initState() {
     super.initState();
     _checkTurnStatus();
+    _checkLpStatus();
+  }
+
+  Future<void> _checkLpStatus() async {
+    final status = await LovePointService.checkLpStatus('word_search');
+    if (mounted) {
+      setState(() {
+        _lpStatus = status;
+      });
+    }
   }
 
   Future<void> _checkTurnStatus() async {
@@ -67,7 +81,12 @@ class _WordSearchIntroScreenState extends State<WordSearchIntroScreen>
     final user = StorageService().getUser();
     final partner = StorageService().getPartner();
     final userName = user?.name;
-    final partnerName = partner?.name;
+    final partnerName = partner?.name ?? 'Partner';
+
+    // Us 2.0 brand uses simplified intro screen
+    if (BrandWidgetFactory.isUs2) {
+      return _buildUs2Intro(userName, partnerName);
+    }
 
     return wrapWithDramaticEffects(
       Scaffold(
@@ -221,7 +240,9 @@ class _WordSearchIntroScreenState extends State<WordSearchIntroScreen>
                             ),
                             const SizedBox(width: 10),
                             Text(
-                              '+30 LP on completion',
+                              _lpStatus?.alreadyGrantedToday == true
+                                  ? 'LP earned today · Resets in ${_lpStatus?.resetTimeFormatted ?? ''}'
+                                  : '+30 LP on completion',
                               style: EditorialStyles.bodySmall,
                             ),
                           ],
@@ -252,6 +273,40 @@ class _WordSearchIntroScreenState extends State<WordSearchIntroScreen>
           ),
         ),
       ),
+    );
+  }
+
+  /// Build Us 2.0 styled intro screen
+  Widget _buildUs2Intro(String? userName, String partnerName) {
+    final alreadyEarned = _lpStatus?.alreadyGrantedToday == true;
+
+    return Us2IntroScreen(
+      title: 'Word Search',
+      description: 'Race to find hidden words! Each word you find earns points for you both.',
+      emoji: '🔍',
+      buttonLabel: _isLoading ? 'Loading...' : 'Start Playing',
+      onStart: _isLoading ? () {} : _startGame,
+      onBack: () => Navigator.of(context).pop(),
+      additionalContent: [
+        // Reward badge
+        Us2RewardBadge(
+          text: alreadyEarned ? 'LP earned today' : '+30 LP',
+          icon: Icons.favorite,
+        ),
+        const SizedBox(height: 12),
+        // Turn indicator
+        Us2RewardBadge(
+          text: _isMyTurn ? "It's your turn!" : "Waiting for $partnerName",
+          icon: _isMyTurn ? Icons.play_arrow : Icons.hourglass_empty,
+        ),
+        if (_partnerFoundCount > 0) ...[
+          const SizedBox(height: 12),
+          Us2RewardBadge(
+            text: '$partnerName found $_partnerFoundCount words',
+            icon: Icons.check_circle,
+          ),
+        ],
+      ],
     );
   }
 

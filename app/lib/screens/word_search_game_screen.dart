@@ -10,6 +10,8 @@ import '../services/love_point_service.dart';
 import '../services/unlock_service.dart';
 import '../models/word_search.dart';
 import '../config/brand/brand_loader.dart';
+import '../config/brand/brand_config.dart';
+import '../config/brand/us2_theme.dart';
 import '../theme/app_theme.dart';
 import '../widgets/linked/turn_complete_dialog.dart';
 import '../widgets/linked/partner_first_dialog.dart';
@@ -39,6 +41,9 @@ class _WordSearchGameScreenState extends State<WordSearchGameScreen>
     with TickerProviderStateMixin, GamePollingMixin {
   final WordSearchService _service = WordSearchService();
   final StorageService _storage = StorageService();
+
+  /// Check if we're running the Us2 brand
+  bool get _isUs2 => BrandLoader().config.brand == Brand.us2;
 
   WordSearchGameState? _gameState;
   bool _isLoading = true;
@@ -209,6 +214,12 @@ class _WordSearchGameScreenState extends State<WordSearchGameScreen>
   }
 
   Future<void> _navigateToCompletionScreen() async {
+    // Set pending results flag FIRST - if app is killed before navigation,
+    // user will see "RESULTS ARE READY!" on home screen
+    if (_gameState != null) {
+      await _storage.setPendingResultsMatchId('word_search', _gameState!.match.matchId);
+    }
+
     // LP is server-authoritative - sync from server before showing completion
     // Server already awarded LP via awardLP() in word-search/submit route
     await LovePointService.fetchAndSyncFromServer();
@@ -354,6 +365,7 @@ class _WordSearchGameScreenState extends State<WordSearchGameScreen>
           });
 
           // Show turn complete dialog if turn ended
+          // NOTE: Pending results flag is set in _navigateToCompletionWithLPSync when game completes
           if (result.turnComplete) {
             // Delay to let the word found overlay show first
             await Future.delayed(const Duration(milliseconds: 1200));
@@ -446,36 +458,41 @@ class _WordSearchGameScreenState extends State<WordSearchGameScreen>
   @override
   Widget build(BuildContext context) {
     // PopScope handles Android back button
-    // iOS swipe-to-go-back is disabled at the route level (PageRouteBuilder in new_home_screen.dart)
+    // iOS swipe-to-go-back is disabled at the route level (PageRouteBuilder in home_screen.dart)
     return PopScope(
       canPop: false,
       child: Scaffold(
-        backgroundColor: BrandLoader().colors.background,
-        body: Stack(
-          children: [
-            // Main content inside SafeArea
-            SafeArea(
-              child: _buildBody(),
-            ),
-            // Full-screen overlay dialogs (outside SafeArea to cover status bar)
-            if (_showTurnComplete)
-              Positioned.fill(
-                child: TurnCompleteDialog(
-                  partnerName: _storage.getPartner()?.name ?? 'Partner',
-                  onLeave: () => Navigator.of(context).pop(),
-                  onStay: () => setState(() => _showTurnComplete = false),
-                ),
+        backgroundColor: _isUs2 ? Us2Theme.bgGradientEnd : BrandLoader().colors.background,
+        body: Container(
+          decoration: _isUs2
+              ? const BoxDecoration(gradient: Us2Theme.backgroundGradient)
+              : null,
+          child: Stack(
+            children: [
+              // Main content inside SafeArea
+              SafeArea(
+                child: _buildBody(),
               ),
-            if (_showPartnerFirst)
-              Positioned.fill(
-                child: PartnerFirstDialog(
-                  partnerName: _storage.getPartner()?.name ?? 'Partner',
-                  puzzleType: 'word search',
-                  onGoBack: () => Navigator.of(context).pop(),
-                  onStay: () => setState(() => _showPartnerFirst = false),
+              // Full-screen overlay dialogs (outside SafeArea to cover status bar)
+              if (_showTurnComplete)
+                Positioned.fill(
+                  child: TurnCompleteDialog(
+                    partnerName: _storage.getPartner()?.name ?? 'Partner',
+                    onLeave: () => Navigator.of(context).pop(),
+                    onStay: () => setState(() => _showTurnComplete = false),
+                  ),
                 ),
-              ),
-          ],
+              if (_showPartnerFirst)
+                Positioned.fill(
+                  child: PartnerFirstDialog(
+                    partnerName: _storage.getPartner()?.name ?? 'Partner',
+                    puzzleType: 'word search',
+                    onGoBack: () => Navigator.of(context).pop(),
+                    onStay: () => setState(() => _showPartnerFirst = false),
+                  ),
+                ),
+            ],
+          ),
         ),
       ),
     );
@@ -605,39 +622,53 @@ class _WordSearchGameScreenState extends State<WordSearchGameScreen>
       children: [
         // Main content - simple flex layout that can't overflow
         Container(
-          color: BrandLoader().colors.surface,
+          color: _isUs2 ? Colors.transparent : BrandLoader().colors.surface,
           child: Column(
             children: [
               // Header - fixed
-              _buildHeader(),
+              _isUs2 ? _buildUs2Header() : _buildHeader(),
               // Middle section - flexible, contains grid and word bank
               Expanded(
                 child: _buildMiddleSection(),
               ),
               // Bottom bar - fixed
-              _buildBottomBar(),
+              _isUs2 ? _buildUs2BottomBar() : _buildBottomBar(),
             ],
           ),
         ),
         // Floating bubble overlay (on top of everything)
         if (_selectedWord.isNotEmpty)
           Positioned(
-            top: 8,
+            top: _isUs2 ? 52 : 8,
             left: 0,
             right: 0,
             child: Center(
               child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                padding: EdgeInsets.symmetric(
+                  horizontal: _isUs2 ? 16 : 16,
+                  vertical: _isUs2 ? 6 : 8,
+                ),
                 decoration: BoxDecoration(
-                  color: BrandLoader().colors.textPrimary,
+                  gradient: _isUs2 ? Us2Theme.accentGradient : null,
+                  color: _isUs2 ? null : BrandLoader().colors.textPrimary,
+                  borderRadius: _isUs2 ? BorderRadius.circular(16) : null,
+                  boxShadow: _isUs2
+                      ? [
+                          BoxShadow(
+                            color: Us2Theme.glowPink.withOpacity(0.4),
+                            blurRadius: 12,
+                            offset: const Offset(0, 3),
+                          ),
+                        ]
+                      : null,
                 ),
                 child: Text(
                   _selectedWord.toUpperCase(),
                   style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
+                    fontSize: _isUs2 ? 14 : 16,
+                    fontWeight: FontWeight.w700,
                     letterSpacing: 2,
-                    color: BrandLoader().colors.textOnPrimary,
+                    color: _isUs2 ? Colors.white : BrandLoader().colors.textOnPrimary,
                   ),
                 ),
               ),
@@ -820,6 +851,114 @@ class _WordSearchGameScreenState extends State<WordSearchGameScreen>
     );
   }
 
+  /// Us2 styled header with gradient back button and score badges
+  Widget _buildUs2Header() {
+    final partner = _storage.getPartner();
+    final partnerName = partner?.name ?? 'Partner';
+    final isMyTurn = _gameState!.isMyTurn;
+
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      child: Row(
+        children: [
+          // Gradient back button
+          GestureDetector(
+            onTap: () => Navigator.of(context).pop(),
+            child: Container(
+              width: 30,
+              height: 30,
+              decoration: BoxDecoration(
+                gradient: Us2Theme.accentGradient,
+                borderRadius: BorderRadius.circular(8),
+                boxShadow: [
+                  BoxShadow(
+                    color: Us2Theme.glowPink.withOpacity(0.3),
+                    blurRadius: 6,
+                    offset: const Offset(0, 2),
+                  ),
+                ],
+              ),
+              child: const Center(
+                child: Text(
+                  '←',
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(width: 10),
+          // Title
+          Text(
+            'WORD SEARCH',
+            style: TextStyle(
+              fontFamily: Us2Theme.fontHeading,
+              fontSize: 16,
+              fontWeight: FontWeight.w700,
+              color: Us2Theme.textDark,
+              letterSpacing: 1.5,
+            ),
+          ),
+          const Spacer(),
+          // Score badges
+          Row(
+            children: [
+              _buildUs2ScoreBadge(
+                'You: ${_gameState!.myScore}',
+                isActive: isMyTurn,
+              ),
+              const SizedBox(width: 6),
+              _buildUs2ScoreBadge(
+                '$partnerName: ${_gameState!.partnerScore}',
+                isActive: !isMyTurn,
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// Us2 styled score badge
+  Widget _buildUs2ScoreBadge(String text, {required bool isActive}) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      decoration: BoxDecoration(
+        gradient: Us2Theme.accentGradient,
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: isActive
+            ? [
+                BoxShadow(
+                  color: Us2Theme.glowPink.withOpacity(0.4),
+                  blurRadius: 8,
+                  offset: const Offset(0, 2),
+                ),
+              ]
+            : null,
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          if (isActive) ...[
+            const Text('💗', style: TextStyle(fontSize: 11)),
+            const SizedBox(width: 4),
+          ],
+          Text(
+            text,
+            style: const TextStyle(
+              fontSize: 11,
+              fontWeight: FontWeight.w700,
+              color: Colors.white,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget _buildGameArea(double gridSize) {
     // Grid with calculated size passed from parent
     return Padding(
@@ -869,6 +1008,7 @@ class _WordSearchGameScreenState extends State<WordSearchGameScreen>
   }
 
   // Determine which adjacent cell to select based on direction from last cell
+  // Uses angle snapping to nearest of 8 directions for more predictable control
   GridPosition? _getNextCellByDirection(GridPosition fromCell, Offset toLocalPos) {
     final fromCenter = _getCellCenter(fromCell);
     final dx = toLocalPos.dx - fromCenter.dx;
@@ -876,30 +1016,48 @@ class _WordSearchGameScreenState extends State<WordSearchGameScreen>
 
     // Need to move at least 30% of cell size to register
     final threshold = _cellSize * 0.3;
-    if (dx.abs() < threshold && dy.abs() < threshold) return null;
+    final distance = (dx * dx + dy * dy);
+    if (distance < threshold * threshold) return null;
 
-    // Calculate direction using angle
-    // Diagonal zones: 22.5° to 67.5° (and equivalents in other quadrants)
-    final angle = (dx == 0 && dy == 0) ? 0 : (dy.abs() / (dx.abs() + 0.001));
+    // Calculate angle in degrees (0-360), with 0° pointing right, going clockwise
+    // atan2 returns radians from -π to π, with 0 pointing right
+    double angleRad = math.atan2(dy, dx);
+    double angleDeg = angleRad * 180 / math.pi;
+    if (angleDeg < 0) angleDeg += 360;
 
+    // Snap to nearest 45° direction (8 directions total)
+    // 0° = right, 45° = down-right, 90° = down, 135° = down-left
+    // 180° = left, 225° = up-left, 270° = up, 315° = up-right
+    int snappedAngle = ((angleDeg + 22.5) ~/ 45 * 45).round() % 360;
+
+    // Map snapped angle to dRow, dCol
     int dRow = 0;
     int dCol = 0;
-
-    // Determine horizontal component
-    if (dx.abs() >= threshold) {
-      dCol = dx > 0 ? 1 : -1;
-    }
-
-    // Determine vertical component
-    if (dy.abs() >= threshold) {
-      dRow = dy > 0 ? 1 : -1;
-    }
-
-    // If moving mostly diagonal (angle between 0.4 and 2.5, roughly 22° to 68°)
-    // ensure both components are set
-    if (angle > 0.4 && angle < 2.5 && dx.abs() >= threshold * 0.7 && dy.abs() >= threshold * 0.7) {
-      if (dCol == 0) dCol = dx > 0 ? 1 : -1;
-      if (dRow == 0) dRow = dy > 0 ? 1 : -1;
+    switch (snappedAngle) {
+      case 0:   // Right
+        dCol = 1; dRow = 0;
+        break;
+      case 45:  // Down-right
+        dCol = 1; dRow = 1;
+        break;
+      case 90:  // Down
+        dCol = 0; dRow = 1;
+        break;
+      case 135: // Down-left
+        dCol = -1; dRow = 1;
+        break;
+      case 180: // Left
+        dCol = -1; dRow = 0;
+        break;
+      case 225: // Up-left
+        dCol = -1; dRow = -1;
+        break;
+      case 270: // Up
+        dCol = 0; dRow = -1;
+        break;
+      case 315: // Up-right
+        dCol = 1; dRow = -1;
+        break;
     }
 
     if (dRow == 0 && dCol == 0) return null;
@@ -918,6 +1076,10 @@ class _WordSearchGameScreenState extends State<WordSearchGameScreen>
 
   void _handlePanStart(DragStartDetails details) {
     if (!_gameState!.isMyTurn || _isSubmitting) return;
+
+    // If selection already started (via onTapDown), don't restart
+    // This prevents losing the first cell when dragging from edge
+    if (_isSelecting && _selectedPositions.isNotEmpty) return;
 
     final cell = _getCellFromPosition(details.globalPosition);
     if (cell != null) {
@@ -941,13 +1103,76 @@ class _WordSearchGameScreenState extends State<WordSearchGameScreen>
     if (localPos == null) return;
 
     final lastCell = _selectedPositions.last;
+    GridPosition? nextCell;
 
-    // Use direction-based detection from last cell
-    final nextCell = _getNextCellByDirection(lastCell, localPos);
-    if (nextCell == null) return;
+    if (_selectedPositions.length < 2) {
+      // PHASE 1: First 2 cells - use angle snapping to establish direction
+      nextCell = _getNextCellByDirection(lastCell, localPos);
+      if (nextCell == null) return;
+    } else {
+      // PHASE 2: Direction established - continue in that direction based on distance
+      // Get the established direction from first 2 cells
+      final first = _selectedPositions[0];
+      final second = _selectedPositions[1];
+      final dRow = (second.row - first.row).sign; // -1, 0, or 1
+      final dCol = (second.col - first.col).sign;
 
-    // Allow backtracking
-    if (_selectedPositions.length >= 2) {
+      // Calculate next cell in established direction
+      final expectedNextRow = lastCell.row + dRow;
+      final expectedNextCol = lastCell.col + dCol;
+
+      // Check if finger has moved far enough toward next cell
+      final nextCellCenter = Offset(
+        (expectedNextCol + 0.5) * _cellSize,
+        (expectedNextRow + 0.5) * _cellSize,
+      );
+      final lastCellCenter = _getCellCenter(lastCell);
+
+      // Calculate progress toward next cell (0 = at last cell, 1 = at next cell)
+      final totalDist = (nextCellCenter - lastCellCenter).distance;
+      final currentDist = (localPos - lastCellCenter).distance;
+
+      // Also check we're moving in the right direction (not backwards)
+      final toNext = nextCellCenter - lastCellCenter;
+      final toFinger = localPos - lastCellCenter;
+      final dotProduct = toNext.dx * toFinger.dx + toNext.dy * toFinger.dy;
+
+      // Need to be at least 50% of the way to next cell, moving forward
+      // (Higher threshold prevents flickering at cell boundaries)
+      if (dotProduct > 0 && currentDist > totalDist * 0.5) {
+        final puzzle = _gameState?.puzzle;
+        if (puzzle != null &&
+            expectedNextRow >= 0 && expectedNextRow < puzzle.rows &&
+            expectedNextCol >= 0 && expectedNextCol < puzzle.cols) {
+          nextCell = GridPosition(expectedNextRow, expectedNextCol);
+        }
+      }
+
+      // Also check for backtracking
+      if (nextCell == null && _selectedPositions.length >= 2) {
+        final prevCell = _selectedPositions[_selectedPositions.length - 2];
+        final prevCellCenter = _getCellCenter(prevCell);
+        final toPrev = prevCellCenter - lastCellCenter;
+        final dotPrev = toPrev.dx * toFinger.dx + toPrev.dy * toFinger.dy;
+        final prevDist = (localPos - lastCellCenter).distance;
+        final totalPrevDist = (prevCellCenter - lastCellCenter).distance;
+
+        // Need to be 60% of the way back to trigger backtrack (higher than forward threshold)
+        if (dotPrev > 0 && prevDist > totalPrevDist * 0.6) {
+          // Backtracking
+          setState(() {
+            _selectedPositions.removeLast();
+            _updateSelectedWord();
+          });
+          return;
+        }
+      }
+
+      if (nextCell == null) return;
+    }
+
+    // Allow backtracking for phase 1
+    if (_selectedPositions.length >= 2 && _selectedPositions.length < 3) {
       final prevCell = _selectedPositions[_selectedPositions.length - 2];
       if (prevCell.row == nextCell.row && prevCell.col == nextCell.col) {
         setState(() {
@@ -961,17 +1186,11 @@ class _WordSearchGameScreenState extends State<WordSearchGameScreen>
     // Don't add if already selected
     if (_isPositionSelected(nextCell.row, nextCell.col)) return;
 
-    // Must maintain straight line direction after first 2 cells
-    if (_selectedPositions.length >= 2) {
-      final prevLast = _selectedPositions[_selectedPositions.length - 2];
-      if (!_isInLine(prevLast, lastCell, nextCell)) return;
-    }
-
     // Light haptic feedback when adding cell to selection
     HapticService().trigger(HapticType.light);
 
     setState(() {
-      _selectedPositions.add(nextCell);
+      _selectedPositions.add(nextCell!);
       _updateSelectedWord();
     });
   }
@@ -1015,7 +1234,7 @@ class _WordSearchGameScreenState extends State<WordSearchGameScreen>
               child: AnimatedBuilder(
                 animation: _pulseAnimation,
                 builder: (context, gridChild) {
-                  return Container(
+                  final gridContent = Container(
                     key: _gridKey,
                     width: gridSize,
                     height: gridSize,
@@ -1031,6 +1250,47 @@ class _WordSearchGameScreenState extends State<WordSearchGameScreen>
                       child: gridChild,
                     ),
                   );
+
+                  // Us2: Wrap grid in gold beveled frame
+                  if (_isUs2) {
+                    return Container(
+                      decoration: BoxDecoration(
+                        gradient: Us2Theme.gridFrameGradient,
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(color: Us2Theme.goldBorder, width: 1.5),
+                        boxShadow: [
+                          ...Us2Theme.gridFrameShadow,
+                          const BoxShadow(
+                            color: Color(0x66FFFFFF),
+                            blurRadius: 0,
+                            spreadRadius: 0,
+                            offset: Offset(0, 1),
+                          ),
+                        ],
+                      ),
+                      padding: const EdgeInsets.all(6),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Us2Theme.goldMid,
+                          borderRadius: BorderRadius.circular(8),
+                          boxShadow: const [
+                            BoxShadow(
+                              color: Color(0x1A000000),
+                              blurRadius: 3,
+                              offset: Offset(0, 1),
+                            ),
+                          ],
+                        ),
+                        padding: const EdgeInsets.all(4),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(4),
+                          child: gridContent,
+                        ),
+                      ),
+                    );
+                  }
+
+                  return gridContent;
                 },
                 child: GridView.builder(
                   physics: const NeverScrollableScrollPhysics(),
@@ -1062,6 +1322,58 @@ class _WordSearchGameScreenState extends State<WordSearchGameScreen>
     final isHint = _hintPosition?.row == row && _hintPosition?.col == col;
     final foundColor = _getFoundWordColor(row, col);
 
+    // Us2 styling
+    if (_isUs2) {
+      return Container(
+        decoration: BoxDecoration(
+          gradient: isSelected
+              ? Us2Theme.letterTileGradient // Gold gradient for selected
+              : null,
+          color: isSelected
+              ? null
+              : isHint
+                  ? const Color(0xFFBBDEFB) // Light blue hint
+                  : foundColor ?? const Color(0xFFFFFBF5), // Cream
+          borderRadius: BorderRadius.circular(3),
+          border: Border.all(
+            color: isSelected
+                ? Us2Theme.goldBorder
+                : isHint
+                    ? const Color(0xFF2196F3)
+                    : Us2Theme.cellBorder,
+            width: 1,
+          ),
+          boxShadow: isSelected
+              ? [
+                  BoxShadow(
+                    color: const Color(0x33000000),
+                    blurRadius: 4,
+                    offset: const Offset(0, 2),
+                  ),
+                ]
+              : [
+                  const BoxShadow(
+                    color: Color(0xE6FFFFFF),
+                    blurRadius: 0,
+                    offset: Offset(0, 1),
+                  ),
+                ],
+        ),
+        child: Center(
+          child: Text(
+            letter.toUpperCase(),
+            style: TextStyle(
+              fontFamily: Us2Theme.fontHeading,
+              fontSize: cellSize * 0.42,
+              fontWeight: FontWeight.w700,
+              color: isSelected ? Us2Theme.tileText : Us2Theme.textDark,
+            ),
+          ),
+        ),
+      );
+    }
+
+    // Original brand styling
     return Container(
       decoration: BoxDecoration(
         color: isSelected
@@ -1104,10 +1416,18 @@ class _WordSearchGameScreenState extends State<WordSearchGameScreen>
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
         decoration: BoxDecoration(
-          color: BrandLoader().colors.surface,
-          border: Border(
-            top: BorderSide(color: const Color(0xFFE0E0E0)),
-          ),
+          color: _isUs2 ? null : BrandLoader().colors.surface,
+          gradient: _isUs2
+              ? const LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [Color(0xFFFFFBF5), Color(0xFFFFF5EE)],
+                )
+              : null,
+          borderRadius: _isUs2 ? const BorderRadius.vertical(top: Radius.circular(12)) : null,
+          border: _isUs2
+              ? Border.all(color: const Color(0x4DC9A875))
+              : Border(top: BorderSide(color: const Color(0xFFE0E0E0))),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -1120,16 +1440,18 @@ class _WordSearchGameScreenState extends State<WordSearchGameScreen>
                   'FIND THESE WORDS',
                   style: TextStyle(
                     fontSize: 10,
+                    fontWeight: _isUs2 ? FontWeight.w700 : FontWeight.w400,
                     letterSpacing: 1,
-                    color: BrandLoader().colors.textSecondary,
+                    color: _isUs2 ? Us2Theme.textMedium : BrandLoader().colors.textSecondary,
                   ),
                 ),
                 Text(
                   '${match.totalWordsFound} / ${puzzle.words.length}',
                   style: TextStyle(
                     fontSize: 10,
+                    fontWeight: _isUs2 ? FontWeight.w700 : FontWeight.w400,
                     letterSpacing: 1,
-                    color: BrandLoader().colors.textSecondary,
+                    color: _isUs2 ? Us2Theme.gradientAccentStart : BrandLoader().colors.textSecondary,
                   ),
                 ),
               ],
@@ -1157,9 +1479,10 @@ class _WordSearchGameScreenState extends State<WordSearchGameScreen>
                   return Container(
                     padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
                     decoration: BoxDecoration(
-                      color: BrandLoader().colors.surface,
+                      color: _isUs2 ? Colors.white : BrandLoader().colors.surface,
+                      borderRadius: _isUs2 ? BorderRadius.circular(6) : null,
                       border: Border.all(
-                        color: found ? color! : const Color(0xFFE0E0E0),
+                        color: found ? color! : (_isUs2 ? Us2Theme.cellBorder : const Color(0xFFE0E0E0)),
                       ),
                     ),
                     child: Center(
@@ -1168,12 +1491,12 @@ class _WordSearchGameScreenState extends State<WordSearchGameScreen>
                         child: Text(
                           word.toUpperCase(),
                           style: TextStyle(
-                            fontSize: 11,
-                            fontWeight: FontWeight.w600,
+                            fontSize: _isUs2 ? 10 : 11,
+                            fontWeight: _isUs2 ? FontWeight.w700 : FontWeight.w600,
                             letterSpacing: 0.5,
                             color: found
                                 ? color!.withValues(alpha: 0.6)
-                                : BrandLoader().colors.textPrimary,
+                                : (_isUs2 ? Us2Theme.textDark : BrandLoader().colors.textPrimary),
                             decoration: found ? TextDecoration.lineThrough : null,
                           ),
                         ),
@@ -1294,6 +1617,121 @@ class _WordSearchGameScreenState extends State<WordSearchGameScreen>
                       color: isMyTurn
                           ? BrandLoader().colors.textOnPrimary
                           : BrandLoader().colors.textSecondary,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// Us2 styled bottom bar with gradient buttons
+  Widget _buildUs2BottomBar() {
+    final isMyTurn = _gameState!.isMyTurn;
+    final hintsRemaining = _gameState!.myHints;
+    final wordsThisTurn = _gameState!.match.wordsFoundThisTurn;
+    final isDisabled = !isMyTurn;
+
+    return Container(
+      padding: EdgeInsets.fromLTRB(12, 6, 12, MediaQuery.of(context).padding.bottom + 8),
+      decoration: const BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [Color(0xFFFFFBF5), Color(0xFFFFF5EE)],
+        ),
+      ),
+      child: Row(
+        children: [
+          // Hint button - compact
+          Opacity(
+            opacity: isDisabled || hintsRemaining <= 0 ? 0.5 : 1.0,
+            child: GestureDetector(
+              onTap: !isDisabled && hintsRemaining > 0 ? _useHint : null,
+              child: Container(
+                padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 14),
+                decoration: BoxDecoration(
+                  gradient: Us2Theme.accentGradient,
+                  borderRadius: BorderRadius.circular(18),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Us2Theme.glowPink.withOpacity(0.3),
+                      blurRadius: 8,
+                      offset: const Offset(0, 2),
+                    ),
+                  ],
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Text('💡', style: TextStyle(fontSize: 14)),
+                    const SizedBox(width: 4),
+                    Text(
+                      'Hint ($hintsRemaining)',
+                      style: const TextStyle(
+                        fontSize: 13,
+                        fontWeight: FontWeight.w700,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(width: 10),
+          // Turn progress - compact
+          Expanded(
+            child: Container(
+              padding: const EdgeInsets.symmetric(vertical: 8),
+              decoration: BoxDecoration(
+                gradient: isMyTurn
+                    ? Us2Theme.accentGradient
+                    : const LinearGradient(
+                        colors: [Color(0xFFE0E0E0), Color(0xFFBDBDBD)],
+                      ),
+                borderRadius: BorderRadius.circular(18),
+                boxShadow: isMyTurn
+                    ? [
+                        BoxShadow(
+                          color: Us2Theme.glowPink.withOpacity(0.3),
+                          blurRadius: 8,
+                          offset: const Offset(0, 2),
+                        ),
+                      ]
+                    : null,
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  // Progress dots
+                  Row(
+                    children: List.generate(3, (i) {
+                      final filled = i < wordsThisTurn;
+                      return Container(
+                        width: 8,
+                        height: 8,
+                        margin: const EdgeInsets.only(right: 4),
+                        decoration: BoxDecoration(
+                          color: isMyTurn
+                              ? Colors.white.withOpacity(filled ? 1.0 : 0.4)
+                              : const Color(0xFF666666).withOpacity(filled ? 0.6 : 0.3),
+                          shape: BoxShape.circle,
+                        ),
+                      );
+                    }),
+                  ),
+                  const SizedBox(width: 6),
+                  Text(
+                    isMyTurn ? '$wordsThisTurn/3 FOUND' : "PARTNER'S TURN",
+                    style: TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w700,
+                      letterSpacing: 0.5,
+                      color: isMyTurn ? Colors.white : const Color(0xFF666666),
                     ),
                   ),
                 ],

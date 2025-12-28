@@ -1,6 +1,6 @@
 {
   "quizId": "quiz_011",
-  "title": "Growth Quiz 11",
+  "title": "Inspiration",
   "branch": "growth",
   "questions": [
     {
@@ -33,5 +33,6 @@
       "prompt": "Who prioritizes more...",
       "content": "Shared goals over individual ones"
     }
-  ]
+  ],
+  "description": "How do you inspire each other to be better? Discover your influence."
 }

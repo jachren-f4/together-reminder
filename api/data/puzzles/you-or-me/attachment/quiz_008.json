@@ -1,6 +1,6 @@
 {
   "quizId": "quiz_008",
-  "title": "Attachment Quiz 8",
+  "title": "Past Patterns",
   "branch": "attachment",
   "questions": [
     {
@@ -33,5 +33,6 @@
       "prompt": "Who seeks more...",
       "content": "Verbal reassurance when anxious"
     }
-  ]
+  ],
+  "description": "How do old experiences shape your current relationship dynamics?"
 }

@@ -1,0 +1,250 @@
+{
+  "quizzes": [
+    {
+      "id": "personal_evolution",
+      "name": "Personal Evolution",
+      "category": "growth",
+      "difficulty": 2,
+      "formatType": "affirmation",
+      "imagePath": "",
+      "description": "Rate your personal growth in love",
+      "questions": [
+        {
+          "question": "This relationship has helped me become a better person.",
+          "questionType": "scale",
+          "options": [],
+          "correctAnswer": null
+        },
+        {
+          "question": "I have grown emotionally since being with my partner.",
+          "questionType": "scale",
+          "options": [],
+          "correctAnswer": null
+        },
+        {
+          "question": "My partner encourages me to be my best self.",
+          "questionType": "scale",
+          "options": [],
+          "correctAnswer": null
+        },
+        {
+          "question": "I feel inspired to grow when I'm with my partner.",
+          "questionType": "scale",
+          "options": [],
+          "correctAnswer": null
+        },
+        {
+          "question": "Love has taught me things about myself I didn't know.",
+          "questionType": "scale",
+          "options": [],
+          "correctAnswer": null
+        }
+      ]
+    },
+    {
+      "id": "supporting_dreams",
+      "name": "Supporting Dreams",
+      "category": "growth",
+      "difficulty": 2,
+      "formatType": "affirmation",
+      "imagePath": "",
+      "description": "Rate how you support each other's dreams",
+      "questions": [
+        {
+          "question": "My partner genuinely supports my goals and dreams.",
+          "questionType": "scale",
+          "options": [],
+          "correctAnswer": null
+        },
+        {
+          "question": "I feel encouraged to pursue what matters to me.",
+          "questionType": "scale",
+          "options": [],
+          "correctAnswer": null
+        },
+        {
+          "question": "We celebrate each other's achievements.",
+          "questionType": "scale",
+          "options": [],
+          "correctAnswer": null
+        },
+        {
+          "question": "My partner believes in my potential.",
+          "questionType": "scale",
+          "options": [],
+          "correctAnswer": null
+        },
+        {
+          "question": "We help each other reach for our aspirations.",
+          "questionType": "scale",
+          "options": [],
+          "correctAnswer": null
+        }
+      ]
+    },
+    {
+      "id": "learning_together",
+      "name": "Learning Together",
+      "category": "growth",
+      "difficulty": 2,
+      "formatType": "affirmation",
+      "imagePath": "",
+      "description": "Rate your growth as a couple",
+      "questions": [
+        {
+          "question": "We learn from our mistakes as a couple.",
+          "questionType": "scale",
+          "options": [],
+          "correctAnswer": null
+        },
+        {
+          "question": "Our communication has improved over time.",
+          "questionType": "scale",
+          "options": [],
+          "correctAnswer": null
+        },
+        {
+          "question": "We're better at handling challenges than we used to be.",
+          "questionType": "scale",
+          "options": [],
+          "correctAnswer": null
+        },
+        {
+          "question": "We actively work on improving our relationship.",
+          "questionType": "scale",
+          "options": [],
+          "correctAnswer": null
+        },
+        {
+          "question": "Each year together makes us stronger.",
+          "questionType": "scale",
+          "options": [],
+          "correctAnswer": null
+        }
+      ]
+    },
+    {
+      "id": "shared_vision",
+      "name": "Shared Vision",
+      "category": "growth",
+      "difficulty": 2,
+      "formatType": "affirmation",
+      "imagePath": "",
+      "description": "Rate your shared future vision",
+      "questions": [
+        {
+          "question": "We share a vision for our future together.",
+          "questionType": "scale",
+          "options": [],
+          "correctAnswer": null
+        },
+        {
+          "question": "Our goals and values are aligned.",
+          "questionType": "scale",
+          "options": [],
+          "correctAnswer": null
+        },
+        {
+          "question": "We plan for the future as a team.",
+          "questionType": "scale",
+          "options": [],
+          "correctAnswer": null
+        },
+        {
+          "question": "I'm excited about what we will build together.",
+          "questionType": "scale",
+          "options": [],
+          "correctAnswer": null
+        },
+        {
+          "question": "We're growing in the same direction.",
+          "questionType": "scale",
+          "options": [],
+          "correctAnswer": null
+        }
+      ]
+    },
+    {
+      "id": "resilience",
+      "name": "Resilience",
+      "category": "growth",
+      "difficulty": 2,
+      "formatType": "affirmation",
+      "imagePath": "",
+      "description": "Rate your relationship resilience",
+      "questions": [
+        {
+          "question": "We've become stronger through the hard times.",
+          "questionType": "scale",
+          "options": [],
+          "correctAnswer": null
+        },
+        {
+          "question": "Challenges have deepened our bond rather than weakened it.",
+          "questionType": "scale",
+          "options": [],
+          "correctAnswer": null
+        },
+        {
+          "question": "I trust we can handle whatever comes our way.",
+          "questionType": "scale",
+          "options": [],
+          "correctAnswer": null
+        },
+        {
+          "question": "Our relationship has survived tests that make it more solid.",
+          "questionType": "scale",
+          "options": [],
+          "correctAnswer": null
+        },
+        {
+          "question": "We bounce back from setbacks together.",
+          "questionType": "scale",
+          "options": [],
+          "correctAnswer": null
+        }
+      ]
+    },
+    {
+      "id": "evolving_love",
+      "name": "Evolving Love",
+      "category": "growth",
+      "difficulty": 2,
+      "formatType": "affirmation",
+      "imagePath": "",
+      "description": "Rate how your love has evolved",
+      "questions": [
+        {
+          "question": "Our love has matured and deepened over time.",
+          "questionType": "scale",
+          "options": [],
+          "correctAnswer": null
+        },
+        {
+          "question": "I love my partner more now than when we first met.",
+          "questionType": "scale",
+          "options": [],
+          "correctAnswer": null
+        },
+        {
+          "question": "Our relationship continues to surprise and delight me.",
+          "questionType": "scale",
+          "options": [],
+          "correctAnswer": null
+        },
+        {
+          "question": "We've found new ways to connect as we've changed.",
+          "questionType": "scale",
+          "options": [],
+          "correctAnswer": null
+        },
+        {
+          "question": "The best parts of our relationship are still unfolding.",
+          "questionType": "scale",
+          "options": [],
+          "correctAnswer": null
+        }
+      ]
+    }
+  ]
+}

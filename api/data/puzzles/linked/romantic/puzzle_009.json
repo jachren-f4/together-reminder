@@ -9,8 +9,10 @@
     "1": { "type": "text", "content": "Take a ___", "arrow": "down", "target_index": 8 },
     "2": { "type": "text", "content": "After D", "arrow": "down", "target_index": 12 },
     "3": { "type": "text", "content": "BOL_", "arrow": "down", "target_index": 13 },
-    "4": { "type": "emoji", "content": "🍬", "arrow": "down", "target_index": 17 },
-    "5": { "type": "emoji", "content": "🛏️", "arrow": "across", "target_index": 11 },
+    "4": {
+      "across": { "type": "emoji", "content": "🛏️", "target_index": 11 },
+      "down": { "type": "emoji", "content": "🍬", "target_index": 17 }
+    },
     "6": { "type": "text", "content": "Can't ___", "arrow": "across", "target_index": 24 },
     "7": { "type": "emoji", "content": "💍", "arrow": "across", "target_index": 29 },
     "8": { "type": "text", "content": "Before W", "arrow": "down", "target_index": 43 },

@@ -1,6 +1,6 @@
 {
   "quizId": "quiz_008",
-  "title": "Connection Quiz 8",
+  "title": "Trust & Truth",
   "branch": "connection",
   "questions": [
     {
@@ -33,5 +33,6 @@
       "prompt": "Who is more...",
       "content": "Comfortable with silence together"
     }
-  ]
+  ],
+  "description": "The foundation of connection—explore your trust in each other."
 }

@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=390, height=844, initial-scale=1.0">
+    <title>Us 2.0 - Settings Screen</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Nunito:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-gradient-start: #FFD1C1;
+            --bg-gradient-end: #FFF5F0;
+            --accent-start: #FF6B6B;
+            --accent-end: #FF9F43;
+            --cream: #FFF8F0;
+            --beige: #F5E6D8;
+            --text-dark: #2D2D2D;
+            --text-medium: #666666;
+            --text-light: #999999;
+            --gold: #C9A875;
+            --glow-pink: rgba(255, 107, 107, 0.4);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            background: linear-gradient(180deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
+            min-height: 100vh;
+            padding-bottom: 40px;
+        }
+
+        .container {
+            max-width: 390px;
+            margin: 0 auto;
+        }
+
+        /* Header */
+        .header {
+            padding: 60px 24px 24px;
+        }
+
+        .header-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 32px;
+            font-weight: 600;
+            background: linear-gradient(135deg, var(--accent-start), var(--accent-end));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Partner Banner */
+        .partner-banner {
+            margin: 0 20px 24px;
+            background: white;
+            border-radius: 20px;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+        }
+
+        .partner-avatar {
+            width: 52px;
+            height: 52px;
+            background: linear-gradient(135deg, var(--accent-start), var(--accent-end));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 20px;
+            font-weight: 700;
+            box-shadow: 0 6px 20px var(--glow-pink);
+        }
+
+        .partner-info {
+            flex: 1;
+        }
+
+        .partner-name {
+            font-family: 'Playfair Display', serif;
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .partner-since {
+            font-size: 11px;
+            color: var(--text-light);
+            letter-spacing: 1px;
+            margin-top: 4px;
+        }
+
+        .partner-heart {
+            font-size: 24px;
+        }
+
+        /* Settings Group */
+        .settings-group {
+            margin: 0 20px 20px;
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+        }
+
+        .group-title {
+            padding: 16px 20px 10px;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            color: var(--text-light);
+        }
+
+        /* Setting Row */
+        .setting-row {
+            display: flex;
+            align-items: center;
+            padding: 16px 20px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .setting-row:hover {
+            background: var(--cream);
+        }
+
+        .setting-row:not(:last-child) {
+            border-bottom: 1px solid var(--beige);
+        }
+
+        .setting-content {
+            flex: 1;
+        }
+
+        .setting-label {
+            font-size: 15px;
+            color: var(--text-dark);
+        }
+
+        .setting-value {
+            font-size: 12px;
+            color: var(--text-medium);
+            margin-top: 2px;
+        }
+
+        .setting-arrow {
+            color: var(--beige);
+            font-size: 18px;
+        }
+
+        /* Toggle Switch */
+        .toggle-switch {
+            width: 48px;
+            height: 28px;
+            background: var(--beige);
+            border-radius: 14px;
+            position: relative;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .toggle-switch.active {
+            background: linear-gradient(135deg, var(--accent-start), var(--accent-end));
+        }
+
+        .toggle-switch::after {
+            content: '';
+            position: absolute;
+            width: 22px;
+            height: 22px;
+            background: white;
+            border-radius: 50%;
+            top: 3px;
+            left: 3px;
+            transition: transform 0.2s;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+        }
+
+        .toggle-switch.active::after {
+            transform: translateX(20px);
+        }
+
+        /* Who Goes First Picker */
+        .picker-container {
+            padding: 16px 20px;
+        }
+
+        .picker-label {
+            font-size: 14px;
+            color: var(--text-dark);
+            margin-bottom: 12px;
+        }
+
+        .picker-options {
+            display: flex;
+            gap: 10px;
+        }
+
+        .picker-option {
+            flex: 1;
+            padding: 14px;
+            text-align: center;
+            border-radius: 12px;
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 2px solid var(--beige);
+            background: white;
+            color: var(--text-dark);
+        }
+
+        .picker-option.selected {
+            background: linear-gradient(135deg, var(--accent-start), var(--accent-end));
+            border-color: transparent;
+            color: white;
+            box-shadow: 0 6px 20px var(--glow-pink);
+        }
+
+        /* Steps Section */
+        .steps-connected {
+            padding: 16px 20px;
+        }
+
+        .steps-status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #4CAF50;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+
+        .steps-status-icon {
+            font-size: 18px;
+        }
+
+        .steps-card {
+            background: var(--cream);
+            border-radius: 16px;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .steps-emoji {
+            font-size: 36px;
+        }
+
+        .steps-info {
+            flex: 1;
+        }
+
+        .steps-label {
+            font-size: 10px;
+            color: var(--text-light);
+            letter-spacing: 1px;
+        }
+
+        .steps-value {
+            font-family: 'Playfair Display', serif;
+            font-size: 28px;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-top: 4px;
+        }
+
+        .steps-refresh {
+            color: var(--text-light);
+            font-size: 20px;
+            cursor: pointer;
+        }
+
+        /* Connect Button */
+        .connect-section {
+            padding: 16px 20px;
+        }
+
+        .connect-description {
+            font-size: 14px;
+            color: var(--text-medium);
+            margin-bottom: 16px;
+            line-height: 1.5;
+        }
+
+        .connect-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 14px 24px;
+            background: linear-gradient(135deg, var(--accent-start), var(--accent-end));
+            border-radius: 12px;
+            color: white;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 6px 20px var(--glow-pink);
+        }
+
+        .connect-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px var(--glow-pink);
+        }
+
+        .connect-button-icon {
+            font-size: 16px;
+        }
+
+        /* Footer */
+        .footer {
+            padding: 32px;
+            text-align: center;
+        }
+
+        .footer-text {
+            font-size: 11px;
+            color: var(--text-light);
+            letter-spacing: 1px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="header-title">Settings</div>
+        </div>
+
+        <!-- Partner Banner -->
+        <div class="partner-banner">
+            <div class="partner-avatar">T</div>
+            <div class="partner-info">
+                <div class="partner-name">Taija</div>
+                <div class="partner-since">PARTNER SINCE DEC 2024</div>
+            </div>
+            <div class="partner-heart">💕</div>
+        </div>
+
+        <!-- Profile Section -->
+        <div class="settings-group">
+            <div class="group-title">PROFILE</div>
+            <div class="setting-row">
+                <div class="setting-content">
+                    <div class="setting-label">Name</div>
+                    <div class="setting-value">Joakim</div>
+                </div>
+                <span class="setting-arrow">›</span>
+            </div>
+            <div class="setting-row">
+                <div class="setting-content">
+                    <div class="setting-label">Avatar</div>
+                    <div class="setting-value">Tap to change</div>
+                </div>
+                <span class="setting-arrow">›</span>
+            </div>
+        </div>
+
+        <!-- Sound Section -->
+        <div class="settings-group">
+            <div class="group-title">SOUND</div>
+            <div class="setting-row">
+                <div class="setting-content">
+                    <div class="setting-label">Sound Effects</div>
+                </div>
+                <div class="toggle-switch active"></div>
+            </div>
+            <div class="setting-row">
+                <div class="setting-content">
+                    <div class="setting-label">Haptic Feedback</div>
+                </div>
+                <div class="toggle-switch active"></div>
+            </div>
+        </div>
+
+        <!-- Games Section -->
+        <div class="settings-group">
+            <div class="group-title">GAMES</div>
+            <div class="picker-container">
+                <div class="picker-label">Who goes first?</div>
+                <div class="picker-options">
+                    <div class="picker-option selected">YOU</div>
+                    <div class="picker-option">TAIJA</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Steps Section (Connected State) -->
+        <div class="settings-group">
+            <div class="group-title">STEPS TOGETHER</div>
+            <div class="steps-connected">
+                <div class="steps-status">
+                    <span class="steps-status-icon">✓</span>
+                    Apple Health Connected
+                </div>
+                <div class="steps-card">
+                    <span class="steps-emoji">👟</span>
+                    <div class="steps-info">
+                        <div class="steps-label">TODAY'S STEPS</div>
+                        <div class="steps-value">8,432</div>
+                    </div>
+                    <span class="steps-refresh">↻</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Steps Section (Not Connected State) - Alternative -->
+        <!--
+        <div class="settings-group">
+            <div class="group-title">STEPS TOGETHER</div>
+            <div class="connect-section">
+                <div class="connect-description">
+                    Connect Apple Health to track your daily steps together.
+                </div>
+                <div class="connect-button">
+                    <span class="connect-button-icon">❤️</span>
+                    CONNECT APPLE HEALTH
+                </div>
+            </div>
+        </div>
+        -->
+
+        <!-- Footer -->
+        <div class="footer">
+            <div class="footer-text">US 2.0 V1.0.0</div>
+        </div>
+    </div>
+</body>
+</html>

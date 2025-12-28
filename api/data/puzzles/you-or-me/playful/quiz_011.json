@@ -1,6 +1,6 @@
 {
   "quizId": "quiz_011",
-  "title": "Playful Quiz 11",
+  "title": "Superpowers",
   "branch": "playful",
   "questions": [
     {
@@ -33,5 +33,6 @@
       "prompt": "Who would...",
       "content": "Wear something outrageous to get attention"
     }
-  ]
+  ],
+  "description": "If you had powers, who'd be the hero and who'd be the sidekick?"
 }

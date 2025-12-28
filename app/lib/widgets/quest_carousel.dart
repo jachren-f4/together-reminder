@@ -20,6 +20,9 @@ import 'steps/steps_quest_card.dart';
 /// Callback to determine if a quest is locked and what criteria is needed to unlock
 typedef QuestLockCallback = ({bool isLocked, String? unlockCriteria}) Function(DailyQuest quest);
 
+/// Callback to determine if a quest should show onboarding guidance
+typedef QuestGuidanceCallback = ({bool showGuidance, String? guidanceText}) Function(DailyQuest quest);
+
 class QuestCarousel extends StatefulWidget {
   final List<DailyQuest> quests;
   final String? currentUserId;
@@ -27,6 +30,7 @@ class QuestCarousel extends StatefulWidget {
   final double cardWidthPercent; // Default: 0.6 (60%)
   final bool showProgressBar; // Default: true
   final QuestLockCallback? isLockedBuilder; // Optional: determines locked state per quest
+  final QuestGuidanceCallback? guidanceBuilder; // Optional: determines guidance state per quest
 
   const QuestCarousel({
     super.key,
@@ -36,6 +40,7 @@ class QuestCarousel extends StatefulWidget {
     this.cardWidthPercent = 0.6,
     this.showProgressBar = true,
     this.isLockedBuilder,
+    this.guidanceBuilder,
   });
 
   @override
@@ -175,6 +180,11 @@ class _QuestCarouselState extends State<QuestCarousel> {
     final isLocked = lockState?.isLocked ?? false;
     final unlockCriteria = lockState?.unlockCriteria;
 
+    // Check if quest should show guidance
+    final guidanceState = widget.guidanceBuilder?.call(quest);
+    final showGuidance = guidanceState?.showGuidance ?? false;
+    final guidanceText = guidanceState?.guidanceText;
+
     // Use specialized StepsQuestCard for steps quests (iOS only)
     if (quest.type == QuestType.steps && Platform.isIOS) {
       return StepsQuestCard(
@@ -205,6 +215,8 @@ class _QuestCarouselState extends State<QuestCarousel> {
       showShadow: isActive,
       isLocked: isLocked,
       unlockCriteria: unlockCriteria,
+      showGuidance: showGuidance,
+      guidanceText: guidanceText,
     );
   }
 

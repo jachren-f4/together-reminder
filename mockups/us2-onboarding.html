@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Us 2.0 - Onboarding Screen</title>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-gradient-start: #FFD1C1;
+            --bg-gradient-end: #FFF5F0;
+            --primary-pink: #FF5E62;
+            --gradient-start: #FF6B6B;
+            --gradient-end: #FF9F43;
+            --card-salmon: #FF7B6B;
+            --cream: #FFF8F0;
+            --text-dark: #2D2D2D;
+            --text-medium: #6B6B6B;
+            --text-light: #9B9B9B;
+            --glow-pink: rgba(255, 107, 107, 0.5);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            min-height: 100vh;
+            background: linear-gradient(180deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .phone-frame {
+            width: 390px;
+            height: 844px;
+            background: linear-gradient(180deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
+            border-radius: 40px;
+            overflow: hidden;
+            box-shadow: 0 25px 80px rgba(0, 0, 0, 0.15);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .safe-area {
+            padding: 60px 24px 40px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .logo-section {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .logo {
+            font-family: 'Pacifico', cursive;
+            font-size: 64px;
+            color: white;
+            text-shadow:
+                0 0 20px rgba(255, 107, 107, 0.8),
+                0 0 40px rgba(255, 159, 67, 0.5),
+                0 0 60px rgba(255, 107, 107, 0.3);
+            position: relative;
+        }
+
+        .logo::after {
+            content: '♥';
+            position: absolute;
+            top: -10px;
+            right: -25px;
+            font-size: 24px;
+        }
+
+        .tagline {
+            font-family: 'Nunito', sans-serif;
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: 3px;
+            color: var(--text-medium);
+            margin-top: 8px;
+        }
+
+        .hearts-symbol {
+            margin: 40px 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .heart-circle {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            border: 3px solid var(--gradient-start);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.5);
+        }
+
+        .heart-circle:first-child {
+            margin-right: -20px;
+            z-index: 1;
+        }
+
+        .heart-circle:last-child {
+            border-color: var(--gradient-end);
+        }
+
+        .heart-emoji {
+            font-size: 32px;
+        }
+
+        .subtitle {
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            font-size: 18px;
+            color: var(--text-medium);
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .buttons-section {
+            width: 100%;
+            max-width: 320px;
+        }
+
+        .primary-button {
+            width: 100%;
+            padding: 18px 32px;
+            background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+            border: none;
+            border-radius: 16px;
+            font-family: 'Nunito', sans-serif;
+            font-size: 16px;
+            font-weight: 700;
+            color: white;
+            cursor: pointer;
+            box-shadow: 0 8px 25px var(--glow-pink);
+            transition: all 0.2s ease;
+            letter-spacing: 0.5px;
+        }
+
+        .primary-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 35px var(--glow-pink);
+        }
+
+        .secondary-link {
+            text-align: center;
+            margin-top: 24px;
+        }
+
+        .secondary-link span {
+            font-size: 14px;
+            color: var(--text-medium);
+            font-style: italic;
+        }
+
+        .secondary-link a {
+            font-size: 14px;
+            color: var(--primary-pink);
+            text-decoration: none;
+            font-weight: 600;
+            margin-left: 4px;
+        }
+
+        .secondary-link a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="phone-frame">
+        <div class="safe-area">
+            <div class="logo-section">
+                <div class="logo">Us 2.0</div>
+                <div class="tagline">FOR COUPLES WHO CONNECT</div>
+            </div>
+
+            <div class="hearts-symbol">
+                <div class="heart-circle">
+                    <span class="heart-emoji">💕</span>
+                </div>
+                <div class="heart-circle">
+                    <span class="heart-emoji">💖</span>
+                </div>
+            </div>
+
+            <div class="subtitle">
+                For the small moments that matter
+            </div>
+
+            <div class="buttons-section">
+                <button class="primary-button">Get Started</button>
+
+                <div class="secondary-link">
+                    <span>Already have an account?</span>
+                    <a href="#">Sign in</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

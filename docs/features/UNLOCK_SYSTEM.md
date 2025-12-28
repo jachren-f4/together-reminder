@@ -171,6 +171,26 @@ void _onUnlockChanged() {
 }
 ```
 
+### 6. Guidance Hand with Pending Results
+If a user kills the app while on a waiting screen and has pending results, the guidance hand
+stays on that quest until they view results:
+
+```dart
+// In daily_quests_widget.dart _getGuidanceState()
+// Check for pending results BEFORE checking normal guidance target
+String? pendingContentType;
+if (quest.type == QuestType.quiz) {
+  pendingContentType = quest.formatType == 'affirmation' ? 'affirmation_quiz' : 'classic_quiz';
+} else if (quest.type == QuestType.youOrMe) {
+  pendingContentType = 'you_or_me';
+}
+if (pendingContentType != null && StorageService().hasPendingResults(pendingContentType)) {
+  return (showGuidance: true, guidanceText: 'Continue Here');
+}
+```
+
+This ensures users complete the "RESULTS ARE READY!" screen before moving on to the next activity.
+
 ---
 
 ## Common Bugs & Fixes
@@ -368,6 +388,7 @@ No (wait for other)         Yes (unlock!)
 
 | Date | Change |
 |------|--------|
+| 2025-12-17 | Guidance hand stays on quest with pending results until user views results screen |
 | 2025-12-16 | Removed LP awarding for unlocks - LP only comes from game completion now |
 | 2025-12-16 | Fixed celebration overlay dark background not filling screen edges (showGeneralDialog + SizedBox.expand) |
 | 2025-12-16 | Initial documentation |

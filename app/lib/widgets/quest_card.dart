@@ -8,6 +8,7 @@ import '../config/brand/brand_loader.dart';
 import '../theme/app_theme.dart';
 import '../animations/animation_config.dart';
 import 'animated_checkmark.dart';
+import 'quest_guidance_overlay.dart';
 
 /// Therapeutic branch names that get the "Deeper" badge
 const List<String> _therapeuticBranches = ['connection', 'attachment', 'growth'];
@@ -32,6 +33,8 @@ class QuestCard extends StatefulWidget {
   final bool showShadow; // Controlled by carousel for active card
   final bool isLocked; // When true, shows grayscale + lock icon + unlock criteria
   final String? unlockCriteria; // e.g., "Complete a Daily Quest to unlock"
+  final bool showGuidance; // When true, shows ribbon + floating hand for onboarding
+  final String? guidanceText; // "Start Here" or "Continue Here"
 
   const QuestCard({
     super.key,
@@ -41,6 +44,8 @@ class QuestCard extends StatefulWidget {
     this.showShadow = false,
     this.isLocked = false,
     this.unlockCriteria,
+    this.showGuidance = false,
+    this.guidanceText,
   });
 
   @override
@@ -234,12 +239,15 @@ class _QuestCardState extends State<QuestCard>
       0, 0, 0, 1, 0,
     ];
 
-    return GestureDetector(
-      onTapDown: _handleTapDown,
-      onTapUp: _handleTapUp,
-      onTapCancel: _handleTapCancel,
-      onTap: _handleTap,
-      child: AnimatedBuilder(
+    return QuestGuidanceOverlay(
+      showGuidance: widget.showGuidance,
+      ribbonText: widget.guidanceText ?? 'Start Here',
+      child: GestureDetector(
+        onTapDown: _handleTapDown,
+        onTapUp: _handleTapUp,
+        onTapCancel: _handleTapCancel,
+        onTap: _handleTap,
+        child: AnimatedBuilder(
         animation: _pressController,
         builder: (context, child) {
           Widget cardWidget = Transform.scale(
@@ -417,24 +425,8 @@ class _QuestCardState extends State<QuestCard>
                           ],
                         ),
                       ),
-                      const SizedBox(width: 8),
-
-                      // Reward badge
-                      Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                        decoration: BoxDecoration(
-                          color: BrandLoader().colors.textPrimary,
-                          border: Border.all(color: BrandLoader().colors.textPrimary, width: 1),
-                        ),
-                        child: Text(
-                          '+${widget.quest.lpAwarded ?? 30}',
-                          style: AppTheme.headlineFont.copyWith( // Serif font
-                            fontSize: 14,
-                            fontWeight: FontWeight.w700,
-                            color: BrandLoader().colors.textOnPrimary,
-                          ),
-                        ),
-                      ),
+                      // LP reward badge removed - LP is now daily-capped
+                      // See docs/LP_DAILY_RESET_SYSTEM.md for details
                     ],
                   ),
                   const SizedBox(height: 12),
@@ -456,6 +448,7 @@ class _QuestCardState extends State<QuestCard>
             ),
           ],
         ),
+      ),
       ),
     );
   }
@@ -506,7 +499,7 @@ class _QuestCardState extends State<QuestCard>
         if (widget.quest.formatType == 'affirmation') {
           return 'Rate your feelings together';
         }
-        return 'Answer ten questions together';
+        return 'Answer five questions together';
       case QuestType.youOrMe:
         return 'Guess who said what';
       case QuestType.question:
@@ -660,6 +653,40 @@ class _QuestCardState extends State<QuestCard>
         );
       }
       // If _isMyTurn is null, fall through to standard logic
+    }
+
+    // Check for pending results (user was on waiting screen and killed app)
+    // Applies to all game types: quiz, you_or_me, linked, word_search
+    String? contentType;
+    if (widget.quest.type == QuestType.quiz) {
+      contentType = widget.quest.formatType == 'affirmation' ? 'affirmation_quiz' : 'classic_quiz';
+    } else if (widget.quest.type == QuestType.youOrMe) {
+      contentType = 'you_or_me';
+    } else if (widget.quest.type == QuestType.linked) {
+      contentType = 'linked';
+    } else if (widget.quest.type == QuestType.wordSearch) {
+      contentType = 'word_search';
+    }
+    // Only show "RESULTS ARE READY!" if flag is set AND quest is actually completed
+    // This allows the flag to be set when going to waiting screen, but only shows
+    // "RESULTS ARE READY!" once the partner has also completed
+    if (contentType != null && bothCompleted && StorageService().hasPendingResults(contentType)) {
+      return Container(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+        decoration: BoxDecoration(
+          color: BrandLoader().colors.textPrimary,
+          border: Border.all(color: BrandLoader().colors.textPrimary, width: 1),
+        ),
+        child: Text(
+          'RESULTS ARE READY!',
+          style: AppTheme.headlineFont.copyWith(
+            fontSize: 11,
+            fontWeight: FontWeight.w700,
+            color: BrandLoader().colors.textOnPrimary,
+            letterSpacing: 0.5,
+          ),
+        ),
+      );
     }
 
     if (bothCompleted) {
@@ -829,7 +856,7 @@ class _QuestCardState extends State<QuestCard>
         if (widget.quest.formatType == 'affirmation') {
           return 'Affirmation Quiz';
         }
-        return 'Couple Quiz'; // Fallback for classic quizzes without manifest
+        return 'Classic Quiz'; // Fallback for classic quizzes without manifest
       case QuestType.game:
         return 'Fun Game';
       case QuestType.youOrMe:

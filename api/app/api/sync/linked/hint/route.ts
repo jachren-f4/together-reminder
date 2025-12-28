@@ -146,8 +146,8 @@ export const POST = withAuthOrDevBypass(async (req, userId, email) => {
       );
     }
 
-    // Load puzzle
-    const puzzle = loadPuzzle(match.puzzle_id);
+    // Load puzzle (use stored branch, fallback to casual for old matches)
+    const puzzle = loadPuzzle(match.puzzle_id, match.branch || 'casual');
     if (!puzzle) {
       await client.query('ROLLBACK');
       return NextResponse.json(

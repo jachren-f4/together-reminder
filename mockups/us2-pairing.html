@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Us 2.0 - Pairing Screen</title>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-gradient-start: #FFD1C1;
+            --bg-gradient-end: #FFF5F0;
+            --primary-pink: #FF5E62;
+            --gradient-start: #FF6B6B;
+            --gradient-end: #FF9F43;
+            --cream: #FFF8F0;
+            --text-dark: #2D2D2D;
+            --text-medium: #6B6B6B;
+            --text-light: #9B9B9B;
+            --glow-pink: rgba(255, 107, 107, 0.5);
+            --gold: #C9A875;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            min-height: 100vh;
+            background: linear-gradient(180deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .phone-frame {
+            width: 390px;
+            height: 844px;
+            background: linear-gradient(180deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
+            border-radius: 40px;
+            overflow: hidden;
+            box-shadow: 0 25px 80px rgba(0, 0, 0, 0.15);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            padding: 60px 20px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .step-indicator {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-medium);
+            background: rgba(255, 255, 255, 0.8);
+            padding: 6px 14px;
+            border-radius: 20px;
+        }
+
+        .content {
+            flex: 1;
+            padding: 20px 24px;
+            overflow-y: auto;
+        }
+
+        .title-section {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        .hearts-icon {
+            font-size: 48px;
+            margin-bottom: 16px;
+        }
+
+        .title {
+            font-family: 'Playfair Display', serif;
+            font-size: 26px;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            font-size: 14px;
+            color: var(--text-medium);
+        }
+
+        /* Your Code Section */
+        .your-code-section {
+            background: white;
+            border-radius: 20px;
+            padding: 24px;
+            text-align: center;
+            box-shadow: 0 8px 30px rgba(255, 107, 107, 0.15);
+            margin-bottom: 24px;
+        }
+
+        .section-label {
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            color: var(--text-light);
+            margin-bottom: 16px;
+        }
+
+        .code-display {
+            font-family: 'Nunito', sans-serif;
+            font-size: 42px;
+            font-weight: 800;
+            letter-spacing: 8px;
+            background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 8px;
+        }
+
+        .expiry-text {
+            font-size: 12px;
+            color: var(--text-light);
+            margin-bottom: 16px;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+        }
+
+        .icon-button {
+            width: 48px;
+            height: 48px;
+            background: var(--cream);
+            border: 1px solid rgba(255, 94, 98, 0.2);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .icon-button:hover {
+            background: rgba(255, 94, 98, 0.1);
+            border-color: var(--primary-pink);
+        }
+
+        .icon-button svg {
+            width: 20px;
+            height: 20px;
+            color: var(--primary-pink);
+        }
+
+        /* Divider */
+        .divider {
+            display: flex;
+            align-items: center;
+            margin: 24px 0;
+        }
+
+        .divider-line {
+            flex: 1;
+            height: 1px;
+            background: var(--text-light);
+            opacity: 0.3;
+        }
+
+        .divider-text {
+            padding: 0 16px;
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            color: var(--text-light);
+        }
+
+        /* Enter Partner Code Section */
+        .enter-code-section {
+            background: white;
+            border-radius: 20px;
+            padding: 24px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+        }
+
+        .partner-code-input {
+            width: 100%;
+            padding: 18px 20px;
+            background: var(--cream);
+            border: 2px solid transparent;
+            border-radius: 12px;
+            font-family: 'Nunito', sans-serif;
+            font-size: 28px;
+            font-weight: 700;
+            letter-spacing: 10px;
+            color: var(--text-dark);
+            text-align: center;
+            text-transform: uppercase;
+            transition: all 0.2s ease;
+            margin-bottom: 16px;
+        }
+
+        .partner-code-input:focus {
+            outline: none;
+            border-color: var(--primary-pink);
+            background: white;
+        }
+
+        .partner-code-input::placeholder {
+            color: var(--text-light);
+            letter-spacing: 6px;
+        }
+
+        .join-button {
+            width: 100%;
+            padding: 16px 32px;
+            background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+            border: none;
+            border-radius: 14px;
+            font-family: 'Nunito', sans-serif;
+            font-size: 15px;
+            font-weight: 700;
+            color: white;
+            cursor: pointer;
+            box-shadow: 0 6px 20px var(--glow-pink);
+            transition: all 0.2s ease;
+            letter-spacing: 1px;
+        }
+
+        .join-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px var(--glow-pink);
+        }
+
+        /* Success State (alternative view) */
+        .success-state {
+            display: none; /* Show this instead of content when paired */
+            flex: 1;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .success-icon {
+            width: 100px;
+            height: 100px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 24px;
+            box-shadow: 0 8px 30px rgba(255, 107, 107, 0.2);
+        }
+
+        .success-icon span {
+            font-size: 48px;
+        }
+
+        .success-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 36px;
+            font-weight: 600;
+            background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 12px;
+        }
+
+        .success-subtitle {
+            font-size: 16px;
+            color: var(--text-medium);
+            margin-bottom: 32px;
+        }
+
+        .loading-dots {
+            display: flex;
+            gap: 8px;
+        }
+
+        .loading-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--primary-pink);
+            border-radius: 50%;
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+
+        .loading-dot:nth-child(2) { animation-delay: 0.2s; }
+        .loading-dot:nth-child(3) { animation-delay: 0.4s; }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.3; transform: scale(0.8); }
+            50% { opacity: 1; transform: scale(1); }
+        }
+    </style>
+</head>
+<body>
+    <div class="phone-frame">
+        <div class="header">
+            <div class="step-indicator">Step 3 of 3</div>
+        </div>
+
+        <div class="content">
+            <div class="title-section">
+                <div class="hearts-icon">💕</div>
+                <h1 class="title">Connect with your partner</h1>
+                <p class="subtitle">Share your code or enter theirs</p>
+            </div>
+
+            <!-- Your Code Section -->
+            <div class="your-code-section">
+                <div class="section-label">YOUR CODE</div>
+                <div class="code-display">X7K9M2</div>
+                <div class="expiry-text">Expires in 4:32</div>
+                <div class="action-buttons">
+                    <div class="icon-button" title="Copy">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="9" y="9" width="13" height="13" rx="2"/>
+                            <path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/>
+                        </svg>
+                    </div>
+                    <div class="icon-button" title="Share">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M4 12v8a2 2 0 002 2h12a2 2 0 002-2v-8"/>
+                            <polyline points="16,6 12,2 8,6"/>
+                            <line x1="12" y1="2" x2="12" y2="15"/>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Divider -->
+            <div class="divider">
+                <div class="divider-line"></div>
+                <div class="divider-text">OR ENTER PARTNER'S CODE</div>
+                <div class="divider-line"></div>
+            </div>
+
+            <!-- Enter Partner Code Section -->
+            <div class="enter-code-section">
+                <input type="text" class="partner-code-input" placeholder="_ _ _ _ _ _" maxlength="6">
+                <button class="join-button">JOIN PARTNER</button>
+            </div>
+        </div>
+
+        <!-- Success State (shown after successful pairing) -->
+        <!--
+        <div class="success-state">
+            <div class="success-icon">
+                <span>💕</span>
+            </div>
+            <div class="success-title">Paired!</div>
+            <div class="success-subtitle">Connected with Alex</div>
+            <div class="loading-dots">
+                <div class="loading-dot"></div>
+                <div class="loading-dot"></div>
+                <div class="loading-dot"></div>
+            </div>
+            <p style="margin-top: 16px; color: var(--text-light); font-style: italic; font-size: 13px;">
+                Preparing your experience...
+            </p>
+        </div>
+        -->
+    </div>
+</body>
+</html>

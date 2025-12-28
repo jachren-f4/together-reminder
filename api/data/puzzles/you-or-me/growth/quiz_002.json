@@ -1,6 +1,6 @@
 {
   "quizId": "quiz_002",
-  "title": "Growth Quiz 2",
+  "title": "Learning Curve",
   "branch": "growth",
   "questions": [
     {
@@ -33,5 +33,6 @@
       "prompt": "Who has bigger...",
       "content": "Dreams for the future"
     }
-  ]
+  ],
+  "description": "What have you learned from each other? Discover your mutual influence."
 }

@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Loading Screen - V4 Quote</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Georgia, 'Times New Roman', serif;
+      background: #FAFAFA;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #1A1A1A;
+    }
+
+    .container {
+      text-align: center;
+      padding: 40px;
+      max-width: 340px;
+    }
+
+    .quote-mark {
+      font-size: 48px;
+      line-height: 1;
+      color: #DDD;
+      margin-bottom: 8px;
+    }
+
+    .quote-text {
+      font-size: 20px;
+      font-style: italic;
+      line-height: 1.5;
+      margin-bottom: 16px;
+      animation: fadeQuote 4s ease-in-out infinite;
+    }
+
+    @keyframes fadeQuote {
+      0%, 100% { opacity: 0; }
+      20%, 80% { opacity: 1; }
+    }
+
+    .divider-small {
+      width: 40px;
+      height: 1px;
+      background: #CCC;
+      margin: 24px auto;
+    }
+
+    .status-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+    }
+
+    .spinner {
+      width: 16px;
+      height: 16px;
+      border: 2px solid #E5E5E5;
+      border-top-color: #1A1A1A;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .status-text {
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: #666;
+    }
+
+    /* Quote variations */
+    .quote-samples {
+      margin-top: 60px;
+      padding-top: 40px;
+      border-top: 1px solid #DDD;
+    }
+
+    .quote-samples h3 {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: #666;
+      margin-bottom: 24px;
+      font-weight: 400;
+    }
+
+    .sample-quote {
+      font-size: 14px;
+      font-style: italic;
+      color: #888;
+      margin: 12px 0;
+      line-height: 1.5;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="quote-mark">"</div>
+    <p class="quote-text">The best thing to hold onto in life is each other.</p>
+
+    <div class="divider-small"></div>
+
+    <div class="status-container">
+      <div class="spinner"></div>
+      <p class="status-text">Syncing quests</p>
+    </div>
+
+    <div class="quote-samples">
+      <h3>Sample Quotes (Rotate)</h3>
+      <p class="sample-quote">"Love grows by giving."</p>
+      <p class="sample-quote">"Together is a wonderful place to be."</p>
+      <p class="sample-quote">"Every love story is beautiful."</p>
+    </div>
+  </div>
+</body>
+</html>

@@ -10,6 +10,13 @@ import 'package:flutter/widgets.dart';
 /// to automatically respect the user's "reduce motion" preference.
 class AnimationConfig {
   // ============================================
+  // Feature Flags (for easy rollback)
+  // ============================================
+
+  /// Enable staggered entrance animation on home screen
+  /// Set to false to disable all home entrance animations
+  static const bool enableHomeEntranceAnimation = true;
+  // ============================================
   // Durations
   // ============================================
 

@@ -1,6 +1,6 @@
 {
   "quizId": "quiz_002",
-  "title": "Lighthearted Quiz 2",
+  "title": "Social Vibes",
   "branch": "lighthearted",
   "questions": [
     {
@@ -33,5 +33,6 @@
       "prompt": "Who is more",
       "content": "Likely to know the latest music trends"
     }
-  ]
+  ],
+  "description": "Find out who lights up the room, who cries at movies, and who keeps up with the latest trends."
 }

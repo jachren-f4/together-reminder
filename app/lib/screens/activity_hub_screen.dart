@@ -6,6 +6,7 @@ import 'package:togetherremind/services/storage_service.dart';
 import 'package:togetherremind/services/reminder_service.dart';
 import 'package:togetherremind/theme/app_theme.dart';
 import 'package:togetherremind/widgets/participant_avatars.dart';
+import 'package:togetherremind/widgets/brand/brand_widget_factory.dart';
 import 'package:togetherremind/config/brand/brand_loader.dart';
 import 'package:intl/intl.dart';
 
@@ -140,9 +141,15 @@ class _ActivityHubScreenState extends State<ActivityHubScreen> {
   Widget build(BuildContext context) {
     final activities = _getFilteredActivities();
 
+    // Us 2.0 uses its own gradient background
+    final isUs2 = BrandWidgetFactory.isUs2;
+    final bgGradient = isUs2
+        ? BrandLoader().colors.backgroundGradient
+        : AppTheme.backgroundGradient;
+
     return Container(
       decoration: BoxDecoration(
-        gradient: AppTheme.backgroundGradient,
+        gradient: bgGradient,
       ),
       child: SafeArea(
         child: Column(

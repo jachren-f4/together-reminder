@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import '../config/brand/brand_config.dart';
+import '../config/brand/brand_loader.dart';
+import '../config/brand/us2_theme.dart';
 import '../models/you_or_me_match.dart';
 import '../services/you_or_me_match_service.dart';
 import '../services/daily_quest_service.dart';
@@ -8,8 +12,9 @@ import '../services/sound_service.dart';
 import '../utils/logger.dart';
 import '../widgets/editorial/editorial.dart';
 import '../widgets/daily_quests_widget.dart' show questRouteObserver;
-import 'you_or_me_match_waiting_screen.dart';
+import 'game_waiting_screen.dart';
 import 'you_or_me_match_results_screen.dart';
+import '../services/unified_game_service.dart';
 
 /// You-or-Me Match game screen (bulk submission)
 ///
@@ -39,6 +44,9 @@ class _YouOrMeMatchGameScreenState extends State<YouOrMeMatchGameScreen>
   bool _isLoading = true;
   String? _error;
   bool _isSubmitting = false;
+
+  /// Check if Us 2.0 brand is active
+  bool get _isUs2 => BrandLoader().config.brand == Brand.us2;
 
   // Question navigation
   int _currentQuestionIndex = 0;
@@ -201,14 +209,22 @@ class _YouOrMeMatchGameScreenState extends State<YouOrMeMatchGameScreen>
                 quiz: gameState.quiz,
                 myScore: gameState.myScore,
                 partnerScore: gameState.partnerScore,
+                matchPercentage: gameState.matchPercentage,
+                userAnswers: gameState.userAnswers,
+                partnerAnswers: gameState.partnerAnswers,
               ),
             ),
           );
         } else {
+          // Partner hasn't answered yet - go to waiting screen
+          // Set pending results flag now so it's available if user leaves waiting screen
+          // Quest card will only show "RESULTS ARE READY!" when both flag is set AND quest is completed
+          await StorageService().setPendingResultsMatchId('you_or_me', gameState.match.id);
           Navigator.of(context).pushReplacement(
             MaterialPageRoute(
-              builder: (context) => YouOrMeMatchWaitingScreen(
+              builder: (context) => GameWaitingScreen(
                 matchId: gameState.match.id,
+                gameType: GameType.you_or_me,
                 questId: widget.questId,
               ),
             ),
@@ -343,10 +359,14 @@ class _YouOrMeMatchGameScreenState extends State<YouOrMeMatchGameScreen>
         );
       } else {
         // Partner hasn't answered yet - go to waiting screen
+        // Set pending results flag now so it's available if user leaves waiting screen
+        // Quest card will only show "RESULTS ARE READY!" when both flag is set AND quest is completed
+        await StorageService().setPendingResultsMatchId('you_or_me', _gameState!.match.id);
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(
-            builder: (context) => YouOrMeMatchWaitingScreen(
+            builder: (context) => GameWaitingScreen(
               matchId: _gameState!.match.id,
+              gameType: GameType.you_or_me,
               questId: widget.questId,
             ),
           ),
@@ -396,7 +416,7 @@ class _YouOrMeMatchGameScreenState extends State<YouOrMeMatchGameScreen>
             quest.userCompletions ??= {};
             quest.userCompletions![partnerKey] = true;
           }
-          await quest.save();
+          await StorageService().saveDailyQuest(quest);
           Logger.debug('Marked quest as fully completed for ${widget.questId}', service: 'you_or_me');
         }
       }
@@ -410,6 +430,11 @@ class _YouOrMeMatchGameScreenState extends State<YouOrMeMatchGameScreen>
 
   @override
   Widget build(BuildContext context) {
+    // Us 2.0 brand uses different styling
+    if (_isUs2) {
+      return _buildUs2Screen();
+    }
+
     if (_isLoading) {
       return PopScope(
         canPop: false,
@@ -513,7 +538,7 @@ class _YouOrMeMatchGameScreenState extends State<YouOrMeMatchGameScreen>
     }
 
     final question = questions[currentIndex];
-    final progress = (currentIndex + 1) / questions.length;
+    final progress = currentIndex / questions.length;
     final partnerName = _storage.getPartner()?.name ?? 'Partner';
     final userName = _storage.getUser()?.name ?? 'You';
 
@@ -599,16 +624,18 @@ class _YouOrMeMatchGameScreenState extends State<YouOrMeMatchGameScreen>
             ),
           ),
 
-          // Loading overlay
+          // Loading overlay - outside SafeArea to cover full screen
           if (_isSubmitting)
-            Container(
-              color: EditorialStyles.ink.withValues(alpha: 0.3),
-              child: const Center(
-                child: CircularProgressIndicator(),
+            Positioned.fill(
+              child: Container(
+                color: EditorialStyles.ink.withValues(alpha: 0.3),
+                child: const Center(
+                  child: CircularProgressIndicator(),
+                ),
               ),
             ),
         ],
-      ),
+        ),
       ),
     );
   }
@@ -780,6 +807,454 @@ class _YouOrMeMatchGameScreenState extends State<YouOrMeMatchGameScreen>
           ),
         );
       },
+    );
+  }
+
+  /// Build Us 2.0 styled You or Me screen
+  Widget _buildUs2Screen() {
+    if (_isLoading) {
+      return PopScope(
+        canPop: false,
+        child: Scaffold(
+          body: Container(
+            decoration: const BoxDecoration(gradient: Us2Theme.backgroundGradient),
+            child: SafeArea(
+              child: Column(
+                children: [
+                  _buildUs2Header(),
+                  const Expanded(
+                    child: Center(
+                      child: CircularProgressIndicator(
+                        color: Us2Theme.primaryBrandPink,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      );
+    }
+
+    if (_error != null && _gameState == null) {
+      return PopScope(
+        canPop: false,
+        child: Scaffold(
+          body: Container(
+            decoration: const BoxDecoration(gradient: Us2Theme.backgroundGradient),
+            child: SafeArea(
+              child: Column(
+                children: [
+                  _buildUs2Header(),
+                  Expanded(
+                    child: Center(
+                      child: Padding(
+                        padding: const EdgeInsets.all(20),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              _error!,
+                              style: GoogleFonts.nunito(
+                                fontSize: 16,
+                                color: Us2Theme.textDark,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                            const SizedBox(height: 20),
+                            _buildUs2Button('Try Again', _loadGameState),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      );
+    }
+
+    final questions = _gameState?.quiz?.questions ?? [];
+    if (questions.isEmpty) {
+      return PopScope(
+        canPop: false,
+        child: Scaffold(
+          body: Container(
+            decoration: const BoxDecoration(gradient: Us2Theme.backgroundGradient),
+            child: SafeArea(
+              child: Column(
+                children: [
+                  _buildUs2Header(),
+                  Expanded(
+                    child: Center(
+                      child: Text(
+                        'No questions available',
+                        style: GoogleFonts.nunito(
+                          fontSize: 16,
+                          color: Us2Theme.textMedium,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      );
+    }
+
+    final currentIndex = _currentQuestionIndex;
+    if (currentIndex >= questions.length) {
+      return PopScope(
+        canPop: false,
+        child: Scaffold(
+          body: Container(
+            decoration: const BoxDecoration(gradient: Us2Theme.backgroundGradient),
+            child: const Center(child: Text('Loading...')),
+          ),
+        ),
+      );
+    }
+
+    final question = questions[currentIndex];
+    final progress = (currentIndex + 1) / questions.length;
+    final partnerName = _storage.getPartner()?.name ?? 'Partner';
+    final userName = _storage.getUser()?.name ?? 'You';
+
+    return PopScope(
+      canPop: false,
+      child: Scaffold(
+        body: Container(
+          decoration: const BoxDecoration(gradient: Us2Theme.backgroundGradient),
+          child: Stack(
+            children: [
+              SafeArea(
+                child: Column(
+                  children: [
+                    // Header with progress
+                    _buildUs2Header(
+                      counter: '${currentIndex + 1} of ${questions.length}',
+                      progress: progress,
+                    ),
+
+                    // Question card
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.all(20),
+                        child: SlideTransition(
+                          position: _slideAnimation,
+                          child: Transform.rotate(
+                            angle: _rotateAnimation.value,
+                            child: FadeTransition(
+                              opacity: _fadeAnimation,
+                              child: Container(
+                                width: double.infinity,
+                                padding: const EdgeInsets.all(28),
+                                decoration: BoxDecoration(
+                                  color: Us2Theme.cream,
+                                  borderRadius: BorderRadius.circular(24),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black.withOpacity(0.08),
+                                      blurRadius: 20,
+                                      offset: const Offset(0, 8),
+                                    ),
+                                  ],
+                                ),
+                                child: Stack(
+                                  children: [
+                                    // Question text
+                                    Center(
+                                      child: Text(
+                                        question.content,
+                                        style: GoogleFonts.playfairDisplay(
+                                          fontSize: 24,
+                                          fontWeight: FontWeight.w600,
+                                          color: Us2Theme.textDark,
+                                          height: 1.4,
+                                        ),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    ),
+                                    // Decision stamp overlay
+                                    if (_tempSelectedAnswer != null)
+                                      _buildUs2DecisionStamp(_tempSelectedAnswer == 'me'),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+
+                    // Answer buttons
+                    _buildUs2AnswerButtons(userName, partnerName),
+                  ],
+                ),
+              ),
+
+              // Loading overlay
+              if (_isSubmitting)
+                Positioned.fill(
+                  child: Container(
+                    color: Us2Theme.textDark.withOpacity(0.3),
+                    child: const Center(
+                      child: CircularProgressIndicator(
+                        color: Us2Theme.primaryBrandPink,
+                      ),
+                    ),
+                  ),
+                ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  /// Build Us 2.0 styled header
+  Widget _buildUs2Header({String? counter, double? progress}) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      decoration: BoxDecoration(
+        color: Colors.white.withOpacity(0.5),
+      ),
+      child: Column(
+        children: [
+          Row(
+            children: [
+              // Close button
+              GestureDetector(
+                onTap: () => Navigator.of(context).pop(),
+                child: Container(
+                  width: 40,
+                  height: 40,
+                  decoration: BoxDecoration(
+                    color: Colors.white.withOpacity(0.6),
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: const Icon(
+                    Icons.close,
+                    size: 20,
+                    color: Us2Theme.textDark,
+                  ),
+                ),
+              ),
+              const SizedBox(width: 12),
+              // Title
+              Text(
+                'You or Me',
+                style: GoogleFonts.playfairDisplay(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600,
+                  color: Us2Theme.textDark,
+                ),
+              ),
+              const Spacer(),
+              // Counter badge
+              if (counter != null)
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+                  decoration: BoxDecoration(
+                    gradient: Us2Theme.accentGradient,
+                    borderRadius: BorderRadius.circular(15),
+                  ),
+                  child: Text(
+                    counter,
+                    style: GoogleFonts.nunito(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w700,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+            ],
+          ),
+          // Progress bar
+          if (progress != null) ...[
+            const SizedBox(height: 12),
+            Container(
+              height: 6,
+              decoration: BoxDecoration(
+                color: Colors.white.withOpacity(0.8),
+                borderRadius: BorderRadius.circular(3),
+              ),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(3),
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: FractionallySizedBox(
+                    widthFactor: progress,
+                    child: Container(
+                      decoration: const BoxDecoration(
+                        gradient: Us2Theme.accentGradient,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+
+  /// Build Us 2.0 styled answer buttons
+  Widget _buildUs2AnswerButtons(String userName, String partnerName) {
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: Colors.white.withOpacity(0.5),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          _buildUs2AnswerButton(
+            label: userName,
+            emoji: '🙋',
+            onTap: () => _handleAnswer('me'),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: Text(
+              'or',
+              style: GoogleFonts.nunito(
+                fontSize: 14,
+                color: Us2Theme.textLight,
+              ),
+            ),
+          ),
+          _buildUs2AnswerButton(
+            label: partnerName,
+            emoji: '🙋‍♀️',
+            onTap: () => _handleAnswer('you'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// Build Us 2.0 styled answer button
+  Widget _buildUs2AnswerButton({
+    required String label,
+    required String emoji,
+    required VoidCallback onTap,
+  }) {
+    return GestureDetector(
+      onTap: _isSubmitting ? null : onTap,
+      child: Container(
+        width: 110,
+        padding: const EdgeInsets.symmetric(vertical: 18),
+        decoration: BoxDecoration(
+          gradient: Us2Theme.cardGradient,
+          borderRadius: BorderRadius.circular(20),
+          boxShadow: [
+            BoxShadow(
+              color: Us2Theme.glowPink.withOpacity(0.3),
+              blurRadius: 15,
+              offset: const Offset(0, 6),
+            ),
+          ],
+        ),
+        child: Column(
+          children: [
+            Text(emoji, style: const TextStyle(fontSize: 32)),
+            const SizedBox(height: 8),
+            Text(
+              label.length > 8 ? '${label.substring(0, 8)}...' : label,
+              style: GoogleFonts.nunito(
+                fontSize: 14,
+                fontWeight: FontWeight.w700,
+                color: Colors.white,
+              ),
+              overflow: TextOverflow.ellipsis,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  /// Build Us 2.0 styled decision stamp
+  Widget _buildUs2DecisionStamp(bool isMe) {
+    final stampText = isMe ? 'ME' : 'YOU';
+
+    return AnimatedBuilder(
+      animation: _stampController,
+      builder: (context, child) {
+        return Center(
+          child: Transform.scale(
+            scale: _stampScaleAnimation.value,
+            child: Opacity(
+              opacity: _stampOpacityAnimation.value,
+              child: Transform.rotate(
+                angle: isMe ? 0.15 : -0.15,
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 14),
+                  decoration: BoxDecoration(
+                    gradient: Us2Theme.accentGradient,
+                    borderRadius: BorderRadius.circular(12),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Us2Theme.glowPink.withOpacity(0.5),
+                        blurRadius: 20,
+                        offset: const Offset(0, 6),
+                      ),
+                    ],
+                  ),
+                  child: Text(
+                    stampText,
+                    style: GoogleFonts.playfairDisplay(
+                      fontSize: 48,
+                      fontWeight: FontWeight.w900,
+                      color: Colors.white,
+                      letterSpacing: 8,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  /// Build Us 2.0 styled button
+  Widget _buildUs2Button(String label, VoidCallback onPressed) {
+    return GestureDetector(
+      onTap: onPressed,
+      child: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.symmetric(vertical: 18),
+        decoration: BoxDecoration(
+          gradient: Us2Theme.accentGradient,
+          borderRadius: BorderRadius.circular(30),
+          boxShadow: [
+            BoxShadow(
+              color: Us2Theme.glowPink.withOpacity(0.4),
+              blurRadius: 25,
+              offset: const Offset(0, 8),
+            ),
+          ],
+        ),
+        child: Center(
+          child: Text(
+            label,
+            style: GoogleFonts.nunito(
+              fontSize: 17,
+              fontWeight: FontWeight.w700,
+              color: Colors.white,
+            ),
+          ),
+        ),
+      ),
     );
   }
 }

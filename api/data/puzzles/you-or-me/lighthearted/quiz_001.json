@@ -1,6 +1,6 @@
 {
   "quizId": "quiz_001",
-  "title": "Lighthearted Quiz 1",
+  "title": "Daily Habits",
   "branch": "lighthearted",
   "questions": [
     {
@@ -33,5 +33,6 @@
       "prompt": "Who is more",
       "content": "Likely to get lost in a book for hours"
     }
-  ]
+  ],
+  "description": "Discover who's the adventurous eater, the snooze button champion, and the social butterfly in your relationship."
 }

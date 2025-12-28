@@ -1,6 +1,6 @@
 {
   "quizId": "quiz_011",
-  "title": "Connection Quiz 11",
+  "title": "Shared Joy",
   "branch": "connection",
   "questions": [
     {
@@ -33,5 +33,6 @@
       "prompt": "Who knows better when...",
       "content": "The other needs space vs. closeness"
     }
-  ]
+  ],
+  "description": "What makes you both light up? Find your sources of shared happiness."
 }

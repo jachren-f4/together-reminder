@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Linked Dual Clue - Variant 4: Color Zones</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #f5f5f5;
+      padding: 20px;
+      min-height: 100vh;
+    }
+
+    h1 {
+      font-family: Georgia, serif;
+      font-size: 24px;
+      margin-bottom: 8px;
+      color: #1a1a1a;
+    }
+
+    .description {
+      color: #666;
+      margin-bottom: 20px;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .grid-container {
+      background: #f8f6f1;
+      padding: 12px;
+      display: inline-block;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(7, 48px);
+      grid-template-rows: repeat(5, 48px);
+      gap: 2px;
+      background: #1a1a1a;
+      padding: 2px;
+    }
+
+    .cell {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: Arial, sans-serif;
+      font-weight: 800;
+      position: relative;
+    }
+
+    .cell.void {
+      background: rgba(26, 26, 26, 0.13);
+    }
+
+    .cell.answer {
+      background: #ffffff;
+    }
+
+    .cell.answer.filled {
+      background: rgba(76, 175, 80, 0.15);
+    }
+
+    .cell.answer span {
+      font-size: 22px;
+      color: rgba(26, 26, 26, 0.87);
+    }
+
+    .cell.clue {
+      background: #e8e4d9;
+      padding: 3px;
+      flex-direction: column;
+    }
+
+    .cell.clue .content {
+      font-size: 10px;
+      text-align: center;
+      color: #1a1a1a;
+      text-transform: uppercase;
+      line-height: 1.05;
+    }
+
+    .cell.clue .content.emoji {
+      font-size: 28px;
+      text-transform: none;
+    }
+
+    .cell.clue .arrow {
+      position: absolute;
+      font-size: 6px;
+      color: #888;
+    }
+
+    .cell.clue .arrow.right {
+      top: 0;
+      right: 1px;
+    }
+
+    .cell.clue .arrow.down {
+      bottom: 1px;
+      left: 0;
+    }
+
+    /* VARIANT 4: Color Zones - Different background tints for each direction */
+    .cell.dual-clue {
+      background: #e8e4d9;
+      flex-direction: column;
+      padding: 0;
+      overflow: hidden;
+    }
+
+    .cell.dual-clue .zone {
+      flex: 1;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      padding: 1px 2px;
+    }
+
+    .cell.dual-clue .zone.across {
+      background: linear-gradient(90deg, #e8e4d9 0%, #f0ece3 100%);
+    }
+
+    .cell.dual-clue .zone.down {
+      background: linear-gradient(180deg, #ddd8c9 0%, #e8e4d9 100%);
+    }
+
+    .cell.dual-clue .zone .content {
+      font-size: 7px;
+      font-weight: 800;
+      text-align: center;
+      color: #1a1a1a;
+      text-transform: uppercase;
+      line-height: 1;
+      font-family: Arial, sans-serif;
+    }
+
+    .cell.dual-clue .zone .content.emoji {
+      font-size: 12px;
+      text-transform: none;
+    }
+
+    .cell.dual-clue .zone .arrow {
+      position: absolute;
+      font-size: 5px;
+      font-weight: bold;
+    }
+
+    .cell.dual-clue .zone.across .arrow {
+      top: 1px;
+      right: 1px;
+      color: #2196f3;
+    }
+
+    .cell.dual-clue .zone.down .arrow {
+      bottom: 1px;
+      left: 1px;
+      color: #ff9800;
+    }
+
+    /* Subtle gradient separator instead of hard line */
+    .cell.dual-clue .separator {
+      width: 100%;
+      height: 2px;
+      background: linear-gradient(90deg,
+        transparent 0%,
+        rgba(0,0,0,0.1) 20%,
+        rgba(0,0,0,0.15) 50%,
+        rgba(0,0,0,0.1) 80%,
+        transparent 100%
+      );
+    }
+
+    .legend {
+      margin-top: 20px;
+      padding: 16px;
+      background: white;
+      border: 1px solid #ddd;
+      max-width: 450px;
+    }
+
+    .legend h3 {
+      font-size: 14px;
+      margin-bottom: 12px;
+      color: #1a1a1a;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 8px;
+      font-size: 13px;
+    }
+
+    .color-key {
+      margin-top: 20px;
+      padding: 12px;
+      background: white;
+      border: 1px solid #ddd;
+      max-width: 300px;
+    }
+
+    .color-key h4 {
+      font-size: 13px;
+      margin-bottom: 8px;
+    }
+
+    .color-key-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 6px;
+      font-size: 12px;
+    }
+
+    .color-swatch {
+      width: 20px;
+      height: 14px;
+      border: 1px solid #ccc;
+    }
+
+    .color-swatch.across {
+      background: linear-gradient(90deg, #e8e4d9 0%, #f0ece3 100%);
+    }
+
+    .color-swatch.down {
+      background: linear-gradient(180deg, #ddd8c9 0%, #e8e4d9 100%);
+    }
+
+    .pros-cons {
+      margin-top: 20px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      max-width: 600px;
+    }
+
+    .pros, .cons {
+      padding: 12px;
+      background: white;
+      border: 1px solid #ddd;
+    }
+
+    .pros h4 { color: #4caf50; }
+    .cons h4 { color: #f44336; }
+
+    .pros ul, .cons ul {
+      margin-top: 8px;
+      padding-left: 20px;
+      font-size: 13px;
+      line-height: 1.6;
+    }
+  </style>
+</head>
+<body>
+  <h1>Variant 4: Color Zones</h1>
+  <p class="description">
+    Each direction gets a subtly different background tint. The "across" zone has a lighter
+    horizontal gradient, while the "down" zone has a slightly darker vertical gradient.
+    Colored arrows reinforce the direction coding.
+  </p>
+
+  <div class="grid-container">
+    <div class="grid">
+      <!-- Row 1 -->
+      <div class="cell void"></div>
+      <div class="cell clue">
+        <span class="content">WARM</span>
+        <span class="arrow down">▼</span>
+      </div>
+      <div class="cell clue">
+        <span class="content emoji">🌙</span>
+        <span class="arrow down">▼</span>
+      </div>
+      <div class="cell void"></div>
+      <div class="cell clue">
+        <span class="content">BOND</span>
+        <span class="arrow down">▼</span>
+      </div>
+      <div class="cell void"></div>
+      <div class="cell void"></div>
+
+      <!-- Row 2 -->
+      <div class="cell clue">
+        <span class="content">FEEL</span>
+        <span class="arrow right">▶</span>
+      </div>
+      <div class="cell answer"><span>L</span></div>
+      <div class="cell answer"><span>O</span></div>
+      <div class="cell answer"><span>V</span></div>
+      <div class="cell answer"><span>E</span></div>
+      <div class="cell void"></div>
+      <div class="cell void"></div>
+
+      <!-- Row 3 -->
+      <div class="cell void"></div>
+      <div class="cell answer"><span>U</span></div>
+      <div class="cell answer"><span>N</span></div>
+
+      <!-- DUAL CLUE CELL - Variant 4: Color Zones -->
+      <div class="cell dual-clue">
+        <div class="zone across">
+          <span class="content">SAFE</span>
+          <span class="arrow">▶</span>
+        </div>
+        <div class="separator"></div>
+        <div class="zone down">
+          <span class="content">CLOSE</span>
+          <span class="arrow">▼</span>
+        </div>
+      </div>
+
+      <div class="cell answer"><span>O</span></div>
+      <div class="cell answer"><span>M</span></div>
+      <div class="cell answer"><span>E</span></div>
+
+      <!-- Row 4 -->
+      <div class="cell void"></div>
+      <div class="cell answer filled"><span>G</span></div>
+      <div class="cell answer"><span>I</span></div>
+      <div class="cell answer"><span>G</span></div>
+      <div class="cell answer"><span>H</span></div>
+      <div class="cell answer"><span>T</span></div>
+      <div class="cell void"></div>
+
+      <!-- Row 5 -->
+      <div class="cell void"></div>
+      <div class="cell void"></div>
+      <div class="cell answer"><span>T</span></div>
+      <div class="cell answer"><span>E</span></div>
+      <div class="cell answer"><span>A</span></div>
+      <div class="cell void"></div>
+      <div class="cell void"></div>
+    </div>
+  </div>
+
+  <div class="legend">
+    <h3>Dual Clue Cell (Highlighted)</h3>
+    <div class="legend-item">
+      <div class="grid" style="grid-template-columns: 48px; grid-template-rows: 48px; padding: 2px;">
+        <div class="cell dual-clue">
+          <div class="zone across">
+            <span class="content">SAFE</span>
+            <span class="arrow">▶</span>
+          </div>
+          <div class="separator"></div>
+          <div class="zone down">
+            <span class="content">CLOSE</span>
+            <span class="arrow">▼</span>
+          </div>
+        </div>
+      </div>
+      <div>
+        <strong>Top (light):</strong> "SAFE" → across<br>
+        <strong>Bottom (darker):</strong> "CLOSE" ↓ down<br>
+        <em>Color + arrow = double encoding</em>
+      </div>
+    </div>
+  </div>
+
+  <div class="color-key">
+    <h4>Color Key</h4>
+    <div class="color-key-item">
+      <div class="color-swatch across"></div>
+      <span>Across clue (lighter, horizontal gradient)</span>
+    </div>
+    <div class="color-key-item">
+      <div class="color-swatch down"></div>
+      <span>Down clue (darker, vertical gradient)</span>
+    </div>
+    <div class="color-key-item">
+      <span style="color: #2196f3; font-weight: bold;">▶</span>
+      <span>Blue arrow = across</span>
+    </div>
+    <div class="color-key-item">
+      <span style="color: #ff9800; font-weight: bold;">▼</span>
+      <span>Orange arrow = down</span>
+    </div>
+  </div>
+
+  <div class="pros-cons">
+    <div class="pros">
+      <h4>Pros</h4>
+      <ul>
+        <li>Multiple visual cues (color + arrow)</li>
+        <li>Gradients feel polished</li>
+        <li>Softer separator than hard line</li>
+        <li>Accessible with color blindness (has arrows)</li>
+      </ul>
+    </div>
+    <div class="cons">
+      <h4>Cons</h4>
+      <ul>
+        <li>Subtle colors may be too similar</li>
+        <li>More complex to implement</li>
+        <li>Text still small in half-height zones</li>
+        <li>Gradients add visual weight</li>
+      </ul>
+    </div>
+  </div>
+</body>
+</html>

@@ -28,6 +28,7 @@ class BrandRegistry {
   static final Map<Brand, BrandConfig> _brands = {
     Brand.togetherRemind: _togetherRemindConfig,
     Brand.holyCouples: _holyCouplesConfig,
+    Brand.us2: _us2Config,
   };
 
   // ========================================
@@ -36,7 +37,7 @@ class BrandRegistry {
 
   static final _togetherRemindConfig = BrandConfig(
     brand: Brand.togetherRemind,
-    appName: 'TogetherRemind',
+    appName: 'Liia',
     appTagline: 'Stay connected with your partner',
     bundleIdAndroid: 'com.togetherremind.togetherremind',
     bundleIdIOS: 'com.togetherremind.togetherremind2',
@@ -170,6 +171,98 @@ class BrandRegistry {
     ),
     apiBaseUrl: 'https://api.togetherremind.com', // Using same API for testing
     // Using TogetherRemind Supabase for testing (create separate project for production)
+    supabaseUrl: 'https://naqzdqdncdzxpxbdysgq.supabase.co',
+    supabaseAnonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5hcXpkcWRuY2R6eHB4YmR5c2dxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzI2MjM1MTAsImV4cCI6MjA0ODE5OTUxMH0.placeholder', // TODO: Replace with real key for production
+  );
+
+  // ========================================
+  // Us 2.0 (Warm Coral/Pink Brand)
+  // ========================================
+  // Warm, inviting coral/pink palette with gradient styling
+  // Features glow effects, sparkle animations, gradient backgrounds
+
+  static final _us2Config = BrandConfig(
+    brand: Brand.us2,
+    appName: 'Us 2.0',
+    appTagline: 'Grow closer together',
+    bundleIdAndroid: 'com.togetherremind.us2',
+    bundleIdIOS: 'com.togetherremind.us2',
+    colors: const BrandColors(
+      // Warm coral/pink palette (from HTML mockup)
+      primary: Color(0xFFFF5E62),        // Primary brand pink
+      primaryLight: Color(0xFFFF6B6B),   // Gradient accent start
+      primaryDark: Color(0xFFFF9F43),    // Gradient accent end (orange)
+      background: Color(0xFFFFF5F0),     // Light peach
+      surface: Color(0xFFFFF8F0),        // Cream
+
+      textPrimary: Color(0xFF2D2D2D),    // Dark gray (near black)
+      textSecondary: Color(0xFF6B6B6B),  // Medium gray
+      textTertiary: Color(0xFF9B9B9B),   // Light gray
+      textOnPrimary: Color(0xFFFFFFFF),  // White
+
+      accentGreen: Color(0xFF22C55E),    // Green for success states
+      accentOrange: Color(0xFFFF9F43),   // Orange (matches gradient end)
+
+      border: Color(0xFFFF5E62),         // Brand pink
+      borderLight: Color(0xFFFFE4DB),    // Light peach
+      divider: Color(0xFFF0E8E4),        // Warm gray
+      shadow: Color(0x26FF5E62),         // Pink shadow (15% opacity)
+      overlay: Color(0x80000000),        // Black overlay
+
+      success: Color(0xFF22C55E),        // Green
+      error: Color(0xFFEF4444),          // Red
+      warning: Color(0xFFF59E0B),        // Amber
+      info: Color(0xFFFF5E62),           // Brand pink
+
+      disabled: Color(0xFFD4D4D4),       // Gray
+      highlight: Color(0xFFFFF5F0),      // Light peach
+      selected: Color(0xFFFFE4DB),       // Peach
+
+      // Us 2.0 specific gradients (from HTML CSS variables)
+      backgroundGradientColors: [
+        Color(0xFFFFD1C1),  // --bg-gradient-start: peach
+        Color(0xFFFFF5F0),  // --bg-gradient-end: light peach
+      ],
+      accentGradientColors: [
+        Color(0xFFFF6B6B),  // --gradient-accent-start: pink
+        Color(0xFFFF9F43),  // --gradient-accent-end: orange
+      ],
+      progressGradientColors: [
+        Color(0xFFFFFFFF),  // White start
+        Color(0xFFFFF8F0),  // Cream end
+      ],
+
+      // Glow effects
+      glowPrimary: Color(0xCCFF6B6B),    // Pink glow (80% opacity)
+      glowSecondary: Color(0x99FF9F43),  // Orange glow (60% opacity)
+
+      // Card-specific colors
+      cardBackground: Color(0xFFFF7B6B), // --card-salmon
+      cardBackgroundDark: Color(0xFFFF6B5B), // Darker salmon
+      ribbonBackground: Color(0xFFF5E6D8), // --beige
+    ),
+    typography: const BrandTypography(
+      defaultSerifFont: SerifFont.georgia,
+      bodyFontFamily: 'Inter',
+    ),
+    assets: const BrandAssets('us2'),
+    content: const ContentPaths('us2'),
+    // Using TogetherRemind Firebase for testing (will be separate in production)
+    firebase: const BrandFirebaseConfig(
+      projectId: 'togetherremind',
+      storageBucket: 'togetherremind.firebasestorage.app',
+      databaseURL: 'https://togetherremind-default-rtdb.firebaseio.com',
+      messagingSenderId: '725871129285',
+      androidApiKey: 'AIzaSyDpkSTQ6PwEYtKQuzMe_GJt6x2fESNGM04',
+      androidAppId: '1:725871129285:android:fbf78b68b07590f327f6ac',
+      iosApiKey: 'AIzaSyBolavJ_1dNiEZ42dLd7OmANLCcKTvyPJg',
+      iosAppId: '1:725871129285:ios:9b09ef0e56448b1727f6ac',
+      iosBundleId: 'com.togetherremind.us2',
+      webApiKey: 'AIzaSyCh97osauFB0ljuBr5MU5QfHX6Zx3XOZ80',
+      webAppId: '1:725871129285:web:5c82d5e18390e80c27f6ac',
+      webAuthDomain: 'togetherremind.firebaseapp.com',
+    ),
+    apiBaseUrl: 'https://api.togetherremind.com', // Using same API for testing
     supabaseUrl: 'https://naqzdqdncdzxpxbdysgq.supabase.co',
     supabaseAnonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5hcXpkcWRuY2R6eHB4YmR5c2dxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzI2MjM1MTAsImV4cCI6MjA0ODE5OTUxMH0.placeholder', // TODO: Replace with real key for production
   );

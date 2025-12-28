@@ -1,6 +1,6 @@
 {
   "quizId": "quiz_012",
-  "title": "Lighthearted Quiz 12",
+  "title": "Money Matters",
   "branch": "lighthearted",
   "questions": [
     {
@@ -33,5 +33,6 @@
       "prompt": "Who is more",
       "content": "Likely to host gatherings at their place"
     }
-  ]
+  ],
+  "description": "Saver or spender? Discover your financial personalities without the serious talk."
 }

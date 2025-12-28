@@ -1,6 +1,6 @@
 {
   "quizId": "quiz_012",
-  "title": "Attachment Quiz 12",
+  "title": "Future Fears",
   "branch": "attachment",
   "questions": [
     {
@@ -33,5 +33,6 @@
       "prompt": "Who turns to the other more for...",
       "content": "Comfort during difficult times"
     }
-  ]
+  ],
+  "description": "Worries about tomorrow—explore how you handle uncertainty together."
 }

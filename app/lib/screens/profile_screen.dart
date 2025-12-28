@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import '../services/storage_service.dart';
 import '../services/love_point_service.dart';
 import '../services/couple_stats_service.dart';
 import '../services/auth_service.dart';
 import '../theme/app_theme.dart';
 import '../utils/number_formatter.dart';
+import '../widgets/brand/brand_widget_factory.dart';
+import '../config/brand/brand_loader.dart';
+import '../config/brand/brand_config.dart';
+import '../config/brand/us2_theme.dart';
 import 'onboarding_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -21,6 +26,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   CoupleStats? _coupleStats;
   bool _isLoadingStats = true;
+
+  bool get _isUs2 => BrandLoader().config.brand == Brand.us2;
 
   @override
   void initState() {
@@ -43,6 +50,39 @@ class _ProfileScreenState extends State<ProfileScreen> {
     final user = _storage.getUser();
     final partner = _storage.getPartner();
     final stats = LovePointService.getStats();
+
+    if (_isUs2) {
+      return Scaffold(
+        body: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [Us2Theme.bgGradientStart, Us2Theme.bgGradientEnd],
+            ),
+          ),
+          child: SafeArea(
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  _buildUs2Header(user, partner),
+                  _buildUs2HeroStats(stats),
+                  _buildUs2CurrentArena(stats),
+                  _buildUs2ProgressSection(stats),
+                  const SizedBox(height: 20),
+                  _buildUs2TogetherForSection(),
+                  const SizedBox(height: 20),
+                  _buildUs2YourActivitySection(),
+                  const SizedBox(height: 32),
+                  _buildUs2AccountSection(),
+                  const SizedBox(height: 32),
+                ],
+              ),
+            ),
+          ),
+        ),
+      );
+    }
 
     return Scaffold(
       backgroundColor: AppTheme.primaryWhite,
@@ -981,6 +1021,693 @@ class _ProfileScreenState extends State<ProfileScreen> {
             _loadCoupleStats();
           }
         },
+      ),
+    );
+  }
+
+  // ==================== Us 2.0 Sections ====================
+
+  /// Us2 Header with gradient title
+  Widget _buildUs2Header(user, partner) {
+    String subtitle;
+    if (user != null && partner != null) {
+      final combined = '${user.name} & ${partner.name}';
+      subtitle = combined.length > 30 ? '${combined.substring(0, 27)}...' : combined;
+    } else {
+      subtitle = 'Your Progress';
+    }
+
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(24, 40, 24, 24),
+      child: Column(
+        children: [
+          ShaderMask(
+            shaderCallback: (bounds) => const LinearGradient(
+              colors: [Us2Theme.gradientAccentStart, Us2Theme.gradientAccentEnd],
+            ).createShader(bounds),
+            child: Text(
+              'Progress',
+              style: GoogleFonts.playfairDisplay(
+                fontSize: 32,
+                fontWeight: FontWeight.w600,
+                color: Colors.white,
+              ),
+            ),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            subtitle,
+            style: GoogleFonts.nunito(
+              fontSize: 14,
+              fontStyle: FontStyle.italic,
+              color: Us2Theme.textMedium,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// Us2 Hero Stats Card
+  Widget _buildUs2HeroStats(Map<String, dynamic> stats) {
+    final lovePoints = stats['total'] ?? 0;
+    final dayStreak = stats['streak'] ?? 0;
+
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 20),
+      padding: const EdgeInsets.all(28),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(24),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.08),
+            blurRadius: 32,
+            offset: const Offset(0, 8),
+          ),
+        ],
+      ),
+      child: Row(
+        children: [
+          Expanded(
+            child: Column(
+              children: [
+                ShaderMask(
+                  shaderCallback: (bounds) => const LinearGradient(
+                    colors: [Us2Theme.gradientAccentStart, Us2Theme.gradientAccentEnd],
+                  ).createShader(bounds),
+                  child: Text(
+                    NumberFormatter.format(lovePoints),
+                    style: GoogleFonts.playfairDisplay(
+                      fontSize: 48,
+                      fontWeight: FontWeight.w700,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  'LOVE POINTS',
+                  style: GoogleFonts.nunito(
+                    fontSize: 11,
+                    fontWeight: FontWeight.w700,
+                    letterSpacing: 1.5,
+                    color: Us2Theme.textLight,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Container(
+            width: 2,
+            height: 60,
+            margin: const EdgeInsets.symmetric(horizontal: 20),
+            decoration: BoxDecoration(
+              gradient: Us2Theme.accentGradient,
+              borderRadius: BorderRadius.circular(1),
+            ),
+          ),
+          Expanded(
+            child: Column(
+              children: [
+                ShaderMask(
+                  shaderCallback: (bounds) => const LinearGradient(
+                    colors: [Us2Theme.gradientAccentStart, Us2Theme.gradientAccentEnd],
+                  ).createShader(bounds),
+                  child: Text(
+                    NumberFormatter.format(dayStreak),
+                    style: GoogleFonts.playfairDisplay(
+                      fontSize: 48,
+                      fontWeight: FontWeight.w700,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  'DAY STREAK',
+                  style: GoogleFonts.nunito(
+                    fontSize: 11,
+                    fontWeight: FontWeight.w700,
+                    letterSpacing: 1.5,
+                    color: Us2Theme.textLight,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// Us2 Current Arena Card
+  Widget _buildUs2CurrentArena(Map<String, dynamic> stats) {
+    final arena = stats['currentArena'] ?? {'emoji': '🏆', 'name': 'Current Arena'};
+    final tier = stats['tier'] ?? 1;
+    final emoji = arena['emoji'] ?? '🏆';
+    final arenaName = arena['name'] ?? 'Current Arena';
+
+    return Container(
+      margin: const EdgeInsets.fromLTRB(20, 20, 20, 0),
+      padding: const EdgeInsets.all(24),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(24),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.08),
+            blurRadius: 32,
+            offset: const Offset(0, 8),
+          ),
+        ],
+      ),
+      child: Row(
+        children: [
+          Text(emoji, style: const TextStyle(fontSize: 64)),
+          const SizedBox(width: 20),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                  decoration: BoxDecoration(
+                    gradient: Us2Theme.accentGradient,
+                    borderRadius: BorderRadius.circular(4),
+                  ),
+                  child: Text(
+                    'TIER $tier OF 5',
+                    style: GoogleFonts.nunito(
+                      fontSize: 10,
+                      fontWeight: FontWeight.w700,
+                      letterSpacing: 1,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  arenaName,
+                  style: GoogleFonts.playfairDisplay(
+                    fontSize: 26,
+                    fontWeight: FontWeight.w600,
+                    color: Us2Theme.textDark,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// Us2 Progress Section
+  Widget _buildUs2ProgressSection(Map<String, dynamic> stats) {
+    final nextArena = stats['nextArena'];
+
+    if (nextArena == null) {
+      return _buildUs2MaxTierCard();
+    }
+
+    final progress = stats['progressToNext'] ?? 0.0;
+    final currentLP = stats['total'] ?? 0;
+    final nextArenaMin = nextArena['min'] ?? 0;
+    final remaining = nextArenaMin - currentLP;
+    final nextArenaEmoji = nextArena['emoji'] ?? '🏆';
+    final nextArenaName = nextArena['name'] ?? 'Next Arena';
+    final cappedProgress = progress.clamp(0.0, 1.0);
+
+    return Container(
+      margin: const EdgeInsets.fromLTRB(20, 20, 20, 0),
+      padding: const EdgeInsets.all(24),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(24),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.08),
+            blurRadius: 32,
+            offset: const Offset(0, 8),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'Next: $nextArenaName',
+                style: GoogleFonts.nunito(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
+                  color: Us2Theme.textDark,
+                ),
+              ),
+              Text(
+                remaining < 10 ? '< 10 LP remaining' : '${NumberFormatter.format(remaining)} LP remaining',
+                style: GoogleFonts.nunito(
+                  fontSize: 12,
+                  color: Us2Theme.textMedium,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+          Row(
+            children: [
+              Expanded(
+                child: Container(
+                  height: 16,
+                  decoration: BoxDecoration(
+                    color: Us2Theme.beige,
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: FractionallySizedBox(
+                    alignment: Alignment.centerLeft,
+                    widthFactor: cappedProgress,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        gradient: Us2Theme.accentGradient,
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(width: 16),
+              Text(nextArenaEmoji, style: const TextStyle(fontSize: 32)),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// Us2 Max Tier Card
+  Widget _buildUs2MaxTierCard() {
+    return Container(
+      margin: const EdgeInsets.fromLTRB(20, 20, 20, 0),
+      padding: const EdgeInsets.all(32),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(24),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.08),
+            blurRadius: 32,
+            offset: const Offset(0, 8),
+          ),
+        ],
+      ),
+      child: Column(
+        children: [
+          const Text('👑', style: TextStyle(fontSize: 48)),
+          const SizedBox(height: 12),
+          Text(
+            'Max Tier Reached!',
+            style: GoogleFonts.playfairDisplay(
+              fontSize: 20,
+              fontWeight: FontWeight.w600,
+              color: Us2Theme.textDark,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// Us2 Together For Section
+  Widget _buildUs2TogetherForSection() {
+    final anniversaryDate = _coupleStats?.anniversaryDate;
+
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 20),
+      decoration: BoxDecoration(
+        gradient: Us2Theme.accentGradient,
+        borderRadius: BorderRadius.circular(24),
+        boxShadow: [
+          BoxShadow(
+            color: Us2Theme.glowPink,
+            blurRadius: 40,
+            offset: const Offset(0, 12),
+          ),
+        ],
+      ),
+      child: anniversaryDate == null
+          ? _buildUs2SetAnniversaryPrompt()
+          : _buildUs2AnniversaryDisplay(anniversaryDate),
+    );
+  }
+
+  /// Us2 Prompt to set anniversary
+  Widget _buildUs2SetAnniversaryPrompt() {
+    return InkWell(
+      onTap: _showSetAnniversaryModal,
+      borderRadius: BorderRadius.circular(24),
+      child: Padding(
+        padding: const EdgeInsets.all(24),
+        child: Row(
+          children: [
+            Icon(
+              Icons.favorite_outline,
+              color: Colors.white.withOpacity(0.8),
+              size: 32,
+            ),
+            const SizedBox(width: 16),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Together for',
+                    style: GoogleFonts.playfairDisplay(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.white,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    'Set up your anniversary date',
+                    style: GoogleFonts.nunito(
+                      fontSize: 14,
+                      color: Colors.white.withOpacity(0.8),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Icon(
+              Icons.add_circle_outline,
+              color: Colors.white.withOpacity(0.8),
+              size: 24,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  /// Us2 Anniversary Display
+  Widget _buildUs2AnniversaryDisplay(DateTime anniversaryDate) {
+    final duration = RelationshipDuration.fromAnniversary(anniversaryDate);
+
+    return Padding(
+      padding: const EdgeInsets.all(24),
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'Together for',
+                style: GoogleFonts.playfairDisplay(
+                  fontSize: 22,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.white,
+                ),
+              ),
+              GestureDetector(
+                onTap: _showEditAnniversaryModal,
+                child: Text(
+                  '✏️',
+                  style: TextStyle(
+                    fontSize: 20,
+                    color: Colors.white.withOpacity(0.7),
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 20),
+          Row(
+            children: [
+              Expanded(child: _buildUs2DurationBox(duration.years.toString(), 'Years')),
+              const SizedBox(width: 12),
+              Expanded(child: _buildUs2DurationBox(duration.months.toString(), 'Months')),
+              const SizedBox(width: 12),
+              Expanded(child: _buildUs2DurationBox(duration.days.toString(), 'Days')),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// Us2 Duration Box
+  Widget _buildUs2DurationBox(String value, String label) {
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 20),
+      decoration: BoxDecoration(
+        color: Colors.white.withOpacity(0.2),
+        borderRadius: BorderRadius.circular(16),
+      ),
+      child: Column(
+        children: [
+          Text(
+            value,
+            style: GoogleFonts.playfairDisplay(
+              fontSize: 36,
+              fontWeight: FontWeight.w700,
+              color: Colors.white,
+            ),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            label,
+            style: GoogleFonts.nunito(
+              fontSize: 13,
+              color: Colors.white.withOpacity(0.8),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// Us2 Your Activity Section
+  Widget _buildUs2YourActivitySection() {
+    if (_isLoadingStats) {
+      return Container(
+        margin: const EdgeInsets.symmetric(horizontal: 20),
+        padding: const EdgeInsets.all(40),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(24),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.08),
+              blurRadius: 32,
+              offset: const Offset(0, 8),
+            ),
+          ],
+        ),
+        child: const Center(
+          child: CircularProgressIndicator(strokeWidth: 2),
+        ),
+      );
+    }
+
+    if (_coupleStats == null) {
+      return const SizedBox.shrink();
+    }
+
+    final currentUser = _coupleStats!.currentUserStats;
+    final partner = _coupleStats!.partnerStats;
+
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 20),
+      padding: const EdgeInsets.all(24),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(24),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.08),
+            blurRadius: 32,
+            offset: const Offset(0, 8),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Your Activity',
+            style: GoogleFonts.playfairDisplay(
+              fontSize: 22,
+              fontWeight: FontWeight.w600,
+              color: Us2Theme.textDark,
+            ),
+          ),
+          const SizedBox(height: 20),
+          // Headers
+          Row(
+            children: [
+              const SizedBox(width: 48),
+              Expanded(child: _buildUs2ActivityHeader('✓', 'Activities\ncompleted')),
+              Expanded(child: _buildUs2ActivityHeader('🔥', 'Current streak\ndays')),
+              Expanded(child: _buildUs2ActivityHeader('🏆', 'Couple games\nwon')),
+            ],
+          ),
+          const SizedBox(height: 16),
+          // User row
+          _buildUs2ActivityRow(
+            initial: currentUser.initial,
+            isCurrentUser: true,
+            values: [
+              currentUser.activitiesCompleted.toString(),
+              currentUser.currentStreakDays > 0 ? currentUser.currentStreakDays.toString() : '-',
+              currentUser.coupleGamesWon.toString(),
+            ],
+          ),
+          const SizedBox(height: 12),
+          // Partner row
+          _buildUs2ActivityRow(
+            initial: partner.initial,
+            isCurrentUser: false,
+            values: [
+              partner.activitiesCompleted.toString(),
+              partner.currentStreakDays > 0 ? partner.currentStreakDays.toString() : '-',
+              partner.coupleGamesWon.toString(),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// Us2 Activity Header
+  Widget _buildUs2ActivityHeader(String icon, String label) {
+    return Column(
+      children: [
+        Text(icon, style: TextStyle(fontSize: 20, color: Colors.grey.withOpacity(0.5))),
+        const SizedBox(height: 6),
+        Text(
+          label,
+          textAlign: TextAlign.center,
+          style: GoogleFonts.nunito(
+            fontSize: 10,
+            color: Us2Theme.textLight,
+            height: 1.3,
+          ),
+        ),
+      ],
+    );
+  }
+
+  /// Us2 Activity Row
+  Widget _buildUs2ActivityRow({
+    required String initial,
+    required bool isCurrentUser,
+    required List<String> values,
+  }) {
+    return Row(
+      children: [
+        Container(
+          width: 36,
+          height: 36,
+          margin: const EdgeInsets.only(right: 12),
+          decoration: BoxDecoration(
+            gradient: isCurrentUser ? Us2Theme.accentGradient : null,
+            color: isCurrentUser ? null : Us2Theme.beige,
+            shape: BoxShape.circle,
+          ),
+          child: Center(
+            child: Text(
+              initial,
+              style: GoogleFonts.nunito(
+                fontSize: 14,
+                fontWeight: FontWeight.w700,
+                color: isCurrentUser ? Colors.white : Us2Theme.textDark,
+              ),
+            ),
+          ),
+        ),
+        ...values.map((value) => Expanded(
+          child: Center(
+            child: Container(
+              width: double.infinity,
+              margin: const EdgeInsets.symmetric(horizontal: 4),
+              padding: const EdgeInsets.symmetric(vertical: 10),
+              decoration: BoxDecoration(
+                gradient: isCurrentUser ? Us2Theme.accentGradient : null,
+                color: isCurrentUser ? null : Us2Theme.beige,
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: Text(
+                value,
+                textAlign: TextAlign.center,
+                style: GoogleFonts.nunito(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                  color: isCurrentUser ? Colors.white : Us2Theme.textDark,
+                ),
+              ),
+            ),
+          ),
+        )),
+      ],
+    );
+  }
+
+  /// Us2 Account Section
+  Widget _buildUs2AccountSection() {
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 20),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(left: 4, bottom: 12),
+            child: Text(
+              'Account',
+              style: GoogleFonts.playfairDisplay(
+                fontSize: 18,
+                fontWeight: FontWeight.w600,
+                color: Us2Theme.textDark,
+              ),
+            ),
+          ),
+          GestureDetector(
+            onTap: _showLogoutConfirmation,
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                border: Border.all(color: const Color(0xFFFF6B6B), width: 2),
+                borderRadius: BorderRadius.circular(16),
+              ),
+              child: Row(
+                children: [
+                  const Text('🚪', style: TextStyle(fontSize: 20)),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Text(
+                      'Sign Out',
+                      style: GoogleFonts.nunito(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                        color: const Color(0xFFFF6B6B),
+                      ),
+                    ),
+                  ),
+                  Text(
+                    '›',
+                    style: TextStyle(
+                      fontSize: 18,
+                      color: const Color(0xFFFFB3B3),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

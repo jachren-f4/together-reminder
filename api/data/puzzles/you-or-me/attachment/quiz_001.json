@@ -1,6 +1,6 @@
 {
   "quizId": "quiz_001",
-  "title": "Attachment Quiz 1",
+  "title": "Safe Space",
   "branch": "attachment",
   "questions": [
     {
@@ -33,5 +33,6 @@
       "prompt": "Who feels more...",
       "content": "Secure in the relationship"
     }
-  ]
+  ],
+  "description": "Explore your security needs and how you create safety in your relationship."
 }

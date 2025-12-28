@@ -8,6 +8,46 @@ class DevConfig {
   static final DeviceInfoPlugin _deviceInfo = DeviceInfoPlugin();
   static bool? _cachedIsSimulator;
 
+  // ============================================================================
+  // PRODUCTION SAFETY GUARD
+  // ============================================================================
+
+  /// CRITICAL: Call this on app startup to prevent dev flags in production
+  ///
+  /// This method will throw a [StateError] in release builds if any dangerous
+  /// dev bypass flags are enabled. This prevents accidentally shipping dev
+  /// mode to the App Store.
+  ///
+  /// Call this at the very start of main() before any other initialization.
+  static void validateProductionSafety() {
+    if (kReleaseMode) {
+      final List<String> violations = [];
+
+      if (skipAuthInDev) {
+        violations.add('skipAuthInDev is true');
+      }
+      if (skipOtpVerificationInDev) {
+        violations.add('skipOtpVerificationInDev is true');
+      }
+      if (allowAuthBypassInRelease) {
+        violations.add('allowAuthBypassInRelease is true');
+      }
+
+      if (violations.isNotEmpty) {
+        throw StateError(
+          'CRITICAL: Dev auth bypass flags are enabled in release build!\n'
+          'Violations:\n'
+          '  - ${violations.join('\n  - ')}\n\n'
+          'Fix: Set these flags to false in lib/config/dev_config.dart before releasing.',
+        );
+      }
+    }
+  }
+
+  // ============================================================================
+  // DEV AUTH BYPASS FLAGS
+  // ============================================================================
+
   /// Skip Supabase authentication in development mode
   /// Set to true to bypass auth flow during development
   /// Set to false when you need to test auth/onboarding functionality
@@ -64,12 +104,12 @@ class DevConfig {
   /// Set to true when you need to test on unplugged physical devices (e.g., walking outside)
   /// Set to false for production releases
   /// WARNING: Never ship to App Store with this set to true!
-  static const bool allowAuthBypassInRelease = true;
+  static const bool allowAuthBypassInRelease = false;
 
   /// Force production API (Vercel) even in debug builds
   /// Set to true when testing on physical devices that can't reach localhost
   /// Set to false for emulator/simulator development with local API
-  static const bool useProductionApi = true;
+  static const bool useProductionApi = false;
 
   // ============================================================================
   // PHASE 4 MIGRATION FEATURE FLAGS
@@ -105,6 +145,10 @@ class DevConfig {
   /// TRUE = Server-centric flow (match-based, like Linked/WordSearch games)
   static const bool useServerCentricQuizzes = true;
 
+  // ============================================================================
+  // DEVELOPMENT USER IDs
+  // ============================================================================
+
   /// Development User IDs for API auth bypass
   /// These IDs are sent to the API via X-Dev-User-Id header
   /// Only active when API has AUTH_DEV_BYPASS_ENABLED=true
@@ -112,10 +156,26 @@ class DevConfig {
   /// Usage: Android uses devUserIdAndroid, Chrome/Web uses devUserIdWeb
   /// This allows two-device testing with different users simultaneously
   ///
-  /// **IMPORTANT**: Replace with your actual user IDs from database:
+  /// Can be overridden via --dart-define:
+  ///   flutter run --dart-define=DEV_USER_ID_ANDROID=your-uuid
+  ///   flutter run --dart-define=DEV_USER_ID_WEB=your-uuid
+  ///
+  /// Or set in database and use default values:
   ///   SELECT user1_id, user2_id FROM couples LIMIT 1;
-  static const String devUserIdAndroid = 'c7f42ec5-7c6d-4dc4-90f2-2aae6ede4d28';  // TestiY (user1_id)
-  static const String devUserIdWeb = 'd71425a3-a92f-404e-bfbe-a54c4cb58b6a';      // Jokke (user2_id)
+  static const String devUserIdAndroid = String.fromEnvironment(
+    'DEV_USER_ID_ANDROID',
+    defaultValue: 'f8bd457e-4b89-4480-89ff-7f433d927bda',  // Kilu
+  );
+
+  static const String devUserIdWeb = String.fromEnvironment(
+    'DEV_USER_ID_WEB',
+    defaultValue: 'aed52d5a-3a48-4b58-abb9-47a7dfa9c933',  // Pertsa
+  );
+
+  /// Check if custom dev user IDs were provided via environment
+  static bool get hasCustomDevUserIds =>
+      devUserIdAndroid != 'f8bd457e-4b89-4480-89ff-7f433d927bda' ||
+      devUserIdWeb != 'aed52d5a-3a48-4b58-abb9-47a7dfa9c933';
 
   /// Detect if running on iOS/Android simulator or emulator
   /// Returns true ONLY when running in a simulator/emulator

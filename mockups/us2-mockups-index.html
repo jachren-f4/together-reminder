@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Us 2.0 Mockups Index</title>
+  <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Playfair+Display:wght@400;600;700&family=Nunito:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-gradient-start: #FFD1C1;
+      --bg-gradient-end: #FFF5F0;
+      --primary-brand-pink: #FF5E62;
+      --gradient-accent-start: #FF6B6B;
+      --gradient-accent-end: #FF9F43;
+      --text-dark: #2D2D2D;
+      --text-medium: #6B6B6B;
+      --text-light: #9B9B9B;
+      --cream: #FFF8F0;
+      --beige: #F5E6D8;
+      --glow-pink: rgba(255, 107, 107, 0.5);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Nunito', sans-serif;
+      min-height: 100vh;
+      background: linear-gradient(180deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
+      padding: 40px 20px;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .logo {
+      font-family: 'Pacifico', cursive;
+      font-size: 48px;
+      color: white;
+      text-shadow:
+        0 0 10px var(--glow-pink),
+        0 0 20px var(--glow-pink),
+        0 0 30px var(--glow-pink);
+      margin-bottom: 8px;
+    }
+
+    .subtitle {
+      font-family: 'Playfair Display', serif;
+      font-size: 18px;
+      color: var(--text-medium);
+      font-style: italic;
+    }
+
+    .section {
+      background: white;
+      border-radius: 20px;
+      padding: 24px;
+      margin-bottom: 24px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    }
+
+    .section-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--text-dark);
+      margin-bottom: 16px;
+      padding-bottom: 12px;
+      border-bottom: 2px solid var(--beige);
+    }
+
+    .links-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 12px;
+    }
+
+    .link-card {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 16px;
+      background: var(--cream);
+      border: 1px solid var(--beige);
+      border-radius: 12px;
+      text-decoration: none;
+      transition: all 0.2s ease;
+    }
+
+    .link-card:hover {
+      background: linear-gradient(135deg, var(--gradient-accent-start), var(--gradient-accent-end));
+      border-color: transparent;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px var(--glow-pink);
+    }
+
+    .link-card:hover .link-text {
+      color: white;
+    }
+
+    .link-card:hover .link-emoji {
+      transform: scale(1.1);
+    }
+
+    .link-emoji {
+      font-size: 24px;
+      transition: transform 0.2s ease;
+    }
+
+    .link-text {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-dark);
+      transition: color 0.2s ease;
+    }
+
+    .status-badge {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 12px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      margin-left: 8px;
+    }
+
+    .status-done {
+      background: #4CAF50;
+      color: white;
+    }
+
+    .status-pending {
+      background: var(--beige);
+      color: var(--text-medium);
+    }
+
+    .footer {
+      text-align: center;
+      margin-top: 40px;
+      color: var(--text-light);
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header class="header">
+      <div class="logo">Us 2.0</div>
+      <p class="subtitle">Design Mockups</p>
+    </header>
+
+    <section class="section">
+      <h2 class="section-title">Auth & Onboarding <span class="status-badge status-done">DONE</span></h2>
+      <div class="links-grid">
+        <a href="us2-onboarding.html" class="link-card">
+          <span class="link-emoji">👋</span>
+          <span class="link-text">Onboarding</span>
+        </a>
+        <a href="us2-auth.html" class="link-card">
+          <span class="link-emoji">📧</span>
+          <span class="link-text">Auth (Email)</span>
+        </a>
+        <a href="us2-otp.html" class="link-card">
+          <span class="link-emoji">🔢</span>
+          <span class="link-text">OTP Verification</span>
+        </a>
+        <a href="us2-name-entry.html" class="link-card">
+          <span class="link-emoji">✏️</span>
+          <span class="link-text">Name Entry</span>
+        </a>
+        <a href="us2-pairing.html" class="link-card">
+          <span class="link-emoji">🔗</span>
+          <span class="link-text">Pairing</span>
+        </a>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2 class="section-title">Welcome Quiz <span class="status-badge status-done">DONE</span></h2>
+      <div class="links-grid">
+        <a href="us2-welcome-quiz-intro.html" class="link-card">
+          <span class="link-emoji">💕</span>
+          <span class="link-text">Intro</span>
+        </a>
+        <a href="us2-welcome-quiz-game.html" class="link-card">
+          <span class="link-emoji">🎮</span>
+          <span class="link-text">Game</span>
+        </a>
+        <a href="us2-welcome-quiz-waiting.html" class="link-card">
+          <span class="link-emoji">⏳</span>
+          <span class="link-text">Waiting</span>
+        </a>
+        <a href="us2-welcome-quiz-results.html" class="link-card">
+          <span class="link-emoji">🎯</span>
+          <span class="link-text">Results</span>
+        </a>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2 class="section-title">Home & Navigation</h2>
+      <div class="links-grid">
+        <a href="us2-home-v2.html" class="link-card">
+          <span class="link-emoji">🏠</span>
+          <span class="link-text">Home Screen v2</span>
+        </a>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2 class="section-title">Game Completion <span class="status-badge status-pending">PENDING</span></h2>
+      <div class="links-grid">
+        <a href="us2-linked-completion.html" class="link-card">
+          <span class="link-emoji">🔗</span>
+          <span class="link-text">Linked Completion</span>
+        </a>
+        <a href="us2-word-search-completion.html" class="link-card">
+          <span class="link-emoji">🔍</span>
+          <span class="link-text">Word Search Completion</span>
+        </a>
+        <a href="us2-game-waiting.html" class="link-card">
+          <span class="link-emoji">⏳</span>
+          <span class="link-text">Game Waiting</span>
+        </a>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2 class="section-title">Steps Together <span class="status-badge status-pending">PENDING</span></h2>
+      <div class="links-grid">
+        <a href="us2-steps-intro.html" class="link-card">
+          <span class="link-emoji">👟</span>
+          <span class="link-text">Steps Intro</span>
+        </a>
+        <a href="us2-steps-counter.html" class="link-card">
+          <span class="link-emoji">📊</span>
+          <span class="link-text">Steps Counter</span>
+        </a>
+        <a href="us2-steps-claim.html" class="link-card">
+          <span class="link-emoji">🎁</span>
+          <span class="link-text">Steps Claim</span>
+        </a>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2 class="section-title">Daily Pulse <span class="status-badge status-pending">PENDING</span></h2>
+      <div class="links-grid">
+        <a href="us2-daily-pulse.html" class="link-card">
+          <span class="link-emoji">💭</span>
+          <span class="link-text">Daily Pulse Game</span>
+        </a>
+        <a href="us2-daily-pulse-results.html" class="link-card">
+          <span class="link-emoji">✨</span>
+          <span class="link-text">Daily Pulse Results</span>
+        </a>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2 class="section-title">Inbox & Reminders <span class="status-badge status-pending">PENDING</span></h2>
+      <div class="links-grid">
+        <a href="us2-inbox.html" class="link-card">
+          <span class="link-emoji">📬</span>
+          <span class="link-text">Inbox</span>
+        </a>
+        <a href="us2-send-reminder.html" class="link-card">
+          <span class="link-emoji">⏰</span>
+          <span class="link-text">Send Reminder</span>
+        </a>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2 class="section-title">Bottom Sheets <span class="status-badge status-done">DONE</span></h2>
+      <div class="links-grid">
+        <a href="us2-poke-bottom-sheet.html" class="link-card">
+          <span class="link-emoji">👋</span>
+          <span class="link-text">Poke</span>
+        </a>
+        <a href="us2-remind-bottom-sheet.html" class="link-card">
+          <span class="link-emoji">⏰</span>
+          <span class="link-text">Remind</span>
+        </a>
+        <a href="us2-leaderboard-bottom-sheet.html" class="link-card">
+          <span class="link-emoji">🏆</span>
+          <span class="link-text">Leaderboard</span>
+        </a>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2 class="section-title">Full-Screen Overlays <span class="status-badge status-done">DONE</span></h2>
+      <div class="links-grid">
+        <a href="us2-lp-intro-overlay.html" class="link-card">
+          <span class="link-emoji">💎</span>
+          <span class="link-text">LP Intro</span>
+        </a>
+        <a href="us2-unlock-celebration.html" class="link-card">
+          <span class="link-emoji">🔓</span>
+          <span class="link-text">Unlock Celebration</span>
+        </a>
+        <a href="us2-quest-guidance-overlay.html" class="link-card">
+          <span class="link-emoji">👆</span>
+          <span class="link-text">Quest Guidance</span>
+        </a>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2 class="section-title">Dialogs <span class="status-badge status-done">DONE</span></h2>
+      <div class="links-grid">
+        <a href="us2-match-reveal-dialog.html" class="link-card">
+          <span class="link-emoji">✨</span>
+          <span class="link-text">Match Reveal</span>
+        </a>
+        <a href="us2-poke-response-dialog.html" class="link-card">
+          <span class="link-emoji">❤️</span>
+          <span class="link-text">Poke Response</span>
+        </a>
+        <a href="us2-turn-complete-dialog.html" class="link-card">
+          <span class="link-emoji">✅</span>
+          <span class="link-text">Turn Complete</span>
+        </a>
+        <a href="us2-partner-first-dialog.html" class="link-card">
+          <span class="link-emoji">⏳</span>
+          <span class="link-text">Partner First</span>
+        </a>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <p>Us 2.0 Design System - Together Remind</p>
+    </footer>
+  </div>
+</body>
+</html>

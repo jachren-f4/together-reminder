@@ -3,7 +3,7 @@
 
 // App identity
 PRODUCT_BUNDLE_IDENTIFIER = com.togetherremind.togetherremind2
-PRODUCT_NAME = TogetherRemind
+PRODUCT_NAME = Liia
 
 // Brand identifier (passed to Dart via --dart-define)
 BRAND = togetherRemind

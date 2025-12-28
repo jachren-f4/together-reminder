@@ -68,18 +68,15 @@ function checkWordCompletions(
   newlyLockedCells: number[]
 ): WordCompletion[] {
   const completedWords: WordCompletion[] = [];
-  const { clues, grid, gridnums, size } = puzzle;
+  const { clues, grid, size } = puzzle;
 
-  // For each clue, check if all cells are now filled
-  for (const [clueNum, clue] of Object.entries(clues) as [string, any][]) {
-    const targetIndex = clue.target_index;
-    const direction = clue.arrow;
+  // Helper to check a single direction
+  function checkDirection(targetIndex: number, direction: 'across' | 'down'): WordCompletion | null {
     const wordCells: number[] = [];
     let word = '';
     let allFilled = true;
     let hasNewCell = false;
 
-    // Trace the word from target_index
     let currentIndex = targetIndex;
     const stepSize = direction === 'across' ? 1 : size.cols;
 
@@ -123,11 +120,29 @@ function checkWordCompletions(
     // If all cells are filled and at least one was just placed, it's a completion
     if (allFilled && hasNewCell && word.length > 1) {
       const bonus = word.length * 10;
-      completedWords.push({
-        word,
-        cells: wordCells,
-        bonus,
-      });
+      return { word, cells: wordCells, bonus };
+    }
+    return null;
+  }
+
+  // For each clue, check if all cells are now filled
+  for (const [clueNum, clue] of Object.entries(clues) as [string, any][]) {
+    // Check for dual-direction clues (have nested 'across' and/or 'down' objects)
+    if (clue.across || clue.down) {
+      // Check across direction if present
+      if (clue.across && clue.across.target_index !== undefined) {
+        const result = checkDirection(clue.across.target_index, 'across');
+        if (result) completedWords.push(result);
+      }
+      // Check down direction if present
+      if (clue.down && clue.down.target_index !== undefined) {
+        const result = checkDirection(clue.down.target_index, 'down');
+        if (result) completedWords.push(result);
+      }
+    } else if (clue.target_index !== undefined && clue.arrow) {
+      // Single-direction clue (legacy format)
+      const result = checkDirection(clue.target_index, clue.arrow);
+      if (result) completedWords.push(result);
     }
   }
 
@@ -218,8 +233,8 @@ export const POST = withAuthOrDevBypass(async (req, userId, email) => {
       );
     }
 
-    // Load puzzle with solution
-    const puzzle = loadPuzzle(match.puzzle_id);
+    // Load puzzle with solution (use stored branch, fallback to casual for old matches)
+    const puzzle = loadPuzzle(match.puzzle_id, match.branch || 'casual');
     if (!puzzle) {
       await client.query('ROLLBACK');
       return NextResponse.json(

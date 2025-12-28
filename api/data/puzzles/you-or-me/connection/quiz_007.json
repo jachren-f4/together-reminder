@@ -1,6 +1,6 @@
 {
   "quizId": "quiz_007",
-  "title": "Connection Quiz 7",
+  "title": "Appreciation",
   "branch": "connection",
   "questions": [
     {
@@ -33,5 +33,6 @@
       "prompt": "Who remembers more...",
       "content": "Little details the other shares"
     }
-  ]
+  ],
+  "description": "How do you show gratitude? Discover your appreciation patterns."
 }

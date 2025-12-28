@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import '../config/brand/brand_loader.dart';
+import '../config/brand/brand_config.dart';
+import '../config/brand/us2_theme.dart';
 import '../services/welcome_quiz_service.dart';
 import '../services/haptic_service.dart';
 import '../services/sound_service.dart';
@@ -20,6 +24,8 @@ class WelcomeQuizGameScreen extends StatefulWidget {
 class _WelcomeQuizGameScreenState extends State<WelcomeQuizGameScreen>
     with TickerProviderStateMixin, DramaticScreenMixin {
   final WelcomeQuizService _service = WelcomeQuizService();
+
+  bool get _isUs2 => BrandLoader().config.brand == Brand.us2;
 
   // Animation controllers
   late AnimationController _slideController;
@@ -221,16 +227,18 @@ class _WelcomeQuizGameScreenState extends State<WelcomeQuizGameScreen>
   @override
   Widget build(BuildContext context) {
     if (_isLoading) {
-      return _buildLoadingState();
+      return _isUs2 ? _buildUs2LoadingState() : _buildLoadingState();
     }
 
     if (_error != null) {
-      return _buildErrorState();
+      return _isUs2 ? _buildUs2ErrorState() : _buildErrorState();
     }
 
     if (_quizData == null || _quizData!.questions.isEmpty) {
-      return _buildErrorState('No questions available');
+      return _isUs2 ? _buildUs2ErrorState('No questions available') : _buildErrorState('No questions available');
     }
+
+    if (_isUs2) return _buildUs2GameScreen();
 
     final questions = _quizData!.questions;
     final currentQuestion = questions[_currentQuestionIndex];
@@ -271,12 +279,19 @@ class _WelcomeQuizGameScreenState extends State<WelcomeQuizGameScreen>
                   ),
                 ),
 
-                // Progress bar
-                LinearProgressIndicator(
-                  value: (_currentQuestionIndex + 1) / questions.length,
-                  backgroundColor: EditorialStyles.ink.withOpacity(0.1),
-                  valueColor: AlwaysStoppedAnimation<Color>(EditorialStyles.ink),
-                  minHeight: 3,
+                // Progress bar - delayed until after header animation completes
+                TweenAnimationBuilder<double>(
+                  tween: Tween<double>(begin: 0.0, end: _currentQuestionIndex / questions.length),
+                  duration: const Duration(milliseconds: 400),
+                  // Delay the animation start by waiting for header to drop
+                  builder: (context, value, child) {
+                    return LinearProgressIndicator(
+                      value: value,
+                      backgroundColor: EditorialStyles.ink.withOpacity(0.1),
+                      valueColor: AlwaysStoppedAnimation<Color>(EditorialStyles.ink),
+                      minHeight: 3,
+                    );
+                  },
                 ),
 
                 // Question content
@@ -496,6 +511,414 @@ class _WelcomeQuizGameScreenState extends State<WelcomeQuizGameScreen>
           ],
         ),
       ),
+      ),
+    );
+  }
+
+  // ===========================================
+  // Us 2.0 Implementation
+  // ===========================================
+
+  Widget _buildUs2GameScreen() {
+    final questions = _quizData!.questions;
+    final currentQuestion = questions[_currentQuestionIndex];
+
+    return wrapWithDramaticEffects(
+      PopScope(
+        canPop: false,
+        child: Scaffold(
+          body: Container(
+            decoration: const BoxDecoration(
+              gradient: Us2Theme.backgroundGradient,
+            ),
+            child: SafeArea(
+              child: Column(
+                children: [
+                  // Header
+                  _buildUs2Header(questions.length),
+
+                  // Progress bar
+                  TweenAnimationBuilder<double>(
+                    tween: Tween<double>(
+                      begin: 0.0,
+                      end: (_currentQuestionIndex + 1) / questions.length,
+                    ),
+                    duration: const Duration(milliseconds: 400),
+                    builder: (context, value, child) {
+                      return Container(
+                        height: 6,
+                        decoration: BoxDecoration(
+                          color: Colors.white.withOpacity(0.8),
+                          borderRadius: BorderRadius.circular(3),
+                        ),
+                        child: Align(
+                          alignment: Alignment.centerLeft,
+                          child: FractionallySizedBox(
+                            widthFactor: value,
+                            child: Container(
+                              decoration: BoxDecoration(
+                                gradient: Us2Theme.accentGradient,
+                                borderRadius: BorderRadius.circular(3),
+                              ),
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+
+                  // Question content
+                  Expanded(
+                    child: SlideTransition(
+                      position: _slideAnimation,
+                      child: FadeTransition(
+                        opacity: _fadeAnimation,
+                        child: SingleChildScrollView(
+                          padding: const EdgeInsets.all(24),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                              const SizedBox(height: 32),
+
+                              // Question text
+                              Text(
+                                currentQuestion.question,
+                                style: GoogleFonts.playfairDisplay(
+                                  fontSize: 24,
+                                  fontWeight: FontWeight.w600,
+                                  color: Us2Theme.textDark,
+                                  height: 1.4,
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+
+                              const SizedBox(height: 32),
+
+                              // Answer options
+                              ...currentQuestion.options.asMap().entries.map((entry) {
+                                final index = entry.key;
+                                final option = entry.value;
+                                return _buildUs2Option(index, option);
+                              }),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+
+                  // Next/Submit button
+                  _buildUs2FooterButton(questions.length),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildUs2Header(int totalQuestions) {
+    return Container(
+      padding: const EdgeInsets.fromLTRB(20, 16, 20, 12),
+      decoration: BoxDecoration(
+        color: Colors.white.withOpacity(0.5),
+      ),
+      child: Row(
+        children: [
+          // Progress text
+          Text(
+            '${_currentQuestionIndex + 1}/$totalQuestions',
+            style: GoogleFonts.nunito(
+              fontSize: 13,
+              fontWeight: FontWeight.w700,
+              letterSpacing: 2,
+              color: Us2Theme.textMedium,
+            ),
+          ),
+          const Spacer(),
+          // Title
+          Text(
+            'Welcome Quiz',
+            style: GoogleFonts.playfairDisplay(
+              fontSize: 18,
+              fontWeight: FontWeight.w600,
+              color: Us2Theme.textDark,
+            ),
+          ),
+          const Spacer(),
+          // Counter badge
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+            decoration: BoxDecoration(
+              gradient: Us2Theme.accentGradient,
+              borderRadius: BorderRadius.circular(15),
+            ),
+            child: Text(
+              '${_currentQuestionIndex + 1} of $totalQuestions',
+              style: GoogleFonts.nunito(
+                fontSize: 13,
+                fontWeight: FontWeight.w700,
+                color: Colors.white,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildUs2Option(int index, String option) {
+    final isSelected = _tempSelectedIndex == index;
+    final letter = String.fromCharCode(65 + index); // A, B, C, D
+
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 12),
+      child: GestureDetector(
+        onTapDown: (details) => _selectAnswer(index, details),
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 150),
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            gradient: isSelected ? Us2Theme.cardGradient : null,
+            color: isSelected ? null : Us2Theme.cream,
+            border: isSelected
+                ? null
+                : Border.all(color: Us2Theme.beige, width: 1),
+            borderRadius: BorderRadius.circular(16),
+            boxShadow: isSelected
+                ? [
+                    BoxShadow(
+                      color: Us2Theme.glowPink.withOpacity(0.35),
+                      blurRadius: 20,
+                      offset: const Offset(0, 6),
+                    ),
+                  ]
+                : null,
+          ),
+          child: Row(
+            children: [
+              // Letter circle
+              Container(
+                width: 36,
+                height: 36,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: isSelected
+                      ? Colors.white.withOpacity(0.3)
+                      : Colors.white.withOpacity(0.5),
+                  border: Border.all(
+                    color: isSelected ? Colors.white : Us2Theme.textMedium,
+                    width: 2,
+                  ),
+                ),
+                child: Center(
+                  child: Text(
+                    letter,
+                    style: GoogleFonts.nunito(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w700,
+                      color: isSelected ? Colors.white : Us2Theme.textDark,
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(width: 14),
+              // Option text
+              Expanded(
+                child: Text(
+                  option,
+                  style: GoogleFonts.nunito(
+                    fontSize: 15,
+                    fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
+                    color: isSelected ? Colors.white : Us2Theme.textDark,
+                    height: 1.4,
+                  ),
+                ),
+              ),
+              // Check icon when selected
+              if (isSelected)
+                const Icon(
+                  Icons.check,
+                  color: Colors.white,
+                  size: 22,
+                ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildUs2FooterButton(int totalQuestions) {
+    final isLastQuestion = _currentQuestionIndex >= totalQuestions - 1;
+    final isEnabled = _tempSelectedIndex != null && !_isSubmitting;
+
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(24, 0, 24, 40),
+      child: GestureDetector(
+        onTap: isEnabled ? _nextQuestion : null,
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 150),
+          width: double.infinity,
+          padding: const EdgeInsets.symmetric(vertical: 18),
+          decoration: BoxDecoration(
+            gradient: isEnabled ? Us2Theme.accentGradient : null,
+            color: isEnabled ? null : Us2Theme.beige,
+            borderRadius: BorderRadius.circular(30),
+            boxShadow: isEnabled ? Us2Theme.buttonGlowShadow : null,
+          ),
+          child: Center(
+            child: Text(
+              _isSubmitting
+                  ? 'Submitting...'
+                  : isLastQuestion
+                      ? 'Submit'
+                      : 'Next',
+              style: GoogleFonts.nunito(
+                fontSize: 17,
+                fontWeight: FontWeight.w700,
+                color: isEnabled ? Colors.white : Us2Theme.textLight,
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildUs2LoadingState() {
+    return Scaffold(
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: Us2Theme.backgroundGradient,
+        ),
+        child: SafeArea(
+          child: Column(
+            children: [
+              Container(
+                padding: const EdgeInsets.fromLTRB(24, 16, 24, 12),
+                decoration: BoxDecoration(
+                  color: Colors.white.withOpacity(0.5),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      'Welcome Quiz',
+                      style: GoogleFonts.playfairDisplay(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w600,
+                        color: Us2Theme.textDark,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Expanded(
+                child: Center(
+                  child: CircularProgressIndicator(
+                    valueColor: AlwaysStoppedAnimation<Color>(Us2Theme.primaryBrandPink),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildUs2ErrorState([String? message]) {
+    return PopScope(
+      canPop: false,
+      child: Scaffold(
+        body: Container(
+          decoration: const BoxDecoration(
+            gradient: Us2Theme.backgroundGradient,
+          ),
+          child: SafeArea(
+            child: Column(
+              children: [
+                Container(
+                  padding: const EdgeInsets.fromLTRB(24, 16, 24, 12),
+                  decoration: BoxDecoration(
+                    color: Colors.white.withOpacity(0.5),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        'Welcome Quiz',
+                        style: GoogleFonts.playfairDisplay(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w600,
+                          color: Us2Theme.textDark,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Expanded(
+                  child: Center(
+                    child: Padding(
+                      padding: const EdgeInsets.all(24),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            message ?? _error ?? 'An error occurred',
+                            style: GoogleFonts.nunito(
+                              fontSize: 16,
+                              color: Us2Theme.textMedium,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                          const SizedBox(height: 24),
+                          GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                _error = null;
+                              });
+                              if (_answers.isNotEmpty && _quizData != null &&
+                                  _answers.length >= _quizData!.questions.length) {
+                                _submitAnswers();
+                              } else {
+                                setState(() {
+                                  _isLoading = true;
+                                });
+                                _loadQuizData();
+                              }
+                            },
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 32,
+                                vertical: 14,
+                              ),
+                              decoration: BoxDecoration(
+                                gradient: Us2Theme.accentGradient,
+                                borderRadius: BorderRadius.circular(25),
+                                boxShadow: Us2Theme.buttonGlowShadow,
+                              ),
+                              child: Text(
+                                'Try Again',
+                                style: GoogleFonts.nunito(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w700,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
       ),
     );
   }
