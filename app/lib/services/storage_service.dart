@@ -14,6 +14,7 @@ import '../models/linked.dart';
 import '../models/word_search.dart';
 import '../models/branch_progression_state.dart';
 import '../models/steps_data.dart';
+import '../models/journal_entry.dart';
 import '../utils/logger.dart';
 
 class StorageService {
@@ -39,6 +40,10 @@ class StorageService {
   static const String _branchProgressionBox = 'branch_progression_states';
   static const String _stepsDaysBox = 'steps_days';
   static const String _stepsConnectionBox = 'steps_connection';
+  static const String _journalEntriesBox = 'journal_entries';
+
+  // Public box name for JournalService access
+  static const String appMetadataBoxName = 'app_metadata';
 
   static Future<void> init() async {
     try {
@@ -71,6 +76,9 @@ class StorageService {
       if (!Hive.isAdapterRegistered(26)) Hive.registerAdapter(BranchProgressionStateAdapter());
       if (!Hive.isAdapterRegistered(27)) Hive.registerAdapter(StepsDayAdapter());
       if (!Hive.isAdapterRegistered(28)) Hive.registerAdapter(StepsConnectionAdapter());
+      // Journal adapters (typeId 30=entry, 31=enum)
+      if (!Hive.isAdapterRegistered(30)) Hive.registerAdapter(JournalEntryAdapter());
+      if (!Hive.isAdapterRegistered(31)) Hive.registerAdapter(JournalEntryTypeAdapter());
 
       // Open boxes
       Logger.debug('Opening Hive boxes...', service: 'storage');
@@ -96,8 +104,9 @@ class StorageService {
       await Hive.openBox<BranchProgressionState>(_branchProgressionBox);
       await Hive.openBox<StepsDay>(_stepsDaysBox);
       await Hive.openBox<StepsConnection>(_stepsConnectionBox);
+      await Hive.openBox<JournalEntry>(_journalEntriesBox);
 
-      Logger.info('Hive storage initialized successfully (25 boxes opened)', service: 'storage');
+      Logger.info('Hive storage initialized successfully (26 boxes opened)', service: 'storage');
 
       // Debug: Log daily quest state at startup to diagnose persistence issues
       final questsBox = Hive.box<DailyQuest>(_dailyQuestsBox);

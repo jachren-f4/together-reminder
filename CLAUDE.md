@@ -576,7 +576,7 @@ FutureBuilder(future: _cachedFuture ?? _fetchData(), ...)
 
 ## Development Setup
 
-### Dev Auth Bypass Toggles
+### Dev Auth Toggles
 
 All toggles in `lib/config/dev_config.dart`:
 
@@ -615,26 +615,6 @@ bool get _isAppleSignInAvailable {
 - **Current state:** Disabled (`return false`)
 - **To enable:** Change to `if (kIsWeb) return false; return Platform.isIOS;`
 - **Full setup guide:** `docs/APPLE_SIGNIN_SETUP.md`
-
-#### API-Side Bypass
-Controls how the API authenticates requests:
-```bash
-# api/.env.local
-AUTH_DEV_BYPASS_ENABLED=true   # Ignores JWT, uses hardcoded dev user IDs
-AUTH_DEV_BYPASS_ENABLED=false  # Reads real JWT from Supabase auth
-```
-
-#### CRITICAL: Flutter + API Setting Compatibility
-
-| Flutter Setting | API Setting | Result |
-|-----------------|-------------|--------|
-| `skipAuthInDev=true` | `AUTH_DEV_BYPASS_ENABLED=true` | ✅ Both use hardcoded dev user IDs |
-| `skipOtpVerificationInDev=true` | `AUTH_DEV_BYPASS_ENABLED=false` | ✅ Both use real users with real JWTs |
-| `skipOtpVerificationInDev=true` | `AUTH_DEV_BYPASS_ENABLED=true` | ❌ **BROKEN** - Flutter creates real users, API ignores their JWTs and uses wrong hardcoded IDs → "Couple not found" |
-
-**Rule of thumb:**
-- Testing with **hardcoded dev users** (fast, no signup): `skipAuthInDev=true` + `AUTH_DEV_BYPASS_ENABLED=true`
-- Testing with **real signup flow** (new users each time): `skipOtpVerificationInDev=true` + `AUTH_DEV_BYPASS_ENABLED=false`
 
 **Quick start:** `/runtogether` launches Android + Chrome with clean state
 

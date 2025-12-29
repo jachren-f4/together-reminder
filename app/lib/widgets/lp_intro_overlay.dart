@@ -38,6 +38,7 @@ class _LpIntroOverlayState extends State<LpIntroOverlay>
   late Animation<double> _meterAnimation;
 
   bool _showContent = false;
+  bool _isProcessing = false;
   bool get _isUs2 => BrandLoader().config.brand == Brand.us2;
 
   @override
@@ -88,6 +89,10 @@ class _LpIntroOverlayState extends State<LpIntroOverlay>
   }
 
   void _dismiss() async {
+    // Prevent double-tap
+    if (_isProcessing) return;
+    setState(() => _isProcessing = true);
+
     HapticService().trigger(HapticType.light);
 
     // Mark LP intro as shown on server
@@ -319,6 +324,7 @@ class _LpIntroOverlayState extends State<LpIntroOverlay>
                     child: EditorialButton(
                       label: 'Got It!',
                       onPressed: _dismiss,
+                      isLoading: _isProcessing,
                     ),
                   ),
 
@@ -437,30 +443,45 @@ class _LpIntroOverlayState extends State<LpIntroOverlay>
                     BounceInWidget(
                       delay: const Duration(milliseconds: 700),
                       child: GestureDetector(
-                        onTap: _dismiss,
-                        child: Container(
-                          width: double.infinity,
-                          constraints: const BoxConstraints(maxWidth: 280),
-                          height: 56,
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(28),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black.withOpacity(0.2),
-                                blurRadius: 20,
-                                offset: const Offset(0, 8),
-                              ),
-                            ],
-                          ),
-                          child: Center(
-                            child: Text(
-                              "Let's Go!",
-                              style: GoogleFonts.nunito(
-                                fontSize: 17,
-                                fontWeight: FontWeight.w700,
-                                color: Us2Theme.gradientAccentStart,
-                              ),
+                        onTap: _isProcessing ? null : _dismiss,
+                        child: AnimatedOpacity(
+                          opacity: _isProcessing ? 0.7 : 1.0,
+                          duration: const Duration(milliseconds: 200),
+                          child: Container(
+                            width: double.infinity,
+                            constraints: const BoxConstraints(maxWidth: 280),
+                            height: 56,
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(28),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withOpacity(0.2),
+                                  blurRadius: 20,
+                                  offset: const Offset(0, 8),
+                                ),
+                              ],
+                            ),
+                            child: Center(
+                              child: _isProcessing
+                                  ? SizedBox(
+                                      width: 20,
+                                      height: 20,
+                                      child: CircularProgressIndicator(
+                                        strokeWidth: 2,
+                                        valueColor: AlwaysStoppedAnimation<Color>(
+                                          Us2Theme.gradientAccentStart,
+                                        ),
+                                      ),
+                                    )
+                                  : Text(
+                                      "Let's Go!",
+                                      style: GoogleFonts.nunito(
+                                        fontSize: 17,
+                                        fontWeight: FontWeight.w700,
+                                        color: Us2Theme.gradientAccentStart,
+                                      ),
+                                    ),
                             ),
                           ),
                         ),

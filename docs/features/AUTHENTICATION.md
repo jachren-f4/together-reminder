@@ -213,15 +213,6 @@ static const bool skipOtpVerificationInDev = true;
 // CRITICAL: Set to FALSE before App Store release!
 ```
 
-### API-Side Bypass
-```bash
-# In api/.env.local
-AUTH_DEV_BYPASS_ENABLED=true
-
-# Effect: API accepts X-Dev-User-Id header instead of JWT
-# DevConfig.devUserIdAndroid / devUserIdWeb determine which user
-```
-
 ### Production Safety Guard
 ```dart
 // In main.dart startup

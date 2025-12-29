@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=390, initial-scale=1.0">
+  <title>Us Profile - Tier & Achievements</title>
+  <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-gradient-start: #FFD1C1;
+      --bg-gradient-end: #FFF5F0;
+      --primary-pink: #FF6B6B;
+      --primary-orange: #FF9F43;
+      --cream: #FFF8F0;
+      --beige: #F5E6D8;
+      --text-dark: #2D2D2D;
+      --text-medium: #6B6B6B;
+      --text-light: #9B9B9B;
+      --gold: #FFD700;
+      --silver: #C0C0C0;
+      --bronze: #CD7F32;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Nunito', sans-serif;
+      background: linear-gradient(180deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
+      min-height: 100vh;
+      padding: 20px;
+      padding-bottom: 100px;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 24px;
+    }
+
+    .header h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--text-dark);
+    }
+
+    /* Current Tier Card */
+    .tier-card {
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+      border-radius: 24px;
+      padding: 24px;
+      margin-bottom: 24px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .tier-card::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      right: -50%;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle, rgba(255,215,0,0.15) 0%, transparent 60%);
+    }
+
+    .tier-header {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 20px;
+      position: relative;
+    }
+
+    .tier-badge {
+      width: 80px;
+      height: 80px;
+      background: linear-gradient(135deg, var(--gold), #FFA500);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 40px;
+      box-shadow: 0 0 30px rgba(255,215,0,0.4);
+    }
+
+    .tier-info h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 24px;
+      color: var(--gold);
+      margin-bottom: 4px;
+    }
+
+    .tier-info p {
+      color: rgba(255,255,255,0.7);
+      font-size: 14px;
+    }
+
+    .tier-progress {
+      position: relative;
+    }
+
+    .tier-progress-bar {
+      height: 12px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 6px;
+      overflow: hidden;
+      margin-bottom: 8px;
+    }
+
+    .tier-progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--gold), #FFA500);
+      border-radius: 6px;
+      width: 67%;
+    }
+
+    .tier-progress-labels {
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      color: rgba(255,255,255,0.6);
+    }
+
+    .tier-progress-labels .current {
+      color: var(--gold);
+      font-weight: 700;
+    }
+
+    /* Tier Benefits */
+    .benefits-card {
+      background: white;
+      border-radius: 20px;
+      padding: 20px;
+      margin-bottom: 24px;
+    }
+
+    .section-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--text-dark);
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .benefit-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--beige);
+    }
+
+    .benefit-item:last-child {
+      border-bottom: none;
+    }
+
+    .benefit-icon {
+      width: 40px;
+      height: 40px;
+      background: linear-gradient(135deg, var(--primary-pink), var(--primary-orange));
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+    }
+
+    .benefit-icon.locked {
+      background: var(--beige);
+      opacity: 0.5;
+    }
+
+    .benefit-text {
+      flex: 1;
+    }
+
+    .benefit-text h4 {
+      font-weight: 700;
+      color: var(--text-dark);
+      font-size: 14px;
+    }
+
+    .benefit-text p {
+      font-size: 12px;
+      color: var(--text-medium);
+    }
+
+    .benefit-status {
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .benefit-status.unlocked {
+      color: #4CAF50;
+    }
+
+    .benefit-status.locked {
+      color: var(--text-light);
+    }
+
+    /* Tier Roadmap */
+    .roadmap-card {
+      background: white;
+      border-radius: 20px;
+      padding: 20px;
+      margin-bottom: 24px;
+    }
+
+    .tier-roadmap {
+      display: flex;
+      justify-content: space-between;
+      position: relative;
+      padding: 20px 0;
+    }
+
+    .tier-roadmap::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 10%;
+      right: 10%;
+      height: 4px;
+      background: var(--beige);
+      transform: translateY(-50%);
+      z-index: 0;
+    }
+
+    .roadmap-tier {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+      z-index: 1;
+    }
+
+    .roadmap-badge {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      margin-bottom: 8px;
+    }
+
+    .roadmap-badge.bronze { background: linear-gradient(135deg, var(--bronze), #8B4513); }
+    .roadmap-badge.silver { background: linear-gradient(135deg, var(--silver), #A0A0A0); }
+    .roadmap-badge.gold { background: linear-gradient(135deg, var(--gold), #FFA500); box-shadow: 0 0 15px rgba(255,215,0,0.4); }
+    .roadmap-badge.platinum { background: linear-gradient(135deg, #E5E4E2, #BCC6CC); }
+    .roadmap-badge.diamond { background: linear-gradient(135deg, #B9F2FF, #7DF9FF); }
+
+    .roadmap-badge.locked {
+      background: var(--beige);
+      opacity: 0.4;
+    }
+
+    .roadmap-label {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text-medium);
+    }
+
+    .roadmap-label.current {
+      color: var(--gold);
+    }
+
+    .roadmap-lp {
+      font-size: 10px;
+      color: var(--text-light);
+    }
+
+    /* Achievements Grid */
+    .achievements-card {
+      background: white;
+      border-radius: 20px;
+      padding: 20px;
+      margin-bottom: 24px;
+    }
+
+    .achievements-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+    }
+
+    .achievement {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+
+    .achievement-badge {
+      width: 56px;
+      height: 56px;
+      background: linear-gradient(135deg, var(--primary-pink), var(--primary-orange));
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      margin-bottom: 6px;
+      box-shadow: 0 4px 12px rgba(255,107,107,0.3);
+    }
+
+    .achievement-badge.locked {
+      background: var(--beige);
+      box-shadow: none;
+      opacity: 0.4;
+    }
+
+    .achievement-name {
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--text-dark);
+      line-height: 1.2;
+    }
+
+    .achievement-name.locked {
+      color: var(--text-light);
+    }
+
+    /* Recent Unlocks */
+    .recent-unlock {
+      background: linear-gradient(135deg, #FFF9E6, #FFF5F0);
+      border-radius: 16px;
+      padding: 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 12px;
+      border: 2px solid var(--gold);
+    }
+
+    .recent-unlock-badge {
+      font-size: 32px;
+    }
+
+    .recent-unlock-info h4 {
+      font-weight: 700;
+      color: var(--text-dark);
+      font-size: 14px;
+    }
+
+    .recent-unlock-info p {
+      font-size: 12px;
+      color: var(--text-medium);
+    }
+
+    .recent-unlock-date {
+      font-size: 11px;
+      color: var(--gold);
+      font-weight: 700;
+      margin-left: auto;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>Us</h1>
+  </div>
+
+  <!-- Current Tier -->
+  <div class="tier-card">
+    <div class="tier-header">
+      <div class="tier-badge">👑</div>
+      <div class="tier-info">
+        <h2>Gold Tier</h2>
+        <p>Devoted Partners</p>
+      </div>
+    </div>
+    <div class="tier-progress">
+      <div class="tier-progress-bar">
+        <div class="tier-progress-fill"></div>
+      </div>
+      <div class="tier-progress-labels">
+        <span class="current">847 LP</span>
+        <span>1,000 LP for Platinum</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tier Roadmap -->
+  <div class="section-title">🗺️ Tier Journey</div>
+  <div class="roadmap-card">
+    <div class="tier-roadmap">
+      <div class="roadmap-tier">
+        <div class="roadmap-badge bronze">🥉</div>
+        <div class="roadmap-label">Bronze</div>
+        <div class="roadmap-lp">0 LP</div>
+      </div>
+      <div class="roadmap-tier">
+        <div class="roadmap-badge silver">🥈</div>
+        <div class="roadmap-label">Silver</div>
+        <div class="roadmap-lp">300 LP</div>
+      </div>
+      <div class="roadmap-tier">
+        <div class="roadmap-badge gold">👑</div>
+        <div class="roadmap-label current">Gold</div>
+        <div class="roadmap-lp">600 LP</div>
+      </div>
+      <div class="roadmap-tier">
+        <div class="roadmap-badge locked">💎</div>
+        <div class="roadmap-label">Platinum</div>
+        <div class="roadmap-lp">1,000 LP</div>
+      </div>
+      <div class="roadmap-tier">
+        <div class="roadmap-badge locked">💠</div>
+        <div class="roadmap-label">Diamond</div>
+        <div class="roadmap-lp">2,000 LP</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Current Tier Benefits -->
+  <div class="section-title">✨ Gold Tier Benefits</div>
+  <div class="benefits-card">
+    <div class="benefit-item">
+      <div class="benefit-icon">🎮</div>
+      <div class="benefit-text">
+        <h4>All Games Unlocked</h4>
+        <p>Access to Linked, Word Search & more</p>
+      </div>
+      <span class="benefit-status unlocked">✓ Active</span>
+    </div>
+    <div class="benefit-item">
+      <div class="benefit-icon">📊</div>
+      <div class="benefit-text">
+        <h4>Weekly Insights</h4>
+        <p>Detailed relationship analytics</p>
+      </div>
+      <span class="benefit-status unlocked">✓ Active</span>
+    </div>
+    <div class="benefit-item">
+      <div class="benefit-icon">🎨</div>
+      <div class="benefit-text">
+        <h4>Custom Themes</h4>
+        <p>Personalize your app appearance</p>
+      </div>
+      <span class="benefit-status unlocked">✓ Active</span>
+    </div>
+    <div class="benefit-item">
+      <div class="benefit-icon locked">👥</div>
+      <div class="benefit-text">
+        <h4>Couple Challenges</h4>
+        <p>Weekly challenges with rewards</p>
+      </div>
+      <span class="benefit-status locked">Platinum</span>
+    </div>
+  </div>
+
+  <!-- Recent Unlocks -->
+  <div class="section-title">🆕 Recent Unlocks</div>
+  <div class="recent-unlock">
+    <div class="recent-unlock-badge">🏆</div>
+    <div class="recent-unlock-info">
+      <h4>Gold Tier Achieved!</h4>
+      <p>Reached 600 Love Points</p>
+    </div>
+    <span class="recent-unlock-date">2 days ago</span>
+  </div>
+
+  <!-- Achievements -->
+  <div class="section-title">🏅 Achievements</div>
+  <div class="achievements-card">
+    <div class="achievements-grid">
+      <div class="achievement">
+        <div class="achievement-badge">🌟</div>
+        <div class="achievement-name">First Quiz</div>
+      </div>
+      <div class="achievement">
+        <div class="achievement-badge">🔥</div>
+        <div class="achievement-name">7 Day Streak</div>
+      </div>
+      <div class="achievement">
+        <div class="achievement-badge">💯</div>
+        <div class="achievement-name">Perfect Match</div>
+      </div>
+      <div class="achievement">
+        <div class="achievement-badge">🎯</div>
+        <div class="achievement-name">10 Quests</div>
+      </div>
+      <div class="achievement">
+        <div class="achievement-badge">💕</div>
+        <div class="achievement-name">Love Master</div>
+      </div>
+      <div class="achievement">
+        <div class="achievement-badge">🧩</div>
+        <div class="achievement-name">Puzzle Pro</div>
+      </div>
+      <div class="achievement">
+        <div class="achievement-badge locked">🏃</div>
+        <div class="achievement-name locked">Step Stars</div>
+      </div>
+      <div class="achievement">
+        <div class="achievement-badge locked">🎪</div>
+        <div class="achievement-name locked">All Games</div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

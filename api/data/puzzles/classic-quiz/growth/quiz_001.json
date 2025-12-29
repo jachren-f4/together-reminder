@@ -13,7 +13,10 @@
         "Creative pursuits",
         "Financial stability"
       ],
-      "category": "personal_goals"
+      "category": "personal_goals",
+      "metadata": {
+        "valueCategory": "work_life_balance"
+      }
     },
     {
       "id": "quiz_001_q2",
@@ -37,7 +40,10 @@
         "A creative outlet",
         "A physical challenge"
       ],
-      "category": "aspirations"
+      "category": "aspirations",
+      "metadata": {
+        "valueCategory": "adventure_growth"
+      }
     },
     {
       "id": "quiz_001_q4",
@@ -49,7 +55,10 @@
         "Relationships with others",
         "Self-confidence"
       ],
-      "category": "self_improvement"
+      "category": "self_improvement",
+      "metadata": {
+        "valueCategory": "work_life_balance"
+      }
     },
     {
       "id": "quiz_001_q5",
@@ -61,7 +70,11 @@
         "Accountability check-ins",
         "Join me in the journey"
       ],
-      "category": "support_style"
+      "category": "support_style",
+      "metadata": {
+        "loveLanguage": true,
+        "languageMapping": ["words_of_affirmation", "acts_of_service", null, "words_of_affirmation", "quality_time"]
+      }
     }
   ],
   "description": "Explore how you grow and evolve together as partners."

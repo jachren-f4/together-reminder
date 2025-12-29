@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bottom Nav - Glow Cards</title>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Nunito', sans-serif;
+      background: linear-gradient(180deg, #FFD1C1 0%, #FFF5F0 100%);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      max-width: 430px;
+      margin: 0 auto;
+    }
+
+    .description {
+      text-align: center;
+      padding: 40px 20px;
+      color: #2D2D2D;
+    }
+    .description h1 { font-size: 20px; margin-bottom: 8px; }
+    .description p { font-size: 14px; color: #666; }
+
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100%;
+      max-width: 430px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.95) 0%, white 100%);
+      display: flex;
+      justify-content: space-around;
+      padding: 14px 12px 28px;
+      box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.08);
+    }
+
+    .nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+    }
+
+    .nav-card {
+      width: 52px;
+      height: 52px;
+      background: #F8F8F8;
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+    }
+
+    .nav-card img {
+      width: 36px;
+      height: 36px;
+      object-fit: contain;
+      opacity: 0.5;
+      transition: all 0.3s ease;
+    }
+
+    .nav-item.active .nav-card {
+      background: linear-gradient(145deg, #FFF8F6 0%, #FFE8E0 100%);
+      box-shadow:
+        0 0 0 2px rgba(255, 107, 107, 0.2),
+        0 8px 24px rgba(255, 107, 107, 0.25),
+        inset 0 1px 0 rgba(255, 255, 255, 0.8);
+    }
+
+    .nav-item.active .nav-card img {
+      opacity: 1;
+      transform: scale(1.1);
+    }
+
+    .nav-label {
+      font-size: 10px;
+      font-weight: 600;
+      color: #AAA;
+    }
+
+    .nav-item.active .nav-label {
+      color: #FF6B6B;
+      font-weight: 700;
+    }
+
+    /* Poke always has subtle glow */
+    .nav-item.poke .nav-card {
+      background: linear-gradient(145deg, #FFF5F2 0%, #FFE8E0 100%);
+    }
+    .nav-item.poke .nav-card img {
+      opacity: 0.8;
+    }
+  </style>
+</head>
+<body>
+  <div class="description">
+    <h1>Glow Cards</h1>
+    <p>Soft cards with glowing active state</p>
+  </div>
+
+  <nav class="bottom-nav">
+    <div class="nav-item active">
+      <div class="nav-card">
+        <img src="home_v1.png" alt="Home">
+      </div>
+      <span class="nav-label">Home</span>
+    </div>
+    <div class="nav-item">
+      <div class="nav-card">
+        <img src="Inbox_v1.png" alt="Inbox">
+      </div>
+      <span class="nav-label">Inbox</span>
+    </div>
+    <div class="nav-item poke">
+      <div class="nav-card">
+        <img src="Poke_v2.png" alt="Poke">
+      </div>
+      <span class="nav-label">Poke</span>
+    </div>
+    <div class="nav-item">
+      <div class="nav-card">
+        <img src="profile_v2.png" alt="Us">
+      </div>
+      <span class="nav-label">Us</span>
+    </div>
+    <div class="nav-item">
+      <div class="nav-card">
+        <img src="Settings_v1.png" alt="Settings">
+      </div>
+      <span class="nav-label">Settings</span>
+    </div>
+  </nav>
+
+  <script>
+    document.querySelectorAll('.nav-item').forEach(item => {
+      item.addEventListener('click', () => {
+        document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+        item.classList.add('active');
+      });
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bottom Nav - Pill Expand</title>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Nunito', sans-serif;
+      background: linear-gradient(180deg, #FFD1C1 0%, #FFF5F0 100%);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      max-width: 430px;
+      margin: 0 auto;
+    }
+
+    .description {
+      text-align: center;
+      padding: 40px 20px;
+      color: #2D2D2D;
+    }
+    .description h1 { font-size: 20px; margin-bottom: 8px; }
+    .description p { font-size: 14px; color: #666; }
+
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100%;
+      max-width: 430px;
+      background: white;
+      display: flex;
+      justify-content: center;
+      gap: 6px;
+      padding: 12px 16px 28px;
+      box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.08);
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 20px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      background: transparent;
+    }
+
+    .nav-icon {
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .nav-icon img {
+      width: 28px;
+      height: 28px;
+      object-fit: contain;
+      opacity: 0.5;
+      transition: all 0.3s ease;
+    }
+
+    .nav-label {
+      font-size: 12px;
+      font-weight: 700;
+      color: #FF6B6B;
+      max-width: 0;
+      overflow: hidden;
+      white-space: nowrap;
+      transition: all 0.3s ease;
+    }
+
+    .nav-item.active {
+      background: linear-gradient(135deg, #FFF0ED 0%, #FFE5DF 100%);
+      padding: 8px 16px 8px 12px;
+    }
+
+    .nav-item.active .nav-icon img {
+      opacity: 1;
+      width: 32px;
+      height: 32px;
+    }
+
+    .nav-item.active .nav-label {
+      max-width: 80px;
+    }
+  </style>
+</head>
+<body>
+  <div class="description">
+    <h1>Pill Expand</h1>
+    <p>Active tab expands into pill with label</p>
+  </div>
+
+  <nav class="bottom-nav">
+    <div class="nav-item active">
+      <div class="nav-icon">
+        <img src="home_v1.png" alt="Home">
+      </div>
+      <span class="nav-label">Home</span>
+    </div>
+    <div class="nav-item">
+      <div class="nav-icon">
+        <img src="Inbox_v1.png" alt="Inbox">
+      </div>
+      <span class="nav-label">Inbox</span>
+    </div>
+    <div class="nav-item">
+      <div class="nav-icon">
+        <img src="Poke_v2.png" alt="Poke">
+      </div>
+      <span class="nav-label">Poke</span>
+    </div>
+    <div class="nav-item">
+      <div class="nav-icon">
+        <img src="profile_v2.png" alt="Us">
+      </div>
+      <span class="nav-label">Us</span>
+    </div>
+    <div class="nav-item">
+      <div class="nav-icon">
+        <img src="Settings_v1.png" alt="Settings">
+      </div>
+      <span class="nav-label">Settings</span>
+    </div>
+  </nav>
+
+  <script>
+    document.querySelectorAll('.nav-item').forEach(item => {
+      item.addEventListener('click', () => {
+        document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+        item.classList.add('active');
+      });
+    });
+  </script>
+</body>
+</html>

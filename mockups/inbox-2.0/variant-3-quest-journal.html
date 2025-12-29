@@ -1,0 +1,843 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inbox 2.0 - Quest Journal</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Nunito:wght@400;600;700&family=Pacifico&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-gradient-start: #FFD1C1;
+            --bg-gradient-end: #FFF5F0;
+            --accent-pink: #FF6B6B;
+            --accent-orange: #FF9F43;
+            --salmon: #FF7B6B;
+            --cream: #FFF8F0;
+            --beige: #F5E6D8;
+            --ink: #2D2D2D;
+            --ink-light: #666;
+            --white: #FFFFFF;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            background: linear-gradient(180deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
+            min-height: 100vh;
+            color: var(--ink);
+        }
+
+        .phone-frame {
+            max-width: 390px;
+            margin: 20px auto;
+            background: linear-gradient(180deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
+            min-height: 844px;
+            border-radius: 40px;
+            overflow: hidden;
+            box-shadow: 0 25px 80px rgba(0,0,0,0.15);
+            position: relative;
+        }
+
+        .header {
+            padding: 60px 20px 16px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 26px;
+            font-weight: 600;
+            color: var(--ink);
+        }
+
+        .header .subtitle {
+            font-size: 14px;
+            color: var(--ink-light);
+            margin-top: 4px;
+        }
+
+        /* Week Navigation */
+        .week-nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 20px;
+            background: var(--white);
+            margin: 0 16px;
+            border-radius: 16px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+        }
+
+        .week-nav button {
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            border: none;
+            background: var(--cream);
+            color: var(--accent-pink);
+            font-size: 18px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+
+        .week-nav button:hover:not(:disabled) {
+            background: linear-gradient(135deg, var(--accent-pink), var(--accent-orange));
+            color: white;
+        }
+
+        .week-nav button:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        .week-info {
+            text-align: center;
+        }
+
+        .week-dates {
+            font-weight: 700;
+            font-size: 16px;
+            color: var(--ink);
+        }
+
+        .week-summary {
+            font-size: 12px;
+            color: var(--ink-light);
+            margin-top: 2px;
+        }
+
+        /* Tab Filters */
+        .tab-filters {
+            display: flex;
+            gap: 8px;
+            padding: 16px 20px;
+            overflow-x: auto;
+            scrollbar-width: none;
+        }
+
+        .tab-filters::-webkit-scrollbar {
+            display: none;
+        }
+
+        .tab-btn {
+            flex-shrink: 0;
+            padding: 8px 16px;
+            border-radius: 20px;
+            border: none;
+            background: var(--white);
+            color: var(--ink-light);
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        }
+
+        .tab-btn.active {
+            background: linear-gradient(135deg, var(--accent-pink), var(--accent-orange));
+            color: white;
+        }
+
+        .tab-btn:hover:not(.active) {
+            background: var(--cream);
+        }
+
+        /* Quest List */
+        .quest-list {
+            padding: 0 20px 100px;
+        }
+
+        .day-section {
+            margin-bottom: 24px;
+        }
+
+        .day-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--beige);
+        }
+
+        .day-name {
+            font-family: 'Playfair Display', serif;
+            font-weight: 600;
+            font-size: 15px;
+            color: var(--ink);
+        }
+
+        .day-date {
+            font-size: 12px;
+            color: var(--ink-light);
+        }
+
+        .day-lp {
+            margin-left: auto;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            padding: 4px 10px;
+            background: linear-gradient(135deg, rgba(255,107,107,0.1), rgba(255,159,67,0.1));
+            border-radius: 10px;
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--accent-pink);
+        }
+
+        /* Quest Card */
+        .quest-card {
+            background: var(--white);
+            border-radius: 16px;
+            margin-bottom: 12px;
+            overflow: hidden;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+        }
+
+        .quest-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 16px;
+            cursor: pointer;
+        }
+
+        .quest-icon {
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            flex-shrink: 0;
+        }
+
+        .quest-icon.quiz { background: linear-gradient(135deg, #FFEBEE, #FFCDD2); }
+        .quest-icon.affirmation { background: linear-gradient(135deg, #FCE4EC, #F8BBD9); }
+        .quest-icon.you-or-me { background: linear-gradient(135deg, #FFF3E0, #FFE0B2); }
+        .quest-icon.linked { background: linear-gradient(135deg, #E3F2FD, #BBDEFB); }
+        .quest-icon.word-search { background: linear-gradient(135deg, #F3E5F5, #E1BEE7); }
+        .quest-icon.steps { background: linear-gradient(135deg, #E8F5E9, #C8E6C9); }
+
+        .quest-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .quest-type {
+            font-size: 11px;
+            color: var(--ink-light);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .quest-title {
+            font-weight: 700;
+            font-size: 14px;
+            color: var(--ink);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .quest-meta {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .quest-time {
+            font-size: 11px;
+            color: var(--ink-light);
+        }
+
+        .quest-lp {
+            padding: 3px 8px;
+            background: linear-gradient(135deg, var(--accent-pink), var(--accent-orange));
+            color: white;
+            border-radius: 8px;
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        .quest-expand {
+            color: var(--ink-light);
+            font-size: 18px;
+            transition: transform 0.2s;
+        }
+
+        .quest-card.expanded .quest-expand {
+            transform: rotate(180deg);
+        }
+
+        /* Quest Details */
+        .quest-details {
+            display: none;
+            padding: 0 16px 16px;
+            border-top: 1px solid var(--beige);
+        }
+
+        .quest-card.expanded .quest-details {
+            display: block;
+        }
+
+        /* Quiz Answers */
+        .answers-section {
+            margin-top: 14px;
+        }
+
+        .answer-item {
+            background: var(--cream);
+            border-radius: 12px;
+            padding: 12px;
+            margin-bottom: 10px;
+        }
+
+        .answer-question {
+            font-size: 12px;
+            color: var(--ink-light);
+            font-style: italic;
+            margin-bottom: 8px;
+        }
+
+        .answer-row {
+            display: flex;
+            gap: 8px;
+        }
+
+        .answer-bubble {
+            flex: 1;
+            padding: 10px;
+            background: var(--white);
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .answer-bubble.matched {
+            border: 2px solid #4CAF50;
+        }
+
+        .answer-name {
+            font-size: 10px;
+            font-weight: 700;
+            color: var(--ink-light);
+            margin-bottom: 3px;
+        }
+
+        .answer-text {
+            font-size: 13px;
+            color: var(--ink);
+            font-weight: 600;
+        }
+
+        .match-indicator {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            margin-top: 8px;
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        .match-indicator.matched {
+            color: #4CAF50;
+        }
+
+        .match-indicator.different {
+            color: var(--accent-orange);
+        }
+
+        /* Linked/Word Search Results */
+        .game-result {
+            margin-top: 14px;
+            padding: 14px;
+            background: var(--cream);
+            border-radius: 12px;
+        }
+
+        .game-result-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .game-result-title {
+            font-weight: 700;
+            font-size: 13px;
+            color: var(--ink);
+        }
+
+        .game-result-badge {
+            padding: 4px 10px;
+            background: #E8F5E9;
+            color: #2E7D32;
+            border-radius: 8px;
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        .words-found {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+
+        .word-tag {
+            padding: 4px 10px;
+            background: var(--white);
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--ink);
+        }
+
+        /* Turn Summary */
+        .turn-summary {
+            display: flex;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .turn-item {
+            flex: 1;
+            text-align: center;
+            padding: 10px;
+            background: var(--white);
+            border-radius: 10px;
+        }
+
+        .turn-name {
+            font-size: 10px;
+            color: var(--ink-light);
+            margin-bottom: 4px;
+        }
+
+        .turn-words {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--ink);
+        }
+
+        .turn-label {
+            font-size: 10px;
+            color: var(--ink-light);
+        }
+
+        /* Empty State */
+        .empty-day {
+            text-align: center;
+            padding: 30px 20px;
+            color: var(--ink-light);
+        }
+
+        .empty-day-emoji {
+            font-size: 36px;
+            margin-bottom: 10px;
+        }
+
+        .empty-day-text {
+            font-size: 14px;
+            font-style: italic;
+        }
+
+        /* Overall Summary */
+        .week-overview {
+            display: flex;
+            gap: 10px;
+            padding: 16px 20px;
+        }
+
+        .overview-card {
+            flex: 1;
+            background: var(--white);
+            border-radius: 14px;
+            padding: 14px;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .overview-value {
+            font-size: 26px;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--accent-pink), var(--accent-orange));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .overview-label {
+            font-size: 11px;
+            color: var(--ink-light);
+            margin-top: 2px;
+        }
+    </style>
+</head>
+<body>
+    <div class="phone-frame">
+        <div class="header">
+            <h1>Quest Journal</h1>
+            <p class="subtitle">What you've done together</p>
+        </div>
+
+        <div class="week-nav">
+            <button id="prevWeek">‹</button>
+            <div class="week-info">
+                <div class="week-dates" id="weekDates">Dec 23 - Dec 29</div>
+                <div class="week-summary" id="weekSummary">12 quests completed</div>
+            </div>
+            <button id="nextWeek" disabled>›</button>
+        </div>
+
+        <div class="week-overview">
+            <div class="overview-card">
+                <div class="overview-value">12</div>
+                <div class="overview-label">Quests</div>
+            </div>
+            <div class="overview-card">
+                <div class="overview-value">+180</div>
+                <div class="overview-label">LP Earned</div>
+            </div>
+            <div class="overview-card">
+                <div class="overview-value">6/7</div>
+                <div class="overview-label">Active Days</div>
+            </div>
+        </div>
+
+        <div class="tab-filters">
+            <button class="tab-btn active" data-filter="all">All</button>
+            <button class="tab-btn" data-filter="quiz">Quizzes</button>
+            <button class="tab-btn" data-filter="you-or-me">You or Me</button>
+            <button class="tab-btn" data-filter="linked">Linked</button>
+            <button class="tab-btn" data-filter="word-search">Word Search</button>
+            <button class="tab-btn" data-filter="steps">Steps</button>
+        </div>
+
+        <div class="quest-list" id="questList">
+            <!-- Sunday -->
+            <div class="day-section">
+                <div class="day-header">
+                    <span class="day-name">Sunday</span>
+                    <span class="day-date">Dec 29 • Today</span>
+                    <span class="day-lp">+30 LP</span>
+                </div>
+
+                <div class="quest-card" data-type="affirmation">
+                    <div class="quest-header" onclick="toggleCard(this)">
+                        <div class="quest-icon affirmation">💕</div>
+                        <div class="quest-info">
+                            <div class="quest-type">Affirmation Quiz</div>
+                            <div class="quest-title">Morning Check-in</div>
+                        </div>
+                        <div class="quest-meta">
+                            <span class="quest-time">9:15 AM</span>
+                            <span class="quest-lp">+30</span>
+                        </div>
+                        <span class="quest-expand">▾</span>
+                    </div>
+                    <div class="quest-details">
+                        <div class="answers-section">
+                            <div class="answer-item">
+                                <div class="answer-question">"How connected do you feel today?"</div>
+                                <div class="answer-row">
+                                    <div class="answer-bubble matched">
+                                        <div class="answer-name">YOU</div>
+                                        <div class="answer-text">Very close</div>
+                                    </div>
+                                    <div class="answer-bubble matched">
+                                        <div class="answer-name">EMMA</div>
+                                        <div class="answer-text">Very close</div>
+                                    </div>
+                                </div>
+                                <div class="match-indicator matched">✓ Matched!</div>
+                            </div>
+                            <div class="answer-item">
+                                <div class="answer-question">"How's your energy level?"</div>
+                                <div class="answer-row">
+                                    <div class="answer-bubble">
+                                        <div class="answer-name">YOU</div>
+                                        <div class="answer-text">Good</div>
+                                    </div>
+                                    <div class="answer-bubble">
+                                        <div class="answer-name">EMMA</div>
+                                        <div class="answer-text">Tired</div>
+                                    </div>
+                                </div>
+                                <div class="match-indicator different">Different answers</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Saturday -->
+            <div class="day-section">
+                <div class="day-header">
+                    <span class="day-name">Saturday</span>
+                    <span class="day-date">Dec 28</span>
+                    <span class="day-lp">+90 LP</span>
+                </div>
+
+                <div class="quest-card" data-type="linked">
+                    <div class="quest-header" onclick="toggleCard(this)">
+                        <div class="quest-icon linked">🔗</div>
+                        <div class="quest-info">
+                            <div class="quest-type">Linked Puzzle</div>
+                            <div class="quest-title">Romantic Theme</div>
+                        </div>
+                        <div class="quest-meta">
+                            <span class="quest-time">7:45 PM</span>
+                            <span class="quest-lp">+30</span>
+                        </div>
+                        <span class="quest-expand">▾</span>
+                    </div>
+                    <div class="quest-details">
+                        <div class="game-result">
+                            <div class="game-result-header">
+                                <span class="game-result-title">Words Solved</span>
+                                <span class="game-result-badge">Complete!</span>
+                            </div>
+                            <div class="words-found">
+                                <span class="word-tag">LOVE</span>
+                                <span class="word-tag">HEART</span>
+                                <span class="word-tag">FOREVER</span>
+                                <span class="word-tag">TOGETHER</span>
+                            </div>
+                            <div class="turn-summary">
+                                <div class="turn-item">
+                                    <div class="turn-name">YOU</div>
+                                    <div class="turn-words">2</div>
+                                    <div class="turn-label">words solved</div>
+                                </div>
+                                <div class="turn-item">
+                                    <div class="turn-name">EMMA</div>
+                                    <div class="turn-words">2</div>
+                                    <div class="turn-label">words solved</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="quest-card" data-type="you-or-me">
+                    <div class="quest-header" onclick="toggleCard(this)">
+                        <div class="quest-icon you-or-me">🤔</div>
+                        <div class="quest-info">
+                            <div class="quest-type">You or Me</div>
+                            <div class="quest-title">Kitchen Edition</div>
+                        </div>
+                        <div class="quest-meta">
+                            <span class="quest-time">3:20 PM</span>
+                            <span class="quest-lp">+30</span>
+                        </div>
+                        <span class="quest-expand">▾</span>
+                    </div>
+                    <div class="quest-details">
+                        <div class="answers-section">
+                            <div class="answer-item">
+                                <div class="answer-question">"Who's the better cook?"</div>
+                                <div class="answer-row">
+                                    <div class="answer-bubble matched">
+                                        <div class="answer-name">YOU SAID</div>
+                                        <div class="answer-text">Emma</div>
+                                    </div>
+                                    <div class="answer-bubble matched">
+                                        <div class="answer-name">EMMA SAID</div>
+                                        <div class="answer-text">Me (Emma)</div>
+                                    </div>
+                                </div>
+                                <div class="match-indicator matched">✓ You agree!</div>
+                            </div>
+                            <div class="answer-item">
+                                <div class="answer-question">"Who does the dishes more?"</div>
+                                <div class="answer-row">
+                                    <div class="answer-bubble">
+                                        <div class="answer-name">YOU SAID</div>
+                                        <div class="answer-text">Me</div>
+                                    </div>
+                                    <div class="answer-bubble">
+                                        <div class="answer-name">EMMA SAID</div>
+                                        <div class="answer-text">Me (Emma)</div>
+                                    </div>
+                                </div>
+                                <div class="match-indicator different">Different views!</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="quest-card" data-type="steps">
+                    <div class="quest-header" onclick="toggleCard(this)">
+                        <div class="quest-icon steps">👟</div>
+                        <div class="quest-info">
+                            <div class="quest-type">Steps Together</div>
+                            <div class="quest-title">Daily Goal Met!</div>
+                        </div>
+                        <div class="quest-meta">
+                            <span class="quest-time">11:00 AM</span>
+                            <span class="quest-lp">+30</span>
+                        </div>
+                        <span class="quest-expand">▾</span>
+                    </div>
+                    <div class="quest-details">
+                        <div class="game-result">
+                            <div class="turn-summary">
+                                <div class="turn-item">
+                                    <div class="turn-name">YOU</div>
+                                    <div class="turn-words">8,247</div>
+                                    <div class="turn-label">steps</div>
+                                </div>
+                                <div class="turn-item">
+                                    <div class="turn-name">EMMA</div>
+                                    <div class="turn-words">9,102</div>
+                                    <div class="turn-label">steps</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Friday -->
+            <div class="day-section">
+                <div class="day-header">
+                    <span class="day-name">Friday</span>
+                    <span class="day-date">Dec 27</span>
+                    <span class="day-lp">+30 LP</span>
+                </div>
+
+                <div class="quest-card" data-type="quiz">
+                    <div class="quest-header" onclick="toggleCard(this)">
+                        <div class="quest-icon quiz">📝</div>
+                        <div class="quest-info">
+                            <div class="quest-type">Lighthearted Quiz</div>
+                            <div class="quest-title">What's Your Ideal Date Night?</div>
+                        </div>
+                        <div class="quest-meta">
+                            <span class="quest-time">8:30 PM</span>
+                            <span class="quest-lp">+30</span>
+                        </div>
+                        <span class="quest-expand">▾</span>
+                    </div>
+                    <div class="quest-details">
+                        <div class="answers-section">
+                            <div class="answer-item">
+                                <div class="answer-question">"Perfect Friday night activity?"</div>
+                                <div class="answer-row">
+                                    <div class="answer-bubble">
+                                        <div class="answer-name">YOU</div>
+                                        <div class="answer-text">Movie marathon</div>
+                                    </div>
+                                    <div class="answer-bubble">
+                                        <div class="answer-name">EMMA</div>
+                                        <div class="answer-text">Cooking together</div>
+                                    </div>
+                                </div>
+                                <div class="match-indicator different">Different preferences</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Thursday -->
+            <div class="day-section">
+                <div class="day-header">
+                    <span class="day-name">Thursday</span>
+                    <span class="day-date">Dec 26</span>
+                    <span class="day-lp">0 LP</span>
+                </div>
+                <div class="empty-day">
+                    <div class="empty-day-emoji">😴</div>
+                    <div class="empty-day-text">No quests this day</div>
+                </div>
+            </div>
+
+            <!-- Wednesday -->
+            <div class="day-section">
+                <div class="day-header">
+                    <span class="day-name">Wednesday</span>
+                    <span class="day-date">Dec 25 • Christmas</span>
+                    <span class="day-lp">+30 LP</span>
+                </div>
+
+                <div class="quest-card" data-type="affirmation">
+                    <div class="quest-header" onclick="toggleCard(this)">
+                        <div class="quest-icon affirmation">🎄</div>
+                        <div class="quest-info">
+                            <div class="quest-type">Affirmation Quiz</div>
+                            <div class="quest-title">Holiday Check-in</div>
+                        </div>
+                        <div class="quest-meta">
+                            <span class="quest-time">10:00 AM</span>
+                            <span class="quest-lp">+30</span>
+                        </div>
+                        <span class="quest-expand">▾</span>
+                    </div>
+                    <div class="quest-details">
+                        <div class="answers-section">
+                            <div class="answer-item" style="background: linear-gradient(135deg, rgba(76,175,80,0.1), rgba(76,175,80,0.05)); border: 1px solid #4CAF50;">
+                                <div style="text-align: center; padding: 10px;">
+                                    <span style="font-size: 24px;">🏆</span>
+                                    <div style="font-weight: 700; color: #2E7D32; margin-top: 6px;">100% Match!</div>
+                                    <div style="font-size: 12px; color: var(--ink-light);">All 5 answers matched</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleCard(header) {
+            const card = header.closest('.quest-card');
+            card.classList.toggle('expanded');
+        }
+
+        // Tab filtering
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+
+                const filter = btn.dataset.filter;
+                document.querySelectorAll('.quest-card').forEach(card => {
+                    if (filter === 'all' || card.dataset.type === filter ||
+                        (filter === 'quiz' && (card.dataset.type === 'quiz' || card.dataset.type === 'affirmation'))) {
+                        card.style.display = 'block';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+            });
+        });
+
+        // Week navigation
+        document.getElementById('prevWeek').addEventListener('click', () => {
+            document.getElementById('weekDates').textContent = 'Dec 16 - Dec 22';
+            document.getElementById('weekSummary').textContent = '9 quests completed';
+            document.getElementById('nextWeek').disabled = false;
+            document.getElementById('prevWeek').disabled = true;
+        });
+
+        document.getElementById('nextWeek').addEventListener('click', () => {
+            document.getElementById('weekDates').textContent = 'Dec 23 - Dec 29';
+            document.getElementById('weekSummary').textContent = '12 quests completed';
+            document.getElementById('nextWeek').disabled = true;
+            document.getElementById('prevWeek').disabled = false;
+        });
+    </script>
+</body>
+</html>

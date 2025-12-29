@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Journal v8a - Full Details Popup</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Nunito:wght@400;600;700&family=Caveat:wght@500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-gradient-start: #FFD1C1;
+            --bg-gradient-end: #FFF5F0;
+            --accent-pink: #FF6B6B;
+            --accent-orange: #FF9F43;
+            --cream: #FFF8F0;
+            --beige: #F5E6D8;
+            --ink: #2D2D2D;
+            --ink-light: #666;
+            --white: #FFFFFF;
+            --green: #4CAF50;
+            --green-light: #E8F5E9;
+            --tape-color: rgba(255,220,150,0.7);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            background: var(--cream);
+            min-height: 100vh;
+            color: var(--ink);
+        }
+
+        .phone-frame {
+            max-width: 390px;
+            margin: 20px auto;
+            background: var(--cream);
+            min-height: 844px;
+            border-radius: 40px;
+            overflow: hidden;
+            box-shadow: 0 25px 80px rgba(0,0,0,0.15);
+            position: relative;
+        }
+
+        .paper-bg {
+            background-image:
+                radial-gradient(ellipse at 50% 0%, rgba(255,209,193,0.4) 0%, transparent 50%),
+                repeating-linear-gradient(0deg, transparent, transparent 28px, rgba(200,180,160,0.08) 28px, rgba(200,180,160,0.08) 29px);
+            min-height: 844px;
+            padding-bottom: 100px;
+        }
+
+        .header {
+            padding: 60px 20px 16px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-family: 'Caveat', cursive;
+            font-size: 42px;
+            font-weight: 600;
+            color: var(--ink);
+        }
+
+        .week-nav {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            padding: 16px 20px;
+            position: relative;
+        }
+
+        .week-nav::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-1deg);
+            width: 220px;
+            height: 36px;
+            background: var(--tape-color);
+            border-radius: 2px;
+        }
+
+        .week-nav button {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border: 2px solid var(--ink);
+            background: var(--white);
+            color: var(--ink);
+            font-size: 16px;
+            cursor: pointer;
+            position: relative;
+            z-index: 1;
+        }
+
+        .week-nav button:disabled { opacity: 0.3; }
+
+        .week-dates {
+            font-family: 'Caveat', cursive;
+            font-size: 26px;
+            font-weight: 600;
+            color: var(--ink);
+            position: relative;
+            z-index: 1;
+        }
+
+        .weekly-insights {
+            margin: 20px 20px;
+            padding: 20px;
+            background: var(--white);
+            border-radius: 4px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1), 3px 3px 0 var(--beige);
+            position: relative;
+            transform: rotate(-0.5deg);
+        }
+
+        .weekly-insights::before {
+            content: '';
+            position: absolute;
+            top: -10px;
+            left: 40px;
+            width: 70px;
+            height: 24px;
+            background: var(--tape-color);
+            transform: rotate(3deg);
+        }
+
+        .insights-title {
+            font-family: 'Caveat', cursive;
+            font-size: 24px;
+            font-weight: 600;
+            color: var(--ink);
+            margin-bottom: 14px;
+            padding-top: 8px;
+        }
+
+        .insight-row {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .insight-tag {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 14px;
+            background: var(--cream);
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .day-separator {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 20px 24px 12px;
+        }
+
+        .day-label {
+            font-family: 'Caveat', cursive;
+            font-size: 22px;
+            font-weight: 600;
+            color: var(--ink);
+        }
+
+        .day-line {
+            flex: 1;
+            height: 2px;
+            background: repeating-linear-gradient(90deg, var(--ink), var(--ink) 6px, transparent 6px, transparent 12px);
+            opacity: 0.2;
+        }
+
+        .day-note {
+            font-family: 'Caveat', cursive;
+            font-size: 16px;
+            color: var(--ink-light);
+        }
+
+        .quest-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            padding: 0 16px;
+            justify-content: center;
+        }
+
+        .polaroid {
+            width: calc(50% - 12px);
+            max-width: 170px;
+            background: var(--white);
+            padding: 10px 10px 40px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.12);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            transform: rotate(var(--rotation, 0deg));
+        }
+
+        .polaroid:nth-child(odd) { --rotation: -2deg; }
+        .polaroid:nth-child(even) { --rotation: 1.5deg; }
+
+        .polaroid:hover {
+            transform: rotate(0deg) translateY(-4px);
+        }
+
+        .polaroid-image {
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            position: relative;
+            border-radius: 2px;
+        }
+
+        .polaroid-image.classic { background: linear-gradient(135deg, #FFEBEE, #FFCDD2); }
+        .polaroid-image.affirmation { background: linear-gradient(135deg, #FCE4EC, #F8BBD9); }
+        .polaroid-image.you-or-me { background: linear-gradient(135deg, #FFF3E0, #FFE0B2); }
+        .polaroid-image.linked { background: linear-gradient(135deg, #E3F2FD, #BBDEFB); }
+        .polaroid-image.word-search { background: linear-gradient(135deg, #F3E5F5, #E1BEE7); }
+        .polaroid-image.steps { background: linear-gradient(135deg, #E8F5E9, #C8E6C9); }
+
+        .sticker {
+            position: absolute;
+            font-size: 22px;
+            filter: drop-shadow(0 2px 3px rgba(0,0,0,0.2));
+        }
+
+        .sticker.top-right { top: -8px; right: -8px; transform: rotate(15deg); }
+        .sticker.top-left { top: -8px; left: -8px; transform: rotate(-10deg); }
+
+        .result-tag {
+            position: absolute;
+            bottom: 8px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--white);
+            padding: 4px 10px;
+            border-radius: 10px;
+            font-size: 11px;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        .result-tag.aligned { color: var(--green); }
+        .result-tag.mixed { color: #E65100; }
+        .result-tag.complete { color: #1565C0; }
+
+        .polaroid-caption {
+            font-family: 'Caveat', cursive;
+            font-size: 16px;
+            color: var(--ink);
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        .polaroid-type {
+            font-size: 10px;
+            color: var(--ink-light);
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-top: 4px;
+        }
+
+        .polaroid-time {
+            position: absolute;
+            top: 6px;
+            right: 6px;
+            font-size: 9px;
+            color: var(--ink-light);
+            background: rgba(255,255,255,0.8);
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+
+        /* Full Details Popup */
+        .popup-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.6);
+            z-index: 100;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .popup-overlay.visible {
+            display: flex;
+        }
+
+        .popup-card {
+            background: var(--white);
+            border-radius: 20px;
+            max-width: 360px;
+            width: 100%;
+            max-height: 80vh;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            position: relative;
+        }
+
+        .popup-header {
+            padding: 20px;
+            text-align: center;
+            position: relative;
+        }
+
+        .popup-header::before {
+            content: '';
+            position: absolute;
+            top: -6px;
+            left: 50%;
+            transform: translateX(-50%) rotate(2deg);
+            width: 80px;
+            height: 20px;
+            background: var(--tape-color);
+        }
+
+        .popup-emoji {
+            font-size: 50px;
+            margin-bottom: 8px;
+        }
+
+        .popup-title {
+            font-family: 'Caveat', cursive;
+            font-size: 28px;
+            font-weight: 600;
+            color: var(--ink);
+        }
+
+        .popup-subtitle {
+            font-size: 12px;
+            color: var(--ink-light);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .popup-meta {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            margin-top: 12px;
+        }
+
+        .popup-meta-item {
+            font-size: 12px;
+            color: var(--ink-light);
+        }
+
+        .popup-result {
+            display: inline-block;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 700;
+            margin-top: 12px;
+        }
+
+        .popup-result.aligned { background: var(--green-light); color: var(--green); }
+        .popup-result.mixed { background: #FFF3E0; color: #E65100; }
+
+        .popup-close {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--cream);
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .popup-body {
+            padding: 0 20px 20px;
+            max-height: 50vh;
+            overflow-y: auto;
+        }
+
+        .answers-title {
+            font-family: 'Caveat', cursive;
+            font-size: 20px;
+            color: var(--ink);
+            margin-bottom: 12px;
+            text-align: center;
+        }
+
+        .answer-card {
+            background: var(--cream);
+            border-radius: 12px;
+            padding: 14px;
+            margin-bottom: 12px;
+        }
+
+        .answer-number {
+            display: inline-block;
+            width: 22px;
+            height: 22px;
+            background: var(--accent-pink);
+            color: white;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 22px;
+            font-size: 11px;
+            font-weight: 700;
+            margin-right: 8px;
+        }
+
+        .answer-question {
+            font-size: 13px;
+            color: var(--ink);
+            font-weight: 600;
+            margin-bottom: 12px;
+            line-height: 1.4;
+        }
+
+        .answer-pair {
+            display: flex;
+            gap: 10px;
+        }
+
+        .answer-bubble {
+            flex: 1;
+            padding: 12px;
+            background: var(--white);
+            border-radius: 10px;
+            text-align: center;
+            border: 2px solid transparent;
+        }
+
+        .answer-bubble.matched {
+            border-color: var(--green);
+            background: rgba(76,175,80,0.05);
+        }
+
+        .answer-name {
+            font-size: 10px;
+            font-weight: 700;
+            color: var(--ink-light);
+            margin-bottom: 4px;
+        }
+
+        .answer-text {
+            font-size: 14px;
+            color: var(--ink);
+            font-weight: 600;
+        }
+
+        .match-indicator {
+            text-align: center;
+            margin-top: 10px;
+            font-size: 12px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .match-indicator.matched { color: var(--green); }
+        .match-indicator.different { color: #E65100; }
+
+        .match-icon {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+        }
+
+        .match-icon.matched { background: var(--green-light); }
+        .match-icon.different { background: #FFF3E0; }
+
+        .empty-note {
+            text-align: center;
+            padding: 24px;
+            font-family: 'Caveat', cursive;
+            font-size: 20px;
+            color: var(--ink-light);
+        }
+
+        .tap-hint {
+            text-align: center;
+            padding: 8px;
+            font-size: 11px;
+            color: var(--ink-light);
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <div class="phone-frame">
+        <div class="paper-bg">
+            <div class="header">
+                <h1>Our Journal</h1>
+            </div>
+
+            <div class="week-nav">
+                <button disabled>‹</button>
+                <div class="week-dates">Dec 23 - 29</div>
+                <button disabled>›</button>
+            </div>
+
+            <div class="weekly-insights">
+                <div class="insights-title">This Week's Highlights</div>
+                <div class="insight-row">
+                    <span class="insight-tag"><span>🎯</span> 78% aligned</span>
+                    <span class="insight-tag"><span>📅</span> 6 active days</span>
+                    <span class="insight-tag"><span>🎮</span> 12 quests</span>
+                </div>
+            </div>
+
+            <div class="tap-hint">Tap any memory to see all answers</div>
+
+            <div class="day-separator">
+                <span class="day-label">Sunday, Dec 29</span>
+                <div class="day-line"></div>
+                <span class="day-note">Today</span>
+            </div>
+
+            <div class="quest-grid">
+                <div class="polaroid" onclick="showPopup('affirmation1')">
+                    <div class="polaroid-image affirmation">
+                        💕
+                        <span class="polaroid-time">9:15 AM</span>
+                        <span class="result-tag aligned">5 aligned ⭐</span>
+                        <span class="sticker top-right">✨</span>
+                    </div>
+                    <div class="polaroid-caption">Morning Check-in</div>
+                    <div class="polaroid-type">Affirmation Quiz</div>
+                </div>
+
+                <div class="polaroid" onclick="showPopup('classic1')">
+                    <div class="polaroid-image classic">
+                        📝
+                        <span class="polaroid-time">8:30 PM</span>
+                        <span class="result-tag mixed">3 aligned 2 diff</span>
+                    </div>
+                    <div class="polaroid-caption">Ideal Date Night</div>
+                    <div class="polaroid-type">Classic Quiz</div>
+                </div>
+            </div>
+
+            <div class="day-separator">
+                <span class="day-label">Saturday, Dec 28</span>
+                <div class="day-line"></div>
+            </div>
+
+            <div class="quest-grid">
+                <div class="polaroid" onclick="showPopup('youorme1')">
+                    <div class="polaroid-image you-or-me">
+                        🤔
+                        <span class="polaroid-time">3:20 PM</span>
+                        <span class="result-tag aligned">4 aligned 1 diff</span>
+                    </div>
+                    <div class="polaroid-caption">Kitchen Edition</div>
+                    <div class="polaroid-type">You or Me</div>
+                </div>
+
+                <div class="polaroid" onclick="showPopup('linked1')">
+                    <div class="polaroid-image linked">
+                        🔗
+                        <span class="polaroid-time">7:45 PM</span>
+                        <span class="result-tag complete">4 words</span>
+                        <span class="sticker top-left">🏆</span>
+                    </div>
+                    <div class="polaroid-caption">Romantic Crossword</div>
+                    <div class="polaroid-type">Linked</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Popup Overlay -->
+    <div class="popup-overlay" id="popupOverlay" onclick="closePopup()">
+        <div class="popup-card" onclick="event.stopPropagation()">
+            <button class="popup-close" onclick="closePopup()">×</button>
+            <div class="popup-header" id="popupHeader">
+                <!-- Filled dynamically -->
+            </div>
+            <div class="popup-body" id="popupBody">
+                <!-- Filled dynamically -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const quizData = {
+            affirmation1: {
+                emoji: '💕',
+                title: 'Morning Check-in',
+                type: 'Affirmation Quiz',
+                time: '9:15 AM',
+                date: 'Sunday, Dec 29',
+                result: { aligned: 5, diff: 0 },
+                answers: [
+                    { q: "How connected do you feel today?", you: "Very close", partner: "Very close", matched: true },
+                    { q: "How's your energy level?", you: "Good", partner: "Good", matched: true },
+                    { q: "How supported do you feel?", you: "Completely", partner: "Completely", matched: true },
+                    { q: "How would you rate your communication today?", you: "Great", partner: "Great", matched: true },
+                    { q: "How appreciated do you feel?", you: "Very", partner: "Very", matched: true }
+                ]
+            },
+            classic1: {
+                emoji: '📝',
+                title: 'Ideal Date Night',
+                type: 'Classic Quiz',
+                time: '8:30 PM',
+                date: 'Sunday, Dec 29',
+                result: { aligned: 3, diff: 2 },
+                answers: [
+                    { q: "Perfect Friday night activity?", you: "Movie marathon", partner: "Cooking together", matched: false },
+                    { q: "Who usually picks where to eat?", you: "Take turns", partner: "Take turns", matched: true },
+                    { q: "Ideal vacation destination?", you: "Beach resort", partner: "Mountain cabin", matched: false },
+                    { q: "Preferred dinner time?", you: "7 PM", partner: "7 PM", matched: true },
+                    { q: "Date night frequency?", you: "Weekly", partner: "Weekly", matched: true }
+                ]
+            },
+            youorme1: {
+                emoji: '🤔',
+                title: 'Kitchen Edition',
+                type: 'You or Me',
+                time: '3:20 PM',
+                date: 'Saturday, Dec 28',
+                result: { aligned: 4, diff: 1 },
+                answers: [
+                    { q: "Who's the better cook?", you: "Emma", partner: "Me (Emma)", matched: true },
+                    { q: "Who does the dishes more?", you: "Me", partner: "Me (Emma)", matched: false },
+                    { q: "Who picks the groceries?", you: "Both equally", partner: "Both equally", matched: true },
+                    { q: "Who's more adventurous with food?", you: "Emma", partner: "Me (Emma)", matched: true },
+                    { q: "Who cleans up after cooking?", you: "Me", partner: "You", matched: true }
+                ]
+            },
+            linked1: {
+                emoji: '🔗',
+                title: 'Romantic Crossword',
+                type: 'Linked',
+                time: '7:45 PM',
+                date: 'Saturday, Dec 28',
+                isGame: true,
+                words: ['LOVE', 'HEART', 'FOREVER', 'TOGETHER'],
+                contribution: { you: 2, partner: 2 }
+            }
+        };
+
+        function showPopup(id) {
+            const data = quizData[id];
+            const overlay = document.getElementById('popupOverlay');
+            const header = document.getElementById('popupHeader');
+            const body = document.getElementById('popupBody');
+
+            let resultClass = data.result?.diff === 0 ? 'aligned' : 'mixed';
+            let resultText = data.result ? `${data.result.aligned} aligned${data.result.diff > 0 ? ` · ${data.result.diff} different` : ''}` : '';
+
+            header.innerHTML = `
+                <div class="popup-emoji">${data.emoji}</div>
+                <div class="popup-title">${data.title}</div>
+                <div class="popup-subtitle">${data.type}</div>
+                <div class="popup-meta">
+                    <span class="popup-meta-item">📅 ${data.date}</span>
+                    <span class="popup-meta-item">🕐 ${data.time}</span>
+                </div>
+                ${resultText ? `<div class="popup-result ${resultClass}">${resultText}</div>` : ''}
+            `;
+
+            if (data.isGame) {
+                body.innerHTML = `
+                    <div class="answers-title">Words Solved Together</div>
+                    <div style="display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-bottom: 16px;">
+                        ${data.words.map(w => `<span style="padding: 8px 16px; background: var(--cream); border-radius: 10px; font-weight: 600;">${w}</span>`).join('')}
+                    </div>
+                    <div style="display: flex; gap: 12px;">
+                        <div style="flex: 1; text-align: center; padding: 16px; background: var(--cream); border-radius: 12px;">
+                            <div style="font-size: 10px; color: var(--ink-light); font-weight: 700;">YOU</div>
+                            <div style="font-size: 28px; font-weight: 700; color: var(--ink);">${data.contribution.you}</div>
+                            <div style="font-size: 11px; color: var(--ink-light);">words</div>
+                        </div>
+                        <div style="flex: 1; text-align: center; padding: 16px; background: var(--cream); border-radius: 12px;">
+                            <div style="font-size: 10px; color: var(--ink-light); font-weight: 700;">EMMA</div>
+                            <div style="font-size: 28px; font-weight: 700; color: var(--ink);">${data.contribution.partner}</div>
+                            <div style="font-size: 11px; color: var(--ink-light);">words</div>
+                        </div>
+                    </div>
+                `;
+            } else {
+                body.innerHTML = `
+                    <div class="answers-title">All Answers</div>
+                    ${data.answers.map((a, i) => `
+                        <div class="answer-card">
+                            <div class="answer-question">
+                                <span class="answer-number">${i + 1}</span>
+                                ${a.q}
+                            </div>
+                            <div class="answer-pair">
+                                <div class="answer-bubble ${a.matched ? 'matched' : ''}">
+                                    <div class="answer-name">YOU</div>
+                                    <div class="answer-text">${a.you}</div>
+                                </div>
+                                <div class="answer-bubble ${a.matched ? 'matched' : ''}">
+                                    <div class="answer-name">EMMA</div>
+                                    <div class="answer-text">${a.partner}</div>
+                                </div>
+                            </div>
+                            <div class="match-indicator ${a.matched ? 'matched' : 'different'}">
+                                <span class="match-icon ${a.matched ? 'matched' : 'different'}">${a.matched ? '✓' : '≠'}</span>
+                                ${a.matched ? 'Aligned!' : 'Different'}
+                            </div>
+                        </div>
+                    `).join('')}
+                `;
+            }
+
+            overlay.classList.add('visible');
+        }
+
+        function closePopup() {
+            document.getElementById('popupOverlay').classList.remove('visible');
+        }
+    </script>
+</body>
+</html>

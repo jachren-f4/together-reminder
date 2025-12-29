@@ -1,0 +1,861 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Journal - Scrapbook Style</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Nunito:wght@400;600;700&family=Caveat:wght@500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-gradient-start: #FFD1C1;
+            --bg-gradient-end: #FFF5F0;
+            --accent-pink: #FF6B6B;
+            --accent-orange: #FF9F43;
+            --cream: #FFF8F0;
+            --beige: #F5E6D8;
+            --ink: #2D2D2D;
+            --ink-light: #666;
+            --white: #FFFFFF;
+            --green: #4CAF50;
+            --green-light: #E8F5E9;
+            --tape-color: rgba(255,220,150,0.7);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            background: var(--cream);
+            min-height: 100vh;
+            color: var(--ink);
+        }
+
+        .phone-frame {
+            max-width: 390px;
+            margin: 20px auto;
+            background: var(--cream);
+            min-height: 844px;
+            border-radius: 40px;
+            overflow: hidden;
+            box-shadow: 0 25px 80px rgba(0,0,0,0.15);
+            position: relative;
+        }
+
+        /* Paper texture */
+        .paper-bg {
+            background-image:
+                radial-gradient(ellipse at 50% 0%, rgba(255,209,193,0.4) 0%, transparent 50%),
+                repeating-linear-gradient(
+                    0deg,
+                    transparent,
+                    transparent 28px,
+                    rgba(200,180,160,0.08) 28px,
+                    rgba(200,180,160,0.08) 29px
+                );
+            min-height: 844px;
+            padding-bottom: 100px;
+        }
+
+        .header {
+            padding: 60px 20px 16px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-family: 'Caveat', cursive;
+            font-size: 42px;
+            font-weight: 600;
+            color: var(--ink);
+        }
+
+        .header .subtitle {
+            font-family: 'Nunito', sans-serif;
+            font-size: 14px;
+            color: var(--ink-light);
+        }
+
+        /* Week Nav with tape */
+        .week-nav {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            padding: 16px 20px;
+            position: relative;
+        }
+
+        .week-nav::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-1deg);
+            width: 220px;
+            height: 36px;
+            background: var(--tape-color);
+            border-radius: 2px;
+            z-index: 0;
+        }
+
+        .week-nav button {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border: 2px solid var(--ink);
+            background: var(--white);
+            color: var(--ink);
+            font-size: 16px;
+            cursor: pointer;
+            position: relative;
+            z-index: 1;
+            transition: all 0.2s;
+        }
+
+        .week-nav button:hover:not(:disabled) {
+            background: var(--accent-pink);
+            border-color: var(--accent-pink);
+            color: white;
+        }
+
+        .week-nav button:disabled {
+            opacity: 0.3;
+        }
+
+        .week-dates {
+            font-family: 'Caveat', cursive;
+            font-size: 26px;
+            font-weight: 600;
+            color: var(--ink);
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Weekly Insights - Notecard Style */
+        .weekly-insights {
+            margin: 20px 20px;
+            padding: 20px;
+            background: var(--white);
+            border-radius: 4px;
+            box-shadow:
+                0 2px 4px rgba(0,0,0,0.1),
+                3px 3px 0 var(--beige);
+            position: relative;
+            transform: rotate(-0.5deg);
+        }
+
+        .weekly-insights::before {
+            content: '';
+            position: absolute;
+            top: -10px;
+            left: 40px;
+            width: 70px;
+            height: 24px;
+            background: var(--tape-color);
+            transform: rotate(3deg);
+        }
+
+        .insights-title {
+            font-family: 'Caveat', cursive;
+            font-size: 24px;
+            font-weight: 600;
+            color: var(--ink);
+            margin-bottom: 14px;
+            padding-top: 8px;
+        }
+
+        .insight-row {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .insight-tag {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 14px;
+            background: var(--cream);
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--ink);
+        }
+
+        .insight-tag .emoji {
+            font-size: 16px;
+        }
+
+        /* Day Separator - Handwritten style */
+        .day-separator {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 20px 24px 12px;
+        }
+
+        .day-label {
+            font-family: 'Caveat', cursive;
+            font-size: 22px;
+            font-weight: 600;
+            color: var(--ink);
+            white-space: nowrap;
+        }
+
+        .day-line {
+            flex: 1;
+            height: 2px;
+            background: repeating-linear-gradient(
+                90deg,
+                var(--ink),
+                var(--ink) 6px,
+                transparent 6px,
+                transparent 12px
+            );
+            opacity: 0.2;
+        }
+
+        .day-note {
+            font-family: 'Caveat', cursive;
+            font-size: 16px;
+            color: var(--ink-light);
+        }
+
+        /* Polaroid Quest Cards */
+        .quest-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            padding: 0 16px;
+            justify-content: center;
+        }
+
+        .polaroid {
+            width: calc(50% - 12px);
+            max-width: 170px;
+            background: var(--white);
+            padding: 10px 10px 40px;
+            box-shadow:
+                0 4px 8px rgba(0,0,0,0.12),
+                0 2px 4px rgba(0,0,0,0.08);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            transform: rotate(var(--rotation, 0deg));
+        }
+
+        .polaroid:nth-child(odd) { --rotation: -2deg; }
+        .polaroid:nth-child(even) { --rotation: 1.5deg; }
+
+        .polaroid:hover {
+            transform: rotate(0deg) translateY(-4px);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.15);
+        }
+
+        .polaroid.expanded {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(0deg);
+            width: 340px;
+            max-width: 90vw;
+            z-index: 100;
+            padding: 16px 16px 20px;
+        }
+
+        .polaroid-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 99;
+        }
+
+        .polaroid-overlay.visible {
+            display: block;
+        }
+
+        .polaroid-image {
+            aspect-ratio: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            position: relative;
+            border-radius: 2px;
+        }
+
+        .polaroid.expanded .polaroid-image {
+            aspect-ratio: auto;
+            min-height: 100px;
+            font-size: 50px;
+        }
+
+        .polaroid-image.classic { background: linear-gradient(135deg, #FFEBEE, #FFCDD2); }
+        .polaroid-image.affirmation { background: linear-gradient(135deg, #FCE4EC, #F8BBD9); }
+        .polaroid-image.you-or-me { background: linear-gradient(135deg, #FFF3E0, #FFE0B2); }
+        .polaroid-image.linked { background: linear-gradient(135deg, #E3F2FD, #BBDEFB); }
+        .polaroid-image.word-search { background: linear-gradient(135deg, #F3E5F5, #E1BEE7); }
+        .polaroid-image.steps { background: linear-gradient(135deg, #E8F5E9, #C8E6C9); }
+
+        /* Stickers on polaroid */
+        .sticker {
+            position: absolute;
+            font-size: 22px;
+            filter: drop-shadow(0 2px 3px rgba(0,0,0,0.2));
+        }
+
+        .sticker.top-right { top: -8px; right: -8px; transform: rotate(15deg); }
+        .sticker.top-left { top: -8px; left: -8px; transform: rotate(-10deg); }
+        .sticker.bottom-right { bottom: -8px; right: -8px; transform: rotate(20deg); }
+
+        /* Result tag on image */
+        .result-tag {
+            position: absolute;
+            bottom: 8px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--white);
+            padding: 4px 10px;
+            border-radius: 10px;
+            font-size: 11px;
+            font-weight: 700;
+            white-space: nowrap;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .result-tag.aligned { color: var(--green); }
+        .result-tag.mixed { color: #E65100; }
+        .result-tag.complete { color: #1565C0; }
+
+        .polaroid-caption {
+            font-family: 'Caveat', cursive;
+            font-size: 16px;
+            color: var(--ink);
+            text-align: center;
+            margin-top: 10px;
+            line-height: 1.2;
+        }
+
+        .polaroid.expanded .polaroid-caption {
+            font-size: 20px;
+            margin-top: 14px;
+        }
+
+        .polaroid-type {
+            font-family: 'Nunito', sans-serif;
+            font-size: 10px;
+            color: var(--ink-light);
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-top: 4px;
+        }
+
+        .polaroid-time {
+            position: absolute;
+            top: 6px;
+            right: 6px;
+            font-size: 9px;
+            color: var(--ink-light);
+            background: rgba(255,255,255,0.8);
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+
+        /* Expanded Details */
+        .polaroid-details {
+            display: none;
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px dashed var(--beige);
+        }
+
+        .polaroid.expanded .polaroid-details {
+            display: block;
+        }
+
+        .details-title {
+            font-family: 'Caveat', cursive;
+            font-size: 18px;
+            color: var(--ink);
+            margin-bottom: 12px;
+        }
+
+        .answer-card {
+            background: var(--cream);
+            border-radius: 10px;
+            padding: 12px;
+            margin-bottom: 10px;
+        }
+
+        .answer-question {
+            font-size: 12px;
+            color: var(--ink-light);
+            font-style: italic;
+            margin-bottom: 10px;
+        }
+
+        .answer-pair {
+            display: flex;
+            gap: 8px;
+        }
+
+        .answer-bubble {
+            flex: 1;
+            padding: 10px;
+            background: var(--white);
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .answer-bubble.matched {
+            border: 2px solid var(--green);
+        }
+
+        .answer-name {
+            font-size: 10px;
+            font-weight: 700;
+            color: var(--ink-light);
+            margin-bottom: 4px;
+        }
+
+        .answer-text {
+            font-size: 13px;
+            color: var(--ink);
+            font-weight: 600;
+        }
+
+        .match-result {
+            text-align: center;
+            margin-top: 8px;
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        .match-result.aligned { color: var(--green); }
+        .match-result.different { color: #E65100; }
+
+        /* Words list for games */
+        .words-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-bottom: 12px;
+        }
+
+        .word-chip {
+            padding: 5px 10px;
+            background: var(--white);
+            border-radius: 8px;
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--ink);
+        }
+
+        .contribution-row {
+            display: flex;
+            gap: 8px;
+        }
+
+        .contribution-item {
+            flex: 1;
+            text-align: center;
+            padding: 10px;
+            background: var(--white);
+            border-radius: 8px;
+        }
+
+        .contribution-name {
+            font-size: 10px;
+            color: var(--ink-light);
+            font-weight: 700;
+            margin-bottom: 2px;
+        }
+
+        .contribution-value {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--ink);
+        }
+
+        .contribution-label {
+            font-size: 10px;
+            color: var(--ink-light);
+        }
+
+        /* Close button for expanded */
+        .close-btn {
+            position: absolute;
+            top: -12px;
+            right: -12px;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: var(--accent-pink);
+            color: white;
+            border: none;
+            font-size: 18px;
+            cursor: pointer;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
+
+        .polaroid.expanded .close-btn {
+            display: flex;
+        }
+
+        /* Empty day */
+        .empty-note {
+            text-align: center;
+            padding: 24px;
+            font-family: 'Caveat', cursive;
+            font-size: 20px;
+            color: var(--ink-light);
+        }
+
+        /* Perfect match banner */
+        .perfect-banner {
+            background: linear-gradient(135deg, var(--green), #66BB6A);
+            color: white;
+            padding: 10px;
+            border-radius: 8px;
+            text-align: center;
+            margin-bottom: 12px;
+            font-weight: 700;
+            font-size: 13px;
+        }
+
+        /* Tap hint */
+        .tap-hint {
+            text-align: center;
+            padding: 8px;
+            font-size: 11px;
+            color: var(--ink-light);
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <div class="phone-frame">
+        <div class="paper-bg">
+            <div class="header">
+                <h1>Our Journal</h1>
+                <p class="subtitle">Memories from this week</p>
+            </div>
+
+            <div class="week-nav">
+                <button id="prevWeek">‹</button>
+                <div class="week-dates">Dec 23 - 29</div>
+                <button id="nextWeek" disabled>›</button>
+            </div>
+
+            <!-- Weekly Insights Notecard -->
+            <div class="weekly-insights">
+                <div class="insights-title">This Week's Highlights</div>
+                <div class="insight-row">
+                    <span class="insight-tag"><span class="emoji">🎯</span> 78% aligned</span>
+                    <span class="insight-tag"><span class="emoji">📅</span> 6 active days</span>
+                    <span class="insight-tag"><span class="emoji">🎮</span> 12 quests</span>
+                </div>
+            </div>
+
+            <div class="tap-hint">Tap any memory to see details</div>
+
+            <!-- Sunday -->
+            <div class="day-separator">
+                <span class="day-label">Sunday, Dec 29</span>
+                <div class="day-line"></div>
+                <span class="day-note">Today</span>
+            </div>
+
+            <div class="quest-grid">
+                <div class="polaroid" onclick="expandPolaroid(this)">
+                    <button class="close-btn" onclick="event.stopPropagation(); closePolaroid(this)">×</button>
+                    <div class="polaroid-image affirmation">
+                        💕
+                        <span class="polaroid-time">9:15 AM</span>
+                        <span class="result-tag aligned">5 aligned ⭐</span>
+                        <span class="sticker top-right">✨</span>
+                    </div>
+                    <div class="polaroid-caption">Morning Check-in</div>
+                    <div class="polaroid-type">Affirmation Quiz</div>
+                    <div class="polaroid-details">
+                        <div class="perfect-banner">🏆 Perfect Match - All 5 aligned!</div>
+                        <div class="answer-card">
+                            <div class="answer-question">"How connected do you feel today?"</div>
+                            <div class="answer-pair">
+                                <div class="answer-bubble matched">
+                                    <div class="answer-name">YOU</div>
+                                    <div class="answer-text">Very close</div>
+                                </div>
+                                <div class="answer-bubble matched">
+                                    <div class="answer-name">EMMA</div>
+                                    <div class="answer-text">Very close</div>
+                                </div>
+                            </div>
+                            <div class="match-result aligned">✓ Aligned</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="polaroid" onclick="expandPolaroid(this)">
+                    <button class="close-btn" onclick="event.stopPropagation(); closePolaroid(this)">×</button>
+                    <div class="polaroid-image classic">
+                        📝
+                        <span class="polaroid-time">8:30 PM</span>
+                        <span class="result-tag mixed">3 aligned 2 diff</span>
+                    </div>
+                    <div class="polaroid-caption">Ideal Date Night</div>
+                    <div class="polaroid-type">Classic Quiz</div>
+                    <div class="polaroid-details">
+                        <div class="details-title">Your Answers</div>
+                        <div class="answer-card">
+                            <div class="answer-question">"Perfect Friday night activity?"</div>
+                            <div class="answer-pair">
+                                <div class="answer-bubble">
+                                    <div class="answer-name">YOU</div>
+                                    <div class="answer-text">Movie marathon</div>
+                                </div>
+                                <div class="answer-bubble">
+                                    <div class="answer-name">EMMA</div>
+                                    <div class="answer-text">Cooking together</div>
+                                </div>
+                            </div>
+                            <div class="match-result different">Different vibes!</div>
+                        </div>
+                        <div class="answer-card">
+                            <div class="answer-question">"Who picks where to eat?"</div>
+                            <div class="answer-pair">
+                                <div class="answer-bubble matched">
+                                    <div class="answer-name">YOU</div>
+                                    <div class="answer-text">Take turns</div>
+                                </div>
+                                <div class="answer-bubble matched">
+                                    <div class="answer-name">EMMA</div>
+                                    <div class="answer-text">Take turns</div>
+                                </div>
+                            </div>
+                            <div class="match-result aligned">✓ Aligned</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Saturday -->
+            <div class="day-separator">
+                <span class="day-label">Saturday, Dec 28</span>
+                <div class="day-line"></div>
+            </div>
+
+            <div class="quest-grid">
+                <div class="polaroid" onclick="expandPolaroid(this)">
+                    <button class="close-btn" onclick="event.stopPropagation(); closePolaroid(this)">×</button>
+                    <div class="polaroid-image linked">
+                        🔗
+                        <span class="polaroid-time">7:45 PM</span>
+                        <span class="result-tag complete">4 words</span>
+                        <span class="sticker top-left">🏆</span>
+                    </div>
+                    <div class="polaroid-caption">Romantic Crossword</div>
+                    <div class="polaroid-type">Linked</div>
+                    <div class="polaroid-details">
+                        <div class="details-title">Words Solved</div>
+                        <div class="words-list">
+                            <span class="word-chip">LOVE</span>
+                            <span class="word-chip">HEART</span>
+                            <span class="word-chip">FOREVER</span>
+                            <span class="word-chip">TOGETHER</span>
+                        </div>
+                        <div class="contribution-row">
+                            <div class="contribution-item">
+                                <div class="contribution-name">YOU</div>
+                                <div class="contribution-value">2</div>
+                                <div class="contribution-label">words</div>
+                            </div>
+                            <div class="contribution-item">
+                                <div class="contribution-name">EMMA</div>
+                                <div class="contribution-value">2</div>
+                                <div class="contribution-label">words</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="polaroid" onclick="expandPolaroid(this)">
+                    <button class="close-btn" onclick="event.stopPropagation(); closePolaroid(this)">×</button>
+                    <div class="polaroid-image you-or-me">
+                        🤔
+                        <span class="polaroid-time">3:20 PM</span>
+                        <span class="result-tag aligned">4 aligned 1 diff</span>
+                    </div>
+                    <div class="polaroid-caption">Kitchen Edition</div>
+                    <div class="polaroid-type">You or Me</div>
+                    <div class="polaroid-details">
+                        <div class="details-title">Your Answers</div>
+                        <div class="answer-card">
+                            <div class="answer-question">"Who's the better cook?"</div>
+                            <div class="answer-pair">
+                                <div class="answer-bubble matched">
+                                    <div class="answer-name">YOU SAID</div>
+                                    <div class="answer-text">Emma</div>
+                                </div>
+                                <div class="answer-bubble matched">
+                                    <div class="answer-name">EMMA SAID</div>
+                                    <div class="answer-text">Me</div>
+                                </div>
+                            </div>
+                            <div class="match-result aligned">✓ You agree!</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="polaroid" onclick="expandPolaroid(this)">
+                    <button class="close-btn" onclick="event.stopPropagation(); closePolaroid(this)">×</button>
+                    <div class="polaroid-image steps">
+                        👟
+                        <span class="polaroid-time">11:00 AM</span>
+                        <span class="result-tag complete">17,349 steps</span>
+                        <span class="sticker bottom-right">🔥</span>
+                    </div>
+                    <div class="polaroid-caption">Goal Met!</div>
+                    <div class="polaroid-type">Steps Together</div>
+                    <div class="polaroid-details">
+                        <div class="details-title">Your Steps</div>
+                        <div class="contribution-row">
+                            <div class="contribution-item">
+                                <div class="contribution-name">YOU</div>
+                                <div class="contribution-value">8,247</div>
+                                <div class="contribution-label">steps</div>
+                            </div>
+                            <div class="contribution-item">
+                                <div class="contribution-name">EMMA</div>
+                                <div class="contribution-value">9,102</div>
+                                <div class="contribution-label">steps</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Thursday - Empty -->
+            <div class="day-separator">
+                <span class="day-label">Thursday, Dec 26</span>
+                <div class="day-line"></div>
+            </div>
+
+            <div class="empty-note">📝 No quests this day - rest is important too!</div>
+
+            <!-- Wednesday - Christmas -->
+            <div class="day-separator">
+                <span class="day-label">Wednesday, Dec 25</span>
+                <div class="day-line"></div>
+                <span class="day-note">🎄 Christmas</span>
+            </div>
+
+            <div class="quest-grid">
+                <div class="polaroid" onclick="expandPolaroid(this)">
+                    <button class="close-btn" onclick="event.stopPropagation(); closePolaroid(this)">×</button>
+                    <div class="polaroid-image affirmation" style="background: linear-gradient(135deg, #C62828, #E53935);">
+                        🎄
+                        <span class="polaroid-time">10:00 AM</span>
+                        <span class="result-tag aligned">5 aligned ⭐</span>
+                        <span class="sticker top-right">💯</span>
+                        <span class="sticker top-left">✨</span>
+                    </div>
+                    <div class="polaroid-caption">Holiday Check-in</div>
+                    <div class="polaroid-type">Affirmation Quiz</div>
+                    <div class="polaroid-details">
+                        <div class="perfect-banner">🏆 Perfect Match - 5 out of 5!</div>
+                        <div style="text-align: center; font-size: 13px; color: var(--ink-light);">
+                            A perfect Christmas moment together!
+                        </div>
+                    </div>
+                </div>
+
+                <div class="polaroid" onclick="expandPolaroid(this)">
+                    <button class="close-btn" onclick="event.stopPropagation(); closePolaroid(this)">×</button>
+                    <div class="polaroid-image word-search">
+                        🔍
+                        <span class="polaroid-time">2:15 PM</span>
+                        <span class="result-tag complete">8 words</span>
+                    </div>
+                    <div class="polaroid-caption">Holiday Words</div>
+                    <div class="polaroid-type">Word Search</div>
+                    <div class="polaroid-details">
+                        <div class="details-title">Words Found</div>
+                        <div class="words-list">
+                            <span class="word-chip">CHRISTMAS</span>
+                            <span class="word-chip">SNOW</span>
+                            <span class="word-chip">JOY</span>
+                            <span class="word-chip">GIFT</span>
+                            <span class="word-chip">LOVE</span>
+                            <span class="word-chip">FAMILY</span>
+                            <span class="word-chip">PEACE</span>
+                            <span class="word-chip">WARMTH</span>
+                        </div>
+                        <div class="contribution-row">
+                            <div class="contribution-item">
+                                <div class="contribution-name">YOU</div>
+                                <div class="contribution-value">5</div>
+                                <div class="contribution-label">words</div>
+                            </div>
+                            <div class="contribution-item">
+                                <div class="contribution-name">EMMA</div>
+                                <div class="contribution-value">3</div>
+                                <div class="contribution-label">words</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Overlay for expanded polaroids -->
+    <div class="polaroid-overlay" id="overlay" onclick="closeAllPolaroids()"></div>
+
+    <script>
+        function expandPolaroid(element) {
+            // Close any already expanded
+            document.querySelectorAll('.polaroid.expanded').forEach(p => {
+                if (p !== element) p.classList.remove('expanded');
+            });
+
+            element.classList.toggle('expanded');
+            document.getElementById('overlay').classList.toggle('visible', element.classList.contains('expanded'));
+        }
+
+        function closePolaroid(closeBtn) {
+            const polaroid = closeBtn.closest('.polaroid');
+            polaroid.classList.remove('expanded');
+            document.getElementById('overlay').classList.remove('visible');
+        }
+
+        function closeAllPolaroids() {
+            document.querySelectorAll('.polaroid.expanded').forEach(p => p.classList.remove('expanded'));
+            document.getElementById('overlay').classList.remove('visible');
+        }
+
+        document.getElementById('prevWeek').addEventListener('click', function() {
+            document.querySelector('.week-dates').textContent = 'Dec 16 - 22';
+            document.getElementById('nextWeek').disabled = false;
+            this.disabled = true;
+        });
+
+        document.getElementById('nextWeek').addEventListener('click', function() {
+            document.querySelector('.week-dates').textContent = 'Dec 23 - 29';
+            document.getElementById('prevWeek').disabled = false;
+            this.disabled = true;
+        });
+    </script>
+</body>
+</html>

@@ -13,6 +13,7 @@ import {
   gameTypeToContentType,
   LpGrantResult,
 } from '@/lib/lp/grant-service';
+import { recalculateAndCacheProfile } from '@/lib/us-profile/cache';
 import { readFileSync } from 'fs';
 import { join } from 'path';
 
@@ -505,6 +506,11 @@ export async function submitAnswers(
 
     // Advance branch progression
     await advanceBranch(couple.coupleId, match.quizType);
+
+    // Recalculate Us Profile cache (async, non-blocking)
+    recalculateAndCacheProfile(couple.coupleId).catch(err => {
+      console.error('Failed to recalculate Us Profile:', err);
+    });
   }
 
   // Update database

@@ -13,7 +13,11 @@
         "One-on-one time with my partner",
         "Other / It depends"
       ],
-      "category": "personality"
+      "category": "personality",
+      "metadata": {
+        "dimension": "social_energy",
+        "poleMapping": ["right", "right", "left", "left", null]
+      }
     },
     {
       "id": "quiz_001_q2",
@@ -25,7 +29,11 @@
         "Finding a quiet corner to observe",
         "Other / It depends"
       ],
-      "category": "social"
+      "category": "social",
+      "metadata": {
+        "dimension": "social_energy",
+        "poleMapping": ["right", "left", null, "left", null]
+      }
     },
     {
       "id": "quiz_001_q3",
@@ -37,7 +45,11 @@
         "Jump right into interesting conversations",
         "Other / It depends"
       ],
-      "category": "social"
+      "category": "social",
+      "metadata": {
+        "dimension": "social_energy",
+        "poleMapping": ["right", "left", "left", "right", null]
+      }
     },
     {
       "id": "quiz_001_q4",
@@ -49,7 +61,11 @@
         "Spontaneous adventures as they come",
         "Other / It depends"
       ],
-      "category": "lifestyle"
+      "category": "lifestyle",
+      "metadata": {
+        "dimension": "social_energy",
+        "poleMapping": ["right", null, "left", null, null]
+      }
     },
     {
       "id": "quiz_001_q5",
@@ -61,7 +77,11 @@
         "Depends on who was in the crowd",
         "Other / It depends"
       ],
-      "category": "personality"
+      "category": "personality",
+      "metadata": {
+        "dimension": "social_energy",
+        "poleMapping": ["right", null, "left", null, null]
+      }
     }
   ],
   "description": "Discover whether you're party animals or cozy homebodies."

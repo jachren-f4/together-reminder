@@ -13,6 +13,7 @@ import 'package:togetherremind/widgets/brand/brand_widget_factory.dart';
 import 'package:togetherremind/config/brand/brand_loader.dart';
 import 'package:togetherremind/config/brand/brand_config.dart';
 import 'package:togetherremind/config/brand/us2_theme.dart';
+import 'package:togetherremind/config/app_version.dart';
 import 'package:intl/intl.dart';
 import 'debug/data_validation_screen.dart';
 
@@ -614,7 +615,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       );
                     },
                     child: Text(
-                      'TOGETHERREMIND V1.0.0',
+                      'TOGETHERREMIND ${AppVersion.displayVersion}',
                       style: AppTheme.bodyFont.copyWith(
                         fontSize: 11,
                         color: const Color(0xFFAAAAAA),
@@ -751,7 +752,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       );
                     },
                     child: Text(
-                      'US 2.0 V1.0.0',
+                      'US 2.0 ${AppVersion.displayVersion}',
                       style: GoogleFonts.nunito(
                         fontSize: 11,
                         color: Us2Theme.textLight,

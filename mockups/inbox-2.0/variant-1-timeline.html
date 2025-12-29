@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inbox 2.0 - Timeline View</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Nunito:wght@400;600;700&family=Pacifico&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-gradient-start: #FFD1C1;
+            --bg-gradient-end: #FFF5F0;
+            --accent-pink: #FF6B6B;
+            --accent-orange: #FF9F43;
+            --salmon: #FF7B6B;
+            --cream: #FFF8F0;
+            --beige: #F5E6D8;
+            --ink: #2D2D2D;
+            --ink-light: #666;
+            --white: #FFFFFF;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            background: linear-gradient(180deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
+            min-height: 100vh;
+            color: var(--ink);
+        }
+
+        .phone-frame {
+            max-width: 390px;
+            margin: 20px auto;
+            background: linear-gradient(180deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
+            min-height: 844px;
+            border-radius: 40px;
+            overflow: hidden;
+            box-shadow: 0 25px 80px rgba(0,0,0,0.15);
+            position: relative;
+        }
+
+        .header {
+            padding: 60px 20px 20px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 28px;
+            font-weight: 600;
+            color: var(--ink);
+            margin-bottom: 4px;
+        }
+
+        .header .subtitle {
+            font-size: 14px;
+            color: var(--ink-light);
+        }
+
+        /* Week Navigation */
+        .week-nav {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            padding: 16px 20px;
+            background: rgba(255,255,255,0.6);
+            backdrop-filter: blur(10px);
+            margin: 0 16px;
+            border-radius: 16px;
+        }
+
+        .week-nav button {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: none;
+            background: var(--white);
+            color: var(--accent-pink);
+            font-size: 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transition: all 0.2s;
+        }
+
+        .week-nav button:hover {
+            transform: scale(1.1);
+            background: linear-gradient(135deg, var(--accent-pink), var(--accent-orange));
+            color: white;
+        }
+
+        .week-nav button:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        .week-range {
+            text-align: center;
+        }
+
+        .week-range .dates {
+            font-weight: 700;
+            font-size: 16px;
+            color: var(--ink);
+        }
+
+        .week-range .label {
+            font-size: 12px;
+            color: var(--ink-light);
+            margin-top: 2px;
+        }
+
+        /* Week Summary Stats */
+        .week-summary {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            padding: 20px;
+            margin: 16px;
+            background: var(--white);
+            border-radius: 20px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 28px;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--accent-pink), var(--accent-orange));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .stat-label {
+            font-size: 11px;
+            color: var(--ink-light);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Timeline */
+        .timeline {
+            padding: 0 20px 100px;
+        }
+
+        .day-group {
+            margin-bottom: 24px;
+        }
+
+        .day-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .day-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent-pink), var(--accent-orange));
+            flex-shrink: 0;
+        }
+
+        .day-date {
+            font-family: 'Playfair Display', serif;
+            font-weight: 600;
+            font-size: 16px;
+            color: var(--ink);
+        }
+
+        .day-line {
+            flex: 1;
+            height: 1px;
+            background: linear-gradient(90deg, var(--beige), transparent);
+        }
+
+        .activity-cards {
+            margin-left: 24px;
+            padding-left: 16px;
+            border-left: 2px solid var(--beige);
+        }
+
+        .activity-card {
+            background: var(--white);
+            border-radius: 16px;
+            padding: 16px;
+            margin-bottom: 12px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+            transition: transform 0.2s;
+        }
+
+        .activity-card:hover {
+            transform: translateX(4px);
+        }
+
+        .activity-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 8px;
+        }
+
+        .activity-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+
+        .activity-icon.quiz { background: #E8F5E9; }
+        .activity-icon.you-or-me { background: #FFF3E0; }
+        .activity-icon.linked { background: #E3F2FD; }
+        .activity-icon.word-search { background: #FCE4EC; }
+        .activity-icon.steps { background: #F3E5F5; }
+        .activity-icon.poke { background: #FFF8E1; }
+        .activity-icon.affirmation { background: #FFEBEE; }
+
+        .activity-title {
+            font-weight: 700;
+            font-size: 14px;
+            color: var(--ink);
+        }
+
+        .activity-time {
+            font-size: 11px;
+            color: var(--ink-light);
+            margin-left: auto;
+        }
+
+        .activity-content {
+            font-size: 13px;
+            color: var(--ink-light);
+            line-height: 1.5;
+        }
+
+        .activity-lp {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            background: linear-gradient(135deg, var(--accent-pink), var(--accent-orange));
+            color: white;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 700;
+            margin-top: 8px;
+        }
+
+        .match-rate {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px dashed var(--beige);
+        }
+
+        .match-bar {
+            flex: 1;
+            height: 6px;
+            background: var(--beige);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .match-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent-pink), var(--accent-orange));
+            border-radius: 3px;
+            transition: width 0.5s ease;
+        }
+
+        .match-percent {
+            font-weight: 700;
+            font-size: 13px;
+            color: var(--accent-pink);
+        }
+
+        /* Quiz Answer Preview */
+        .quiz-preview {
+            margin-top: 10px;
+            padding: 10px;
+            background: var(--cream);
+            border-radius: 10px;
+        }
+
+        .quiz-question {
+            font-size: 12px;
+            color: var(--ink-light);
+            margin-bottom: 6px;
+            font-style: italic;
+        }
+
+        .quiz-answers {
+            display: flex;
+            gap: 8px;
+        }
+
+        .quiz-answer {
+            flex: 1;
+            padding: 8px;
+            background: var(--white);
+            border-radius: 8px;
+            text-align: center;
+            font-size: 11px;
+        }
+
+        .quiz-answer .name {
+            font-weight: 700;
+            color: var(--accent-pink);
+            margin-bottom: 2px;
+        }
+
+        .quiz-answer .text {
+            color: var(--ink);
+        }
+
+        .quiz-answer.match {
+            background: linear-gradient(135deg, rgba(255,107,107,0.15), rgba(255,159,67,0.15));
+            border: 1px solid var(--accent-pink);
+        }
+
+        /* Empty State */
+        .empty-day {
+            text-align: center;
+            padding: 20px;
+            color: var(--ink-light);
+            font-style: italic;
+        }
+
+        /* Highlight Card */
+        .highlight-card {
+            background: linear-gradient(135deg, var(--accent-pink), var(--accent-orange));
+            color: white;
+            border-radius: 16px;
+            padding: 16px;
+            margin-bottom: 12px;
+        }
+
+        .highlight-card .activity-title {
+            color: white;
+        }
+
+        .highlight-card .activity-content {
+            color: rgba(255,255,255,0.9);
+        }
+
+        .highlight-badge {
+            display: inline-block;
+            background: rgba(255,255,255,0.25);
+            padding: 4px 10px;
+            border-radius: 10px;
+            font-size: 11px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="phone-frame">
+        <div class="header">
+            <h1>Your Week Together</h1>
+            <p class="subtitle">A journey through your relationship</p>
+        </div>
+
+        <div class="week-nav">
+            <button id="prevWeek">&#8249;</button>
+            <div class="week-range">
+                <div class="dates" id="weekDates">Dec 23 - Dec 29</div>
+                <div class="label" id="weekLabel">This Week</div>
+            </div>
+            <button id="nextWeek" disabled>&#8250;</button>
+        </div>
+
+        <div class="week-summary">
+            <div class="stat-item">
+                <div class="stat-value" id="questCount">12</div>
+                <div class="stat-label">Quests Done</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value" id="lpEarned">+180</div>
+                <div class="stat-label">LP Earned</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value" id="matchRate">78%</div>
+                <div class="stat-label">Match Rate</div>
+            </div>
+        </div>
+
+        <div class="timeline" id="timeline">
+            <!-- Timeline content populated by JS -->
+        </div>
+    </div>
+
+    <script>
+        // Sample data structure
+        const weeklyData = {
+            thisWeek: {
+                dates: "Dec 23 - Dec 29",
+                label: "This Week",
+                stats: { quests: 12, lp: 180, matchRate: 78 },
+                days: [
+                    {
+                        date: "Sunday, Dec 29",
+                        isToday: true,
+                        activities: [
+                            {
+                                type: "quiz",
+                                title: "Morning Check-in",
+                                time: "9:15 AM",
+                                content: "Completed affirmation quiz together",
+                                lp: 30,
+                                matchRate: 80,
+                                preview: {
+                                    question: "How connected do you feel today?",
+                                    answers: [
+                                        { name: "You", text: "Very close", match: true },
+                                        { name: "Emma", text: "Very close", match: true }
+                                    ]
+                                }
+                            },
+                            {
+                                type: "poke",
+                                title: "Sweet Poke",
+                                time: "2:30 PM",
+                                content: "Emma sent you a thinking-of-you poke",
+                                emoji: "💭"
+                            }
+                        ]
+                    },
+                    {
+                        date: "Saturday, Dec 28",
+                        activities: [
+                            {
+                                type: "linked",
+                                title: "Linked Puzzle",
+                                time: "7:45 PM",
+                                content: "Solved the romantic crossword together!",
+                                lp: 30,
+                                highlight: true,
+                                highlightReason: "Perfect Solve"
+                            },
+                            {
+                                type: "you-or-me",
+                                title: "You or Me",
+                                time: "3:20 PM",
+                                content: "Discovered who's the better cook (it's Emma!)",
+                                lp: 30,
+                                matchRate: 100
+                            },
+                            {
+                                type: "steps",
+                                title: "Steps Together",
+                                time: "11:00 AM",
+                                content: "You both hit 8,000+ steps! Keep walking together.",
+                                lp: 30
+                            }
+                        ]
+                    },
+                    {
+                        date: "Friday, Dec 27",
+                        activities: [
+                            {
+                                type: "quiz",
+                                title: "Lighthearted Quiz",
+                                time: "8:30 PM",
+                                content: "\"What's Your Ideal Date Night?\"",
+                                lp: 30,
+                                matchRate: 60,
+                                preview: {
+                                    question: "Perfect Friday night activity?",
+                                    answers: [
+                                        { name: "You", text: "Movie marathon", match: false },
+                                        { name: "Emma", text: "Cooking together", match: false }
+                                    ]
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        date: "Thursday, Dec 26",
+                        activities: []
+                    },
+                    {
+                        date: "Wednesday, Dec 25",
+                        activities: [
+                            {
+                                type: "affirmation",
+                                title: "Holiday Check-in",
+                                time: "10:00 AM",
+                                content: "Special Christmas affirmation quiz",
+                                lp: 30,
+                                matchRate: 100,
+                                highlight: true,
+                                highlightReason: "Perfect Match!"
+                            }
+                        ]
+                    },
+                    {
+                        date: "Tuesday, Dec 24",
+                        activities: [
+                            {
+                                type: "word-search",
+                                title: "Word Search",
+                                time: "6:15 PM",
+                                content: "Found all 8 words in 4 minutes!",
+                                lp: 30
+                            },
+                            {
+                                type: "poke",
+                                title: "Merry Christmas Eve!",
+                                time: "12:00 PM",
+                                content: "You sent Emma a holiday poke",
+                                emoji: "🎄"
+                            }
+                        ]
+                    },
+                    {
+                        date: "Monday, Dec 23",
+                        activities: [
+                            {
+                                type: "quiz",
+                                title: "Weekly Starter",
+                                time: "7:00 AM",
+                                content: "Started the week with a quiz together",
+                                lp: 30,
+                                matchRate: 80
+                            }
+                        ]
+                    }
+                ]
+            },
+            lastWeek: {
+                dates: "Dec 16 - Dec 22",
+                label: "Last Week",
+                stats: { quests: 9, lp: 150, matchRate: 82 },
+                days: [
+                    {
+                        date: "Sunday, Dec 22",
+                        activities: [
+                            {
+                                type: "linked",
+                                title: "Linked Puzzle",
+                                time: "8:00 PM",
+                                content: "Completed casual crossword",
+                                lp: 30
+                            }
+                        ]
+                    },
+                    {
+                        date: "Saturday, Dec 21",
+                        activities: [
+                            {
+                                type: "quiz",
+                                title: "Weekend Quiz",
+                                time: "10:30 AM",
+                                content: "\"How Well Do You Know Each Other?\"",
+                                lp: 30,
+                                matchRate: 90,
+                                highlight: true,
+                                highlightReason: "High Sync!"
+                            }
+                        ]
+                    }
+                ]
+            }
+        };
+
+        let currentWeek = 'thisWeek';
+
+        function renderTimeline() {
+            const data = weeklyData[currentWeek];
+            const timeline = document.getElementById('timeline');
+
+            // Update header
+            document.getElementById('weekDates').textContent = data.dates;
+            document.getElementById('weekLabel').textContent = data.label;
+            document.getElementById('questCount').textContent = data.stats.quests;
+            document.getElementById('lpEarned').textContent = '+' + data.stats.lp;
+            document.getElementById('matchRate').textContent = data.stats.matchRate + '%';
+
+            // Update nav buttons
+            document.getElementById('nextWeek').disabled = currentWeek === 'thisWeek';
+            document.getElementById('prevWeek').disabled = currentWeek === 'lastWeek';
+
+            // Render days
+            let html = '';
+            data.days.forEach(day => {
+                html += `
+                    <div class="day-group">
+                        <div class="day-header">
+                            <div class="day-dot"></div>
+                            <div class="day-date">${day.date}${day.isToday ? ' (Today)' : ''}</div>
+                            <div class="day-line"></div>
+                        </div>
+                        <div class="activity-cards">
+                `;
+
+                if (day.activities.length === 0) {
+                    html += '<div class="empty-day">No activities this day</div>';
+                } else {
+                    day.activities.forEach(activity => {
+                        const cardClass = activity.highlight ? 'activity-card highlight-card' : 'activity-card';
+                        html += `<div class="${cardClass}">`;
+
+                        if (activity.highlight) {
+                            html += `<span class="highlight-badge">${activity.highlightReason}</span>`;
+                        }
+
+                        html += `
+                            <div class="activity-header">
+                                <div class="activity-icon ${activity.type}">
+                                    ${getActivityEmoji(activity.type)}
+                                </div>
+                                <div class="activity-title">${activity.title}</div>
+                                <div class="activity-time">${activity.time}</div>
+                            </div>
+                            <div class="activity-content">${activity.content}</div>
+                        `;
+
+                        if (activity.preview) {
+                            const matchClass = activity.preview.answers[0].match ? 'match' : '';
+                            html += `
+                                <div class="quiz-preview">
+                                    <div class="quiz-question">"${activity.preview.question}"</div>
+                                    <div class="quiz-answers">
+                                        <div class="quiz-answer ${matchClass}">
+                                            <div class="name">${activity.preview.answers[0].name}</div>
+                                            <div class="text">${activity.preview.answers[0].text}</div>
+                                        </div>
+                                        <div class="quiz-answer ${matchClass}">
+                                            <div class="name">${activity.preview.answers[1].name}</div>
+                                            <div class="text">${activity.preview.answers[1].text}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            `;
+                        }
+
+                        if (activity.matchRate !== undefined) {
+                            html += `
+                                <div class="match-rate">
+                                    <span style="font-size: 11px; color: var(--ink-light);">Match</span>
+                                    <div class="match-bar">
+                                        <div class="match-fill" style="width: ${activity.matchRate}%"></div>
+                                    </div>
+                                    <span class="match-percent">${activity.matchRate}%</span>
+                                </div>
+                            `;
+                        }
+
+                        if (activity.lp) {
+                            html += `<span class="activity-lp">+${activity.lp} LP</span>`;
+                        }
+
+                        html += '</div>';
+                    });
+                }
+
+                html += '</div></div>';
+            });
+
+            timeline.innerHTML = html;
+        }
+
+        function getActivityEmoji(type) {
+            const emojis = {
+                'quiz': '📝',
+                'you-or-me': '🤔',
+                'linked': '🔗',
+                'word-search': '🔍',
+                'steps': '👟',
+                'poke': '👋',
+                'affirmation': '💕'
+            };
+            return emojis[type] || '✨';
+        }
+
+        // Event listeners
+        document.getElementById('prevWeek').addEventListener('click', () => {
+            currentWeek = 'lastWeek';
+            renderTimeline();
+        });
+
+        document.getElementById('nextWeek').addEventListener('click', () => {
+            currentWeek = 'thisWeek';
+            renderTimeline();
+        });
+
+        // Initial render
+        renderTimeline();
+    </script>
+</body>
+</html>

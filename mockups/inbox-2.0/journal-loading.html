@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Journal Loading</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Nunito:wght@400;600;700&family=Caveat:wght@500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-gradient-start: #FFD1C1;
+            --bg-gradient-end: #FFF5F0;
+            --accent-pink: #FF6B6B;
+            --accent-orange: #FF9F43;
+            --cream: #FFF8F0;
+            --beige: #F5E6D8;
+            --ink: #2D2D2D;
+            --ink-light: #666;
+            --white: #FFFFFF;
+            --safe-top: env(safe-area-inset-top, 0px);
+            --safe-bottom: env(safe-area-inset-bottom, 0px);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            min-height: 100vh;
+            overflow: hidden;
+        }
+
+        .phone-frame {
+            max-width: 390px;
+            margin: 0 auto;
+            min-height: 100vh;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 30px;
+            padding-top: calc(40px + var(--safe-top));
+            padding-bottom: calc(40px + var(--safe-bottom));
+            background: linear-gradient(to bottom, var(--bg-gradient-start), var(--bg-gradient-end));
+        }
+
+        /* Paper texture overlay */
+        .paper-texture {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image:
+                repeating-linear-gradient(0deg, transparent, transparent 28px, rgba(200,180,160,0.06) 28px, rgba(200,180,160,0.06) 29px);
+            pointer-events: none;
+            opacity: 0;
+            animation: fadeInPaper 1s ease 0.5s forwards;
+        }
+
+        @keyframes fadeInPaper {
+            to { opacity: 1; }
+        }
+
+        /* Polaroid stack animation */
+        .polaroid-stack {
+            position: relative;
+            width: 200px;
+            height: 220px;
+            margin-bottom: 40px;
+        }
+
+        .mini-polaroid {
+            position: absolute;
+            width: 140px;
+            height: 160px;
+            background: var(--white);
+            box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+            display: flex;
+            flex-direction: column;
+            padding: 10px 10px 30px;
+            opacity: 0;
+        }
+
+        .mini-polaroid:nth-child(1) {
+            animation: stackIn 0.6s ease 0.2s forwards;
+            transform: translate(-30px, 10px) rotate(-12deg);
+        }
+
+        .mini-polaroid:nth-child(2) {
+            animation: stackIn 0.6s ease 0.4s forwards;
+            transform: translate(30px, 20px) rotate(8deg);
+        }
+
+        .mini-polaroid:nth-child(3) {
+            animation: stackIn 0.6s ease 0.6s forwards;
+            transform: translate(0px, 0px) rotate(-3deg);
+        }
+
+        @keyframes stackIn {
+            0% {
+                opacity: 0;
+                transform: translate(0, 100px) rotate(0deg) scale(0.5);
+            }
+            100% {
+                opacity: 1;
+            }
+        }
+
+        .mini-polaroid-image {
+            flex: 1;
+            border-radius: 2px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+        }
+
+        .mini-polaroid:nth-child(1) .mini-polaroid-image {
+            background: linear-gradient(135deg, #FFEBEE, #FFCDD2);
+        }
+
+        .mini-polaroid:nth-child(2) .mini-polaroid-image {
+            background: linear-gradient(135deg, #E3F2FD, #BBDEFB);
+        }
+
+        .mini-polaroid:nth-child(3) .mini-polaroid-image {
+            background: linear-gradient(135deg, #FCE4EC, #F8BBD9);
+        }
+
+        /* Title animation: from serif to handwritten */
+        .title-container {
+            text-align: center;
+            margin-bottom: 30px;
+            position: relative;
+            height: 70px;
+        }
+
+        .title-serif {
+            font-family: 'Playfair Display', serif;
+            font-size: 32px;
+            font-weight: 600;
+            color: var(--ink);
+            position: absolute;
+            width: 100%;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            animation: morphOut 0.8s ease 1.5s forwards;
+        }
+
+        .title-handwritten {
+            font-family: 'Caveat', cursive;
+            font-size: 48px;
+            font-weight: 600;
+            color: var(--ink);
+            position: absolute;
+            width: 100%;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%) scale(0.8);
+            opacity: 0;
+            white-space: nowrap;
+            animation: morphIn 0.8s ease 1.5s forwards;
+        }
+
+        @keyframes morphOut {
+            0% { opacity: 1; transform: translateY(-50%) scale(1); }
+            50% { opacity: 0; transform: translateY(-50%) scale(0.9); }
+            100% { opacity: 0; transform: translateY(-50%) scale(0.8); }
+        }
+
+        @keyframes morphIn {
+            0% { opacity: 0; transform: translateY(-50%) scale(0.8); }
+            50% { opacity: 0; transform: translateY(-50%) scale(0.9); }
+            100% { opacity: 1; transform: translateY(-50%) scale(1); }
+        }
+
+        /* Subtitle with writing animation */
+        .subtitle-container {
+            height: 24px;
+            margin-bottom: 40px;
+            overflow: hidden;
+        }
+
+        .subtitle {
+            font-family: 'Caveat', cursive;
+            font-size: 22px;
+            color: var(--ink-light);
+            opacity: 0;
+            animation: writeIn 1s ease 2.2s forwards;
+        }
+
+        @keyframes writeIn {
+            0% {
+                opacity: 0;
+                clip-path: inset(0 100% 0 0);
+            }
+            100% {
+                opacity: 1;
+                clip-path: inset(0 0 0 0);
+            }
+        }
+
+        /* Pen writing animation */
+        .pen {
+            position: absolute;
+            font-size: 24px;
+            opacity: 0;
+            animation: penWrite 1.5s ease 1.8s forwards;
+        }
+
+        @keyframes penWrite {
+            0% {
+                opacity: 1;
+                transform: translate(-80px, 0) rotate(-30deg);
+            }
+            50% {
+                opacity: 1;
+                transform: translate(40px, 0) rotate(-30deg);
+            }
+            80% {
+                opacity: 1;
+                transform: translate(80px, 0) rotate(-30deg);
+            }
+            100% {
+                opacity: 0;
+                transform: translate(100px, 0) rotate(-30deg);
+            }
+        }
+
+        /* Progress dots */
+        .loading-dots {
+            display: flex;
+            gap: 8px;
+            margin-top: 30px;
+        }
+
+        .dot {
+            width: 8px;
+            height: 8px;
+            background: var(--accent-pink);
+            border-radius: 50%;
+            opacity: 0.3;
+            animation: pulse 1.4s ease infinite;
+        }
+
+        .dot:nth-child(2) { animation-delay: 0.2s; }
+        .dot:nth-child(3) { animation-delay: 0.4s; }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.3; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.2); }
+        }
+
+        /* Loading message */
+        .loading-message {
+            font-family: 'Caveat', cursive;
+            font-size: 18px;
+            color: var(--ink-light);
+            margin-top: 16px;
+            opacity: 0;
+            animation: fadeIn 0.5s ease 2.5s forwards;
+        }
+
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+
+        /* Decorative elements */
+        .tape {
+            position: absolute;
+            width: 60px;
+            height: 20px;
+            background: rgba(255,220,150,0.7);
+            transform: rotate(-5deg);
+            opacity: 0;
+            animation: tapeIn 0.5s ease 0.8s forwards;
+        }
+
+        .tape:nth-child(1) {
+            top: 20%;
+            left: 10%;
+            transform: rotate(12deg);
+        }
+
+        .tape:nth-child(2) {
+            top: 15%;
+            right: 15%;
+            transform: rotate(-8deg);
+            animation-delay: 1s;
+        }
+
+        .tape:nth-child(3) {
+            bottom: 25%;
+            left: 15%;
+            transform: rotate(-15deg);
+            animation-delay: 1.2s;
+        }
+
+        @keyframes tapeIn {
+            0% { opacity: 0; transform: scale(0) rotate(0deg); }
+            100% { opacity: 1; }
+        }
+
+        /* Heart decorations floating up */
+        .floating-hearts {
+            position: absolute;
+            bottom: 20%;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .heart {
+            position: absolute;
+            font-size: 16px;
+            opacity: 0;
+            animation: floatUp 2s ease infinite;
+        }
+
+        .heart:nth-child(1) { left: -30px; animation-delay: 0s; }
+        .heart:nth-child(2) { left: 0px; animation-delay: 0.5s; }
+        .heart:nth-child(3) { left: 30px; animation-delay: 1s; }
+
+        @keyframes floatUp {
+            0% {
+                opacity: 0;
+                transform: translateY(0) scale(0.5);
+            }
+            20% {
+                opacity: 1;
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(-60px) scale(1);
+            }
+        }
+
+        /* Tap to continue */
+        .tap-continue {
+            position: absolute;
+            bottom: 60px;
+            font-family: 'Caveat', cursive;
+            font-size: 20px;
+            color: var(--accent-pink);
+            opacity: 0;
+            animation: fadeIn 0.5s ease 3s forwards, bounce 2s ease 3s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+    </style>
+</head>
+<body>
+    <div class="phone-frame" onclick="goToJournal()">
+        <div class="paper-texture"></div>
+
+        <!-- Decorative tape pieces -->
+        <div class="tape"></div>
+        <div class="tape"></div>
+        <div class="tape"></div>
+
+        <!-- Polaroid stack -->
+        <div class="polaroid-stack">
+            <div class="mini-polaroid">
+                <div class="mini-polaroid-image">📝</div>
+            </div>
+            <div class="mini-polaroid">
+                <div class="mini-polaroid-image">🔗</div>
+            </div>
+            <div class="mini-polaroid">
+                <div class="mini-polaroid-image">💕</div>
+            </div>
+        </div>
+
+        <!-- Title morphing from serif to handwritten -->
+        <div class="title-container">
+            <div class="title-serif">Your Journal</div>
+            <div class="title-handwritten">Our Journal</div>
+            <span class="pen">✏️</span>
+        </div>
+
+        <!-- Subtitle with writing animation -->
+        <div class="subtitle-container">
+            <div class="subtitle">Memories written together...</div>
+        </div>
+
+        <!-- Floating hearts -->
+        <div class="floating-hearts">
+            <span class="heart">💕</span>
+            <span class="heart">💕</span>
+            <span class="heart">💕</span>
+        </div>
+
+        <!-- Loading dots -->
+        <div class="loading-dots">
+            <div class="dot"></div>
+            <div class="dot"></div>
+            <div class="dot"></div>
+        </div>
+
+        <div class="loading-message">Gathering your memories...</div>
+
+        <div class="tap-continue">Tap to continue</div>
+    </div>
+
+    <script>
+        function goToJournal() {
+            window.location.href = 'variant-9-journal.html';
+        }
+    </script>
+</body>
+</html>

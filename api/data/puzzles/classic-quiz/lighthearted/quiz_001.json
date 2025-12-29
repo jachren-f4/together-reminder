@@ -13,7 +13,11 @@
         "Comfort food or a treat",
         "Distraction (TV, games, scrolling)"
       ],
-      "category": "self_care"
+      "category": "self_care",
+      "metadata": {
+        "dimension": "stress_processing",
+        "poleMapping": ["left", "right", null, null, null]
+      }
     },
     {
       "id": "quiz_001_q2",
@@ -37,7 +41,11 @@
         "Productive (errands, projects)",
         "A mix - no strong preference"
       ],
-      "category": "lifestyle"
+      "category": "lifestyle",
+      "metadata": {
+        "dimension": "social_energy",
+        "poleMapping": [null, "right", "left", null, null]
+      }
     },
     {
       "id": "quiz_001_q4",
@@ -49,7 +57,11 @@
         "Let you take the lead",
         "Other / It depends"
       ],
-      "category": "together"
+      "category": "together",
+      "metadata": {
+        "dimension": "planning_style",
+        "poleMapping": ["right", "right", "left", null, null]
+      }
     },
     {
       "id": "quiz_001_q5",
@@ -61,7 +73,11 @@
         "I can come and go as I please",
         "Other / It varies"
       ],
-      "category": "social"
+      "category": "social",
+      "metadata": {
+        "dimension": "social_energy",
+        "poleMapping": ["left", "left", "right", "left", null]
+      }
     }
   ],
   "description": "Discover how your daily rhythms and habits complement each other."

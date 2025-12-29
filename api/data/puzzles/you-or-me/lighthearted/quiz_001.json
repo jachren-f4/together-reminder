@@ -7,31 +7,46 @@
       "id": "quiz_001_q1",
       "category": "preferences",
       "prompt": "Who is more",
-      "content": "Likely to try a new food without asking what's in it"
+      "content": "Likely to try a new food without asking what's in it",
+      "metadata": {
+        "traitLabel": "Adventurous eater"
+      }
     },
     {
       "id": "quiz_001_q2",
       "category": "habits",
       "prompt": "Who is more",
-      "content": "Likely to hit snooze multiple times in the morning"
+      "content": "Likely to hit snooze multiple times in the morning",
+      "metadata": {
+        "traitLabel": "The snooze champion"
+      }
     },
     {
       "id": "quiz_001_q3",
       "category": "personality",
       "prompt": "Who is more",
-      "content": "Likely to strike up a conversation with a stranger"
+      "content": "Likely to strike up a conversation with a stranger",
+      "metadata": {
+        "traitLabel": "Social butterfly"
+      }
     },
     {
       "id": "quiz_001_q4",
       "category": "leisure",
       "prompt": "Who is more",
-      "content": "Likely to choose a cozy night in over going out"
+      "content": "Likely to choose a cozy night in over going out",
+      "metadata": {
+        "traitLabel": "Homebody"
+      }
     },
     {
       "id": "quiz_001_q5",
       "category": "interests",
       "prompt": "Who is more",
-      "content": "Likely to get lost in a book for hours"
+      "content": "Likely to get lost in a book for hours",
+      "metadata": {
+        "traitLabel": "Bookworm"
+      }
     }
   ],
   "description": "Discover who's the adventurous eater, the snooze button champion, and the social butterfly in your relationship."

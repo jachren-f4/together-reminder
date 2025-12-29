@@ -179,17 +179,7 @@ debugPrint('Headers: $headers');
 debugPrint('API base: ${ApiClient()._baseUrl}');
 ```
 
-### 3. Dev Bypass Not Working
-**Symptom:** Dev mode but getting 401.
-
-**Cause:** API doesn't have `AUTH_DEV_BYPASS_ENABLED=true`.
-
-**Fix:** Check API `.env.local`:
-```bash
-AUTH_DEV_BYPASS_ENABLED=true
-```
-
-### 4. Request Timeout
+### 3. Request Timeout
 **Symptom:** Requests hang indefinitely.
 
 **Cause:** No timeout configured.

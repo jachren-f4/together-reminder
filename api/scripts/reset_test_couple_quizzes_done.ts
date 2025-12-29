@@ -328,6 +328,7 @@ async function createTestData(): Promise<void> {
     console.log('   ✓ quiz_matches: classic (completed, 80%)');
 
     // Affirmation quiz match (completed)
+    // Note: branch must match actual folder name in data/puzzles/affirmation/
     await client.query(
       `INSERT INTO quiz_matches (
         id, couple_id, quiz_id, quiz_type, branch, status,
@@ -335,7 +336,7 @@ async function createTestData(): Promise<void> {
         match_percentage, player1_score, player2_score,
         player1_id, player2_id, date, created_at, completed_at
       ) VALUES (
-        gen_random_uuid(), $1, 'affirmation_001', 'affirmation', 'emotional', 'completed',
+        gen_random_uuid(), $1, 'affirmation_001', 'affirmation', 'connection', 'completed',
         $2, $3, 5, 5, 60, 3, 3, $4, $5, $6, NOW(), NOW()
       )`,
       [

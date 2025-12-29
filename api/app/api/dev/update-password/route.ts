@@ -4,7 +4,7 @@
  * This endpoint allows updating a user's password when they were created via OTP
  * but dev mode needs password-based sign-in.
  *
- * Security: Only active when AUTH_DEV_BYPASS_ENABLED=true
+ * Security: Only active in development environment
  */
 
 import { NextRequest, NextResponse } from 'next/server';
@@ -21,8 +21,8 @@ const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
  * for users who were originally created via OTP.
  */
 export async function POST(request: NextRequest) {
-  // Only allow when dev bypass is explicitly enabled
-  if (process.env.AUTH_DEV_BYPASS_ENABLED !== 'true') {
+  // Only allow in development
+  if (process.env.NODE_ENV !== 'development') {
     return NextResponse.json(
       { error: 'Dev endpoints disabled in production' },
       { status: 403 }

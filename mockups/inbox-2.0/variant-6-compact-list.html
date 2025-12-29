@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inbox 2.0 - Compact List</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-gradient-start: #FFD1C1;
+            --bg-gradient-end: #FFF5F0;
+            --accent-pink: #FF6B6B;
+            --accent-orange: #FF9F43;
+            --cream: #FFF8F0;
+            --beige: #F5E6D8;
+            --ink: #2D2D2D;
+            --ink-light: #666;
+            --white: #FFFFFF;
+            --green: #4CAF50;
+            --yellow: #FF9800;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            background: linear-gradient(180deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
+            min-height: 100vh;
+            color: var(--ink);
+        }
+
+        .phone-frame {
+            max-width: 390px;
+            margin: 20px auto;
+            background: var(--white);
+            min-height: 844px;
+            border-radius: 40px;
+            overflow: hidden;
+            box-shadow: 0 25px 80px rgba(0,0,0,0.15);
+        }
+
+        .header-bar {
+            background: linear-gradient(135deg, var(--accent-pink), var(--accent-orange));
+            padding: 60px 20px 24px;
+        }
+
+        .header-bar h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 24px;
+            font-weight: 600;
+            color: white;
+        }
+
+        /* Week Selector */
+        .week-selector {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 20px;
+            background: var(--white);
+            border-bottom: 1px solid var(--beige);
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .week-selector button {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border: 1px solid var(--beige);
+            background: var(--white);
+            color: var(--ink);
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .week-selector button:hover:not(:disabled) {
+            background: var(--cream);
+            border-color: var(--accent-pink);
+            color: var(--accent-pink);
+        }
+
+        .week-selector button:disabled {
+            opacity: 0.3;
+        }
+
+        .week-info {
+            text-align: center;
+        }
+
+        .week-range {
+            font-weight: 700;
+            font-size: 15px;
+            color: var(--ink);
+        }
+
+        .week-stats {
+            font-size: 12px;
+            color: var(--ink-light);
+            margin-top: 2px;
+        }
+
+        /* Quick Stats Bar */
+        .stats-bar {
+            display: flex;
+            padding: 12px 20px;
+            gap: 8px;
+            background: var(--cream);
+            border-bottom: 1px solid var(--beige);
+        }
+
+        .stat-chip {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            background: var(--white);
+            border-radius: 16px;
+            font-size: 12px;
+        }
+
+        .stat-chip .icon {
+            font-size: 14px;
+        }
+
+        .stat-chip .value {
+            font-weight: 700;
+            color: var(--ink);
+        }
+
+        /* Day Groups */
+        .day-group {
+            border-bottom: 1px solid var(--beige);
+        }
+
+        .day-header {
+            display: flex;
+            align-items: center;
+            padding: 14px 20px;
+            background: var(--cream);
+            cursor: pointer;
+        }
+
+        .day-header:hover {
+            background: var(--beige);
+        }
+
+        .day-name {
+            font-weight: 700;
+            font-size: 14px;
+            color: var(--ink);
+            flex: 1;
+        }
+
+        .day-date {
+            font-size: 12px;
+            color: var(--ink-light);
+        }
+
+        .day-count {
+            margin-left: 12px;
+            padding: 3px 10px;
+            background: var(--white);
+            border-radius: 10px;
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--ink-light);
+        }
+
+        .day-lp {
+            margin-left: 8px;
+            padding: 3px 8px;
+            background: linear-gradient(135deg, var(--accent-pink), var(--accent-orange));
+            color: white;
+            border-radius: 8px;
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        .day-chevron {
+            margin-left: 8px;
+            color: var(--ink-light);
+            transition: transform 0.2s;
+        }
+
+        .day-group.expanded .day-chevron {
+            transform: rotate(180deg);
+        }
+
+        /* Quest List */
+        .quest-list {
+            display: none;
+        }
+
+        .day-group.expanded .quest-list {
+            display: block;
+        }
+
+        .quest-row {
+            display: flex;
+            align-items: center;
+            padding: 14px 20px;
+            background: var(--white);
+            border-bottom: 1px solid var(--beige);
+            cursor: pointer;
+            transition: background 0.15s;
+        }
+
+        .quest-row:hover {
+            background: var(--cream);
+        }
+
+        .quest-row:last-child {
+            border-bottom: none;
+        }
+
+        .quest-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            margin-right: 12px;
+            flex-shrink: 0;
+        }
+
+        .quest-icon.classic { background: #FFEBEE; }
+        .quest-icon.affirmation { background: #FCE4EC; }
+        .quest-icon.you-or-me { background: #FFF3E0; }
+        .quest-icon.linked { background: #E3F2FD; }
+        .quest-icon.word-search { background: #F3E5F5; }
+        .quest-icon.steps { background: #E8F5E9; }
+
+        .quest-details {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .quest-title {
+            font-weight: 600;
+            font-size: 14px;
+            color: var(--ink);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .quest-meta {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 3px;
+        }
+
+        .quest-type-label {
+            font-size: 11px;
+            color: var(--ink-light);
+        }
+
+        .quest-time {
+            font-size: 11px;
+            color: var(--ink-light);
+        }
+
+        .quest-match {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .quest-match.high { color: var(--green); }
+        .quest-match.low { color: var(--yellow); }
+
+        .quest-lp {
+            padding: 4px 10px;
+            background: linear-gradient(135deg, var(--accent-pink), var(--accent-orange));
+            color: white;
+            border-radius: 10px;
+            font-size: 12px;
+            font-weight: 700;
+            margin-left: 8px;
+        }
+
+        .quest-arrow {
+            color: var(--ink-light);
+            margin-left: 8px;
+        }
+
+        /* Expanded Quest Detail */
+        .quest-expansion {
+            display: none;
+            padding: 0 20px 16px;
+            padding-left: 68px;
+            background: var(--cream);
+        }
+
+        .quest-row.expanded + .quest-expansion {
+            display: block;
+        }
+
+        .answer-bubble-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .answer-bubble {
+            flex: 1;
+            padding: 10px;
+            background: var(--white);
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .answer-bubble.matched {
+            border: 2px solid var(--green);
+        }
+
+        .answer-name {
+            font-size: 10px;
+            font-weight: 700;
+            color: var(--ink-light);
+            margin-bottom: 4px;
+        }
+
+        .answer-text {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--ink);
+        }
+
+        .answer-question {
+            font-size: 12px;
+            color: var(--ink-light);
+            font-style: italic;
+            margin-bottom: 10px;
+        }
+
+        /* Empty Day */
+        .empty-day {
+            padding: 20px;
+            text-align: center;
+            color: var(--ink-light);
+            font-size: 13px;
+            font-style: italic;
+        }
+
+        /* Bottom padding */
+        .content-area {
+            padding-bottom: 80px;
+        }
+    </style>
+</head>
+<body>
+    <div class="phone-frame">
+        <div class="header-bar">
+            <h1>Quest History</h1>
+        </div>
+
+        <div class="week-selector">
+            <button id="prevWeek">‹</button>
+            <div class="week-info">
+                <div class="week-range">Dec 23 - Dec 29</div>
+                <div class="week-stats">12 quests • +180 LP</div>
+            </div>
+            <button id="nextWeek" disabled>›</button>
+        </div>
+
+        <div class="stats-bar">
+            <div class="stat-chip">
+                <span class="icon">📝</span>
+                <span class="value">5</span> quizzes
+            </div>
+            <div class="stat-chip">
+                <span class="icon">🤔</span>
+                <span class="value">3</span> you or me
+            </div>
+            <div class="stat-chip">
+                <span class="icon">🔗</span>
+                <span class="value">2</span> linked
+            </div>
+            <div class="stat-chip">
+                <span class="icon">🔍</span>
+                <span class="value">1</span> word search
+            </div>
+        </div>
+
+        <div class="content-area">
+            <!-- Sunday -->
+            <div class="day-group expanded" onclick="toggleDay(this)">
+                <div class="day-header">
+                    <span class="day-name">Sunday</span>
+                    <span class="day-date">Dec 29</span>
+                    <span class="day-count">2 quests</span>
+                    <span class="day-lp">+60</span>
+                    <span class="day-chevron">▾</span>
+                </div>
+                <div class="quest-list">
+                    <div class="quest-row" onclick="event.stopPropagation(); toggleQuest(this)">
+                        <div class="quest-icon affirmation">💕</div>
+                        <div class="quest-details">
+                            <div class="quest-title">Morning Check-in</div>
+                            <div class="quest-meta">
+                                <span class="quest-type-label">Affirmation Quiz</span>
+                                <span class="quest-time">9:15 AM</span>
+                                <span class="quest-match high">100% match</span>
+                            </div>
+                        </div>
+                        <span class="quest-lp">+30</span>
+                        <span class="quest-arrow">›</span>
+                    </div>
+                    <div class="quest-expansion">
+                        <div class="answer-question">"How connected do you feel today?"</div>
+                        <div class="answer-bubble-row">
+                            <div class="answer-bubble matched">
+                                <div class="answer-name">YOU</div>
+                                <div class="answer-text">Very close</div>
+                            </div>
+                            <div class="answer-bubble matched">
+                                <div class="answer-name">EMMA</div>
+                                <div class="answer-text">Very close</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="quest-row" onclick="event.stopPropagation(); toggleQuest(this)">
+                        <div class="quest-icon classic">📝</div>
+                        <div class="quest-details">
+                            <div class="quest-title">What's Your Ideal Date Night?</div>
+                            <div class="quest-meta">
+                                <span class="quest-type-label">Classic Quiz</span>
+                                <span class="quest-time">8:30 PM</span>
+                                <span class="quest-match low">60% match</span>
+                            </div>
+                        </div>
+                        <span class="quest-lp">+30</span>
+                        <span class="quest-arrow">›</span>
+                    </div>
+                    <div class="quest-expansion">
+                        <div class="answer-question">"Perfect Friday night activity?"</div>
+                        <div class="answer-bubble-row">
+                            <div class="answer-bubble">
+                                <div class="answer-name">YOU</div>
+                                <div class="answer-text">Movie marathon</div>
+                            </div>
+                            <div class="answer-bubble">
+                                <div class="answer-name">EMMA</div>
+                                <div class="answer-text">Cooking together</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Saturday -->
+            <div class="day-group" onclick="toggleDay(this)">
+                <div class="day-header">
+                    <span class="day-name">Saturday</span>
+                    <span class="day-date">Dec 28</span>
+                    <span class="day-count">3 quests</span>
+                    <span class="day-lp">+90</span>
+                    <span class="day-chevron">▾</span>
+                </div>
+                <div class="quest-list">
+                    <div class="quest-row" onclick="event.stopPropagation()">
+                        <div class="quest-icon linked">🔗</div>
+                        <div class="quest-details">
+                            <div class="quest-title">Romantic Crossword</div>
+                            <div class="quest-meta">
+                                <span class="quest-type-label">Linked</span>
+                                <span class="quest-time">7:45 PM</span>
+                            </div>
+                        </div>
+                        <span class="quest-lp">+30</span>
+                        <span class="quest-arrow">›</span>
+                    </div>
+                    <div class="quest-row" onclick="event.stopPropagation()">
+                        <div class="quest-icon you-or-me">🤔</div>
+                        <div class="quest-details">
+                            <div class="quest-title">Kitchen Edition</div>
+                            <div class="quest-meta">
+                                <span class="quest-type-label">You or Me</span>
+                                <span class="quest-time">3:20 PM</span>
+                                <span class="quest-match high">80% match</span>
+                            </div>
+                        </div>
+                        <span class="quest-lp">+30</span>
+                        <span class="quest-arrow">›</span>
+                    </div>
+                    <div class="quest-row" onclick="event.stopPropagation()">
+                        <div class="quest-icon steps">👟</div>
+                        <div class="quest-details">
+                            <div class="quest-title">Daily Goal Met!</div>
+                            <div class="quest-meta">
+                                <span class="quest-type-label">Steps Together</span>
+                                <span class="quest-time">11:00 AM</span>
+                            </div>
+                        </div>
+                        <span class="quest-lp">+30</span>
+                        <span class="quest-arrow">›</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Friday -->
+            <div class="day-group" onclick="toggleDay(this)">
+                <div class="day-header">
+                    <span class="day-name">Friday</span>
+                    <span class="day-date">Dec 27</span>
+                    <span class="day-count">1 quest</span>
+                    <span class="day-lp">+30</span>
+                    <span class="day-chevron">▾</span>
+                </div>
+                <div class="quest-list">
+                    <div class="quest-row" onclick="event.stopPropagation()">
+                        <div class="quest-icon classic">📝</div>
+                        <div class="quest-details">
+                            <div class="quest-title">Weekend Plans Quiz</div>
+                            <div class="quest-meta">
+                                <span class="quest-type-label">Classic Quiz</span>
+                                <span class="quest-time">6:30 PM</span>
+                                <span class="quest-match high">80% match</span>
+                            </div>
+                        </div>
+                        <span class="quest-lp">+30</span>
+                        <span class="quest-arrow">›</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Thursday - Empty -->
+            <div class="day-group" onclick="toggleDay(this)">
+                <div class="day-header">
+                    <span class="day-name">Thursday</span>
+                    <span class="day-date">Dec 26</span>
+                    <span class="day-count">0 quests</span>
+                    <span class="day-chevron">▾</span>
+                </div>
+                <div class="quest-list">
+                    <div class="empty-day">No quests completed this day</div>
+                </div>
+            </div>
+
+            <!-- Wednesday -->
+            <div class="day-group" onclick="toggleDay(this)">
+                <div class="day-header">
+                    <span class="day-name">Wednesday</span>
+                    <span class="day-date">Dec 25 • Christmas</span>
+                    <span class="day-count">2 quests</span>
+                    <span class="day-lp">+60</span>
+                    <span class="day-chevron">▾</span>
+                </div>
+                <div class="quest-list">
+                    <div class="quest-row" onclick="event.stopPropagation()">
+                        <div class="quest-icon affirmation">🎄</div>
+                        <div class="quest-details">
+                            <div class="quest-title">Holiday Check-in</div>
+                            <div class="quest-meta">
+                                <span class="quest-type-label">Affirmation Quiz</span>
+                                <span class="quest-time">10:00 AM</span>
+                                <span class="quest-match high">100% match ⭐</span>
+                            </div>
+                        </div>
+                        <span class="quest-lp">+30</span>
+                        <span class="quest-arrow">›</span>
+                    </div>
+                    <div class="quest-row" onclick="event.stopPropagation()">
+                        <div class="quest-icon word-search">🔍</div>
+                        <div class="quest-details">
+                            <div class="quest-title">Holiday Words</div>
+                            <div class="quest-meta">
+                                <span class="quest-type-label">Word Search</span>
+                                <span class="quest-time">2:15 PM</span>
+                            </div>
+                        </div>
+                        <span class="quest-lp">+30</span>
+                        <span class="quest-arrow">›</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tuesday -->
+            <div class="day-group" onclick="toggleDay(this)">
+                <div class="day-header">
+                    <span class="day-name">Tuesday</span>
+                    <span class="day-date">Dec 24</span>
+                    <span class="day-count">2 quests</span>
+                    <span class="day-lp">+60</span>
+                    <span class="day-chevron">▾</span>
+                </div>
+                <div class="quest-list">
+                    <div class="quest-row" onclick="event.stopPropagation()">
+                        <div class="quest-icon classic">📝</div>
+                        <div class="quest-details">
+                            <div class="quest-title">Gift Giving Style</div>
+                            <div class="quest-meta">
+                                <span class="quest-type-label">Classic Quiz</span>
+                                <span class="quest-time">7:00 PM</span>
+                                <span class="quest-match high">80% match</span>
+                            </div>
+                        </div>
+                        <span class="quest-lp">+30</span>
+                        <span class="quest-arrow">›</span>
+                    </div>
+                    <div class="quest-row" onclick="event.stopPropagation()">
+                        <div class="quest-icon you-or-me">🤔</div>
+                        <div class="quest-details">
+                            <div class="quest-title">Holiday Traditions</div>
+                            <div class="quest-meta">
+                                <span class="quest-type-label">You or Me</span>
+                                <span class="quest-time">3:30 PM</span>
+                                <span class="quest-match high">100% match</span>
+                            </div>
+                        </div>
+                        <span class="quest-lp">+30</span>
+                        <span class="quest-arrow">›</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Monday -->
+            <div class="day-group" onclick="toggleDay(this)">
+                <div class="day-header">
+                    <span class="day-name">Monday</span>
+                    <span class="day-date">Dec 23</span>
+                    <span class="day-count">2 quests</span>
+                    <span class="day-lp">+60</span>
+                    <span class="day-chevron">▾</span>
+                </div>
+                <div class="quest-list">
+                    <div class="quest-row" onclick="event.stopPropagation()">
+                        <div class="quest-icon affirmation">💕</div>
+                        <div class="quest-details">
+                            <div class="quest-title">Monday Check-in</div>
+                            <div class="quest-meta">
+                                <span class="quest-type-label">Affirmation Quiz</span>
+                                <span class="quest-time">8:00 AM</span>
+                                <span class="quest-match high">80% match</span>
+                            </div>
+                        </div>
+                        <span class="quest-lp">+30</span>
+                        <span class="quest-arrow">›</span>
+                    </div>
+                    <div class="quest-row" onclick="event.stopPropagation()">
+                        <div class="quest-icon linked">🔗</div>
+                        <div class="quest-details">
+                            <div class="quest-title">Casual Crossword</div>
+                            <div class="quest-meta">
+                                <span class="quest-type-label">Linked</span>
+                                <span class="quest-time">9:00 PM</span>
+                            </div>
+                        </div>
+                        <span class="quest-lp">+30</span>
+                        <span class="quest-arrow">›</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleDay(dayGroup) {
+            dayGroup.classList.toggle('expanded');
+        }
+
+        function toggleQuest(questRow) {
+            questRow.classList.toggle('expanded');
+        }
+
+        document.getElementById('prevWeek').addEventListener('click', function(e) {
+            e.stopPropagation();
+            document.querySelector('.week-range').textContent = 'Dec 16 - Dec 22';
+            document.querySelector('.week-stats').textContent = '9 quests • +150 LP';
+            document.getElementById('nextWeek').disabled = false;
+            this.disabled = true;
+        });
+
+        document.getElementById('nextWeek').addEventListener('click', function(e) {
+            e.stopPropagation();
+            document.querySelector('.week-range').textContent = 'Dec 23 - Dec 29';
+            document.querySelector('.week-stats').textContent = '12 quests • +180 LP';
+            document.getElementById('prevWeek').disabled = false;
+            this.disabled = true;
+        });
+    </script>
+</body>
+</html>

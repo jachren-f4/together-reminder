@@ -8,12 +8,17 @@ import 'package:togetherremind/config/brand/us2_theme.dart';
 /// - Pacifico font
 /// - Multi-layer text shadow glow
 /// - Heart emoji positioned top-right
+/// - Optional double-tap callback for debug menu
 class Us2Logo extends StatelessWidget {
-  const Us2Logo({super.key});
+  final VoidCallback? onDoubleTap;
+
+  const Us2Logo({super.key, this.onDoubleTap});
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
+    return GestureDetector(
+      onDoubleTap: onDoubleTap,
+      child: Stack(
       clipBehavior: Clip.none,
       children: [
         // Main logo text with glow
@@ -45,6 +50,7 @@ class Us2Logo extends StatelessWidget {
           ),
         ),
       ],
+    ),
     );
   }
 }

@@ -4,6 +4,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:togetherremind/screens/onboarding_screen.dart';
 import 'package:togetherremind/screens/main_screen.dart';
 import 'package:togetherremind/services/storage_service.dart';
+import 'package:togetherremind/services/nav_style_service.dart';
 import 'package:togetherremind/services/mock_data_service.dart';
 import 'package:togetherremind/services/dev_data_service.dart';
 import 'package:togetherremind/services/dev_pairing_service.dart';
@@ -60,6 +61,9 @@ void main() async {
 
   // Initialize Hive storage
   await StorageService.init();
+
+  // Initialize Nav Style Service (for Us 2.0 bottom nav variants)
+  await NavStyleService.init();
 
   // Initialize NotificationService
   await NotificationService.initialize();

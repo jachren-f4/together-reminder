@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:togetherremind/config/brand/brand_config.dart';
 import 'package:togetherremind/config/brand/brand_loader.dart';
 import 'package:togetherremind/models/daily_quest.dart';
+import 'package:togetherremind/services/nav_style_service.dart';
 import 'us2/us2_widgets.dart';
 
 /// Factory that returns brand-appropriate widgets
@@ -42,6 +43,7 @@ class BrandWidgetFactory {
     required List<DailyQuest> dailyQuests,
     required List<DailyQuest> sideQuests,
     required Function(DailyQuest) onQuestTap,
+    VoidCallback? onDebugTap,
   }) {
     if (!isUs2) return null;
 
@@ -54,22 +56,40 @@ class BrandWidgetFactory {
       dailyQuests: dailyQuests,
       sideQuests: sideQuests,
       onQuestTap: onQuestTap,
+      onDebugTap: onDebugTap,
     );
   }
 
   /// Get Us 2.0 bottom navigation if this is the Us2 brand
   ///
   /// Returns null for other brands (use default navigation).
+  /// Uses the style selected via NavStyleService.
   static Widget? us2BottomNav({
     required int currentIndex,
     required Function(int) onTap,
   }) {
     if (!isUs2) return null;
 
-    return Us2BottomNav(
-      currentIndex: currentIndex,
-      onTap: onTap,
-    );
+    final style = NavStyleService.instance.currentStyle;
+
+    switch (style) {
+      case Us2NavStyle.dock:
+        return Us2BottomNavDock(
+          currentIndex: currentIndex,
+          onTap: onTap,
+        );
+      case Us2NavStyle.pill:
+        return Us2BottomNavPill(
+          currentIndex: currentIndex,
+          onTap: onTap,
+        );
+      case Us2NavStyle.standard:
+      default:
+        return Us2BottomNav(
+          currentIndex: currentIndex,
+          onTap: onTap,
+        );
+    }
   }
 
   /// Get home screen content widget wrapper

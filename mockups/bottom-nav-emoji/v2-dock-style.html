@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bottom Nav - Dock Style</title>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Nunito', sans-serif;
+      background: linear-gradient(180deg, #FFD1C1 0%, #FFF5F0 100%);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      max-width: 430px;
+      margin: 0 auto;
+    }
+
+    .description {
+      text-align: center;
+      padding: 40px 20px;
+      color: #2D2D2D;
+    }
+    .description h1 { font-size: 20px; margin-bottom: 8px; }
+    .description p { font-size: 14px; color: #666; }
+
+    .bottom-nav {
+      position: fixed;
+      bottom: 16px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: calc(100% - 32px);
+      max-width: 398px;
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-radius: 24px;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      padding: 12px 8px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+    }
+
+    .nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      cursor: pointer;
+    }
+
+    .nav-icon {
+      width: 44px;
+      height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .nav-icon img {
+      width: 36px;
+      height: 36px;
+      object-fit: contain;
+      opacity: 0.5;
+      filter: grayscale(40%);
+      transition: all 0.3s ease;
+    }
+
+    .nav-item.active .nav-icon {
+      transform: scale(1.3) translateY(-4px);
+    }
+
+    .nav-item.active .nav-icon img {
+      opacity: 1;
+      filter: grayscale(0%);
+      filter: drop-shadow(0 4px 8px rgba(255, 107, 107, 0.4));
+    }
+
+    /* Neighbors of active get slightly larger */
+    .nav-item.active + .nav-item .nav-icon,
+    .nav-item:has(+ .nav-item.active) .nav-icon {
+      transform: scale(1.1);
+    }
+
+    .nav-item.active + .nav-item .nav-icon img,
+    .nav-item:has(+ .nav-item.active) .nav-icon img {
+      opacity: 0.7;
+    }
+  </style>
+</head>
+<body>
+  <div class="description">
+    <h1>Dock Style</h1>
+    <p>macOS-inspired dock with magnification effect</p>
+  </div>
+
+  <nav class="bottom-nav">
+    <div class="nav-item active">
+      <div class="nav-icon">
+        <img src="home_v1.png" alt="Home">
+      </div>
+    </div>
+    <div class="nav-item">
+      <div class="nav-icon">
+        <img src="Inbox_v1.png" alt="Inbox">
+      </div>
+    </div>
+    <div class="nav-item">
+      <div class="nav-icon">
+        <img src="Poke_v2.png" alt="Poke">
+      </div>
+    </div>
+    <div class="nav-item">
+      <div class="nav-icon">
+        <img src="profile_v2.png" alt="Profile">
+      </div>
+    </div>
+    <div class="nav-item">
+      <div class="nav-icon">
+        <img src="Settings_v1.png" alt="Settings">
+      </div>
+    </div>
+  </nav>
+
+  <script>
+    document.querySelectorAll('.nav-item').forEach(item => {
+      item.addEventListener('click', () => {
+        document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+        item.classList.add('active');
+      });
+    });
+  </script>
+</body>
+</html>

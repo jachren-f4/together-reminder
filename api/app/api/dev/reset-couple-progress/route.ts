@@ -3,7 +3,7 @@
  *
  * POST /api/dev/reset-couple-progress
  *
- * Only available when AUTH_DEV_BYPASS_ENABLED=true
+ * Only available in development environment
  * Used by integration tests to reset state between test runs
  */
 
@@ -12,13 +12,9 @@ import { getClient } from '@/lib/db/pool';
 
 export const dynamic = 'force-dynamic';
 
-// Only allow in development mode with bypass enabled
-const isDevMode = process.env.NODE_ENV === 'development' ||
-  process.env.AUTH_DEV_BYPASS_ENABLED === 'true';
-
 export async function POST(req: NextRequest) {
-  // Security: Only allow in dev mode
-  if (!isDevMode) {
+  // Security: Only allow in development
+  if (process.env.NODE_ENV !== 'development') {
     return NextResponse.json(
       { error: 'Endpoint not available in production' },
       { status: 403 }

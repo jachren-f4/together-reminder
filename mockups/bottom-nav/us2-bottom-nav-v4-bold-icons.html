@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Us 2.0 Bottom Nav - V4 Bold Chunky Icons</title>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --gradient-accent-start: #FF6B6B;
+      --gradient-accent-end: #FF9F43;
+      --nav-text: #4A4A4A;
+      --glow-pink: rgba(255, 107, 107, 0.8);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Nunito', sans-serif;
+      background: linear-gradient(180deg, #FFD1C1 0%, #FFF5F0 100%);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      max-width: 430px;
+      margin: 0 auto;
+    }
+
+    .description {
+      text-align: center;
+      padding: 40px 20px;
+      color: #2D2D2D;
+    }
+
+    .description h1 { font-size: 20px; margin-bottom: 8px; }
+    .description p { font-size: 14px; color: #666; }
+
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100%;
+      max-width: 430px;
+      background: white;
+      display: flex;
+      justify-content: space-around;
+      padding: 10px 0 28px;
+      box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.08);
+    }
+
+    .nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      cursor: pointer;
+    }
+
+    .nav-icon {
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .nav-icon svg {
+      width: 28px;
+      height: 28px;
+      fill: var(--nav-text);
+      transition: all 0.2s;
+    }
+
+    .nav-item.active .nav-icon svg {
+      fill: url(#activeGradient);
+      filter: drop-shadow(0 0 6px var(--glow-pink));
+    }
+
+    .nav-label {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--nav-text);
+    }
+
+    .nav-item.active .nav-label {
+      background: linear-gradient(135deg, var(--gradient-accent-start) 0%, var(--gradient-accent-end) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      font-weight: 800;
+    }
+
+    .nav-item.poke .nav-icon svg {
+      fill: url(#activeGradient);
+    }
+  </style>
+</head>
+<body>
+  <svg width="0" height="0" style="position: absolute;">
+    <defs>
+      <linearGradient id="activeGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" style="stop-color:#FF6B6B"/>
+        <stop offset="100%" style="stop-color:#FF9F43"/>
+      </linearGradient>
+    </defs>
+  </svg>
+
+  <div class="description">
+    <h1>V4: Bold Chunky Icons</h1>
+    <p>Thick, playful icons with more visual weight</p>
+  </div>
+
+  <nav class="bottom-nav">
+    <div class="nav-item active">
+      <div class="nav-icon">
+        <!-- Bold home with thick walls -->
+        <svg viewBox="0 0 24 24">
+          <path d="M12 2.5L2 11H5V21H10V15H14V21H19V11H22L12 2.5ZM12 5.5L17 10V19H15V13H9V19H7V10L12 5.5Z"/>
+          <path d="M7 10V19H9V13H15V19H17V10L12 5.5L7 10Z"/>
+        </svg>
+      </div>
+      <span class="nav-label">Home</span>
+    </div>
+    <div class="nav-item">
+      <div class="nav-icon">
+        <!-- Bold envelope -->
+        <svg viewBox="0 0 24 24">
+          <path d="M2 6C2 4.9 2.9 4 4 4H20C21.1 4 22 4.9 22 6V18C22 19.1 21.1 20 20 20H4C2.9 20 2 19.1 2 18V6ZM4 6V7.5L12 12.5L20 7.5V6H4ZM4 10V18H20V10L12 15L4 10Z"/>
+        </svg>
+      </div>
+      <span class="nav-label">Inbox</span>
+    </div>
+    <div class="nav-item poke">
+      <div class="nav-icon">
+        <!-- Bold star -->
+        <svg viewBox="0 0 24 24">
+          <path d="M12 1L15.5 8.5L23 9.5L17.5 15L19 23L12 19L5 23L6.5 15L1 9.5L8.5 8.5L12 1ZM12 5L9.5 10.5L4 11L8 15L7 20.5L12 17.5L17 20.5L16 15L20 11L14.5 10.5L12 5Z"/>
+          <path d="M9.5 10.5L12 5L14.5 10.5L20 11L16 15L17 20.5L12 17.5L7 20.5L8 15L4 11L9.5 10.5Z"/>
+        </svg>
+      </div>
+      <span class="nav-label">Poke</span>
+    </div>
+    <div class="nav-item">
+      <div class="nav-icon">
+        <!-- Bold person -->
+        <svg viewBox="0 0 24 24">
+          <circle cx="12" cy="7" r="5"/>
+          <path d="M12 14C7 14 3 16.5 3 19V21H21V19C21 16.5 17 14 12 14ZM5 19C5.5 17.5 8.5 16 12 16C15.5 16 18.5 17.5 19 19H5Z"/>
+        </svg>
+      </div>
+      <span class="nav-label">Profile</span>
+    </div>
+    <div class="nav-item">
+      <div class="nav-icon">
+        <!-- Bold gear -->
+        <svg viewBox="0 0 24 24">
+          <path d="M12 8C9.79 8 8 9.79 8 12C8 14.21 9.79 16 12 16C14.21 16 16 14.21 16 12C16 9.79 14.21 8 12 8ZM12 14C10.9 14 10 13.1 10 12C10 10.9 10.9 10 12 10C13.1 10 14 10.9 14 12C14 13.1 13.1 14 12 14Z"/>
+          <path d="M19.4 13C19.5 12.67 19.5 12.33 19.5 12C19.5 11.67 19.5 11.33 19.4 11L21.5 9.4C21.7 9.2 21.8 8.9 21.6 8.7L19.6 5.3C19.5 5.1 19.2 5 19 5.1L16.5 6.2C16 5.8 15.4 5.5 14.8 5.2L14.4 2.5C14.4 2.2 14.2 2 13.9 2H10.1C9.8 2 9.6 2.2 9.6 2.5L9.2 5.2C8.6 5.5 8 5.8 7.5 6.2L5 5.1C4.8 5 4.5 5.1 4.4 5.3L2.4 8.7C2.3 8.9 2.3 9.2 2.5 9.4L4.6 11C4.5 11.33 4.5 11.67 4.5 12C4.5 12.33 4.5 12.67 4.6 13L2.5 14.6C2.3 14.8 2.2 15.1 2.4 15.3L4.4 18.7C4.5 18.9 4.8 19 5 18.9L7.5 17.8C8 18.2 8.6 18.5 9.2 18.8L9.6 21.5C9.6 21.8 9.8 22 10.1 22H13.9C14.2 22 14.4 21.8 14.4 21.5L14.8 18.8C15.4 18.5 16 18.2 16.5 17.8L19 18.9C19.2 19 19.5 18.9 19.6 18.7L21.6 15.3C21.8 15.1 21.7 14.8 21.5 14.6L19.4 13Z"/>
+        </svg>
+      </div>
+      <span class="nav-label">Settings</span>
+    </div>
+  </nav>
+
+  <script>
+    document.querySelectorAll('.nav-item').forEach(item => {
+      item.addEventListener('click', () => {
+        document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+        item.classList.add('active');
+      });
+    });
+  </script>
+</body>
+</html>

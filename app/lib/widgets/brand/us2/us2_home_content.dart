@@ -9,6 +9,10 @@ import 'us2_connection_bar.dart';
 import 'us2_section_header.dart';
 import 'us2_quest_carousel.dart';
 
+/// Toggle: Set to true to make side quest cards the same size as daily quest cards
+/// Set to false for smaller side quest cards (original design)
+const bool kSideQuestsSameAsDailyQuests = true;
+
 /// Us 2.0 brand home screen content
 ///
 /// This widget replaces the default Liia home content when running
@@ -22,6 +26,7 @@ class Us2HomeContent extends StatelessWidget {
   final List<DailyQuest> dailyQuests;
   final List<DailyQuest> sideQuests;
   final Function(DailyQuest) onQuestTap;
+  final VoidCallback? onDebugTap;
 
   Us2HomeContent({
     super.key,
@@ -33,6 +38,7 @@ class Us2HomeContent extends StatelessWidget {
     required this.dailyQuests,
     required this.sideQuests,
     required this.onQuestTap,
+    this.onDebugTap,
   });
 
   /// Build the hero section with overlapping logo, avatars, and connection bar
@@ -49,20 +55,7 @@ class Us2HomeContent extends StatelessWidget {
       child: Stack(
         clipBehavior: Clip.none,
         children: [
-          // Logo and day label at top
-          Positioned(
-            top: 20,
-            left: 0,
-            right: 0,
-            child: Column(
-              children: [
-                const Us2Logo(),
-                const SizedBox(height: 4),
-                Us2DayLabel(dayNumber: dayNumber),
-              ],
-            ),
-          ),
-          // Avatars - positioned to overlap with logo area
+          // Avatars - positioned to overlap with logo area (rendered first, behind logo)
           Positioned(
             top: logoSectionHeight - avatarOverlap,
             left: 0,
@@ -80,6 +73,19 @@ class Us2HomeContent extends StatelessWidget {
             child: Us2ConnectionBar(
               currentLp: currentLp,
               nextTierLp: nextTierLp,
+            ),
+          ),
+          // Logo and day label at top - LAST in Stack so it receives touch events
+          Positioned(
+            top: 20,
+            left: 0,
+            right: 0,
+            child: Column(
+              children: [
+                Us2Logo(onDoubleTap: onDebugTap),
+                const SizedBox(height: 4),
+                Us2DayLabel(dayNumber: dayNumber),
+              ],
             ),
           ),
         ],
@@ -109,9 +115,9 @@ class Us2HomeContent extends StatelessWidget {
               const Us2SectionHeader(title: 'Side Quests'),
               Us2QuestCarousel(
                 quests: _mapQuestsToData(sideQuests),
-                isSmall: true,
+                isSmall: !kSideQuestsSameAsDailyQuests,
               ),
-              const SizedBox(height: 100), // Space for bottom nav
+              const SizedBox(height: 60), // Space for bottom nav
             ],
           ),
         ),

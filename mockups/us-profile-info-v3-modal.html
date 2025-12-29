@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Us Profile Info - Variant 3: Center Modal</title>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Pacifico&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-gradient-start: #FFD1C1;
+      --bg-gradient-end: #FFF5F0;
+      --primary-pink: #FF6B6B;
+      --primary-orange: #FF9F43;
+      --text-dark: #4A4A4A;
+      --text-medium: #7A7A7A;
+      --text-light: #9A9A9A;
+      --cream: #FFF8F0;
+      --beige: #F5E6D8;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Nunito', sans-serif;
+      background: linear-gradient(to bottom, var(--bg-gradient-start), var(--bg-gradient-end));
+      min-height: 100vh;
+      padding: 20px;
+      max-width: 400px;
+      margin: 0 auto;
+    }
+
+    .variant-label {
+      background: linear-gradient(135deg, var(--primary-pink), var(--primary-orange));
+      color: white;
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 700;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .section-card {
+      background: white;
+      border-radius: 20px;
+      padding: 20px;
+      margin-bottom: 16px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+
+    .section-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 15px;
+      color: var(--text-medium);
+    }
+
+    /* Info Button - Gradient filled */
+    .info-btn {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--primary-pink), var(--primary-orange));
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Nunito', sans-serif;
+      font-weight: 700;
+      font-size: 12px;
+      color: white;
+      transition: all 0.2s ease;
+      box-shadow: 0 2px 8px rgba(255,107,107,0.3);
+    }
+
+    .info-btn:hover {
+      transform: scale(1.1);
+      box-shadow: 0 4px 12px rgba(255,107,107,0.4);
+    }
+
+    /* Modal Overlay */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0,0,0,0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s ease;
+      z-index: 1000;
+      padding: 20px;
+    }
+
+    .modal-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    /* Modal */
+    .modal {
+      background: white;
+      border-radius: 24px;
+      max-width: 340px;
+      width: 100%;
+      transform: scale(0.9);
+      transition: transform 0.3s ease;
+      overflow: hidden;
+    }
+
+    .modal-overlay.active .modal {
+      transform: scale(1);
+    }
+
+    .modal-header {
+      background: linear-gradient(135deg, var(--primary-pink), var(--primary-orange));
+      padding: 24px 20px;
+      text-align: center;
+      position: relative;
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.2);
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 18px;
+    }
+
+    .modal-icon {
+      font-size: 40px;
+      margin-bottom: 8px;
+    }
+
+    .modal-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 20px;
+      color: white;
+      margin-bottom: 4px;
+    }
+
+    .modal-subtitle {
+      font-size: 12px;
+      color: rgba(255,255,255,0.85);
+    }
+
+    .modal-body {
+      padding: 20px;
+    }
+
+    .modal-text {
+      font-size: 13px;
+      color: var(--text-medium);
+      line-height: 1.6;
+      margin-bottom: 16px;
+    }
+
+    .modal-list {
+      list-style: none;
+      margin-bottom: 16px;
+    }
+
+    .modal-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      margin-bottom: 12px;
+      font-size: 12px;
+      color: var(--text-dark);
+      line-height: 1.5;
+    }
+
+    .modal-list li::before {
+      content: attr(data-icon);
+      font-size: 16px;
+      flex-shrink: 0;
+    }
+
+    .modal-highlight {
+      background: var(--cream);
+      border-radius: 12px;
+      padding: 12px;
+      font-size: 12px;
+      color: var(--text-dark);
+      line-height: 1.5;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .modal-highlight-icon {
+      font-size: 24px;
+    }
+
+    .modal-footer {
+      padding: 0 20px 20px;
+    }
+
+    .modal-btn {
+      width: 100%;
+      padding: 14px;
+      background: var(--cream);
+      border: none;
+      border-radius: 12px;
+      color: var(--text-dark);
+      font-family: 'Nunito', sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .modal-btn:hover {
+      background: var(--beige);
+    }
+
+    /* Sample content */
+    .stats-row {
+      display: flex;
+      gap: 12px;
+    }
+
+    .stat-box {
+      flex: 1;
+      background: var(--cream);
+      border-radius: 14px;
+      padding: 14px;
+      text-align: center;
+    }
+
+    .stat-number {
+      font-size: 28px;
+      font-weight: 800;
+      color: var(--text-dark);
+    }
+
+    .stat-label {
+      font-size: 10px;
+      color: var(--text-light);
+      line-height: 1.3;
+      margin-top: 4px;
+    }
+  </style>
+</head>
+<body>
+  <div class="variant-label">Variant 3: Center Modal (Click any info button)</div>
+
+  <!-- Action Stats Section -->
+  <div class="section-card">
+    <div class="section-header">
+      <span class="section-title">Your Actions Together</span>
+      <button class="info-btn" onclick="openModal('actions')">?</button>
+    </div>
+    <div class="stats-row">
+      <div class="stat-box">
+        <div class="stat-number">3</div>
+        <div class="stat-label">Insights<br>Acted On</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-number">5</div>
+        <div class="stat-label">Conversations<br>Had</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Dimensions Section -->
+  <div class="section-card">
+    <div class="section-header">
+      <span class="section-title">How You Navigate Together</span>
+      <button class="info-btn" onclick="openModal('dimensions')">?</button>
+    </div>
+    <div style="background: var(--cream); border-radius: 12px; padding: 12px; text-align: center; color: var(--text-light); font-size: 12px;">
+      4 dimensions unlocked
+    </div>
+  </div>
+
+  <!-- Discoveries Section -->
+  <div class="section-card">
+    <div class="section-header">
+      <span class="section-title">Recent Discoveries</span>
+      <button class="info-btn" onclick="openModal('discoveries')">?</button>
+    </div>
+    <div style="background: var(--cream); border-radius: 12px; padding: 12px; text-align: center; color: var(--text-light); font-size: 12px;">
+      8 discoveries found
+    </div>
+  </div>
+
+  <!-- Love Languages Section -->
+  <div class="section-card">
+    <div class="section-header">
+      <span class="section-title">Love Languages</span>
+      <button class="info-btn" onclick="openModal('love')">?</button>
+    </div>
+    <div style="background: var(--cream); border-radius: 12px; padding: 12px; text-align: center; color: var(--text-light); font-size: 12px;">
+      Words of Affirmation vs Quality Time
+    </div>
+  </div>
+
+  <!-- Modal: Actions -->
+  <div class="modal-overlay" id="modal-actions" onclick="closeModal(event)">
+    <div class="modal" onclick="event.stopPropagation()">
+      <div class="modal-header">
+        <button class="modal-close" onclick="closeAllModals()">&times;</button>
+        <div class="modal-icon">🎯</div>
+        <div class="modal-title">Actions Together</div>
+        <div class="modal-subtitle">Turn insights into real connection</div>
+      </div>
+      <div class="modal-body">
+        <p class="modal-text">
+          Knowledge is great, but action is where relationships grow. Track your progress here!
+        </p>
+        <ul class="modal-list">
+          <li data-icon="💡">
+            <span><strong>Insights Acted On</strong> - Tried a suggestion from your discoveries or conversation starters? Count it!</span>
+          </li>
+          <li data-icon="💬">
+            <span><strong>Conversations Had</strong> - Had a meaningful talk using our prompts? That's connection in action.</span>
+          </li>
+        </ul>
+        <div class="modal-highlight">
+          <span class="modal-highlight-icon">📈</span>
+          <span>Aim for 2+ actions per week to build your connection habit!</span>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="modal-btn" onclick="closeAllModals()">Got it!</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Dimensions -->
+  <div class="modal-overlay" id="modal-dimensions" onclick="closeModal(event)">
+    <div class="modal" onclick="event.stopPropagation()">
+      <div class="modal-header">
+        <button class="modal-close" onclick="closeAllModals()">&times;</button>
+        <div class="modal-icon">📊</div>
+        <div class="modal-title">Dimensions</div>
+        <div class="modal-subtitle">Your relationship spectrums</div>
+      </div>
+      <div class="modal-body">
+        <p class="modal-text">
+          Dimensions show where each of you naturally land on key relationship spectrums.
+        </p>
+        <ul class="modal-list">
+          <li data-icon="🎚️">
+            <span><strong>Spectrum positions</strong> - Your dot shows your tendency based on quiz answers. Neither end is better!</span>
+          </li>
+          <li data-icon="🔄">
+            <span><strong>Complementary pairs</strong> - Being on opposite ends often means you balance each other out.</span>
+          </li>
+          <li data-icon="📝">
+            <span><strong>More accuracy</strong> - Each quiz adds data points, making your readings more precise.</span>
+          </li>
+        </ul>
+        <div class="modal-highlight">
+          <span class="modal-highlight-icon">🔓</span>
+          <span>New dimensions unlock as you complete more quizzes together.</span>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="modal-btn" onclick="closeAllModals()">Got it!</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Discoveries -->
+  <div class="modal-overlay" id="modal-discoveries" onclick="closeModal(event)">
+    <div class="modal" onclick="event.stopPropagation()">
+      <div class="modal-header">
+        <button class="modal-close" onclick="closeAllModals()">&times;</button>
+        <div class="modal-icon">🔍</div>
+        <div class="modal-title">Discoveries</div>
+        <div class="modal-subtitle">Your different perspectives</div>
+      </div>
+      <div class="modal-body">
+        <p class="modal-text">
+          Discoveries highlight where you answered differently - these are opportunities, not problems!
+        </p>
+        <ul class="modal-list">
+          <li data-icon="🌟">
+            <span><strong>Different ≠ Wrong</strong> - Your unique perspectives make your relationship richer.</span>
+          </li>
+          <li data-icon="💭">
+            <span><strong>Try This actions</strong> - Each discovery has a suggested action to help you explore it together.</span>
+          </li>
+          <li data-icon="❤️">
+            <span><strong>Build empathy</strong> - Understanding why they see it differently deepens your bond.</span>
+          </li>
+        </ul>
+        <div class="modal-highlight">
+          <span class="modal-highlight-icon">💡</span>
+          <span>Pick one discovery per week to explore. Quality over quantity!</span>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="modal-btn" onclick="closeAllModals()">Got it!</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Love Languages -->
+  <div class="modal-overlay" id="modal-love" onclick="closeModal(event)">
+    <div class="modal" onclick="event.stopPropagation()">
+      <div class="modal-header">
+        <button class="modal-close" onclick="closeAllModals()">&times;</button>
+        <div class="modal-icon">💕</div>
+        <div class="modal-title">Love Languages</div>
+        <div class="modal-subtitle">How you give & receive love</div>
+      </div>
+      <div class="modal-body">
+        <p class="modal-text">
+          Based on Dr. Gary Chapman's framework, your love language is how you naturally express and feel love.
+        </p>
+        <ul class="modal-list">
+          <li data-icon="💬">
+            <span><strong>Words of Affirmation</strong> - Verbal compliments and encouragement</span>
+          </li>
+          <li data-icon="⏰">
+            <span><strong>Quality Time</strong> - Undivided attention and presence</span>
+          </li>
+          <li data-icon="🎁">
+            <span><strong>Receiving Gifts</strong> - Thoughtful presents and symbols of love</span>
+          </li>
+          <li data-icon="🤝">
+            <span><strong>Acts of Service</strong> - Helpful actions that ease your load</span>
+          </li>
+          <li data-icon="🤗">
+            <span><strong>Physical Touch</strong> - Hugs, holding hands, physical closeness</span>
+          </li>
+        </ul>
+        <div class="modal-highlight">
+          <span class="modal-highlight-icon">💝</span>
+          <span>Speaking your partner's language makes your love land more effectively!</span>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="modal-btn" onclick="closeAllModals()">Got it!</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function openModal(type) {
+      document.getElementById('modal-' + type).classList.add('active');
+    }
+
+    function closeModal(event) {
+      if (event.target.classList.contains('modal-overlay')) {
+        event.target.classList.remove('active');
+      }
+    }
+
+    function closeAllModals() {
+      document.querySelectorAll('.modal-overlay').forEach(modal => {
+        modal.classList.remove('active');
+      });
+    }
+  </script>
+</body>
+</html>

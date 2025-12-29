@@ -26,22 +26,14 @@ static const bool skipOtpVerificationInDev = true;
 static const bool useProductionApi = false;
 ```
 
-### 2. Configure API (`api/.env.local`)
-
-```bash
-# Line 19-20: DISABLE dev bypass so API uses real JWT tokens
-AUTH_DEV_BYPASS_ENABLED=false
-AUTH_DEV_USER_ID=<any-uuid>  # Not used when bypass is disabled
-```
-
-### 3. Start Local API Server
+### 2. Start Local API Server
 
 ```bash
 cd /Users/joakimachren/Desktop/togetherremind/api
 npm run dev
 ```
 
-### 4. Clear App Data & Launch
+### 3. Clear App Data & Launch
 
 ```bash
 # Clear Android app data
@@ -107,35 +99,7 @@ This allows the same email to sign in again without knowing the password.
 
 ---
 
-## Critical Configuration
-
-### API Dev Bypass Must Be DISABLED
-
-When `AUTH_DEV_BYPASS_ENABLED=true` in the API, it ignores JWT tokens and uses a hardcoded user ID. This causes "Couple not found" errors because:
-
-1. Flutter creates NEW user with random email → gets user ID `abc123`
-2. API ignores JWT, uses hardcoded `AUTH_DEV_USER_ID=xyz789`
-3. API looks for couple with user `xyz789` → not found!
-
-**Solution:** Set `AUTH_DEV_BYPASS_ENABLED=false` so API uses the real JWT token.
-
-### When to Use Each Configuration
-
-| Scenario | `skipAuthInDev` | `skipOtpVerificationInDev` | `AUTH_DEV_BYPASS_ENABLED` |
-|----------|-----------------|----------------------------|---------------------------|
-| **Test new user flow** | `false` | `true` | `false` |
-| Skip all auth (existing couple) | `true` | `true` | `true` |
-| Production-like testing | `false` | `false` | `false` |
-
----
-
 ## Troubleshooting
-
-### "Couple not found" after pairing
-
-**Cause:** API dev bypass is overriding the JWT token.
-
-**Fix:** Set `AUTH_DEV_BYPASS_ENABLED=false` in `api/.env.local` and restart the API server.
 
 ### Thrown back to OnboardingScreen after signup
 
@@ -166,48 +130,6 @@ When `AUTH_DEV_BYPASS_ENABLED=true` in the API, it ignores JWT tokens and uses a
 | `app/lib/screens/auth_screen.dart` | Random email generation, dev sign-in UI |
 | `app/lib/screens/name_entry_screen.dart` | Name input after auth |
 | `app/lib/widgets/auth_wrapper.dart` | Auth state routing |
-| `api/.env.local` | API dev bypass toggle |
-| `api/lib/auth/dev-middleware.ts` | API auth bypass logic |
-
----
-
-## One-Click Setup Script
-
-For future agents, here's a script to set up the dev auth testing environment:
-
-```bash
-#!/bin/bash
-# setup_dev_auth_testing.sh
-
-cd /Users/joakimachren/Desktop/togetherremind
-
-# 1. Configure Flutter dev_config.dart
-sed -i '' 's/static const bool skipAuthInDev = true/static const bool skipAuthInDev = false/' app/lib/config/dev_config.dart
-sed -i '' 's/static const bool skipOtpVerificationInDev = false/static const bool skipOtpVerificationInDev = true/' app/lib/config/dev_config.dart
-sed -i '' 's/static const bool useProductionApi = true/static const bool useProductionApi = false/' app/lib/config/dev_config.dart
-
-# 2. Disable API dev bypass
-sed -i '' 's/AUTH_DEV_BYPASS_ENABLED=true/AUTH_DEV_BYPASS_ENABLED=false/' api/.env.local
-
-# 3. Kill existing processes
-pkill -9 -f "flutter" 2>/dev/null || true
-lsof -ti:3000 | xargs kill -9 2>/dev/null || true
-
-# 4. Start API server
-cd api && npm run dev &
-sleep 5
-
-# 5. Clear app data
-cd ../app
-~/Library/Android/sdk/platform-tools/adb shell pm clear com.togetherremind.togetherremind 2>/dev/null || true
-
-# 6. Launch apps
-flutter run -d emulator-5554 --flavor togetherremind --dart-define=BRAND=togetherRemind &
-flutter run -d chrome --dart-define=BRAND=togetherRemind &
-
-echo "Dev auth testing environment ready!"
-echo "Chrome: Clear site data in DevTools → Application → Clear site data"
-```
 
 ---
 
@@ -216,6 +138,5 @@ echo "Chrome: Clear site data in DevTools → Application → Clear site data"
 To test the full new-user signup flow:
 
 1. **Flutter:** `skipAuthInDev = false`, `skipOtpVerificationInDev = true`, `useProductionApi = false`
-2. **API:** `AUTH_DEV_BYPASS_ENABLED = false`
-3. **Clear app data** on both devices
-4. **Walk through:** Onboarding → Email → Name → Pairing → Welcome Quiz
+2. **Clear app data** on both devices
+3. **Walk through:** Onboarding → Email → Name → Pairing → Welcome Quiz

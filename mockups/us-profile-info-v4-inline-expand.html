@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Us Profile Info - Variant 4: Inline Expandable</title>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Pacifico&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-gradient-start: #FFD1C1;
+      --bg-gradient-end: #FFF5F0;
+      --primary-pink: #FF6B6B;
+      --primary-orange: #FF9F43;
+      --text-dark: #4A4A4A;
+      --text-medium: #7A7A7A;
+      --text-light: #9A9A9A;
+      --cream: #FFF8F0;
+      --beige: #F5E6D8;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Nunito', sans-serif;
+      background: linear-gradient(to bottom, var(--bg-gradient-start), var(--bg-gradient-end));
+      min-height: 100vh;
+      padding: 20px;
+      max-width: 400px;
+      margin: 0 auto;
+    }
+
+    .variant-label {
+      background: linear-gradient(135deg, var(--primary-pink), var(--primary-orange));
+      color: white;
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 700;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .section-card {
+      background: white;
+      border-radius: 20px;
+      padding: 20px;
+      margin-bottom: 16px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+      overflow: hidden;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+
+    .section-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 15px;
+      color: var(--text-medium);
+    }
+
+    /* Info Button - Text link style */
+    .info-btn {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-family: 'Nunito', sans-serif;
+      font-size: 11px;
+      color: var(--text-light);
+      transition: all 0.2s ease;
+      padding: 4px 8px;
+      border-radius: 12px;
+    }
+
+    .info-btn:hover {
+      color: var(--primary-pink);
+      background: rgba(255,107,107,0.08);
+    }
+
+    .info-btn .icon {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: var(--beige);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: 9px;
+      transition: all 0.2s ease;
+    }
+
+    .info-btn:hover .icon {
+      background: var(--primary-pink);
+      color: white;
+    }
+
+    .info-btn .arrow {
+      transition: transform 0.3s ease;
+    }
+
+    .info-btn.expanded .arrow {
+      transform: rotate(180deg);
+    }
+
+    /* Expandable Info Section */
+    .info-expand {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.4s ease, padding 0.3s ease, margin 0.3s ease;
+      background: linear-gradient(135deg, rgba(255,107,107,0.06), rgba(255,159,67,0.06));
+      border-radius: 12px;
+      margin-top: 0;
+    }
+
+    .info-expand.expanded {
+      max-height: 500px;
+      padding: 14px;
+      margin-top: 16px;
+    }
+
+    .info-expand-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+
+    .info-expand-icon {
+      font-size: 18px;
+    }
+
+    .info-expand-title {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text-dark);
+    }
+
+    .info-expand-text {
+      font-size: 12px;
+      color: var(--text-medium);
+      line-height: 1.6;
+      margin-bottom: 12px;
+    }
+
+    .info-expand-list {
+      list-style: none;
+    }
+
+    .info-expand-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      margin-bottom: 8px;
+      font-size: 11px;
+      color: var(--text-dark);
+      line-height: 1.5;
+    }
+
+    .info-expand-list li::before {
+      content: attr(data-bullet);
+      flex-shrink: 0;
+    }
+
+    .info-tip {
+      background: white;
+      border-radius: 8px;
+      padding: 10px;
+      font-size: 11px;
+      color: var(--text-dark);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .info-tip-icon {
+      font-size: 16px;
+    }
+
+    /* Content below header */
+    .section-content {
+      transition: opacity 0.3s ease;
+    }
+
+    /* Sample content */
+    .stats-row {
+      display: flex;
+      gap: 12px;
+    }
+
+    .stat-box {
+      flex: 1;
+      background: var(--cream);
+      border-radius: 14px;
+      padding: 14px;
+      text-align: center;
+    }
+
+    .stat-number {
+      font-size: 28px;
+      font-weight: 800;
+      color: var(--text-dark);
+    }
+
+    .stat-label {
+      font-size: 10px;
+      color: var(--text-light);
+      line-height: 1.3;
+      margin-top: 4px;
+    }
+
+    .dimension-preview {
+      background: var(--cream);
+      border-radius: 12px;
+      padding: 12px;
+    }
+
+    .dimension-label {
+      font-size: 11px;
+      color: var(--text-medium);
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .dimension-track {
+      height: 8px;
+      background: var(--beige);
+      border-radius: 4px;
+      position: relative;
+      margin-bottom: 6px;
+    }
+
+    .dimension-dot {
+      position: absolute;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      top: 50%;
+      transform: translateY(-50%);
+      border: 2px solid white;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+    }
+
+    .dot-emma { background: var(--primary-pink); left: 20%; }
+    .dot-james { background: #5B9BD5; left: 80%; }
+
+    .dimension-labels {
+      display: flex;
+      justify-content: space-between;
+      font-size: 9px;
+      color: var(--text-light);
+    }
+
+    .discovery-item {
+      background: var(--cream);
+      border-radius: 12px;
+      padding: 12px;
+      font-size: 12px;
+      color: var(--text-dark);
+      line-height: 1.5;
+    }
+
+    .name-emma { color: var(--primary-pink); font-weight: 700; }
+    .name-james { color: #5B9BD5; font-weight: 700; }
+  </style>
+</head>
+<body>
+  <div class="variant-label">Variant 4: Inline Expandable (Click "Learn more")</div>
+
+  <!-- Action Stats Section -->
+  <div class="section-card">
+    <div class="section-header">
+      <span class="section-title">Your Actions Together</span>
+      <button class="info-btn" onclick="toggleInfo(this)">
+        <span class="icon">i</span>
+        <span>Learn more</span>
+        <span class="arrow">▾</span>
+      </button>
+    </div>
+    <div class="section-content">
+      <div class="stats-row">
+        <div class="stat-box">
+          <div class="stat-number">3</div>
+          <div class="stat-label">Insights<br>Acted On</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-number">5</div>
+          <div class="stat-label">Conversations<br>Had</div>
+        </div>
+      </div>
+    </div>
+    <div class="info-expand">
+      <div class="info-expand-header">
+        <span class="info-expand-icon">🎯</span>
+        <span class="info-expand-title">What are Actions?</span>
+      </div>
+      <p class="info-expand-text">
+        These numbers track when you put insights into practice. It's not just about knowing - it's about doing!
+      </p>
+      <ul class="info-expand-list">
+        <li data-bullet="💡"><strong>Insights Acted On</strong> - Mark when you try a "Try This" suggestion</li>
+        <li data-bullet="💬"><strong>Conversations Had</strong> - Log meaningful talks using our prompts</li>
+      </ul>
+      <div class="info-tip">
+        <span class="info-tip-icon">✨</span>
+        <span>Couples who act on 2+ insights/week feel 40% more connected!</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Dimensions Section -->
+  <div class="section-card">
+    <div class="section-header">
+      <span class="section-title">How You Navigate Together</span>
+      <button class="info-btn" onclick="toggleInfo(this)">
+        <span class="icon">i</span>
+        <span>Learn more</span>
+        <span class="arrow">▾</span>
+      </button>
+    </div>
+    <div class="section-content">
+      <div class="dimension-preview">
+        <div class="dimension-label">How You Process Stress</div>
+        <div class="dimension-track">
+          <div class="dimension-dot dot-emma"></div>
+          <div class="dimension-dot dot-james"></div>
+        </div>
+        <div class="dimension-labels">
+          <span>Internal Processor</span>
+          <span>External Processor</span>
+        </div>
+      </div>
+    </div>
+    <div class="info-expand">
+      <div class="info-expand-header">
+        <span class="info-expand-icon">📊</span>
+        <span class="info-expand-title">Understanding Dimensions</span>
+      </div>
+      <p class="info-expand-text">
+        Dimensions show where you each naturally fall on key relationship spectrums. Neither end is "better"!
+      </p>
+      <ul class="info-expand-list">
+        <li data-bullet="🎚️"><strong>Your position</strong> shows your natural tendency based on quiz answers</li>
+        <li data-bullet="🔄"><strong>Opposite ends</strong> often means you complement and balance each other</li>
+        <li data-bullet="📈"><strong>More quizzes</strong> = more accurate readings over time</li>
+      </ul>
+      <div class="info-tip">
+        <span class="info-tip-icon">🔓</span>
+        <span>Complete more quizzes to unlock additional dimensions!</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Discoveries Section -->
+  <div class="section-card">
+    <div class="section-header">
+      <span class="section-title">Recent Discoveries</span>
+      <button class="info-btn" onclick="toggleInfo(this)">
+        <span class="icon">i</span>
+        <span>Learn more</span>
+        <span class="arrow">▾</span>
+      </button>
+    </div>
+    <div class="section-content">
+      <div class="discovery-item">
+        <span class="name-emma">Emma</span> prefers quiet time at home •
+        <span class="name-james">James</span> enjoys going out with friends
+      </div>
+    </div>
+    <div class="info-expand">
+      <div class="info-expand-header">
+        <span class="info-expand-icon">🔍</span>
+        <span class="info-expand-title">What are Discoveries?</span>
+      </div>
+      <p class="info-expand-text">
+        Discoveries highlight where you answered differently. These aren't problems - they're opportunities to understand each other better!
+      </p>
+      <ul class="info-expand-list">
+        <li data-bullet="🌟"><strong>Different ≠ Wrong</strong> - Your unique perspectives enrich your relationship</li>
+        <li data-bullet="💭"><strong>Try This</strong> - Each discovery has an action to explore it together</li>
+        <li data-bullet="❤️"><strong>Build empathy</strong> - Curiosity about differences deepens your bond</li>
+      </ul>
+      <div class="info-tip">
+        <span class="info-tip-icon">💡</span>
+        <span>Pick one discovery per week to explore together!</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Values Section -->
+  <div class="section-card">
+    <div class="section-header">
+      <span class="section-title">Where You Align</span>
+      <button class="info-btn" onclick="toggleInfo(this)">
+        <span class="icon">i</span>
+        <span>Learn more</span>
+        <span class="arrow">▾</span>
+      </button>
+    </div>
+    <div class="section-content">
+      <div class="discovery-item">
+        <strong>Honesty & Trust</strong> - 100% aligned based on 8 answers
+      </div>
+    </div>
+    <div class="info-expand">
+      <div class="info-expand-header">
+        <span class="info-expand-icon">💎</span>
+        <span class="info-expand-title">Your Shared Values</span>
+      </div>
+      <p class="info-expand-text">
+        Values show what matters most to both of you. High alignment on core values predicts relationship satisfaction!
+      </p>
+      <ul class="info-expand-list">
+        <li data-bullet="📊"><strong>Alignment %</strong> shows how often you answered similarly on value questions</li>
+        <li data-bullet="⭐"><strong>Priority values</strong> are marked when they come up frequently</li>
+        <li data-bullet="🌱"><strong>Growing together</strong> - shared values create a strong foundation</li>
+      </ul>
+      <div class="info-tip">
+        <span class="info-tip-icon">💝</span>
+        <span>Celebrate your shared values - they're your relationship superpower!</span>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function toggleInfo(btn) {
+      const card = btn.closest('.section-card');
+      const expand = card.querySelector('.info-expand');
+
+      btn.classList.toggle('expanded');
+      expand.classList.toggle('expanded');
+    }
+  </script>
+</body>
+</html>

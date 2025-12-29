@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:togetherremind/screens/home_screen.dart';
-import 'package:togetherremind/screens/activity_hub_screen.dart';
+import 'package:togetherremind/screens/journal_screen.dart';
+import 'package:togetherremind/screens/poke_screen.dart';
 import 'package:togetherremind/screens/profile_screen.dart';
 import 'package:togetherremind/screens/settings_screen.dart';
 import 'package:togetherremind/theme/app_theme.dart';
 import 'package:togetherremind/config/brand/brand_assets.dart';
-import 'package:togetherremind/widgets/poke_bottom_sheet.dart';
 import 'package:togetherremind/widgets/brand/brand_widget_factory.dart';
 import 'package:togetherremind/services/sound_service.dart';
 import 'package:togetherremind/services/haptic_service.dart';
+import 'package:togetherremind/services/nav_style_service.dart';
 import 'package:togetherremind/animations/animation_config.dart';
 import 'package:togetherremind/config/animation_constants.dart';
 
@@ -16,9 +17,12 @@ import 'package:togetherremind/config/animation_constants.dart';
 ///
 /// Contains tabs for:
 /// - HomeScreen (daily quests, side quests)
-/// - ActivityHubScreen (inbox)
+/// - ActivityHubScreen (journal) - TODO: Replace with JournalScreen
+/// - PokeScreen (send pokes)
 /// - ProfileScreen
 /// - SettingsScreen
+///
+/// Screen indices: Home=0, Journal=1, Poke=2, Profile=3, Settings=4
 class MainScreen extends StatefulWidget {
   final bool showLpIntro;
 
@@ -87,7 +91,8 @@ class _MainScreenState extends State<MainScreen> with SingleTickerProviderStateM
           }
         },
       ),
-      const ActivityHubScreen(),
+      const JournalScreen(),
+      const PokeScreen(),
       const ProfileScreen(),
       const SettingsScreen(),
     ];
@@ -111,21 +116,22 @@ class _MainScreenState extends State<MainScreen> with SingleTickerProviderStateM
       _bottomNavController.value = 1.0;
       _hasAnimatedBottomNav = true;
     }
+
+    // Listen to nav style changes (Us 2.0) to rebuild bottom nav immediately
+    NavStyleService.instance.addListener(_onNavStyleChanged);
+  }
+
+  void _onNavStyleChanged() {
+    if (mounted) {
+      setState(() {});
+    }
   }
 
   @override
   void dispose() {
+    NavStyleService.instance.removeListener(_onNavStyleChanged);
     _bottomNavController.dispose();
     super.dispose();
-  }
-
-  void _showPokeBottomSheet() {
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: Colors.transparent,
-      builder: (context) => const PokeBottomSheet(),
-    );
   }
 
   @override
@@ -144,8 +150,8 @@ class _MainScreenState extends State<MainScreen> with SingleTickerProviderStateM
   Widget _buildBottomNav(bool skipAnimation) {
     // Check for Us 2.0 brand - use custom bottom nav
     final us2Nav = BrandWidgetFactory.us2BottomNav(
-      currentIndex: _getUs2NavIndex(_currentIndex),
-      onTap: _handleUs2NavTap,
+      currentIndex: _currentIndex,
+      onTap: (index) => setState(() => _currentIndex = index),
     );
 
     if (us2Nav != null) {
@@ -188,28 +194,29 @@ class _MainScreenState extends State<MainScreen> with SingleTickerProviderStateM
                   onTap: () => setState(() => _currentIndex = 0),
                 ),
                 _NavItem(
-                  iconOutline: BrandAssets.inboxIcon,
-                  iconFilled: BrandAssets.inboxIconFilled,
-                  label: 'Inbox',
+                  iconOutline: BrandAssets.journalIcon,
+                  iconFilled: BrandAssets.journalIconFilled,
+                  label: 'Journal',
                   isActive: _currentIndex == 1,
                   onTap: () => setState(() => _currentIndex = 1),
                 ),
                 _PokeNavItem(
-                  onTap: _showPokeBottomSheet,
+                  isActive: _currentIndex == 2,
+                  onTap: () => setState(() => _currentIndex = 2),
                 ),
                 _NavItem(
                   iconOutline: BrandAssets.profileIcon,
                   iconFilled: BrandAssets.profileIconFilled,
                   label: 'Profile',
-                  isActive: _currentIndex == 2,
-                  onTap: () => setState(() => _currentIndex = 2),
+                  isActive: _currentIndex == 3,
+                  onTap: () => setState(() => _currentIndex = 3),
                 ),
                 _NavItem(
                   iconOutline: BrandAssets.settingsIcon,
                   iconFilled: BrandAssets.settingsIconFilled,
                   label: 'Settings',
-                  isActive: _currentIndex == 3,
-                  onTap: () => setState(() => _currentIndex = 3),
+                  isActive: _currentIndex == 4,
+                  onTap: () => setState(() => _currentIndex = 4),
                 ),
               ],
             ),
@@ -217,40 +224,6 @@ class _MainScreenState extends State<MainScreen> with SingleTickerProviderStateM
         ),
       ),
     );
-  }
-
-  /// Convert screen index to Us2 nav index (which has Poke in the middle)
-  /// Screens: [Home, Inbox, Profile, Settings] (indices 0-3)
-  /// Us2Nav:  [Home, Inbox, Poke, Profile, Settings] (indices 0-4)
-  int _getUs2NavIndex(int screenIndex) {
-    // Map screen indices to Us2 nav indices
-    // 0 (Home) -> 0
-    // 1 (Inbox) -> 1
-    // 2 (Profile) -> 3
-    // 3 (Settings) -> 4
-    if (screenIndex <= 1) return screenIndex;
-    return screenIndex + 1;
-  }
-
-  /// Handle Us2 nav tap (which has Poke at index 2)
-  void _handleUs2NavTap(int navIndex) {
-    if (navIndex == 2) {
-      // Poke - show bottom sheet instead of switching screens
-      _showPokeBottomSheet();
-      return;
-    }
-
-    // Map Us2 nav indices back to screen indices
-    // 0 (Home) -> 0
-    // 1 (Inbox) -> 1
-    // 3 (Profile) -> 2
-    // 4 (Settings) -> 3
-    int screenIndex = navIndex;
-    if (navIndex > 2) {
-      screenIndex = navIndex - 1;
-    }
-
-    setState(() => _currentIndex = screenIndex);
   }
 }
 
@@ -310,9 +283,11 @@ class _NavItem extends StatelessWidget {
 }
 
 class _PokeNavItem extends StatelessWidget {
+  final bool isActive;
   final VoidCallback onTap;
 
   const _PokeNavItem({
+    required this.isActive,
     required this.onTap,
   });
 
@@ -339,7 +314,7 @@ class _PokeNavItem extends StatelessWidget {
               style: AppTheme.bodyFont.copyWith(
                 fontSize: 11,
                 fontWeight: FontWeight.w500,
-                color: AppTheme.textTertiary,
+                color: isActive ? AppTheme.textPrimary : AppTheme.textTertiary,
               ),
             ),
           ],

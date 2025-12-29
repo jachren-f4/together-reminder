@@ -13,7 +13,11 @@
         "Acts of service",
         "Receiving thoughtful gifts"
       ],
-      "category": "love_languages"
+      "category": "love_languages",
+      "metadata": {
+        "loveLanguage": true,
+        "languageMapping": ["words_of_affirmation", "physical_touch", "quality_time", "acts_of_service", "receiving_gifts"]
+      }
     },
     {
       "id": "quiz_001_q2",
@@ -25,7 +29,11 @@
         "Distraction and cheering up",
         "Practical help with tasks"
       ],
-      "category": "emotional_needs"
+      "category": "emotional_needs",
+      "metadata": {
+        "dimension": "stress_processing",
+        "poleMapping": ["left", null, "right", null, null]
+      }
     },
     {
       "id": "quiz_001_q3",
@@ -37,7 +45,11 @@
         "Quiet time together",
         "Going on adventures"
       ],
-      "category": "connection"
+      "category": "connection",
+      "metadata": {
+        "loveLanguage": true,
+        "languageMapping": ["words_of_affirmation", "quality_time", "physical_touch", "quality_time", "quality_time"]
+      }
     },
     {
       "id": "quiz_001_q4",
@@ -49,7 +61,10 @@
         "Our shared future plans",
         "Our open communication"
       ],
-      "category": "security"
+      "category": "security",
+      "metadata": {
+        "valueCategory": "honesty_trust"
+      }
     },
     {
       "id": "quiz_001_q5",
@@ -61,7 +76,11 @@
         "When you support my goals",
         "During quiet everyday moments"
       ],
-      "category": "intimacy"
+      "category": "intimacy",
+      "metadata": {
+        "loveLanguage": true,
+        "languageMapping": ["words_of_affirmation", "physical_touch", "quality_time", "acts_of_service", "quality_time"]
+      }
     }
   ],
   "description": "Explore the emotional bonds that strengthen your relationship."

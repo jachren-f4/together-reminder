@@ -70,8 +70,17 @@ class BrandAssets {
   static const String homeIconFilled = '$sharedGfxPath/home_filled.png';
   static const String activitiesIcon = '$sharedGfxPath/activities.png';
   static const String activitiesIconFilled = '$sharedGfxPath/activities_filled.png';
+
+  // Journal icons (coral notebook with heart)
+  static const String journalIcon = '$sharedGfxPath/journal.png';
+  static const String journalIconFilled = '$sharedGfxPath/journal_filled.png';
+
+  // Legacy inbox icons - deprecated, use journal icons instead
+  @Deprecated('Use journalIcon instead')
   static const String inboxIcon = '$sharedGfxPath/inbox.png';
+  @Deprecated('Use journalIconFilled instead')
   static const String inboxIconFilled = '$sharedGfxPath/inbox_filled.png';
+
   static const String profileIcon = '$sharedGfxPath/profile.png';
   static const String profileIconFilled = '$sharedGfxPath/profile_filled.png';
   static const String settingsIcon = '$sharedGfxPath/settings.png';

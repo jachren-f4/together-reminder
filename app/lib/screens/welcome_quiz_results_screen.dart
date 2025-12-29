@@ -35,6 +35,7 @@ class _WelcomeQuizResultsScreenState extends State<WelcomeQuizResultsScreen>
     with DramaticScreenMixin {
   bool get _isUs2 => BrandLoader().config.brand == Brand.us2;
   bool _showLpIntroOverlay = false;
+  bool _isProcessing = false;
 
   @override
   bool get enableConfetti => true;
@@ -51,6 +52,10 @@ class _WelcomeQuizResultsScreenState extends State<WelcomeQuizResultsScreen>
   }
 
   void _continue() async {
+    // Prevent double-tap
+    if (_isProcessing) return;
+    setState(() => _isProcessing = true);
+
     HapticService().trigger(HapticType.light);
     triggerFlash();
 
@@ -238,6 +243,7 @@ class _WelcomeQuizResultsScreenState extends State<WelcomeQuizResultsScreen>
                     label: 'Continue',
                     onPressed: _continue,
                     isFullWidth: true,
+                    isLoading: _isProcessing,
                   ),
                 ),
               ),
@@ -642,23 +648,36 @@ class _WelcomeQuizResultsScreenState extends State<WelcomeQuizResultsScreen>
     return Padding(
       padding: const EdgeInsets.fromLTRB(24, 0, 24, 40),
       child: GestureDetector(
-        onTap: _continue,
-        child: Container(
-          width: double.infinity,
-          padding: const EdgeInsets.symmetric(vertical: 18),
-          decoration: BoxDecoration(
-            gradient: Us2Theme.accentGradient,
-            borderRadius: BorderRadius.circular(30),
-            boxShadow: Us2Theme.buttonGlowShadow,
-          ),
-          child: Center(
-            child: Text(
-              'Continue',
-              style: GoogleFonts.nunito(
-                fontSize: 17,
-                fontWeight: FontWeight.w700,
-                color: Colors.white,
-              ),
+        onTap: _isProcessing ? null : _continue,
+        child: AnimatedOpacity(
+          opacity: _isProcessing ? 0.7 : 1.0,
+          duration: const Duration(milliseconds: 200),
+          child: Container(
+            width: double.infinity,
+            padding: const EdgeInsets.symmetric(vertical: 18),
+            decoration: BoxDecoration(
+              gradient: Us2Theme.accentGradient,
+              borderRadius: BorderRadius.circular(30),
+              boxShadow: Us2Theme.buttonGlowShadow,
+            ),
+            child: Center(
+              child: _isProcessing
+                  ? const SizedBox(
+                      width: 20,
+                      height: 20,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                        valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                      ),
+                    )
+                  : Text(
+                      'Continue',
+                      style: GoogleFonts.nunito(
+                        fontSize: 17,
+                        fontWeight: FontWeight.w700,
+                        color: Colors.white,
+                      ),
+                    ),
             ),
           ),
         ),

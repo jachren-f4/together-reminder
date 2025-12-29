@@ -38,6 +38,9 @@ class EditorialButton extends StatefulWidget {
   /// Optional emoji to show before the label
   final String? emoji;
 
+  /// Show loading spinner instead of label
+  final bool isLoading;
+
   const EditorialButton({
     super.key,
     required this.label,
@@ -46,6 +49,7 @@ class EditorialButton extends StatefulWidget {
     this.isFullWidth = false,
     this.icon,
     this.emoji,
+    this.isLoading = false,
   });
 
   @override
@@ -58,7 +62,7 @@ class _EditorialButtonState extends State<EditorialButton>
   late Animation<double> _scaleAnimation;
   bool _isPressed = false;
 
-  bool get _isDisabled => widget.onPressed == null;
+  bool get _isDisabled => widget.onPressed == null || widget.isLoading;
 
   @override
   void initState() {
@@ -127,24 +131,35 @@ class _EditorialButtonState extends State<EditorialButton>
             ? EditorialStyles.paper
             : EditorialStyles.ink;
 
-    Widget content = Row(
-      mainAxisSize: widget.isFullWidth ? MainAxisSize.max : MainAxisSize.min,
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        if (widget.emoji != null) ...[
-          Text(widget.emoji!, style: const TextStyle(fontSize: 16)),
-          const SizedBox(width: 10),
-        ],
-        if (widget.icon != null) ...[
-          Icon(widget.icon, size: 18, color: iconColor),
-          const SizedBox(width: 10),
-        ],
-        Text(
-          widget.label.toUpperCase(),
-          style: textStyle,
-        ),
-      ],
-    );
+    Widget content = widget.isLoading
+        ? SizedBox(
+            width: 18,
+            height: 18,
+            child: CircularProgressIndicator(
+              strokeWidth: 2,
+              valueColor: AlwaysStoppedAnimation<Color>(
+                widget.isPrimary ? EditorialStyles.paper : EditorialStyles.ink,
+              ),
+            ),
+          )
+        : Row(
+            mainAxisSize: widget.isFullWidth ? MainAxisSize.max : MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              if (widget.emoji != null) ...[
+                Text(widget.emoji!, style: const TextStyle(fontSize: 16)),
+                const SizedBox(width: 10),
+              ],
+              if (widget.icon != null) ...[
+                Icon(widget.icon, size: 18, color: iconColor),
+                const SizedBox(width: 10),
+              ],
+              Text(
+                widget.label.toUpperCase(),
+                style: textStyle,
+              ),
+            ],
+          );
 
     return GestureDetector(
       onTapDown: _handleTapDown,

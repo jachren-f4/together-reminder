@@ -12,5 +12,7 @@ export 'us2_quest_card.dart';
 export 'us2_quest_carousel.dart';
 export 'us2_home_content.dart';
 export 'us2_bottom_nav.dart';
+export 'us2_bottom_nav_dock.dart';
+export 'us2_bottom_nav_pill.dart';
 export 'us2_intro_screen.dart';
 export 'us2_card.dart';

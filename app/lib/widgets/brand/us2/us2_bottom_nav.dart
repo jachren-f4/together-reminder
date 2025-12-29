@@ -50,8 +50,8 @@ class Us2BottomNav extends StatelessWidget {
                 onTap: () => onTap(0),
               ),
               _NavItem(
-                icon: Icons.mail_rounded,
-                label: 'Inbox',
+                icon: Icons.book_rounded,
+                label: 'Journal',
                 color: const Color(0xFFFF9F43), // Orange
                 isActive: currentIndex == 1,
                 onTap: () => onTap(1),

@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Journal v8c - Flip Cards</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Nunito:wght@400;600;700&family=Caveat:wght@500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-gradient-start: #FFD1C1;
+            --bg-gradient-end: #FFF5F0;
+            --accent-pink: #FF6B6B;
+            --accent-orange: #FF9F43;
+            --cream: #FFF8F0;
+            --beige: #F5E6D8;
+            --ink: #2D2D2D;
+            --ink-light: #666;
+            --white: #FFFFFF;
+            --green: #4CAF50;
+            --green-light: #E8F5E9;
+            --tape-color: rgba(255,220,150,0.7);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            background: var(--cream);
+            min-height: 100vh;
+            color: var(--ink);
+        }
+
+        .phone-frame {
+            max-width: 390px;
+            margin: 20px auto;
+            background: var(--cream);
+            min-height: 844px;
+            border-radius: 40px;
+            overflow: hidden;
+            box-shadow: 0 25px 80px rgba(0,0,0,0.15);
+            position: relative;
+        }
+
+        .paper-bg {
+            background-image:
+                radial-gradient(ellipse at 50% 0%, rgba(255,209,193,0.4) 0%, transparent 50%),
+                repeating-linear-gradient(0deg, transparent, transparent 28px, rgba(200,180,160,0.08) 28px, rgba(200,180,160,0.08) 29px);
+            min-height: 844px;
+            padding-bottom: 100px;
+        }
+
+        .header {
+            padding: 60px 20px 16px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-family: 'Caveat', cursive;
+            font-size: 42px;
+            font-weight: 600;
+        }
+
+        .week-nav {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            padding: 16px 20px;
+            position: relative;
+        }
+
+        .week-nav::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-1deg);
+            width: 220px;
+            height: 36px;
+            background: var(--tape-color);
+            border-radius: 2px;
+        }
+
+        .week-nav button {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border: 2px solid var(--ink);
+            background: var(--white);
+            font-size: 16px;
+            cursor: pointer;
+            position: relative;
+            z-index: 1;
+        }
+
+        .week-nav button:disabled { opacity: 0.3; }
+
+        .week-dates {
+            font-family: 'Caveat', cursive;
+            font-size: 26px;
+            font-weight: 600;
+            position: relative;
+            z-index: 1;
+        }
+
+        .weekly-insights {
+            margin: 20px;
+            padding: 20px;
+            background: var(--white);
+            border-radius: 4px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1), 3px 3px 0 var(--beige);
+            transform: rotate(-0.5deg);
+            position: relative;
+        }
+
+        .weekly-insights::before {
+            content: '';
+            position: absolute;
+            top: -10px;
+            left: 40px;
+            width: 70px;
+            height: 24px;
+            background: var(--tape-color);
+            transform: rotate(3deg);
+        }
+
+        .insights-title {
+            font-family: 'Caveat', cursive;
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 14px;
+            padding-top: 8px;
+        }
+
+        .insight-row {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .insight-tag {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 14px;
+            background: var(--cream);
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .day-separator {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 20px 24px 12px;
+        }
+
+        .day-label {
+            font-family: 'Caveat', cursive;
+            font-size: 22px;
+            font-weight: 600;
+        }
+
+        .day-line {
+            flex: 1;
+            height: 2px;
+            background: repeating-linear-gradient(90deg, var(--ink), var(--ink) 6px, transparent 6px, transparent 12px);
+            opacity: 0.2;
+        }
+
+        .day-note {
+            font-family: 'Caveat', cursive;
+            font-size: 16px;
+            color: var(--ink-light);
+        }
+
+        .quest-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            padding: 0 16px;
+            justify-content: center;
+            perspective: 1000px;
+        }
+
+        .tap-hint {
+            text-align: center;
+            padding: 8px;
+            font-size: 11px;
+            color: var(--ink-light);
+            font-style: italic;
+        }
+
+        /* Flip Card Container */
+        .flip-card {
+            width: calc(50% - 12px);
+            max-width: 170px;
+            height: 220px;
+            perspective: 1000px;
+            cursor: pointer;
+        }
+
+        .flip-card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            transform-style: preserve-3d;
+        }
+
+        .flip-card.flipped .flip-card-inner {
+            transform: rotateY(180deg);
+        }
+
+        /* Front - Polaroid */
+        .flip-front {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            background: var(--white);
+            padding: 10px 10px 40px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.12);
+            transform: rotate(var(--rotation, 0deg));
+        }
+
+        .flip-card:nth-child(odd) .flip-front { --rotation: -2deg; }
+        .flip-card:nth-child(even) .flip-front { --rotation: 1.5deg; }
+
+        .flip-card.flipped .flip-front {
+            transform: rotate(0deg);
+        }
+
+        .polaroid-image {
+            height: 120px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            position: relative;
+            border-radius: 2px;
+        }
+
+        .polaroid-image.classic { background: linear-gradient(135deg, #FFEBEE, #FFCDD2); }
+        .polaroid-image.affirmation { background: linear-gradient(135deg, #FCE4EC, #F8BBD9); }
+        .polaroid-image.you-or-me { background: linear-gradient(135deg, #FFF3E0, #FFE0B2); }
+        .polaroid-image.linked { background: linear-gradient(135deg, #E3F2FD, #BBDEFB); }
+
+        .sticker {
+            position: absolute;
+            font-size: 20px;
+            filter: drop-shadow(0 2px 3px rgba(0,0,0,0.2));
+        }
+
+        .sticker.top-right { top: -6px; right: -6px; transform: rotate(15deg); }
+        .sticker.top-left { top: -6px; left: -6px; transform: rotate(-10deg); }
+
+        .result-tag {
+            position: absolute;
+            bottom: 8px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--white);
+            padding: 4px 8px;
+            border-radius: 8px;
+            font-size: 10px;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        .result-tag.aligned { color: var(--green); }
+        .result-tag.mixed { color: #E65100; }
+        .result-tag.complete { color: #1565C0; }
+
+        .polaroid-caption {
+            font-family: 'Caveat', cursive;
+            font-size: 15px;
+            text-align: center;
+            margin-top: 8px;
+            line-height: 1.2;
+        }
+
+        .polaroid-type {
+            font-size: 9px;
+            color: var(--ink-light);
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-top: 4px;
+        }
+
+        .flip-hint {
+            position: absolute;
+            bottom: 4px;
+            right: 8px;
+            font-size: 10px;
+            color: var(--ink-light);
+        }
+
+        /* Back - Details */
+        .flip-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            transform: rotateY(180deg);
+            background: var(--white);
+            border-radius: 4px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .back-header {
+            padding: 12px;
+            background: linear-gradient(135deg, var(--accent-pink), var(--accent-orange));
+            color: white;
+            text-align: center;
+        }
+
+        .back-emoji {
+            font-size: 24px;
+            margin-bottom: 4px;
+        }
+
+        .back-title {
+            font-family: 'Caveat', cursive;
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .back-result {
+            font-size: 11px;
+            margin-top: 4px;
+            opacity: 0.9;
+        }
+
+        .back-body {
+            flex: 1;
+            padding: 10px;
+            overflow-y: auto;
+            font-size: 11px;
+        }
+
+        .mini-answer {
+            background: var(--cream);
+            border-radius: 8px;
+            padding: 8px;
+            margin-bottom: 6px;
+        }
+
+        .mini-question {
+            font-size: 10px;
+            color: var(--ink-light);
+            margin-bottom: 6px;
+            font-style: italic;
+            line-height: 1.3;
+        }
+
+        .mini-pair {
+            display: flex;
+            gap: 4px;
+        }
+
+        .mini-bubble {
+            flex: 1;
+            padding: 6px;
+            background: var(--white);
+            border-radius: 6px;
+            text-align: center;
+            font-size: 10px;
+        }
+
+        .mini-bubble.matched {
+            border: 1.5px solid var(--green);
+        }
+
+        .mini-name {
+            font-size: 8px;
+            color: var(--ink-light);
+            font-weight: 700;
+            margin-bottom: 2px;
+        }
+
+        .mini-text {
+            font-weight: 600;
+            color: var(--ink);
+            line-height: 1.2;
+        }
+
+        .mini-match {
+            text-align: center;
+            margin-top: 4px;
+            font-size: 9px;
+            font-weight: 700;
+        }
+
+        .mini-match.aligned { color: var(--green); }
+        .mini-match.different { color: #E65100; }
+
+        .back-footer {
+            padding: 8px;
+            text-align: center;
+            font-size: 10px;
+            color: var(--ink-light);
+            border-top: 1px dashed var(--beige);
+        }
+
+        .words-mini {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
+            justify-content: center;
+            margin-bottom: 8px;
+        }
+
+        .word-mini {
+            padding: 4px 8px;
+            background: var(--cream);
+            border-radius: 6px;
+            font-size: 10px;
+            font-weight: 600;
+        }
+
+        .contrib-mini {
+            display: flex;
+            gap: 6px;
+        }
+
+        .contrib-item {
+            flex: 1;
+            text-align: center;
+            padding: 8px;
+            background: var(--cream);
+            border-radius: 8px;
+        }
+
+        .contrib-name {
+            font-size: 9px;
+            color: var(--ink-light);
+            margin-bottom: 2px;
+        }
+
+        .contrib-value {
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .contrib-label {
+            font-size: 9px;
+            color: var(--ink-light);
+        }
+    </style>
+</head>
+<body>
+    <div class="phone-frame">
+        <div class="paper-bg">
+            <div class="header">
+                <h1>Our Journal</h1>
+            </div>
+
+            <div class="week-nav">
+                <button disabled>‹</button>
+                <div class="week-dates">Dec 23 - 29</div>
+                <button disabled>›</button>
+            </div>
+
+            <div class="weekly-insights">
+                <div class="insights-title">This Week's Highlights</div>
+                <div class="insight-row">
+                    <span class="insight-tag"><span>🎯</span> 78% aligned</span>
+                    <span class="insight-tag"><span>📅</span> 6 active days</span>
+                    <span class="insight-tag"><span>🎮</span> 12 quests</span>
+                </div>
+            </div>
+
+            <div class="tap-hint">Tap any card to flip and see details</div>
+
+            <div class="day-separator">
+                <span class="day-label">Sunday, Dec 29</span>
+                <div class="day-line"></div>
+                <span class="day-note">Today</span>
+            </div>
+
+            <div class="quest-grid">
+                <!-- Affirmation Quiz -->
+                <div class="flip-card" onclick="this.classList.toggle('flipped')">
+                    <div class="flip-card-inner">
+                        <div class="flip-front">
+                            <div class="polaroid-image affirmation">
+                                💕
+                                <span class="result-tag aligned">5 aligned ⭐</span>
+                                <span class="sticker top-right">✨</span>
+                            </div>
+                            <div class="polaroid-caption">Morning Check-in</div>
+                            <div class="polaroid-type">Affirmation Quiz</div>
+                            <div class="flip-hint">tap to flip →</div>
+                        </div>
+                        <div class="flip-back">
+                            <div class="back-header">
+                                <div class="back-emoji">💕</div>
+                                <div class="back-title">Morning Check-in</div>
+                                <div class="back-result">🏆 Perfect - 5/5 aligned!</div>
+                            </div>
+                            <div class="back-body">
+                                <div class="mini-answer">
+                                    <div class="mini-question">"How connected do you feel?"</div>
+                                    <div class="mini-pair">
+                                        <div class="mini-bubble matched">
+                                            <div class="mini-name">YOU</div>
+                                            <div class="mini-text">Very close</div>
+                                        </div>
+                                        <div class="mini-bubble matched">
+                                            <div class="mini-name">EMMA</div>
+                                            <div class="mini-text">Very close</div>
+                                        </div>
+                                    </div>
+                                    <div class="mini-match aligned">✓</div>
+                                </div>
+                                <div class="mini-answer">
+                                    <div class="mini-question">"How's your energy level?"</div>
+                                    <div class="mini-pair">
+                                        <div class="mini-bubble matched">
+                                            <div class="mini-name">YOU</div>
+                                            <div class="mini-text">Good</div>
+                                        </div>
+                                        <div class="mini-bubble matched">
+                                            <div class="mini-name">EMMA</div>
+                                            <div class="mini-text">Good</div>
+                                        </div>
+                                    </div>
+                                    <div class="mini-match aligned">✓</div>
+                                </div>
+                                <div class="mini-answer">
+                                    <div class="mini-question">"How supported do you feel?"</div>
+                                    <div class="mini-pair">
+                                        <div class="mini-bubble matched">
+                                            <div class="mini-name">YOU</div>
+                                            <div class="mini-text">Completely</div>
+                                        </div>
+                                        <div class="mini-bubble matched">
+                                            <div class="mini-name">EMMA</div>
+                                            <div class="mini-text">Completely</div>
+                                        </div>
+                                    </div>
+                                    <div class="mini-match aligned">✓</div>
+                                </div>
+                            </div>
+                            <div class="back-footer">tap to flip back</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Classic Quiz -->
+                <div class="flip-card" onclick="this.classList.toggle('flipped')">
+                    <div class="flip-card-inner">
+                        <div class="flip-front">
+                            <div class="polaroid-image classic">
+                                📝
+                                <span class="result-tag mixed">3 aligned 2 diff</span>
+                            </div>
+                            <div class="polaroid-caption">Ideal Date Night</div>
+                            <div class="polaroid-type">Classic Quiz</div>
+                            <div class="flip-hint">tap to flip →</div>
+                        </div>
+                        <div class="flip-back">
+                            <div class="back-header">
+                                <div class="back-emoji">📝</div>
+                                <div class="back-title">Ideal Date Night</div>
+                                <div class="back-result">3 aligned · 2 different</div>
+                            </div>
+                            <div class="back-body">
+                                <div class="mini-answer">
+                                    <div class="mini-question">"Perfect Friday night?"</div>
+                                    <div class="mini-pair">
+                                        <div class="mini-bubble">
+                                            <div class="mini-name">YOU</div>
+                                            <div class="mini-text">Movies</div>
+                                        </div>
+                                        <div class="mini-bubble">
+                                            <div class="mini-name">EMMA</div>
+                                            <div class="mini-text">Cooking</div>
+                                        </div>
+                                    </div>
+                                    <div class="mini-match different">≠</div>
+                                </div>
+                                <div class="mini-answer">
+                                    <div class="mini-question">"Who picks where to eat?"</div>
+                                    <div class="mini-pair">
+                                        <div class="mini-bubble matched">
+                                            <div class="mini-name">YOU</div>
+                                            <div class="mini-text">Take turns</div>
+                                        </div>
+                                        <div class="mini-bubble matched">
+                                            <div class="mini-name">EMMA</div>
+                                            <div class="mini-text">Take turns</div>
+                                        </div>
+                                    </div>
+                                    <div class="mini-match aligned">✓</div>
+                                </div>
+                                <div class="mini-answer">
+                                    <div class="mini-question">"Ideal vacation?"</div>
+                                    <div class="mini-pair">
+                                        <div class="mini-bubble">
+                                            <div class="mini-name">YOU</div>
+                                            <div class="mini-text">Beach</div>
+                                        </div>
+                                        <div class="mini-bubble">
+                                            <div class="mini-name">EMMA</div>
+                                            <div class="mini-text">Mountains</div>
+                                        </div>
+                                    </div>
+                                    <div class="mini-match different">≠</div>
+                                </div>
+                            </div>
+                            <div class="back-footer">tap to flip back</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="day-separator">
+                <span class="day-label">Saturday, Dec 28</span>
+                <div class="day-line"></div>
+            </div>
+
+            <div class="quest-grid">
+                <!-- You or Me -->
+                <div class="flip-card" onclick="this.classList.toggle('flipped')">
+                    <div class="flip-card-inner">
+                        <div class="flip-front">
+                            <div class="polaroid-image you-or-me">
+                                🤔
+                                <span class="result-tag aligned">4 aligned 1 diff</span>
+                            </div>
+                            <div class="polaroid-caption">Kitchen Edition</div>
+                            <div class="polaroid-type">You or Me</div>
+                            <div class="flip-hint">tap to flip →</div>
+                        </div>
+                        <div class="flip-back">
+                            <div class="back-header">
+                                <div class="back-emoji">🤔</div>
+                                <div class="back-title">Kitchen Edition</div>
+                                <div class="back-result">4 aligned · 1 different</div>
+                            </div>
+                            <div class="back-body">
+                                <div class="mini-answer">
+                                    <div class="mini-question">"Who's the better cook?"</div>
+                                    <div class="mini-pair">
+                                        <div class="mini-bubble matched">
+                                            <div class="mini-name">YOU</div>
+                                            <div class="mini-text">Emma</div>
+                                        </div>
+                                        <div class="mini-bubble matched">
+                                            <div class="mini-name">EMMA</div>
+                                            <div class="mini-text">Me</div>
+                                        </div>
+                                    </div>
+                                    <div class="mini-match aligned">✓ Agree!</div>
+                                </div>
+                                <div class="mini-answer">
+                                    <div class="mini-question">"Who does dishes more?"</div>
+                                    <div class="mini-pair">
+                                        <div class="mini-bubble">
+                                            <div class="mini-name">YOU</div>
+                                            <div class="mini-text">Me</div>
+                                        </div>
+                                        <div class="mini-bubble">
+                                            <div class="mini-name">EMMA</div>
+                                            <div class="mini-text">Me</div>
+                                        </div>
+                                    </div>
+                                    <div class="mini-match different">≠ Both claim it!</div>
+                                </div>
+                            </div>
+                            <div class="back-footer">tap to flip back</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Linked -->
+                <div class="flip-card" onclick="this.classList.toggle('flipped')">
+                    <div class="flip-card-inner">
+                        <div class="flip-front">
+                            <div class="polaroid-image linked">
+                                🔗
+                                <span class="result-tag complete">4 words</span>
+                                <span class="sticker top-left">🏆</span>
+                            </div>
+                            <div class="polaroid-caption">Romantic Crossword</div>
+                            <div class="polaroid-type">Linked</div>
+                            <div class="flip-hint">tap to flip →</div>
+                        </div>
+                        <div class="flip-back">
+                            <div class="back-header">
+                                <div class="back-emoji">🔗</div>
+                                <div class="back-title">Romantic Crossword</div>
+                                <div class="back-result">Complete! 🎉</div>
+                            </div>
+                            <div class="back-body">
+                                <div style="margin-bottom: 10px; font-size: 10px; color: var(--ink-light); text-align: center;">Words Found:</div>
+                                <div class="words-mini">
+                                    <span class="word-mini">LOVE</span>
+                                    <span class="word-mini">HEART</span>
+                                    <span class="word-mini">FOREVER</span>
+                                    <span class="word-mini">TOGETHER</span>
+                                </div>
+                                <div style="margin-top: 12px; font-size: 10px; color: var(--ink-light); text-align: center;">Contributions:</div>
+                                <div class="contrib-mini">
+                                    <div class="contrib-item">
+                                        <div class="contrib-name">YOU</div>
+                                        <div class="contrib-value">2</div>
+                                        <div class="contrib-label">words</div>
+                                    </div>
+                                    <div class="contrib-item">
+                                        <div class="contrib-name">EMMA</div>
+                                        <div class="contrib-value">2</div>
+                                        <div class="contrib-label">words</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="back-footer">tap to flip back</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

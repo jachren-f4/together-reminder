@@ -27,7 +27,7 @@ class Us2QuestCarousel extends StatelessWidget {
     final cardWidth = (screenWidth * cardWidthFraction).clamp(0.0, maxCardWidth);
 
     return SizedBox(
-      height: isSmall ? 330 : 420,
+      height: isSmall ? 330 : 380,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
         padding: const EdgeInsets.only(left: 15, right: 15, bottom: 25),

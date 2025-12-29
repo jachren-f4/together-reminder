@@ -4,7 +4,7 @@
  * This endpoint deletes all quiz_matches and you_or_me_sessions for a couple,
  * allowing fresh test runs without stale data.
  *
- * Security: Only active when AUTH_DEV_BYPASS_ENABLED=true
+ * Security: Only active in development environment
  */
 
 import { NextRequest, NextResponse } from 'next/server';
@@ -23,8 +23,8 @@ const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
  * Returns: { success: true, deleted: { quizMatches: number, youOrMeMatches: number } }
  */
 export async function POST(request: NextRequest) {
-  // Only allow when dev bypass is explicitly enabled
-  if (process.env.AUTH_DEV_BYPASS_ENABLED !== 'true') {
+  // Only allow in development
+  if (process.env.NODE_ENV !== 'development') {
     return NextResponse.json(
       { error: 'Dev endpoints disabled in production' },
       { status: 403 }

@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=390, initial-scale=1.0">
+  <title>Us Profile - Relationship Insights</title>
+  <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-gradient-start: #FFD1C1;
+      --bg-gradient-end: #FFF5F0;
+      --primary-pink: #FF6B6B;
+      --primary-orange: #FF9F43;
+      --cream: #FFF8F0;
+      --beige: #F5E6D8;
+      --text-dark: #2D2D2D;
+      --text-medium: #6B6B6B;
+      --text-light: #9B9B9B;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Nunito', sans-serif;
+      background: linear-gradient(180deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
+      min-height: 100vh;
+      padding: 20px;
+      padding-bottom: 100px;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 24px;
+    }
+
+    .header h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--text-dark);
+    }
+
+    .header .subtitle {
+      font-size: 14px;
+      color: var(--text-medium);
+      margin-top: 4px;
+    }
+
+    .section-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--text-dark);
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* Compatibility Score */
+    .compatibility-card {
+      background: white;
+      border-radius: 24px;
+      padding: 24px;
+      margin-bottom: 24px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .compatibility-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 100px;
+      background: linear-gradient(135deg, var(--primary-pink), var(--primary-orange));
+      opacity: 0.1;
+    }
+
+    .compatibility-ring {
+      width: 160px;
+      height: 160px;
+      margin: 0 auto 16px;
+      position: relative;
+    }
+
+    .compatibility-ring svg {
+      transform: rotate(-90deg);
+    }
+
+    .compatibility-ring circle {
+      fill: none;
+      stroke-width: 12;
+    }
+
+    .ring-bg {
+      stroke: var(--beige);
+    }
+
+    .ring-fill {
+      stroke: url(#compatGradient);
+      stroke-linecap: round;
+      stroke-dasharray: 440;
+      stroke-dashoffset: 88; /* 80% = 440 * 0.2 */
+    }
+
+    .compatibility-value {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+    }
+
+    .compatibility-value .number {
+      font-size: 48px;
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--primary-pink), var(--primary-orange));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .compatibility-value .label {
+      font-size: 12px;
+      color: var(--text-medium);
+      font-weight: 600;
+    }
+
+    .compatibility-description {
+      font-size: 14px;
+      color: var(--text-medium);
+      line-height: 1.5;
+    }
+
+    /* Love Languages */
+    .love-languages-card {
+      background: white;
+      border-radius: 20px;
+      padding: 20px;
+      margin-bottom: 24px;
+    }
+
+    .love-languages-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .person-languages {
+      text-align: center;
+    }
+
+    .person-avatar {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--primary-pink), var(--primary-orange));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      margin: 0 auto 8px;
+    }
+
+    .person-name {
+      font-weight: 700;
+      color: var(--text-dark);
+      font-size: 14px;
+      margin-bottom: 12px;
+    }
+
+    .language-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px;
+      background: var(--cream);
+      border-radius: 10px;
+      margin-bottom: 8px;
+    }
+
+    .language-icon {
+      font-size: 18px;
+    }
+
+    .language-info {
+      flex: 1;
+      text-align: left;
+    }
+
+    .language-name {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text-dark);
+    }
+
+    .language-bar {
+      height: 4px;
+      background: var(--beige);
+      border-radius: 2px;
+      margin-top: 4px;
+      overflow: hidden;
+    }
+
+    .language-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--primary-pink), var(--primary-orange));
+      border-radius: 2px;
+    }
+
+    /* Communication Style */
+    .communication-card {
+      background: white;
+      border-radius: 20px;
+      padding: 20px;
+      margin-bottom: 24px;
+    }
+
+    .style-comparison {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 0;
+      border-bottom: 1px solid var(--beige);
+    }
+
+    .style-comparison:last-child {
+      border-bottom: none;
+    }
+
+    .style-label {
+      font-size: 13px;
+      color: var(--text-medium);
+      width: 50px;
+      text-align: center;
+    }
+
+    .style-bar-container {
+      flex: 1;
+      height: 8px;
+      background: var(--beige);
+      border-radius: 4px;
+      margin: 0 12px;
+      position: relative;
+    }
+
+    .style-bar-fill {
+      position: absolute;
+      height: 100%;
+      background: linear-gradient(90deg, var(--primary-pink), var(--primary-orange));
+      border-radius: 4px;
+    }
+
+    .style-marker {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 16px;
+      height: 16px;
+      background: white;
+      border: 3px solid var(--primary-pink);
+      border-radius: 50%;
+    }
+
+    .style-name {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text-dark);
+      flex: 1;
+    }
+
+    /* Strengths & Growth */
+    .dual-card {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+
+    .strength-card, .growth-card {
+      background: white;
+      border-radius: 16px;
+      padding: 16px;
+    }
+
+    .card-header {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text-dark);
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .tag-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .tag {
+      font-size: 11px;
+      padding: 6px 10px;
+      border-radius: 12px;
+      font-weight: 600;
+    }
+
+    .tag.strength {
+      background: linear-gradient(135deg, rgba(76, 175, 80, 0.15), rgba(139, 195, 74, 0.15));
+      color: #4CAF50;
+    }
+
+    .tag.growth {
+      background: linear-gradient(135deg, rgba(255, 107, 107, 0.15), rgba(255, 159, 67, 0.15));
+      color: var(--primary-pink);
+    }
+
+    /* Alignment Radar */
+    .radar-card {
+      background: white;
+      border-radius: 20px;
+      padding: 20px;
+      margin-bottom: 24px;
+    }
+
+    .radar-container {
+      width: 200px;
+      height: 200px;
+      margin: 0 auto;
+      position: relative;
+    }
+
+    .radar-labels {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+    }
+
+    .radar-label {
+      position: absolute;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text-medium);
+    }
+
+    .radar-label.top { top: -20px; left: 50%; transform: translateX(-50%); }
+    .radar-label.right { right: -30px; top: 50%; transform: translateY(-50%); }
+    .radar-label.bottom { bottom: -20px; left: 50%; transform: translateX(-50%); }
+    .radar-label.left { left: -30px; top: 50%; transform: translateY(-50%); }
+    .radar-label.top-right { top: 10px; right: 0; }
+    .radar-label.bottom-right { bottom: 10px; right: 0; }
+
+    .radar-legend {
+      display: flex;
+      justify-content: center;
+      gap: 24px;
+      margin-top: 16px;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      color: var(--text-medium);
+    }
+
+    .legend-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+    }
+
+    .legend-dot.emma { background: var(--primary-pink); }
+    .legend-dot.james { background: #5B9BD5; }
+
+    /* Weekly Insight */
+    .insight-card {
+      background: linear-gradient(135deg, #FFF9E6, #FFF5F0);
+      border-radius: 20px;
+      padding: 20px;
+      border: 2px solid rgba(255, 159, 67, 0.3);
+    }
+
+    .insight-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .insight-icon {
+      font-size: 32px;
+    }
+
+    .insight-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text-dark);
+    }
+
+    .insight-text {
+      font-size: 14px;
+      color: var(--text-medium);
+      line-height: 1.6;
+    }
+
+    .insight-text strong {
+      color: var(--primary-pink);
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>Us</h1>
+    <p class="subtitle">Relationship Insights</p>
+  </div>
+
+  <!-- Compatibility Score -->
+  <div class="compatibility-card">
+    <div class="compatibility-ring">
+      <svg width="160" height="160" viewBox="0 0 160 160">
+        <defs>
+          <linearGradient id="compatGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" style="stop-color:#FF6B6B"/>
+            <stop offset="100%" style="stop-color:#FF9F43"/>
+          </linearGradient>
+        </defs>
+        <circle class="ring-bg" cx="80" cy="80" r="70"/>
+        <circle class="ring-fill" cx="80" cy="80" r="70"/>
+      </svg>
+      <div class="compatibility-value">
+        <div class="number">80%</div>
+        <div class="label">COMPATIBILITY</div>
+      </div>
+    </div>
+    <p class="compatibility-description">
+      You and James have strong alignment in values and communication.
+      Your areas of difference create opportunities for growth!
+    </p>
+  </div>
+
+  <!-- Love Languages -->
+  <div class="section-title">Love Languages</div>
+  <div class="love-languages-card">
+    <div class="love-languages-grid">
+      <div class="person-languages">
+        <div class="person-avatar">E</div>
+        <div class="person-name">Emma</div>
+        <div class="language-item">
+          <span class="language-icon">Words of Affirmation</span>
+        </div>
+        <div class="language-item">
+          <div class="language-info">
+            <div class="language-name">Words of Affirmation</div>
+            <div class="language-bar"><div class="language-bar-fill" style="width: 90%;"></div></div>
+          </div>
+        </div>
+        <div class="language-item">
+          <div class="language-info">
+            <div class="language-name">Quality Time</div>
+            <div class="language-bar"><div class="language-bar-fill" style="width: 75%;"></div></div>
+          </div>
+        </div>
+        <div class="language-item">
+          <div class="language-info">
+            <div class="language-name">Physical Touch</div>
+            <div class="language-bar"><div class="language-bar-fill" style="width: 60%;"></div></div>
+          </div>
+        </div>
+      </div>
+      <div class="person-languages">
+        <div class="person-avatar" style="background: linear-gradient(135deg, #5B9BD5, #3A7BBD);">J</div>
+        <div class="person-name">James</div>
+        <div class="language-item">
+          <div class="language-info">
+            <div class="language-name">Acts of Service</div>
+            <div class="language-bar"><div class="language-bar-fill" style="width: 85%;"></div></div>
+          </div>
+        </div>
+        <div class="language-item">
+          <div class="language-info">
+            <div class="language-name">Quality Time</div>
+            <div class="language-bar"><div class="language-bar-fill" style="width: 80%;"></div></div>
+          </div>
+        </div>
+        <div class="language-item">
+          <div class="language-info">
+            <div class="language-name">Physical Touch</div>
+            <div class="language-bar"><div class="language-bar-fill" style="width: 70%;"></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Communication Style -->
+  <div class="section-title">Communication Patterns</div>
+  <div class="communication-card">
+    <div class="style-comparison">
+      <span class="style-name">Conflict Style</span>
+      <span class="style-label">Avoid</span>
+      <div class="style-bar-container">
+        <div class="style-marker" style="left: 65%;"></div>
+      </div>
+      <span class="style-label">Discuss</span>
+    </div>
+    <div class="style-comparison">
+      <span class="style-name">Decision Making</span>
+      <span class="style-label">Logical</span>
+      <div class="style-bar-container">
+        <div class="style-marker" style="left: 45%;"></div>
+      </div>
+      <span class="style-label">Intuitive</span>
+    </div>
+    <div class="style-comparison">
+      <span class="style-name">Planning</span>
+      <span class="style-label">Spontan</span>
+      <div class="style-bar-container">
+        <div class="style-marker" style="left: 75%;"></div>
+      </div>
+      <span class="style-label">Planned</span>
+    </div>
+    <div class="style-comparison">
+      <span class="style-name">Social Energy</span>
+      <span class="style-label">Intro</span>
+      <div class="style-bar-container">
+        <div class="style-marker" style="left: 55%;"></div>
+      </div>
+      <span class="style-label">Extro</span>
+    </div>
+  </div>
+
+  <!-- Strengths & Growth -->
+  <div class="dual-card">
+    <div class="strength-card">
+      <div class="card-header">Your Strengths</div>
+      <div class="tag-list">
+        <span class="tag strength">Communication</span>
+        <span class="tag strength">Trust</span>
+        <span class="tag strength">Humor</span>
+        <span class="tag strength">Support</span>
+      </div>
+    </div>
+    <div class="growth-card">
+      <div class="card-header">Growth Areas</div>
+      <div class="tag-list">
+        <span class="tag growth">Planning</span>
+        <span class="tag growth">Finances</span>
+        <span class="tag growth">Boundaries</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Weekly Insight -->
+  <div class="section-title">This Week's Discovery</div>
+  <div class="insight-card">
+    <div class="insight-header">
+      <span class="insight-icon">💡</span>
+      <span class="insight-title">Insight of the Week</span>
+    </div>
+    <p class="insight-text">
+      Based on your quiz answers, you both value <strong>quality time together</strong>
+      over material gifts. Consider planning a screen-free evening this week!
+    </p>
+  </div>
+</body>
+</html>

@@ -56,8 +56,10 @@ class QuestSyncService {
 
             if (supabaseQuestIds.difference(localQuestIds).isEmpty &&
                 localQuestIds.difference(supabaseQuestIds).isEmpty) {
-              // Quest IDs match - already synced
-              Logger.debug('   ✅ Local quests match Supabase', service: 'quest');
+              // Quest IDs match - update metadata from enriched API response
+              // This ensures quiz titles/descriptions are populated even for existing quests
+              Logger.debug('   ✅ Local quests match Supabase, updating metadata...', service: 'quest');
+              await _updateLocalQuestsWithMetadata(questsData, dateKey);
               return true;
             } else {
               // Quest IDs don't match - replace with Supabase
@@ -110,6 +112,9 @@ class QuestSyncService {
   }
 
   /// Save generated quests to Supabase
+  ///
+  /// The API returns enriched quests with quiz metadata (title, description).
+  /// We update local quests with this metadata so the home screen shows it immediately.
   Future<void> saveQuestsToSupabase({
     required List<DailyQuest> quests,
     required String currentUserId,
@@ -123,7 +128,7 @@ class QuestSyncService {
 
       final response = await _apiClient.post('/api/sync/daily-quests', body: {
         'dateKey': dateKey,
-        'quests': quests.map((q) => {
+        'quests': quests.map((q) => ({
           'id': q.id,
           'questType': _getQuestTypeString(q.type),
           'contentId': q.contentId,
@@ -131,11 +136,17 @@ class QuestSyncService {
           'isSideQuest': q.isSideQuest,
           'formatType': q.formatType,
           'quizName': q.quizName,
-        }).toList(),
+        })).toList(),
       });
 
       if (response.success) {
         Logger.success('Saved ${quests.length} quests to Supabase', service: 'quest');
+
+        // Update local quests with enriched metadata from API response
+        final enrichedQuests = response.data?['quests'] as List?;
+        if (enrichedQuests != null) {
+          await _updateLocalQuestsWithMetadata(enrichedQuests, dateKey);
+        }
       } else {
         Logger.error('Failed to save quests to Supabase: ${response.error}', service: 'quest');
         throw Exception('Failed to save quests to Supabase');
@@ -143,6 +154,43 @@ class QuestSyncService {
     } catch (e) {
       Logger.error('Error saving quests to Supabase', error: e, service: 'quest');
       rethrow;
+    }
+  }
+
+  /// Update local quests with enriched metadata from API response
+  Future<void> _updateLocalQuestsWithMetadata(
+    List<dynamic> enrichedQuests,
+    String dateKey,
+  ) async {
+    for (final questData in enrichedQuests) {
+      final questMap = questData as Map<String, dynamic>;
+      final questId = questMap['id'] as String;
+      final metadata = questMap['metadata'] as Map<String, dynamic>?;
+
+      if (metadata == null) continue;
+
+      final quizName = metadata['quizName'] as String?;
+      final quizDescription = metadata['quizDescription'] as String?;
+
+      // Update local quest with enriched metadata
+      final localQuest = _storage.getDailyQuest(questId);
+      if (localQuest != null) {
+        bool updated = false;
+
+        if (quizName != null && (localQuest.quizName == null || localQuest.quizName!.isEmpty)) {
+          localQuest.quizName = quizName;
+          updated = true;
+        }
+        if (quizDescription != null && (localQuest.description == null || localQuest.description!.isEmpty)) {
+          localQuest.description = quizDescription;
+          updated = true;
+        }
+
+        if (updated) {
+          await _storage.saveDailyQuest(localQuest);
+          Logger.debug('Updated quest $questId with metadata: $quizName', service: 'quest');
+        }
+      }
     }
   }
 

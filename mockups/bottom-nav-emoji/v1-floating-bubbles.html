@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bottom Nav - Floating Bubbles</title>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Nunito', sans-serif;
+      background: linear-gradient(180deg, #FFD1C1 0%, #FFF5F0 100%);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      max-width: 430px;
+      margin: 0 auto;
+    }
+
+    .description {
+      text-align: center;
+      padding: 40px 20px;
+      color: #2D2D2D;
+    }
+    .description h1 { font-size: 20px; margin-bottom: 8px; }
+    .description p { font-size: 14px; color: #666; }
+
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100%;
+      max-width: 430px;
+      background: white;
+      display: flex;
+      justify-content: space-around;
+      align-items: flex-end;
+      padding: 8px 10px 24px;
+      box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.08);
+    }
+
+    .nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      cursor: pointer;
+      transition: transform 0.3s ease;
+    }
+
+    .nav-bubble {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: #F5F5F5;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    .nav-bubble img {
+      width: 32px;
+      height: 32px;
+      object-fit: contain;
+      opacity: 0.6;
+      transition: all 0.3s ease;
+    }
+
+    .nav-item.active .nav-bubble {
+      width: 56px;
+      height: 56px;
+      transform: translateY(-12px);
+      background: linear-gradient(135deg, #FFF5F0 0%, #FFE8E0 100%);
+      box-shadow: 0 8px 24px rgba(255, 107, 107, 0.3);
+    }
+
+    .nav-item.active .nav-bubble img {
+      width: 40px;
+      height: 40px;
+      opacity: 1;
+    }
+
+    .nav-label {
+      font-size: 10px;
+      font-weight: 600;
+      color: #999;
+      transition: all 0.3s ease;
+    }
+
+    .nav-item.active .nav-label {
+      color: #FF6B6B;
+      font-weight: 700;
+    }
+  </style>
+</head>
+<body>
+  <div class="description">
+    <h1>Floating Bubbles</h1>
+    <p>Active icon floats up in a glowing bubble</p>
+  </div>
+
+  <nav class="bottom-nav">
+    <div class="nav-item active">
+      <div class="nav-bubble">
+        <img src="home_v1.png" alt="Home">
+      </div>
+      <span class="nav-label">Home</span>
+    </div>
+    <div class="nav-item">
+      <div class="nav-bubble">
+        <img src="Inbox_v1.png" alt="Inbox">
+      </div>
+      <span class="nav-label">Inbox</span>
+    </div>
+    <div class="nav-item">
+      <div class="nav-bubble">
+        <img src="Poke_v2.png" alt="Poke">
+      </div>
+      <span class="nav-label">Poke</span>
+    </div>
+    <div class="nav-item">
+      <div class="nav-bubble">
+        <img src="profile_v2.png" alt="Profile">
+      </div>
+      <span class="nav-label">Us</span>
+    </div>
+    <div class="nav-item">
+      <div class="nav-bubble">
+        <img src="Settings_v1.png" alt="Settings">
+      </div>
+      <span class="nav-label">Settings</span>
+    </div>
+  </nav>
+
+  <script>
+    document.querySelectorAll('.nav-item').forEach(item => {
+      item.addEventListener('click', () => {
+        document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+        item.classList.add('active');
+      });
+    });
+  </script>
+</body>
+</html>

@@ -1,10 +1,10 @@
 /**
- * Development Only: Fetch user and couple data for dev auth bypass
+ * Development Only: Fetch user and couple data for dev testing
  *
  * This endpoint allows the Flutter app to load real user data without going
  * through the email auth flow during development.
  *
- * Security: Only active when AUTH_DEV_BYPASS_ENABLED=true
+ * Security: Only active in development environment
  */
 
 import { NextRequest, NextResponse } from 'next/server';
@@ -19,8 +19,8 @@ const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
  * Returns user data and partner data for local storage initialization
  */
 export async function GET(request: NextRequest) {
-  // Only allow when dev bypass is explicitly enabled
-  if (process.env.AUTH_DEV_BYPASS_ENABLED !== 'true') {
+  // Only allow in development
+  if (process.env.NODE_ENV !== 'development') {
     return NextResponse.json(
       { error: 'Dev endpoints disabled in production' },
       { status: 403 }

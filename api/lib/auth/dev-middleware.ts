@@ -1,126 +1,23 @@
 /**
- * Development Authentication Bypass Middleware
+ * Authentication Middleware Wrapper
  *
- * SECURITY: Only active when NODE_ENV=development AND AUTH_DEV_BYPASS_ENABLED=true
- *
- * Allows skipping JWT email authentication during development to improve
- * developer productivity while maintaining production security.
+ * This module provides withAuthOrDevBypass which is an alias for withAuth.
+ * All API routes use JWT authentication via Supabase.
  */
 
-import { NextRequest, NextResponse } from 'next/server';
-import { AuthenticatedRequest, RouteContext, withAuth } from './middleware';
+import { withAuth } from './middleware';
 
 /**
- * Check if development bypass is enabled
+ * Auth wrapper for API routes.
  *
- * Requirements:
- * - NODE_ENV must be 'development'
- * - AUTH_DEV_BYPASS_ENABLED must be explicitly 'true'
- *
- * Both conditions must be true for bypass to activate.
- * This prevents accidental activation in production.
- */
-function isDevBypassEnabled(): boolean {
-  const isDevelopment = process.env.NODE_ENV === 'development';
-  const bypassEnabled = process.env.AUTH_DEV_BYPASS_ENABLED === 'true';
-
-  return isDevelopment && bypassEnabled;
-}
-
-/**
- * Get development user credentials from request or environment
- *
- * Priority:
- * 1. X-Dev-User-Id header (for per-device user IDs)
- * 2. AUTH_DEV_USER_ID from .env.local
- * 3. Fallback to default test value
- *
- * This allows two devices to test as different users:
- * - Android: Send X-Dev-User-Id: user1_id
- * - Chrome: Send X-Dev-User-Id: user2_id
- */
-function getDevCredentials(req: NextRequest): { userId: string; email: string } {
-  // Check for per-device user ID in header
-  const headerUserId = req.headers.get('X-Dev-User-Id');
-
-  const userId = headerUserId || process.env.AUTH_DEV_USER_ID || 'dev-test-user-id';
-
-  return {
-    userId,
-    email: process.env.AUTH_DEV_USER_EMAIL || 'dev@togetherremind.local',
-  };
-}
-
-/**
- * Development-friendly auth wrapper
- *
- * In development with bypass enabled:
- * - Skips JWT verification
- * - Uses test userId from environment variables
- * - Logs bypass activation for visibility
- *
- * In production or when bypass disabled:
- * - Falls back to normal JWT authentication
- * - Same security as withAuth()
+ * This is an alias for withAuth - all requests require valid JWT authentication.
  *
  * Usage:
  * ```typescript
  * export const POST = withAuthOrDevBypass(async (req, userId, email, context) => {
- *   // Works in dev without JWT, requires JWT in prod
  *   const { matchId } = await context.params;
  *   return NextResponse.json({ userId, matchId });
  * });
  * ```
  */
-export function withAuthOrDevBypass(
-  handler: (req: AuthenticatedRequest, userId: string, email?: string, context?: RouteContext) => Promise<NextResponse>
-) {
-  return async (req: NextRequest, context?: RouteContext): Promise<NextResponse> => {
-    // Warn if bypass is configured but blocked due to non-development environment
-    if (process.env.AUTH_DEV_BYPASS_ENABLED === 'true' && process.env.NODE_ENV !== 'development') {
-      console.error(
-        `[DEV AUTH BYPASS] BLOCKED - AUTH_DEV_BYPASS_ENABLED is true but NODE_ENV=${process.env.NODE_ENV}. ` +
-        `Bypass only works in development mode. Falling back to JWT auth.`
-      );
-    }
-
-    // Check if dev bypass is enabled (requires both NODE_ENV=development AND AUTH_DEV_BYPASS_ENABLED=true)
-    if (isDevBypassEnabled()) {
-      const credentials = getDevCredentials(req);
-
-      const headerUserId = req.headers.get('X-Dev-User-Id');
-      const source = headerUserId ? 'X-Dev-User-Id header' : '.env.local';
-
-      // Log bypass activation (warn level for visibility)
-      console.warn(
-        `[DEV AUTH BYPASS] Active for userId: ${credentials.userId} (from ${source}) | ` +
-        `Email: ${credentials.email} | ` +
-        `Endpoint: ${req.nextUrl.pathname}`
-      );
-
-      // Attach dev credentials to request
-      const authenticatedReq = req as AuthenticatedRequest;
-      authenticatedReq.userId = credentials.userId;
-      authenticatedReq.userEmail = credentials.email;
-
-      // Call handler with dev credentials and context (for dynamic route params)
-      const response = await handler(authenticatedReq, credentials.userId, credentials.email, context);
-
-      // Add CORS headers for dev mode (browser requests from Flutter web)
-      response.headers.set('Access-Control-Allow-Origin', '*');
-      response.headers.set('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Dev-User-Id');
-
-      return response;
-    }
-
-    // Production or bypass disabled: use normal JWT auth
-    return withAuth(handler)(req, context);
-  };
-}
-
-/**
- * Export for testing/debugging
- */
-export const _internal = {
-  isDevBypassEnabled,
-};
+export const withAuthOrDevBypass = withAuth;

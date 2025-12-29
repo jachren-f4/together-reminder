@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inbox 2.0 - Scrapbook Style</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Nunito:wght@400;600;700&family=Caveat:wght@500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-gradient-start: #FFD1C1;
+            --bg-gradient-end: #FFF5F0;
+            --accent-pink: #FF6B6B;
+            --accent-orange: #FF9F43;
+            --cream: #FFF8F0;
+            --beige: #F5E6D8;
+            --ink: #2D2D2D;
+            --ink-light: #666;
+            --white: #FFFFFF;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            background: linear-gradient(180deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
+            min-height: 100vh;
+            color: var(--ink);
+        }
+
+        .phone-frame {
+            max-width: 390px;
+            margin: 20px auto;
+            background: var(--cream);
+            min-height: 844px;
+            border-radius: 40px;
+            overflow: hidden;
+            box-shadow: 0 25px 80px rgba(0,0,0,0.15);
+            position: relative;
+        }
+
+        /* Paper texture background */
+        .paper-bg {
+            background-image:
+                radial-gradient(ellipse at 50% 0%, rgba(255,209,193,0.5) 0%, transparent 60%),
+                repeating-linear-gradient(
+                    0deg,
+                    transparent,
+                    transparent 24px,
+                    rgba(200,180,160,0.1) 24px,
+                    rgba(200,180,160,0.1) 25px
+                );
+            min-height: 844px;
+        }
+
+        .header {
+            padding: 60px 20px 20px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-family: 'Caveat', cursive;
+            font-size: 38px;
+            font-weight: 600;
+            color: var(--ink);
+        }
+
+        /* Week Nav - Tape Style */
+        .week-nav {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            padding: 16px 20px;
+            position: relative;
+        }
+
+        .week-nav::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-2deg);
+            width: 240px;
+            height: 40px;
+            background: rgba(255,200,100,0.4);
+            border-radius: 2px;
+        }
+
+        .week-nav button {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border: 2px solid var(--ink);
+            background: var(--white);
+            color: var(--ink);
+            font-size: 16px;
+            cursor: pointer;
+            position: relative;
+            z-index: 1;
+            transition: all 0.2s;
+        }
+
+        .week-nav button:hover:not(:disabled) {
+            background: var(--accent-pink);
+            color: white;
+            border-color: var(--accent-pink);
+        }
+
+        .week-nav button:disabled {
+            opacity: 0.3;
+        }
+
+        .week-dates {
+            font-family: 'Caveat', cursive;
+            font-size: 24px;
+            font-weight: 600;
+            color: var(--ink);
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Polaroid-style memory cards */
+        .memories-grid {
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .memory-polaroid {
+            background: var(--white);
+            padding: 12px 12px 40px;
+            box-shadow:
+                0 4px 6px rgba(0,0,0,0.1),
+                0 1px 3px rgba(0,0,0,0.08);
+            transform: rotate(var(--rotation, 0deg));
+            transition: transform 0.3s;
+            cursor: pointer;
+        }
+
+        .memory-polaroid:hover {
+            transform: rotate(0deg) scale(1.02);
+            z-index: 10;
+        }
+
+        .memory-polaroid:nth-child(odd) {
+            --rotation: -2deg;
+        }
+
+        .memory-polaroid:nth-child(even) {
+            --rotation: 1.5deg;
+        }
+
+        .polaroid-image {
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 60px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .polaroid-image.quiz { background: linear-gradient(135deg, #FFEBEE, #FFCDD2); }
+        .polaroid-image.affirmation { background: linear-gradient(135deg, #FCE4EC, #F8BBD9); }
+        .polaroid-image.you-or-me { background: linear-gradient(135deg, #FFF3E0, #FFE0B2); }
+        .polaroid-image.linked { background: linear-gradient(135deg, #E3F2FD, #BBDEFB); }
+        .polaroid-image.word-search { background: linear-gradient(135deg, #F3E5F5, #E1BEE7); }
+        .polaroid-image.steps { background: linear-gradient(135deg, #E8F5E9, #C8E6C9); }
+
+        .polaroid-date {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(0,0,0,0.6);
+            color: white;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .polaroid-caption {
+            font-family: 'Caveat', cursive;
+            font-size: 20px;
+            color: var(--ink);
+            text-align: center;
+            margin-top: 12px;
+            line-height: 1.2;
+        }
+
+        .polaroid-subcaption {
+            font-family: 'Nunito', sans-serif;
+            font-size: 12px;
+            color: var(--ink-light);
+            text-align: center;
+            margin-top: 4px;
+        }
+
+        /* Answer display inside polaroid */
+        .answer-preview {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(transparent, rgba(0,0,0,0.8));
+            padding: 40px 16px 16px;
+            color: white;
+        }
+
+        .answer-row-mini {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+
+        .answer-mini {
+            flex: 1;
+            background: rgba(255,255,255,0.2);
+            padding: 8px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .answer-mini.matched {
+            background: rgba(76,175,80,0.4);
+            border: 1px solid #4CAF50;
+        }
+
+        .answer-mini-name {
+            font-size: 10px;
+            opacity: 0.8;
+            margin-bottom: 2px;
+        }
+
+        .answer-mini-text {
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .match-tag {
+            text-align: center;
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        .match-tag.yes { color: #4CAF50; }
+        .match-tag.no { color: #FFB74D; }
+
+        /* Sticker badges */
+        .sticker {
+            position: absolute;
+            font-size: 28px;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+        }
+
+        .sticker.top-left { top: -10px; left: -10px; transform: rotate(-15deg); }
+        .sticker.top-right { top: -10px; right: -10px; transform: rotate(20deg); }
+        .sticker.bottom-right { bottom: 45px; right: -5px; transform: rotate(10deg); }
+
+        /* LP Badge */
+        .lp-badge {
+            position: absolute;
+            bottom: 50px;
+            left: 10px;
+            background: linear-gradient(135deg, var(--accent-pink), var(--accent-orange));
+            color: white;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 700;
+            transform: rotate(-5deg);
+        }
+
+        /* Week Summary Card */
+        .week-summary-card {
+            margin: 0 20px 20px;
+            padding: 20px;
+            background: var(--white);
+            border-radius: 16px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            position: relative;
+        }
+
+        .week-summary-card::before {
+            content: '';
+            position: absolute;
+            top: -8px;
+            left: 30px;
+            width: 60px;
+            height: 20px;
+            background: rgba(255,200,100,0.6);
+            transform: rotate(-3deg);
+        }
+
+        .summary-title {
+            font-family: 'Caveat', cursive;
+            font-size: 22px;
+            color: var(--ink);
+            margin-bottom: 12px;
+        }
+
+        .summary-stats {
+            display: flex;
+            gap: 16px;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--accent-pink);
+        }
+
+        .stat-label {
+            font-size: 11px;
+            color: var(--ink-light);
+        }
+
+        /* Empty day styling */
+        .empty-note {
+            padding: 24px;
+            text-align: center;
+            font-family: 'Caveat', cursive;
+            font-size: 20px;
+            color: var(--ink-light);
+            transform: rotate(-1deg);
+        }
+
+        .empty-note::before {
+            content: '📝';
+            display: block;
+            font-size: 30px;
+            margin-bottom: 8px;
+        }
+
+        /* Day Separator */
+        .day-separator {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 0 20px;
+            margin: 20px 0;
+        }
+
+        .day-label {
+            font-family: 'Caveat', cursive;
+            font-size: 20px;
+            color: var(--ink);
+            white-space: nowrap;
+        }
+
+        .day-line {
+            flex: 1;
+            height: 2px;
+            background: repeating-linear-gradient(
+                90deg,
+                var(--ink),
+                var(--ink) 8px,
+                transparent 8px,
+                transparent 16px
+            );
+            opacity: 0.3;
+        }
+
+        .scroll-area {
+            padding-bottom: 100px;
+        }
+    </style>
+</head>
+<body>
+    <div class="phone-frame">
+        <div class="paper-bg">
+            <div class="header">
+                <h1>Our Quest Memories</h1>
+            </div>
+
+            <div class="week-nav">
+                <button id="prevWeek">‹</button>
+                <div class="week-dates">Dec 23 - 29</div>
+                <button id="nextWeek" disabled>›</button>
+            </div>
+
+            <div class="week-summary-card">
+                <div class="summary-title">This Week's Adventures</div>
+                <div class="summary-stats">
+                    <div class="stat-item">
+                        <div class="stat-value">12</div>
+                        <div class="stat-label">Quests</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">+180</div>
+                        <div class="stat-label">LP</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">6/7</div>
+                        <div class="stat-label">Days Active</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="scroll-area">
+                <div class="day-separator">
+                    <span class="day-label">Sunday, Dec 29</span>
+                    <div class="day-line"></div>
+                </div>
+
+                <div class="memories-grid">
+                    <div class="memory-polaroid" style="--rotation: -1deg;">
+                        <div class="polaroid-image affirmation">
+                            💕
+                            <span class="polaroid-date">9:15 AM</span>
+                            <div class="answer-preview">
+                                <div class="answer-row-mini">
+                                    <div class="answer-mini matched">
+                                        <div class="answer-mini-name">You</div>
+                                        <div class="answer-mini-text">Very close</div>
+                                    </div>
+                                    <div class="answer-mini matched">
+                                        <div class="answer-mini-name">Emma</div>
+                                        <div class="answer-mini-text">Very close</div>
+                                    </div>
+                                </div>
+                                <div class="match-tag yes">✓ Perfect match!</div>
+                            </div>
+                        </div>
+                        <span class="sticker top-right">⭐</span>
+                        <span class="lp-badge">+30 LP</span>
+                        <div class="polaroid-caption">Morning Check-in</div>
+                        <div class="polaroid-subcaption">Affirmation Quiz</div>
+                    </div>
+                </div>
+
+                <div class="day-separator">
+                    <span class="day-label">Saturday, Dec 28</span>
+                    <div class="day-line"></div>
+                </div>
+
+                <div class="memories-grid">
+                    <div class="memory-polaroid" style="--rotation: 2deg;">
+                        <div class="polaroid-image linked">
+                            🔗
+                            <span class="polaroid-date">7:45 PM</span>
+                        </div>
+                        <span class="sticker top-left">🏆</span>
+                        <span class="lp-badge">+30 LP</span>
+                        <div class="polaroid-caption">Romantic Crossword Complete!</div>
+                        <div class="polaroid-subcaption">Linked • LOVE, HEART, FOREVER, TOGETHER</div>
+                    </div>
+
+                    <div class="memory-polaroid" style="--rotation: -2deg;">
+                        <div class="polaroid-image you-or-me">
+                            🤔
+                            <span class="polaroid-date">3:20 PM</span>
+                            <div class="answer-preview">
+                                <div class="answer-row-mini">
+                                    <div class="answer-mini matched">
+                                        <div class="answer-mini-name">You said</div>
+                                        <div class="answer-mini-text">Emma</div>
+                                    </div>
+                                    <div class="answer-mini matched">
+                                        <div class="answer-mini-name">Emma said</div>
+                                        <div class="answer-mini-text">Me</div>
+                                    </div>
+                                </div>
+                                <div class="match-tag yes">Who's the better cook? You agree!</div>
+                            </div>
+                        </div>
+                        <span class="lp-badge">+30 LP</span>
+                        <div class="polaroid-caption">Kitchen Edition</div>
+                        <div class="polaroid-subcaption">You or Me</div>
+                    </div>
+
+                    <div class="memory-polaroid" style="--rotation: 1deg;">
+                        <div class="polaroid-image steps">
+                            👟
+                            <span class="polaroid-date">11:00 AM</span>
+                        </div>
+                        <span class="sticker bottom-right">🔥</span>
+                        <span class="lp-badge">+30 LP</span>
+                        <div class="polaroid-caption">8,000+ steps each!</div>
+                        <div class="polaroid-subcaption">Steps Together</div>
+                    </div>
+                </div>
+
+                <div class="day-separator">
+                    <span class="day-label">Thursday, Dec 26</span>
+                    <div class="day-line"></div>
+                </div>
+
+                <div class="empty-note">
+                    No quests this day - taking a break is okay!
+                </div>
+
+                <div class="day-separator">
+                    <span class="day-label">Wednesday, Dec 25</span>
+                    <div class="day-line"></div>
+                </div>
+
+                <div class="memories-grid">
+                    <div class="memory-polaroid" style="--rotation: -1.5deg;">
+                        <div class="polaroid-image affirmation" style="background: linear-gradient(135deg, #C62828, #D32F2F);">
+                            🎄
+                            <span class="polaroid-date">10:00 AM</span>
+                        </div>
+                        <span class="sticker top-left">✨</span>
+                        <span class="sticker top-right">💯</span>
+                        <span class="lp-badge">+30 LP</span>
+                        <div class="polaroid-caption">Perfect Christmas Match!</div>
+                        <div class="polaroid-subcaption">Holiday Check-in • 100% aligned</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('prevWeek').addEventListener('click', function() {
+            document.querySelector('.week-dates').textContent = 'Dec 16 - 22';
+            document.getElementById('nextWeek').disabled = false;
+            this.disabled = true;
+        });
+
+        document.getElementById('nextWeek').addEventListener('click', function() {
+            document.querySelector('.week-dates').textContent = 'Dec 23 - 29';
+            document.getElementById('prevWeek').disabled = false;
+            this.disabled = true;
+        });
+
+        // Click to expand polaroid (would show full details in production)
+        document.querySelectorAll('.memory-polaroid').forEach(polaroid => {
+            polaroid.addEventListener('click', () => {
+                // Would open detail view
+                polaroid.style.transform = 'scale(1.05)';
+                setTimeout(() => {
+                    polaroid.style.transform = '';
+                }, 200);
+            });
+        });
+    </script>
+</body>
+</html>

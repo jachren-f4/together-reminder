@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <title>Us Profile - Day 1 Experience</title>
+  <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-gradient-start: #FFD1C1;
+      --bg-gradient-end: #FFF5F0;
+      --primary-pink: #FF6B6B;
+      --primary-orange: #FF9F43;
+      --cream: #FFF8F0;
+      --beige: #F5E6D8;
+      --text-dark: #2D2D2D;
+      --text-medium: #6B6B6B;
+      --text-light: #9B9B9B;
+      --accent-purple: #9B7ED9;
+      --accent-teal: #5BBFBA;
+      --accent-gold: #F4C55B;
+      --accent-green: #4CAF50;
+      --emma-color: #FF6B6B;
+      --james-color: #5B9BD5;
+      --locked-bg: #F0EDE8;
+      --safe-top: env(safe-area-inset-top, 0px);
+      --safe-bottom: env(safe-area-inset-bottom, 0px);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+    html { -webkit-text-size-adjust: 100%; }
+
+    body {
+      font-family: 'Nunito', sans-serif;
+      background: linear-gradient(180deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
+      min-height: 100vh;
+      min-height: -webkit-fill-available;
+      padding: 16px;
+      padding-top: calc(16px + var(--safe-top));
+      padding-bottom: calc(100px + var(--safe-bottom));
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 8px;
+    }
+
+    .header h1 {
+      font-family: 'Pacifico', cursive;
+      font-size: 32px;
+      color: var(--text-dark);
+    }
+
+    .header .subtitle {
+      font-size: 13px;
+      color: var(--text-medium);
+      font-style: italic;
+      margin-top: 4px;
+    }
+
+    .info-link {
+      text-align: center;
+      margin-bottom: 16px;
+    }
+
+    .info-link a {
+      font-size: 12px;
+      color: var(--text-light);
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .section-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text-dark);
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .new-badge {
+      font-size: 9px;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, var(--primary-pink), var(--primary-orange));
+      color: white;
+      margin-left: auto;
+    }
+
+    /* Action Stats - Day 1 Version */
+    .action-stats-card {
+      background: white;
+      border-radius: 20px;
+      padding: 20px 16px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    }
+
+    .action-stats-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 15px;
+      color: var(--text-medium);
+      margin-bottom: 14px;
+      text-align: center;
+    }
+
+    .action-stats-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .action-stat {
+      background: var(--cream);
+      border-radius: 14px;
+      padding: 14px 12px;
+      text-align: center;
+    }
+
+    .action-stat-value {
+      font-size: 28px;
+      font-weight: 800;
+      color: var(--text-dark);
+    }
+
+    .action-stat-value.zero {
+      color: var(--text-light);
+    }
+
+    .action-stat-label {
+      font-size: 10px;
+      color: var(--text-light);
+      line-height: 1.3;
+      margin-top: 4px;
+    }
+
+    .action-stat-goal {
+      font-size: 9px;
+      color: var(--accent-purple);
+      font-weight: 600;
+      margin-top: 6px;
+    }
+
+    .focus-section {
+      background: linear-gradient(135deg, var(--primary-pink), var(--primary-orange));
+      border-radius: 14px;
+      padding: 14px;
+      color: white;
+    }
+
+    .focus-label {
+      font-size: 9px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      opacity: 0.9;
+      margin-bottom: 6px;
+    }
+
+    .focus-text {
+      font-size: 13px;
+      line-height: 1.4;
+    }
+
+    .focus-action {
+      margin-top: 10px;
+      padding-top: 10px;
+      border-top: 1px solid rgba(255,255,255,0.2);
+      font-size: 11px;
+      opacity: 0.9;
+    }
+
+    .last-updated {
+      font-size: 10px;
+      color: var(--text-light);
+      margin-top: 14px;
+      padding-top: 10px;
+      border-top: 1px solid var(--beige);
+      text-align: center;
+    }
+
+    /* First Discovery - Celebratory */
+    .first-discovery-card {
+      background: linear-gradient(135deg, #FFF9E6, #FFF5F0);
+      border-radius: 18px;
+      padding: 16px;
+      margin-bottom: 20px;
+      border: 2px solid rgba(244, 197, 91, 0.4);
+      position: relative;
+    }
+
+    .first-discovery-badge {
+      position: absolute;
+      top: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: linear-gradient(135deg, var(--accent-gold), #F5D76E);
+      color: white;
+      font-size: 10px;
+      font-weight: 700;
+      padding: 4px 12px;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(244, 197, 91, 0.4);
+    }
+
+    .discovery-item {
+      background: white;
+      border-radius: 14px;
+      padding: 14px;
+      margin-top: 8px;
+    }
+
+    .discovery-insight {
+      font-size: 13px;
+      color: var(--text-dark);
+      line-height: 1.5;
+      margin-bottom: 12px;
+    }
+
+    .discovery-insight strong { color: var(--primary-pink); }
+
+    .discovery-action {
+      background: linear-gradient(135deg, rgba(255, 107, 107, 0.15), rgba(255, 159, 67, 0.15));
+      border-radius: 12px;
+      padding: 14px;
+      border-left: 4px solid var(--primary-pink);
+    }
+
+    .discovery-action-label {
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--primary-pink);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 6px;
+    }
+
+    .discovery-action-text {
+      font-size: 13px;
+      color: var(--text-dark);
+      line-height: 1.5;
+      font-weight: 600;
+    }
+
+    .discovery-action-buttons {
+      display: flex;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .action-btn {
+      font-size: 11px;
+      padding: 8px 14px;
+      border-radius: 14px;
+      border: none;
+      cursor: pointer;
+      font-weight: 600;
+      font-family: 'Nunito', sans-serif;
+    }
+
+    .action-btn.done {
+      background: var(--accent-green);
+      color: white;
+    }
+
+    .action-btn.later {
+      background: var(--beige);
+      color: var(--text-medium);
+    }
+
+    /* Locked Sections */
+    .locked-section {
+      background: var(--locked-bg);
+      border-radius: 18px;
+      padding: 20px;
+      margin-bottom: 16px;
+      text-align: center;
+      border: 2px dashed #D0C8BE;
+    }
+
+    .locked-section.large {
+      padding: 28px 20px;
+    }
+
+    .locked-icon {
+      font-size: 24px;
+      margin-bottom: 8px;
+      opacity: 0.6;
+    }
+
+    .locked-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 14px;
+      color: var(--text-medium);
+      margin-bottom: 4px;
+    }
+
+    .locked-description {
+      font-size: 11px;
+      color: var(--text-light);
+      margin-bottom: 12px;
+      line-height: 1.4;
+    }
+
+    .locked-progress {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .locked-progress-bar {
+      width: 80px;
+      height: 6px;
+      background: #D0C8BE;
+      border-radius: 3px;
+      overflow: hidden;
+    }
+
+    .locked-progress-fill {
+      height: 100%;
+      background: var(--accent-purple);
+      border-radius: 3px;
+    }
+
+    .locked-progress-text {
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--accent-purple);
+    }
+
+    /* Locked Grid - Two columns */
+    .locked-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .locked-grid .locked-section {
+      margin-bottom: 0;
+      padding: 16px 12px;
+    }
+
+    .locked-grid .locked-icon {
+      font-size: 20px;
+      margin-bottom: 6px;
+    }
+
+    .locked-grid .locked-title {
+      font-size: 12px;
+    }
+
+    .locked-grid .locked-description {
+      font-size: 10px;
+      margin-bottom: 10px;
+    }
+
+    .locked-grid .locked-progress-bar {
+      width: 60px;
+    }
+
+    .locked-grid .locked-progress-text {
+      font-size: 9px;
+    }
+
+    /* Conversation Starter - First one */
+    .convo-card {
+      background: white;
+      border-radius: 18px;
+      padding: 16px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    }
+
+    .convo-item {
+      background: var(--cream);
+      border-radius: 14px;
+      padding: 14px;
+    }
+
+    .convo-trigger {
+      font-size: 9px;
+      color: var(--accent-purple);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 6px;
+    }
+
+    .convo-question {
+      font-size: 13px;
+      color: var(--text-dark);
+      line-height: 1.5;
+      margin-bottom: 8px;
+    }
+
+    .convo-context {
+      font-size: 10px;
+      color: var(--text-light);
+      font-style: italic;
+      line-height: 1.4;
+    }
+
+    .convo-actions {
+      display: flex;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .convo-btn {
+      font-size: 11px;
+      padding: 8px 14px;
+      border-radius: 14px;
+      border: none;
+      cursor: pointer;
+      font-weight: 600;
+      font-family: 'Nunito', sans-serif;
+    }
+
+    .convo-btn.primary {
+      background: linear-gradient(135deg, var(--primary-pink), var(--primary-orange));
+      color: white;
+    }
+
+    .convo-btn.secondary {
+      background: var(--beige);
+      color: var(--text-medium);
+    }
+
+    /* What's Coming Section */
+    .whats-coming {
+      background: white;
+      border-radius: 18px;
+      padding: 20px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    }
+
+    .whats-coming h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 15px;
+      color: var(--text-dark);
+      margin-bottom: 14px;
+      text-align: center;
+    }
+
+    .coming-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--beige);
+    }
+
+    .coming-item:last-child {
+      border-bottom: none;
+    }
+
+    .coming-icon {
+      width: 36px;
+      height: 36px;
+      background: var(--cream);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+    }
+
+    .coming-text {
+      flex: 1;
+    }
+
+    .coming-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-dark);
+    }
+
+    .coming-unlock {
+      font-size: 10px;
+      color: var(--text-light);
+    }
+
+    .coming-progress {
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--accent-purple);
+    }
+
+    /* Methodology */
+    .methodology-hint {
+      text-align: center;
+      margin-top: 20px;
+      padding: 14px;
+      background: white;
+      border-radius: 14px;
+    }
+
+    .methodology-hint p {
+      font-size: 11px;
+      color: var(--text-light);
+      line-height: 1.5;
+    }
+
+    .methodology-hint a {
+      color: var(--accent-purple);
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    /* Touch feedback */
+    .action-btn:active, .convo-btn:active {
+      transform: scale(0.97);
+      opacity: 0.9;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>Us</h1>
+    <p class="subtitle">Your journey together starts here</p>
+  </div>
+
+  <div class="info-link">
+    <a href="#">How we create these insights</a>
+  </div>
+
+  <!-- ACTION STATS - Day 1 with motivating zeros -->
+  <div class="action-stats-card">
+    <div class="action-stats-title">Your Actions Together</div>
+    <div class="action-stats-grid">
+      <div class="action-stat">
+        <div class="action-stat-value zero">0</div>
+        <div class="action-stat-label">Insights<br>Acted On</div>
+        <div class="action-stat-goal">Your first one is below!</div>
+      </div>
+      <div class="action-stat">
+        <div class="action-stat-value zero">0</div>
+        <div class="action-stat-label">Conversations<br>Had</div>
+        <div class="action-stat-goal">Start with the prompt below</div>
+      </div>
+    </div>
+    <div class="focus-section">
+      <div class="focus-label">This Week's Focus</div>
+      <div class="focus-text">
+        When James seems stressed, try saying "I'm here when you're ready" instead of asking what's wrong.
+      </div>
+      <div class="focus-action">
+        Based on your first quiz together
+      </div>
+    </div>
+    <div class="last-updated">Your first quiz completed today!</div>
+  </div>
+
+  <!-- FIRST DISCOVERY - Celebratory -->
+  <div class="section-title">
+    Your First Discovery
+    <span class="new-badge">New!</span>
+  </div>
+  <div class="first-discovery-card">
+    <div class="first-discovery-badge">You learned something new!</div>
+    <div class="discovery-item">
+      <div class="discovery-insight">
+        <strong>James</strong> prefers quiet time when stressed, while <strong>Emma</strong> wants to talk things through right away.
+      </div>
+      <div class="discovery-action">
+        <div class="discovery-action-label">Try This</div>
+        <div class="discovery-action-text">
+          When James seems stressed, say: "I'm here when you're ready to talk"
+        </div>
+        <div class="discovery-action-buttons">
+          <button class="action-btn done">I tried it!</button>
+          <button class="action-btn later">Save for later</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FIRST CONVERSATION STARTER -->
+  <div class="section-title">Start a Conversation</div>
+  <div class="convo-card">
+    <div class="convo-item">
+      <div class="convo-trigger">From your first discovery</div>
+      <div class="convo-question">
+        Ask James: "When you need space, what helps you most?"
+      </div>
+      <div class="convo-context">
+        Understanding his process helps you support him better.
+      </div>
+      <div class="convo-actions">
+        <button class="convo-btn primary">We discussed this</button>
+        <button class="convo-btn secondary">Later</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- LOCKED SECTIONS - Grid layout -->
+  <div class="section-title">Coming Soon</div>
+
+  <div class="locked-grid">
+    <div class="locked-section">
+      <div class="locked-icon">Dimensions</div>
+      <div class="locked-title">How You Navigate</div>
+      <div class="locked-description">See how you each approach life</div>
+      <div class="locked-progress">
+        <div class="locked-progress-bar">
+          <div class="locked-progress-fill" style="width: 20%;"></div>
+        </div>
+        <span class="locked-progress-text">2 more quizzes</span>
+      </div>
+    </div>
+
+    <div class="locked-section">
+      <div class="locked-icon">Values</div>
+      <div class="locked-title">Where You Align</div>
+      <div class="locked-description">Discover shared values</div>
+      <div class="locked-progress">
+        <div class="locked-progress-bar">
+          <div class="locked-progress-fill" style="width: 20%;"></div>
+        </div>
+        <span class="locked-progress-text">2 more quizzes</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="locked-section large">
+    <div class="locked-icon">Partner View</div>
+    <div class="locked-title">Through Each Other's Eyes</div>
+    <div class="locked-description">Play "You or Me" to see how your partner sees you</div>
+    <div class="locked-progress">
+      <div class="locked-progress-bar">
+        <div class="locked-progress-fill" style="width: 0%;"></div>
+      </div>
+      <span class="locked-progress-text">Play You or Me</span>
+    </div>
+  </div>
+
+  <!-- WHAT'S COMING - Roadmap -->
+  <div class="whats-coming">
+    <h3>Your Profile Will Grow</h3>
+
+    <div class="coming-item">
+      <div class="coming-icon">Stress</div>
+      <div class="coming-text">
+        <div class="coming-title">Stress Processing Style</div>
+        <div class="coming-unlock">After 3 more questions</div>
+      </div>
+      <div class="coming-progress">1/4</div>
+    </div>
+
+    <div class="coming-item">
+      <div class="coming-icon">Plan</div>
+      <div class="coming-text">
+        <div class="coming-title">Planning Style</div>
+        <div class="coming-unlock">After 3 more questions</div>
+      </div>
+      <div class="coming-progress">0/3</div>
+    </div>
+
+    <div class="coming-item">
+      <div class="coming-icon">Love</div>
+      <div class="coming-text">
+        <div class="coming-title">Love Languages</div>
+        <div class="coming-unlock">After 6 love language questions</div>
+      </div>
+      <div class="coming-progress">0/6</div>
+    </div>
+
+    <div class="coming-item">
+      <div class="coming-icon">Money</div>
+      <div class="coming-text">
+        <div class="coming-title">Financial Philosophy</div>
+        <div class="coming-unlock">After 3 finance questions</div>
+      </div>
+      <div class="coming-progress">0/3</div>
+    </div>
+  </div>
+
+  <!-- Methodology -->
+  <div class="methodology-hint">
+    <p>
+      As you explore more quizzes together, your profile will reveal patterns and insights unique to your relationship.
+      <a href="#">Learn more</a>
+    </p>
+  </div>
+</body>
+</html>

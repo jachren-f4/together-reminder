@@ -11,6 +11,7 @@ import '../config/brand/brand_loader.dart';
 import '../config/brand/brand_config.dart';
 import '../config/brand/us2_theme.dart';
 import 'onboarding_screen.dart';
+import 'us_profile_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -66,6 +67,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               child: Column(
                 children: [
                   _buildUs2Header(user, partner),
+                  _buildUs2ProfileLink(),
                   _buildUs2HeroStats(stats),
                   _buildUs2CurrentArena(stats),
                   _buildUs2ProgressSection(stats),
@@ -1064,6 +1066,88 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  /// Us2 Profile Link Card - Navigate to Us Profile
+  Widget _buildUs2ProfileLink() {
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const UsProfileScreen()),
+        );
+      },
+      child: Container(
+        margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              Us2Theme.gradientAccentStart.withOpacity(0.15),
+              Us2Theme.gradientAccentEnd.withOpacity(0.15),
+            ],
+          ),
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(
+            color: Us2Theme.primaryBrandPink.withOpacity(0.3),
+            width: 1,
+          ),
+        ),
+        child: Row(
+          children: [
+            Container(
+              width: 44,
+              height: 44,
+              decoration: BoxDecoration(
+                gradient: Us2Theme.accentGradient,
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: const Center(
+                child: Text(
+                  'Us',
+                  style: TextStyle(
+                    fontFamily: 'Pacifico',
+                    fontSize: 18,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Us Profile',
+                    style: GoogleFonts.playfairDisplay(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                      color: Us2Theme.textDark,
+                    ),
+                  ),
+                  const SizedBox(height: 2),
+                  Text(
+                    'Discover insights about your relationship',
+                    style: GoogleFonts.nunito(
+                      fontSize: 12,
+                      color: Us2Theme.textMedium,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Icon(
+              Icons.arrow_forward_ios,
+              size: 16,
+              color: Us2Theme.textLight,
+            ),
+          ],
+        ),
       ),
     );
   }

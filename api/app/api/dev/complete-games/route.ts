@@ -44,7 +44,7 @@ import { LP_REWARDS } from '@/lib/lp/config';
 export const dynamic = 'force-dynamic';
 
 // Only allow in dev mode
-const DEV_BYPASS_ENABLED = process.env.AUTH_DEV_BYPASS_ENABLED === 'true';
+const IS_DEV = process.env.NODE_ENV === 'development';
 
 // Game config for branch advancement
 const GAME_CONFIG: Record<string, { activityType: string; numBranches: number; table?: string }> = {
@@ -241,10 +241,10 @@ async function completeWordSearchMatch(
 }
 
 export async function POST(req: NextRequest) {
-  // Security: Only allow in dev mode
-  if (!DEV_BYPASS_ENABLED) {
+  // Security: Only allow in development
+  if (!IS_DEV) {
     return NextResponse.json(
-      { error: 'Dev bypass not enabled' },
+      { error: 'Dev endpoints disabled in production' },
       { status: 403 }
     );
   }

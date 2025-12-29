@@ -25,7 +25,11 @@
         "A physical activity or walk",
         "Other / It depends on the people"
       ],
-      "category": "self_care"
+      "category": "self_care",
+      "metadata": {
+        "dimension": "social_energy",
+        "poleMapping": ["left", "right", "left", null, null]
+      }
     },
     {
       "id": "quiz_002_q3",
@@ -37,7 +41,11 @@
         "Physical comfort (hug, being close)",
         "Practical help or advice"
       ],
-      "category": "support"
+      "category": "support",
+      "metadata": {
+        "dimension": "stress_processing",
+        "poleMapping": ["right", "left", null, null, null]
+      }
     },
     {
       "id": "quiz_002_q4",
@@ -49,7 +57,11 @@
         "Exercise or stay active",
         "Comfort activities (food, shows, etc.)"
       ],
-      "category": "self_care"
+      "category": "self_care",
+      "metadata": {
+        "dimension": "stress_processing",
+        "poleMapping": ["left", "left", "right", null, null]
+      }
     },
     {
       "id": "quiz_002_q5",
@@ -61,7 +73,11 @@
         "Distract me with something fun",
         "Other / Just ask me in the moment"
       ],
-      "category": "support"
+      "category": "support",
+      "metadata": {
+        "dimension": "stress_processing",
+        "poleMapping": ["left", null, null, null, null]
+      }
     }
   ],
   "description": "Learn about what energizes you both and how you support each other."

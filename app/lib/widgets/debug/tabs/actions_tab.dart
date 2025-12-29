@@ -23,6 +23,8 @@ import '../../../services/user_profile_service.dart';
 import '../../../config/supabase_config.dart';
 import '../../../utils/logger.dart';
 import '../../../config/theme_config.dart';
+import '../../../services/nav_style_service.dart';
+import '../../brand/brand_widget_factory.dart';
 import '../components/debug_section_card.dart';
 
 /// Actions tab for testing tools and data management
@@ -772,6 +774,59 @@ class _ActionsTabState extends State<ActionsTab> {
               ],
             ),
           ),
+
+          // Nav Style (Us 2.0 only)
+          if (BrandWidgetFactory.isUs2)
+            DebugSectionCard(
+              title: '🎨 BOTTOM NAV STYLE',
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Text(
+                    'Current: ${NavStyleService.instance.getStyleDisplayName(NavStyleService.instance.currentStyle)}',
+                    style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
+                  ),
+                  const SizedBox(height: 12),
+                  Row(
+                    children: [
+                      for (final style in Us2NavStyle.values)
+                        Expanded(
+                          child: Padding(
+                            padding: EdgeInsets.only(
+                              right: style != Us2NavStyle.values.last ? 8 : 0,
+                            ),
+                            child: ElevatedButton(
+                              onPressed: NavStyleService.instance.currentStyle == style
+                                  ? null
+                                  : () async {
+                                      await NavStyleService.instance.setStyle(style);
+                                      setState(() {});
+                                      if (mounted) {
+                                        // Close debug menu so user can see the nav change
+                                        Navigator.of(context).pop();
+                                      }
+                                    },
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: NavStyleService.instance.currentStyle == style
+                                    ? Colors.green
+                                    : Colors.grey.shade300,
+                                foregroundColor: NavStyleService.instance.currentStyle == style
+                                    ? Colors.white
+                                    : Colors.black87,
+                                padding: const EdgeInsets.symmetric(vertical: 12),
+                              ),
+                              child: Text(
+                                NavStyleService.instance.getStyleDisplayName(style).split(' ').first,
+                                style: const TextStyle(fontSize: 11),
+                              ),
+                            ),
+                          ),
+                        ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
 
           // Clear Local Storage
           DebugSectionCard(

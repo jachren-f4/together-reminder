@@ -1,0 +1,973 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Journal - Timeline View</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-gradient-start: #FFD1C1;
+            --bg-gradient-end: #FFF5F0;
+            --accent-pink: #FF6B6B;
+            --accent-orange: #FF9F43;
+            --salmon: #FF7B6B;
+            --cream: #FFF8F0;
+            --beige: #F5E6D8;
+            --ink: #2D2D2D;
+            --ink-light: #666;
+            --white: #FFFFFF;
+            --green: #4CAF50;
+            --green-light: #E8F5E9;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            background: linear-gradient(180deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
+            min-height: 100vh;
+            color: var(--ink);
+        }
+
+        .phone-frame {
+            max-width: 390px;
+            margin: 20px auto;
+            background: linear-gradient(180deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
+            min-height: 844px;
+            border-radius: 40px;
+            overflow: hidden;
+            box-shadow: 0 25px 80px rgba(0,0,0,0.15);
+            position: relative;
+        }
+
+        .header {
+            padding: 60px 20px 20px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 28px;
+            font-weight: 600;
+            color: var(--ink);
+            margin-bottom: 4px;
+        }
+
+        .header .subtitle {
+            font-size: 14px;
+            color: var(--ink-light);
+        }
+
+        /* Week Navigation */
+        .week-nav {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            padding: 16px 20px;
+            background: rgba(255,255,255,0.6);
+            backdrop-filter: blur(10px);
+            margin: 0 16px;
+            border-radius: 16px;
+        }
+
+        .week-nav button {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: none;
+            background: var(--white);
+            color: var(--accent-pink);
+            font-size: 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transition: all 0.2s;
+        }
+
+        .week-nav button:hover:not(:disabled) {
+            transform: scale(1.1);
+            background: linear-gradient(135deg, var(--accent-pink), var(--accent-orange));
+            color: white;
+        }
+
+        .week-nav button:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        .week-range {
+            text-align: center;
+        }
+
+        .week-range .dates {
+            font-weight: 700;
+            font-size: 16px;
+            color: var(--ink);
+        }
+
+        .week-range .label {
+            font-size: 12px;
+            color: var(--ink-light);
+            margin-top: 2px;
+        }
+
+        /* Weekly Insights Section */
+        .weekly-insights {
+            margin: 20px 16px;
+            padding: 20px;
+            background: var(--white);
+            border-radius: 20px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+
+        .insights-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+
+        .insights-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--ink);
+        }
+
+        .insights-line {
+            flex: 1;
+            height: 1px;
+            background: var(--beige);
+        }
+
+        .insight-cards {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .insight-card {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 14px;
+            background: var(--cream);
+            border-radius: 14px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .insight-card:hover {
+            transform: translateX(4px);
+        }
+
+        .insight-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            flex-shrink: 0;
+        }
+
+        .insight-icon.sync { background: #E8F5E9; }
+        .insight-icon.activity { background: #FFF3E0; }
+        .insight-icon.games { background: #E3F2FD; }
+
+        .insight-content {
+            flex: 1;
+        }
+
+        .insight-headline {
+            font-weight: 700;
+            font-size: 14px;
+            color: var(--ink);
+            margin-bottom: 3px;
+        }
+
+        .insight-detail {
+            font-size: 12px;
+            color: var(--ink-light);
+            line-height: 1.4;
+        }
+
+        /* Timeline */
+        .timeline {
+            padding: 20px 20px 100px;
+        }
+
+        .day-group {
+            margin-bottom: 24px;
+        }
+
+        .day-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .day-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent-pink), var(--accent-orange));
+            flex-shrink: 0;
+        }
+
+        .day-dot.empty {
+            background: var(--beige);
+        }
+
+        .day-info {
+            flex: 1;
+        }
+
+        .day-date {
+            font-family: 'Playfair Display', serif;
+            font-weight: 600;
+            font-size: 16px;
+            color: var(--ink);
+        }
+
+        .day-summary {
+            font-size: 12px;
+            color: var(--ink-light);
+            margin-top: 2px;
+        }
+
+        .day-line {
+            width: 40px;
+            height: 1px;
+            background: linear-gradient(90deg, var(--beige), transparent);
+        }
+
+        /* Quest Cards */
+        .quest-cards {
+            margin-left: 24px;
+            padding-left: 16px;
+            border-left: 2px solid var(--beige);
+        }
+
+        .quest-card {
+            background: var(--white);
+            border-radius: 16px;
+            margin-bottom: 12px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+            overflow: hidden;
+            transition: transform 0.2s;
+        }
+
+        .quest-card:hover {
+            transform: translateX(4px);
+        }
+
+        .quest-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 16px;
+            cursor: pointer;
+        }
+
+        .quest-icon {
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            flex-shrink: 0;
+        }
+
+        .quest-icon.classic { background: linear-gradient(135deg, #FFEBEE, #FFCDD2); }
+        .quest-icon.affirmation { background: linear-gradient(135deg, #FCE4EC, #F8BBD9); }
+        .quest-icon.you-or-me { background: linear-gradient(135deg, #FFF3E0, #FFE0B2); }
+        .quest-icon.linked { background: linear-gradient(135deg, #E3F2FD, #BBDEFB); }
+        .quest-icon.word-search { background: linear-gradient(135deg, #F3E5F5, #E1BEE7); }
+        .quest-icon.steps { background: linear-gradient(135deg, #E8F5E9, #C8E6C9); }
+
+        .quest-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .quest-type {
+            font-size: 11px;
+            color: var(--ink-light);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .quest-title {
+            font-weight: 700;
+            font-size: 14px;
+            color: var(--ink);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            margin-top: 2px;
+        }
+
+        .quest-meta {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 4px;
+        }
+
+        .quest-time {
+            font-size: 11px;
+            color: var(--ink-light);
+        }
+
+        /* Result Badge - replaces LP */
+        .result-badge {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 10px;
+            border-radius: 10px;
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        .result-badge.aligned {
+            background: var(--green-light);
+            color: var(--green);
+        }
+
+        .result-badge.mixed {
+            background: #FFF3E0;
+            color: #E65100;
+        }
+
+        .result-badge.complete {
+            background: #E3F2FD;
+            color: #1565C0;
+        }
+
+        .quest-expand {
+            color: var(--ink-light);
+            font-size: 16px;
+            transition: transform 0.2s;
+            margin-left: 4px;
+        }
+
+        .quest-card.expanded .quest-expand {
+            transform: rotate(180deg);
+        }
+
+        /* Quest Details - Expandable */
+        .quest-details {
+            display: none;
+            padding: 0 16px 16px;
+            border-top: 1px solid var(--beige);
+        }
+
+        .quest-card.expanded .quest-details {
+            display: block;
+        }
+
+        /* Answer Display */
+        .answers-section {
+            margin-top: 14px;
+        }
+
+        .answer-item {
+            background: var(--cream);
+            border-radius: 12px;
+            padding: 12px;
+            margin-bottom: 10px;
+        }
+
+        .answer-question {
+            font-size: 12px;
+            color: var(--ink-light);
+            font-style: italic;
+            margin-bottom: 10px;
+            line-height: 1.4;
+        }
+
+        .answer-row {
+            display: flex;
+            gap: 8px;
+        }
+
+        .answer-bubble {
+            flex: 1;
+            padding: 10px;
+            background: var(--white);
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .answer-bubble.matched {
+            border: 2px solid var(--green);
+            background: rgba(76,175,80,0.05);
+        }
+
+        .answer-name {
+            font-size: 10px;
+            font-weight: 700;
+            color: var(--ink-light);
+            margin-bottom: 4px;
+        }
+
+        .answer-text {
+            font-size: 13px;
+            color: var(--ink);
+            font-weight: 600;
+        }
+
+        .match-indicator {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            margin-top: 8px;
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        .match-indicator.matched { color: var(--green); }
+        .match-indicator.different { color: #E65100; }
+
+        /* Game Result Display */
+        .game-result {
+            margin-top: 14px;
+            padding: 14px;
+            background: var(--cream);
+            border-radius: 12px;
+        }
+
+        .game-result-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .game-result-title {
+            font-weight: 700;
+            font-size: 13px;
+            color: var(--ink);
+        }
+
+        .game-result-badge {
+            padding: 4px 10px;
+            background: var(--green-light);
+            color: var(--green);
+            border-radius: 8px;
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        .words-found {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-bottom: 12px;
+        }
+
+        .word-tag {
+            padding: 5px 12px;
+            background: var(--white);
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--ink);
+        }
+
+        .contribution-row {
+            display: flex;
+            gap: 10px;
+        }
+
+        .contribution-item {
+            flex: 1;
+            text-align: center;
+            padding: 10px;
+            background: var(--white);
+            border-radius: 10px;
+        }
+
+        .contribution-name {
+            font-size: 10px;
+            color: var(--ink-light);
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .contribution-value {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--ink);
+        }
+
+        .contribution-label {
+            font-size: 10px;
+            color: var(--ink-light);
+        }
+
+        /* Empty Day */
+        .empty-day {
+            text-align: center;
+            padding: 20px;
+            margin-left: 24px;
+            padding-left: 16px;
+            border-left: 2px solid var(--beige);
+            color: var(--ink-light);
+            font-style: italic;
+        }
+
+        /* Perfect Match Banner */
+        .perfect-banner {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            background: linear-gradient(135deg, var(--green), #66BB6A);
+            color: white;
+            padding: 10px 16px;
+            border-radius: 10px;
+            margin-bottom: 12px;
+        }
+
+        .perfect-banner-emoji {
+            font-size: 20px;
+        }
+
+        .perfect-banner-text {
+            font-weight: 700;
+            font-size: 13px;
+        }
+
+        /* All aligned tag */
+        .all-aligned {
+            background: var(--green-light);
+            color: var(--green);
+            padding: 10px;
+            border-radius: 10px;
+            text-align: center;
+            font-weight: 700;
+            font-size: 13px;
+        }
+    </style>
+</head>
+<body>
+    <div class="phone-frame">
+        <div class="header">
+            <h1>Journal</h1>
+            <p class="subtitle">Your week together</p>
+        </div>
+
+        <div class="week-nav">
+            <button id="prevWeek">&#8249;</button>
+            <div class="week-range">
+                <div class="dates">Dec 23 - Dec 29</div>
+                <div class="label">This Week</div>
+            </div>
+            <button id="nextWeek" disabled>&#8250;</button>
+        </div>
+
+        <!-- Weekly Insights -->
+        <div class="weekly-insights">
+            <div class="insights-header">
+                <span class="insights-title">Weekly Insights</span>
+                <div class="insights-line"></div>
+            </div>
+            <div class="insight-cards">
+                <div class="insight-card">
+                    <div class="insight-icon sync">🎯</div>
+                    <div class="insight-content">
+                        <div class="insight-headline">78% Aligned This Week</div>
+                        <div class="insight-detail">You matched on 18 out of 23 questions across all quizzes</div>
+                    </div>
+                </div>
+                <div class="insight-card">
+                    <div class="insight-icon activity">📅</div>
+                    <div class="insight-content">
+                        <div class="insight-headline">6 Active Days</div>
+                        <div class="insight-detail">You completed quests together on 6 out of 7 days</div>
+                    </div>
+                </div>
+                <div class="insight-card">
+                    <div class="insight-icon games">🎮</div>
+                    <div class="insight-content">
+                        <div class="insight-headline">12 Quests Completed</div>
+                        <div class="insight-detail">5 Daily Quests • 4 Side Quests • 3 Steps Together</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Timeline -->
+        <div class="timeline">
+            <!-- Sunday -->
+            <div class="day-group">
+                <div class="day-header">
+                    <div class="day-dot"></div>
+                    <div class="day-info">
+                        <div class="day-date">Sunday, Dec 29</div>
+                        <div class="day-summary">Today • 2 quests</div>
+                    </div>
+                    <div class="day-line"></div>
+                </div>
+                <div class="quest-cards">
+                    <div class="quest-card">
+                        <div class="quest-header" onclick="toggleCard(this)">
+                            <div class="quest-icon affirmation">💕</div>
+                            <div class="quest-info">
+                                <div class="quest-type">Affirmation Quiz</div>
+                                <div class="quest-title">Morning Check-in</div>
+                            </div>
+                            <div class="quest-meta">
+                                <span class="quest-time">9:15 AM</span>
+                                <span class="result-badge aligned">5 aligned</span>
+                            </div>
+                            <span class="quest-expand">▾</span>
+                        </div>
+                        <div class="quest-details">
+                            <div class="all-aligned">🏆 Perfect Match - All 5 questions aligned!</div>
+                            <div class="answers-section">
+                                <div class="answer-item">
+                                    <div class="answer-question">"How connected do you feel today?"</div>
+                                    <div class="answer-row">
+                                        <div class="answer-bubble matched">
+                                            <div class="answer-name">YOU</div>
+                                            <div class="answer-text">Very close</div>
+                                        </div>
+                                        <div class="answer-bubble matched">
+                                            <div class="answer-name">EMMA</div>
+                                            <div class="answer-text">Very close</div>
+                                        </div>
+                                    </div>
+                                    <div class="match-indicator matched">✓ Aligned</div>
+                                </div>
+                                <div class="answer-item">
+                                    <div class="answer-question">"How's your energy level?"</div>
+                                    <div class="answer-row">
+                                        <div class="answer-bubble matched">
+                                            <div class="answer-name">YOU</div>
+                                            <div class="answer-text">Good</div>
+                                        </div>
+                                        <div class="answer-bubble matched">
+                                            <div class="answer-name">EMMA</div>
+                                            <div class="answer-text">Good</div>
+                                        </div>
+                                    </div>
+                                    <div class="match-indicator matched">✓ Aligned</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="quest-card">
+                        <div class="quest-header" onclick="toggleCard(this)">
+                            <div class="quest-icon classic">📝</div>
+                            <div class="quest-info">
+                                <div class="quest-type">Classic Quiz</div>
+                                <div class="quest-title">What's Your Ideal Date Night?</div>
+                            </div>
+                            <div class="quest-meta">
+                                <span class="quest-time">8:30 PM</span>
+                                <span class="result-badge mixed">3 aligned 2 diff</span>
+                            </div>
+                            <span class="quest-expand">▾</span>
+                        </div>
+                        <div class="quest-details">
+                            <div class="answers-section">
+                                <div class="answer-item">
+                                    <div class="answer-question">"Perfect Friday night activity?"</div>
+                                    <div class="answer-row">
+                                        <div class="answer-bubble">
+                                            <div class="answer-name">YOU</div>
+                                            <div class="answer-text">Movie marathon</div>
+                                        </div>
+                                        <div class="answer-bubble">
+                                            <div class="answer-name">EMMA</div>
+                                            <div class="answer-text">Cooking together</div>
+                                        </div>
+                                    </div>
+                                    <div class="match-indicator different">Different preferences</div>
+                                </div>
+                                <div class="answer-item">
+                                    <div class="answer-question">"Who usually picks where to eat?"</div>
+                                    <div class="answer-row">
+                                        <div class="answer-bubble matched">
+                                            <div class="answer-name">YOU</div>
+                                            <div class="answer-text">Take turns</div>
+                                        </div>
+                                        <div class="answer-bubble matched">
+                                            <div class="answer-name">EMMA</div>
+                                            <div class="answer-text">Take turns</div>
+                                        </div>
+                                    </div>
+                                    <div class="match-indicator matched">✓ Aligned</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Saturday -->
+            <div class="day-group">
+                <div class="day-header">
+                    <div class="day-dot"></div>
+                    <div class="day-info">
+                        <div class="day-date">Saturday, Dec 28</div>
+                        <div class="day-summary">3 quests</div>
+                    </div>
+                    <div class="day-line"></div>
+                </div>
+                <div class="quest-cards">
+                    <div class="quest-card">
+                        <div class="quest-header" onclick="toggleCard(this)">
+                            <div class="quest-icon linked">🔗</div>
+                            <div class="quest-info">
+                                <div class="quest-type">Linked</div>
+                                <div class="quest-title">Romantic Crossword</div>
+                            </div>
+                            <div class="quest-meta">
+                                <span class="quest-time">7:45 PM</span>
+                                <span class="result-badge complete">4 words</span>
+                            </div>
+                            <span class="quest-expand">▾</span>
+                        </div>
+                        <div class="quest-details">
+                            <div class="game-result">
+                                <div class="game-result-header">
+                                    <span class="game-result-title">Words Solved Together</span>
+                                    <span class="game-result-badge">Complete!</span>
+                                </div>
+                                <div class="words-found">
+                                    <span class="word-tag">LOVE</span>
+                                    <span class="word-tag">HEART</span>
+                                    <span class="word-tag">FOREVER</span>
+                                    <span class="word-tag">TOGETHER</span>
+                                </div>
+                                <div class="contribution-row">
+                                    <div class="contribution-item">
+                                        <div class="contribution-name">YOU</div>
+                                        <div class="contribution-value">2</div>
+                                        <div class="contribution-label">words</div>
+                                    </div>
+                                    <div class="contribution-item">
+                                        <div class="contribution-name">EMMA</div>
+                                        <div class="contribution-value">2</div>
+                                        <div class="contribution-label">words</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="quest-card">
+                        <div class="quest-header" onclick="toggleCard(this)">
+                            <div class="quest-icon you-or-me">🤔</div>
+                            <div class="quest-info">
+                                <div class="quest-type">You or Me</div>
+                                <div class="quest-title">Kitchen Edition</div>
+                            </div>
+                            <div class="quest-meta">
+                                <span class="quest-time">3:20 PM</span>
+                                <span class="result-badge aligned">4 aligned 1 diff</span>
+                            </div>
+                            <span class="quest-expand">▾</span>
+                        </div>
+                        <div class="quest-details">
+                            <div class="answers-section">
+                                <div class="answer-item">
+                                    <div class="answer-question">"Who's the better cook?"</div>
+                                    <div class="answer-row">
+                                        <div class="answer-bubble matched">
+                                            <div class="answer-name">YOU SAID</div>
+                                            <div class="answer-text">Emma</div>
+                                        </div>
+                                        <div class="answer-bubble matched">
+                                            <div class="answer-name">EMMA SAID</div>
+                                            <div class="answer-text">Me</div>
+                                        </div>
+                                    </div>
+                                    <div class="match-indicator matched">✓ You agree!</div>
+                                </div>
+                                <div class="answer-item">
+                                    <div class="answer-question">"Who does the dishes more?"</div>
+                                    <div class="answer-row">
+                                        <div class="answer-bubble">
+                                            <div class="answer-name">YOU SAID</div>
+                                            <div class="answer-text">Me</div>
+                                        </div>
+                                        <div class="answer-bubble">
+                                            <div class="answer-name">EMMA SAID</div>
+                                            <div class="answer-text">Me</div>
+                                        </div>
+                                    </div>
+                                    <div class="match-indicator different">Different views!</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="quest-card">
+                        <div class="quest-header" onclick="toggleCard(this)">
+                            <div class="quest-icon steps">👟</div>
+                            <div class="quest-info">
+                                <div class="quest-type">Steps Together</div>
+                                <div class="quest-title">Daily Goal Met!</div>
+                            </div>
+                            <div class="quest-meta">
+                                <span class="quest-time">11:00 AM</span>
+                                <span class="result-badge complete">17,349 total</span>
+                            </div>
+                            <span class="quest-expand">▾</span>
+                        </div>
+                        <div class="quest-details">
+                            <div class="game-result">
+                                <div class="contribution-row">
+                                    <div class="contribution-item">
+                                        <div class="contribution-name">YOU</div>
+                                        <div class="contribution-value">8,247</div>
+                                        <div class="contribution-label">steps</div>
+                                    </div>
+                                    <div class="contribution-item">
+                                        <div class="contribution-name">EMMA</div>
+                                        <div class="contribution-value">9,102</div>
+                                        <div class="contribution-label">steps</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Thursday - Empty -->
+            <div class="day-group">
+                <div class="day-header">
+                    <div class="day-dot empty"></div>
+                    <div class="day-info">
+                        <div class="day-date">Thursday, Dec 26</div>
+                        <div class="day-summary">Rest day</div>
+                    </div>
+                    <div class="day-line"></div>
+                </div>
+                <div class="empty-day">No quests this day - and that's okay!</div>
+            </div>
+
+            <!-- Wednesday -->
+            <div class="day-group">
+                <div class="day-header">
+                    <div class="day-dot"></div>
+                    <div class="day-info">
+                        <div class="day-date">Wednesday, Dec 25</div>
+                        <div class="day-summary">Christmas • 2 quests</div>
+                    </div>
+                    <div class="day-line"></div>
+                </div>
+                <div class="quest-cards">
+                    <div class="quest-card">
+                        <div class="quest-header" onclick="toggleCard(this)">
+                            <div class="quest-icon affirmation">🎄</div>
+                            <div class="quest-info">
+                                <div class="quest-type">Affirmation Quiz</div>
+                                <div class="quest-title">Holiday Check-in</div>
+                            </div>
+                            <div class="quest-meta">
+                                <span class="quest-time">10:00 AM</span>
+                                <span class="result-badge aligned">5 aligned ⭐</span>
+                            </div>
+                            <span class="quest-expand">▾</span>
+                        </div>
+                        <div class="quest-details">
+                            <div class="perfect-banner">
+                                <span class="perfect-banner-emoji">🏆</span>
+                                <span class="perfect-banner-text">Perfect Match - 5 out of 5!</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="quest-card">
+                        <div class="quest-header" onclick="toggleCard(this)">
+                            <div class="quest-icon word-search">🔍</div>
+                            <div class="quest-info">
+                                <div class="quest-type">Word Search</div>
+                                <div class="quest-title">Holiday Words</div>
+                            </div>
+                            <div class="quest-meta">
+                                <span class="quest-time">2:15 PM</span>
+                                <span class="result-badge complete">8 words</span>
+                            </div>
+                            <span class="quest-expand">▾</span>
+                        </div>
+                        <div class="quest-details">
+                            <div class="game-result">
+                                <div class="game-result-header">
+                                    <span class="game-result-title">Words Found</span>
+                                    <span class="game-result-badge">Complete!</span>
+                                </div>
+                                <div class="words-found">
+                                    <span class="word-tag">CHRISTMAS</span>
+                                    <span class="word-tag">SNOW</span>
+                                    <span class="word-tag">JOY</span>
+                                    <span class="word-tag">GIFT</span>
+                                    <span class="word-tag">LOVE</span>
+                                    <span class="word-tag">FAMILY</span>
+                                    <span class="word-tag">PEACE</span>
+                                    <span class="word-tag">WARMTH</span>
+                                </div>
+                                <div class="contribution-row">
+                                    <div class="contribution-item">
+                                        <div class="contribution-name">YOU</div>
+                                        <div class="contribution-value">5</div>
+                                        <div class="contribution-label">words</div>
+                                    </div>
+                                    <div class="contribution-item">
+                                        <div class="contribution-name">EMMA</div>
+                                        <div class="contribution-value">3</div>
+                                        <div class="contribution-label">words</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleCard(header) {
+            const card = header.closest('.quest-card');
+            card.classList.toggle('expanded');
+        }
+
+        document.getElementById('prevWeek').addEventListener('click', function() {
+            document.querySelector('.week-range .dates').textContent = 'Dec 16 - Dec 22';
+            document.querySelector('.week-range .label').textContent = 'Last Week';
+            document.getElementById('nextWeek').disabled = false;
+            this.disabled = true;
+        });
+
+        document.getElementById('nextWeek').addEventListener('click', function() {
+            document.querySelector('.week-range .dates').textContent = 'Dec 23 - Dec 29';
+            document.querySelector('.week-range .label').textContent = 'This Week';
+            document.getElementById('prevWeek').disabled = false;
+            this.disabled = true;
+        });
+    </script>
+</body>
+</html>

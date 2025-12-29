@@ -130,6 +130,10 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin, 
     // Subscribe to unified polling service for side quest updates
     _pollingService.subscribe();
     _pollingService.subscribeToTopic('sideQuests', _onSideQuestUpdate);
+    // Us 2.0: Also subscribe to daily quest updates since DailyQuestsWidget isn't used
+    if (BrandWidgetFactory.isUs2) {
+      _pollingService.subscribeToTopic('dailyQuests', _onDailyQuestUpdate);
+    }
 
     // Initialize cached Future on first load
     _refreshSideQuestsFuture();
@@ -171,6 +175,15 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin, 
     if (mounted) {
       Logger.debug('Side quest update from polling service', service: 'home');
       _refreshSideQuestsFuture();
+      setState(() {});
+    }
+  }
+
+  /// Called when HomePollingService detects daily quest updates (Us 2.0 only)
+  /// In Liia mode, DailyQuestsWidget handles its own polling subscription
+  void _onDailyQuestUpdate() {
+    if (mounted) {
+      Logger.debug('Daily quest update from polling service (Us 2.0)', service: 'home');
       setState(() {});
     }
   }
@@ -239,6 +252,10 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin, 
   void dispose() {
     questRouteObserver.unsubscribe(this);
     _pollingService.unsubscribeFromTopic('sideQuests', _onSideQuestUpdate);
+    // Us 2.0: Unsubscribe from daily quest updates
+    if (BrandWidgetFactory.isUs2) {
+      _pollingService.unsubscribeFromTopic('dailyQuests', _onDailyQuestUpdate);
+    }
     _pollingService.unsubscribe();
     _unlockService.removeOnUnlockChanged(_onUnlockChanged); // Remove unlock callback
     LovePointService.setLPChangeCallback(null); // Clear LP callback to prevent memory leak
@@ -323,6 +340,12 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin, 
               dailyQuests: dailyQuests,
               sideQuests: sideQuests,
               onQuestTap: _navigateToQuest,
+              onDebugTap: () {
+                showDialog(
+                  context: context,
+                  builder: (context) => const DebugMenu(),
+                );
+              },
             ) ?? const SizedBox.shrink();
           },
         ),
