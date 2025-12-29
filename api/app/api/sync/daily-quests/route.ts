@@ -49,7 +49,43 @@ export const POST = withAuthOrDevBypass(async (req, userId) => {
             }
         });
 
-        return NextResponse.json({ success: true });
+        // Re-fetch quests to get enriched metadata (same logic as GET)
+        // This ensures the first device also gets quiz titles/descriptions
+        const savedQuestsResult = await query(
+            `SELECT * FROM daily_quests
+             WHERE couple_id = $1 AND date = $2
+             ORDER BY sort_order ASC`,
+            [coupleId, dateKey]
+        );
+
+        // Enrich with quiz metadata
+        const enrichedQuests = await Promise.all(
+            savedQuestsResult.rows.map(async (quest: any) => {
+                const existingMetadata = quest.metadata || {};
+                let gameType: GameType | null = null;
+
+                if (quest.quest_type === 'youOrMe' || quest.quest_type === 'you_or_me') {
+                    gameType = 'you_or_me';
+                } else if (quest.quest_type === 'quiz') {
+                    const formatType = existingMetadata.formatType || 'classic';
+                    gameType = formatType === 'affirmation' ? 'affirmation' : 'classic';
+                }
+
+                if (gameType) {
+                    const quizInfo = await getNextQuizInfo(coupleId, gameType, dateKey);
+                    if (quizInfo) {
+                        quest.metadata = {
+                            ...existingMetadata,
+                            quizName: quizInfo.name,
+                            quizDescription: quizInfo.description,
+                        };
+                    }
+                }
+                return quest;
+            })
+        );
+
+        return NextResponse.json({ success: true, quests: enrichedQuests });
     } catch (error) {
         console.error('Error syncing quests:', error);
         return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
@@ -119,12 +155,23 @@ export const GET = withAuthOrDevBypass(async (req, userId) => {
         // Enrich quests with quiz metadata for game types that need it
         const enrichedQuests = await Promise.all(
             questsResult.rows.map(async (quest: any) => {
-                // For You or Me quests, look up quiz metadata
+                const existingMetadata = quest.metadata || {};
+                let gameType: GameType | null = null;
+
+                // Determine the game type for quiz metadata lookup
                 if (quest.quest_type === 'youOrMe' || quest.quest_type === 'you_or_me') {
-                    const quizInfo = await getNextQuizInfo(coupleId, 'you_or_me' as GameType, date);
+                    gameType = 'you_or_me';
+                } else if (quest.quest_type === 'quiz') {
+                    // For quiz quests, check formatType to determine classic vs affirmation
+                    const formatType = existingMetadata.formatType || 'classic';
+                    gameType = formatType === 'affirmation' ? 'affirmation' : 'classic';
+                }
+
+                // Look up quiz metadata if we have a valid game type
+                if (gameType) {
+                    const quizInfo = await getNextQuizInfo(coupleId, gameType, date);
                     if (quizInfo) {
                         // Merge quiz metadata into the quest's metadata
-                        const existingMetadata = quest.metadata || {};
                         quest.metadata = {
                             ...existingMetadata,
                             quizName: quizInfo.name,
