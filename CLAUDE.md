@@ -103,11 +103,13 @@ cd app/ios && rm -rf Pods Podfile.lock && pod install
 
 ### TestFlight Deployment (iOS)
 
+**IMPORTANT: Always use `BRAND=us2` for TestFlight builds. Us 2.0 is the default production brand.**
+
 ```bash
 cd /Users/joakimachren/Desktop/togetherremind/app
 
-# 1. Build the IPA
-flutter build ipa --release --dart-define=BRAND=togetherRemind
+# 1. Build the IPA (ALWAYS use BRAND=us2 unless explicitly requested otherwise)
+flutter build ipa --release --dart-define=BRAND=us2
 
 # 2. Ensure API key is in place
 mkdir -p ~/.private_keys
@@ -115,13 +117,13 @@ cp keys/connect/AuthKey_54R6QHKMB4.p8 ~/.private_keys/
 
 # 3. Upload to App Store Connect
 xcrun altool --upload-app --type ios \
-  -f build/ios/ipa/togetherremind.ipa \
+  -f "build/ios/ipa/Us 2.0.ipa" \
   --apiKey 54R6QHKMB4 \
   --apiIssuer e43a1b2a-f0d3-4d40-af64-a987db2c850a
 ```
 
 **After upload:**
-1. Go to [App Store Connect](https://appstoreconnect.apple.com) → TogetherRemind → TestFlight
+1. Go to [App Store Connect](https://appstoreconnect.apple.com) → Us 2.0 → TestFlight
 2. Wait 5-15 min for processing
 3. Complete "Export Compliance" (select "None of the algorithms mentioned above")
 4. Build becomes available to testers automatically
