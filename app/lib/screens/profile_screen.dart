@@ -4,6 +4,7 @@ import '../services/storage_service.dart';
 import '../services/love_point_service.dart';
 import '../services/couple_stats_service.dart';
 import '../services/auth_service.dart';
+import '../services/us_profile_service.dart';
 import '../theme/app_theme.dart';
 import '../utils/number_formatter.dart';
 import '../widgets/brand/brand_widget_factory.dart';
@@ -1072,11 +1073,36 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   /// Us2 Profile Link Card - Navigate to Us Profile
   Widget _buildUs2ProfileLink() {
+    final stats = UsProfileService().getCachedQuickStats();
+
     return GestureDetector(
       onTap: () {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => const UsProfileScreen()),
+          PageRouteBuilder(
+            pageBuilder: (context, animation, secondaryAnimation) =>
+                const UsProfileScreen(),
+            transitionsBuilder:
+                (context, animation, secondaryAnimation, child) {
+              // Slide up from bottom with fade
+              const begin = Offset(0.0, 0.15);
+              const end = Offset.zero;
+              const curve = Curves.easeOutCubic;
+              var slideTween =
+                  Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+              var fadeTween = Tween(begin: 0.0, end: 1.0)
+                  .chain(CurveTween(curve: curve));
+
+              return SlideTransition(
+                position: animation.drive(slideTween),
+                child: FadeTransition(
+                  opacity: animation.drive(fadeTween),
+                  child: child,
+                ),
+              );
+            },
+            transitionDuration: const Duration(milliseconds: 350),
+          ),
         );
       },
       child: Container(
@@ -1096,59 +1122,223 @@ class _ProfileScreenState extends State<ProfileScreen> {
             color: Us2Theme.primaryBrandPink.withOpacity(0.3),
             width: 1,
           ),
-        ),
-        child: Row(
-          children: [
-            Container(
-              width: 44,
-              height: 44,
-              decoration: BoxDecoration(
-                gradient: Us2Theme.accentGradient,
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: const Center(
-                child: Text(
-                  'Us',
-                  style: TextStyle(
-                    fontFamily: 'Pacifico',
-                    fontSize: 18,
-                    color: Colors.white,
-                  ),
-                ),
-              ),
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Us Profile',
-                    style: GoogleFonts.playfairDisplay(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                      color: Us2Theme.textDark,
-                    ),
-                  ),
-                  const SizedBox(height: 2),
-                  Text(
-                    'Discover insights about your relationship',
-                    style: GoogleFonts.nunito(
-                      fontSize: 12,
-                      color: Us2Theme.textMedium,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Icon(
-              Icons.arrow_forward_ios,
-              size: 16,
-              color: Us2Theme.textLight,
+          boxShadow: [
+            BoxShadow(
+              color: Us2Theme.primaryBrandPink.withOpacity(0.1),
+              blurRadius: 8,
+              offset: const Offset(0, 2),
             ),
           ],
         ),
+        child: Column(
+          children: [
+            Row(
+              children: [
+                // Us icon with glow and optional "New" badge
+                Stack(
+                  clipBehavior: Clip.none,
+                  children: [
+                    Container(
+                      width: 48,
+                      height: 48,
+                      decoration: BoxDecoration(
+                        gradient: Us2Theme.accentGradient,
+                        borderRadius: BorderRadius.circular(14),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Us2Theme.primaryBrandPink.withOpacity(0.3),
+                            blurRadius: 8,
+                            offset: const Offset(0, 2),
+                          ),
+                        ],
+                      ),
+                      child: const Center(
+                        child: Text(
+                          'Us',
+                          style: TextStyle(
+                            fontFamily: 'Pacifico',
+                            fontSize: 20,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                    ),
+                    // "New" badge when there's new content
+                    if (stats?.hasNewContent == true)
+                      Positioned(
+                        top: -4,
+                        right: -4,
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 6, vertical: 2),
+                          decoration: BoxDecoration(
+                            gradient: const LinearGradient(
+                              colors: [Color(0xFFFF6B6B), Color(0xFFFF9F43)],
+                            ),
+                            borderRadius: BorderRadius.circular(8),
+                            boxShadow: [
+                              BoxShadow(
+                                color: const Color(0xFFFF6B6B).withOpacity(0.4),
+                                blurRadius: 4,
+                                offset: const Offset(0, 2),
+                              ),
+                            ],
+                          ),
+                          child: Text(
+                            'New',
+                            style: GoogleFonts.nunito(
+                              fontSize: 9,
+                              fontWeight: FontWeight.w700,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                      ),
+                  ],
+                ),
+                const SizedBox(width: 14),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Us Profile',
+                        style: GoogleFonts.playfairDisplay(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w600,
+                          color: Us2Theme.textDark,
+                        ),
+                      ),
+                      const SizedBox(height: 3),
+                      Text(
+                        'Your relationship insights & discoveries',
+                        style: GoogleFonts.nunito(
+                          fontSize: 12,
+                          color: Us2Theme.textMedium,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Container(
+                  width: 32,
+                  height: 32,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(
+                      color: Us2Theme.beige,
+                      width: 1,
+                    ),
+                  ),
+                  child: Icon(
+                    Icons.arrow_forward_ios,
+                    size: 14,
+                    color: Us2Theme.primaryBrandPink,
+                  ),
+                ),
+              ],
+            ),
+            // Stats preview row (only show if we have data)
+            if (stats != null && stats.hasData) ...[
+              const SizedBox(height: 14),
+              Container(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                decoration: BoxDecoration(
+                  color: Colors.white.withOpacity(0.7),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    _buildProfileStatItem(
+                      '${stats.discoveryCount}',
+                      'Discoveries',
+                      const Color(0xFFFF6B6B),
+                    ),
+                    Container(
+                      width: 1,
+                      height: 24,
+                      color: Us2Theme.beige,
+                    ),
+                    _buildProfileStatItem(
+                      '${stats.dimensionCount}/6',
+                      'Dimensions',
+                      const Color(0xFF9B7ED9),
+                    ),
+                    if (stats.valueAlignmentPercent != null) ...[
+                      Container(
+                        width: 1,
+                        height: 24,
+                        color: Us2Theme.beige,
+                      ),
+                      _buildProfileStatItem(
+                        '${stats.valueAlignmentPercent}%',
+                        'Aligned',
+                        const Color(0xFF4CAF50),
+                      ),
+                    ],
+                  ],
+                ),
+              ),
+            ] else ...[
+              // Onboarding prompt for new users
+              const SizedBox(height: 12),
+              Container(
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFFFF8E1),
+                  borderRadius: BorderRadius.circular(10),
+                  border: Border.all(
+                    color: const Color(0xFFFFE082),
+                    width: 1,
+                  ),
+                ),
+                child: Row(
+                  children: [
+                    const Text('💡', style: TextStyle(fontSize: 16)),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: Text(
+                        'Play quizzes together to unlock relationship insights!',
+                        style: GoogleFonts.nunito(
+                          fontSize: 12,
+                          color: Us2Theme.textMedium,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ],
+        ),
       ),
+    );
+  }
+
+  /// Build a single stat item for the profile card preview
+  Widget _buildProfileStatItem(String value, String label, Color color) {
+    return Column(
+      children: [
+        Text(
+          value,
+          style: GoogleFonts.nunito(
+            fontSize: 16,
+            fontWeight: FontWeight.w700,
+            color: color,
+          ),
+        ),
+        const SizedBox(height: 2),
+        Text(
+          label,
+          style: GoogleFonts.nunito(
+            fontSize: 10,
+            color: Us2Theme.textLight,
+          ),
+        ),
+      ],
     );
   }
 

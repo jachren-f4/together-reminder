@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../services/us_profile_service.dart';
 import '../services/storage_service.dart';
@@ -34,10 +35,143 @@ class _UsProfileScreenState extends State<UsProfileScreen> {
   static const Color _accentGreen = Color(0xFF4CAF50);
   static const Color _lockedBg = Color(0xFFF0EDE8);
 
+  // Friction/repair colors
+  static const Color _frictionBg = Color(0xFFFFF0ED);
+  static const Color _frictionBorder = Color(0xFFFFD4CC);
+
+  // Track which dimension repair sections are expanded
+  final Set<String> _expandedRepairDimensions = {};
+
+  // Discovery filter state
+  String _selectedDiscoveryFilter = 'All';
+  static const List<String> _discoveryFilters = [
+    'All',
+    'Lifestyle',
+    'Values',
+    'Communication',
+    'Future',
+    'Family',
+    'Daily Life',
+  ];
+
+  // Track discovery actions
+  final Set<String> _triedDiscoveries = {};
+  final Set<String> _savedDiscoveries = {};
+
+  // Repair script data for each dimension
+  static const Map<String, Map<String, dynamic>> _repairScripts = {
+    'stress_processing': {
+      'recognition': 'One of you wants to talk through stress while the other needs quiet time to process first.',
+      'leftScript': 'I need some quiet time to process, but I promise we\'ll talk about this. Can we reconnect in an hour?',
+      'rightScript': 'I know you need space right now. I\'m here when you\'re ready. No pressure.',
+      'tip': 'Create a signal (like a specific phrase) that means "I need processing time" without having to explain in the moment.',
+    },
+    'conflict_approach': {
+      'recognition': 'One of you wants to talk about a disagreement right away while the other needs time to calm down first.',
+      'leftScript': 'I need some time to collect my thoughts so I can be fully present. I\'ll come find you in 20 minutes.',
+      'rightScript': 'I want to work this out together. Would 20 minutes be enough time for you to feel ready to talk?',
+      'tip': 'Agree on a "pause phrase" in advance that either can use to request time without it feeling like rejection.',
+    },
+    'social_energy': {
+      'recognition': 'One of you is energized by social events while the other feels drained and needs recovery time.',
+      'leftScript': 'I loved the party, but I\'m going to need some quiet time tomorrow to recharge. Can we plan a low-key day?',
+      'rightScript': 'I know that party was a lot for you. Thanks for coming with me. Let\'s have a relaxed evening at home.',
+      'tip': 'Set expectations before events: agree on arrival/departure times so both partners feel heard.',
+    },
+    'planning_style': {
+      'recognition': 'One of you prefers spontaneity while the other feels more comfortable with plans and structure.',
+      'leftScript': 'I\'m feeling a bit anxious without a plan. Could we at least decide on a rough outline?',
+      'rightScript': 'I\'d love to leave some room for spontaneity. What if we plan the mornings but keep afternoons flexible?',
+      'tip': 'Try "planned spontaneity" - schedule blocks of unstructured time so both styles are honored.',
+    },
+    'support_style': {
+      'recognition': 'One of you offers solutions when stressed while the other just wants to be heard and validated.',
+      'leftScript': 'Right now I just need to vent. Can you listen without trying to fix it? Solutions can come later.',
+      'rightScript': 'That sounds really hard. I\'m here for you. Do you want me to just listen, or would suggestions help?',
+      'tip': 'Use a simple check-in: "Are you venting or problem-solving?" to clarify what kind of support is needed.',
+    },
+    'space_needs': {
+      'recognition': 'One of you craves togetherness while the other needs more alone time to feel balanced.',
+      'leftScript': 'I love spending time with you. I also need some solo time to recharge - it\'s not about us.',
+      'rightScript': 'I miss you when we\'re apart. Can we schedule some quality time together this week?',
+      'tip': 'Create a shared calendar that includes both "us time" and "me time" so needs are visible and respected.',
+    },
+  };
+
   /// Lowercase the first character of a string (for discoveries text)
   String _lowercaseFirst(String text) {
     if (text.isEmpty) return text;
     return text[0].toLowerCase() + text.substring(1);
+  }
+
+  /// Handle "I tried it!" button tap
+  void _onTriedAction(FramedDiscovery discovery) {
+    HapticFeedback.mediumImpact();
+
+    setState(() {
+      _triedDiscoveries.add(discovery.id);
+      // Remove from saved if it was there
+      _savedDiscoveries.remove(discovery.id);
+    });
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Row(
+          children: [
+            const Icon(Icons.check_circle, color: Colors.white, size: 20),
+            const SizedBox(width: 8),
+            Expanded(
+              child: Text(
+                'Nice! Keep exploring what works for you two.',
+                style: GoogleFonts.nunito(fontSize: 14),
+              ),
+            ),
+          ],
+        ),
+        backgroundColor: _accentGreen,
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        duration: const Duration(seconds: 2),
+      ),
+    );
+  }
+
+  /// Handle "Save for later" button tap
+  void _onSaveForLater(FramedDiscovery discovery) {
+    HapticFeedback.lightImpact();
+
+    final wasAlreadySaved = _savedDiscoveries.contains(discovery.id);
+
+    setState(() {
+      if (wasAlreadySaved) {
+        _savedDiscoveries.remove(discovery.id);
+      } else {
+        _savedDiscoveries.add(discovery.id);
+      }
+    });
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Row(
+          children: [
+            Icon(
+              wasAlreadySaved ? Icons.bookmark_remove : Icons.bookmark_added,
+              color: Colors.white,
+              size: 20,
+            ),
+            const SizedBox(width: 8),
+            Text(
+              wasAlreadySaved ? 'Removed from saved' : 'Saved for later',
+              style: GoogleFonts.nunito(fontSize: 14),
+            ),
+          ],
+        ),
+        backgroundColor: Us2Theme.textMedium,
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        duration: const Duration(seconds: 2),
+      ),
+    );
   }
 
   @override
@@ -60,6 +194,11 @@ class _UsProfileScreenState extends State<UsProfileScreen> {
         _isLoading = _profile == null;
         _error = profile == null ? 'Failed to load profile' : null;
       });
+
+      // Mark profile as viewed when successfully loaded
+      if (profile != null) {
+        _profileService.markProfileViewed();
+      }
     }
   }
 
@@ -357,7 +496,7 @@ class _UsProfileScreenState extends State<UsProfileScreen> {
               goalText,
               textAlign: TextAlign.center,
               style: GoogleFonts.nunito(
-                fontSize: 9,
+                fontSize: 11,
                 fontWeight: FontWeight.w600,
                 color: _accentPurple,
               ),
@@ -390,7 +529,7 @@ class _UsProfileScreenState extends State<UsProfileScreen> {
           Text(
             'THIS WEEK\'S FOCUS',
             style: GoogleFonts.nunito(
-              fontSize: 9,
+              fontSize: 11,
               fontWeight: FontWeight.w700,
               letterSpacing: 0.5,
               color: Colors.white.withOpacity(0.9),
@@ -622,7 +761,7 @@ class _UsProfileScreenState extends State<UsProfileScreen> {
               Text(
                 remaining,
                 style: GoogleFonts.nunito(
-                  fontSize: 9,
+                  fontSize: 11,
                   fontWeight: FontWeight.w700,
                   color: _accentPurple,
                 ),
@@ -895,8 +1034,184 @@ class _UsProfileScreenState extends State<UsProfileScreen> {
         if (profile.conversationStarters.isNotEmpty) ...[
           _buildSectionTitle('Start a Conversation', infoKey: 'conversation'),
           _buildConversationStartersCard(profile),
+          const SizedBox(height: 20),
         ],
+
+        // Growth Milestone Timeline
+        _buildGrowthMilestoneSection(profile),
       ],
+    );
+  }
+
+  /// Build the growth milestone timeline section
+  Widget _buildGrowthMilestoneSection(UsProfile profile) {
+    // Calculate milestones based on profile data
+    final milestones = _calculateMilestones(profile);
+
+    return Container(
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            _emmaColor.withOpacity(0.08),
+            const Color(0xFFFF9F43).withOpacity(0.08),
+          ],
+        ),
+        borderRadius: BorderRadius.circular(14),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Header
+          Row(
+            children: [
+              const Text('📈', style: TextStyle(fontSize: 18)),
+              const SizedBox(width: 8),
+              Text(
+                'Your Journey So Far',
+                style: GoogleFonts.nunito(
+                  fontSize: 13,
+                  fontWeight: FontWeight.w700,
+                  color: Us2Theme.textDark,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 14),
+          // Milestone items
+          ...milestones.map((m) => _buildMilestoneItem(
+                m['text'] as String,
+                m['date'] as String,
+                m['completed'] as bool,
+              )),
+        ],
+      ),
+    );
+  }
+
+  /// Calculate milestones based on profile stats
+  List<Map<String, dynamic>> _calculateMilestones(UsProfile profile) {
+    final milestones = <Map<String, dynamic>>[];
+    final unlockedDims =
+        profile.dimensions.where((d) => d.isUnlocked).length;
+    final totalQuizzes = profile.stats.questionsExplored;
+
+    // First quiz milestone (always completed if they have a profile)
+    milestones.add({
+      'text': 'First quiz completed together',
+      'date': 'Day 1',
+      'completed': true,
+    });
+
+    // Dimension unlock milestones
+    if (unlockedDims >= 2) {
+      milestones.add({
+        'text': 'Unlocked 2 dimensions',
+        'date': 'Week 1',
+        'completed': true,
+      });
+    }
+
+    if (unlockedDims >= 4) {
+      milestones.add({
+        'text': 'Unlocked 4 dimensions',
+        'date': 'Week 2',
+        'completed': true,
+      });
+    }
+
+    // Discovery milestone
+    if (profile.discoveries.length >= 5) {
+      milestones.add({
+        'text': '5 discoveries found',
+        'date': 'Week 2',
+        'completed': true,
+      });
+    }
+
+    // Quiz count milestones
+    if (totalQuizzes >= 10) {
+      milestones.add({
+        'text': '10 questions explored',
+        'date': 'Week 1',
+        'completed': true,
+      });
+    }
+
+    if (totalQuizzes >= 25) {
+      milestones.add({
+        'text': '25 questions explored',
+        'date': 'Week 3',
+        'completed': true,
+      });
+    }
+
+    // Pending milestones (not yet achieved)
+    if (unlockedDims < 6) {
+      milestones.add({
+        'text': 'All 6 dimensions unlocked',
+        'date': 'Soon',
+        'completed': false,
+      });
+    }
+
+    if (totalQuizzes < 50) {
+      milestones.add({
+        'text': '50 questions milestone',
+        'date': 'Keep going!',
+        'completed': false,
+      });
+    }
+
+    return milestones;
+  }
+
+  /// Build a single milestone item
+  Widget _buildMilestoneItem(String text, String date, bool completed) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 10),
+      child: Row(
+        children: [
+          // Milestone dot
+          Container(
+            width: 10,
+            height: 10,
+            decoration: BoxDecoration(
+              color: completed ? _accentGreen : Colors.transparent,
+              shape: BoxShape.circle,
+              border: completed
+                  ? null
+                  : Border.all(
+                      color: Us2Theme.textLight,
+                      width: 2,
+                      style: BorderStyle.solid,
+                    ),
+            ),
+          ),
+          const SizedBox(width: 10),
+          // Milestone text
+          Expanded(
+            child: Text(
+              text,
+              style: GoogleFonts.nunito(
+                fontSize: 12,
+                color: completed ? Us2Theme.textDark : Us2Theme.textLight,
+                fontWeight: completed ? FontWeight.w500 : FontWeight.w400,
+              ),
+            ),
+          ),
+          // Date
+          Text(
+            date,
+            style: GoogleFonts.nunito(
+              fontSize: 11,
+              color: Us2Theme.textLight,
+            ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -929,7 +1244,7 @@ class _UsProfileScreenState extends State<UsProfileScreen> {
               child: Text(
                 'Based on ${profile.stats.questionsExplored} questions',
                 style: GoogleFonts.nunito(
-                  fontSize: 9,
+                  fontSize: 11,
                   fontWeight: FontWeight.w600,
                   color: _accentTeal,
                 ),
@@ -1000,24 +1315,9 @@ class _UsProfileScreenState extends State<UsProfileScreen> {
                         color: Us2Theme.textDark,
                       ),
                     ),
-                    if (dim.similarity == 'different') ...[
+                    if (dim.similarity != 'aligned') ...[
                       const SizedBox(width: 6),
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 6, vertical: 2),
-                        decoration: BoxDecoration(
-                          color: _emmaColor.withOpacity(0.15),
-                          borderRadius: BorderRadius.circular(6),
-                        ),
-                        child: Text(
-                          'Key',
-                          style: GoogleFonts.nunito(
-                            fontSize: 8,
-                            fontWeight: FontWeight.w600,
-                            color: _emmaColor,
-                          ),
-                        ),
-                      ),
+                      _buildSimilarityBadge(dim.similarity),
                     ],
                   ],
                 ),
@@ -1026,7 +1326,7 @@ class _UsProfileScreenState extends State<UsProfileScreen> {
                       ? '${dim.dataPoints} questions - Early reading'
                       : '${dim.dataPoints} questions',
                   style: GoogleFonts.nunito(
-                    fontSize: 9,
+                    fontSize: 11,
                     color: Us2Theme.textLight,
                   ),
                 ),
@@ -1039,14 +1339,14 @@ class _UsProfileScreenState extends State<UsProfileScreen> {
                 Text(
                   dim.user1Label,
                   style: GoogleFonts.nunito(
-                    fontSize: 9,
+                    fontSize: 11,
                     color: Us2Theme.textLight,
                   ),
                 ),
                 Text(
                   dim.user2Label,
                   style: GoogleFonts.nunito(
-                    fontSize: 9,
+                    fontSize: 11,
                     color: Us2Theme.textLight,
                   ),
                 ),
@@ -1147,7 +1447,284 @@ class _UsProfileScreenState extends State<UsProfileScreen> {
                       ),
                     ),
             ),
+            // Repair script section (only for 'different' dimensions with enough data)
+            if (dim.similarity == 'different' &&
+                !isLowConfidence &&
+                _repairScripts.containsKey(dim.id))
+              _buildRepairSection(dim, userName, partnerName),
           ],
+        ),
+      ),
+    );
+  }
+
+  /// Build the expandable repair script section for a dimension
+  Widget _buildRepairSection(
+      FramedDimension dim, String userName, String partnerName) {
+    final isExpanded = _expandedRepairDimensions.contains(dim.id);
+    final scripts = _repairScripts[dim.id]!;
+
+    // Determine which partner is on which pole based on their positions
+    final user1IsLeft = dim.user1Position < dim.user2Position;
+    final leftPartner = user1IsLeft ? userName : partnerName;
+    final rightPartner = user1IsLeft ? partnerName : userName;
+    final leftColor = user1IsLeft ? _emmaColor : _jamesColor;
+    final rightColor = user1IsLeft ? _jamesColor : _emmaColor;
+
+    return Column(
+      children: [
+        const SizedBox(height: 10),
+        // Friction trigger button
+        GestureDetector(
+          onTap: () {
+            setState(() {
+              if (isExpanded) {
+                _expandedRepairDimensions.remove(dim.id);
+              } else {
+                _expandedRepairDimensions.add(dim.id);
+              }
+            });
+          },
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+            decoration: BoxDecoration(
+              color: isExpanded ? _frictionBg : Colors.transparent,
+              borderRadius: BorderRadius.circular(10),
+              border: Border.all(
+                color: _frictionBorder,
+                style: BorderStyle.solid,
+                width: 1,
+              ),
+            ),
+            child: Row(
+              children: [
+                const Text('🔧', style: TextStyle(fontSize: 14)),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Text(
+                    'When this causes friction...',
+                    style: GoogleFonts.nunito(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w600,
+                      color: Us2Theme.textMedium,
+                    ),
+                  ),
+                ),
+                AnimatedRotation(
+                  turns: isExpanded ? 0.5 : 0,
+                  duration: const Duration(milliseconds: 200),
+                  child: Text(
+                    '▾',
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: Us2Theme.textLight,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+        // Expandable repair content
+        AnimatedCrossFade(
+          firstChild: const SizedBox.shrink(),
+          secondChild: Container(
+            margin: const EdgeInsets.only(top: 8),
+            padding: const EdgeInsets.all(14),
+            decoration: BoxDecoration(
+              color: _frictionBg,
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(color: _frictionBorder),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Recognition section
+                Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'You might notice tension when...',
+                        style: GoogleFonts.nunito(
+                          fontSize: 11,
+                          fontWeight: FontWeight.w700,
+                          color: Us2Theme.textMedium,
+                        ),
+                      ),
+                      const SizedBox(height: 6),
+                      Text(
+                        scripts['recognition'] as String,
+                        style: GoogleFonts.nunito(
+                          fontSize: 12,
+                          color: Us2Theme.textDark,
+                          height: 1.4,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 12),
+                // Scripts section header
+                Row(
+                  children: [
+                    const Text('💬', style: TextStyle(fontSize: 14)),
+                    const SizedBox(width: 6),
+                    Text(
+                      'Words that can help:',
+                      style: GoogleFonts.nunito(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w700,
+                        color: Us2Theme.textMedium,
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 10),
+                // Left pole partner script
+                _buildScriptCard(
+                  'For $leftPartner:',
+                  scripts['leftScript'] as String,
+                  leftColor,
+                ),
+                const SizedBox(height: 8),
+                // Right pole partner script
+                _buildScriptCard(
+                  'For $rightPartner:',
+                  scripts['rightScript'] as String,
+                  rightColor,
+                ),
+                const SizedBox(height: 12),
+                // De-escalation tip
+                Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFFFFBF0),
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(color: const Color(0xFFF4E6C8)),
+                  ),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text('💡', style: TextStyle(fontSize: 16)),
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Pro Tip',
+                              style: GoogleFonts.nunito(
+                                fontSize: 11,
+                                fontWeight: FontWeight.w700,
+                                color: const Color(0xFFB8860B),
+                              ),
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              scripts['tip'] as String,
+                              style: GoogleFonts.nunito(
+                                fontSize: 12,
+                                color: Us2Theme.textDark,
+                                height: 1.4,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+          crossFadeState:
+              isExpanded ? CrossFadeState.showSecond : CrossFadeState.showFirst,
+          duration: const Duration(milliseconds: 250),
+        ),
+      ],
+    );
+  }
+
+  /// Build a script card for a partner
+  Widget _buildScriptCard(String label, String script, Color color) {
+    return Container(
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(color: color.withOpacity(0.3)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            label,
+            style: GoogleFonts.nunito(
+              fontSize: 11,
+              fontWeight: FontWeight.w700,
+              color: color,
+            ),
+          ),
+          const SizedBox(height: 6),
+          Text(
+            '"$script"',
+            style: GoogleFonts.nunito(
+              fontSize: 12,
+              fontStyle: FontStyle.italic,
+              color: Us2Theme.textDark,
+              height: 1.4,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// Build similarity badge with colors matching mockup
+  Widget _buildSimilarityBadge(String similarity) {
+    // Colors from mockup CSS
+    Color bgColor;
+    Color textColor;
+    String label;
+
+    switch (similarity) {
+      case 'different':
+        bgColor = const Color(0xFFFFEBEE); // Light red
+        textColor = const Color(0xFFE53935); // Dark red
+        label = 'Different';
+        break;
+      case 'similar':
+        bgColor = const Color(0xFFE8F5E9); // Light green
+        textColor = const Color(0xFF43A047); // Dark green
+        label = 'Similar';
+        break;
+      case 'complementary':
+        bgColor = const Color(0xFFE3F2FD); // Light blue
+        textColor = const Color(0xFF1976D2); // Dark blue
+        label = 'Complementary';
+        break;
+      default:
+        return const SizedBox.shrink();
+    }
+
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+      decoration: BoxDecoration(
+        color: bgColor,
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Text(
+        label,
+        style: GoogleFonts.nunito(
+          fontSize: 11,
+          fontWeight: FontWeight.w600,
+          color: textColor,
         ),
       ),
     );
@@ -1231,6 +1808,15 @@ class _UsProfileScreenState extends State<UsProfileScreen> {
 
   Widget _buildDiscoveriesCard(
       UsProfile profile, String userName, String partnerName) {
+    // Filter discoveries based on selected category
+    final filteredDiscoveries = _selectedDiscoveryFilter == 'All'
+        ? profile.discoveries
+        : profile.discoveries
+            .where((d) =>
+                d.category?.toLowerCase() ==
+                _selectedDiscoveryFilter.toLowerCase().replaceAll(' ', '_'))
+            .toList();
+
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -1246,26 +1832,280 @@ class _UsProfileScreenState extends State<UsProfileScreen> {
         ),
       ),
       child: Column(
-        children: profile.discoveries
-            .take(3)
-            .map((d) => _buildDiscoveryItemWithAction(d, userName, partnerName))
-            .toList(),
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Filter tabs
+          _buildDiscoveryFilterTabs(profile.discoveries),
+          const SizedBox(height: 14),
+          // Filtered discoveries list
+          if (filteredDiscoveries.isEmpty)
+            Center(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 20),
+                child: Text(
+                  'No discoveries in this category yet',
+                  style: GoogleFonts.nunito(
+                    fontSize: 13,
+                    fontStyle: FontStyle.italic,
+                    color: Us2Theme.textLight,
+                  ),
+                ),
+              ),
+            )
+          else
+            ...filteredDiscoveries
+                .take(5)
+                .map((d) =>
+                    _buildDiscoveryItemWithAction(d, userName, partnerName)),
+        ],
       ),
     );
   }
 
+  /// Build the horizontal scrollable filter tabs for discoveries
+  Widget _buildDiscoveryFilterTabs(List<FramedDiscovery> discoveries) {
+    // Get available categories from actual discoveries
+    final availableCategories = <String>{'All'};
+    for (final d in discoveries) {
+      if (d.category != null && d.category!.isNotEmpty) {
+        // Convert snake_case to Title Case
+        final formatted = d.category!
+            .split('_')
+            .map((word) => word[0].toUpperCase() + word.substring(1))
+            .join(' ');
+        availableCategories.add(formatted);
+      }
+    }
+
+    // Filter the predefined list to only show categories with discoveries
+    final filtersToShow = _discoveryFilters
+        .where((f) => availableCategories.contains(f))
+        .toList();
+
+    return SizedBox(
+      height: 32,
+      child: ListView.separated(
+        scrollDirection: Axis.horizontal,
+        itemCount: filtersToShow.length,
+        separatorBuilder: (_, __) => const SizedBox(width: 8),
+        itemBuilder: (context, index) {
+          final filter = filtersToShow[index];
+          final isSelected = _selectedDiscoveryFilter == filter;
+          final count = filter == 'All'
+              ? discoveries.length
+              : discoveries
+                  .where((d) =>
+                      d.category?.toLowerCase() ==
+                      filter.toLowerCase().replaceAll(' ', '_'))
+                  .length;
+
+          return GestureDetector(
+            onTap: () {
+              setState(() {
+                _selectedDiscoveryFilter = filter;
+              });
+            },
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+              decoration: BoxDecoration(
+                gradient: isSelected
+                    ? const LinearGradient(
+                        colors: [_emmaColor, Color(0xFFFF9F43)],
+                      )
+                    : null,
+                color: isSelected ? null : Us2Theme.cream,
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(
+                  color: isSelected
+                      ? Colors.transparent
+                      : Us2Theme.beige,
+                ),
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    filter,
+                    style: GoogleFonts.nunito(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w600,
+                      color: isSelected ? Colors.white : Us2Theme.textMedium,
+                    ),
+                  ),
+                  const SizedBox(width: 4),
+                  Container(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 5, vertical: 1),
+                    decoration: BoxDecoration(
+                      color: isSelected
+                          ? Colors.white.withOpacity(0.25)
+                          : Us2Theme.beige,
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Text(
+                      count.toString(),
+                      style: GoogleFonts.nunito(
+                        fontSize: 10,
+                        fontWeight: FontWeight.w700,
+                        color: isSelected ? Colors.white : Us2Theme.textLight,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  /// Get timing info based on discovery category
+  Map<String, dynamic> _getTimingInfo(String? category) {
+    // High-stakes categories need dedicated time
+    const dedicatedCategories = ['values', 'future', 'family', 'money'];
+    // Medium-stakes need a relaxed moment
+    const relaxedCategories = ['communication', 'emotional', 'conflict', 'intimacy'];
+    // Quick categories for light topics
+    const quickCategories = ['lifestyle', 'entertainment', 'social', 'daily_life'];
+
+    final cat = category?.toLowerCase() ?? '';
+
+    if (dedicatedCategories.contains(cat)) {
+      return {
+        'type': 'dedicated',
+        'icon': '📅',
+        'label': '20-30 min',
+        'hint': 'Plan a relaxed time for this',
+        'bgColor': const Color(0xFFFCE4EC),
+        'textColor': const Color(0xFFC2185B),
+      };
+    } else if (relaxedCategories.contains(cat)) {
+      return {
+        'type': 'relaxed',
+        'icon': '🌙',
+        'label': 'Quiet moment',
+        'hint': 'Best for a calm evening',
+        'bgColor': const Color(0xFFF3E5F5),
+        'textColor': const Color(0xFF7B1FA2),
+      };
+    } else if (quickCategories.contains(cat)) {
+      return {
+        'type': 'quick',
+        'icon': '⚡',
+        'label': 'Anytime',
+        'hint': '2-3 minutes is enough',
+        'bgColor': const Color(0xFFE8F5E9),
+        'textColor': const Color(0xFF388E3C),
+      };
+    } else {
+      // Default to relaxed for unknown categories
+      return {
+        'type': 'relaxed',
+        'icon': '🌙',
+        'label': 'Relaxed moment',
+        'hint': 'Find a calm moment',
+        'bgColor': const Color(0xFFF3E5F5),
+        'textColor': const Color(0xFF7B1FA2),
+      };
+    }
+  }
+
+  // High-stakes discovery colors
+  static const Color _highStakesBg = Color(0xFFFFF8F5);
+  static const Color _highStakesBorder = Color(0xFFFFB8A8);
+
   Widget _buildDiscoveryItemWithAction(
       FramedDiscovery discovery, String userName, String partnerName) {
+    final timing = _getTimingInfo(discovery.category);
+    final isHighStakes = timing['type'] == 'dedicated';
+
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: isHighStakes ? _highStakesBg : Colors.white,
         borderRadius: BorderRadius.circular(14),
+        border: isHighStakes
+            ? Border.all(color: _highStakesBorder, width: 2)
+            : null,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // High-stakes "Big Topic" badge
+          if (isHighStakes) ...[
+            Container(
+              margin: const EdgeInsets.only(bottom: 8),
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [
+                    const Color(0xFFFF6B6B).withOpacity(0.2),
+                    const Color(0xFFFF9F43).withOpacity(0.2),
+                  ],
+                ),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Text('💎', style: TextStyle(fontSize: 12)),
+                  const SizedBox(width: 6),
+                  Text(
+                    'Big Topic',
+                    style: GoogleFonts.nunito(
+                      fontSize: 11,
+                      fontWeight: FontWeight.w700,
+                      color: _emmaColor,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+          // Timing badge row
+          Padding(
+            padding: const EdgeInsets.only(bottom: 10),
+            child: Row(
+              children: [
+                Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  decoration: BoxDecoration(
+                    color: timing['bgColor'] as Color,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(timing['icon'] as String,
+                          style: const TextStyle(fontSize: 10)),
+                      const SizedBox(width: 4),
+                      Text(
+                        timing['label'] as String,
+                        style: GoogleFonts.nunito(
+                          fontSize: 10,
+                          fontWeight: FontWeight.w600,
+                          color: timing['textColor'] as Color,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Text(
+                    timing['hint'] as String,
+                    style: GoogleFonts.nunito(
+                      fontSize: 10,
+                      color: Us2Theme.textLight,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
           RichText(
             text: TextSpan(
               style: GoogleFonts.nunito(
@@ -1334,42 +2174,316 @@ class _UsProfileScreenState extends State<UsProfileScreen> {
                     ),
                   ),
                   const SizedBox(height: 12),
-                  Row(
-                    children: [
-                      _buildActionButton('I tried it!', _accentGreen, true),
-                      const SizedBox(width: 8),
-                      _buildActionButton('Save for later', Us2Theme.beige, false),
-                    ],
-                  ),
+                  _buildDiscoveryActionButtons(discovery),
                 ],
               ),
             ),
+          ],
+          // High-stakes guidance section
+          if (isHighStakes) ...[
+            const SizedBox(height: 14),
+            _buildHighStakesGuidance(),
           ],
         ],
       ),
     );
   }
 
-  Widget _buildActionButton(String text, Color color, bool isPrimary) {
-    return GestureDetector(
-      onTap: () {
-        // TODO: Track action
-      },
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-        decoration: BoxDecoration(
-          color: color,
-          borderRadius: BorderRadius.circular(14),
-        ),
-        child: Text(
-          text,
-          style: GoogleFonts.nunito(
-            fontSize: 11,
-            fontWeight: FontWeight.w600,
-            color: isPrimary ? Colors.white : Us2Theme.textMedium,
+  /// Build the high-stakes guidance section with acknowledgment and steps
+  Widget _buildHighStakesGuidance() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Acknowledgment section
+        Container(
+          padding: const EdgeInsets.all(12),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(color: Us2Theme.beige),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  const Text('✨', style: TextStyle(fontSize: 14)),
+                  const SizedBox(width: 6),
+                  Text(
+                    'This is a significant topic',
+                    style: GoogleFonts.nunito(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w700,
+                      color: Us2Theme.textDark,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 6),
+              Text(
+                'This touches on big life questions. There\'s no quick answer, and that\'s okay.',
+                style: GoogleFonts.nunito(
+                  fontSize: 11,
+                  color: Us2Theme.textMedium,
+                  height: 1.4,
+                ),
+              ),
+            ],
           ),
         ),
+        const SizedBox(height: 10),
+        // Suggested approach steps
+        Container(
+          padding: const EdgeInsets.all(12),
+          decoration: BoxDecoration(
+            color: const Color(0xFFF8F9FA),
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  const Text('🗺️', style: TextStyle(fontSize: 14)),
+                  const SizedBox(width: 6),
+                  Text(
+                    'Suggested approach',
+                    style: GoogleFonts.nunito(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w700,
+                      color: Us2Theme.textDark,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 10),
+              _buildGuidanceStep(1, 'Find a relaxed time (not during stress)'),
+              _buildGuidanceStep(2, 'Start with curiosity, not conclusions'),
+              _buildGuidanceStep(3, 'Share feelings without pressure to decide'),
+              _buildGuidanceStep(4, 'It\'s okay to revisit this multiple times'),
+            ],
+          ),
+        ),
+        const SizedBox(height: 10),
+        // Reassurance quote
+        Container(
+          padding: const EdgeInsets.all(12),
+          decoration: BoxDecoration(
+            color: const Color(0xFFFFFBF0),
+            borderRadius: BorderRadius.circular(10),
+            border: Border.all(color: const Color(0xFFF4E6C8)),
+          ),
+          child: Text(
+            '"Many happy couples navigate this over time. You don\'t need to solve it today."',
+            style: GoogleFonts.nunito(
+              fontSize: 11,
+              fontStyle: FontStyle.italic,
+              color: Us2Theme.textMedium,
+              height: 1.4,
+            ),
+            textAlign: TextAlign.center,
+          ),
+        ),
+        const SizedBox(height: 10),
+        // Professional help prompt
+        _buildProfessionalHelpPrompt(),
+      ],
+    );
+  }
+
+  /// Build the subtle professional help prompt for high-stakes discoveries
+  Widget _buildProfessionalHelpPrompt() {
+    return Container(
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color: const Color(0xFFF5FFF5), // help-bg
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: const Color(0xFFC8E6C9)), // help-border
       ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text('🌱', style: TextStyle(fontSize: 20)),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Some couples find it helpful to explore big life questions with a professional. This isn\'t about having problems — it\'s about having support for important conversations.',
+                  style: GoogleFonts.nunito(
+                    fontSize: 11,
+                    color: Us2Theme.textDark,
+                    height: 1.6,
+                  ),
+                ),
+                const SizedBox(height: 10),
+                GestureDetector(
+                  onTap: () {
+                    // Could link to resources in the future
+                    HapticFeedback.lightImpact();
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(
+                          'Resources coming soon!',
+                          style: GoogleFonts.nunito(fontSize: 14),
+                        ),
+                        backgroundColor: const Color(0xFF4CAF50),
+                        behavior: SnackBarBehavior.floating,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12)),
+                        duration: const Duration(seconds: 2),
+                      ),
+                    );
+                  },
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        'Learn more about couples coaching',
+                        style: GoogleFonts.nunito(
+                          fontSize: 11,
+                          fontWeight: FontWeight.w600,
+                          color: const Color(0xFF4CAF50), // help-accent
+                        ),
+                      ),
+                      const SizedBox(width: 4),
+                      const Icon(
+                        Icons.arrow_forward,
+                        size: 12,
+                        color: Color(0xFF4CAF50),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// Build a single guidance step
+  Widget _buildGuidanceStep(int number, String text) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            width: 18,
+            height: 18,
+            decoration: BoxDecoration(
+              color: _emmaColor.withOpacity(0.15),
+              shape: BoxShape.circle,
+            ),
+            child: Center(
+              child: Text(
+                number.toString(),
+                style: GoogleFonts.nunito(
+                  fontSize: 10,
+                  fontWeight: FontWeight.w700,
+                  color: _emmaColor,
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(width: 10),
+          Expanded(
+            child: Text(
+              text,
+              style: GoogleFonts.nunito(
+                fontSize: 11,
+                color: Us2Theme.textDark,
+                height: 1.3,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// Build action buttons for a discovery with state-aware styling
+  Widget _buildDiscoveryActionButtons(FramedDiscovery discovery) {
+    final isTried = _triedDiscoveries.contains(discovery.id);
+    final isSaved = _savedDiscoveries.contains(discovery.id);
+
+    return Row(
+      children: [
+        // "I tried it!" / "Tried!" button
+        GestureDetector(
+          onTap: isTried ? null : () => _onTriedAction(discovery),
+          child: AnimatedContainer(
+            duration: const Duration(milliseconds: 200),
+            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+            decoration: BoxDecoration(
+              color: isTried ? _accentGreen.withOpacity(0.15) : _accentGreen,
+              borderRadius: BorderRadius.circular(14),
+              border: isTried
+                  ? Border.all(color: _accentGreen, width: 1.5)
+                  : null,
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                if (isTried) ...[
+                  Icon(
+                    Icons.check_circle,
+                    size: 14,
+                    color: _accentGreen,
+                  ),
+                  const SizedBox(width: 4),
+                ],
+                Text(
+                  isTried ? 'Tried!' : 'I tried it!',
+                  style: GoogleFonts.nunito(
+                    fontSize: 11,
+                    fontWeight: FontWeight.w600,
+                    color: isTried ? _accentGreen : Colors.white,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+        const SizedBox(width: 8),
+        // "Save for later" / "Saved" button
+        GestureDetector(
+          onTap: () => _onSaveForLater(discovery),
+          child: AnimatedContainer(
+            duration: const Duration(milliseconds: 200),
+            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+            decoration: BoxDecoration(
+              color: isSaved ? _accentPurple.withOpacity(0.15) : Us2Theme.beige,
+              borderRadius: BorderRadius.circular(14),
+              border: isSaved
+                  ? Border.all(color: _accentPurple, width: 1.5)
+                  : null,
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(
+                  isSaved ? Icons.bookmark : Icons.bookmark_border,
+                  size: 14,
+                  color: isSaved ? _accentPurple : Us2Theme.textMedium,
+                ),
+                const SizedBox(width: 4),
+                Text(
+                  isSaved ? 'Saved' : 'Save for later',
+                  style: GoogleFonts.nunito(
+                    fontSize: 11,
+                    fontWeight: FontWeight.w600,
+                    color: isSaved ? _accentPurple : Us2Theme.textMedium,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
     );
   }
 
@@ -1399,7 +2513,7 @@ class _UsProfileScreenState extends State<UsProfileScreen> {
               child: Text(
                 '${profile.values.fold(0, (sum, v) => sum + v.questions)} questions',
                 style: GoogleFonts.nunito(
-                  fontSize: 9,
+                  fontSize: 11,
                   fontWeight: FontWeight.w600,
                   color: _accentGreen,
                 ),
@@ -1483,7 +2597,7 @@ class _UsProfileScreenState extends State<UsProfileScreen> {
                 child: Text(
                   label,
                   style: GoogleFonts.nunito(
-                    fontSize: 9,
+                    fontSize: 11,
                     fontWeight: FontWeight.w600,
                     color: color,
                   ),
@@ -1516,7 +2630,7 @@ class _UsProfileScreenState extends State<UsProfileScreen> {
                 ? '${value.questions} questions - High impact topic'
                 : '${value.questions} questions',
             style: GoogleFonts.nunito(
-              fontSize: 9,
+              fontSize: 11,
               color: Us2Theme.textLight,
             ),
           ),
@@ -1619,10 +2733,239 @@ class _UsProfileScreenState extends State<UsProfileScreen> {
                   );
                 }).toList(),
               ),
+              // Growth Edge section (if available)
+              if (profile.growthEdges.isNotEmpty) ...[
+                const SizedBox(height: 18),
+                _buildGrowthEdgeSection(profile.growthEdges.first, partnerName),
+              ],
+              // Framing note
+              const SizedBox(height: 14),
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [
+                      _emmaColor.withOpacity(0.08),
+                      const Color(0xFFFF9F43).withOpacity(0.08),
+                    ],
+                  ),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Text(
+                  'These perceptions often reveal strengths you don\'t recognize in yourself.',
+                  style: GoogleFonts.nunito(
+                    fontSize: 11,
+                    color: Us2Theme.textMedium,
+                    height: 1.4,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ),
             ],
           ),
         ),
       ],
+    );
+  }
+
+  // Growth Edge colors
+  static const Color _growthBg = Color(0xFFF0F7FF);
+  static const Color _growthBorder = Color(0xFFB8D4F0);
+  static const Color _growthAccent = Color(0xFF4A90C2);
+
+  /// Build the Growth Edge section showing perception gaps
+  Widget _buildGrowthEdgeSection(GrowthEdge edge, String partnerName) {
+    return Container(
+      decoration: BoxDecoration(
+        color: _growthBg,
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: _growthBorder),
+      ),
+      child: Column(
+        children: [
+          // Gradient top bar
+          Container(
+            height: 3,
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [_growthAccent, const Color(0xFF7BC4D4)],
+              ),
+              borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(14),
+                topRight: Radius.circular(14),
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Header
+                Row(
+                  children: [
+                    const Text('🔍', style: TextStyle(fontSize: 18)),
+                    const SizedBox(width: 8),
+                    Text(
+                      'A Different Perspective',
+                      style: GoogleFonts.nunito(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w700,
+                        color: _growthAccent,
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 12),
+                // Comparison highlight
+                Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Column(
+                    children: [
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Column(
+                              children: [
+                                Text(
+                                  'YOU SAID',
+                                  style: GoogleFonts.nunito(
+                                    fontSize: 9,
+                                    fontWeight: FontWeight.w600,
+                                    color: Us2Theme.textLight,
+                                    letterSpacing: 0.3,
+                                  ),
+                                ),
+                                const SizedBox(height: 4),
+                                Container(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 10, vertical: 6),
+                                  decoration: BoxDecoration(
+                                    color: Us2Theme.cream,
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                  child: Text(
+                                    '"${edge.selfView}"',
+                                    style: GoogleFonts.nunito(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w700,
+                                      color: Us2Theme.textDark,
+                                    ),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 8),
+                            child: Text(
+                              '↔️',
+                              style: TextStyle(
+                                fontSize: 16,
+                                color: _growthAccent,
+                              ),
+                            ),
+                          ),
+                          Expanded(
+                            child: Column(
+                              children: [
+                                Text(
+                                  '${partnerName.toUpperCase()} SEES',
+                                  style: GoogleFonts.nunito(
+                                    fontSize: 9,
+                                    fontWeight: FontWeight.w600,
+                                    color: Us2Theme.textLight,
+                                    letterSpacing: 0.3,
+                                  ),
+                                ),
+                                const SizedBox(height: 4),
+                                Container(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 10, vertical: 6),
+                                  decoration: BoxDecoration(
+                                    color: Us2Theme.cream,
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                  child: Text(
+                                    '"${edge.partnerView}"',
+                                    style: GoogleFonts.nunito(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w700,
+                                      color: Us2Theme.textDark,
+                                    ),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 10),
+                      Text(
+                        edge.insight,
+                        style: GoogleFonts.nunito(
+                          fontSize: 11,
+                          fontStyle: FontStyle.italic,
+                          color: Us2Theme.textMedium,
+                          height: 1.5,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 14),
+                // Curiosity prompt
+                Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text('💭', style: TextStyle(fontSize: 18)),
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Try asking $partnerName:',
+                              style: GoogleFonts.nunito(
+                                fontSize: 10,
+                                fontWeight: FontWeight.w700,
+                                color: _growthAccent,
+                              ),
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              '"${edge.askQuestion}"',
+                              style: GoogleFonts.nunito(
+                                fontSize: 12,
+                                fontStyle: FontStyle.italic,
+                                color: Us2Theme.textDark,
+                                height: 1.5,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -1681,7 +3024,7 @@ class _UsProfileScreenState extends State<UsProfileScreen> {
           Text(
             starter.triggerType.toUpperCase().replaceAll('_', ' '),
             style: GoogleFonts.nunito(
-              fontSize: 9,
+              fontSize: 11,
               fontWeight: FontWeight.w700,
               color: _accentPurple,
               letterSpacing: 0.5,
@@ -2279,7 +3622,7 @@ class _UsProfileScreenState extends State<UsProfileScreen> {
               child: Text(
                 'New!',
                 style: GoogleFonts.nunito(
-                  fontSize: 9,
+                  fontSize: 11,
                   fontWeight: FontWeight.w700,
                   color: Colors.white,
                 ),

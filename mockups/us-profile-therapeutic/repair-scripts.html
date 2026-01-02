@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Therapeutic Enhancement: Repair Scripts for Dimensions</title>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Pacifico&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-gradient-start: #FFD1C1;
+      --bg-gradient-end: #FFF5F0;
+      --primary-pink: #FF6B6B;
+      --primary-orange: #FF9F43;
+      --text-dark: #4A4A4A;
+      --text-medium: #7A7A7A;
+      --text-light: #9A9A9A;
+      --cream: #FFF8F0;
+      --beige: #F5E6D8;
+      --soft-blue: #5B9BD5;
+      --friction-bg: #FFF0ED;
+      --friction-border: #FFD4CC;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Nunito', sans-serif;
+      background: linear-gradient(to bottom, var(--bg-gradient-start), var(--bg-gradient-end));
+      min-height: 100vh;
+      padding: 20px;
+      max-width: 400px;
+      margin: 0 auto;
+    }
+
+    .mockup-header {
+      background: linear-gradient(135deg, var(--primary-pink), var(--primary-orange));
+      color: white;
+      padding: 16px;
+      border-radius: 16px;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    .mockup-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 18px;
+      margin-bottom: 8px;
+    }
+
+    .mockup-desc {
+      font-size: 12px;
+      opacity: 0.9;
+      line-height: 1.5;
+    }
+
+    .section-card {
+      background: white;
+      border-radius: 20px;
+      padding: 20px;
+      margin-bottom: 16px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    }
+
+    .section-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 15px;
+      color: var(--text-medium);
+      margin-bottom: 16px;
+    }
+
+    /* Dimension Spectrum */
+    .dimension-card {
+      background: var(--cream);
+      border-radius: 16px;
+      padding: 16px;
+      margin-bottom: 12px;
+    }
+
+    .dimension-label {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-dark);
+      margin-bottom: 12px;
+    }
+
+    .dimension-track {
+      height: 10px;
+      background: var(--beige);
+      border-radius: 5px;
+      position: relative;
+      margin-bottom: 8px;
+    }
+
+    .dimension-dot {
+      position: absolute;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      top: 50%;
+      transform: translateY(-50%);
+      border: 2px solid white;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+    }
+
+    .dot-emma { background: var(--primary-pink); left: 18%; }
+    .dot-james { background: var(--soft-blue); left: 78%; }
+
+    .dimension-labels {
+      display: flex;
+      justify-content: space-between;
+      font-size: 10px;
+      color: var(--text-light);
+      margin-bottom: 12px;
+    }
+
+    /* Friction Trigger */
+    .friction-trigger {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 12px;
+      background: transparent;
+      border: 1px dashed var(--friction-border);
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      width: 100%;
+      text-align: left;
+    }
+
+    .friction-trigger:hover {
+      background: var(--friction-bg);
+      border-style: solid;
+    }
+
+    .friction-trigger.expanded {
+      background: var(--friction-bg);
+      border-style: solid;
+      border-bottom-left-radius: 0;
+      border-bottom-right-radius: 0;
+    }
+
+    .friction-icon {
+      font-size: 14px;
+    }
+
+    .friction-text {
+      font-size: 11px;
+      color: var(--text-medium);
+      flex: 1;
+    }
+
+    .friction-arrow {
+      font-size: 10px;
+      color: var(--text-light);
+      transition: transform 0.3s ease;
+    }
+
+    .friction-trigger.expanded .friction-arrow {
+      transform: rotate(180deg);
+    }
+
+    /* Repair Content */
+    .repair-content {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.4s ease;
+      background: var(--friction-bg);
+      border: 1px solid var(--friction-border);
+      border-top: none;
+      border-bottom-left-radius: 10px;
+      border-bottom-right-radius: 10px;
+    }
+
+    .repair-content.expanded {
+      max-height: 600px;
+    }
+
+    .repair-inner {
+      padding: 16px;
+    }
+
+    /* Recognition prompt */
+    .recognition {
+      background: white;
+      border-radius: 10px;
+      padding: 12px;
+      margin-bottom: 14px;
+      font-size: 12px;
+      color: var(--text-dark);
+      line-height: 1.6;
+      border-left: 3px solid var(--primary-orange);
+    }
+
+    .recognition-label {
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--text-light);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 6px;
+    }
+
+    /* Repair scripts */
+    .scripts-section {
+      margin-bottom: 14px;
+    }
+
+    .scripts-title {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text-dark);
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .script-card {
+      background: white;
+      border-radius: 10px;
+      padding: 12px;
+      margin-bottom: 8px;
+    }
+
+    .script-for {
+      font-size: 10px;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    .script-for.emma { color: var(--primary-pink); }
+    .script-for.james { color: var(--soft-blue); }
+
+    .script-text {
+      font-size: 12px;
+      color: var(--text-dark);
+      line-height: 1.5;
+      font-style: italic;
+    }
+
+    /* De-escalation tip */
+    .deescalation {
+      background: linear-gradient(135deg, rgba(255,107,107,0.1), rgba(255,159,67,0.1));
+      border-radius: 10px;
+      padding: 12px;
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+    }
+
+    .deescalation-icon {
+      font-size: 20px;
+      flex-shrink: 0;
+    }
+
+    .deescalation-content {
+      flex: 1;
+    }
+
+    .deescalation-label {
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--primary-pink);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 4px;
+    }
+
+    .deescalation-text {
+      font-size: 11px;
+      color: var(--text-dark);
+      line-height: 1.5;
+    }
+
+    /* Legend */
+    .legend {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      margin-bottom: 12px;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      color: var(--text-medium);
+    }
+
+    .legend-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+    }
+
+    .legend-dot.emma { background: var(--primary-pink); }
+    .legend-dot.james { background: var(--soft-blue); }
+
+    /* Notes */
+    .design-notes {
+      background: #2C3E50;
+      color: white;
+      border-radius: 12px;
+      padding: 16px;
+      margin-top: 24px;
+      font-size: 11px;
+      line-height: 1.6;
+    }
+
+    .design-notes h4 {
+      font-family: 'Playfair Display', serif;
+      margin-bottom: 10px;
+      font-size: 14px;
+    }
+
+    .design-notes ul {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    .design-notes li {
+      margin-bottom: 6px;
+      padding-left: 16px;
+      position: relative;
+    }
+
+    .design-notes li::before {
+      content: "•";
+      position: absolute;
+      left: 0;
+      color: var(--primary-pink);
+    }
+  </style>
+</head>
+<body>
+  <div class="mockup-header">
+    <div class="mockup-title">Repair Scripts for Dimensions</div>
+    <div class="mockup-desc">
+      When couples have significant differences on key dimensions,
+      help them with concrete repair language when friction occurs.
+    </div>
+  </div>
+
+  <div class="section-card">
+    <div class="section-title">How You Navigate Together</div>
+
+    <div class="legend">
+      <div class="legend-item">
+        <div class="legend-dot emma"></div>
+        <span>Emma</span>
+      </div>
+      <div class="legend-item">
+        <div class="legend-dot james"></div>
+        <span>James</span>
+      </div>
+    </div>
+
+    <!-- Dimension with Repair Scripts -->
+    <div class="dimension-card">
+      <div class="dimension-label">How You Process Stress</div>
+      <div class="dimension-track">
+        <div class="dimension-dot dot-emma"></div>
+        <div class="dimension-dot dot-james"></div>
+      </div>
+      <div class="dimension-labels">
+        <span>Internal Processor</span>
+        <span>External Processor</span>
+      </div>
+
+      <!-- Friction Trigger Button -->
+      <button class="friction-trigger" onclick="toggleRepair(this)">
+        <span class="friction-icon">🔧</span>
+        <span class="friction-text">When this causes friction...</span>
+        <span class="friction-arrow">▾</span>
+      </button>
+
+      <!-- Repair Content (Expandable) -->
+      <div class="repair-content">
+        <div class="repair-inner">
+          <!-- Recognition -->
+          <div class="recognition">
+            <div class="recognition-label">You might notice tension when...</div>
+            One of you wants to talk through stress while the other needs quiet time to process first.
+          </div>
+
+          <!-- Repair Scripts -->
+          <div class="scripts-section">
+            <div class="scripts-title">
+              <span>💬</span>
+              Words that can help:
+            </div>
+
+            <div class="script-card">
+              <div class="script-for emma">For Emma (Internal):</div>
+              <div class="script-text">
+                "I need some quiet time to process, but I promise we'll talk about this. Can we reconnect in an hour?"
+              </div>
+            </div>
+
+            <div class="script-card">
+              <div class="script-for james">For James (External):</div>
+              <div class="script-text">
+                "I know you need space right now. I'm here when you're ready. No pressure."
+              </div>
+            </div>
+          </div>
+
+          <!-- De-escalation Tip -->
+          <div class="deescalation">
+            <span class="deescalation-icon">💡</span>
+            <div class="deescalation-content">
+              <div class="deescalation-label">Pro Tip</div>
+              <div class="deescalation-text">
+                Create a signal (like placing a specific object on the table) that means "I need processing time" without having to explain in the moment.
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Second Dimension Example (Collapsed) -->
+    <div class="dimension-card">
+      <div class="dimension-label">Conflict Style</div>
+      <div class="dimension-track">
+        <div class="dimension-dot dot-emma" style="left: 75%;"></div>
+        <div class="dimension-dot dot-james" style="left: 25%;"></div>
+      </div>
+      <div class="dimension-labels">
+        <span>Cool Down First</span>
+        <span>Address Immediately</span>
+      </div>
+
+      <button class="friction-trigger" onclick="toggleRepair(this)">
+        <span class="friction-icon">🔧</span>
+        <span class="friction-text">When this causes friction...</span>
+        <span class="friction-arrow">▾</span>
+      </button>
+
+      <div class="repair-content">
+        <div class="repair-inner">
+          <div class="recognition">
+            <div class="recognition-label">You might notice tension when...</div>
+            One of you wants to talk about a disagreement right away while the other needs time to calm down first.
+          </div>
+
+          <div class="scripts-section">
+            <div class="scripts-title">
+              <span>💬</span>
+              Words that can help:
+            </div>
+
+            <div class="script-card">
+              <div class="script-for emma">For Emma (Address Immediately):</div>
+              <div class="script-text">
+                "I want to work this out together. Would 20 minutes be enough time for you to feel ready to talk?"
+              </div>
+            </div>
+
+            <div class="script-card">
+              <div class="script-for james">For James (Cool Down First):</div>
+              <div class="script-text">
+                "I need some time to collect my thoughts so I can be fully present. I'll come find you in 20 minutes."
+              </div>
+            </div>
+          </div>
+
+          <div class="deescalation">
+            <span class="deescalation-icon">💡</span>
+            <div class="deescalation-content">
+              <div class="deescalation-label">Pro Tip</div>
+              <div class="deescalation-text">
+                Agree on a "pause phrase" in advance that either can use to request time without it feeling like rejection.
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="design-notes">
+    <h4>Design Notes</h4>
+    <ul>
+      <li>Repair section only appears on dimensions marked as "Different" or "Complementary"</li>
+      <li>Collapsed by default - subtle dashed border invites curiosity</li>
+      <li>Uses warm colors to feel supportive, not clinical</li>
+      <li>Scripts are personalized with actual partner names</li>
+      <li>Recognition prompt helps couples identify the pattern</li>
+      <li>Pro tip gives actionable, concrete suggestion</li>
+      <li>Language is non-blaming: "when this causes friction" not "when you fight"</li>
+    </ul>
+  </div>
+
+  <script>
+    function toggleRepair(btn) {
+      const repairContent = btn.nextElementSibling;
+      btn.classList.toggle('expanded');
+      repairContent.classList.toggle('expanded');
+    }
+  </script>
+</body>
+</html>

@@ -201,6 +201,37 @@ class FramedPerception {
   }
 }
 
+/// Growth Edge - perception gap between self and partner view
+class GrowthEdge {
+  final String id;
+  final String selfView;       // How the user described themselves
+  final String partnerView;    // How partner sees them
+  final String insight;        // The framing text
+  final String askQuestion;    // Suggested question to ask partner
+  final String partnerName;    // Name of the partner who sees this
+
+  GrowthEdge({
+    required this.id,
+    required this.selfView,
+    required this.partnerView,
+    required this.insight,
+    required this.askQuestion,
+    required this.partnerName,
+  });
+
+  factory GrowthEdge.fromJson(Map<String, dynamic> json) {
+    return GrowthEdge(
+      id: json['id'] as String? ?? '',
+      selfView: json['selfView'] as String? ?? '',
+      partnerView: json['partnerView'] as String? ?? '',
+      insight: json['insight'] as String? ??
+          "This isn't right or wrong — it's interesting! How you see yourself isn't always how others experience you.",
+      askQuestion: json['askQuestion'] as String? ?? '',
+      partnerName: json['partnerName'] as String? ?? 'Partner',
+    );
+  }
+}
+
 /// Conversation starter
 class ConversationStarter {
   final String? id;
@@ -384,6 +415,7 @@ class UsProfile {
   final FramedLoveLanguage? loveLanguages;
   final List<FramedDiscovery> discoveries;
   final List<FramedPerception> partnerPerceptions;
+  final List<GrowthEdge> growthEdges;
   final List<ConversationStarter> conversationStarters;
   final ProfileStats stats;
   final ProgressiveReveal progressiveReveal;
@@ -398,6 +430,7 @@ class UsProfile {
     this.loveLanguages,
     required this.discoveries,
     required this.partnerPerceptions,
+    this.growthEdges = const [],
     required this.conversationStarters,
     required this.stats,
     required this.progressiveReveal,
@@ -432,6 +465,10 @@ class UsProfile {
               ?.map((e) => FramedPerception.fromJson(e as Map<String, dynamic>))
               .toList() ??
           [],
+      growthEdges: (profile['growthEdges'] as List<dynamic>?)
+              ?.map((e) => GrowthEdge.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          [],
       conversationStarters: starters
           .map((e) => ConversationStarter.fromJson(e as Map<String, dynamic>))
           .toList(),
@@ -457,6 +494,23 @@ class UsProfile {
   }
 }
 
+/// Quick stats for profile entry card preview
+class UsProfileQuickStats {
+  final int discoveryCount;
+  final int dimensionCount;
+  final int? valueAlignmentPercent;
+  final bool hasData;
+  final bool hasNewContent;
+
+  UsProfileQuickStats({
+    required this.discoveryCount,
+    required this.dimensionCount,
+    this.valueAlignmentPercent,
+    required this.hasData,
+    this.hasNewContent = false,
+  });
+}
+
 // =============================================================================
 // Service
 // =============================================================================
@@ -473,6 +527,8 @@ class UsProfileService {
   static const String _appMetadataBox = 'app_metadata';
   static const String _usProfileKey = 'us_profile';
   static const String _usProfileFetchedAtKey = 'us_profile_fetched_at';
+  static const String _usProfileLastViewedAtKey = 'us_profile_last_viewed_at';
+  static const String _usProfileLastViewedHashKey = 'us_profile_last_viewed_hash';
 
   /// Fetch profile from API
   ///
@@ -545,6 +601,117 @@ class UsProfileService {
       return UsProfile.fromJson(data, userRole);
     } catch (e) {
       Logger.error('Error recalculating Us Profile', error: e, service: 'usprofile');
+      return null;
+    }
+  }
+
+  /// Get quick stats from cached profile (for entry card preview)
+  /// Returns null if no cached profile exists
+  UsProfileQuickStats? getCachedQuickStats() {
+    try {
+      final box = Hive.box(_appMetadataBox);
+      final cached = box.get(_usProfileKey) as Map?;
+      if (cached == null) return null;
+
+      final data = Map<String, dynamic>.from(cached);
+
+      // Extract quick stats
+      final discoveries =
+          (data['discoveries'] as List<dynamic>?)?.length ?? 0;
+      final dimensions =
+          (data['dimensions'] as List<dynamic>?)?.length ?? 0;
+      final values = (data['values'] as List<dynamic>?) ?? [];
+
+      // Calculate average alignment from values
+      int alignmentSum = 0;
+      int alignmentCount = 0;
+      for (final v in values) {
+        final percent = v['alignmentPercent'] as int?;
+        if (percent != null) {
+          alignmentSum += percent;
+          alignmentCount++;
+        }
+      }
+      final avgAlignment =
+          alignmentCount > 0 ? (alignmentSum / alignmentCount).round() : null;
+
+      return UsProfileQuickStats(
+        discoveryCount: discoveries,
+        dimensionCount: dimensions,
+        valueAlignmentPercent: avgAlignment,
+        hasData: discoveries > 0 || dimensions > 0,
+        hasNewContent: hasNewContentSinceLastView(),
+      );
+    } catch (e) {
+      Logger.error('Error getting cached quick stats',
+          error: e, service: 'usprofile');
+      return null;
+    }
+  }
+
+  /// Generate a simple hash of profile content for change detection
+  String _generateProfileContentHash(Map<String, dynamic> data) {
+    final discoveries = (data['discoveries'] as List<dynamic>?)?.length ?? 0;
+    final dimensions = (data['dimensions'] as List<dynamic>?)?.length ?? 0;
+    final starters = (data['conversationStarters'] as List<dynamic>?)?.length ?? 0;
+    final values = (data['values'] as List<dynamic>?)?.length ?? 0;
+    // Simple hash based on counts - will detect new content
+    return '$discoveries-$dimensions-$starters-$values';
+  }
+
+  /// Mark the profile as viewed (call when user opens UsProfileScreen)
+  Future<void> markProfileViewed() async {
+    try {
+      final box = Hive.box(_appMetadataBox);
+      await box.put(_usProfileLastViewedAtKey, DateTime.now());
+
+      // Store hash of current content
+      final cached = box.get(_usProfileKey) as Map?;
+      if (cached != null) {
+        final data = Map<String, dynamic>.from(cached);
+        final hash = _generateProfileContentHash(data);
+        await box.put(_usProfileLastViewedHashKey, hash);
+      }
+
+      Logger.debug('Profile marked as viewed', service: 'usprofile');
+    } catch (e) {
+      Logger.error('Error marking profile viewed', error: e, service: 'usprofile');
+    }
+  }
+
+  /// Check if there's new content since the last time user viewed the profile
+  bool hasNewContentSinceLastView() {
+    try {
+      final box = Hive.box(_appMetadataBox);
+      final lastViewedHash = box.get(_usProfileLastViewedHashKey) as String?;
+      final cached = box.get(_usProfileKey) as Map?;
+
+      // If never viewed, any content is "new"
+      if (lastViewedHash == null && cached != null) {
+        return true;
+      }
+
+      // If no cached data, nothing new
+      if (cached == null) {
+        return false;
+      }
+
+      // Compare hashes
+      final data = Map<String, dynamic>.from(cached);
+      final currentHash = _generateProfileContentHash(data);
+      return currentHash != lastViewedHash;
+    } catch (e) {
+      Logger.error('Error checking for new content', error: e, service: 'usprofile');
+      return false;
+    }
+  }
+
+  /// Get the last time the profile was viewed
+  DateTime? getLastViewedAt() {
+    try {
+      final box = Hive.box(_appMetadataBox);
+      return box.get(_usProfileLastViewedAtKey) as DateTime?;
+    } catch (e) {
       return null;
     }
   }

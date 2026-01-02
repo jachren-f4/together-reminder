@@ -1,0 +1,1546 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Us Profile - Month 1 Complete</title>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Pacifico&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-gradient-start: #FFD1C1;
+      --bg-gradient-end: #FFF5F0;
+      --primary-pink: #FF6B6B;
+      --primary-orange: #FF9F43;
+      --text-dark: #3A3A3A;      /* Darkened from #4A4A4A */
+      --text-medium: #5A5A5A;    /* Darkened from #7A7A7A */
+      --text-light: #707070;     /* Darkened from #9A9A9A - now readable */
+      --cream: #FFF8F0;
+      --beige: #F5E6D8;
+      --soft-blue: #4A8BC9;      /* Slightly darkened for contrast */
+      --success-green: #3D8B40;  /* Slightly darkened */
+      --friction-bg: #FFF0ED;
+      --friction-border: #FFD4CC;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Nunito', sans-serif;
+      background: linear-gradient(to bottom, var(--bg-gradient-start), var(--bg-gradient-end));
+      min-height: 100vh;
+      padding: 0;
+    }
+
+    .phone-container {
+      max-width: 400px;
+      margin: 0 auto;
+      background: linear-gradient(to bottom, var(--bg-gradient-start), var(--bg-gradient-end));
+      min-height: 100vh;
+      padding-bottom: 100px;
+    }
+
+    /* ========== HEADER ========== */
+    .profile-header {
+      padding: 24px 20px;
+      text-align: center;
+      position: relative;
+    }
+
+    .back-btn {
+      position: absolute;
+      left: 16px;
+      top: 24px;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: white;
+      border: none;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    .couple-avatars {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 12px;
+    }
+
+    .avatar {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      border: 3px solid white;
+      box-shadow: 0 3px 12px rgba(0,0,0,0.1);
+    }
+
+    .avatar.emma {
+      background: linear-gradient(135deg, var(--primary-pink), #FF8E8E);
+      margin-right: -12px;
+      z-index: 1;
+    }
+    .avatar.james {
+      background: linear-gradient(135deg, var(--soft-blue), #7BC4D4);
+    }
+
+    .couple-names {
+      font-family: 'Playfair Display', serif;
+      font-size: 24px;
+      color: var(--text-dark);
+      margin-bottom: 4px;
+    }
+
+    .journey-info {
+      font-size: 13px;
+      color: var(--text-medium);
+    }
+
+    .journey-info strong {
+      color: var(--primary-pink);
+      font-weight: 800;
+    }
+
+    /* Stats bar */
+    .stats-bar {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 16px;
+    }
+
+    .stat-pill {
+      background: white;
+      border-radius: 20px;
+      padding: 8px 14px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    }
+
+    .stat-icon {
+      font-size: 14px;
+    }
+
+    .stat-value {
+      font-size: 14px;
+      font-weight: 800;
+      color: var(--text-dark);
+    }
+
+    .stat-label {
+      font-size: 12px;
+      color: var(--text-medium);
+    }
+
+    /* ========== CONTENT ========== */
+    .content {
+      padding: 0 16px;
+    }
+
+    /* ========== SECTION CARD ========== */
+    .section-card {
+      background: white;
+      border-radius: 20px;
+      padding: 18px;
+      margin-bottom: 14px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 14px;
+    }
+
+    .section-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 15px;
+      color: var(--text-medium);
+    }
+
+    .section-meta {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .section-badge {
+      background: linear-gradient(135deg, var(--primary-pink), var(--primary-orange));
+      color: white;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 12px;
+    }
+
+    /* Info button */
+    .info-btn {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-family: 'Nunito', sans-serif;
+      font-size: 12px;
+      color: var(--text-medium);
+      padding: 4px 8px;
+      border-radius: 12px;
+      transition: all 0.2s ease;
+    }
+
+    .info-btn:hover {
+      color: var(--primary-pink);
+      background: rgba(255,107,107,0.08);
+    }
+
+    .info-btn .icon {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: var(--beige);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: 11px;
+    }
+
+    .info-btn .arrow {
+      transition: transform 0.3s ease;
+      font-size: 10px;
+    }
+
+    .info-btn.expanded .arrow {
+      transform: rotate(180deg);
+    }
+
+    /* Info expand */
+    .info-expand {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.4s ease, padding 0.3s ease, margin 0.3s ease;
+      background: linear-gradient(135deg, rgba(255,107,107,0.06), rgba(255,159,67,0.06));
+      border-radius: 12px;
+      margin-bottom: 0;
+    }
+
+    .info-expand.expanded {
+      max-height: 400px;
+      padding: 14px;
+      margin-bottom: 14px;
+    }
+
+    .info-expand-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+
+    .info-expand-icon { font-size: 18px; }
+
+    .info-expand-title {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text-dark);
+    }
+
+    .info-expand-text {
+      font-size: 13px;
+      color: var(--text-medium);
+      line-height: 1.6;
+      margin-bottom: 10px;
+    }
+
+    .info-expand-list {
+      list-style: none;
+    }
+
+    .info-expand-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      margin-bottom: 6px;
+      font-size: 12px;
+      color: var(--text-dark);
+      line-height: 1.5;
+    }
+
+    .info-tip {
+      background: white;
+      border-radius: 8px;
+      padding: 10px;
+      font-size: 12px;
+      color: var(--text-dark);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    /* ========== DIMENSIONS ========== */
+    .dimension-legend {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      margin-bottom: 12px;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 12px;
+      color: var(--text-medium);
+    }
+
+    .legend-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+    }
+
+    .legend-dot.emma { background: var(--primary-pink); }
+    .legend-dot.james { background: var(--soft-blue); }
+
+    .dimension-item {
+      background: var(--cream);
+      border-radius: 14px;
+      padding: 14px;
+      margin-bottom: 10px;
+    }
+
+    .dimension-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+
+    .dimension-label {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text-dark);
+    }
+
+    .dimension-tag {
+      font-size: 11px;
+      padding: 3px 8px;
+      border-radius: 8px;
+      font-weight: 600;
+    }
+
+    .dimension-tag.different {
+      background: #FFEBEE;
+      color: #E53935;
+    }
+
+    .dimension-tag.similar {
+      background: #E8F5E9;
+      color: #43A047;
+    }
+
+    .dimension-tag.complementary {
+      background: #E3F2FD;
+      color: #1976D2;
+    }
+
+    .dimension-track {
+      height: 10px;
+      background: var(--beige);
+      border-radius: 5px;
+      position: relative;
+      margin-bottom: 8px;
+    }
+
+    .dimension-dot {
+      position: absolute;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      top: 50%;
+      transform: translateY(-50%);
+      border: 2px solid white;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+    }
+
+    .dot-emma { background: var(--primary-pink); }
+    .dot-james { background: var(--soft-blue); }
+
+    .dimension-labels-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 11px;
+      color: var(--text-light);
+    }
+
+    /* Repair trigger */
+    .repair-trigger {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 10px;
+      background: transparent;
+      border: 1px dashed var(--friction-border);
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      width: 100%;
+      text-align: left;
+      margin-top: 10px;
+      font-family: 'Nunito', sans-serif;
+    }
+
+    .repair-trigger:hover {
+      background: var(--friction-bg);
+      border-style: solid;
+    }
+
+    .repair-trigger.expanded {
+      background: var(--friction-bg);
+      border-style: solid;
+      border-bottom-left-radius: 0;
+      border-bottom-right-radius: 0;
+    }
+
+    .repair-icon { font-size: 14px; }
+
+    .repair-text {
+      font-size: 12px;
+      color: var(--text-medium);
+      flex: 1;
+    }
+
+    .repair-arrow {
+      font-size: 10px;
+      color: var(--text-light);
+      transition: transform 0.3s ease;
+    }
+
+    .repair-trigger.expanded .repair-arrow {
+      transform: rotate(180deg);
+    }
+
+    /* Repair content */
+    .repair-content {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.4s ease;
+      background: var(--friction-bg);
+      border: 1px solid var(--friction-border);
+      border-top: none;
+      border-bottom-left-radius: 8px;
+      border-bottom-right-radius: 8px;
+    }
+
+    .repair-content.expanded {
+      max-height: 400px;
+    }
+
+    .repair-inner {
+      padding: 12px;
+    }
+
+    .repair-recognition {
+      background: white;
+      border-radius: 8px;
+      padding: 10px;
+      margin-bottom: 10px;
+      font-size: 11px;
+      color: var(--text-dark);
+      line-height: 1.5;
+      border-left: 3px solid var(--primary-orange);
+    }
+
+    .repair-recognition-label {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text-light);
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+      margin-bottom: 4px;
+    }
+
+    .script-card {
+      background: white;
+      border-radius: 8px;
+      padding: 10px;
+      margin-bottom: 6px;
+    }
+
+    .script-for {
+      font-size: 11px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .script-for.emma { color: var(--primary-pink); }
+    .script-for.james { color: var(--soft-blue); }
+
+    .script-text {
+      font-size: 11px;
+      color: var(--text-dark);
+      line-height: 1.5;
+      font-style: italic;
+    }
+
+    .repair-tip {
+      background: linear-gradient(135deg, rgba(255,107,107,0.1), rgba(255,159,67,0.1));
+      border-radius: 8px;
+      padding: 10px;
+      display: flex;
+      gap: 8px;
+      align-items: flex-start;
+      margin-top: 10px;
+    }
+
+    .repair-tip-icon { font-size: 16px; }
+
+    .repair-tip-text {
+      font-size: 12px;
+      color: var(--text-dark);
+      line-height: 1.5;
+    }
+
+    /* Locked dimension */
+    .dimension-locked {
+      background: var(--beige);
+      border-radius: 14px;
+      padding: 16px;
+      text-align: center;
+      border: 2px dashed #DDD;
+    }
+
+    .locked-icon { font-size: 20px; margin-bottom: 6px; }
+
+    .locked-text {
+      font-size: 12px;
+      color: var(--text-light);
+      margin-bottom: 8px;
+    }
+
+    .locked-progress {
+      height: 4px;
+      background: #DDD;
+      border-radius: 2px;
+      overflow: hidden;
+      max-width: 150px;
+      margin: 0 auto;
+    }
+
+    .locked-progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--primary-pink), var(--primary-orange));
+      border-radius: 2px;
+    }
+
+    /* ========== DISCOVERIES ========== */
+    .filter-tabs {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 12px;
+      overflow-x: auto;
+      padding-bottom: 4px;
+    }
+
+    .filter-tab {
+      background: var(--cream);
+      border: none;
+      border-radius: 14px;
+      padding: 6px 12px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-medium);
+      cursor: pointer;
+      white-space: nowrap;
+      font-family: 'Nunito', sans-serif;
+      transition: all 0.2s ease;
+    }
+
+    .filter-tab:hover {
+      background: var(--beige);
+    }
+
+    .filter-tab.active {
+      background: linear-gradient(135deg, var(--primary-pink), var(--primary-orange));
+      color: white;
+    }
+
+    .discovery-item {
+      background: var(--cream);
+      border-radius: 12px;
+      padding: 12px;
+      margin-bottom: 10px;
+    }
+
+    .discovery-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 6px;
+    }
+
+    .discovery-category {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text-light);
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .stakes-badge {
+      font-size: 10px;
+      padding: 3px 8px;
+      border-radius: 6px;
+      font-weight: 700;
+    }
+
+    .stakes-badge.high {
+      background: #FFEBEE;
+      color: #E53935;
+    }
+
+    .discovery-text {
+      font-size: 12px;
+      color: var(--text-dark);
+      line-height: 1.5;
+      margin-bottom: 10px;
+    }
+
+    .name-emma { color: var(--primary-pink); font-weight: 700; }
+    .name-james { color: var(--soft-blue); font-weight: 700; }
+
+    .discovery-action {
+      background: white;
+      border-radius: 8px;
+      padding: 10px;
+    }
+
+    .action-header {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 6px;
+    }
+
+    .action-icon { font-size: 14px; }
+
+    .action-label {
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--text-dark);
+    }
+
+    .action-text {
+      font-size: 11px;
+      color: var(--text-medium);
+      line-height: 1.5;
+    }
+
+    /* Timing badge */
+    .timing-row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 8px;
+      padding-top: 8px;
+      border-top: 1px dashed var(--beige);
+    }
+
+    .timing-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 4px 10px;
+      border-radius: 10px;
+      font-size: 11px;
+      font-weight: 600;
+    }
+
+    .timing-badge.relaxed {
+      background: #F3E5F5;
+      color: #7B1FA2;
+    }
+
+    .timing-badge.quick {
+      background: #E8F5E9;
+      color: #388E3C;
+    }
+
+    .timing-badge.dedicated {
+      background: #FCE4EC;
+      color: #C2185B;
+    }
+
+    .timing-text {
+      font-size: 11px;
+      color: var(--text-light);
+    }
+
+    .view-all-btn {
+      display: block;
+      width: 100%;
+      background: var(--cream);
+      border: none;
+      border-radius: 10px;
+      padding: 10px;
+      font-family: 'Nunito', sans-serif;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-medium);
+      cursor: pointer;
+      transition: background 0.2s ease;
+    }
+
+    .view-all-btn:hover {
+      background: var(--beige);
+    }
+
+    /* ========== VALUES ========== */
+    .value-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--cream);
+      border-radius: 10px;
+      padding: 12px 14px;
+      margin-bottom: 8px;
+    }
+
+    .value-info {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .value-icon { font-size: 16px; }
+
+    .value-name {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-dark);
+    }
+
+    .value-bar-container {
+      flex: 1;
+      max-width: 100px;
+      margin: 0 12px;
+    }
+
+    .value-bar {
+      height: 6px;
+      background: var(--beige);
+      border-radius: 3px;
+      overflow: hidden;
+    }
+
+    .value-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--primary-pink), var(--primary-orange));
+      border-radius: 3px;
+    }
+
+    .value-score {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--primary-pink);
+      min-width: 45px;
+      text-align: right;
+    }
+
+    /* ========== PARTNER PERCEPTION ========== */
+    .partner-section {
+      background: var(--cream);
+      border-radius: 14px;
+      padding: 14px;
+      margin-bottom: 12px;
+    }
+
+    .partner-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .partner-avatar-small {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+    }
+
+    .partner-avatar-small.james {
+      background: linear-gradient(135deg, var(--soft-blue), #7BC4D4);
+    }
+
+    .partner-avatar-small.emma {
+      background: linear-gradient(135deg, var(--primary-pink), #FF8E8E);
+    }
+
+    .partner-title {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text-dark);
+    }
+
+    .partner-subtitle {
+      font-size: 12px;
+      color: var(--text-light);
+    }
+
+    .trait-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .trait-tag {
+      background: white;
+      border-radius: 14px;
+      padding: 6px 12px;
+      font-size: 11px;
+      color: var(--text-dark);
+      font-weight: 600;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+    }
+
+    /* ========== CONVERSATION STARTERS ========== */
+    .convo-card {
+      background: var(--cream);
+      border-radius: 12px;
+      padding: 14px;
+      margin-bottom: 10px;
+    }
+
+    .convo-header {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 8px;
+    }
+
+    .convo-icon { font-size: 14px; }
+
+    .convo-label {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text-light);
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+    }
+
+    .convo-prompt {
+      font-size: 13px;
+      color: var(--text-dark);
+      line-height: 1.6;
+      font-style: italic;
+      margin-bottom: 10px;
+    }
+
+    .convo-timing {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .start-convo-btn {
+      display: block;
+      width: 100%;
+      background: linear-gradient(135deg, var(--primary-pink), var(--primary-orange));
+      border: none;
+      border-radius: 10px;
+      padding: 10px;
+      font-family: 'Nunito', sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      color: white;
+      cursor: pointer;
+      margin-top: 10px;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .start-convo-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(255,107,107,0.3);
+    }
+
+    /* ========== ACTIONS SECTION ========== */
+    .actions-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .action-stat {
+      background: var(--cream);
+      border-radius: 14px;
+      padding: 16px;
+      text-align: center;
+    }
+
+    .action-stat-value {
+      font-size: 28px;
+      font-weight: 800;
+      color: var(--text-dark);
+    }
+
+    .action-stat-label {
+      font-size: 12px;
+      color: var(--text-light);
+      line-height: 1.3;
+      margin-top: 4px;
+    }
+
+    /* ========== GROWTH SECTION ========== */
+    .growth-card {
+      background: linear-gradient(135deg, rgba(255,107,107,0.08), rgba(255,159,67,0.08));
+      border-radius: 14px;
+      padding: 14px;
+    }
+
+    .growth-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .growth-icon { font-size: 18px; }
+
+    .growth-title {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text-dark);
+    }
+
+    .milestone-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .milestone-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--success-green);
+      flex-shrink: 0;
+    }
+
+    .milestone-dot.pending {
+      background: transparent;
+      border: 2px dashed var(--text-light);
+    }
+
+    .milestone-text {
+      font-size: 12px;
+      color: var(--text-dark);
+      flex: 1;
+    }
+
+    .milestone-date {
+      font-size: 11px;
+      color: var(--text-light);
+    }
+
+    /* ========== FOOTER SPACER ========== */
+    .footer-spacer {
+      height: 40px;
+    }
+  </style>
+</head>
+<body>
+  <div class="phone-container">
+    <!-- ========== HEADER ========== -->
+    <div class="profile-header">
+      <button class="back-btn">←</button>
+
+      <div class="couple-avatars">
+        <div class="avatar emma">👩</div>
+        <div class="avatar james">👨</div>
+      </div>
+
+      <div class="couple-names">Emma & James</div>
+      <div class="journey-info">Day <strong>30</strong> of your journey together</div>
+
+      <div class="stats-bar">
+        <div class="stat-pill">
+          <span class="stat-icon">📝</span>
+          <span class="stat-value">30</span>
+          <span class="stat-label">quizzes</span>
+        </div>
+        <div class="stat-pill">
+          <span class="stat-icon">💡</span>
+          <span class="stat-value">18</span>
+          <span class="stat-label">discoveries</span>
+        </div>
+        <div class="stat-pill">
+          <span class="stat-icon">💬</span>
+          <span class="stat-value">5</span>
+          <span class="stat-label">convos</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="content">
+      <!-- ========== DIMENSIONS ========== -->
+      <div class="section-card">
+        <div class="section-header">
+          <span class="section-title">How You Navigate Together</span>
+          <div class="section-meta">
+            <span class="section-badge">4/6</span>
+            <button class="info-btn" onclick="toggleInfo(this)">
+              <span class="icon">i</span>
+              <span>Learn</span>
+              <span class="arrow">▾</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="info-expand">
+          <div class="info-expand-header">
+            <span class="info-expand-icon">📊</span>
+            <span class="info-expand-title">Understanding Dimensions</span>
+          </div>
+          <p class="info-expand-text">
+            Dimensions show where you each naturally fall on key relationship spectrums. Neither end is "better"!
+          </p>
+          <ul class="info-expand-list">
+            <li>🎚️ <strong>Your position</strong> shows your natural tendency</li>
+            <li>🔄 <strong>Opposite ends</strong> often means you complement each other</li>
+            <li>📈 <strong>More quizzes</strong> = more accurate readings</li>
+          </ul>
+          <div class="info-tip">
+            <span>🔓</span>
+            <span>Complete more quizzes to unlock additional dimensions!</span>
+          </div>
+        </div>
+
+        <div class="dimension-legend">
+          <div class="legend-item">
+            <div class="legend-dot emma"></div>
+            <span>Emma</span>
+          </div>
+          <div class="legend-item">
+            <div class="legend-dot james"></div>
+            <span>James</span>
+          </div>
+        </div>
+
+        <!-- Dimension 1: Different -->
+        <div class="dimension-item">
+          <div class="dimension-header">
+            <span class="dimension-label">Stress Processing</span>
+            <span class="dimension-tag different">Different</span>
+          </div>
+          <div class="dimension-track">
+            <div class="dimension-dot dot-emma" style="left: 22%;"></div>
+            <div class="dimension-dot dot-james" style="left: 78%;"></div>
+          </div>
+          <div class="dimension-labels-row">
+            <span>Internal Processor</span>
+            <span>External Processor</span>
+          </div>
+
+          <button class="repair-trigger" onclick="toggleRepair(this)">
+            <span class="repair-icon">🔧</span>
+            <span class="repair-text">When this causes friction...</span>
+            <span class="repair-arrow">▾</span>
+          </button>
+          <div class="repair-content">
+            <div class="repair-inner">
+              <div class="repair-recognition">
+                <div class="repair-recognition-label">You might notice tension when...</div>
+                One of you wants to talk through stress while the other needs quiet time to process first.
+              </div>
+              <div class="script-card">
+                <div class="script-for emma">For Emma:</div>
+                <div class="script-text">"I need some quiet time to process, but I promise we'll talk. Can we reconnect in an hour?"</div>
+              </div>
+              <div class="script-card">
+                <div class="script-for james">For James:</div>
+                <div class="script-text">"I know you need space right now. I'm here when you're ready. No pressure."</div>
+              </div>
+              <div class="repair-tip">
+                <span class="repair-tip-icon">💡</span>
+                <span class="repair-tip-text">Create a signal that means "I need processing time" without explaining in the moment.</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Dimension 2: Different -->
+        <div class="dimension-item">
+          <div class="dimension-header">
+            <span class="dimension-label">Conflict Style</span>
+            <span class="dimension-tag different">Different</span>
+          </div>
+          <div class="dimension-track">
+            <div class="dimension-dot dot-emma" style="left: 72%;"></div>
+            <div class="dimension-dot dot-james" style="left: 28%;"></div>
+          </div>
+          <div class="dimension-labels-row">
+            <span>Cool Down First</span>
+            <span>Address Immediately</span>
+          </div>
+
+          <button class="repair-trigger" onclick="toggleRepair(this)">
+            <span class="repair-icon">🔧</span>
+            <span class="repair-text">When this causes friction...</span>
+            <span class="repair-arrow">▾</span>
+          </button>
+          <div class="repair-content">
+            <div class="repair-inner">
+              <div class="repair-recognition">
+                <div class="repair-recognition-label">You might notice tension when...</div>
+                One wants to discuss a disagreement right away while the other needs time to calm down.
+              </div>
+              <div class="script-card">
+                <div class="script-for emma">For Emma:</div>
+                <div class="script-text">"I want to work this out. Would 20 minutes be enough time for you to feel ready?"</div>
+              </div>
+              <div class="script-card">
+                <div class="script-for james">For James:</div>
+                <div class="script-text">"I need time to collect my thoughts. I'll come find you in 20 minutes."</div>
+              </div>
+              <div class="repair-tip">
+                <span class="repair-tip-icon">💡</span>
+                <span class="repair-tip-text">Agree on a "pause phrase" either can use to request time without it feeling like rejection.</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Dimension 3: Similar -->
+        <div class="dimension-item">
+          <div class="dimension-header">
+            <span class="dimension-label">Social Energy</span>
+            <span class="dimension-tag similar">Similar</span>
+          </div>
+          <div class="dimension-track">
+            <div class="dimension-dot dot-emma" style="left: 38%;"></div>
+            <div class="dimension-dot dot-james" style="left: 48%;"></div>
+          </div>
+          <div class="dimension-labels-row">
+            <span>Recharge Alone</span>
+            <span>Recharge with Others</span>
+          </div>
+        </div>
+
+        <!-- Dimension 4: Complementary -->
+        <div class="dimension-item">
+          <div class="dimension-header">
+            <span class="dimension-label">Planning Style</span>
+            <span class="dimension-tag complementary">Complementary</span>
+          </div>
+          <div class="dimension-track">
+            <div class="dimension-dot dot-emma" style="left: 82%;"></div>
+            <div class="dimension-dot dot-james" style="left: 32%;"></div>
+          </div>
+          <div class="dimension-labels-row">
+            <span>Go with the Flow</span>
+            <span>Plan Ahead</span>
+          </div>
+        </div>
+
+        <!-- Locked Dimensions -->
+        <div class="dimension-locked">
+          <div class="locked-icon">🔒</div>
+          <div class="locked-text">2 more dimensions unlock with more quizzes</div>
+          <div class="locked-progress">
+            <div class="locked-progress-fill" style="width: 65%;"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ========== DISCOVERIES ========== -->
+      <div class="section-card">
+        <div class="section-header">
+          <span class="section-title">Your Discoveries</span>
+          <div class="section-meta">
+            <span class="section-badge">18</span>
+            <button class="info-btn" onclick="toggleInfo(this)">
+              <span class="icon">i</span>
+              <span>Learn</span>
+              <span class="arrow">▾</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="info-expand">
+          <div class="info-expand-header">
+            <span class="info-expand-icon">🔍</span>
+            <span class="info-expand-title">What are Discoveries?</span>
+          </div>
+          <p class="info-expand-text">
+            Discoveries highlight where you answered differently. These aren't problems - they're opportunities to understand each other!
+          </p>
+          <ul class="info-expand-list">
+            <li>🌟 <strong>Different ≠ Wrong</strong> — Your perspectives enrich your relationship</li>
+            <li>💭 <strong>Try This</strong> — Each discovery has an action to explore together</li>
+            <li>❤️ <strong>Build empathy</strong> — Curiosity about differences deepens your bond</li>
+          </ul>
+        </div>
+
+        <div class="filter-tabs">
+          <button class="filter-tab active">All (18)</button>
+          <button class="filter-tab">Lifestyle</button>
+          <button class="filter-tab">Values</button>
+          <button class="filter-tab">Future</button>
+          <button class="filter-tab">Acted On ✓</button>
+        </div>
+
+        <!-- Discovery 1: High Stakes -->
+        <div class="discovery-item">
+          <div class="discovery-header">
+            <span class="discovery-category">💰 Finances</span>
+            <span class="stakes-badge high">Big Topic</span>
+          </div>
+          <div class="discovery-text">
+            <span class="name-emma">Emma</span> is a planner-saver •
+            <span class="name-james">James</span> is more spontaneous with spending
+          </div>
+          <div class="discovery-action">
+            <div class="action-header">
+              <span class="action-icon">💡</span>
+              <span class="action-label">Suggested Approach</span>
+            </div>
+            <div class="action-text">
+              Share your money stories — what did your families teach you about finances? Understanding the "why" behind habits builds empathy.
+            </div>
+            <div class="timing-row">
+              <span class="timing-badge dedicated">📅 20-30 min</span>
+              <span class="timing-text">Plan a relaxed time for this</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Discovery 2: Light -->
+        <div class="discovery-item">
+          <div class="discovery-header">
+            <span class="discovery-category">🍿 Entertainment</span>
+          </div>
+          <div class="discovery-text">
+            <span class="name-emma">Emma</span> prefers action movies •
+            <span class="name-james">James</span> loves romantic comedies
+          </div>
+          <div class="discovery-action">
+            <div class="action-header">
+              <span class="action-icon">💡</span>
+              <span class="action-label">Try This</span>
+            </div>
+            <div class="action-text">
+              Take turns picking movie night films this month
+            </div>
+            <div class="timing-row">
+              <span class="timing-badge quick">⚡ Anytime</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Discovery 3: Medium -->
+        <div class="discovery-item">
+          <div class="discovery-header">
+            <span class="discovery-category">🏠 Future Plans</span>
+          </div>
+          <div class="discovery-text">
+            <span class="name-emma">Emma</span> dreams of city life •
+            <span class="name-james">James</span> prefers suburbs
+          </div>
+          <div class="discovery-action">
+            <div class="action-header">
+              <span class="action-icon">💡</span>
+              <span class="action-label">Try This</span>
+            </div>
+            <div class="action-text">
+              Each share your "why" — what specifically draws you to that lifestyle?
+            </div>
+            <div class="timing-row">
+              <span class="timing-badge relaxed">🌙 Quiet evening</span>
+            </div>
+          </div>
+        </div>
+
+        <button class="view-all-btn">View all 18 discoveries →</button>
+      </div>
+
+      <!-- ========== VALUES ========== -->
+      <div class="section-card">
+        <div class="section-header">
+          <span class="section-title">Where You Align</span>
+          <button class="info-btn" onclick="toggleInfo(this)">
+            <span class="icon">i</span>
+            <span>Learn</span>
+            <span class="arrow">▾</span>
+          </button>
+        </div>
+
+        <div class="info-expand">
+          <div class="info-expand-header">
+            <span class="info-expand-icon">💎</span>
+            <span class="info-expand-title">Your Shared Values</span>
+          </div>
+          <p class="info-expand-text">
+            Values show what matters most to both of you. High alignment on core values predicts relationship satisfaction!
+          </p>
+          <ul class="info-expand-list">
+            <li>📊 <strong>Alignment %</strong> shows how often you answered similarly</li>
+            <li>⭐ <strong>Priority values</strong> appear more frequently in your answers</li>
+          </ul>
+        </div>
+
+        <div class="value-item">
+          <div class="value-info">
+            <span class="value-icon">⭐</span>
+            <span class="value-name">Honesty & Trust</span>
+          </div>
+          <div class="value-bar-container">
+            <div class="value-bar">
+              <div class="value-bar-fill" style="width: 92%;"></div>
+            </div>
+          </div>
+          <span class="value-score">92%</span>
+        </div>
+
+        <div class="value-item">
+          <div class="value-info">
+            <span class="value-icon">💕</span>
+            <span class="value-name">Quality Time</span>
+          </div>
+          <div class="value-bar-container">
+            <div class="value-bar">
+              <div class="value-bar-fill" style="width: 88%;"></div>
+            </div>
+          </div>
+          <span class="value-score">88%</span>
+        </div>
+
+        <div class="value-item">
+          <div class="value-info">
+            <span class="value-icon">🌱</span>
+            <span class="value-name">Personal Growth</span>
+          </div>
+          <div class="value-bar-container">
+            <div class="value-bar">
+              <div class="value-bar-fill" style="width: 85%;"></div>
+            </div>
+          </div>
+          <span class="value-score">85%</span>
+        </div>
+
+        <div class="value-item">
+          <div class="value-info">
+            <span class="value-icon">👨‍👩‍👧</span>
+            <span class="value-name">Family</span>
+          </div>
+          <div class="value-bar-container">
+            <div class="value-bar">
+              <div class="value-bar-fill" style="width: 78%;"></div>
+            </div>
+          </div>
+          <span class="value-score">78%</span>
+        </div>
+      </div>
+
+      <!-- ========== PARTNER PERCEPTION ========== -->
+      <div class="section-card">
+        <div class="section-header">
+          <span class="section-title">Through Each Other's Eyes</span>
+          <button class="info-btn" onclick="toggleInfo(this)">
+            <span class="icon">i</span>
+            <span>Learn</span>
+            <span class="arrow">▾</span>
+          </button>
+        </div>
+
+        <div class="info-expand">
+          <div class="info-expand-header">
+            <span class="info-expand-icon">👀</span>
+            <span class="info-expand-title">Partner Perception</span>
+          </div>
+          <p class="info-expand-text">
+            See how your partner perceives you — often revealing strengths you don't recognize in yourself!
+          </p>
+        </div>
+
+        <div class="partner-section">
+          <div class="partner-header">
+            <div class="partner-avatar-small james">👨</div>
+            <div>
+              <div class="partner-title">Through James's Eyes</div>
+              <div class="partner-subtitle">How James sees Emma</div>
+            </div>
+          </div>
+          <div class="trait-tags">
+            <span class="trait-tag">Adventurous</span>
+            <span class="trait-tag">Organized</span>
+            <span class="trait-tag">Caring</span>
+            <span class="trait-tag">Creative</span>
+          </div>
+        </div>
+
+        <div class="partner-section">
+          <div class="partner-header">
+            <div class="partner-avatar-small emma">👩</div>
+            <div>
+              <div class="partner-title">Through Emma's Eyes</div>
+              <div class="partner-subtitle">How Emma sees James</div>
+            </div>
+          </div>
+          <div class="trait-tags">
+            <span class="trait-tag">Thoughtful</span>
+            <span class="trait-tag">Funny</span>
+            <span class="trait-tag">Loyal</span>
+            <span class="trait-tag">Calm</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ========== CONVERSATION STARTERS ========== -->
+      <div class="section-card">
+        <div class="section-header">
+          <span class="section-title">Conversation Starters</span>
+          <span class="section-badge">New</span>
+        </div>
+
+        <div class="convo-card">
+          <div class="convo-header">
+            <span class="convo-icon">💬</span>
+            <span class="convo-label">Based on your differences</span>
+          </div>
+          <div class="convo-prompt">
+            "You have different approaches to handling stress. What helps you feel most supported when you're overwhelmed?"
+          </div>
+          <div class="convo-timing">
+            <span class="timing-badge relaxed">🌙 Relaxed moment</span>
+            <span class="timing-text">Best for a quiet evening</span>
+          </div>
+          <button class="start-convo-btn">Start This Conversation →</button>
+        </div>
+
+        <div class="convo-card">
+          <div class="convo-header">
+            <span class="convo-icon">💬</span>
+            <span class="convo-label">Quick connection</span>
+          </div>
+          <div class="convo-prompt">
+            "What's one thing that made you smile today?"
+          </div>
+          <div class="convo-timing">
+            <span class="timing-badge quick">⚡ 2-3 minutes</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ========== YOUR ACTIONS ========== -->
+      <div class="section-card">
+        <div class="section-header">
+          <span class="section-title">Your Actions Together</span>
+          <button class="info-btn" onclick="toggleInfo(this)">
+            <span class="icon">i</span>
+            <span>Learn</span>
+            <span class="arrow">▾</span>
+          </button>
+        </div>
+
+        <div class="info-expand">
+          <div class="info-expand-header">
+            <span class="info-expand-icon">🎯</span>
+            <span class="info-expand-title">What are Actions?</span>
+          </div>
+          <p class="info-expand-text">
+            These numbers track when you put insights into practice. It's not just about knowing — it's about doing!
+          </p>
+          <div class="info-tip">
+            <span>✨</span>
+            <span>Couples who act on 2+ insights/week feel more connected!</span>
+          </div>
+        </div>
+
+        <div class="actions-grid">
+          <div class="action-stat">
+            <div class="action-stat-value">3</div>
+            <div class="action-stat-label">Insights<br>Acted On</div>
+          </div>
+          <div class="action-stat">
+            <div class="action-stat-value">5</div>
+            <div class="action-stat-label">Conversations<br>Started</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ========== GROWTH ========== -->
+      <div class="section-card">
+        <div class="growth-card">
+          <div class="growth-header">
+            <span class="growth-icon">📈</span>
+            <span class="growth-title">Your Journey So Far</span>
+          </div>
+
+          <div class="milestone-item">
+            <div class="milestone-dot"></div>
+            <span class="milestone-text">First quiz completed together</span>
+            <span class="milestone-date">Day 1</span>
+          </div>
+          <div class="milestone-item">
+            <div class="milestone-dot"></div>
+            <span class="milestone-text">Unlocked 4 dimensions</span>
+            <span class="milestone-date">Day 14</span>
+          </div>
+          <div class="milestone-item">
+            <div class="milestone-dot"></div>
+            <span class="milestone-text">5 conversations started</span>
+            <span class="milestone-date">Day 22</span>
+          </div>
+          <div class="milestone-item">
+            <div class="milestone-dot pending"></div>
+            <span class="milestone-text">All 6 dimensions unlocked</span>
+            <span class="milestone-date">Soon</span>
+          </div>
+          <div class="milestone-item">
+            <div class="milestone-dot pending"></div>
+            <span class="milestone-text">50 quizzes milestone</span>
+            <span class="milestone-date">Keep going!</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-spacer"></div>
+    </div>
+  </div>
+
+  <script>
+    function toggleInfo(btn) {
+      const card = btn.closest('.section-card');
+      const expand = card.querySelector('.info-expand');
+      btn.classList.toggle('expanded');
+      expand.classList.toggle('expanded');
+    }
+
+    function toggleRepair(btn) {
+      const repairContent = btn.nextElementSibling;
+      btn.classList.toggle('expanded');
+      repairContent.classList.toggle('expanded');
+    }
+  </script>
+</body>
+</html>

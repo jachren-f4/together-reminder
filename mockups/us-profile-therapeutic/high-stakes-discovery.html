@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Therapeutic Enhancement: High-Stakes Discovery Cards</title>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Pacifico&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-gradient-start: #FFD1C1;
+      --bg-gradient-end: #FFF5F0;
+      --primary-pink: #FF6B6B;
+      --primary-orange: #FF9F43;
+      --text-dark: #4A4A4A;
+      --text-medium: #7A7A7A;
+      --text-light: #9A9A9A;
+      --cream: #FFF8F0;
+      --beige: #F5E6D8;
+      --soft-blue: #5B9BD5;
+      --high-stakes-bg: #FFF8F5;
+      --high-stakes-border: #FFB8A8;
+      --high-stakes-accent: #E8A090;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Nunito', sans-serif;
+      background: linear-gradient(to bottom, var(--bg-gradient-start), var(--bg-gradient-end));
+      min-height: 100vh;
+      padding: 20px;
+      max-width: 400px;
+      margin: 0 auto;
+    }
+
+    .mockup-header {
+      background: linear-gradient(135deg, var(--primary-pink), var(--primary-orange));
+      color: white;
+      padding: 16px;
+      border-radius: 16px;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    .mockup-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 18px;
+      margin-bottom: 8px;
+    }
+
+    .mockup-desc {
+      font-size: 12px;
+      opacity: 0.9;
+      line-height: 1.5;
+    }
+
+    .section-card {
+      background: white;
+      border-radius: 20px;
+      padding: 20px;
+      margin-bottom: 16px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    }
+
+    .section-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 15px;
+      color: var(--text-medium);
+      margin-bottom: 16px;
+    }
+
+    /* Standard Discovery Card (for comparison) */
+    .discovery-card {
+      background: var(--cream);
+      border-radius: 14px;
+      padding: 14px;
+      margin-bottom: 12px;
+    }
+
+    .discovery-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+
+    .discovery-category {
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--text-light);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .discovery-content {
+      font-size: 12px;
+      color: var(--text-dark);
+      line-height: 1.5;
+      margin-bottom: 12px;
+    }
+
+    .name-emma { color: var(--primary-pink); font-weight: 700; }
+    .name-james { color: var(--soft-blue); font-weight: 700; }
+
+    .try-this {
+      background: white;
+      border-radius: 10px;
+      padding: 10px 12px;
+      font-size: 11px;
+      color: var(--text-dark);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .try-this-icon {
+      font-size: 16px;
+    }
+
+    /* HIGH STAKES Discovery Card */
+    .discovery-card.high-stakes {
+      background: var(--high-stakes-bg);
+      border: 2px solid var(--high-stakes-border);
+      position: relative;
+    }
+
+    .stakes-badge {
+      position: absolute;
+      top: -8px;
+      right: 12px;
+      background: linear-gradient(135deg, var(--primary-pink), var(--primary-orange));
+      color: white;
+      font-size: 9px;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .stakes-acknowledgment {
+      background: white;
+      border-radius: 10px;
+      padding: 12px;
+      margin-bottom: 14px;
+      border-left: 3px solid var(--primary-orange);
+    }
+
+    .stakes-ack-title {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text-dark);
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .stakes-ack-text {
+      font-size: 11px;
+      color: var(--text-medium);
+      line-height: 1.5;
+    }
+
+    /* Multi-step guidance */
+    .guidance-section {
+      background: white;
+      border-radius: 10px;
+      padding: 14px;
+      margin-bottom: 12px;
+    }
+
+    .guidance-title {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text-dark);
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .guidance-steps {
+      list-style: none;
+    }
+
+    .guidance-step {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 10px;
+      font-size: 11px;
+      color: var(--text-dark);
+      line-height: 1.5;
+    }
+
+    .step-number {
+      width: 20px;
+      height: 20px;
+      background: var(--beige);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--text-medium);
+      flex-shrink: 0;
+    }
+
+    .guidance-step:last-child {
+      margin-bottom: 0;
+    }
+
+    /* Reassurance message */
+    .reassurance {
+      background: linear-gradient(135deg, rgba(255,107,107,0.08), rgba(255,159,67,0.08));
+      border-radius: 10px;
+      padding: 12px;
+      margin-bottom: 12px;
+      font-size: 11px;
+      color: var(--text-dark);
+      line-height: 1.5;
+      text-align: center;
+      font-style: italic;
+    }
+
+    /* Counselor prompt */
+    .counselor-prompt {
+      background: white;
+      border-radius: 10px;
+      padding: 12px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      border: 1px solid var(--beige);
+    }
+
+    .counselor-prompt:hover {
+      border-color: var(--primary-pink);
+      background: var(--cream);
+    }
+
+    .counselor-icon {
+      font-size: 20px;
+    }
+
+    .counselor-text {
+      flex: 1;
+      font-size: 11px;
+      color: var(--text-medium);
+      line-height: 1.4;
+    }
+
+    .counselor-arrow {
+      color: var(--text-light);
+      font-size: 12px;
+    }
+
+    /* Stakes level legend */
+    .stakes-legend {
+      background: var(--cream);
+      border-radius: 12px;
+      padding: 14px;
+      margin-top: 16px;
+    }
+
+    .legend-title {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text-dark);
+      margin-bottom: 10px;
+    }
+
+    .legend-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 8px;
+      font-size: 11px;
+    }
+
+    .legend-row:last-child {
+      margin-bottom: 0;
+    }
+
+    .legend-tag {
+      padding: 3px 8px;
+      border-radius: 6px;
+      font-size: 9px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+      min-width: 50px;
+      text-align: center;
+    }
+
+    .legend-tag.light {
+      background: #E8F5E9;
+      color: #4CAF50;
+    }
+
+    .legend-tag.medium {
+      background: #FFF3E0;
+      color: #FF9800;
+    }
+
+    .legend-tag.high {
+      background: #FFEBEE;
+      color: #E53935;
+    }
+
+    .legend-examples {
+      color: var(--text-medium);
+      font-size: 10px;
+    }
+
+    /* Design notes */
+    .design-notes {
+      background: #2C3E50;
+      color: white;
+      border-radius: 12px;
+      padding: 16px;
+      margin-top: 24px;
+      font-size: 11px;
+      line-height: 1.6;
+    }
+
+    .design-notes h4 {
+      font-family: 'Playfair Display', serif;
+      margin-bottom: 10px;
+      font-size: 14px;
+    }
+
+    .design-notes ul {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    .design-notes li {
+      margin-bottom: 6px;
+      padding-left: 16px;
+      position: relative;
+    }
+
+    .design-notes li::before {
+      content: "•";
+      position: absolute;
+      left: 0;
+      color: var(--primary-pink);
+    }
+  </style>
+</head>
+<body>
+  <div class="mockup-header">
+    <div class="mockup-title">High-Stakes Discovery Cards</div>
+    <div class="mockup-desc">
+      Some topics need more careful handling than "have a 10-minute conversation."
+      Tag discoveries by stakes level and provide appropriate scaffolding.
+    </div>
+  </div>
+
+  <!-- Standard Discovery (Light Stakes) -->
+  <div class="section-card">
+    <div class="section-title">Light Stakes Example</div>
+
+    <div class="discovery-card">
+      <div class="discovery-header">
+        <span class="discovery-category">🍿 Entertainment</span>
+      </div>
+      <div class="discovery-content">
+        <span class="name-emma">Emma</span> prefers action movies •
+        <span class="name-james">James</span> loves romantic comedies
+      </div>
+      <div class="try-this">
+        <span class="try-this-icon">💡</span>
+        <span><strong>Try This:</strong> Take turns picking movie night films this month</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- High Stakes Discovery -->
+  <div class="section-card">
+    <div class="section-title">High Stakes Example</div>
+
+    <div class="discovery-card high-stakes">
+      <div class="stakes-badge">💎 Big Topic</div>
+
+      <div class="discovery-header">
+        <span class="discovery-category">👶 Family Planning</span>
+      </div>
+
+      <div class="discovery-content">
+        <span class="name-emma">Emma</span> definitely wants kids in the next few years •
+        <span class="name-james">James</span> is still figuring out if he wants to be a parent
+      </div>
+
+      <!-- Acknowledgment -->
+      <div class="stakes-acknowledgment">
+        <div class="stakes-ack-title">
+          <span>✨</span>
+          This is a significant topic
+        </div>
+        <div class="stakes-ack-text">
+          This difference touches on life direction and timing. There's no quick answer, and that's okay.
+        </div>
+      </div>
+
+      <!-- Multi-step guidance -->
+      <div class="guidance-section">
+        <div class="guidance-title">
+          <span>🗺️</span>
+          Suggested approach
+        </div>
+        <ol class="guidance-steps">
+          <li class="guidance-step">
+            <span class="step-number">1</span>
+            <span>Find a relaxed time (not during stress)</span>
+          </li>
+          <li class="guidance-step">
+            <span class="step-number">2</span>
+            <span>Start with curiosity: "I'd love to understand what makes you unsure"</span>
+          </li>
+          <li class="guidance-step">
+            <span class="step-number">3</span>
+            <span>Share your feelings without pressure to decide</span>
+          </li>
+          <li class="guidance-step">
+            <span class="step-number">4</span>
+            <span>It's okay to revisit this multiple times</span>
+          </li>
+        </ol>
+      </div>
+
+      <!-- Reassurance -->
+      <div class="reassurance">
+        "Many happy couples navigate this over time. You don't need to solve it today."
+      </div>
+
+      <!-- Counselor suggestion -->
+      <div class="counselor-prompt">
+        <span class="counselor-icon">🤝</span>
+        <span class="counselor-text">
+          Some couples find it helpful to explore big life questions with a counselor present.
+        </span>
+        <span class="counselor-arrow">›</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Medium Stakes Example -->
+  <div class="section-card">
+    <div class="section-title">Medium Stakes Example</div>
+
+    <div class="discovery-card" style="border: 1px solid var(--beige);">
+      <div class="discovery-header">
+        <span class="discovery-category">🏠 Living Situation</span>
+      </div>
+      <div class="discovery-content">
+        <span class="name-emma">Emma</span> dreams of city living •
+        <span class="name-james">James</span> wants a quiet suburban home
+      </div>
+      <div class="try-this">
+        <span class="try-this-icon">💡</span>
+        <span><strong>Try This:</strong> Each share your "why" behind your preference</span>
+      </div>
+      <div style="margin-top: 10px; font-size: 10px; color: var(--text-light); display: flex; align-items: center; gap: 6px;">
+        <span>🌙</span>
+        <span>Best for: A relaxed evening when you're both feeling connected</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Stakes Legend -->
+  <div class="section-card">
+    <div class="stakes-legend">
+      <div class="legend-title">Stakes Categories</div>
+
+      <div class="legend-row">
+        <span class="legend-tag light">Light</span>
+        <span class="legend-examples">Food, hobbies, entertainment, travel preferences</span>
+      </div>
+
+      <div class="legend-row">
+        <span class="legend-tag medium">Medium</span>
+        <span class="legend-examples">Social life, daily routines, household, living situation</span>
+      </div>
+
+      <div class="legend-row">
+        <span class="legend-tag high">High</span>
+        <span class="legend-examples">Finances, family planning, intimacy, career, values, in-laws</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="design-notes">
+    <h4>Design Notes</h4>
+    <ul>
+      <li>High-stakes card has distinct visual treatment (border, badge)</li>
+      <li>Replaces simple "Try This" with multi-step approach</li>
+      <li>Acknowledgment validates the difficulty ("There's no quick answer")</li>
+      <li>Counselor prompt is optional, non-alarming, framed as optimization</li>
+      <li>Medium stakes get timing guidance but not full scaffolding</li>
+      <li>Light stakes stay simple - quick action is appropriate</li>
+      <li>Badge uses "Big Topic" not "High Stakes" (less clinical)</li>
+    </ul>
+  </div>
+</body>
+</html>

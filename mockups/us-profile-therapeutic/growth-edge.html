@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Therapeutic Enhancement: Growth Edge Perception</title>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Pacifico&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-gradient-start: #FFD1C1;
+      --bg-gradient-end: #FFF5F0;
+      --primary-pink: #FF6B6B;
+      --primary-orange: #FF9F43;
+      --text-dark: #4A4A4A;
+      --text-medium: #7A7A7A;
+      --text-light: #9A9A9A;
+      --cream: #FFF8F0;
+      --beige: #F5E6D8;
+      --soft-blue: #5B9BD5;
+      --growth-bg: #F0F7FF;
+      --growth-border: #B8D4F0;
+      --growth-accent: #4A90C2;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Nunito', sans-serif;
+      background: linear-gradient(to bottom, var(--bg-gradient-start), var(--bg-gradient-end));
+      min-height: 100vh;
+      padding: 20px;
+      max-width: 400px;
+      margin: 0 auto;
+    }
+
+    .mockup-header {
+      background: linear-gradient(135deg, var(--primary-pink), var(--primary-orange));
+      color: white;
+      padding: 16px;
+      border-radius: 16px;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    .mockup-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 18px;
+      margin-bottom: 8px;
+    }
+
+    .mockup-desc {
+      font-size: 12px;
+      opacity: 0.9;
+      line-height: 1.5;
+    }
+
+    .section-card {
+      background: white;
+      border-radius: 20px;
+      padding: 20px;
+      margin-bottom: 16px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    }
+
+    .section-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 15px;
+      color: var(--text-medium);
+      margin-bottom: 16px;
+    }
+
+    /* Partner Perception Section */
+    .partner-view-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .partner-avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--soft-blue), #7BC4D4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+    }
+
+    .partner-view-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 14px;
+      color: var(--text-dark);
+    }
+
+    .partner-view-subtitle {
+      font-size: 10px;
+      color: var(--text-light);
+    }
+
+    /* Trait tags */
+    .trait-section {
+      background: var(--cream);
+      border-radius: 12px;
+      padding: 14px;
+      margin-bottom: 14px;
+    }
+
+    .trait-label {
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--text-light);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 10px;
+    }
+
+    .trait-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .trait-tag {
+      background: white;
+      border-radius: 16px;
+      padding: 6px 12px;
+      font-size: 12px;
+      color: var(--text-dark);
+      font-weight: 600;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    }
+
+    /* NEW: Growth Edge Section */
+    .growth-edge {
+      background: var(--growth-bg);
+      border: 1px solid var(--growth-border);
+      border-radius: 14px;
+      padding: 16px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .growth-edge::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--growth-accent), #7BC4D4);
+    }
+
+    .growth-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .growth-icon {
+      font-size: 18px;
+    }
+
+    .growth-title {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--growth-accent);
+    }
+
+    .growth-content {
+      font-size: 12px;
+      color: var(--text-dark);
+      line-height: 1.6;
+      margin-bottom: 14px;
+    }
+
+    .growth-highlight {
+      background: white;
+      border-radius: 10px;
+      padding: 12px;
+      margin-bottom: 14px;
+    }
+
+    .growth-comparison {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 10px;
+    }
+
+    .comparison-item {
+      flex: 1;
+      text-align: center;
+    }
+
+    .comparison-label {
+      font-size: 9px;
+      color: var(--text-light);
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+      margin-bottom: 4px;
+    }
+
+    .comparison-value {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text-dark);
+      background: var(--cream);
+      padding: 6px 10px;
+      border-radius: 8px;
+    }
+
+    .comparison-arrow {
+      font-size: 16px;
+      color: var(--growth-accent);
+    }
+
+    .growth-insight {
+      font-size: 11px;
+      color: var(--text-medium);
+      font-style: italic;
+      line-height: 1.5;
+    }
+
+    /* Curiosity prompt */
+    .curiosity-prompt {
+      background: white;
+      border-radius: 10px;
+      padding: 12px;
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+    }
+
+    .curiosity-icon {
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+
+    .curiosity-content {
+      flex: 1;
+    }
+
+    .curiosity-label {
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--growth-accent);
+      margin-bottom: 4px;
+    }
+
+    .curiosity-question {
+      font-size: 12px;
+      color: var(--text-dark);
+      line-height: 1.5;
+      font-style: italic;
+    }
+
+    /* Framing note */
+    .framing-note {
+      background: linear-gradient(135deg, rgba(255,107,107,0.08), rgba(255,159,67,0.08));
+      border-radius: 10px;
+      padding: 12px;
+      margin-top: 14px;
+      font-size: 11px;
+      color: var(--text-medium);
+      line-height: 1.5;
+      text-align: center;
+    }
+
+    .framing-note strong {
+      color: var(--text-dark);
+    }
+
+    /* Additional examples */
+    .example-label {
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--text-light);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 12px;
+      margin-top: 16px;
+    }
+
+    .mini-growth {
+      background: var(--growth-bg);
+      border: 1px solid var(--growth-border);
+      border-radius: 10px;
+      padding: 12px;
+      margin-bottom: 10px;
+    }
+
+    .mini-growth-text {
+      font-size: 11px;
+      color: var(--text-dark);
+      line-height: 1.5;
+      margin-bottom: 8px;
+    }
+
+    .mini-growth-ask {
+      font-size: 10px;
+      color: var(--growth-accent);
+      font-style: italic;
+    }
+
+    /* Design notes */
+    .design-notes {
+      background: #2C3E50;
+      color: white;
+      border-radius: 12px;
+      padding: 16px;
+      margin-top: 24px;
+      font-size: 11px;
+      line-height: 1.6;
+    }
+
+    .design-notes h4 {
+      font-family: 'Playfair Display', serif;
+      margin-bottom: 10px;
+      font-size: 14px;
+    }
+
+    .design-notes ul {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    .design-notes li {
+      margin-bottom: 6px;
+      padding-left: 16px;
+      position: relative;
+    }
+
+    .design-notes li::before {
+      content: "•";
+      position: absolute;
+      left: 0;
+      color: var(--primary-pink);
+    }
+  </style>
+</head>
+<body>
+  <div class="mockup-header">
+    <div class="mockup-title">Growth Edge in Partner Perception</div>
+    <div class="mockup-desc">
+      Show interesting discrepancies between how you see yourself and how your partner sees you.
+      Framed as curiosity-inducing, never critical.
+    </div>
+  </div>
+
+  <!-- Partner Perception Section with Growth Edge -->
+  <div class="section-card">
+    <div class="section-title">Through Each Other's Eyes</div>
+
+    <!-- Standard partner view -->
+    <div class="partner-view-header">
+      <div class="partner-avatar">👨</div>
+      <div>
+        <div class="partner-view-title">Through James's Eyes</div>
+        <div class="partner-view-subtitle">How James sees you</div>
+      </div>
+    </div>
+
+    <div class="trait-section">
+      <div class="trait-label">James sees Emma as...</div>
+      <div class="trait-tags">
+        <span class="trait-tag">Adventurous</span>
+        <span class="trait-tag">Organized</span>
+        <span class="trait-tag">Caring</span>
+        <span class="trait-tag">Creative</span>
+      </div>
+    </div>
+
+    <!-- NEW: Growth Edge -->
+    <div class="growth-edge">
+      <div class="growth-header">
+        <span class="growth-icon">🔍</span>
+        <span class="growth-title">A Different Perspective</span>
+      </div>
+
+      <div class="growth-highlight">
+        <div class="growth-comparison">
+          <div class="comparison-item">
+            <div class="comparison-label">You said</div>
+            <div class="comparison-value">"Go with the flow"</div>
+          </div>
+          <span class="comparison-arrow">↔️</span>
+          <div class="comparison-item">
+            <div class="comparison-label">James sees</div>
+            <div class="comparison-value">"The organized one"</div>
+          </div>
+        </div>
+        <div class="growth-insight">
+          This isn't right or wrong — it's interesting! How you see yourself isn't always how others experience you.
+        </div>
+      </div>
+
+      <div class="curiosity-prompt">
+        <span class="curiosity-icon">💭</span>
+        <div class="curiosity-content">
+          <div class="curiosity-label">Try asking James:</div>
+          <div class="curiosity-question">
+            "What makes you see me as organized? I'm curious because I don't always feel that way."
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="framing-note">
+      <strong>Remember:</strong> These differences in perception are normal and often reveal strengths you don't recognize in yourself.
+    </div>
+  </div>
+
+  <!-- More Examples -->
+  <div class="section-card">
+    <div class="section-title">More Growth Edge Examples</div>
+
+    <div class="example-label">Example 2: Hidden Strength</div>
+    <div class="mini-growth">
+      <div class="mini-growth-text">
+        You described yourself as "quiet in groups" but James sees you as "the thoughtful one everyone listens to."
+      </div>
+      <div class="mini-growth-ask">
+        💭 Ask: "Can you share a time when you noticed people paying attention to what I said?"
+      </div>
+    </div>
+
+    <div class="example-label">Example 3: Self-Perception Gap</div>
+    <div class="mini-growth">
+      <div class="mini-growth-text">
+        You said you're "not very creative" but James marked "Creative" as one of your top traits.
+      </div>
+      <div class="mini-growth-ask">
+        💭 Ask: "What do you see as creative about me? I'd love to understand your perspective."
+      </div>
+    </div>
+
+    <div class="example-label">Example 4: Complementary View</div>
+    <div class="mini-growth">
+      <div class="mini-growth-text">
+        Emma sees James as "adventurous" while he describes himself as "someone who likes routine."
+      </div>
+      <div class="mini-growth-ask">
+        💭 Emma could ask: "I see you as adventurous — what does adventure look like to you?"
+      </div>
+    </div>
+  </div>
+
+  <!-- Rules for Display -->
+  <div class="section-card">
+    <div class="section-title">When to Show Growth Edges</div>
+
+    <div style="background: var(--cream); border-radius: 12px; padding: 14px;">
+      <div style="font-size: 11px; color: var(--text-dark); line-height: 1.6; margin-bottom: 12px;">
+        <strong>✅ Show when:</strong>
+      </div>
+      <ul style="font-size: 11px; color: var(--text-medium); line-height: 1.7; margin-left: 16px; margin-bottom: 14px;">
+        <li>Partner sees a positive trait you don't claim</li>
+        <li>Self-description differs from partner's view (neutral tone)</li>
+        <li>Comparison reveals hidden strength</li>
+      </ul>
+
+      <div style="font-size: 11px; color: var(--text-dark); line-height: 1.6; margin-bottom: 12px;">
+        <strong>❌ Never show when:</strong>
+      </div>
+      <ul style="font-size: 11px; color: var(--text-medium); line-height: 1.7; margin-left: 16px;">
+        <li>Gap could feel critical ("You said confident, they said insecure")</li>
+        <li>Difference implies blame or shortcoming</li>
+        <li>Topic is sensitive (intimacy, conflict patterns)</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="design-notes">
+    <h4>Design Notes</h4>
+    <ul>
+      <li>Uses blue tones to feel curious/exploratory, not alarming</li>
+      <li>Always frames as "interesting" not "incorrect"</li>
+      <li>Provides specific question to ask — lowers barrier to conversation</li>
+      <li>Only shows gaps that reveal hidden positives or neutral differences</li>
+      <li>Data source: Compare "You or Me" answers + self-description questions</li>
+      <li>Reassurance note prevents defensive reaction</li>
+      <li>Never implies one person is "right" about the other</li>
+    </ul>
+  </div>
+</body>
+</html>
