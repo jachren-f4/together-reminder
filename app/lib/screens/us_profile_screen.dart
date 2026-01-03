@@ -54,10 +54,6 @@ class _UsProfileScreenState extends State<UsProfileScreen> {
     'Daily Life',
   ];
 
-  // Track discovery actions
-  final Set<String> _triedDiscoveries = {};
-  final Set<String> _savedDiscoveries = {};
-
   // Repair script data for each dimension
   static const Map<String, Map<String, dynamic>> _repairScripts = {
     'stress_processing': {
@@ -102,76 +98,6 @@ class _UsProfileScreenState extends State<UsProfileScreen> {
   String _lowercaseFirst(String text) {
     if (text.isEmpty) return text;
     return text[0].toLowerCase() + text.substring(1);
-  }
-
-  /// Handle "I tried it!" button tap
-  void _onTriedAction(FramedDiscovery discovery) {
-    HapticFeedback.mediumImpact();
-
-    setState(() {
-      _triedDiscoveries.add(discovery.id);
-      // Remove from saved if it was there
-      _savedDiscoveries.remove(discovery.id);
-    });
-
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Row(
-          children: [
-            const Icon(Icons.check_circle, color: Colors.white, size: 20),
-            const SizedBox(width: 8),
-            Expanded(
-              child: Text(
-                'Nice! Keep exploring what works for you two.',
-                style: GoogleFonts.nunito(fontSize: 14),
-              ),
-            ),
-          ],
-        ),
-        backgroundColor: _accentGreen,
-        behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-        duration: const Duration(seconds: 2),
-      ),
-    );
-  }
-
-  /// Handle "Save for later" button tap
-  void _onSaveForLater(FramedDiscovery discovery) {
-    HapticFeedback.lightImpact();
-
-    final wasAlreadySaved = _savedDiscoveries.contains(discovery.id);
-
-    setState(() {
-      if (wasAlreadySaved) {
-        _savedDiscoveries.remove(discovery.id);
-      } else {
-        _savedDiscoveries.add(discovery.id);
-      }
-    });
-
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Row(
-          children: [
-            Icon(
-              wasAlreadySaved ? Icons.bookmark_remove : Icons.bookmark_added,
-              color: Colors.white,
-              size: 20,
-            ),
-            const SizedBox(width: 8),
-            Text(
-              wasAlreadySaved ? 'Removed from saved' : 'Saved for later',
-              style: GoogleFonts.nunito(fontSize: 14),
-            ),
-          ],
-        ),
-        backgroundColor: Us2Theme.textMedium,
-        behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-        duration: const Duration(seconds: 2),
-      ),
-    );
   }
 
   @override
@@ -2173,8 +2099,6 @@ class _UsProfileScreenState extends State<UsProfileScreen> {
                       height: 1.5,
                     ),
                   ),
-                  const SizedBox(height: 12),
-                  _buildDiscoveryActionButtons(discovery),
                 ],
               ),
             ),
@@ -2402,88 +2326,6 @@ class _UsProfileScreenState extends State<UsProfileScreen> {
           ),
         ],
       ),
-    );
-  }
-
-  /// Build action buttons for a discovery with state-aware styling
-  Widget _buildDiscoveryActionButtons(FramedDiscovery discovery) {
-    final isTried = _triedDiscoveries.contains(discovery.id);
-    final isSaved = _savedDiscoveries.contains(discovery.id);
-
-    return Row(
-      children: [
-        // "I tried it!" / "Tried!" button
-        GestureDetector(
-          onTap: isTried ? null : () => _onTriedAction(discovery),
-          child: AnimatedContainer(
-            duration: const Duration(milliseconds: 200),
-            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-            decoration: BoxDecoration(
-              color: isTried ? _accentGreen.withOpacity(0.15) : _accentGreen,
-              borderRadius: BorderRadius.circular(14),
-              border: isTried
-                  ? Border.all(color: _accentGreen, width: 1.5)
-                  : null,
-            ),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                if (isTried) ...[
-                  Icon(
-                    Icons.check_circle,
-                    size: 14,
-                    color: _accentGreen,
-                  ),
-                  const SizedBox(width: 4),
-                ],
-                Text(
-                  isTried ? 'Tried!' : 'I tried it!',
-                  style: GoogleFonts.nunito(
-                    fontSize: 11,
-                    fontWeight: FontWeight.w600,
-                    color: isTried ? _accentGreen : Colors.white,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-        const SizedBox(width: 8),
-        // "Save for later" / "Saved" button
-        GestureDetector(
-          onTap: () => _onSaveForLater(discovery),
-          child: AnimatedContainer(
-            duration: const Duration(milliseconds: 200),
-            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-            decoration: BoxDecoration(
-              color: isSaved ? _accentPurple.withOpacity(0.15) : Us2Theme.beige,
-              borderRadius: BorderRadius.circular(14),
-              border: isSaved
-                  ? Border.all(color: _accentPurple, width: 1.5)
-                  : null,
-            ),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Icon(
-                  isSaved ? Icons.bookmark : Icons.bookmark_border,
-                  size: 14,
-                  color: isSaved ? _accentPurple : Us2Theme.textMedium,
-                ),
-                const SizedBox(width: 4),
-                Text(
-                  isSaved ? 'Saved' : 'Save for later',
-                  style: GoogleFonts.nunito(
-                    fontSize: 11,
-                    fontWeight: FontWeight.w600,
-                    color: isSaved ? _accentPurple : Us2Theme.textMedium,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ],
     );
   }
 
