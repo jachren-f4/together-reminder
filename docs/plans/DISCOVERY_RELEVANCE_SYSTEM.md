@@ -418,6 +418,16 @@ Adapt the featured section header based on context:
 
 ## Migration Plan
 
+### Phase 0: Test Data Setup
+Run the test script to create two contrasting couples for development:
+```bash
+npx tsx scripts/reset_test_couples_discovery.ts
+```
+
+This creates:
+- **Pertsa & Kilu** (aligned couple): Similar answers, ~8 discoveries, high match %
+- **Bob & Alice** (opposites couple): Different answers, ~25 discoveries, low match %
+
 ### Phase 1: Backend
 1. Add `discovery_appreciations` table
 2. Add `stakesLevel` to quiz question metadata (derive from category for existing)
