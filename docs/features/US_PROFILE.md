@@ -254,6 +254,71 @@ Discoveries are tagged by category and stakes level:
 
 High-stakes discoveries receive special treatment with multi-step conversation guides rather than quick action suggestions.
 
+### Example Couples
+
+These examples illustrate how discoveries manifest differently based on couple dynamics.
+
+#### Couple A: "The Opposites Attract"
+**Maya (extrovert, spontaneous) & David (introvert, planner)**
+
+After 12 quizzes, they have **28 discoveries** (high difference rate ~58%). Their Recent Discoveries:
+
+| Question | Maya | David |
+|----------|------|-------|
+| How do you prefer to unwind after a stressful day? | Going out with friends | Quiet time alone |
+| What's your ideal weekend morning? | Spontaneous brunch plans | Structured routine at home |
+| When facing a big decision... | Go with my gut feeling | Research all options first |
+| At a party, I typically... | Work the room, meet everyone | Find one good conversation |
+| When stressed, I need... | To talk it through immediately | Space to process alone |
+| Planning a vacation means... | Book flights, figure out the rest later | Detailed itinerary in advance |
+| How do you show you care? | Quality time together | Acts of service |
+| After an argument, I prefer to... | Talk it out right away | Cool down first, then discuss |
+| My ideal date night is... | Trying a new restaurant or bar | Cooking together at home |
+| When something's bothering me... | I bring it up immediately | I think about it first |
+
+**Profile characteristics:**
+- High discovery count indicates many differences to explore
+- Discoveries span social energy, planning style, conflict approach
+- Try This suggestions focus on compromise and respecting different needs
+- Dimension spectrums would show them on opposite ends for several dimensions
+
+---
+
+#### Couple B: "The Aligned Soulmates"
+**Priya & Amir (both homebodies, similar values)**
+
+After 12 quizzes, they have **9 discoveries** (low difference rate ~19%). Their Recent Discoveries:
+
+| Question | Priya | Amir |
+|----------|-------|------|
+| What type of affection makes you feel most connected? | Hearing 'I love you' and compliments | Holding hands or cuddling |
+| When celebrating good news... | Call my family first | Celebrate with just us first |
+| My favorite way to spend a lazy Sunday... | Reading together in silence | Watching a movie together |
+| What makes me feel most appreciated? | When you notice small things I do | When you thank me publicly |
+| How do I prefer to receive encouragement? | Verbal praise and affirmation | You believing in me even when I doubt myself |
+| When one of us is sick... | I want to be taken care of | I prefer to be left alone to rest |
+| Our home should feel... | Cozy and warm | Clean and organized |
+| How do you like to handle finances? | Save first, spend what's left | Budget but allow for treats |
+| When meeting new people... | I'm friendly but reserved | I warm up slowly |
+
+**Profile characteristics:**
+- Low discovery count indicates strong alignment
+- Differences are minor preferences, not fundamental values
+- Try This suggestions focus on small adjustments and love language nuances
+- Dimension spectrums would show them close together on most dimensions
+- More value alignment badges and fewer repair script prompts
+
+---
+
+#### Comparison Summary
+
+| Couple | Discoveries (12 quizzes) | Difference Rate | Primary Themes | Stakes Level |
+|--------|-------------------------|-----------------|----------------|--------------|
+| Maya & David | 28 | ~58% | Social energy, planning, conflict | Medium |
+| Priya & Amir | 9 | ~19% | Minor preferences, affection styles | Light |
+
+This demonstrates how the Us Profile adapts to each couple's unique dynamic, providing relevant insights whether they're navigating many differences or fine-tuning an already strong alignment.
+
 ---
 
 ## Therapeutic Enhancements
@@ -379,4 +444,4 @@ Connect discoveries to the Journal feature, allowing couples to document their c
 
 ---
 
-*Last Updated: January 3, 2026 — Added Recent Discoveries system documentation*
+*Last Updated: January 3, 2026 — Added Recent Discoveries documentation with example couples*
