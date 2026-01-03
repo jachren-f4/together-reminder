@@ -174,8 +174,9 @@ export function frameProfile(profile: UsProfileResult): FramedProfile {
     ? frameLoveLanguages(user1Insights.loveLanguages, user2Insights.loveLanguages)
     : null;
 
-  // Frame discoveries (always show top ones)
-  const discoveries = frameDiscoveries(coupleInsights.discoveries).slice(0, 10);
+  // Frame discoveries (show most recent - quizzes are processed oldest-first, so take last 10)
+  const allDiscoveries = frameDiscoveries(coupleInsights.discoveries);
+  const discoveries = allDiscoveries.slice(-10).reverse();
 
   // Frame partner perceptions
   const partnerPerceptions = framePerceptions(

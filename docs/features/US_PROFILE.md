@@ -188,6 +188,74 @@ Each dimension shows:
 
 ---
 
+## How Recent Discoveries Work
+
+The "Recent Discoveries" section surfaces moments where partners answered quiz questions differently, revealing interesting differences in perspectives, preferences, or approaches.
+
+### Source of Discovery Content
+
+Discoveries are generated from **completed quiz answers** across all quiz types:
+
+| Quiz Type | Example Question | Answer Choices |
+|-----------|------------------|----------------|
+| Classic Quiz | "What type of affection makes me feel most connected?" | Holding hands, Hearing 'I love you', Thoughtful surprises, etc. |
+| Affirmation | "Hearing 'I love you' regularly is important to me" | Strongly Agree → Strongly Disagree scale |
+| You or Me | "Who says 'I love you' more?" | Partner / Self |
+
+When partners select **different answers** to the same question, a discovery is created showing what each person chose.
+
+### Content Variety
+
+The quiz content library provides substantial variety:
+
+- **5 quiz branches** per type: lighthearted, playful, connection, attachment, growth
+- **~12 quizzes per branch** with 5 questions each
+- **~900 total unique questions** across all quiz types
+- **4-5 answer choices** per question
+
+This means couples will encounter fresh questions for months of daily play.
+
+### Discovery Display Format
+
+Each discovery card shows:
+- The original question text
+- Each partner's answer (using their names)
+- A category tag (emotional, communication, values, etc.)
+- A "Try This" action suggestion based on the category
+- Timing guidance for when to discuss
+
+Example:
+> **Question:** "What type of affection makes me feel most connected?"
+> - **Emma:** Hearing 'I love you' and compliments
+> - **James:** Quality time together
+>
+> *Try This: Have a 10-minute conversation about this difference tonight*
+
+### Refresh Rate
+
+With the standard 3 quizzes per day (Classic, Affirmation, You or Me):
+- **15 questions answered daily** (5 per quiz)
+- **~7-8 new discoveries per day** (assuming ~50% different answers)
+- **10 most recent shown** in the Recent Discoveries section
+
+The section refreshes with new content after each completed quiz where partners had different answers. Couples doing all daily quests will see fresh discoveries regularly.
+
+### Categories and Stakes Levels
+
+Discoveries are tagged by category and stakes level:
+
+**Categories:**
+- Emotional, Communication, Values, Lifestyle, Future, Family, Daily Life
+
+**Stakes Levels:**
+- **Light** (food, hobbies) → Simple action suggestion
+- **Medium** (routines, social) → Action + timing suggestion
+- **High** (finances, family planning, intimacy) → Extended guidance + professional help prompt
+
+High-stakes discoveries receive special treatment with multi-step conversation guides rather than quick action suggestions.
+
+---
+
 ## Therapeutic Enhancements
 
 The Us Profile implements 6 therapeutic recommendations (see `docs/plans/US_PROFILE_THERAPEUTIC_ENHANCEMENTS.md`):
@@ -311,4 +379,4 @@ Connect discoveries to the Journal feature, allowing couples to document their c
 
 ---
 
-*Last Updated: January 3, 2026*
+*Last Updated: January 3, 2026 — Added Recent Discoveries system documentation*
