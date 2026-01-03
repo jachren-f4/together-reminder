@@ -21,41 +21,40 @@ Replace the time-based "Recent Discoveries" with a relevance-scored "Worth Discu
 
 - Section titled "Worth Discussing"
 - Shows 1 Featured Discovery + 4 Other Discoveries
-- Prioritized by relevance score combining stakes, likes, patterns, and recency
-- Simple "Like" interaction to show appreciation (no task-like "tried" tracking)
-- Social dynamic: see what your partner found meaningful
+- Prioritized by relevance score combining stakes, appreciations, patterns, and recency
+- Simple "Appreciate" interaction to show resonance (no task-like "tried" tracking)
+- Social dynamic: see what your partner appreciates
 - Adapts to any usage pattern (daily, sporadic, returning)
 
 ---
 
-## The "Like" Model
+## The "Appreciate" Model
 
-### Why "Like" Instead of "Tried"
+### Why "Appreciate" Instead of "Tried"
 
-| "Tried" (task-based) | "Like" (appreciation-based) |
-|----------------------|----------------------------|
+| "Tried" (task-based) | "Appreciate" (appreciation-based) |
+|----------------------|----------------------------------|
 | "I completed this conversation" | "This resonated with me" |
 | Implies work is done | Implies it's meaningful |
 | Feels like homework | Feels like engagement |
 | Unlikely to be used | Natural, familiar interaction |
 | No social component | Creates sharing between partners |
 
-### How Likes Work
+### How Appreciation Works
 
-**For the liker:**
-- Tap heart → marks "I found this meaningful"
+**For the user:**
+- Tap heart → "Appreciate this insight"
 - Discovery becomes less prominent for them (they've engaged)
-- Can unlike to reverse
+- Can tap again to reverse
 
 **For their partner:**
-- Sees badge: "Emma found this meaningful"
+- Sees badge: "Emma appreciates this insight"
 - Discovery becomes MORE prominent (partner cares about this)
-- Social nudge without pressure
+- Social signal of what resonated
 
-**Mutual likes:**
-- Both partners liked → shown with special styling
-- Lower priority for both (mutual acknowledgment complete)
-- Could surface in a "Discoveries you both loved" section
+**Mutual appreciation:**
+- Both partners appreciated → shown with subtle styling
+- Serves as communication between partners, not task completion
 
 ---
 
@@ -64,7 +63,7 @@ Replace the time-based "Recent Discoveries" with a relevance-scored "Worth Discu
 ### Scoring Formula
 
 ```
-relevanceScore = stakesPoints + likePoints + patternPoints + recencyPoints
+relevanceScore = stakesPoints + appreciationPoints + patternPoints + recencyPoints
 ```
 
 ### Scoring Breakdown
@@ -108,14 +107,14 @@ LIGHT_STAKES_CATEGORIES = [
 ]
 ```
 
-#### Like Points (-15 to +30)
+#### Appreciation Points (-15 to +30)
 
 | Scenario | Points for User | Rationale |
 |----------|-----------------|-----------|
-| Neither liked | +0 | Neutral baseline |
-| I liked it | -15 | I've engaged, show me other things |
-| Partner liked it | +30 | Partner found this meaningful, I should see it |
-| Both liked it | -10 | Mutual acknowledgment, can deprioritize |
+| Neither appreciated | +0 | Neutral baseline |
+| I appreciated it | -15 | I've engaged, show me other things |
+| Partner appreciated it | +30 | Partner found this meaningful, I should see it |
+| Both appreciated it | +0 | Mutual signal complete, neutral priority |
 
 This creates a discovery "passing" dynamic between partners.
 
@@ -140,21 +139,21 @@ This creates a discovery "passing" dynamic between partners.
 
 ## Database Changes
 
-### New Table: `discovery_likes`
+### New Table: `discovery_appreciations`
 
 ```sql
-CREATE TABLE discovery_likes (
+CREATE TABLE discovery_appreciations (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   couple_id UUID NOT NULL REFERENCES couples(id) ON DELETE CASCADE,
   discovery_id TEXT NOT NULL,  -- Format: "{quizMatchId}_{questionId}"
   user_id UUID NOT NULL REFERENCES auth.users(id),
-  liked_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  appreciated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
 
   UNIQUE(couple_id, discovery_id, user_id)
 );
 
-CREATE INDEX idx_discovery_likes_couple ON discovery_likes(couple_id);
-CREATE INDEX idx_discovery_likes_discovery ON discovery_likes(couple_id, discovery_id);
+CREATE INDEX idx_discovery_appreciations_couple ON discovery_appreciations(couple_id);
+CREATE INDEX idx_discovery_appreciations_discovery ON discovery_appreciations(couple_id, discovery_id);
 ```
 
 ### Quiz Question Metadata Update
@@ -193,10 +192,10 @@ Response structure for discoveries:
       "stakesLevel": "high",
       "relevanceScore": 95,
       "createdAt": "2026-01-01T10:00:00Z",
-      "likes": {
-        "user1Liked": false,
-        "user2Liked": true,
-        "partnerLikedLabel": "Emma found this meaningful"
+      "appreciation": {
+        "userAppreciated": false,
+        "partnerAppreciated": true,
+        "partnerAppreciatedLabel": "Emma appreciates this insight"
       },
       "conversationGuide": {
         "acknowledgment": "This is a significant topic. There's no quick answer, and that's okay.",
@@ -205,8 +204,7 @@ Response structure for discoveries:
           "Start with curiosity: \"I'd love to understand your perspective\"",
           "Share your feelings without pressure to decide",
           "It's okay to revisit this multiple times"
-        ],
-        "professionalPrompt": "Some couples find it helpful to explore big life questions with a counselor."
+        ]
       },
       "timingBadge": { "type": "dedicated", "label": "Set aside 20-30 minutes" }
     },
@@ -220,10 +218,10 @@ Response structure for discoveries:
         "stakesLevel": "high",
         "relevanceScore": 75,
         "createdAt": "2025-12-28T14:00:00Z",
-        "likes": {
-          "user1Liked": true,
-          "user2Liked": true,
-          "mutualLike": true
+        "appreciation": {
+          "userAppreciated": true,
+          "partnerAppreciated": true,
+          "mutualAppreciation": true
         },
         "tryThisAction": "Have a 15-minute conversation about financial priorities this week",
         "timingBadge": { "type": "relaxed", "label": "Best for a quiet evening" }
@@ -236,24 +234,24 @@ Response structure for discoveries:
 }
 ```
 
-### New: POST /api/us-profile/discovery/{id}/like
+### New: POST /api/us-profile/discovery/{id}/appreciate
 
-Toggle like on a discovery:
+Toggle appreciation on a discovery:
 
 ```json
 // Request (empty body - toggles current state)
-POST /api/us-profile/discovery/match_123_q3/like
+POST /api/us-profile/discovery/match_123_q3/appreciate
 
 // Response
 {
   "success": true,
-  "liked": true,
+  "appreciated": true,
   "discovery": {
     "id": "match_123_q3",
-    "likes": {
-      "user1Liked": true,
-      "user2Liked": false,
-      "partnerLikedLabel": null
+    "appreciation": {
+      "userAppreciated": true,
+      "partnerAppreciated": false,
+      "partnerAppreciatedLabel": null
     }
   }
 }
@@ -267,13 +265,13 @@ POST /api/us-profile/discovery/match_123_q3/like
 
 ```
 Functions:
-- calculateRelevanceScore(discovery, dimensions, likesMap, userId) → number
-- rankDiscoveries(discoveries, dimensions, likesMap, userId) → RankedDiscovery[]
+- calculateRelevanceScore(discovery, dimensions, appreciationsMap, userId) → number
+- rankDiscoveries(discoveries, dimensions, appreciationsMap, userId) → RankedDiscovery[]
 - selectFeaturedAndOthers(rankedDiscoveries) → { featured, others }
 - getStakesLevel(category, explicitLevel?) → 'high' | 'medium' | 'light'
 - getPatternBonus(discovery, dimensions) → number
 - getRecencyBonus(createdAt) → number
-- getLikeBonus(likes, userId) → number
+- getAppreciationBonus(appreciations, userId) → number
 ```
 
 ### Modified: `api/lib/us-profile/framing.ts`
@@ -285,11 +283,11 @@ const discoveries = frameDiscoveries(coupleInsights.discoveries).slice(-10).reve
 
 With:
 ```typescript
-const likesMap = await getDiscoveryLikes(coupleId);
+const appreciationsMap = await getDiscoveryAppreciations(coupleId);
 const rankedDiscoveries = rankDiscoveries(
   coupleInsights.discoveries,
   framedDimensions,
-  likesMap,
+  appreciationsMap,
   userId
 );
 const { featured, others } = selectFeaturedAndOthers(rankedDiscoveries);
@@ -324,23 +322,23 @@ When selecting the 4 "other" discoveries:
 │  │  Emma: "Definitely want kids soon"  ││
 │  │  James: "Still figuring it out"     ││
 │  │                                     ││
-│  │  💬 Emma found this meaningful      ││
+│  │  💬 Emma appreciates this insight   ││
 │  │                                     ││
 │  │  This is a significant topic...     ││
 │  │                                     ││
-│  │  ♡ Like                             ││
+│  │  ♡ Appreciate this insight          ││
 │  └─────────────────────────────────────┘│
 │                                         │
 │  Other Insights                         │
 │  ┌──────────────────────────────────┐  │
 │  │ "When money is tight..."         │  │
 │  │ Emma: Cut back  James: Prioritize│  │
-│  │ ♥ You both liked this            │  │
+│  │ ♥ You both appreciate this       │  │
 │  └──────────────────────────────────┘  │
 │  ┌──────────────────────────────────┐  │
 │  │ "Ideal weekend morning..."       │  │
 │  │ Emma: Spontaneous  James: Routine│  │
-│  │ ♡ Like                           │  │
+│  │ ♡ Appreciate this insight        │  │
 │  └──────────────────────────────────┘  │
 │  (... 2 more cards)                    │
 │                                         │
@@ -348,48 +346,48 @@ When selecting the 4 "other" discoveries:
 └─────────────────────────────────────────┘
 ```
 
-### Like Button States
+### Appreciation Button States
 
 | State | Icon | Label | Color |
 |-------|------|-------|-------|
-| Not liked | ♡ (outline) | "Like" | Gray |
-| I liked | ♥ (filled) | "Liked" | Pink/Red |
-| Partner liked | ♡ (outline) | "Like" + badge above | Gray + badge |
-| Both liked | ♥ (filled) | "You both liked this" | Pink with glow |
+| Not appreciated | ♡ (outline) | "Appreciate this insight" | Gray |
+| I appreciated | ♥ (filled) | "Appreciated" | Pink/Red |
+| Partner appreciated | ♡ (outline) | "Appreciate this insight" + badge above | Gray + badge |
+| Both appreciated | ♥ (filled) | "You both appreciate this" | Pink with subtle styling |
 
-### Partner Like Badge
+### Partner Appreciation Badge
 
-When partner has liked a discovery the user hasn't:
+When partner has appreciated a discovery the user hasn't:
 
 ```
 ┌─────────────────────────────────────┐
-│  💬 Emma found this meaningful      │  ← Subtle badge
+│  💬 Emma appreciates this insight   │  ← Subtle badge
 │                                     │
 │  "How do you handle stress?"        │
 │  ...                                │
 │                                     │
-│  ♡ Like                             │
+│  ♡ Appreciate this insight          │
 └─────────────────────────────────────┘
 ```
 
-### Like Interaction
+### Appreciation Interaction
 
 ```dart
-void _onLikeTapped(String discoveryId) async {
+void _onAppreciateTapped(String discoveryId) async {
   HapticFeedback.lightImpact();
 
   // Optimistic update
   setState(() {
-    _toggleLocalLike(discoveryId);
+    _toggleLocalAppreciation(discoveryId);
   });
 
   // API call
   try {
-    await _profileService.toggleDiscoveryLike(discoveryId);
+    await _profileService.toggleDiscoveryAppreciation(discoveryId);
   } catch (e) {
     // Revert on error
     setState(() {
-      _toggleLocalLike(discoveryId);
+      _toggleLocalAppreciation(discoveryId);
     });
   }
 }
@@ -399,7 +397,7 @@ void _onLikeTapped(String discoveryId) async {
 
 Add method:
 ```dart
-Future<bool> toggleDiscoveryLike(String discoveryId);
+Future<bool> toggleDiscoveryAppreciation(String discoveryId);
 ```
 
 ---
@@ -410,10 +408,10 @@ Adapt the featured section header based on context:
 
 | Context | Header | Rationale |
 |---------|--------|-----------|
-| Partner liked a high-stakes discovery | "Emma Found This Meaningful" | Direct social prompt |
-| Has unliked high-stakes discovery | "Worth Discussing" | Neutral importance |
+| Partner appreciated a high-stakes discovery | "Emma Appreciates This Insight" | Direct social prompt |
+| Has unappreciated high-stakes discovery | "Worth Discussing" | Neutral importance |
 | Returning after 2+ weeks | "Pick Up Where You Left Off" | Acknowledge break |
-| All discoveries mutually liked | "You're In Sync!" | Celebrate alignment |
+| All discoveries mutually appreciated | "You're In Sync!" | Celebrate alignment |
 | Very few discoveries total | "Your First Insights" | Encourage new users |
 
 ---
@@ -421,22 +419,22 @@ Adapt the featured section header based on context:
 ## Migration Plan
 
 ### Phase 1: Backend
-1. Add `discovery_likes` table
+1. Add `discovery_appreciations` table
 2. Add `stakesLevel` to quiz question metadata (derive from category for existing)
 3. Implement relevance scoring in `relevance.ts`
-4. Update `/api/us-profile` to return scored discoveries with like state
-5. Add `/api/us-profile/discovery/{id}/like` endpoint
+4. Update `/api/us-profile` to return scored discoveries with appreciation state
+5. Add `/api/us-profile/discovery/{id}/appreciate` endpoint
 
 ### Phase 2: Flutter UI
 1. Update `UsProfileScreen` section layout
-2. Add featured discovery card component with like button
-3. Add compact discovery card list with like buttons
-4. Add partner like badges
+2. Add featured discovery card component with appreciation button
+3. Add compact discovery card list with appreciation buttons
+4. Add partner appreciation badges
 5. Add "See all discoveries" navigation
 
 ### Phase 3: Polish
-1. Add contextual headers based on like state
-2. Add mutual like celebration styling
+1. Add contextual headers based on appreciation state
+2. Add mutual appreciation styling
 3. Add empty state for couples with few discoveries
 4. Test with various usage patterns
 
@@ -446,9 +444,9 @@ Adapt the featured section header based on context:
 
 | Metric | Target | How to Measure |
 |--------|--------|----------------|
-| Like rate | 20%+ of discoveries get at least one like | likes / total discoveries |
-| Partner like engagement | 50%+ of partner-liked discoveries get viewed | Track if user sees discoveries partner liked |
-| Mutual like rate | 10%+ discoveries liked by both | mutual likes / total discoveries |
+| Appreciation rate | 20%+ of discoveries get at least one appreciation | appreciations / total discoveries |
+| Partner appreciation engagement | 50%+ of partner-appreciated discoveries get viewed | Track if user sees discoveries partner appreciated |
+| Mutual appreciation rate | 10%+ discoveries appreciated by both | mutual appreciations / total discoveries |
 | Return visits to Us Profile | Increase week-over-week | Profile view events per user |
 
 ---
@@ -457,46 +455,77 @@ Adapt the featured section header based on context:
 
 ### Scenario A: Daily Active Couple
 - 40 quizzes, 85 discoveries
-- Emma liked 12 discoveries, James liked 8, 4 mutual
+- Emma appreciated 12 discoveries, James appreciated 8, 4 mutual
 - James opens Us Profile:
-  - **Featured:** High-stakes discovery Emma liked yesterday (partner signal + stakes + recency)
-  - **Others:** Mix of Emma-liked + new unlocked discoveries
+  - **Featured:** High-stakes discovery Emma appreciated yesterday (partner signal + stakes + recency)
+  - **Others:** Mix of Emma-appreciated + new unlocked discoveries
 
 ### Scenario B: Sporadic Couple
 - 9 quizzes (8 two weeks ago, 1 yesterday)
-- Emma liked 3 discoveries from two weeks ago
+- Emma appreciated 3 discoveries from two weeks ago
 - James opens Us Profile:
-  - **Featured:** Emma's liked high-stakes discovery from 12 days ago (partner signal trumps recency)
-  - **Others:** Mix including yesterday's, but Emma-liked surfaces higher
+  - **Featured:** Emma's appreciated high-stakes discovery from 12 days ago (partner signal trumps recency)
+  - **Others:** Mix including yesterday's, but Emma-appreciated surfaces higher
 
 ### Scenario C: Returning Couple
 - 15 quizzes a month ago, 3-week break
-- Several discoveries liked by partner but unseen
+- Several discoveries appreciated by partner but unseen
 - James opens Us Profile:
   - **Header:** "Pick Up Where You Left Off"
-  - **Featured:** Partner-liked discovery from before break
+  - **Featured:** Partner-appreciated discovery from before break
   - **Prompt:** "Ready for new discoveries? Start today's quiz →"
 
 ### Scenario D: Highly Aligned Couple
 - 30 quizzes, only 15 discoveries (few differences)
-- 10 mutual likes
+- 10 mutual appreciations
 - **Header:** "You're In Sync!"
-- **Featured:** Remaining non-mutual-liked discovery
-- **Section:** "Discoveries You Both Loved" showing mutual likes
+- **Featured:** Remaining non-appreciated discovery
+- **Section:** "Insights You Both Appreciate" showing mutual appreciations
 
 ---
 
 ## Open Questions
 
-1. **Should mutual likes ever resurface?** Perhaps in a nostalgia "Remember when..." feature?
+1. **Should mutual appreciations ever resurface?** Perhaps in a nostalgia "Remember when..." feature?
 
-2. **Should we notify partner when you like a discovery?** Push notification: "James found a discovery meaningful" could drive engagement but might feel intrusive.
+2. **Should there be a "See what Emma appreciated" view?** Let partners explore each other's appreciated discoveries.
 
-3. **Should there be a "See what Emma liked" view?** Let partners explore each other's liked discoveries.
+3. **Cap on featured discovery age?** Or is "partner-appreciated high-stakes from 60 days ago" still valid to surface?
 
-4. **Cap on featured discovery age?** Or is "partner-liked high-stakes from 60 days ago" still valid to surface?
+---
+
+## Future Considerations
+
+### "This Matters to Us" Flag
+
+Allow either partner to flag individual discoveries as important to their relationship, regardless of the default stakes category.
+
+**Rationale:**
+- Static stakes categories (food=light, finances=high) don't account for couple-specific sensitivities
+- A "food" discovery might be high stakes for couples with dietary conflicts or budget issues
+- Individual flagging is more actionable than category-level overrides
+
+**Implementation:**
+- Small flag icon on discovery cards
+- Either partner can flag → adds +20 relevance points
+- Flagged discoveries show subtle indicator
+- No aggregate counts shown (avoid comparison anxiety)
+
+**Database:**
+```sql
+CREATE TABLE discovery_flags (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  couple_id UUID NOT NULL REFERENCES couples(id) ON DELETE CASCADE,
+  discovery_id TEXT NOT NULL,
+  user_id UUID NOT NULL REFERENCES auth.users(id),
+  flagged_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+
+  UNIQUE(couple_id, discovery_id, user_id)
+);
+```
 
 ---
 
 *Specification created: January 3, 2026*
-*Updated: January 3, 2026 — Replaced "tried/saved" model with simpler "Like" model*
+*Updated: January 3, 2026 — Replaced "tried/saved" model with simpler "Appreciate" model*
+*Updated: January 3, 2026 — Renamed "Like" to "Appreciate", removed counselor prompts, added "This Matters to Us" future consideration*
