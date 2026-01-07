@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=390, initial-scale=1.0">
+    <title>Paywall V2 - Minimal</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #0f0f0f;
+            min-height: 100vh;
+            color: white;
+            padding: 80px 24px 40px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .container {
+            max-width: 390px;
+            margin: 0 auto;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Hero Section */
+        .hero {
+            text-align: center;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding-bottom: 40px;
+        }
+
+        .logo {
+            font-size: 48px;
+            margin-bottom: 32px;
+        }
+
+        .hero-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 36px;
+            font-weight: 600;
+            line-height: 1.15;
+            margin-bottom: 16px;
+        }
+
+        .hero-title span {
+            color: #f5af19;
+        }
+
+        .hero-subtitle {
+            font-size: 17px;
+            color: rgba(255, 255, 255, 0.6);
+            line-height: 1.5;
+            max-width: 280px;
+            margin: 0 auto;
+        }
+
+        /* Benefits - Simple List */
+        .benefits {
+            margin-bottom: 40px;
+        }
+
+        .benefit {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .benefit:last-child {
+            border-bottom: none;
+        }
+
+        .benefit-icon {
+            font-size: 20px;
+            width: 32px;
+            text-align: center;
+        }
+
+        .benefit-text {
+            font-size: 15px;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        /* CTA Section */
+        .cta-section {
+            text-align: center;
+        }
+
+        .price-highlight {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.5);
+            margin-bottom: 16px;
+        }
+
+        .price-highlight strong {
+            color: #f5af19;
+            font-weight: 600;
+        }
+
+        .cta-button {
+            width: 100%;
+            padding: 18px 32px;
+            font-size: 17px;
+            font-weight: 600;
+            color: #0f0f0f;
+            background: white;
+            border: none;
+            border-radius: 14px;
+            cursor: pointer;
+            margin-bottom: 16px;
+        }
+
+        .secondary-info {
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.4);
+            line-height: 1.6;
+        }
+
+        /* Footer Links */
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 24px;
+            margin-top: 24px;
+            padding-top: 24px;
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .footer-link {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.3);
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Hero -->
+        <div class="hero">
+            <div class="logo">💑</div>
+            <h1 class="hero-title">Your relationship<br>deserves <span>this</span></h1>
+            <p class="hero-subtitle">A few minutes a day to grow closer together</p>
+        </div>
+
+        <!-- Benefits -->
+        <div class="benefits">
+            <div class="benefit">
+                <span class="benefit-icon">✓</span>
+                <span class="benefit-text">Daily couples activities</span>
+            </div>
+            <div class="benefit">
+                <span class="benefit-icon">✓</span>
+                <span class="benefit-text">Discover new things about each other</span>
+            </div>
+            <div class="benefit">
+                <span class="benefit-icon">✓</span>
+                <span class="benefit-text">Fun games you play together</span>
+            </div>
+            <div class="benefit">
+                <span class="benefit-icon">✓</span>
+                <span class="benefit-text">Track your connection journey</span>
+            </div>
+        </div>
+
+        <!-- CTA -->
+        <div class="cta-section">
+            <p class="price-highlight"><strong>7 days free</strong>, then €9.99/month</p>
+            <button class="cta-button">Start Free Trial</button>
+            <p class="secondary-info">Cancel anytime during your trial.<br>No charge until day 8.</p>
+
+            <div class="footer-links">
+                <a href="#" class="footer-link">Restore</a>
+                <a href="#" class="footer-link">Terms</a>
+                <a href="#" class="footer-link">Privacy</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

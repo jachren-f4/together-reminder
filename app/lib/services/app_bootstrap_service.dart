@@ -8,6 +8,8 @@ import 'love_point_service.dart';
 import 'unlock_service.dart';
 import 'home_polling_service.dart';
 import 'notification_service.dart';
+import 'subscription_service.dart';
+import 'auth_service.dart';
 
 /// Bootstrap state machine for app initialization
 ///
@@ -104,12 +106,13 @@ class AppBootstrapService extends ChangeNotifier {
       _setState(BootstrapState.restoring);
       await _restoreUserAndPartner();
 
-      // Phase 2: Sync quests, LP, and unlock state in parallel
+      // Phase 2: Sync quests, LP, unlock state, and subscription in parallel
       _setState(BootstrapState.syncing);
       await Future.wait([
         _syncQuests(),
         _syncLovePoints(),
         _fetchUnlockState(),
+        _syncSubscription(),
       ]);
 
       // Phase 3: Poll for latest completion status
@@ -236,6 +239,20 @@ class AppBootstrapService extends ChangeNotifier {
     } catch (e) {
       Logger.error('Bootstrap: failed to fetch unlock state', error: e, service: 'bootstrap');
       // Don't rethrow - unlock state not fetching shouldn't block the entire app
+    }
+  }
+
+  /// Phase 2d: Sync subscription state with RevenueCat
+  Future<void> _syncSubscription() async {
+    try {
+      final userId = AuthService().userId;
+      if (userId != null) {
+        await SubscriptionService().logIn(userId);
+        Logger.debug('Bootstrap: subscription synced', service: 'bootstrap');
+      }
+    } catch (e) {
+      Logger.error('Bootstrap: failed to sync subscription', error: e, service: 'bootstrap');
+      // Don't rethrow - subscription not syncing shouldn't block the entire app
     }
   }
 

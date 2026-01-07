@@ -8,6 +8,7 @@ import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import '../config/dev_config.dart';
+import 'subscription_service.dart';
 
 /// Authentication states
 enum AuthState {
@@ -111,6 +112,21 @@ class AuthService {
   /// Check if user is authenticated
   bool get isAuthenticated => _authState == AuthState.authenticated;
 
+  /// Check if user's email is verified
+  /// Returns true if Supabase has confirmed the email (via OTP verification)
+  bool get isEmailVerified {
+    return _supabase?.auth.currentUser?.emailConfirmedAt != null;
+  }
+
+  /// Check if an email should bypass magic link verification
+  /// Test accounts use password auth for easier testing
+  bool shouldBypassMagicLink(String email) {
+    // Test email patterns that skip magic link
+    if (email.endsWith('@dev.test')) return true;
+    if (email.contains('+test')) return true;
+    return false;
+  }
+
   // ============================================================================
   // ASYNC GETTERS (for backwards compatibility)
   // ============================================================================
@@ -166,6 +182,92 @@ class AuthService {
       return true;
     } catch (e) {
       debugPrint('❌ Sign in failed: $e');
+      return false;
+    }
+  }
+
+  /// Send verification email to the currently logged-in user
+  /// Used from Settings when user wants to verify their account
+  Future<bool> sendVerificationEmail() async {
+    final email = userEmail;
+    if (email == null) {
+      debugPrint('❌ Cannot send verification email - no user email');
+      return false;
+    }
+    debugPrint('📧 Sending verification email to $email');
+    return await signInWithMagicLink(email);
+  }
+
+  /// Sign in/up with password (no OTP required)
+  /// Used for new user signup and test account login
+  ///
+  /// Uses deterministic password based on email hash.
+  /// REQUIRES: Supabase Dashboard > Auth > Providers > Email > "Confirm email" = DISABLED
+  Future<bool> signInWithPassword(String email) async {
+    try {
+      _updateAuthState(AuthState.loading);
+
+      // Deterministic password based on email (SHA256 for cross-device stability)
+      final emailBytes = utf8.encode(email);
+      final hash = sha256.convert(emailBytes);
+      final shortHash = hash.toString().substring(0, 12);
+      final password = 'DevPass_${shortHash}_2024!';
+
+      debugPrint('🔐 Attempting password sign-in for $email');
+
+      // Try sign-in first (existing user)
+      try {
+        final signInResponse = await _supabase!.auth.signInWithPassword(
+          email: email,
+          password: password,
+        );
+
+        if (signInResponse.session != null) {
+          _updateAuthState(AuthState.authenticated);
+          debugPrint('✅ Signed in existing user: $email');
+          return true;
+        }
+      } on AuthException catch (e) {
+        debugPrint('ℹ️ Sign-in failed: ${e.message}, trying sign-up...');
+      }
+
+      // Try sign-up (new user)
+      try {
+        final signUpResponse = await _supabase!.auth.signUp(
+          email: email,
+          password: password,
+        );
+
+        if (signUpResponse.session != null) {
+          _updateAuthState(AuthState.authenticated);
+          debugPrint('✅ Created and signed in new user: $email');
+          return true;
+        } else if (signUpResponse.user != null) {
+          // User created but no session - email confirmation might be enabled
+          debugPrint('⚠️ No session after signup - retrying sign-in...');
+
+          // Retry sign-in
+          try {
+            final retryResponse = await _supabase!.auth.signInWithPassword(
+              email: email,
+              password: password,
+            );
+            if (retryResponse.session != null) {
+              _updateAuthState(AuthState.authenticated);
+              debugPrint('✅ Signed in after signup: $email');
+              return true;
+            }
+          } catch (_) {}
+        }
+      } on AuthException catch (e) {
+        debugPrint('❌ Sign-up failed: ${e.message}');
+      }
+
+      _updateAuthState(AuthState.unauthenticated);
+      return false;
+    } catch (e) {
+      debugPrint('❌ Password sign-in error: $e');
+      _updateAuthState(AuthState.unauthenticated);
       return false;
     }
   }
@@ -342,6 +444,9 @@ class AuthService {
   /// Sign out and clear session
   Future<void> signOut() async {
     try {
+      // Log out from RevenueCat first
+      await SubscriptionService().logOut();
+
       await _supabase!.auth.signOut();
       _updateAuthState(AuthState.unauthenticated);
       debugPrint('✅ Signed out successfully');

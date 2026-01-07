@@ -15,6 +15,7 @@ import 'package:togetherremind/services/you_or_me_service.dart';
 import 'package:togetherremind/services/love_point_service.dart';
 import 'package:togetherremind/services/steps_feature_service.dart';
 import 'package:togetherremind/services/auth_service.dart';
+import 'package:togetherremind/services/subscription_service.dart';
 import 'dart:io' show Platform;
 import 'package:togetherremind/services/api_client.dart';
 import 'package:togetherremind/services/sound_service.dart';
@@ -61,6 +62,9 @@ void main() async {
 
   // Initialize Hive storage
   await StorageService.init();
+
+  // Initialize RevenueCat for in-app purchases
+  await SubscriptionService().initialize();
 
   // Initialize Nav Style Service (for Us 2.0 bottom nav variants)
   await NavStyleService.init();
@@ -184,6 +188,7 @@ class _TogetherRemindAppState extends State<TogetherRemindApp> with WidgetsBindi
     if (state == AppLifecycleState.resumed) {
       _syncStepsOnResume();
       _syncPushTokenOnResume();
+      _refreshSubscriptionOnResume();
     }
   }
 
@@ -197,6 +202,14 @@ class _TogetherRemindAppState extends State<TogetherRemindApp> with WidgetsBindi
 
     // Sync token (will check permission and sync if authorized)
     await NotificationService.syncTokenToServer();
+  }
+
+  /// Refresh subscription status on resume
+  Future<void> _refreshSubscriptionOnResume() async {
+    if (kIsWeb) return;
+
+    // Refresh subscription status from RevenueCat
+    await SubscriptionService().refreshPremiumStatus();
   }
 
   Future<void> _syncStepsOnResume() async {

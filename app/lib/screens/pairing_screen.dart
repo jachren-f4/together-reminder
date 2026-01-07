@@ -19,7 +19,9 @@ import 'package:togetherremind/services/couple_pairing_service.dart';
 import 'package:togetherremind/services/auth_service.dart';
 import 'package:togetherremind/services/app_bootstrap_service.dart';
 import 'package:togetherremind/services/unlock_service.dart';
+import 'package:togetherremind/services/subscription_service.dart';
 import 'welcome_quiz_intro_screen.dart';
+import 'paywall_screen.dart';
 import 'package:togetherremind/test/test_keys.dart';
 import 'package:togetherremind/theme/app_theme.dart';
 import 'package:togetherremind/widgets/newspaper/newspaper_widgets.dart';
@@ -116,9 +118,34 @@ class _PairingScreenState extends State<PairingScreen> {
     super.dispose();
   }
 
-  /// Complete onboarding after pairing - check unlock state and navigate
+  /// Complete onboarding after pairing - check subscription and unlock state, then navigate
   Future<void> _completeOnboarding() async {
-    // Check if Welcome Quiz has been completed
+    // Check if user already has premium subscription
+    final subscriptionService = SubscriptionService();
+    final isPremium = subscriptionService.isPremium;
+
+    if (mounted) {
+      if (!isPremium) {
+        // Show paywall for non-premium users
+        Logger.debug('Showing paywall - user is not premium', service: 'pairing');
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(
+            builder: (context) => PaywallScreen(
+              onContinue: () => _navigateAfterPaywall(context),
+              allowSkip: false, // Hard paywall - must start trial
+            ),
+          ),
+        );
+      } else {
+        // User already has premium, skip paywall
+        Logger.debug('Skipping paywall - user already has premium', service: 'pairing');
+        await _navigateToNextScreen();
+      }
+    }
+  }
+
+  /// Navigate to Welcome Quiz or MainScreen based on unlock state
+  Future<void> _navigateToNextScreen() async {
     final unlockService = UnlockService();
     final unlockState = await unlockService.getUnlockState();
 
@@ -136,6 +163,34 @@ class _PairingScreenState extends State<PairingScreen> {
       } else {
         // Welcome Quiz not completed - go to Welcome Quiz intro
         Logger.debug('Navigating to Welcome Quiz intro', service: 'pairing');
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(
+            builder: (context) => const WelcomeQuizIntroScreen(),
+          ),
+        );
+      }
+    }
+  }
+
+  /// Called when paywall is completed (user subscribed or restored)
+  static Future<void> _navigateAfterPaywall(BuildContext context) async {
+    final unlockService = UnlockService();
+    final unlockState = await unlockService.getUnlockState();
+
+    if (context.mounted) {
+      if (unlockState != null && unlockState.welcomeQuizCompleted) {
+        // Welcome Quiz already completed - bootstrap and go to home
+        await AppBootstrapService.instance.bootstrap();
+        Logger.debug('Bootstrap completed after paywall', service: 'pairing');
+
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(
+            builder: (context) => const MainScreen(),
+          ),
+        );
+      } else {
+        // Welcome Quiz not completed - go to Welcome Quiz intro
+        Logger.debug('Navigating to Welcome Quiz intro after paywall', service: 'pairing');
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(
             builder: (context) => const WelcomeQuizIntroScreen(),

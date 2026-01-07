@@ -1,0 +1,611 @@
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:purchases_flutter/purchases_flutter.dart';
+import '../config/brand/us2_theme.dart';
+import '../services/subscription_service.dart';
+import '../utils/logger.dart';
+
+/// Paywall screen shown after pairing or when subscription lapses
+///
+/// This is a "hard paywall" - users must subscribe to access the app.
+///
+/// Two modes:
+/// - New user (default): Shows free trial offer after pairing
+/// - Lapsed user: Shows "Welcome Back" resubscribe flow
+class PaywallScreen extends StatefulWidget {
+  /// Called when user successfully subscribes or skips (if allowed)
+  final VoidCallback onContinue;
+
+  /// Whether to allow skipping the paywall (for testing/dev)
+  final bool allowSkip;
+
+  /// Whether this is a lapsed user (subscription ended)
+  /// Changes messaging from "Start Free Trial" to "Welcome Back"
+  final bool isLapsedUser;
+
+  const PaywallScreen({
+    super.key,
+    required this.onContinue,
+    this.allowSkip = false,
+    this.isLapsedUser = false,
+  });
+
+  @override
+  State<PaywallScreen> createState() => _PaywallScreenState();
+}
+
+class _PaywallScreenState extends State<PaywallScreen> {
+  final SubscriptionService _subscriptionService = SubscriptionService();
+
+  bool _isLoading = true;
+  bool _isPurchasing = false;
+  bool _isRestoring = false;
+  Offerings? _offerings;
+  String? _errorMessage;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadOfferings();
+  }
+
+  Future<void> _loadOfferings() async {
+    setState(() {
+      _isLoading = true;
+      _errorMessage = null;
+    });
+
+    try {
+      // Check if already subscribed
+      if (_subscriptionService.isPremium) {
+        Logger.debug('User already has premium, skipping paywall', service: 'paywall');
+        widget.onContinue();
+        return;
+      }
+
+      // Load offerings
+      final offerings = await _subscriptionService.getOfferings();
+      if (mounted) {
+        setState(() {
+          _offerings = offerings;
+          _isLoading = false;
+        });
+      }
+    } catch (e) {
+      Logger.error('Failed to load offerings', error: e, service: 'paywall');
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+          _errorMessage = 'Unable to load subscription options';
+        });
+      }
+    }
+  }
+
+  Future<void> _startTrial() async {
+    final package = _offerings?.current?.availablePackages.firstOrNull;
+    if (package == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('No subscription available')),
+      );
+      return;
+    }
+
+    setState(() => _isPurchasing = true);
+
+    try {
+      final success = await _subscriptionService.purchasePackage(package);
+      if (success && mounted) {
+        widget.onContinue();
+      }
+    } on PlatformException catch (e) {
+      // User cancelled or other error
+      Logger.debug('Purchase cancelled or failed: $e', service: 'paywall');
+    } finally {
+      if (mounted) {
+        setState(() => _isPurchasing = false);
+      }
+    }
+  }
+
+  Future<void> _restorePurchases() async {
+    setState(() => _isRestoring = true);
+
+    try {
+      final restored = await _subscriptionService.restorePurchases();
+      if (restored && mounted) {
+        widget.onContinue();
+      } else if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('No previous subscription found')),
+        );
+      }
+    } catch (e) {
+      Logger.error('Restore failed', error: e, service: 'paywall');
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Failed to restore purchases')),
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() => _isRestoring = false);
+      }
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [Us2Theme.bgGradientStart, Us2Theme.bgGradientEnd],
+          ),
+        ),
+        child: SafeArea(
+          child: _isLoading
+              ? const Center(child: CircularProgressIndicator(color: Us2Theme.primaryBrandPink))
+              : _buildContent(),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildContent() {
+    return SingleChildScrollView(
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
+      child: Column(
+        children: [
+          // Hero Section
+          _buildHero(),
+          const SizedBox(height: 24),
+
+          // Welcome back message (lapsed users only)
+          if (widget.isLapsedUser) ...[
+            _buildWelcomeBackMessage(),
+            const SizedBox(height: 20),
+          ],
+
+          // Subscription Card
+          _buildSubscriptionCard(),
+          const SizedBox(height: 20),
+
+          // CTA Button
+          _buildCtaButton(),
+          const SizedBox(height: 12),
+
+          // Guarantee text
+          Text(
+            widget.isLapsedUser
+                ? 'Cancel anytime. Your progress is saved.'
+                : 'Cancel anytime. No charge until day 8.',
+            style: GoogleFonts.nunito(
+              fontSize: 13,
+              color: Us2Theme.textMedium,
+            ),
+          ),
+          const SizedBox(height: 20),
+
+          // Footer
+          _buildFooter(),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildWelcomeBackMessage() {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.white.withValues(alpha: 0.7),
+        borderRadius: BorderRadius.circular(16),
+      ),
+      child: Text.rich(
+        TextSpan(
+          style: GoogleFonts.nunito(
+            fontSize: 14,
+            color: Us2Theme.textMedium,
+            height: 1.5,
+          ),
+          children: [
+            const TextSpan(
+              text: 'Your journey together doesn\'t have to end here.\n',
+            ),
+            TextSpan(
+              text: 'Pick up where you left off.',
+              style: GoogleFonts.nunito(
+                fontSize: 14,
+                fontWeight: FontWeight.w700,
+                color: Us2Theme.primaryBrandPink,
+              ),
+            ),
+          ],
+        ),
+        textAlign: TextAlign.center,
+      ),
+    );
+  }
+
+  Widget _buildHero() {
+    return Column(
+      children: [
+        // Logo
+        Text(
+          'Us',
+          style: GoogleFonts.pacifico(
+            fontSize: 42,
+            color: Colors.white,
+            shadows: [
+              Shadow(
+                blurRadius: 20,
+                color: Us2Theme.glowPink.withValues(alpha: 0.8),
+              ),
+              Shadow(
+                blurRadius: 40,
+                color: Us2Theme.glowOrange.withValues(alpha: 0.5),
+              ),
+            ],
+          ),
+        ),
+        Text(
+          '♥',
+          style: TextStyle(
+            fontSize: 18,
+            color: Us2Theme.primaryBrandPink,
+          ),
+        ),
+        const SizedBox(height: 12),
+
+        // Status badge (lapsed users only)
+        if (widget.isLapsedUser) ...[
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            decoration: BoxDecoration(
+              color: Us2Theme.primaryBrandPink.withValues(alpha: 0.1),
+              border: Border.all(
+                color: Us2Theme.primaryBrandPink.withValues(alpha: 0.3),
+              ),
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  width: 8,
+                  height: 8,
+                  decoration: const BoxDecoration(
+                    color: Us2Theme.primaryBrandPink,
+                    shape: BoxShape.circle,
+                  ),
+                ),
+                const SizedBox(width: 6),
+                Text(
+                  'Subscription Ended',
+                  style: GoogleFonts.nunito(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w600,
+                    color: Us2Theme.primaryBrandPink,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 16),
+        ],
+
+        // Title - different for lapsed users
+        Text(
+          widget.isLapsedUser
+              ? 'Welcome Back!'
+              : 'Your Journey to a\nDeeper Connection',
+          textAlign: TextAlign.center,
+          style: GoogleFonts.playfairDisplay(
+            fontSize: widget.isLapsedUser ? 28 : 26,
+            fontWeight: FontWeight.w600,
+            color: Us2Theme.textDark,
+            height: 1.25,
+          ),
+        ),
+        const SizedBox(height: 8),
+
+        // Subtitle - different for lapsed users
+        Text(
+          widget.isLapsedUser
+              ? 'We\'ve missed you'
+              : 'Starts with just a few minutes a day',
+          style: GoogleFonts.nunito(
+            fontSize: 15,
+            fontStyle: FontStyle.italic,
+            color: Us2Theme.textMedium,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildSubscriptionCard() {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(24),
+      decoration: BoxDecoration(
+        gradient: const LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [Us2Theme.cardSalmon, Us2Theme.cardSalmonDark],
+        ),
+        borderRadius: BorderRadius.circular(24),
+        boxShadow: [
+          BoxShadow(
+            color: Us2Theme.glowPink.withValues(alpha: 0.3),
+            blurRadius: 32,
+            offset: const Offset(0, 8),
+          ),
+          BoxShadow(
+            color: Us2Theme.primaryBrandPink.withValues(alpha: 0.2),
+            blurRadius: 16,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Trial tag (only for new users)
+          if (!widget.isLapsedUser) ...[
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+              decoration: BoxDecoration(
+                color: Us2Theme.cream,
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: Text(
+                '7-Day Free Trial',
+                style: GoogleFonts.nunito(
+                  fontSize: 11,
+                  fontWeight: FontWeight.w700,
+                  color: Us2Theme.primaryBrandPink,
+                  letterSpacing: 0.5,
+                ),
+              ),
+            ),
+            const SizedBox(height: 16),
+          ],
+
+          // Plan name
+          Text(
+            'Us 2.0 Premium',
+            style: GoogleFonts.playfairDisplay(
+              fontSize: 22,
+              fontWeight: FontWeight.w600,
+              color: Colors.white,
+            ),
+          ),
+          const SizedBox(height: 4),
+
+          // Description
+          Text(
+            'Full access to everything',
+            style: GoogleFonts.nunito(
+              fontSize: 14,
+              fontStyle: FontStyle.italic,
+              color: Colors.white.withValues(alpha: 0.85),
+            ),
+          ),
+          const SizedBox(height: 20),
+
+          // Price
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.baseline,
+            textBaseline: TextBaseline.alphabetic,
+            children: [
+              Text(
+                '€9.99',
+                style: GoogleFonts.nunito(
+                  fontSize: 36,
+                  fontWeight: FontWeight.w700,
+                  color: Colors.white,
+                ),
+              ),
+              const SizedBox(width: 6),
+              Text(
+                '/month',
+                style: GoogleFonts.nunito(
+                  fontSize: 15,
+                  color: Colors.white.withValues(alpha: 0.8),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 6),
+
+          Text(
+            widget.isLapsedUser ? 'Billed monthly' : 'After your free trial',
+            style: GoogleFonts.nunito(
+              fontSize: 13,
+              color: Colors.white.withValues(alpha: 0.7),
+            ),
+          ),
+          const SizedBox(height: 20),
+
+          // Divider
+          Container(
+            height: 1,
+            color: Colors.white.withValues(alpha: 0.2),
+          ),
+          const SizedBox(height: 20),
+
+          // Features
+          _buildFeature('Daily couples quests'),
+          _buildFeature('All game modes unlocked'),
+          _buildFeature('Discover new things together'),
+          _buildFeature('Fresh content every week'),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildFeature(String text) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 10),
+      child: Row(
+        children: [
+          Container(
+            width: 22,
+            height: 22,
+            decoration: BoxDecoration(
+              color: Colors.white.withValues(alpha: 0.95),
+              shape: BoxShape.circle,
+            ),
+            child: const Center(
+              child: Text(
+                '✓',
+                style: TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.w700,
+                  color: Us2Theme.primaryBrandPink,
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(width: 10),
+          Text(
+            text,
+            style: GoogleFonts.nunito(
+              fontSize: 14,
+              color: Colors.white,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildCtaButton() {
+    final isDisabled = _isPurchasing || _isRestoring || _offerings == null;
+
+    return GestureDetector(
+      onTap: isDisabled ? null : _startTrial,
+      child: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.symmetric(vertical: 18),
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: isDisabled
+                ? [Colors.grey.shade300, Colors.grey.shade400]
+                : [Colors.white, Us2Theme.cream],
+          ),
+          borderRadius: BorderRadius.circular(50),
+          boxShadow: isDisabled
+              ? null
+              : [
+                  BoxShadow(
+                    color: Us2Theme.glowPink.withValues(alpha: 0.4),
+                    blurRadius: 24,
+                    offset: const Offset(0, 8),
+                  ),
+                  BoxShadow(
+                    color: Us2Theme.primaryBrandPink.withValues(alpha: 0.3),
+                    blurRadius: 12,
+                    offset: const Offset(0, 4),
+                  ),
+                ],
+        ),
+        child: Center(
+          child: _isPurchasing
+              ? const SizedBox(
+                  width: 20,
+                  height: 20,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2,
+                    color: Us2Theme.primaryBrandPink,
+                  ),
+                )
+              : Text(
+                  widget.isLapsedUser ? 'Continue Your Journey' : 'Start Free Trial',
+                  style: GoogleFonts.nunito(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w700,
+                    color: Us2Theme.primaryBrandPink,
+                  ),
+                ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildFooter() {
+    return Column(
+      children: [
+        // Restore button
+        TextButton(
+          onPressed: _isRestoring ? null : _restorePurchases,
+          child: _isRestoring
+              ? const SizedBox(
+                  width: 16,
+                  height: 16,
+                  child: CircularProgressIndicator(strokeWidth: 2),
+                )
+              : Text(
+                  'Already subscribed? Restore',
+                  style: GoogleFonts.nunito(
+                    fontSize: 14,
+                    color: Us2Theme.textMedium,
+                    decoration: TextDecoration.underline,
+                    decorationColor: Us2Theme.textMedium.withValues(alpha: 0.3),
+                  ),
+                ),
+        ),
+        const SizedBox(height: 12),
+
+        // Legal links
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            _buildLegalLink('Terms of Service', () {
+              // TODO: Open terms URL
+            }),
+            const SizedBox(width: 20),
+            _buildLegalLink('Privacy Policy', () {
+              // TODO: Open privacy URL
+            }),
+          ],
+        ),
+
+        // Dev skip button (only in debug)
+        if (widget.allowSkip) ...[
+          const SizedBox(height: 24),
+          TextButton(
+            onPressed: widget.onContinue,
+            child: Text(
+              'Skip (Dev Only)',
+              style: GoogleFonts.nunito(
+                fontSize: 12,
+                color: Us2Theme.textLight,
+              ),
+            ),
+          ),
+        ],
+      ],
+    );
+  }
+
+  Widget _buildLegalLink(String text, VoidCallback onTap) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Text(
+        text,
+        style: GoogleFonts.nunito(
+          fontSize: 12,
+          color: Us2Theme.textLight,
+        ),
+      ),
+    );
+  }
+}
