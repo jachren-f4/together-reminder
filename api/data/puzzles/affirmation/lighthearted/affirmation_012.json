@@ -9,31 +9,62 @@
       "id": "affirmation_012_q1",
       "text": "Feeling understood is more important to me than being agreed with",
       "type": "scale",
-      "scaleLabels": ["Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"]
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ]
     },
     {
       "id": "affirmation_012_q2",
       "text": "Having fun together is as important as the serious stuff",
       "type": "scale",
-      "scaleLabels": ["Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"]
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ]
     },
     {
       "id": "affirmation_012_q3",
       "text": "I value reliability and consistency in our relationship",
       "type": "scale",
-      "scaleLabels": ["Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"]
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ]
     },
     {
       "id": "affirmation_012_q4",
       "text": "Maintaining our individual identities is important to me",
       "type": "scale",
-      "scaleLabels": ["Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"]
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ]
     },
     {
       "id": "affirmation_012_q5",
       "text": "I believe the little everyday moments matter more than big gestures",
       "type": "scale",
-      "scaleLabels": ["Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"]
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ]
     }
-  ]
+  ],
+  "magnet_id": 1
 }

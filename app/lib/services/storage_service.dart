@@ -15,6 +15,8 @@ import '../models/word_search.dart';
 import '../models/branch_progression_state.dart';
 import '../models/steps_data.dart';
 import '../models/journal_entry.dart';
+import '../models/magnet_collection.dart';
+import '../models/cooldown_status.dart';
 import '../utils/logger.dart';
 
 class StorageService {
@@ -41,6 +43,8 @@ class StorageService {
   static const String _stepsDaysBox = 'steps_days';
   static const String _stepsConnectionBox = 'steps_connection';
   static const String _journalEntriesBox = 'journal_entries';
+  static const String _magnetCollectionBox = 'magnet_collection';
+  static const String _cooldownCollectionBox = 'cooldown_collection';
 
   // Public box name for JournalService access
   static const String appMetadataBoxName = 'app_metadata';
@@ -79,6 +83,10 @@ class StorageService {
       // Journal adapters (typeId 30=entry, 31=enum)
       if (!Hive.isAdapterRegistered(30)) Hive.registerAdapter(JournalEntryAdapter());
       if (!Hive.isAdapterRegistered(31)) Hive.registerAdapter(JournalEntryTypeAdapter());
+      // Magnet collection adapters (typeId 32=collection, 33=cooldown status, 34=cooldown collection)
+      if (!Hive.isAdapterRegistered(32)) Hive.registerAdapter(MagnetCollectionAdapter());
+      if (!Hive.isAdapterRegistered(33)) Hive.registerAdapter(CooldownStatusAdapter());
+      if (!Hive.isAdapterRegistered(34)) Hive.registerAdapter(CooldownCollectionAdapter());
 
       // Open boxes
       Logger.debug('Opening Hive boxes...', service: 'storage');
@@ -105,8 +113,10 @@ class StorageService {
       await Hive.openBox<StepsDay>(_stepsDaysBox);
       await Hive.openBox<StepsConnection>(_stepsConnectionBox);
       await Hive.openBox<JournalEntry>(_journalEntriesBox);
+      await Hive.openBox<MagnetCollection>(_magnetCollectionBox);
+      await Hive.openBox<CooldownCollection>(_cooldownCollectionBox);
 
-      Logger.info('Hive storage initialized successfully (26 boxes opened)', service: 'storage');
+      Logger.info('Hive storage initialized successfully (28 boxes opened)', service: 'storage');
 
       // Debug: Log daily quest state at startup to diagnose persistence issues
       final questsBox = Hive.box<DailyQuest>(_dailyQuestsBox);
@@ -750,5 +760,84 @@ class StorageService {
   Future<void> clearAllPendingResults() async {
     final box = Hive.box(_appMetadataBox);
     await box.delete(_pendingResultsKey);
+  }
+
+  // ============================================================================
+  // MAGNET COLLECTION OPERATIONS
+  // ============================================================================
+
+  Box<MagnetCollection> get magnetCollectionBox => Hive.box<MagnetCollection>(_magnetCollectionBox);
+
+  /// Get magnet collection from storage
+  MagnetCollection? getMagnetCollection() {
+    return magnetCollectionBox.get('current');
+  }
+
+  /// Save magnet collection to storage
+  Future<void> saveMagnetCollection(MagnetCollection collection) async {
+    try {
+      await magnetCollectionBox.put('current', collection);
+      Logger.debug('Saved magnet collection: ${collection.unlockedCount}/${collection.totalMagnets}', service: 'storage');
+    } catch (e, stackTrace) {
+      Logger.error('Failed to save magnet collection', error: e, stackTrace: stackTrace, service: 'storage');
+      rethrow;
+    }
+  }
+
+  /// Clear magnet collection (for testing/logout)
+  Future<void> clearMagnetCollection() async {
+    await magnetCollectionBox.clear();
+  }
+
+  // ============================================================================
+  // COOLDOWN COLLECTION OPERATIONS
+  // ============================================================================
+
+  Box<CooldownCollection> get cooldownCollectionBox => Hive.box<CooldownCollection>(_cooldownCollectionBox);
+
+  /// Get cooldown collection from storage
+  CooldownCollection? getCooldownCollection() {
+    return cooldownCollectionBox.get('current');
+  }
+
+  /// Save cooldown collection to storage
+  Future<void> saveCooldownCollection(CooldownCollection collection) async {
+    try {
+      await cooldownCollectionBox.put('current', collection);
+      Logger.debug('Saved cooldown collection', service: 'storage');
+    } catch (e, stackTrace) {
+      Logger.error('Failed to save cooldown collection', error: e, stackTrace: stackTrace, service: 'storage');
+      rethrow;
+    }
+  }
+
+  /// Clear cooldown collection (for testing/logout)
+  Future<void> clearCooldownCollection() async {
+    await cooldownCollectionBox.clear();
+  }
+
+  // ============================================================================
+  // MAGNET CELEBRATION TRACKING
+  // ============================================================================
+
+  static const String _lastCelebratedMagnetKey = 'last_celebrated_magnet_count';
+
+  /// Get the last celebrated magnet count (null if never set - fresh install)
+  int? getLastCelebratedMagnetCount() {
+    final box = Hive.box(_appMetadataBox);
+    return box.get(_lastCelebratedMagnetKey) as int?;
+  }
+
+  /// Set the last celebrated magnet count
+  Future<void> setLastCelebratedMagnetCount(int count) async {
+    final box = Hive.box(_appMetadataBox);
+    await box.put(_lastCelebratedMagnetKey, count);
+    Logger.debug('Set lastCelebratedMagnetCount=$count', service: 'storage');
+  }
+
+  /// Clear magnet celebration tracking (for testing/logout)
+  Future<void> clearMagnetCelebrationTracking() async {
+    final box = Hive.box(_appMetadataBox);
+    await box.delete(_lastCelebratedMagnetKey);
   }
 }

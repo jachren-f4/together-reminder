@@ -183,23 +183,30 @@ class _NameEntryScreenState extends State<NameEntryScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // Emoji circle
-                      Container(
-                        width: 80,
-                        height: 80,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          shape: BoxShape.circle,
-                          boxShadow: [
-                            BoxShadow(
-                              color: Us2Theme.glowPink.withValues(alpha: 0.2),
-                              blurRadius: 20,
-                              offset: const Offset(0, 4),
-                            ),
-                          ],
+                      // Large step number
+                      ShaderMask(
+                        shaderCallback: (bounds) => const LinearGradient(
+                          colors: [Us2Theme.gradientAccentStart, Us2Theme.gradientAccentEnd],
+                        ).createShader(bounds),
+                        child: Text(
+                          '1',
+                          style: GoogleFonts.playfairDisplay(
+                            fontSize: 100,
+                            fontWeight: FontWeight.w700,
+                            color: Colors.white,
+                            height: 1,
+                          ),
                         ),
-                        child: const Center(
-                          child: Text('👋', style: TextStyle(fontSize: 36)),
+                      ),
+
+                      // Step label
+                      Text(
+                        'of 3 steps',
+                        style: GoogleFonts.nunito(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w700,
+                          letterSpacing: 2,
+                          color: Us2Theme.textMedium,
                         ),
                       ),
 
@@ -219,7 +226,7 @@ class _NameEntryScreenState extends State<NameEntryScreen> {
 
                       // Subtitle
                       Text(
-                        'Your name will appear to your partner when you connect',
+                        'Your name will appear to your partner when you connect.',
                         style: GoogleFonts.nunito(
                           fontSize: 15,
                           color: Us2Theme.textMedium,
@@ -332,25 +339,6 @@ class _NameEntryScreenState extends State<NameEntryScreen> {
               ),
             ),
           ),
-          const Spacer(),
-          // Step indicator
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
-            decoration: BoxDecoration(
-              color: Colors.white.withValues(alpha: 0.8),
-              borderRadius: BorderRadius.circular(20),
-            ),
-            child: Text(
-              'Step 1 of 3',
-              style: GoogleFonts.nunito(
-                fontSize: 12,
-                fontWeight: FontWeight.w600,
-                color: Us2Theme.textMedium,
-              ),
-            ),
-          ),
-          const Spacer(),
-          const SizedBox(width: 40), // Balance
         ],
       ),
     );

@@ -17,6 +17,16 @@ import {
   VALUE_CATEGORIES,
 } from './calculator';
 
+import {
+  DiscoveryAppreciationsMap,
+  rankDiscoveries,
+  selectFeaturedAndOthers,
+  getStakesLevel,
+  getDiscoveryId,
+  getContextualHeader,
+  RankedDiscovery,
+} from './relevance';
+
 // =============================================================================
 // Types
 // =============================================================================
@@ -29,6 +39,18 @@ export const REVEAL_THRESHOLDS = {
   FULL_PROFILE: 10,          // After 10+ quizzes: full profile
   MIN_DATA_POINTS: 2,        // Minimum answers for a dimension to show
 } as const;
+
+// Context for relevance-aware framing
+export interface RelevanceContext {
+  userId: string;
+  user1Id: string;
+  user2Id: string;
+  user1Name: string;
+  user2Name: string;
+  appreciationsMap: DiscoveryAppreciationsMap;
+  daysSinceLastActivity?: number;
+  dimensionUnlocks?: Record<string, string>;  // Tracks when each dimension was first unlocked
+}
 
 // Framed dimension insight
 export interface FramedDimension {
@@ -44,6 +66,7 @@ export interface FramedDimension {
   conversationPrompt: string;
   isUnlocked: boolean;
   dataPoints: number;
+  unlockedAt: string | null;  // ISO timestamp when dimension was first unlocked
 }
 
 // Framed love language insight
@@ -59,6 +82,17 @@ export interface FramedLoveLanguage {
   isUnlocked: boolean;
 }
 
+// Stakes level for discoveries
+export type StakesLevel = 'high' | 'medium' | 'light';
+
+// Appreciation state for discoveries
+export interface DiscoveryAppreciation {
+  userAppreciated: boolean;
+  partnerAppreciated: boolean;
+  partnerAppreciatedLabel: string | null;
+  mutualAppreciation: boolean;
+}
+
 // Framed discovery
 export interface FramedDiscovery {
   id: string;
@@ -66,8 +100,17 @@ export interface FramedDiscovery {
   user1Answer: string;
   user2Answer: string;
   category: string | null;
+  stakesLevel: StakesLevel;
+  relevanceScore: number;
   conversationPrompt: string;
   tryThisAction: string | null;
+  appreciation: DiscoveryAppreciation;
+  // Conversation guide for high-stakes discoveries
+  conversationGuide: {
+    acknowledgment: string;
+    steps: string[];
+  } | null;
+  timingBadge: { type: string; label: string } | null;
 }
 
 // Framed partner perception
@@ -117,11 +160,19 @@ export interface UpcomingInsight {
   required: number;
 }
 
+// Discovery section with relevance ranking
+export interface DiscoverySection {
+  featured: FramedDiscovery | null;
+  others: FramedDiscovery[];
+  totalCount: number;
+  contextLabel: string;
+}
+
 // Complete framed profile
 export interface FramedProfile {
   dimensions: FramedDimension[];
   loveLanguages: FramedLoveLanguage | null;
-  discoveries: FramedDiscovery[];
+  discoveries: DiscoverySection;
   partnerPerceptions: FramedPerception[];
   conversationStarters: ConversationStarter[];
   actionStats: ActionStats;
@@ -152,8 +203,12 @@ export interface FramedProfile {
  * Frame raw profile data into human-readable insights.
  *
  * Applies progressive reveal logic based on quiz completion count.
+ * When relevanceContext is provided, applies relevance scoring to discoveries.
  */
-export function frameProfile(profile: UsProfileResult): FramedProfile {
+export function frameProfile(
+  profile: UsProfileResult,
+  relevanceContext?: RelevanceContext
+): FramedProfile {
   const { user1Insights, user2Insights, coupleInsights, totalQuizzesCompleted } = profile;
 
   // Determine progressive reveal level
@@ -166,7 +221,8 @@ export function frameProfile(profile: UsProfileResult): FramedProfile {
   const dimensions = frameDimensions(
     user1Insights.dimensions,
     user2Insights.dimensions,
-    totalQuizzesCompleted
+    totalQuizzesCompleted,
+    relevanceContext?.dimensionUnlocks || {}
   );
 
   // Frame love languages
@@ -174,9 +230,12 @@ export function frameProfile(profile: UsProfileResult): FramedProfile {
     ? frameLoveLanguages(user1Insights.loveLanguages, user2Insights.loveLanguages)
     : null;
 
-  // Frame discoveries (show most recent - quizzes are processed oldest-first, so take last 10)
-  const allDiscoveries = frameDiscoveries(coupleInsights.discoveries);
-  const discoveries = allDiscoveries.slice(-10).reverse();
+  // Frame discoveries with relevance scoring
+  const discoverySection = frameDiscoveriesWithRelevance(
+    coupleInsights.discoveries,
+    dimensions,
+    relevanceContext
+  );
 
   // Frame partner perceptions
   const partnerPerceptions = framePerceptions(
@@ -198,7 +257,7 @@ export function frameProfile(profile: UsProfileResult): FramedProfile {
   const weeklyFocus = generateWeeklyFocus(profile);
 
   // Frame values
-  const values = frameValues(coupleInsights.valueAlignments);
+  const values = frameValues(coupleInsights.valueAlignments ?? []);
 
   // Generate upcoming insights roadmap
   const upcomingInsights = generateUpcomingInsights(profile);
@@ -206,7 +265,7 @@ export function frameProfile(profile: UsProfileResult): FramedProfile {
   return {
     dimensions,
     loveLanguages,
-    discoveries,
+    discoveries: discoverySection,
     partnerPerceptions,
     conversationStarters,
     actionStats,
@@ -274,7 +333,8 @@ function getNextMilestoneMessage(current: number): string | null {
 function frameDimensions(
   user1Dims: DimensionScore[],
   user2Dims: DimensionScore[],
-  quizCount: number
+  quizCount: number,
+  dimensionUnlocks: Record<string, string> = {}
 ): FramedDimension[] {
   const result: FramedDimension[] = [];
 
@@ -323,6 +383,7 @@ function frameDimensions(
       conversationPrompt: getDimensionPrompt(dimDef, similarity),
       isUnlocked,
       dataPoints,
+      unlockedAt: dimensionUnlocks[dimId] || null,
     });
   }
 
@@ -385,21 +446,249 @@ function frameLoveLanguages(
   };
 }
 
-function frameDiscoveries(discoveries: Discovery[]): FramedDiscovery[] {
-  return discoveries.map((d, idx) => ({
-    id: `discovery_${idx}`,
-    questionText: d.questionText,
-    user1Answer: d.user1Answer,
-    user2Answer: d.user2Answer,
-    category: d.category ?? null,
-    conversationPrompt: generateDiscoveryPrompt(d),
-    tryThisAction: generateTryThisAction(d),
-  }));
+/**
+ * Frame discoveries with relevance scoring.
+ * Returns a DiscoverySection with featured + others.
+ */
+function frameDiscoveriesWithRelevance(
+  discoveries: Discovery[],
+  dimensions: FramedDimension[],
+  relevanceContext?: RelevanceContext
+): DiscoverySection {
+  // If no relevance context, fall back to simple framing
+  if (!relevanceContext) {
+    const framedDiscoveries = discoveries.slice(-10).reverse().map((d, idx) =>
+      frameDiscoverySimple(d, idx)
+    );
+    return {
+      featured: framedDiscoveries[0] ?? null,
+      others: framedDiscoveries.slice(1, 5),
+      totalCount: discoveries.length,
+      contextLabel: 'Worth Discussing',
+    };
+  }
+
+  // Apply relevance scoring
+  const ranked = rankDiscoveries(
+    discoveries,
+    dimensions,
+    relevanceContext.appreciationsMap,
+    relevanceContext.userId,
+    relevanceContext.user1Id
+  );
+
+  // Select featured and others with category diversity
+  const { featured, others } = selectFeaturedAndOthers(ranked, 4);
+
+  // Frame the ranked discoveries
+  const framedFeatured = featured
+    ? frameRankedDiscovery(featured, relevanceContext)
+    : null;
+
+  const framedOthers = others.map(rd => frameRankedDiscovery(rd, relevanceContext));
+
+  // Get contextual header
+  const isUser1 = relevanceContext.userId === relevanceContext.user1Id;
+  const partnerName = isUser1 ? relevanceContext.user2Name : relevanceContext.user1Name;
+  const { label: contextLabel } = getContextualHeader(
+    featured,
+    discoveries.length,
+    relevanceContext.daysSinceLastActivity ?? 0,
+    partnerName
+  );
+
+  return {
+    featured: framedFeatured,
+    others: framedOthers,
+    totalCount: discoveries.length,
+    contextLabel,
+  };
+}
+
+/**
+ * Frame a simple discovery without relevance scoring (fallback).
+ */
+function frameDiscoverySimple(discovery: Discovery, idx: number): FramedDiscovery {
+  const stakesLevel = getStakesLevel(discovery.category);
+  return {
+    id: getDiscoveryId(discovery),
+    questionText: discovery.questionText,
+    user1Answer: discovery.user1Answer,
+    user2Answer: discovery.user2Answer,
+    category: discovery.category ?? null,
+    stakesLevel,
+    relevanceScore: 0,
+    conversationPrompt: generateDiscoveryPrompt(discovery),
+    tryThisAction: generateTryThisAction(discovery),
+    appreciation: {
+      userAppreciated: false,
+      partnerAppreciated: false,
+      partnerAppreciatedLabel: null,
+      mutualAppreciation: false,
+    },
+    conversationGuide: stakesLevel === 'high' ? generateConversationGuide(discovery) : null,
+    timingBadge: getTimingBadge(stakesLevel),
+  };
+}
+
+/**
+ * Frame a ranked discovery with full relevance data.
+ */
+function frameRankedDiscovery(
+  ranked: RankedDiscovery,
+  context: RelevanceContext
+): FramedDiscovery {
+  const discovery = ranked.discovery;
+  const isUser1 = context.userId === context.user1Id;
+  const partnerName = isUser1 ? context.user2Name : context.user1Name;
+
+  return {
+    id: getDiscoveryId(discovery),
+    questionText: discovery.questionText,
+    user1Answer: discovery.user1Answer,
+    user2Answer: discovery.user2Answer,
+    category: discovery.category ?? null,
+    stakesLevel: ranked.stakesLevel,
+    relevanceScore: ranked.relevanceScore,
+    conversationPrompt: generateDiscoveryPrompt(discovery),
+    tryThisAction: generateTryThisAction(discovery),
+    appreciation: {
+      userAppreciated: ranked.appreciation.userAppreciated,
+      partnerAppreciated: ranked.appreciation.partnerAppreciated,
+      partnerAppreciatedLabel: ranked.appreciation.partnerAppreciated
+        ? `${partnerName} appreciates this insight`
+        : null,
+      mutualAppreciation: ranked.appreciation.userAppreciated && ranked.appreciation.partnerAppreciated,
+    },
+    conversationGuide: ranked.stakesLevel === 'high' ? generateConversationGuide(discovery) : null,
+    timingBadge: getTimingBadge(ranked.stakesLevel),
+  };
+}
+
+/**
+ * Generate conversation guide for high-stakes discoveries.
+ */
+function generateConversationGuide(discovery: Discovery): { acknowledgment: string; steps: string[] } {
+  return {
+    acknowledgment: "This is a significant topic. There's no quick answer, and that's okay.",
+    steps: [
+      'Find a relaxed time (not during stress)',
+      'Start with curiosity: "I\'d love to understand your perspective"',
+      'Share your feelings without pressure to decide',
+      "It's okay to revisit this multiple times",
+    ],
+  };
+}
+
+/**
+ * Get timing badge based on stakes level.
+ */
+function getTimingBadge(stakesLevel: StakesLevel): { type: string; label: string } {
+  switch (stakesLevel) {
+    case 'high':
+      return { type: 'dedicated', label: 'Set aside 20-30 minutes' };
+    case 'medium':
+      return { type: 'relaxed', label: 'Best for a quiet evening' };
+    case 'light':
+      return { type: 'quick', label: 'Quick check-in' };
+  }
 }
 
 function generateDiscoveryPrompt(discovery: Discovery): string {
-  // Generate contextual prompt based on the difference
-  return `You answered differently: "${discovery.user1Answer}" vs "${discovery.user2Answer}". What do you think influenced your different perspectives?`;
+  const category = discovery.category?.toLowerCase() ?? '';
+
+  // Category-specific prompts that add insight beyond the answers
+  const categoryPrompts: Record<string, string[]> = {
+    // High-stakes categories
+    finances: [
+      "Different approaches to money can complement each other — or create tension. Worth exploring.",
+      "Money habits often come from how we grew up. Understanding that context helps.",
+      "Financial decisions work best when you understand each other's priorities.",
+    ],
+    family_planning: [
+      "You're in different places on this. Understanding where each of you is coming from can help.",
+      "There's no rush to align perfectly — but staying curious about each other's feelings matters.",
+      "This is one of those topics that benefits from revisiting over time.",
+    ],
+    intimacy: [
+      "Physical connection means different things to different people. This is worth exploring gently.",
+      "Understanding each other's needs here can deepen your connection.",
+      "These differences often reflect different ways of feeling close.",
+    ],
+    career: [
+      "Balancing ambition and togetherness is an ongoing conversation for most couples.",
+      "Career priorities shift over time. What matters is staying in sync.",
+      "Understanding what drives each of you professionally helps you support each other.",
+    ],
+    living_location: [
+      "Where you live shapes so much of daily life. This deserves unhurried conversation.",
+      "Location preferences often tie to deeper values about lifestyle and family.",
+    ],
+
+    // Medium-stakes categories
+    communication: [
+      "Knowing how you each process conflict can prevent misunderstandings.",
+      "Communication styles often differ — the key is learning each other's patterns.",
+      "These differences can actually strengthen how you communicate, once understood.",
+    ],
+    conflict: [
+      "How you handle disagreements shapes your relationship more than the disagreements themselves.",
+      "Different conflict styles aren't right or wrong — they just need understanding.",
+    ],
+    emotional_support: [
+      "People feel supported in different ways. This insight can help you show up for each other.",
+      "Understanding what support looks like to your partner prevents missed connections.",
+    ],
+    stress: [
+      "Stress responses are deeply personal. Knowing yours helps you help each other.",
+      "When you understand how your partner processes stress, you can be there in the way they need.",
+    ],
+
+    // Light categories
+    food: [
+      "Food preferences can be fun to navigate together — lots of room for compromise here.",
+      "Different tastes can lead to discovering new things together.",
+    ],
+    lifestyle: [
+      "Day-to-day preferences shape your rhythm as a couple. Good to know where you land.",
+      "These lifestyle differences are usually easy to work with once you're aware of them.",
+    ],
+    social: [
+      "Social energy levels often differ. Finding your balance keeps both of you happy.",
+      "Introverts and extroverts can thrive together with a little awareness.",
+    ],
+    entertainment: [
+      "Different tastes in fun can actually expand what you do together.",
+      "These preferences are easy to accommodate once you know them.",
+    ],
+    travel: [
+      "Travel styles reveal a lot about how you like to spend time. Worth discussing before your next trip.",
+      "Planning adventures is easier when you know what recharges each of you.",
+    ],
+  };
+
+  // Simple hash of discovery ID for deterministic prompt selection
+  const hash = (discovery.questionId ?? discovery.quizId ?? '').split('')
+    .reduce((acc, char) => acc + char.charCodeAt(0), 0);
+
+  // Find matching category prompts
+  for (const [cat, prompts] of Object.entries(categoryPrompts)) {
+    if (category.includes(cat) || cat.includes(category)) {
+      // Pick a deterministic prompt based on discovery ID
+      return prompts[hash % prompts.length];
+    }
+  }
+
+  // Generic fallback prompts (still better than repeating the answers)
+  const fallbackPrompts = [
+    "Understanding where this difference comes from can bring you closer.",
+    "Differences like this often reflect your unique backgrounds and experiences.",
+    "These perspectives aren't right or wrong — they're just different. Worth exploring.",
+    "Curiosity about each other's viewpoint goes a long way here.",
+    "This kind of difference is common and totally workable with awareness.",
+  ];
+
+  return fallbackPrompts[hash % fallbackPrompts.length];
 }
 
 function generateTryThisAction(discovery: Discovery): string | null {
@@ -424,18 +713,23 @@ function generateTryThisAction(discovery: Discovery): string | null {
 }
 
 function framePerceptions(
-  user1Traits: PartnerPerceptionTrait[],
-  user2Traits: PartnerPerceptionTrait[]
+  user1Traits: PartnerPerceptionTrait[] | undefined,
+  user2Traits: PartnerPerceptionTrait[] | undefined
 ): FramedPerception[] {
   const result: FramedPerception[] = [];
 
+  // Handle missing traits gracefully
+  if (!user1Traits && !user2Traits) {
+    return result;
+  }
+
   // Traits that user2 perceives about user1
-  const user1Perceived = user1Traits
+  const user1Perceived = (user1Traits ?? [])
     .filter(t => t.perceivedBy === 'user2')
     .map(t => t.trait);
 
   // Traits that user1 perceives about user2
-  const user2Perceived = user2Traits
+  const user2Perceived = (user2Traits ?? [])
     .filter(t => t.perceivedBy === 'user1')
     .map(t => t.trait);
 
@@ -527,7 +821,7 @@ function generateConversationStarters(
   }
 
   // Add value alignment starter if we have matching values
-  if (profile.coupleInsights.valueAlignments.length > 0) {
+  if ((profile.coupleInsights.valueAlignments?.length ?? 0) > 0) {
     const topValue = profile.coupleInsights.valueAlignments[0];
     const valueLabel = VALUE_CATEGORIES[topValue.valueId] ?? topValue.valueId;
     starters.push({

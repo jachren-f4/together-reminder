@@ -1,0 +1,99 @@
+{
+  "quizId": "quiz_019",
+  "title": "Lazy Days & Self-Care",
+  "branch": "playful",
+  "questions": [
+    {
+      "id": "quiz_019_q1",
+      "text": "My ideal lazy Sunday with you looks like...",
+      "choices": [
+        "Doing nothing together - couch, snacks, no plans",
+        "Parallel relaxing - same room, different activities",
+        "A mix of together time and solo recharge",
+        "Having some 'me time' before coming back together",
+        "Other / It depends"
+      ],
+      "category": "lifestyle",
+      "metadata": {
+        "dimension": "social_energy",
+        "poleMapping": [
+          "right",
+          null,
+          null,
+          "left",
+          null
+        ]
+      }
+    },
+    {
+      "id": "quiz_019_q2",
+      "text": "When I need to recharge, I find it most helpful to...",
+      "choices": [
+        "Be close to you, even if we're not really talking",
+        "Do something relaxing together like watching a show",
+        "Have quiet time in separate spaces, then reconnect",
+        "Take some solo time to fully reset",
+        "Other / It depends"
+      ],
+      "category": "lifestyle",
+      "metadata": {
+        "dimension": "social_energy",
+        "poleMapping": [
+          "right",
+          "right",
+          null,
+          "left",
+          null
+        ]
+      }
+    },
+    {
+      "id": "quiz_019_q3",
+      "text": "For self-care rituals (skincare, baths, reading, etc.), I prefer...",
+      "choices": [
+        "Doing them together - spa night vibes",
+        "Side by side but doing our own thing",
+        "Having my own routine, but happy to share sometimes",
+        "These are my solo rituals",
+        "Other / It depends"
+      ],
+      "category": "preferences"
+    },
+    {
+      "id": "quiz_019_q4",
+      "text": "After a really draining day, what I need most is...",
+      "choices": [
+        "Cuddles and connection with you",
+        "Your presence nearby while I decompress",
+        "A little space first, then coming together",
+        "Some alone time before I'm ready to engage",
+        "Other / It depends"
+      ],
+      "category": "communication",
+      "metadata": {
+        "dimension": "social_energy",
+        "poleMapping": [
+          "right",
+          "right",
+          null,
+          "left",
+          null
+        ]
+      }
+    },
+    {
+      "id": "quiz_019_q5",
+      "text": "When it comes to taking breaks during busy periods, I hope we...",
+      "choices": [
+        "Find ways to rest together, even if briefly",
+        "Check in with each other about how we're doing",
+        "Respect when each of us needs space to recharge",
+        "Balance time together with individual downtime",
+        "Other / It depends"
+      ],
+      "category": "communication"
+    }
+  ],
+  "description": "Discover how you each recharge and what lazy days look like together.",
+  "magnet_id": 5
+}

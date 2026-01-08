@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:togetherremind/config/brand/brand_config.dart';
 import 'package:togetherremind/config/brand/brand_loader.dart';
 import 'package:togetherremind/models/daily_quest.dart';
+import 'package:togetherremind/models/magnet_collection.dart';
 import 'package:togetherremind/services/nav_style_service.dart';
 import 'us2/us2_widgets.dart';
+import 'us2/us2_home_content.dart' show GuidanceCallback;
 
 /// Factory that returns brand-appropriate widgets
 ///
@@ -38,12 +40,14 @@ class BrandWidgetFactory {
     required String userName,
     required String partnerName,
     required int dayNumber,
-    required int currentLp,
-    required int nextTierLp,
+    MagnetCollection? magnetCollection,
+    VoidCallback? onCollectionTap,
     required List<DailyQuest> dailyQuests,
     required List<DailyQuest> sideQuests,
     required Function(DailyQuest) onQuestTap,
     VoidCallback? onDebugTap,
+    GuidanceCallback? getDailyQuestGuidance,
+    GuidanceCallback? getSideQuestGuidance,
   }) {
     if (!isUs2) return null;
 
@@ -51,12 +55,14 @@ class BrandWidgetFactory {
       userName: userName,
       partnerName: partnerName,
       dayNumber: dayNumber,
-      currentLp: currentLp,
-      nextTierLp: nextTierLp,
+      magnetCollection: magnetCollection,
+      onCollectionTap: onCollectionTap,
       dailyQuests: dailyQuests,
       sideQuests: sideQuests,
       onQuestTap: onQuestTap,
       onDebugTap: onDebugTap,
+      getDailyQuestGuidance: getDailyQuestGuidance,
+      getSideQuestGuidance: getSideQuestGuidance,
     );
   }
 

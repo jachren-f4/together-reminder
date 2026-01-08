@@ -9,31 +9,62 @@
       "id": "affirmation_010_q1",
       "text": "We balance each other's strengths and weaknesses",
       "type": "scale",
-      "scaleLabels": ["Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"]
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ]
     },
     {
       "id": "affirmation_010_q2",
       "text": "Our differences make us a stronger team",
       "type": "scale",
-      "scaleLabels": ["Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"]
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ]
     },
     {
       "id": "affirmation_010_q3",
       "text": "I'm better at some things while my partner excels at others",
       "type": "scale",
-      "scaleLabels": ["Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"]
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ]
     },
     {
       "id": "affirmation_010_q4",
       "text": "We challenge each other to grow in positive ways",
       "type": "scale",
-      "scaleLabels": ["Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"]
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ]
     },
     {
       "id": "affirmation_010_q5",
       "text": "Having similar personalities is important for compatibility",
       "type": "scale",
-      "scaleLabels": ["Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"]
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ]
     }
-  ]
+  ],
+  "magnet_id": 3
 }

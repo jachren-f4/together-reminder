@@ -25,10 +25,10 @@ class Us2Theme {
   static const cream = Color(0xFFFFF8F0);
   static const beige = Color(0xFFF5E6D8);
 
-  // Text colors
-  static const textDark = Color(0xFF2D2D2D);
-  static const textMedium = Color(0xFF6B6B6B);
-  static const textLight = Color(0xFF9B9B9B);
+  // Text colors (darkened for better readability per mockup)
+  static const textDark = Color(0xFF3A3A3A);   // was #2D2D2D, mockup uses #3A3A3A
+  static const textMedium = Color(0xFF5A5A5A); // was #6B6B6B, mockup uses #5A5A5A
+  static const textLight = Color(0xFF707070);  // was #9B9B9B, mockup uses #707070
 
   // Glow effects
   static const glowPink = Color(0xCCFF6B6B); // 80% opacity

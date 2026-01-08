@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Worth Discussing v4 - Balanced</title>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&family=Playfair+Display:ital,wght@0,500;0,600;1,500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-gradient-start: #FFD1C1;
+      --bg-gradient-end: #FFF5F0;
+      --emma-pink: #FF6B6B;
+      --accent-gold: #F4C55B;
+      --cream: #FFF9E6;
+      --peachy: #FFF5F0;
+      --text-dark: #2D2D2D;
+      --text-medium: #5A5A5A;
+      --text-light: #8A8A8A;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Nunito', sans-serif;
+      background: linear-gradient(180deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
+      min-height: 100vh;
+      padding: 20px;
+      max-width: 420px;
+      margin: 0 auto;
+    }
+
+    .variant-label {
+      position: fixed;
+      top: 10px;
+      right: 10px;
+      background: rgba(0,0,0,0.7);
+      color: white;
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-size: 11px;
+      font-weight: 600;
+      z-index: 100;
+    }
+
+    /* Section Header - Contextual */
+    .section-header {
+      margin-bottom: 14px;
+    }
+
+    .section-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 20px;
+      font-weight: 600;
+      color: var(--text-dark);
+      margin-bottom: 2px;
+    }
+
+    .section-subtitle {
+      font-size: 13px;
+      color: var(--text-medium);
+    }
+
+    /* Main Container */
+    .discoveries-container {
+      background: linear-gradient(135deg, var(--cream) 0%, var(--peachy) 100%);
+      border: 2px solid rgba(244, 197, 91, 0.3);
+      border-radius: 18px;
+      padding: 16px;
+    }
+
+
+    /* Discovery Card */
+    .discovery-card {
+      background: white;
+      border-radius: 14px;
+      padding: 16px;
+      margin-bottom: 12px;
+    }
+
+    .discovery-card:last-child {
+      margin-bottom: 0;
+    }
+
+    /* Card Header: Category + Partner Appreciation */
+    .card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+
+    .category-label {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+      color: var(--text-light);
+    }
+
+    .partner-appreciated {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--emma-pink);
+    }
+
+    /* Answers Section */
+    .answers {
+      margin-bottom: 12px;
+    }
+
+    .answer-row {
+      display: flex;
+      align-items: baseline;
+      margin-bottom: 6px;
+      font-size: 14px;
+      line-height: 1.45;
+    }
+
+    .answer-row:last-child {
+      margin-bottom: 0;
+    }
+
+    .answer-name {
+      font-weight: 700;
+      color: var(--emma-pink);
+      margin-right: 6px;
+      flex-shrink: 0;
+    }
+
+    .answer-text {
+      color: var(--text-dark);
+    }
+
+    /* Conversation Prompt - The "insight" framing */
+    .conversation-prompt {
+      font-size: 13px;
+      font-style: italic;
+      color: var(--text-medium);
+      line-height: 1.5;
+      margin-bottom: 12px;
+      padding-left: 10px;
+      border-left: 2px solid rgba(244, 197, 91, 0.5);
+    }
+
+
+    /* Card Footer */
+    .card-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-top: 10px;
+      border-top: 1px solid rgba(0,0,0,0.06);
+    }
+
+    /* Appreciate Button */
+    .appreciate-btn {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: none;
+      border: 1.5px solid rgba(255, 107, 107, 0.25);
+      border-radius: 20px;
+      padding: 7px 14px;
+      font-family: 'Nunito', sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-medium);
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .appreciate-btn:hover {
+      border-color: var(--emma-pink);
+      color: var(--emma-pink);
+      background: rgba(255, 107, 107, 0.04);
+    }
+
+    .appreciate-btn.appreciated {
+      background: var(--emma-pink);
+      border-color: var(--emma-pink);
+      color: white;
+    }
+
+    .appreciate-btn .heart {
+      font-size: 15px;
+    }
+
+    /* Mutual Badge */
+    .mutual-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 12px;
+      color: var(--emma-pink);
+    }
+
+    /* Demo Controls */
+    .demo-tabs {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+
+    .demo-tab {
+      padding: 8px 14px;
+      background: white;
+      border: 2px solid transparent;
+      border-radius: 20px;
+      font-family: 'Nunito', sans-serif;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .demo-tab:hover {
+      border-color: var(--emma-pink);
+    }
+
+    .demo-tab.active {
+      background: var(--emma-pink);
+      color: white;
+    }
+
+    .demo-section {
+      display: none;
+    }
+
+    .demo-section.active {
+      display: block;
+    }
+
+    /* See All */
+    .see-all {
+      display: block;
+      text-align: center;
+      margin-top: 16px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--emma-pink);
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="variant-label">v4 - Balanced</div>
+
+  <div class="demo-tabs">
+    <button class="demo-tab active" onclick="showDemo('default')">Default</button>
+    <button class="demo-tab" onclick="showDemo('partner')">Partner Appreciated</button>
+    <button class="demo-tab" onclick="showDemo('insync')">In Sync</button>
+    <button class="demo-tab" onclick="showDemo('returning')">Returning User</button>
+  </div>
+
+  <!-- Demo 1: Default State -->
+  <div id="demo-default" class="demo-section active">
+    <div class="section-header">
+      <h2 class="section-title">Worth Discussing</h2>
+      <p class="section-subtitle">Ranked by what matters most</p>
+    </div>
+
+    <div class="discoveries-container">
+      <!-- Card 1: High relevance, partner appreciated -->
+      <div class="discovery-card">
+        <div class="card-header">
+          <span class="category-label">Family</span>
+          <span class="partner-appreciated">♥ Alice appreciates this</span>
+        </div>
+        <div class="answers">
+          <div class="answer-row">
+            <span class="answer-name">Bob:</span>
+            <span class="answer-text">Definitely want kids in the next few years</span>
+          </div>
+          <div class="answer-row">
+            <span class="answer-name">Alice:</span>
+            <span class="answer-text">Still figuring out if parenthood is for me</span>
+          </div>
+        </div>
+        <p class="conversation-prompt">
+          You're in different places on this. Understanding where each of you is coming from can help.
+        </p>
+        <div class="card-footer">
+          <button class="appreciate-btn">
+            <span class="heart">♡</span>
+            Appreciate
+          </button>
+        </div>
+      </div>
+
+      <!-- Card 2: High relevance, I appreciated -->
+      <div class="discovery-card">
+        <div class="card-header">
+          <span class="category-label">Money</span>
+        </div>
+        <div class="answers">
+          <div class="answer-row">
+            <span class="answer-name">Bob:</span>
+            <span class="answer-text">Cut back on everything equally</span>
+          </div>
+          <div class="answer-row">
+            <span class="answer-name">Alice:</span>
+            <span class="answer-text">Prioritize what matters, cut the rest</span>
+          </div>
+        </div>
+        <p class="conversation-prompt">
+          Different approaches to money can complement each other — or create tension. Worth exploring.
+        </p>
+        <div class="card-footer">
+          <button class="appreciate-btn appreciated">
+            <span class="heart">♥</span>
+            Appreciated
+          </button>
+        </div>
+      </div>
+
+      <!-- Card 3: Medium relevance -->
+      <div class="discovery-card">
+        <div class="card-header">
+          <span class="category-label">Communication</span>
+        </div>
+        <div class="answers">
+          <div class="answer-row">
+            <span class="answer-name">Bob:</span>
+            <span class="answer-text">Time alone to process after a disagreement</span>
+          </div>
+          <div class="answer-row">
+            <span class="answer-name">Alice:</span>
+            <span class="answer-text">Talk it through immediately</span>
+          </div>
+        </div>
+        <p class="conversation-prompt">
+          Knowing how you each process conflict can prevent misunderstandings.
+        </p>
+        <div class="card-footer">
+          <button class="appreciate-btn">
+            <span class="heart">♡</span>
+            Appreciate
+          </button>
+        </div>
+      </div>
+
+      <!-- Card 4: Mutual appreciation -->
+      <div class="discovery-card">
+        <div class="card-header">
+          <span class="category-label">Career</span>
+        </div>
+        <div class="answers">
+          <div class="answer-row">
+            <span class="answer-name">Bob:</span>
+            <span class="answer-text">Career comes first in these years</span>
+          </div>
+          <div class="answer-row">
+            <span class="answer-name">Alice:</span>
+            <span class="answer-text">Family time is non-negotiable</span>
+          </div>
+        </div>
+        <p class="conversation-prompt">
+          Balancing ambition and togetherness is an ongoing conversation for most couples.
+        </p>
+        <div class="card-footer">
+          <span class="mutual-badge">♥ You both appreciate this</span>
+        </div>
+      </div>
+
+      <!-- Card 5: Light stakes -->
+      <div class="discovery-card">
+        <div class="card-header">
+          <span class="category-label">Lifestyle</span>
+        </div>
+        <div class="answers">
+          <div class="answer-row">
+            <span class="answer-name">Bob:</span>
+            <span class="answer-text">Cook at home most nights</span>
+          </div>
+          <div class="answer-row">
+            <span class="answer-name">Alice:</span>
+            <span class="answer-text">Eat out or order in often</span>
+          </div>
+        </div>
+        <div class="card-footer">
+          <button class="appreciate-btn">
+            <span class="heart">♡</span>
+            Appreciate
+          </button>
+        </div>
+      </div>
+
+      <a href="#" class="see-all">See all 25 discoveries →</a>
+    </div>
+  </div>
+
+  <!-- Demo 2: Partner Appreciated Context -->
+  <div id="demo-partner" class="demo-section">
+    <div class="section-header">
+      <h2 class="section-title">Alice Appreciates These</h2>
+      <p class="section-subtitle">She found these meaningful</p>
+    </div>
+
+    <div class="discoveries-container">
+      <div class="discovery-card">
+        <div class="card-header">
+          <span class="category-label">Family</span>
+          <span class="partner-appreciated">♥ Alice appreciates this</span>
+        </div>
+        <div class="answers">
+          <div class="answer-row">
+            <span class="answer-name">Bob:</span>
+            <span class="answer-text">Definitely want kids in the next few years</span>
+          </div>
+          <div class="answer-row">
+            <span class="answer-name">Alice:</span>
+            <span class="answer-text">Still figuring out if parenthood is for me</span>
+          </div>
+        </div>
+        <p class="conversation-prompt">
+          You're in different places on this. Understanding where each of you is coming from can help.
+        </p>
+        <div class="card-footer">
+          <button class="appreciate-btn">
+            <span class="heart">♡</span>
+            Appreciate
+          </button>
+        </div>
+      </div>
+
+      <div class="discovery-card">
+        <div class="card-header">
+          <span class="category-label">Communication</span>
+          <span class="partner-appreciated">♥ Alice appreciates this</span>
+        </div>
+        <div class="answers">
+          <div class="answer-row">
+            <span class="answer-name">Bob:</span>
+            <span class="answer-text">Time alone to process after a disagreement</span>
+          </div>
+          <div class="answer-row">
+            <span class="answer-name">Alice:</span>
+            <span class="answer-text">Talk it through immediately</span>
+          </div>
+        </div>
+        <p class="conversation-prompt">
+          Knowing how you each process conflict can prevent misunderstandings.
+        </p>
+        <div class="card-footer">
+          <button class="appreciate-btn">
+            <span class="heart">♡</span>
+            Appreciate
+          </button>
+        </div>
+      </div>
+
+      <a href="#" class="see-all">See all discoveries →</a>
+    </div>
+  </div>
+
+  <!-- Demo 3: In Sync -->
+  <div id="demo-insync" class="demo-section">
+    <div class="section-header">
+      <h2 class="section-title">You're In Sync!</h2>
+      <p class="section-subtitle">You both appreciate these insights</p>
+    </div>
+
+    <div class="discoveries-container">
+      <div class="discovery-card">
+        <div class="card-header">
+          <span class="category-label">Money</span>
+        </div>
+        <div class="answers">
+          <div class="answer-row">
+            <span class="answer-name">Bob:</span>
+            <span class="answer-text">Cut back on everything equally</span>
+          </div>
+          <div class="answer-row">
+            <span class="answer-name">Alice:</span>
+            <span class="answer-text">Prioritize what matters, cut the rest</span>
+          </div>
+        </div>
+        <p class="conversation-prompt">
+          Different approaches to money can complement each other — or create tension. Worth exploring.
+        </p>
+        <div class="card-footer">
+          <span class="mutual-badge">♥ You both appreciate this</span>
+        </div>
+      </div>
+
+      <div class="discovery-card">
+        <div class="card-header">
+          <span class="category-label">Career</span>
+        </div>
+        <div class="answers">
+          <div class="answer-row">
+            <span class="answer-name">Bob:</span>
+            <span class="answer-text">Career comes first in these years</span>
+          </div>
+          <div class="answer-row">
+            <span class="answer-name">Alice:</span>
+            <span class="answer-text">Family time is non-negotiable</span>
+          </div>
+        </div>
+        <p class="conversation-prompt">
+          Balancing ambition and togetherness is an ongoing conversation for most couples.
+        </p>
+        <div class="card-footer">
+          <span class="mutual-badge">♥ You both appreciate this</span>
+        </div>
+      </div>
+
+      <a href="#" class="see-all">See all discoveries →</a>
+    </div>
+  </div>
+
+  <!-- Demo 4: Returning User -->
+  <div id="demo-returning" class="demo-section">
+    <div class="section-header">
+      <h2 class="section-title">Pick Up Where You Left Off</h2>
+      <p class="section-subtitle">Welcome back — here's what matters</p>
+    </div>
+
+    <div class="discoveries-container">
+      <div class="discovery-card">
+        <div class="card-header">
+          <span class="category-label">Family</span>
+          <span class="partner-appreciated">♥ Alice appreciates this</span>
+        </div>
+        <div class="answers">
+          <div class="answer-row">
+            <span class="answer-name">Bob:</span>
+            <span class="answer-text">Definitely want kids in the next few years</span>
+          </div>
+          <div class="answer-row">
+            <span class="answer-name">Alice:</span>
+            <span class="answer-text">Still figuring out if parenthood is for me</span>
+          </div>
+        </div>
+        <p class="conversation-prompt">
+          You're in different places on this. Understanding where each of you is coming from can help.
+        </p>
+        <div class="card-footer">
+          <button class="appreciate-btn">
+            <span class="heart">♡</span>
+            Appreciate
+          </button>
+        </div>
+      </div>
+
+      <div class="discovery-card">
+        <div class="card-header">
+          <span class="category-label">Money</span>
+        </div>
+        <div class="answers">
+          <div class="answer-row">
+            <span class="answer-name">Bob:</span>
+            <span class="answer-text">Cut back on everything equally</span>
+          </div>
+          <div class="answer-row">
+            <span class="answer-name">Alice:</span>
+            <span class="answer-text">Prioritize what matters, cut the rest</span>
+          </div>
+        </div>
+        <p class="conversation-prompt">
+          Different approaches to money can complement each other — or create tension. Worth exploring.
+        </p>
+        <div class="card-footer">
+          <button class="appreciate-btn">
+            <span class="heart">♡</span>
+            Appreciate
+          </button>
+        </div>
+      </div>
+
+      <a href="#" class="see-all">See all discoveries →</a>
+    </div>
+  </div>
+
+  <script>
+    function showDemo(demoId) {
+      document.querySelectorAll('.demo-section').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.demo-tab').forEach(el => el.classList.remove('active'));
+      document.getElementById('demo-' + demoId).classList.add('active');
+      event.target.classList.add('active');
+    }
+
+    document.querySelectorAll('.appreciate-btn').forEach(btn => {
+      btn.addEventListener('click', function() {
+        this.classList.toggle('appreciated');
+        const heart = this.querySelector('.heart');
+        const isAppreciated = this.classList.contains('appreciated');
+        heart.innerHTML = isAppreciated ? '♥' : '♡';
+        this.childNodes[2].textContent = isAppreciated ? ' Appreciated' : ' Appreciate';
+      });
+    });
+  </script>
+</body>
+</html>

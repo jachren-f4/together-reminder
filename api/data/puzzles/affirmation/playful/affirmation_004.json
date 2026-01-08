@@ -9,31 +9,62 @@
       "id": "affirmation_004_q1",
       "text": "I'd rather cook at home than eat out",
       "type": "scale",
-      "scaleLabels": ["Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"]
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ]
     },
     {
       "id": "affirmation_004_q2",
       "text": "I enjoy the process of preparing meals together",
       "type": "scale",
-      "scaleLabels": ["Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"]
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ]
     },
     {
       "id": "affirmation_004_q3",
       "text": "Dining out is more about the experience than the food",
       "type": "scale",
-      "scaleLabels": ["Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"]
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ]
     },
     {
       "id": "affirmation_004_q4",
       "text": "I prefer quick easy meals over elaborate cooking",
       "type": "scale",
-      "scaleLabels": ["Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"]
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ]
     },
     {
       "id": "affirmation_004_q5",
       "text": "Trying new recipes together is fun for me",
       "type": "scale",
-      "scaleLabels": ["Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"]
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ]
     }
-  ]
+  ],
+  "magnet_id": 2
 }

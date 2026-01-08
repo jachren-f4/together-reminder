@@ -8,6 +8,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { withAuthOrDevBypass } from '@/lib/auth/dev-middleware';
 import { query, getClient } from '@/lib/db/pool';
 import { LP_REWARDS, LP_BONUSES } from '@/lib/lp/config';
+import { recordActivityPlay, type ActivityType } from '@/lib/magnets';
 
 export const dynamic = 'force-dynamic';
 
@@ -163,7 +164,7 @@ export const POST = withAuthOrDevBypass(async (req, userId, email) => {
       }
 
       // Advance branch progression for quiz activity
-      const activityType = session.format_type === 'affirmation' ? 'affirmation' : 'classicQuiz';
+      const branchActivityType = session.format_type === 'affirmation' ? 'affirmation' : 'classicQuiz';
       await client.query(
         `INSERT INTO branch_progression (couple_id, activity_type, current_branch, total_completions, max_branches)
          VALUES ($1, $2, 0, 1, 5)
@@ -173,8 +174,14 @@ export const POST = withAuthOrDevBypass(async (req, userId, email) => {
            current_branch = (branch_progression.total_completions + 1) % 5,
            last_completed_at = NOW(),
            updated_at = NOW()`,
-        [coupleId, activityType]
+        [coupleId, branchActivityType]
       );
+
+      // Record activity play for cooldown tracking (Magnet Collection System)
+      const cooldownActivityType: ActivityType = session.format_type === 'affirmation'
+        ? 'affirmation_quiz'
+        : 'classic_quiz';
+      await recordActivityPlay(coupleId, cooldownActivityType);
     }
 
     // Update session

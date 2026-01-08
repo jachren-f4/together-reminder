@@ -5,64 +5,115 @@
   "questions": [
     {
       "id": "quiz_003_q1",
-      "text": "When making important decisions, I rely most on...",
+      "text": "When we have a decision to make together, I'd like us to...",
       "choices": [
-        "My gut feelings and intuition",
-        "Logic and careful analysis",
-        "Advice from people I trust",
-        "Past experiences and patterns",
+        "Go with our gut and figure it out as we go",
+        "Talk through the options and decide together",
+        "Each think about it separately, then compare notes",
+        "Take our time - no rush on big decisions",
         "Other / It depends"
       ],
-      "category": "personality"
+      "category": "communication",
+      "metadata": {
+        "dimension": "planning_style",
+        "poleMapping": [
+          "left",
+          null,
+          "right",
+          "right",
+          null
+        ]
+      }
     },
     {
       "id": "quiz_003_q2",
-      "text": "When plans change unexpectedly, I typically...",
+      "text": "If our plans fall through last minute, I hope we...",
       "choices": [
-        "Get excited about new possibilities",
-        "Feel stressed but adapt quickly",
-        "Prefer to stick to the original plan",
-        "Need time to process the change",
+        "See it as a chance to do something spontaneous",
+        "Quickly come up with a backup plan together",
+        "Acknowledge the disappointment, then move on",
+        "Have a list of backup ideas ready for moments like this",
         "Other / It depends"
       ],
-      "category": "personality"
+      "category": "lifestyle",
+      "metadata": {
+        "dimension": "planning_style",
+        "poleMapping": [
+          "left",
+          null,
+          null,
+          "right",
+          null
+        ]
+      }
     },
     {
       "id": "quiz_003_q3",
-      "text": "My approach to planning a date night is...",
+      "text": "For date nights, I'd love it if we...",
       "choices": [
-        "Completely spontaneous - see where the night takes us",
-        "A rough idea with room for flexibility",
-        "A well-researched plan with reservations",
-        "Following a tried-and-true favorite routine",
+        "Keep it spontaneous - decide when we're already out",
+        "Take turns surprising each other",
+        "Plan something special together ahead of time",
+        "Have a mix of planned dates and 'let's just see' nights",
         "Other / It depends"
       ],
-      "category": "lifestyle"
+      "category": "lifestyle",
+      "metadata": {
+        "dimension": "planning_style",
+        "poleMapping": [
+          "left",
+          null,
+          "right",
+          null,
+          null
+        ]
+      }
     },
     {
       "id": "quiz_003_q4",
-      "text": "When shopping for something important, I...",
+      "text": "When we're planning something together (a trip, a purchase, an event), I tend to...",
       "choices": [
-        "Buy what feels right in the moment",
-        "Compare a few options quickly",
-        "Research extensively for the best choice",
-        "Ask for recommendations from others",
+        "Jump in and start making it happen",
+        "Brainstorm ideas and narrow down together",
+        "Research options before we discuss",
+        "Let you take the lead and give input when asked",
         "Other / It depends"
       ],
-      "category": "preferences"
+      "category": "communication",
+      "metadata": {
+        "dimension": "planning_style",
+        "poleMapping": [
+          "left",
+          null,
+          "right",
+          null,
+          null
+        ]
+      }
     },
     {
       "id": "quiz_003_q5",
-      "text": "If I'm unsure about a choice, I'm most likely to...",
+      "text": "When we're not sure what to do, I think the best approach is...",
       "choices": [
-        "Make a decision and adjust as needed",
-        "Sleep on it and decide tomorrow",
-        "Make a pros/cons list",
-        "Talk it through with someone",
+        "Just pick something and adjust if needed",
+        "Sleep on it and revisit tomorrow",
+        "List out the pros and cons together",
+        "Talk it through until we're both comfortable",
         "Other / It depends"
       ],
-      "category": "personality"
+      "category": "communication",
+      "metadata": {
+        "dimension": "planning_style",
+        "poleMapping": [
+          "left",
+          "right",
+          "right",
+          null,
+          null
+        ]
+      }
     }
   ],
-  "description": "Learn how you both tackle choices big and small."
+  "description": "Explore how you'll make decisions as a team.",
+  "magnet_id": 2
 }

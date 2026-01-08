@@ -1,0 +1,69 @@
+{
+  "quizId": "quiz_017",
+  "title": "Affection & Touch",
+  "branch": "playful",
+  "questions": [
+    {
+      "id": "quiz_017_q1",
+      "text": "When it comes to PDA (public displays of affection), I'm comfortable with...",
+      "choices": [
+        "All of it - hand holding, kisses, the works",
+        "Some affection - hand holding, arm around each other",
+        "Keeping it subtle in public, more affectionate in private",
+        "Not really a PDA person - save it for when we're alone",
+        "Other / It depends"
+      ],
+      "category": "preferences"
+    },
+    {
+      "id": "quiz_017_q2",
+      "text": "For cuddling on the couch, my ideal situation is...",
+      "choices": [
+        "Fully intertwined - the closer the better",
+        "Leaning on each other or side by side",
+        "Touching but with some personal space",
+        "I like my own spot, but close by",
+        "Other / It depends"
+      ],
+      "category": "preferences"
+    },
+    {
+      "id": "quiz_017_q3",
+      "text": "When I've had a tough day, physical comfort looks like...",
+      "choices": [
+        "A long hug that makes everything better",
+        "Sitting close while we talk about it",
+        "Just being near you is enough",
+        "I might need a little space first, then closeness",
+        "Other / It depends"
+      ],
+      "category": "communication"
+    },
+    {
+      "id": "quiz_017_q4",
+      "text": "Little physical gestures that mean a lot to me are...",
+      "choices": [
+        "Random kisses throughout the day",
+        "A hand on my back or shoulder",
+        "Playing with my hair or gentle touches",
+        "Holding hands when we're out together",
+        "Other / It depends"
+      ],
+      "category": "preferences"
+    },
+    {
+      "id": "quiz_017_q5",
+      "text": "When it comes to how much physical affection feels right, I'd say...",
+      "choices": [
+        "I'm very affectionate - more is more",
+        "I like regular affection but not constantly",
+        "I show love in other ways more than physical touch",
+        "It depends on my mood and energy",
+        "Other / It depends"
+      ],
+      "category": "preferences"
+    }
+  ],
+  "description": "Discover your love language when it comes to touch and affection.",
+  "magnet_id": 4
+}

@@ -5,64 +5,115 @@
   "questions": [
     {
       "id": "quiz_004_q1",
-      "text": "My ideal movie night features...",
+      "text": "For a movie night together, I'd love us to...",
       "choices": [
-        "Action-packed thrillers that keep me on edge",
-        "Thought-provoking dramas or documentaries",
-        "Feel-good comedies that make me laugh",
-        "Romantic stories with emotional depth",
+        "Pick something new neither of us has seen",
+        "Revisit a favorite one of us wants to share",
+        "Take turns choosing - your pick this time, mine next",
+        "Find something we're both in the mood for in the moment",
         "Other / It depends"
       ],
-      "category": "preferences"
+      "category": "lifestyle",
+      "metadata": {
+        "dimension": "novelty_preference",
+        "poleMapping": [
+          "right",
+          "left",
+          null,
+          null,
+          null
+        ]
+      }
     },
     {
       "id": "quiz_004_q2",
-      "text": "When choosing what to watch, I prefer...",
+      "text": "When we can't agree on what to watch, I hope we...",
       "choices": [
-        "Something brand new I've never seen",
-        "Critically acclaimed shows everyone's talking about",
-        "Comfort rewatches of old favorites",
-        "Whatever matches my current mood",
+        "Flip a coin and go with it",
+        "Each pitch our top choice and find common ground",
+        "Save both options and watch one now, one later",
+        "Put on something easy we both kind of like",
         "Other / It depends"
       ],
-      "category": "preferences"
+      "category": "communication",
+      "metadata": {
+        "dimension": "novelty_preference",
+        "poleMapping": [
+          null,
+          null,
+          null,
+          "left",
+          null
+        ]
+      }
     },
     {
       "id": "quiz_004_q3",
-      "text": "My music taste reveals that I'm...",
+      "text": "When it comes to music together, I'd enjoy...",
       "choices": [
-        "Always discovering new artists and genres",
-        "Loyal to a few favorite artists or styles",
-        "Eclectic - I love everything",
-        "Nostalgic - drawn to music from my past",
+        "Sharing songs we've discovered and making playlists for each other",
+        "Having our music playing when we're together",
+        "Enjoying music separately - it's a personal thing",
+        "Going to concerts or live music together",
         "Other / It depends"
       ],
-      "category": "personality"
+      "category": "lifestyle",
+      "metadata": {
+        "dimension": "novelty_preference",
+        "poleMapping": [
+          "right",
+          "left",
+          null,
+          "right",
+          null
+        ]
+      }
     },
     {
       "id": "quiz_004_q4",
-      "text": "At a game night, I'm most drawn to...",
+      "text": "If we had a game night (just us or with friends), I'd want to...",
       "choices": [
-        "Competitive strategy games",
-        "Cooperative team games",
-        "Creative storytelling games",
-        "Quick party games with lots of laughs",
+        "Get competitive - I like winning!",
+        "Play as a team against others or the game",
+        "Keep it light and silly with party games",
+        "Try something new we've never played",
         "Other / It depends"
       ],
-      "category": "social"
+      "category": "social",
+      "metadata": {
+        "dimension": "novelty_preference",
+        "poleMapping": [
+          null,
+          null,
+          "left",
+          "right",
+          null
+        ]
+      }
     },
     {
       "id": "quiz_004_q5",
-      "text": "When I have free time, I'm most likely to...",
+      "text": "For a lazy evening at home together, I picture us...",
       "choices": [
-        "Dive into an engaging book or podcast",
-        "Watch the latest trending series",
-        "Play video games or apps",
-        "Create or make something artistic",
+        "Doing our own things in the same room - cozy parallel time",
+        "Watching something together, cuddled up",
+        "Playing a game or doing an activity together",
+        "Talking, cooking, or just hanging out without screens",
         "Other / It depends"
       ],
-      "category": "lifestyle"
+      "category": "lifestyle",
+      "metadata": {
+        "dimension": "novelty_preference",
+        "poleMapping": [
+          "left",
+          "left",
+          "right",
+          "right",
+          null
+        ]
+      }
     }
   ],
-  "description": "Explore your movie nights, game preferences, and fun times."
+  "description": "Discover how you like to unwind and have fun together.",
+  "magnet_id": 2
 }

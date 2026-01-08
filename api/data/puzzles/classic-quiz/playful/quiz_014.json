@@ -1,0 +1,69 @@
+{
+  "quizId": "quiz_014",
+  "title": "Pet Peeves & Quirks",
+  "branch": "playful",
+  "questions": [
+    {
+      "id": "quiz_014_q1",
+      "text": "When my partner has a habit that's a little annoying, I usually...",
+      "choices": [
+        "Find it kind of endearing honestly",
+        "Mention it gently and hope they adjust",
+        "Let it go - nobody's perfect",
+        "Tease them about it playfully",
+        "Other / It depends"
+      ],
+      "category": "communication"
+    },
+    {
+      "id": "quiz_014_q2",
+      "text": "Something small that I find surprisingly important is...",
+      "choices": [
+        "How the kitchen/bathroom is kept",
+        "Being on time vs running late",
+        "Noise levels and quiet time",
+        "How we share or divide space",
+        "Other / It depends"
+      ],
+      "category": "preferences"
+    },
+    {
+      "id": "quiz_014_q3",
+      "text": "When it comes to tidiness and organization, I'd say I'm...",
+      "choices": [
+        "Pretty neat - I like things in their place",
+        "Organized chaos - I know where my stuff is",
+        "Relaxed - mess doesn't really bother me",
+        "It depends on my mood and energy",
+        "Other / It depends"
+      ],
+      "category": "lifestyle"
+    },
+    {
+      "id": "quiz_014_q4",
+      "text": "A quirky thing about me that you might have to accept is...",
+      "choices": [
+        "I have specific ways I like things done",
+        "I can be forgetful about little things",
+        "I need things to be tidy to feel calm",
+        "I'm not great at putting things back where they belong",
+        "Other / It depends"
+      ],
+      "category": "personality"
+    },
+    {
+      "id": "quiz_014_q5",
+      "text": "When we notice each other's quirks, I hope we...",
+      "choices": [
+        "Laugh about them and accept them",
+        "Gently help each other improve",
+        "Pick our battles - some things aren't worth mentioning",
+        "Appreciate that quirks make us who we are",
+        "Other / It depends"
+      ],
+      "category": "communication"
+    }
+  ],
+  "description": "Discover the little quirks that make you, you.",
+  "magnet_id": 4
+}

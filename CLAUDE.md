@@ -180,6 +180,14 @@ See `docs/WHITE_LABEL_GUIDE.md` for complete guide.
 
 ## Architecture Rules
 
+### Implementing from Mockups
+
+When implementing UI from `mockups/*.html` files:
+1. **Read the mockup HTML first** - before writing any code
+2. **Copy assets** from `mockups/` to `app/assets/` before implementing
+3. **Use exact text** - don't paraphrase labels (e.g., "CONNECTION BAR" not "MAGNET COLLECTION")
+4. **Verify after** - compare screenshot against mockup before marking complete
+
 ### Initialization & Storage
 
 #### Startup Order (MUST FOLLOW)
@@ -584,8 +592,9 @@ All toggles in `lib/config/dev_config.dart`:
 
 | Toggle | Purpose | Default | Works in Release? |
 |--------|---------|---------|-------------------|
-| `skipAuthInDev` | Skip entire auth flow (simulator/emulator only) | `true` | No |
+| `skipAuthInDev` | Skip entire auth flow (simulator/emulator only) | `false` | No |
 | `skipOtpVerificationInDev` | Skip OTP code, use password auth | `true` | **Yes** |
+| `skipSubscriptionCheckInDev` | Bypass paywall, always return premium | `true` | No |
 
 #### `skipAuthInDev` - Full Auth Bypass (Simulators Only)
 Skips the entire authentication flow on simulators/emulators/web. Never activates on physical devices.
@@ -605,6 +614,16 @@ static const bool skipOtpVerificationInDev = true;  // Toggle in dev_config.dart
 - **Technical:** Uses deterministic password `DevPass_{sha256(email).substring(0,12)}_2024!`
 - **Note:** SHA256 hash used instead of Dart's `hashCode` because hashCode is NOT stable across devices
 - **WARNING:** Set to `false` before App Store release!
+
+#### `skipSubscriptionCheckInDev` - Paywall Bypass (Debug Only)
+Bypasses RevenueCat subscription check, making `SubscriptionService.isPremium` always return true.
+```dart
+static const bool skipSubscriptionCheckInDev = true;  // Toggle in dev_config.dart:75
+```
+- **Use case:** Testing app features without subscribing during development
+- **Effect:** Paywall screen is never shown, all premium features available
+- **Scope:** Only active in debug builds (`kDebugMode`), never in release
+- **WARNING:** Set to `false` when testing actual paywall/subscription flow!
 
 #### Apple Sign-In Toggle
 Enable/disable "Continue with Apple" button on iOS. Requires Apple Developer Portal + Supabase configuration.

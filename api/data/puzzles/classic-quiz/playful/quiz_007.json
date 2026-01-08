@@ -5,64 +5,85 @@
   "questions": [
     {
       "id": "quiz_007_q1",
-      "text": "In a group setting, I naturally tend to...",
+      "text": "When we're out with friends or in a group, I'd love it if we...",
       "choices": [
-        "Take charge and lead the group",
-        "Support and encourage others",
-        "Contribute ideas but let others lead",
-        "Observe and participate when needed",
+        "Tag-team the conversations and work the room together",
+        "Stick close and experience it as a pair",
+        "Do our own thing but check in throughout",
+        "Have a signal for when one of us is ready to leave",
         "Other / It depends"
       ],
       "category": "social"
     },
     {
       "id": "quiz_007_q2",
-      "text": "When someone shares a problem with me, I usually...",
+      "text": "When I'm going through something hard, what helps most from you is...",
       "choices": [
-        "Offer practical solutions immediately",
-        "Listen empathetically and validate feelings",
-        "Share a similar experience I've had",
-        "Ask questions to help them think it through",
+        "Practical suggestions or help solving it",
+        "Just listening and letting me vent",
+        "Asking questions to help me think it through",
+        "Distraction - help me take my mind off it",
         "Other / It depends"
       ],
-      "category": "personality"
+      "category": "communication",
+      "metadata": {
+        "dimension": "support_style",
+        "poleMapping": [
+          "right",
+          "left",
+          null,
+          null,
+          null
+        ]
+      }
     },
     {
       "id": "quiz_007_q3",
-      "text": "At social gatherings, I prefer groups that are...",
+      "text": "The social situations where I feel most comfortable with you are...",
       "choices": [
-        "Large and lively with lots of energy",
-        "Medium-sized with a mix of people",
-        "Small and intimate with close friends",
-        "One-on-one conversations",
+        "Big gatherings with lots of energy",
+        "Smaller groups of close friends",
+        "Double dates or hanging with one other couple",
+        "Just the two of us, honestly",
+        "Other / It depends"
+      ],
+      "category": "social",
+      "metadata": {
+        "dimension": "social_energy",
+        "poleMapping": [
+          "right",
+          null,
+          null,
+          "left",
+          null
+        ]
+      }
+    },
+    {
+      "id": "quiz_007_q4",
+      "text": "When we're making plans with friends and can't all agree, I think we should...",
+      "choices": [
+        "Just pick something and go with it",
+        "Keep discussing until everyone's happy",
+        "Let whoever cares most decide",
+        "Split up and do different things if needed",
         "Other / It depends"
       ],
       "category": "social"
     },
     {
-      "id": "quiz_007_q4",
-      "text": "When making group decisions, I believe we should...",
-      "choices": [
-        "Vote democratically",
-        "Defer to whoever cares most",
-        "Discuss until we find consensus",
-        "Let the most knowledgeable person decide",
-        "Other / It depends"
-      ],
-      "category": "personality"
-    },
-    {
       "id": "quiz_007_q5",
-      "text": "My role in my friend group is usually...",
+      "text": "When we're with our friends, I see us as the couple who...",
       "choices": [
-        "The organizer who makes plans happen",
-        "The cheerleader who keeps spirits up",
-        "The wise advisor people come to",
-        "The fun one who brings the laughs",
+        "Makes things happen - we organize and bring people together",
+        "Brings the fun - we're up for anything",
+        "Is easy to be around - chill and go-with-the-flow",
+        "Has the deep conversations - people open up to us",
         "Other / It depends"
       ],
       "category": "social"
     }
   ],
-  "description": "Explore how you navigate friendships and gatherings."
+  "description": "Explore how you show up together in your social world.",
+  "magnet_id": 3
 }

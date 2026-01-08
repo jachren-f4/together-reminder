@@ -1,0 +1,901 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=390, height=844, initial-scale=1.0">
+    <title>Us Profile - New Dimensions Mockup</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Nunito:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-gradient-start: #FFD1C1;
+            --bg-gradient-end: #FFF5F0;
+            --cream: #FFF8F0;
+            --beige: #F5E6D8;
+            --text-dark: #2D2D2D;
+            --text-medium: #666666;
+            --text-light: #999999;
+            --emma-color: #FF6B6B;
+            --james-color: #5B9BD5;
+            --accent-purple: #9B7ED9;
+            --accent-gold: #F4C55B;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            background: linear-gradient(180deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 390px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 24px;
+            color: var(--text-dark);
+            text-align: center;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            text-align: center;
+            font-size: 14px;
+            color: var(--text-medium);
+            margin-bottom: 24px;
+        }
+
+        /* Section Card */
+        .section-card {
+            background: white;
+            border-radius: 18px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+        }
+
+        .section-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .section-badge {
+            font-family: 'Nunito', sans-serif;
+            font-size: 10px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #4CAF50, #81C784);
+            color: white;
+            padding: 3px 8px;
+            border-radius: 4px;
+            letter-spacing: 0.5px;
+        }
+
+        /* Group Header */
+        .group-header {
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            color: var(--text-light);
+            text-transform: uppercase;
+            margin: 20px 0 12px 0;
+            padding-bottom: 6px;
+            border-bottom: 1px solid var(--beige);
+        }
+
+        .group-header:first-child {
+            margin-top: 0;
+        }
+
+        /* Dimension Row */
+        .dimension-row {
+            margin-bottom: 18px;
+        }
+
+        .dimension-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 4px;
+        }
+
+        .dimension-label-row {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .dimension-label {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text-dark);
+        }
+
+        .similarity-badge {
+            font-size: 9px;
+            font-weight: 700;
+            padding: 2px 6px;
+            border-radius: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .similarity-different {
+            background: #FFF0ED;
+            color: #E57373;
+        }
+
+        .similarity-similar {
+            background: #E8F5E9;
+            color: #66BB6A;
+        }
+
+        .dimension-questions {
+            font-size: 11px;
+            color: var(--text-light);
+        }
+
+        .pole-labels {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 6px;
+        }
+
+        .pole-label {
+            font-size: 11px;
+            color: var(--text-light);
+        }
+
+        /* Spectrum Track */
+        .spectrum-track {
+            height: 22px;
+            background: linear-gradient(90deg, var(--beige), var(--cream), var(--beige));
+            border-radius: 4px;
+            position: relative;
+        }
+
+        .marker {
+            position: absolute;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: 700;
+            color: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .marker-emma {
+            background: var(--emma-color);
+        }
+
+        .marker-james {
+            background: var(--james-color);
+        }
+
+        /* Description Box */
+        .dimension-description {
+            background: var(--cream);
+            border-radius: 10px;
+            padding: 10px;
+            margin-top: 8px;
+            font-size: 11px;
+            color: var(--text-medium);
+            text-align: center;
+        }
+
+        .dimension-description .name-emma {
+            font-weight: 700;
+            color: var(--emma-color);
+        }
+
+        .dimension-description .name-james {
+            font-weight: 700;
+            color: var(--james-color);
+        }
+
+        /* Legend */
+        .legend {
+            display: flex;
+            justify-content: center;
+            gap: 24px;
+            padding-top: 14px;
+            border-top: 1px solid var(--beige);
+            margin-top: 8px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12px;
+            color: var(--text-medium);
+        }
+
+        .legend-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .legend-dot-emma {
+            background: var(--emma-color);
+        }
+
+        .legend-dot-james {
+            background: var(--james-color);
+        }
+
+        /* New badge */
+        .new-badge {
+            font-size: 9px;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--accent-purple), #B39DDB);
+            color: white;
+            padding: 2px 6px;
+            border-radius: 4px;
+            letter-spacing: 0.5px;
+        }
+
+        /* Variant Toggle */
+        .variant-toggle {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .variant-btn {
+            padding: 8px 16px;
+            border: 2px solid var(--emma-color);
+            background: white;
+            border-radius: 20px;
+            font-family: 'Nunito', sans-serif;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--emma-color);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .variant-btn:hover {
+            background: #FFF0F0;
+        }
+
+        .variant-btn.active {
+            background: var(--emma-color);
+            color: white;
+        }
+
+        .variant-section {
+            display: none;
+        }
+
+        .variant-section.active {
+            display: block;
+        }
+
+        /* Info Text */
+        .info-text {
+            background: #F0F7FF;
+            border-left: 3px solid #5B9BD5;
+            padding: 12px;
+            border-radius: 0 8px 8px 0;
+            margin-bottom: 20px;
+            font-size: 12px;
+            color: var(--text-medium);
+        }
+
+        .info-text strong {
+            color: var(--text-dark);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Us Profile Dimensions</h1>
+        <p class="subtitle">Phase 2: Adding 4 New Dimensions</p>
+
+        <div class="variant-toggle">
+            <button class="variant-btn active" onclick="showVariant('flat')">Flat List (Current)</button>
+            <button class="variant-btn" onclick="showVariant('grouped')">Grouped by Theme</button>
+            <button class="variant-btn" onclick="showVariant('progressive')">Progressive Reveal</button>
+        </div>
+
+        <!-- VARIANT 1: Flat List (Current Style) -->
+        <div id="variant-flat" class="variant-section active">
+            <div class="info-text">
+                <strong>Variant 1: Flat List</strong><br>
+                All dimensions shown in a single list. Simple, but may feel overwhelming with 8 dimensions.
+            </div>
+
+            <div class="section-card">
+                <div class="section-title">
+                    How You Navigate
+                    <span class="section-badge">8 DIMENSIONS</span>
+                </div>
+
+                <!-- Existing Dimensions -->
+                <div class="dimension-row">
+                    <div class="dimension-header">
+                        <div class="dimension-label-row">
+                            <span class="dimension-label">Social Energy</span>
+                            <span class="similarity-badge similarity-different">Different</span>
+                        </div>
+                        <span class="dimension-questions">12 questions</span>
+                    </div>
+                    <div class="pole-labels">
+                        <span class="pole-label">Recharge Alone</span>
+                        <span class="pole-label">Energized by People</span>
+                    </div>
+                    <div class="spectrum-track">
+                        <div class="marker marker-emma" style="left: 25%;">E</div>
+                        <div class="marker marker-james" style="left: 72%;">J</div>
+                    </div>
+                    <div class="dimension-description">
+                        <span class="name-emma">Emma</span> recharges with quiet time &bull;
+                        <span class="name-james">James</span> gets energy from socializing
+                    </div>
+                </div>
+
+                <div class="dimension-row">
+                    <div class="dimension-header">
+                        <div class="dimension-label-row">
+                            <span class="dimension-label">Stress Processing</span>
+                            <span class="similarity-badge similarity-similar">Similar</span>
+                        </div>
+                        <span class="dimension-questions">8 questions</span>
+                    </div>
+                    <div class="pole-labels">
+                        <span class="pole-label">Internal Processor</span>
+                        <span class="pole-label">External Processor</span>
+                    </div>
+                    <div class="spectrum-track">
+                        <div class="marker marker-emma" style="left: 35%;">E</div>
+                        <div class="marker marker-james" style="left: 42%;">J</div>
+                    </div>
+                    <div class="dimension-description">
+                        <span class="name-emma">Emma</span> &amp; <span class="name-james">James</span> both process internally first
+                    </div>
+                </div>
+
+                <div class="dimension-row">
+                    <div class="dimension-header">
+                        <div class="dimension-label-row">
+                            <span class="dimension-label">Planning Style</span>
+                        </div>
+                        <span class="dimension-questions">10 questions</span>
+                    </div>
+                    <div class="pole-labels">
+                        <span class="pole-label">Spontaneous</span>
+                        <span class="pole-label">Structured</span>
+                    </div>
+                    <div class="spectrum-track">
+                        <div class="marker marker-emma" style="left: 68%;">E</div>
+                        <div class="marker marker-james" style="left: 45%;">J</div>
+                    </div>
+                    <div class="dimension-description">
+                        <span class="name-emma">Emma</span> likes having a plan &bull;
+                        <span class="name-james">James</span> goes with the flow
+                    </div>
+                </div>
+
+                <div class="dimension-row">
+                    <div class="dimension-header">
+                        <div class="dimension-label-row">
+                            <span class="dimension-label">Conflict Approach</span>
+                            <span class="similarity-badge similarity-different">Different</span>
+                        </div>
+                        <span class="dimension-questions">6 questions</span>
+                    </div>
+                    <div class="pole-labels">
+                        <span class="pole-label">Space First</span>
+                        <span class="pole-label">Talk It Out</span>
+                    </div>
+                    <div class="spectrum-track">
+                        <div class="marker marker-emma" style="left: 78%;">E</div>
+                        <div class="marker marker-james" style="left: 28%;">J</div>
+                    </div>
+                    <div class="dimension-description">
+                        <span class="name-emma">Emma</span> wants to talk through conflict &bull;
+                        <span class="name-james">James</span> needs space to process first
+                    </div>
+                </div>
+
+                <!-- NEW Dimensions -->
+                <div class="dimension-row">
+                    <div class="dimension-header">
+                        <div class="dimension-label-row">
+                            <span class="dimension-label">Risk & Adventure</span>
+                            <span class="new-badge">NEW</span>
+                        </div>
+                        <span class="dimension-questions">8 questions</span>
+                    </div>
+                    <div class="pole-labels">
+                        <span class="pole-label">Play It Safe</span>
+                        <span class="pole-label">Thrill Seeker</span>
+                    </div>
+                    <div class="spectrum-track">
+                        <div class="marker marker-emma" style="left: 30%;">E</div>
+                        <div class="marker marker-james" style="left: 75%;">J</div>
+                    </div>
+                    <div class="dimension-description">
+                        <span class="name-emma">Emma</span> prefers familiar comfort &bull;
+                        <span class="name-james">James</span> seeks new adventures
+                    </div>
+                </div>
+
+                <div class="dimension-row">
+                    <div class="dimension-header">
+                        <div class="dimension-label-row">
+                            <span class="dimension-label">Novelty Preference</span>
+                            <span class="new-badge">NEW</span>
+                            <span class="similarity-badge similarity-similar">Similar</span>
+                        </div>
+                        <span class="dimension-questions">12 questions</span>
+                    </div>
+                    <div class="pole-labels">
+                        <span class="pole-label">Comfort & Familiar</span>
+                        <span class="pole-label">New & Discovery</span>
+                    </div>
+                    <div class="spectrum-track">
+                        <div class="marker marker-emma" style="left: 58%;">E</div>
+                        <div class="marker marker-james" style="left: 65%;">J</div>
+                    </div>
+                    <div class="dimension-description">
+                        <span class="name-emma">Emma</span> &amp; <span class="name-james">James</span> both enjoy trying new things
+                    </div>
+                </div>
+
+                <div class="dimension-row">
+                    <div class="dimension-header">
+                        <div class="dimension-label-row">
+                            <span class="dimension-label">Support Style</span>
+                            <span class="new-badge">NEW</span>
+                            <span class="similarity-badge similarity-different">Different</span>
+                        </div>
+                        <span class="dimension-questions">6 questions</span>
+                    </div>
+                    <div class="pole-labels">
+                        <span class="pole-label">Listen First</span>
+                        <span class="pole-label">Give Solutions</span>
+                    </div>
+                    <div class="spectrum-track">
+                        <div class="marker marker-emma" style="left: 22%;">E</div>
+                        <div class="marker marker-james" style="left: 80%;">J</div>
+                    </div>
+                    <div class="dimension-description">
+                        <span class="name-emma">Emma</span> wants to be heard first &bull;
+                        <span class="name-james">James</span> jumps to problem-solving
+                    </div>
+                </div>
+
+                <div class="dimension-row">
+                    <div class="dimension-header">
+                        <div class="dimension-label-row">
+                            <span class="dimension-label">Daily Rhythm</span>
+                            <span class="new-badge">NEW</span>
+                        </div>
+                        <span class="dimension-questions">4 questions</span>
+                    </div>
+                    <div class="pole-labels">
+                        <span class="pole-label">Night Owl</span>
+                        <span class="pole-label">Early Bird</span>
+                    </div>
+                    <div class="spectrum-track">
+                        <div class="marker marker-emma" style="left: 75%;">E</div>
+                        <div class="marker marker-james" style="left: 35%;">J</div>
+                    </div>
+                    <div class="dimension-description">
+                        <span class="name-emma">Emma</span> rises with the sun &bull;
+                        <span class="name-james">James</span> comes alive at night
+                    </div>
+                </div>
+
+                <div class="legend">
+                    <div class="legend-item">
+                        <div class="legend-dot legend-dot-emma"></div>
+                        <span>Emma</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-dot legend-dot-james"></div>
+                        <span>James</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- VARIANT 2: Grouped by Theme -->
+        <div id="variant-grouped" class="variant-section">
+            <div class="info-text">
+                <strong>Variant 2: Grouped by Theme</strong><br>
+                Dimensions organized into logical categories. Easier to scan and find related insights.
+            </div>
+
+            <div class="section-card">
+                <div class="section-title">How You Navigate</div>
+
+                <!-- Social & Energy Group -->
+                <div class="group-header">Social & Energy</div>
+
+                <div class="dimension-row">
+                    <div class="dimension-header">
+                        <div class="dimension-label-row">
+                            <span class="dimension-label">Social Energy</span>
+                            <span class="similarity-badge similarity-different">Different</span>
+                        </div>
+                        <span class="dimension-questions">12 questions</span>
+                    </div>
+                    <div class="pole-labels">
+                        <span class="pole-label">Recharge Alone</span>
+                        <span class="pole-label">Energized by People</span>
+                    </div>
+                    <div class="spectrum-track">
+                        <div class="marker marker-emma" style="left: 25%;">E</div>
+                        <div class="marker marker-james" style="left: 72%;">J</div>
+                    </div>
+                </div>
+
+                <div class="dimension-row">
+                    <div class="dimension-header">
+                        <div class="dimension-label-row">
+                            <span class="dimension-label">Daily Rhythm</span>
+                            <span class="new-badge">NEW</span>
+                        </div>
+                        <span class="dimension-questions">4 questions</span>
+                    </div>
+                    <div class="pole-labels">
+                        <span class="pole-label">Night Owl</span>
+                        <span class="pole-label">Early Bird</span>
+                    </div>
+                    <div class="spectrum-track">
+                        <div class="marker marker-emma" style="left: 75%;">E</div>
+                        <div class="marker marker-james" style="left: 35%;">J</div>
+                    </div>
+                </div>
+
+                <!-- Decision & Action Group -->
+                <div class="group-header">Decision & Action</div>
+
+                <div class="dimension-row">
+                    <div class="dimension-header">
+                        <div class="dimension-label-row">
+                            <span class="dimension-label">Planning Style</span>
+                        </div>
+                        <span class="dimension-questions">10 questions</span>
+                    </div>
+                    <div class="pole-labels">
+                        <span class="pole-label">Spontaneous</span>
+                        <span class="pole-label">Structured</span>
+                    </div>
+                    <div class="spectrum-track">
+                        <div class="marker marker-emma" style="left: 68%;">E</div>
+                        <div class="marker marker-james" style="left: 45%;">J</div>
+                    </div>
+                </div>
+
+                <div class="dimension-row">
+                    <div class="dimension-header">
+                        <div class="dimension-label-row">
+                            <span class="dimension-label">Risk & Adventure</span>
+                            <span class="new-badge">NEW</span>
+                        </div>
+                        <span class="dimension-questions">8 questions</span>
+                    </div>
+                    <div class="pole-labels">
+                        <span class="pole-label">Play It Safe</span>
+                        <span class="pole-label">Thrill Seeker</span>
+                    </div>
+                    <div class="spectrum-track">
+                        <div class="marker marker-emma" style="left: 30%;">E</div>
+                        <div class="marker marker-james" style="left: 75%;">J</div>
+                    </div>
+                </div>
+
+                <div class="dimension-row">
+                    <div class="dimension-header">
+                        <div class="dimension-label-row">
+                            <span class="dimension-label">Novelty Preference</span>
+                            <span class="new-badge">NEW</span>
+                        </div>
+                        <span class="dimension-questions">12 questions</span>
+                    </div>
+                    <div class="pole-labels">
+                        <span class="pole-label">Comfort & Familiar</span>
+                        <span class="pole-label">New & Discovery</span>
+                    </div>
+                    <div class="spectrum-track">
+                        <div class="marker marker-emma" style="left: 58%;">E</div>
+                        <div class="marker marker-james" style="left: 65%;">J</div>
+                    </div>
+                </div>
+
+                <!-- Communication & Conflict Group -->
+                <div class="group-header">Communication & Conflict</div>
+
+                <div class="dimension-row">
+                    <div class="dimension-header">
+                        <div class="dimension-label-row">
+                            <span class="dimension-label">Stress Processing</span>
+                            <span class="similarity-badge similarity-similar">Similar</span>
+                        </div>
+                        <span class="dimension-questions">8 questions</span>
+                    </div>
+                    <div class="pole-labels">
+                        <span class="pole-label">Internal Processor</span>
+                        <span class="pole-label">External Processor</span>
+                    </div>
+                    <div class="spectrum-track">
+                        <div class="marker marker-emma" style="left: 35%;">E</div>
+                        <div class="marker marker-james" style="left: 42%;">J</div>
+                    </div>
+                </div>
+
+                <div class="dimension-row">
+                    <div class="dimension-header">
+                        <div class="dimension-label-row">
+                            <span class="dimension-label">Conflict Approach</span>
+                            <span class="similarity-badge similarity-different">Different</span>
+                        </div>
+                        <span class="dimension-questions">6 questions</span>
+                    </div>
+                    <div class="pole-labels">
+                        <span class="pole-label">Space First</span>
+                        <span class="pole-label">Talk It Out</span>
+                    </div>
+                    <div class="spectrum-track">
+                        <div class="marker marker-emma" style="left: 78%;">E</div>
+                        <div class="marker marker-james" style="left: 28%;">J</div>
+                    </div>
+                </div>
+
+                <div class="dimension-row">
+                    <div class="dimension-header">
+                        <div class="dimension-label-row">
+                            <span class="dimension-label">Support Style</span>
+                            <span class="new-badge">NEW</span>
+                            <span class="similarity-badge similarity-different">Different</span>
+                        </div>
+                        <span class="dimension-questions">6 questions</span>
+                    </div>
+                    <div class="pole-labels">
+                        <span class="pole-label">Listen First</span>
+                        <span class="pole-label">Give Solutions</span>
+                    </div>
+                    <div class="spectrum-track">
+                        <div class="marker marker-emma" style="left: 22%;">E</div>
+                        <div class="marker marker-james" style="left: 80%;">J</div>
+                    </div>
+                </div>
+
+                <div class="legend">
+                    <div class="legend-item">
+                        <div class="legend-dot legend-dot-emma"></div>
+                        <span>Emma</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-dot legend-dot-james"></div>
+                        <span>James</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- VARIANT 3: Progressive Reveal -->
+        <div id="variant-progressive" class="variant-section">
+            <div class="info-text">
+                <strong>Variant 3: Progressive Reveal</strong><br>
+                New dimensions shown in a separate "Recently Unlocked" section, moving to main list after a week. Creates excitement around new insights.
+            </div>
+
+            <div class="section-card" style="border: 2px solid var(--accent-purple); background: linear-gradient(135deg, #F8F5FF 0%, white 100%);">
+                <div class="section-title" style="color: var(--accent-purple);">
+                    <span style="font-size: 20px;">&#x2728;</span>
+                    Recently Unlocked
+                </div>
+
+                <div class="dimension-row">
+                    <div class="dimension-header">
+                        <div class="dimension-label-row">
+                            <span class="dimension-label">Support Style</span>
+                            <span class="similarity-badge similarity-different">Different</span>
+                        </div>
+                        <span class="dimension-questions">6 questions</span>
+                    </div>
+                    <div class="pole-labels">
+                        <span class="pole-label">Listen First</span>
+                        <span class="pole-label">Give Solutions</span>
+                    </div>
+                    <div class="spectrum-track">
+                        <div class="marker marker-emma" style="left: 22%;">E</div>
+                        <div class="marker marker-james" style="left: 80%;">J</div>
+                    </div>
+                    <div class="dimension-description">
+                        <span class="name-emma">Emma</span> wants to be heard first &bull;
+                        <span class="name-james">James</span> jumps to problem-solving
+                    </div>
+                </div>
+
+                <div class="dimension-row" style="margin-bottom: 0;">
+                    <div class="dimension-header">
+                        <div class="dimension-label-row">
+                            <span class="dimension-label">Daily Rhythm</span>
+                        </div>
+                        <span class="dimension-questions">4 questions</span>
+                    </div>
+                    <div class="pole-labels">
+                        <span class="pole-label">Night Owl</span>
+                        <span class="pole-label">Early Bird</span>
+                    </div>
+                    <div class="spectrum-track">
+                        <div class="marker marker-emma" style="left: 75%;">E</div>
+                        <div class="marker marker-james" style="left: 35%;">J</div>
+                    </div>
+                    <div class="dimension-description">
+                        <span class="name-emma">Emma</span> rises with the sun &bull;
+                        <span class="name-james">James</span> comes alive at night
+                    </div>
+                </div>
+            </div>
+
+            <div class="section-card">
+                <div class="section-title">
+                    How You Navigate
+                    <span class="section-badge">6 DIMENSIONS</span>
+                </div>
+
+                <div class="dimension-row">
+                    <div class="dimension-header">
+                        <div class="dimension-label-row">
+                            <span class="dimension-label">Social Energy</span>
+                            <span class="similarity-badge similarity-different">Different</span>
+                        </div>
+                        <span class="dimension-questions">12 questions</span>
+                    </div>
+                    <div class="pole-labels">
+                        <span class="pole-label">Recharge Alone</span>
+                        <span class="pole-label">Energized by People</span>
+                    </div>
+                    <div class="spectrum-track">
+                        <div class="marker marker-emma" style="left: 25%;">E</div>
+                        <div class="marker marker-james" style="left: 72%;">J</div>
+                    </div>
+                </div>
+
+                <div class="dimension-row">
+                    <div class="dimension-header">
+                        <div class="dimension-label-row">
+                            <span class="dimension-label">Stress Processing</span>
+                            <span class="similarity-badge similarity-similar">Similar</span>
+                        </div>
+                        <span class="dimension-questions">8 questions</span>
+                    </div>
+                    <div class="pole-labels">
+                        <span class="pole-label">Internal Processor</span>
+                        <span class="pole-label">External Processor</span>
+                    </div>
+                    <div class="spectrum-track">
+                        <div class="marker marker-emma" style="left: 35%;">E</div>
+                        <div class="marker marker-james" style="left: 42%;">J</div>
+                    </div>
+                </div>
+
+                <div class="dimension-row">
+                    <div class="dimension-header">
+                        <div class="dimension-label-row">
+                            <span class="dimension-label">Planning Style</span>
+                        </div>
+                        <span class="dimension-questions">10 questions</span>
+                    </div>
+                    <div class="pole-labels">
+                        <span class="pole-label">Spontaneous</span>
+                        <span class="pole-label">Structured</span>
+                    </div>
+                    <div class="spectrum-track">
+                        <div class="marker marker-emma" style="left: 68%;">E</div>
+                        <div class="marker marker-james" style="left: 45%;">J</div>
+                    </div>
+                </div>
+
+                <div class="dimension-row">
+                    <div class="dimension-header">
+                        <div class="dimension-label-row">
+                            <span class="dimension-label">Conflict Approach</span>
+                            <span class="similarity-badge similarity-different">Different</span>
+                        </div>
+                        <span class="dimension-questions">6 questions</span>
+                    </div>
+                    <div class="pole-labels">
+                        <span class="pole-label">Space First</span>
+                        <span class="pole-label">Talk It Out</span>
+                    </div>
+                    <div class="spectrum-track">
+                        <div class="marker marker-emma" style="left: 78%;">E</div>
+                        <div class="marker marker-james" style="left: 28%;">J</div>
+                    </div>
+                </div>
+
+                <div class="dimension-row">
+                    <div class="dimension-header">
+                        <div class="dimension-label-row">
+                            <span class="dimension-label">Risk & Adventure</span>
+                        </div>
+                        <span class="dimension-questions">8 questions</span>
+                    </div>
+                    <div class="pole-labels">
+                        <span class="pole-label">Play It Safe</span>
+                        <span class="pole-label">Thrill Seeker</span>
+                    </div>
+                    <div class="spectrum-track">
+                        <div class="marker marker-emma" style="left: 30%;">E</div>
+                        <div class="marker marker-james" style="left: 75%;">J</div>
+                    </div>
+                </div>
+
+                <div class="dimension-row" style="margin-bottom: 0;">
+                    <div class="dimension-header">
+                        <div class="dimension-label-row">
+                            <span class="dimension-label">Novelty Preference</span>
+                        </div>
+                        <span class="dimension-questions">12 questions</span>
+                    </div>
+                    <div class="pole-labels">
+                        <span class="pole-label">Comfort & Familiar</span>
+                        <span class="pole-label">New & Discovery</span>
+                    </div>
+                    <div class="spectrum-track">
+                        <div class="marker marker-emma" style="left: 58%;">E</div>
+                        <div class="marker marker-james" style="left: 65%;">J</div>
+                    </div>
+                </div>
+
+                <div class="legend">
+                    <div class="legend-item">
+                        <div class="legend-dot legend-dot-emma"></div>
+                        <span>Emma</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-dot legend-dot-james"></div>
+                        <span>James</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showVariant(variant) {
+            // Hide all variants
+            document.querySelectorAll('.variant-section').forEach(el => {
+                el.classList.remove('active');
+            });
+            // Show selected variant
+            document.getElementById('variant-' + variant).classList.add('active');
+
+            // Update button states
+            document.querySelectorAll('.variant-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+        }
+    </script>
+</body>
+</html>

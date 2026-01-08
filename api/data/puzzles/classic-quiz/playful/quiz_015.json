@@ -1,0 +1,109 @@
+{
+  "quizId": "quiz_015",
+  "title": "Morning & Night",
+  "branch": "playful",
+  "questions": [
+    {
+      "id": "quiz_015_q1",
+      "text": "I feel most awake and energized...",
+      "choices": [
+        "Early morning - I'm a natural early bird",
+        "Late morning once I've had time to wake up",
+        "Afternoon and evening - I peak later in the day",
+        "Late at night - I come alive after dark",
+        "Other / It depends"
+      ],
+      "category": "lifestyle",
+      "metadata": {
+        "dimension": "daily_rhythm",
+        "poleMapping": [
+          "right",
+          "right",
+          "left",
+          "left",
+          null
+        ]
+      }
+    },
+    {
+      "id": "quiz_015_q2",
+      "text": "On weekends, my ideal wake-up time would be...",
+      "choices": [
+        "Same as weekdays - I like consistency",
+        "A bit later, but still before 9am",
+        "Mid-morning - let's sleep in a little",
+        "As late as possible - weekends are for sleeping",
+        "Other / It depends"
+      ],
+      "category": "lifestyle",
+      "metadata": {
+        "dimension": "daily_rhythm",
+        "poleMapping": [
+          "right",
+          "right",
+          "left",
+          "left",
+          null
+        ]
+      }
+    },
+    {
+      "id": "quiz_015_q3",
+      "text": "For quality time together, I'd prefer...",
+      "choices": [
+        "Morning coffee or breakfast together",
+        "Daytime activities and adventures",
+        "Evening hangs after the day winds down",
+        "Late night talks when everything's quiet",
+        "Other / It depends"
+      ],
+      "category": "lifestyle",
+      "metadata": {
+        "dimension": "daily_rhythm",
+        "poleMapping": [
+          "right",
+          null,
+          null,
+          "left",
+          null
+        ]
+      }
+    },
+    {
+      "id": "quiz_015_q4",
+      "text": "When it comes to bedtime, I usually...",
+      "choices": [
+        "Get tired early and like being in bed by 10pm",
+        "Aim for a reasonable hour but it varies",
+        "Stay up later than I probably should",
+        "I'm a true night owl - midnight is just the beginning",
+        "Other / It depends"
+      ],
+      "category": "lifestyle",
+      "metadata": {
+        "dimension": "daily_rhythm",
+        "poleMapping": [
+          "right",
+          null,
+          "left",
+          "left",
+          null
+        ]
+      }
+    },
+    {
+      "id": "quiz_015_q5",
+      "text": "If we have different sleep schedules, I hope we...",
+      "choices": [
+        "Find a middle ground that works for both",
+        "Respect each other's rhythms without pressure to change",
+        "Have some overlap time but also our own routines",
+        "Slowly sync up over time",
+        "Other / It depends"
+      ],
+      "category": "communication"
+    }
+  ],
+  "description": "Discover if you're early birds, night owls, or something in between.",
+  "magnet_id": 4
+}

@@ -9,6 +9,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { withAuthOrDevBypass } from '@/lib/auth/dev-middleware';
 import { query, getClient } from '@/lib/db/pool';
 import { LP_REWARDS } from '@/lib/lp/config';
+import { recordActivityPlay } from '@/lib/magnets';
 
 export const dynamic = 'force-dynamic';
 
@@ -160,6 +161,9 @@ export const POST = withAuthOrDevBypass(async (req, userId, email) => {
            updated_at = NOW()`,
         [coupleId]
       );
+
+      // Record activity play for cooldown tracking (Magnet Collection System)
+      await recordActivityPlay(coupleId, 'you_or_me');
     }
 
     // Update session

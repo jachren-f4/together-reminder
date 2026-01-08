@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Worth Discussing v2 - List Based</title>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&family=Playfair+Display:ital,wght@0,500;0,600;1,500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-gradient-start: #FFD1C1;
+      --bg-gradient-end: #FFF5F0;
+      --emma-pink: #FF6B6B;
+      --accent-gold: #F4C55B;
+      --cream: #FFF9E6;
+      --peachy: #FFF5F0;
+      --text-dark: #2D2D2D;
+      --text-medium: #5A5A5A;
+      --text-light: #8A8A8A;
+      --high-stakes-bg: #FFF8F5;
+      --high-stakes-border: #FFB8A8;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Nunito', sans-serif;
+      background: linear-gradient(180deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
+      min-height: 100vh;
+      padding: 20px;
+      max-width: 420px;
+      margin: 0 auto;
+    }
+
+    .variant-label {
+      position: fixed;
+      top: 10px;
+      right: 10px;
+      background: rgba(0,0,0,0.7);
+      color: white;
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-size: 11px;
+      font-weight: 600;
+      z-index: 100;
+    }
+
+    /* Section Title */
+    .section-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 20px;
+      font-weight: 600;
+      color: var(--text-dark);
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .section-title .info-icon {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: rgba(0,0,0,0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      color: var(--text-medium);
+      cursor: pointer;
+    }
+
+    /* Main Card Container (matches existing design) */
+    .discoveries-container {
+      background: linear-gradient(135deg, var(--cream) 0%, var(--peachy) 100%);
+      border: 2px solid rgba(244, 197, 91, 0.3);
+      border-radius: 18px;
+      padding: 16px;
+    }
+
+    /* Filter Tabs */
+    .filter-tabs {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding-bottom: 12px;
+      margin-bottom: 12px;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .filter-tabs::-webkit-scrollbar {
+      display: none;
+    }
+
+    .filter-tab {
+      flex-shrink: 0;
+      height: 32px;
+      padding: 0 12px;
+      border-radius: 16px;
+      border: 1.5px solid #E8DFD0;
+      background: var(--cream);
+      font-family: 'Nunito', sans-serif;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-medium);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s ease;
+    }
+
+    .filter-tab:hover {
+      border-color: var(--emma-pink);
+    }
+
+    .filter-tab.active {
+      background: linear-gradient(135deg, var(--emma-pink), var(--accent-gold));
+      border-color: transparent;
+      color: white;
+    }
+
+    .filter-tab .count {
+      background: rgba(255,255,255,0.3);
+      padding: 2px 6px;
+      border-radius: 8px;
+      font-size: 10px;
+    }
+
+    .filter-tab.active .count {
+      background: rgba(255,255,255,0.3);
+    }
+
+    /* Discovery Card */
+    .discovery-card {
+      background: white;
+      border-radius: 14px;
+      padding: 14px;
+      margin-bottom: 12px;
+    }
+
+    .discovery-card:last-child {
+      margin-bottom: 0;
+    }
+
+    .discovery-card.high-stakes {
+      background: var(--high-stakes-bg);
+      border: 1.5px solid var(--high-stakes-border);
+    }
+
+    /* Big Topic Badge */
+    .big-topic-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      background: linear-gradient(135deg, var(--emma-pink), var(--accent-gold));
+      color: white;
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      padding: 4px 10px;
+      border-radius: 10px;
+      margin-bottom: 10px;
+    }
+
+    /* Timing Badge */
+    .timing-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: 10px;
+      font-size: 11px;
+      margin-bottom: 10px;
+    }
+
+    .timing-badge.dedicated {
+      background: #FCE4EC;
+      color: #C2185B;
+    }
+
+    .timing-badge.relaxed {
+      background: #F3E5F5;
+      color: #7B1FA2;
+    }
+
+    .timing-badge.quick {
+      background: #E8F5E9;
+      color: #388E3C;
+    }
+
+    .timing-badge .icon {
+      font-size: 12px;
+    }
+
+    .timing-badge .label {
+      font-weight: 600;
+    }
+
+    .timing-badge .hint {
+      font-weight: 400;
+      opacity: 0.8;
+    }
+
+    /* Partner Appreciation Alert */
+    .partner-appreciated-alert {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(255, 107, 107, 0.08);
+      border: 1px solid rgba(255, 107, 107, 0.2);
+      border-radius: 10px;
+      padding: 8px 12px;
+      margin-bottom: 10px;
+      font-size: 12px;
+      color: var(--emma-pink);
+    }
+
+    .partner-appreciated-alert .heart {
+      font-size: 14px;
+    }
+
+    /* Discovery Text */
+    .discovery-text {
+      font-size: 13px;
+      line-height: 1.5;
+      color: var(--text-dark);
+      margin-bottom: 12px;
+    }
+
+    .discovery-text .name {
+      font-weight: 700;
+      color: var(--emma-pink);
+    }
+
+    .discovery-text .separator {
+      color: var(--text-light);
+      margin: 0 4px;
+    }
+
+    /* Try This Action */
+    .try-this-box {
+      background: linear-gradient(135deg, rgba(255,107,107,0.1), rgba(244,197,91,0.1));
+      border-left: 4px solid var(--emma-pink);
+      border-radius: 0 12px 12px 0;
+      padding: 12px 14px;
+      margin-bottom: 12px;
+    }
+
+    .try-this-label {
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--emma-pink);
+      margin-bottom: 4px;
+    }
+
+    .try-this-text {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-dark);
+      line-height: 1.4;
+    }
+
+    /* Card Footer with Appreciate Button */
+    .card-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-top: 10px;
+      border-top: 1px solid rgba(0,0,0,0.06);
+    }
+
+    .appreciate-btn {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: none;
+      border: 1.5px solid rgba(255, 107, 107, 0.3);
+      border-radius: 20px;
+      padding: 6px 14px;
+      font-family: 'Nunito', sans-serif;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-medium);
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .appreciate-btn:hover {
+      border-color: var(--emma-pink);
+      color: var(--emma-pink);
+      background: rgba(255, 107, 107, 0.05);
+    }
+
+    .appreciate-btn.appreciated {
+      background: var(--emma-pink);
+      border-color: var(--emma-pink);
+      color: white;
+    }
+
+    .appreciate-btn .heart {
+      font-size: 14px;
+      transition: transform 0.2s ease;
+    }
+
+    .appreciate-btn:hover .heart {
+      transform: scale(1.15);
+    }
+
+    /* Mutual appreciation badge */
+    .mutual-badge {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 11px;
+      color: var(--emma-pink);
+      background: rgba(255, 107, 107, 0.08);
+      padding: 4px 10px;
+      border-radius: 12px;
+    }
+
+    /* Empty State */
+    .empty-state {
+      text-align: center;
+      padding: 20px;
+      font-size: 13px;
+      font-style: italic;
+      color: var(--text-light);
+    }
+
+    /* Demo Controls */
+    .demo-tabs {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+
+    .demo-tab {
+      padding: 8px 14px;
+      background: white;
+      border: 2px solid transparent;
+      border-radius: 20px;
+      font-family: 'Nunito', sans-serif;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .demo-tab:hover {
+      border-color: var(--emma-pink);
+    }
+
+    .demo-tab.active {
+      background: var(--emma-pink);
+      color: white;
+    }
+
+    .demo-section {
+      display: none;
+    }
+
+    .demo-section.active {
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <div class="variant-label">Worth Discussing v2 - List Based</div>
+
+  <div class="demo-tabs">
+    <button class="demo-tab active" onclick="showDemo('default')">Default View</button>
+    <button class="demo-tab" onclick="showDemo('partner')">Partner Appreciated</button>
+    <button class="demo-tab" onclick="showDemo('mutual')">Mutual Appreciation</button>
+  </div>
+
+  <!-- Demo 1: Default View -->
+  <div id="demo-default" class="demo-section active">
+    <h2 class="section-title">
+      Worth Discussing
+      <span class="info-icon">?</span>
+    </h2>
+
+    <div class="discoveries-container">
+      <!-- Filter Tabs -->
+      <div class="filter-tabs">
+        <button class="filter-tab active">All <span class="count">25</span></button>
+        <button class="filter-tab">Values <span class="count">8</span></button>
+        <button class="filter-tab">Future <span class="count">5</span></button>
+        <button class="filter-tab">Communication <span class="count">6</span></button>
+        <button class="filter-tab">Lifestyle <span class="count">4</span></button>
+        <button class="filter-tab">Daily Life <span class="count">2</span></button>
+      </div>
+
+      <!-- High Stakes Card -->
+      <div class="discovery-card high-stakes">
+        <div class="big-topic-badge">
+          <span>💎</span> Big Topic
+        </div>
+        <div class="timing-badge dedicated">
+          <span class="icon">📅</span>
+          <span class="label">20-30 min</span>
+          <span class="hint">· Plan a relaxed time</span>
+        </div>
+        <p class="discovery-text">
+          <span class="name">Bob</span> definitely wants kids in the next few years
+          <span class="separator">•</span>
+          <span class="name">Alice</span> is still figuring out if parenthood is for her
+        </p>
+        <div class="try-this-box">
+          <div class="try-this-label">Try This</div>
+          <div class="try-this-text">Find a calm moment to share what's behind your feelings without needing to decide anything</div>
+        </div>
+        <div class="card-footer">
+          <button class="appreciate-btn">
+            <span class="heart">♡</span>
+            Appreciate
+          </button>
+        </div>
+      </div>
+
+      <!-- High Stakes Card 2 -->
+      <div class="discovery-card high-stakes">
+        <div class="big-topic-badge">
+          <span>💎</span> Big Topic
+        </div>
+        <div class="timing-badge dedicated">
+          <span class="icon">📅</span>
+          <span class="label">20-30 min</span>
+          <span class="hint">· Plan a relaxed time</span>
+        </div>
+        <p class="discovery-text">
+          <span class="name">Bob</span> wants to cut back on everything equally when money is tight
+          <span class="separator">•</span>
+          <span class="name">Alice</span> prefers to prioritize what matters and cut the rest
+        </p>
+        <div class="card-footer">
+          <button class="appreciate-btn appreciated">
+            <span class="heart">♥</span>
+            Appreciated
+          </button>
+        </div>
+      </div>
+
+      <!-- Medium Stakes Card -->
+      <div class="discovery-card">
+        <div class="timing-badge relaxed">
+          <span class="icon">🌙</span>
+          <span class="label">Quiet moment</span>
+          <span class="hint">· Best for a calm evening</span>
+        </div>
+        <p class="discovery-text">
+          <span class="name">Bob</span> needs time alone to process after a disagreement
+          <span class="separator">•</span>
+          <span class="name">Alice</span> wants to talk it through immediately
+        </p>
+        <div class="try-this-box">
+          <div class="try-this-label">Try This</div>
+          <div class="try-this-text">Ask your partner how they want to be supported next time you disagree</div>
+        </div>
+        <div class="card-footer">
+          <button class="appreciate-btn">
+            <span class="heart">♡</span>
+            Appreciate
+          </button>
+        </div>
+      </div>
+
+      <!-- Light Stakes Card -->
+      <div class="discovery-card">
+        <div class="timing-badge quick">
+          <span class="icon">⚡</span>
+          <span class="label">Anytime</span>
+          <span class="hint">· 2-3 minutes is enough</span>
+        </div>
+        <p class="discovery-text">
+          <span class="name">Bob</span> prefers cooking at home most nights
+          <span class="separator">•</span>
+          <span class="name">Alice</span> likes to eat out or order in often
+        </p>
+        <div class="card-footer">
+          <button class="appreciate-btn">
+            <span class="heart">♡</span>
+            Appreciate
+          </button>
+        </div>
+      </div>
+
+      <!-- Another Light Card -->
+      <div class="discovery-card">
+        <div class="timing-badge quick">
+          <span class="icon">⚡</span>
+          <span class="label">Anytime</span>
+          <span class="hint">· 2-3 minutes is enough</span>
+        </div>
+        <p class="discovery-text">
+          <span class="name">Bob</span> prefers action and sci-fi movies
+          <span class="separator">•</span>
+          <span class="name">Alice</span> loves romantic comedies
+        </p>
+        <div class="card-footer">
+          <button class="appreciate-btn">
+            <span class="heart">♡</span>
+            Appreciate
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Demo 2: Partner Appreciated -->
+  <div id="demo-partner" class="demo-section">
+    <h2 class="section-title">
+      Worth Discussing
+      <span class="info-icon">?</span>
+    </h2>
+
+    <div class="discoveries-container">
+      <div class="filter-tabs">
+        <button class="filter-tab active">All <span class="count">25</span></button>
+        <button class="filter-tab">Values <span class="count">8</span></button>
+        <button class="filter-tab">Future <span class="count">5</span></button>
+      </div>
+
+      <!-- Card with Partner Appreciation -->
+      <div class="discovery-card high-stakes">
+        <div class="big-topic-badge">
+          <span>💎</span> Big Topic
+        </div>
+        <div class="partner-appreciated-alert">
+          <span class="heart">💗</span>
+          Alice appreciates this insight
+        </div>
+        <div class="timing-badge dedicated">
+          <span class="icon">📅</span>
+          <span class="label">20-30 min</span>
+          <span class="hint">· Plan a relaxed time</span>
+        </div>
+        <p class="discovery-text">
+          <span class="name">Bob</span> definitely wants kids in the next few years
+          <span class="separator">•</span>
+          <span class="name">Alice</span> is still figuring out if parenthood is for her
+        </p>
+        <div class="try-this-box">
+          <div class="try-this-label">Try This</div>
+          <div class="try-this-text">Find a calm moment to share what's behind your feelings without needing to decide anything</div>
+        </div>
+        <div class="card-footer">
+          <button class="appreciate-btn">
+            <span class="heart">♡</span>
+            Appreciate
+          </button>
+        </div>
+      </div>
+
+      <!-- Another partner appreciated -->
+      <div class="discovery-card">
+        <div class="partner-appreciated-alert">
+          <span class="heart">💗</span>
+          Alice appreciates this insight
+        </div>
+        <div class="timing-badge relaxed">
+          <span class="icon">🌙</span>
+          <span class="label">Quiet moment</span>
+          <span class="hint">· Best for a calm evening</span>
+        </div>
+        <p class="discovery-text">
+          <span class="name">Bob</span> needs time alone to process after a disagreement
+          <span class="separator">•</span>
+          <span class="name">Alice</span> wants to talk it through immediately
+        </p>
+        <div class="card-footer">
+          <button class="appreciate-btn">
+            <span class="heart">♡</span>
+            Appreciate
+          </button>
+        </div>
+      </div>
+
+      <!-- Regular card for comparison -->
+      <div class="discovery-card">
+        <div class="timing-badge quick">
+          <span class="icon">⚡</span>
+          <span class="label">Anytime</span>
+          <span class="hint">· 2-3 minutes is enough</span>
+        </div>
+        <p class="discovery-text">
+          <span class="name">Bob</span> prefers cooking at home most nights
+          <span class="separator">•</span>
+          <span class="name">Alice</span> likes to eat out or order in often
+        </p>
+        <div class="card-footer">
+          <button class="appreciate-btn">
+            <span class="heart">♡</span>
+            Appreciate
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Demo 3: Mutual Appreciation -->
+  <div id="demo-mutual" class="demo-section">
+    <h2 class="section-title">
+      Worth Discussing
+      <span class="info-icon">?</span>
+    </h2>
+
+    <div class="discoveries-container">
+      <div class="filter-tabs">
+        <button class="filter-tab active">All <span class="count">25</span></button>
+        <button class="filter-tab">Values <span class="count">8</span></button>
+        <button class="filter-tab">Future <span class="count">5</span></button>
+      </div>
+
+      <!-- Mutual Appreciation Card -->
+      <div class="discovery-card high-stakes">
+        <div class="big-topic-badge">
+          <span>💎</span> Big Topic
+        </div>
+        <div class="timing-badge dedicated">
+          <span class="icon">📅</span>
+          <span class="label">20-30 min</span>
+          <span class="hint">· Plan a relaxed time</span>
+        </div>
+        <p class="discovery-text">
+          <span class="name">Bob</span> definitely wants kids in the next few years
+          <span class="separator">•</span>
+          <span class="name">Alice</span> is still figuring out if parenthood is for her
+        </p>
+        <div class="card-footer">
+          <span class="mutual-badge">
+            <span>💗</span>
+            You both appreciate this
+          </span>
+        </div>
+      </div>
+
+      <!-- User appreciated, partner hasn't -->
+      <div class="discovery-card high-stakes">
+        <div class="big-topic-badge">
+          <span>💎</span> Big Topic
+        </div>
+        <div class="timing-badge dedicated">
+          <span class="icon">📅</span>
+          <span class="label">20-30 min</span>
+          <span class="hint">· Plan a relaxed time</span>
+        </div>
+        <p class="discovery-text">
+          <span class="name">Bob</span> wants to cut back on everything equally when money is tight
+          <span class="separator">•</span>
+          <span class="name">Alice</span> prefers to prioritize what matters and cut the rest
+        </p>
+        <div class="card-footer">
+          <button class="appreciate-btn appreciated">
+            <span class="heart">♥</span>
+            Appreciated
+          </button>
+        </div>
+      </div>
+
+      <!-- Neither appreciated -->
+      <div class="discovery-card">
+        <div class="timing-badge relaxed">
+          <span class="icon">🌙</span>
+          <span class="label">Quiet moment</span>
+          <span class="hint">· Best for a calm evening</span>
+        </div>
+        <p class="discovery-text">
+          <span class="name">Bob</span> needs time alone to process after a disagreement
+          <span class="separator">•</span>
+          <span class="name">Alice</span> wants to talk it through immediately
+        </p>
+        <div class="card-footer">
+          <button class="appreciate-btn">
+            <span class="heart">♡</span>
+            Appreciate
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function showDemo(demoId) {
+      document.querySelectorAll('.demo-section').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.demo-tab').forEach(el => el.classList.remove('active'));
+      document.getElementById('demo-' + demoId).classList.add('active');
+      event.target.classList.add('active');
+    }
+
+    // Filter tab interaction
+    document.querySelectorAll('.filter-tab').forEach(tab => {
+      tab.addEventListener('click', function() {
+        this.parentElement.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+        this.classList.add('active');
+      });
+    });
+
+    // Appreciate button interaction
+    document.querySelectorAll('.appreciate-btn').forEach(btn => {
+      btn.addEventListener('click', function() {
+        this.classList.toggle('appreciated');
+        const heart = this.querySelector('.heart');
+        const isAppreciated = this.classList.contains('appreciated');
+        heart.innerHTML = isAppreciated ? '♥' : '♡';
+        this.childNodes[2].textContent = isAppreciated ? ' Appreciated' : ' Appreciate';
+      });
+    });
+  </script>
+</body>
+</html>

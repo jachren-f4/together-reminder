@@ -1,0 +1,1116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Magnet Collection - Us 2.0 Style</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Nunito:wght@400;600;700&family=Pacifico&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Nunito', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: linear-gradient(180deg, #FFD1C1 0%, #FFF5F0 100%);
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    :root {
+      --bg-gradient-start: #FFD1C1;
+      --bg-gradient-end: #FFF5F0;
+      --primary-pink: #FF5E62;
+      --accent-start: #FF6B6B;
+      --accent-end: #FF9F43;
+      --card-salmon: #FF7B6B;
+      --card-salmon-dark: #FF6B5B;
+      --cream: #FFF8F0;
+      --beige: #F5E6D8;
+      --text-dark: #3A3A3A;
+      --text-medium: #5A5A5A;
+      --text-light: #707070;
+      --gold-light: #F5E6D0;
+      --gold-mid: #E8D5B8;
+      --gold-dark: #D4B896;
+      --gold-border: #C9A875;
+      --gold-fill-start: #FFE066;
+      --gold-fill-end: #FFB347;
+    }
+
+    .mockup-container {
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 10px;
+      color: var(--text-dark);
+      font-family: 'Playfair Display', serif;
+      font-weight: 700;
+    }
+
+    .subtitle {
+      text-align: center;
+      color: var(--text-medium);
+      margin-bottom: 40px;
+    }
+
+    .variant-section {
+      margin-bottom: 60px;
+    }
+
+    .variant-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.4rem;
+      font-style: italic;
+      color: var(--card-salmon);
+      margin-bottom: 20px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid var(--beige);
+    }
+
+    /* Phone Frame */
+    .phone-frame {
+      width: 375px;
+      height: 780px;
+      background: linear-gradient(180deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
+      border-radius: 40px;
+      padding: 20px;
+      margin: 0 auto;
+      box-shadow: 0 20px 60px rgba(255, 94, 98, 0.2), 0 10px 30px rgba(0,0,0,0.1);
+      overflow: hidden;
+      position: relative;
+      border: 3px solid var(--cream);
+    }
+
+    .status-bar {
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      color: var(--text-medium);
+      margin-bottom: 15px;
+      font-weight: 600;
+    }
+
+    /* Header */
+    .header {
+      display: flex;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .back-btn {
+      width: 40px;
+      height: 40px;
+      background: var(--cream);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      margin-right: 15px;
+      color: var(--primary-pink);
+      box-shadow: 0 2px 8px rgba(255, 94, 98, 0.15);
+      cursor: pointer;
+    }
+
+    .header-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.5rem;
+      font-weight: 700;
+      font-style: italic;
+      color: var(--text-dark);
+    }
+
+    .header-count {
+      margin-left: auto;
+      background: linear-gradient(135deg, var(--accent-start) 0%, var(--accent-end) 100%);
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: white;
+      box-shadow: 0 4px 12px rgba(255, 107, 107, 0.3);
+    }
+
+    /* Progress Section */
+    .progress-section {
+      background: var(--cream);
+      border-radius: 20px;
+      padding: 16px;
+      margin-bottom: 20px;
+      box-shadow: 0 4px 16px rgba(255, 94, 98, 0.1);
+      border: 2px solid var(--beige);
+    }
+
+    .progress-header {
+      display: flex;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .next-magnet-preview {
+      width: 56px;
+      height: 56px;
+      border-radius: 10px;
+      margin-right: 14px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      overflow: hidden;
+      border: 2px solid var(--gold-border);
+    }
+
+    .next-magnet-preview img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .next-magnet-info {
+      flex: 1;
+    }
+
+    .next-label {
+      font-size: 0.7rem;
+      color: var(--text-light);
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      font-weight: 700;
+    }
+
+    .next-name {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--text-dark);
+    }
+
+    .lp-needed {
+      font-size: 0.85rem;
+      color: var(--primary-pink);
+      font-weight: 600;
+    }
+
+    .progress-bar-container {
+      height: 10px;
+      background: var(--beige);
+      border-radius: 5px;
+      overflow: hidden;
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--accent-start) 0%, var(--accent-end) 100%);
+      border-radius: 5px;
+    }
+
+    /* Magnet Grid - Polaroid Style */
+    .magnet-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+
+    .magnet-item {
+      aspect-ratio: 1;
+      background: white;
+      padding: 6px;
+      padding-bottom: 24px;
+      border-radius: 4px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+      overflow: hidden;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+      position: relative;
+    }
+
+    .magnet-item:hover {
+      transform: scale(1.03);
+    }
+
+    .magnet-item.collected:hover {
+      box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+    }
+
+    .magnet-item img {
+      width: 100%;
+      height: calc(100% - 18px);
+      object-fit: cover;
+      border-radius: 2px;
+    }
+
+    /* Locked state */
+    .magnet-item.locked {
+      background: #e8e0d8;
+    }
+
+    .magnet-item.locked img {
+      filter: grayscale(100%) brightness(0.7);
+      opacity: 0.4;
+    }
+
+    .lock-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0,0,0,0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .lock-icon {
+      font-size: 24px;
+      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+    }
+
+    /* Current/Next - golden highlight */
+    .magnet-item.current {
+      border: 3px solid var(--gold-border);
+      box-shadow: 0 4px 20px rgba(201, 168, 117, 0.5);
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { box-shadow: 0 4px 20px rgba(201, 168, 117, 0.5); }
+      50% { box-shadow: 0 4px 30px rgba(201, 168, 117, 0.7), 0 0 0 4px rgba(201, 168, 117, 0.2); }
+    }
+
+    /* ============================================ */
+    /* Entry Points Section                        */
+    /* ============================================ */
+    .entry-points-section {
+      margin-top: 60px;
+      padding-top: 40px;
+      border-top: 2px solid var(--beige);
+    }
+
+    .entry-points-row {
+      display: flex;
+      gap: 60px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .entry-point-demo {
+      text-align: center;
+    }
+
+    .entry-point-label {
+      margin-bottom: 15px;
+      color: var(--text-medium);
+      font-size: 0.9rem;
+      font-weight: 600;
+    }
+
+    /* ============================================ */
+    /* Connection Bar - Matching Flutter Style     */
+    /* ============================================ */
+    .connection-bar-flutter {
+      width: 340px;
+      background: linear-gradient(135deg, var(--accent-start) 0%, var(--accent-end) 100%);
+      border-radius: 20px 20px 0 0;
+      padding: 12px 16px 20px 16px;
+      box-shadow: 0 8px 32px rgba(255, 107, 107, 0.3);
+    }
+
+    .connection-bar-flutter-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .connection-bar-flutter-label {
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      color: white;
+    }
+
+    .connection-bar-flutter-lp {
+      font-size: 18px;
+      font-weight: 700;
+      color: white;
+    }
+
+    .connection-bar-flutter-track {
+      position: relative;
+      height: 70px;
+    }
+
+    /* Tier endpoint magnets (no labels) */
+    .tier-magnet {
+      width: 36px;
+      height: 36px;
+      border-radius: 6px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+      border: 2px solid rgba(255,255,255,0.5);
+    }
+
+    .tier-magnet img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    /* Next magnet is NOT grayed out - user should see it clearly */
+
+    .tier-magnet-left {
+      position: absolute;
+      left: 0;
+      top: 0;
+    }
+
+    .tier-magnet-right {
+      position: absolute;
+      right: 0;
+      top: 0;
+    }
+
+    /* Progress track */
+    .flutter-track-bg {
+      position: absolute;
+      left: 44px;
+      right: 44px;
+      top: 13px;
+      height: 10px;
+      background: rgba(0,0,0,0.2);
+      border-radius: 5px;
+    }
+
+    .flutter-track-fill {
+      position: absolute;
+      left: 44px;
+      top: 13px;
+      height: 10px;
+      width: calc((100% - 88px) * 0.65);
+      background: linear-gradient(90deg, var(--gold-fill-start) 0%, var(--gold-fill-end) 100%);
+      border-radius: 5px;
+      box-shadow: 0 0 10px rgba(255, 224, 102, 0.6);
+    }
+
+    /* Heart indicator */
+    .flutter-heart {
+      position: absolute;
+      left: calc(44px + (100% - 88px) * 0.65 - 22px);
+      top: -4px;
+      width: 44px;
+      height: 44px;
+      background: linear-gradient(135deg, var(--accent-start) 0%, var(--accent-end) 100%);
+      border-radius: 50%;
+      border: 3px solid white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 15px rgba(255, 107, 107, 0.5);
+      font-size: 20px;
+    }
+
+    /* Sparkles */
+    .sparkle {
+      position: absolute;
+      font-size: 14px;
+      animation: sparkle 1.5s ease-in-out infinite;
+    }
+
+    .sparkle-1 { left: calc(44px + (100% - 88px) * 0.65 - 30px); top: -12px; animation-delay: 0s; }
+    .sparkle-2 { left: calc(44px + (100% - 88px) * 0.65 + 8px); top: -8px; animation-delay: 0.5s; }
+    .sparkle-3 { left: calc(44px + (100% - 88px) * 0.65 + 12px); top: 22px; animation-delay: 1s; }
+
+    @keyframes sparkle {
+      0%, 100% { opacity: 0.3; transform: scale(0.8); }
+      50% { opacity: 1; transform: scale(1.2); }
+    }
+
+    /* ============================================ */
+    /* Profile Section - Shows last 6 badges       */
+    /* ============================================ */
+    .profile-section-demo {
+      width: 340px;
+      background: var(--cream);
+      border-radius: 20px;
+      padding: 20px;
+      box-shadow: 0 8px 32px rgba(255, 94, 98, 0.1);
+      border: 2px solid var(--beige);
+    }
+
+    .profile-section-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1rem;
+      font-style: italic;
+      color: var(--text-dark);
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .view-all-btn {
+      font-family: 'Nunito', sans-serif;
+      font-size: 0.8rem;
+      font-style: normal;
+      color: var(--primary-pink);
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    .profile-magnets-row {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+
+    .profile-magnet {
+      width: 48px;
+      height: 48px;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+    }
+
+    .profile-magnet img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .profile-magnet.locked {
+      background: var(--beige);
+      border: 2px dashed var(--gold-mid);
+    }
+
+    .profile-magnet.locked img {
+      filter: grayscale(100%);
+      opacity: 0.4;
+    }
+
+    .profile-magnet.next {
+      border: 2px solid var(--gold-border);
+      box-shadow: 0 2px 12px rgba(201, 168, 117, 0.3);
+    }
+
+    .profile-next-info {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px;
+      background: linear-gradient(135deg, rgba(255,107,107,0.1) 0%, rgba(255,159,67,0.1) 100%);
+      border-radius: 14px;
+      cursor: pointer;
+      border: 2px solid var(--beige);
+    }
+
+    .profile-next-img {
+      width: 40px;
+      height: 40px;
+      border-radius: 8px;
+      object-fit: cover;
+    }
+
+    .profile-next-text {
+      flex: 1;
+    }
+
+    .profile-next-label {
+      font-size: 0.7rem;
+      color: var(--text-light);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-weight: 600;
+    }
+
+    .profile-next-name {
+      font-family: 'Playfair Display', serif;
+      font-weight: 700;
+      color: var(--text-dark);
+    }
+
+    .profile-next-arrow {
+      color: var(--primary-pink);
+      font-size: 1.2rem;
+    }
+
+    /* ============================================ */
+    /* Celebration Section - CSS Confetti          */
+    /* ============================================ */
+    .celebration-section {
+      margin-top: 60px;
+      padding-top: 40px;
+      border-top: 2px solid var(--beige);
+    }
+
+    .celebration-frame {
+      width: 375px;
+      height: 600px;
+      background: linear-gradient(180deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
+      border-radius: 40px;
+      padding: 40px 20px;
+      margin: 0 auto;
+      box-shadow: 0 20px 60px rgba(255, 94, 98, 0.2), 0 10px 30px rgba(0,0,0,0.1);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      border: 3px solid var(--cream);
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* CSS Confetti SHOWER Animation - falls from top, plays once on load */
+    .confetti-container {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      pointer-events: none;
+      overflow: hidden;
+      z-index: 10; /* In front of magnet */
+    }
+
+    .confetti {
+      position: absolute;
+      top: -20px;
+      width: 12px;
+      height: 12px;
+      opacity: 0;
+      animation: confetti-fall 2.5s ease-out forwards;
+    }
+
+    /* Massive shower from top - varied positions, sizes, delays */
+    .confetti:nth-child(1) { left: 5%; background: #FF6B6B; animation-delay: 0s; border-radius: 50%; width: 10px; height: 10px; }
+    .confetti:nth-child(2) { left: 12%; background: #FFE066; animation-delay: 0.1s; border-radius: 2px; width: 14px; height: 14px; }
+    .confetti:nth-child(3) { left: 18%; background: #FF9F43; animation-delay: 0.05s; border-radius: 50%; width: 8px; height: 8px; }
+    .confetti:nth-child(4) { left: 25%; background: #FF6B6B; animation-delay: 0.15s; border-radius: 2px; width: 12px; height: 12px; }
+    .confetti:nth-child(5) { left: 32%; background: #FFB347; animation-delay: 0s; border-radius: 50%; width: 10px; height: 10px; }
+    .confetti:nth-child(6) { left: 38%; background: #FFE066; animation-delay: 0.2s; border-radius: 2px; width: 9px; height: 9px; }
+    .confetti:nth-child(7) { left: 45%; background: #FF9F43; animation-delay: 0.08s; border-radius: 50%; width: 14px; height: 14px; }
+    .confetti:nth-child(8) { left: 52%; background: #FF6B6B; animation-delay: 0.12s; border-radius: 2px; width: 11px; height: 11px; }
+    .confetti:nth-child(9) { left: 58%; background: #FFE066; animation-delay: 0.03s; border-radius: 50%; width: 8px; height: 8px; }
+    .confetti:nth-child(10) { left: 65%; background: #FFB347; animation-delay: 0.18s; width: 13px; height: 13px; border-radius: 2px; }
+    .confetti:nth-child(11) { left: 72%; background: #FF6B6B; animation-delay: 0.06s; width: 10px; height: 10px; border-radius: 50%; }
+    .confetti:nth-child(12) { left: 78%; background: #FFE066; animation-delay: 0.14s; width: 12px; height: 12px; border-radius: 2px; }
+    .confetti:nth-child(13) { left: 85%; background: #FF9F43; animation-delay: 0.02s; width: 9px; height: 9px; border-radius: 50%; }
+    .confetti:nth-child(14) { left: 92%; background: #FFB347; animation-delay: 0.1s; width: 11px; height: 11px; border-radius: 2px; }
+    .confetti:nth-child(15) { left: 8%; background: #FF6B6B; animation-delay: 0.22s; width: 7px; height: 7px; border-radius: 50%; }
+    .confetti:nth-child(16) { left: 22%; background: #FFE066; animation-delay: 0.16s; width: 13px; height: 13px; border-radius: 2px; }
+    .confetti:nth-child(17) { left: 35%; background: #FF9F43; animation-delay: 0.25s; width: 10px; height: 10px; border-radius: 50%; }
+    .confetti:nth-child(18) { left: 48%; background: #FFB347; animation-delay: 0.08s; width: 8px; height: 8px; border-radius: 2px; }
+    .confetti:nth-child(19) { left: 62%; background: #FF6B6B; animation-delay: 0.2s; width: 12px; height: 12px; border-radius: 50%; }
+    .confetti:nth-child(20) { left: 75%; background: #FFE066; animation-delay: 0.12s; width: 9px; height: 9px; border-radius: 2px; }
+    .confetti:nth-child(21) { left: 88%; background: #FF9F43; animation-delay: 0.04s; width: 11px; height: 11px; border-radius: 50%; }
+    .confetti:nth-child(22) { left: 15%; background: #FFB347; animation-delay: 0.18s; width: 14px; height: 14px; border-radius: 2px; }
+    .confetti:nth-child(23) { left: 28%; background: #FF6B6B; animation-delay: 0.1s; width: 8px; height: 8px; border-radius: 50%; }
+    .confetti:nth-child(24) { left: 42%; background: #FFE066; animation-delay: 0.24s; width: 10px; height: 10px; border-radius: 2px; }
+    .confetti:nth-child(25) { left: 55%; background: #FF9F43; animation-delay: 0.06s; width: 13px; height: 13px; border-radius: 50%; }
+    .confetti:nth-child(26) { left: 68%; background: #FFB347; animation-delay: 0.15s; width: 9px; height: 9px; border-radius: 2px; }
+    .confetti:nth-child(27) { left: 82%; background: #FF6B6B; animation-delay: 0.02s; width: 11px; height: 11px; border-radius: 50%; }
+    .confetti:nth-child(28) { left: 95%; background: #FFE066; animation-delay: 0.2s; width: 7px; height: 7px; border-radius: 2px; }
+    .confetti:nth-child(29) { left: 3%; background: #FF9F43; animation-delay: 0.12s; width: 12px; height: 12px; border-radius: 50%; }
+    .confetti:nth-child(30) { left: 50%; background: #FFB347; animation-delay: 0.08s; width: 15px; height: 15px; border-radius: 2px; }
+
+    @keyframes confetti-fall {
+      0% {
+        transform: translateY(0) rotate(0deg);
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(650px) rotate(720deg);
+        opacity: 0;
+      }
+    }
+
+    /* Replay button for demo purposes */
+    .replay-confetti {
+      position: absolute;
+      bottom: 20px;
+      right: 20px;
+      background: var(--primary-pink);
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      z-index: 20;
+    }
+
+    .celebration-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.3rem;
+      font-weight: 700;
+      font-style: italic;
+      margin-bottom: 20px;
+      margin-top: 20px;
+      color: var(--text-dark);
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Less rounded magnet image */
+    .celebration-magnet {
+      width: 180px;
+      height: 180px;
+      border-radius: 8px; /* Half the previous 16px */
+      overflow: hidden;
+      margin: 20px 0;
+      box-shadow: 0 12px 40px rgba(0,0,0,0.2);
+      animation: celebrate 0.5s ease-out;
+      border: 4px solid var(--cream);
+      position: relative;
+      z-index: 1;
+    }
+
+    .celebration-magnet img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    @keyframes celebrate {
+      0% { transform: scale(0) rotate(-10deg); }
+      50% { transform: scale(1.05) rotate(3deg); }
+      100% { transform: scale(1) rotate(0); }
+    }
+
+    .celebration-tagline {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      color: var(--text-medium);
+      margin-bottom: 25px;
+      font-size: 1.1rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Single stat - 18 New Quizzes Unlocked */
+    .celebration-stats {
+      display: flex;
+      gap: 40px;
+      margin-bottom: 30px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .celebration-stat {
+      text-align: center;
+    }
+
+    .celebration-stat-value {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--primary-pink);
+    }
+
+    .celebration-stat-label {
+      font-size: 0.75rem;
+      color: var(--text-light);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .celebration-btn {
+      background: linear-gradient(180deg, white 0%, var(--cream) 100%);
+      border: none;
+      color: var(--primary-pink);
+      padding: 16px 48px;
+      border-radius: 30px;
+      font-family: 'Nunito', sans-serif;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 6px 20px rgba(255, 94, 98, 0.3);
+      transition: transform 0.2s, box-shadow 0.2s;
+      position: relative;
+      z-index: 1;
+    }
+
+    .celebration-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 28px rgba(255, 94, 98, 0.4);
+    }
+
+    /* Reference Section */
+    .reference-section {
+      margin-bottom: 60px;
+    }
+
+    .reference-images {
+      display: flex;
+      gap: 20px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
+
+    .reference-image {
+      width: 150px;
+      height: 150px;
+      border-radius: 12px;
+      object-fit: cover;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+    }
+
+    /* Design Notes */
+    .design-notes {
+      margin-top: 40px;
+      padding: 20px;
+      background: var(--cream);
+      border-radius: 16px;
+      border-left: 4px solid var(--primary-pink);
+    }
+
+    .design-notes h3 {
+      font-family: 'Playfair Display', serif;
+      color: var(--primary-pink);
+      margin-bottom: 12px;
+      font-style: italic;
+    }
+
+    .design-notes ul {
+      margin-left: 20px;
+      color: var(--text-medium);
+    }
+
+    .design-notes li {
+      margin-bottom: 8px;
+    }
+
+    .design-notes strong {
+      color: var(--text-dark);
+    }
+  </style>
+</head>
+<body>
+  <div class="mockup-container">
+    <h1>Magnet Collection</h1>
+    <p class="subtitle">Us 2.0 Brand Style - Polaroid Grid</p>
+
+    <!-- Reference Images -->
+    <div class="reference-section">
+      <h2 class="variant-title">Available Magnet Assets</h2>
+      <div class="reference-images">
+        <img src="austin.jpg" alt="Austin" class="reference-image">
+        <img src="miami.jpg" alt="Miami" class="reference-image">
+        <img src="chicago.jpg" alt="Chicago" class="reference-image">
+        <img src="barcelona.jpg" alt="Barcelona" class="reference-image">
+      </div>
+      <p style="text-align: center; color: var(--text-medium);">
+        Flat illustrated travel posters with destination names built in
+      </p>
+    </div>
+
+    <!-- Collection View -->
+    <div class="variant-section">
+      <h2 class="variant-title">Collection View</h2>
+
+      <div class="phone-frame">
+        <div class="status-bar">
+          <span>9:41</span>
+          <span>100%</span>
+        </div>
+
+        <div class="header">
+          <div class="back-btn">←</div>
+          <div class="header-title">Our Collection</div>
+          <div class="header-count">4/30</div>
+        </div>
+
+        <div class="progress-section">
+          <div class="progress-header">
+            <div class="next-magnet-preview">
+              <img src="barcelona.jpg" alt="Barcelona">
+            </div>
+            <div class="next-magnet-info">
+              <div class="next-label">Next Destination</div>
+              <div class="next-name">Barcelona</div>
+              <div class="lp-needed">520 / 800 LP</div>
+            </div>
+          </div>
+          <div class="progress-bar-container">
+            <div class="progress-bar-fill" style="width: 65%"></div>
+          </div>
+        </div>
+
+        <div class="magnet-grid">
+          <div class="magnet-item collected">
+            <img src="austin.jpg" alt="Austin">
+          </div>
+          <div class="magnet-item collected">
+            <img src="miami.jpg" alt="Miami">
+          </div>
+          <div class="magnet-item collected">
+            <img src="chicago.jpg" alt="Chicago">
+          </div>
+          <div class="magnet-item current">
+            <img src="barcelona.jpg" alt="Barcelona">
+          </div>
+          <div class="magnet-item locked">
+            <img src="austin.jpg" alt="Locked">
+            <div class="lock-overlay">
+              <span class="lock-icon">🔒</span>
+            </div>
+          </div>
+          <div class="magnet-item locked">
+            <img src="miami.jpg" alt="Locked">
+            <div class="lock-overlay">
+              <span class="lock-icon">🔒</span>
+            </div>
+          </div>
+          <div class="magnet-item locked">
+            <img src="chicago.jpg" alt="Locked">
+            <div class="lock-overlay">
+              <span class="lock-icon">🔒</span>
+            </div>
+          </div>
+          <div class="magnet-item locked">
+            <img src="barcelona.jpg" alt="Locked">
+            <div class="lock-overlay">
+              <span class="lock-icon">🔒</span>
+            </div>
+          </div>
+          <div class="magnet-item locked">
+            <img src="austin.jpg" alt="Locked">
+            <div class="lock-overlay">
+              <span class="lock-icon">🔒</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Entry Points -->
+    <div class="entry-points-section">
+      <h2 class="variant-title">Entry Points to Collection View</h2>
+
+      <div class="entry-points-row">
+        <!-- Connection Bar - Flutter Style with Magnets -->
+        <div class="entry-point-demo">
+          <div class="entry-point-label">Connection Bar (Mid-Progress)</div>
+          <div class="connection-bar-flutter">
+            <div class="connection-bar-flutter-header">
+              <span class="connection-bar-flutter-label">CONNECTION BAR</span>
+              <span class="connection-bar-flutter-lp">2,460/2,800</span>
+            </div>
+            <div class="connection-bar-flutter-track">
+              <!-- Left tier magnet (current) -->
+              <div class="tier-magnet-left">
+                <div class="tier-magnet">
+                  <img src="chicago.jpg" alt="Chicago">
+                </div>
+              </div>
+              <!-- Right tier magnet (next) - NOT grayed out -->
+              <div class="tier-magnet-right">
+                <div class="tier-magnet">
+                  <img src="barcelona.jpg" alt="Barcelona">
+                </div>
+              </div>
+              <!-- Track -->
+              <div class="flutter-track-bg"></div>
+              <div class="flutter-track-fill"></div>
+              <!-- Heart with sparkles -->
+              <div class="flutter-heart">💗</div>
+              <span class="sparkle sparkle-1">✨</span>
+              <span class="sparkle sparkle-2">✨</span>
+              <span class="sparkle sparkle-3">✨</span>
+            </div>
+          </div>
+          <div class="design-notes" style="width: 340px; margin-top: 15px;">
+            <p style="color: var(--text-medium); font-size: 0.85rem;">Both magnets fully visible. Tap anywhere → Opens Collection View</p>
+          </div>
+        </div>
+
+        <!-- Connection Bar - NEW USER (no previous magnet) -->
+        <div class="entry-point-demo">
+          <div class="entry-point-label">Connection Bar (New User)</div>
+          <div class="connection-bar-flutter">
+            <div class="connection-bar-flutter-header">
+              <span class="connection-bar-flutter-label">CONNECTION BAR</span>
+              <span class="connection-bar-flutter-lp">0/600</span>
+            </div>
+            <div class="connection-bar-flutter-track" style="height: 50px;">
+              <!-- NO left magnet for new users -->
+              <!-- Right tier magnet (first destination) -->
+              <div class="tier-magnet-right">
+                <div class="tier-magnet">
+                  <img src="austin.jpg" alt="Austin">
+                </div>
+              </div>
+              <!-- Track - starts from left edge -->
+              <div class="flutter-track-bg" style="left: 8px;"></div>
+              <div class="flutter-track-fill" style="left: 8px; width: 0%;"></div>
+              <!-- Heart at far left -->
+              <div class="flutter-heart" style="left: -14px; top: -4px;">💗</div>
+              <span class="sparkle" style="left: -22px; top: -12px; animation: sparkle 1.5s ease-in-out infinite;">✨</span>
+              <span class="sparkle" style="left: 16px; top: -8px; animation: sparkle 1.5s ease-in-out infinite 0.5s;">✨</span>
+              <span class="sparkle" style="left: 20px; top: 22px; animation: sparkle 1.5s ease-in-out infinite 1s;">✨</span>
+            </div>
+          </div>
+          <div class="design-notes" style="width: 340px; margin-top: 15px;">
+            <p style="color: var(--text-medium); font-size: 0.85rem;">No left magnet yet. Heart starts at far left. First destination clearly visible.</p>
+          </div>
+        </div>
+
+        <!-- Profile Section - Shows 6 badges -->
+        <div class="entry-point-demo">
+          <div class="entry-point-label">Profile Screen Section</div>
+          <div class="profile-section-demo">
+            <div class="profile-section-title">
+              <span>My Collection</span>
+              <span class="view-all-btn">View All →</span>
+            </div>
+            <!-- Shows last 6: 3 collected + 1 current + 2 grayed out -->
+            <div class="profile-magnets-row">
+              <div class="profile-magnet">
+                <img src="austin.jpg" alt="Austin">
+              </div>
+              <div class="profile-magnet">
+                <img src="miami.jpg" alt="Miami">
+              </div>
+              <div class="profile-magnet">
+                <img src="chicago.jpg" alt="Chicago">
+              </div>
+              <div class="profile-magnet next">
+                <img src="barcelona.jpg" alt="Barcelona">
+              </div>
+              <div class="profile-magnet locked">
+                <img src="austin.jpg" alt="Locked">
+              </div>
+              <div class="profile-magnet locked">
+                <img src="miami.jpg" alt="Locked">
+              </div>
+            </div>
+            <div class="profile-next-info">
+              <img src="barcelona.jpg" alt="Barcelona" class="profile-next-img">
+              <div class="profile-next-text">
+                <div class="profile-next-label">Collecting...</div>
+                <div class="profile-next-name">Barcelona</div>
+              </div>
+              <span class="profile-next-arrow">→</span>
+            </div>
+          </div>
+          <div class="design-notes" style="width: 340px; margin-top: 15px;">
+            <p style="color: var(--text-medium); font-size: 0.85rem;">Always shows 6 badges. If only 1 collected → show 1 + 5 grayed out</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Unlock Celebration -->
+    <div class="celebration-section">
+      <h2 class="variant-title">Unlock Celebration Screen</h2>
+
+      <div class="celebration-frame">
+        <!-- CSS Confetti SHOWER - massive falling confetti from top, in front of magnet -->
+        <div class="confetti-container" id="confettiContainer">
+          <div class="confetti"></div>
+          <div class="confetti"></div>
+          <div class="confetti"></div>
+          <div class="confetti"></div>
+          <div class="confetti"></div>
+          <div class="confetti"></div>
+          <div class="confetti"></div>
+          <div class="confetti"></div>
+          <div class="confetti"></div>
+          <div class="confetti"></div>
+          <div class="confetti"></div>
+          <div class="confetti"></div>
+          <div class="confetti"></div>
+          <div class="confetti"></div>
+          <div class="confetti"></div>
+          <div class="confetti"></div>
+          <div class="confetti"></div>
+          <div class="confetti"></div>
+          <div class="confetti"></div>
+          <div class="confetti"></div>
+          <div class="confetti"></div>
+          <div class="confetti"></div>
+          <div class="confetti"></div>
+          <div class="confetti"></div>
+          <div class="confetti"></div>
+          <div class="confetti"></div>
+          <div class="confetti"></div>
+          <div class="confetti"></div>
+          <div class="confetti"></div>
+          <div class="confetti"></div>
+        </div>
+
+        <div class="celebration-title">New Destination Unlocked!</div>
+
+        <div class="celebration-magnet">
+          <img src="barcelona.jpg" alt="Barcelona">
+        </div>
+
+        <div class="celebration-tagline">"Mediterranean Sun"</div>
+
+        <div class="celebration-stats">
+          <div class="celebration-stat">
+            <div class="celebration-stat-value">18</div>
+            <div class="celebration-stat-label">New Quizzes Unlocked</div>
+          </div>
+        </div>
+
+        <button class="celebration-btn" onclick="navigateToCollection()">Add to Collection</button>
+
+        <!-- Demo replay button -->
+        <button class="replay-confetti" onclick="replayConfetti()">Replay Burst</button>
+      </div>
+
+      <div class="design-notes" style="width: 375px; margin: 15px auto 0;">
+        <p style="color: var(--text-medium); font-size: 0.85rem;">
+          <strong>On screen load:</strong> Massive confetti shower falls from top (in front of magnet)<br>
+          <strong>"Add to Collection" tap:</strong> Navigate to Collection View with new magnet highlighted
+        </p>
+      </div>
+    </div>
+
+    <script>
+      function replayConfetti() {
+        const container = document.getElementById('confettiContainer');
+        const confetti = container.querySelectorAll('.confetti');
+        confetti.forEach(c => {
+          c.style.animation = 'none';
+          c.offsetHeight; // Trigger reflow
+          c.style.animation = null;
+        });
+      }
+
+      function navigateToCollection() {
+        alert('In the app: Navigate to Collection View with Barcelona highlighted as "newly added"');
+      }
+    </script>
+
+    <!-- Design Notes -->
+    <div class="design-notes" style="margin-top: 60px;">
+      <h3>Design Decisions</h3>
+      <ul>
+        <li><strong>Connection Bar:</strong> Magnet images replace tier emojis (no labels). Both magnets fully visible (no graying).</li>
+        <li><strong>Connection Bar (New User):</strong> No left magnet - heart starts at far left, first destination on right.</li>
+        <li><strong>Profile Section:</strong> Always shows 6 badges - collected ones first, then grayed out to fill.</li>
+        <li><strong>Celebration:</strong> Confetti SHOWER falls from top (in front of magnet), less rounded magnet (8px), single stat.</li>
+        <li><strong>"Add to Collection":</strong> Navigates to Collection View with new magnet highlighted.</li>
+        <li><strong>Polaroid Style:</strong> White border like instant photos - nostalgic travel memory feel.</li>
+      </ul>
+    </div>
+
+    <div class="design-notes" style="margin-top: 20px;">
+      <h3>PNG Assets Needed (30 total)</h3>
+      <ul>
+        <li><strong>Current:</strong> Austin, Miami, Chicago, Barcelona</li>
+        <li><strong>Remaining US:</strong> Portland, San Diego, Denver, Nashville, Boston, New Orleans, San Francisco, New York</li>
+        <li><strong>Europe:</strong> London, Amsterdam, Berlin, Paris, Rome, Vienna, Prague, Lisbon, Athens, Santorini, Dubrovnik</li>
+        <li><strong>Local:</strong> Coffee Shop, City Park, Rooftop, Beach Town, Cabin, Vineyard, Lake House</li>
+      </ul>
+    </div>
+  </div>
+</body>
+</html>

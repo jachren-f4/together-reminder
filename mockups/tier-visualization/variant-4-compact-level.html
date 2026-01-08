@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=375, initial-scale=1.0">
+    <title>Tier Visualization - Variant 4: Compact Level</title>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            background: linear-gradient(180deg, #FFF5F0 0%, #FFE8E0 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 18px;
+            color: #2D2D2D;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .description {
+            font-size: 12px;
+            color: #666;
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 0 20px;
+        }
+
+        /* Connection Bar Container - More compact */
+        .connection-bar {
+            background: linear-gradient(135deg, #FF7B6B 0%, #FF9B8B 50%, #FFB89B 100%);
+            border-radius: 24px 24px 0 0;
+            padding: 16px;
+            margin-bottom: 40px;
+        }
+
+        /* Top row: Tier badge + LP counter */
+        .top-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 14px;
+        }
+
+        /* Tier badge - pill shaped */
+        .tier-badge {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255,255,255,0.2);
+            padding: 6px 12px 6px 6px;
+            border-radius: 24px;
+            border: 2px solid rgba(255,255,255,0.3);
+        }
+
+        .tier-badge-icon {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, #FF6B9D 0%, #FF8E6B 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            border: 2px solid white;
+        }
+
+        .tier-badge-text {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .tier-badge-name {
+            font-size: 13px;
+            font-weight: 700;
+            color: white;
+            line-height: 1.1;
+        }
+
+        .tier-badge-level {
+            font-size: 9px;
+            color: rgba(255,255,255,0.8);
+        }
+
+        /* LP counter on right */
+        .lp-section {
+            text-align: right;
+        }
+
+        .lp-value {
+            font-size: 20px;
+            font-weight: 800;
+            color: white;
+            line-height: 1;
+        }
+
+        .lp-label {
+            font-size: 9px;
+            color: rgba(255,255,255,0.8);
+            letter-spacing: 0.5px;
+        }
+
+        /* Progress bar */
+        .progress-container {
+            position: relative;
+        }
+
+        .progress-track {
+            height: 12px;
+            background: rgba(0,0,0,0.15);
+            border-radius: 6px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #FFE066 0%, #FFB347 100%);
+            border-radius: 6px;
+            box-shadow: 0 0 12px rgba(255,224,102,0.5);
+            position: relative;
+            transition: width 0.5s ease;
+        }
+
+        /* Animated shine effect */
+        .progress-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(
+                90deg,
+                transparent 0%,
+                rgba(255,255,255,0.4) 50%,
+                transparent 100%
+            );
+            animation: shine 2s ease-in-out infinite;
+        }
+
+        @keyframes shine {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        /* Next tier indicator below bar */
+        .next-tier-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 10px;
+        }
+
+        .next-tier-info {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .next-tier-icon {
+            font-size: 16px;
+            opacity: 0.7;
+        }
+
+        .next-tier-text {
+            font-size: 11px;
+            color: rgba(255,255,255,0.9);
+        }
+
+        .remaining-lp {
+            font-size: 11px;
+            font-weight: 700;
+            color: white;
+            background: rgba(0,0,0,0.15);
+            padding: 4px 10px;
+            border-radius: 12px;
+        }
+
+        /* States */
+        .states-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        .state-label {
+            font-size: 10px;
+            font-weight: 700;
+            color: #999;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+    </style>
+</head>
+<body>
+    <h2>Variant 4: Compact Level Indicator</h2>
+    <p class="description">Compact design with tier badge on left, LP on right, and a simple progress bar with next tier preview below. Keeps it minimal while still showing progression.</p>
+
+    <div class="states-grid">
+        <!-- State 1: At Cozy Cabin -->
+        <div>
+            <div class="state-label">STATE: TIER 1 (COZY CABIN) - 320 LP</div>
+            <div class="connection-bar">
+                <div class="top-row">
+                    <div class="tier-badge">
+                        <div class="tier-badge-icon">🏕️</div>
+                        <div class="tier-badge-text">
+                            <span class="tier-badge-name">Cozy Cabin</span>
+                            <span class="tier-badge-level">Tier 1 of 5</span>
+                        </div>
+                    </div>
+                    <div class="lp-section">
+                        <div class="lp-value">320</div>
+                        <div class="lp-label">LOVE POINTS</div>
+                    </div>
+                </div>
+
+                <div class="progress-container">
+                    <div class="progress-track">
+                        <div class="progress-fill" style="width: 32%;"></div>
+                    </div>
+                </div>
+
+                <div class="next-tier-row">
+                    <div class="next-tier-info">
+                        <span class="next-tier-icon">🏖️</span>
+                        <span class="next-tier-text">Next: Beach Villa</span>
+                    </div>
+                    <span class="remaining-lp">680 LP to go</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- State 2: At Beach Villa -->
+        <div>
+            <div class="state-label">STATE: TIER 2 (BEACH VILLA) - 1,800 LP</div>
+            <div class="connection-bar">
+                <div class="top-row">
+                    <div class="tier-badge">
+                        <div class="tier-badge-icon" style="background: linear-gradient(135deg, #87CEEB 0%, #FFD700 100%);">🏖️</div>
+                        <div class="tier-badge-text">
+                            <span class="tier-badge-name">Beach Villa</span>
+                            <span class="tier-badge-level">Tier 2 of 5</span>
+                        </div>
+                    </div>
+                    <div class="lp-section">
+                        <div class="lp-value">1,800</div>
+                        <div class="lp-label">LOVE POINTS</div>
+                    </div>
+                </div>
+
+                <div class="progress-container">
+                    <div class="progress-track">
+                        <div class="progress-fill" style="width: 53%;"></div>
+                    </div>
+                </div>
+
+                <div class="next-tier-row">
+                    <div class="next-tier-info">
+                        <span class="next-tier-icon">⛵</span>
+                        <span class="next-tier-text">Next: Yacht Getaway</span>
+                    </div>
+                    <span class="remaining-lp">700 LP to go</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- State 3: At Yacht Getaway, almost at next tier -->
+        <div>
+            <div class="state-label">STATE: TIER 3 (YACHT) - 4,850 LP (ALMOST THERE!)</div>
+            <div class="connection-bar">
+                <div class="top-row">
+                    <div class="tier-badge">
+                        <div class="tier-badge-icon" style="background: linear-gradient(135deg, #1E3A8A 0%, #60A5FA 100%);">⛵</div>
+                        <div class="tier-badge-text">
+                            <span class="tier-badge-name">Yacht Getaway</span>
+                            <span class="tier-badge-level">Tier 3 of 5</span>
+                        </div>
+                    </div>
+                    <div class="lp-section">
+                        <div class="lp-value">4,850</div>
+                        <div class="lp-label">LOVE POINTS</div>
+                    </div>
+                </div>
+
+                <div class="progress-container">
+                    <div class="progress-track">
+                        <div class="progress-fill" style="width: 94%;"></div>
+                    </div>
+                </div>
+
+                <div class="next-tier-row">
+                    <div class="next-tier-info">
+                        <span class="next-tier-icon">🏔️</span>
+                        <span class="next-tier-text">Next: Mountain Penthouse</span>
+                    </div>
+                    <span class="remaining-lp" style="background: linear-gradient(90deg, #FFE066, #FFB347); color: #333;">150 LP! 🎉</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- State 4: At Castle (Max tier) -->
+        <div>
+            <div class="state-label">STATE: TIER 5 (CASTLE RETREAT) - MAX TIER</div>
+            <div class="connection-bar">
+                <div class="top-row">
+                    <div class="tier-badge" style="border-color: gold;">
+                        <div class="tier-badge-icon" style="background: linear-gradient(135deg, #7C3AED 0%, #C084FC 100%);">🏰</div>
+                        <div class="tier-badge-text">
+                            <span class="tier-badge-name">Castle Retreat</span>
+                            <span class="tier-badge-level">Tier 5 of 5 👑</span>
+                        </div>
+                    </div>
+                    <div class="lp-section">
+                        <div class="lp-value">12,500</div>
+                        <div class="lp-label">LOVE POINTS</div>
+                    </div>
+                </div>
+
+                <div class="progress-container">
+                    <div class="progress-track">
+                        <div class="progress-fill" style="width: 100%; background: linear-gradient(90deg, #7C3AED 0%, #C084FC 100%);"></div>
+                    </div>
+                </div>
+
+                <div class="next-tier-row">
+                    <div class="next-tier-info">
+                        <span class="next-tier-icon">✨</span>
+                        <span class="next-tier-text">You've reached the highest tier!</span>
+                    </div>
+                    <span class="remaining-lp" style="background: linear-gradient(90deg, #7C3AED, #C084FC); color: white;">MAX 👑</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

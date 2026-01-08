@@ -9,6 +9,7 @@
 | Name Entry | `lib/screens/name_entry_screen.dart` |
 | Email Entry | `lib/screens/auth_screen.dart` |
 | OTP Verification | `lib/screens/otp_verification_screen.dart` |
+| Settings (Verify Email) | `lib/screens/settings_screen.dart` |
 | Dev Config | `lib/config/dev_config.dart` |
 | API Profile Route | `api/app/api/users/profile/route.ts` |
 | API Signup Route | `api/app/api/users/signup/route.ts` |
@@ -22,8 +23,8 @@
 │                     Supabase Auth                                │
 │                                                                  │
 │   ┌──────────────┐    ┌──────────────┐    ┌──────────────────┐  │
-│   │  OTP Email   │    │  Password    │    │  Apple Sign-In   │  │
-│   │  (Production)│    │  (Dev Mode)  │    │  (Disabled)      │  │
+│   │  Password    │    │  Magic Link  │    │  Apple Sign-In   │  │
+│   │  (New Users) │    │  (Returning) │    │  (Disabled)      │  │
 │   └──────────────┘    └──────────────┘    └──────────────────┘  │
 └─────────────────────────────────────────────────────────────────┘
                               │
@@ -34,29 +35,56 @@
 │   • Session management (auto-persist via Supabase)              │
 │   • Token refresh (automatic)                                    │
 │   • Auth state stream for UI updates                            │
-│   • Dev auth bypass support                                      │
+│   • Test account bypass (emails matching @dev.test or +test)    │
+│   • Email verification status (isEmailVerified getter)          │
 └─────────────────────────────────────────────────────────────────┘
 ```
+
+### Key Design Decision: Optional Email Verification
+
+**New users** sign up without email verification (password-based auth) for frictionless onboarding.
+**Returning users** must verify via magic link to prove email ownership (security).
+**Email verification** is available optionally in Settings for users who want to verify their account.
 
 ---
 
 ## User Flows
 
-### New User Flow
+### New User Flow (No OTP Required)
 ```
-OnboardingScreen ──[BEGIN]──> NameEntryScreen ──> AuthScreen ──> OtpVerificationScreen ──> PairingScreen
-                                    │                                      │
-                                    │                                      ▼
-                                    └──────[Dev Mode]─────────────────> PairingScreen
+OnboardingScreen ──[BEGIN]──> NameEntryScreen ──> AuthScreen ──> PairingScreen
+                                                       │
+                                                       ▼
+                                              [Instant Signup]
+                                         (No email verification)
 ```
+New users go directly to pairing without needing to verify their email. This reduces friction during onboarding.
 
-### Returning User Flow
+**Technical note:** Behind the scenes, a deterministic password is generated from the email hash (`DevPass_{sha256(email).substring(0,12)}_2024!`) to create a real Supabase account. The user never sees or enters this password.
+
+### Returning User Flow (Magic Link Required)
 ```
 OnboardingScreen ──[Sign in]──> AuthScreen ──> OtpVerificationScreen ──> MainScreen
-                                    │                                       │
-                                    │                                       ▼
-                                    └──────[Dev Mode]──────────────────> MainScreen
+                                    │                   │
+                                    │                   ▼
+                                    │            [Magic Link]
+                                    │         (Proves email ownership)
+                                    │
+                                    └──[Test Account @dev.test]──> MainScreen
+                                              (Password Auth)
 ```
+Returning users must verify via magic link for security - they have existing data worth protecting.
+Test accounts (`@dev.test` or `+test` emails) bypass magic link for easier development.
+
+### Settings Email Verification Flow
+```
+SettingsScreen ──> [Verify Email] ──> OtpVerificationScreen ──> [Success] ──> SettingsScreen
+                                              │
+                                              ▼
+                                        [Magic Link]
+                                    (Optional verification)
+```
+Users can optionally verify their email from Settings at any time.
 
 ### Automatic Session Restore
 ```
@@ -81,9 +109,24 @@ App Launch ──> main.dart ──> AuthService.initialize() ──> Check Supa
 
 ## Data Flow
 
-### Sign In with OTP (Production)
+### New User Sign Up (Instant - No OTP)
 ```dart
-// 1. Send OTP to email
+// 1. Create account instantly (user just enters email, no password prompt)
+final success = await _authService.signInWithPassword(email);
+// Behind the scenes: deterministic password from email hash
+// Password formula: DevPass_{sha256(email).substring(0,12)}_2024!
+// Session automatically persisted by Supabase
+
+// 2. Complete signup (create user profile)
+await userProfileService.completeSignup(
+  pushToken: pushToken,
+  name: pendingName,
+);
+```
+
+### Returning User Sign In (Magic Link)
+```dart
+// 1. Send magic link to email
 await _authService.signInWithMagicLink(email);
 // Supabase sends 8-digit code to email
 
@@ -91,18 +134,34 @@ await _authService.signInWithMagicLink(email);
 final success = await _authService.verifyOTP(email, otp);
 // Session automatically persisted by Supabase
 
-// 3. Complete signup (create/sync user profile)
-await userProfileService.completeSignup(
-  pushToken: pushToken,
-  name: pendingName,
-);
+// 3. Sync profile (restore user data)
+await userProfileService.completeSignup(pushToken: pushToken);
 ```
 
-### Sign In with Password (Dev Mode)
+### Test Account Bypass
 ```dart
-// Uses deterministic password based on email hash
-final success = await _authService.devSignInWithEmail(email);
-// Password: DevPass_{sha256(email).substring(0,12)}_2024!
+// Test accounts skip magic link entirely
+if (_authService.shouldBypassMagicLink(email)) {
+  // Matches: @dev.test, +test in email
+  await _authService.signInWithPassword(email);
+} else {
+  await _authService.signInWithMagicLink(email);
+}
+```
+
+### Email Verification from Settings
+```dart
+// 1. Check verification status
+final isVerified = _authService.isEmailVerified;
+
+// 2. If not verified, user can trigger verification
+if (!isVerified) {
+  await _authService.sendVerificationEmail();
+  // Navigate to OtpVerificationScreen(isFromSettings: true)
+}
+
+// 3. After successful OTP verification, email is marked verified
+// Supabase sets emailConfirmedAt on the user record
 ```
 
 ---
@@ -183,44 +242,54 @@ Auth tokens are managed by Supabase automatically. Use secure storage only for a
 
 ---
 
-## Dev Auth Bypass
+## Test Account Bypass
 
-### Available Toggles (in `dev_config.dart`)
+### Test Email Patterns
+
+The app recognizes test email patterns that bypass magic link verification:
+
+| Pattern | Example | Behavior |
+|---------|---------|----------|
+| `@dev.test` | `test7001@dev.test` | Password auth, no magic link |
+| `+test` | `john+test@gmail.com` | Password auth, no magic link |
+
+```dart
+// In auth_service.dart
+bool shouldBypassMagicLink(String email) {
+  if (email.endsWith('@dev.test')) return true;
+  if (email.contains('+test')) return true;
+  return false;
+}
+```
+
+### Why Test Email Patterns (Not Flags)
+
+**Production-safe:** Real users won't accidentally use `@dev.test` emails.
+**No flags to forget:** Works in all environments without configuration.
+**Easy to use:** Just add `+test` to any email during testing.
+
+### Dev Config Toggles (Legacy)
 
 | Toggle | Purpose | Works on Physical Devices? |
 |--------|---------|---------------------------|
 | `skipAuthInDev` | Skip entire auth flow | NO (simulators only) |
-| `skipOtpVerificationInDev` | Skip OTP, use password auth | YES |
+| `skipOtpVerificationInDev` | Pre-fills test email | YES (convenience) |
 
-### skipAuthInDev (Full Bypass)
 ```dart
-static const bool skipAuthInDev = true;
-
-// Effect: Goes directly to HomeScreen without any login
-// Condition: Only works on simulators/emulators/web
-// Use case: Fastest development iteration
+// skipOtpVerificationInDev now just pre-fills test email for convenience
+// The actual bypass is based on email pattern, not this flag
+if (DevConfig.skipOtpVerificationInDev) {
+  final random = DateTime.now().millisecondsSinceEpoch % 10000;
+  _emailController.text = 'test$random@dev.test';
+}
 ```
 
-### skipOtpVerificationInDev (OTP Bypass)
-```dart
-static const bool skipOtpVerificationInDev = true;
+### Production Safety
 
-// Effect: Collects email but uses password auth instead of OTP
-// Condition: Works on ALL devices including physical
-// Use case: Bug hunting on phones without email access
-// Password formula: DevPass_{sha256(email).substring(0,12)}_2024!
-
-// CRITICAL: Set to FALSE before App Store release!
-```
-
-### Production Safety Guard
-```dart
-// In main.dart startup
-DevConfig.validateProductionSafety();
-
-// This THROWS if dev flags are enabled in release mode
-// Prevents accidentally shipping dev mode to App Store
-```
+The test email pattern approach is production-safe because:
+- Real users won't use `@dev.test` domain (doesn't exist)
+- Real users won't add `+test` to their emails accidentally
+- No configuration flags that could be left enabled
 
 ---
 
@@ -373,14 +442,15 @@ See `docs/APPLE_SIGNIN_SETUP.md` for full setup guide.
 
 | File | Purpose |
 |------|---------|
-| `auth_service.dart` | Core auth logic, session management, Apple Sign-In |
+| `auth_service.dart` | Core auth logic, session management, verification status |
 | `onboarding_screen.dart` | Initial splash with BEGIN/Sign in buttons |
 | `name_entry_screen.dart` | Step 1: Collect user's name |
-| `auth_screen.dart` | Step 2: Collect email, send OTP or dev sign-in |
-| `otp_verification_screen.dart` | Step 3: Verify OTP code |
+| `auth_screen.dart` | Step 2: Collect email, password or magic link auth |
+| `otp_verification_screen.dart` | Verify OTP code (returning users + settings verification) |
+| `settings_screen.dart` | Email verification UI in Account section |
 | `pairing_screen.dart` | Post-auth screen for new users (pair with partner) |
 | `main_screen.dart` | Post-auth screen for returning users (home with nav) |
-| `dev_config.dart` | Dev bypass flags and production safety |
+| `dev_config.dart` | Dev bypass flags (test email pre-fill) |
 | `user_profile_service.dart` | Server-side profile sync |
 
 ---
@@ -389,5 +459,10 @@ See `docs/APPLE_SIGNIN_SETUP.md` for full setup guide.
 
 | Date | Change |
 |------|--------|
+| 2025-01-06 | **Major change:** Optional email verification - new users no longer require OTP, verification moved to Settings |
+| 2025-01-06 | Added test email pattern bypass (`@dev.test`, `+test`) for development |
+| 2025-01-06 | Added `isEmailVerified` getter and `sendVerificationEmail()` to AuthService |
+| 2025-01-06 | Added `isFromSettings` param to OtpVerificationScreen |
+| 2025-01-06 | Added email verification UI to Settings screen Account section |
 | 2025-12-16 | Added fix for keyboard overlap on name/email entry screens (SingleChildScrollView + footer background) |
 | 2025-12-16 | Initial documentation |

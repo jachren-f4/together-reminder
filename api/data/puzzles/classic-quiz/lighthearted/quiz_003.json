@@ -1,68 +1,79 @@
 {
   "quizId": "quiz_003",
-  "title": "Communication Styles",
+  "title": "Our Little Moments",
   "branch": "lighthearted",
   "questions": [
     {
       "id": "quiz_003_q1",
-      "text": "When I'm upset, I prefer to...",
+      "text": "My favorite ordinary moment with you is...",
       "choices": [
-        "Talk about it right away",
-        "Cool down first, then talk",
-        "Write out my thoughts before discussing",
-        "Process it myself and move on",
-        "Other / It depends on the situation"
+        "Morning coffee or breakfast together",
+        "Driving somewhere, just the two of us",
+        "Cooking or eating dinner together",
+        "Winding down at the end of the day",
+        "Other / It depends"
       ],
-      "category": "communication"
+      "category": "preferences"
     },
     {
       "id": "quiz_003_q2",
-      "text": "How do I usually express that I'm happy?",
+      "text": "Random memories of us that make me smile are usually about...",
       "choices": [
-        "I say it directly",
-        "Through physical affection",
-        "By being extra playful or silly",
-        "Doing thoughtful things for you",
-        "I'm more quiet/content than expressive"
+        "Times we couldn't stop laughing",
+        "Small sweet gestures you did",
+        "Adventures or trips we took",
+        "Quiet moments just being together",
+        "Other / It depends"
       ],
-      "category": "communication"
+      "category": "preferences"
     },
     {
       "id": "quiz_003_q3",
-      "text": "When I need something from you, I typically...",
+      "text": "The time of day I most look forward to being with you is...",
       "choices": [
-        "Ask directly and clearly",
-        "Hint and hope you pick up on it",
-        "Wait for you to notice",
-        "Feel awkward asking at all",
-        "Other / It depends what it is"
+        "Mornings before the day starts",
+        "Lunch or afternoon breaks",
+        "Evening when we're both home",
+        "Late night when everything's quiet",
+        "Other / It depends"
       ],
-      "category": "communication"
+      "category": "lifestyle",
+      "metadata": {
+        "dimension": "daily_rhythm",
+        "poleMapping": [
+          "right",
+          null,
+          null,
+          "left",
+          null
+        ]
+      }
     },
     {
       "id": "quiz_003_q4",
-      "text": "During disagreements, I tend to...",
+      "text": "When we're doing nothing together, I love it when...",
       "choices": [
-        "Want to resolve it immediately",
-        "Need time to think before continuing",
-        "Focus on finding a compromise",
-        "Get quiet and withdraw",
-        "Other / It varies"
+        "We're in comfortable silence",
+        "We chat about random things",
+        "We're physically close, even if distracted",
+        "We do our own things but nearby",
+        "Other / It depends"
       ],
-      "category": "communication"
+      "category": "connection"
     },
     {
       "id": "quiz_003_q5",
-      "text": "I feel most heard when you...",
+      "text": "A 'boring' activity that's actually fun with you is...",
       "choices": [
-        "Give me your full attention",
-        "Ask follow-up questions",
-        "Validate how I'm feeling",
-        "Offer solutions or help",
-        "Just listen without responding"
+        "Grocery shopping or errands",
+        "Cleaning or organizing together",
+        "Waiting in line or at appointments",
+        "Long car rides",
+        "Other / It depends"
       ],
-      "category": "communication"
+      "category": "preferences"
     }
   ],
-  "description": "Explore how you express yourselves and connect through words."
+  "description": "Celebrate the small, everyday moments that make your relationship special.",
+  "magnet_id": 0
 }

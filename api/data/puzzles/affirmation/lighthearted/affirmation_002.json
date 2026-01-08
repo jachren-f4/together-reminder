@@ -9,31 +9,62 @@
       "id": "affirmation_002_q1",
       "text": "When I'm upset, I want comfort before solutions",
       "type": "scale",
-      "scaleLabels": ["Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"]
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ]
     },
     {
       "id": "affirmation_002_q2",
       "text": "I need to process difficult feelings on my own before talking about them",
       "type": "scale",
-      "scaleLabels": ["Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"]
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ]
     },
     {
       "id": "affirmation_002_q3",
       "text": "Physical comfort (hugs, closeness) helps me feel better when I'm down",
       "type": "scale",
-      "scaleLabels": ["Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"]
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ]
     },
     {
       "id": "affirmation_002_q4",
       "text": "I find it easy to ask for help when I need it",
       "type": "scale",
-      "scaleLabels": ["Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"]
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ]
     },
     {
       "id": "affirmation_002_q5",
       "text": "Distraction helps me more than talking through problems",
       "type": "scale",
-      "scaleLabels": ["Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"]
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ]
     }
-  ]
+  ],
+  "magnet_id": 0
 }

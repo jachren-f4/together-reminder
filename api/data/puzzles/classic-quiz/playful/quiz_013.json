@@ -1,0 +1,99 @@
+{
+  "quizId": "quiz_013",
+  "title": "Food & Dining",
+  "branch": "playful",
+  "questions": [
+    {
+      "id": "quiz_013_q1",
+      "text": "When we're deciding what to eat, I'd prefer we...",
+      "choices": [
+        "Try somewhere new we've never been",
+        "Go to a reliable favorite we both love",
+        "Cook something together at home",
+        "Be spontaneous - decide when we're hungry",
+        "Other / It depends"
+      ],
+      "category": "lifestyle",
+      "metadata": {
+        "dimension": "novelty_preference",
+        "poleMapping": [
+          "right",
+          "left",
+          null,
+          null,
+          null
+        ]
+      }
+    },
+    {
+      "id": "quiz_013_q2",
+      "text": "For cooking at home together, I'd enjoy...",
+      "choices": [
+        "Trying new recipes and experimenting",
+        "Making comfort food we both love",
+        "One of us cooks while the other keeps company",
+        "Ordering in - cooking isn't really our thing",
+        "Other / It depends"
+      ],
+      "category": "lifestyle",
+      "metadata": {
+        "dimension": "novelty_preference",
+        "poleMapping": [
+          "right",
+          "left",
+          null,
+          null,
+          null
+        ]
+      }
+    },
+    {
+      "id": "quiz_013_q3",
+      "text": "When it comes to meals during the week, I'd like us to...",
+      "choices": [
+        "Plan meals ahead so we know what's for dinner",
+        "Have a few go-to options and decide day-of",
+        "Wing it completely - see what we're in the mood for",
+        "Take turns being in charge of dinner",
+        "Other / It depends"
+      ],
+      "category": "lifestyle",
+      "metadata": {
+        "dimension": "planning_style",
+        "poleMapping": [
+          "right",
+          null,
+          "left",
+          null,
+          null
+        ]
+      }
+    },
+    {
+      "id": "quiz_013_q4",
+      "text": "My ideal food date with you would be...",
+      "choices": [
+        "A fancy restaurant for a special occasion",
+        "A cozy spot with great food and no fuss",
+        "Street food or a food market adventure",
+        "Cooking a meal together at home",
+        "Other / It depends"
+      ],
+      "category": "preferences"
+    },
+    {
+      "id": "quiz_013_q5",
+      "text": "When one of us wants to try something the other isn't sure about, I hope we...",
+      "choices": [
+        "Give it a shot - worst case, we don't like it",
+        "Find a place that has options for both of us",
+        "Take turns picking so we both get our way sometimes",
+        "Respect that we don't have to like all the same things",
+        "Other / It depends"
+      ],
+      "category": "communication"
+    }
+  ],
+  "description": "Discover your food adventures and kitchen vibes together.",
+  "magnet_id": 4
+}

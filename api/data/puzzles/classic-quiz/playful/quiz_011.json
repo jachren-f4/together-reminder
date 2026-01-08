@@ -5,64 +5,105 @@
   "questions": [
     {
       "id": "quiz_011_q1",
-      "text": "My ideal definition of adventure is...",
+      "text": "For us, adventure together looks like...",
       "choices": [
-        "Exploring remote places off the beaten path",
-        "Trying new experiences in familiar settings",
-        "Learning and growing through challenges",
-        "Comfortable enjoyment with a touch of newness",
+        "Exploring somewhere completely new and unknown",
+        "Trying new things in places we're comfortable",
+        "Pushing ourselves to grow through shared challenges",
+        "Cozy experiences with just a hint of something new",
         "Other / It depends"
       ],
-      "category": "lifestyle"
+      "category": "lifestyle",
+      "metadata": {
+        "dimension": "risk_adventure",
+        "poleMapping": [
+          "right",
+          null,
+          "right",
+          "left",
+          null
+        ]
+      }
     },
     {
       "id": "quiz_011_q2",
-      "text": "When traveling, I'm most excited about...",
+      "text": "For a trip together, I'd be most excited to...",
       "choices": [
-        "Immersing myself in different cultures",
-        "Trying authentic local cuisine",
-        "Seeing famous landmarks and attractions",
-        "Relaxing in beautiful new surroundings",
+        "Go somewhere neither of us has been and figure it out",
+        "Explore local food, culture, and hidden gems",
+        "See the must-see sights and check things off the list",
+        "Relax somewhere beautiful without a packed itinerary",
         "Other / It depends"
       ],
-      "category": "preferences"
+      "category": "lifestyle",
+      "metadata": {
+        "dimension": "risk_adventure",
+        "poleMapping": [
+          "right",
+          "right",
+          null,
+          "left",
+          null
+        ]
+      }
     },
     {
       "id": "quiz_011_q3",
-      "text": "My comfort zone is something I...",
+      "text": "When it comes to trying new things together, I hope we...",
       "choices": [
-        "Actively push myself to expand regularly",
-        "Step out of when the opportunity feels right",
-        "Appreciate but occasionally challenge",
-        "Value and protect - it exists for a reason",
+        "Push each other to try stuff we'd never do alone",
+        "Encourage each other when the moment feels right",
+        "Balance new experiences with familiar comforts",
+        "Respect if one of us isn't feeling it",
         "Other / It depends"
       ],
-      "category": "personality"
+      "category": "lifestyle",
+      "metadata": {
+        "dimension": "risk_adventure",
+        "poleMapping": [
+          "right",
+          null,
+          null,
+          "left",
+          null
+        ]
+      }
     },
     {
       "id": "quiz_011_q4",
-      "text": "When faced with something scary but exciting, I...",
+      "text": "If there's something exciting but a little scary (skydiving, a big move, a spontaneous trip), I'd want us to...",
       "choices": [
-        "Feel the fear and do it anyway",
-        "Carefully assess if it's worth the risk",
-        "Need encouragement from others",
-        "Usually decide it's not for me",
+        "Go for it - we've got each other!",
+        "Talk through the risks and decide together",
+        "One of us might need convincing from the other",
+        "Be honest if it's not something I'm ready for",
         "Other / It depends"
       ],
-      "category": "personality"
+      "category": "lifestyle",
+      "metadata": {
+        "dimension": "risk_adventure",
+        "poleMapping": [
+          "right",
+          null,
+          null,
+          "left",
+          null
+        ]
+      }
     },
     {
       "id": "quiz_011_q5",
-      "text": "My approach to trying new hobbies is...",
+      "text": "When one of us wants to try a new hobby or activity, I'd love it if we...",
       "choices": [
-        "Jump in enthusiastically with full commitment",
-        "Try it a few times to see if I like it",
-        "Research thoroughly before starting",
-        "Stick to hobbies I already know I enjoy",
+        "Both dive in and try it together",
+        "Support each other even if only one is into it",
+        "Take turns trying each other's interests",
+        "Enjoy having some separate hobbies too",
         "Other / It depends"
       ],
       "category": "lifestyle"
     }
   ],
-  "description": "Explore your balance between excitement and coziness."
+  "description": "Find your balance between excitement and coziness together.",
+  "magnet_id": 3
 }

@@ -5,64 +5,105 @@
   "questions": [
     {
       "id": "quiz_008_q1",
-      "text": "When disagreements arise, I prefer to...",
+      "text": "When we disagree on something, I'd like us to...",
       "choices": [
-        "Address them directly and immediately",
-        "Take time to cool off before discussing",
-        "Find a compromise that works for everyone",
-        "Avoid conflict when possible",
+        "Talk it through right away before it builds up",
+        "Take a breather and come back to it when we're calm",
+        "Find a middle ground we can both live with",
+        "Let the small stuff go - not everything needs a discussion",
         "Other / It depends"
       ],
-      "category": "personality"
+      "category": "communication",
+      "metadata": {
+        "dimension": "conflict_approach",
+        "poleMapping": [
+          "right",
+          "left",
+          null,
+          "left",
+          null
+        ]
+      }
     },
     {
       "id": "quiz_008_q2",
-      "text": "During a heated discussion, I'm most likely to...",
+      "text": "If things get tense between us, what would help me most is...",
       "choices": [
-        "Stand firm on my principles",
-        "Focus on understanding the other perspective",
-        "Try to lighten the mood with humor",
-        "Need space to process my emotions",
+        "Staying in the conversation until we work it out",
+        "Taking a break and reconnecting when we're both ready",
+        "A bit of humor or lightness to ease the tension",
+        "Knowing you still love me even when we're frustrated",
         "Other / It depends"
       ],
-      "category": "personality"
+      "category": "communication",
+      "metadata": {
+        "dimension": "conflict_approach",
+        "poleMapping": [
+          "right",
+          "left",
+          null,
+          null,
+          null
+        ]
+      }
     },
     {
       "id": "quiz_008_q3",
-      "text": "After an argument, I typically...",
+      "text": "After a disagreement, I usually need...",
       "choices": [
-        "Want to resolve it quickly and move on",
-        "Need time alone to think things through",
-        "Seek reassurance that everything's okay",
-        "Analyze what happened to prevent it next time",
+        "To resolve it and reconnect quickly",
+        "Some time alone to process before coming back together",
+        "Reassurance that we're okay",
+        "To understand what happened so we can avoid it next time",
         "Other / It depends"
       ],
-      "category": "personality"
+      "category": "communication",
+      "metadata": {
+        "dimension": "conflict_approach",
+        "poleMapping": [
+          "right",
+          "left",
+          null,
+          null,
+          null
+        ]
+      }
     },
     {
       "id": "quiz_008_q4",
-      "text": "When someone criticizes me, my first reaction is to...",
+      "text": "If you're upset with something I did, the best way to tell me is...",
       "choices": [
-        "Defend myself and explain my reasoning",
-        "Listen and consider if they have a point",
-        "Feel hurt but try not to show it",
-        "Ask for specific examples to understand better",
+        "Be direct - I'd rather know right away",
+        "Give me a heads up that we need to talk, then tell me",
+        "Gently, with reassurance that it's not a big deal",
+        "With specific examples so I understand what happened",
         "Other / It depends"
       ],
-      "category": "personality"
+      "category": "communication",
+      "metadata": {
+        "dimension": "conflict_approach",
+        "poleMapping": [
+          "right",
+          null,
+          "left",
+          null,
+          null
+        ]
+      }
     },
     {
       "id": "quiz_008_q5",
-      "text": "My approach to apologizing is...",
+      "text": "When it comes to apologies, I believe...",
       "choices": [
-        "Quick and sincere when I'm wrong",
-        "Difficult - I struggle to say sorry",
-        "Thoughtful and accompanied by changed behavior",
-        "I explain my perspective first, then apologize",
+        "A quick, sincere sorry goes a long way",
+        "Actions matter more than words",
+        "I need to understand what I did wrong first",
+        "Both people should acknowledge their part",
         "Other / It depends"
       ],
-      "category": "social"
+      "category": "communication"
     }
   ],
-  "description": "Learn how you handle disagreements and find resolution."
+  "description": "Discover how you'll navigate the bumps together.",
+  "magnet_id": 3
 }

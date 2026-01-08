@@ -31,7 +31,26 @@ export {
   type FramedDiscovery,
   type FramedPerception,
   type ConversationStarter,
+  type DiscoverySection,
+  type DiscoveryAppreciation,
+  type RelevanceContext,
+  type StakesLevel,
 } from './framing';
+
+// Relevance - discovery ranking and appreciations
+export {
+  rankDiscoveries,
+  selectFeaturedAndOthers,
+  getStakesLevel,
+  getDiscoveryId,
+  getContextualHeader,
+  getDiscoveryAppreciations,
+  toggleAppreciation,
+  type RankedDiscovery,
+  type DiscoveryAppreciationsMap,
+  type AppreciationState,
+  type ContextualHeader,
+} from './relevance';
 
 // Cache - storage management
 export {
@@ -42,5 +61,6 @@ export {
   getActiveConversationStarters,
   dismissConversationStarter,
   markStarterDiscussed,
+  getDimensionUnlocks,
   type CachedProfile,
 } from './cache';

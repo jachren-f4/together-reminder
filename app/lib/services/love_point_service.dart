@@ -2,17 +2,17 @@ import '../models/love_point_transaction.dart';
 import 'storage_service.dart';
 import 'general_activity_streak_service.dart';
 import 'api_client.dart';
+import 'magnet_service.dart';
 import 'package:uuid/uuid.dart';
 import 'package:flutter/material.dart';
 import '../widgets/foreground_notification_banner.dart';
+import '../widgets/magnet_unlock_celebration.dart';
 import '../utils/logger.dart';
+import '../main.dart' show AppNavigator;
 
 class LovePointService {
   static final StorageService _storage = StorageService();
   static final ApiClient _apiClient = ApiClient();
-
-  // BuildContext for showing foreground notifications
-  static BuildContext? _appContext;
 
   // Callback for triggering UI updates when LP changes
   static VoidCallback? _onLPChanged;
@@ -186,11 +186,6 @@ class LovePointService {
     };
   }
 
-  /// Set app context for showing foreground notifications
-  static void setAppContext(BuildContext context) {
-    _appContext = context;
-  }
-
   /// Register callback for LP changes (for real-time UI updates)
   /// Use this in screens that need to update when LP changes
   static void setLPChangeCallback(VoidCallback? callback) {
@@ -243,16 +238,44 @@ class LovePointService {
 
       await _storage.saveUser(user);
 
-      // Show notification if LP increased during active session
-      // Skip notification if localLp was 0 (fresh login/reinstall - just restoring state)
+      // Check for magnet unlock celebration using local storage tracking
+      // This handles 3 scenarios:
+      // 1. New user (lastCelebrated = null) -> initialize to current, no celebration
+      // 2. Existing user -> celebrate if new magnets unlocked
+      // 3. Reinstalled user (lastCelebrated = null) -> initialize to current, no celebration
+      final magnetService = MagnetService();
+      final currentUnlockedCount = magnetService.calculateMagnets(serverTotalLp);
+      final lastCelebrated = _storage.getLastCelebratedMagnetCount();
+
+      if (lastCelebrated == null) {
+        // Fresh install or reinstall - initialize to current count, no catch-up celebrations
+        await _storage.setLastCelebratedMagnetCount(currentUnlockedCount);
+        Logger.info('Initialized magnet celebration tracking: $currentUnlockedCount magnets', service: 'lovepoint');
+      } else if (currentUnlockedCount > lastCelebrated) {
+        // New magnet unlocked - use global navigator for stable context
+        final navContext = AppNavigator.context;
+        if (navContext != null) {
+          Logger.success('Magnet #$currentUnlockedCount unlocked!', service: 'lovepoint');
+          MagnetUnlockCelebration.show(navContext, currentUnlockedCount);
+        }
+        await _storage.setLastCelebratedMagnetCount(currentUnlockedCount);
+      }
+
+      // Show LP notification if gained LP (but not on fresh install)
       final lpDiff = serverTotalLp - localLp;
-      if (lpDiff > 0 && localLp > 0 && _appContext != null && _appContext!.mounted) {
-        ForegroundNotificationBanner.show(
-          _appContext!,
-          title: 'Love Points Synced!',
-          message: '+$lpDiff LP',
-          emoji: '🤍',
-        );
+      if (lpDiff > 0 && localLp > 0) {
+        // Only show LP banner if no magnet was unlocked (celebration takes priority)
+        if (lastCelebrated != null && currentUnlockedCount <= lastCelebrated) {
+          final navContext = AppNavigator.context;
+          if (navContext != null) {
+            ForegroundNotificationBanner.show(
+              navContext,
+              title: 'Love Points Synced!',
+              message: '+$lpDiff LP',
+              emoji: '🤍',
+            );
+          }
+        }
       }
 
       // Trigger UI update callback

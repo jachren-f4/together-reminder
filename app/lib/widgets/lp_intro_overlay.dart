@@ -11,6 +11,8 @@ import '../widgets/animations/animations.dart';
 import '../config/brand/brand_loader.dart';
 import '../config/brand/brand_config.dart';
 import '../config/brand/us2_theme.dart';
+import '../models/magnet_collection.dart';
+import '../widgets/brand/us2/us2_connection_bar.dart';
 
 /// LP Introduction overlay shown on home screen after completing Welcome Quiz.
 ///
@@ -36,9 +38,12 @@ class _LpIntroOverlayState extends State<LpIntroOverlay>
   late Animation<double> _fadeAnimation;
   late AnimationController _meterController;
   late Animation<double> _meterAnimation;
+  late AnimationController _badgeController;
+  late Animation<double> _badgeAnimation;
 
   bool _showContent = false;
   bool _isProcessing = false;
+  bool _showBadge = false;
   bool get _isUs2 => BrandLoader().config.brand == Brand.us2;
 
   @override
@@ -65,6 +70,16 @@ class _LpIntroOverlayState extends State<LpIntroOverlay>
       curve: Curves.easeOutCubic,
     );
 
+    // Badge pop-in animation
+    _badgeController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 400),
+    );
+    _badgeAnimation = CurvedAnimation(
+      parent: _badgeController,
+      curve: Curves.elasticOut,
+    );
+
     // Start animations
     _fadeController.forward();
     Future.delayed(const Duration(milliseconds: 300), () {
@@ -75,6 +90,25 @@ class _LpIntroOverlayState extends State<LpIntroOverlay>
             _meterController.forward();
             HapticService().trigger(HapticType.success);
             SoundService().play(SoundId.success);
+
+            // Show +30 LP badge during meter fill (Us2 only)
+            if (_isUs2) {
+              Future.delayed(const Duration(milliseconds: 300), () {
+                if (mounted) {
+                  setState(() => _showBadge = true);
+                  _badgeController.forward();
+
+                  // Hide badge after 2.5 seconds
+                  Future.delayed(const Duration(milliseconds: 2500), () {
+                    if (mounted) {
+                      _badgeController.reverse().then((_) {
+                        if (mounted) setState(() => _showBadge = false);
+                      });
+                    }
+                  });
+                }
+              });
+            }
           }
         });
       }
@@ -85,6 +119,7 @@ class _LpIntroOverlayState extends State<LpIntroOverlay>
   void dispose() {
     _fadeController.dispose();
     _meterController.dispose();
+    _badgeController.dispose();
     super.dispose();
   }
 
@@ -339,296 +374,412 @@ class _LpIntroOverlayState extends State<LpIntroOverlay>
   }
 
   Widget _buildUs2Overlay(BuildContext context) {
+    // Get first destination dynamically from config
+    const firstMagnetId = 1;
+    final destinationName = MagnetCollection.getMagnetName(firstMagnetId);
+    final destinationAsset = MagnetCollection.getMagnetAssetPath(firstMagnetId);
+    final lpThreshold = Us2ConnectionBar.getCumulativeLpForMagnet(firstMagnetId);
+
     return Material(
-      // Fully opaque gradient - prevents main screen flash
-      color: const Color(0xFFFF6B6B),
+      // Dark overlay background
+      color: Colors.black,
       child: FadeTransition(
         opacity: _fadeAnimation,
-        child: SizedBox.expand(
-          child: Container(
-            width: double.infinity,
-            height: double.infinity,
-            decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [
-                  Color(0xFFFF6B6B), // Fully opaque gradient start
-                  Color(0xFFFF9F43), // Fully opaque gradient end
-                ],
+        child: Container(
+          width: double.infinity,
+          height: double.infinity,
+          decoration: BoxDecoration(
+            color: Colors.black.withValues(alpha: 0.6),
+          ),
+          child: SafeArea(
+            child: Center(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
+                child: _showContent
+                    ? BounceInWidget(
+                        delay: Duration.zero,
+                        child: Container(
+                          width: double.infinity,
+                          constraints: const BoxConstraints(maxWidth: 340),
+                          padding: const EdgeInsets.all(28),
+                          decoration: BoxDecoration(
+                            color: Us2Theme.cream,
+                            borderRadius: BorderRadius.circular(28),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withValues(alpha: 0.3),
+                                blurRadius: 40,
+                                offset: const Offset(0, 20),
+                              ),
+                            ],
+                          ),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              // Pulsing heart emoji
+                              _buildPulsingHeart(),
+
+                              const SizedBox(height: 16),
+
+                              // Title
+                              Text(
+                                'Love Points',
+                                style: GoogleFonts.playfairDisplay(
+                                  fontSize: 28,
+                                  fontWeight: FontWeight.w700,
+                                  color: Us2Theme.textDark,
+                                ),
+                              ),
+
+                              const SizedBox(height: 12),
+
+                              // Subtitle - mentions destinations
+                              Text(
+                                'Complete quests together to earn Love Points and unlock romantic destinations!',
+                                textAlign: TextAlign.center,
+                                style: GoogleFonts.nunito(
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w500,
+                                  color: Us2Theme.textMedium,
+                                  height: 1.5,
+                                ),
+                              ),
+
+                              const SizedBox(height: 24),
+
+                              // Connection bar preview with animation
+                              AnimatedBuilder(
+                                animation: _meterAnimation,
+                                builder: (context, child) {
+                                  return _buildUs2JourneyBar(
+                                    progress: _meterAnimation.value,
+                                    destinationAsset: destinationAsset,
+                                    lpThreshold: lpThreshold,
+                                  );
+                                },
+                              ),
+
+                              const SizedBox(height: 16),
+
+                              // First destination hint
+                              Text.rich(
+                                TextSpan(
+                                  children: [
+                                    TextSpan(
+                                      text: 'First stop: ',
+                                      style: GoogleFonts.nunito(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w500,
+                                        fontStyle: FontStyle.italic,
+                                        color: Us2Theme.textLight,
+                                      ),
+                                    ),
+                                    TextSpan(
+                                      text: destinationName,
+                                      style: GoogleFonts.nunito(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w700,
+                                        color: Us2Theme.primaryBrandPink,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+
+                              const SizedBox(height: 24),
+
+                              // Let's Go button
+                              GestureDetector(
+                                onTap: _isProcessing ? null : _dismiss,
+                                child: AnimatedOpacity(
+                                  opacity: _isProcessing ? 0.7 : 1.0,
+                                  duration: const Duration(milliseconds: 200),
+                                  child: Container(
+                                    width: double.infinity,
+                                    height: 52,
+                                    decoration: BoxDecoration(
+                                      gradient: const LinearGradient(
+                                        colors: [
+                                          Color(0xFFFF6B6B),
+                                          Color(0xFFFF9F43),
+                                        ],
+                                      ),
+                                      borderRadius: BorderRadius.circular(26),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: const Color(0xFFFF6B6B).withValues(alpha: 0.4),
+                                          blurRadius: 16,
+                                          offset: const Offset(0, 6),
+                                        ),
+                                      ],
+                                    ),
+                                    child: Center(
+                                      child: _isProcessing
+                                          ? const SizedBox(
+                                              width: 20,
+                                              height: 20,
+                                              child: CircularProgressIndicator(
+                                                strokeWidth: 2,
+                                                valueColor: AlwaysStoppedAnimation<Color>(
+                                                  Colors.white,
+                                                ),
+                                              ),
+                                            )
+                                          : Text(
+                                              "Let's Go!",
+                                              style: GoogleFonts.nunito(
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.w700,
+                                                color: Colors.white,
+                                              ),
+                                            ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      )
+                    : const SizedBox.shrink(),
               ),
             ),
-            child: SafeArea(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 24),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Spacer(flex: 1),
+          ),
+        ),
+      ),
+    );
+  }
 
-                  // Diamond icon with glow - smaller
-                  if (_showContent)
-                    BounceInWidget(
-                      delay: const Duration(milliseconds: 0),
-                      child: _buildUs2DiamondIcon(),
+  Widget _buildPulsingHeart() {
+    return TweenAnimationBuilder<double>(
+      tween: Tween(begin: 1.0, end: 1.1),
+      duration: const Duration(milliseconds: 800),
+      curve: Curves.easeInOut,
+      builder: (context, value, child) {
+        return Transform.scale(
+          scale: value,
+          child: const Text(
+            '💗',
+            style: TextStyle(fontSize: 48),
+          ),
+        );
+      },
+      onEnd: () {
+        if (mounted) setState(() {});
+      },
+    );
+  }
+
+  /// Connection bar preview matching the mockup design
+  Widget _buildUs2JourneyBar({
+    required double progress,
+    required String destinationAsset,
+    required int lpThreshold,
+  }) {
+    // Calculate the fill percentage (30 LP out of threshold)
+    final fillPercent = (widget.lpAwarded / lpThreshold).clamp(0.0, 1.0) * progress;
+    final currentLp = (widget.lpAwarded * progress).round();
+
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        gradient: const LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            Color(0xFFFF6B6B),
+            Color(0xFFFF9F43),
+          ],
+        ),
+        borderRadius: BorderRadius.circular(16),
+      ),
+      child: Column(
+        children: [
+          // Header label
+          Text(
+            'YOUR JOURNEY',
+            style: GoogleFonts.nunito(
+              fontSize: 11,
+              fontWeight: FontWeight.w700,
+              letterSpacing: 1.5,
+              color: Colors.white.withValues(alpha: 0.9),
+            ),
+          ),
+
+          const SizedBox(height: 14),
+
+          // Track with destination
+          SizedBox(
+            height: 50,
+            child: LayoutBuilder(
+              builder: (context, constraints) {
+                final trackWidth = constraints.maxWidth - 48; // Reserve space for destination
+                final heartPosition = trackWidth * fillPercent;
+
+                return Stack(
+                  clipBehavior: Clip.none,
+                  children: [
+                    // Track background
+                    Positioned(
+                      left: 0,
+                      right: 48,
+                      top: 15,
+                      child: Container(
+                        height: 10,
+                        decoration: BoxDecoration(
+                          color: Colors.black.withValues(alpha: 0.2),
+                          borderRadius: BorderRadius.circular(5),
+                        ),
+                      ),
                     ),
 
-                  const SizedBox(height: 20),
+                    // Progress fill with glow
+                    Positioned(
+                      left: 0,
+                      top: 15,
+                      child: Container(
+                        height: 10,
+                        width: trackWidth * fillPercent,
+                        decoration: BoxDecoration(
+                          gradient: const LinearGradient(
+                            colors: [
+                              Color(0xFFFFE066), // Gold start
+                              Color(0xFFFFB347), // Gold end
+                            ],
+                          ),
+                          borderRadius: BorderRadius.circular(5),
+                          boxShadow: [
+                            BoxShadow(
+                              color: const Color(0xFFFFE066).withValues(alpha: 0.6),
+                              blurRadius: 10,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
 
-                  // Title with text shadow for readability
-                  if (_showContent)
-                    BounceInWidget(
-                      delay: const Duration(milliseconds: 200),
-                      child: Text(
-                        'Love Points',
-                        style: GoogleFonts.playfairDisplay(
-                          fontSize: 38,
-                          fontWeight: FontWeight.w700,
-                          color: Colors.white,
-                          shadows: [
-                            Shadow(
-                              color: Colors.black.withOpacity(0.2),
+                    // Heart indicator
+                    Positioned(
+                      left: heartPosition - 18,
+                      top: -3,
+                      child: Container(
+                        width: 36,
+                        height: 36,
+                        decoration: BoxDecoration(
+                          gradient: const LinearGradient(
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                            colors: [
+                              Color(0xFFFF6B6B),
+                              Color(0xFFFF9F43),
+                            ],
+                          ),
+                          shape: BoxShape.circle,
+                          border: Border.all(color: Colors.white, width: 3),
+                          boxShadow: [
+                            BoxShadow(
+                              color: const Color(0xFFFF6B6B).withValues(alpha: 0.4),
+                              blurRadius: 12,
+                              offset: const Offset(0, 4),
+                            ),
+                          ],
+                        ),
+                        child: const Center(
+                          child: Text('💗', style: TextStyle(fontSize: 16)),
+                        ),
+                      ),
+                    ),
+
+                    // +30 LP badge (animated)
+                    if (_showBadge)
+                      Positioned(
+                        left: heartPosition - 10,
+                        top: -34,
+                        child: AnimatedBuilder(
+                          animation: _badgeAnimation,
+                          builder: (context, child) {
+                            return Transform.scale(
+                              scale: _badgeAnimation.value,
+                              child: Opacity(
+                                opacity: _badgeAnimation.value.clamp(0.0, 1.0),
+                                child: Container(
+                                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                                  decoration: BoxDecoration(
+                                    gradient: const LinearGradient(
+                                      colors: [
+                                        Color(0xFFFFE066),
+                                        Color(0xFFFFB347),
+                                      ],
+                                    ),
+                                    borderRadius: BorderRadius.circular(12),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: const Color(0xFFFFE066).withValues(alpha: 0.5),
+                                        blurRadius: 8,
+                                        offset: const Offset(0, 2),
+                                      ),
+                                    ],
+                                  ),
+                                  child: Text(
+                                    '+$currentLp LP',
+                                    style: GoogleFonts.nunito(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w700,
+                                      color: Us2Theme.textDark,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+
+                    // Destination magnet image
+                    Positioned(
+                      right: 0,
+                      top: 0,
+                      child: Container(
+                        width: 40,
+                        height: 40,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(8),
+                          border: Border.all(
+                            color: Colors.white.withValues(alpha: 0.6),
+                            width: 2,
+                          ),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withValues(alpha: 0.2),
                               blurRadius: 8,
                               offset: const Offset(0, 2),
                             ),
                           ],
                         ),
-                      ),
-                    ),
-
-                  const SizedBox(height: 12),
-
-                  // Subtitle with better contrast
-                  if (_showContent)
-                    BounceInWidget(
-                      delay: const Duration(milliseconds: 300),
-                      child: Text(
-                        'Complete quests together to earn points\nand strengthen your connection',
-                        textAlign: TextAlign.center,
-                        style: GoogleFonts.nunito(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.white,
-                          height: 1.5,
-                          shadows: [
-                            Shadow(
-                              color: Colors.black.withOpacity(0.15),
-                              blurRadius: 6,
-                              offset: const Offset(0, 1),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-
-                  const SizedBox(height: 28),
-
-                  // LP Meter
-                  if (_showContent)
-                    BounceInWidget(
-                      delay: const Duration(milliseconds: 500),
-                      child: AnimatedBuilder(
-                        animation: _meterAnimation,
-                        builder: (context, child) {
-                          final progress = _meterAnimation.value;
-                          return _buildUs2LpMeter(progress);
-                        },
-                      ),
-                    ),
-
-                  const Spacer(flex: 2),
-
-                  // Continue button
-                  if (_showContent)
-                    BounceInWidget(
-                      delay: const Duration(milliseconds: 700),
-                      child: GestureDetector(
-                        onTap: _isProcessing ? null : _dismiss,
-                        child: AnimatedOpacity(
-                          opacity: _isProcessing ? 0.7 : 1.0,
-                          duration: const Duration(milliseconds: 200),
-                          child: Container(
-                            width: double.infinity,
-                            constraints: const BoxConstraints(maxWidth: 280),
-                            height: 56,
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(28),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black.withOpacity(0.2),
-                                  blurRadius: 20,
-                                  offset: const Offset(0, 8),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(6),
+                          child: Image.asset(
+                            destinationAsset,
+                            fit: BoxFit.cover,
+                            errorBuilder: (context, error, stackTrace) {
+                              // Fallback to emoji
+                              return Container(
+                                color: const Color(0xFFFF6B6B),
+                                child: Center(
+                                  child: Text(
+                                    Us2ConnectionBar.getMagnetEmoji(1),
+                                    style: const TextStyle(fontSize: 18),
+                                  ),
                                 ),
-                              ],
-                            ),
-                            child: Center(
-                              child: _isProcessing
-                                  ? SizedBox(
-                                      width: 20,
-                                      height: 20,
-                                      child: CircularProgressIndicator(
-                                        strokeWidth: 2,
-                                        valueColor: AlwaysStoppedAnimation<Color>(
-                                          Us2Theme.gradientAccentStart,
-                                        ),
-                                      ),
-                                    )
-                                  : Text(
-                                      "Let's Go!",
-                                      style: GoogleFonts.nunito(
-                                        fontSize: 17,
-                                        fontWeight: FontWeight.w700,
-                                        color: Us2Theme.gradientAccentStart,
-                                      ),
-                                    ),
-                            ),
+                              );
+                            },
                           ),
                         ),
                       ),
                     ),
-
-                  const SizedBox(height: 32),
-                ],
-              ),
-            ),
-          ),
-        ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildUs2DiamondIcon() {
-    return Stack(
-      alignment: Alignment.center,
-      children: [
-        // Glow effect - smaller
-        Container(
-          width: 100,
-          height: 100,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            gradient: RadialGradient(
-              colors: [
-                Colors.white.withOpacity(0.5),
-                Colors.transparent,
-              ],
-            ),
-          ),
-        ),
-        // Diamond emoji with animation - smaller
-        TweenAnimationBuilder<double>(
-          tween: Tween(begin: 1.0, end: 1.08),
-          duration: const Duration(milliseconds: 1000),
-          curve: Curves.easeInOut,
-          builder: (context, value, child) {
-            return Transform.scale(
-              scale: value,
-              child: const Text(
-                '💎',
-                style: TextStyle(fontSize: 64),
-              ),
-            );
-          },
-          onEnd: () {
-            // Restart animation for pulsing effect
-            if (mounted) setState(() {});
-          },
-        ),
-      ],
-    );
-  }
-
-  Widget _buildUs2LpMeter(double progress) {
-    final currentLp = (widget.lpAwarded * progress).round();
-
-    return Container(
-      width: double.infinity,
-      constraints: const BoxConstraints(maxWidth: 300),
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.25),
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(
-          color: Colors.white.withOpacity(0.3),
-          width: 1,
-        ),
-      ),
-      child: Column(
-        children: [
-          // Big LP number with +30 badge
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              Text(
-                '+$currentLp',
-                style: GoogleFonts.playfairDisplay(
-                  fontSize: 56,
-                  fontWeight: FontWeight.w700,
-                  color: Colors.white,
-                  shadows: [
-                    Shadow(
-                      color: Colors.black.withOpacity(0.15),
-                      blurRadius: 8,
-                      offset: const Offset(0, 2),
-                    ),
                   ],
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(bottom: 12),
-                child: Text(
-                  ' LP',
-                  style: GoogleFonts.nunito(
-                    fontSize: 20,
-                    fontWeight: FontWeight.w700,
-                    color: Colors.white,
-                  ),
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 16),
-
-          // Progress track
-          Container(
-            height: 10,
-            decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.35),
-              borderRadius: BorderRadius.circular(5),
-            ),
-            child: Stack(
-              children: [
-                FractionallySizedBox(
-                  widthFactor: progress * 0.2, // 30 out of 150 = 20%
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(5),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(height: 10),
-
-          // Footer
-          Text(
-            '${widget.lpAwarded} / 150 to next tier',
-            style: GoogleFonts.nunito(
-              fontSize: 13,
-              fontWeight: FontWeight.w600,
-              color: Colors.white,
-              shadows: [
-                Shadow(
-                  color: Colors.black.withOpacity(0.1),
-                  blurRadius: 4,
-                  offset: const Offset(0, 1),
-                ),
-              ],
+                );
+              },
             ),
           ),
         ],
@@ -636,45 +787,4 @@ class _LpIntroOverlayState extends State<LpIntroOverlay>
     );
   }
 
-  Widget _buildUs2InfoCards() {
-    final items = [
-      {'icon': '✨', 'text': 'Complete daily quests to earn LP'},
-      {'icon': '🎯', 'text': 'Reach milestones to unlock rewards'},
-      {'icon': '💕', 'text': 'Build your connection score together'},
-    ];
-
-    return Column(
-      children: items.map((item) {
-        return Container(
-          width: double.infinity,
-          constraints: const BoxConstraints(maxWidth: 300),
-          margin: const EdgeInsets.only(bottom: 12),
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-          decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.2),
-            borderRadius: BorderRadius.circular(12),
-          ),
-          child: Row(
-            children: [
-              Text(
-                item['icon']!,
-                style: const TextStyle(fontSize: 24),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Text(
-                  item['text']!,
-                  style: GoogleFonts.nunito(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w500,
-                    color: Colors.white,
-                  ),
-                ),
-              ),
-            ],
-          ),
-        );
-      }).toList(),
-    );
-  }
 }

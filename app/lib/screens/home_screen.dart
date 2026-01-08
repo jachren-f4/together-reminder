@@ -9,6 +9,7 @@ import '../utils/logger.dart';
 import '../utils/number_formatter.dart';
 import '../services/storage_service.dart';
 import '../services/arena_service.dart';
+import '../models/arena.dart';
 import '../services/daily_pulse_service.dart';
 import '../services/word_search_service.dart';
 import '../services/linked_service.dart';
@@ -20,6 +21,8 @@ import '../services/sound_service.dart';
 import '../services/steps_feature_service.dart';
 import '../services/home_polling_service.dart';
 import '../services/unlock_service.dart';
+import '../services/magnet_service.dart';
+import '../models/magnet_collection.dart';
 import '../animations/animation_config.dart';
 import '../theme/app_theme.dart';
 import '../widgets/poke_bottom_sheet.dart';
@@ -52,6 +55,7 @@ import 'steps_intro_screen.dart';
 import 'steps_counter_screen.dart';
 import 'linked_completion_screen.dart';
 import 'word_search_completion_screen.dart';
+import 'magnet_collection_screen.dart';
 import '../widgets/lp_intro_overlay.dart';
 
 /// Home tab content showing daily quests, side quests, and stats
@@ -85,8 +89,10 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin, 
   final QuizService _quizService = QuizService();
   final HomePollingService _pollingService = HomePollingService();
   final UnlockService _unlockService = UnlockService();
+  final MagnetService _magnetService = MagnetService();
 
   bool _isRefreshing = false;
+  MagnetCollection? _magnetCollection;
   UnlockState? _unlockState; // Cached unlock state for rendering
   DateTime? _lastSyncTime;
   late AnimationController _pulseController;
@@ -124,8 +130,18 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin, 
     _unlockService.addOnUnlockChanged(_onUnlockChanged);
 
     // Fetch unlock state for locked quest rendering
-    // Note: LP sync and quest sync are now handled by AppBootstrapService before HomeScreen is shown
     _fetchUnlockState();
+
+    // Fetch magnet collection (for Us 2.0 connection bar)
+    _fetchMagnetCollection();
+
+    // Sync LP from server on initial load - triggers magnet unlock celebration if needed
+    // Use postFrameCallback to ensure context is available for showing dialogs
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        LovePointService.fetchAndSyncFromServer();
+      }
+    });
 
     // Subscribe to unified polling service for side quest updates
     _pollingService.subscribe();
@@ -161,12 +177,17 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin, 
       // MUST await before setState to prevent flash (stale data → fresh data)
       await _pollingService.pollNow();
       if (!mounted) return;
+      // Sync LP from server - this triggers magnet unlock celebration if threshold crossed
+      await LovePointService.fetchAndSyncFromServer();
+      if (!mounted) return;
       // Refresh unlock state - a game completion may have unlocked features
       _fetchUnlockState();
       // Also refresh side quests carousel
       _refreshSideQuestsFuture();
+      // Refresh magnet collection (Us 2.0)
+      _fetchMagnetCollection();
       setState(() {});
-      Logger.debug('Route popped - refreshing side quests and unlock state', service: 'home');
+      Logger.debug('Route popped - refreshing side quests, LP, and unlock state', service: 'home');
     }
   }
 
@@ -224,6 +245,31 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin, 
       }
     } catch (e) {
       Logger.error('Failed to fetch unlock state', error: e, service: 'home');
+    }
+  }
+
+  /// Fetch magnet collection from server (for Us 2.0 connection bar)
+  Future<void> _fetchMagnetCollection() async {
+    if (!BrandWidgetFactory.isUs2) return;
+
+    try {
+      // First, try to get cached collection for immediate display
+      final cached = _magnetService.getCachedCollection();
+      if (cached != null && mounted) {
+        setState(() {
+          _magnetCollection = cached;
+        });
+      }
+
+      // Then fetch from server to ensure data is fresh
+      final collection = await _magnetService.fetchAndSync();
+      if (mounted && collection != null) {
+        setState(() {
+          _magnetCollection = collection;
+        });
+      }
+    } catch (e) {
+      Logger.error('Failed to fetch magnet collection', error: e, service: 'home');
     }
   }
 
@@ -313,6 +359,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin, 
     final partner = _storage.getPartner();
     final currentArena = _arenaService.getCurrentArena();
     final lovePoints = _arenaService.getLovePoints();
+    final nextArena = Arena.getNextArena(lovePoints);
 
     // Calculate days together
     int daysTogether = 1;
@@ -335,8 +382,15 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin, 
               userName: user?.name ?? 'You',
               partnerName: partner?.name ?? 'Partner',
               dayNumber: daysTogether,
-              currentLp: lovePoints,
-              nextTierLp: currentArena.maxLP,
+              magnetCollection: _magnetCollection,
+              onCollectionTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const MagnetCollectionScreen(),
+                  ),
+                );
+              },
               dailyQuests: dailyQuests,
               sideQuests: sideQuests,
               onQuestTap: _navigateToQuest,
@@ -346,6 +400,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin, 
                   builder: (context) => const DebugMenu(),
                 );
               },
+              getDailyQuestGuidance: _getDailyQuestGuidanceState,
+              getSideQuestGuidance: _getSideQuestGuidanceState,
             ) ?? const SizedBox.shrink();
           },
         ),
@@ -1285,6 +1341,70 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin, 
     return (isLocked: isLocked, unlockCriteria: isLocked ? criteria : null);
   }
 
+  /// Determine if a daily quest should show onboarding guidance (Us 2.0 only)
+  ({bool showGuidance, String? guidanceText}) _getDailyQuestGuidanceState(DailyQuest quest) {
+    // If unlock state hasn't loaded yet, don't show guidance
+    if (_unlockState == null) {
+      return (showGuidance: false, guidanceText: null);
+    }
+
+    final user = _storage.getUser();
+    final userId = user?.id;
+
+    // Check if any quest is in "waiting for partner" state
+    // If user completed but partner hasn't, suppress all guidance
+    if (userId != null) {
+      final allQuests = _storage.getTodayQuests().where((q) => !q.isSideQuest).toList();
+      final anyWaitingForPartner = allQuests.any((q) {
+        final userCompleted = q.hasUserCompleted(userId);
+        final bothCompleted = q.isCompleted;
+        return userCompleted && !bothCompleted;
+      });
+      if (anyWaitingForPartner) {
+        return (showGuidance: false, guidanceText: null);
+      }
+    }
+
+    // Check for pending results - show "Continue Here" on those
+    final hasClassicPending = _storage.hasPendingResults('classic_quiz');
+    final hasAffirmationPending = _storage.hasPendingResults('affirmation_quiz');
+    final hasYouOrMePending = _storage.hasPendingResults('you_or_me');
+    final anyPending = hasClassicPending || hasAffirmationPending || hasYouOrMePending;
+
+    if (anyPending) {
+      if (quest.type == QuestType.quiz && quest.formatType == 'classic' && hasClassicPending) {
+        return (showGuidance: true, guidanceText: 'Continue Here');
+      }
+      if (quest.type == QuestType.quiz && quest.formatType == 'affirmation' && hasAffirmationPending && !hasClassicPending) {
+        return (showGuidance: true, guidanceText: 'Continue Here');
+      }
+      if (quest.type == QuestType.youOrMe && hasYouOrMePending && !hasClassicPending && !hasAffirmationPending) {
+        return (showGuidance: true, guidanceText: 'Continue Here');
+      }
+      // Some other quest has pending results - suppress guidance on this quest
+      return (showGuidance: false, guidanceText: null);
+    }
+
+    // Use unlock state guidance target
+    final target = _unlockState!.currentGuidanceTarget;
+    final text = _unlockState!.guidanceText;
+
+    // Match quest type to guidance target
+    if (quest.type == QuestType.quiz) {
+      if (quest.formatType == 'classic' && target == GuidanceTarget.classicQuiz) {
+        return (showGuidance: true, guidanceText: text);
+      }
+      if (quest.formatType == 'affirmation' && target == GuidanceTarget.affirmationQuiz) {
+        return (showGuidance: true, guidanceText: text);
+      }
+    }
+    if (quest.type == QuestType.youOrMe && target == GuidanceTarget.youOrMe) {
+      return (showGuidance: true, guidanceText: text);
+    }
+
+    return (showGuidance: false, guidanceText: null);
+  }
+
   /// Determine if a side quest should show onboarding guidance
   ({bool showGuidance, String? guidanceText}) _getSideQuestGuidanceState(DailyQuest quest) {
     // If unlock state hasn't loaded yet, don't show guidance
@@ -1305,6 +1425,22 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin, 
 
     // Steps is skipped in guidance chain
     return (showGuidance: false, guidanceText: null);
+  }
+
+  /// Get a short tier name for display in the connection bar
+  /// e.g., "Cozy Cabin" -> "Cabin", "Beach Villa" -> "Beach"
+  String _getShortTierName(String fullName) {
+    // Extract just the first word for most cases
+    final words = fullName.split(' ');
+    if (words.length >= 2) {
+      // For "Cozy Cabin" -> "Cabin", "Beach Villa" -> "Beach", etc.
+      // Use the more descriptive word (usually the second for location-based names)
+      if (words[0] == 'Cozy' || words[0] == 'Beach' || words[0] == 'Yacht' || words[0] == 'Mountain' || words[0] == 'Castle') {
+        return words[0];
+      }
+      return words[1];
+    }
+    return fullName;
   }
 
   void _showPokeBottomSheet() {

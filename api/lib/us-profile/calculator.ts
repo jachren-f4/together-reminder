@@ -137,6 +137,39 @@ export const DIMENSIONS: Record<string, Dimension> = {
     leftDescription: 'Needs time alone to process before discussing',
     rightDescription: 'Prefers to address issues right away',
   },
+  // New dimensions added January 2026
+  risk_adventure: {
+    id: 'risk_adventure',
+    label: 'Risk & Adventure',
+    leftLabel: 'Play It Safe',
+    rightLabel: 'Thrill Seeker',
+    leftDescription: 'Prefers familiar comfort and calculated choices',
+    rightDescription: 'Seeks new experiences and embraces the unknown',
+  },
+  novelty_preference: {
+    id: 'novelty_preference',
+    label: 'Novelty Preference',
+    leftLabel: 'Comfort & Familiar',
+    rightLabel: 'New & Discovery',
+    leftDescription: 'Loves traditions and returning to favorites',
+    rightDescription: 'Always looking to try something new',
+  },
+  support_style: {
+    id: 'support_style',
+    label: 'Support Style',
+    leftLabel: 'Listen First',
+    rightLabel: 'Give Solutions',
+    leftDescription: 'Focuses on empathy and being heard',
+    rightDescription: 'Jumps into problem-solving mode',
+  },
+  daily_rhythm: {
+    id: 'daily_rhythm',
+    label: 'Daily Rhythm',
+    leftLabel: 'Night Owl',
+    rightLabel: 'Early Bird',
+    leftDescription: 'Comes alive in the evening and late night',
+    rightDescription: 'Most energized in the morning hours',
+  },
 };
 
 // Love language display names

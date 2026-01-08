@@ -1,68 +1,79 @@
 {
   "quizId": "quiz_005",
-  "title": "Decisions & Planning",
+  "title": "Dreams & Wishes",
   "branch": "lighthearted",
   "questions": [
     {
       "id": "quiz_005_q1",
-      "text": "When making a big decision, I usually...",
+      "text": "A dream I'd love to make happen with you someday is...",
       "choices": [
-        "Research thoroughly first",
-        "Go with my gut instinct",
-        "Talk it through with you",
-        "Take my time, no rushing",
-        "Other / It depends on the decision"
+        "Traveling somewhere incredible together",
+        "Building or creating something meaningful",
+        "A lifestyle change (home, location, pace)",
+        "An experience or adventure we'd never forget",
+        "Other / It depends"
       ],
-      "category": "together"
+      "category": "preferences"
     },
     {
       "id": "quiz_005_q2",
-      "text": "For everyday choices (dinner, weekend plans), I prefer...",
+      "text": "When I imagine our future together, I picture...",
       "choices": [
-        "You decide, I'm easy",
-        "We decide together",
-        "Take turns choosing",
-        "I usually have opinions",
-        "Other / Whoever cares more decides"
+        "A cozy, settled life with routines we love",
+        "Adventures and new experiences along the way",
+        "Growing and evolving together",
+        "Being surrounded by family and friends",
+        "Other / It depends"
       ],
-      "category": "together"
+      "category": "preferences"
     },
     {
       "id": "quiz_005_q3",
-      "text": "When it comes to trying new things, I'm usually...",
+      "text": "A place I'd love to visit or live with you someday is...",
       "choices": [
-        "Excited and up for it",
-        "Cautious but open",
-        "Need convincing first",
-        "Prefer sticking to what I know",
-        "Other / Depends on the thing"
+        "Somewhere by the ocean or water",
+        "A vibrant city with lots to do",
+        "Somewhere quiet in nature",
+        "A different country or culture",
+        "Other / It depends"
       ],
-      "category": "lifestyle"
+      "category": "preferences"
     },
     {
       "id": "quiz_005_q4",
-      "text": "How do I feel about surprises?",
+      "text": "Something I hope we learn or try together is...",
       "choices": [
-        "Love them - the more the better",
-        "Like small surprises, not big ones",
-        "Prefer to know what's coming",
-        "Depends who it's from",
-        "Other / Mixed feelings"
+        "A new hobby or skill",
+        "A language or cultural experience",
+        "Something adventurous or physical",
+        "A creative project or craft",
+        "Other / It depends"
       ],
-      "category": "lifestyle"
+      "category": "lifestyle",
+      "metadata": {
+        "dimension": "novelty_preference",
+        "poleMapping": [
+          "right",
+          "right",
+          "right",
+          "right",
+          null
+        ]
+      }
     },
     {
       "id": "quiz_005_q5",
-      "text": "When we disagree on plans, I'd rather...",
+      "text": "A 'someday' conversation I'd love to have with you is about...",
       "choices": [
-        "Compromise and meet in the middle",
-        "Take turns getting our way",
-        "Go with whoever feels stronger",
-        "Find a third option we both like",
-        "Other / Talk it out until we agree"
+        "Where we want to be in 5 or 10 years",
+        "Bucket list dreams and adventures",
+        "What kind of home we'd create together",
+        "How we want to grow old together",
+        "Other / It depends"
       ],
-      "category": "together"
+      "category": "communication"
     }
   ],
-  "description": "See how you approach choices and plan your life together."
+  "description": "Share your hopes and dreams for your future together.",
+  "magnet_id": 0
 }

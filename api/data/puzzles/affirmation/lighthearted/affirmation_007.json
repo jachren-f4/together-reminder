@@ -9,31 +9,62 @@
       "id": "affirmation_007_q1",
       "text": "I feel more relaxed when I have a plan",
       "type": "scale",
-      "scaleLabels": ["Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"]
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ]
     },
     {
       "id": "affirmation_007_q2",
       "text": "I enjoy spontaneous changes to our plans",
       "type": "scale",
-      "scaleLabels": ["Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"]
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ]
     },
     {
       "id": "affirmation_007_q3",
       "text": "I like to research and prepare before making decisions",
       "type": "scale",
-      "scaleLabels": ["Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"]
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ]
     },
     {
       "id": "affirmation_007_q4",
       "text": "Last-minute plans stress me out",
       "type": "scale",
-      "scaleLabels": ["Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"]
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ]
     },
     {
       "id": "affirmation_007_q5",
       "text": "I prefer going with the flow over strict schedules",
       "type": "scale",
-      "scaleLabels": ["Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"]
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ]
     }
-  ]
+  ],
+  "magnet_id": 1
 }

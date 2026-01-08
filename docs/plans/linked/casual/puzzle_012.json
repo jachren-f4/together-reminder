@@ -1,0 +1,87 @@
+{
+  "author": "Crossword Maker GPT",
+  "title": "Adult Intimacy Puzzle #12",
+  "size": {
+    "rows": 9,
+    "cols": 7
+  },
+  "clues": {
+    "1": { "type": "emoji", "content": "🎵", "arrow": "down", "target_index": 8 },
+    "2": { "type": "text", "content": "SE_D", "arrow": "down", "target_index": 10 },
+    "3": { "type": "emoji", "content": "🚗", "arrow": "down", "target_index": 11 },
+    "4": { "type": "emoji", "content": "🍰🍰", "arrow": "down", "target_index": 13 },
+    "5": { "type": "text", "content": "Repair", "arrow": "across", "target_index": 8 },
+    "6": {
+      "across": { "type": "text", "content": "_IVE", "target_index": 18 },
+      "down": { "type": "text", "content": "Before X", "target_index": 24 }
+    },
+    "7": { "type": "text", "content": "After R", "arrow": "across", "target_index": 22 },
+    "8": {
+      "across": { "type": "text", "content": "Clean surface", "target_index": 24 },
+      "down": { "type": "text", "content": "Alike", "target_index": 30 }
+    },
+    "10": {
+      "across": { "type": "text", "content": "__ VERSA", "target_index": 32 },
+      "down": { "type": "text", "content": "Authentic", "target_index": 38 }
+    },
+    "11": {
+      "across": { "type": "text", "content": "_REAT", "target_index": 41 },
+      "down": { "type": "emoji", "content": "🍑", "target_index": 47 }
+    },
+    "12": {
+      "across": { "type": "text", "content": "_E", "target_index": 44 },
+      "down": { "type": "emoji", "content": "👍", "text": "__S", "target_index": 50 }
+    },
+    "13": {
+      "across": { "type": "text", "content": "__ USUAL", "target_index": 47 },
+      "down": { "type": "text", "content": "__SCUE", "target_index": 53 }
+    },
+    "14": { "type": "emoji", "content": "📅", "arrow": "across", "target_index": 50 },
+    "15": { "type": "text", "content": "___IAN", "arrow": "across", "target_index": 59 },
+    "16": { "type": "text", "content": "__D", "arrow": "down", "target_index": 9 },
+    "17": {
+      "across": { "type": "text", "content": "_REAT", "target_index": 13 },
+      "down": { "type": "text", "content": "_P", "target_index": 19 }
+    },
+    "18": { "type": "text", "content": "__DO", "arrow": "across", "target_index": 15 },
+    "19": {
+      "across": { "type": "text", "content": "_S", "target_index": 29 },
+      "down": { "type": "text", "content": "_CEL", "target_index": 36 }
+    },
+    "20": { "type": "text", "content": "_ARE", "arrow": "across", "target_index": 36 },
+    "21": { "type": "text", "content": "_E", "arrow": "across", "target_index": 9 },
+    "22": { "type": "text", "content": "_USIC", "arrow": "down", "target_index": 15 },
+    "23": { "type": "text", "content": "_IPE", "arrow": "down", "target_index": 25 },
+    "24": { "type": "text", "content": "_RIVE", "arrow": "down", "target_index": 18 },
+    "25": { "type": "text", "content": "_EAL", "arrow": "down", "target_index": 45 },
+    "26": { "type": "text", "content": "_I", "arrow": "down", "target_index": 26 },
+    "27": { "type": "text", "content": "_EAR", "arrow": "across", "target_index": 51 },
+    "28": { "type": "text", "content": "_S", "arrow": "down", "target_index": 54 },
+    "29": { "type": "text", "content": "Before F", "arrow": "across", "target_index": 57 },
+    "30": { "type": "emoji", "content": "🪲", "text": "_UG", "arrow": "down", "target_index": 62 }
+  },
+  "date": "2025-11-27",
+  "grid": [
+    ".", ".", ".", ".", ".", ".", ".",
+    ".", "M", "E", "N", "D", ".", "T",
+    ".", "U", "N", ".", "R", "O", "R",
+    ".", "S", ".", "W", "I", "P", "E",
+    ".", "I", "S", ".", "V", "I", "A",
+    ".", "C", "A", "R", "E", ".", "T",
+    ".", ".", "M", "E", ".", "A", "S",
+    ".", "Y", "E", "A", "R", "S", ".",
+    ".", "E", ".", "L", "E", "S", "B"
+  ],
+  "gridnums": [
+    0, 1, 16, 2, 3, 0, 4,
+    5, 0, 21, 0, 0, 17, 0,
+    18, 0, 0, 6, 24, 0, 0,
+    7, 0, 8, 0, 23, 26, 0,
+    19, 0, 0, 10, 0, 0, 0,
+    20, 0, 0, 0, 25, 11, 0,
+    0, 12, 0, 0, 13, 28, 0,
+    14, 0, 27, 0, 0, 0, 30,
+    29, 0, 15, 0, 0, 0, 0
+  ],
+  "puzzleId": "puzzle_012"
+}

@@ -5,6 +5,7 @@ import 'storage_service.dart';
 import 'user_profile_service.dart';
 import 'quest_initialization_service.dart';
 import 'love_point_service.dart';
+import 'magnet_service.dart';
 import 'unlock_service.dart';
 import 'home_polling_service.dart';
 import 'notification_service.dart';
@@ -225,9 +226,39 @@ class AppBootstrapService extends ChangeNotifier {
     try {
       await LovePointService.fetchAndSyncFromServer();
       Logger.debug('Bootstrap: LP synced', service: 'bootstrap');
+
+      // Initialize magnet celebration tracking if not set
+      // This ensures existing users don't miss celebrations after code update
+      await _initializeMagnetCelebrationTracking();
     } catch (e) {
       Logger.error('Bootstrap: failed to sync LP', error: e, service: 'bootstrap');
       // Don't rethrow - LP not syncing shouldn't block the entire app
+    }
+  }
+
+  /// Initialize magnet celebration tracking for existing users
+  ///
+  /// If lastCelebratedMagnetCount is null (first run with new code),
+  /// initialize it to current magnet count so future unlocks trigger celebrations.
+  Future<void> _initializeMagnetCelebrationTracking() async {
+    try {
+      final lastCelebrated = _storage.getLastCelebratedMagnetCount();
+      if (lastCelebrated != null) return; // Already initialized
+
+      // Get current LP and calculate magnets
+      final user = _storage.getUser();
+      if (user == null) return;
+
+      final magnetService = MagnetService();
+      final currentMagnets = magnetService.calculateMagnets(user.lovePoints);
+
+      await _storage.setLastCelebratedMagnetCount(currentMagnets);
+      Logger.debug(
+        'Bootstrap: initialized magnet celebration tracking at $currentMagnets magnets',
+        service: 'bootstrap',
+      );
+    } catch (e) {
+      Logger.error('Bootstrap: failed to init magnet tracking', error: e, service: 'bootstrap');
     }
   }
 

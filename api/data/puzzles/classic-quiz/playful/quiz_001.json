@@ -5,84 +5,115 @@
   "questions": [
     {
       "id": "quiz_001_q1",
-      "text": "After a long week, I prefer to recharge by...",
+      "text": "When it comes to our social life, I'd love for us to...",
       "choices": [
-        "Going out with friends to a lively event",
-        "Having a small gathering with close friends",
-        "Spending quiet time at home alone",
-        "One-on-one time with my partner",
+        "Have a close circle of couple friends we see regularly",
+        "Keep our social lives mostly separate and cherish our couple time",
+        "Be spontaneous - say yes to whatever comes up",
+        "Find a balance between group hangs and just-us time",
         "Other / It depends"
       ],
-      "category": "personality",
+      "category": "social",
       "metadata": {
         "dimension": "social_energy",
-        "poleMapping": ["right", "right", "left", "left", null]
+        "poleMapping": [
+          "right",
+          "left",
+          null,
+          null,
+          null
+        ]
       }
     },
     {
       "id": "quiz_001_q2",
-      "text": "At a party, you'll most likely find me...",
+      "text": "When I need some alone time to recharge, I hope my partner...",
       "choices": [
-        "In the center of the room telling stories",
-        "Having deep conversations with a few people",
-        "Helping the host with tasks",
-        "Finding a quiet corner to observe",
+        "Gives me space without taking it personally",
+        "Checks in on me after a while",
+        "Joins me in quiet parallel time - same room, doing our own things",
+        "Understands without me having to explain",
         "Other / It depends"
       ],
-      "category": "social",
+      "category": "communication",
       "metadata": {
         "dimension": "social_energy",
-        "poleMapping": ["right", "left", null, "left", null]
+        "poleMapping": [
+          "left",
+          null,
+          "left",
+          null,
+          null
+        ]
       }
     },
     {
       "id": "quiz_001_q3",
-      "text": "When meeting new people, I typically...",
+      "text": "I feel most energized as a couple when we...",
       "choices": [
-        "Introduce myself to everyone enthusiastically",
-        "Wait for others to approach me first",
-        "Stick with people I already know",
-        "Jump right into interesting conversations",
-        "Other / It depends"
-      ],
-      "category": "social",
-      "metadata": {
-        "dimension": "social_energy",
-        "poleMapping": ["right", "left", "left", "right", null]
-      }
-    },
-    {
-      "id": "quiz_001_q4",
-      "text": "My ideal weekend involves...",
-      "choices": [
-        "Multiple social activities and plans",
-        "One fun outing and lots of rest",
-        "Staying home with a good book or show",
-        "Spontaneous adventures as they come",
+        "Are out doing something social together",
+        "Have a cozy night in, just the two of us",
+        "Each do our own thing and reconnect after",
+        "Try something new together, just us",
         "Other / It depends"
       ],
       "category": "lifestyle",
       "metadata": {
         "dimension": "social_energy",
-        "poleMapping": ["right", null, "left", null, null]
+        "poleMapping": [
+          "right",
+          "left",
+          "left",
+          null,
+          null
+        ]
+      }
+    },
+    {
+      "id": "quiz_001_q4",
+      "text": "For our ideal weekend together, I'd want...",
+      "choices": [
+        "At least one social plan with friends or family",
+        "Mostly unstructured quality time, just us",
+        "A mix of adventure and downtime",
+        "To follow your lead and see what you're in the mood for",
+        "Other / It depends"
+      ],
+      "category": "lifestyle",
+      "metadata": {
+        "dimension": "social_energy",
+        "poleMapping": [
+          "right",
+          "left",
+          null,
+          null,
+          null
+        ]
       }
     },
     {
       "id": "quiz_001_q5",
-      "text": "After spending time in a crowd, I feel...",
+      "text": "Something I'm curious to learn about how we work together is...",
       "choices": [
-        "Energized and ready for more",
-        "Happy but needing some quiet time",
-        "Drained and eager to be alone",
-        "Depends on who was in the crowd",
+        "How we'll balance 'people time' vs 'us time'",
+        "Whether we recharge in similar or different ways",
+        "How we'll handle it when one of us is more social than the other",
+        "What traditions we'll create as a couple",
         "Other / It depends"
       ],
-      "category": "personality",
+      "category": "growth",
       "metadata": {
         "dimension": "social_energy",
-        "poleMapping": ["right", null, "left", null, null]
+        "poleMapping": [
+          null,
+          null,
+          null,
+          null,
+          null
+        ]
       }
     }
   ],
-  "description": "Discover whether you're party animals or cozy homebodies."
+  "description": "Explore how you'll navigate the social world together.",
+  "magnet_id": 2
 }

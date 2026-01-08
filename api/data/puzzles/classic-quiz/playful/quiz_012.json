@@ -5,64 +5,65 @@
   "questions": [
     {
       "id": "quiz_012_q1",
-      "text": "I believe happiness comes from...",
+      "text": "For me, a happy life together would include...",
       "choices": [
-        "Pursuing meaningful goals and growth",
-        "Strong relationships and connections",
-        "Living in the moment and enjoying life",
-        "Creating security and stability",
+        "Growing together and chasing shared dreams",
+        "Deep connection and feeling truly known by you",
+        "Enjoying the everyday moments, big and small",
+        "Building a stable, secure foundation together",
         "Other / It depends"
       ],
-      "category": "personality"
+      "category": "preferences"
     },
     {
       "id": "quiz_012_q2",
-      "text": "When setting goals, I focus on...",
+      "text": "When I think about our future together, I dream about...",
       "choices": [
-        "Ambitious dreams that excite me",
-        "Realistic milestones I can achieve",
-        "Personal growth and learning",
-        "Balance between work and enjoyment",
+        "Big adventures and ambitious goals we'll tackle together",
+        "A steady, comfortable life with someone I love",
+        "Constant learning and growth as individuals and as a couple",
+        "Finding the right balance between career, fun, and us",
         "Other / It depends"
       ],
-      "category": "lifestyle"
+      "category": "preferences"
     },
     {
       "id": "quiz_012_q3",
-      "text": "My approach to work-life balance is...",
+      "text": "When it comes to balancing work, life, and us, I believe...",
       "choices": [
-        "Work hard, play hard - both deserve 100%",
-        "Work is part of life, not separate from it",
-        "Life comes first, work funds my passions",
-        "Find fulfillment in both equally",
+        "We should both go after our careers and support each other fully",
+        "Our relationship comes first - work is just how we fund our life",
+        "Finding fulfillment in both work and love matters equally",
+        "It'll shift over time and we'll figure it out together",
         "Other / It depends"
       ],
       "category": "lifestyle"
     },
     {
       "id": "quiz_012_q4",
-      "text": "When reflecting on my life, I most value...",
+      "text": "Years from now, I hope we'll look back and feel proud of...",
       "choices": [
-        "The experiences and memories I've collected",
-        "The impact I've had on others",
-        "The challenges I've overcome",
-        "The peace and contentment I've found",
+        "The experiences and memories we made together",
+        "The way we showed up for each other",
+        "The challenges we faced and grew through",
+        "The peaceful, loving life we built",
         "Other / It depends"
       ],
-      "category": "personality"
+      "category": "preferences"
     },
     {
       "id": "quiz_012_q5",
-      "text": "My biggest motivator in life is...",
+      "text": "What drives me most in life is...",
       "choices": [
-        "Achieving success and recognition",
-        "Building deep meaningful relationships",
-        "Personal freedom and independence",
-        "Making a positive difference in the world",
+        "Building a successful, meaningful career",
+        "Having deep, loving relationships",
+        "Freedom to live life on my own terms",
+        "Making a positive impact on the world",
         "Other / It depends"
       ],
-      "category": "personality"
+      "category": "preferences"
     }
   ],
-  "description": "Share your perspectives on life's big questions."
+  "description": "Share your perspectives on what matters most in life together.",
+  "magnet_id": 3
 }

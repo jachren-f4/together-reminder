@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import '../services/us_profile_service.dart';
 import '../services/storage_service.dart';
 import '../config/brand/us2_theme.dart';
+import '../widgets/worth_discussing_card.dart';
 
 /// Us Profile Screen
 ///
@@ -42,17 +43,6 @@ class _UsProfileScreenState extends State<UsProfileScreen> {
   // Track which dimension repair sections are expanded
   final Set<String> _expandedRepairDimensions = {};
 
-  // Discovery filter state
-  String _selectedDiscoveryFilter = 'All';
-  static const List<String> _discoveryFilters = [
-    'All',
-    'Lifestyle',
-    'Values',
-    'Communication',
-    'Future',
-    'Family',
-    'Daily Life',
-  ];
 
   // Repair script data for each dimension
   static const Map<String, Map<String, dynamic>> _repairScripts = {
@@ -106,13 +96,13 @@ class _UsProfileScreenState extends State<UsProfileScreen> {
     _loadProfile();
   }
 
-  Future<void> _loadProfile() async {
+  Future<void> _loadProfile({bool forceRefresh = false}) async {
     setState(() {
       _isLoading = true;
       _error = null;
     });
 
-    final profile = await _profileService.fetchProfile();
+    final profile = await _profileService.fetchProfile(forceRefresh: forceRefresh);
 
     if (mounted) {
       setState(() {
@@ -217,10 +207,6 @@ class _UsProfileScreenState extends State<UsProfileScreen> {
             _buildInfoLink(),
             const SizedBox(height: 16),
 
-            // Action Stats - always shown
-            _buildActionStatsCard(profile, partnerName),
-            const SizedBox(height: 20),
-
             // Day 1 or Full Profile content
             if (profile.isDay1) ...[
               _buildDay1Content(profile, userName, partnerName),
@@ -300,193 +286,6 @@ class _UsProfileScreenState extends State<UsProfileScreen> {
             color: Us2Theme.textLight,
           ),
         ),
-      ),
-    );
-  }
-
-  // ===========================================================================
-  // Action Stats Card (variant-9/10)
-  // ===========================================================================
-
-  Widget _buildActionStatsCard(UsProfile profile, String partnerName) {
-    final isDay1 = profile.isDay1;
-    final stats = profile.actionStats;
-
-    return Container(
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(20),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.04),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      child: Column(
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                'Your Actions Together',
-                style: GoogleFonts.playfairDisplay(
-                  fontSize: 15,
-                  color: Us2Theme.textMedium,
-                ),
-              ),
-              const SizedBox(width: 8),
-              _buildInfoButton('actions'),
-            ],
-          ),
-          const SizedBox(height: 14),
-          Row(
-            children: [
-              Expanded(
-                child: _buildActionStat(
-                  stats.insightsActedOn,
-                  'Insights\nActed On',
-                  isZero: stats.insightsActedOn == 0,
-                  goalText: isDay1 ? 'Your first one is below!' : null,
-                ),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: _buildActionStat(
-                  stats.conversationsHad,
-                  'Conversations\nHad',
-                  isZero: stats.conversationsHad == 0,
-                  goalText: isDay1 ? 'Start with the prompt below' : null,
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 16),
-          _buildWeeklyFocusSection(profile, partnerName),
-          const SizedBox(height: 14),
-          Container(
-            padding: const EdgeInsets.only(top: 10),
-            decoration: BoxDecoration(
-              border: Border(
-                top: BorderSide(color: Us2Theme.beige, width: 1),
-              ),
-            ),
-            child: Text(
-              isDay1
-                  ? 'Your first quiz completed today!'
-                  : 'Last updated: Today',
-              style: GoogleFonts.nunito(
-                fontSize: 10,
-                color: Us2Theme.textLight,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildActionStat(int value, String label,
-      {bool isZero = false, String? goalText}) {
-    return Container(
-      padding: const EdgeInsets.all(14),
-      decoration: BoxDecoration(
-        color: Us2Theme.cream,
-        borderRadius: BorderRadius.circular(14),
-      ),
-      child: Column(
-        children: [
-          Text(
-            value.toString(),
-            style: GoogleFonts.nunito(
-              fontSize: 28,
-              fontWeight: FontWeight.w800,
-              color: isZero ? Us2Theme.textLight : Us2Theme.textDark,
-            ),
-          ),
-          const SizedBox(height: 4),
-          Text(
-            label,
-            textAlign: TextAlign.center,
-            style: GoogleFonts.nunito(
-              fontSize: 10,
-              color: Us2Theme.textLight,
-              height: 1.3,
-            ),
-          ),
-          if (goalText != null) ...[
-            const SizedBox(height: 6),
-            Text(
-              goalText,
-              textAlign: TextAlign.center,
-              style: GoogleFonts.nunito(
-                fontSize: 11,
-                fontWeight: FontWeight.w600,
-                color: _accentPurple,
-              ),
-            ),
-          ],
-        ],
-      ),
-    );
-  }
-
-  Widget _buildWeeklyFocusSection(UsProfile profile, String partnerName) {
-    final focus = profile.weeklyFocus;
-    final focusText = focus?.text ??
-        'When $partnerName seems stressed, try saying "I\'m here when you\'re ready" instead of asking what\'s wrong.';
-    final sourceText = focus?.source ?? 'Based on your stress processing difference';
-
-    return Container(
-      padding: const EdgeInsets.all(14),
-      decoration: BoxDecoration(
-        gradient: const LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [Color(0xFFFF6B6B), Color(0xFFFF9F43)],
-        ),
-        borderRadius: BorderRadius.circular(14),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'THIS WEEK\'S FOCUS',
-            style: GoogleFonts.nunito(
-              fontSize: 11,
-              fontWeight: FontWeight.w700,
-              letterSpacing: 0.5,
-              color: Colors.white.withOpacity(0.9),
-            ),
-          ),
-          const SizedBox(height: 6),
-          Text(
-            focusText,
-            style: GoogleFonts.nunito(
-              fontSize: 13,
-              color: Colors.white,
-              height: 1.4,
-            ),
-          ),
-          const SizedBox(height: 10),
-          Container(
-            padding: const EdgeInsets.only(top: 10),
-            decoration: BoxDecoration(
-              border: Border(
-                top: BorderSide(color: Colors.white.withOpacity(0.2), width: 1),
-              ),
-            ),
-            child: Text(
-              sourceText,
-              style: GoogleFonts.nunito(
-                fontSize: 11,
-                color: Colors.white.withOpacity(0.9),
-              ),
-            ),
-          ),
-        ],
       ),
     );
   }
@@ -670,9 +469,10 @@ class _UsProfileScreenState extends State<UsProfileScreen> {
           const SizedBox(height: 10),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
             children: [
               SizedBox(
-                width: 60,
+                width: 50,
                 height: 6,
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(3),
@@ -683,11 +483,11 @@ class _UsProfileScreenState extends State<UsProfileScreen> {
                   ),
                 ),
               ),
-              const SizedBox(width: 8),
+              const SizedBox(width: 6),
               Text(
                 remaining,
                 style: GoogleFonts.nunito(
-                  fontSize: 11,
+                  fontSize: 10,
                   fontWeight: FontWeight.w700,
                   color: _accentPurple,
                 ),
@@ -924,10 +724,9 @@ class _UsProfileScreenState extends State<UsProfileScreen> {
           const SizedBox(height: 20),
         ],
 
-        // Discoveries with Try This actions
+        // Worth Discussing section
         if (profile.discoveries.isNotEmpty) ...[
-          _buildSectionTitle('Recent Discoveries', infoKey: 'discoveries'),
-          _buildDiscoveriesCard(profile, userName, partnerName),
+          _buildWorthDiscussingSection(profile, userName, partnerName),
           const SizedBox(height: 20),
         ],
 
@@ -1241,6 +1040,10 @@ class _UsProfileScreenState extends State<UsProfileScreen> {
                         color: Us2Theme.textDark,
                       ),
                     ),
+                    if (dim.isRecentlyUnlocked) ...[
+                      const SizedBox(width: 6),
+                      _buildNewBadge(),
+                    ],
                     if (dim.similarity != 'aligned') ...[
                       const SizedBox(width: 6),
                       _buildSimilarityBadge(dim.similarity),
@@ -1656,6 +1459,28 @@ class _UsProfileScreenState extends State<UsProfileScreen> {
     );
   }
 
+  /// Build "NEW" badge for recently unlocked dimensions
+  Widget _buildNewBadge() {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [_accentPurple, _accentPurple.withOpacity(0.8)],
+        ),
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Text(
+        'NEW',
+        style: GoogleFonts.nunito(
+          fontSize: 10,
+          fontWeight: FontWeight.w700,
+          color: Colors.white,
+          letterSpacing: 0.5,
+        ),
+      ),
+    );
+  }
+
   Widget _buildMarker(String initial, Color color, bool isLowConfidence) {
     return Container(
       width: 22,
@@ -1732,157 +1557,94 @@ class _UsProfileScreenState extends State<UsProfileScreen> {
     );
   }
 
-  Widget _buildDiscoveriesCard(
+  /// Build the Worth Discussing section with contextual header
+  Widget _buildWorthDiscussingSection(
       UsProfile profile, String userName, String partnerName) {
-    // Filter discoveries based on selected category
-    final filteredDiscoveries = _selectedDiscoveryFilter == 'All'
-        ? profile.discoveries
-        : profile.discoveries
-            .where((d) =>
-                d.category?.toLowerCase() ==
-                _selectedDiscoveryFilter.toLowerCase().replaceAll(' ', '_'))
-            .toList();
+    final section = profile.discoverySection;
+    final discoveries = section.allDiscoveries;
 
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        gradient: const LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [Color(0xFFFFF9E6), Color(0xFFFFF5F0)],
-        ),
-        borderRadius: BorderRadius.circular(18),
-        border: Border.all(
-          color: _accentGold.withOpacity(0.3),
-          width: 2,
-        ),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Filter tabs
-          _buildDiscoveryFilterTabs(profile.discoveries),
-          const SizedBox(height: 14),
-          // Filtered discoveries list
-          if (filteredDiscoveries.isEmpty)
-            Center(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 20),
-                child: Text(
-                  'No discoveries in this category yet',
-                  style: GoogleFonts.nunito(
-                    fontSize: 13,
-                    fontStyle: FontStyle.italic,
-                    color: Us2Theme.textLight,
-                  ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Section Header with contextual label
+        Padding(
+          padding: const EdgeInsets.only(bottom: 14),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                section.contextLabel,
+                style: GoogleFonts.playfairDisplay(
+                  fontSize: 20,
+                  fontWeight: FontWeight.w600,
+                  color: Us2Theme.textDark,
                 ),
               ),
-            )
-          else
-            ...filteredDiscoveries
-                .take(5)
-                .map((d) =>
-                    _buildDiscoveryItemWithAction(d, userName, partnerName)),
-        ],
-      ),
-    );
-  }
-
-  /// Build the horizontal scrollable filter tabs for discoveries
-  Widget _buildDiscoveryFilterTabs(List<FramedDiscovery> discoveries) {
-    // Get available categories from actual discoveries
-    final availableCategories = <String>{'All'};
-    for (final d in discoveries) {
-      if (d.category != null && d.category!.isNotEmpty) {
-        // Convert snake_case to Title Case
-        final formatted = d.category!
-            .split('_')
-            .map((word) => word[0].toUpperCase() + word.substring(1))
-            .join(' ');
-        availableCategories.add(formatted);
-      }
-    }
-
-    // Filter the predefined list to only show categories with discoveries
-    final filtersToShow = _discoveryFilters
-        .where((f) => availableCategories.contains(f))
-        .toList();
-
-    return SizedBox(
-      height: 32,
-      child: ListView.separated(
-        scrollDirection: Axis.horizontal,
-        itemCount: filtersToShow.length,
-        separatorBuilder: (_, __) => const SizedBox(width: 8),
-        itemBuilder: (context, index) {
-          final filter = filtersToShow[index];
-          final isSelected = _selectedDiscoveryFilter == filter;
-          final count = filter == 'All'
-              ? discoveries.length
-              : discoveries
-                  .where((d) =>
-                      d.category?.toLowerCase() ==
-                      filter.toLowerCase().replaceAll(' ', '_'))
-                  .length;
-
-          return GestureDetector(
-            onTap: () {
-              setState(() {
-                _selectedDiscoveryFilter = filter;
-              });
-            },
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-              decoration: BoxDecoration(
-                gradient: isSelected
-                    ? const LinearGradient(
-                        colors: [_emmaColor, Color(0xFFFF9F43)],
-                      )
-                    : null,
-                color: isSelected ? null : Us2Theme.cream,
-                borderRadius: BorderRadius.circular(16),
-                border: Border.all(
-                  color: isSelected
-                      ? Colors.transparent
-                      : Us2Theme.beige,
+              const SizedBox(height: 2),
+              Text(
+                'Ranked by what matters most',
+                style: GoogleFonts.nunito(
+                  fontSize: 13,
+                  color: Us2Theme.textMedium,
                 ),
               ),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    filter,
-                    style: GoogleFonts.nunito(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w600,
-                      color: isSelected ? Colors.white : Us2Theme.textMedium,
-                    ),
-                  ),
-                  const SizedBox(width: 4),
-                  Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 5, vertical: 1),
-                    decoration: BoxDecoration(
-                      color: isSelected
-                          ? Colors.white.withOpacity(0.25)
-                          : Us2Theme.beige,
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: Text(
-                      count.toString(),
-                      style: GoogleFonts.nunito(
-                        fontSize: 10,
-                        fontWeight: FontWeight.w700,
-                        color: isSelected ? Colors.white : Us2Theme.textLight,
+            ],
+          ),
+        ),
+
+        // Container with discoveries
+        Container(
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            gradient: const LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [Color(0xFFFFF9E6), Color(0xFFFFF5F0)],
+            ),
+            borderRadius: BorderRadius.circular(18),
+            border: Border.all(
+              color: _accentGold.withOpacity(0.3),
+              width: 2,
+            ),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Discovery cards
+              ...discoveries.take(5).map((d) => WorthDiscussingCard(
+                    discovery: d,
+                    user1Name: userName,
+                    user2Name: partnerName,
+                    onAppreciationChanged: () {
+                      // Refresh to get updated state
+                      _loadProfile(forceRefresh: true);
+                    },
+                  )),
+
+              // See all link
+              if (section.totalCount > 5)
+                Padding(
+                  padding: const EdgeInsets.only(top: 4),
+                  child: Center(
+                    child: TextButton(
+                      onPressed: () {
+                        // TODO: Navigate to full discoveries list
+                      },
+                      child: Text(
+                        'See all ${section.totalCount} discoveries \u2192',
+                        style: GoogleFonts.nunito(
+                          fontSize: 13,
+                          fontWeight: FontWeight.w600,
+                          color: _emmaColor,
+                        ),
                       ),
                     ),
                   ),
-                ],
-              ),
-            ),
-          );
-        },
-      ),
+                ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 
@@ -2032,74 +1794,45 @@ class _UsProfileScreenState extends State<UsProfileScreen> {
               ],
             ),
           ),
-          RichText(
-            text: TextSpan(
-              style: GoogleFonts.nunito(
-                fontSize: 13,
-                color: Us2Theme.textDark,
-                height: 1.5,
+          // Question text
+          if (discovery.questionText.isNotEmpty)
+            Padding(
+              padding: const EdgeInsets.only(bottom: 8),
+              child: Text(
+                discovery.questionText,
+                style: GoogleFonts.nunito(
+                  fontSize: 13,
+                  fontWeight: FontWeight.w600,
+                  color: Us2Theme.textDark,
+                  height: 1.4,
+                ),
               ),
-              children: [
-                TextSpan(
-                  text: userName,
-                  style: const TextStyle(
-                    fontWeight: FontWeight.w700,
-                    color: Us2Theme.primaryBrandPink,
-                  ),
-                ),
-                TextSpan(text: ' ${_lowercaseFirst(discovery.user1Answer)} • '),
-                TextSpan(
-                  text: partnerName,
-                  style: const TextStyle(
-                    fontWeight: FontWeight.w700,
-                    color: Us2Theme.primaryBrandPink,
-                  ),
-                ),
-                TextSpan(text: ' ${_lowercaseFirst(discovery.user2Answer)}'),
-              ],
             ),
-          ),
-          if (discovery.tryThisAction != null) ...[
-            const SizedBox(height: 12),
+          // Answers in clear format
+          _buildAnswerLine(userName, discovery.user1Answer),
+          const SizedBox(height: 4),
+          _buildAnswerLine(partnerName, discovery.user2Answer),
+          // Conversation prompt
+          if (discovery.conversationPrompt.isNotEmpty) ...[
+            const SizedBox(height: 10),
             Container(
-              padding: const EdgeInsets.all(14),
+              padding: const EdgeInsets.only(left: 10),
               decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: [
-                    _emmaColor.withOpacity(0.15),
-                    const Color(0xFFFF9F43).withOpacity(0.15),
-                  ],
-                ),
-                borderRadius: BorderRadius.circular(12),
                 border: Border(
-                  left: BorderSide(color: _emmaColor, width: 4),
+                  left: BorderSide(
+                    color: const Color(0xFFF4C55B).withOpacity(0.5),
+                    width: 2,
+                  ),
                 ),
               ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'TRY THIS',
-                    style: GoogleFonts.nunito(
-                      fontSize: 10,
-                      fontWeight: FontWeight.w700,
-                      color: _emmaColor,
-                      letterSpacing: 0.5,
-                    ),
-                  ),
-                  const SizedBox(height: 6),
-                  Text(
-                    discovery.tryThisAction!,
-                    style: GoogleFonts.nunito(
-                      fontSize: 13,
-                      fontWeight: FontWeight.w600,
-                      color: Us2Theme.textDark,
-                      height: 1.5,
-                    ),
-                  ),
-                ],
+              child: Text(
+                discovery.conversationPrompt,
+                style: GoogleFonts.nunito(
+                  fontSize: 12,
+                  fontStyle: FontStyle.italic,
+                  color: Us2Theme.textMedium,
+                  height: 1.4,
+                ),
               ),
             ),
           ],
@@ -2110,6 +1843,33 @@ class _UsProfileScreenState extends State<UsProfileScreen> {
           ],
         ],
       ),
+    );
+  }
+
+  /// Build a single answer line with name and answer
+  Widget _buildAnswerLine(String name, String answer) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          '$name: ',
+          style: GoogleFonts.nunito(
+            fontSize: 13,
+            fontWeight: FontWeight.w700,
+            color: Us2Theme.primaryBrandPink,
+          ),
+        ),
+        Expanded(
+          child: Text(
+            answer,
+            style: GoogleFonts.nunito(
+              fontSize: 13,
+              color: Us2Theme.textDark,
+              height: 1.4,
+            ),
+          ),
+        ),
+      ],
     );
   }
 
@@ -2959,29 +2719,6 @@ class _UsProfileScreenState extends State<UsProfileScreen> {
 
   /// Info content for each section
   static const Map<String, _InfoModalContent> _infoContent = {
-    'actions': _InfoModalContent(
-      icon: '🎯',
-      title: 'Actions Together',
-      subtitle: 'Turn insights into real connection',
-      description:
-          'Knowledge is great, but action is where relationships grow. Track your progress here!',
-      items: [
-        _InfoItem(
-          icon: '💡',
-          title: 'Insights Acted On',
-          text:
-              'Tried a suggestion from your discoveries or conversation starters? Count it!',
-        ),
-        _InfoItem(
-          icon: '💬',
-          title: 'Conversations Had',
-          text:
-              'Had a meaningful talk using our prompts? That\'s connection in action.',
-        ),
-      ],
-      highlightIcon: '📈',
-      highlightText: 'Aim for 2+ actions per week to build your connection habit!',
-    ),
     'dimensions': _InfoModalContent(
       icon: '📊',
       title: 'Dimensions',

@@ -47,6 +47,7 @@ class FramedDimension {
   final String conversationPrompt;
   final bool isUnlocked;
   final int dataPoints;
+  final DateTime? unlockedAt;  // When this dimension was first unlocked
 
   FramedDimension({
     required this.id,
@@ -61,7 +62,15 @@ class FramedDimension {
     required this.conversationPrompt,
     required this.isUnlocked,
     required this.dataPoints,
+    this.unlockedAt,
   });
+
+  /// Check if this dimension was unlocked recently (within 7 days)
+  bool get isRecentlyUnlocked {
+    if (unlockedAt == null) return false;
+    final daysSinceUnlock = DateTime.now().difference(unlockedAt!).inDays;
+    return daysSinceUnlock <= 7;
+  }
 
   factory FramedDimension.fromJson(Map<String, dynamic> json) {
     return FramedDimension(
@@ -77,6 +86,9 @@ class FramedDimension {
       conversationPrompt: json['conversationPrompt'] as String? ?? '',
       isUnlocked: json['isUnlocked'] as bool? ?? false,
       dataPoints: json['dataPoints'] as int? ?? 0,
+      unlockedAt: json['unlockedAt'] != null
+          ? DateTime.tryParse(json['unlockedAt'] as String)
+          : null,
     );
   }
 }
@@ -147,6 +159,30 @@ class FramedLoveLanguage {
   }
 }
 
+/// Appreciation state for a discovery
+class DiscoveryAppreciation {
+  final bool userAppreciated;
+  final bool partnerAppreciated;
+  final String? partnerAppreciatedLabel;
+  final bool mutualAppreciation;
+
+  DiscoveryAppreciation({
+    required this.userAppreciated,
+    required this.partnerAppreciated,
+    this.partnerAppreciatedLabel,
+    required this.mutualAppreciation,
+  });
+
+  factory DiscoveryAppreciation.fromJson(Map<String, dynamic> json) {
+    return DiscoveryAppreciation(
+      userAppreciated: json['userAppreciated'] as bool? ?? false,
+      partnerAppreciated: json['partnerAppreciated'] as bool? ?? false,
+      partnerAppreciatedLabel: json['partnerAppreciatedLabel'] as String?,
+      mutualAppreciation: json['mutualAppreciation'] as bool? ?? false,
+    );
+  }
+}
+
 /// Discovery (different answers between partners)
 class FramedDiscovery {
   final String id;
@@ -154,8 +190,11 @@ class FramedDiscovery {
   final String user1Answer;
   final String user2Answer;
   final String? category;
+  final String stakesLevel; // 'high' | 'medium' | 'light'
+  final int relevanceScore;
   final String conversationPrompt;
-  final String? tryThisAction;
+  final String? tryThisAction; // Kept for backward compatibility with Day 1 experience
+  final DiscoveryAppreciation appreciation;
 
   FramedDiscovery({
     required this.id,
@@ -163,8 +202,11 @@ class FramedDiscovery {
     required this.user1Answer,
     required this.user2Answer,
     this.category,
+    required this.stakesLevel,
+    required this.relevanceScore,
     required this.conversationPrompt,
     this.tryThisAction,
+    required this.appreciation,
   });
 
   factory FramedDiscovery.fromJson(Map<String, dynamic> json) {
@@ -174,8 +216,54 @@ class FramedDiscovery {
       user1Answer: json['user1Answer'] as String,
       user2Answer: json['user2Answer'] as String,
       category: json['category'] as String?,
+      stakesLevel: json['stakesLevel'] as String? ?? 'light',
+      relevanceScore: json['relevanceScore'] as int? ?? 0,
       conversationPrompt: json['conversationPrompt'] as String? ?? '',
       tryThisAction: json['tryThisAction'] as String?,
+      appreciation: json['appreciation'] != null
+          ? DiscoveryAppreciation.fromJson(json['appreciation'] as Map<String, dynamic>)
+          : DiscoveryAppreciation(
+              userAppreciated: false,
+              partnerAppreciated: false,
+              mutualAppreciation: false,
+            ),
+    );
+  }
+}
+
+/// Discovery section with contextual header
+class DiscoverySection {
+  final FramedDiscovery? featured;
+  final List<FramedDiscovery> others;
+  final int totalCount;
+  final String contextLabel;
+
+  DiscoverySection({
+    this.featured,
+    required this.others,
+    required this.totalCount,
+    required this.contextLabel,
+  });
+
+  /// Get all discoveries as a flat list (featured first if present)
+  List<FramedDiscovery> get allDiscoveries {
+    if (featured != null) {
+      return [featured!, ...others];
+    }
+    return others;
+  }
+
+  factory DiscoverySection.fromJson(Map<String, dynamic> json) {
+    return DiscoverySection(
+      featured: json['featured'] != null
+          ? FramedDiscovery.fromJson(json['featured'] as Map<String, dynamic>)
+          : null,
+      others: (json['others'] as List<dynamic>?)
+              ?.map((e) => FramedDiscovery.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          [],
+      totalCount: json['totalCount'] as int? ?? 0,
+      contextLabel: json['contextLabel'] as String? ?? 'Worth Discussing',
     );
   }
 }
@@ -413,7 +501,7 @@ class ProgressiveReveal {
 class UsProfile {
   final List<FramedDimension> dimensions;
   final FramedLoveLanguage? loveLanguages;
-  final List<FramedDiscovery> discoveries;
+  final DiscoverySection discoverySection;
   final List<FramedPerception> partnerPerceptions;
   final List<GrowthEdge> growthEdges;
   final List<ConversationStarter> conversationStarters;
@@ -428,7 +516,7 @@ class UsProfile {
   UsProfile({
     required this.dimensions,
     this.loveLanguages,
-    required this.discoveries,
+    required this.discoverySection,
     required this.partnerPerceptions,
     this.growthEdges = const [],
     required this.conversationStarters,
@@ -444,9 +532,38 @@ class UsProfile {
   /// Check if this is a Day 1 experience (new user with minimal data)
   bool get isDay1 => stats.totalQuizzes <= 1;
 
+  /// Convenience getter for all discoveries as a flat list
+  List<FramedDiscovery> get discoveries => discoverySection.allDiscoveries;
+
   factory UsProfile.fromJson(Map<String, dynamic> json, String userRole) {
     final profile = json['profile'] as Map<String, dynamic>? ?? {};
     final starters = json['starters'] as List<dynamic>? ?? [];
+
+    // Parse discoveries - handle both old format (list) and new format (section)
+    DiscoverySection discoverySection;
+    final discoveriesData = profile['discoveries'];
+    if (discoveriesData is Map<String, dynamic>) {
+      // New format: DiscoverySection object
+      discoverySection = DiscoverySection.fromJson(discoveriesData);
+    } else if (discoveriesData is List) {
+      // Old format: list of discoveries - convert to section
+      final discoveries = discoveriesData
+          .map((e) => FramedDiscovery.fromJson(e as Map<String, dynamic>))
+          .toList();
+      discoverySection = DiscoverySection(
+        featured: discoveries.isNotEmpty ? discoveries.first : null,
+        others: discoveries.length > 1 ? discoveries.sublist(1) : [],
+        totalCount: discoveries.length,
+        contextLabel: 'Worth Discussing',
+      );
+    } else {
+      // No discoveries
+      discoverySection = DiscoverySection(
+        others: [],
+        totalCount: 0,
+        contextLabel: 'Worth Discussing',
+      );
+    }
 
     return UsProfile(
       dimensions: (profile['dimensions'] as List<dynamic>?)
@@ -457,10 +574,7 @@ class UsProfile {
           ? FramedLoveLanguage.fromJson(
               profile['loveLanguages'] as Map<String, dynamic>)
           : null,
-      discoveries: (profile['discoveries'] as List<dynamic>?)
-              ?.map((e) => FramedDiscovery.fromJson(e as Map<String, dynamic>))
-              .toList() ??
-          [],
+      discoverySection: discoverySection,
       partnerPerceptions: (profile['partnerPerceptions'] as List<dynamic>?)
               ?.map((e) => FramedPerception.fromJson(e as Map<String, dynamic>))
               .toList() ??
@@ -763,6 +877,35 @@ class UsProfileService {
     } catch (e) {
       Logger.error('Error marking starter discussed', error: e, service: 'usprofile');
       return false;
+    }
+  }
+
+  /// Toggle appreciation for a discovery
+  /// Returns the new appreciation state, or null on error
+  Future<DiscoveryAppreciation?> appreciateDiscovery(String discoveryId) async {
+    try {
+      Logger.debug('Toggling appreciation for discovery: $discoveryId', service: 'usprofile');
+      final response = await _apiClient.post(
+        '/api/us-profile/discovery/$discoveryId/appreciate',
+      );
+
+      if (!response.success || response.data == null) {
+        Logger.error('Failed to appreciate discovery',
+            error: response.error, service: 'usprofile');
+        return null;
+      }
+
+      final data = response.data as Map<String, dynamic>;
+
+      // Invalidate cache so next fetch gets updated state
+      final box = Hive.box(_appMetadataBox);
+      await box.delete(_usProfileFetchedAtKey);
+
+      Logger.success('Discovery appreciation toggled', service: 'usprofile');
+      return DiscoveryAppreciation.fromJson(data);
+    } catch (e) {
+      Logger.error('Error appreciating discovery', error: e, service: 'usprofile');
+      return null;
     }
   }
 

@@ -29,6 +29,14 @@ import 'package:togetherremind/utils/logger.dart';
 import 'package:togetherremind/widgets/auth_wrapper.dart';
 import 'package:togetherremind/widgets/daily_quests_widget.dart';
 
+/// Global navigator key accessor for showing dialogs from services
+class AppNavigator {
+  static final GlobalKey<NavigatorState> key = GlobalKey<NavigatorState>();
+
+  /// Get the current navigator context (may be null during startup)
+  static BuildContext? get context => key.currentContext;
+}
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -166,7 +174,6 @@ class TogetherRemindApp extends StatefulWidget {
 }
 
 class _TogetherRemindAppState extends State<TogetherRemindApp> with WidgetsBindingObserver {
-  final GlobalKey<NavigatorState> _navigatorKey = GlobalKey<NavigatorState>();
 
   @override
   void initState() {
@@ -244,17 +251,16 @@ class _TogetherRemindAppState extends State<TogetherRemindApp> with WidgetsBindi
       valueListenable: ThemeConfig().currentFont,
       builder: (context, currentFont, child) {
         return MaterialApp(
-          navigatorKey: _navigatorKey,
+          navigatorKey: AppNavigator.key,
           navigatorObservers: [questRouteObserver],
           title: brand.appName,
           theme: AppTheme.lightTheme,
           debugShowCheckedModeBanner: false,
           home: Builder(
             builder: (context) {
-              // Set the app context for NotificationService and LovePointService
+              // Set the app context for NotificationService
               WidgetsBinding.instance.addPostFrameCallback((_) {
                 NotificationService.setAppContext(context);
-                LovePointService.setAppContext(context);
               });
 
               // Use AuthWrapper if Supabase is configured, otherwise fall back to old behavior

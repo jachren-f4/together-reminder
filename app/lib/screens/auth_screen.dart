@@ -44,8 +44,8 @@ class _AuthScreenState extends State<AuthScreen> {
   @override
   void initState() {
     super.initState();
-    // Pre-fill with random test email when OTP bypass is enabled
-    // Works in both debug and release builds for faster testing
+    // Pre-fill with random test email for easier testing
+    // Only when dev mode bypass is enabled (for backwards compatibility)
     if (DevConfig.skipOtpVerificationInDev) {
       final random = DateTime.now().millisecondsSinceEpoch % 10000;
       _emailController.text = 'test$random@dev.test';
@@ -69,8 +69,9 @@ class _AuthScreenState extends State<AuthScreen> {
       return;
     }
 
-    // Skip email format validation in dev mode for faster testing
-    if (!DevConfig.skipOtpVerificationInDev) {
+    // Skip email format validation for test accounts (e.g., @dev.test)
+    final isTestAccount = _authService.shouldBypassMagicLink(email);
+    if (!isTestAccount) {
       final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
       if (!emailRegex.hasMatch(email)) {
         setState(() {
@@ -86,11 +87,17 @@ class _AuthScreenState extends State<AuthScreen> {
     });
 
     try {
-      // Check if OTP bypass is enabled
-      if (DevConfig.skipOtpVerificationInDev) {
-        await _handleDevModeSignIn(email);
+      if (widget.isNewUser) {
+        // New users: Always use password auth (no OTP required)
+        await _handlePasswordSignIn(email);
       } else {
-        await _handleProductionSignIn(email);
+        // Returning users: Check for test account bypass
+        if (isTestAccount) {
+          await _handlePasswordSignIn(email);
+        } else {
+          // Real returning users need magic link for security
+          await _handleMagicLinkSignIn(email);
+        }
       }
     } catch (e) {
       Logger.error('Error in auth flow', error: e);
@@ -106,13 +113,14 @@ class _AuthScreenState extends State<AuthScreen> {
     }
   }
 
-  /// Dev mode: Sign in directly without OTP verification
-  Future<void> _handleDevModeSignIn(String email) async {
-    final success = await _authService.devSignInWithEmail(email);
+  /// Password-based sign in (no OTP required)
+  /// Used for new users and test accounts
+  Future<void> _handlePasswordSignIn(String email) async {
+    final success = await _authService.signInWithPassword(email);
 
     if (!success) {
       setState(() {
-        _errorMessage = 'Dev sign-in failed. Please try again.';
+        _errorMessage = 'Sign-in failed. Please try again.';
       });
       return;
     }
@@ -120,7 +128,7 @@ class _AuthScreenState extends State<AuthScreen> {
     if (!mounted) return;
 
     if (widget.isNewUser) {
-      // New user in dev mode - complete signup with stored name
+      // New user - complete signup with stored name
       final pendingName = await _secureStorage.read(key: 'pending_user_name');
       if (pendingName != null && pendingName.isNotEmpty) {
         try {
@@ -131,10 +139,10 @@ class _AuthScreenState extends State<AuthScreen> {
             name: pendingName,
           );
           await _secureStorage.delete(key: 'pending_user_name');
-          Logger.success('Signup completed on server (dev mode)', service: 'auth');
+          Logger.success('Signup completed on server', service: 'auth');
         } catch (e) {
-          Logger.error('Failed to complete signup on server (dev mode)', error: e, service: 'auth');
-          // Don't block - user can proceed in dev mode
+          Logger.error('Failed to complete signup on server', error: e, service: 'auth');
+          // Don't block - user can proceed
         }
       }
 
@@ -149,7 +157,7 @@ class _AuthScreenState extends State<AuthScreen> {
         (route) => false,
       );
     } else {
-      // Returning user in dev mode - restore profile from server first
+      // Returning user - restore profile from server first
       try {
         final userProfileService = UserProfileService();
         final result = await userProfileService.getProfile();
@@ -164,7 +172,7 @@ class _AuthScreenState extends State<AuthScreen> {
           Logger.success('Bootstrap completed for returning user', service: 'auth');
         }
       } catch (e) {
-        Logger.error('Failed to restore profile (dev mode)', error: e, service: 'auth');
+        Logger.error('Failed to restore profile', error: e, service: 'auth');
         // Don't block - user can try to proceed
       }
 
@@ -178,8 +186,9 @@ class _AuthScreenState extends State<AuthScreen> {
     }
   }
 
-  /// Production mode: Send OTP and navigate to verification screen
-  Future<void> _handleProductionSignIn(String email) async {
+  /// Magic link sign in (sends OTP for verification)
+  /// Used for returning users with real emails
+  Future<void> _handleMagicLinkSignIn(String email) async {
     final success = await _authService.signInWithMagicLink(email);
 
     if (success) {
@@ -198,6 +207,24 @@ class _AuthScreenState extends State<AuthScreen> {
       setState(() {
         _errorMessage = 'Failed to send verification code. Please try again.';
       });
+    }
+  }
+
+  /// Get button text based on user type and email
+  String _getButtonText() {
+    final email = _emailController.text.trim().toLowerCase();
+    final isTestAccount = _authService.shouldBypassMagicLink(email);
+
+    if (widget.isNewUser) {
+      // New users never need OTP
+      return 'Continue';
+    } else {
+      // Returning users: test accounts bypass, real emails need verification
+      if (isTestAccount) {
+        return 'Continue';
+      } else {
+        return 'Send Verification Code';
+      }
     }
   }
 
@@ -298,9 +325,7 @@ class _AuthScreenState extends State<AuthScreen> {
                       ),
                     ),
                     child: NewspaperPrimaryButton(
-                      text: DevConfig.skipOtpVerificationInDev
-                          ? 'Continue (Dev Mode)'
-                          : 'Send Verification Code',
+                      text: _getButtonText(),
                       onPressed: _sendMagicLink,
                       isLoading: _isLoading,
                     ),
@@ -335,23 +360,30 @@ class _AuthScreenState extends State<AuthScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // Emoji circle
-                      Container(
-                        width: 80,
-                        height: 80,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          shape: BoxShape.circle,
-                          boxShadow: [
-                            BoxShadow(
-                              color: Us2Theme.glowPink.withValues(alpha: 0.2),
-                              blurRadius: 20,
-                              offset: const Offset(0, 4),
-                            ),
-                          ],
+                      // Large step number
+                      ShaderMask(
+                        shaderCallback: (bounds) => const LinearGradient(
+                          colors: [Us2Theme.gradientAccentStart, Us2Theme.gradientAccentEnd],
+                        ).createShader(bounds),
+                        child: Text(
+                          widget.isNewUser ? '2' : '1',
+                          style: GoogleFonts.playfairDisplay(
+                            fontSize: 100,
+                            fontWeight: FontWeight.w700,
+                            color: Colors.white,
+                            height: 1,
+                          ),
                         ),
-                        child: const Center(
-                          child: Text('📧', style: TextStyle(fontSize: 36)),
+                      ),
+
+                      // Step label
+                      Text(
+                        widget.isNewUser ? 'of 3 steps' : 'of 2 steps',
+                        style: GoogleFonts.nunito(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w700,
+                          letterSpacing: 2,
+                          color: Us2Theme.textMedium,
                         ),
                       ),
 
@@ -371,7 +403,7 @@ class _AuthScreenState extends State<AuthScreen> {
 
                       // Subtitle
                       Text(
-                        "We'll send a secure code to verify your identity",
+                        "We'll send a secure code to verify your identity.",
                         style: GoogleFonts.nunito(
                           fontSize: 15,
                           color: Us2Theme.textMedium,
@@ -521,9 +553,7 @@ class _AuthScreenState extends State<AuthScreen> {
               Container(
                 padding: const EdgeInsets.fromLTRB(24, 20, 24, 40),
                 child: _buildUs2Button(
-                  DevConfig.skipOtpVerificationInDev
-                      ? 'Continue (Dev Mode)'
-                      : 'Send Verification Code',
+                  _getButtonText(),
                   _isLoading ? null : _sendMagicLink,
                   isLoading: _isLoading,
                 ),
@@ -564,25 +594,6 @@ class _AuthScreenState extends State<AuthScreen> {
               ),
             ),
           ),
-          const Spacer(),
-          // Step indicator
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
-            decoration: BoxDecoration(
-              color: Colors.white.withValues(alpha: 0.8),
-              borderRadius: BorderRadius.circular(20),
-            ),
-            child: Text(
-              'Step 2 of 3',
-              style: GoogleFonts.nunito(
-                fontSize: 12,
-                fontWeight: FontWeight.w600,
-                color: Us2Theme.textMedium,
-              ),
-            ),
-          ),
-          const Spacer(),
-          const SizedBox(width: 40), // Balance
         ],
       ),
     );

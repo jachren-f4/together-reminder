@@ -1,68 +1,69 @@
 {
   "quizId": "quiz_006",
-  "title": "Morning & Evening",
+  "title": "Celebrating Each Other",
   "branch": "lighthearted",
   "questions": [
     {
       "id": "quiz_006_q1",
-      "text": "In the morning, I need...",
+      "text": "Something about you that I find really attractive is...",
       "choices": [
-        "Quiet time to wake up slowly",
-        "Conversation and connection",
-        "Coffee/tea before anything else",
-        "To get moving right away",
-        "Other / Just don't rush me"
+        "Your sense of humor",
+        "How you care for others",
+        "Your confidence or drive",
+        "The way you look at me",
+        "Other / It depends"
       ],
-      "category": "lifestyle"
+      "category": "preferences"
     },
     {
       "id": "quiz_006_q2",
-      "text": "My ideal evening together looks like...",
+      "text": "A quality I admire about how you handle life is...",
       "choices": [
-        "Watching something together",
-        "Going out (dinner, activity)",
-        "Doing our own things nearby",
-        "Deep conversation",
-        "Other / Varies by mood"
+        "Your calmness under pressure",
+        "Your optimism and positivity",
+        "Your determination and grit",
+        "Your thoughtfulness and care",
+        "Other / It depends"
       ],
-      "category": "together"
+      "category": "appreciation"
     },
     {
       "id": "quiz_006_q3",
-      "text": "Before bed, I usually need...",
+      "text": "Something you do that always impresses me is...",
       "choices": [
-        "Wind-down time (reading, phone)",
-        "To talk about tomorrow",
-        "Physical closeness",
-        "The room to be just right",
-        "Other / I just crash"
+        "How you connect with people",
+        "How you solve problems",
+        "How you express yourself",
+        "How you take care of things",
+        "Other / It depends"
       ],
-      "category": "lifestyle"
+      "category": "appreciation"
     },
     {
       "id": "quiz_006_q4",
-      "text": "On weekend mornings, I'd rather...",
+      "text": "A little thing about you that makes me smile is...",
       "choices": [
-        "Sleep in as late as possible",
-        "Wake up naturally, no alarm",
-        "Get up early and enjoy the day",
-        "Lazy morning in bed together",
-        "Other / Depends on plans"
+        "Your laugh or expressions",
+        "Your habits or quirks",
+        "The way you say certain things",
+        "How you are when you're focused",
+        "Other / It depends"
       ],
-      "category": "lifestyle"
+      "category": "connection"
     },
     {
       "id": "quiz_006_q5",
-      "text": "I'm more productive when I...",
+      "text": "If I had to brag about you to someone, I'd tell them...",
       "choices": [
-        "Have the whole day planned",
-        "Have a loose structure",
-        "Work in focused bursts",
-        "Go with the flow",
-        "Other / Depends on the task"
+        "How talented or skilled you are",
+        "How kind and caring you are",
+        "How fun and adventurous you are",
+        "How smart and insightful you are",
+        "Other / It depends"
       ],
-      "category": "energy"
+      "category": "appreciation"
     }
   ],
-  "description": "Discover your routines from sunrise to sunset."
+  "description": "Share what you admire and love about each other.",
+  "magnet_id": 0
 }

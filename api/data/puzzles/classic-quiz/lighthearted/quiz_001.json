@@ -1,84 +1,79 @@
 {
   "quizId": "quiz_001",
-  "title": "Daily Life Patterns",
+  "title": "How We Show Up",
   "branch": "lighthearted",
   "questions": [
     {
       "id": "quiz_001_q1",
-      "text": "When I've had a long day, what helps me unwind?",
+      "text": "When you've had a rough day, the first thing I want to do is...",
       "choices": [
-        "Quiet time alone",
-        "Talking about my day",
-        "Physical activity or movement",
-        "Comfort food or a treat",
-        "Distraction (TV, games, scrolling)"
+        "Listen and let you vent",
+        "Try to cheer you up or distract you",
+        "Give you space until you're ready to talk",
+        "Do something practical to help",
+        "Other / It depends"
       ],
-      "category": "self_care",
+      "category": "support",
       "metadata": {
-        "dimension": "stress_processing",
-        "poleMapping": ["left", "right", null, null, null]
+        "dimension": "support_style",
+        "poleMapping": [
+          "left",
+          null,
+          "left",
+          "right",
+          null
+        ]
       }
     },
     {
       "id": "quiz_001_q2",
-      "text": "How do I prefer us to stay connected during busy days?",
+      "text": "A small gesture from you that always makes my day better is...",
       "choices": [
-        "Quick check-in texts",
-        "A phone call, even if brief",
-        "Save it for quality time later",
-        "Sharing memes or funny things",
+        "A random sweet text or message",
+        "Making me coffee or bringing me something",
+        "Physical affection - a hug or kiss",
+        "Asking how I'm really doing",
+        "Other / It depends"
+      ],
+      "category": "preferences"
+    },
+    {
+      "id": "quiz_001_q3",
+      "text": "When we're apart for a while, I find myself...",
+      "choices": [
+        "Texting you little updates throughout the day",
+        "Saving up stories to share when we're together",
+        "Missing your presence but enjoying solo time too",
+        "Counting down until I see you again",
         "Other / It depends"
       ],
       "category": "connection"
     },
     {
-      "id": "quiz_001_q3",
-      "text": "What kind of weekend sounds best to me?",
-      "choices": [
-        "Adventure and exploring",
-        "Social plans with friends/family",
-        "Cozy and low-key at home",
-        "Productive (errands, projects)",
-        "A mix - no strong preference"
-      ],
-      "category": "lifestyle",
-      "metadata": {
-        "dimension": "social_energy",
-        "poleMapping": [null, "right", "left", null, null]
-      }
-    },
-    {
       "id": "quiz_001_q4",
-      "text": "When we're making plans together, I usually prefer to...",
+      "text": "I know you're really listening to me when you...",
       "choices": [
-        "Plan everything in advance",
-        "Have a loose plan, stay flexible",
-        "Decide in the moment",
-        "Let you take the lead",
+        "Put down your phone and make eye contact",
+        "Ask follow-up questions",
+        "Remember little details I mentioned",
+        "Just sit with me without trying to fix things",
         "Other / It depends"
       ],
-      "category": "together",
-      "metadata": {
-        "dimension": "planning_style",
-        "poleMapping": ["right", "right", "left", null, null]
-      }
+      "category": "communication"
     },
     {
       "id": "quiz_001_q5",
-      "text": "In social situations, I'm most comfortable when...",
+      "text": "Something I hope we never stop doing together is...",
       "choices": [
-        "It's just the two of us",
-        "We're with a few close friends",
-        "There's a bigger group with energy",
-        "I can come and go as I please",
-        "Other / It varies"
+        "Laughing at silly things",
+        "Having real conversations about life",
+        "Little traditions and rituals",
+        "Surprising each other",
+        "Other / It depends"
       ],
-      "category": "social",
-      "metadata": {
-        "dimension": "social_energy",
-        "poleMapping": ["left", "left", "right", "left", null]
-      }
+      "category": "preferences"
     }
   ],
-  "description": "Discover how your daily rhythms and habits complement each other."
+  "description": "Discover the small ways you show up for each other every day.",
+  "magnet_id": 0
 }

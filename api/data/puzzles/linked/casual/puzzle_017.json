@@ -1,6 +1,6 @@
 {
   "author": "Crossword Maker GPT",
-  "title": "Adult Intimacy Puzzle #17",
+  "title": "Casual Puzzle #17",
   "size": {
     "rows": 9,
     "cols": 7
@@ -9,38 +9,63 @@
     "1": { "type": "emoji", "content": "💑", "arrow": "down", "target_index": 8 },
     "2": { "type": "emoji", "content": "🍕", "arrow": "down", "target_index": 11 },
     "3": { "type": "emoji", "content": "🧣", "arrow": "down", "target_index": 13 },
-    "4": { "type": "text", "content": "Before Q", "arrow": "across", "target_index": 11 },
-    "5": { "type": "text", "content": "After N", "arrow": "across", "target_index": 15 },
-    "6": { "type": "text", "content": "Twice weekly", "arrow": "across", "target_index": 17 },
-    "7": { "type": "text", "content": "Before [", "arrow": "across", "target_index": 25 },
+    "4": {
+      "across": { "type": "text", "content": "Before Q", "target_index": 11 },
+      "down": { "type": "emoji", "content": "🇧🇿", "text": "_ELIZE", "target_index": 17 }
+    },
+    "5": { "type": "emoji", "content": "🥶", "text": "C_LD", "arrow": "across", "target_index": 15 },
+    "6": { "type": "text", "content": "B in LGBTQ", "arrow": "across", "target_index": 17 },
+    "7": { "type": "text", "content": "AFTER Y", "arrow": "across", "target_index": 25 },
     "8": { "type": "text", "content": "WEI_D", "arrow": "across", "target_index": 36 },
-    "9": { "type": "text", "content": "Sound of understanding", "arrow": "down", "target_index": 44 },
-    "10": { "type": "text", "content": "T_KE", "arrow": "across", "target_index": 39 },
+    "9": { "type": "text", "content": "Sound of relief", "arrow": "down", "target_index": 44 },
+    "10": {
+      "across": { "type": "text", "content": "T_KE", "target_index": 39 },
+      "down": { "type": "emoji", "content": "🍸", "target_index": 45 }
+    },
     "11": { "type": "emoji", "content": "😌", "arrow": "across", "target_index": 50 },
-    "12": { "type": "text", "content": "Midday", "arrow": "across", "target_index": 59 }
+    "12": { "type": "text", "content": "Midday", "arrow": "across", "target_index": 59 },
+    "13": { "type": "emoji", "content": "🔥", "text": "__ST", "arrow": "across", "target_index": 8 },
+    "14": { "type": "emoji", "content": "😭", "text": "_AD", "arrow": "across", "target_index": 13 },
+    "15": { "type": "emoji", "content": "🇨🇦", "text": "_ANADA", "arrow": "across", "target_index": 20 },
+    "16": { "type": "emoji", "content": "🇻🇪", "text": "_ENEZUELA", "arrow": "across", "target_index": 22 },
+    "17": { "type": "emoji", "content": "🧶", "text": "THRE_D", "arrow": "across", "target_index": 27 },
+    "18": { "type": "emoji", "content": "👂", "text": "_A_", "arrow": "across", "target_index": 29 },
+    "19": { "type": "emoji", "content": "🇷🇺", "text": "_USSIA", "arrow": "across", "target_index": 34 },
+    "20": { "type": "emoji", "content": "🇫🇷", "text": "_RANCE", "arrow": "across", "target_index": 41 },
+    "21": {
+      "across": { "type": "text", "content": "_H", "target_index": 44 },
+      "down": { "type": "emoji", "content": "🇨🇱", "text": "__ILE", "target_index": 50 }
+    },
+    "22": { "type": "text", "content": "__ and behold", "arrow": "down", "target_index": 53 },
+    "23": { "type": "text", "content": "BEFORE O", "arrow": "down", "target_index": 62 },
+    "24": { "type": "text", "content": "FRANK _APPA", "arrow": "across", "target_index": 32 },
+    "25": { "type": "emoji", "content": "❤️", "text": "__VE", "arrow": "down", "target_index": 54 },
+    "26": { "type": "emoji", "content": "👋", "text": "_I", "arrow": "across", "target_index": 57 },
+    "27": { "type": "emoji", "content": "🇷🇴", "text": "_OMANIA", "arrow": "down", "target_index": 30 },
+    "28": { "type": "emoji", "content": "🫶", "text": "L_V", "arrow": "down", "target_index": 9 }
   },
   "date": "2025-11-27",
   "grid": [
     ".", ".", ".", ".", ".", ".", ".",
-    ".", "L", ".", ".", "P", ".", "S",
+    ".", "L", "U", ".", "P", ".", "S",
     ".", "O", ".", "B", "I", ".", "C",
     ".", "V", ".", ".", "Z", ".", "A",
-    ".", "E", ".", ".", "Z", ".", "R",
+    ".", "E", "R", ".", "Z", ".", "R",
     ".", "R", ".", ".", "A", ".", "F",
-    ".", ".", "A", ".", ".", ".", ".",
+    ".", ".", "A", "G", ".", ".", ".",
     ".", "C", "H", "I", "L", "L", ".",
-    ".", ".", ".", "N", "O", "O", "N"
+    ".", "H", ".", "N", "O", "O", "N"
   ],
   "gridnums": [
-    0, 1, 0, 0, 2, 0, 3,
-    0, 0, 0, 4, 0, 0, 0,
-    5, 0, 6, 0, 0, 0, 0,
-    0, 0, 0, 7, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 0,
-    8, 0, 9, 10, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 0,
-    11, 0, 0, 0, 0, 0, 0,
-    0, 0, 12, 0, 0, 0, 0
+    0, 1, 28, 0, 2, 0, 3,
+    13, 0, 0, 4, 0, 14, 0,
+    5, 0, 6, 0, 0, 15, 0,
+    16, 0, 27, 7, 0, 17, 0,
+    18, 0, 0, 24, 0, 19, 0,
+    8, 0, 9, 10, 0, 20, 0,
+    0, 21, 0, 0, 22, 25, 0,
+    11, 0, 0, 0, 0, 0, 23,
+    26, 0, 12, 0, 0, 0, 0
   ],
   "puzzleId": "puzzle_017"
 }

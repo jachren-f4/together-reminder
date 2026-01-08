@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=375, initial-scale=1.0">
+    <title>Tier Visualization - Variant 9: Endpoints with Labels</title>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Nunito', sans-serif;
+            background: linear-gradient(180deg, #FFF5F0 0%, #FFE8E0 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        h2 { font-size: 16px; color: #2D2D2D; margin-bottom: 10px; text-align: center; }
+        .description { font-size: 11px; color: #666; text-align: center; margin-bottom: 30px; }
+
+        .connection-bar {
+            background: linear-gradient(135deg, #FF7B6B 0%, #FF9B8B 50%, #FFB89B 100%);
+            border-radius: 24px 24px 0 0;
+            padding: 12px 16px 20px 16px;
+            margin-bottom: 40px;
+        }
+
+        .header-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .header-label {
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            color: rgba(255,255,255,0.9);
+        }
+
+        .lp-counter {
+            font-size: 16px;
+            font-weight: 700;
+            color: white;
+        }
+
+        /* Progress section with tier endpoints */
+        .progress-section {
+            position: relative;
+            height: 70px;
+        }
+
+        .progress-track {
+            position: absolute;
+            top: 17px;
+            left: 32px;
+            right: 32px;
+            height: 10px;
+            background: rgba(0,0,0,0.2);
+            border-radius: 5px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #FFE066 0%, #FFB347 100%);
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(255,224,102,0.6);
+        }
+
+        /* Tier endpoints */
+        .tier-endpoint {
+            position: absolute;
+            top: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .tier-endpoint.start { left: 0; }
+        .tier-endpoint.end { right: 0; }
+
+        .tier-icon {
+            font-size: 24px;
+            margin-bottom: 4px;
+        }
+
+        .tier-label {
+            font-size: 9px;
+            font-weight: 700;
+            color: white;
+            text-align: center;
+            line-height: 1.1;
+        }
+
+        .tier-endpoint.end .tier-icon {
+            opacity: 0.6;
+        }
+
+        .tier-endpoint.end .tier-label {
+            opacity: 0.7;
+        }
+
+        /* Heart indicator */
+        .heart-indicator {
+            position: absolute;
+            top: 0;
+            width: 44px;
+            height: 44px;
+            background: linear-gradient(135deg, #FF6B9D 0%, #FF8E6B 100%);
+            border-radius: 50%;
+            border: 3px solid white;
+            box-shadow: 0 4px 15px rgba(255,107,157,0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+        .state-label { font-size: 10px; font-weight: 700; color: #999; letter-spacing: 1px; margin-bottom: 8px; }
+        .states-grid { display: flex; flex-direction: column; gap: 30px; }
+    </style>
+</head>
+<body>
+    <h2>Variant 9: Endpoints with Labels</h2>
+    <p class="description">Tier emoji + name at start and end of bar. Labels below icons.</p>
+
+    <div class="states-grid">
+        <div>
+            <div class="state-label">TIER 1: COZY CABIN → BEACH VILLA</div>
+            <div class="connection-bar">
+                <div class="header-row">
+                    <span class="header-label">CONNECTION BAR</span>
+                    <span class="lp-counter">320/1,000</span>
+                </div>
+                <div class="progress-section">
+                    <div class="tier-endpoint start">
+                        <span class="tier-icon">🏕️</span>
+                        <span class="tier-label">Cabin</span>
+                    </div>
+                    <div class="progress-track">
+                        <div class="progress-fill" style="width: 32%;"></div>
+                    </div>
+                    <div class="tier-endpoint end">
+                        <span class="tier-icon">🏖️</span>
+                        <span class="tier-label">Beach</span>
+                    </div>
+                    <div class="heart-indicator" style="left: calc(32px + (100% - 108px) * 0.32);">💗</div>
+                </div>
+            </div>
+        </div>
+
+        <div>
+            <div class="state-label">TIER 2: BEACH VILLA → YACHT GETAWAY</div>
+            <div class="connection-bar">
+                <div class="header-row">
+                    <span class="header-label">CONNECTION BAR</span>
+                    <span class="lp-counter">1,800/2,500</span>
+                </div>
+                <div class="progress-section">
+                    <div class="tier-endpoint start">
+                        <span class="tier-icon">🏖️</span>
+                        <span class="tier-label">Beach</span>
+                    </div>
+                    <div class="progress-track">
+                        <div class="progress-fill" style="width: 53%;"></div>
+                    </div>
+                    <div class="tier-endpoint end">
+                        <span class="tier-icon">⛵</span>
+                        <span class="tier-label">Yacht</span>
+                    </div>
+                    <div class="heart-indicator" style="left: calc(32px + (100% - 108px) * 0.53);">💗</div>
+                </div>
+            </div>
+        </div>
+
+        <div>
+            <div class="state-label">TIER 3: YACHT → MOUNTAIN</div>
+            <div class="connection-bar">
+                <div class="header-row">
+                    <span class="header-label">CONNECTION BAR</span>
+                    <span class="lp-counter">3,800/5,000</span>
+                </div>
+                <div class="progress-section">
+                    <div class="tier-endpoint start">
+                        <span class="tier-icon">⛵</span>
+                        <span class="tier-label">Yacht</span>
+                    </div>
+                    <div class="progress-track">
+                        <div class="progress-fill" style="width: 52%;"></div>
+                    </div>
+                    <div class="tier-endpoint end">
+                        <span class="tier-icon">🏔️</span>
+                        <span class="tier-label">Mountain</span>
+                    </div>
+                    <div class="heart-indicator" style="left: calc(32px + (100% - 108px) * 0.52);">💗</div>
+                </div>
+            </div>
+        </div>
+
+        <div>
+            <div class="state-label">TIER 4: MOUNTAIN → CASTLE</div>
+            <div class="connection-bar">
+                <div class="header-row">
+                    <span class="header-label">CONNECTION BAR</span>
+                    <span class="lp-counter">7,500/10,000</span>
+                </div>
+                <div class="progress-section">
+                    <div class="tier-endpoint start">
+                        <span class="tier-icon">🏔️</span>
+                        <span class="tier-label">Mountain</span>
+                    </div>
+                    <div class="progress-track">
+                        <div class="progress-fill" style="width: 50%;"></div>
+                    </div>
+                    <div class="tier-endpoint end">
+                        <span class="tier-icon">🏰</span>
+                        <span class="tier-label">Castle</span>
+                    </div>
+                    <div class="heart-indicator" style="left: calc(32px + (100% - 108px) * 0.50);">💗</div>
+                </div>
+            </div>
+        </div>
+
+        <div>
+            <div class="state-label">TIER 5: CASTLE (MAX)</div>
+            <div class="connection-bar">
+                <div class="header-row">
+                    <span class="header-label">CONNECTION BAR</span>
+                    <span class="lp-counter">15,000 LP</span>
+                </div>
+                <div class="progress-section">
+                    <div class="tier-endpoint start">
+                        <span class="tier-icon">🏰</span>
+                        <span class="tier-label">Castle</span>
+                    </div>
+                    <div class="progress-track">
+                        <div class="progress-fill" style="width: 100%; background: linear-gradient(90deg, #7C3AED 0%, #C084FC 100%);"></div>
+                    </div>
+                    <div class="tier-endpoint end">
+                        <span class="tier-icon">👑</span>
+                        <span class="tier-label">Max!</span>
+                    </div>
+                    <div class="heart-indicator" style="left: calc(100% - 76px); background: linear-gradient(135deg, #7C3AED 0%, #C084FC 100%);">💗</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

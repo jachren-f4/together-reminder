@@ -1,0 +1,65 @@
+{
+  "author": "Crossword Maker GPT",
+  "title": "Adult Intimacy Puzzle #4",
+  "size": {
+    "rows": 9,
+    "cols": 7
+  },
+  "clues": {
+    "1": { "type": "emoji", "content": "☀️", "arrow": "down", "target_index": 13 },
+    "2": { "type": "emoji", "content": "🍺", "arrow": "across", "target_index": 8 },
+    "3": { "type": "text", "content": "Casual no", "arrow": "across", "target_index": 16 },
+    "4": { "type": "text", "content": "H_LD", "arrow": "across", "target_index": 20 },
+    "5": { "type": "text", "content": "Filing together", "arrow": "down", "target_index": 29 },
+    "6": { "type": "text", "content": "Before J", "arrow": "down", "target_index": 30 },
+    "7": { "type": "emoji", "content": "☀️", "arrow": "down", "target_index": 31 },
+    "8": { "type": "text", "content": "Boundary word", "arrow": "across", "target_index": 26 },
+    "9": { "type": "emoji", "content": "✨", "arrow": "across", "target_index": 29 },
+    "10": { "type": "text", "content": "After M", "arrow": "across", "target_index": 34 },
+    "11": { "type": "text", "content": "B_R", "arrow": "across", "target_index": 36 },
+    "12": { "type": "text", "content": "Before Y", "arrow": "across", "target_index": 43 },
+    "13": {
+      "across": { "type": "text", "content": "Loud cry", "target_index": 45 },
+      "down": { "type": "text", "content": "First person", "target_index": 51 }
+    },
+    "15": { "type": "text", "content": "BA_", "arrow": "down", "target_index": 61 },
+    "16": { "type": "text", "content": "Not ever", "arrow": "across", "target_index": 57 },
+    "17": { "type": "text", "content": "Before Q", "arrow": "down", "target_index": 8 },
+    "18": { "type": "text", "content": "___do (reverse)", "arrow": "down", "target_index": 9 },
+    "19": { "type": "text", "content": "Before C", "arrow": "down", "target_index": 10 },
+    "20": { "type": "text", "content": "Before O", "arrow": "across", "target_index": 13 },
+    "22": { "type": "text", "content": "_CE", "arrow": "across", "target_index": 38 },
+    "23": { "type": "text", "content": "Before F", "arrow": "down", "target_index": 46 },
+    "24": { "type": "emoji", "content": "❤️", "text": "_OVE", "arrow": "down", "target_index": 47 },
+    "25": {
+      "across": { "type": "text", "content": "Before N", "target_index": 51 },
+      "down": { "type": "text", "content": "Before O", "target_index": 57 }
+    },
+    "26": { "type": "text", "content": "Before W", "arrow": "down", "target_index": 59 },
+    "27": { "type": "text", "content": "Before F", "arrow": "down", "target_index": 60 }
+  },
+  "date": "2025-11-27",
+  "grid": [
+    ".", ".", ".", ".", ".", ".", ".",
+    ".", "P", "U", "B", ".", ".", "N",
+    ".", ".", "N", "A", "H", ".", "O",
+    ".", ".", ".", ".", ".", "N", "O",
+    ".", "T", "I", "D", "Y", ".", "N",
+    ".", "A", ".", "A", ".", ".", ".",
+    ".", "X", ".", "Y", "E", "L", "L",
+    ".", ".", "M", ".", ".", ".", ".",
+    ".", "N", "E", "V", "E", "R", "."
+  ],
+  "gridnums": [
+    0, 17, 18, 19, 0, 0, 1,
+    2, 0, 0, 0, 0, 20, 0,
+    0, 3, 0, 0, 0, 4, 0,
+    0, 5, 6, 7, 8, 0, 0,
+    9, 0, 0, 0, 0, 10, 0,
+    11, 0, 22, 0, 23, 24, 0,
+    12, 0, 13, 0, 0, 0, 0,
+    0, 25, 0, 26, 27, 15, 0,
+    16, 0, 0, 0, 0, 0, 0
+  ],
+  "puzzleId": "puzzle_004"
+}

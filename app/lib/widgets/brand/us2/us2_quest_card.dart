@@ -6,6 +6,7 @@ import 'package:togetherremind/services/storage_service.dart';
 import 'package:togetherremind/services/couple_preferences_service.dart';
 import 'package:togetherremind/services/haptic_service.dart';
 import 'package:togetherremind/services/sound_service.dart';
+import 'package:togetherremind/widgets/quest_guidance_overlay.dart';
 
 /// Therapeutic branch names that get the "Deeper" badge
 const List<String> _therapeuticBranches = ['connection', 'attachment', 'growth'];
@@ -391,21 +392,25 @@ class _Us2QuestCardState extends State<Us2QuestCard>
       );
     }
 
-    return GestureDetector(
-      onTapDown: (_) {
-        if (!widget.isLocked) setState(() => _isPressed = true);
-      },
-      onTapUp: (_) {
-        if (!widget.isLocked) setState(() => _isPressed = false);
-      },
-      onTapCancel: () {
-        if (!widget.isLocked) setState(() => _isPressed = false);
-      },
-      onTap: _handleTap,
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 150),
-        transform: Matrix4.translationValues(0, _isPressed ? 2 : 0, 0),
-        child: cardContent,
+    return QuestGuidanceOverlay(
+      showGuidance: widget.showGuidance,
+      ribbonText: widget.guidanceText ?? 'Start Here',
+      child: GestureDetector(
+        onTapDown: (_) {
+          if (!widget.isLocked) setState(() => _isPressed = true);
+        },
+        onTapUp: (_) {
+          if (!widget.isLocked) setState(() => _isPressed = false);
+        },
+        onTapCancel: () {
+          if (!widget.isLocked) setState(() => _isPressed = false);
+        },
+        onTap: _handleTap,
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 150),
+          transform: Matrix4.translationValues(0, _isPressed ? 2 : 0, 0),
+          child: cardContent,
+        ),
       ),
     );
   }

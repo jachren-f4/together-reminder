@@ -16,7 +16,13 @@
       "category": "love_languages",
       "metadata": {
         "loveLanguage": true,
-        "languageMapping": ["words_of_affirmation", "physical_touch", "quality_time", "acts_of_service", "receiving_gifts"]
+        "languageMapping": [
+          "words_of_affirmation",
+          "physical_touch",
+          "quality_time",
+          "acts_of_service",
+          "receiving_gifts"
+        ]
       }
     },
     {
@@ -32,7 +38,13 @@
       "category": "emotional_needs",
       "metadata": {
         "dimension": "stress_processing",
-        "poleMapping": ["left", null, "right", null, null]
+        "poleMapping": [
+          "left",
+          null,
+          "right",
+          null,
+          null
+        ]
       }
     },
     {
@@ -48,7 +60,13 @@
       "category": "connection",
       "metadata": {
         "loveLanguage": true,
-        "languageMapping": ["words_of_affirmation", "quality_time", "physical_touch", "quality_time", "quality_time"]
+        "languageMapping": [
+          "words_of_affirmation",
+          "quality_time",
+          "physical_touch",
+          "quality_time",
+          "quality_time"
+        ]
       }
     },
     {
@@ -79,9 +97,16 @@
       "category": "intimacy",
       "metadata": {
         "loveLanguage": true,
-        "languageMapping": ["words_of_affirmation", "physical_touch", "quality_time", "acts_of_service", "quality_time"]
+        "languageMapping": [
+          "words_of_affirmation",
+          "physical_touch",
+          "quality_time",
+          "acts_of_service",
+          "quality_time"
+        ]
       }
     }
   ],
-  "description": "Explore the emotional bonds that strengthen your relationship."
+  "description": "Explore the emotional bonds that strengthen your relationship.",
+  "magnet_id": 5
 }

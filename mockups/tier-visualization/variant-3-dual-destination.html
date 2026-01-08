@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=375, initial-scale=1.0">
+    <title>Tier Visualization - Variant 3: Dual Destination</title>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            background: linear-gradient(180deg, #FFF5F0 0%, #FFE8E0 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 18px;
+            color: #2D2D2D;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .description {
+            font-size: 12px;
+            color: #666;
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 0 20px;
+        }
+
+        /* Connection Bar Container */
+        .connection-bar {
+            background: linear-gradient(135deg, #FF7B6B 0%, #FF9B8B 50%, #FFB89B 100%);
+            border-radius: 24px 24px 0 0;
+            padding: 20px 16px 24px 16px;
+            margin-bottom: 40px;
+        }
+
+        /* Dual destination layout */
+        .dual-destination {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 12px;
+        }
+
+        /* Destination cards */
+        .destination {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 90px;
+        }
+
+        .destination-icon {
+            width: 64px;
+            height: 64px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            margin-bottom: 8px;
+        }
+
+        .destination.current .destination-icon {
+            background: linear-gradient(135deg, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0.1) 100%);
+            border: 3px solid white;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+        }
+
+        .destination.next .destination-icon {
+            background: rgba(255,255,255,0.15);
+            border: 2px dashed rgba(255,255,255,0.5);
+        }
+
+        .destination-label {
+            font-size: 9px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            color: rgba(255,255,255,0.7);
+            margin-bottom: 4px;
+        }
+
+        .destination-name {
+            font-family: 'Playfair Display', serif;
+            font-size: 13px;
+            font-weight: 600;
+            color: white;
+            text-align: center;
+        }
+
+        /* Progress bridge between destinations */
+        .progress-bridge {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 0 8px;
+        }
+
+        .bridge-track {
+            width: 100%;
+            height: 8px;
+            background: rgba(0,0,0,0.15);
+            border-radius: 4px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .bridge-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #FFE066 0%, #FFB347 100%);
+            border-radius: 4px;
+            position: relative;
+        }
+
+        .bridge-fill::after {
+            content: '💗';
+            position: absolute;
+            right: -10px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 16px;
+        }
+
+        .bridge-arrow {
+            font-size: 16px;
+            color: rgba(255,255,255,0.6);
+            margin-bottom: 8px;
+        }
+
+        .lp-display {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 8px;
+        }
+
+        .lp-current {
+            font-size: 18px;
+            font-weight: 800;
+            color: white;
+        }
+
+        .lp-target {
+            font-size: 11px;
+            color: rgba(255,255,255,0.8);
+        }
+
+        /* Progress text */
+        .progress-text {
+            text-align: center;
+            font-size: 11px;
+            color: rgba(255,255,255,0.9);
+            margin-top: 12px;
+            padding: 8px 16px;
+            background: rgba(0,0,0,0.1);
+            border-radius: 20px;
+        }
+
+        /* States */
+        .states-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        .state-label {
+            font-size: 10px;
+            font-weight: 700;
+            color: #999;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+    </style>
+</head>
+<body>
+    <h2>Variant 3: Dual Destination</h2>
+    <p class="description">Current tier on the left, next tier on the right, with progress bar bridging them. Creates a clear "from → to" visual metaphor.</p>
+
+    <div class="states-grid">
+        <!-- State 1: At Cozy Cabin -->
+        <div>
+            <div class="state-label">STATE: TIER 1 (COZY CABIN) - 320 LP</div>
+            <div class="connection-bar">
+                <div class="dual-destination">
+                    <div class="destination current">
+                        <span class="destination-label">NOW</span>
+                        <div class="destination-icon">🏕️</div>
+                        <span class="destination-name">Cozy<br>Cabin</span>
+                    </div>
+
+                    <div class="progress-bridge">
+                        <span class="bridge-arrow">✨ → ✨</span>
+                        <div class="bridge-track">
+                            <div class="bridge-fill" style="width: 32%;"></div>
+                        </div>
+                        <div class="lp-display">
+                            <span class="lp-current">320 LP</span>
+                            <span class="lp-target">of 1,000 LP</span>
+                        </div>
+                    </div>
+
+                    <div class="destination next">
+                        <span class="destination-label">NEXT</span>
+                        <div class="destination-icon">🏖️</div>
+                        <span class="destination-name">Beach<br>Villa</span>
+                    </div>
+                </div>
+
+                <div class="progress-text">
+                    680 LP until your Beach Villa vacation! 🌴
+                </div>
+            </div>
+        </div>
+
+        <!-- State 2: At Beach Villa -->
+        <div>
+            <div class="state-label">STATE: TIER 2 (BEACH VILLA) - 2,100 LP</div>
+            <div class="connection-bar">
+                <div class="dual-destination">
+                    <div class="destination current">
+                        <span class="destination-label">NOW</span>
+                        <div class="destination-icon">🏖️</div>
+                        <span class="destination-name">Beach<br>Villa</span>
+                    </div>
+
+                    <div class="progress-bridge">
+                        <span class="bridge-arrow">✨ → ✨</span>
+                        <div class="bridge-track">
+                            <div class="bridge-fill" style="width: 73%;"></div>
+                        </div>
+                        <div class="lp-display">
+                            <span class="lp-current">2,100 LP</span>
+                            <span class="lp-target">of 2,500 LP</span>
+                        </div>
+                    </div>
+
+                    <div class="destination next">
+                        <span class="destination-label">NEXT</span>
+                        <div class="destination-icon">⛵</div>
+                        <span class="destination-name">Yacht<br>Getaway</span>
+                    </div>
+                </div>
+
+                <div class="progress-text">
+                    Almost there! 400 LP to Yacht Getaway ⛵
+                </div>
+            </div>
+        </div>
+
+        <!-- State 3: At Mountain Penthouse -->
+        <div>
+            <div class="state-label">STATE: TIER 4 (MOUNTAIN) - 7,500 LP</div>
+            <div class="connection-bar">
+                <div class="dual-destination">
+                    <div class="destination current">
+                        <span class="destination-label">NOW</span>
+                        <div class="destination-icon">🏔️</div>
+                        <span class="destination-name">Mountain<br>Penthouse</span>
+                    </div>
+
+                    <div class="progress-bridge">
+                        <span class="bridge-arrow">✨ → ✨</span>
+                        <div class="bridge-track">
+                            <div class="bridge-fill" style="width: 50%;"></div>
+                        </div>
+                        <div class="lp-display">
+                            <span class="lp-current">7,500 LP</span>
+                            <span class="lp-target">of 10,000 LP</span>
+                        </div>
+                    </div>
+
+                    <div class="destination next">
+                        <span class="destination-label">FINAL</span>
+                        <div class="destination-icon">🏰</div>
+                        <span class="destination-name">Castle<br>Retreat</span>
+                    </div>
+                </div>
+
+                <div class="progress-text">
+                    Halfway to the Castle! 2,500 LP to go 🏰
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

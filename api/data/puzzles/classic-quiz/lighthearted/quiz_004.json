@@ -1,68 +1,89 @@
 {
   "quizId": "quiz_004",
-  "title": "Showing Care",
+  "title": "When Things Go Wrong",
   "branch": "lighthearted",
   "questions": [
     {
       "id": "quiz_004_q1",
-      "text": "I feel most loved when you...",
+      "text": "When I'm sick, I'd love it if you...",
       "choices": [
-        "Tell me in words",
-        "Show physical affection",
-        "Do something helpful for me",
-        "Give me your undivided time",
-        "Surprise me with something thoughtful"
+        "Took care of everything so I can rest",
+        "Kept me company and pampered me",
+        "Gave me space but checked in",
+        "Distracted me with shows or comfort food",
+        "Other / It depends"
       ],
       "category": "support"
     },
     {
       "id": "quiz_004_q2",
-      "text": "When I'm sick, I prefer...",
+      "text": "If I'm having an embarrassing moment, I hope you...",
       "choices": [
-        "Being taken care of and pampered",
-        "Being left alone to rest",
-        "Company but low expectations",
-        "Distraction (movies, shows)",
-        "Other / Just check on me occasionally"
+        "Laugh with me and make it lighter",
+        "Pretend you didn't notice",
+        "Rescue me from the situation",
+        "Reassure me later that it wasn't a big deal",
+        "Other / It depends"
       ],
       "category": "support"
     },
     {
       "id": "quiz_004_q3",
-      "text": "The kind of compliment that means most to me is about...",
+      "text": "When I make a mistake, what helps me most is...",
       "choices": [
-        "My appearance",
-        "My personality or character",
-        "Something I accomplished",
-        "How I make you feel",
-        "My skills or abilities"
+        "You listening without judgment",
+        "You helping me figure out a fix",
+        "You reminding me it's not the end of the world",
+        "You giving me space to process it",
+        "Other / It depends"
       ],
-      "category": "support"
+      "category": "support",
+      "metadata": {
+        "dimension": "support_style",
+        "poleMapping": [
+          "left",
+          "right",
+          null,
+          "left",
+          null
+        ]
+      }
     },
     {
       "id": "quiz_004_q4",
-      "text": "When I've had a win (good news, achievement), I want you to...",
+      "text": "If I'm frustrated with something, I'd want you to...",
       "choices": [
-        "Celebrate enthusiastically with me",
-        "Acknowledge it warmly but calmly",
-        "Ask me all about it",
-        "Just be happy for me, no big deal",
-        "Other / Help me share it with others"
+        "Just let me vent without trying to fix it",
+        "Offer ideas or solutions",
+        "Give me a hug and be supportive",
+        "Help me take my mind off it",
+        "Other / It depends"
       ],
-      "category": "support"
+      "category": "support",
+      "metadata": {
+        "dimension": "support_style",
+        "poleMapping": [
+          "left",
+          "right",
+          null,
+          null,
+          null
+        ]
+      }
     },
     {
       "id": "quiz_004_q5",
-      "text": "A small gesture that would brighten my day is...",
+      "text": "After a disappointment, I feel better when we...",
       "choices": [
-        "A sweet text out of nowhere",
-        "Making me food or coffee",
-        "Physical affection (hug, kiss)",
-        "Handling a task I was dreading",
-        "Planning something fun for us"
+        "Talk through what happened",
+        "Do something fun to shift the mood",
+        "Just be together quietly",
+        "Make a plan for next time",
+        "Other / It depends"
       ],
       "category": "support"
     }
   ],
-  "description": "Uncover the little ways you show love and appreciation."
+  "description": "Learn how to be there for each other when things don't go as planned.",
+  "magnet_id": 0
 }

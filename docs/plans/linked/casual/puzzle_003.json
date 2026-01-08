@@ -1,0 +1,77 @@
+{
+  "author": "Crossword Maker GPT",
+  "title": "Adult Intimacy Puzzle #3",
+  "size": {
+    "rows": 9,
+    "cols": 7
+  },
+  "clues": {
+    "1": { "type": "emoji", "content": "💘", "arrow": "down", "target_index": 8 },
+    "2": { "type": "text", "content": "Down ___", "arrow": "down", "target_index": 10 },
+    "3": { "type": "text", "content": "Casual yes", "arrow": "down", "target_index": 13 },
+    "4": { "type": "text", "content": "After B", "arrow": "across", "target_index": 8 },
+    "5": { "type": "text", "content": "Twice weekly", "arrow": "across", "target_index": 10 },
+    "6": {
+      "across": { "type": "text", "content": "After X", "target_index": 13 },
+      "down": { "type": "emoji", "content": "😏", "target_index": 19 }
+    },
+    "7": { "type": "emoji", "content": "👋", "text": "TO_CH", "arrow": "across", "target_index": 15 },
+    "8": { "type": "text", "content": "Before B", "arrow": "down", "target_index": 39 },
+    "9": { "type": "text", "content": "Adult male", "arrow": "down", "target_index": 41 },
+    "10": { "type": "text", "content": "BEN_", "arrow": "across", "target_index": 36 },
+    "11": { "type": "emoji", "content": "☀️", "arrow": "across", "target_index": 38 },
+    "12": { "type": "text", "content": "Exclamation", "arrow": "down", "target_index": 50 },
+    "13": { "type": "text", "content": "Hold ___", "arrow": "across", "target_index": 50 },
+    "14": { "type": "emoji", "content": "❤️", "arrow": "across", "target_index": 57 },
+    "15": {
+      "across": { "type": "text", "content": "Before F", "target_index": 17 },
+      "down": { "type": "text", "content": "Before J", "target_index": 23 }
+    },
+    "16": { "type": "emoji", "content": "🏭", "text": "__CTORY", "arrow": "across", "target_index": 19 },
+    "17": { "type": "emoji", "content": "💊", "text": "___L", "arrow": "across", "target_index": 22 },
+    "18": { "type": "emoji", "content": "🎵", "text": "__RICS", "arrow": "across", "target_index": 26 },
+    "19": { "type": "text", "content": "Before J", "arrow": "across", "target_index": 29 },
+    "20": {
+      "across": { "type": "text", "content": "Before P", "target_index": 31 },
+      "down": { "type": "text", "content": "After V", "target_index": 38 }
+    },
+    "21": { "type": "text", "content": "Compass dir", "arrow": "down", "target_index": 51 },
+    "22": { "type": "emoji", "content": "👯‍♀️", "text": "__NDEM", "arrow": "down", "target_index": 52 },
+    "23": {
+      "across": { "type": "text", "content": "British thanks", "target_index": 47 },
+      "down": { "type": "text", "content": "Either ___", "target_index": 53 }
+    },
+    "24": {
+      "across": { "type": "text", "content": "___ be or not", "target_index": 52 },
+      "down": { "type": "text", "content": "Before F", "target_index": 58 }
+    },
+    "25": {
+      "across": { "type": "text", "content": "Before O", "target_index": 55 },
+      "down": { "type": "text", "content": "Before U", "target_index": 61 }
+    }
+  },
+  "date": "2025-11-27",
+  "grid": [
+    ".", ".", ".", ".", ".", ".", ".",
+    ".", "C", ".", "B", "I", ".", "Y",
+    ".", "U", ".", "E", ".", "F", "A",
+    ".", "P", "I", "L", ".", "L", "Y",
+    ".", "I", ".", "O", ".", "I", ".",
+    ".", "D", ".", "W", "A", "R", "M",
+    ".", ".", ".", ".", ".", "T", "A",
+    ".", "O", "N", "T", "O", ".", "N",
+    ".", "H", "E", "A", "R", "T", "."
+  ],
+  "gridnums": [
+    0, 1, 0, 2, 0, 0, 3,
+    4, 0, 5, 0, 0, 6, 0,
+    7, 0, 15, 0, 16, 0, 0,
+    17, 0, 0, 0, 18, 0, 0,
+    19, 0, 20, 0, 8, 0, 9,
+    10, 0, 11, 0, 0, 0, 0,
+    0, 12, 21, 22, 23, 0, 0,
+    13, 0, 24, 0, 0, 25, 0,
+    14, 0, 0, 0, 0, 0, 0
+  ],
+  "puzzleId": "puzzle_003"
+}

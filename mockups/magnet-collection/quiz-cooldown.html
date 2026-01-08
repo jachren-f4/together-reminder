@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quiz Cooldown Overlay</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #f5f5f5;
+      padding: 20px;
+      min-height: 100vh;
+    }
+
+    h1 {
+      text-align: center;
+      color: #333;
+      margin-bottom: 10px;
+      font-size: 24px;
+    }
+
+    .subtitle {
+      text-align: center;
+      color: #666;
+      margin-bottom: 30px;
+      font-size: 14px;
+    }
+
+    .variants-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 30px;
+      justify-content: center;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .variant {
+      background: white;
+      border-radius: 16px;
+      padding: 20px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    .variant-label {
+      font-size: 12px;
+      font-weight: 600;
+      color: #888;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 15px;
+      text-align: center;
+    }
+
+    /* Phone frame */
+    .phone-frame {
+      width: 320px;
+      background: linear-gradient(180deg, #FFD1C1 0%, #FFF5F0 100%);
+      border-radius: 24px;
+      overflow: hidden;
+      position: relative;
+      padding: 20px;
+      padding-top: 60px;
+    }
+
+    .section-label {
+      font-size: 12px;
+      font-weight: 600;
+      color: #666;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 12px;
+    }
+
+    /* Quest Card Base */
+    .quest-card {
+      background: white;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+      margin-bottom: 12px;
+      position: relative;
+    }
+
+    .quest-card-content {
+      display: flex;
+      align-items: center;
+      padding: 16px;
+      gap: 12px;
+    }
+
+    .quest-icon {
+      width: 48px;
+      height: 48px;
+      background: linear-gradient(135deg, #FFE8E0 0%, #FFD1C1 100%);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      flex-shrink: 0;
+    }
+
+    .quest-info {
+      flex: 1;
+    }
+
+    .quest-title {
+      font-size: 15px;
+      font-weight: 600;
+      color: #333;
+      margin-bottom: 2px;
+    }
+
+    .quest-subtitle {
+      font-size: 13px;
+      color: #888;
+    }
+
+    .quest-arrow {
+      color: #CCC;
+      font-size: 20px;
+    }
+
+    /* Cooldown Overlay */
+    .cooldown-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.6);
+      border-radius: 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      text-align: center;
+      padding: 16px;
+    }
+
+    .cooldown-icon {
+      font-size: 28px;
+      margin-bottom: 8px;
+    }
+
+    .cooldown-time {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .cooldown-hint {
+      font-size: 12px;
+      color: rgba(255,255,255,0.7);
+    }
+
+    /* Available card (no overlay) */
+    .quest-card.available {
+      cursor: pointer;
+    }
+
+    .quest-card.available:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(0,0,0,0.12);
+    }
+
+    /* Status indicators */
+    .status-badge {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      font-size: 10px;
+      font-weight: 600;
+      padding: 4px 8px;
+      border-radius: 10px;
+      text-transform: uppercase;
+    }
+
+    .status-badge.ready {
+      background: #E8F5E9;
+      color: #4CAF50;
+    }
+
+    .status-badge.cooldown {
+      background: rgba(255,255,255,0.2);
+      color: white;
+    }
+
+    /* Context explanation */
+    .context-box {
+      background: #F8F8F8;
+      border-radius: 12px;
+      padding: 16px;
+      margin-top: 20px;
+      font-size: 13px;
+      color: #666;
+      line-height: 1.5;
+    }
+
+    .context-box strong {
+      color: #333;
+    }
+
+    .nav-hint {
+      text-align: center;
+      font-size: 11px;
+      color: rgba(0,0,0,0.4);
+      margin-top: 16px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Quiz Cooldown States</h1>
+  <p class="subtitle">Cooldown overlay only shows AFTER user has reviewed results of their 2nd play</p>
+
+  <div class="variants-container">
+
+    <!-- Home Screen with Mixed States -->
+    <div class="variant">
+      <div class="variant-label">Home Screen - Mixed Cooldown States</div>
+      <div class="phone-frame">
+        <div class="section-label">Today's Quests</div>
+
+        <!-- Classic Quiz - On Cooldown -->
+        <div class="quest-card">
+          <div class="quest-card-content">
+            <div class="quest-icon">💭</div>
+            <div class="quest-info">
+              <div class="quest-title">Classic Quiz</div>
+              <div class="quest-subtitle">5 questions</div>
+            </div>
+            <div class="quest-arrow">›</div>
+          </div>
+          <div class="cooldown-overlay">
+            <div class="cooldown-icon">⏱️</div>
+            <div class="cooldown-time">Back in 6h 24m</div>
+            <div class="cooldown-hint">Try other activities to earn LP</div>
+          </div>
+        </div>
+
+        <!-- Affirmation Quiz - Available -->
+        <div class="quest-card available">
+          <span class="status-badge ready">Ready</span>
+          <div class="quest-card-content">
+            <div class="quest-icon">💝</div>
+            <div class="quest-info">
+              <div class="quest-title">Affirmation Quiz</div>
+              <div class="quest-subtitle">5 questions</div>
+            </div>
+            <div class="quest-arrow">›</div>
+          </div>
+        </div>
+
+        <!-- You or Me - Available -->
+        <div class="quest-card available">
+          <span class="status-badge ready">Ready</span>
+          <div class="quest-card-content">
+            <div class="quest-icon">🤔</div>
+            <div class="quest-info">
+              <div class="quest-title">You or Me</div>
+              <div class="quest-subtitle">Quick picks</div>
+            </div>
+            <div class="quest-arrow">›</div>
+          </div>
+        </div>
+
+        <div class="context-box">
+          <strong>Scenario:</strong> User played 2 Classic Quizzes. That type is on cooldown, but Affirmation and You or Me are still available.
+        </div>
+      </div>
+    </div>
+
+    <!-- All Quiz Types on Cooldown -->
+    <div class="variant">
+      <div class="variant-label">All Quiz Types on Cooldown</div>
+      <div class="phone-frame">
+        <div class="section-label">Today's Quests</div>
+
+        <!-- Classic Quiz - On Cooldown -->
+        <div class="quest-card">
+          <div class="quest-card-content">
+            <div class="quest-icon">💭</div>
+            <div class="quest-info">
+              <div class="quest-title">Classic Quiz</div>
+              <div class="quest-subtitle">5 questions</div>
+            </div>
+            <div class="quest-arrow">›</div>
+          </div>
+          <div class="cooldown-overlay">
+            <div class="cooldown-icon">⏱️</div>
+            <div class="cooldown-time">Back in 5h 12m</div>
+            <div class="cooldown-hint">Try other activities to earn LP</div>
+          </div>
+        </div>
+
+        <!-- Affirmation Quiz - On Cooldown -->
+        <div class="quest-card">
+          <div class="quest-card-content">
+            <div class="quest-icon">💝</div>
+            <div class="quest-info">
+              <div class="quest-title">Affirmation Quiz</div>
+              <div class="quest-subtitle">5 questions</div>
+            </div>
+            <div class="quest-arrow">›</div>
+          </div>
+          <div class="cooldown-overlay">
+            <div class="cooldown-icon">⏱️</div>
+            <div class="cooldown-time">Back in 3h 45m</div>
+            <div class="cooldown-hint">Try other activities to earn LP</div>
+          </div>
+        </div>
+
+        <!-- You or Me - On Cooldown -->
+        <div class="quest-card">
+          <div class="quest-card-content">
+            <div class="quest-icon">🤔</div>
+            <div class="quest-info">
+              <div class="quest-title">You or Me</div>
+              <div class="quest-subtitle">Quick picks</div>
+            </div>
+            <div class="quest-arrow">›</div>
+          </div>
+          <div class="cooldown-overlay">
+            <div class="cooldown-icon">⏱️</div>
+            <div class="cooldown-time">Back in 7h 02m</div>
+            <div class="cooldown-hint">Try other activities to earn LP</div>
+          </div>
+        </div>
+
+        <div class="context-box">
+          <strong>Scenario:</strong> User played 2 of each quiz type. All on cooldown with different timers. They can still play Linked, Word Search, or earn LP from Steps.
+        </div>
+      </div>
+    </div>
+
+    <!-- Side Quests with Cooldown -->
+    <div class="variant">
+      <div class="variant-label">Side Quests Section</div>
+      <div class="phone-frame">
+        <div class="section-label">Side Quests</div>
+
+        <!-- Linked - On Cooldown -->
+        <div class="quest-card">
+          <div class="quest-card-content">
+            <div class="quest-icon">🔗</div>
+            <div class="quest-info">
+              <div class="quest-title">Linked</div>
+              <div class="quest-subtitle">Word puzzle</div>
+            </div>
+            <div class="quest-arrow">›</div>
+          </div>
+          <div class="cooldown-overlay">
+            <div class="cooldown-icon">⏱️</div>
+            <div class="cooldown-time">Back in 2h 18m</div>
+            <div class="cooldown-hint">Try other activities to earn LP</div>
+          </div>
+        </div>
+
+        <!-- Word Search - Available -->
+        <div class="quest-card available">
+          <span class="status-badge ready">Ready</span>
+          <div class="quest-card-content">
+            <div class="quest-icon">🔍</div>
+            <div class="quest-info">
+              <div class="quest-title">Word Search</div>
+              <div class="quest-subtitle">Find the words</div>
+            </div>
+            <div class="quest-arrow">›</div>
+          </div>
+        </div>
+
+        <div class="context-box">
+          <strong>Note:</strong> Linked and Word Search also have separate cooldowns. User played 2 Linked games, but Word Search is still available.
+        </div>
+      </div>
+    </div>
+
+  </div>
+</body>
+</html>

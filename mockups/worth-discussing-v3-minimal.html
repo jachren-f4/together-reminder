@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Worth Discussing v3 - Minimal</title>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&family=Playfair+Display:ital,wght@0,500;0,600;1,500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-gradient-start: #FFD1C1;
+      --bg-gradient-end: #FFF5F0;
+      --emma-pink: #FF6B6B;
+      --accent-gold: #F4C55B;
+      --cream: #FFF9E6;
+      --peachy: #FFF5F0;
+      --text-dark: #2D2D2D;
+      --text-medium: #5A5A5A;
+      --text-light: #8A8A8A;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Nunito', sans-serif;
+      background: linear-gradient(180deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
+      min-height: 100vh;
+      padding: 20px;
+      max-width: 420px;
+      margin: 0 auto;
+    }
+
+    .variant-label {
+      position: fixed;
+      top: 10px;
+      right: 10px;
+      background: rgba(0,0,0,0.7);
+      color: white;
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-size: 11px;
+      font-weight: 600;
+      z-index: 100;
+    }
+
+    /* Section Title */
+    .section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+
+    .section-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 20px;
+      font-weight: 600;
+      color: var(--text-dark);
+    }
+
+    .discovery-count {
+      font-size: 12px;
+      color: var(--text-light);
+    }
+
+    /* Main Container */
+    .discoveries-container {
+      background: linear-gradient(135deg, var(--cream) 0%, var(--peachy) 100%);
+      border: 2px solid rgba(244, 197, 91, 0.3);
+      border-radius: 18px;
+      padding: 16px;
+    }
+
+    /* Filter Tabs */
+    .filter-tabs {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding-bottom: 14px;
+      margin-bottom: 4px;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .filter-tabs::-webkit-scrollbar {
+      display: none;
+    }
+
+    .filter-tab {
+      flex-shrink: 0;
+      height: 32px;
+      padding: 0 14px;
+      border-radius: 16px;
+      border: 1.5px solid #E8DFD0;
+      background: var(--cream);
+      font-family: 'Nunito', sans-serif;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-medium);
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .filter-tab:hover {
+      border-color: var(--emma-pink);
+    }
+
+    .filter-tab.active {
+      background: linear-gradient(135deg, var(--emma-pink), var(--accent-gold));
+      border-color: transparent;
+      color: white;
+    }
+
+    /* Discovery Card - Clean & Simple */
+    .discovery-card {
+      background: white;
+      border-radius: 14px;
+      padding: 16px;
+      margin-bottom: 12px;
+    }
+
+    .discovery-card:last-child {
+      margin-bottom: 0;
+    }
+
+    /* Partner Appreciation Indicator */
+    .partner-appreciated {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 12px;
+      color: var(--emma-pink);
+      margin-bottom: 10px;
+    }
+
+    .partner-appreciated .heart {
+      font-size: 13px;
+    }
+
+    /* Question Text */
+    .question-text {
+      font-size: 13px;
+      color: var(--text-light);
+      margin-bottom: 8px;
+      font-style: italic;
+    }
+
+    /* Answers */
+    .answers {
+      margin-bottom: 14px;
+    }
+
+    .answer-row {
+      display: flex;
+      align-items: baseline;
+      margin-bottom: 6px;
+      font-size: 14px;
+      line-height: 1.4;
+    }
+
+    .answer-row:last-child {
+      margin-bottom: 0;
+    }
+
+    .answer-name {
+      font-weight: 700;
+      color: var(--emma-pink);
+      margin-right: 6px;
+      flex-shrink: 0;
+    }
+
+    .answer-text {
+      color: var(--text-dark);
+    }
+
+    /* Card Footer */
+    .card-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-top: 12px;
+      border-top: 1px solid rgba(0,0,0,0.06);
+    }
+
+    /* Appreciate Button */
+    .appreciate-btn {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: none;
+      border: 1.5px solid rgba(255, 107, 107, 0.25);
+      border-radius: 20px;
+      padding: 7px 14px;
+      font-family: 'Nunito', sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-medium);
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .appreciate-btn:hover {
+      border-color: var(--emma-pink);
+      color: var(--emma-pink);
+      background: rgba(255, 107, 107, 0.04);
+    }
+
+    .appreciate-btn.appreciated {
+      background: var(--emma-pink);
+      border-color: var(--emma-pink);
+      color: white;
+    }
+
+    .appreciate-btn .heart {
+      font-size: 15px;
+    }
+
+    /* Mutual Badge */
+    .mutual-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 12px;
+      color: var(--emma-pink);
+    }
+
+    /* Demo Controls */
+    .demo-tabs {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+
+    .demo-tab {
+      padding: 8px 14px;
+      background: white;
+      border: 2px solid transparent;
+      border-radius: 20px;
+      font-family: 'Nunito', sans-serif;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .demo-tab:hover {
+      border-color: var(--emma-pink);
+    }
+
+    .demo-tab.active {
+      background: var(--emma-pink);
+      color: white;
+    }
+
+    .demo-section {
+      display: none;
+    }
+
+    .demo-section.active {
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <div class="variant-label">v3 - Minimal</div>
+
+  <div class="demo-tabs">
+    <button class="demo-tab active" onclick="showDemo('bob')">Bob's View</button>
+    <button class="demo-tab" onclick="showDemo('alice')">Alice's View</button>
+  </div>
+
+  <!-- Bob's View -->
+  <div id="demo-bob" class="demo-section active">
+    <div class="section-header">
+      <h2 class="section-title">Worth Discussing</h2>
+      <span class="discovery-count">25 discoveries</span>
+    </div>
+
+    <div class="discoveries-container">
+      <div class="filter-tabs">
+        <button class="filter-tab active">All</button>
+        <button class="filter-tab">Family</button>
+        <button class="filter-tab">Money</button>
+        <button class="filter-tab">Communication</button>
+        <button class="filter-tab">Lifestyle</button>
+      </div>
+
+      <!-- Card: Partner appreciated, I haven't -->
+      <div class="discovery-card">
+        <div class="partner-appreciated">
+          <span class="heart">♥</span> Alice appreciates this
+        </div>
+        <div class="question-text">How do you feel about having children?</div>
+        <div class="answers">
+          <div class="answer-row">
+            <span class="answer-name">Bob:</span>
+            <span class="answer-text">Definitely want kids in the next few years</span>
+          </div>
+          <div class="answer-row">
+            <span class="answer-name">Alice:</span>
+            <span class="answer-text">Still figuring out if parenthood is for me</span>
+          </div>
+        </div>
+        <div class="card-footer">
+          <button class="appreciate-btn">
+            <span class="heart">♡</span>
+            Appreciate
+          </button>
+        </div>
+      </div>
+
+      <!-- Card: Both appreciated -->
+      <div class="discovery-card">
+        <div class="question-text">When money is tight, you prefer to...</div>
+        <div class="answers">
+          <div class="answer-row">
+            <span class="answer-name">Bob:</span>
+            <span class="answer-text">Cut back on everything equally</span>
+          </div>
+          <div class="answer-row">
+            <span class="answer-name">Alice:</span>
+            <span class="answer-text">Prioritize what matters, cut the rest</span>
+          </div>
+        </div>
+        <div class="card-footer">
+          <span class="mutual-badge">
+            <span>♥</span> You both appreciate this
+          </span>
+        </div>
+      </div>
+
+      <!-- Card: I appreciated, partner hasn't -->
+      <div class="discovery-card">
+        <div class="question-text">After a disagreement, you need...</div>
+        <div class="answers">
+          <div class="answer-row">
+            <span class="answer-name">Bob:</span>
+            <span class="answer-text">Time alone to process</span>
+          </div>
+          <div class="answer-row">
+            <span class="answer-name">Alice:</span>
+            <span class="answer-text">To talk it through immediately</span>
+          </div>
+        </div>
+        <div class="card-footer">
+          <button class="appreciate-btn appreciated">
+            <span class="heart">♥</span>
+            Appreciated
+          </button>
+        </div>
+      </div>
+
+      <!-- Card: Neither appreciated -->
+      <div class="discovery-card">
+        <div class="question-text">Dining out vs cooking at home?</div>
+        <div class="answers">
+          <div class="answer-row">
+            <span class="answer-name">Bob:</span>
+            <span class="answer-text">Cook at home most nights</span>
+          </div>
+          <div class="answer-row">
+            <span class="answer-name">Alice:</span>
+            <span class="answer-text">Eat out or order in often</span>
+          </div>
+        </div>
+        <div class="card-footer">
+          <button class="appreciate-btn">
+            <span class="heart">♡</span>
+            Appreciate
+          </button>
+        </div>
+      </div>
+
+      <!-- Card: Neither appreciated -->
+      <div class="discovery-card">
+        <div class="question-text">Ideal vacation style?</div>
+        <div class="answers">
+          <div class="answer-row">
+            <span class="answer-name">Bob:</span>
+            <span class="answer-text">Go with the flow, no plans</span>
+          </div>
+          <div class="answer-row">
+            <span class="answer-name">Alice:</span>
+            <span class="answer-text">Detailed itinerary in advance</span>
+          </div>
+        </div>
+        <div class="card-footer">
+          <button class="appreciate-btn">
+            <span class="heart">♡</span>
+            Appreciate
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Alice's View (same discoveries, different appreciation states) -->
+  <div id="demo-alice" class="demo-section">
+    <div class="section-header">
+      <h2 class="section-title">Worth Discussing</h2>
+      <span class="discovery-count">25 discoveries</span>
+    </div>
+
+    <div class="discoveries-container">
+      <div class="filter-tabs">
+        <button class="filter-tab active">All</button>
+        <button class="filter-tab">Family</button>
+        <button class="filter-tab">Money</button>
+        <button class="filter-tab">Communication</button>
+        <button class="filter-tab">Lifestyle</button>
+      </div>
+
+      <!-- Card: I appreciated, partner hasn't (Alice's POV) -->
+      <div class="discovery-card">
+        <div class="question-text">How do you feel about having children?</div>
+        <div class="answers">
+          <div class="answer-row">
+            <span class="answer-name">Bob:</span>
+            <span class="answer-text">Definitely want kids in the next few years</span>
+          </div>
+          <div class="answer-row">
+            <span class="answer-name">Alice:</span>
+            <span class="answer-text">Still figuring out if parenthood is for me</span>
+          </div>
+        </div>
+        <div class="card-footer">
+          <button class="appreciate-btn appreciated">
+            <span class="heart">♥</span>
+            Appreciated
+          </button>
+        </div>
+      </div>
+
+      <!-- Card: Both appreciated -->
+      <div class="discovery-card">
+        <div class="question-text">When money is tight, you prefer to...</div>
+        <div class="answers">
+          <div class="answer-row">
+            <span class="answer-name">Bob:</span>
+            <span class="answer-text">Cut back on everything equally</span>
+          </div>
+          <div class="answer-row">
+            <span class="answer-name">Alice:</span>
+            <span class="answer-text">Prioritize what matters, cut the rest</span>
+          </div>
+        </div>
+        <div class="card-footer">
+          <span class="mutual-badge">
+            <span>♥</span> You both appreciate this
+          </span>
+        </div>
+      </div>
+
+      <!-- Card: Partner appreciated, I haven't (Alice's POV) -->
+      <div class="discovery-card">
+        <div class="partner-appreciated">
+          <span class="heart">♥</span> Bob appreciates this
+        </div>
+        <div class="question-text">After a disagreement, you need...</div>
+        <div class="answers">
+          <div class="answer-row">
+            <span class="answer-name">Bob:</span>
+            <span class="answer-text">Time alone to process</span>
+          </div>
+          <div class="answer-row">
+            <span class="answer-name">Alice:</span>
+            <span class="answer-text">To talk it through immediately</span>
+          </div>
+        </div>
+        <div class="card-footer">
+          <button class="appreciate-btn">
+            <span class="heart">♡</span>
+            Appreciate
+          </button>
+        </div>
+      </div>
+
+      <!-- Card: Neither appreciated -->
+      <div class="discovery-card">
+        <div class="question-text">Dining out vs cooking at home?</div>
+        <div class="answers">
+          <div class="answer-row">
+            <span class="answer-name">Bob:</span>
+            <span class="answer-text">Cook at home most nights</span>
+          </div>
+          <div class="answer-row">
+            <span class="answer-name">Alice:</span>
+            <span class="answer-text">Eat out or order in often</span>
+          </div>
+        </div>
+        <div class="card-footer">
+          <button class="appreciate-btn">
+            <span class="heart">♡</span>
+            Appreciate
+          </button>
+        </div>
+      </div>
+
+      <!-- Card: Neither appreciated -->
+      <div class="discovery-card">
+        <div class="question-text">Ideal vacation style?</div>
+        <div class="answers">
+          <div class="answer-row">
+            <span class="answer-name">Bob:</span>
+            <span class="answer-text">Go with the flow, no plans</span>
+          </div>
+          <div class="answer-row">
+            <span class="answer-name">Alice:</span>
+            <span class="answer-text">Detailed itinerary in advance</span>
+          </div>
+        </div>
+        <div class="card-footer">
+          <button class="appreciate-btn">
+            <span class="heart">♡</span>
+            Appreciate
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function showDemo(demoId) {
+      document.querySelectorAll('.demo-section').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.demo-tab').forEach(el => el.classList.remove('active'));
+      document.getElementById('demo-' + demoId).classList.add('active');
+      event.target.classList.add('active');
+    }
+
+    document.querySelectorAll('.filter-tab').forEach(tab => {
+      tab.addEventListener('click', function() {
+        this.parentElement.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+        this.classList.add('active');
+      });
+    });
+
+    document.querySelectorAll('.appreciate-btn').forEach(btn => {
+      btn.addEventListener('click', function() {
+        this.classList.toggle('appreciated');
+        const heart = this.querySelector('.heart');
+        const isAppreciated = this.classList.contains('appreciated');
+        heart.innerHTML = isAppreciated ? '♥' : '♡';
+        this.childNodes[2].textContent = isAppreciated ? ' Appreciated' : ' Appreciate';
+      });
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quizzes Exhausted States</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #f5f5f5;
+      padding: 20px;
+      min-height: 100vh;
+    }
+
+    h1 {
+      text-align: center;
+      color: #333;
+      margin-bottom: 10px;
+      font-size: 24px;
+    }
+
+    .subtitle {
+      text-align: center;
+      color: #666;
+      margin-bottom: 30px;
+      font-size: 14px;
+    }
+
+    .variants-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 30px;
+      justify-content: center;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    .variant {
+      background: white;
+      border-radius: 16px;
+      padding: 20px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    .variant-label {
+      font-size: 12px;
+      font-weight: 600;
+      color: #888;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 15px;
+      text-align: center;
+    }
+
+    /* Phone frame */
+    .phone-frame {
+      width: 320px;
+      height: 500px;
+      background: linear-gradient(180deg, #FFD1C1 0%, #FFF5F0 100%);
+      border-radius: 24px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* ===== VARIANT A: Quest Card Empty State ===== */
+    .quest-card-empty {
+      background: white;
+      border-radius: 16px;
+      margin: 20px;
+      padding: 24px;
+      text-align: center;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+    }
+
+    .empty-illustration {
+      width: 80px;
+      height: 80px;
+      margin: 0 auto 16px;
+      background: linear-gradient(135deg, #FFF5F0 0%, #FFE8E0 100%);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 36px;
+    }
+
+    .empty-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: #333;
+      margin-bottom: 8px;
+    }
+
+    .empty-message {
+      font-size: 14px;
+      color: #666;
+      line-height: 1.5;
+      margin-bottom: 20px;
+    }
+
+    .progress-info {
+      background: linear-gradient(135deg, #FFF5F0 0%, #FFE8E0 100%);
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 16px;
+    }
+
+    .progress-label {
+      font-size: 12px;
+      color: #888;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 8px;
+    }
+
+    .progress-bar-container {
+      background: rgba(255,255,255,0.8);
+      border-radius: 8px;
+      height: 12px;
+      overflow: hidden;
+      margin-bottom: 8px;
+    }
+
+    .progress-bar-fill {
+      background: linear-gradient(90deg, #FF6B6B 0%, #FF9F43 100%);
+      height: 100%;
+      border-radius: 8px;
+      width: 70%;
+    }
+
+    .progress-text {
+      font-size: 13px;
+      color: #666;
+    }
+
+    .progress-text strong {
+      color: #FF6B6B;
+    }
+
+    .unlock-button {
+      background: linear-gradient(135deg, #FF6B6B 0%, #FF9F43 100%);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      padding: 14px 24px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .unlock-button .magnet-icon {
+      width: 20px;
+      height: 20px;
+      background: white;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+    }
+
+    /* ===== VARIANT B: Full Screen Modal ===== */
+    .modal-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0,0,0,0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .modal-content {
+      background: white;
+      border-radius: 24px;
+      padding: 28px 24px;
+      text-align: center;
+      width: 100%;
+      max-width: 300px;
+      margin-bottom: 40px;
+    }
+
+    .modal-magnet {
+      width: 100px;
+      height: 100px;
+      margin: 0 auto 20px;
+      background: linear-gradient(135deg, #87CEEB 0%, #98D8C8 100%);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 48px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      position: relative;
+    }
+
+    .modal-magnet::after {
+      content: '?';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 40px;
+      color: white;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    }
+
+    .modal-magnet.locked {
+      background: linear-gradient(135deg, #E0E0E0 0%, #BDBDBD 100%);
+      filter: grayscale(0.3);
+    }
+
+    .modal-title {
+      font-size: 20px;
+      font-weight: 700;
+      color: #333;
+      margin-bottom: 12px;
+    }
+
+    .modal-message {
+      font-size: 15px;
+      color: #666;
+      line-height: 1.6;
+      margin-bottom: 24px;
+    }
+
+    .modal-stats {
+      display: flex;
+      justify-content: center;
+      gap: 24px;
+      margin-bottom: 24px;
+      padding: 16px;
+      background: #F8F8F8;
+      border-radius: 12px;
+    }
+
+    .modal-stat {
+      text-align: center;
+    }
+
+    .modal-stat-value {
+      font-size: 24px;
+      font-weight: 700;
+      color: #FF6B6B;
+    }
+
+    .modal-stat-label {
+      font-size: 11px;
+      color: #888;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .modal-button {
+      background: linear-gradient(135deg, #FF6B6B 0%, #FF9F43 100%);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      padding: 16px 24px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      width: 100%;
+      margin-bottom: 12px;
+    }
+
+    .modal-button-secondary {
+      background: transparent;
+      color: #666;
+      border: none;
+      padding: 12px;
+      font-size: 14px;
+      cursor: pointer;
+      text-decoration: underline;
+    }
+
+    .modal-badge {
+      display: inline-block;
+      background: linear-gradient(135deg, #FF6B6B 0%, #FF9F43 100%);
+      color: white;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      padding: 6px 12px;
+      border-radius: 20px;
+      margin-bottom: 12px;
+    }
+
+    .next-magnet-section {
+      background: #F8F8F8;
+      border-radius: 16px;
+      padding: 16px;
+      margin: 20px 0;
+    }
+
+    .next-magnet-label {
+      font-size: 11px;
+      font-weight: 600;
+      color: #888;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 12px;
+    }
+
+    .next-magnet-preview {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .next-magnet-image {
+      width: 56px;
+      height: 56px;
+      background: linear-gradient(135deg, #E8F4F8 0%, #B8E6CF 100%);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    .next-magnet-name {
+      font-size: 18px;
+      font-weight: 600;
+      color: #333;
+    }
+
+    .lp-progress-section {
+      margin-top: 8px;
+    }
+
+    .lp-progress-bar {
+      background: #E0E0E0;
+      border-radius: 6px;
+      height: 10px;
+      overflow: hidden;
+      margin-bottom: 6px;
+    }
+
+    .lp-progress-fill {
+      background: linear-gradient(90deg, #FF6B6B 0%, #FF9F43 100%);
+      height: 100%;
+      border-radius: 6px;
+    }
+
+    .lp-progress-text {
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      color: #888;
+    }
+
+    .lp-progress-text span:first-child {
+      color: #FF6B6B;
+      font-weight: 600;
+    }
+
+    .lp-hint {
+      font-size: 12px;
+      color: #888;
+      margin-top: 10px;
+      font-style: italic;
+    }
+
+    .unlock-reward {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 12px;
+      background: linear-gradient(135deg, #FFF5F0 0%, #FFE8E0 100%);
+      border-radius: 10px;
+      margin-bottom: 20px;
+    }
+
+    .reward-icon {
+      font-size: 18px;
+    }
+
+    .reward-text {
+      font-size: 14px;
+      color: #666;
+    }
+
+    .reward-text strong {
+      color: #FF6B6B;
+    }
+
+    /* ===== VARIANT C: Inline Banner ===== */
+    .home-content {
+      padding: 20px;
+    }
+
+    .section-label {
+      font-size: 12px;
+      font-weight: 600;
+      color: #888;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 12px;
+    }
+
+    .exhausted-banner {
+      background: linear-gradient(135deg, #FFF5F0 0%, #FFE8E0 100%);
+      border-radius: 16px;
+      padding: 20px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 16px;
+      border: 2px dashed rgba(255,107,107,0.3);
+    }
+
+    .banner-magnet {
+      width: 56px;
+      height: 56px;
+      background: linear-gradient(135deg, #E8E8E8 0%, #D0D0D0 100%);
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      flex-shrink: 0;
+      position: relative;
+    }
+
+    .banner-magnet::after {
+      content: '?';
+      position: absolute;
+      font-size: 20px;
+      color: white;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+    }
+
+    .banner-content {
+      flex: 1;
+    }
+
+    .banner-title {
+      font-size: 15px;
+      font-weight: 600;
+      color: #333;
+      margin-bottom: 4px;
+    }
+
+    .banner-message {
+      font-size: 13px;
+      color: #666;
+      line-height: 1.4;
+    }
+
+    .banner-message strong {
+      color: #FF6B6B;
+    }
+
+    .banner-arrow {
+      color: #FF6B6B;
+      font-size: 20px;
+    }
+
+    /* Disabled quest card */
+    .quest-card-disabled {
+      background: white;
+      border-radius: 16px;
+      padding: 16px;
+      opacity: 0.6;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .quest-icon-disabled {
+      width: 48px;
+      height: 48px;
+      background: #E8E8E8;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      filter: grayscale(1);
+    }
+
+    .quest-info {
+      flex: 1;
+    }
+
+    .quest-title-disabled {
+      font-size: 15px;
+      font-weight: 600;
+      color: #999;
+    }
+
+    .quest-subtitle-disabled {
+      font-size: 13px;
+      color: #BBB;
+    }
+
+    .lock-icon {
+      font-size: 20px;
+      color: #CCC;
+    }
+
+    /* ===== VARIANT D: Toast/Snackbar ===== */
+    .toast-container {
+      position: absolute;
+      bottom: 100px;
+      left: 20px;
+      right: 20px;
+    }
+
+    .toast {
+      background: #333;
+      color: white;
+      border-radius: 12px;
+      padding: 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    }
+
+    .toast-icon {
+      width: 40px;
+      height: 40px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+    }
+
+    .toast-content {
+      flex: 1;
+    }
+
+    .toast-title {
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 2px;
+    }
+
+    .toast-message {
+      font-size: 12px;
+      color: rgba(255,255,255,0.7);
+    }
+
+    .toast-action {
+      background: linear-gradient(135deg, #FF6B6B 0%, #FF9F43 100%);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 10px 14px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    /* Navigation hint */
+    .nav-hint {
+      position: absolute;
+      bottom: 20px;
+      left: 20px;
+      right: 20px;
+      text-align: center;
+      font-size: 11px;
+      color: rgba(0,0,0,0.4);
+    }
+  </style>
+</head>
+<body>
+  <h1>Quizzes Exhausted States</h1>
+  <p class="subtitle">What users see when they've completed all available quizzes and need to unlock more</p>
+
+  <div class="variants-container">
+
+    <!-- VARIANT A: Quest Card Empty State -->
+    <div class="variant">
+      <div class="variant-label">A: Quest Card Empty State</div>
+      <div class="phone-frame">
+        <div style="padding-top: 60px;">
+          <div class="quest-card-empty">
+            <div class="empty-illustration">📭</div>
+            <div class="empty-title">You've Done Them All!</div>
+            <div class="empty-message">
+              You've completed all unlocked quizzes. Collect your next magnet to unlock 18 more!
+            </div>
+
+            <div class="progress-info">
+              <div class="progress-label">Next Magnet Progress</div>
+              <div class="progress-bar-container">
+                <div class="progress-bar-fill"></div>
+              </div>
+              <div class="progress-text"><strong>420</strong> / 600 LP</div>
+            </div>
+
+            <button class="unlock-button">
+              <span class="magnet-icon">🧲</span>
+              View Collection
+            </button>
+          </div>
+        </div>
+        <div class="nav-hint">Replaces quest card when no quizzes available</div>
+      </div>
+    </div>
+
+    <!-- VARIANT B: Full Screen Modal -->
+    <div class="variant">
+      <div class="variant-label">B: Modal (On Quiz Tap)</div>
+      <div class="phone-frame">
+        <div class="modal-overlay">
+          <div class="modal-content">
+            <div class="modal-badge">All Done!</div>
+            <div class="modal-title">You've Completed All Quizzes</div>
+            <div class="modal-message">
+              Unlock your next magnet to get 18 fresh quizzes to explore together.
+            </div>
+
+            <div class="next-magnet-section">
+              <div class="next-magnet-label">Next Destination</div>
+              <div class="next-magnet-preview">
+                <div class="next-magnet-image">🗼</div>
+                <div class="next-magnet-name">Paris</div>
+              </div>
+
+              <div class="lp-progress-section">
+                <div class="lp-progress-bar">
+                  <div class="lp-progress-fill" style="width: 70%;"></div>
+                </div>
+                <div class="lp-progress-text">
+                  <span>420 LP</span>
+                  <span>600 LP</span>
+                </div>
+              </div>
+              <div class="lp-hint">Try other activities to earn LP</div>
+            </div>
+
+            <button class="modal-button">OK</button>
+          </div>
+        </div>
+        <div class="nav-hint">Shows when tapping a quiz quest</div>
+      </div>
+    </div>
+
+    <!-- VARIANT C: Inline Banner -->
+    <div class="variant">
+      <div class="variant-label">C: Inline Banner + Disabled Card</div>
+      <div class="phone-frame">
+        <div class="home-content" style="padding-top: 60px;">
+          <div class="section-label">Today's Quests</div>
+
+          <div class="exhausted-banner">
+            <div class="banner-magnet"></div>
+            <div class="banner-content">
+              <div class="banner-title">Unlock More Quizzes</div>
+              <div class="banner-message">
+                <strong>180 LP</strong> until your next magnet unlocks 18 new quizzes!
+              </div>
+            </div>
+            <div class="banner-arrow">›</div>
+          </div>
+
+          <div class="quest-card-disabled">
+            <div class="quest-icon-disabled">💭</div>
+            <div class="quest-info">
+              <div class="quest-title-disabled">Classic Quiz</div>
+              <div class="quest-subtitle-disabled">All completed</div>
+            </div>
+            <div class="lock-icon">🔒</div>
+          </div>
+        </div>
+        <div class="nav-hint">Banner tappable, leads to collection</div>
+      </div>
+    </div>
+
+    <!-- VARIANT D: Toast/Snackbar -->
+    <div class="variant">
+      <div class="variant-label">D: Toast Notification</div>
+      <div class="phone-frame">
+        <div class="home-content" style="padding-top: 60px;">
+          <div class="section-label">Today's Quests</div>
+
+          <div class="quest-card-disabled" style="opacity: 0.5;">
+            <div class="quest-icon-disabled">💭</div>
+            <div class="quest-info">
+              <div class="quest-title-disabled">Classic Quiz</div>
+              <div class="quest-subtitle-disabled">No quizzes available</div>
+            </div>
+            <div class="lock-icon">🔒</div>
+          </div>
+
+          <div style="height: 16px;"></div>
+
+          <div class="quest-card-disabled" style="opacity: 0.5;">
+            <div class="quest-icon-disabled">💝</div>
+            <div class="quest-info">
+              <div class="quest-title-disabled">Affirmation Quiz</div>
+              <div class="quest-subtitle-disabled">No quizzes available</div>
+            </div>
+            <div class="lock-icon">🔒</div>
+          </div>
+        </div>
+
+        <div class="toast-container">
+          <div class="toast">
+            <div class="toast-icon">🧲</div>
+            <div class="toast-content">
+              <div class="toast-title">All Quizzes Complete!</div>
+              <div class="toast-message">180 LP until next unlock</div>
+            </div>
+            <button class="toast-action">View</button>
+          </div>
+        </div>
+
+        <div class="nav-hint">Toast appears on attempted quiz tap</div>
+      </div>
+    </div>
+
+  </div>
+</body>
+</html>

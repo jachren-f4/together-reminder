@@ -23,10 +23,15 @@ class OtpVerificationScreen extends StatefulWidget {
   /// Whether this is a new user signing up (true) or returning user (false)
   final bool isNewUser;
 
+  /// Whether this verification was triggered from Settings (account verification)
+  /// When true, just pops back to Settings on success instead of navigating elsewhere
+  final bool isFromSettings;
+
   const OtpVerificationScreen({
     super.key,
     required this.email,
     this.isNewUser = true,  // Default to new user for backwards compatibility
+    this.isFromSettings = false,
   });
 
   @override
@@ -84,6 +89,18 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
       }
 
       if (!mounted) return;
+
+      // If this is from Settings (account verification), just pop back with success
+      if (widget.isFromSettings) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Email verified successfully!'),
+            backgroundColor: Color(0xFF4CAF50),
+          ),
+        );
+        Navigator.of(context).pop();
+        return;
+      }
 
       if (widget.isNewUser) {
         // New user - complete signup with stored name
@@ -388,29 +405,35 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                 child: SingleChildScrollView(
                   padding: const EdgeInsets.all(24),
                   child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
+                    crossAxisAlignment: widget.isNewUser ? CrossAxisAlignment.center : CrossAxisAlignment.start,
                     children: [
-                      // Emoji circle
-                      Container(
-                        width: 80,
-                        height: 80,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          shape: BoxShape.circle,
-                          boxShadow: [
-                            BoxShadow(
-                              color: Us2Theme.glowPink.withValues(alpha: 0.2),
-                              blurRadius: 20,
-                              offset: const Offset(0, 4),
+                      // Large step number (only for returning users / sign-in flow)
+                      if (!widget.isNewUser) ...[
+                        ShaderMask(
+                          shaderCallback: (bounds) => const LinearGradient(
+                            colors: [Us2Theme.gradientAccentStart, Us2Theme.gradientAccentEnd],
+                          ).createShader(bounds),
+                          child: Text(
+                            '2',
+                            style: GoogleFonts.playfairDisplay(
+                              fontSize: 100,
+                              fontWeight: FontWeight.w700,
+                              color: Colors.white,
+                              height: 1,
                             ),
-                          ],
+                          ),
                         ),
-                        child: const Center(
-                          child: Text('📧', style: TextStyle(fontSize: 36)),
+                        Text(
+                          'of 2 steps',
+                          style: GoogleFonts.nunito(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w700,
+                            letterSpacing: 2,
+                            color: Us2Theme.textMedium,
+                          ),
                         ),
-                      ),
-
-                      const SizedBox(height: 24),
+                        const SizedBox(height: 24),
+                      ],
 
                       // Title
                       Text(
@@ -585,25 +608,6 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
               ),
             ),
           ),
-          const Spacer(),
-          // Step indicator
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
-            decoration: BoxDecoration(
-              color: Colors.white.withValues(alpha: 0.8),
-              borderRadius: BorderRadius.circular(20),
-            ),
-            child: Text(
-              'Almost There',
-              style: GoogleFonts.nunito(
-                fontSize: 12,
-                fontWeight: FontWeight.w600,
-                color: Us2Theme.textMedium,
-              ),
-            ),
-          ),
-          const Spacer(),
-          const SizedBox(width: 40), // Balance
         ],
       ),
     );

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:video_player/video_player.dart';
 import 'package:togetherremind/config/brand/brand_config.dart';
 import 'package:togetherremind/config/brand/brand_loader.dart';
 import 'package:togetherremind/config/brand/us2_theme.dart';
@@ -26,6 +27,10 @@ class _OnboardingScreenState extends State<OnboardingScreen>
   late AnimationController _fadeController;
   late Animation<double> _fadeAnimation;
 
+  // Video player for Us 2.0 splash screen
+  VideoPlayerController? _videoController;
+  bool _isVideoInitialized = false;
+
   @override
   void initState() {
     super.initState();
@@ -39,11 +44,38 @@ class _OnboardingScreenState extends State<OnboardingScreen>
       curve: Curves.easeOut,
     );
     _fadeController.forward();
+
+    // Initialize video for Us 2.0
+    if (_isUs2) {
+      _initializeVideo();
+    }
+  }
+
+  Future<void> _initializeVideo() async {
+    _videoController = VideoPlayerController.asset(
+      'assets/brands/us2/videos/splash.mp4',
+    );
+
+    try {
+      await _videoController!.initialize();
+      await _videoController!.setLooping(true);
+      await _videoController!.setVolume(0);
+      await _videoController!.play();
+      if (mounted) {
+        setState(() {
+          _isVideoInitialized = true;
+        });
+      }
+    } catch (e) {
+      // Video failed to load - will show gradient fallback
+      debugPrint('Splash video failed to load: $e');
+    }
   }
 
   @override
   void dispose() {
     _fadeController.dispose();
+    _videoController?.dispose();
     super.dispose();
   }
 
@@ -118,69 +150,92 @@ class _OnboardingScreenState extends State<OnboardingScreen>
   }
 
   // ============================================
-  // Us 2.0 Brand Implementation
+  // Us 2.0 Brand Implementation - Video Splash
   // ============================================
 
   Widget _buildUs2Screen() {
     return Scaffold(
-      body: Container(
-        decoration: const BoxDecoration(
-          gradient: Us2Theme.backgroundGradient,
-        ),
-        child: SafeArea(
-          child: FadeTransition(
-            opacity: _fadeAnimation,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24),
-              child: Column(
-                children: [
-                  const Spacer(flex: 2),
+      body: Stack(
+        fit: StackFit.expand,
+        children: [
+          // Video background (or gradient fallback)
+          _buildVideoBackground(),
 
-                  // Logo section
-                  _buildUs2Logo(),
-
-                  const SizedBox(height: 12),
-
-                  // Tagline
-                  Text(
-                    'FOR COUPLES WHO CONNECT',
-                    style: GoogleFonts.nunito(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w600,
-                      letterSpacing: 3,
-                      color: Us2Theme.textMedium,
-                    ),
-                  ),
-
-                  const SizedBox(height: 48),
-
-                  // Hearts symbol
-                  _buildUs2HeartsSymbol(),
-
-                  const SizedBox(height: 40),
-
-                  // Subtitle
-                  Text(
-                    'For the small moments that matter',
-                    style: GoogleFonts.playfairDisplay(
-                      fontSize: 18,
-                      fontStyle: FontStyle.italic,
-                      color: Us2Theme.textMedium,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-
-                  const Spacer(flex: 3),
-
-                  // Buttons section
-                  _buildUs2Buttons(),
-
-                  const SizedBox(height: 40),
+          // Gradient overlay for readability
+          Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [
+                  Colors.black.withValues(alpha: 0.1),
+                  Colors.black.withValues(alpha: 0.0),
+                  Colors.black.withValues(alpha: 0.0),
+                  Colors.black.withValues(alpha: 0.4),
+                  Colors.black.withValues(alpha: 0.7),
                 ],
+                stops: const [0.0, 0.3, 0.5, 0.8, 1.0],
               ),
             ),
           ),
+
+          // Content
+          SafeArea(
+            child: FadeTransition(
+              opacity: _fadeAnimation,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 24),
+                child: Column(
+                  children: [
+                    const SizedBox(height: 60),
+
+                    // Logo section at top
+                    _buildUs2Logo(),
+
+                    const SizedBox(height: 8),
+
+                    // Tagline with enhanced shadow for readability
+                    _buildUs2Tagline(),
+
+                    const Spacer(),
+
+                    // Buttons section at bottom
+                    _buildUs2Buttons(),
+
+                    const SizedBox(height: 16),
+
+                    // Terms text
+                    _buildUs2Terms(),
+
+                    const SizedBox(height: 50),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildVideoBackground() {
+    if (_isVideoInitialized && _videoController != null) {
+      return SizedBox.expand(
+        child: FittedBox(
+          fit: BoxFit.cover,
+          child: SizedBox(
+            width: _videoController!.value.size.width,
+            height: _videoController!.value.size.height,
+            child: VideoPlayer(_videoController!),
+          ),
         ),
+      );
+    }
+
+    // Fallback gradient while video loads
+    return Container(
+      decoration: const BoxDecoration(
+        gradient: Us2Theme.backgroundGradient,
       ),
     );
   }
@@ -192,7 +247,7 @@ class _OnboardingScreenState extends State<OnboardingScreen>
         Text(
           'Us 2.0',
           style: GoogleFonts.pacifico(
-            fontSize: 64,
+            fontSize: 48,
             color: Colors.white,
             shadows: [
               Shadow(
@@ -207,77 +262,66 @@ class _OnboardingScreenState extends State<OnboardingScreen>
                 blurRadius: 60,
                 color: Us2Theme.glowPink.withValues(alpha: 0.3),
               ),
+              Shadow(
+                blurRadius: 80,
+                color: Us2Theme.glowOrange.withValues(alpha: 0.2),
+              ),
             ],
           ),
         ),
         Positioned(
-          top: -8,
-          right: -20,
-          child: Text(
-            '♥',
-            style: GoogleFonts.pacifico(
-              fontSize: 24,
-              color: Colors.white,
-              shadows: [
-                Shadow(
-                  blurRadius: 10,
-                  color: Us2Theme.glowPink.withValues(alpha: 0.8),
-                ),
-              ],
-            ),
-          ),
+          top: -6,
+          right: -18,
+          child: _AnimatedHeart(),
         ),
       ],
     );
   }
 
-  Widget _buildUs2HeartsSymbol() {
-    return SizedBox(
-      width: 180,
-      height: 90,
-      child: Stack(
-        alignment: Alignment.center,
-        children: [
-          // Left circle
-          Positioned(
-            left: 20,
-            child: Container(
-              width: 80,
-              height: 80,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: Colors.white.withValues(alpha: 0.5),
-                border: Border.all(
-                  color: Us2Theme.gradientAccentStart,
-                  width: 3,
-                ),
-              ),
-              child: const Center(
-                child: Text('💕', style: TextStyle(fontSize: 32)),
-              ),
-            ),
+  Widget _buildUs2Tagline() {
+    return Text(
+      'Grow closer, one moment at a time',
+      style: GoogleFonts.playfairDisplay(
+        fontSize: 16,
+        fontStyle: FontStyle.italic,
+        color: Colors.white.withValues(alpha: 0.9),
+        shadows: [
+          // Dark outline effect (reduced 50%)
+          const Shadow(
+            offset: Offset(-1.0, -1.0),
+            blurRadius: 1,
+            color: Colors.black26,
           ),
-          // Right circle
-          Positioned(
-            right: 20,
-            child: Container(
-              width: 80,
-              height: 80,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: Colors.white.withValues(alpha: 0.5),
-                border: Border.all(
-                  color: Us2Theme.gradientAccentEnd,
-                  width: 3,
-                ),
-              ),
-              child: const Center(
-                child: Text('💖', style: TextStyle(fontSize: 32)),
-              ),
-            ),
+          const Shadow(
+            offset: Offset(1.0, -1.0),
+            blurRadius: 1,
+            color: Colors.black26,
+          ),
+          const Shadow(
+            offset: Offset(-1.0, 1.0),
+            blurRadius: 1,
+            color: Colors.black26,
+          ),
+          const Shadow(
+            offset: Offset(1.0, 1.0),
+            blurRadius: 1,
+            color: Colors.black26,
+          ),
+          // Soft drop shadow
+          const Shadow(
+            offset: Offset(0, 2),
+            blurRadius: 4,
+            color: Colors.black45,
+          ),
+          // Additional glow for depth
+          const Shadow(
+            offset: Offset(0, 0),
+            blurRadius: 8,
+            color: Colors.black26,
           ),
         ],
       ),
+      textAlign: TextAlign.center,
     );
   }
 
@@ -289,61 +333,100 @@ class _OnboardingScreenState extends State<OnboardingScreen>
           onTap: _handleBegin,
           child: Container(
             width: double.infinity,
-            padding: const EdgeInsets.symmetric(vertical: 18),
+            padding: const EdgeInsets.symmetric(vertical: 16),
             decoration: BoxDecoration(
               gradient: const LinearGradient(
+                begin: Alignment.centerLeft,
+                end: Alignment.centerRight,
                 colors: [Us2Theme.gradientAccentStart, Us2Theme.gradientAccentEnd],
               ),
-              borderRadius: BorderRadius.circular(16),
+              borderRadius: BorderRadius.circular(30),
               boxShadow: [
                 BoxShadow(
-                  color: Us2Theme.glowPink.withValues(alpha: 0.5),
-                  blurRadius: 25,
-                  offset: const Offset(0, 8),
+                  color: Us2Theme.glowPink.withValues(alpha: 0.4),
+                  blurRadius: 15,
+                  offset: const Offset(0, 4),
+                ),
+                BoxShadow(
+                  color: Us2Theme.glowPink.withValues(alpha: 0.3),
+                  blurRadius: 30,
+                  spreadRadius: 0,
                 ),
               ],
             ),
             child: Text(
-              'Get Started',
+              'GET STARTED',
               textAlign: TextAlign.center,
               style: GoogleFonts.nunito(
                 fontSize: 16,
                 fontWeight: FontWeight.w700,
                 color: Colors.white,
-                letterSpacing: 0.5,
+                letterSpacing: 1,
               ),
             ),
           ),
         ),
 
-        const SizedBox(height: 24),
+        const SizedBox(height: 12),
 
-        // Secondary link - Sign in
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              'Already have an account? ',
+        // Secondary button - Sign in
+        GestureDetector(
+          onTap: _handleSignIn,
+          child: Container(
+            width: double.infinity,
+            padding: const EdgeInsets.symmetric(vertical: 16),
+            decoration: BoxDecoration(
+              color: Colors.white.withValues(alpha: 0.15),
+              borderRadius: BorderRadius.circular(30),
+              border: Border.all(
+                color: Colors.white.withValues(alpha: 0.3),
+                width: 1,
+              ),
+            ),
+            child: Text(
+              'I ALREADY HAVE AN ACCOUNT',
+              textAlign: TextAlign.center,
               style: GoogleFonts.nunito(
-                fontSize: 14,
-                fontStyle: FontStyle.italic,
-                color: Us2Theme.textMedium,
+                fontSize: 16,
+                fontWeight: FontWeight.w700,
+                color: Colors.white,
+                letterSpacing: 1,
               ),
             ),
-            GestureDetector(
-              onTap: _handleSignIn,
-              child: Text(
-                'Sign in',
-                style: GoogleFonts.nunito(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w600,
-                  color: Us2Theme.primaryBrandPink,
-                ),
-              ),
-            ),
-          ],
+          ),
         ),
       ],
+    );
+  }
+
+  Widget _buildUs2Terms() {
+    return Text.rich(
+      TextSpan(
+        style: GoogleFonts.nunito(
+          fontSize: 11,
+          color: Colors.white.withValues(alpha: 0.6),
+          height: 1.5,
+        ),
+        children: [
+          const TextSpan(text: 'By continuing, you agree to our '),
+          TextSpan(
+            text: 'Terms',
+            style: TextStyle(
+              color: Colors.white.withValues(alpha: 0.8),
+              decoration: TextDecoration.underline,
+            ),
+          ),
+          const TextSpan(text: ' and '),
+          TextSpan(
+            text: 'Privacy Policy',
+            style: TextStyle(
+              color: Colors.white.withValues(alpha: 0.8),
+              decoration: TextDecoration.underline,
+            ),
+          ),
+        ],
+      ),
+      textAlign: TextAlign.center,
     );
   }
 
@@ -538,6 +621,60 @@ class _OverlappingCirclesSymbol extends StatelessWidget {
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+/// Animated pulsing heart for Us 2.0 logo
+class _AnimatedHeart extends StatefulWidget {
+  @override
+  State<_AnimatedHeart> createState() => _AnimatedHeartState();
+}
+
+class _AnimatedHeartState extends State<_AnimatedHeart>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> _scaleAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      duration: const Duration(milliseconds: 2000),
+      vsync: this,
+    );
+    _scaleAnimation = Tween<double>(begin: 1.0, end: 1.2).animate(
+      CurvedAnimation(
+        parent: _controller,
+        curve: Curves.easeInOut,
+      ),
+    );
+    _controller.repeat(reverse: true);
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return ScaleTransition(
+      scale: _scaleAnimation,
+      child: Text(
+        '❤',
+        style: GoogleFonts.pacifico(
+          fontSize: 16,
+          color: Colors.white,
+          shadows: [
+            Shadow(
+              blurRadius: 10,
+              color: Us2Theme.glowPink.withValues(alpha: 0.8),
+            ),
+          ],
+        ),
       ),
     );
   }

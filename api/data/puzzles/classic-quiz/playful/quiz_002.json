@@ -5,64 +5,115 @@
   "questions": [
     {
       "id": "quiz_002_q1",
-      "text": "When faced with a new opportunity, my first instinct is to...",
+      "text": "When it comes to trying new things together, I hope we...",
       "choices": [
-        "Jump in immediately - life's short!",
-        "Research thoroughly before deciding",
-        "Ask trusted friends for their opinions",
-        "Weigh the pros and cons carefully",
+        "Push each other out of our comfort zones",
+        "Take turns picking adventures for each other",
+        "Find new things we're both curious about",
+        "Balance adventure with plenty of cozy familiar stuff",
         "Other / It depends"
       ],
-      "category": "personality"
+      "category": "lifestyle",
+      "metadata": {
+        "dimension": "risk_adventure",
+        "poleMapping": [
+          "right",
+          null,
+          null,
+          "left",
+          null
+        ]
+      }
     },
     {
       "id": "quiz_002_q2",
-      "text": "My ideal vacation would be...",
+      "text": "For a trip together, I'd be most excited about...",
       "choices": [
-        "Backpacking through unfamiliar countries",
-        "A planned itinerary in a new city",
-        "A relaxing resort with all amenities",
-        "Visiting familiar favorite destinations",
+        "Exploring somewhere completely new to both of us",
+        "A mix of adventure during the day and relaxation at night",
+        "A laid-back trip where we can just be together",
+        "Surprising each other with parts of the itinerary",
         "Other / It depends"
       ],
-      "category": "preferences"
+      "category": "preferences",
+      "metadata": {
+        "dimension": "risk_adventure",
+        "poleMapping": [
+          "right",
+          null,
+          "left",
+          null,
+          null
+        ]
+      }
     },
     {
       "id": "quiz_002_q3",
-      "text": "When trying new foods, I typically...",
+      "text": "When we're picking where to eat, I'd love it if we...",
       "choices": [
-        "Order the most unusual item on the menu",
-        "Try one new thing alongside familiar favorites",
-        "Stick to dishes I know I'll enjoy",
-        "Ask for recommendations first",
+        "Always try somewhere new and adventurous",
+        "Take turns choosing - your pick, then mine",
+        "Have a few 'our spots' we keep coming back to",
+        "Mix it up based on our mood that day",
         "Other / It depends"
       ],
-      "category": "lifestyle"
+      "category": "lifestyle",
+      "metadata": {
+        "dimension": "risk_adventure",
+        "poleMapping": [
+          "right",
+          null,
+          "left",
+          null,
+          null
+        ]
+      }
     },
     {
       "id": "quiz_002_q4",
-      "text": "If I could learn a new skill, I'd choose...",
+      "text": "Something I'd love for us to learn or try together is...",
       "choices": [
-        "Skydiving or extreme sports",
-        "A creative art like painting or music",
-        "A practical skill like cooking or woodworking",
-        "An intellectual pursuit like a new language",
+        "Something active or adventurous - a sport, dancing, climbing",
+        "Something creative - cooking, art, music",
+        "Something chill - a new show, game nights, a hobby we can do side by side",
+        "I'm open to anything if we're doing it together",
         "Other / It depends"
       ],
-      "category": "preferences"
+      "category": "preferences",
+      "metadata": {
+        "dimension": "risk_adventure",
+        "poleMapping": [
+          "right",
+          null,
+          "left",
+          null,
+          null
+        ]
+      }
     },
     {
       "id": "quiz_002_q5",
-      "text": "My approach to financial decisions is...",
+      "text": "When it comes to spending on experiences together, I tend to think...",
       "choices": [
-        "Take calculated risks for big rewards",
-        "Balance security with some adventures",
-        "Prioritize stability and savings",
-        "Live in the moment, money comes and goes",
+        "Life's short - let's splurge on memories",
+        "Save up for one big thing we're both excited about",
+        "Plenty of great dates don't cost much",
+        "Let's figure out what matters most to us and spend there",
         "Other / It depends"
       ],
-      "category": "personality"
+      "category": "lifestyle",
+      "metadata": {
+        "dimension": "risk_adventure",
+        "poleMapping": [
+          "right",
+          null,
+          "left",
+          null,
+          null
+        ]
+      }
     }
   ],
-  "description": "Find out who's the thrill-seeker and who plays it safe."
+  "description": "Discover how adventurous you want to be together.",
+  "magnet_id": 2
 }

@@ -1,84 +1,79 @@
 {
   "quizId": "quiz_002",
-  "title": "Energy & Support",
+  "title": "Feeling Appreciated",
   "branch": "lighthearted",
   "questions": [
     {
       "id": "quiz_002_q1",
-      "text": "What time of day am I usually at my best?",
+      "text": "I feel most appreciated when you...",
       "choices": [
-        "Early morning",
-        "Mid-morning to noon",
-        "Afternoon",
-        "Evening or night",
-        "It varies day to day"
+        "Tell me what you love about me",
+        "Do something thoughtful without being asked",
+        "Make time for just us",
+        "Show affection physically",
+        "Other / It depends"
       ],
-      "category": "energy"
+      "category": "preferences"
     },
     {
       "id": "quiz_002_q2",
-      "text": "How do I recharge after being around people?",
+      "text": "The compliments that mean the most to me are about...",
       "choices": [
-        "I need alone time to reset",
-        "Being with people actually energizes me",
-        "Quiet time with just you",
-        "A physical activity or walk",
-        "Other / It depends on the people"
+        "How I look or my appearance",
+        "My personality or character",
+        "Things I've accomplished or done",
+        "How I make you feel",
+        "Other / It depends"
       ],
-      "category": "self_care",
-      "metadata": {
-        "dimension": "social_energy",
-        "poleMapping": ["left", "right", "left", null, null]
-      }
+      "category": "preferences"
     },
     {
       "id": "quiz_002_q3",
-      "text": "When something's bothering me, what helps most?",
+      "text": "When I do something for you, I hope you notice...",
       "choices": [
-        "Talking it through with you",
-        "Space to process on my own first",
-        "A distraction to take my mind off it",
-        "Physical comfort (hug, being close)",
-        "Practical help or advice"
+        "The effort I put into it",
+        "That I remembered what you like",
+        "That I wanted to make you happy",
+        "Honestly, I don't need recognition",
+        "Other / It depends"
       ],
-      "category": "support",
-      "metadata": {
-        "dimension": "stress_processing",
-        "poleMapping": ["right", "left", null, null, null]
-      }
+      "category": "communication"
     },
     {
       "id": "quiz_002_q4",
-      "text": "How do I usually handle a stressful week?",
+      "text": "A way you could celebrate me that I'd love is...",
       "choices": [
-        "Push through and deal with it later",
-        "Need extra downtime each day",
-        "Talk about it frequently",
-        "Exercise or stay active",
-        "Comfort activities (food, shows, etc.)"
+        "Planning a surprise or special moment",
+        "Telling others something you're proud of about me",
+        "A heartfelt card or message",
+        "Quality time doing something I love",
+        "Other / It depends"
       ],
-      "category": "self_care",
-      "metadata": {
-        "dimension": "stress_processing",
-        "poleMapping": ["left", "left", "right", null, null]
-      }
+      "category": "preferences"
     },
     {
       "id": "quiz_002_q5",
-      "text": "When I'm tired, I'd rather you...",
+      "text": "I feel closest to you when we...",
       "choices": [
-        "Give me space and quiet",
-        "Keep me company without expectations",
-        "Take care of things so I can rest",
-        "Distract me with something fun",
-        "Other / Just ask me in the moment"
+        "Have deep, meaningful conversations",
+        "Do something fun or adventurous together",
+        "Just exist together in comfortable silence",
+        "Are physically close - cuddling, holding hands",
+        "Other / It depends"
       ],
-      "category": "support",
+      "category": "connection",
       "metadata": {
-        "dimension": "stress_processing",
-        "poleMapping": ["left", null, null, null, null]
+        "dimension": "social_energy",
+        "poleMapping": [
+          null,
+          "right",
+          "left",
+          null,
+          null
+        ]
       }
     }
   ],
-  "description": "Learn about what energizes you both and how you support each other."
+  "description": "Discover what makes each of you feel truly valued and loved.",
+  "magnet_id": 0
 }

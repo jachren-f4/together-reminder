@@ -4,12 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:togetherremind/services/storage_service.dart';
 import 'package:togetherremind/services/couple_preferences_service.dart';
+import 'package:togetherremind/services/auth_service.dart';
+import 'package:togetherremind/screens/onboarding_screen.dart';
+import 'package:togetherremind/screens/otp_verification_screen.dart';
 import 'package:togetherremind/services/api_client.dart';
 import 'package:togetherremind/services/sound_service.dart';
 import 'package:togetherremind/services/haptic_service.dart';
 import 'package:togetherremind/services/steps_health_service.dart';
 import 'package:togetherremind/theme/app_theme.dart';
-import 'package:togetherremind/widgets/brand/brand_widget_factory.dart';
 import 'package:togetherremind/config/brand/brand_loader.dart';
 import 'package:togetherremind/config/brand/brand_config.dart';
 import 'package:togetherremind/config/brand/us2_theme.dart';
@@ -29,6 +31,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   final CouplePreferencesService _preferencesService = CouplePreferencesService();
   final SoundService _soundService = SoundService();
   final HapticService _hapticService = HapticService();
+  final AuthService _authService = AuthService();
 
   bool get _isUs2 => BrandLoader().config.brand == Brand.us2;
 
@@ -739,6 +742,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   ],
                 ),
 
+              // Account Section
+              _buildUs2SettingsGroup(
+                title: 'ACCOUNT',
+                children: [
+                  _buildUs2EmailVerificationRow(),
+                  _buildUs2SignOutButton(),
+                ],
+              ),
+
               // Footer
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 32),
@@ -1227,6 +1239,240 @@ class _SettingsScreenState extends State<SettingsScreen> {
         ],
       ),
     );
+  }
+
+  Widget _buildUs2EmailVerificationRow() {
+    final isVerified = _authService.isEmailVerified;
+    final email = _authService.userEmail ?? 'your email';
+
+    if (isVerified) {
+      // Show verified badge
+      return Padding(
+        padding: const EdgeInsets.fromLTRB(20, 20, 20, 8),
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            border: Border.all(color: const Color(0xFF4CAF50), width: 2),
+            borderRadius: BorderRadius.circular(16),
+          ),
+          child: Row(
+            children: [
+              const Icon(Icons.verified, color: Color(0xFF4CAF50), size: 20),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Email Verified',
+                      style: GoogleFonts.nunito(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                        color: const Color(0xFF4CAF50),
+                      ),
+                    ),
+                    Text(
+                      email,
+                      style: GoogleFonts.nunito(
+                        fontSize: 13,
+                        color: Us2Theme.textMedium,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const Icon(Icons.check_circle, color: Color(0xFF4CAF50), size: 20),
+            ],
+          ),
+        ),
+      );
+    } else {
+      // Show verify button
+      return Padding(
+        padding: const EdgeInsets.fromLTRB(20, 20, 20, 8),
+        child: GestureDetector(
+          onTap: _startEmailVerification,
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              border: Border.all(color: Us2Theme.primaryBrandPink, width: 2),
+              borderRadius: BorderRadius.circular(16),
+            ),
+            child: Row(
+              children: [
+                const Icon(Icons.mail_outline, color: Us2Theme.primaryBrandPink, size: 20),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Verify Email',
+                        style: GoogleFonts.nunito(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                          color: Us2Theme.primaryBrandPink,
+                        ),
+                      ),
+                      Text(
+                        email,
+                        style: GoogleFonts.nunito(
+                          fontSize: 13,
+                          color: Us2Theme.textMedium,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const Icon(Icons.chevron_right, color: Us2Theme.primaryBrandPink, size: 20),
+              ],
+            ),
+          ),
+        ),
+      );
+    }
+  }
+
+  Future<void> _startEmailVerification() async {
+    final email = _authService.userEmail;
+    if (email == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('No email found. Please sign in again.')),
+      );
+      return;
+    }
+
+    // Send verification email
+    final success = await _authService.sendVerificationEmail();
+
+    if (success && mounted) {
+      // Navigate to OTP screen
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => OtpVerificationScreen(
+            email: email,
+            isNewUser: false,
+            isFromSettings: true,
+          ),
+        ),
+      ).then((_) {
+        // Refresh UI after returning from OTP screen
+        if (mounted) setState(() {});
+      });
+    } else if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Failed to send verification email. Please try again.')),
+      );
+    }
+  }
+
+  Widget _buildUs2SignOutButton() {
+    return Padding(
+      padding: const EdgeInsets.all(20),
+      child: GestureDetector(
+        onTap: _showLogoutConfirmation,
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            border: Border.all(color: const Color(0xFFFF6B6B), width: 2),
+            borderRadius: BorderRadius.circular(16),
+          ),
+          child: Row(
+            children: [
+              const Icon(Icons.logout, color: Color(0xFFFF6B6B), size: 20),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Text(
+                  'Sign Out',
+                  style: GoogleFonts.nunito(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                    color: const Color(0xFFFF6B6B),
+                  ),
+                ),
+              ),
+              const Icon(Icons.chevron_right, color: Color(0xFFFF6B6B), size: 20),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  void _showLogoutConfirmation() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        title: Text(
+          'Sign Out',
+          style: GoogleFonts.playfairDisplay(
+            fontSize: 20,
+            fontWeight: FontWeight.w600,
+            color: Us2Theme.textDark,
+          ),
+        ),
+        content: Text(
+          'Are you sure you want to sign out? This will clear all local data and you\'ll need to sign in again.',
+          style: GoogleFonts.nunito(
+            fontSize: 15,
+            color: Us2Theme.textMedium,
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text(
+              'Cancel',
+              style: GoogleFonts.nunito(
+                fontWeight: FontWeight.w600,
+                color: Us2Theme.textMedium,
+              ),
+            ),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context);
+              _performLogout();
+            },
+            child: Text(
+              'Sign Out',
+              style: GoogleFonts.nunito(
+                color: const Color(0xFFFF6B6B),
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future<void> _performLogout() async {
+    try {
+      await _authService.signOut();
+      await _storageService.clearAllData();
+
+      if (mounted) {
+        Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (context) => const OnboardingScreen()),
+          (route) => false,
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error signing out: $e'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    }
   }
 }
 

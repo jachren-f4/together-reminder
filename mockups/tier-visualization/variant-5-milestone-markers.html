@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=375, initial-scale=1.0">
+    <title>Tier Visualization - Variant 5: Milestone Markers</title>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            background: linear-gradient(180deg, #FFF5F0 0%, #FFE8E0 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 18px;
+            color: #2D2D2D;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .description {
+            font-size: 12px;
+            color: #666;
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 0 20px;
+        }
+
+        /* Connection Bar Container */
+        .connection-bar {
+            background: linear-gradient(135deg, #FF7B6B 0%, #FF9B8B 50%, #FFB89B 100%);
+            border-radius: 24px 24px 0 0;
+            padding: 16px 16px 20px 16px;
+            margin-bottom: 40px;
+        }
+
+        /* Header row */
+        .header-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .current-tier-label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .tier-emoji {
+            font-size: 24px;
+        }
+
+        .tier-text {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .tier-name {
+            font-family: 'Playfair Display', serif;
+            font-size: 16px;
+            font-weight: 600;
+            color: white;
+            line-height: 1.1;
+        }
+
+        .tier-subtitle {
+            font-size: 10px;
+            color: rgba(255,255,255,0.8);
+        }
+
+        .lp-display {
+            text-align: right;
+        }
+
+        .lp-value {
+            font-size: 18px;
+            font-weight: 800;
+            color: white;
+        }
+
+        .lp-label {
+            font-size: 9px;
+            color: rgba(255,255,255,0.7);
+            letter-spacing: 0.5px;
+        }
+
+        /* Milestone progress bar */
+        .milestone-bar {
+            position: relative;
+            height: 60px;
+            margin-bottom: 8px;
+        }
+
+        /* Background track */
+        .track-bg {
+            position: absolute;
+            top: 24px;
+            left: 0;
+            right: 0;
+            height: 8px;
+            background: rgba(0,0,0,0.15);
+            border-radius: 4px;
+        }
+
+        /* Filled progress */
+        .track-fill {
+            position: absolute;
+            top: 24px;
+            left: 0;
+            height: 8px;
+            background: linear-gradient(90deg, #FFE066 0%, #FFB347 100%);
+            border-radius: 4px;
+            box-shadow: 0 0 12px rgba(255,224,102,0.5);
+        }
+
+        /* Milestone markers container */
+        .milestones {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        /* Individual milestone */
+        .milestone {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 50px;
+        }
+
+        .milestone-dot {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            background: rgba(255,255,255,0.2);
+            border: 2px solid rgba(255,255,255,0.3);
+            transition: all 0.3s ease;
+            position: relative;
+            z-index: 2;
+        }
+
+        .milestone.completed .milestone-dot {
+            background: linear-gradient(135deg, #4CAF50 0%, #8BC34A 100%);
+            border: 2px solid white;
+            box-shadow: 0 2px 8px rgba(76,175,80,0.4);
+        }
+
+        .milestone.current .milestone-dot {
+            background: linear-gradient(135deg, #FF6B9D 0%, #FF8E6B 100%);
+            border: 3px solid white;
+            box-shadow: 0 4px 15px rgba(255,107,157,0.5);
+            transform: scale(1.2);
+        }
+
+        .milestone.locked .milestone-dot {
+            opacity: 0.5;
+        }
+
+        .milestone-lp {
+            font-size: 8px;
+            font-weight: 700;
+            color: rgba(255,255,255,0.6);
+            margin-top: 4px;
+        }
+
+        .milestone.current .milestone-lp,
+        .milestone.completed .milestone-lp {
+            color: rgba(255,255,255,0.9);
+        }
+
+        /* Current position indicator on track */
+        .position-indicator {
+            position: absolute;
+            top: 18px;
+            width: 20px;
+            height: 20px;
+            background: linear-gradient(135deg, #FFE066 0%, #FFB347 100%);
+            border: 3px solid white;
+            border-radius: 50%;
+            box-shadow: 0 2px 10px rgba(255,179,71,0.5);
+            z-index: 3;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .position-indicator::after {
+            content: '💗';
+            font-size: 10px;
+        }
+
+        /* Bottom text */
+        .progress-text {
+            text-align: center;
+            font-size: 11px;
+            color: rgba(255,255,255,0.9);
+            background: rgba(0,0,0,0.1);
+            padding: 8px 16px;
+            border-radius: 16px;
+        }
+
+        /* States */
+        .states-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        .state-label {
+            font-size: 10px;
+            font-weight: 700;
+            color: #999;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+    </style>
+</head>
+<body>
+    <h2>Variant 5: Milestone Markers</h2>
+    <p class="description">Progress bar with tier milestone markers along the track. Each milestone shows the tier emoji. Completed milestones show checkmarks, current is highlighted.</p>
+
+    <div class="states-grid">
+        <!-- State 1: At Cozy Cabin, early progress -->
+        <div>
+            <div class="state-label">STATE: TIER 1 (COZY CABIN) - 320 LP</div>
+            <div class="connection-bar">
+                <div class="header-row">
+                    <div class="current-tier-label">
+                        <span class="tier-emoji">🏕️</span>
+                        <div class="tier-text">
+                            <span class="tier-name">Cozy Cabin</span>
+                            <span class="tier-subtitle">Your vacation awaits</span>
+                        </div>
+                    </div>
+                    <div class="lp-display">
+                        <div class="lp-value">320 LP</div>
+                        <div class="lp-label">TOTAL</div>
+                    </div>
+                </div>
+
+                <div class="milestone-bar">
+                    <div class="track-bg"></div>
+                    <div class="track-fill" style="width: 6.4%;"></div>
+
+                    <div class="milestones">
+                        <div class="milestone current">
+                            <div class="milestone-dot">🏕️</div>
+                            <span class="milestone-lp">0</span>
+                        </div>
+                        <div class="milestone locked">
+                            <div class="milestone-dot">🏖️</div>
+                            <span class="milestone-lp">1K</span>
+                        </div>
+                        <div class="milestone locked">
+                            <div class="milestone-dot">⛵</div>
+                            <span class="milestone-lp">2.5K</span>
+                        </div>
+                        <div class="milestone locked">
+                            <div class="milestone-dot">🏔️</div>
+                            <span class="milestone-lp">5K</span>
+                        </div>
+                        <div class="milestone locked">
+                            <div class="milestone-dot">🏰</div>
+                            <span class="milestone-lp">10K</span>
+                        </div>
+                    </div>
+
+                    <div class="position-indicator" style="left: calc(6.4% - 10px);"></div>
+                </div>
+
+                <div class="progress-text">
+                    680 LP until Beach Villa 🏖️
+                </div>
+            </div>
+        </div>
+
+        <!-- State 2: At Beach Villa -->
+        <div>
+            <div class="state-label">STATE: TIER 2 (BEACH VILLA) - 1,800 LP</div>
+            <div class="connection-bar">
+                <div class="header-row">
+                    <div class="current-tier-label">
+                        <span class="tier-emoji">🏖️</span>
+                        <div class="tier-text">
+                            <span class="tier-name">Beach Villa</span>
+                            <span class="tier-subtitle">Sun, sand & love</span>
+                        </div>
+                    </div>
+                    <div class="lp-display">
+                        <div class="lp-value">1,800 LP</div>
+                        <div class="lp-label">TOTAL</div>
+                    </div>
+                </div>
+
+                <div class="milestone-bar">
+                    <div class="track-bg"></div>
+                    <div class="track-fill" style="width: 28%;"></div>
+
+                    <div class="milestones">
+                        <div class="milestone completed">
+                            <div class="milestone-dot">✓</div>
+                            <span class="milestone-lp">0</span>
+                        </div>
+                        <div class="milestone current">
+                            <div class="milestone-dot">🏖️</div>
+                            <span class="milestone-lp">1K</span>
+                        </div>
+                        <div class="milestone locked">
+                            <div class="milestone-dot">⛵</div>
+                            <span class="milestone-lp">2.5K</span>
+                        </div>
+                        <div class="milestone locked">
+                            <div class="milestone-dot">🏔️</div>
+                            <span class="milestone-lp">5K</span>
+                        </div>
+                        <div class="milestone locked">
+                            <div class="milestone-dot">🏰</div>
+                            <span class="milestone-lp">10K</span>
+                        </div>
+                    </div>
+
+                    <div class="position-indicator" style="left: calc(28% - 10px);"></div>
+                </div>
+
+                <div class="progress-text">
+                    700 LP until Yacht Getaway ⛵
+                </div>
+            </div>
+        </div>
+
+        <!-- State 3: At Yacht Getaway -->
+        <div>
+            <div class="state-label">STATE: TIER 3 (YACHT) - 3,800 LP</div>
+            <div class="connection-bar">
+                <div class="header-row">
+                    <div class="current-tier-label">
+                        <span class="tier-emoji">⛵</span>
+                        <div class="tier-text">
+                            <span class="tier-name">Yacht Getaway</span>
+                            <span class="tier-subtitle">Sailing together</span>
+                        </div>
+                    </div>
+                    <div class="lp-display">
+                        <div class="lp-value">3,800 LP</div>
+                        <div class="lp-label">TOTAL</div>
+                    </div>
+                </div>
+
+                <div class="milestone-bar">
+                    <div class="track-bg"></div>
+                    <div class="track-fill" style="width: 52%;"></div>
+
+                    <div class="milestones">
+                        <div class="milestone completed">
+                            <div class="milestone-dot">✓</div>
+                            <span class="milestone-lp">0</span>
+                        </div>
+                        <div class="milestone completed">
+                            <div class="milestone-dot">✓</div>
+                            <span class="milestone-lp">1K</span>
+                        </div>
+                        <div class="milestone current">
+                            <div class="milestone-dot">⛵</div>
+                            <span class="milestone-lp">2.5K</span>
+                        </div>
+                        <div class="milestone locked">
+                            <div class="milestone-dot">🏔️</div>
+                            <span class="milestone-lp">5K</span>
+                        </div>
+                        <div class="milestone locked">
+                            <div class="milestone-dot">🏰</div>
+                            <span class="milestone-lp">10K</span>
+                        </div>
+                    </div>
+
+                    <div class="position-indicator" style="left: calc(52% - 10px);"></div>
+                </div>
+
+                <div class="progress-text">
+                    1,200 LP until Mountain Penthouse 🏔️
+                </div>
+            </div>
+        </div>
+
+        <!-- State 4: At Castle (Max tier) -->
+        <div>
+            <div class="state-label">STATE: TIER 5 (CASTLE) - 15,000 LP (MAX)</div>
+            <div class="connection-bar">
+                <div class="header-row">
+                    <div class="current-tier-label">
+                        <span class="tier-emoji">🏰</span>
+                        <div class="tier-text">
+                            <span class="tier-name">Castle Retreat</span>
+                            <span class="tier-subtitle">Royal romance 👑</span>
+                        </div>
+                    </div>
+                    <div class="lp-display">
+                        <div class="lp-value">15,000 LP</div>
+                        <div class="lp-label">TOTAL</div>
+                    </div>
+                </div>
+
+                <div class="milestone-bar">
+                    <div class="track-bg"></div>
+                    <div class="track-fill" style="width: 100%; background: linear-gradient(90deg, #7C3AED 0%, #C084FC 100%);"></div>
+
+                    <div class="milestones">
+                        <div class="milestone completed">
+                            <div class="milestone-dot">✓</div>
+                            <span class="milestone-lp">0</span>
+                        </div>
+                        <div class="milestone completed">
+                            <div class="milestone-dot">✓</div>
+                            <span class="milestone-lp">1K</span>
+                        </div>
+                        <div class="milestone completed">
+                            <div class="milestone-dot">✓</div>
+                            <span class="milestone-lp">2.5K</span>
+                        </div>
+                        <div class="milestone completed">
+                            <div class="milestone-dot">✓</div>
+                            <span class="milestone-lp">5K</span>
+                        </div>
+                        <div class="milestone current">
+                            <div class="milestone-dot" style="background: linear-gradient(135deg, #7C3AED 0%, #C084FC 100%);">🏰</div>
+                            <span class="milestone-lp">10K</span>
+                        </div>
+                    </div>
+
+                    <div class="position-indicator" style="left: calc(100% - 20px); background: linear-gradient(135deg, #7C3AED 0%, #C084FC 100%);"></div>
+                </div>
+
+                <div class="progress-text">
+                    🎉 You've reached the highest tier! 👑
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

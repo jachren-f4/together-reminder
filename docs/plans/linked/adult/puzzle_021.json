@@ -1,0 +1,74 @@
+{
+  "author": "Crossword Maker GPT",
+  "title": "Adult Intimacy Puzzle #21",
+  "size": {
+    "rows": 9,
+    "cols": 7
+  },
+  "clues": {
+    "1": { "type": "text", "content": "MOA_", "arrow": "down", "target_index": 8 },
+    "2": { "type": "text", "content": "N_P", "arrow": "down", "target_index": 9 },
+    "3": { "type": "emoji", "content": "😽", "text": "___SY", "arrow": "down", "target_index": 10 },
+    "4": { "type": "text", "content": "GANG____", "arrow": "down", "target_index": 13 },
+    "5": { "type": "emoji", "content": "🍒", "arrow": "across", "target_index": 8 },
+    "6": {
+      "across": { "type": "text", "content": "After A", "target_index": 13 },
+      "down": { "type": "text", "content": "BEFORE Z", "target_index": 19 }
+    },
+    "7": { "type": "emoji", "content": "✋", "text": "__O_E", "arrow": "down", "target_index": 22 },
+    "8": {
+      "across": { "type": "emoji", "content": "🥱", "text": "__WN", "target_index": 19 },
+      "down": { "type": "text", "content": "_A__", "target_index": 25 }
+    },
+    "9": { "type": "text", "content": "Excited yes", "arrow": "across", "target_index": 19 },
+    "10": { "type": "emoji", "content": "💦", "arrow": "across", "target_index": 22 },
+    "11": { "type": "text", "content": "After Q", "arrow": "across", "target_index": 29 },
+    "12": {
+      "across": { "type": "text", "content": "After F", "target_index": 34 },
+      "down": { "type": "text", "content": "_SE ME", "target_index": 40 }
+    },
+    "13": { "type": "text", "content": "MAKE _____CE", "arrow": "across", "target_index": 36 },
+    "14": { "type": "text", "content": "Stomach area", "arrow": "down", "target_index": 48 },
+    "15": { "type": "text", "content": "Position above", "arrow": "down", "target_index": 52 },
+    "16": { "type": "text", "content": "Together as one", "arrow": "down", "target_index": 53 },
+    "17": { "type": "emoji", "content": "🌊", "arrow": "across", "target_index": 50 },
+    "18": { "type": "emoji", "content": "🪺", "arrow": "across", "target_index": 59 },
+    "19": { "type": "text", "content": "BEFORE T", "arrow": "down", "target_index": 11 },
+    "20": { "type": "text", "content": "BEFORE V", "arrow": "down", "target_index": 17 },
+    "21": { "type": "text", "content": "BEFORE O", "arrow": "across", "target_index": 27 },
+    "22": { "type": "text", "content": "BEFORE S", "arrow": "down", "target_index": 37 },
+    "23": { "type": "text", "content": "BEFORE S", "arrow": "across", "target_index": 32 },
+    "24": { "type": "emoji", "content": "✊", "text": "__ST", "arrow": "down", "target_index": 50 },
+    "25": { "type": "text", "content": "BEFORE M", "arrow": "down", "target_index": 51 },
+    "26": { "type": "text", "content": "BEFORE H", "arrow": "across", "target_index": 48 },
+    "27": {
+      "across": { "type": "emoji", "content": "☀️", "text": "S_N", "target_index": 55 },
+      "down": { "type": "text", "content": "_EX", "target_index": 61 }
+    },
+    "28": { "type": "emoji", "content": "🥧", "text": "P_E", "arrow": "across", "target_index": 57 }
+  },
+  "date": "2025-12-27",
+  "grid": [
+    ".", ".", ".", ".", ".", ".", ".",
+    ".", "N", "I", "P", "S", ".", "B",
+    ".", ".", ".", "U", ".", "Y", "A",
+    ".", "G", "U", "S", "H", ".", "N",
+    ".", "R", ".", ".", "R", ".", "G",
+    ".", "P", "R", "O", "D", "U", ".",
+    ".", ".", ".", ".", ".", ".", "G",
+    ".", "F", "L", "O", "W", ".", "U",
+    ".", "I", ".", "N", "E", "S", "T"
+  ],
+  "gridnums": [
+    0, 1, 2, 3, 19, 0, 4,
+    5, 0, 0, 0, 0, 6, 0,
+    0, 7, 20, 0, 8, 0, 0,
+    10, 0, 0, 0, 0, 21, 0,
+    11, 0, 22, 23, 0, 12, 0,
+    13, 0, 0, 0, 0, 0, 14,
+    0, 24, 25, 15, 16, 26, 0,
+    17, 0, 0, 0, 0, 27, 0,
+    28, 0, 18, 0, 0, 0, 0
+  ],
+  "puzzleId": "puzzle_021"
+}

@@ -5,64 +5,65 @@
   "questions": [
     {
       "id": "quiz_005_q1",
-      "text": "When I want to express myself creatively, I'm drawn to...",
+      "text": "Something creative I'd love to try or share with you is...",
       "choices": [
-        "Visual arts like drawing or photography",
-        "Writing, journaling, or storytelling",
-        "Music, dancing, or performing",
-        "Cooking, crafting, or hands-on projects",
+        "Making something together - cooking, art, a project",
+        "Sharing music, movies, or content we've discovered",
+        "Writing notes, messages, or keeping a shared journal",
+        "Taking photos or documenting our memories",
         "Other / It depends"
       ],
-      "category": "preferences"
+      "category": "lifestyle"
     },
     {
       "id": "quiz_005_q2",
-      "text": "My workspace or creative area is usually...",
+      "text": "When it comes to our shared spaces, I'd like them to feel...",
       "choices": [
-        "Organized chaos - I know where everything is",
-        "Minimalist and clean for clear thinking",
-        "Colorful and full of inspiration",
-        "Constantly changing based on my projects",
+        "Cozy and personal - full of things that mean something to us",
+        "Clean and calm - a peaceful retreat",
+        "Fun and colorful - reflecting our personalities",
+        "Flexible - changing based on what we're into",
         "Other / It depends"
       ],
-      "category": "personality"
+      "category": "lifestyle"
     },
     {
       "id": "quiz_005_q3",
-      "text": "When starting a creative project, I prefer to...",
+      "text": "If we were working on a project together (decorating, planning a trip, making something), I'd want to...",
       "choices": [
-        "Jump in and figure it out as I go",
-        "Sketch out a rough plan first",
-        "Research and prepare thoroughly",
-        "Collaborate and brainstorm with others",
+        "Dive in and figure it out together as we go",
+        "Start with a rough idea and stay flexible",
+        "Plan it out carefully before starting",
+        "Each take on different parts based on our strengths",
         "Other / It depends"
       ],
-      "category": "personality"
+      "category": "communication"
     },
     {
       "id": "quiz_005_q4",
-      "text": "The content I share on social media tends to be...",
+      "text": "When it comes to sharing our relationship on social media, I prefer...",
       "choices": [
-        "Humorous memes and funny observations",
-        "Thoughtful articles and ideas",
-        "Beautiful photos and aesthetic content",
-        "Personal updates and life moments",
+        "Keeping it mostly private - our moments are for us",
+        "Occasional posts for special moments",
+        "Sharing openly - I love celebrating us publicly",
+        "I don't think about it much either way",
         "Other / It depends"
       ],
       "category": "social"
     },
     {
       "id": "quiz_005_q5",
-      "text": "When giving a gift, I prefer to...",
+      "text": "The gifts that mean the most to me are...",
       "choices": [
-        "Make something personal and handmade",
-        "Find something unique and unexpected",
-        "Choose something practical they need",
-        "Give experiences rather than things",
+        "Handmade or personalized - showing thought and effort",
+        "Surprises - something unexpected I didn't know I wanted",
+        "Practical things I actually need or use",
+        "Experiences we can enjoy together",
         "Other / It depends"
       ],
       "category": "preferences"
     }
   ],
-  "description": "Uncover your artistic sides and creative outlets."
+  "description": "Explore how you express yourselves and create together.",
+  "magnet_id": 2
 }

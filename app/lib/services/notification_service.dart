@@ -93,11 +93,13 @@ class NotificationService {
     const AndroidInitializationSettings androidSettings =
         AndroidInitializationSettings('@mipmap/ic_launcher');
 
+    // DON'T request permissions during init - defer until after first quiz
+    // Permission will be requested via requestPermission() after classic quiz completion
     const DarwinInitializationSettings iosSettings =
         DarwinInitializationSettings(
-      requestAlertPermission: true,
-      requestBadgePermission: true,
-      requestSoundPermission: true,
+      requestAlertPermission: false,
+      requestBadgePermission: false,
+      requestSoundPermission: false,
     );
 
     const InitializationSettings initSettings = InitializationSettings(
@@ -222,6 +224,20 @@ class NotificationService {
       }
     } catch (e) {
       Logger.warn('Failed to sync push token on startup: $e', service: 'notification');
+    }
+  }
+
+  /// Check if notifications are authorized (without requesting permission)
+  /// Returns true if authorized, false if denied/notDetermined
+  static Future<bool> isAuthorized() async {
+    if (kIsWeb) return true; // Web doesn't need permission
+
+    try {
+      final settings = await _fcm.getNotificationSettings();
+      return settings.authorizationStatus == AuthorizationStatus.authorized;
+    } catch (e) {
+      Logger.warn('Failed to check notification authorization: $e', service: 'notification');
+      return false;
     }
   }
 

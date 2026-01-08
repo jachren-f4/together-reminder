@@ -1,0 +1,841 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quiz Content Reviewer</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #1a1a2e;
+      color: #eee;
+      margin: 0;
+      padding: 20px;
+      min-height: 100vh;
+    }
+
+    h1 {
+      text-align: center;
+      color: #fff;
+      margin-bottom: 10px;
+    }
+
+    .subtitle {
+      text-align: center;
+      color: #888;
+      margin-bottom: 30px;
+    }
+
+    /* Drop Zone */
+    .drop-zone {
+      border: 3px dashed #444;
+      border-radius: 16px;
+      padding: 60px 40px;
+      text-align: center;
+      margin-bottom: 30px;
+      transition: all 0.3s ease;
+      background: #16213e;
+    }
+
+    .drop-zone.dragover {
+      border-color: #e94560;
+      background: #1f3460;
+    }
+
+    .drop-zone-icon {
+      font-size: 48px;
+      margin-bottom: 15px;
+    }
+
+    .drop-zone-text {
+      font-size: 18px;
+      color: #888;
+    }
+
+    .drop-zone-hint {
+      font-size: 13px;
+      color: #666;
+      margin-top: 10px;
+    }
+
+    /* Stats Bar */
+    .stats-bar {
+      display: flex;
+      gap: 20px;
+      justify-content: center;
+      margin-bottom: 30px;
+      flex-wrap: wrap;
+    }
+
+    .stat {
+      background: #16213e;
+      padding: 12px 24px;
+      border-radius: 8px;
+      text-align: center;
+    }
+
+    .stat-value {
+      font-size: 24px;
+      font-weight: bold;
+      color: #e94560;
+    }
+
+    .stat-label {
+      font-size: 12px;
+      color: #888;
+      text-transform: uppercase;
+    }
+
+    /* Filter Tabs */
+    .filter-tabs {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      margin-bottom: 30px;
+      flex-wrap: wrap;
+    }
+
+    .filter-tab {
+      background: #16213e;
+      border: none;
+      color: #888;
+      padding: 10px 20px;
+      border-radius: 20px;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-size: 14px;
+    }
+
+    .filter-tab:hover {
+      background: #1f3460;
+    }
+
+    .filter-tab.active {
+      background: #e94560;
+      color: #fff;
+    }
+
+    /* Content Grid */
+    .content-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+      gap: 20px;
+    }
+
+    /* Quiz Card */
+    .quiz-card {
+      background: #16213e;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid #2a2a4a;
+    }
+
+    .quiz-header {
+      background: linear-gradient(135deg, #e94560 0%, #0f3460 100%);
+      padding: 16px 20px;
+    }
+
+    .quiz-title {
+      font-size: 18px;
+      font-weight: 600;
+      margin: 0 0 6px 0;
+    }
+
+    .quiz-meta {
+      display: flex;
+      gap: 12px;
+      font-size: 12px;
+      color: rgba(255,255,255,0.8);
+    }
+
+    .quiz-tag {
+      background: rgba(255,255,255,0.2);
+      padding: 2px 8px;
+      border-radius: 10px;
+    }
+
+    .quiz-body {
+      padding: 20px;
+    }
+
+    /* Questions */
+    .question {
+      margin-bottom: 20px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid #2a2a4a;
+    }
+
+    .question:last-child {
+      margin-bottom: 0;
+      padding-bottom: 0;
+      border-bottom: none;
+    }
+
+    .question-number {
+      display: inline-block;
+      background: #e94560;
+      color: #fff;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      text-align: center;
+      line-height: 24px;
+      font-size: 12px;
+      font-weight: bold;
+      margin-right: 10px;
+    }
+
+    .question-text {
+      font-size: 15px;
+      line-height: 1.5;
+      margin-bottom: 12px;
+      color: #fff;
+    }
+
+    .choices {
+      margin-left: 34px;
+    }
+
+    .choice {
+      display: flex;
+      align-items: flex-start;
+      margin-bottom: 8px;
+      font-size: 14px;
+      color: #aaa;
+    }
+
+    .choice-letter {
+      background: #2a2a4a;
+      color: #888;
+      width: 22px;
+      height: 22px;
+      border-radius: 4px;
+      text-align: center;
+      line-height: 22px;
+      font-size: 11px;
+      margin-right: 10px;
+      flex-shrink: 0;
+    }
+
+    .choice-text {
+      line-height: 22px;
+    }
+
+    /* Scale Labels */
+    .scale-labels {
+      display: flex;
+      justify-content: space-between;
+      margin-left: 34px;
+      margin-top: 8px;
+      gap: 4px;
+    }
+
+    .scale-label {
+      background: #2a2a4a;
+      padding: 6px 10px;
+      border-radius: 6px;
+      font-size: 11px;
+      color: #888;
+      text-align: center;
+      flex: 1;
+    }
+
+    .scale-label:first-child {
+      background: #3d1a2a;
+      color: #e94560;
+    }
+
+    .scale-label:last-child {
+      background: #1a3d2a;
+      color: #4ecdc4;
+    }
+
+    /* Linked Puzzle */
+    .puzzle-grid {
+      display: grid;
+      gap: 2px;
+      margin-bottom: 20px;
+      justify-content: center;
+    }
+
+    .puzzle-cell {
+      width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      font-weight: bold;
+      position: relative;
+    }
+
+    .puzzle-cell.filled {
+      background: #2a2a4a;
+      border-radius: 4px;
+      color: #4ecdc4;
+    }
+
+    .puzzle-cell.empty {
+      background: transparent;
+    }
+
+    .cell-number {
+      position: absolute;
+      top: 2px;
+      left: 4px;
+      font-size: 9px;
+      color: #888;
+      font-weight: normal;
+    }
+
+    .clues-section {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    .clues-column h4 {
+      color: #e94560;
+      margin: 0 0 12px 0;
+      font-size: 13px;
+      text-transform: uppercase;
+    }
+
+    .clue {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 8px;
+      font-size: 13px;
+    }
+
+    .clue-number {
+      color: #e94560;
+      font-weight: bold;
+      min-width: 20px;
+    }
+
+    .clue-content {
+      color: #aaa;
+    }
+
+    .clue-emoji {
+      font-size: 18px;
+    }
+
+    /* Word Search */
+    .ws-grid {
+      display: grid;
+      gap: 2px;
+      margin-bottom: 20px;
+      justify-content: center;
+      font-family: monospace;
+    }
+
+    .ws-cell {
+      width: 28px;
+      height: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #2a2a4a;
+      border-radius: 3px;
+      font-size: 14px;
+      color: #888;
+    }
+
+    .words-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .word-tag {
+      background: #2a2a4a;
+      padding: 6px 12px;
+      border-radius: 15px;
+      font-size: 13px;
+      color: #4ecdc4;
+    }
+
+    /* Empty State */
+    .empty-state {
+      text-align: center;
+      padding: 60px;
+      color: #666;
+    }
+
+    /* Clear Button */
+    .clear-btn {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      background: #e94560;
+      color: #fff;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 25px;
+      cursor: pointer;
+      font-size: 14px;
+      box-shadow: 0 4px 15px rgba(233, 69, 96, 0.3);
+      transition: transform 0.2s;
+    }
+
+    .clear-btn:hover {
+      transform: scale(1.05);
+    }
+
+    .clear-btn:active {
+      transform: scale(0.95);
+    }
+
+    /* Quality Indicators */
+    .quality-issues {
+      background: #3d2a1a;
+      border: 1px solid #e9a345;
+      border-radius: 8px;
+      padding: 12px;
+      margin-top: 15px;
+    }
+
+    .quality-issues h5 {
+      color: #e9a345;
+      margin: 0 0 8px 0;
+      font-size: 12px;
+      text-transform: uppercase;
+    }
+
+    .issue {
+      font-size: 12px;
+      color: #cca366;
+      margin-bottom: 4px;
+    }
+
+    .issue:last-child {
+      margin-bottom: 0;
+    }
+
+    @media (max-width: 500px) {
+      .content-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .clues-section {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <h1>Quiz Content Reviewer</h1>
+  <p class="subtitle">Drag and drop JSON files to review quiz content quality</p>
+
+  <div class="drop-zone" id="dropZone">
+    <div class="drop-zone-icon">📁</div>
+    <div class="drop-zone-text">Drop JSON files here</div>
+    <div class="drop-zone-hint">Supports: classic-quiz, affirmation, linked, word-search</div>
+  </div>
+
+  <div class="stats-bar" id="statsBar" style="display: none;">
+    <div class="stat">
+      <div class="stat-value" id="totalFiles">0</div>
+      <div class="stat-label">Files</div>
+    </div>
+    <div class="stat">
+      <div class="stat-value" id="totalQuestions">0</div>
+      <div class="stat-label">Questions</div>
+    </div>
+    <div class="stat">
+      <div class="stat-value" id="totalIssues">0</div>
+      <div class="stat-label">Issues</div>
+    </div>
+  </div>
+
+  <div class="filter-tabs" id="filterTabs" style="display: none;">
+    <button class="filter-tab active" data-filter="all">All</button>
+    <button class="filter-tab" data-filter="classic-quiz">Classic Quiz</button>
+    <button class="filter-tab" data-filter="affirmation">Affirmation</button>
+    <button class="filter-tab" data-filter="linked">Linked</button>
+    <button class="filter-tab" data-filter="word-search">Word Search</button>
+    <button class="filter-tab" data-filter="issues">With Issues</button>
+  </div>
+
+  <div class="content-grid" id="contentGrid"></div>
+
+  <button class="clear-btn" id="clearBtn" style="display: none;">Clear All</button>
+
+  <script>
+    const dropZone = document.getElementById('dropZone');
+    const contentGrid = document.getElementById('contentGrid');
+    const statsBar = document.getElementById('statsBar');
+    const filterTabs = document.getElementById('filterTabs');
+    const clearBtn = document.getElementById('clearBtn');
+
+    let loadedContent = [];
+    let currentFilter = 'all';
+
+    // Drag and drop handlers
+    dropZone.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      dropZone.classList.add('dragover');
+    });
+
+    dropZone.addEventListener('dragleave', () => {
+      dropZone.classList.remove('dragover');
+    });
+
+    dropZone.addEventListener('drop', async (e) => {
+      e.preventDefault();
+      dropZone.classList.remove('dragover');
+
+      const files = Array.from(e.dataTransfer.files).filter(f => f.name.endsWith('.json'));
+
+      for (const file of files) {
+        try {
+          const text = await file.text();
+          const data = JSON.parse(text);
+          const type = detectContentType(data, file.name);
+          const issues = analyzeQuality(data, type);
+
+          loadedContent.push({
+            filename: file.name,
+            path: file.webkitRelativePath || file.name,
+            data,
+            type,
+            issues
+          });
+        } catch (err) {
+          console.error(`Failed to parse ${file.name}:`, err);
+        }
+      }
+
+      updateUI();
+    });
+
+    // Filter tabs
+    filterTabs.addEventListener('click', (e) => {
+      if (e.target.classList.contains('filter-tab')) {
+        document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+        e.target.classList.add('active');
+        currentFilter = e.target.dataset.filter;
+        renderContent();
+      }
+    });
+
+    // Clear button
+    clearBtn.addEventListener('click', () => {
+      loadedContent = [];
+      updateUI();
+    });
+
+    function detectContentType(data, filename) {
+      // Check based on data structure
+      if (data.clues && data.grid && Array.isArray(data.grid)) return 'linked';
+      if (data.words && typeof data.grid === 'string') return 'word-search';
+      if (data.questions) {
+        if (data.questions[0]?.scaleLabels) return 'affirmation';
+        if (data.questions[0]?.choices) return 'classic-quiz';
+      }
+
+      // Fallback to filename
+      if (filename.includes('puzzle_') || filename.includes('linked')) return 'linked';
+      if (filename.includes('ws_')) return 'word-search';
+      if (filename.includes('affirmation')) return 'affirmation';
+      return 'classic-quiz';
+    }
+
+    function analyzeQuality(data, type) {
+      const issues = [];
+
+      if (type === 'classic-quiz' || type === 'affirmation') {
+        if (!data.title) issues.push('Missing title');
+        if (!data.description) issues.push('Missing description');
+        if (!data.questions || data.questions.length === 0) {
+          issues.push('No questions');
+        } else {
+          data.questions.forEach((q, i) => {
+            if (!q.text || q.text.trim().length < 10) {
+              issues.push(`Q${i+1}: Question text too short`);
+            }
+            if (type === 'classic-quiz') {
+              if (!q.choices || q.choices.length < 3) {
+                issues.push(`Q${i+1}: Less than 3 choices`);
+              }
+              // Check for duplicate choices
+              const uniqueChoices = new Set(q.choices?.map(c => c.toLowerCase().trim()));
+              if (uniqueChoices.size !== q.choices?.length) {
+                issues.push(`Q${i+1}: Duplicate choices`);
+              }
+            }
+          });
+
+          // Check for question variety
+          if (data.questions.length > 3) {
+            const texts = data.questions.map(q => q.text.toLowerCase());
+            const similar = texts.filter((t, i) =>
+              texts.some((t2, j) => i !== j && t.includes(t2.substring(0, 20)))
+            );
+            if (similar.length > 1) {
+              issues.push('Some questions appear similar');
+            }
+          }
+        }
+      }
+
+      if (type === 'linked') {
+        if (!data.clues || Object.keys(data.clues).length === 0) {
+          issues.push('No clues defined');
+        }
+        if (!data.grid || data.grid.length === 0) {
+          issues.push('No grid defined');
+        }
+        // Check for empty clue content
+        Object.entries(data.clues || {}).forEach(([num, clue]) => {
+          if (!clue.content || clue.content.trim() === '') {
+            issues.push(`Clue ${num}: Empty content`);
+          }
+        });
+      }
+
+      if (type === 'word-search') {
+        if (!data.words || Object.keys(data.words).length === 0) {
+          issues.push('No words defined');
+        }
+        if (!data.grid) {
+          issues.push('No grid defined');
+        }
+        // Check word count
+        const wordCount = Object.keys(data.words || {}).length;
+        if (wordCount < 5) {
+          issues.push(`Only ${wordCount} words (recommend 8+)`);
+        }
+      }
+
+      return issues;
+    }
+
+    function updateUI() {
+      const hasContent = loadedContent.length > 0;
+
+      statsBar.style.display = hasContent ? 'flex' : 'none';
+      filterTabs.style.display = hasContent ? 'flex' : 'none';
+      clearBtn.style.display = hasContent ? 'block' : 'none';
+
+      if (hasContent) {
+        // Update stats
+        document.getElementById('totalFiles').textContent = loadedContent.length;
+        document.getElementById('totalQuestions').textContent = loadedContent.reduce((sum, c) => {
+          if (c.type === 'classic-quiz' || c.type === 'affirmation') {
+            return sum + (c.data.questions?.length || 0);
+          }
+          return sum;
+        }, 0);
+        document.getElementById('totalIssues').textContent = loadedContent.reduce((sum, c) => sum + c.issues.length, 0);
+      }
+
+      renderContent();
+    }
+
+    function renderContent() {
+      const filtered = loadedContent.filter(c => {
+        if (currentFilter === 'all') return true;
+        if (currentFilter === 'issues') return c.issues.length > 0;
+        return c.type === currentFilter;
+      });
+
+      if (filtered.length === 0) {
+        contentGrid.innerHTML = loadedContent.length === 0
+          ? ''
+          : '<div class="empty-state">No content matches the current filter</div>';
+        return;
+      }
+
+      contentGrid.innerHTML = filtered.map(item => renderCard(item)).join('');
+    }
+
+    function renderCard(item) {
+      const { filename, data, type, issues } = item;
+
+      let body = '';
+      switch (type) {
+        case 'classic-quiz':
+          body = renderClassicQuiz(data);
+          break;
+        case 'affirmation':
+          body = renderAffirmation(data);
+          break;
+        case 'linked':
+          body = renderLinked(data);
+          break;
+        case 'word-search':
+          body = renderWordSearch(data);
+          break;
+      }
+
+      const issuesHtml = issues.length > 0 ? `
+        <div class="quality-issues">
+          <h5>Quality Issues (${issues.length})</h5>
+          ${issues.map(i => `<div class="issue">• ${i}</div>`).join('')}
+        </div>
+      ` : '';
+
+      return `
+        <div class="quiz-card" data-type="${type}">
+          <div class="quiz-header">
+            <h3 class="quiz-title">${data.title || filename}</h3>
+            <div class="quiz-meta">
+              <span class="quiz-tag">${type}</span>
+              ${data.branch ? `<span class="quiz-tag">${data.branch}</span>` : ''}
+              ${data.category ? `<span class="quiz-tag">${data.category}</span>` : ''}
+              <span>${filename}</span>
+            </div>
+          </div>
+          <div class="quiz-body">
+            ${body}
+            ${issuesHtml}
+          </div>
+        </div>
+      `;
+    }
+
+    function renderClassicQuiz(data) {
+      if (!data.questions) return '<p>No questions</p>';
+
+      return data.questions.map((q, i) => `
+        <div class="question">
+          <div class="question-text">
+            <span class="question-number">${i + 1}</span>
+            ${escapeHtml(q.text)}
+          </div>
+          <div class="choices">
+            ${(q.choices || []).map((c, j) => `
+              <div class="choice">
+                <span class="choice-letter">${String.fromCharCode(65 + j)}</span>
+                <span class="choice-text">${escapeHtml(c)}</span>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function renderAffirmation(data) {
+      if (!data.questions) return '<p>No questions</p>';
+
+      return data.questions.map((q, i) => `
+        <div class="question">
+          <div class="question-text">
+            <span class="question-number">${i + 1}</span>
+            ${escapeHtml(q.text)}
+          </div>
+          <div class="scale-labels">
+            ${(q.scaleLabels || []).map(l => `
+              <div class="scale-label">${escapeHtml(l)}</div>
+            `).join('')}
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function renderLinked(data) {
+      const { grid, gridnums, size, clues } = data;
+      if (!grid || !size) return '<p>Invalid puzzle data</p>';
+
+      const cols = size.cols || 7;
+      const rows = size.rows || 9;
+
+      // Render grid
+      let gridHtml = `<div class="puzzle-grid" style="grid-template-columns: repeat(${cols}, 36px);">`;
+      for (let i = 0; i < grid.length; i++) {
+        const cell = grid[i];
+        const num = gridnums?.[i];
+        const isEmpty = cell === '.';
+
+        gridHtml += `
+          <div class="puzzle-cell ${isEmpty ? 'empty' : 'filled'}">
+            ${num ? `<span class="cell-number">${num}</span>` : ''}
+            ${isEmpty ? '' : cell}
+          </div>
+        `;
+      }
+      gridHtml += '</div>';
+
+      // Render clues
+      const acrossClues = [];
+      const downClues = [];
+
+      Object.entries(clues || {}).forEach(([num, clue]) => {
+        const content = clue.type === 'emoji'
+          ? `<span class="clue-emoji">${clue.content}</span>`
+          : escapeHtml(clue.content);
+
+        const clueHtml = `
+          <div class="clue">
+            <span class="clue-number">${num}.</span>
+            <span class="clue-content">${content}</span>
+          </div>
+        `;
+
+        if (clue.arrow === 'across') {
+          acrossClues.push({ num: parseInt(num), html: clueHtml });
+        } else {
+          downClues.push({ num: parseInt(num), html: clueHtml });
+        }
+      });
+
+      acrossClues.sort((a, b) => a.num - b.num);
+      downClues.sort((a, b) => a.num - b.num);
+
+      return `
+        ${gridHtml}
+        <div class="clues-section">
+          <div class="clues-column">
+            <h4>Across</h4>
+            ${acrossClues.map(c => c.html).join('')}
+          </div>
+          <div class="clues-column">
+            <h4>Down</h4>
+            ${downClues.map(c => c.html).join('')}
+          </div>
+        </div>
+      `;
+    }
+
+    function renderWordSearch(data) {
+      const { grid, size, words } = data;
+      if (!grid || !size) return '<p>Invalid puzzle data</p>';
+
+      const cols = size.cols || 10;
+
+      // Render grid
+      let gridHtml = `<div class="ws-grid" style="grid-template-columns: repeat(${cols}, 28px);">`;
+      for (const char of grid) {
+        gridHtml += `<div class="ws-cell">${char}</div>`;
+      }
+      gridHtml += '</div>';
+
+      // Render words
+      const wordsList = Object.keys(words || {}).sort();
+
+      return `
+        ${gridHtml}
+        <div class="words-list">
+          ${wordsList.map(w => `<span class="word-tag">${w}</span>`).join('')}
+        </div>
+      `;
+    }
+
+    function escapeHtml(text) {
+      if (!text) return '';
+      return text
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+    }
+  </script>
+</body>
+</html>

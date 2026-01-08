@@ -29,6 +29,9 @@ class DevConfig {
       if (skipOtpVerificationInDev) {
         violations.add('skipOtpVerificationInDev is true');
       }
+      if (skipSubscriptionCheckInDev) {
+        violations.add('skipSubscriptionCheckInDev is true');
+      }
       if (allowAuthBypassInRelease) {
         violations.add('allowAuthBypassInRelease is true');
       }
@@ -64,6 +67,15 @@ class DevConfig {
   /// QUICK TOGGLE: Change to `true` to skip OTP, `false` to require it
   /// NOTE: This creates real Supabase users but bypasses email verification
   static const bool skipOtpVerificationInDev = true;  // <-- Toggle this!
+
+  /// Skip subscription/paywall check in development
+  /// When enabled, SubscriptionService.isPremium returns true without checking RevenueCat
+  /// Set to true for testing app features without subscribing
+  /// Set to false when testing the actual paywall/subscription flow
+  ///
+  /// QUICK TOGGLE: Change to `true` to bypass paywall, `false` to test it
+  /// NOTE: Only active in debug mode, never in release builds
+  static const bool skipSubscriptionCheckInDev = true;  // <-- Toggle this!
 
   /// Check if auth should actually be bypassed
   /// Returns true only on simulators/emulators/web, NEVER on physical devices

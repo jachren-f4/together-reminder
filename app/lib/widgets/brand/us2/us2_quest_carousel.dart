@@ -52,6 +52,8 @@ class Us2QuestCarousel extends StatelessWidget {
               currentUserId: questData.currentUserId,
               isLocked: questData.isLocked,
               unlockCriteria: questData.unlockCriteria,
+              showGuidance: questData.showGuidance,
+              guidanceText: questData.guidanceText,
             ),
           );
         },
@@ -72,6 +74,8 @@ class Us2QuestData {
   final String? currentUserId;
   final bool isLocked;
   final String? unlockCriteria;
+  final bool showGuidance;
+  final String? guidanceText;
 
   const Us2QuestData({
     this.quest,
@@ -84,5 +88,7 @@ class Us2QuestData {
     this.currentUserId,
     this.isLocked = false,
     this.unlockCriteria,
+    this.showGuidance = false,
+    this.guidanceText,
   });
 }

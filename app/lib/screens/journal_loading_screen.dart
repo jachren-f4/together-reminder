@@ -8,13 +8,13 @@ import 'package:togetherremind/config/animation_constants.dart';
 /// Shows an animated intro that transforms from "Your Journal" to "Our Journal",
 /// emphasizing the shared nature of the couple's memories.
 ///
-/// Animation sequence (~3.5s):
+/// Animation sequence (~3s):
 /// 1. Background gradient fades in
 /// 2. Polaroids stack in from below
 /// 3. Paper texture appears
 /// 4. Title morphs from "Your" to "Our"
 /// 5. Subtitle reveals
-/// 6. "Tap to continue" appears with bounce
+/// 6. Auto-navigates to Journal once title morph completes
 class JournalLoadingScreen extends StatefulWidget {
   final VoidCallback onComplete;
 
@@ -34,8 +34,6 @@ class _JournalLoadingScreenState extends State<JournalLoadingScreen>
   late AnimationController _polaroidController;
   late AnimationController _titleController;
   late AnimationController _subtitleController;
-  late AnimationController _tapPromptController;
-  late AnimationController _heartController;
 
   // Animations
   late Animation<double> _backgroundOpacity;
@@ -44,10 +42,6 @@ class _JournalLoadingScreenState extends State<JournalLoadingScreen>
   late Animation<double> _polaroid3Slide;
   late Animation<double> _titleMorph;
   late Animation<double> _subtitleReveal;
-  late Animation<double> _tapPromptOpacity;
-  late Animation<double> _tapPromptBounce;
-
-  bool _canTap = false;
 
   @override
   void initState() {
@@ -117,30 +111,6 @@ class _JournalLoadingScreenState extends State<JournalLoadingScreen>
     _subtitleReveal = Tween<double>(begin: 0, end: 1).animate(
       CurvedAnimation(parent: _subtitleController, curve: Curves.easeOut),
     );
-
-    // Tap prompt (3.0s+)
-    _tapPromptController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 1500),
-    );
-    _tapPromptOpacity = Tween<double>(begin: 0, end: 1).animate(
-      CurvedAnimation(
-        parent: _tapPromptController,
-        curve: const Interval(0.0, 0.3, curve: Curves.easeIn),
-      ),
-    );
-    _tapPromptBounce = Tween<double>(begin: 0, end: 8).animate(
-      CurvedAnimation(
-        parent: _tapPromptController,
-        curve: const Interval(0.3, 1.0, curve: Curves.elasticOut),
-      ),
-    );
-
-    // Floating hearts (infinite)
-    _heartController = AnimationController(
-      vsync: this,
-      duration: const Duration(seconds: 3),
-    );
   }
 
   void _startAnimations() async {
@@ -152,22 +122,20 @@ class _JournalLoadingScreenState extends State<JournalLoadingScreen>
     if (!mounted) return;
     _polaroidController.forward();
 
-    // Start title morph after 1.5s
-    await Future.delayed(const Duration(milliseconds: 1300));
+    // Start title morph after polaroids settle (~1s)
+    await Future.delayed(const Duration(milliseconds: 800));
     if (!mounted) return;
     _titleController.forward();
 
-    // Start subtitle after 2.2s
-    await Future.delayed(const Duration(milliseconds: 700));
+    // Start subtitle as title morphs
+    await Future.delayed(const Duration(milliseconds: 500));
     if (!mounted) return;
     _subtitleController.forward();
 
-    // Start tap prompt after 3.0s
-    await Future.delayed(const Duration(milliseconds: 800));
+    // Wait for title morph to complete (800ms total), then brief pause
+    await Future.delayed(const Duration(milliseconds: 600));
     if (!mounted) return;
-    _tapPromptController.forward();
-    _heartController.repeat();
-    setState(() => _canTap = true);
+    widget.onComplete();
   }
 
   @override
@@ -176,37 +144,29 @@ class _JournalLoadingScreenState extends State<JournalLoadingScreen>
     _polaroidController.dispose();
     _titleController.dispose();
     _subtitleController.dispose();
-    _tapPromptController.dispose();
-    _heartController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: _canTap ? widget.onComplete : null,
-      child: Scaffold(
-        body: AnimatedBuilder(
-          animation: Listenable.merge([
-            _backgroundController,
-            _polaroidController,
-            _titleController,
-            _subtitleController,
-            _tapPromptController,
-            _heartController,
-          ]),
-          builder: (context, child) {
-            return Stack(
-              children: [
-                _buildBackground(),
-                _buildPaperTexture(),
-                _buildPolaroidStack(),
-                _buildContent(),
-                _buildFloatingHearts(),
-              ],
-            );
-          },
-        ),
+    return Scaffold(
+      body: AnimatedBuilder(
+        animation: Listenable.merge([
+          _backgroundController,
+          _polaroidController,
+          _titleController,
+          _subtitleController,
+        ]),
+        builder: (context, child) {
+          return Stack(
+            children: [
+              _buildBackground(),
+              _buildPaperTexture(),
+              _buildPolaroidStack(),
+              _buildContent(),
+            ],
+          );
+        },
       ),
     );
   }
@@ -333,28 +293,6 @@ class _JournalLoadingScreenState extends State<JournalLoadingScreen>
                 ),
               ),
               const Spacer(flex: 3),
-              // Tap to continue
-              Transform.translate(
-                offset: Offset(0, -_tapPromptBounce.value),
-                child: Opacity(
-                  opacity: _tapPromptOpacity.value,
-                  child: Column(
-                    children: [
-                      Text(
-                        'Tap to continue',
-                        style: JournalFonts.tapToContinue,
-                      ),
-                      const SizedBox(height: 8),
-                      const Icon(
-                        Icons.touch_app_outlined,
-                        size: 28,
-                        color: Color(0xFFFF6B6B),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              const SizedBox(height: 60),
             ],
           ),
         ),
@@ -391,44 +329,6 @@ class _JournalLoadingScreenState extends State<JournalLoadingScreen>
           ),
         ),
       ],
-    );
-  }
-
-  Widget _buildFloatingHearts() {
-    if (!_canTap) return const SizedBox.shrink();
-
-    return Positioned.fill(
-      child: IgnorePointer(
-        child: Stack(
-          children: List.generate(5, (index) {
-            final random = math.Random(index);
-            final startX = random.nextDouble() * 300 + 50;
-            final delay = random.nextDouble() * 0.5;
-
-            return AnimatedBuilder(
-              animation: _heartController,
-              builder: (context, child) {
-                final progress = ((_heartController.value + delay) % 1.0);
-                final y = MediaQuery.of(context).size.height * (1 - progress);
-                final opacity = (1 - progress).clamp(0.0, 0.6);
-                final scale = 0.5 + (progress * 0.3);
-
-                return Positioned(
-                  left: startX + math.sin(progress * math.pi * 2) * 20,
-                  top: y,
-                  child: Opacity(
-                    opacity: opacity,
-                    child: Transform.scale(
-                      scale: scale,
-                      child: const Text('💕', style: TextStyle(fontSize: 24)),
-                    ),
-                  ),
-                );
-              },
-            );
-          }),
-        ),
-      ),
     );
   }
 }

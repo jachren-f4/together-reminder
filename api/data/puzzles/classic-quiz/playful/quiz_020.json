@@ -1,0 +1,109 @@
+{
+  "quizId": "quiz_020",
+  "title": "Traditions & Rituals",
+  "branch": "playful",
+  "questions": [
+    {
+      "id": "quiz_020_q1",
+      "text": "When it comes to creating 'our traditions', I think...",
+      "choices": [
+        "I love having rituals we can count on",
+        "Some traditions are nice, but not too rigid",
+        "I prefer keeping things spontaneous",
+        "Let's see what naturally develops",
+        "Other / It depends"
+      ],
+      "category": "lifestyle",
+      "metadata": {
+        "dimension": "novelty_preference",
+        "poleMapping": [
+          "left",
+          null,
+          "right",
+          "right",
+          null
+        ]
+      }
+    },
+    {
+      "id": "quiz_020_q2",
+      "text": "For holidays and special occasions, I'd love for us to...",
+      "choices": [
+        "Build traditions we repeat every year",
+        "Have some traditions but also try new things",
+        "Do something different each time",
+        "Keep it flexible and go with the flow",
+        "Other / It depends"
+      ],
+      "category": "preferences",
+      "metadata": {
+        "dimension": "novelty_preference",
+        "poleMapping": [
+          "left",
+          null,
+          "right",
+          "right",
+          null
+        ]
+      }
+    },
+    {
+      "id": "quiz_020_q3",
+      "text": "Little daily rituals (morning coffee, goodnight texts, etc.)...",
+      "choices": [
+        "Mean everything to me - I love our routines",
+        "Are sweet but don't need to happen every single day",
+        "Should happen naturally, not as obligations",
+        "Can feel repetitive - I like variety",
+        "Other / It depends"
+      ],
+      "category": "communication",
+      "metadata": {
+        "dimension": "novelty_preference",
+        "poleMapping": [
+          "left",
+          "left",
+          null,
+          "right",
+          null
+        ]
+      }
+    },
+    {
+      "id": "quiz_020_q4",
+      "text": "If we found a restaurant we love, I'd want to...",
+      "choices": [
+        "Make it 'our spot' and go there regularly",
+        "Go back sometimes, but also explore new places",
+        "Try it a couple times then find new favorites",
+        "Always be discovering new spots together",
+        "Other / It depends"
+      ],
+      "category": "preferences",
+      "metadata": {
+        "dimension": "novelty_preference",
+        "poleMapping": [
+          "left",
+          null,
+          "right",
+          "right",
+          null
+        ]
+      }
+    },
+    {
+      "id": "quiz_020_q5",
+      "text": "When it comes to anniversaries and milestones, I hope we...",
+      "choices": [
+        "Celebrate them the same special way each time",
+        "Have some traditions but add new elements",
+        "Do something completely different each year",
+        "Acknowledge them but not make a huge deal",
+        "Other / It depends"
+      ],
+      "category": "preferences"
+    }
+  ],
+  "description": "Discover how you feel about creating traditions and rituals together.",
+  "magnet_id": 5
+}

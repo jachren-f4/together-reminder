@@ -34,7 +34,8 @@ export const GET = withAuthOrDevBypass(async (req, userId) => {
     }
 
     // Get framed profile (from cache or fresh calculation)
-    const profile = await getFramedProfile(couple.coupleId);
+    // Pass userId for relevance-aware discovery ranking
+    const profile = await getFramedProfile(couple.coupleId, userId);
 
     // Get active conversation starters
     const starters = await getActiveConversationStarters(couple.coupleId);
@@ -77,8 +78,8 @@ export const POST = withAuthOrDevBypass(async (req, userId) => {
     // Force recalculation
     const rawProfile = await recalculateAndCacheProfile(couple.coupleId);
 
-    // Get framed profile
-    const profile = await getFramedProfile(couple.coupleId);
+    // Get framed profile with relevance-aware discovery ranking
+    const profile = await getFramedProfile(couple.coupleId, userId);
 
     // Get active conversation starters
     const starters = await getActiveConversationStarters(couple.coupleId);

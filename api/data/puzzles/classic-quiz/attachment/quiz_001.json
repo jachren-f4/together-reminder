@@ -16,7 +16,13 @@
       "category": "separation",
       "metadata": {
         "connectionTendency": "reassurance_needs",
-        "scoreMapping": [1, 3, 1, 5, 3]
+        "scoreMapping": [
+          1,
+          3,
+          1,
+          5,
+          3
+        ]
       }
     },
     {
@@ -32,7 +38,13 @@
       "category": "distance_response",
       "metadata": {
         "connectionTendency": "reassurance_needs",
-        "scoreMapping": [1, 3, 5, 2, 3]
+        "scoreMapping": [
+          1,
+          3,
+          5,
+          2,
+          3
+        ]
       }
     },
     {
@@ -48,7 +60,13 @@
       "category": "fears",
       "metadata": {
         "connectionTendency": "reassurance_needs",
-        "scoreMapping": [5, 1, 4, 3, 3]
+        "scoreMapping": [
+          5,
+          1,
+          4,
+          3,
+          3
+        ]
       }
     },
     {
@@ -64,7 +82,13 @@
       "category": "dependency",
       "metadata": {
         "connectionTendency": "closeness_comfort",
-        "scoreMapping": [5, 4, 1, 3, 3]
+        "scoreMapping": [
+          5,
+          4,
+          1,
+          3,
+          3
+        ]
       }
     },
     {
@@ -80,9 +104,16 @@
       "category": "security",
       "metadata": {
         "connectionTendency": "reassurance_needs",
-        "scoreMapping": [5, 2, 4, 2, 2]
+        "scoreMapping": [
+          5,
+          2,
+          4,
+          2,
+          2
+        ]
       }
     }
   ],
-  "description": "Explore how you feel secure and loved in your relationship."
+  "description": "Explore how you feel secure and loved in your relationship.",
+  "magnet_id": 7
 }

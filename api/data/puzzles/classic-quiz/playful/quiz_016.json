@@ -1,0 +1,99 @@
+{
+  "quizId": "quiz_016",
+  "title": "Technology & Screens",
+  "branch": "playful",
+  "questions": [
+    {
+      "id": "quiz_016_q1",
+      "text": "When we're hanging out at home, I'd prefer our phones to be...",
+      "choices": [
+        "Put away so we can focus on each other",
+        "Around but not the main focus",
+        "Fine to scroll while we're chilling together",
+        "Depends on what we're doing",
+        "Other / It depends"
+      ],
+      "category": "lifestyle",
+      "metadata": {
+        "dimension": "social_energy",
+        "poleMapping": [
+          "right",
+          null,
+          "left",
+          null,
+          null
+        ]
+      }
+    },
+    {
+      "id": "quiz_016_q2",
+      "text": "When it comes to watching shows together, I'd like us to...",
+      "choices": [
+        "Have a show that's 'ours' that we only watch together",
+        "Watch whatever we're in the mood for, together or solo",
+        "Binge together when we find something good",
+        "Have our own shows and share highlights",
+        "Other / It depends"
+      ],
+      "category": "lifestyle"
+    },
+    {
+      "id": "quiz_016_q3",
+      "text": "If one of us is gaming or deep into something on our phone, I hope...",
+      "choices": [
+        "We set some boundaries so it doesn't take over quality time",
+        "The other person joins in or finds their own thing",
+        "It's fine as long as we still have connection time",
+        "We can enjoy being in the same room doing different things",
+        "Other / It depends"
+      ],
+      "category": "communication",
+      "metadata": {
+        "dimension": "social_energy",
+        "poleMapping": [
+          "right",
+          null,
+          null,
+          "left",
+          null
+        ]
+      }
+    },
+    {
+      "id": "quiz_016_q4",
+      "text": "For a cozy night in, my ideal screen situation is...",
+      "choices": [
+        "Movie or show together, phones away",
+        "Background TV while we chat or do other things",
+        "Each doing our own thing on our devices, side by side",
+        "Mix it up depending on the mood",
+        "Other / It depends"
+      ],
+      "category": "lifestyle",
+      "metadata": {
+        "dimension": "social_energy",
+        "poleMapping": [
+          "right",
+          null,
+          "left",
+          null,
+          null
+        ]
+      }
+    },
+    {
+      "id": "quiz_016_q5",
+      "text": "When it comes to social media and sharing about us, I prefer...",
+      "choices": [
+        "Keeping our relationship mostly offline",
+        "Occasional posts for special moments",
+        "Sharing more openly - I like celebrating us",
+        "Don't really think about it either way",
+        "Other / It depends"
+      ],
+      "category": "preferences"
+    }
+  ],
+  "description": "Discover your screen habits and digital life together.",
+  "magnet_id": 4
+}

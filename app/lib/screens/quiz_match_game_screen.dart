@@ -6,12 +6,14 @@ import '../config/brand/us2_theme.dart';
 import '../models/quiz_match.dart';
 import '../services/quiz_match_service.dart';
 import '../services/daily_quest_service.dart';
+import '../services/notification_service.dart';
 import '../services/storage_service.dart';
 import '../services/haptic_service.dart';
 import '../services/sound_service.dart';
 import '../utils/logger.dart';
 import '../widgets/editorial/editorial.dart';
 import '../widgets/daily_quests_widget.dart' show questRouteObserver;
+import '../widgets/notification_permission_popup.dart';
 import 'quiz_match_waiting_screen.dart';
 import 'quiz_match_results_screen.dart';
 
@@ -301,6 +303,25 @@ class _QuizMatchGameScreenState extends State<QuizMatchGameScreen>
         // Quest card will only show "RESULTS ARE READY!" when both flag is set AND quest is completed
         final contentType = '${widget.quizType}_quiz';
         await StorageService().setPendingResultsMatchId(contentType, _gameState!.match.id);
+
+        // Show notification permission popup for classic quiz if not yet authorized
+        if (widget.quizType == 'classic' && mounted) {
+          final isAuthorized = await NotificationService.isAuthorized();
+          if (!isAuthorized && mounted) {
+            final shouldEnable = await showDialog<bool>(
+              context: context,
+              barrierDismissible: false,
+              builder: (context) => const NotificationPermissionPopup(),
+            );
+
+            if (shouldEnable == true) {
+              await NotificationService.requestPermission();
+            }
+          }
+        }
+
+        if (!mounted) return;
+
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(
             builder: (context) => QuizMatchWaitingScreen(

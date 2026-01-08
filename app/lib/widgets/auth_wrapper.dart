@@ -14,7 +14,6 @@ import '../screens/name_entry_screen.dart';
 import '../screens/pairing_screen.dart';
 import '../screens/main_screen.dart';
 import '../services/notification_service.dart';
-import '../services/love_point_service.dart';
 import 'editorial/editorial_styles.dart';
 
 /// Auth wrapper that handles authentication state and navigation
@@ -117,10 +116,9 @@ class _AuthWrapperState extends State<AuthWrapper> {
 
   @override
   Widget build(BuildContext context) {
-    // Set app context for services
+    // Set app context for NotificationService
     WidgetsBinding.instance.addPostFrameCallback((_) {
       NotificationService.setAppContext(context);
-      LovePointService.setAppContext(context);
     });
 
     // Wait for bypass check to complete

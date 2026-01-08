@@ -1,51 +1,66 @@
 {
   "author": "Crossword Maker GPT",
-  "title": "Adult Intimacy Puzzle #19",
+  "title": "Casual Puzzle #19",
   "size": {
     "rows": 9,
     "cols": 7
   },
   "clues": {
-    "1": { "type": "text", "content": "SWOO_", "arrow": "down", "target_index": 8 },
-    "2": { "type": "text", "content": "After @", "arrow": "down", "target_index": 9 },
+    "1": { "type": "text", "content": "DOMI__", "arrow": "down", "target_index": 8 },
+    "2": { "type": "emoji", "content": "😤", "arrow": "down", "target_index": 9 },
     "3": { "type": "text", "content": "After O", "arrow": "down", "target_index": 10 },
     "4": { "type": "text", "content": "Morning star", "arrow": "down", "target_index": 11 },
     "5": { "type": "emoji", "content": "🎸", "arrow": "down", "target_index": 13 },
     "6": { "type": "emoji", "content": "😴", "arrow": "across", "target_index": 8 },
     "7": { "type": "text", "content": "_UY", "arrow": "across", "target_index": 13 },
-    "8": { "type": "emoji", "content": "🥘", "arrow": "down", "target_index": 23 },
-    "9": { "type": "text", "content": "Before V", "arrow": "across", "target_index": 18 },
+    "8": { "type": "text", "content": "UP__", "arrow": "across", "target_index": 15 },
+    "9": {
+      "across": { "type": "emoji", "content": "🇺🇸", "text": "_SA", "target_index": 18 },
+      "down": { "type": "text", "content": "S__", "target_index": 24 }
+    },
     "10": {
-      "across": { "type": "text", "content": "Frying ___", "target_index": 23 },
+      "across": { "type": "text", "content": "Indian bread", "target_index": 23 },
       "down": { "type": "text", "content": "Breakfast spread", "target_index": 29 }
     },
-    "12": { "type": "text", "content": "Porch relaxation", "arrow": "down", "target_index": 33 },
+    "11": { "type": "text", "content": "Dad, informally", "arrow": "down", "target_index": 52 },
+    "12": {
+      "across": { "type": "text", "content": "BI_", "target_index": 27 },
+      "down": { "type": "text", "content": "Playground fun", "target_index": 33 }
+    },
     "13": { "type": "emoji", "content": "😊", "arrow": "across", "target_index": 29 },
-    "14": { "type": "text", "content": "Quirky together", "arrow": "down", "target_index": 41 },
-    "15": { "type": "text", "content": "SWI_", "arrow": "across", "target_index": 43 },
+    "14": { "type": "text", "content": "___BALL", "arrow": "down", "target_index": 41 },
+    "15": { "type": "text", "content": "___. Pac-Man", "arrow": "across", "target_index": 43 },
     "16": { "type": "text", "content": "___ time together", "arrow": "across", "target_index": 51 },
-    "17": { "type": "text", "content": "___ out together", "arrow": "across", "target_index": 58 }
+    "17": { "type": "text", "content": "___ out together", "arrow": "across", "target_index": 58 },
+    "18": { "type": "text", "content": "___ caramba!", "arrow": "across", "target_index": 36 },
+    "19": {
+      "across": { "type": "emoji", "content": "🪪", "target_index": 47 },
+      "down": { "type": "text", "content": "Half of em", "target_index": 53 }
+    },
+    "20": { "type": "text", "content": "_GLOO", "arrow": "across", "target_index": 20 },
+    "21": { "type": "text", "content": "YE_", "arrow": "across", "target_index": 33 },
+    "22": { "type": "text", "content": "__IN", "arrow": "across", "target_index": 40 }
   },
   "date": "2025-11-27",
   "grid": [
     ".", ".", ".", ".", ".", ".", ".",
     ".", "N", "A", "P", "S", ".", "G",
-    ".", ".", ".", ".", "U", ".", "I",
-    ".", ".", "P", "A", "N", ".", "G",
+    ".", "O", "N", ".", "U", ".", "I",
+    ".", ".", "N", "A", "N", ".", "G",
     ".", "J", "O", "Y", ".", "S", ".",
-    ".", "A", "T", ".", ".", "W", "O",
-    ".", "M", ".", ".", ".", "I", "D",
+    ".", "A", "Y", ".", ".", "W", "O",
+    ".", "M", "S", ".", ".", "I", "D",
     ".", ".", "S", "P", "E", "N", "D",
     ".", ".", "H", "A", "N", "G", "."
   ],
   "gridnums": [
     0, 1, 2, 3, 4, 0, 5,
     6, 0, 0, 0, 0, 7, 0,
-    0, 0, 8, 9, 0, 0, 0,
-    0, 10, 0, 0, 0, 12, 0,
-    13, 0, 0, 0, 0, 0, 14,
-    0, 0, 0, 0, 0, 0, 0,
-    15, 0, 0, 0, 0, 0, 0,
+    8, 0, 0, 9, 0, 20, 0,
+    0, 0, 10, 0, 0, 12, 0,
+    13, 0, 0, 0, 21, 0, 14,
+    18, 0, 0, 0, 22, 0, 0,
+    15, 0, 0, 11, 19, 0, 0,
     0, 16, 0, 0, 0, 0, 0,
     0, 17, 0, 0, 0, 0, 0
   ],

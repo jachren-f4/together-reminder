@@ -1,0 +1,847 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LP Intro Enhancement - Magnet Destination Tie-in</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Nunito:wght@400;600;700&family=Pacifico&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Nunito', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: linear-gradient(180deg, #FFD1C1 0%, #FFF5F0 100%);
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    :root {
+      --bg-gradient-start: #FFD1C1;
+      --bg-gradient-end: #FFF5F0;
+      --primary-pink: #FF5E62;
+      --accent-start: #FF6B6B;
+      --accent-end: #FF9F43;
+      --cream: #FFF8F0;
+      --beige: #F5E6D8;
+      --text-dark: #3A3A3A;
+      --text-medium: #5A5A5A;
+      --text-light: #707070;
+      --gold-border: #C9A875;
+      --gold-fill-start: #FFE066;
+      --gold-fill-end: #FFB347;
+    }
+
+    .mockup-container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 10px;
+      color: var(--text-dark);
+      font-family: 'Playfair Display', serif;
+      font-weight: 700;
+    }
+
+    .subtitle {
+      text-align: center;
+      color: var(--text-medium);
+      margin-bottom: 40px;
+    }
+
+    .variant-section {
+      margin-bottom: 60px;
+    }
+
+    .variant-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.4rem;
+      font-style: italic;
+      color: var(--accent-start);
+      margin-bottom: 20px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid var(--beige);
+    }
+
+    .variants-row {
+      display: flex;
+      gap: 40px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    /* Phone Frame */
+    .phone-frame {
+      width: 375px;
+      height: 700px;
+      background: linear-gradient(180deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
+      border-radius: 40px;
+      padding: 20px;
+      box-shadow: 0 20px 60px rgba(255, 94, 98, 0.2), 0 10px 30px rgba(0,0,0,0.1);
+      overflow: hidden;
+      position: relative;
+      border: 3px solid var(--cream);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .phone-frame.overlay-demo {
+      background: rgba(0,0,0,0.4);
+    }
+
+    .status-bar {
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      color: var(--text-medium);
+      margin-bottom: 15px;
+      font-weight: 600;
+    }
+
+    /* ============================================ */
+    /* LP Intro Overlay - Enhanced with Destinations */
+    /* ============================================ */
+    .lp-intro-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0,0,0,0.6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      border-radius: 40px;
+    }
+
+    .lp-intro-card {
+      background: var(--cream);
+      border-radius: 28px;
+      padding: 32px 24px;
+      width: 100%;
+      max-width: 320px;
+      text-align: center;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+      animation: slideUp 0.4s ease-out;
+    }
+
+    @keyframes slideUp {
+      from { transform: translateY(40px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    .lp-intro-emoji {
+      font-size: 48px;
+      margin-bottom: 16px;
+    }
+
+    .lp-intro-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--text-dark);
+      margin-bottom: 12px;
+    }
+
+    .lp-intro-subtitle {
+      font-size: 0.95rem;
+      color: var(--text-medium);
+      margin-bottom: 24px;
+      line-height: 1.5;
+    }
+
+    /* Connection Bar Preview in Intro */
+    .lp-intro-bar-preview {
+      background: linear-gradient(135deg, var(--accent-start) 0%, var(--accent-end) 100%);
+      border-radius: 16px;
+      padding: 16px;
+      margin-bottom: 20px;
+    }
+
+    .lp-intro-bar-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      color: rgba(255,255,255,0.9);
+      margin-bottom: 12px;
+    }
+
+    .lp-intro-bar-track {
+      position: relative;
+      height: 50px;
+    }
+
+    .lp-intro-destination {
+      position: absolute;
+      right: 0;
+      top: 0;
+      width: 40px;
+      height: 40px;
+      border-radius: 8px;
+      overflow: hidden;
+      border: 2px solid rgba(255,255,255,0.6);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+
+    .lp-intro-destination img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .lp-intro-track-bg {
+      position: absolute;
+      left: 0;
+      right: 48px;
+      top: 15px;
+      height: 10px;
+      background: rgba(0,0,0,0.2);
+      border-radius: 5px;
+    }
+
+    .lp-intro-track-fill {
+      position: absolute;
+      left: 0;
+      top: 15px;
+      height: 10px;
+      width: 15%;
+      background: linear-gradient(90deg, var(--gold-fill-start) 0%, var(--gold-fill-end) 100%);
+      border-radius: 5px;
+      box-shadow: 0 0 10px rgba(255, 224, 102, 0.6);
+    }
+
+    .lp-intro-heart {
+      position: absolute;
+      left: calc(15% - 18px);
+      top: -3px;
+      width: 36px;
+      height: 36px;
+      background: linear-gradient(135deg, var(--accent-start) 0%, var(--accent-end) 100%);
+      border-radius: 50%;
+      border: 3px solid white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      box-shadow: 0 4px 12px rgba(255, 107, 107, 0.4);
+    }
+
+    .lp-intro-destination-hint {
+      font-size: 0.8rem;
+      color: var(--text-light);
+      margin-top: 8px;
+      font-style: italic;
+    }
+
+    /* Itinerary Teaser */
+    .lp-intro-itinerary-teaser {
+      background: linear-gradient(135deg, rgba(255,107,107,0.1) 0%, rgba(255,159,67,0.1) 100%);
+      border-radius: 12px;
+      padding: 12px 16px;
+      margin-bottom: 20px;
+      border: 1px solid var(--beige);
+    }
+
+    .itinerary-teaser-text {
+      font-size: 0.85rem;
+      color: var(--text-medium);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .itinerary-teaser-text span {
+      font-size: 16px;
+    }
+
+    .lp-intro-btn {
+      background: linear-gradient(135deg, var(--accent-start) 0%, var(--accent-end) 100%);
+      border: none;
+      color: white;
+      padding: 16px 40px;
+      border-radius: 30px;
+      font-family: 'Nunito', sans-serif;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 6px 20px rgba(255, 94, 98, 0.4);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .lp-intro-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 28px rgba(255, 94, 98, 0.5);
+    }
+
+    /* ============================================ */
+    /* Animated Version (Option A)                 */
+    /* ============================================ */
+
+    .lp-intro-bar-track-container {
+      position: relative;
+      height: 50px;
+    }
+
+    .lp-intro-track-bg {
+      position: absolute;
+      left: 0;
+      right: 48px;
+      top: 15px;
+      height: 10px;
+      background: rgba(0,0,0,0.2);
+      border-radius: 5px;
+    }
+
+    .lp-intro-track-fill {
+      position: absolute;
+      left: 0;
+      top: 15px;
+      height: 10px;
+      width: 0%;
+      background: linear-gradient(90deg, var(--gold-fill-start) 0%, var(--gold-fill-end) 100%);
+      border-radius: 5px;
+      box-shadow: 0 0 10px rgba(255, 224, 102, 0.6);
+      transition: width 1.5s ease-out;
+    }
+
+    .lp-intro-track-fill.filling {
+      width: 20%;
+    }
+
+    .lp-intro-track-fill.glowing {
+      animation: glow-pulse 1.5s ease-in-out infinite;
+    }
+
+    @keyframes glow-pulse {
+      0%, 100% { box-shadow: 0 0 10px rgba(255, 224, 102, 0.6); }
+      50% { box-shadow: 0 0 20px rgba(255, 224, 102, 1), 0 0 30px rgba(255, 224, 102, 0.5); }
+    }
+
+    .lp-intro-heart {
+      position: absolute;
+      left: -18px;
+      top: -3px;
+      width: 36px;
+      height: 36px;
+      background: linear-gradient(135deg, var(--accent-start) 0%, var(--accent-end) 100%);
+      border-radius: 50%;
+      border: 3px solid white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      box-shadow: 0 4px 12px rgba(255, 107, 107, 0.4);
+      transition: left 1.5s ease-out;
+      z-index: 2;
+    }
+
+    .lp-intro-heart.sliding {
+      left: calc(20% - 18px);
+    }
+
+    .lp-intro-destination {
+      position: absolute;
+      right: 0;
+      top: 0;
+      width: 40px;
+      height: 40px;
+      border-radius: 8px;
+      overflow: hidden;
+      border: 2px solid rgba(255,255,255,0.6);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+
+    .lp-intro-destination img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    /* Floating +30 LP badge that emerges from the fill */
+    .lp-badge-floating {
+      position: absolute;
+      left: 10%;
+      top: -30px;
+      background: linear-gradient(135deg, var(--gold-fill-start) 0%, var(--gold-fill-end) 100%);
+      color: var(--text-dark);
+      padding: 6px 14px;
+      border-radius: 16px;
+      font-weight: 700;
+      font-size: 0.9rem;
+      box-shadow: 0 4px 12px rgba(255, 224, 102, 0.5);
+      opacity: 0;
+      transform: translateY(20px) scale(0.8);
+      transition: all 0.4s ease-out;
+      z-index: 10;
+    }
+
+    .lp-badge-floating.visible {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+
+    .lp-badge-floating.float-up {
+      animation: float-up-down 2s ease-in-out infinite;
+    }
+
+    @keyframes float-up-down {
+      0%, 100% { transform: translateY(0) scale(1); }
+      50% { transform: translateY(-5px) scale(1.05); }
+    }
+
+    .pulsing-heart {
+      animation: pulse-heart 1.5s ease-in-out infinite;
+    }
+
+    @keyframes pulse-heart {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+    }
+
+    .destination-name {
+      font-weight: 700;
+      color: var(--primary-pink);
+    }
+
+    .replay-btn {
+      margin-top: 12px;
+      background: transparent;
+      border: 2px solid rgba(255,107,107,0.3);
+      color: var(--primary-pink);
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .replay-btn:hover {
+      background: rgba(255,107,107,0.1);
+    }
+
+    /* ============================================ */
+    /* Variant B - Minimal/Subtle Version          */
+    /* ============================================ */
+    .lp-intro-card.minimal {
+      padding: 28px 20px;
+    }
+
+    .minimal .lp-intro-subtitle {
+      margin-bottom: 20px;
+    }
+
+    .minimal-destination-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: var(--beige);
+      border-radius: 12px;
+      padding: 12px;
+      margin-bottom: 20px;
+    }
+
+    .minimal-destination-img {
+      width: 48px;
+      height: 48px;
+      border-radius: 8px;
+      object-fit: cover;
+      border: 2px solid var(--gold-border);
+    }
+
+    .minimal-destination-text {
+      flex: 1;
+      text-align: left;
+    }
+
+    .minimal-destination-label {
+      font-size: 0.7rem;
+      color: var(--text-light);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-weight: 600;
+    }
+
+    .minimal-destination-name {
+      font-family: 'Playfair Display', serif;
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--text-dark);
+    }
+
+    /* ============================================ */
+    /* Variant C - One-liner approach              */
+    /* ============================================ */
+    .lp-intro-card.oneliner .lp-intro-subtitle {
+      margin-bottom: 16px;
+    }
+
+    .oneliner-tagline {
+      font-size: 0.9rem;
+      color: var(--primary-pink);
+      font-weight: 600;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .oneliner-tagline img {
+      width: 24px;
+      height: 24px;
+      border-radius: 4px;
+      object-fit: cover;
+    }
+
+    /* ============================================ */
+    /* Design Notes                                */
+    /* ============================================ */
+    .design-notes {
+      margin-top: 20px;
+      padding: 20px;
+      background: var(--cream);
+      border-radius: 16px;
+      border-left: 4px solid var(--primary-pink);
+      max-width: 375px;
+    }
+
+    .design-notes h3 {
+      font-family: 'Playfair Display', serif;
+      color: var(--primary-pink);
+      margin-bottom: 12px;
+      font-style: italic;
+      font-size: 1rem;
+    }
+
+    .design-notes p {
+      color: var(--text-medium);
+      font-size: 0.85rem;
+      line-height: 1.5;
+    }
+
+    .design-notes ul {
+      margin-left: 20px;
+      color: var(--text-medium);
+      font-size: 0.85rem;
+    }
+
+    .design-notes li {
+      margin-bottom: 6px;
+    }
+
+    /* Comparison section */
+    .comparison-section {
+      margin-top: 60px;
+      padding-top: 40px;
+      border-top: 2px solid var(--beige);
+    }
+
+    .recommendation-box {
+      background: linear-gradient(135deg, rgba(255,107,107,0.15) 0%, rgba(255,159,67,0.15) 100%);
+      border-radius: 20px;
+      padding: 24px;
+      margin-top: 40px;
+      border: 2px solid var(--beige);
+    }
+
+    .recommendation-box h3 {
+      font-family: 'Playfair Display', serif;
+      color: var(--text-dark);
+      margin-bottom: 12px;
+    }
+
+    .recommendation-box p {
+      color: var(--text-medium);
+      line-height: 1.6;
+    }
+  </style>
+</head>
+<body>
+  <div class="mockup-container">
+    <h1>LP Introduction Enhancement</h1>
+    <p class="subtitle">Connecting Love Points to Romantic Destinations</p>
+
+    <!-- Variant A: Full Preview with Animation (SELECTED) -->
+    <div class="variant-section">
+      <h2 class="variant-title">Option A: Connection Bar Preview with Animation (SELECTED)</h2>
+      <p style="color: var(--text-medium); margin-bottom: 20px;">
+        Shows a mini connection bar with animated LP filling toward the first destination.
+        <strong>The bar animates with +30 LP pulsing toward the destination magnet.</strong>
+      </p>
+
+      <div class="variants-row">
+        <div>
+          <div class="phone-frame overlay-demo">
+            <div class="lp-intro-overlay">
+              <div class="lp-intro-card animated-card">
+                <div class="lp-intro-emoji pulsing-heart">💗</div>
+                <div class="lp-intro-title">Love Points</div>
+                <div class="lp-intro-subtitle">
+                  Complete quests together to earn Love Points and unlock romantic destinations!
+                </div>
+
+                <!-- Animated connection bar preview -->
+                <div class="lp-intro-bar-preview">
+                  <div class="lp-intro-bar-label">YOUR JOURNEY</div>
+                  <div class="lp-intro-bar-track-container">
+                    <div class="lp-intro-track-bg"></div>
+                    <!-- Animated fill - pulses toward destination -->
+                    <div class="lp-intro-track-fill" id="animatedFill"></div>
+                    <div class="lp-intro-heart" id="animatedHeart">💗</div>
+                    <!-- +30 LP badge that pops up from the fill -->
+                    <div class="lp-badge-floating" id="lpBadge">+30 LP</div>
+                    <!-- Dynamic: comes from MagnetCollection.getMagnetAssetPath(1) -->
+                    <div class="lp-intro-destination">
+                      <img src="austin.jpg" alt="First Destination">
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Dynamic: comes from MagnetCollection.getMagnetName(1) -->
+                <!-- TODO: Either create local images OR reorder config so Austin is first -->
+                <div class="lp-intro-destination-hint">
+                  First stop: <span class="destination-name">Austin</span>
+                </div>
+
+                <button class="lp-intro-btn" onclick="replayAnimation()">Let's Go!</button>
+                <button class="replay-btn" onclick="replayAnimation()">Replay Animation</button>
+              </div>
+            </div>
+          </div>
+          <div class="design-notes">
+            <h3>Animation Sequence</h3>
+            <ul>
+              <li><strong>0ms:</strong> Card fades in, heart emoji pulses</li>
+              <li><strong>500ms:</strong> "+30 LP" badge appears</li>
+              <li><strong>800ms:</strong> Bar fill animates from 0% to 5% (30/600)</li>
+              <li><strong>1500ms:</strong> Heart indicator slides along with fill</li>
+              <li><strong>Continuous:</strong> Subtle glow pulse on fill bar</li>
+            </ul>
+            <h3 style="margin-top: 12px;">Dynamic Data</h3>
+            <ul>
+              <li><strong>Destination image:</strong> <code>MagnetCollection.getMagnetAssetPath(1)</code></li>
+              <li><strong>Destination name:</strong> <code>MagnetCollection.getMagnetName(1)</code></li>
+              <li><strong>LP threshold:</strong> <code>Us2ConnectionBar.getCumulativeLpForMagnet(1)</code> = 600</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Variant B: Minimal -->
+    <div class="variant-section">
+      <h2 class="variant-title">Option B: Destination Card (Recommended)</h2>
+      <p style="color: var(--text-medium); margin-bottom: 20px;">
+        Simple destination preview without showing the full bar. Cleaner, still shows the reward.
+      </p>
+
+      <div class="variants-row">
+        <div>
+          <div class="phone-frame overlay-demo">
+            <div class="lp-intro-overlay">
+              <div class="lp-intro-card minimal">
+                <div class="lp-intro-emoji">💗</div>
+                <div class="lp-intro-title">Love Points</div>
+                <div class="lp-intro-subtitle">
+                  Complete quests together to earn Love Points and unlock romantic destinations.
+                </div>
+
+                <!-- Simple destination preview -->
+                <div class="minimal-destination-row">
+                  <img src="austin.jpg" alt="Austin" class="minimal-destination-img">
+                  <div class="minimal-destination-text">
+                    <div class="minimal-destination-label">First Destination</div>
+                    <div class="minimal-destination-name">Austin</div>
+                  </div>
+                </div>
+
+                <!-- Itinerary teaser -->
+                <div class="lp-intro-itinerary-teaser">
+                  <div class="itinerary-teaser-text">
+                    <span>📋</span>
+                    Each destination includes a romantic weekend itinerary
+                  </div>
+                </div>
+
+                <button class="lp-intro-btn">Let's Go!</button>
+              </div>
+            </div>
+          </div>
+          <div class="design-notes">
+            <h3>Pros</h3>
+            <ul>
+              <li>Clean and focused</li>
+              <li>Shows destination without UI complexity</li>
+              <li>Itinerary teaser adds value proposition</li>
+              <li>Easy to understand at a glance</li>
+            </ul>
+            <h3 style="margin-top: 12px;">Cons</h3>
+            <ul>
+              <li>Doesn't show the connection bar they'll use</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Variant C: One-liner -->
+    <div class="variant-section">
+      <h2 class="variant-title">Option C: Subtle One-Liner</h2>
+      <p style="color: var(--text-medium); margin-bottom: 20px;">
+        Minimal mention, lets them discover organically. Least intrusive.
+      </p>
+
+      <div class="variants-row">
+        <div>
+          <div class="phone-frame overlay-demo">
+            <div class="lp-intro-overlay">
+              <div class="lp-intro-card oneliner">
+                <div class="lp-intro-emoji">💗</div>
+                <div class="lp-intro-title">Love Points</div>
+                <div class="lp-intro-subtitle">
+                  Complete quests together to earn Love Points!
+                </div>
+
+                <div class="oneliner-tagline">
+                  <img src="austin.jpg" alt="">
+                  Unlock romantic destinations together
+                </div>
+
+                <button class="lp-intro-btn">Let's Go!</button>
+              </div>
+            </div>
+          </div>
+          <div class="design-notes">
+            <h3>Pros</h3>
+            <ul>
+              <li>Very clean and simple</li>
+              <li>Doesn't overwhelm new users</li>
+              <li>Encourages organic discovery</li>
+            </ul>
+            <h3 style="margin-top: 12px;">Cons</h3>
+            <ul>
+              <li>Might not convey enough value</li>
+              <li>Users might not understand the goal</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Recommendation -->
+    <div class="recommendation-box">
+      <h3>Selected: Option A with Animation</h3>
+      <p>
+        <strong>Option A</strong> was selected because the animated bar creates excitement and clearly shows
+        the connection between earning LP and progressing toward destinations. The animation sequence:
+      </p>
+      <ol style="margin: 12px 0 12px 20px; color: var(--text-medium);">
+        <li>Card fades in with pulsing heart emoji</li>
+        <li>"+30 LP" badge pops in with gold gradient</li>
+        <li>Bar fill animates from 0% toward the destination</li>
+        <li>Heart indicator slides along with the fill</li>
+        <li>Subtle glow pulse continues on the filled bar</li>
+      </ol>
+      <p>
+        <strong>Dynamic data:</strong> The destination image and name come from <code>MagnetCollection</code>
+        so changing the first magnet in the config automatically updates this screen.
+      </p>
+    </div>
+
+    <!-- Copy Variants -->
+    <div class="comparison-section">
+      <h2 class="variant-title">Copy Alternatives</h2>
+      <p style="color: var(--text-medium); margin-bottom: 20px;">
+        Different ways to phrase the value proposition:
+      </p>
+
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;">
+        <div class="design-notes" style="margin: 0;">
+          <h3>Version 1: Journey-focused</h3>
+          <p>"Complete quests together to earn Love Points and unlock romantic destinations."</p>
+        </div>
+        <div class="design-notes" style="margin: 0;">
+          <h3>Version 2: Reward-focused</h3>
+          <p>"Earn Love Points together and unlock curated date ideas for your next getaway."</p>
+        </div>
+        <div class="design-notes" style="margin: 0;">
+          <h3>Version 3: Action-focused</h3>
+          <p>"Play together, earn points, unlock romantic adventures."</p>
+        </div>
+        <div class="design-notes" style="margin: 0;">
+          <h3>Version 4: Emotional</h3>
+          <p>"Every quest brings you closer - and unlocks your next romantic adventure together."</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Implementation Notes -->
+    <div class="design-notes" style="margin-top: 40px; max-width: 100%;">
+      <h3>Implementation Notes</h3>
+      <ul>
+        <li><strong>When shown:</strong> After Welcome Quiz completion, before home screen (existing lp_intro_overlay.dart)</li>
+        <li><strong>Trigger:</strong> First time user completes welcome quiz and earns LP</li>
+        <li><strong>Dismissal:</strong> "Let's Go!" button navigates to home screen</li>
+        <li><strong>One-time:</strong> Only shown once per user (flag in local storage)</li>
+        <li><strong>Fallback:</strong> If no magnet image available, show emoji placeholder</li>
+      </ul>
+    </div>
+  </div>
+
+  <script>
+    // Animation sequence for the LP intro
+    function runAnimation() {
+      const fill = document.getElementById('animatedFill');
+      const heart = document.getElementById('animatedHeart');
+      const badge = document.getElementById('lpBadge');
+
+      if (!fill || !heart || !badge) return;
+
+      // Reset state
+      fill.classList.remove('filling', 'glowing');
+      heart.classList.remove('sliding');
+      badge.classList.remove('visible', 'float-up');
+
+      // Force reflow to restart transitions
+      fill.offsetHeight;
+
+      // Step 1: After 500ms, start bar filling and heart sliding
+      setTimeout(() => {
+        fill.classList.add('filling');
+        heart.classList.add('sliding');
+      }, 500);
+
+      // Step 2: After 800ms (during fill), +30 LP badge pops up from the fill
+      setTimeout(() => {
+        badge.classList.add('visible');
+      }, 800);
+
+      // Step 3: After fill completes (2000ms), add glow pulse and float animation
+      setTimeout(() => {
+        fill.classList.add('glowing');
+        badge.classList.add('float-up');
+      }, 2000);
+
+      // Step 4: After 2.5 seconds from badge appearing (800ms + 2500ms = 3300ms), hide the badge
+      setTimeout(() => {
+        badge.classList.remove('visible', 'float-up');
+      }, 3300);
+    }
+
+    function replayAnimation() {
+      runAnimation();
+    }
+
+    // Run animation on page load
+    window.addEventListener('load', () => {
+      setTimeout(runAnimation, 300);
+    });
+  </script>
+</body>
+</html>

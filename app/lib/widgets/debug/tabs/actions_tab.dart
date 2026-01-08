@@ -479,6 +479,76 @@ class _ActionsTabState extends State<ActionsTab> {
     }
   }
 
+  /// Award LP via dev API endpoint (for testing magnet unlocks)
+  Future<void> _awardLp({int amount = 30}) async {
+    setState(() => _isProcessing = true);
+
+    try {
+      final authService = AuthService();
+      final uri = Uri.parse('${SupabaseConfig.apiUrl}/api/dev/award-lp');
+      final headers = await authService.getAuthHeaders();
+
+      final response = await http.post(
+        uri,
+        headers: {
+          ...headers,
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode({'amount': amount}),
+      );
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        final newTotal = data['newTotal'] as int? ?? 0;
+        final awarded = data['awarded'] as int? ?? 0;
+
+        Logger.success('Awarded $awarded LP, new total: $newTotal', service: 'debug');
+
+        // Sync LP to local storage
+        await LovePointService.fetchAndSyncFromServer();
+
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('+$awarded LP! Total: $newTotal'),
+              duration: const Duration(seconds: 2),
+              backgroundColor: Colors.green,
+            ),
+          );
+        }
+      } else if (response.statusCode == 403) {
+        Logger.warn('Dev bypass not enabled on server', service: 'debug');
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Dev bypass not enabled on server'),
+              backgroundColor: Colors.orange,
+            ),
+          );
+        }
+      } else {
+        Logger.warn('Award LP failed: ${response.statusCode} ${response.body}', service: 'debug');
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Failed: ${response.body}'),
+              backgroundColor: Colors.red,
+            ),
+          );
+        }
+      }
+    } catch (e) {
+      Logger.error('Error awarding LP', error: e, service: 'debug');
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error: $e'), backgroundColor: Colors.red),
+        );
+      }
+    } finally {
+      setState(() => _isProcessing = false);
+    }
+  }
+
   Future<void> _resetUserData() async {
     // Show confirmation dialog
     final confirmed = await showDialog<bool>(
@@ -716,6 +786,60 @@ class _ActionsTabState extends State<ActionsTab> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
+          // Award LP (for testing magnet unlocks)
+          DebugSectionCard(
+            title: '💰 AWARD LP',
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: Colors.green.shade50,
+                    borderRadius: BorderRadius.circular(6),
+                  ),
+                  child: Text(
+                    'Award LP for testing magnet unlocks.\nCurrent couple gets LP immediately.',
+                    style: TextStyle(
+                      fontSize: 10,
+                      color: Colors.green.shade800,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 12),
+                Row(
+                  children: [
+                    Expanded(
+                      child: ElevatedButton.icon(
+                        onPressed: _isProcessing ? null : () => _awardLp(amount: 30),
+                        icon: const Icon(Icons.add, size: 18),
+                        label: const Text('+30 LP'),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.green,
+                          foregroundColor: Colors.white,
+                          minimumSize: const Size(0, 44),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: ElevatedButton.icon(
+                        onPressed: _isProcessing ? null : () => _awardLp(amount: 100),
+                        icon: const Icon(Icons.add, size: 18),
+                        label: const Text('+100 LP'),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.green.shade700,
+                          foregroundColor: Colors.white,
+                          minimumSize: const Size(0, 44),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+
           // Reset User Data
           DebugSectionCard(
             title: '🔄 RESET USER DATA',

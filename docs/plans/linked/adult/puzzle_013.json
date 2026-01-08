@@ -1,0 +1,69 @@
+{
+  "author": "Crossword Maker GPT",
+  "title": "Adult Intimacy Puzzle #13",
+  "size": {
+    "rows": 9,
+    "cols": 7
+  },
+  "clues": {
+    "1": { "type": "emoji", "content": "🍑", "arrow": "down", "target_index": 8 },
+    "2": { "type": "emoji", "content": "😮", "arrow": "down", "target_index": 11 },
+    "3": { "type": "emoji", "content": "👠", "arrow": "down", "target_index": 13 },
+    "4": { "type": "text", "content": "S_RIP", "arrow": "across", "target_index": 8 },
+    "5": { "type": "emoji", "content": "🐝", "text": "_EE", "arrow": "down", "target_index": 17 },
+    "6": { "type": "emoji", "content": "🆕", "text": "NE_", "arrow": "across", "target_index": 15 },
+    "7": {
+      "across": { "type": "text", "content": "Sexy endearment", "target_index": 17 },
+      "down": { "type": "text", "content": "__MAN", "target_index": 23 }
+    },
+    "8": { "type": "emoji", "content": "😏", "text": "L__D", "arrow": "across", "target_index": 22 },
+    "9": {
+      "across": { "type": "text", "content": "_ASSION", "target_index": 32 },
+      "down": { "type": "emoji", "content": "💎", "target_index": 38 }
+    },
+    "10": {
+      "across": { "type": "text", "content": "_EGS", "target_index": 34 },
+      "down": { "type": "text", "content": "Remove clothing", "target_index": 40 }
+    },
+    "11": { "type": "emoji", "content": "💨", "arrow": "down", "target_index": 44 },
+    "12": { "type": "text", "content": "O_RS", "arrow": "across", "target_index": 40 },
+    "13": { "type": "text", "content": "Tip of penis", "arrow": "across", "target_index": 44 },
+    "14": { "type": "text", "content": "TO_", "arrow": "down", "target_index": 62 },
+    "15": { "type": "emoji", "content": "🙇", "text": "Bent over", "arrow": "across", "target_index": 58 },
+    "16": { "type": "emoji", "content": "🔥", "text": "_OT", "arrow": "across", "target_index": 13 },
+    "17": { "type": "text", "content": "_RECTION", "arrow": "across", "target_index": 27 },
+    "18": { "type": "text", "content": "_ENSUAL", "arrow": "across", "target_index": 25 },
+    "19": { "type": "emoji", "content": "🌹", "text": "__RE", "arrow": "across", "target_index": 29 },
+    "20": { "type": "emoji", "content": "💋", "text": "_ISS", "arrow": "across", "target_index": 36 },
+    "21": { "type": "text", "content": "AF___R", "arrow": "across", "target_index": 50 },
+    "22": {
+      "across": { "type": "text", "content": "_O IT", "target_index": 54 },
+      "down": { "type": "text", "content": "_H NO", "target_index": 60 }
+    },
+    "23": { "type": "text", "content": "_ARLING", "arrow": "down", "target_index": 48 }
+  },
+  "date": "2025-11-27",
+  "grid": [
+    ".", ".", ".", ".", ".", ".", ".",
+    ".", "T", ".", ".", "G", ".", "H",
+    ".", "W", ".", "B", "A", "B", "E",
+    ".", "E", "W", ".", "S", ".", "E",
+    ".", "R", "O", ".", "P", ".", "L",
+    ".", "K", ".", "C", ".", "U", ".",
+    ".", ".", "G", "L", "A", "N", "D",
+    ".", "F", "A", "I", ".", "D", ".",
+    ".", ".", "S", "T", "O", "O", "P"
+  ],
+  "gridnums": [
+    0, 1, 0, 0, 2, 0, 3,
+    4, 0, 0, 5, 0, 16, 0,
+    6, 0, 7, 0, 0, 0, 0,
+    8, 0, 0, 18, 0, 17, 0,
+    19, 0, 0, 9, 0, 10, 0,
+    20, 0, 11, 0, 12, 0, 23,
+    0, 13, 0, 0, 0, 0, 0,
+    21, 0, 0, 0, 22, 0, 14,
+    0, 15, 0, 0, 0, 0, 0
+  ],
+  "puzzleId": "puzzle_013"
+}

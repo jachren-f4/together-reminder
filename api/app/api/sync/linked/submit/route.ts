@@ -9,6 +9,7 @@ import { withAuthOrDevBypass } from '@/lib/auth/dev-middleware';
 import { query, getClient } from '@/lib/db/pool';
 import { LP_REWARDS, SCORING } from '@/lib/lp/config';
 import { tryAwardDailyLp, LpGrantResult } from '@/lib/lp/grant-service';
+import { recordActivityPlay } from '@/lib/magnets';
 import { readFileSync } from 'fs';
 import { join } from 'path';
 
@@ -340,6 +341,9 @@ export const POST = withAuthOrDevBypass(async (req, userId, email) => {
         [coupleId]
       );
       nextBranch = branchResult.rows[0]?.current_branch ?? 0;
+
+      // Record activity play for cooldown tracking (Magnet Collection System)
+      await recordActivityPlay(coupleId, 'linked');
     }
 
     // Generate new rack and switch turns

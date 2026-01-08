@@ -1,0 +1,69 @@
+{
+  "author": "Crossword Maker GPT",
+  "title": "Adult Intimacy Puzzle #8",
+  "size": {
+    "rows": 9,
+    "cols": 7
+  },
+  "clues": {
+    "1": { "type": "text", "content": "INDOOR SPACE", "arrow": "down", "target_index": 8 },
+    "2": { "type": "emoji", "content": "📦", "arrow": "down", "target_index": 11 },
+    "3": { "type": "text", "content": "Make an effort", "arrow": "down", "target_index": 20 },
+    "4": { "type": "text", "content": "Organize together", "arrow": "across", "target_index": 17 },
+    "5": { "type": "text", "content": "TO BE __ NOT", "arrow": "across", "target_index": 22 },
+    "6": { "type": "text", "content": "Before S", "arrow": "across", "target_index": 27 },
+    "7": { "type": "emoji", "content": "🙋‍♂️", "text": "_A_", "arrow": "across", "target_index": 29 },
+    "8": {
+      "across": { "type": "emoji", "content": "🛏️", "target_index": 38 },
+      "down": { "type": "text", "content": "_YSELF", "target_index": 44 }
+    },
+    "9": { "type": "emoji", "content": "😊", "arrow": "across", "target_index": 43 },
+    "10": { "type": "text", "content": "R_AL", "arrow": "down", "target_index": 59 },
+    "11": { "type": "text", "content": "Before U", "arrow": "down", "target_index": 61 },
+    "12": { "type": "text", "content": "VISITORS", "arrow": "across", "target_index": 57 },
+    "13": { "type": "emoji", "content": "🏃‍♀️", "text": "__N", "arrow": "across", "target_index": 8 },
+    "14": {
+      "across": { "type": "text", "content": "_EE", "target_index": 11 },
+      "down": { "type": "text", "content": "_HE", "target_index": 17 }
+    },
+    "15": { "type": "text", "content": "G_", "arrow": "across", "target_index": 15 },
+    "16": { "type": "text", "content": "BO_", "arrow": "across", "target_index": 25 },
+    "17": { "type": "text", "content": "__G", "arrow": "down", "target_index": 38 },
+    "18": { "type": "text", "content": "The ___", "arrow": "down", "target_index": 39 },
+    "19": {
+      "across": { "type": "text", "content": "WH_", "target_index": 34 },
+      "down": { "type": "text", "content": "MA__", "target_index": 40 }
+    },
+    "20": { "type": "text", "content": "JU_", "arrow": "down", "target_index": 57 },
+    "21": { "type": "emoji", "content": "🫵", "text": "YO_", "arrow": "down", "target_index": 58 },
+    "22": { "type": "emoji", "content": "👍", "text": "YE_", "arrow": "down", "target_index": 60 },
+    "23": { "type": "text", "content": "_EX", "arrow": "down", "target_index": 43 },
+    "24": { "type": "text", "content": "DEA_", "arrow": "down", "target_index": 19 },
+    "25": { "type": "text", "content": "EXISTS", "arrow": "down", "target_index": 55 },
+    "26": { "type": "emoji", "content": "☝️", "text": "_P", "arrow": "down", "target_index": 9 }
+  },
+  "date": "2025-11-27",
+  "grid": [
+    ".", ".", ".", ".", ".", ".", ".",
+    ".", "R", "U", ".", "B", ".", ".",
+    ".", "O", ".", "S", "O", "R", "T",
+    ".", "O", "R", ".", "X", ".", "R",
+    ".", "M", "N", ".", ".", ".", "Y",
+    ".", ".", ".", "B", "E", "D", ".",
+    ".", "S", "M", "I", "L", "E", ".",
+    ".", ".", ".", ".", ".", ".", "I",
+    ".", "G", "U", "E", "S", "T", "S"
+  ],
+  "gridnums": [
+    0, 1, 26, 0, 2, 0, 0,
+    13, 0, 0, 14, 0, 24, 3,
+    15, 0, 4, 0, 0, 0, 0,
+    5, 0, 0, 16, 0, 6, 0,
+    7, 0, 0, 17, 18, 19, 0,
+    0, 23, 8, 0, 0, 0, 0,
+    9, 0, 0, 0, 0, 0, 25,
+    0, 20, 21, 10, 22, 11, 0,
+    12, 0, 0, 0, 0, 0, 0
+  ],
+  "puzzleId": "puzzle_008"
+}

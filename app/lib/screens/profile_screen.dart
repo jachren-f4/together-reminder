@@ -3,7 +3,6 @@ import 'package:google_fonts/google_fonts.dart';
 import '../services/storage_service.dart';
 import '../services/love_point_service.dart';
 import '../services/couple_stats_service.dart';
-import '../services/auth_service.dart';
 import '../services/us_profile_service.dart';
 import '../theme/app_theme.dart';
 import '../utils/number_formatter.dart';
@@ -11,7 +10,11 @@ import '../widgets/brand/brand_widget_factory.dart';
 import '../config/brand/brand_loader.dart';
 import '../config/brand/brand_config.dart';
 import '../config/brand/us2_theme.dart';
-import 'onboarding_screen.dart';
+import '../widgets/brand/us2/us2_tier_emoji.dart';
+import '../widgets/brand/us2/us2_connection_bar.dart';
+import '../models/magnet_collection.dart';
+import '../services/magnet_service.dart';
+import '../screens/magnet_collection_screen.dart';
 import 'us_profile_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -24,7 +27,6 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreenState extends State<ProfileScreen> {
   final StorageService _storage = StorageService();
   final CoupleStatsService _coupleStatsService = CoupleStatsService();
-  final AuthService _authService = AuthService();
 
   CoupleStats? _coupleStats;
   bool _isLoadingStats = true;
@@ -70,14 +72,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   _buildUs2Header(user, partner),
                   _buildUs2ProfileLink(),
                   _buildUs2HeroStats(stats),
-                  _buildUs2CurrentArena(stats),
-                  _buildUs2ProgressSection(stats),
+                  _buildUs2MagnetCollectionSection(),
                   const SizedBox(height: 20),
                   _buildUs2TogetherForSection(),
                   const SizedBox(height: 20),
                   _buildUs2YourActivitySection(),
-                  const SizedBox(height: 32),
-                  _buildUs2AccountSection(),
                   const SizedBox(height: 32),
                 ],
               ),
@@ -101,8 +100,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
               _buildTogetherForSection(),
               const SizedBox(height: 16),
               _buildYourActivitySection(),
-              const SizedBox(height: 32),
-              _buildAccountSection(),
               const SizedBox(height: 32),
             ],
           ),
@@ -782,138 +779,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  /// Section 7: Account Section (Sign Out)
-  Widget _buildAccountSection() {
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(left: 4, bottom: 12),
-            child: Text(
-              'Account',
-              style: AppTheme.headlineFont.copyWith(
-                fontSize: 18,
-                fontWeight: FontWeight.w600,
-                color: AppTheme.primaryBlack,
-              ),
-            ),
-          ),
-          InkWell(
-            onTap: _showLogoutConfirmation,
-            borderRadius: BorderRadius.circular(12),
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-              decoration: BoxDecoration(
-                border: Border.all(color: Colors.red[300]!, width: 1.5),
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Row(
-                children: [
-                  Icon(
-                    Icons.logout,
-                    color: Colors.red[600],
-                    size: 22,
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: Text(
-                      'Sign Out',
-                      style: AppTheme.bodyFont.copyWith(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w500,
-                        color: Colors.red[600],
-                      ),
-                    ),
-                  ),
-                  Icon(
-                    Icons.chevron_right,
-                    color: Colors.red[400],
-                    size: 20,
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  /// Show logout confirmation dialog
-  void _showLogoutConfirmation() {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text(
-          'Sign Out',
-          style: AppTheme.headlineFont.copyWith(
-            fontSize: 20,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-        content: Text(
-          'Are you sure you want to sign out? This will clear all local data and you\'ll need to sign in again.',
-          style: AppTheme.bodyFont.copyWith(fontSize: 15),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: Text(
-              'Cancel',
-              style: AppTheme.bodyFont.copyWith(
-                color: AppTheme.textSecondary,
-              ),
-            ),
-          ),
-          TextButton(
-            onPressed: () {
-              Navigator.pop(context);
-              _performLogout();
-            },
-            child: Text(
-              'Sign Out',
-              style: AppTheme.bodyFont.copyWith(
-                color: Colors.red[600],
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  /// Perform the actual logout
-  Future<void> _performLogout() async {
-    try {
-      // Clear auth tokens (Supabase session)
-      await _authService.signOut();
-
-      // Clear all Hive local data (user, partner, quests, sessions, etc.)
-      await _storage.clearAllData();
-
-      // Navigate to onboarding and clear navigation stack
-      if (mounted) {
-        Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(builder: (_) => const OnboardingScreen()),
-          (route) => false,
-        );
-      }
-    } catch (e) {
-      // Show error if something goes wrong
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Error signing out: $e'),
-            backgroundColor: Colors.red,
-          ),
-        );
-      }
-    }
-  }
-
   /// Show modal to set anniversary date
   void _showSetAnniversaryModal() {
     showModalBottomSheet(
@@ -1435,181 +1300,236 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  /// Us2 Current Arena Card
-  Widget _buildUs2CurrentArena(Map<String, dynamic> stats) {
-    final arena = stats['currentArena'] ?? {'emoji': '🏆', 'name': 'Current Arena'};
-    final tier = stats['tier'] ?? 1;
-    final emoji = arena['emoji'] ?? '🏆';
-    final arenaName = arena['name'] ?? 'Current Arena';
+  /// Us2 Magnet Collection Section - matches mockup/magnet-collection/collection-view.html
+  /// Profile Screen Section: Shows 6 magnets + "Collecting..." card
+  Widget _buildUs2MagnetCollectionSection() {
+    final collection = MagnetService().getCachedCollection();
+    final unlockedCount = collection?.unlockedCount ?? 0;
+    final nextMagnetId = collection?.nextMagnetId ?? 1;
+    final nextMagnetName = MagnetCollection.getMagnetName(nextMagnetId);
 
     return Container(
       margin: const EdgeInsets.fromLTRB(20, 20, 20, 0),
-      padding: const EdgeInsets.all(24),
+      padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(24),
+        color: Us2Theme.cream,
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: Us2Theme.beige, width: 2),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.08),
-            blurRadius: 32,
-            offset: const Offset(0, 8),
-          ),
-        ],
-      ),
-      child: Row(
-        children: [
-          Text(emoji, style: const TextStyle(fontSize: 64)),
-          const SizedBox(width: 20),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                  decoration: BoxDecoration(
-                    gradient: Us2Theme.accentGradient,
-                    borderRadius: BorderRadius.circular(4),
-                  ),
-                  child: Text(
-                    'TIER $tier OF 5',
-                    style: GoogleFonts.nunito(
-                      fontSize: 10,
-                      fontWeight: FontWeight.w700,
-                      letterSpacing: 1,
-                      color: Colors.white,
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  arenaName,
-                  style: GoogleFonts.playfairDisplay(
-                    fontSize: 26,
-                    fontWeight: FontWeight.w600,
-                    color: Us2Theme.textDark,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  /// Us2 Progress Section
-  Widget _buildUs2ProgressSection(Map<String, dynamic> stats) {
-    final nextArena = stats['nextArena'];
-
-    if (nextArena == null) {
-      return _buildUs2MaxTierCard();
-    }
-
-    final progress = stats['progressToNext'] ?? 0.0;
-    final currentLP = stats['total'] ?? 0;
-    final nextArenaMin = nextArena['min'] ?? 0;
-    final remaining = nextArenaMin - currentLP;
-    final nextArenaEmoji = nextArena['emoji'] ?? '🏆';
-    final nextArenaName = nextArena['name'] ?? 'Next Arena';
-    final cappedProgress = progress.clamp(0.0, 1.0);
-
-    return Container(
-      margin: const EdgeInsets.fromLTRB(20, 20, 20, 0),
-      padding: const EdgeInsets.all(24),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(24),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.08),
+            color: Us2Theme.primaryBrandPink.withOpacity(0.1),
             blurRadius: 32,
             offset: const Offset(0, 8),
           ),
         ],
       ),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // Header: "My Collection" + "View All →"
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                'Next: $nextArenaName',
-                style: GoogleFonts.nunito(
-                  fontSize: 14,
+                'My Collection',
+                style: GoogleFonts.playfairDisplay(
+                  fontSize: 16,
                   fontWeight: FontWeight.w600,
+                  fontStyle: FontStyle.italic,
                   color: Us2Theme.textDark,
                 ),
               ),
-              Text(
-                remaining < 10 ? '< 10 LP remaining' : '${NumberFormatter.format(remaining)} LP remaining',
-                style: GoogleFonts.nunito(
-                  fontSize: 12,
-                  color: Us2Theme.textMedium,
+              GestureDetector(
+                onTap: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => const MagnetCollectionScreen()),
+                ),
+                child: Text(
+                  'View All →',
+                  style: GoogleFonts.nunito(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w600,
+                    color: Us2Theme.primaryBrandPink,
+                  ),
                 ),
               ),
             ],
           ),
           const SizedBox(height: 16),
+          // Row of 6 magnets (48x48px)
           Row(
-            children: [
-              Expanded(
-                child: Container(
-                  height: 16,
-                  decoration: BoxDecoration(
-                    color: Us2Theme.beige,
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: FractionallySizedBox(
-                    alignment: Alignment.centerLeft,
-                    widthFactor: cappedProgress,
-                    child: Container(
-                      decoration: BoxDecoration(
-                        gradient: Us2Theme.accentGradient,
-                        borderRadius: BorderRadius.circular(8),
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: List.generate(6, (index) {
+              final magnetId = index + 1;
+              final isUnlocked = magnetId <= unlockedCount;
+              final isNext = magnetId == nextMagnetId;
+              return _buildProfileMagnet(magnetId, isUnlocked, isNext);
+            }),
+          ),
+          const SizedBox(height: 16),
+          // "Collecting..." card
+          GestureDetector(
+            onTap: () => Navigator.push(
+              context,
+              MaterialPageRoute(builder: (_) => const MagnetCollectionScreen()),
+            ),
+            child: Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [
+                    Us2Theme.gradientAccentStart.withOpacity(0.1),
+                    Us2Theme.gradientAccentEnd.withOpacity(0.1),
+                  ],
+                ),
+                borderRadius: BorderRadius.circular(14),
+                border: Border.all(color: Us2Theme.beige, width: 2),
+              ),
+              child: Row(
+                children: [
+                  // Next magnet image (40x40)
+                  Container(
+                    width: 40,
+                    height: 40,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(8),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.12),
+                          blurRadius: 8,
+                        ),
+                      ],
+                    ),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(8),
+                      child: Image.asset(
+                        MagnetCollection.getMagnetAssetPath(nextMagnetId),
+                        fit: BoxFit.cover,
+                        errorBuilder: (_, __, ___) => Container(
+                          color: const Color(0xFFFFD1C1),
+                          child: Center(
+                            child: Text(
+                              Us2ConnectionBar.getMagnetEmoji(nextMagnetId),
+                              style: const TextStyle(fontSize: 20),
+                            ),
+                          ),
+                        ),
                       ),
                     ),
                   ),
-                ),
+                  const SizedBox(width: 12),
+                  // Text info
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'COLLECTING...',
+                          style: GoogleFonts.nunito(
+                            fontSize: 10,
+                            fontWeight: FontWeight.w600,
+                            letterSpacing: 1,
+                            color: Us2Theme.textLight,
+                          ),
+                        ),
+                        Text(
+                          nextMagnetName,
+                          style: GoogleFonts.playfairDisplay(
+                            fontSize: 15,
+                            fontWeight: FontWeight.w700,
+                            color: Us2Theme.textDark,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  // Arrow
+                  Text(
+                    '→',
+                    style: GoogleFonts.nunito(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w600,
+                      color: Us2Theme.primaryBrandPink,
+                    ),
+                  ),
+                ],
               ),
-              const SizedBox(width: 16),
-              Text(nextArenaEmoji, style: const TextStyle(fontSize: 32)),
-            ],
+            ),
           ),
         ],
       ),
     );
   }
 
-  /// Us2 Max Tier Card
-  Widget _buildUs2MaxTierCard() {
+  /// Single profile magnet (48x48px) for the collection row
+  Widget _buildProfileMagnet(int magnetId, bool isUnlocked, bool isNext) {
     return Container(
-      margin: const EdgeInsets.fromLTRB(20, 20, 20, 0),
-      padding: const EdgeInsets.all(32),
+      width: 48,
+      height: 48,
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(24),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.08),
-            blurRadius: 32,
-            offset: const Offset(0, 8),
-          ),
-        ],
+        borderRadius: BorderRadius.circular(8),
+        border: isNext
+            ? Border.all(color: Us2Theme.goldBorder, width: 2)
+            : isUnlocked
+                ? null
+                : Border.all(
+                    color: Us2Theme.goldMid,
+                    width: 2,
+                    strokeAlign: BorderSide.strokeAlignInside,
+                  ),
+        boxShadow: isNext
+            ? [
+                BoxShadow(
+                  color: Us2Theme.goldBorder.withOpacity(0.3),
+                  blurRadius: 12,
+                ),
+              ]
+            : [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.12),
+                  blurRadius: 8,
+                ),
+              ],
       ),
-      child: Column(
-        children: [
-          const Text('👑', style: TextStyle(fontSize: 48)),
-          const SizedBox(height: 12),
-          Text(
-            'Max Tier Reached!',
-            style: GoogleFonts.playfairDisplay(
-              fontSize: 20,
-              fontWeight: FontWeight.w600,
-              color: Us2Theme.textDark,
-            ),
-          ),
-        ],
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(isUnlocked ? 8 : 6),
+        child: isUnlocked
+            ? Image.asset(
+                MagnetCollection.getMagnetAssetPath(magnetId),
+                fit: BoxFit.cover,
+                errorBuilder: (_, __, ___) => Container(
+                  color: const Color(0xFFFFD1C1),
+                  child: Center(
+                    child: Text(
+                      Us2ConnectionBar.getMagnetEmoji(magnetId),
+                      style: const TextStyle(fontSize: 20),
+                    ),
+                  ),
+                ),
+              )
+            : ColorFiltered(
+                colorFilter: const ColorFilter.matrix(<double>[
+                  0.2126, 0.7152, 0.0722, 0, 0,
+                  0.2126, 0.7152, 0.0722, 0, 0,
+                  0.2126, 0.7152, 0.0722, 0, 0,
+                  0, 0, 0, 1, 0,
+                ]),
+                child: Opacity(
+                  opacity: 0.4,
+                  child: Image.asset(
+                    MagnetCollection.getMagnetAssetPath(magnetId),
+                    fit: BoxFit.cover,
+                    errorBuilder: (_, __, ___) => Container(
+                      color: Us2Theme.beige,
+                      child: Center(
+                        child: Text(
+                          Us2ConnectionBar.getMagnetEmoji(magnetId),
+                          style: const TextStyle(fontSize: 20),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
       ),
     );
   }
@@ -1926,63 +1846,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
         )),
       ],
-    );
-  }
-
-  /// Us2 Account Section
-  Widget _buildUs2AccountSection() {
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 20),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(left: 4, bottom: 12),
-            child: Text(
-              'Account',
-              style: GoogleFonts.playfairDisplay(
-                fontSize: 18,
-                fontWeight: FontWeight.w600,
-                color: Us2Theme.textDark,
-              ),
-            ),
-          ),
-          GestureDetector(
-            onTap: _showLogoutConfirmation,
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                border: Border.all(color: const Color(0xFFFF6B6B), width: 2),
-                borderRadius: BorderRadius.circular(16),
-              ),
-              child: Row(
-                children: [
-                  const Text('🚪', style: TextStyle(fontSize: 20)),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: Text(
-                      'Sign Out',
-                      style: GoogleFonts.nunito(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w500,
-                        color: const Color(0xFFFF6B6B),
-                      ),
-                    ),
-                  ),
-                  Text(
-                    '›',
-                    style: TextStyle(
-                      fontSize: 18,
-                      color: const Color(0xFFFFB3B3),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ],
-      ),
     );
   }
 }

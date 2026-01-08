@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:togetherremind/config/brand/us2_theme.dart';
 import 'package:togetherremind/models/daily_quest.dart';
+import 'package:togetherremind/models/magnet_collection.dart';
 import 'package:togetherremind/services/storage_service.dart';
 import 'us2_logo.dart';
 import 'us2_day_label.dart';
@@ -8,6 +9,9 @@ import 'us2_avatar_section.dart';
 import 'us2_connection_bar.dart';
 import 'us2_section_header.dart';
 import 'us2_quest_carousel.dart';
+
+/// Callback type for calculating quest guidance state
+typedef GuidanceCallback = ({bool showGuidance, String? guidanceText}) Function(DailyQuest quest);
 
 /// Toggle: Set to true to make side quest cards the same size as daily quest cards
 /// Set to false for smaller side quest cards (original design)
@@ -21,24 +25,28 @@ class Us2HomeContent extends StatelessWidget {
   final String userName;
   final String partnerName;
   final int dayNumber;
-  final int currentLp;
-  final int nextTierLp;
+  final MagnetCollection? magnetCollection;
+  final VoidCallback? onCollectionTap;
   final List<DailyQuest> dailyQuests;
   final List<DailyQuest> sideQuests;
   final Function(DailyQuest) onQuestTap;
   final VoidCallback? onDebugTap;
+  final GuidanceCallback? getDailyQuestGuidance;
+  final GuidanceCallback? getSideQuestGuidance;
 
   Us2HomeContent({
     super.key,
     required this.userName,
     required this.partnerName,
     required this.dayNumber,
-    required this.currentLp,
-    required this.nextTierLp,
+    this.magnetCollection,
+    this.onCollectionTap,
     required this.dailyQuests,
     required this.sideQuests,
     required this.onQuestTap,
     this.onDebugTap,
+    this.getDailyQuestGuidance,
+    this.getSideQuestGuidance,
   });
 
   /// Build the hero section with overlapping logo, avatars, and connection bar
@@ -47,7 +55,7 @@ class Us2HomeContent extends StatelessWidget {
     // Heights based on mockup layout
     const logoSectionHeight = 100.0; // Logo + day label
     const avatarHeight = 235.0;
-    const connectionBarHeight = 120.0;
+    const connectionBarHeight = 115.0; // Header + spacing + track + padding
     const avatarOverlap = 80.0; // How much avatars overlap into header
 
     return SizedBox(
@@ -71,8 +79,8 @@ class Us2HomeContent extends StatelessWidget {
             left: 0,
             right: 0,
             child: Us2ConnectionBar(
-              currentLp: currentLp,
-              nextTierLp: nextTierLp,
+              collection: magnetCollection,
+              onTap: onCollectionTap,
             ),
           ),
           // Logo and day label at top - LAST in Stack so it receives touch events
@@ -109,12 +117,12 @@ class Us2HomeContent extends StatelessWidget {
               // Daily Quests section
               const Us2SectionHeader(title: 'Daily Quests'),
               Us2QuestCarousel(
-                quests: _mapQuestsToData(dailyQuests),
+                quests: _mapQuestsToData(dailyQuests, getDailyQuestGuidance),
               ),
               // Side Quests section
               const Us2SectionHeader(title: 'Side Quests'),
               Us2QuestCarousel(
-                quests: _mapQuestsToData(sideQuests),
+                quests: _mapQuestsToData(sideQuests, getSideQuestGuidance),
                 isSmall: !kSideQuestsSameAsDailyQuests,
               ),
               const SizedBox(height: 60), // Space for bottom nav
@@ -125,10 +133,11 @@ class Us2HomeContent extends StatelessWidget {
     );
   }
 
-  List<Us2QuestData> _mapQuestsToData(List<DailyQuest> quests) {
+  List<Us2QuestData> _mapQuestsToData(List<DailyQuest> quests, GuidanceCallback? getGuidance) {
     final userId = StorageService().getUser()?.id;
 
     return quests.map((quest) {
+      final guidance = getGuidance?.call(quest);
       return Us2QuestData(
         quest: quest,
         title: _getQuestTitle(quest),
@@ -138,6 +147,8 @@ class Us2HomeContent extends StatelessWidget {
         onTap: () => onQuestTap(quest),
         imagePath: _getQuestImagePath(quest),
         currentUserId: userId,
+        showGuidance: guidance?.showGuidance ?? false,
+        guidanceText: guidance?.guidanceText,
       );
     }).toList();
   }

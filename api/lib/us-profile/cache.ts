@@ -7,7 +7,8 @@
 
 import { query } from '@/lib/db/pool';
 import { UsProfileResult, calculateUsProfile } from './calculator';
-import { FramedProfile, frameProfile, ConversationStarter } from './framing';
+import { FramedProfile, frameProfile, ConversationStarter, RelevanceContext } from './framing';
+import { getDiscoveryAppreciations } from './relevance';
 
 // =============================================================================
 // Types
@@ -91,6 +92,9 @@ export async function recalculateAndCacheProfile(coupleId: string): Promise<UsPr
   // Update cache
   await updateCache(coupleId, profile);
 
+  // Track newly unlocked dimensions
+  await updateDimensionUnlocks(coupleId, profile);
+
   // Generate and store new conversation starters
   await updateConversationStarters(coupleId, profile);
 
@@ -98,17 +102,127 @@ export async function recalculateAndCacheProfile(coupleId: string): Promise<UsPr
 }
 
 /**
+ * Track when dimensions are first unlocked (have data points).
+ * Updates the dimension_unlocks JSONB column in couples table.
+ */
+async function updateDimensionUnlocks(coupleId: string, profile: UsProfileResult): Promise<void> {
+  // Get current unlock timestamps
+  const coupleResult = await query(
+    `SELECT dimension_unlocks FROM couples WHERE id = $1`,
+    [coupleId]
+  );
+
+  if (coupleResult.rows.length === 0) return;
+
+  const existingUnlocks: Record<string, string> = coupleResult.rows[0].dimension_unlocks || {};
+
+  // Find all dimensions that have data points in the profile
+  const dimensionsWithData = new Set<string>();
+
+  // Check user1 dimensions
+  for (const dim of profile.user1Insights.dimensions) {
+    if (dim.totalAnswers > 0) {
+      dimensionsWithData.add(dim.dimensionId);
+    }
+  }
+
+  // Check user2 dimensions
+  for (const dim of profile.user2Insights.dimensions) {
+    if (dim.totalAnswers > 0) {
+      dimensionsWithData.add(dim.dimensionId);
+    }
+  }
+
+  // Record timestamps for newly unlocked dimensions
+  let hasNewUnlocks = false;
+  const now = new Date().toISOString();
+
+  for (const dimId of dimensionsWithData) {
+    if (!existingUnlocks[dimId]) {
+      existingUnlocks[dimId] = now;
+      hasNewUnlocks = true;
+    }
+  }
+
+  // Only update if there are new unlocks
+  if (hasNewUnlocks) {
+    await query(
+      `UPDATE couples SET dimension_unlocks = $1 WHERE id = $2`,
+      [JSON.stringify(existingUnlocks), coupleId]
+    );
+  }
+}
+
+/**
+ * Get dimension unlock timestamps for a couple.
+ */
+export async function getDimensionUnlocks(coupleId: string): Promise<Record<string, string>> {
+  const result = await query(
+    `SELECT dimension_unlocks FROM couples WHERE id = $1`,
+    [coupleId]
+  );
+
+  if (result.rows.length === 0) return {};
+  return result.rows[0].dimension_unlocks || {};
+}
+
+/**
+ * Get couple details including user IDs and names.
+ */
+async function getCoupleDetails(coupleId: string): Promise<{
+  user1Id: string;
+  user2Id: string;
+  user1Name: string;
+  user2Name: string;
+} | null> {
+  const result = await query(
+    `SELECT c.user1_id, c.user2_id,
+            COALESCE(u1.raw_user_meta_data->>'full_name', 'Partner 1') as user1_name,
+            COALESCE(u2.raw_user_meta_data->>'full_name', 'Partner 2') as user2_name
+     FROM couples c
+     JOIN auth.users u1 ON c.user1_id = u1.id
+     JOIN auth.users u2 ON c.user2_id = u2.id
+     WHERE c.id = $1`,
+    [coupleId]
+  );
+
+  if (result.rows.length === 0) {
+    return null;
+  }
+
+  const row = result.rows[0];
+  return {
+    user1Id: row.user1_id,
+    user2Id: row.user2_id,
+    user1Name: row.user1_name || 'Partner 1',
+    user2Name: row.user2_name || 'Partner 2',
+  };
+}
+
+/**
  * Get framed profile for display.
  * Tries cache first, recalculates if stale or missing.
+ *
+ * @param coupleId - The couple's ID
+ * @param userId - The requesting user's ID (for relevance personalization)
  */
-export async function getFramedProfile(coupleId: string): Promise<FramedProfile> {
+export async function getFramedProfile(
+  coupleId: string,
+  userId?: string
+): Promise<FramedProfile> {
   // First check cache
   let cachedProfile = await getCachedProfile(coupleId);
 
   // If no cache, calculate fresh
   if (!cachedProfile) {
     const profile = await recalculateAndCacheProfile(coupleId);
-    return frameProfile(profile);
+
+    // Build relevance context if userId provided
+    const relevanceContext = userId
+      ? await buildRelevanceContext(coupleId, userId)
+      : undefined;
+
+    return frameProfile(profile, relevanceContext);
   }
 
   // Reconstruct UsProfileResult from cache
@@ -119,7 +233,48 @@ export async function getFramedProfile(coupleId: string): Promise<FramedProfile>
     totalQuizzesCompleted: cachedProfile.totalQuizzesCompleted,
   };
 
-  return frameProfile(profile);
+  // Build relevance context if userId provided
+  const relevanceContext = userId
+    ? await buildRelevanceContext(coupleId, userId)
+    : undefined;
+
+  return frameProfile(profile, relevanceContext);
+}
+
+/**
+ * Build relevance context for personalized discovery ranking.
+ */
+async function buildRelevanceContext(
+  coupleId: string,
+  userId: string
+): Promise<RelevanceContext | undefined> {
+  const coupleDetails = await getCoupleDetails(coupleId);
+  if (!coupleDetails) {
+    return undefined;
+  }
+
+  const { user1Id, user2Id, user1Name, user2Name } = coupleDetails;
+
+  // Fetch appreciations
+  const appreciationsMap = await getDiscoveryAppreciations(coupleId, user1Id, user2Id);
+
+  // Fetch dimension unlock timestamps
+  const dimensionUnlocks = await getDimensionUnlocks(coupleId);
+
+  // TODO: Calculate days since last activity (for contextual headers)
+  // For now, default to 0 (recent activity)
+  const daysSinceLastActivity = 0;
+
+  return {
+    userId,
+    user1Id,
+    user2Id,
+    user1Name,
+    user2Name,
+    appreciationsMap,
+    daysSinceLastActivity,
+    dimensionUnlocks,
+  };
 }
 
 // =============================================================================

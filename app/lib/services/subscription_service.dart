@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:purchases_flutter/purchases_flutter.dart';
+import '../config/dev_config.dart';
 import '../config/revenuecat_config.dart';
 import '../utils/logger.dart';
 
@@ -140,6 +141,11 @@ class SubscriptionService with ChangeNotifier {
   /// Uses cached value for fast synchronous access.
   /// For most up-to-date status, call [refreshPremiumStatus] first.
   bool get isPremium {
+    // Dev bypass: Skip subscription check in debug mode
+    if (kDebugMode && DevConfig.skipSubscriptionCheckInDev) {
+      return true;
+    }
+
     // On web, always return false (no IAP support)
     if (kIsWeb) return false;
 
