@@ -1,10 +1,8 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io' show Platform;
-import 'dart:math';
 import 'package:crypto/crypto.dart';
 import 'package:flutter/foundation.dart';
-import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import '../config/dev_config.dart';
@@ -373,70 +371,6 @@ class AuthService {
     }
   }
 
-  /// Sign in with Apple
-  Future<Map<String, dynamic>> signInWithApple() async {
-    try {
-      _updateAuthState(AuthState.loading);
-
-      final rawNonce = _generateNonce();
-      final hashedNonce = sha256.convert(utf8.encode(rawNonce)).toString();
-
-      final credential = await SignInWithApple.getAppleIDCredential(
-        scopes: [
-          AppleIDAuthorizationScopes.email,
-          AppleIDAuthorizationScopes.fullName,
-        ],
-        nonce: hashedNonce,
-      );
-
-      final idToken = credential.identityToken;
-      if (idToken == null) {
-        debugPrint('❌ Apple Sign-In: No ID token received');
-        _updateAuthState(AuthState.unauthenticated);
-        return {'success': false};
-      }
-
-      // Extract display name if provided
-      String? displayName;
-      if (credential.givenName != null || credential.familyName != null) {
-        final parts = [credential.givenName, credential.familyName]
-            .where((p) => p != null && p.isNotEmpty)
-            .toList();
-        if (parts.isNotEmpty) {
-          displayName = parts.join(' ');
-        }
-      }
-
-      final response = await _supabase!.auth.signInWithIdToken(
-        provider: OAuthProvider.apple,
-        idToken: idToken,
-        nonce: rawNonce,
-      );
-
-      if (response.session != null) {
-        _updateAuthState(AuthState.authenticated);
-        debugPrint('✅ Apple Sign-In successful');
-
-        if (displayName != null) {
-          await updateDisplayName(displayName);
-        }
-
-        return {'success': true, 'displayName': displayName};
-      }
-
-      _updateAuthState(AuthState.unauthenticated);
-      return {'success': false};
-    } on SignInWithAppleAuthorizationException catch (e) {
-      debugPrint('⚠️ Apple Sign-In cancelled: ${e.code}');
-      _updateAuthState(AuthState.unauthenticated);
-      return {'success': false, 'cancelled': e.code == AuthorizationErrorCode.canceled};
-    } catch (e) {
-      debugPrint('❌ Apple Sign-In error: $e');
-      _updateAuthState(AuthState.unauthenticated);
-      return {'success': false};
-    }
-  }
-
   // ============================================================================
   // SIGN OUT & TOKEN REFRESH
   // ============================================================================
@@ -544,12 +478,6 @@ class AuthService {
       default:
         break;
     }
-  }
-
-  String _generateNonce([int length = 32]) {
-    const charset = '0123456789ABCDEFGHIJKLMNOPQRSTUVXYZabcdefghijklmnopqrstuvwxyz-._';
-    final random = Random.secure();
-    return List.generate(length, (_) => charset[random.nextInt(charset.length)]).join();
   }
 
   /// Determine dev user ID based on platform/device

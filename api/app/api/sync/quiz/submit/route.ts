@@ -8,7 +8,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { withAuthOrDevBypass } from '@/lib/auth/dev-middleware';
 import { query, getClient } from '@/lib/db/pool';
 import { LP_REWARDS, LP_BONUSES } from '@/lib/lp/config';
-import { recordActivityPlay, type ActivityType } from '@/lib/magnets';
+import { recordActivityPlay, getCooldownStatus, type ActivityType } from '@/lib/magnets';
 
 export const dynamic = 'force-dynamic';
 
@@ -80,6 +80,32 @@ export const POST = withAuthOrDevBypass(async (req, userId, email) => {
         { error: 'Quiz already completed', code: 'ALREADY_COMPLETED' },
         { status: 400 }
       );
+    }
+
+    // Server-side cooldown check (safety net for client bypass)
+    // Only check if user hasn't already answered (allows completing in-progress quizzes)
+    const existingAnswersForCooldownCheck = typeof session.answers === 'string'
+      ? JSON.parse(session.answers)
+      : session.answers || {};
+
+    if (!existingAnswersForCooldownCheck[userId]) {
+      const cooldownActivityType: ActivityType = session.format_type === 'affirmation'
+        ? 'affirmation_quiz'
+        : 'classic_quiz';
+      const cooldownStatus = await getCooldownStatus(coupleId, cooldownActivityType);
+
+      if (!cooldownStatus.canPlay) {
+        await client.query('ROLLBACK');
+        return NextResponse.json(
+          {
+            error: 'Activity is on cooldown',
+            code: 'ON_COOLDOWN',
+            cooldownEndsAt: cooldownStatus.cooldownEndsAt?.toISOString(),
+            cooldownRemainingMs: cooldownStatus.cooldownRemainingMs,
+          },
+          { status: 429 }
+        );
+      }
     }
 
     // Check if user has already answered

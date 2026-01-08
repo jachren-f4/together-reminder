@@ -5,7 +5,7 @@ import 'package:togetherremind/models/daily_quest.dart';
 import 'package:togetherremind/models/magnet_collection.dart';
 import 'package:togetherremind/services/nav_style_service.dart';
 import 'us2/us2_widgets.dart';
-import 'us2/us2_home_content.dart' show GuidanceCallback;
+import 'us2/us2_home_content.dart' show GuidanceCallback, CooldownCallback;
 
 /// Factory that returns brand-appropriate widgets
 ///
@@ -48,6 +48,7 @@ class BrandWidgetFactory {
     VoidCallback? onDebugTap,
     GuidanceCallback? getDailyQuestGuidance,
     GuidanceCallback? getSideQuestGuidance,
+    CooldownCallback? getCooldownStatus,
   }) {
     if (!isUs2) return null;
 
@@ -63,6 +64,7 @@ class BrandWidgetFactory {
       onDebugTap: onDebugTap,
       getDailyQuestGuidance: getDailyQuestGuidance,
       getSideQuestGuidance: getSideQuestGuidance,
+      getCooldownStatus: getCooldownStatus,
     );
   }
 

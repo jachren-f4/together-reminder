@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:togetherremind/config/brand/us2_theme.dart';
 import 'package:togetherremind/models/daily_quest.dart';
+import 'package:togetherremind/models/cooldown_status.dart';
 import 'package:togetherremind/services/storage_service.dart';
 import 'package:togetherremind/services/couple_preferences_service.dart';
 import 'package:togetherremind/services/haptic_service.dart';
@@ -42,6 +43,7 @@ class Us2QuestCard extends StatefulWidget {
   final String? unlockCriteria;
   final bool showGuidance;
   final String? guidanceText;
+  final CooldownStatus? cooldownStatus;
 
   const Us2QuestCard({
     super.key,
@@ -59,6 +61,7 @@ class Us2QuestCard extends StatefulWidget {
     this.unlockCriteria,
     this.showGuidance = false,
     this.guidanceText,
+    this.cooldownStatus,
   });
 
   @override
@@ -365,6 +368,8 @@ class _Us2QuestCardState extends State<Us2QuestCard>
                       color: Colors.white.withOpacity(0.85),
                       height: 1.3,
                     ),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
                   ),
                   // Spacer pushes divider and button to bottom
                   const Spacer(),
@@ -422,6 +427,15 @@ class _Us2QuestCardState extends State<Us2QuestCard>
         style: _StatusStyle.locked,
         text: widget.unlockCriteria ?? 'Complete a quiz to unlock',
         icon: '🔒',
+      );
+    }
+
+    // For quests on cooldown - show remaining time
+    if (widget.cooldownStatus?.isOnCooldown == true) {
+      return _Us2StatusBadge(
+        style: _StatusStyle.onCooldown,
+        text: 'More in ${widget.cooldownStatus!.formattedRemaining}',
+        icon: '⏰',
       );
     }
 
@@ -527,6 +541,7 @@ enum _StatusStyle {
   resultsReady,
   completed,
   locked,
+  onCooldown,
 }
 
 /// Status badge widget with different styles
@@ -617,6 +632,8 @@ class _Us2StatusBadgeState extends State<_Us2StatusBadge>
         return _buildCompletedBadge();
       case _StatusStyle.locked:
         return _buildLockedBadge();
+      case _StatusStyle.onCooldown:
+        return _buildOnCooldownBadge();
     }
   }
 
@@ -872,6 +889,37 @@ class _Us2StatusBadgeState extends State<_Us2StatusBadge>
                 fontWeight: FontWeight.w600,
                 color: Colors.white,
               ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildOnCooldownBadge() {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+      decoration: BoxDecoration(
+        color: Colors.white.withOpacity(0.9),
+        borderRadius: BorderRadius.circular(25),
+        border: Border.all(
+          color: const Color(0xFFE0E0E0),
+          width: 1,
+        ),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          if (widget.icon != null) ...[
+            Text(widget.icon!, style: const TextStyle(fontSize: 14)),
+            const SizedBox(width: 8),
+          ],
+          Text(
+            widget.text,
+            style: GoogleFonts.nunito(
+              fontSize: 12,
+              fontWeight: FontWeight.w600,
+              color: const Color(0xFF888888),
             ),
           ),
         ],

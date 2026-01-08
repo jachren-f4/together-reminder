@@ -4,10 +4,13 @@ import '../services/storage_service.dart';
 import '../services/branch_manifest_service.dart';
 import '../services/quiz_match_service.dart';
 import '../services/love_point_service.dart';
+import '../services/magnet_service.dart';
 import '../models/branch_progression_state.dart';
+import '../models/cooldown_status.dart';
 import '../widgets/editorial/editorial.dart';
 import '../widgets/brand/brand_widget_factory.dart';
 import '../widgets/brand/us2/us2_intro_screen.dart';
+import '../widgets/cooldown_card.dart';
 import '../config/brand/brand_loader.dart';
 import 'quiz_match_game_screen.dart';
 
@@ -38,6 +41,7 @@ class QuizIntroScreen extends StatefulWidget {
 class _QuizIntroScreenState extends State<QuizIntroScreen>
     with TickerProviderStateMixin {
   final StorageService _storage = StorageService();
+  final MagnetService _magnetService = MagnetService();
 
   // Partner status for banner
   bool _partnerCompleted = false;
@@ -49,6 +53,9 @@ class _QuizIntroScreenState extends State<QuizIntroScreen>
 
   // LP status for reward display
   LpContentStatus? _lpStatus;
+
+  // Cooldown status
+  CooldownStatus? _cooldownStatus;
 
   // Video player state
   VideoPlayerController? _videoController;
@@ -135,12 +142,25 @@ class _QuizIntroScreenState extends State<QuizIntroScreen>
     _checkPartnerStatus();
     _loadManifestTitle();
     _checkLpStatus();
+    _checkCooldownStatus();
 
     // Start content animation immediately (don't wait for video)
     // Video is a visual enhancement, not a blocker
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _startContentAnimation();
     });
+  }
+
+  /// Check cooldown status for classic quiz
+  Future<void> _checkCooldownStatus() async {
+    // Fetch fresh cooldown data from server
+    await _magnetService.fetchAndSync();
+    final status = _magnetService.getCooldownStatus(ActivityType.classicQuiz);
+    if (mounted) {
+      setState(() {
+        _cooldownStatus = status;
+      });
+    }
   }
 
   /// Load quiz metadata directly from DailyQuest (already synced from home screen)
@@ -466,6 +486,7 @@ class _QuizIntroScreenState extends State<QuizIntroScreen>
   /// Build Us 2.0 styled intro screen using reusable component
   Widget _buildUs2Intro(String partnerName) {
     final alreadyEarned = _lpStatus?.alreadyGrantedToday == true;
+    final remainingPlays = _cooldownStatus?.remainingInBatch ?? 2;
 
     // Build badges list
     final badges = <String>['CLASSIC QUIZ'];
@@ -480,16 +501,30 @@ class _QuizIntroScreenState extends State<QuizIntroScreen>
       ('Reward', alreadyEarned ? 'Earned today' : '+30 LP', !alreadyEarned),
     ];
 
+    // Build additional content (remaining plays indicator)
+    final additionalContent = <Widget>[];
+    if (remainingPlays < 2 && !(_cooldownStatus?.isOnCooldown ?? false)) {
+      additionalContent.add(
+        Padding(
+          padding: const EdgeInsets.only(top: 16),
+          child: RemainingPlaysIndicator(remaining: remainingPlays),
+        ),
+      );
+    }
+
     return Us2IntroScreen.withQuizCard(
       buttonLabel: 'Begin Quiz',
       onStart: _startQuiz,
       onBack: () => Navigator.of(context).pop(),
-      heroEmoji: '🧩',
+      heroImagePath: 'assets/brands/us2/images/quests/classic-quiz-default.png',
       badges: badges,
       quizTitle: _quizTitle ?? 'Classic Quiz',
       quizDescription: _quizDescription,
       stats: stats,
       instructionText: 'Both you and $partnerName answer the same questions about yourselves. Then see where you align and where you differ!',
+      cooldownStatus: _cooldownStatus,
+      activityName: 'Classic Quiz',
+      additionalContent: additionalContent.isNotEmpty ? additionalContent : null,
     );
   }
 

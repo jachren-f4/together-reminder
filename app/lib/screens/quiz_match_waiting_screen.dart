@@ -10,6 +10,7 @@ import '../services/storage_service.dart';
 import '../services/daily_quest_service.dart';
 import '../services/love_point_service.dart';
 import '../services/poke_service.dart';
+import '../services/notification_service.dart';
 import '../utils/logger.dart';
 import '../widgets/editorial/editorial.dart';
 import 'quiz_match_results_screen.dart';
@@ -249,6 +250,15 @@ class _QuizMatchWaitingScreenState extends State<QuizMatchWaitingScreen>
     setState(() => _isSendingPoke = true);
 
     try {
+      // Check if user has granted push notification permission
+      // If not, this is a great moment to ask (contextually relevant)
+      final isAuthorized = await NotificationService.isAuthorized();
+      if (!isAuthorized) {
+        // Request permission - user is about to send a reminder, so they understand the value
+        await NotificationService.requestPermission();
+        // Continue regardless of result - we still try to send the poke
+      }
+
       await PokeService.sendPoke();
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(

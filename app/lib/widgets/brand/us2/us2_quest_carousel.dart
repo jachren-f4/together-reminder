@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:togetherremind/models/daily_quest.dart';
+import 'package:togetherremind/models/cooldown_status.dart';
 import 'us2_quest_card.dart';
 
 /// Horizontal scrolling carousel of quest cards
@@ -54,6 +55,7 @@ class Us2QuestCarousel extends StatelessWidget {
               unlockCriteria: questData.unlockCriteria,
               showGuidance: questData.showGuidance,
               guidanceText: questData.guidanceText,
+              cooldownStatus: questData.cooldownStatus,
             ),
           );
         },
@@ -76,6 +78,7 @@ class Us2QuestData {
   final String? unlockCriteria;
   final bool showGuidance;
   final String? guidanceText;
+  final CooldownStatus? cooldownStatus;
 
   const Us2QuestData({
     this.quest,
@@ -90,5 +93,6 @@ class Us2QuestData {
     this.unlockCriteria,
     this.showGuidance = false,
     this.guidanceText,
+    this.cooldownStatus,
   });
 }

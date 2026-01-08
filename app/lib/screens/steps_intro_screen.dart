@@ -8,6 +8,7 @@ import '../services/steps_feature_service.dart';
 import '../services/haptic_service.dart';
 import '../services/sound_service.dart';
 import '../services/poke_service.dart';
+import '../services/notification_service.dart';
 import 'steps_counter_screen.dart';
 
 /// Intro screen for Steps Together feature.
@@ -849,6 +850,15 @@ class _StepsIntroScreenState extends State<StepsIntroScreen> {
     SoundService().tap();
 
     try {
+      // Check if user has granted push notification permission
+      // If not, this is a great moment to ask (contextually relevant)
+      final isAuthorized = await NotificationService.isAuthorized();
+      if (!isAuthorized) {
+        // Request permission - user is about to send a reminder, so they understand the value
+        await NotificationService.requestPermission();
+        // Continue regardless of result - we still try to send the poke
+      }
+
       // Use poke service with steps emoji
       final success = await PokeService.sendPoke(emoji: '👟');
 

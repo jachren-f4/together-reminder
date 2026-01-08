@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:togetherremind/config/brand/us2_theme.dart';
 import 'package:togetherremind/models/daily_quest.dart';
 import 'package:togetherremind/models/magnet_collection.dart';
+import 'package:togetherremind/models/cooldown_status.dart';
 import 'package:togetherremind/services/storage_service.dart';
 import 'us2_logo.dart';
 import 'us2_day_label.dart';
@@ -12,6 +13,9 @@ import 'us2_quest_carousel.dart';
 
 /// Callback type for calculating quest guidance state
 typedef GuidanceCallback = ({bool showGuidance, String? guidanceText}) Function(DailyQuest quest);
+
+/// Callback type for calculating quest cooldown state
+typedef CooldownCallback = CooldownStatus? Function(DailyQuest quest);
 
 /// Toggle: Set to true to make side quest cards the same size as daily quest cards
 /// Set to false for smaller side quest cards (original design)
@@ -33,6 +37,7 @@ class Us2HomeContent extends StatelessWidget {
   final VoidCallback? onDebugTap;
   final GuidanceCallback? getDailyQuestGuidance;
   final GuidanceCallback? getSideQuestGuidance;
+  final CooldownCallback? getCooldownStatus;
 
   Us2HomeContent({
     super.key,
@@ -47,6 +52,7 @@ class Us2HomeContent extends StatelessWidget {
     this.onDebugTap,
     this.getDailyQuestGuidance,
     this.getSideQuestGuidance,
+    this.getCooldownStatus,
   });
 
   /// Build the hero section with overlapping logo, avatars, and connection bar
@@ -138,6 +144,7 @@ class Us2HomeContent extends StatelessWidget {
 
     return quests.map((quest) {
       final guidance = getGuidance?.call(quest);
+      final cooldown = getCooldownStatus?.call(quest);
       return Us2QuestData(
         quest: quest,
         title: _getQuestTitle(quest),
@@ -149,6 +156,7 @@ class Us2HomeContent extends StatelessWidget {
         currentUserId: userId,
         showGuidance: guidance?.showGuidance ?? false,
         guidanceText: guidance?.guidanceText,
+        cooldownStatus: cooldown,
       );
     }).toList();
   }

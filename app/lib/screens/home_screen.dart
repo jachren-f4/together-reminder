@@ -23,6 +23,7 @@ import '../services/home_polling_service.dart';
 import '../services/unlock_service.dart';
 import '../services/magnet_service.dart';
 import '../models/magnet_collection.dart';
+import '../models/cooldown_status.dart';
 import '../animations/animation_config.dart';
 import '../theme/app_theme.dart';
 import '../widgets/poke_bottom_sheet.dart';
@@ -402,6 +403,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin, 
               },
               getDailyQuestGuidance: _getDailyQuestGuidanceState,
               getSideQuestGuidance: _getSideQuestGuidanceState,
+              getCooldownStatus: _getCooldownStatus,
             ) ?? const SizedBox.shrink();
           },
         ),
@@ -1425,6 +1427,36 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin, 
 
     // Steps is skipped in guidance chain
     return (showGuidance: false, guidanceText: null);
+  }
+
+  /// Get cooldown status for a quest based on its type
+  /// Returns null if quest type doesn't have cooldowns or if not on cooldown
+  CooldownStatus? _getCooldownStatus(DailyQuest quest) {
+    // Map quest type to activity type
+    ActivityType? activityType;
+
+    switch (quest.type) {
+      case QuestType.quiz:
+        activityType = quest.formatType == 'affirmation'
+            ? ActivityType.affirmationQuiz
+            : ActivityType.classicQuiz;
+        break;
+      case QuestType.youOrMe:
+        activityType = ActivityType.youOrMe;
+        break;
+      case QuestType.linked:
+        activityType = ActivityType.linked;
+        break;
+      case QuestType.wordSearch:
+        activityType = ActivityType.wordsearch;
+        break;
+      default:
+        // Steps and other types don't have cooldowns
+        return null;
+    }
+
+    // Get cooldown status from MagnetService
+    return _magnetService.getCooldownStatus(activityType);
   }
 
   /// Get a short tier name for display in the connection bar

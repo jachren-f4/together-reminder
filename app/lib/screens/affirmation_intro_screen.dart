@@ -2,13 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 import '../config/brand/brand_loader.dart';
 import '../models/branch_progression_state.dart';
+import '../models/cooldown_status.dart';
 import '../services/branch_manifest_service.dart';
 import '../services/quiz_match_service.dart';
 import '../services/love_point_service.dart';
+import '../services/magnet_service.dart';
 import '../services/storage_service.dart';
 import '../widgets/editorial/editorial.dart';
 import '../widgets/brand/brand_widget_factory.dart';
 import '../widgets/brand/us2/us2_intro_screen.dart';
+import '../widgets/cooldown_card.dart';
 import 'quiz_match_game_screen.dart';
 
 /// Therapeutic branch names that get the "Deeper" badge
@@ -38,6 +41,7 @@ class AffirmationIntroScreen extends StatefulWidget {
 class _AffirmationIntroScreenState extends State<AffirmationIntroScreen>
     with TickerProviderStateMixin {
   final StorageService _storage = StorageService();
+  final MagnetService _magnetService = MagnetService();
 
   // Partner status for banner
   bool _partnerCompleted = false;
@@ -49,6 +53,9 @@ class _AffirmationIntroScreenState extends State<AffirmationIntroScreen>
 
   // LP status for reward display
   LpContentStatus? _lpStatus;
+
+  // Cooldown status
+  CooldownStatus? _cooldownStatus;
 
   // Video player state
   VideoPlayerController? _videoController;
@@ -134,12 +141,25 @@ class _AffirmationIntroScreenState extends State<AffirmationIntroScreen>
     _initializeVideo();
     _checkPartnerStatus();
     _checkLpStatus();
+    _checkCooldownStatus();
 
     // Start content animation immediately (don't wait for video)
     // Video is a visual enhancement, not a blocker
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _startContentAnimation();
     });
+  }
+
+  /// Check cooldown status for affirmation quiz
+  Future<void> _checkCooldownStatus() async {
+    // Fetch fresh cooldown data from server
+    await _magnetService.fetchAndSync();
+    final status = _magnetService.getCooldownStatus(ActivityType.affirmationQuiz);
+    if (mounted) {
+      setState(() {
+        _cooldownStatus = status;
+      });
+    }
   }
 
   /// Load quiz metadata directly from DailyQuest (already synced from home screen)
@@ -442,6 +462,7 @@ class _AffirmationIntroScreenState extends State<AffirmationIntroScreen>
   /// Build Us 2.0 styled intro screen using reusable component
   Widget _buildUs2Intro(String partnerName) {
     final alreadyEarned = _lpStatus?.alreadyGrantedToday == true;
+    final remainingPlays = _cooldownStatus?.remainingInBatch ?? 2;
 
     // Build badges list
     final badges = <String>['AFFIRMATION'];
@@ -456,16 +477,30 @@ class _AffirmationIntroScreenState extends State<AffirmationIntroScreen>
       ('Reward', alreadyEarned ? 'Earned today' : '+30 LP', !alreadyEarned),
     ];
 
+    // Build additional content (remaining plays indicator)
+    final additionalContent = <Widget>[];
+    if (remainingPlays < 2 && !(_cooldownStatus?.isOnCooldown ?? false)) {
+      additionalContent.add(
+        Padding(
+          padding: const EdgeInsets.only(top: 16),
+          child: RemainingPlaysIndicator(remaining: remainingPlays),
+        ),
+      );
+    }
+
     return Us2IntroScreen.withQuizCard(
       buttonLabel: 'Begin',
       onStart: _startQuiz,
       onBack: () => Navigator.of(context).pop(),
-      heroEmoji: '💑',
+      heroImagePath: 'assets/brands/us2/images/quests/affirmation-default.png',
       badges: badges,
       quizTitle: _quizTitle ?? 'Affirmation Quiz',
       quizDescription: _quizDescription,
       stats: stats,
       instructionText: 'Rate how strongly you agree with statements about yourself. Then compare with $partnerName to discover where you align!',
+      cooldownStatus: _cooldownStatus,
+      activityName: 'Affirmation Quiz',
+      additionalContent: additionalContent.isNotEmpty ? additionalContent : null,
     );
   }
 

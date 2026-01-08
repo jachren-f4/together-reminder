@@ -13,6 +13,7 @@ import {
   gameTypeToContentType,
   LpGrantResult,
 } from '@/lib/lp/grant-service';
+import { recordActivityPlay, type ActivityType } from '@/lib/magnets';
 import { recalculateAndCacheProfile } from '@/lib/us-profile/cache';
 import { readFileSync } from 'fs';
 import { join } from 'path';
@@ -506,6 +507,15 @@ export async function submitAnswers(
 
     // Advance branch progression
     await advanceBranch(couple.coupleId, match.quizType);
+
+    // Record activity play for cooldown tracking (Magnet Collection System)
+    const cooldownActivityType: ActivityType = match.quizType === 'affirmation'
+      ? 'affirmation_quiz'
+      : match.quizType === 'you_or_me'
+        ? 'you_or_me'
+        : 'classic_quiz';
+    await recordActivityPlay(couple.coupleId, cooldownActivityType);
+    console.log(`🎯 Recorded activity play for ${cooldownActivityType}`);
 
     // Recalculate Us Profile cache (async, non-blocking)
     recalculateAndCacheProfile(couple.coupleId).catch(err => {

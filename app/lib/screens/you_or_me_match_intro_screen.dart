@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 import '../models/branch_progression_state.dart';
+import '../models/cooldown_status.dart';
 import '../services/storage_service.dart';
 import '../services/branch_manifest_service.dart';
 import '../services/you_or_me_match_service.dart';
 import '../services/love_point_service.dart';
+import '../services/magnet_service.dart';
 import '../widgets/editorial/editorial.dart';
 import '../widgets/brand/brand_widget_factory.dart';
 import '../widgets/brand/us2/us2_intro_screen.dart';
+import '../widgets/cooldown_card.dart';
 import '../config/brand/brand_loader.dart';
 import 'you_or_me_match_game_screen.dart';
 
@@ -41,6 +44,7 @@ class YouOrMeMatchIntroScreen extends StatefulWidget {
 
 class _YouOrMeMatchIntroScreenState extends State<YouOrMeMatchIntroScreen>
     with TickerProviderStateMixin {
+  final MagnetService _magnetService = MagnetService();
   int? _exampleSelected; // 0 = You, 1 = Partner
 
   // Partner status for banner
@@ -53,6 +57,9 @@ class _YouOrMeMatchIntroScreenState extends State<YouOrMeMatchIntroScreen>
 
   // LP status for reward display
   LpContentStatus? _lpStatus;
+
+  // Cooldown status
+  CooldownStatus? _cooldownStatus;
 
   // Video player state
   VideoPlayerController? _videoController;
@@ -138,12 +145,25 @@ class _YouOrMeMatchIntroScreenState extends State<YouOrMeMatchIntroScreen>
     _initializeVideo();
     _checkPartnerStatus();
     _checkLpStatus();
+    _checkCooldownStatus();
 
     // Start content animation immediately (don't wait for video)
     // Video is a visual enhancement, not a blocker
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _startContentAnimation();
     });
+  }
+
+  /// Check cooldown status for you or me game
+  Future<void> _checkCooldownStatus() async {
+    // Fetch fresh cooldown data from server
+    await _magnetService.fetchAndSync();
+    final status = _magnetService.getCooldownStatus(ActivityType.youOrMe);
+    if (mounted) {
+      setState(() {
+        _cooldownStatus = status;
+      });
+    }
   }
 
   /// Load quiz metadata directly from DailyQuest (already synced from home screen)
@@ -425,6 +445,7 @@ class _YouOrMeMatchIntroScreenState extends State<YouOrMeMatchIntroScreen>
   /// Build Us 2.0 styled intro screen using reusable component
   Widget _buildUs2Intro(String partnerName) {
     final alreadyEarned = _lpStatus?.alreadyGrantedToday == true;
+    final remainingPlays = _cooldownStatus?.remainingInBatch ?? 2;
 
     // Build badges list
     final badges = <String>['YOU OR ME'];
@@ -439,6 +460,17 @@ class _YouOrMeMatchIntroScreenState extends State<YouOrMeMatchIntroScreen>
       ('Reward', alreadyEarned ? 'Earned today' : '+30 LP', !alreadyEarned),
     ];
 
+    // Build additional content (remaining plays indicator)
+    final additionalContent = <Widget>[];
+    if (remainingPlays < 2 && !(_cooldownStatus?.isOnCooldown ?? false)) {
+      additionalContent.add(
+        Padding(
+          padding: const EdgeInsets.only(top: 16),
+          child: RemainingPlaysIndicator(remaining: remainingPlays),
+        ),
+      );
+    }
+
     return Us2IntroScreen.withQuizCard(
       buttonLabel: 'Start Game',
       onStart: () {
@@ -451,12 +483,15 @@ class _YouOrMeMatchIntroScreenState extends State<YouOrMeMatchIntroScreen>
         );
       },
       onBack: () => Navigator.of(context).pop(),
-      heroEmoji: '🤔',
+      heroImagePath: 'assets/brands/us2/images/quests/you-or-me.png',
       badges: badges,
       quizTitle: _quizTitle ?? 'You or Me',
       quizDescription: _quizDescription,
       stats: stats,
       instructionText: 'For each trait, decide who it describes better—you or $partnerName.',
+      cooldownStatus: _cooldownStatus,
+      activityName: 'You or Me',
+      additionalContent: additionalContent.isNotEmpty ? additionalContent : null,
     );
   }
 

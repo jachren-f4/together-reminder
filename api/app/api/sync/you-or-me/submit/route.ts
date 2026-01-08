@@ -9,7 +9,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { withAuthOrDevBypass } from '@/lib/auth/dev-middleware';
 import { query, getClient } from '@/lib/db/pool';
 import { LP_REWARDS } from '@/lib/lp/config';
-import { recordActivityPlay } from '@/lib/magnets';
+import { recordActivityPlay, getCooldownStatus } from '@/lib/magnets';
 
 export const dynamic = 'force-dynamic';
 
@@ -86,6 +86,30 @@ export const POST = withAuthOrDevBypass(async (req, userId, email) => {
         { error: 'Session already completed', code: 'ALREADY_COMPLETED' },
         { status: 400 }
       );
+    }
+
+    // Get existing answers for cooldown and duplicate check
+    const existingAnswersRaw = typeof session.answers === 'string'
+      ? JSON.parse(session.answers)
+      : session.answers || {};
+
+    // Server-side cooldown check (safety net for client bypass)
+    // Only check if user hasn't submitted any answers yet (allows completing in-progress games)
+    if (!existingAnswersRaw[userId] || existingAnswersRaw[userId].length === 0) {
+      const cooldownStatus = await getCooldownStatus(coupleId, 'you_or_me');
+
+      if (!cooldownStatus.canPlay) {
+        await client.query('ROLLBACK');
+        return NextResponse.json(
+          {
+            error: 'Activity is on cooldown',
+            code: 'ON_COOLDOWN',
+            cooldownEndsAt: cooldownStatus.cooldownEndsAt?.toISOString(),
+            cooldownRemainingMs: cooldownStatus.cooldownRemainingMs,
+          },
+          { status: 429 }
+        );
+      }
     }
 
     // Get existing answers

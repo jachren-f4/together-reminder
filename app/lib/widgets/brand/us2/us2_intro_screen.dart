@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:togetherremind/config/brand/us2_theme.dart';
+import 'package:togetherremind/models/cooldown_status.dart';
+import 'package:togetherremind/widgets/cooldown_card.dart';
 
 /// Base intro screen layout for Us 2.0 brand
 ///
@@ -23,6 +25,7 @@ class Us2IntroScreen extends StatelessWidget {
 
   // Card layout (variant 2) - scrollable with cards
   final String? heroEmoji;
+  final String? heroImagePath;
   final List<String>? badges;
   final String? quizTitle;
   final String? quizDescription;
@@ -31,6 +34,10 @@ class Us2IntroScreen extends StatelessWidget {
 
   // Additional content (badges, partner status, etc.)
   final List<Widget>? additionalContent;
+
+  // Cooldown support
+  final CooldownStatus? cooldownStatus;
+  final String? activityName; // For cooldown card display
 
   const Us2IntroScreen({
     super.key,
@@ -43,6 +50,7 @@ class Us2IntroScreen extends StatelessWidget {
     this.emoji,
     // Card layout
     this.heroEmoji,
+    this.heroImagePath,
     this.badges,
     this.quizTitle,
     this.quizDescription,
@@ -50,6 +58,9 @@ class Us2IntroScreen extends StatelessWidget {
     this.instructionText,
     // Extras
     this.additionalContent,
+    // Cooldown
+    this.cooldownStatus,
+    this.activityName,
   });
 
   /// Factory for simple centered layout (original style)
@@ -61,6 +72,8 @@ class Us2IntroScreen extends StatelessWidget {
     required VoidCallback onStart,
     VoidCallback? onBack,
     List<Widget>? additionalContent,
+    CooldownStatus? cooldownStatus,
+    String? activityName,
   }) {
     return Us2IntroScreen(
       title: title,
@@ -70,6 +83,8 @@ class Us2IntroScreen extends StatelessWidget {
       onStart: onStart,
       onBack: onBack,
       additionalContent: additionalContent,
+      cooldownStatus: cooldownStatus,
+      activityName: activityName,
     );
   }
 
@@ -78,29 +93,36 @@ class Us2IntroScreen extends StatelessWidget {
     required String buttonLabel,
     required VoidCallback onStart,
     VoidCallback? onBack,
-    String heroEmoji = '🤔',
+    String? heroEmoji,
+    String? heroImagePath,
     List<String> badges = const [],
     String? quizTitle,
     String? quizDescription,
     List<(String, String, bool)>? stats,
     String? instructionText,
     List<Widget>? additionalContent,
+    CooldownStatus? cooldownStatus,
+    String? activityName,
   }) {
     return Us2IntroScreen(
       buttonLabel: buttonLabel,
       onStart: onStart,
       onBack: onBack,
       heroEmoji: heroEmoji,
+      heroImagePath: heroImagePath,
       badges: badges,
       quizTitle: quizTitle,
       quizDescription: quizDescription,
       stats: stats,
       instructionText: instructionText,
       additionalContent: additionalContent,
+      cooldownStatus: cooldownStatus,
+      activityName: activityName,
     );
   }
 
-  bool get _useCardLayout => heroEmoji != null || quizTitle != null;
+  bool get _useCardLayout => heroEmoji != null || heroImagePath != null || quizTitle != null;
+  bool get _isOnCooldown => cooldownStatus?.isOnCooldown ?? false;
 
   @override
   Widget build(BuildContext context) {
@@ -121,21 +143,34 @@ class Us2IntroScreen extends StatelessWidget {
                     child: _Us2BackButton(onTap: onBack!),
                   ),
                 ),
-              // Main content
+              // Main content - show cooldown card if on cooldown
               Expanded(
-                child: _useCardLayout ? _buildCardLayout() : _buildSimpleLayout(),
+                child: _isOnCooldown
+                    ? _buildCooldownLayout()
+                    : (_useCardLayout ? _buildCardLayout() : _buildSimpleLayout()),
               ),
-              // Bottom button
-              Padding(
-                padding: const EdgeInsets.all(24),
-                child: Us2StartButton(
-                  label: buttonLabel,
-                  onPressed: onStart,
+              // Bottom button - hide when on cooldown
+              if (!_isOnCooldown)
+                Padding(
+                  padding: const EdgeInsets.all(24),
+                  child: Us2StartButton(
+                    label: buttonLabel,
+                    onPressed: onStart,
+                  ),
                 ),
-              ),
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  /// Layout shown when activity is on cooldown
+  Widget _buildCooldownLayout() {
+    return Center(
+      child: CooldownCard(
+        status: cooldownStatus!,
+        activityName: activityName ?? 'quiz',
       ),
     );
   }
@@ -203,8 +238,9 @@ class Us2IntroScreen extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Hero image
-          if (heroEmoji != null) _Us2HeroImage(emoji: heroEmoji!),
-          if (heroEmoji != null) const SizedBox(height: 20),
+          if (heroImagePath != null || heroEmoji != null)
+            _Us2HeroImage(emoji: heroEmoji, imagePath: heroImagePath),
+          if (heroImagePath != null || heroEmoji != null) const SizedBox(height: 20),
 
           // Badges
           if (badges != null && badges!.isNotEmpty) ...[
@@ -289,11 +325,12 @@ class _Us2BackButton extends StatelessWidget {
   }
 }
 
-/// Hero image section with emoji
+/// Hero image section with emoji or image
 class _Us2HeroImage extends StatelessWidget {
-  final String emoji;
+  final String? emoji;
+  final String? imagePath;
 
-  const _Us2HeroImage({required this.emoji});
+  const _Us2HeroImage({this.emoji, this.imagePath});
 
   @override
   Widget build(BuildContext context) {
@@ -301,14 +338,16 @@ class _Us2HeroImage extends StatelessWidget {
       width: double.infinity,
       height: 180,
       decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [
-            Us2Theme.primaryBrandPink.withValues(alpha: 0.3),
-            Us2Theme.gradientAccentEnd.withValues(alpha: 0.2),
-          ],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
+        gradient: imagePath == null
+            ? LinearGradient(
+                colors: [
+                  Us2Theme.primaryBrandPink.withValues(alpha: 0.3),
+                  Us2Theme.gradientAccentEnd.withValues(alpha: 0.2),
+                ],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              )
+            : null,
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
@@ -318,8 +357,23 @@ class _Us2HeroImage extends StatelessWidget {
           ),
         ],
       ),
-      child: Center(
-        child: Text(emoji, style: const TextStyle(fontSize: 80)),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(16),
+        child: imagePath != null
+            ? Image.asset(
+                imagePath!,
+                fit: BoxFit.cover,
+                alignment: Alignment.topCenter,
+                errorBuilder: (context, error, stackTrace) {
+                  // Fallback to emoji if image fails
+                  return Center(
+                    child: Text(emoji ?? '🎯', style: const TextStyle(fontSize: 80)),
+                  );
+                },
+              )
+            : Center(
+                child: Text(emoji ?? '🎯', style: const TextStyle(fontSize: 80)),
+              ),
       ),
     );
   }
