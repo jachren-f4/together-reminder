@@ -20,6 +20,7 @@ import 'package:togetherremind/services/auth_service.dart';
 import 'package:togetherremind/services/app_bootstrap_service.dart';
 import 'package:togetherremind/services/unlock_service.dart';
 import 'package:togetherremind/services/subscription_service.dart';
+import 'already_subscribed_screen.dart';
 import 'welcome_quiz_intro_screen.dart';
 import 'paywall_screen.dart';
 import 'package:togetherremind/test/test_keys.dart';
@@ -120,12 +121,45 @@ class _PairingScreenState extends State<PairingScreen> {
 
   /// Complete onboarding after pairing - check subscription and unlock state, then navigate
   Future<void> _completeOnboarding() async {
-    // Check if user already has premium subscription
     final subscriptionService = SubscriptionService();
+
+    // Transfer existing subscription to new couple if user has one
+    // This handles the case where a subscriber unpaired and re-paired with a new partner
+    if (subscriptionService.hasRevenueCatEntitlement) {
+      Logger.debug('User has existing subscription - transferring to new couple', service: 'pairing');
+      try {
+        await subscriptionService.activateForCouple(
+          productId: subscriptionService.currentProductId ?? 'transferred',
+          expiresAt: subscriptionService.currentExpiresAt,
+        );
+        Logger.info('Subscription transferred to new couple', service: 'pairing');
+      } catch (e) {
+        Logger.error('Failed to transfer subscription', error: e, service: 'pairing');
+        // Continue anyway - webhook will also handle this
+      }
+    }
+
+    // Check couple-level subscription status from server (partner may have already subscribed)
+    // This handles the case where partner subscribed before we paired
+    Logger.debug('Checking couple subscription status...', service: 'pairing');
+    final coupleStatus = await subscriptionService.checkCoupleSubscription();
+
+    // Check if couple or user already has premium
     final isPremium = subscriptionService.isPremium;
 
     if (mounted) {
-      if (!isPremium) {
+      if (coupleStatus?.isActive == true && coupleStatus?.subscribedByMe == false) {
+        // Partner already subscribed - show AlreadySubscribedScreen
+        Logger.debug('Partner already subscribed - showing AlreadySubscribedScreen', service: 'pairing');
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(
+            builder: (context) => AlreadySubscribedScreen(
+              subscriberName: coupleStatus?.subscriberName ?? 'Your partner',
+              onContinue: () => _navigateAfterPaywall(context),
+            ),
+          ),
+        );
+      } else if (!isPremium) {
         // Show paywall for non-premium users
         Logger.debug('Showing paywall - user is not premium', service: 'pairing');
         Navigator.of(context).pushReplacement(

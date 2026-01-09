@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../services/storage_service.dart';
 import '../services/love_point_service.dart';
 import '../services/couple_stats_service.dart';
 import '../services/us_profile_service.dart';
+import '../services/subscription_service.dart';
 import '../theme/app_theme.dart';
 import '../utils/number_formatter.dart';
 import '../widgets/brand/brand_widget_factory.dart';
@@ -13,8 +15,10 @@ import '../config/brand/us2_theme.dart';
 import '../widgets/brand/us2/us2_tier_emoji.dart';
 import '../widgets/brand/us2/us2_connection_bar.dart';
 import '../models/magnet_collection.dart';
+import '../models/couple_subscription_status.dart';
 import '../services/magnet_service.dart';
 import '../screens/magnet_collection_screen.dart';
+import 'paywall_screen.dart';
 import 'us_profile_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -77,6 +81,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   _buildUs2TogetherForSection(),
                   const SizedBox(height: 20),
                   _buildUs2YourActivitySection(),
+                  const SizedBox(height: 20),
+                  _buildUs2SubscriptionSection(),
                   const SizedBox(height: 32),
                 ],
               ),
@@ -1846,6 +1852,216 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
         )),
       ],
+    );
+  }
+
+  /// Us2 Subscription Section
+  Widget _buildUs2SubscriptionSection() {
+    final subscriptionService = SubscriptionService();
+    final coupleStatus = subscriptionService.coupleStatus;
+    final isPremium = subscriptionService.isPremium;
+
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 20),
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Section header
+          Row(
+            children: [
+              Container(
+                width: 32,
+                height: 32,
+                decoration: BoxDecoration(
+                  gradient: isPremium
+                      ? const LinearGradient(
+                          colors: [Us2Theme.primaryBrandPink, Us2Theme.gradientAccentEnd],
+                        )
+                      : null,
+                  color: isPremium ? null : Us2Theme.textLight,
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Icon(
+                  isPremium ? Icons.star_rounded : Icons.star_outline_rounded,
+                  color: Colors.white,
+                  size: 20,
+                ),
+              ),
+              const SizedBox(width: 12),
+              Text(
+                'Subscription',
+                style: GoogleFonts.playfairDisplay(
+                  fontSize: 20,
+                  fontWeight: FontWeight.w600,
+                  color: Us2Theme.textDark,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+
+          // Subscription status
+          if (isPremium) ...[
+            // Premium badge
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+              decoration: BoxDecoration(
+                gradient: const LinearGradient(
+                  colors: [Us2Theme.primaryBrandPink, Us2Theme.gradientAccentEnd],
+                ),
+                borderRadius: BorderRadius.circular(16),
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Icon(Icons.check_circle, color: Colors.white, size: 16),
+                  const SizedBox(width: 6),
+                  Text(
+                    'PREMIUM ACTIVE',
+                    style: GoogleFonts.nunito(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w700,
+                      color: Colors.white,
+                      letterSpacing: 0.5,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 12),
+
+            // Who manages the subscription
+            if (coupleStatus != null) ...[
+              Text(
+                coupleStatus.subscribedByMe
+                    ? 'You manage this subscription'
+                    : 'Managed by ${coupleStatus.subscriberName ?? 'your partner'}',
+                style: GoogleFonts.nunito(
+                  fontSize: 14,
+                  color: Us2Theme.textMedium,
+                ),
+              ),
+              if (coupleStatus.subscribedByMe && coupleStatus.expiresAt != null) ...[
+                const SizedBox(height: 4),
+                Text(
+                  'Renews ${_formatSubscriptionDate(coupleStatus.expiresAt!)}',
+                  style: GoogleFonts.nunito(
+                    fontSize: 13,
+                    color: Us2Theme.textLight,
+                  ),
+                ),
+              ],
+              const SizedBox(height: 16),
+
+              // Manage button (only for subscriber)
+              if (coupleStatus.subscribedByMe)
+                SizedBox(
+                  width: double.infinity,
+                  child: OutlinedButton(
+                    onPressed: _openSubscriptionManagement,
+                    style: OutlinedButton.styleFrom(
+                      foregroundColor: Us2Theme.primaryBrandPink,
+                      side: const BorderSide(color: Us2Theme.primaryBrandPink),
+                      padding: const EdgeInsets.symmetric(vertical: 12),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                    child: Text(
+                      'Manage Subscription',
+                      style: GoogleFonts.nunito(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                ),
+            ] else ...[
+              Text(
+                'You have full access to all features',
+                style: GoogleFonts.nunito(
+                  fontSize: 14,
+                  color: Us2Theme.textMedium,
+                ),
+              ),
+            ],
+          ] else ...[
+            // Not premium
+            Text(
+              'Upgrade to unlock all features',
+              style: GoogleFonts.nunito(
+                fontSize: 14,
+                color: Us2Theme.textMedium,
+              ),
+            ),
+            const SizedBox(height: 12),
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                onPressed: _showPaywall,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Us2Theme.primaryBrandPink,
+                  foregroundColor: Colors.white,
+                  padding: const EdgeInsets.symmetric(vertical: 12),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+                child: Text(
+                  'Get Premium',
+                  style: GoogleFonts.nunito(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+
+  /// Format date for subscription display
+  String _formatSubscriptionDate(DateTime date) {
+    final months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    return '${months[date.month - 1]} ${date.day}, ${date.year}';
+  }
+
+  /// Open subscription management (App Store/Play Store)
+  Future<void> _openSubscriptionManagement() async {
+    // iOS App Store subscription management URL
+    const iosUrl = 'https://apps.apple.com/account/subscriptions';
+    // Android Play Store subscription management URL
+    const androidUrl = 'https://play.google.com/store/account/subscriptions';
+
+    final url = Uri.parse(Theme.of(context).platform == TargetPlatform.iOS ? iosUrl : androidUrl);
+
+    if (await canLaunchUrl(url)) {
+      await launchUrl(url, mode: LaunchMode.externalApplication);
+    }
+  }
+
+  /// Show paywall screen
+  void _showPaywall() {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => PaywallScreen(
+          onContinue: () => Navigator.of(context).pop(),
+        ),
+      ),
     );
   }
 }

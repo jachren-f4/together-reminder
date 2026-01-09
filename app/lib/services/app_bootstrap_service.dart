@@ -273,12 +273,27 @@ class AppBootstrapService extends ChangeNotifier {
     }
   }
 
-  /// Phase 2d: Sync subscription state with RevenueCat
+  /// Phase 2d: Sync subscription state with RevenueCat and check couple subscription
   Future<void> _syncSubscription() async {
     try {
       final userId = AuthService().userId;
       if (userId != null) {
+        // Log in to RevenueCat
         await SubscriptionService().logIn(userId);
+
+        // Retry any pending activation from a previous failed purchase
+        await SubscriptionService().retryPendingActivation();
+
+        // Check couple-level subscription status (partner may have subscribed)
+        final coupleStatus = await SubscriptionService().checkCoupleSubscription();
+        if (coupleStatus != null) {
+          SubscriptionService().setCoupleStatus(coupleStatus);
+          Logger.debug(
+            'Bootstrap: couple subscription status=${coupleStatus.status}, isActive=${coupleStatus.isActive}',
+            service: 'bootstrap',
+          );
+        }
+
         Logger.debug('Bootstrap: subscription synced', service: 'bootstrap');
       }
     } catch (e) {

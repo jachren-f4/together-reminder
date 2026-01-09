@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -5,6 +7,7 @@ import 'package:purchases_flutter/purchases_flutter.dart';
 import '../config/brand/us2_theme.dart';
 import '../services/subscription_service.dart';
 import '../utils/logger.dart';
+import 'already_subscribed_screen.dart';
 
 /// Paywall screen shown after pairing or when subscription lapses
 ///
@@ -44,10 +47,45 @@ class _PaywallScreenState extends State<PaywallScreen> {
   Offerings? _offerings;
   String? _errorMessage;
 
+  /// Polls for couple subscription status (partner might subscribe)
+  Timer? _pollTimer;
+
   @override
   void initState() {
     super.initState();
     _loadOfferings();
+    _startPolling();
+  }
+
+  @override
+  void dispose() {
+    _pollTimer?.cancel();
+    super.dispose();
+  }
+
+  /// Poll every 5 seconds to check if partner subscribed
+  void _startPolling() {
+    _pollTimer = Timer.periodic(const Duration(seconds: 5), (_) async {
+      try {
+        final status = await _subscriptionService.checkCoupleSubscription();
+        if (status != null && status.isActive && mounted) {
+          _pollTimer?.cancel();
+          // Partner subscribed! Navigate to AlreadySubscribedScreen
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (_) => AlreadySubscribedScreen(
+                subscriberName: status.subscriberName ?? 'Your partner',
+                onContinue: widget.onContinue,
+              ),
+            ),
+          );
+        }
+      } catch (e) {
+        // Ignore polling errors
+        Logger.debug('Paywall poll error: $e', service: 'paywall');
+      }
+    });
   }
 
   Future<void> _loadOfferings() async {
@@ -95,13 +133,45 @@ class _PaywallScreenState extends State<PaywallScreen> {
     setState(() => _isPurchasing = true);
 
     try {
-      final success = await _subscriptionService.purchasePackage(package);
-      if (success && mounted) {
+      // Check if partner already subscribed before initiating purchase
+      final status = await _subscriptionService.checkCoupleSubscription();
+      if (status != null && status.isActive && mounted) {
+        _pollTimer?.cancel();
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (_) => AlreadySubscribedScreen(
+              subscriberName: status.subscriberName ?? 'Your partner',
+              onContinue: widget.onContinue,
+            ),
+          ),
+        );
+        return;
+      }
+
+      final result = await _subscriptionService.purchasePackage(package);
+      if (!mounted) return;
+
+      if (result.isAlreadySubscribed) {
+        // Partner subscribed during our purchase attempt
+        _pollTimer?.cancel();
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (_) => AlreadySubscribedScreen(
+              subscriberName: result.subscriberName ?? 'Your partner',
+              onContinue: widget.onContinue,
+            ),
+          ),
+        );
+      } else if (result.success) {
         widget.onContinue();
       }
     } on PlatformException catch (e) {
       // User cancelled or other error
       Logger.debug('Purchase cancelled or failed: $e', service: 'paywall');
+    } catch (e) {
+      Logger.error('Purchase error', error: e, service: 'paywall');
     } finally {
       if (mounted) {
         setState(() => _isPurchasing = false);
@@ -113,12 +183,27 @@ class _PaywallScreenState extends State<PaywallScreen> {
     setState(() => _isRestoring = true);
 
     try {
-      final restored = await _subscriptionService.restorePurchases();
-      if (restored && mounted) {
+      final result = await _subscriptionService.restorePurchases();
+      if (!mounted) return;
+
+      if (result.isCoupleActive) {
+        // Partner subscribed - show success screen
+        _pollTimer?.cancel();
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (_) => AlreadySubscribedScreen(
+              subscriberName: result.subscriberName ?? 'Your partner',
+              onContinue: widget.onContinue,
+            ),
+          ),
+        );
+      } else if (result.isRevenueCatRestored) {
+        // Own subscription restored
         widget.onContinue();
-      } else if (mounted) {
+      } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('No previous subscription found')),
+          const SnackBar(content: Text('No subscription found')),
         );
       }
     } catch (e) {
@@ -299,10 +384,11 @@ class _PaywallScreenState extends State<PaywallScreen> {
         ],
 
         // Title - different for lapsed users
+        // Variant 7: "One Subscription. Two Accounts." messaging
         Text(
           widget.isLapsedUser
               ? 'Welcome Back!'
-              : 'Your Journey to a\nDeeper Connection',
+              : 'One Subscription.\nTwo Accounts.',
           textAlign: TextAlign.center,
           style: GoogleFonts.playfairDisplay(
             fontSize: widget.isLapsedUser ? 28 : 26,
@@ -317,7 +403,7 @@ class _PaywallScreenState extends State<PaywallScreen> {
         Text(
           widget.isLapsedUser
               ? 'We\'ve missed you'
-              : 'Starts with just a few minutes a day',
+              : 'You subscribe, your partner gets access too',
           style: GoogleFonts.nunito(
             fontSize: 15,
             fontStyle: FontStyle.italic,
