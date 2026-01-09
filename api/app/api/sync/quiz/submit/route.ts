@@ -204,10 +204,11 @@ export const POST = withAuthOrDevBypass(async (req, userId, email) => {
       );
 
       // Record activity play for cooldown tracking (Magnet Collection System)
+      // Pass client to avoid connection pool deadlock
       const cooldownActivityType: ActivityType = session.format_type === 'affirmation'
         ? 'affirmation_quiz'
         : 'classic_quiz';
-      await recordActivityPlay(coupleId, cooldownActivityType);
+      await recordActivityPlay(coupleId, cooldownActivityType, client);
     }
 
     // Update session

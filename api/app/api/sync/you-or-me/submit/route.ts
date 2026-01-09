@@ -187,7 +187,8 @@ export const POST = withAuthOrDevBypass(async (req, userId, email) => {
       );
 
       // Record activity play for cooldown tracking (Magnet Collection System)
-      await recordActivityPlay(coupleId, 'you_or_me');
+      // Pass client to avoid connection pool deadlock
+      await recordActivityPlay(coupleId, 'you_or_me', client);
     }
 
     // Update session

@@ -9,7 +9,8 @@
  * Activity types: classic_quiz, affirmation_quiz, you_or_me, linked, wordsearch
  */
 
-import { query } from '../db/pool';
+import { query, getClient } from '../db/pool';
+import { PoolClient } from 'pg';
 
 export type ActivityType =
   | 'classic_quiz'
@@ -104,72 +105,88 @@ export async function getCooldownStatus(
 /**
  * Record a play and potentially start cooldown
  * Call this AFTER a game is completed (results reviewed)
+ *
+ * @param coupleId - The couple's ID
+ * @param activityType - The activity type being played
+ * @param existingClient - Optional existing PoolClient to use (for transactions)
  */
 export async function recordActivityPlay(
   coupleId: string,
-  activityType: ActivityType
+  activityType: ActivityType,
+  existingClient?: PoolClient
 ): Promise<{
   cooldownStarted: boolean;
   cooldownEndsAt: Date | null;
   remainingInBatch: number;
 }> {
-  // Get current cooldowns
-  const result = await query(
-    'SELECT cooldowns FROM couples WHERE id = $1',
-    [coupleId]
-  );
+  // Use existing client or get a new one
+  const client = existingClient || await getClient();
+  const shouldReleaseClient = !existingClient;
 
-  if (result.rows.length === 0) {
-    throw new Error(`Couple not found: ${coupleId}`);
-  }
+  try {
+    // Get current cooldowns
+    const result = await client.query(
+      'SELECT cooldowns FROM couples WHERE id = $1',
+      [coupleId]
+    );
 
-  const cooldowns: CooldownsMap = result.rows[0].cooldowns || {};
-  const now = new Date();
+    if (result.rows.length === 0) {
+      throw new Error(`Couple not found: ${coupleId}`);
+    }
 
-  // Get or create entry for this activity
-  let entry = cooldowns[activityType];
+    const cooldowns: CooldownsMap = result.rows[0].cooldowns || {};
+    const now = new Date();
 
-  // Check if cooldown expired - if so, reset
-  if (entry?.cooldown_until) {
-    const cooldownEnd = new Date(entry.cooldown_until);
-    if (cooldownEnd <= now) {
-      // Cooldown expired, reset
+    // Get or create entry for this activity
+    let entry = cooldowns[activityType];
+
+    // Check if cooldown expired - if so, reset
+    if (entry?.cooldown_until) {
+      const cooldownEnd = new Date(entry.cooldown_until);
+      if (cooldownEnd <= now) {
+        // Cooldown expired, reset
+        entry = { batch_count: 0, cooldown_until: null };
+      }
+    }
+
+    if (!entry) {
       entry = { batch_count: 0, cooldown_until: null };
     }
+
+    // Increment batch count
+    entry.batch_count += 1;
+
+    let cooldownStarted = false;
+    let cooldownEndsAt: Date | null = null;
+
+    // Check if we've hit the batch limit
+    if (entry.batch_count >= BATCH_SIZE) {
+      cooldownStarted = true;
+      cooldownEndsAt = new Date(now.getTime() + COOLDOWN_HOURS * 60 * 60 * 1000);
+      entry.cooldown_until = cooldownEndsAt.toISOString();
+    }
+
+    // Update cooldowns in database
+    cooldowns[activityType] = entry;
+
+    await client.query(
+      'UPDATE couples SET cooldowns = $1, updated_at = NOW() WHERE id = $2',
+      [JSON.stringify(cooldowns), coupleId]
+    );
+
+    const remainingInBatch = cooldownStarted ? 0 : BATCH_SIZE - entry.batch_count;
+
+    return {
+      cooldownStarted,
+      cooldownEndsAt,
+      remainingInBatch,
+    };
+  } finally {
+    // Only release client if we created it
+    if (shouldReleaseClient) {
+      client.release();
+    }
   }
-
-  if (!entry) {
-    entry = { batch_count: 0, cooldown_until: null };
-  }
-
-  // Increment batch count
-  entry.batch_count += 1;
-
-  let cooldownStarted = false;
-  let cooldownEndsAt: Date | null = null;
-
-  // Check if we've hit the batch limit
-  if (entry.batch_count >= BATCH_SIZE) {
-    cooldownStarted = true;
-    cooldownEndsAt = new Date(now.getTime() + COOLDOWN_HOURS * 60 * 60 * 1000);
-    entry.cooldown_until = cooldownEndsAt.toISOString();
-  }
-
-  // Update cooldowns in database
-  cooldowns[activityType] = entry;
-
-  await query(
-    'UPDATE couples SET cooldowns = $1, updated_at = NOW() WHERE id = $2',
-    [JSON.stringify(cooldowns), coupleId]
-  );
-
-  const remainingInBatch = cooldownStarted ? 0 : BATCH_SIZE - entry.batch_count;
-
-  return {
-    cooldownStarted,
-    cooldownEndsAt,
-    remainingInBatch,
-  };
 }
 
 /**

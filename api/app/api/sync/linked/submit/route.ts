@@ -343,7 +343,8 @@ export const POST = withAuthOrDevBypass(async (req, userId, email) => {
       nextBranch = branchResult.rows[0]?.current_branch ?? 0;
 
       // Record activity play for cooldown tracking (Magnet Collection System)
-      await recordActivityPlay(coupleId, 'linked');
+      // Pass client to avoid connection pool deadlock
+      await recordActivityPlay(coupleId, 'linked', client);
     }
 
     // Generate new rack and switch turns

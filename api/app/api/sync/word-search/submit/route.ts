@@ -296,7 +296,8 @@ export const POST = withAuthOrDevBypass(async (req, userId, email) => {
       nextBranch = branchResult.rows[0]?.current_branch ?? 0;
 
       // Record activity play for cooldown tracking (Magnet Collection System)
-      await recordActivityPlay(coupleId, 'wordsearch');
+      // Pass client to avoid connection pool deadlock
+      await recordActivityPlay(coupleId, 'wordsearch', client);
     }
 
     // Switch turns if turn complete and game not over
