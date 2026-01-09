@@ -42,6 +42,9 @@ class SubscriptionService with ChangeNotifier {
   // Couple-level subscription status (one subscription, two accounts)
   CoupleSubscriptionStatus? _coupleSubscriptionStatus;
 
+  // Dev bypass flag (set via triple-tap on paywall for testing)
+  bool _devBypass = false;
+
   // Stream for subscription status changes (legacy - use addListener instead)
   final _premiumStatusController = StreamController<bool>.broadcast();
   Stream<bool> get premiumStatusStream => _premiumStatusController.stream;
@@ -54,6 +57,18 @@ class SubscriptionService with ChangeNotifier {
 
   /// Get the current couple subscription status
   CoupleSubscriptionStatus? get coupleStatus => _coupleSubscriptionStatus;
+
+  /// Set dev bypass flag (triple-tap on paywall for testing)
+  ///
+  /// When true, [isPremium] returns true regardless of subscription state.
+  /// Use this for testing the app without subscribing in TestFlight builds.
+  void setDevBypass(bool enabled) {
+    _devBypass = enabled;
+    notifyListeners();
+  }
+
+  /// Check if dev bypass is active
+  bool get isDevBypassActive => _devBypass;
 
   /// Initialize RevenueCat SDK
   ///
@@ -154,6 +169,11 @@ class SubscriptionService with ChangeNotifier {
   /// Checks both couple-level subscription and RevenueCat entitlement.
   /// For most up-to-date status, call [refreshPremiumStatus] first.
   bool get isPremium {
+    // Dev bypass via triple-tap on paywall (works in release builds)
+    if (_devBypass) {
+      return true;
+    }
+
     // Dev bypass: Skip subscription check in debug mode
     if (kDebugMode && DevConfig.skipSubscriptionCheckInDev) {
       return true;

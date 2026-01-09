@@ -50,6 +50,10 @@ class _PaywallScreenState extends State<PaywallScreen> {
   /// Polls for couple subscription status (partner might subscribe)
   Timer? _pollTimer;
 
+  /// Triple-tap bypass for testing
+  int _devTapCount = 0;
+  DateTime? _lastTapTime;
+
   @override
   void initState() {
     super.initState();
@@ -61,6 +65,67 @@ class _PaywallScreenState extends State<PaywallScreen> {
   void dispose() {
     _pollTimer?.cancel();
     super.dispose();
+  }
+
+  /// Handle triple-tap on title for dev bypass
+  void _handleDevTap() {
+    final now = DateTime.now();
+
+    // Reset if more than 500ms since last tap
+    if (_lastTapTime != null && now.difference(_lastTapTime!).inMilliseconds > 500) {
+      _devTapCount = 0;
+    }
+
+    _lastTapTime = now;
+    _devTapCount++;
+
+    if (_devTapCount >= 3) {
+      _devTapCount = 0;
+      _activateDevBypass();
+    }
+  }
+
+  /// Activate dev bypass - grants temporary subscription access
+  Future<void> _activateDevBypass() async {
+    // Haptic feedback
+    HapticFeedback.heavyImpact();
+
+    // Show confirmation
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Dev Bypass'),
+        content: const Text('Bypass paywall for testing?\n\nThis will grant temporary access without subscribing.'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: const Text('Bypass'),
+          ),
+        ],
+      ),
+    );
+
+    if (confirmed == true && mounted) {
+      // Set dev bypass flag on subscription service
+      _subscriptionService.setDevBypass(true);
+      Logger.info('Dev bypass activated', service: 'paywall');
+
+      // Show success toast
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Dev bypass activated'),
+          backgroundColor: Colors.green,
+          duration: Duration(seconds: 2),
+        ),
+      );
+
+      // Continue to app
+      widget.onContinue();
+    }
   }
 
   /// Poll every 5 seconds to check if partner subscribed
@@ -385,16 +450,20 @@ class _PaywallScreenState extends State<PaywallScreen> {
 
         // Title - different for lapsed users
         // Variant 7: "One Subscription. Two Accounts." messaging
-        Text(
-          widget.isLapsedUser
-              ? 'Welcome Back!'
-              : 'One Subscription.\nTwo Accounts.',
-          textAlign: TextAlign.center,
-          style: GoogleFonts.playfairDisplay(
-            fontSize: widget.isLapsedUser ? 28 : 26,
-            fontWeight: FontWeight.w600,
-            color: Us2Theme.textDark,
-            height: 1.25,
+        // Triple-tap for dev bypass (testing)
+        GestureDetector(
+          onTap: _handleDevTap,
+          child: Text(
+            widget.isLapsedUser
+                ? 'Welcome Back!'
+                : 'One Subscription.\nTwo Accounts.',
+            textAlign: TextAlign.center,
+            style: GoogleFonts.playfairDisplay(
+              fontSize: widget.isLapsedUser ? 28 : 26,
+              fontWeight: FontWeight.w600,
+              color: Us2Theme.textDark,
+              height: 1.25,
+            ),
           ),
         ),
         const SizedBox(height: 8),

@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Paywall - Already Subscribed (Partner View)</title>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Playfair+Display:wght@400;600&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Nunito', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #1a1a2e;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .phone-frame {
+            width: 375px;
+            height: 812px;
+            background: linear-gradient(180deg, #FFF5F5 0%, #FFF0E5 100%);
+            border-radius: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+            overflow: hidden;
+            position: relative;
+        }
+        .status-bar {
+            height: 44px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 24px;
+            font-size: 14px;
+            font-weight: 600;
+            color: #2D2D2D;
+        }
+        .content {
+            padding: 0 20px 24px;
+            height: calc(100% - 44px);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        /* Success State */
+        .success-icon {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, #E8618C 0%, #F4A467 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+            margin-bottom: 32px;
+            box-shadow:
+                0 8px 32px rgba(232,97,140,0.4),
+                0 0 60px rgba(232,97,140,0.2);
+            animation: pulse 2s ease-in-out infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .success-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 32px;
+            font-weight: 600;
+            color: #2D2D2D;
+            margin-bottom: 12px;
+        }
+
+        .success-subtitle {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 32px;
+            line-height: 1.5;
+        }
+        .partner-name {
+            color: #E8618C;
+            font-weight: 700;
+        }
+
+        /* Premium Card */
+        .premium-card {
+            background: white;
+            border-radius: 20px;
+            padding: 24px;
+            width: 100%;
+            max-width: 300px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            margin-bottom: 32px;
+        }
+        .premium-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: linear-gradient(135deg, #E8618C 0%, #F4A467 100%);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            margin-bottom: 16px;
+        }
+        .premium-badge-icon {
+            font-size: 14px;
+        }
+
+        .premium-text {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.6;
+        }
+        .premium-features {
+            margin-top: 16px;
+            text-align: left;
+        }
+        .premium-feature {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 8px;
+        }
+        .premium-check {
+            color: #4CAF50;
+            font-size: 16px;
+        }
+        .premium-feature-text {
+            font-size: 13px;
+            color: #666;
+        }
+
+        /* CTA Button */
+        .cta-btn {
+            width: 100%;
+            max-width: 300px;
+            padding: 18px;
+            background: linear-gradient(135deg, #E8618C 0%, #F4A467 100%);
+            border: none;
+            border-radius: 50px;
+            font-size: 16px;
+            font-weight: 700;
+            color: white;
+            cursor: pointer;
+            box-shadow:
+                0 8px 24px rgba(232,97,140,0.4),
+                0 4px 12px rgba(232,97,140,0.3);
+        }
+
+        /* Note */
+        .note {
+            font-size: 12px;
+            color: #999;
+            margin-top: 16px;
+            max-width: 280px;
+        }
+
+        .back-link {
+            position: absolute;
+            top: 60px;
+            left: 24px;
+            font-size: 13px;
+            color: #888;
+            text-decoration: none;
+        }
+        .back-link:hover {
+            color: #E8618C;
+        }
+
+        /* Confetti animation (decorative) */
+        .confetti {
+            position: absolute;
+            font-size: 24px;
+            animation: fall 3s ease-in-out infinite;
+            opacity: 0.6;
+        }
+        .confetti:nth-child(1) { left: 10%; top: 15%; animation-delay: 0s; }
+        .confetti:nth-child(2) { left: 85%; top: 20%; animation-delay: 0.5s; }
+        .confetti:nth-child(3) { left: 20%; top: 75%; animation-delay: 1s; }
+        .confetti:nth-child(4) { left: 75%; top: 70%; animation-delay: 1.5s; }
+        @keyframes fall {
+            0%, 100% { transform: translateY(0) rotate(0deg); opacity: 0.6; }
+            50% { transform: translateY(10px) rotate(10deg); opacity: 0.8; }
+        }
+    </style>
+</head>
+<body>
+    <a href="index.html" class="back-link">< Back to variants</a>
+
+    <div class="phone-frame">
+        <div class="status-bar">
+            <span>9:41</span>
+            <span>100%</span>
+        </div>
+
+        <!-- Decorative confetti -->
+        <span class="confetti">&#10024;</span>
+        <span class="confetti">&#127881;</span>
+        <span class="confetti">&#128150;</span>
+        <span class="confetti">&#10024;</span>
+
+        <div class="content">
+            <!-- Success Icon -->
+            <div class="success-icon">&#10003;</div>
+
+            <h1 class="success-title">You're All Set!</h1>
+            <p class="success-subtitle">
+                <span class="partner-name">Emma</span> already subscribed for both of you.
+            </p>
+
+            <!-- Premium Card -->
+            <div class="premium-card">
+                <div class="premium-badge">
+                    <span class="premium-badge-icon">&#9733;</span>
+                    <span>PREMIUM ACTIVE</span>
+                </div>
+                <p class="premium-text">
+                    You have full access to Us 2.0 Premium. Enjoy all features together!
+                </p>
+                <div class="premium-features">
+                    <div class="premium-feature">
+                        <span class="premium-check">&#10003;</span>
+                        <span class="premium-feature-text">Daily couples quests</span>
+                    </div>
+                    <div class="premium-feature">
+                        <span class="premium-check">&#10003;</span>
+                        <span class="premium-feature-text">All game modes</span>
+                    </div>
+                    <div class="premium-feature">
+                        <span class="premium-check">&#10003;</span>
+                        <span class="premium-feature-text">Fresh content weekly</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CTA -->
+            <button class="cta-btn">Let's Go! &#10084;&#65039;</button>
+
+            <p class="note">
+                Subscription is managed by Emma. You'll keep access as long as the subscription is active.
+            </p>
+        </div>
+    </div>
+</body>
+</html>

@@ -222,18 +222,6 @@ class _NameEntryScreenState extends State<NameEntryScreen> {
                         ),
                       ),
 
-                      const SizedBox(height: 12),
-
-                      // Subtitle
-                      Text(
-                        'Your name will appear to your partner when you connect.',
-                        style: GoogleFonts.nunito(
-                          fontSize: 15,
-                          color: Us2Theme.textMedium,
-                          height: 1.5,
-                        ),
-                      ),
-
                       const SizedBox(height: 32),
 
                       // Input label
