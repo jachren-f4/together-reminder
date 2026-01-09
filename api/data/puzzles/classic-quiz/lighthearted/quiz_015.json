@@ -1,0 +1,115 @@
+{
+  "quizId": "quiz_015",
+  "title": "Fun & Play",
+  "branch": "lighthearted",
+  "description": "Explore how you bring joy and playfulness into your relationship.",
+  "magnet_id": 0,
+  "questions": [
+    {
+      "id": "quiz_015_q1",
+      "text": "My idea of fun together is...",
+      "choices": [
+        "Going on adventures",
+        "Cozy nights in",
+        "Being silly and playful",
+        "Trying new experiences"
+      ],
+      "category": "together",
+      "metadata": {
+        "dimension": "novelty_preference",
+        "poleMapping": ["right", "left", "neutral", "right"],
+        "therapeutic": {
+          "rationale": "Play and fun are essential to relationship health—research shows couples who laugh together report higher satisfaction. But 'fun' means different things to different people. Adventure-seekers need novelty; homebodies need comfort; playful types need silliness; experience-seekers need growth; relaxed types need ease. Understanding each other's fun language helps you create joy together rather than accidentally draining each other.",
+          "framework": "self_expansion_theory",
+          "whenDifferent": "The adventurer may feel their partner is boring; the homebody may feel exhausted by constant activity. Take turns: their kind of fun this week, yours next. The goal is both of you experiencing joy, which means sometimes stretching into each other's style.",
+          "whenSame": "Shared fun preferences make leisure time easy. You'll naturally gravitate toward the same activities. Lean into this—regularly scheduled fun in your shared style keeps the relationship energized.",
+          "journalPrompt": "When was the last time you had genuine fun together? What were you doing? How can you create more of those moments?"
+        }
+      }
+    },
+    {
+      "id": "quiz_015_q2",
+      "text": "When it comes to humor, I appreciate...",
+      "choices": [
+        "Witty banter and wordplay",
+        "Physical comedy and silliness",
+        "Dark or dry humor",
+        "Inside jokes between us"
+      ],
+      "category": "connection",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Shared humor is one of the strongest predictors of relationship longevity. Couples who laugh together build positive emotional reserves that buffer against conflict. Humor style matters—what's hilarious to one person may fall flat or even offend another. Finding your shared comedic language creates a private world of inside jokes and playfulness that strengthens your bond.",
+          "framework": "positive_psychology",
+          "whenDifferent": "The witty partner may feel their jokes aren't appreciated; the silly partner may feel judged. Humor differences rarely cause major conflict, but can create small disconnects. Appreciate your partner's style even if it's not your own—laughing together matters more than matching exactly.",
+          "whenSame": "Shared humor style means you can make each other laugh effortlessly. This is a genuine relationship asset. Cultivate it—develop your inside jokes, your recurring bits, your shared comedic shorthand.",
+          "journalPrompt": "What makes you laugh hardest? What's an inside joke between you that still lands? How often do you genuinely laugh together?"
+        }
+      }
+    },
+    {
+      "id": "quiz_015_q3",
+      "text": "For games and competition, I'm...",
+      "choices": [
+        "Very competitive - I play to win",
+        "Competitive but fun about it",
+        "More about the experience than winning",
+        "Not really into games"
+      ],
+      "category": "together",
+      "metadata": {
+        "dimension": "competitiveness",
+        "poleMapping": ["right", "neutral", "left", "left"],
+        "therapeutic": {
+          "rationale": "Competitiveness in play can either energize or derail couples. For some, healthy competition adds excitement and playful tension. For others, a partner's competitiveness feels aggressive or makes games unenjoyable. Games are supposed to be fun—if one partner is stressed or the other is bored, the activity isn't serving the relationship.",
+          "framework": "play_theory",
+          "whenDifferent": "The competitive partner may feel their intensity is unwelcome; the casual partner may feel the fun is being sucked out. Choose games that work for both: maybe cooperative games, or games where you're on the same team. Save intense competition for opponents outside the relationship.",
+          "whenSame": "Matched competitiveness means games work for both of you. If you're both intense, go all out. If neither cares about winning, enjoy the social experience. Either way, play serves connection.",
+          "journalPrompt": "How do you feel when you lose to your partner? How do you feel when you win? What does this reveal about your relationship with competition?"
+        }
+      }
+    },
+    {
+      "id": "quiz_015_q4",
+      "text": "Spontaneity in our relationship means...",
+      "choices": [
+        "Surprise adventures or dates",
+        "Changing plans when something better comes up",
+        "Random acts of affection",
+        "I prefer knowing what's coming"
+      ],
+      "category": "together",
+      "metadata": {
+        "dimension": "planning_preference",
+        "poleMapping": ["right", "right", "neutral", "left"],
+        "therapeutic": {
+          "rationale": "Spontaneity adds novelty and excitement, but tolerance for it varies widely. Some people thrive on surprise—it activates the same reward pathways as early romance. Others experience unexpected changes as stressful, even when the change is positive. Understanding your partner's spontaneity tolerance helps you surprise them in ways that delight rather than destabilize.",
+          "framework": "personality_psychology",
+          "whenDifferent": "The spontaneous partner may feel controlled; the planner may feel anxious or steamrolled. Negotiate: some areas can be spontaneous (dinner choice), others need advance notice (weekend plans). Honor both needs.",
+          "whenSame": "Matched spontaneity preferences make daily life smoother. You'll naturally agree on how much structure you need. Build your life accordingly—spontaneous couples can keep calendars loose; planners can create reliable routines.",
+          "journalPrompt": "How do you feel when plans change unexpectedly? What kind of surprises delight you versus stress you? Does your partner know the difference?"
+        }
+      }
+    },
+    {
+      "id": "quiz_015_q5",
+      "text": "What keeps our relationship playful is...",
+      "choices": [
+        "Teasing and flirting",
+        "Trying new things together",
+        "Having adventures",
+        "Making each other laugh"
+      ],
+      "category": "connection",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Playfulness is the antidote to the heaviness that can accumulate in long-term relationships. Couples who maintain playfulness report higher satisfaction and stronger connection. But playfulness takes different forms—some couples tease, others explore, others adventure, others laugh, others are silly. Knowing what keeps YOUR relationship light helps you prioritize it.",
+          "framework": "relationship_science",
+          "whenDifferent": "Different playfulness styles means you energize each other in different ways. The teaser may not understand why their partner wants adventures; the explorer may not appreciate comfortable silliness. Both are valid—try each other's style.",
+          "whenSame": "Shared playfulness style means you naturally keep things light in the same way. Protect this—schedule it if you have to. Relationships that lose playfulness often lose passion too.",
+          "journalPrompt": "When was the last time you were truly playful together? What were you doing? How can you bring more of that energy into daily life?"
+        }
+      }
+    }
+  ]
+}

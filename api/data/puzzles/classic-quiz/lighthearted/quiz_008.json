@@ -2,6 +2,8 @@
   "quizId": "quiz_008",
   "title": "Home Life",
   "branch": "lighthearted",
+  "description": "Explore your domestic dynamics and shared space preferences.",
+  "magnet_id": 1,
   "questions": [
     {
       "id": "quiz_008_q1",
@@ -10,10 +12,20 @@
         "Low - I like things tidy",
         "Medium - some mess is fine",
         "High - I don't notice much",
-        "It depends on the room",
-        "Other / I have specific pet peeves"
+        "It depends on the room"
       ],
-      "category": "lifestyle"
+      "category": "lifestyle",
+      "metadata": {
+        "dimension": "domestic_tidiness",
+        "poleMapping": ["left", "neutral", "right", "neutral"],
+        "therapeutic": {
+          "rationale": "Differences in tidiness tolerance are among the most common sources of daily friction in couples. Research shows this isn't about one person being 'right' about cleanliness—it's about different thresholds for environmental stimulation. People with lower mess tolerance often experience visual clutter as genuine stress, while those with higher tolerance may genuinely not register disorder. Neither is lazy or uptight; they're experiencing the same space differently.",
+          "framework": "environmental_psychology",
+          "whenDifferent": "The tidier partner often feels burdened by invisible labor—they notice and fix things their partner doesn't see. The messier partner may feel criticized or controlled. The solution isn't meeting in the middle (which leaves both unhappy) but finding specific agreements: which spaces matter most to whom, and what 'clean enough' means in each area.",
+          "whenSame": "Shared tidiness standards reduce daily friction significantly. If you're both tidy, you'll naturally maintain spaces without nagging. If you're both relaxed about mess, neither feels judged. Be mindful that shared standards can become rigid—allow flexibility when life gets busy.",
+          "journalPrompt": "Which specific messes bother you most? Which don't you notice? Have you ever explicitly discussed your different 'mess thresholds' with your partner, or do conflicts arise in the moment?"
+        }
+      }
     },
     {
       "id": "quiz_008_q2",
@@ -22,10 +34,18 @@
         "Splitting them evenly",
         "Each doing what we're good at",
         "Tackling them together",
-        "Trading off who does what",
-        "Other / Hiring help if possible"
+        "Trading off who does what"
       ],
-      "category": "together"
+      "category": "together",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "How couples divide household labor is both practical and deeply symbolic. Research consistently shows that perceived fairness in domestic work correlates strongly with relationship satisfaction—and 'perceived fairness' matters more than objective equality. What feels fair depends on each person's standards, preferences, and the invisible mental load of managing the household. The approach you prefer reveals something about how you value efficiency, togetherness, autonomy, and equity.",
+          "framework": "relationship_science",
+          "whenDifferent": "Different preferences here often mean different values are at play. One partner may prioritize efficiency (each do what we're good at), another may prioritize bonding (tackling things together), another fairness (splitting evenly). Name the underlying value, not just the preference—this prevents 'you never help' arguments that miss the real issue.",
+          "whenSame": "Aligned approaches to household labor is a genuine gift. You'll naturally coordinate without negotiation. Use this alignment to build routines that work—but stay flexible when life circumstances change (new job, baby, illness).",
+          "journalPrompt": "Who manages the 'mental load' of remembering what needs to be done? Is your current system working, or does it need a reset? What would 'fair' look like to each of you?"
+        }
+      }
     },
     {
       "id": "quiz_008_q3",
@@ -34,10 +54,18 @@
         "Calm and peaceful",
         "Lively with activity",
         "Cozy and warm",
-        "Organized and functional",
-        "Other / Depends on my mood"
+        "Organized and functional"
       ],
-      "category": "lifestyle"
+      "category": "lifestyle",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Our home environment preferences often reflect what we need to regulate our nervous systems. Some people need external calm to feel internal calm; others feel deadened by too much quiet and need stimulation to feel alive. This isn't just aesthetic preference—it's about what kind of environment helps you show up as your best self. Understanding your partner's ideal environment helps you create a home that restores both of you.",
+          "framework": "attachment_theory",
+          "whenDifferent": "When one partner needs quiet and another needs activity, home can become a battleground—or an opportunity for creative compromise. Consider zoning: a peaceful corner for the calm-seeker, a space for activity for the lively one. Or time-blocking: quiet mornings, livelier evenings. The goal is for both to feel 'home' is truly theirs.",
+          "whenSame": "Shared environmental preferences make home-building easier. You'll naturally agree on music volume, lighting, activity level. This is a foundation to build on—consider what specific elements create your shared ideal space.",
+          "journalPrompt": "When you walk into your home after a hard day, what do you need to feel restored? Is your current home providing that? What small change would help?"
+        }
+      }
     },
     {
       "id": "quiz_008_q4",
@@ -46,10 +74,20 @@
         "Love and do often",
         "Enjoy occasionally",
         "Need advance notice for",
-        "Find draining",
-        "Other / Depends on who"
+        "Find draining"
       ],
-      "category": "social"
+      "category": "social",
+      "metadata": {
+        "dimension": "social_energy",
+        "poleMapping": ["right", "neutral", "neutral", "left"],
+        "therapeutic": {
+          "rationale": "How we feel about hosting reflects our social energy needs and our relationship to our home as sanctuary versus social hub. Some people recharge by having friends over; others need their home to be a private retreat. Neither is antisocial or overly social—they're different ways of managing energy. This question often surfaces introversion/extraversion differences that extend well beyond hosting.",
+          "framework": "personality_psychology",
+          "whenDifferent": "The partner who loves hosting may feel isolated or that their social needs aren't valued; the partner who finds it draining may feel their home is being 'invaded' or that they never get to recharge. Compromise often looks like: planned hosting (with recovery time built in), having some gatherings outside the home, and the introvert getting genuine solo time before and after guests.",
+          "whenSame": "Shared hosting preferences prevent a common relationship conflict. If you both love it, your home becomes a hub for your community. If you both prefer privacy, you'll protect your sanctuary together. Either way, you won't be constantly negotiating your social calendar.",
+          "journalPrompt": "Think about the last time you had guests. How did you feel before, during, and after? How did your partner seem? Did you ever discuss your different experiences of the same event?"
+        }
+      }
     },
     {
       "id": "quiz_008_q5",
@@ -58,12 +96,18 @@
         "Quiet and minimal interruption",
         "Occasional breaks together",
         "Background presence is fine",
-        "I can work anywhere, any conditions",
-        "Other / I don't work from home"
+        "I can work anywhere, any conditions"
       ],
-      "category": "lifestyle"
+      "category": "lifestyle",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Work-from-home boundaries have become a major relationship negotiation for modern couples. The question isn't just about productivity—it's about how you manage attention, transition between roles, and maintain connection while also honoring focus. Partners who don't understand each other's work-mode needs can accidentally derail important work or create feelings of rejection when requests for quiet are made.",
+          "framework": "boundary_setting",
+          "whenDifferent": "The partner who needs quiet may feel frustrated by interruptions; the partner who wants breaks together may feel shut out or lonely. Create explicit agreements: when is deep-focus time (no interruptions), when are breaks welcome, and how do you signal which mode you're in? A simple 'flag' system (headphones on = focused) can prevent resentment.",
+          "whenSame": "Matched work styles at home reduce friction significantly. If you both need quiet, you can create a focused household. If you both like breaks, build them into your day together. This alignment becomes especially important if you're both working from home regularly.",
+          "journalPrompt": "How do you currently handle work-from-home days together? Are there unspoken rules that should become spoken? What would help you both be productive AND connected?"
+        }
+      }
     }
-  ],
-  "description": "Explore your domestic dynamics and shared space preferences.",
-  "magnet_id": 1
+  ]
 }

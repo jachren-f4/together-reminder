@@ -188,7 +188,7 @@ class _MainScreenState extends State<MainScreen> with SingleTickerProviderStateM
   }
 
   /// Called when paywall is completed (user subscribed or restored)
-  void _onPaywallComplete() {
+  void _onPaywallComplete(BuildContext ctx) {
     if (mounted) {
       setState(() {
         _showPaywall = false;

@@ -10,8 +10,7 @@
         "Put away so we can focus on each other",
         "Around but not the main focus",
         "Fine to scroll while we're chilling together",
-        "Depends on what we're doing",
-        "Other / It depends"
+        "Depends on what we're doing"
       ],
       "category": "lifestyle",
       "metadata": {
@@ -20,7 +19,6 @@
           "right",
           null,
           "left",
-          null,
           null
         ]
       }
@@ -32,8 +30,7 @@
         "Have a show that's 'ours' that we only watch together",
         "Watch whatever we're in the mood for, together or solo",
         "Binge together when we find something good",
-        "Have our own shows and share highlights",
-        "Other / It depends"
+        "Have our own shows and share highlights"
       ],
       "category": "lifestyle"
     },
@@ -44,8 +41,7 @@
         "We set some boundaries so it doesn't take over quality time",
         "The other person joins in or finds their own thing",
         "It's fine as long as we still have connection time",
-        "We can enjoy being in the same room doing different things",
-        "Other / It depends"
+        "We can enjoy being in the same room doing different things"
       ],
       "category": "communication",
       "metadata": {
@@ -54,8 +50,7 @@
           "right",
           null,
           null,
-          "left",
-          null
+          "left"
         ]
       }
     },
@@ -66,8 +61,7 @@
         "Movie or show together, phones away",
         "Background TV while we chat or do other things",
         "Each doing our own thing on our devices, side by side",
-        "Mix it up depending on the mood",
-        "Other / It depends"
+        "Mix it up depending on the mood"
       ],
       "category": "lifestyle",
       "metadata": {
@@ -76,7 +70,6 @@
           "right",
           null,
           "left",
-          null,
           null
         ]
       }
@@ -88,8 +81,7 @@
         "Keeping our relationship mostly offline",
         "Occasional posts for special moments",
         "Sharing more openly - I like celebrating us",
-        "Don't really think about it either way",
-        "Other / It depends"
+        "Don't really think about it either way"
       ],
       "category": "preferences"
     }

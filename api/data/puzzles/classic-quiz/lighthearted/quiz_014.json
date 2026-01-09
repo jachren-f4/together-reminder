@@ -1,0 +1,111 @@
+{
+  "quizId": "quiz_014",
+  "title": "Support & Encouragement",
+  "branch": "lighthearted",
+  "description": "Learn how you best give and receive support.",
+  "magnet_id": 1,
+  "questions": [
+    {
+      "id": "quiz_014_q1",
+      "text": "When I'm stressed, what helps most is...",
+      "choices": [
+        "A hug or physical comfort",
+        "You taking something off my plate",
+        "Space to figure it out myself",
+        "Talking through what's stressing me"
+      ],
+      "category": "support",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "How we want to be supported during stress often reflects our attachment patterns. Some people co-regulate through physical touch; others through practical help (acts of service); others need autonomy to self-regulate; others verbally process; others need distraction. Partners who offer the 'wrong' kind of support aren't being unsupportive—they're offering what they would want. Knowing each other's stress response needs is foundational to being helpful.",
+          "framework": "attachment_theory",
+          "whenDifferent": "The partner who needs space may feel smothered; the partner who needs connection may feel abandoned. Ask directly when stress hits: 'What do you need right now?' Accept the answer even if it's not what you'd want. Your job is to support them in their way.",
+          "whenSame": "Matched stress responses make support intuitive. You'll naturally know what to offer because it's what you'd need. Be careful not to assume—even with matched styles, specific stressors may require different responses.",
+          "journalPrompt": "Think about a recent stressful time. What did your partner do that helped? What did they do that didn't? Did you communicate clearly what you needed, or did you expect them to guess?"
+        }
+      }
+    },
+    {
+      "id": "quiz_014_q2",
+      "text": "When you're going through something hard, I want to...",
+      "choices": [
+        "Fix it if I can",
+        "Just be there with you",
+        "Give you space unless you ask",
+        "Check in frequently"
+      ],
+      "category": "support",
+      "metadata": {
+        "dimension": "support_style",
+        "poleMapping": ["right", "neutral", "left", "right"],
+        "therapeutic": {
+          "rationale": "Our support-giving style often mirrors what we'd want—but may not match what our partner needs. Fixers feel useless without action; present-witnesses know silence can be powerful; space-givers respect autonomy; checkers show care through attention; doers show love through service. Understanding your default helps you stretch when your partner needs something different.",
+          "framework": "love_languages",
+          "whenDifferent": "The fixer may feel rejected when told 'just be here'; the space-giver may seem cold to a partner who needs presence. When your partner is struggling, ask: 'How can I best support you right now?' Then do that, even if it feels wrong to you.",
+          "whenSame": "Matched support-giving styles mean you'll naturally offer what feels right to both of you. This is especially helpful during hard times—you won't be navigating different expectations on top of the difficulty. Lean into this alignment.",
+          "journalPrompt": "What's your instinct when your partner is struggling? Where did you learn this response? Has your partner ever told you it wasn't what they needed?"
+        }
+      }
+    },
+    {
+      "id": "quiz_014_q3",
+      "text": "I feel most encouraged when you...",
+      "choices": [
+        "Believe in me out loud",
+        "Notice my efforts, not just results",
+        "Celebrate my wins with me",
+        "Give me perspective when I'm hard on myself"
+      ],
+      "category": "support",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Encouragement that lands well is highly personal. Some people are motivated by expressed belief; others by having their process acknowledged; others by shared celebration; others by challenge; others by reframing. What feels encouraging to one person may feel hollow or even annoying to another. Learning your partner's encouragement language helps you actually boost them rather than miss the mark.",
+          "framework": "positive_psychology",
+          "whenDifferent": "The person who needs 'you've got this' may feel dismissed by perspective-giving; the person who needs challenge may feel patronized by cheerleading. Pay attention to what lights your partner up—it may not be what works for you.",
+          "whenSame": "Matched encouragement styles mean your cheerleading naturally resonates. You'll say the right thing without having to translate. Use this to be each other's best supporters.",
+          "journalPrompt": "What encouragement from your partner has stuck with you? What made it land? What encouragement has fallen flat, and why?"
+        }
+      }
+    },
+    {
+      "id": "quiz_014_q4",
+      "text": "When I fail or mess up, I need you to...",
+      "choices": [
+        "Tell me it's okay and you still love me",
+        "Help me figure out what went wrong",
+        "Give me space to process",
+        "Not make a big deal of it"
+      ],
+      "category": "conflict",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "How we want to be met in failure reveals our relationship with shame and self-compassion. Some people need immediate reassurance of love and worth; others need analytical distance; others need solitude to recover; others need their competence reflected back; others need minimizing. A well-intentioned partner can accidentally deepen shame by offering the wrong response. Understanding this is crucial for repair.",
+          "framework": "shame_resilience",
+          "whenDifferent": "The reassurance-needer may feel their partner is dismissive; the space-needer may feel crowded. After a failure, gently ask: 'What would help right now?' Don't assume—shame responses are tender and specific.",
+          "whenSame": "Matched failure responses mean you'll naturally comfort each other in ways that feel right. This builds resilience—knowing your partner 'gets it' makes bouncing back easier.",
+          "journalPrompt": "Think about a recent failure or mistake. What was your internal response? What did you need from your partner? Did you get it?"
+        }
+      }
+    },
+    {
+      "id": "quiz_014_q5",
+      "text": "The best thing you do for me when I'm overwhelmed is...",
+      "choices": [
+        "Take care of practical things",
+        "Help me prioritize what matters",
+        "Remind me I don't have to do it all",
+        "Just hold me"
+      ],
+      "category": "support",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Overwhelm is a specific stress state where our capacity feels exceeded. What helps in overwhelm differs from general support—we need something that either reduces the load, clarifies the path, gives permission to let go, regulates our nervous system, or shifts our state entirely. Partners who know each other's overwhelm response can intervene effectively during high-stress moments.",
+          "framework": "stress_regulation",
+          "whenDifferent": "The practical-help person may not understand why their partner just wants a hug; the permission-needer may feel patronized by prioritizing. Match the intervention to the person: ask 'Do you need help sorting this, or help stepping back from it?'",
+          "whenSame": "Matched overwhelm responses mean you can support each other effectively in crunch times. You'll intuitively know what to offer. This is especially valuable during life's inevitable overwhelming seasons.",
+          "journalPrompt": "What's your body's first signal of overwhelm? What actually helps you come back? Does your partner know this, or do you expect them to figure it out?"
+        }
+      }
+    }
+  ]
+}

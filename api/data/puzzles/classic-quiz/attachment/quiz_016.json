@@ -1,0 +1,109 @@
+{
+  "quizId": "quiz_016",
+  "title": "Intimacy & Closeness",
+  "branch": "attachment",
+  "description": "Explore what true intimacy means to you and how you achieve it.",
+  "magnet_id": 10,
+  "questions": [
+    {
+      "id": "quiz_016_q1",
+      "text": "What does deep intimacy feel like to me?",
+      "choices": [
+        "Being fully known and accepted",
+        "Comfortable silence together",
+        "Physical closeness and touch",
+        "Feeling safe to be vulnerable"
+      ],
+      "category": "intimacy_feeling",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Intimacy definitions reveal attachment needs. Known-and-accepted seekers need validation; comfortable-silence lovers value presence without performance; physical-closeness seekers bond through body; vulnerability-safety seekers need emotional security. What feels intimate to you is your intimacy blueprint.",
+          "framework": "attachment_theory",
+          "whenDifferent": "Different intimacy definitions may feel like missing each other. The silence-lover may feel the vulnerability-seeker needs too much processing; the physical-seeker may feel the known-accepted seeker is always analyzing.",
+          "whenSame": "Shared intimacy definitions make deep connection easier. You feel intimate in the same ways and will naturally create what feels close to both.",
+          "journalPrompt": "What does deep intimacy feel like to you? When have you felt it in this relationship? What would create more of it?"
+        }
+      }
+    },
+    {
+      "id": "quiz_016_q2",
+      "text": "What blocks me from feeling truly close to you?",
+      "choices": [
+        "Fear of being too much or not enough",
+        "Fear of losing my independence",
+        "Past hurts I'm still healing",
+        "Difficulty fully trusting"
+      ],
+      "category": "intimacy_blocks",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Intimacy blocks reveal attachment wounds. Too-much-or-not-enough fear creates performing; independence-loss fear creates distance-keeping; past-hurts create protective walls; trust-difficulty creates testing. Understanding what blocks intimacy is the first step to removing the barrier.",
+          "framework": "attachment_theory",
+          "whenDifferent": "Different intimacy blocks need different patience. The independence-loser needs space reassurance; the past-hurt person needs consistent safety. Know each other's blocks.",
+          "whenSame": "Shared intimacy blocks create understanding but may also create reinforcement. Two trust-difficult people may both hold back, creating less intimacy.",
+          "journalPrompt": "What blocks you from feeling fully close? Where does this barrier come from? What would help you lower it?"
+        }
+      }
+    },
+    {
+      "id": "quiz_016_q3",
+      "text": "How do I show you that I want to be closer?",
+      "choices": [
+        "I initiate deep conversations",
+        "I increase physical affection",
+        "I create quality time together",
+        "I share more of my inner world"
+      ],
+      "category": "closeness_signals",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Closeness-seeking signals vary by attachment and love language. Conversation-initiators seek emotional connection; affection-increasers seek physical bonding; time-creators seek presence; inner-world sharers seek intimacy through disclosure. Recognizing your partner's closeness signals helps you receive their bids.",
+          "framework": "attachment_theory",
+          "whenDifferent": "Different closeness signals may be missed. The inner-world sharer may not see the affection-increaser's bid as closeness-seeking. Learn your partner's signals.",
+          "whenSame": "Shared closeness signals make recognition easy. You see each other's closeness bids because you make the same ones.",
+          "journalPrompt": "How do you signal wanting to be closer? Does your partner recognize these signals? Would clearer communication help?"
+        }
+      }
+    },
+    {
+      "id": "quiz_016_q4",
+      "text": "What helps me open up more deeply?",
+      "choices": [
+        "Feeling that you truly want to understand me",
+        "Knowing my vulnerability won't be used against me",
+        "Your patience when I struggle to express myself",
+        "Seeing you open up first"
+      ],
+      "category": "opening_conditions",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Opening-up conditions reveal vulnerability requirements. Understanding-wanting provides attunement safety; not-used-against provides trust safety; patience provides process safety; you-first provides reciprocity safety. Creating your partner's opening-up conditions enables deeper intimacy.",
+          "framework": "attachment_theory",
+          "whenDifferent": "Different opening conditions need different creation. The you-first person needs your vulnerability modeling; the patience-needer needs time without pressure. Provide your partner's conditions.",
+          "whenSame": "Shared opening conditions make intimacy easier. You know what enables vulnerability because you need the same things.",
+          "journalPrompt": "What conditions help you open up? Does your partner provide these? How could you create them together?"
+        }
+      }
+    },
+    {
+      "id": "quiz_016_q5",
+      "text": "How has our relationship deepened my capacity for intimacy?",
+      "choices": [
+        "I've become more comfortable being vulnerable",
+        "I've learned to receive love more easily",
+        "I've opened up about things I've never shared",
+        "I've become more secure in closeness"
+      ],
+      "category": "intimacy_growth",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Intimacy growth reflects earned security. Vulnerability-comfort shows opening; receiving-love shows allowing in; never-shared-sharing shows deeper trust; closeness-security shows settling in. Relationships can heal attachment wounds and expand intimacy capacity.",
+          "framework": "attachment_theory",
+          "whenDifferent": "Different intimacy growth celebrates different progress. Honor whatever growth edge your partner is working on, even if different from yours.",
+          "whenSame": "Shared intimacy growth means you're developing together. Celebrate how far you've come and support continued expansion.",
+          "journalPrompt": "How has this relationship grown your capacity for intimacy? What helped most? What's your next growth edge?"
+        }
+      }
+    }
+  ]
+}

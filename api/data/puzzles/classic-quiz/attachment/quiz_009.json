@@ -1,7 +1,9 @@
 {
   "quizId": "quiz_009",
-  "title": "Attachment Quiz 9",
+  "title": "Conflict & Attachment",
   "branch": "attachment",
+  "description": "Discover how your attachment style shapes conflict patterns.",
+  "magnet_id": 8,
   "questions": [
     {
       "id": "quiz_009_q1",
@@ -10,10 +12,20 @@
         "I pursue resolution immediately",
         "I need space to calm down first",
         "I try to fix it right away to feel secure again",
-        "I withdraw to protect myself",
-        "Other / It depends"
+        "I withdraw to protect myself"
       ],
-      "category": "communication"
+      "category": "conflict_response",
+      "metadata": {
+        "dimension": "support_style",
+        "poleMapping": ["right", "left", "right", "left"],
+        "therapeutic": {
+          "rationale": "Conflict responses are deeply tied to attachment styles. Immediate pursuers have anxious attachment activation; space-needers have avoidant activation; fix-it-now types manage anxiety through action; withdrawers protect through distance. Your conflict response often triggers your partner's attachment system in return.",
+          "framework": "attachment_theory",
+          "whenDifferent": "Different conflict responses often create the pursue-withdraw cycle. The immediate pursuer escalates because the withdrawer won't engage; the withdrawer retreats because pursuit feels overwhelming. Name the pattern to break it.",
+          "whenSame": "Shared conflict responses can be helpful or problematic. Two pursuers will engage intensely; two withdrawers may avoid necessary conversations. Know your shared pattern.",
+          "journalPrompt": "What happens in your body when conflict arises? Where did you learn this response? Does it help or hinder resolution?"
+        }
+      }
     },
     {
       "id": "quiz_009_q2",
@@ -22,10 +34,20 @@
         "Reassurance that we'll be okay",
         "Space to process my emotions",
         "Active listening and validation",
-        "Focus on finding a solution",
-        "Other / It depends"
+        "Your calm presence without intensity"
       ],
-      "category": "communication"
+      "category": "argument_needs",
+      "metadata": {
+        "dimension": "support_style",
+        "poleMapping": ["right", "left", "neutral", "left"],
+        "therapeutic": {
+          "rationale": "What we need during arguments reveals our attachment soothing system. Reassurance-seekers need attachment confirmation; space-needers need self-regulation time; validation-seekers need to feel heard; calm-presence seekers need co-regulation without escalation. Providing the wrong thing during conflict can escalate rather than resolve.",
+          "framework": "attachment_theory",
+          "whenDifferent": "Different argument needs create disconnects. The reassurance-seeker feels abandoned by the space-needer; the space-needer feels suffocated by pursuit. Ask: 'What do you need right now?' before assuming.",
+          "whenSame": "Shared argument needs make de-escalation easier. You'll naturally provide what helps because it's what you need too.",
+          "journalPrompt": "During arguments, what helps you calm down? What makes things worse? Does your partner know what you need?"
+        }
+      }
     },
     {
       "id": "quiz_009_q3",
@@ -34,10 +56,18 @@
         "I want to resolve it immediately",
         "A few minutes to an hour",
         "Several hours to a day",
-        "It depends on the severity",
-        "Other / It depends"
+        "I move on quickly once it's addressed"
       ],
-      "category": "emotional"
+      "category": "processing_time",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Processing time needs reflect nervous system regulation. Immediate-resolvers have anxiety that needs quick relief; brief-processors need minimal space; extended-processors need time for their system to settle; quick-movers recover fast. Respecting different processing times prevents re-triggering.",
+          "framework": "attachment_theory",
+          "whenDifferent": "Different processing times test relationships. The immediate-resolver may feel dismissed by the day-long processor; the extended-processor may feel pressured by immediate demands. Negotiate timing explicitly.",
+          "whenSame": "Shared processing times smooth post-conflict recovery. You'll naturally be ready to reconnect at similar moments.",
+          "journalPrompt": "How long does it take you to feel calm after conflict? What happens if you're pushed to resolve before you're ready?"
+        }
+      }
     },
     {
       "id": "quiz_009_q4",
@@ -46,10 +76,18 @@
         "Knowing you're committed to working it out",
         "Your calm and respectful approach",
         "Feeling heard and understood",
-        "Physical proximity or touch",
-        "Other / It depends"
+        "Confidence that you won't leave"
       ],
-      "category": "trust"
+      "category": "conflict_safety",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Conflict safety needs reveal core attachment requirements. Commitment-knowing addresses abandonment anxiety; calm-approach needs reflect sensitivity to dysregulation; feeling-heard addresses validation needs; won't-leave confidence addresses foundational security. Without these conditions, conflicts feel existentially threatening rather than solvable.",
+          "framework": "attachment_theory",
+          "whenDifferent": "Different safety needs mean you need different things to engage. Create your partner's safety conditions.",
+          "whenSame": "Shared safety needs make conflict feel less dangerous. You understand what each other needs to feel secure enough to engage.",
+          "journalPrompt": "What makes conflict feel safe versus threatening? Can you engage when you don't feel safe? What would help you feel more secure?"
+        }
+      }
     },
     {
       "id": "quiz_009_q5",
@@ -58,12 +96,18 @@
         "That it will damage our relationship",
         "That you'll pull away from me",
         "That we won't understand each other",
-        "That the issue won't truly get resolved",
-        "Other / It depends"
+        "That the issue won't truly get resolved"
       ],
-      "category": "trust"
+      "category": "conflict_fears",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Conflict fears reveal attachment vulnerabilities. Damage-fear indicates catastrophizing about relationship fragility; pull-away fear indicates abandonment anxiety; misunderstanding fear indicates connection anxiety; unresolved-fear indicates completion anxiety. Knowing your partner's conflict fear helps you provide specific reassurance.",
+          "framework": "attachment_theory",
+          "whenDifferent": "Different conflict fears drive different protective behaviors. The damage-fearer may avoid all conflict; the pull-away fearer may pursue intensely. Understanding fear motivations increases compassion.",
+          "whenSame": "Shared conflict fears create mutual understanding but may also reinforce avoidance patterns. Two damage-fearers may avoid necessary conversations.",
+          "journalPrompt": "What's your deepest fear when you and your partner conflict? Where does this fear come from? Is the fear realistic?"
+        }
+      }
     }
-  ],
-  "description": "Discover how you handle separation and reunion.",
-  "magnet_id": 8
+  ]
 }

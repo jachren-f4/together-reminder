@@ -139,7 +139,7 @@ class _LinkedIntroScreenState extends State<LinkedIntroScreen>
                       ),
                       const SizedBox(height: 16),
                       Text(
-                        'Linked',
+                        'Crossword',
                         style: EditorialStyles.headline,
                       ),
                     ],
@@ -271,9 +271,10 @@ class _LinkedIntroScreenState extends State<LinkedIntroScreen>
     final alreadyEarned = _lpStatus?.alreadyGrantedToday == true;
 
     return Us2IntroScreen(
-      title: 'Linked',
+      title: 'Crossword',
       description: 'Take turns solving crossword clues. Connect your words and see how in sync your minds are with $partnerName.',
-      emoji: '🔗',
+      imagePath: 'assets/brands/us2/images/quests/linked.png',
+      emoji: '🔗', // Fallback if image fails to load
       buttonLabel: _isLoading ? 'Loading...' : 'Start Playing',
       onStart: _isLoading ? () {} : _startGame,
       onBack: () => Navigator.of(context).pop(),

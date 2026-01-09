@@ -1,7 +1,9 @@
 {
   "quizId": "quiz_003",
-  "title": "Connection Quiz 3",
+  "title": "Reassurance & Support",
   "branch": "connection",
+  "description": "Learn how you comfort each other and what makes your bond special.",
+  "magnet_id": 5,
   "questions": [
     {
       "id": "quiz_003_q1",
@@ -10,10 +12,18 @@
         "Hearing you say you love me",
         "Being held close",
         "Talking through my worries",
-        "You taking action to help",
         "Just being present with me"
       ],
-      "category": "reassurance"
+      "category": "reassurance",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Attachment theory shows that our need for reassurance reflects early bonding patterns. Some of us are soothed by words (hearing 'I love you'), others by touch (being held), others by processing (talking it through), and others by presence (simply being there). Knowing your partner's reassurance language allows you to calm their nervous system effectively during moments of anxiety.",
+          "framework": "attachment_theory",
+          "whenDifferent": "Different reassurance needs often lead to well-intentioned but misattuned support. The partner who needs words may feel uncared for when their tactile partner just holds them silently. Ask: 'What would help right now?' rather than assuming your comfort style works for them.",
+          "whenSame": "Matched reassurance styles mean you'll naturally soothe each other in ways that land. When you both need presence, simply being there together creates safety. This alignment is a relationship asset.",
+          "journalPrompt": "Think about a recent time you felt anxious or insecure. What did your partner do? What did you wish they had done? What would have genuinely settled your nervous system?"
+        }
+      }
     },
     {
       "id": "quiz_003_q2",
@@ -22,10 +32,18 @@
         "How well we understand each other",
         "Our shared sense of humor",
         "The passion between us",
-        "How we support each other",
-        "Our history together"
+        "How we support each other"
       ],
-      "category": "uniqueness"
+      "category": "uniqueness",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Every relationship has its defining qualities—the specific combination that makes it irreplaceable. Understanding (feeling known), humor (playfulness), passion (intensity), and support (teamwork) all create unique bonds. Knowing what makes your relationship special to your partner reveals what they value most and need you to protect.",
+          "framework": "narrative_therapy",
+          "whenDifferent": "Different valued qualities show you each treasure different aspects of the relationship. The understanding-valuer needs to be deeply known; the humor-valuer needs regular playfulness. Both perspectives reveal genuine relationship strengths.",
+          "whenSame": "Shared recognition of what makes you unique suggests alignment on your relationship's core identity. This is the essence of 'us'—nurture and protect it intentionally.",
+          "journalPrompt": "What is it about your relationship that you couldn't replicate with anyone else? What would be lost if this quality faded? How do you actively maintain it?"
+        }
+      }
     },
     {
       "id": "quiz_003_q3",
@@ -34,10 +52,18 @@
         "Supported me through a hard time",
         "Made a sacrifice for us",
         "Showed up when I needed you",
-        "Believed in me when I doubted",
         "Accepted a part of me I hid"
       ],
-      "category": "meaningful_moments"
+      "category": "meaningful_moments",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Meaningful moments become relationship touchstones—evidence that we matter to our partner. Support during hardship, sacrifice for the relationship, reliability when needed, and acceptance of our shadow sides all communicate deep love in different ways. Knowing which moment mattered most to your partner reveals what form of love lands deepest for them.",
+          "framework": "gottman",
+          "whenDifferent": "Different meaningful moments reveal different emotional currencies. Your partner may have felt most loved in a moment you barely remember—naming it validates their experience and teaches you what matters to them.",
+          "whenSame": "A shared most meaningful moment is a cornerstone of your relationship story. Tell this story to each other and others. It's part of what bonds you.",
+          "journalPrompt": "What single moment with your partner showed you most clearly how much they love you? Have you ever told them how much that moment meant? How would they react to hearing it?"
+        }
+      }
     },
     {
       "id": "quiz_003_q4",
@@ -46,10 +72,18 @@
         "Through words and compliments",
         "Through physical closeness",
         "Through helpful actions",
-        "Through quality time",
-        "Through gifts and surprises"
+        "Through quality time"
       ],
-      "category": "love_expression"
+      "category": "love_expression",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "How we express love often differs from how we receive it. We tend to give love in our native language—the way loving comes naturally to us. Understanding your partner's expression style helps you recognize their love even when it doesn't match your receiving preferences. Their care is real, even if it looks different from what you'd expect.",
+          "framework": "love_languages",
+          "whenDifferent": "Different expression styles are extremely common. The acts-of-service expresser shows love by doing; the words expresser verbalizes constantly. Learn to see your partner's expressions as love, even when they don't match your receiving style.",
+          "whenSame": "Matched expression styles mean your love will be naturally visible to each other. You'll recognize your partner's caring because it looks like your own.",
+          "journalPrompt": "How do you typically show your partner you love them? Do they notice and appreciate it? What would help your expressions of love land better for them?"
+        }
+      }
     },
     {
       "id": "quiz_003_q5",
@@ -58,12 +92,18 @@
         "My playful side",
         "My vulnerable side",
         "My ambitious side",
-        "My caring side",
-        "My confident side"
+        "My caring side"
       ],
-      "category": "personal_growth"
+      "category": "personal_growth",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "The self-expansion model shows that we grow through close relationships—our partners help us access parts of ourselves we might otherwise suppress or neglect. A partner who brings out your playfulness helps you stay light; one who accesses vulnerability creates depth; one who evokes ambition supports your drive; one who draws out caring develops your nurturing.",
+          "framework": "self_expansion_theory",
+          "whenDifferent": "Different sides being activated suggests you see your partner's multidimensional impact. The side they believe you bring out reveals what they value most about themselves in the relationship.",
+          "whenSame": "Shared recognition of which side you bring out confirms that aspect is central to your dynamic. You're aligned on how you transform each other.",
+          "journalPrompt": "Who are you in this relationship that you aren't anywhere else? What parts of yourself does your partner access that others don't? Is that a gift or sometimes a burden?"
+        }
+      }
     }
-  ],
-  "description": "Learn about the foundations of your emotional intimacy.",
-  "magnet_id": 5
+  ]
 }

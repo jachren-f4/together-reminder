@@ -1,0 +1,109 @@
+{
+  "quizId": "quiz_018",
+  "title": "Dreams & Desires",
+  "branch": "connection",
+  "description": "Share your hopes, goals, and wishes for the future.",
+  "magnet_id": 8,
+  "questions": [
+    {
+      "id": "quiz_018_q1",
+      "text": "What's a dream I have that I haven't told you about?",
+      "choices": [
+        "Something career or achievement-related",
+        "A travel or adventure dream",
+        "A lifestyle or living situation change",
+        "A personal growth or learning goal"
+      ],
+      "category": "hidden_dreams",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Gottman's research on 'dreams within conflict' shows that understanding your partner's hidden dreams is essential for relationship depth. Career dreams reveal ambition; travel dreams reveal adventure desires; lifestyle dreams reveal values; personal growth dreams reveal self-development wishes; relationship dreams reveal partnership hopes. Sharing hidden dreams creates deeper intimacy and allows partners to support each other's aspirations.",
+          "framework": "gottman",
+          "whenDifferent": "Different hidden dreams reveal different aspirations you're each holding. This is valuable information—your partner's dreams deserve your curiosity and support even if different from yours.",
+          "whenSame": "Shared hidden dreams suggest aligned future wishes. Consider working toward this dream together.",
+          "journalPrompt": "What dream have you not told your partner about? What holds you back from sharing it? What would you need from them to feel safe discussing it?"
+        }
+      }
+    },
+    {
+      "id": "quiz_018_q2",
+      "text": "What do I hope we experience together someday?",
+      "choices": [
+        "Traveling somewhere new and exciting",
+        "Achieving a big goal together",
+        "Creating a home that feels like us",
+        "Reaching a new level of intimacy"
+      ],
+      "category": "shared_hopes",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Shared experience hopes reveal what adventure and partnership mean to each person. Travel hopes seek novelty together; achievement hopes seek joint accomplishment; home hopes seek belonging; intimacy hopes seek deeper connection; legacy hopes seek lasting impact. These shared aspirations become the roadmap for your future together.",
+          "framework": "self_expansion_theory",
+          "whenDifferent": "Different hoped-for experiences reveal different relationship dreams. Your partner may dream of travel while you dream of home. Discuss how to honor both aspirations.",
+          "whenSame": "Shared experience hopes mean you're dreaming the same dreams. Work actively toward making this vision reality.",
+          "journalPrompt": "What do you most hope to experience with your partner? Have you told them? What would make this dream possible?"
+        }
+      }
+    },
+    {
+      "id": "quiz_018_q3",
+      "text": "What's a goal I'm working toward right now?",
+      "choices": [
+        "Career advancement or change",
+        "Health and wellness improvements",
+        "Learning something new",
+        "Financial stability or freedom"
+      ],
+      "category": "current_goals",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Current goals reveal present priorities and need for support. Career goals need encouragement; health goals need accommodation; learning goals need time and interest; financial goals need partnership; personal development needs space and understanding. Knowing your partner's active goals helps you support them appropriately.",
+          "framework": "positive_psychology",
+          "whenDifferent": "Different current goals mean you're each pursuing different priorities. Understanding your partner's goals helps you support without competing.",
+          "whenSame": "Shared current goals create opportunity for joint pursuit and mutual support. Consider how to work toward this goal together.",
+          "journalPrompt": "What goal are you actively working toward? Does your partner know about it? How could they support you better?"
+        }
+      }
+    },
+    {
+      "id": "quiz_018_q4",
+      "text": "What would make me feel most fulfilled in life?",
+      "choices": [
+        "Making a meaningful impact",
+        "Deep, loving relationships",
+        "Adventures and rich experiences",
+        "Inner peace and contentment"
+      ],
+      "category": "life_fulfillment",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Fulfillment sources reveal core values and life purpose. Impact-seekers value contribution; relationship-seekers value connection; experience-seekers value richness; creation-seekers value legacy; peace-seekers value presence. Understanding what would fulfill your partner helps you support their deepest aspirations.",
+          "framework": "positive_psychology",
+          "whenDifferent": "Different fulfillment sources reveal different life values. Your partner's core need may be quite different from yours. Support what fulfills them, even if it differs from you.",
+          "whenSame": "Shared fulfillment sources suggest deep value alignment. You want the same things from life. Build a life that fulfills you both.",
+          "journalPrompt": "What would make you feel truly fulfilled? Is your current life moving toward this? What would need to change?"
+        }
+      }
+    },
+    {
+      "id": "quiz_018_q5",
+      "text": "How do I want you to support my dreams?",
+      "choices": [
+        "Believe in me even when I doubt myself",
+        "Give me space and time to pursue them",
+        "Actively help with practical support",
+        "Be interested and ask about them"
+      ],
+      "category": "dream_support",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Dream support needs vary significantly. Belief-seekers need borrowed confidence; space-needers need autonomy; practical-seekers need help; interest-seekers need curiosity; co-dreamers need participation. Knowing how your partner wants their dreams supported helps you champion them effectively.",
+          "framework": "supportive_communication",
+          "whenDifferent": "Different support needs for dreams mean your default helping may not be what your partner wants. The space-needer may feel smothered by active help; the believer-needer may feel abandoned by space-giving. Ask how to support.",
+          "whenSame": "Shared dream-support needs mean you'll naturally support each other's aspirations in the right way. You understand what helps because it's what helps you.",
+          "journalPrompt": "How do you want your partner to support your dreams? Do they know this? What would ideal support look like?"
+        }
+      }
+    }
+  ]
+}

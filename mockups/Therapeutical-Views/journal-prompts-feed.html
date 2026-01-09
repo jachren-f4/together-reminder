@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=375, initial-scale=1.0, maximum-scale=1.0">
+    <title>Journal Prompts Feed</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0f0f1a;
+            min-height: 100vh;
+            color: #fff;
+            max-width: 375px;
+            margin: 0 auto;
+        }
+        .header {
+            padding: 60px 20px 20px;
+            background: linear-gradient(180deg, #1a1a2e 0%, #0f0f1a 100%);
+        }
+        .header h1 {
+            font-size: 1.8rem;
+            margin-bottom: 8px;
+        }
+        .header p {
+            color: rgba(255,255,255,0.6);
+            font-size: 0.9rem;
+        }
+
+        .tabs {
+            display: flex;
+            padding: 16px 20px;
+            gap: 10px;
+            background: #0f0f1a;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+        .tab {
+            padding: 10px 16px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            background: rgba(255,255,255,0.05);
+            color: rgba(255,255,255,0.5);
+            cursor: pointer;
+            white-space: nowrap;
+        }
+        .tab.active {
+            background: rgba(255,215,0,0.15);
+            color: #FFD700;
+        }
+
+        .prompts-section {
+            padding: 0 16px 100px;
+        }
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 0 12px;
+        }
+        .section-title {
+            font-size: 0.75rem;
+            color: rgba(255,255,255,0.4);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .section-count {
+            font-size: 0.75rem;
+            color: rgba(255,255,255,0.3);
+        }
+
+        .prompt-card {
+            background: rgba(255,255,255,0.05);
+            border-radius: 16px;
+            margin-bottom: 12px;
+            overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.08);
+        }
+        .prompt-card.featured {
+            background: linear-gradient(135deg, rgba(255,215,0,0.1), rgba(255,165,0,0.05));
+            border-color: rgba(255,215,0,0.15);
+        }
+        .prompt-source {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 16px;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        .source-icon {
+            width: 24px;
+            height: 24px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+        }
+        .source-icon.attachment { background: rgba(233, 30, 99, 0.2); }
+        .source-icon.connection { background: rgba(156, 39, 176, 0.2); }
+        .source-icon.growth { background: rgba(76, 175, 80, 0.2); }
+        .source-icon.lighthearted { background: rgba(255, 193, 7, 0.2); }
+        .source-text {
+            font-size: 0.75rem;
+            color: rgba(255,255,255,0.5);
+        }
+        .source-badge {
+            margin-left: auto;
+            font-size: 0.65rem;
+            background: rgba(255,215,0,0.15);
+            color: #FFD700;
+            padding: 3px 8px;
+            border-radius: 10px;
+        }
+
+        .prompt-content {
+            padding: 16px;
+        }
+        .prompt-text {
+            font-size: 1rem;
+            line-height: 1.5;
+            color: rgba(255,255,255,0.9);
+            margin-bottom: 12px;
+        }
+        .prompt-context {
+            font-size: 0.8rem;
+            color: rgba(255,255,255,0.5);
+            line-height: 1.5;
+            padding: 12px;
+            background: rgba(255,255,255,0.03);
+            border-radius: 10px;
+            margin-bottom: 12px;
+        }
+        .prompt-actions {
+            display: flex;
+            gap: 10px;
+        }
+        .prompt-btn {
+            flex: 1;
+            padding: 12px;
+            border-radius: 10px;
+            font-size: 0.85rem;
+            text-align: center;
+            cursor: pointer;
+        }
+        .prompt-btn.primary {
+            background: linear-gradient(135deg, #FFD700, #FFA500);
+            color: #1a1a2e;
+            font-weight: 600;
+        }
+        .prompt-btn.secondary {
+            background: rgba(255,255,255,0.08);
+            color: rgba(255,255,255,0.7);
+        }
+
+        .prompt-card.completed {
+            opacity: 0.6;
+        }
+        .completed-badge {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 12px 16px;
+            background: rgba(76,175,80,0.1);
+            color: #4CAF50;
+            font-size: 0.8rem;
+        }
+
+        .prompt-mini {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 12px;
+            padding: 14px 16px;
+            margin-bottom: 10px;
+            cursor: pointer;
+        }
+        .prompt-mini:hover {
+            background: rgba(255,255,255,0.08);
+        }
+        .prompt-mini-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            background: rgba(255,215,0,0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+        }
+        .prompt-mini-text {
+            flex: 1;
+            font-size: 0.9rem;
+            color: rgba(255,255,255,0.8);
+            line-height: 1.4;
+        }
+        .prompt-mini-arrow {
+            color: rgba(255,255,255,0.3);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: rgba(255,255,255,0.4);
+        }
+        .empty-state-icon {
+            font-size: 3rem;
+            margin-bottom: 16px;
+        }
+
+        .floating-btn {
+            position: fixed;
+            bottom: 90px;
+            right: 20px;
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #FFD700, #FFA500);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            box-shadow: 0 4px 20px rgba(255,215,0,0.3);
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Journal</h1>
+        <p>Prompts generated from your quizzes</p>
+    </div>
+
+    <div class="tabs">
+        <div class="tab active">New (7)</div>
+        <div class="tab">Saved</div>
+        <div class="tab">Completed</div>
+        <div class="tab">Discuss</div>
+    </div>
+
+    <div class="prompts-section">
+        <div class="section-header">
+            <span class="section-title">Based on your differences</span>
+            <span class="section-count">From today's quiz</span>
+        </div>
+
+        <div class="prompt-card featured">
+            <div class="prompt-source">
+                <div class="source-icon attachment">🔗</div>
+                <span class="source-text">Separation & Security Quiz</span>
+                <span class="source-badge">New</span>
+            </div>
+            <div class="prompt-content">
+                <div class="prompt-text">
+                    When you sense your partner withdrawing, what's your instinct? Does that response bring you closer or push you apart? Where did you learn this pattern?
+                </div>
+                <div class="prompt-context">
+                    💡 You and Sarah answered differently about how you react when feeling distance. Exploring this pattern could help you understand each other better.
+                </div>
+                <div class="prompt-actions">
+                    <div class="prompt-btn primary">Write Now</div>
+                    <div class="prompt-btn secondary">Save for Later</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="prompt-card">
+            <div class="prompt-source">
+                <div class="source-icon attachment">🔗</div>
+                <span class="source-text">Separation & Security Quiz</span>
+            </div>
+            <div class="prompt-content">
+                <div class="prompt-text">
+                    What's your deepest fear about relationships? Where did this fear originate? How does it show up in your current relationship?
+                </div>
+                <div class="prompt-context">
+                    💡 You fear being abandoned; Sarah fears losing independence. Understanding where these fears come from can build compassion.
+                </div>
+                <div class="prompt-actions">
+                    <div class="prompt-btn primary">Write Now</div>
+                    <div class="prompt-btn secondary">Save</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section-header">
+            <span class="section-title">Explore further</span>
+            <span class="section-count">7 more prompts</span>
+        </div>
+
+        <div class="prompt-mini">
+            <div class="prompt-mini-icon">💭</div>
+            <div class="prompt-mini-text">How do you feel when your partner isn't around?</div>
+            <div class="prompt-mini-arrow">›</div>
+        </div>
+
+        <div class="prompt-mini">
+            <div class="prompt-mini-icon">❤️</div>
+            <div class="prompt-mini-text">What does your partner do that makes you feel most loved?</div>
+            <div class="prompt-mini-arrow">›</div>
+        </div>
+
+        <div class="prompt-mini">
+            <div class="prompt-mini-icon">🌱</div>
+            <div class="prompt-mini-text">What's something you've recently realized about yourself?</div>
+            <div class="prompt-mini-arrow">›</div>
+        </div>
+
+        <div class="prompt-mini">
+            <div class="prompt-mini-icon">🎯</div>
+            <div class="prompt-mini-text">When do you feel most like you and your partner are a team?</div>
+            <div class="prompt-mini-arrow">›</div>
+        </div>
+
+        <div class="section-header">
+            <span class="section-title">Recently completed</span>
+        </div>
+
+        <div class="prompt-card completed">
+            <div class="completed-badge">
+                ✓ Completed Jan 8
+            </div>
+            <div class="prompt-content">
+                <div class="prompt-text">
+                    What makes you feel most secure in love? When your partner does this, how does it affect you?
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="floating-btn">✍️</div>
+</body>
+</html>

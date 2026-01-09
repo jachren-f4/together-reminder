@@ -1,7 +1,9 @@
 {
   "quizId": "quiz_005",
-  "title": "Connection Quiz 5",
+  "title": "Appreciation & Teamwork",
   "branch": "connection",
+  "description": "Explore how you show gratitude and work together as partners.",
+  "magnet_id": 6,
   "questions": [
     {
       "id": "quiz_005_q1",
@@ -10,22 +12,38 @@
         "Cooking my favorite meals",
         "Sending sweet messages during the day",
         "Planning special dates or surprises",
-        "Helping with tasks without being asked",
-        "Other / It depends"
+        "Helping with tasks without being asked"
       ],
-      "category": "emotional"
+      "category": "love_expression",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "The way our partner shows love becomes a signature of their caring. Cooking meals is nurturing through provision; messages show they're thinking of us; planned surprises demonstrate effort and intention; unprompted help shows attentiveness to burden. Knowing which of your partner's expressions lands deepest helps them feel their love is received.",
+          "framework": "love_languages",
+          "whenDifferent": "Different valued expressions mean you're each touched by different demonstrations of love. Tell your partner which of their loving actions means most—they may not know their cooking matters more to you than their gifts.",
+          "whenSame": "Shared recognition of a meaningful love expression confirms it's central to your relationship. Do more of it. It's clearly working.",
+          "journalPrompt": "What does your partner do that makes you feel most loved? Have you told them how much it means? Do they know it's their signature love gesture for you?"
+        }
+      }
     },
     {
       "id": "quiz_005_q2",
       "text": "When do I feel most appreciated by you?",
       "choices": [
         "When you notice small things I do",
-        "When you thank me publicly",
+        "When you acknowledge me in front of others",
         "When you show physical affection",
-        "When you make time for me despite being busy",
-        "Other / It depends"
+        "When you verbally express gratitude"
       ],
-      "category": "emotional"
+      "category": "appreciation",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Feeling appreciated is essential to relationship satisfaction—Gottman found that expressing appreciation is one of the strongest predictors of lasting love. Some people feel most appreciated when noticed (attention), some when publicly acknowledged (validation), some through touch (physical affirmation), and some through explicit thanks (verbal gratitude). How appreciation lands varies significantly.",
+          "framework": "gottman",
+          "whenDifferent": "Different appreciation languages mean your efforts may be missing the mark. The partner who needs to be noticed may not register verbal thanks as deeply; the public-acknowledgment person needs you to brag about them. Learn how appreciation lands for your partner.",
+          "whenSame": "Shared appreciation languages mean you'll naturally make each other feel valued in the same way. This alignment makes gratitude flow naturally.",
+          "journalPrompt": "When was the last time you felt truly appreciated by your partner? What did they do? Do you feel appreciated enough in your relationship?"
+        }
+      }
     },
     {
       "id": "quiz_005_q3",
@@ -34,10 +52,18 @@
         "Holding hands or cuddling",
         "Hearing 'I love you' and compliments",
         "Receiving thoughtful surprises",
-        "Having you remember important details about me",
-        "Other / It depends"
+        "Eye contact and full attention"
       ],
-      "category": "communication"
+      "category": "affection",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Affection creates connection, but what feels connecting varies. Physical touch (holding hands) creates bodily bonding; verbal affection (I love you) creates emotional certainty; surprises create delight and feeling thought of; attentive presence creates feeling valued. The form of affection that connects you most reveals your primary connection pathway.",
+          "framework": "gottman",
+          "whenDifferent": "Different connecting affections mean you need different things to feel close. The touch-person may feel disconnected if verbal affection replaces cuddling; the attention-person feels unseen without focused presence. Give affection in your partner's form.",
+          "whenSame": "Shared affection preferences make connection intuitive. You'll naturally create closeness through the same behaviors. Lean into this alignment.",
+          "journalPrompt": "What form of affection makes you feel closest to your partner? When was the last time you received it? How could you ask for more?"
+        }
+      }
     },
     {
       "id": "quiz_005_q4",
@@ -46,10 +72,18 @@
         "Verbal praise and affirmation",
         "A supportive hug or touch",
         "You believing in me even when I doubt myself",
-        "Practical help to achieve my goals",
-        "Other / It depends"
+        "Practical help to achieve my goals"
       ],
-      "category": "emotional"
+      "category": "support",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Encouragement helps us stretch beyond our comfort zones, but how it lands differs. Verbal praise builds confidence through words; supportive touch grounds us physically; belief provides borrowed certainty; practical help removes obstacles. Knowing how your partner best receives encouragement helps you support their growth effectively.",
+          "framework": "supportive_communication",
+          "whenDifferent": "Different encouragement needs can lead to mismatched support. The verbal-praise person may feel the quiet-confidence partner is unsupportive; the practical-help person may feel words are empty. Ask: 'What kind of support would help right now?'",
+          "whenSame": "Matched encouragement preferences mean you'll naturally support each other in ways that feel supportive. You both need the same thing when stretching and growing.",
+          "journalPrompt": "When you're facing something hard, what does ideal support from your partner look like? Do they know this is what helps you? When have they gotten it exactly right?"
+        }
+      }
     },
     {
       "id": "quiz_005_q5",
@@ -58,12 +92,18 @@
         "Working together on household tasks",
         "Supporting each other's individual goals",
         "Making decisions together",
-        "Facing challenges side by side",
-        "Other / It depends"
+        "Facing challenges side by side"
       ],
-      "category": "values"
+      "category": "teamwork",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Partnership is central to relationship satisfaction—feeling like a team predicts long-term success. Some feel teamwork through shared domestic labor; others through championing individual dreams; others through collaborative decision-making; others through weathering storms together. How 'we' manifests for your partner shapes what they need from partnership.",
+          "framework": "gottman",
+          "whenDifferent": "Different team-feelings mean you experience partnership differently. The household-teamwork person may feel unpartnered if decisions aren't shared; the goal-supporter may not notice domestic collaboration. Both are valid forms of partnership.",
+          "whenSame": "Shared team-feelings mean you'll experience 'us' at the same moments. You're aligned on what partnership looks and feels like. Build more of those experiences.",
+          "journalPrompt": "When do you feel most like you and your partner are a true team? When does it feel like you're on your own? What would help build more 'we' in your daily life?"
+        }
+      }
     }
-  ],
-  "description": "Explore how you nurture your emotional bond.",
-  "magnet_id": 6
+  ]
 }

@@ -10,8 +10,7 @@
         "Pick something new neither of us has seen",
         "Revisit a favorite one of us wants to share",
         "Take turns choosing - your pick this time, mine next",
-        "Find something we're both in the mood for in the moment",
-        "Other / It depends"
+        "Find something we're both in the mood for in the moment"
       ],
       "category": "lifestyle",
       "metadata": {
@@ -19,7 +18,6 @@
         "poleMapping": [
           "right",
           "left",
-          null,
           null,
           null
         ]
@@ -32,8 +30,7 @@
         "Flip a coin and go with it",
         "Each pitch our top choice and find common ground",
         "Save both options and watch one now, one later",
-        "Put on something easy we both kind of like",
-        "Other / It depends"
+        "Put on something easy we both kind of like"
       ],
       "category": "communication",
       "metadata": {
@@ -42,8 +39,7 @@
           null,
           null,
           null,
-          "left",
-          null
+          "left"
         ]
       }
     },
@@ -54,8 +50,7 @@
         "Sharing songs we've discovered and making playlists for each other",
         "Having our music playing when we're together",
         "Enjoying music separately - it's a personal thing",
-        "Going to concerts or live music together",
-        "Other / It depends"
+        "Going to concerts or live music together"
       ],
       "category": "lifestyle",
       "metadata": {
@@ -64,8 +59,7 @@
           "right",
           "left",
           null,
-          "right",
-          null
+          "right"
         ]
       }
     },
@@ -76,8 +70,7 @@
         "Get competitive - I like winning!",
         "Play as a team against others or the game",
         "Keep it light and silly with party games",
-        "Try something new we've never played",
-        "Other / It depends"
+        "Try something new we've never played"
       ],
       "category": "social",
       "metadata": {
@@ -86,8 +79,7 @@
           null,
           null,
           "left",
-          "right",
-          null
+          "right"
         ]
       }
     },
@@ -98,8 +90,7 @@
         "Doing our own things in the same room - cozy parallel time",
         "Watching something together, cuddled up",
         "Playing a game or doing an activity together",
-        "Talking, cooking, or just hanging out without screens",
-        "Other / It depends"
+        "Talking, cooking, or just hanging out without screens"
       ],
       "category": "lifestyle",
       "metadata": {
@@ -108,8 +99,7 @@
           "left",
           "left",
           "right",
-          "right",
-          null
+          "right"
         ]
       }
     }

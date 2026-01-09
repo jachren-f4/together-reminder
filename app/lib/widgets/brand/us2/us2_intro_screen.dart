@@ -22,6 +22,7 @@ class Us2IntroScreen extends StatelessWidget {
   final String? title;
   final String? description;
   final String? emoji;
+  final String? imagePath; // Optional image instead of emoji for simple layout
 
   // Card layout (variant 2) - scrollable with cards
   final String? heroEmoji;
@@ -48,6 +49,7 @@ class Us2IntroScreen extends StatelessWidget {
     this.title,
     this.description,
     this.emoji,
+    this.imagePath,
     // Card layout
     this.heroEmoji,
     this.heroImagePath,
@@ -67,7 +69,8 @@ class Us2IntroScreen extends StatelessWidget {
   factory Us2IntroScreen.simple({
     required String title,
     required String description,
-    required String emoji,
+    String? emoji,
+    String? imagePath,
     required String buttonLabel,
     required VoidCallback onStart,
     VoidCallback? onBack,
@@ -79,6 +82,7 @@ class Us2IntroScreen extends StatelessWidget {
       title: title,
       description: description,
       emoji: emoji,
+      imagePath: imagePath,
       buttonLabel: buttonLabel,
       onStart: onStart,
       onBack: onBack,
@@ -182,21 +186,33 @@ class Us2IntroScreen extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          // Emoji icon
-          if (emoji != null)
+          // Image or emoji icon
+          if (imagePath != null || emoji != null)
             Container(
-              width: 120,
-              height: 120,
+              width: 160,
+              height: 160,
               decoration: BoxDecoration(
-                gradient: Us2Theme.cardGradient,
+                gradient: imagePath == null ? Us2Theme.cardGradient : null,
                 shape: BoxShape.circle,
                 boxShadow: Us2Theme.cardGlowShadow,
               ),
-              child: Center(
-                child: Text(emoji!, style: const TextStyle(fontSize: 60)),
+              child: ClipOval(
+                child: imagePath != null
+                    ? Image.asset(
+                        imagePath!,
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) {
+                          return Center(
+                            child: Text(emoji ?? '🎯', style: const TextStyle(fontSize: 60)),
+                          );
+                        },
+                      )
+                    : Center(
+                        child: Text(emoji!, style: const TextStyle(fontSize: 60)),
+                      ),
               ),
             ),
-          if (emoji != null) const SizedBox(height: 32),
+          if (imagePath != null || emoji != null) const SizedBox(height: 32),
           // Title
           if (title != null)
             Text(

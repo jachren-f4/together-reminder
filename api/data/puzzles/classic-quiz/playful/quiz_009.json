@@ -10,8 +10,7 @@
         "Divide and conquer - we each tackle our own part",
         "Work on it side by side, together",
         "One of us takes the lead while the other supports",
-        "Figure it out as we go, no set plan",
-        "Other / It depends"
+        "Figure it out as we go, no set plan"
       ],
       "category": "lifestyle"
     },
@@ -22,8 +21,7 @@
         "Jump in and help you handle it",
         "Be there while you figure it out yourself",
         "Ask how I can best support you",
-        "Give you space unless you ask for help",
-        "Other / It depends"
+        "Give you space unless you ask for help"
       ],
       "category": "communication",
       "metadata": {
@@ -32,8 +30,7 @@
           "right",
           "left",
           null,
-          "left",
-          null
+          "left"
         ]
       }
     },
@@ -44,8 +41,7 @@
         "Being in the same room even if we're doing different things",
         "Checking in with each other throughout the day",
         "Fully focusing alone, then reconnecting later",
-        "Flexible - depends on the day and what we're doing",
-        "Other / It depends"
+        "Flexible - depends on the day and what we're doing"
       ],
       "category": "lifestyle",
       "metadata": {
@@ -54,7 +50,6 @@
           "right",
           null,
           "left",
-          null,
           null
         ]
       }
@@ -66,8 +61,7 @@
         "Play to our strengths - each do what we're good at",
         "Share everything equally down the middle",
         "Take turns so neither of us gets stuck with the boring stuff",
-        "Not overthink it - just do what needs doing",
-        "Other / It depends"
+        "Not overthink it - just do what needs doing"
       ],
       "category": "lifestyle"
     },
@@ -78,8 +72,7 @@
         "Supporting you when you need it",
         "Building something together - a home, a life, memories",
         "Celebrating each other's individual wins",
-        "Just being there, day in and day out",
-        "Other / It depends"
+        "Just being there, day in and day out"
       ],
       "category": "preferences"
     }

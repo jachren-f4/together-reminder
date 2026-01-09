@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=375, initial-scale=1.0, maximum-scale=1.0">
+    <title>Quiz Results with Insights</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(180deg, #1a1a2e 0%, #0f0f1a 100%);
+            min-height: 100vh;
+            color: #fff;
+            max-width: 375px;
+            margin: 0 auto;
+        }
+        .header {
+            padding: 60px 20px 20px;
+            text-align: center;
+        }
+        .header h1 {
+            font-size: 1.5rem;
+            margin-bottom: 8px;
+        }
+        .header p {
+            color: rgba(255,255,255,0.6);
+            font-size: 0.9rem;
+        }
+        .score-summary {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            padding: 20px;
+            margin-bottom: 10px;
+        }
+        .score-item {
+            text-align: center;
+        }
+        .score-item .number {
+            font-size: 2rem;
+            font-weight: 700;
+        }
+        .score-item .label {
+            font-size: 0.75rem;
+            color: rgba(255,255,255,0.5);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .score-item.matched .number { color: #4CAF50; }
+        .score-item.different .number { color: #FFD700; }
+
+        .tabs {
+            display: flex;
+            padding: 0 20px;
+            margin-bottom: 20px;
+            gap: 10px;
+        }
+        .tab {
+            flex: 1;
+            padding: 12px;
+            border-radius: 12px;
+            text-align: center;
+            font-size: 0.85rem;
+            background: rgba(255,255,255,0.05);
+            color: rgba(255,255,255,0.5);
+            cursor: pointer;
+        }
+        .tab.active {
+            background: rgba(255,215,0,0.15);
+            color: #FFD700;
+        }
+
+        .questions-list {
+            padding: 0 16px 100px;
+        }
+        .question-card {
+            background: rgba(255,255,255,0.05);
+            border-radius: 16px;
+            margin-bottom: 16px;
+            overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.08);
+        }
+        .question-header {
+            padding: 16px;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+        .match-indicator {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            flex-shrink: 0;
+        }
+        .match-indicator.matched {
+            background: rgba(76, 175, 80, 0.2);
+        }
+        .match-indicator.different {
+            background: rgba(255, 215, 0, 0.2);
+        }
+        .question-text {
+            font-size: 0.95rem;
+            line-height: 1.4;
+            flex: 1;
+        }
+
+        .answers-section {
+            padding: 0 16px 16px;
+        }
+        .answer-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 12px;
+            background: rgba(255,255,255,0.03);
+            border-radius: 10px;
+            margin-bottom: 8px;
+        }
+        .answer-avatar {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #FFD700, #FFA500);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+        .answer-avatar.partner {
+            background: linear-gradient(135deg, #E91E63, #9C27B0);
+        }
+        .answer-text {
+            font-size: 0.85rem;
+            color: rgba(255,255,255,0.8);
+        }
+
+        .insight-section {
+            background: linear-gradient(135deg, rgba(255,215,0,0.08), rgba(255,165,0,0.05));
+            padding: 16px;
+            border-top: 1px solid rgba(255,215,0,0.1);
+        }
+        .insight-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(255,215,0,0.15);
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            color: #FFD700;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .insight-text {
+            font-size: 0.85rem;
+            line-height: 1.6;
+            color: rgba(255,255,255,0.85);
+        }
+        .framework-tag {
+            display: inline-block;
+            background: rgba(255,255,255,0.1);
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            color: rgba(255,255,255,0.6);
+            margin-top: 10px;
+        }
+
+        .journal-prompt-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            padding: 12px;
+            border-radius: 10px;
+            margin-top: 12px;
+            color: rgba(255,255,255,0.7);
+            font-size: 0.8rem;
+            cursor: pointer;
+        }
+        .journal-prompt-btn:hover {
+            background: rgba(255,255,255,0.08);
+        }
+
+        .matched-insight {
+            background: linear-gradient(135deg, rgba(76,175,80,0.08), rgba(76,175,80,0.03));
+            border-top: 1px solid rgba(76,175,80,0.1);
+        }
+        .matched-insight .insight-badge {
+            background: rgba(76,175,80,0.15);
+            color: #4CAF50;
+        }
+
+        .bottom-action {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 375px;
+            padding: 16px 20px;
+            background: linear-gradient(transparent, #0f0f1a 30%);
+        }
+        .done-btn {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #FFD700, #FFA500);
+            border: none;
+            border-radius: 14px;
+            color: #1a1a2e;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Separation & Security</h1>
+        <p>Here's what you discovered together</p>
+    </div>
+
+    <div class="score-summary">
+        <div class="score-item matched">
+            <div class="number">3</div>
+            <div class="label">Matched</div>
+        </div>
+        <div class="score-item different">
+            <div class="number">2</div>
+            <div class="label">Different</div>
+        </div>
+    </div>
+
+    <div class="tabs">
+        <div class="tab active">All (5)</div>
+        <div class="tab">Different (2)</div>
+        <div class="tab">Matched (3)</div>
+    </div>
+
+    <div class="questions-list">
+        <!-- Different Answer Example -->
+        <div class="question-card">
+            <div class="question-header">
+                <div class="match-indicator different">💬</div>
+                <div class="question-text">How do I react when I feel like you're pulling away?</div>
+            </div>
+            <div class="answers-section">
+                <div class="answer-row">
+                    <div class="answer-avatar">J</div>
+                    <div class="answer-text">Reach out more to reconnect</div>
+                </div>
+                <div class="answer-row">
+                    <div class="answer-avatar partner">S</div>
+                    <div class="answer-text">Pull back myself</div>
+                </div>
+            </div>
+            <div class="insight-section">
+                <div class="insight-badge">💡 When you differ</div>
+                <div class="insight-text">
+                    Different distance responses create relationship cycles. The reach-outer's attempts may feel like pursuit to the pull-backer, who retreats more, triggering more reaching out. Recognizing this cycle is the first step to breaking it.
+                </div>
+                <div class="framework-tag">Based on Attachment Theory</div>
+                <div class="journal-prompt-btn">
+                    📝 Add to Journal: "Where did I learn this pattern?"
+                </div>
+            </div>
+        </div>
+
+        <!-- Matched Answer Example -->
+        <div class="question-card">
+            <div class="question-header">
+                <div class="match-indicator matched">✓</div>
+                <div class="question-text">What makes me feel most secure in our relationship?</div>
+            </div>
+            <div class="answers-section">
+                <div class="answer-row">
+                    <div class="answer-avatar">J</div>
+                    <div class="answer-text">Knowing you'll always be honest</div>
+                </div>
+                <div class="answer-row">
+                    <div class="answer-avatar partner">S</div>
+                    <div class="answer-text">Knowing you'll always be honest</div>
+                </div>
+            </div>
+            <div class="insight-section matched-insight">
+                <div class="insight-badge">🎯 You're aligned</div>
+                <div class="insight-text">
+                    Shared security sources mean you'll naturally reassure each other in the same way. You understand what creates safety because it's what creates safety for you.
+                </div>
+                <div class="framework-tag">Based on Attachment Theory</div>
+            </div>
+        </div>
+
+        <!-- Another Different Example -->
+        <div class="question-card">
+            <div class="question-header">
+                <div class="match-indicator different">💬</div>
+                <div class="question-text">What's my biggest fear in our relationship?</div>
+            </div>
+            <div class="answers-section">
+                <div class="answer-row">
+                    <div class="answer-avatar">J</div>
+                    <div class="answer-text">Being abandoned or left</div>
+                </div>
+                <div class="answer-row">
+                    <div class="answer-avatar partner">S</div>
+                    <div class="answer-text">Losing my independence</div>
+                </div>
+            </div>
+            <div class="insight-section">
+                <div class="insight-badge">💡 When you differ</div>
+                <div class="insight-text">
+                    Different core fears create different protective behaviors. The abandonment-fearer may cling while the independence-loser pulls away. Neither is wrong—both are protecting against their deepest wound.
+                </div>
+                <div class="framework-tag">Based on Attachment Theory</div>
+                <div class="journal-prompt-btn">
+                    📝 Discuss: "Understanding each other's fears"
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="bottom-action">
+        <button class="done-btn">Continue</button>
+    </div>
+</body>
+</html>

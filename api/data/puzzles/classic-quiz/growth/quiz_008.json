@@ -10,9 +10,7 @@
         "Your career or professional development",
         "Your health and wellness journey",
         "Your creative or personal projects",
-        "Your emotional or mental health",
-        "Other / It depends"
-      ],
+        "Your emotional or mental health"      ],
       "category": "growth"
     },
     {
@@ -22,9 +20,7 @@
         "Giving you time and space to pursue them",
         "Actively helping and participating",
         "Being your biggest cheerleader",
-        "Making sacrifices to help you succeed",
-        "Other / It depends"
-      ],
+        "Making sacrifices to help you succeed"      ],
       "category": "values"
     },
     {
@@ -34,9 +30,7 @@
         "Express belief in your abilities",
         "Ask how I can help instead of directing",
         "Celebrate progress without pressure",
-        "Respect your timeline and process",
-        "Other / It depends"
-      ],
+        "Respect your timeline and process"      ],
       "category": "communication"
     },
     {
@@ -46,9 +40,7 @@
         "Taking turns prioritizing each person's goals",
         "Finding goals we can work on together",
         "Maintaining independence while staying connected",
-        "Regular check-ins about what each person needs",
-        "Other / It depends"
-      ],
+        "Regular check-ins about what each person needs"      ],
       "category": "values"
     },
     {
@@ -58,9 +50,7 @@
         "Never competing or feeling threatened",
         "Celebrating wins together genuinely",
         "Being honest about concerns",
-        "Staying committed even when it's hard",
-        "Other / It depends"
-      ],
+        "Staying committed even when it's hard"      ],
       "category": "trust"
     }
   ],

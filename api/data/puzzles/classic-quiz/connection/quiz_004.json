@@ -1,7 +1,9 @@
 {
   "quizId": "quiz_004",
-  "title": "Connection Quiz 4",
+  "title": "Core Emotional Needs",
   "branch": "connection",
+  "description": "Uncover what you need most to feel loved and seen.",
+  "magnet_id": 5,
   "questions": [
     {
       "id": "quiz_004_q1",
@@ -10,10 +12,18 @@
         "That you're proud of me",
         "That you find me attractive",
         "That you appreciate me",
-        "That you're committed to us",
-        "That you enjoy being with me"
+        "That you're committed to us"
       ],
-      "category": "validation"
+      "category": "validation",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Verbal affirmation meets different emotional needs: pride validates achievement; attraction confirms desirability; appreciation acknowledges contribution; commitment provides security. Most of us have one or two forms of verbal validation that resonate most deeply—often reflecting early experiences of what we longed to hear but didn't receive enough.",
+          "framework": "attachment_theory",
+          "whenDifferent": "Different validation needs mean different words will feel like love. The pride-needer wants to feel accomplished; the attraction-needer wants to feel desired. Say the words your partner most needs, even if they're not what you most need to hear.",
+          "whenSame": "Shared validation needs mean you both hunger for the same verbal nourishment. Make a habit of saying these specific words regularly—they're the love language within words of affirmation.",
+          "journalPrompt": "What do you most wish your partner would say to you more often? When was the last time they said it? What stops you from asking for it directly?"
+        }
+      }
     },
     {
       "id": "quiz_004_q2",
@@ -22,10 +32,18 @@
         "When you were there in a crisis",
         "A spontaneous loving moment",
         "Seeing you with family/friends",
-        "A deep conversation we had",
-        "When you showed your true self"
+        "A deep conversation we had"
       ],
-      "category": "love_realization"
+      "category": "love_realization",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Love crystallizes in specific moments—crisis response reveals reliability; spontaneous affection shows genuine feeling; behavior with others reveals character; deep conversation creates intimacy. These crystallization moments become part of our relationship narrative, explaining to ourselves why we chose this person.",
+          "framework": "narrative_therapy",
+          "whenDifferent": "Different crystallization moments show love struck at different times for different reasons. Sharing these moments lets your partner see themselves through your loving eyes at a specific point in time.",
+          "whenSame": "A shared love-realization moment is powerful—you both felt it shift at the same time. This is a defining moment in your story. Return to it when you need to remember why.",
+          "journalPrompt": "Think back to when you knew—really knew—that you loved your partner. What was happening? What did they do? Have you ever told them about this specific moment?"
+        }
+      }
     },
     {
       "id": "quiz_004_q3",
@@ -34,10 +52,18 @@
         "I need more reassurance than I show",
         "Small things matter most to me",
         "I express love differently than I receive it",
-        "I feel deeply even when quiet",
-        "Physical closeness is essential for me"
+        "I feel deeply even when quiet"
       ],
-      "category": "love_insight"
+      "category": "love_insight",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Our inner experience of love often differs from our outward presentation. Those who hide their need for reassurance may seem self-sufficient; those who value small gestures may appear easy to please; those who express differently than they receive create confusion; quiet feelers may seem disconnected. Revealing our inner truth allows our partner to truly meet us.",
+          "framework": "emotion_focused_therapy",
+          "whenDifferent": "Different hidden truths about love reveal different inner landscapes. This question invites vulnerability—your partner is telling you something they wish you understood but haven't fully communicated.",
+          "whenSame": "Shared hidden truths suggest similar inner experiences of love. You may both be hiding the same needs, which means you can finally stop hiding them from each other.",
+          "journalPrompt": "What about how you experience love do you wish your partner understood better? What stops you from telling them directly? What would change if they truly knew?"
+        }
+      }
     },
     {
       "id": "quiz_004_q4",
@@ -46,10 +72,18 @@
         "Feeling prioritized",
         "Feeling safe to be myself",
         "Feeling desired and wanted",
-        "Feeling respected and heard",
-        "Feeling like a team"
+        "Feeling respected and heard"
       ],
-      "category": "core_needs"
+      "category": "core_needs",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Core emotional needs drive relationship satisfaction. Prioritization needs mean feeling chosen; safety needs mean authentic acceptance; desire needs mean being wanted; respect needs mean being valued. When our core need goes unmet, the relationship feels lacking even if other aspects are strong. Identifying your partner's primary need helps you focus your loving energy where it matters most.",
+          "framework": "attachment_theory",
+          "whenDifferent": "Different core needs require different relationship investments. The prioritization-needer must feel chosen over other demands; the safety-needer must feel unconditionally accepted. Know your partner's core need and feed it consistently.",
+          "whenSame": "Shared core needs mean you're both seeking the same emotional nourishment. You understand each other's hunger because it's the same. Make sure you're both getting fed.",
+          "journalPrompt": "What emotional need, when met, makes everything feel right? What happens when it goes unmet? Does your partner know this is your deepest need?"
+        }
+      }
     },
     {
       "id": "quiz_004_q5",
@@ -58,12 +92,18 @@
         "Comfortable silence together",
         "Finishing each other's thoughts",
         "Feeling completely at ease",
-        "Wanting to share everything",
-        "Physical and emotional sync"
+        "Wanting to share everything"
       ],
-      "category": "connection_signs"
+      "category": "connection_signs",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Connection manifests differently for different people. Silent comfort signals safety; thought-finishing signals knowing; complete ease signals acceptance; share-everything impulses signal intimacy. Recognizing how your partner experiences connection helps you create and notice those moments rather than waiting for connection to feel like it does for you.",
+          "framework": "gottman",
+          "whenDifferent": "Different connection markers mean you may feel connected at different moments. The silence-lover may not realize their chatty partner feels disconnected; the sync-seeker may miss the easy silence as connection. Learn to recognize your partner's connection signs.",
+          "whenSame": "Shared connection markers mean you'll feel bonded at the same moments. You experience 'us' in the same way. Create more of whatever generates this feeling.",
+          "journalPrompt": "When was the last time you felt truly, deeply connected to your partner? What was happening? What would help create more of those moments?"
+        }
+      }
     }
-  ],
-  "description": "Uncover what makes your connection unique and strong.",
-  "magnet_id": 5
+  ]
 }

@@ -10,9 +10,7 @@
         "Career or financial changes",
         "Relationship milestones or transitions",
         "Family or living situation changes",
-        "Personal growth that affects our dynamic",
-        "Other / It depends"
-      ],
+        "Personal growth that affects our dynamic"      ],
       "category": "emotional"
     },
     {
@@ -22,9 +20,7 @@
         "Build deeper emotional intimacy",
         "Create more shared experiences",
         "Develop better communication",
-        "Align our future goals and values",
-        "Other / It depends"
-      ],
+        "Align our future goals and values"      ],
       "category": "growth"
     },
     {
@@ -34,9 +30,7 @@
         "How I communicate or handle conflict",
         "My emotional reactions or triggers",
         "Work-life balance or priorities",
-        "Self-care and health habits",
-        "Other / It depends"
-      ],
+        "Self-care and health habits"      ],
       "category": "growth"
     },
     {
@@ -46,9 +40,7 @@
         "Your resilience and positive attitude",
         "Your problem-solving abilities",
         "Your emotional strength",
-        "Your ability to stay calm",
-        "Other / It depends"
-      ],
+        "Your ability to stay calm"      ],
       "category": "values"
     },
     {
@@ -58,9 +50,7 @@
         "Check in regularly about how we're feeling",
         "Be patient with each other's process",
         "Focus on what's not changing",
-        "Adapt our routines and expectations",
-        "Other / It depends"
-      ],
+        "Adapt our routines and expectations"      ],
       "category": "communication"
     }
   ],

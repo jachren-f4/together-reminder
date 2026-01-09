@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:confetti/confetti.dart';
+import 'package:google_fonts/google_fonts.dart';
 import '../models/linked.dart';
 import '../services/storage_service.dart';
 import '../services/celebration_service.dart';
 import '../config/brand/brand_loader.dart';
+import '../config/brand/us2_theme.dart';
+import '../widgets/brand/brand_widget_factory.dart';
 
 /// Completion screen for Linked game
 ///
@@ -93,6 +96,11 @@ class _LinkedCompletionScreenState extends State<LinkedCompletionScreen>
 
   @override
   Widget build(BuildContext context) {
+    // Us 2.0 brand uses different styling
+    if (BrandWidgetFactory.isUs2) {
+      return _buildUs2Screen();
+    }
+
     return Scaffold(
       backgroundColor: BrandLoader().colors.surface,
       body: Stack(
@@ -358,6 +366,376 @@ class _LinkedCompletionScreenState extends State<LinkedCompletionScreen>
               letterSpacing: 2,
             ),
           ),
+        ),
+      ),
+    );
+  }
+
+  // ============================================
+  // Us 2.0 Brand Styling
+  // ============================================
+
+  Widget _buildUs2Screen() {
+    return Scaffold(
+      body: Stack(
+        children: [
+          // Main content with gradient background
+          Container(
+            decoration: const BoxDecoration(gradient: Us2Theme.backgroundGradient),
+            child: SafeArea(
+              child: Column(
+                children: [
+                  // Header
+                  _buildUs2Header(),
+
+                  // Content
+                  Expanded(
+                    child: SingleChildScrollView(
+                      child: Column(
+                        children: [
+                          // Score Summary Section
+                          Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
+                            decoration: BoxDecoration(
+                              color: Colors.white.withOpacity(0.3),
+                            ),
+                            child: Column(
+                              children: [
+                                // Trophy/Badge
+                                AnimatedBuilder(
+                                  animation: _badgeAnimation,
+                                  builder: (context, child) {
+                                    return Transform.scale(
+                                      scale: _badgeAnimation.value,
+                                      child: Container(
+                                        width: 100,
+                                        height: 100,
+                                        decoration: BoxDecoration(
+                                          gradient: Us2Theme.accentGradient,
+                                          shape: BoxShape.circle,
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color: Us2Theme.glowPink.withOpacity(0.5),
+                                              blurRadius: 30,
+                                              spreadRadius: 5,
+                                            ),
+                                          ],
+                                        ),
+                                        child: const Center(
+                                          child: Text(
+                                            '✓',
+                                            style: TextStyle(
+                                              fontSize: 48,
+                                              fontWeight: FontWeight.w300,
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                ),
+                                const SizedBox(height: 24),
+
+                                // Title
+                                FadeTransition(
+                                  opacity: _fadeAnimation,
+                                  child: Text(
+                                    'Puzzle Complete!',
+                                    style: GoogleFonts.playfairDisplay(
+                                      fontSize: 28,
+                                      fontWeight: FontWeight.w700,
+                                      color: Us2Theme.textDark,
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(height: 8),
+
+                                // Subtitle based on outcome
+                                FadeTransition(
+                                  opacity: _fadeAnimation,
+                                  child: Text(
+                                    _getUs2ResultMessage(),
+                                    style: GoogleFonts.nunito(
+                                      fontSize: 16,
+                                      fontStyle: FontStyle.italic,
+                                      color: Us2Theme.textMedium,
+                                    ),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                ),
+                                const SizedBox(height: 32),
+
+                                // Scores
+                                _buildUs2ScoreCards(),
+                                const SizedBox(height: 24),
+
+                                // Stats pills
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    _buildUs2StatPill('${widget.match.turnNumber} turns', false),
+                                    const SizedBox(width: 12),
+                                    _buildUs2StatPill('+30 LP', true),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+
+                          const SizedBox(height: 24),
+                        ],
+                      ),
+                    ),
+                  ),
+
+                  // Footer button
+                  Container(
+                    padding: const EdgeInsets.all(20),
+                    decoration: BoxDecoration(
+                      color: Colors.white.withOpacity(0.5),
+                    ),
+                    child: GestureDetector(
+                      onTap: () => Navigator.of(context).popUntil((route) => route.isFirst),
+                      child: Container(
+                        width: double.infinity,
+                        padding: const EdgeInsets.symmetric(vertical: 18),
+                        decoration: BoxDecoration(
+                          gradient: Us2Theme.accentGradient,
+                          borderRadius: BorderRadius.circular(30),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Us2Theme.glowPink.withOpacity(0.4),
+                              blurRadius: 25,
+                              offset: const Offset(0, 8),
+                            ),
+                          ],
+                        ),
+                        child: Center(
+                          child: Text(
+                            'Return Home',
+                            style: GoogleFonts.nunito(
+                              fontSize: 17,
+                              fontWeight: FontWeight.w700,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+
+          // Confetti overlay
+          CelebrationService().createConfettiWidget(
+            _confettiController,
+            type: CelebrationType.questComplete,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildUs2Header() {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      decoration: BoxDecoration(
+        color: Colors.white.withOpacity(0.5),
+      ),
+      child: Row(
+        children: [
+          GestureDetector(
+            onTap: () => Navigator.of(context).popUntil((route) => route.isFirst),
+            child: Container(
+              width: 40,
+              height: 40,
+              decoration: BoxDecoration(
+                color: Colors.white.withOpacity(0.6),
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: const Icon(
+                Icons.close,
+                size: 20,
+                color: Us2Theme.textDark,
+              ),
+            ),
+          ),
+          const SizedBox(width: 12),
+          Text(
+            'Crossword Results',
+            style: GoogleFonts.playfairDisplay(
+              fontSize: 18,
+              fontWeight: FontWeight.w600,
+              color: Us2Theme.textDark,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  String _getUs2ResultMessage() {
+    if (_isTie) {
+      return "It's a tie! You both solved the same number of clues.";
+    } else if (_isWinner) {
+      return "You won! Great word skills.";
+    } else {
+      return "${widget.partnerName ?? 'Partner'} won this round!";
+    }
+  }
+
+  Widget _buildUs2ScoreCards() {
+    final userName = StorageService().getUser()?.name ?? 'You';
+    final partnerName = widget.partnerName ?? 'Partner';
+
+    return FadeTransition(
+      opacity: _fadeAnimation,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          // User score
+          _buildUs2PlayerScore(
+            name: userName,
+            score: _myScore,
+            isWinner: _isWinner && !_isTie,
+          ),
+          // Separator
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Text(
+              'vs',
+              style: GoogleFonts.nunito(
+                fontSize: 16,
+                fontStyle: FontStyle.italic,
+                color: Us2Theme.textMedium,
+              ),
+            ),
+          ),
+          // Partner score
+          _buildUs2PlayerScore(
+            name: partnerName,
+            score: _partnerScore,
+            isWinner: !_isWinner && !_isTie,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildUs2PlayerScore({
+    required String name,
+    required int score,
+    required bool isWinner,
+  }) {
+    return Column(
+      children: [
+        // Score card
+        Container(
+          width: 100,
+          padding: const EdgeInsets.symmetric(vertical: 16),
+          decoration: BoxDecoration(
+            gradient: isWinner ? Us2Theme.accentGradient : null,
+            color: isWinner ? null : Us2Theme.cream,
+            borderRadius: BorderRadius.circular(16),
+            border: isWinner ? null : Border.all(color: Colors.black.withOpacity(0.05)),
+            boxShadow: isWinner
+                ? [
+                    BoxShadow(
+                      color: Us2Theme.glowPink.withOpacity(0.3),
+                      blurRadius: 15,
+                      offset: const Offset(0, 4),
+                    ),
+                  ]
+                : null,
+          ),
+          child: Column(
+            children: [
+              Text(
+                '$score',
+                style: GoogleFonts.playfairDisplay(
+                  fontSize: 40,
+                  fontWeight: FontWeight.w700,
+                  color: isWinner ? Colors.white : Us2Theme.textDark,
+                  height: 1,
+                ),
+              ),
+              const SizedBox(height: 4),
+              Text(
+                'CLUES',
+                style: GoogleFonts.nunito(
+                  fontSize: 10,
+                  fontWeight: FontWeight.w700,
+                  letterSpacing: 1,
+                  color: isWinner ? Colors.white.withOpacity(0.8) : Us2Theme.textMedium,
+                ),
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(height: 12),
+        // Name
+        Text(
+          name.length > 10 ? '${name.substring(0, 10)}...' : name,
+          style: GoogleFonts.nunito(
+            fontSize: 14,
+            fontWeight: FontWeight.w600,
+            color: Us2Theme.textDark,
+          ),
+        ),
+        // Winner badge
+        if (isWinner)
+          Container(
+            margin: const EdgeInsets.only(top: 6),
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 3),
+            decoration: BoxDecoration(
+              gradient: Us2Theme.accentGradient,
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Text(
+              'WINNER',
+              style: GoogleFonts.nunito(
+                fontSize: 9,
+                fontWeight: FontWeight.w700,
+                letterSpacing: 0.5,
+                color: Colors.white,
+              ),
+            ),
+          ),
+      ],
+    );
+  }
+
+  Widget _buildUs2StatPill(String text, bool isHighlight) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 8),
+      decoration: BoxDecoration(
+        gradient: isHighlight
+            ? const LinearGradient(
+                colors: [Us2Theme.cardSalmon, Us2Theme.cardSalmonDark],
+              )
+            : null,
+        color: isHighlight ? null : Us2Theme.cream,
+        borderRadius: BorderRadius.circular(20),
+        border: isHighlight ? null : Border.all(color: Colors.black.withOpacity(0.05)),
+        boxShadow: isHighlight
+            ? [
+                BoxShadow(
+                  color: Us2Theme.glowPink.withOpacity(0.3),
+                  blurRadius: 10,
+                  offset: const Offset(0, 3),
+                ),
+              ]
+            : null,
+      ),
+      child: Text(
+        text,
+        style: GoogleFonts.nunito(
+          fontSize: 13,
+          fontWeight: FontWeight.w600,
+          color: isHighlight ? Colors.white : Us2Theme.textDark,
         ),
       ),
     );

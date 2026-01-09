@@ -1,0 +1,115 @@
+{
+  "quizId": "quiz_013",
+  "title": "Communication Styles",
+  "branch": "lighthearted",
+  "description": "Discover how you express yourselves and connect through words.",
+  "magnet_id": 0,
+  "questions": [
+    {
+      "id": "quiz_013_q1",
+      "text": "When I'm upset about something, I usually...",
+      "choices": [
+        "Need to talk about it right away",
+        "Need time to process first",
+        "Drop hints and hope you'll ask",
+        "Push it aside and move on"
+      ],
+      "category": "communication",
+      "metadata": {
+        "dimension": "processing_style",
+        "poleMapping": ["right", "left", "neutral", "left"],
+        "therapeutic": {
+          "rationale": "How we process difficult emotions is deeply wired and often learned in childhood. Immediate processors feel better after talking; internal processors need solitude to sort their thoughts before they can articulate them. Neither is avoiding or oversharing—they're different nervous system needs. When partners have opposite styles, the immediate processor feels shut out; the internal processor feels pressured. Understanding this difference is foundational to healthy conflict.",
+          "framework": "attachment_theory",
+          "whenDifferent": "The talker may interpret their partner's silence as stonewalling or not caring; the processor may feel overwhelmed or cornered. Create a signal: 'I need to talk about something—can we in an hour?' This respects both the need to address it and the need for time.",
+          "whenSame": "Matched processing styles mean you'll naturally navigate upset similarly. If you're both talkers, you'll hash things out immediately. If you're both processors, give each other space without feeling abandoned. The risk is waiting too long to talk.",
+          "journalPrompt": "Think about the last time you were upset with your partner. What did you need in that moment? What did you actually do? Was there a gap between need and action?"
+        }
+      }
+    },
+    {
+      "id": "quiz_013_q2",
+      "text": "I feel most heard when you...",
+      "choices": [
+        "Listen without offering solutions",
+        "Help me problem-solve",
+        "Validate my feelings first",
+        "Give me your full attention"
+      ],
+      "category": "communication",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "One of the most common communication frustrations is the mismatch between needing to vent and receiving unsolicited advice. Some people feel heard when you help fix the problem; others need emotional acknowledgment before any solutions. This maps to classic research on 'supportive communication'—understanding what your partner needs when they share helps you actually provide support rather than accidentally frustrating them.",
+          "framework": "supportive_communication",
+          "whenDifferent": "The venter may feel their partner doesn't understand them when solutions come too fast; the fixer may feel useless when told 'just listen.' Before responding, ask: 'Do you want support or solutions?' This one question prevents most of these conflicts.",
+          "whenSame": "Matched listening preferences mean your support naturally lands well. You'll intuitively know what your partner needs because it's what you need. Build on this by explicitly acknowledging when your partner does it right.",
+          "journalPrompt": "When you share something hard with your partner, what response feels best? Can you give a specific example of a time they responded perfectly, and another when they missed the mark?"
+        }
+      }
+    },
+    {
+      "id": "quiz_013_q3",
+      "text": "My texting/messaging style with you is...",
+      "choices": [
+        "Frequent check-ins throughout the day",
+        "Mostly practical stuff",
+        "Occasional love notes or memes",
+        "I prefer calls or in-person"
+      ],
+      "category": "connection",
+      "metadata": {
+        "dimension": "digital_connection",
+        "poleMapping": ["right", "left", "neutral", "left"],
+        "therapeutic": {
+          "rationale": "Digital communication has become a significant part of how couples maintain connection, but preferences vary widely. Some people feel loved through frequent small messages; others find constant texting draining or intrusive. Neither is 'clingy' or 'distant'—they're different needs for connection and autonomy during the workday. Mismatched expectations about texting frequency is a surprisingly common source of relationship tension.",
+          "framework": "love_languages",
+          "whenDifferent": "The frequent texter may feel ignored; the practical/occasional texter may feel surveilled or unable to focus. Set explicit expectations: 'I love hearing from you, but during work I can only check at lunch.' Knowing what to expect reduces anxiety on both sides.",
+          "whenSame": "Matched texting styles mean you're naturally synced on daily connection. You won't be wondering why they haven't texted or feeling overwhelmed by notifications. Use this alignment to develop your own communication rituals.",
+          "journalPrompt": "What does a text from your partner during the day mean to you? What do you assume when you don't hear from them? Have you ever discussed texting expectations explicitly?"
+        }
+      }
+    },
+    {
+      "id": "quiz_013_q4",
+      "text": "When we disagree, I tend to...",
+      "choices": [
+        "Want to resolve it immediately",
+        "Need a break before continuing",
+        "Avoid conflict if possible",
+        "Get heated, then cool down"
+      ],
+      "category": "conflict",
+      "metadata": {
+        "dimension": "conflict_style",
+        "poleMapping": ["right", "left", "left", "neutral"],
+        "therapeutic": {
+          "rationale": "Conflict style is one of the most important compatibility factors in relationships. Gottman's research shows it's not whether couples fight but how they fight that predicts relationship success. Pursuers want to resolve things now; withdrawers need space to regulate before they can engage constructively. Neither is wrong, but pursuit-withdrawal dynamics can become destructive cycles if not understood.",
+          "framework": "gottman",
+          "whenDifferent": "The pursuer may feel abandoned when their partner needs space; the withdrawer may feel cornered and shut down more. Create a repair ritual: 'I need 20 minutes, then I promise we'll talk.' This gives the withdrawer space while assuring the pursuer the conversation will happen.",
+          "whenSame": "Matched conflict styles reduce meta-conflicts about how you fight. If you both want immediate resolution, don't go to bed angry. If you both need space, take it—but set a time to return. The danger is matching avoidance styles: issues pile up.",
+          "journalPrompt": "What's your body's first reaction when conflict starts—to engage or retreat? Where did you learn this? How does your partner's style affect you in the moment?"
+        }
+      }
+    },
+    {
+      "id": "quiz_013_q5",
+      "text": "The way I show love through words is...",
+      "choices": [
+        "Saying 'I love you' often",
+        "Specific compliments",
+        "Words of encouragement",
+        "Expressing gratitude"
+      ],
+      "category": "appreciation",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Verbal affirmation is one of Gary Chapman's five love languages, but even within this category, people differ in what words mean most. Some need to hear 'I love you'; others value specific appreciation for who they are; others need encouragement during hard times. Understanding your partner's specific dialect of verbal affirmation helps you speak in ways that actually land.",
+          "framework": "love_languages",
+          "whenDifferent": "The frequent 'I love you' person may feel their partner is withholding; the specific-compliment person may feel 'I love you' is generic. Both are loving—they're just different vocabularies. Learn to translate: the encourager is saying love through 'you've got this.'",
+          "whenSame": "Matched verbal styles mean your expressions of love naturally land. You're speaking the same dialect. Keep doing what works, and occasionally try expressing love in your partner's secondary language too.",
+          "journalPrompt": "What words from your partner have stayed with you—that you remember years later? What made them so meaningful? Have you told your partner which of their words meant most?"
+        }
+      }
+    }
+  ]
+}

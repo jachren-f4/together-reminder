@@ -1,7 +1,9 @@
 {
   "quizId": "quiz_010",
-  "title": "Attachment Quiz 10",
+  "title": "Disconnection & Reconnection",
   "branch": "attachment",
+  "description": "Learn how you handle emotional distance and find your way back.",
+  "magnet_id": 8,
   "questions": [
     {
       "id": "quiz_010_q1",
@@ -9,11 +11,21 @@
       "choices": [
         "I reach out and communicate about it",
         "I wait for you to notice and reach out",
-        "I become more clingy or needy",
-        "I pull back to protect myself",
-        "Other / It depends"
+        "I become more attentive or affectionate",
+        "I pull back to protect myself"
       ],
-      "category": "communication"
+      "category": "disconnection_behavior",
+      "metadata": {
+        "dimension": "support_style",
+        "poleMapping": ["neutral", "right", "right", "left"],
+        "therapeutic": {
+          "rationale": "Disconnection responses reveal attachment coping. Reach-outers have secure communication skills; waiters have passive hope or fear of rejection; attentive-increasers try to earn connection back; pull-backers protect against further hurt. How you respond to disconnection determines whether it heals or deepens.",
+          "framework": "attachment_theory",
+          "whenDifferent": "Different disconnection responses can widen the gap. The pull-backer's protection looks like rejection to the attentive-increaser; the waiter's patience looks like indifference to the reach-outer. Name your pattern.",
+          "whenSame": "Shared disconnection responses create predictable patterns. Two pull-backers may drift apart; two reach-outers will pursue each other.",
+          "journalPrompt": "When you feel disconnected, what do you do? Does your response bring you closer or create more distance?"
+        }
+      }
     },
     {
       "id": "quiz_010_q2",
@@ -22,10 +34,18 @@
         "Deep conversation about what happened",
         "Physical intimacy and closeness",
         "Quality time doing something together",
-        "Hearing you express your love",
-        "Other / It depends"
+        "Hearing you express your love"
       ],
-      "category": "emotional"
+      "category": "reconnection_path",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Reconnection paths align with attachment soothing and love languages. Deep-talkers need verbal processing; physical-intimacy seekers need bodily connection; quality-time needers need presence; verbal-love hearers need explicit expression. Knowing your partner's reconnection path helps you bridge distance effectively.",
+          "framework": "attachment_theory",
+          "whenDifferent": "Different reconnection paths can miss. The deep-talker may feel the physical-seeker is avoiding; the physical-seeker may feel the deep-talker is intellectualizing. Use your partner's path, not yours.",
+          "whenSame": "Shared reconnection paths make bridging natural. You'll instinctively offer what helps because it's what would help you.",
+          "journalPrompt": "After feeling distant, what brings you back together? What reconnection attempts have failed? What works best?"
+        }
+      }
     },
     {
       "id": "quiz_010_q3",
@@ -34,10 +54,20 @@
         "Ask directly what's wrong",
         "Give you space and wait",
         "Pursue you more to reconnect",
-        "Match your distance to protect myself",
-        "Other / It depends"
+        "Match your distance to feel safe"
       ],
-      "category": "communication"
+      "category": "partner_withdrawal",
+      "metadata": {
+        "dimension": "support_style",
+        "poleMapping": ["neutral", "left", "right", "left"],
+        "therapeutic": {
+          "rationale": "Response to partner's withdrawal defines relationship dynamics. Direct-askers have secure communication; space-givers show trust or avoidance; pursuers have anxious activation; distance-matchers protect through mirroring. The pursue-withdraw cycle is one of the most common relationship patterns.",
+          "framework": "gottman",
+          "whenDifferent": "Different withdrawal responses create cycles. The pursuer's attempts feel smothering to the withdrawer; the withdrawer's distance feels abandoning to the pursuer. Both are trying to feel safe.",
+          "whenSame": "Shared withdrawal responses need awareness. Two pursuers can escalate; two distance-matchers can drift apart without either bridging.",
+          "journalPrompt": "When your partner seems distant, what do you do? Does your response help or make things worse? What would be more effective?"
+        }
+      }
     },
     {
       "id": "quiz_010_q4",
@@ -46,10 +76,20 @@
         "Anxiously seeking reassurance",
         "Withdrawing to avoid conflict",
         "Trying to fix everything immediately",
-        "Oscillating between pursuing and withdrawing",
-        "Other / It depends"
+        "Staying steady while working through it"
       ],
-      "category": "emotional"
+      "category": "stress_patterns",
+      "metadata": {
+        "dimension": "support_style",
+        "poleMapping": ["right", "left", "right", "neutral"],
+        "therapeutic": {
+          "rationale": "Stress patterns reveal activated attachment styles. Anxious-seekers have preoccupied attachment; withdrawers have dismissive attachment; immediate-fixers manage through action; steady-stayers have earned secure attachment. Recognizing your stress pattern is the first step to changing it.",
+          "framework": "attachment_theory",
+          "whenDifferent": "Different stress patterns interlock in predictable ways. The anxious-seeker pursues the withdrawer, who retreats more, triggering more pursuit. This dance can be exhausting until you name it.",
+          "whenSame": "Shared stress patterns can amplify or balance. Two anxious-seekers may exhaust each other; two withdrawers may never address issues. Awareness helps.",
+          "journalPrompt": "Under relationship stress, what pattern do you fall into? Is this helping or hurting? What would a healthier pattern look like?"
+        }
+      }
     },
     {
       "id": "quiz_010_q5",
@@ -58,12 +98,20 @@
         "Your presence and reassurance",
         "Space to self-soothe first",
         "Talking through my feelings",
-        "Physical grounding techniques",
-        "Other / It depends"
+        "Physical grounding techniques"
       ],
-      "category": "emotional"
+      "category": "emotion_regulation",
+      "metadata": {
+        "dimension": "support_style",
+        "poleMapping": ["right", "left", "neutral", "neutral"],
+        "therapeutic": {
+          "rationale": "Emotion regulation needs vary by attachment style. Presence-needers co-regulate through connection; space-needers self-regulate before connecting; talk-through processors need verbal expression; physical-grounders use body to calm mind. Knowing your partner's regulation style helps you support without overwhelming.",
+          "framework": "attachment_theory",
+          "whenDifferent": "Different regulation needs can clash. The presence-needer feels abandoned by the space-needer; the space-needer feels overwhelmed by the presence-needer. Ask: 'What do you need right now?'",
+          "whenSame": "Shared regulation needs make support intuitive. You'll naturally offer what helps because it's what you need too.",
+          "journalPrompt": "When you're emotionally triggered, what helps you regulate? What makes it worse? Does your partner know how to help?"
+        }
+      }
     }
-  ],
-  "description": "Learn about your emotional responses to each other.",
-  "magnet_id": 8
+  ]
 }

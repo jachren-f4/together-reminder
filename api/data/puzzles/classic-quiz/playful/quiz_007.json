@@ -10,8 +10,7 @@
         "Tag-team the conversations and work the room together",
         "Stick close and experience it as a pair",
         "Do our own thing but check in throughout",
-        "Have a signal for when one of us is ready to leave",
-        "Other / It depends"
+        "Have a signal for when one of us is ready to leave"
       ],
       "category": "social"
     },
@@ -22,8 +21,7 @@
         "Practical suggestions or help solving it",
         "Just listening and letting me vent",
         "Asking questions to help me think it through",
-        "Distraction - help me take my mind off it",
-        "Other / It depends"
+        "Distraction - help me take my mind off it"
       ],
       "category": "communication",
       "metadata": {
@@ -31,7 +29,6 @@
         "poleMapping": [
           "right",
           "left",
-          null,
           null,
           null
         ]
@@ -44,8 +41,7 @@
         "Big gatherings with lots of energy",
         "Smaller groups of close friends",
         "Double dates or hanging with one other couple",
-        "Just the two of us, honestly",
-        "Other / It depends"
+        "Just the two of us, honestly"
       ],
       "category": "social",
       "metadata": {
@@ -54,8 +50,7 @@
           "right",
           null,
           null,
-          "left",
-          null
+          "left"
         ]
       }
     },
@@ -66,8 +61,7 @@
         "Just pick something and go with it",
         "Keep discussing until everyone's happy",
         "Let whoever cares most decide",
-        "Split up and do different things if needed",
-        "Other / It depends"
+        "Split up and do different things if needed"
       ],
       "category": "social"
     },
@@ -78,8 +72,7 @@
         "Makes things happen - we organize and bring people together",
         "Brings the fun - we're up for anything",
         "Is easy to be around - chill and go-with-the-flow",
-        "Has the deep conversations - people open up to us",
-        "Other / It depends"
+        "Has the deep conversations - people open up to us"
       ],
       "category": "social"
     }

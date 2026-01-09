@@ -1,0 +1,113 @@
+{
+  "quizId": "quiz_017",
+  "title": "Social Life",
+  "branch": "lighthearted",
+  "description": "Navigate your social world and friendships together.",
+  "magnet_id": 0,
+  "questions": [
+    {
+      "id": "quiz_017_q1",
+      "text": "Ideally, how often would we see friends?",
+      "choices": [
+        "Multiple times a week",
+        "Weekly",
+        "A few times a month",
+        "Occasionally is fine"
+      ],
+      "category": "social",
+      "metadata": {
+        "dimension": "social_energy",
+        "poleMapping": ["right", "neutral", "left", "left"],
+        "therapeutic": {
+          "rationale": "Social frequency needs often reflect introversion/extraversion but also life stage, friendship history, and how we recharge. Partners with different social needs must navigate how to meet both: too much socializing exhausts one; too little isolates the other. Understanding each other's ideal frequency prevents the extrovert from feeling held back and the introvert from feeling overwhelmed.",
+          "framework": "personality_psychology",
+          "whenDifferent": "The social partner may feel trapped; the homebody may feel constantly drained. Create separate social lives where needed—one can go out while the other stays home. Protect some couple-only time AND some social time. Both are necessary.",
+          "whenSame": "Matched social frequency means you'll naturally agree on how much people-time to schedule. Build your social life together without negotiating every invitation.",
+          "journalPrompt": "After a social event, how do you feel? Energized or drained? How does your partner seem? Have you discussed your ideal social calendar?"
+        }
+      }
+    },
+    {
+      "id": "quiz_017_q2",
+      "text": "When it comes to your friends, I want to...",
+      "choices": [
+        "Be close with all of them",
+        "Know them but have my own too",
+        "Respect they're your people",
+        "Join sometimes, not always"
+      ],
+      "category": "social",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "How couples relate to each other's friends affects identity and autonomy. Some people want complete friend integration—'your friends are my friends.' Others maintain separate social worlds. Neither is more committed; they're different models of partnership. Problems arise when one partner expects integration and the other feels encroached upon, or vice versa.",
+          "framework": "boundary_theory",
+          "whenDifferent": "The integrator may feel shut out; the separator may feel their friendships are being colonized. Discuss explicitly: which friendships are shared, which are individual? How do you each feel about the other spending time with friends solo?",
+          "whenSame": "Matched friend-integration preferences make social life straightforward. If you both want merged circles, build them together. If you both value separate friendships, give each other space without jealousy.",
+          "journalPrompt": "How do you feel when your partner spends time with their friends without you? How do you feel when they join all of yours? What's your ideal friend integration level?"
+        }
+      }
+    },
+    {
+      "id": "quiz_017_q3",
+      "text": "At a party or social event, I tend to...",
+      "choices": [
+        "Work the room and meet everyone",
+        "Find a few people and go deep",
+        "Stick close to you",
+        "Need to recharge midway through"
+      ],
+      "category": "social",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Party behavior reveals social comfort and energy patterns. Room-workers thrive on novelty and breadth; deep-divers prefer meaningful connection; partner-clingers may feel social anxiety; rechargers are classic introverts; early-leavers hit their limit. Understanding each other's party style helps you support each other rather than feeling abandoned or held hostage at events.",
+          "framework": "personality_psychology",
+          "whenDifferent": "The social butterfly may feel their partner is a drag; the introvert may feel abandoned while their partner circulates. Discuss before events: 'I need to recharge—let's check in after an hour.' Have signals for 'I'm ready to go' and 'I need more time.'",
+          "whenSame": "Matched party styles make social events easier. You'll naturally move through the event together, leave at the same time, and need similar recovery afterward.",
+          "journalPrompt": "How do you feel at parties? What do you need from your partner during social events? Have you ever felt abandoned or trapped at one?"
+        }
+      }
+    },
+    {
+      "id": "quiz_017_q4",
+      "text": "Time with my family is...",
+      "choices": [
+        "Really important to me",
+        "Nice but not essential",
+        "Complicated honestly",
+        "Something I need more of"
+      ],
+      "category": "social",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Family relationships carry enormous weight in partnerships. When families are healthy, more time together strengthens roots. When families are complicated, visits can be destabilizing. Partners who don't understand each other's family dynamics may push for more time when less is needed, or dismiss the importance of family when it matters deeply. This question opens the door to deeper family conversations.",
+          "framework": "family_systems",
+          "whenDifferent": "The family-centered partner may feel their partner doesn't value their origins; the complicated-family partner may feel dragged into situations that harm them. Respect each other's needs—one can visit more often alone; the other shouldn't feel forced into uncomfortable dynamics.",
+          "whenSame": "Matched family orientations reduce holiday stress significantly. You'll naturally agree on how much family time is right. If both have complicated families, you can support each other's boundaries.",
+          "journalPrompt": "What role does your family of origin play in your life now? How does your partner's family dynamic affect you? What do you each need around family time?"
+        }
+      }
+    },
+    {
+      "id": "quiz_017_q5",
+      "text": "When friends give relationship advice, I...",
+      "choices": [
+        "Value outside perspectives",
+        "Listen but make my own choices",
+        "Keep our relationship pretty private",
+        "Only share with close friends"
+      ],
+      "category": "communication",
+      "metadata": {
+        "dimension": "relationship_privacy",
+        "poleMapping": ["right", "neutral", "left", "neutral"],
+        "therapeutic": {
+          "rationale": "How much we share about our relationship with others reflects privacy needs and support-seeking styles. Some people process through external input; others feel violated when relationship details are shared. There's no single right answer, but partners need to agree on what's shared outside the relationship—especially during conflict. Sharing too much can poison friendships against a partner; sharing too little can leave someone without support.",
+          "framework": "boundary_theory",
+          "whenDifferent": "The sharer may feel their partner is secretive; the private partner may feel exposed. Discuss boundaries: what's okay to share, with whom, in what circumstances. Conflict details are especially sensitive.",
+          "whenSame": "Matched privacy preferences prevent one of the most common boundary violations. You'll naturally agree on what stays between you and what can be discussed. Build on this shared understanding.",
+          "journalPrompt": "What have you shared about your relationship with friends? How would your partner feel if they knew? What are your unspoken privacy expectations?"
+        }
+      }
+    }
+  ]
+}

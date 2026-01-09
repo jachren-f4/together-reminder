@@ -2,6 +2,8 @@
   "quizId": "quiz_006",
   "title": "Celebrating Each Other",
   "branch": "lighthearted",
+  "description": "Share what you admire and love about each other.",
+  "magnet_id": 0,
   "questions": [
     {
       "id": "quiz_006_q1",
@@ -10,10 +12,18 @@
         "Your sense of humor",
         "How you care for others",
         "Your confidence or drive",
-        "The way you look at me",
-        "Other / It depends"
+        "The way you look at me"
       ],
-      "category": "preferences"
+      "category": "appreciation",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Attraction in long-term relationships evolves beyond physical appearance to encompass character traits, behaviors, and emotional presence. Gottman's research shows that couples who maintain awareness of what draws them to their partner—and express it—build what he calls 'fondness and admiration systems.' This question practices the skill of identifying and naming specific sources of attraction, which strengthens the positive sentiment override that protects relationships during conflict.",
+          "framework": "gottman",
+          "whenDifferent": "Different answers aren't a mismatch—they reveal the multi-dimensional nature of attraction. Your partner is drawn to qualities you might take for granted in yourself. This is valuable information: you're each seeing real, attractive qualities the other may not fully recognize.",
+          "whenSame": "When both partners identify the same quality, it often represents a cornerstone of your connection. This shared recognition suggests you've built part of your relationship identity around this trait. Consider how you can continue nurturing it.",
+          "journalPrompt": "Think back to when you first noticed this quality in your partner. What moment made it stand out? How has your appreciation of it deepened or changed over time?"
+        }
+      }
     },
     {
       "id": "quiz_006_q2",
@@ -22,10 +32,18 @@
         "Your calmness under pressure",
         "Your optimism and positivity",
         "Your determination and grit",
-        "Your thoughtfulness and care",
-        "Other / It depends"
+        "Your thoughtfulness and care"
       ],
-      "category": "appreciation"
+      "category": "appreciation",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Admiration for how your partner navigates life's challenges is a powerful predictor of relationship longevity. When we respect our partner's character—not just enjoy their company—we build a foundation that withstands difficult seasons. This question taps into what researchers call 'perceived partner responsiveness': the belief that your partner is capable and competent. Couples who hold their partners in high esteem are more likely to turn toward each other during stress rather than away.",
+          "framework": "gottman",
+          "whenDifferent": "You're each noticing different strengths in how your partner faces life. This is a gift—you're holding up a mirror to qualities they may not see clearly in themselves. These different observations often reflect what each of you values most or perhaps struggles with personally.",
+          "whenSame": "Shared admiration for the same quality suggests this is a defining characteristic of your partner that shapes how you both experience the relationship. This trait likely provides stability or energy that you've come to rely on together.",
+          "journalPrompt": "Recall a specific moment when you witnessed this quality in action. What was happening, and how did it make you feel about your partner? Have you ever told them how much this means to you?"
+        }
+      }
     },
     {
       "id": "quiz_006_q3",
@@ -34,10 +52,18 @@
         "How you connect with people",
         "How you solve problems",
         "How you express yourself",
-        "How you take care of things",
-        "Other / It depends"
+        "How you take care of things"
       ],
-      "category": "appreciation"
+      "category": "appreciation",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Being impressed by your partner reflects what psychologists call 'positive illusions'—the tendency in healthy relationships to see your partner slightly more favorably than objective reality. Rather than being naive, this bias actively protects relationships. Partners who continue to be impressed by each other maintain curiosity and avoid the contempt that erodes connection. This question invites you to articulate specific competencies you admire, reinforcing the neural pathways associated with appreciation.",
+          "framework": "positive_psychology",
+          "whenDifferent": "Different answers reveal the breadth of your partner's capabilities—you're each witnessing them excel in different arenas. This diversity of admiration means your partner receives validation across multiple dimensions of who they are, not just one narrow role.",
+          "whenSame": "When both of you identify the same impressive quality, it's likely central to your partner's identity and possibly how they contribute to the relationship. This shared recognition can become a source of pride and confidence for them.",
+          "journalPrompt": "When was the last time you told your partner you were impressed by them? What would it mean to them to hear it more often? Consider sharing a specific recent example."
+        }
+      }
     },
     {
       "id": "quiz_006_q4",
@@ -46,10 +72,18 @@
         "Your laugh or expressions",
         "Your habits or quirks",
         "The way you say certain things",
-        "How you are when you're focused",
-        "Other / It depends"
+        "How you are when you're focused"
       ],
-      "category": "connection"
+      "category": "connection",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Noticing small, endearing details about your partner is a hallmark of what Gottman calls 'love maps'—the mental space where you store information about your partner's world. Couples who maintain rich love maps continue to find delight in each other even after years together. The ability to smile at your partner's quirks—rather than be irritated by them—reflects a positive sentiment override that buffers the relationship against negativity. These micro-moments of fondness accumulate into deep, lasting affection.",
+          "framework": "gottman",
+          "whenDifferent": "You're each charmed by different small things—this means your partner brings joy to you in multiple ways, often without realizing it. These little things are the texture of daily love, the background music of a happy relationship.",
+          "whenSame": "A shared smile trigger often becomes an inside reference point—something that connects you in crowded rooms or long days. These small shared delights are relationship glue, easily overlooked but deeply bonding.",
+          "journalPrompt": "Pay attention this week: when does this little thing show up? How does it shift your mood or your sense of connection? Consider telling your partner what it means to you."
+        }
+      }
     },
     {
       "id": "quiz_006_q5",
@@ -58,12 +92,18 @@
         "How talented or skilled you are",
         "How kind and caring you are",
         "How fun and adventurous you are",
-        "How smart and insightful you are",
-        "Other / It depends"
+        "How smart and insightful you are"
       ],
-      "category": "appreciation"
+      "category": "appreciation",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "How we describe our partner to others reveals our internal narrative about them—and shapes it. Couples who speak positively about each other to friends and family reinforce their own positive perceptions and create social accountability for treating each other well. This question surfaces what you consider your partner's 'headline quality'—the trait that most defines them in your eyes. Sharing this with your partner can be profoundly affirming, as it shows them how they exist in your mind when they're not present.",
+          "framework": "narrative_therapy",
+          "whenDifferent": "Different brag-worthy qualities mean your partner is seen as multi-talented—you'd each champion different aspects of who they are. This diversity of public praise gives your partner confidence across multiple dimensions of their identity.",
+          "whenSame": "When you'd both brag about the same thing, you've identified your partner's signature strength—the quality that defines them to the outside world. This consensus can help your partner own this trait more fully as part of their identity.",
+          "journalPrompt": "Have you actually bragged about your partner recently? To whom? How did it feel? Consider: does your partner know this is how you see them, or is it a secret you've been keeping?"
+        }
+      }
     }
-  ],
-  "description": "Share what you admire and love about each other.",
-  "magnet_id": 0
+  ]
 }

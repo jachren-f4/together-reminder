@@ -2,6 +2,8 @@
   "quizId": "quiz_003",
   "title": "Our Little Moments",
   "branch": "lighthearted",
+  "description": "Celebrate the small, everyday moments that make your relationship special.",
+  "magnet_id": 0,
   "questions": [
     {
       "id": "quiz_003_q1",
@@ -10,10 +12,18 @@
         "Morning coffee or breakfast together",
         "Driving somewhere, just the two of us",
         "Cooking or eating dinner together",
-        "Winding down at the end of the day",
-        "Other / It depends"
+        "Winding down at the end of the day"
       ],
-      "category": "preferences"
+      "category": "preferences",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Ordinary moments are the fabric of a relationship—we spend far more time in the mundane than in the extraordinary. Research shows that relationship satisfaction depends less on grand gestures and more on the quality of everyday interactions. Knowing which ordinary moments your partner cherishes helps you show up fully in those times rather than sleepwalking through them.",
+          "framework": "gottman",
+          "whenDifferent": "Different favorite moments mean you each have different opportunities for connection. The morning person may be at their best over coffee; the evening person may be most present winding down. Honor each other's peak moments by being fully there when it matters to them.",
+          "whenSame": "Shared favorite moments are a relationship gift. You both light up at the same time of day, in the same context. Protect this time—don't let phones or distractions erode your shared ordinary magic.",
+          "journalPrompt": "Picture your favorite ordinary moment with your partner. What makes it special? Are you both fully present in those moments, or does one of you tend to be distracted?"
+        }
+      }
     },
     {
       "id": "quiz_003_q2",
@@ -22,10 +32,18 @@
         "Times we couldn't stop laughing",
         "Small sweet gestures you did",
         "Adventures or trips we took",
-        "Quiet moments just being together",
-        "Other / It depends"
+        "Quiet moments just being together"
       ],
-      "category": "preferences"
+      "category": "preferences",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "What we remember most fondly reveals what we value most in the relationship. Gottman's research on 'fondness and admiration' systems shows that couples who can easily recall positive memories have stronger relationships. The type of memories that make you smile—laughter, gestures, adventures, or presence—points to what kind of connection feeds your soul.",
+          "framework": "gottman",
+          "whenDifferent": "Different memory highlights mean you're each treasuring different aspects of your history. Share these: 'You know what I randomly think about? That time...' Your partner may not know which moments stuck with you.",
+          "whenSame": "Shared memory highlights suggest shared relationship values. You both light up thinking about the same kind of moments. Create more of them intentionally.",
+          "journalPrompt": "Close your eyes and let a random happy memory of your partner surface. What came up? What does this tell you about what you value? Have you shared this memory with them lately?"
+        }
+      }
     },
     {
       "id": "quiz_003_q3",
@@ -34,19 +52,19 @@
         "Mornings before the day starts",
         "Lunch or afternoon breaks",
         "Evening when we're both home",
-        "Late night when everything's quiet",
-        "Other / It depends"
+        "Late night when everything's quiet"
       ],
       "category": "lifestyle",
       "metadata": {
         "dimension": "daily_rhythm",
-        "poleMapping": [
-          "right",
-          null,
-          null,
-          "left",
-          null
-        ]
+        "poleMapping": ["right", "neutral", "neutral", "left"],
+        "therapeutic": {
+          "rationale": "Daily rhythms significantly impact relationship connection. Some people are morning people, most present and energized early; others are night owls who come alive after dark. Partners with mismatched chronotypes may struggle to find overlap when both are at their best. Understanding your partner's peak time helps you prioritize connection when they're most available.",
+          "framework": "chronobiology",
+          "whenDifferent": "Different peak times can mean ships passing in the night—literally. The morning person is fading when the night owl is energizing. Find your overlap and protect it. Accept that one of you may need to stretch into the other's time zone sometimes.",
+          "whenSame": "Matched daily rhythms mean your natural peaks align. You'll both be most present at the same time. This is a compatibility advantage—lean into your shared best time.",
+          "journalPrompt": "When do you feel most connected to your partner during a typical day? When do you feel most distracted or unavailable? Does your partner know your rhythm?"
+        }
       }
     },
     {
@@ -56,10 +74,18 @@
         "We're in comfortable silence",
         "We chat about random things",
         "We're physically close, even if distracted",
-        "We do our own things but nearby",
-        "Other / It depends"
+        "We do our own things but nearby"
       ],
-      "category": "connection"
+      "category": "connection",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "'Doing nothing together' is a relationship skill. Some couples need silence to feel peace; others need chatter to feel connected; some need touch; others need parallel presence. What looks like 'just hanging out' is actually a complex negotiation of needs. Understanding how your partner wants to share nothing-time helps you be present in the way they can feel.",
+          "framework": "attachment_theory",
+          "whenDifferent": "The silence-lover may feel their partner's chatting disrupts the peace; the chatter may feel the silence is disconnection. Name your preference: 'I love when we just sit together quietly' or 'Tell me random things about your day.'",
+          "whenSame": "Matched nothing-time preferences mean downtime naturally feels good. You don't have to negotiate how to hang out—you just do. This is easy intimacy. Enjoy it.",
+          "journalPrompt": "What does 'doing nothing together' look like in your ideal version? What about your partner's? Are you both getting what you need in those moments?"
+        }
+      }
     },
     {
       "id": "quiz_003_q5",
@@ -68,12 +94,18 @@
         "Grocery shopping or errands",
         "Cleaning or organizing together",
         "Waiting in line or at appointments",
-        "Long car rides",
-        "Other / It depends"
+        "Long car rides"
       ],
-      "category": "preferences"
+      "category": "preferences",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "The mundane becomes meaningful with the right partner. Couples who can find joy in boring tasks together have discovered something important: connection isn't about what you're doing but who you're with. This question reveals your shared capacity for everyday magic—finding fun in the unfun, together.",
+          "framework": "positive_psychology",
+          "whenDifferent": "Different boring-made-fun activities reveal different opportunities. Maybe errands are your jam but your partner shines on car rides. Split tasks accordingly, or learn to appreciate why they find joy in something you find tedious.",
+          "whenSame": "Shared boring-made-fun activities are relationship gold. You've found the mundane magic together. Lean into it—grocery runs become dates, car rides become conversations.",
+          "journalPrompt": "What boring task becomes genuinely enjoyable when you do it with your partner? What makes it fun? How could you bring more of this energy into other mundane moments?"
+        }
+      }
     }
-  ],
-  "description": "Celebrate the small, everyday moments that make your relationship special.",
-  "magnet_id": 0
+  ]
 }

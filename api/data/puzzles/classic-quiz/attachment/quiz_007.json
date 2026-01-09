@@ -1,7 +1,9 @@
 {
   "quizId": "quiz_007",
-  "title": "Attachment Quiz 7",
+  "title": "Independence & Togetherness",
   "branch": "attachment",
+  "description": "Learn about your balance of closeness and personal space.",
+  "magnet_id": 8,
   "questions": [
     {
       "id": "quiz_007_q1",
@@ -10,10 +12,20 @@
         "A lot - I need significant personal space",
         "Moderate - balance of together and apart time",
         "Minimal - I prefer to share most activities",
-        "It varies based on circumstances",
-        "Other / It depends"
+        "It varies based on circumstances"
       ],
-      "category": "values"
+      "category": "independence_needs",
+      "metadata": {
+        "dimension": "social_energy",
+        "poleMapping": ["left", "neutral", "right", "neutral"],
+        "therapeutic": {
+          "rationale": "Independence needs reflect the balance between autonomy and connection. High-independence seekers may have avoidant attachment or healthy differentiation; moderate-seekers have flexible balance; low-independence seekers may have anxious attachment or genuine togetherness preference; variable-needers adapt to context.",
+          "framework": "attachment_theory",
+          "whenDifferent": "Different independence needs create the most common relationship struggle. The high-independence person may feel suffocated by the togetherness-seeker; the togetherness-seeker may feel abandoned. Neither is wrong—negotiate rather than judge.",
+          "whenSame": "Shared independence needs make balance easier. You'll want similar amounts of space and togetherness.",
+          "journalPrompt": "How much independence do you need? Is your current relationship providing this? What happens when you don't get enough—or get too much?"
+        }
+      }
     },
     {
       "id": "quiz_007_q2",
@@ -22,10 +34,18 @@
         "Completely fine and supportive",
         "Okay if you communicate about it",
         "A bit insecure but I manage it",
-        "Worried that something's wrong",
-        "Other / It depends"
+        "Worried that something's wrong"
       ],
-      "category": "emotional"
+      "category": "partner_space",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Response to partner's space-taking reveals attachment activation. Fine-and-supportive suggests secure attachment; communication-dependent suggests need for reassurance; managed-insecurity shows aware anxiety; worried-response shows activated anxious attachment. How you respond to your partner's space-taking affects whether they feel safe taking it.",
+          "framework": "attachment_theory",
+          "whenDifferent": "Different responses to space-taking affect relationship dynamics. If your partner feels worried when you need space, they need reassurance that space isn't rejection.",
+          "whenSame": "Shared responses to space-taking suggest similar attachment orientations. You understand each other's relationship with alone time.",
+          "journalPrompt": "How do you feel when your partner needs alone time? What thoughts arise? Does your response help them feel safe taking space?"
+        }
+      }
     },
     {
       "id": "quiz_007_q3",
@@ -34,10 +54,20 @@
         "Constant connection and sharing",
         "Regular check-ins throughout the day",
         "Quality time morning and evening",
-        "Meaningful connection a few times a week",
-        "Other / It depends"
+        "Meaningful connection a few times a week"
       ],
-      "category": "values"
+      "category": "togetherness_ideal",
+      "metadata": {
+        "dimension": "social_energy",
+        "poleMapping": ["right", "right", "neutral", "left"],
+        "therapeutic": {
+          "rationale": "Togetherness ideals reflect connection needs. Constant-connectors have high attachment needs; regular check-inners balance connection throughout day; morning-evening connectors have transition rituals; weekly-connectors have lower frequency needs. Mismatched ideals create daily friction.",
+          "framework": "attachment_theory",
+          "whenDifferent": "Different togetherness ideals require compromise. The constant-connector may feel neglected by the weekly-connector; the weekly-connector may feel overwhelmed by constant demand. Find a rhythm that works for both.",
+          "whenSame": "Shared togetherness ideals make daily life flow. You'll naturally want similar amounts of connection.",
+          "journalPrompt": "What's your ideal amount of daily togetherness? Is your relationship providing this? What would your ideal day look like?"
+        }
+      }
     },
     {
       "id": "quiz_007_q4",
@@ -46,10 +76,18 @@
         "I maintain strong individual interests",
         "I blend our lives while keeping some independence",
         "I prioritize our couple identity",
-        "It's an ongoing process I'm working on",
-        "Other / It depends"
+        "I sometimes lose myself in relationships"
       ],
-      "category": "growth"
+      "category": "identity_balance",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Identity balance in relationships reflects differentiation. Strong-individual-interest maintainers preserve selfhood; blenders find balance; couple-identity prioritizers merge more fully; self-losers may have enmeshment patterns. Healthy relationships maintain two distinct selves who choose to be together.",
+          "framework": "family_systems",
+          "whenDifferent": "Different identity balances may create tension. The strong-individual may feel the couple-prioritizer wants too much merger; the couple-prioritizer may feel the strong-individual is distant. Both positions are valid.",
+          "whenSame": "Shared identity balance means you approach 'we' vs 'I' similarly. You're aligned on how much to merge versus stay separate.",
+          "journalPrompt": "How well do you maintain your individual identity in your relationship? Do you lose yourself, or stay too separate? What would ideal balance look like?"
+        }
+      }
     },
     {
       "id": "quiz_007_q5",
@@ -58,12 +96,20 @@
         "Frequent texts or calls",
         "Knowing when we'll see each other next",
         "Trust in our connection",
-        "Photos or voice messages",
-        "Other / It depends"
+        "Having my own activities to focus on"
       ],
-      "category": "trust"
+      "category": "apart_security",
+      "metadata": {
+        "dimension": "social_energy",
+        "poleMapping": ["right", "neutral", "neutral", "left"],
+        "therapeutic": {
+          "rationale": "Apart-security strategies reveal attachment coping. Frequent contact maintains felt connection; knowing-when provides certainty; trust allows secure confidence; own-activities shift focus. Understanding what helps your partner feel secure during separation helps you provide it.",
+          "framework": "attachment_theory",
+          "whenDifferent": "Different apart-security needs mean different things help each of you. The frequent-texter may feel abandoned by the trust-based partner; the own-activities person may feel smothered by constant contact.",
+          "whenSame": "Shared apart-security strategies mean you'll naturally help each other feel connected during separation.",
+          "journalPrompt": "What helps you feel secure when your partner isn't around? Do you need contact, or can you trust the connection? What would help you feel more secure apart?"
+        }
+      }
     }
-  ],
-  "description": "Learn about the ways you show and receive love.",
-  "magnet_id": 8
+  ]
 }

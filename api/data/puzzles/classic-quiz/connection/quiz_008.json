@@ -1,7 +1,9 @@
 {
   "quizId": "quiz_008",
-  "title": "Connection Quiz 8",
+  "title": "Emotional Processing",
   "branch": "connection",
+  "description": "Understand how you handle and share your feelings.",
+  "magnet_id": 6,
   "questions": [
     {
       "id": "quiz_008_q1",
@@ -10,10 +12,18 @@
         "Feeling consistently loved and valued",
         "Feeling heard and understood",
         "Feeling supported in my goals",
-        "Feeling desired and wanted",
-        "Other / It depends"
+        "Feeling desired and wanted"
       ],
-      "category": "emotional"
+      "category": "core_needs",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Core emotional needs drive relationship satisfaction. Consistent love needs daily reassurance; being heard needs active listening; goal support needs championing; being desired needs attraction shown. When our primary need goes unmet, we feel the relationship is failing even if other areas are strong.",
+          "framework": "attachment_theory",
+          "whenDifferent": "Different core needs require different relationship investments. The consistency-seeker needs daily evidence; the heard-seeker needs deep listening; the desired-seeker needs attraction expressed. Know and prioritize your partner's primary need.",
+          "whenSame": "Shared core needs mean you're both seeking the same emotional nourishment. You understand the hunger because it's the same. Make sure you're both fed.",
+          "journalPrompt": "What emotional need, when met, makes the relationship feel right? What happens when it goes unmet for too long? Does your partner know this is your deepest need?"
+        }
+      }
     },
     {
       "id": "quiz_008_q2",
@@ -22,22 +32,40 @@
         "Your reassuring words",
         "Being held or touched",
         "Time alone to process",
-        "Talking through it together",
-        "Other / It depends"
+        "Talking through it together"
       ],
-      "category": "emotional"
+      "category": "regulation",
+      "metadata": {
+        "dimension": "social_energy",
+        "poleMapping": ["neutral", "right", "left", "right"],
+        "therapeutic": {
+          "rationale": "Emotional regulation strategies differ significantly between people. Some co-regulate through words; others through physical contact; others need solitude to self-regulate; others process by talking. Understanding how your partner calms down helps you support their regulation rather than interfere with it.",
+          "framework": "emotion_focused_therapy",
+          "whenDifferent": "Different calming needs often clash. The touch-calmer may feel rejected by the space-needer; the talker may feel abandoned by the silence-needer. State what you need: 'I need 10 minutes alone, then let's talk.'",
+          "whenSame": "Matched calming strategies mean you can help each other regulate in the same way. You instinctively provide what soothes.",
+          "journalPrompt": "When you're upset, what actually helps you calm down? What makes it worse? Does your partner know what helps versus what escalates?"
+        }
+      }
     },
     {
       "id": "quiz_008_q3",
       "text": "What makes me feel most prioritized in your life?",
       "choices": [
         "When you make time for me despite being busy",
-        "When you cancel other plans to be with me",
-        "When you ask about my day",
-        "When you include me in your decisions",
-        "Other / It depends"
+        "When you choose me over other options",
+        "When you ask about my inner world",
+        "When you include me in your decisions"
       ],
-      "category": "values"
+      "category": "prioritization",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Feeling prioritized is essential—we need to know we matter to our partner. Time-making shows we're worth schedule adjustments; choosing shows preference; asking shows interest in our depth; inclusion shows partnership. How prioritization lands varies by person.",
+          "framework": "gottman",
+          "whenDifferent": "Different prioritization needs mean different things make you feel chosen. The choice-seeker needs visible selection; the inclusion-seeker needs collaborative decisions. Show priority in your partner's language.",
+          "whenSame": "Shared prioritization cues mean the same actions make you both feel chosen. You'll naturally prioritize each other in ways that register.",
+          "journalPrompt": "When do you feel most prioritized by your partner? When do you feel like an afterthought? What would help you feel consistently chosen?"
+        }
+      }
     },
     {
       "id": "quiz_008_q4",
@@ -46,10 +74,20 @@
         "In deep, planned conversations",
         "Gradually, as things come up",
         "Through actions more than words",
-        "Via text or writing first",
-        "Other / It depends"
+        "After I've processed alone first"
       ],
-      "category": "communication"
+      "category": "emotional_sharing",
+      "metadata": {
+        "dimension": "planning_preference",
+        "poleMapping": ["left", "neutral", "right", "left"],
+        "therapeutic": {
+          "rationale": "How we share feelings reflects our processing style. Some need dedicated conversation space; others integrate emotionally as they go; others communicate through behavior; others need solitary processing first. Partners with different sharing styles may misinterpret each other—the gradual sharer may seem distant to the deep-conversation seeker.",
+          "framework": "emotion_focused_therapy",
+          "whenDifferent": "Different sharing styles create miscommunication. The planned-conversation person may feel their action-sharing partner never opens up; the process-first partner may feel pressured by immediate demands. Adapt to each other's pace and style.",
+          "whenSame": "Matched sharing styles mean emotional conversations flow naturally. You're on the same wavelength about when and how to process together.",
+          "journalPrompt": "How do you prefer to share difficult feelings? Does your partner know your style? What happens when they push for a style that doesn't fit you?"
+        }
+      }
     },
     {
       "id": "quiz_008_q5",
@@ -58,12 +96,20 @@
         "Quality time with you",
         "Physical affection",
         "Words of encouragement",
-        "Alone time followed by connection",
-        "Other / It depends"
+        "Alone time followed by connection"
       ],
-      "category": "emotional"
+      "category": "recharging",
+      "metadata": {
+        "dimension": "social_energy",
+        "poleMapping": ["right", "right", "neutral", "left"],
+        "therapeutic": {
+          "rationale": "Recharging needs vary based on introversion/extroversion and love languages. Some recharge through togetherness; others through physical contact; others through verbal support; others need solitude before connection. Knowing how your partner recharges helps you give them what they need after depleting days.",
+          "framework": "positive_psychology",
+          "whenDifferent": "Different recharging needs may conflict at day's end. The together-recharger may feel rejected by the alone-time-first partner; the verbal-support person may need to process before other activities. Communicate what you need after hard days.",
+          "whenSame": "Matched recharging styles mean evenings flow naturally. You'll both want to recharge the same way, making end-of-day transitions smooth.",
+          "journalPrompt": "After a really hard day, what do you need to feel recharged? Does your partner provide this? What happens when you can't recharge in your preferred way?"
+        }
+      }
     }
-  ],
-  "description": "Explore the building blocks of your relationship.",
-  "magnet_id": 6
+  ]
 }

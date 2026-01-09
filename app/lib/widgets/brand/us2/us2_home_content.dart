@@ -39,6 +39,12 @@ class Us2HomeContent extends StatelessWidget {
   final GuidanceCallback? getSideQuestGuidance;
   final CooldownCallback? getCooldownStatus;
 
+  /// GlobalKey for the connection bar to access its state for LP animations
+  final GlobalKey<Us2ConnectionBarState>? connectionBarKey;
+
+  /// GlobalKey for the daily quests section to get particle start position
+  final GlobalKey? dailyQuestsSectionKey;
+
   Us2HomeContent({
     super.key,
     required this.userName,
@@ -53,6 +59,8 @@ class Us2HomeContent extends StatelessWidget {
     this.getDailyQuestGuidance,
     this.getSideQuestGuidance,
     this.getCooldownStatus,
+    this.connectionBarKey,
+    this.dailyQuestsSectionKey,
   });
 
   /// Build the hero section with overlapping logo, avatars, and connection bar
@@ -85,6 +93,7 @@ class Us2HomeContent extends StatelessWidget {
             left: 0,
             right: 0,
             child: Us2ConnectionBar(
+              key: connectionBarKey,
               collection: magnetCollection,
               onTap: onCollectionTap,
             ),
@@ -123,6 +132,7 @@ class Us2HomeContent extends StatelessWidget {
               // Daily Quests section
               const Us2SectionHeader(title: 'Daily Quests'),
               Us2QuestCarousel(
+                key: dailyQuestsSectionKey,
                 quests: _mapQuestsToData(dailyQuests, getDailyQuestGuidance),
               ),
               // Side Quests section
@@ -183,7 +193,7 @@ class Us2HomeContent extends StatelessWidget {
       case QuestType.wordSearch:
         return '$basePath/word-search.png';
       case QuestType.steps:
-        return null; // Use emoji fallback
+        return '$basePath/steps-together.png';
     }
   }
 
@@ -203,7 +213,7 @@ class Us2HomeContent extends StatelessWidget {
       case QuestType.youOrMe:
         return quest.quizName ?? 'You or Me';
       case QuestType.linked:
-        return 'Linked';
+        return 'Crossword';
       case QuestType.wordSearch:
         return 'Word Search';
       case QuestType.steps:
@@ -232,7 +242,7 @@ class Us2HomeContent extends StatelessWidget {
       case QuestType.youOrMe:
         return 'Who does what in your relationship?';
       case QuestType.linked:
-        return 'Crossword puzzle together';
+        return 'Solve clues together';
       case QuestType.wordSearch:
         return 'Find hidden words';
       case QuestType.steps:

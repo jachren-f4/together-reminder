@@ -17,8 +17,9 @@ class AlreadySubscribedScreen extends StatefulWidget {
   /// Name of the partner who subscribed
   final String subscriberName;
 
-  /// Called when user taps "Let's Go!" to continue
-  final VoidCallback onContinue;
+  /// Called when user taps "Let's Go!" to continue.
+  /// Receives BuildContext to ensure navigation uses a mounted context.
+  final void Function(BuildContext context) onContinue;
 
   const AlreadySubscribedScreen({
     super.key,
@@ -291,7 +292,7 @@ class _AlreadySubscribedScreenState extends State<AlreadySubscribedScreen>
 
   Widget _buildCtaButton() {
     return GestureDetector(
-      onTap: widget.onContinue,
+      onTap: () => widget.onContinue(context),
       child: Container(
         width: double.infinity,
         constraints: const BoxConstraints(maxWidth: 300),

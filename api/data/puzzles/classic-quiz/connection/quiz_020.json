@@ -1,0 +1,109 @@
+{
+  "quizId": "quiz_020",
+  "title": "Our Relationship Story",
+  "branch": "connection",
+  "description": "Reflect on your journey together and the narrative of your love.",
+  "magnet_id": 8,
+  "questions": [
+    {
+      "id": "quiz_020_q1",
+      "text": "How would I describe the story of how we met?",
+      "choices": [
+        "A chance encounter turned into destiny",
+        "We grew from friends into something more",
+        "There was an instant connection",
+        "It took time, but something special developed"
+      ],
+      "category": "origin_story",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Gottman's research shows that how couples tell their origin story predicts relationship success. Destiny-framers see fate; friends-to-more framers value foundation; instant-connection framers emphasize chemistry; slow-developers appreciate patience; unexpected-beginning framers find meaning in surprise. The story we tell about our beginning shapes how we understand our relationship.",
+          "framework": "gottman",
+          "whenDifferent": "Different origin-story framings show you each interpret your beginning differently. Both perspectives are true—share how you see your story.",
+          "whenSame": "Shared origin-story framing means you tell the same story about your beginning. This shared narrative strengthens your couple identity.",
+          "journalPrompt": "How do you tell the story of how you met? What do you emphasize? How does your partner tell it differently?"
+        }
+      }
+    },
+    {
+      "id": "quiz_020_q2",
+      "text": "What chapter of our relationship has been most meaningful?",
+      "choices": [
+        "The exciting beginning when everything was new",
+        "When we went through something hard together",
+        "A period of deep growth and change",
+        "Ordinary times when we felt most ourselves"
+      ],
+      "category": "meaningful_chapter",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Which chapter we find most meaningful reveals what we value in relationships. Beginning-lovers value excitement and discovery; hardship-survivors value resilience and bonding; growth-celebrators value evolution; ordinary-moment lovers value presence; present-appreciators value current reality. Each perspective highlights different relationship strengths.",
+          "framework": "narrative_therapy",
+          "whenDifferent": "Different meaningful chapters reveal different valued experiences. Your partner may treasure a chapter you barely remember as significant. Share why these times mattered.",
+          "whenSame": "Shared meaningful chapters create aligned relationship narratives. You both see the same period as defining. This is a touchstone of your story.",
+          "journalPrompt": "What period of your relationship has been most meaningful? Why? Have you shared this perspective with your partner?"
+        }
+      }
+    },
+    {
+      "id": "quiz_020_q3",
+      "text": "What has been our greatest challenge?",
+      "choices": [
+        "Learning to communicate effectively",
+        "Getting through a difficult life circumstance",
+        "Growing individually while staying close",
+        "Building trust or working through hurt"
+      ],
+      "category": "challenges",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Acknowledging challenges creates honest narrative. Communication challenges are most common; different needs require ongoing negotiation; life circumstances test resilience; individual-versus-couple balance requires calibration; trust challenges demand repair. Couples who can name their challenges without blame demonstrate relationship maturity.",
+          "framework": "narrative_therapy",
+          "whenDifferent": "Different perceived challenges show you've experienced different struggle areas. Both perspectives are valid—understanding how your partner sees your challenges deepens mutual awareness.",
+          "whenSame": "Shared challenge recognition means you're aligned on what's been hard. This shared understanding creates partnership in overcoming.",
+          "journalPrompt": "What has been the biggest challenge in your relationship? How did you navigate it? What did you learn?"
+        }
+      }
+    },
+    {
+      "id": "quiz_020_q4",
+      "text": "If I told someone what makes our relationship work, I'd say...",
+      "choices": [
+        "How well we communicate",
+        "The deep respect we have for each other",
+        "Our ability to laugh together",
+        "The commitment we share"
+      ],
+      "category": "relationship_strength",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "How we explain our relationship's success reveals perceived strengths. Communication highlights skill; respect highlights values; laughter highlights joy; commitment highlights devotion; balance highlights complementarity. These explanations become self-fulfilling—what we believe makes us work, we tend to maintain.",
+          "framework": "positive_psychology",
+          "whenDifferent": "Different success explanations show you each see different strengths. Both are probably true—share what you think makes you work.",
+          "whenSame": "Shared success explanation means you're aligned on your core strength. Protect and nurture this quality—it's your foundation.",
+          "journalPrompt": "What do you think makes your relationship work? Would your partner agree? What would be lost if this quality disappeared?"
+        }
+      }
+    },
+    {
+      "id": "quiz_020_q5",
+      "text": "What do I want the rest of our story to be about?",
+      "choices": [
+        "Deepening our connection and intimacy",
+        "Building adventures and memories together",
+        "Creating stability and lasting security",
+        "Growing as individuals while staying united"
+      ],
+      "category": "future_story",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Future story aspirations reveal what we want love to mean going forward. Deepening-seekers want more intimacy; adventure-builders want experience; stability-seekers want security; growth-seekers want development; together-facers want partnership. Sharing these aspirations helps couples write their future chapter together.",
+          "framework": "narrative_therapy",
+          "whenDifferent": "Different future-story visions may need integration—but usually can coexist. Adventure and stability aren't opposites. Talk about how your visions can merge.",
+          "whenSame": "Shared future-story vision means you're writing the same next chapter. You're aligned on what you want your love to become.",
+          "journalPrompt": "What do you want the rest of your relationship story to be about? What would make that story possible? What could threaten it?"
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,64 @@
+{
+  "quizId": "quiz_020",
+  "title": "Growth Milestones",
+  "branch": "growth",
+  "questions": [
+    {
+      "id": "quiz_020_q1",
+      "text": "Looking back, the biggest way I've grown is...",
+      "choices": [
+        "How I handle my emotions",
+        "How I communicate and connect",
+        "My confidence and self-worth",
+        "My clarity about what I want in life"
+      ],
+      "category": "growth"
+    },
+    {
+      "id": "quiz_020_q2",
+      "text": "A growth milestone we've achieved together is...",
+      "choices": [
+        "Learning to navigate conflict better",
+        "Building deeper trust and intimacy",
+        "Supporting each other through challenges",
+        "Creating a life we're proud of"
+      ],
+      "category": "values"
+    },
+    {
+      "id": "quiz_020_q3",
+      "text": "What I'm most proud of in my personal growth is...",
+      "choices": [
+        "Overcoming fears or insecurities",
+        "Becoming more self-aware",
+        "Building healthier habits",
+        "Showing up better in relationships"
+      ],
+      "category": "growth"
+    },
+    {
+      "id": "quiz_020_q4",
+      "text": "The next growth milestone I'm working toward is...",
+      "choices": [
+        "Achieving a personal or career goal",
+        "Becoming more emotionally resilient",
+        "Deepening our relationship",
+        "Finding more balance and peace"
+      ],
+      "category": "growth"
+    },
+    {
+      "id": "quiz_020_q5",
+      "text": "Years from now, I hope we look back and see that we...",
+      "choices": [
+        "Never stopped growing together",
+        "Supported each other's dreams",
+        "Built something meaningful",
+        "Loved each other through it all"
+      ],
+      "category": "values"
+    }
+  ],
+  "description": "Celebrate how far you've come and where you're headed together.",
+  "magnet_id": 14
+}

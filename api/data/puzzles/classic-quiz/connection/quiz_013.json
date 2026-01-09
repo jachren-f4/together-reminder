@@ -1,0 +1,109 @@
+{
+  "quizId": "quiz_013",
+  "title": "Trust & Vulnerability",
+  "branch": "connection",
+  "description": "Explore how you build trust and share your true selves.",
+  "magnet_id": 7,
+  "questions": [
+    {
+      "id": "quiz_013_q1",
+      "text": "What helps me trust you most?",
+      "choices": [
+        "Consistency in your words and actions",
+        "Being honest even when it's hard",
+        "Keeping my secrets safe",
+        "Following through on commitments"
+      ],
+      "category": "trust_building",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Trust is built through different currencies for different people. Consistency builds trust through predictability; honesty builds trust through truth; confidentiality builds trust through safety; follow-through builds trust through reliability. Understanding how your partner builds trust helps you invest in the right behaviors.",
+          "framework": "gottman",
+          "whenDifferent": "Different trust currencies mean you're each reassured by different behaviors. The consistency-seeker needs predictability; the honesty-seeker needs truth even when uncomfortable. Know what builds trust for your partner and deliver it.",
+          "whenSame": "Shared trust currencies mean you'll naturally build security through the same behaviors. You understand what builds trust because it's what builds trust for you too.",
+          "journalPrompt": "What behavior from your partner most strengthens your trust? What has your partner done that significantly built trust? What would erode it?"
+        }
+      }
+    },
+    {
+      "id": "quiz_013_q2",
+      "text": "What makes me feel safe being vulnerable with you?",
+      "choices": [
+        "Knowing you won't judge me",
+        "How gently you respond to my feelings",
+        "Your confidentiality with what I share",
+        "That you've been vulnerable with me too"
+      ],
+      "category": "vulnerability",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Vulnerability requires specific conditions to feel safe. Non-judgment allows raw honesty; gentle responses protect tender feelings; confidentiality ensures privacy; mutual vulnerability creates equality. Creating the conditions for your partner's vulnerability is essential for deep intimacy.",
+          "framework": "attachment_theory",
+          "whenDifferent": "Different vulnerability conditions mean you each need different safety guarantees. The non-judgment seeker needs to feel unshamed; the mutual-vulnerability seeker needs reciprocity. Create the conditions your partner needs to open up.",
+          "whenSame": "Shared vulnerability conditions mean you'll naturally create safety for each other. You understand what makes vulnerability possible because you need the same things.",
+          "journalPrompt": "What makes you feel safe being vulnerable? When has your partner created perfect conditions for you to open up? What would help you share more deeply?"
+        }
+      }
+    },
+    {
+      "id": "quiz_013_q3",
+      "text": "What's hardest for me to share with you?",
+      "choices": [
+        "Fears and insecurities",
+        "Past mistakes or regrets",
+        "Needs I think might burden you",
+        "Doubts or worries about us"
+      ],
+      "category": "difficult_sharing",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "What we struggle to share reveals our deepest vulnerabilities. Fear-sharers protect their fragility; regret-sharers protect their self-image; need-sharers fear being too much; relationship-doubt sharers fear destabilizing. Knowing your partner's hardest topics helps you receive them with extra care.",
+          "framework": "shame_resilience",
+          "whenDifferent": "Different hard topics reveal different protected areas. When your partner shares something difficult for them, respond with awareness that this took courage in their specific way.",
+          "whenSame": "Shared difficulty areas suggest you both protect similar parts of yourselves. You understand the courage it takes because you struggle with the same things.",
+          "journalPrompt": "What's hardest for you to tell your partner? What would need to change for you to share it? What would you need from them if you did?"
+        }
+      }
+    },
+    {
+      "id": "quiz_013_q4",
+      "text": "How do I know when you're being completely honest with me?",
+      "choices": [
+        "You make eye contact and seem present",
+        "Your words and body language match",
+        "You share even unflattering truths",
+        "I can just feel it—I know you"
+      ],
+      "category": "honesty_signals",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "We each have signals that indicate authenticity to us. Eye contact signals presence and courage; congruence signals alignment; unflattering truths signal commitment to honesty; intuition signals deep knowing. Understanding what signals honesty for your partner helps you communicate genuinely in ways they can trust.",
+          "framework": "communication_science",
+          "whenDifferent": "Different honesty signals mean different things read as 'truthful' to each of you. The eye-contact seeker may doubt avoidant truth-telling; the intuition-trusting person may not need external signals. Show honesty in your partner's signal language.",
+          "whenSame": "Shared honesty signals mean you'll read authenticity the same way. You'll trust each other's truth through the same cues.",
+          "journalPrompt": "How do you know when your partner is being completely honest? What signals do you look for? When do you doubt their authenticity—and are you right?"
+        }
+      }
+    },
+    {
+      "id": "quiz_013_q5",
+      "text": "What would make me trust you even more?",
+      "choices": [
+        "More consistency day to day",
+        "Sharing your inner world more openly",
+        "Being more reliable with commitments",
+        "Being more present in difficult moments"
+      ],
+      "category": "trust_deepening",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Trust has levels—even strong relationships can deepen further. More consistency provides greater predictability; more sharing creates deeper knowing; more reliability builds stronger foundation; difficult-moment presence proves commitment. Knowing what would deepen trust for your partner gives you a roadmap for strengthening the relationship.",
+          "framework": "gottman",
+          "whenDifferent": "Different trust-deepening paths reveal different growth edges. Your partner is telling you what would make them feel even more secure. This is valuable information for strengthening your bond.",
+          "whenSame": "Shared trust-deepening desires mean you want to grow security in the same direction. Work together on what would make you both feel more trusting.",
+          "journalPrompt": "What would make you trust your partner even more than you do now? Have you told them? What's preventing you from asking for it?"
+        }
+      }
+    }
+  ]
+}

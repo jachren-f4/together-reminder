@@ -1,0 +1,64 @@
+{
+  "quizId": "quiz_019",
+  "title": "Strengths & Growth Areas",
+  "branch": "growth",
+  "questions": [
+    {
+      "id": "quiz_019_q1",
+      "text": "One of my greatest strengths is...",
+      "choices": [
+        "My ability to stay calm under pressure",
+        "My empathy and understanding of others",
+        "My determination and follow-through",
+        "My creativity and problem-solving"
+      ],
+      "category": "growth"
+    },
+    {
+      "id": "quiz_019_q2",
+      "text": "An area where I know I need to grow is...",
+      "choices": [
+        "Being more patient",
+        "Communicating my needs better",
+        "Managing stress and emotions",
+        "Being more present and attentive"
+      ],
+      "category": "growth"
+    },
+    {
+      "id": "quiz_019_q3",
+      "text": "What strength do you bring that complements mine?",
+      "choices": [
+        "You're strong where I'm weak",
+        "You balance my intensity or energy",
+        "You see things from a different angle",
+        "You bring out the best in me"
+      ],
+      "category": "values"
+    },
+    {
+      "id": "quiz_019_q4",
+      "text": "How do you help me work on my growth areas?",
+      "choices": [
+        "You're patient with my progress",
+        "You model what I'm working toward",
+        "You gently hold me accountable",
+        "You love me through my imperfections"
+      ],
+      "category": "emotional"
+    },
+    {
+      "id": "quiz_019_q5",
+      "text": "Together, I think we're strongest at...",
+      "choices": [
+        "Supporting each other through hard times",
+        "Having fun and enjoying life",
+        "Communicating and working through issues",
+        "Building toward shared goals"
+      ],
+      "category": "trust"
+    }
+  ],
+  "description": "Explore how your strengths complement and grow together.",
+  "magnet_id": 13
+}

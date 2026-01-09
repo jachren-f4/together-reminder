@@ -1,7 +1,9 @@
 {
   "quizId": "quiz_004",
-  "title": "Attachment Quiz 4",
+  "title": "Space & Balance",
   "branch": "attachment",
+  "description": "Uncover how you navigate closeness and independence.",
+  "magnet_id": 7,
   "questions": [
     {
       "id": "quiz_004_q1",
@@ -10,10 +12,20 @@
         "I rarely feel overwhelmed",
         "I need some alone time",
         "I pull back a little",
-        "I might start small arguments",
         "I communicate my need for space"
       ],
-      "category": "closeness_overwhelm"
+      "category": "closeness_overwhelm",
+      "metadata": {
+        "dimension": "social_energy",
+        "poleMapping": ["right", "left", "left", "neutral"],
+        "therapeutic": {
+          "rationale": "How we handle too much closeness reveals attachment style. Rarely-overwhelmed suggests secure or anxious attachment; alone-time needers have healthy self-awareness; pull-backers may not recognize their pattern; space-communicators have learned healthy expression. Avoidant attachers often create distance unconsciously when closeness feels threatening.",
+          "framework": "attachment_theory",
+          "whenDifferent": "Different overwhelm responses can confuse partners. The rarely-overwhelmed may not understand their partner's need to pull back. Name the pattern.",
+          "whenSame": "Shared overwhelm patterns help you understand each other—but two pullers-back may create excessive distance. Be intentional about reconnecting.",
+          "journalPrompt": "When does closeness feel like too much? What do you do? Does your partner know this is about needing space, not about them?"
+        }
+      }
     },
     {
       "id": "quiz_004_q2",
@@ -22,10 +34,20 @@
         "I need verbal reassurance",
         "Physical reconnection helps",
         "I need time alone first",
-        "I want to discuss what happened",
-        "I'm ready to move on quickly"
+        "I want to discuss what happened"
       ],
-      "category": "conflict_recovery"
+      "category": "conflict_recovery",
+      "metadata": {
+        "dimension": "support_style",
+        "poleMapping": ["neutral", "right", "left", "neutral"],
+        "therapeutic": {
+          "rationale": "Post-conflict recovery needs reveal attachment soothing patterns. Verbal-reassurance seekers need explicit repair; physical-reconnectors need touch to restore safety; alone-time needers must self-regulate first; discussion-wanters need processing. Matching your repair style to your partner's recovery needs speeds reconnection.",
+          "framework": "gottman",
+          "whenDifferent": "Different recovery needs extend post-conflict distance. The verbal-reassurance seeker feels abandoned by the alone-time needer. Ask: 'What would help us reconnect?'",
+          "whenSame": "Shared recovery needs make repair intuitive. You'll naturally offer what helps because it's what would help you.",
+          "journalPrompt": "After conflict, what do you need to feel reconnected? Does your partner know? What happens when you don't get it?"
+        }
+      }
     },
     {
       "id": "quiz_004_q3",
@@ -34,10 +56,18 @@
         "Regular affection and words",
         "Handling stress as a team",
         "Your commitment actions",
-        "Deep conversations",
-        "Consistency over time"
+        "Deep conversations"
       ],
-      "category": "bond_strength"
+      "category": "bond_strength",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Bond-strength signals vary by attachment needs. Regular affection soothes anxious attachment; team stress-handling builds secure partnership; commitment actions reassure those with abandonment fears; deep conversations create intimacy for emotionally-oriented people. Knowing what signals bond-strength for your partner helps you provide it.",
+          "framework": "attachment_theory",
+          "whenDifferent": "Different bond signals mean you may feel differently about the relationship's strength at the same moment. The affection-needer may doubt when physical touch decreases even if conversations are deep.",
+          "whenSame": "Shared bond signals mean you'll both feel secure from the same behaviors. You're aligned on what makes the relationship feel strong.",
+          "journalPrompt": "What makes you feel your relationship is strong? When does the bond feel weak? What would reinforce your sense of security?"
+        }
+      }
     },
     {
       "id": "quiz_004_q4",
@@ -46,10 +76,20 @@
         "I lean toward needing you more",
         "I lean toward independence",
         "I've found a good balance",
-        "It shifts depending on stress",
-        "I'm still figuring it out"
+        "It shifts depending on stress"
       ],
-      "category": "balance"
+      "category": "balance",
+      "metadata": {
+        "dimension": "social_energy",
+        "poleMapping": ["right", "left", "neutral", "neutral"],
+        "therapeutic": {
+          "rationale": "The need-independence balance reflects attachment style. Lean-toward-needing suggests anxious attachment; lean-toward-independence suggests avoidant attachment; good-balance suggests secure attachment; stress-shifting shows adaptability. The goal is flexible balance—able to depend and be independent based on context.",
+          "framework": "attachment_theory",
+          "whenDifferent": "Different balance points create the classic anxious-avoidant trap. The needing-more person may feel rejected by the independence-leaner; the independence-leaner may feel suffocated. Both are valid positions.",
+          "whenSame": "Shared balance orientation makes relationship calibration easier. Two independence-leaners may have a distant but functional relationship; two needing-more types may be closely intertwined.",
+          "journalPrompt": "Do you lean toward needing your partner or toward independence? Has this changed over time? What would help you find better balance?"
+        }
+      }
     },
     {
       "id": "quiz_004_q5",
@@ -58,12 +98,18 @@
         "More consistent communication",
         "More physical affection",
         "More quality time together",
-        "More verbal reassurance",
-        "I already feel very secure"
+        "More verbal reassurance"
       ],
-      "category": "security_building"
+      "category": "security_building",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "What would increase security reveals unmet attachment needs. Communication consistency soothes contact-anxiety; physical affection fills touch needs; quality time addresses presence needs; verbal reassurance fills words-of-affirmation needs. This question directly asks: 'What do you need more of to feel safer with me?'",
+          "framework": "attachment_theory",
+          "whenDifferent": "Different security-building needs guide where to invest relationship energy. Your partner is telling you exactly what they need to feel more secure. Provide it.",
+          "whenSame": "Shared security-building needs mean you both want more of the same thing. Focus your shared effort here.",
+          "journalPrompt": "What would make you feel more secure in your relationship? Have you asked for this? What's preventing you from getting it?"
+        }
+      }
     }
-  ],
-  "description": "Uncover your styles of seeking comfort and support.",
-  "magnet_id": 7
+  ]
 }

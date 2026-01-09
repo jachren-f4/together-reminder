@@ -10,8 +10,7 @@
         "Exploring somewhere completely new and unknown",
         "Trying new things in places we're comfortable",
         "Pushing ourselves to grow through shared challenges",
-        "Cozy experiences with just a hint of something new",
-        "Other / It depends"
+        "Cozy experiences with just a hint of something new"
       ],
       "category": "lifestyle",
       "metadata": {
@@ -20,8 +19,7 @@
           "right",
           null,
           "right",
-          "left",
-          null
+          "left"
         ]
       }
     },
@@ -32,8 +30,7 @@
         "Go somewhere neither of us has been and figure it out",
         "Explore local food, culture, and hidden gems",
         "See the must-see sights and check things off the list",
-        "Relax somewhere beautiful without a packed itinerary",
-        "Other / It depends"
+        "Relax somewhere beautiful without a packed itinerary"
       ],
       "category": "lifestyle",
       "metadata": {
@@ -42,8 +39,7 @@
           "right",
           "right",
           null,
-          "left",
-          null
+          "left"
         ]
       }
     },
@@ -54,8 +50,7 @@
         "Push each other to try stuff we'd never do alone",
         "Encourage each other when the moment feels right",
         "Balance new experiences with familiar comforts",
-        "Respect if one of us isn't feeling it",
-        "Other / It depends"
+        "Respect if one of us isn't feeling it"
       ],
       "category": "lifestyle",
       "metadata": {
@@ -64,8 +59,7 @@
           "right",
           null,
           null,
-          "left",
-          null
+          "left"
         ]
       }
     },
@@ -76,8 +70,7 @@
         "Go for it - we've got each other!",
         "Talk through the risks and decide together",
         "One of us might need convincing from the other",
-        "Be honest if it's not something I'm ready for",
-        "Other / It depends"
+        "Be honest if it's not something I'm ready for"
       ],
       "category": "lifestyle",
       "metadata": {
@@ -86,8 +79,7 @@
           "right",
           null,
           null,
-          "left",
-          null
+          "left"
         ]
       }
     },
@@ -98,8 +90,7 @@
         "Both dive in and try it together",
         "Support each other even if only one is into it",
         "Take turns trying each other's interests",
-        "Enjoy having some separate hobbies too",
-        "Other / It depends"
+        "Enjoy having some separate hobbies too"
       ],
       "category": "lifestyle"
     }

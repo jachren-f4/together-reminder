@@ -2,6 +2,8 @@
   "quizId": "quiz_011",
   "title": "Money & Priorities",
   "branch": "lighthearted",
+  "description": "Understand your values around spending and saving.",
+  "magnet_id": 1,
   "questions": [
     {
       "id": "quiz_011_q1",
@@ -10,10 +12,20 @@
         "Careful and budget-conscious",
         "Balanced - save some, spend some",
         "More of a spender than saver",
-        "It depends on what it's for",
-        "Other / I don't track closely"
+        "It depends on what it's for"
       ],
-      "category": "lifestyle"
+      "category": "lifestyle",
+      "metadata": {
+        "dimension": "financial_approach",
+        "poleMapping": ["left", "neutral", "right", "neutral"],
+        "therapeutic": {
+          "rationale": "Money is one of the top sources of relationship conflict, and financial style differences often reflect deeper values around security, freedom, and control. Savers may have experienced financial instability; spenders may associate money with enjoyment and connection. Neither approach is inherently right—what matters is understanding the emotional meaning money carries for each partner and finding shared ground.",
+          "framework": "financial_therapy",
+          "whenDifferent": "The saver may feel anxious watching their partner spend; the spender may feel controlled or judged. Money conversations often fail because they're about the numbers when they're really about security, freedom, or values. Start with: 'What did money mean in your family growing up?' Understanding the history changes the conversation.",
+          "whenSame": "Aligned financial styles reduce one of the biggest relationship stressors. You'll naturally agree on saving versus spending without constant negotiation. Build on this alignment with shared financial goals that excite you both.",
+          "journalPrompt": "What's your earliest memory about money? What emotions come up when you think about your bank account? How has your financial style been shaped by your upbringing?"
+        }
+      }
     },
     {
       "id": "quiz_011_q2",
@@ -22,10 +34,18 @@
         "Experiences (travel, dining out)",
         "Things for the home",
         "Personal items or hobbies",
-        "Saving for the future",
-        "Other / Treating people I love"
+        "Saving for the future"
       ],
-      "category": "lifestyle"
+      "category": "lifestyle",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Spending priorities reveal what we value most—experiences, comfort, personal expression, security, or generosity. Research suggests experiences tend to bring more lasting happiness than possessions, but this varies by person. Understanding what your partner considers 'worth it' helps prevent conflicts where one person's 'waste of money' is another's joy.",
+          "framework": "positive_psychology",
+          "whenDifferent": "The experience-prioritizer may resent money 'wasted' on things; the security-prioritizer may feel experiences are frivolous. Create categories: some money for experiences, some for things, some for savings. Each partner gets a 'no questions asked' budget for their priorities.",
+          "whenSame": "Shared spending priorities make financial decisions easier. You'll naturally agree on what's worth the money without feeling like you're sacrificing for your partner. Channel this alignment into intentional spending on what you both value.",
+          "journalPrompt": "Think about your last few purchases that felt really satisfying. What category did they fall into? What did that purchase give you emotionally, not just practically?"
+        }
+      }
     },
     {
       "id": "quiz_011_q3",
@@ -34,10 +54,20 @@
         "Research extensively first",
         "Go with what feels right",
         "Sleep on it before deciding",
-        "Ask for opinions (yours, others)",
-        "Other / Avoid them if possible"
+        "Ask for opinions (yours, others)"
       ],
-      "category": "together"
+      "category": "together",
+      "metadata": {
+        "dimension": "decision_style",
+        "poleMapping": ["left", "right", "neutral", "neutral"],
+        "therapeutic": {
+          "rationale": "Decision-making style—analytical versus intuitive—affects everything from car purchases to life choices. Researchers differentiate between 'maximizers' who exhaustively seek the best option and 'satisficers' who choose what's good enough. Neither is better, but couples often frustrate each other when one wants to 'just decide' and the other needs more research or time.",
+          "framework": "decision_psychology",
+          "whenDifferent": "The researcher may feel rushed; the intuitive may feel paralyzed by analysis. Create rules: research for X days, then decide. Or: the person who cares more leads, the other supports. Big purchases shouldn't become power struggles.",
+          "whenSame": "Matched decision styles make major purchases smoother. You'll naturally move through the process at the same pace. Be careful of shared blind spots—if you both avoid big decisions, things may stagnate; if you both research endlessly, you may never buy.",
+          "journalPrompt": "Think about the last big purchase you made together. How did the process feel? Who led? Did you feel heard? What would make the next one go more smoothly?"
+        }
+      }
     },
     {
       "id": "quiz_011_q4",
@@ -46,10 +76,20 @@
         "Very - it's a top priority",
         "Important but not everything",
         "I try not to worry about it",
-        "I focus on the present more",
-        "Other / It's complicated"
+        "I focus on the present more"
       ],
-      "category": "lifestyle"
+      "category": "lifestyle",
+      "metadata": {
+        "dimension": "security_orientation",
+        "poleMapping": ["left", "neutral", "neutral", "right"],
+        "therapeutic": {
+          "rationale": "Security orientation often connects to early experiences with stability or scarcity. Those who prioritize security may have experienced financial precarity; those who focus on the present may have learned that worrying doesn't help or that life is unpredictable anyway. In relationships, these different orientations can clash: one partner builds emergency funds while the other wonders why they can't enjoy life now.",
+          "framework": "attachment_theory",
+          "whenDifferent": "The security-focused partner may feel their concerns are dismissed; the present-focused partner may feel life is passing by while waiting for 'enough.' Find the minimum security threshold that lets the anxious partner relax, then allocate the rest for present enjoyment. Both needs are valid.",
+          "whenSame": "Shared security orientation means you won't fight about saving versus spending philosophically. If you're both security-focused, create specific goals so you know when 'enough' is reached. If you're both present-focused, build minimal automated safety nets so you can enjoy without risk.",
+          "journalPrompt": "What would 'financial security' actually look like for you? A specific number? A feeling? Have you ever articulated this clearly to your partner?"
+        }
+      }
     },
     {
       "id": "quiz_011_q5",
@@ -58,12 +98,18 @@
         "Discuss and find compromise",
         "Keep some money separate",
         "Defer to whoever cares more",
-        "Take turns on big decisions",
-        "Other / Haven't figured it out"
+        "Take turns on big decisions"
       ],
-      "category": "together"
+      "category": "together",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "How couples navigate financial disagreements reveals their broader conflict style. Some prefer full transparency and negotiation; others maintain autonomy through separate accounts; others use rotating decision-making. There's no single right answer—what matters is that both partners feel the system is fair and that their values are respected. Financial systems that feel controlling or dismissive erode trust.",
+          "framework": "relationship_science",
+          "whenDifferent": "Different preferences for handling money disagreements IS the disagreement. The compromiser may feel separate money creates distance; the autonomy-seeker may feel merged money is controlling. Start here: what would 'fair' feel like to each of you? Design from that principle.",
+          "whenSame": "Matched approaches to financial conflict make money conversations easier. You already agree on HOW to disagree, which is half the battle. Use this alignment to create explicit systems before conflicts arise.",
+          "journalPrompt": "How did your parents handle money disagreements? How has that shaped your preferences? What would an ideal financial system look like for you as a couple?"
+        }
+      }
     }
-  ],
-  "description": "Understand your values around spending and saving.",
-  "magnet_id": 1
+  ]
 }

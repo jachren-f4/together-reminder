@@ -1,7 +1,9 @@
 {
   "quizId": "quiz_001",
-  "title": "Attachment Quiz 1",
+  "title": "Separation & Security",
   "branch": "attachment",
+  "description": "Explore how you feel when apart and what makes you feel secure.",
+  "magnet_id": 7,
   "questions": [
     {
       "id": "quiz_001_q1",
@@ -10,19 +12,17 @@
         "Secure and trusting",
         "A little anxious but okay",
         "I enjoy the independence",
-        "I miss you constantly",
-        "It depends on how we parted"
+        "I miss you constantly"
       ],
       "category": "separation",
       "metadata": {
-        "connectionTendency": "reassurance_needs",
-        "scoreMapping": [
-          1,
-          3,
-          1,
-          5,
-          3
-        ]
+        "therapeutic": {
+          "rationale": "How we feel during separation is one of the clearest indicators of attachment style. Secure attachers feel trusting calm; anxious attachers feel worry; avoidant attachers enjoy independence; anxious-preoccupied attachers miss intensely. This reveals the internal working model of relationships formed in childhood.",
+          "framework": "attachment_theory",
+          "whenDifferent": "Different separation feelings often create the pursuer-distancer dynamic. The one who misses constantly may feel abandoned by the independence-enjoyer; the independence-enjoyer may feel smothered by constant missing. Understanding these as attachment patterns rather than personal rejection helps.",
+          "whenSame": "Shared separation feelings suggest similar attachment orientations. If you both feel secure, separations are easy. If you both miss constantly, you may struggle with time apart together.",
+          "journalPrompt": "How do you feel when your partner isn't around? Does your mind stay calm or does it wander to worries? What does your reaction tell you about your attachment?"
+        }
       }
     },
     {
@@ -32,19 +32,19 @@
         "Give you space and wait",
         "Reach out more to reconnect",
         "Feel anxious and need reassurance",
-        "Pull back myself",
-        "Try to talk about it directly"
+        "Pull back myself"
       ],
       "category": "distance_response",
       "metadata": {
-        "connectionTendency": "reassurance_needs",
-        "scoreMapping": [
-          1,
-          3,
-          5,
-          2,
-          3
-        ]
+        "dimension": "support_style",
+        "poleMapping": ["left", "right", "right", "left"],
+        "therapeutic": {
+          "rationale": "Response to perceived distance reveals attachment activation. Space-givers show secure or avoidant patterns; reach-outers show anxious patterns; anxiety-and-reassurance seekers show anxious-preoccupied attachment; pull-backers show avoidant or fearful attachment. These responses often clash when partners differ.",
+          "framework": "attachment_theory",
+          "whenDifferent": "Different distance responses create relationship cycles. The reach-outer's attempts may feel like pursuit to the pull-backer, who retreats more, triggering more reaching out. Recognizing this cycle is the first step to breaking it.",
+          "whenSame": "Shared distance responses can help (two space-givers respect boundaries) or create problems (two pull-backers may never reconnect). Awareness of your shared pattern matters.",
+          "journalPrompt": "When you sense your partner withdrawing, what's your instinct? Does that response bring you closer or push you apart? Where did you learn this pattern?"
+        }
       }
     },
     {
@@ -54,19 +54,17 @@
         "Being abandoned or left",
         "Losing my independence",
         "Not being good enough",
-        "Being misunderstood",
         "Growing apart over time"
       ],
-      "category": "fears",
+      "category": "core_fears",
       "metadata": {
-        "connectionTendency": "reassurance_needs",
-        "scoreMapping": [
-          5,
-          1,
-          4,
-          3,
-          3
-        ]
+        "therapeutic": {
+          "rationale": "Core relationship fears shape attachment behavior. Abandonment fear drives pursuit and reassurance-seeking; independence-loss fear drives avoidance and boundary-setting; inadequacy fear drives perfectionism and people-pleasing; growing-apart fear drives connection maintenance. These fears usually trace to early experiences.",
+          "framework": "attachment_theory",
+          "whenDifferent": "Different core fears create different protective behaviors. The abandonment-fearer may cling while the independence-loser pulls away. Neither is wrong—both are protecting against their deepest wound.",
+          "whenSame": "Shared core fears suggest similar attachment wounds. You'll deeply understand each other's anxiety because you share it. Be careful not to accidentally trigger your shared vulnerability.",
+          "journalPrompt": "What's your deepest fear about relationships? Where did this fear originate? How does it show up in your current relationship?"
+        }
       }
     },
     {
@@ -76,19 +74,19 @@
         "Completely comfortable",
         "Mostly okay but cautious",
         "I prefer to be self-reliant",
-        "I want to but it's hard",
-        "It depends on the situation"
+        "I want to but it's hard"
       ],
       "category": "dependency",
       "metadata": {
-        "connectionTendency": "closeness_comfort",
-        "scoreMapping": [
-          5,
-          4,
-          1,
-          3,
-          3
-        ]
+        "dimension": "social_energy",
+        "poleMapping": ["right", "neutral", "left", "neutral"],
+        "therapeutic": {
+          "rationale": "Comfort with dependency is a hallmark of attachment security. Secure attachers feel comfortable depending on others; cautious types protect themselves; avoidant attachers prefer self-reliance; anxious attachers want to depend but fear it. The ability to healthily depend on your partner while maintaining autonomy is the goal of secure attachment.",
+          "framework": "attachment_theory",
+          "whenDifferent": "Different dependency comfort creates relationship tension. The comfortable-depender may feel rejected by the self-reliant partner's independence; the self-reliant may feel burdened by dependency. Both are coping strategies for the same underlying fear.",
+          "whenSame": "Shared dependency comfort suggests similar attachment styles. Two comfortable-dependers will interweave easily; two self-reliant types may maintain more parallel lives.",
+          "journalPrompt": "How do you feel about needing your partner? Is it comfortable or threatening? Where did you learn your relationship to dependency?"
+        }
       }
     },
     {
@@ -98,22 +96,18 @@
         "Consistent daily contact",
         "Knowing you'll always be honest",
         "Physical presence and affection",
-        "Shared long-term plans",
-        "Weathering challenges together"
+        "Shared long-term plans"
       ],
-      "category": "security",
+      "category": "security_sources",
       "metadata": {
-        "connectionTendency": "reassurance_needs",
-        "scoreMapping": [
-          5,
-          2,
-          4,
-          2,
-          2
-        ]
+        "therapeutic": {
+          "rationale": "Security sources vary by attachment style. Consistent contact soothes anxious attachers; honesty builds trust for those with betrayal wounds; physical presence grounds touch-oriented people; shared plans reassure commitment-anxious people. Knowing your partner's security source helps you provide what they specifically need.",
+          "framework": "attachment_theory",
+          "whenDifferent": "Different security sources mean different things make you feel safe. Your partner's security source may not be yours—provide what they need, not what you would need.",
+          "whenSame": "Shared security sources mean you'll naturally reassure each other in the same way. You understand what creates safety because it's what creates safety for you.",
+          "journalPrompt": "What makes you feel most secure in love? When your partner does this, how does it affect you? What happens when this source of security is missing?"
+        }
       }
     }
-  ],
-  "description": "Explore how you feel secure and loved in your relationship.",
-  "magnet_id": 7
+  ]
 }

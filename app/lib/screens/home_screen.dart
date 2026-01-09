@@ -58,6 +58,8 @@ import 'linked_completion_screen.dart';
 import 'word_search_completion_screen.dart';
 import 'magnet_collection_screen.dart';
 import '../widgets/lp_intro_overlay.dart';
+import '../widgets/animations/lp_celebration_overlay.dart';
+import '../widgets/brand/us2/us2_connection_bar.dart';
 
 /// Home tab content showing daily quests, side quests, and stats
 ///
@@ -106,6 +108,14 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin, 
 
   // LP intro overlay state
   bool _showingLpIntro = false;
+
+  // LP celebration animation state (Us 2.0 only)
+  final GlobalKey<Us2ConnectionBarState> _connectionBarKey = GlobalKey<Us2ConnectionBarState>();
+  final GlobalKey _dailyQuestsSectionKey = GlobalKey();
+  bool _showingLpCelebration = false;
+  int? _lpBeforeQuest; // LP value before navigating to a daily quest
+  int? _lpBeforeCelebration; // LP value stored when celebration starts (for connection bar animation)
+  bool _navigatedToDailyQuest = false; // Track if we came from a daily quest
 
   @override
   void initState() {
@@ -174,6 +184,14 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin, 
     // Called when a route has been popped off, and this route is now visible
     // This happens when returning from Linked/Word Search game screens
     if (mounted) {
+      // Capture previous LP for potential celebration (before sync)
+      final previousLp = _lpBeforeQuest;
+      final wasFromDailyQuest = _navigatedToDailyQuest;
+
+      // Reset tracking flags
+      _lpBeforeQuest = null;
+      _navigatedToDailyQuest = false;
+
       // Force immediate poll when returning from a game screen
       // MUST await before setState to prevent flash (stale data → fresh data)
       await _pollingService.pollNow();
@@ -181,6 +199,20 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin, 
       // Sync LP from server - this triggers magnet unlock celebration if threshold crossed
       await LovePointService.fetchAndSyncFromServer();
       if (!mounted) return;
+
+      // Check for LP gain from daily quest (Us 2.0 celebration)
+      if (wasFromDailyQuest && BrandWidgetFactory.isUs2 && previousLp != null) {
+        final newLp = _arenaService.getLovePoints();
+        if (newLp > previousLp) {
+          // Trigger LP celebration animation after a brief delay
+          await Future.delayed(AnimationConstants.lpCelebrationDelay);
+          if (mounted) {
+            _triggerLpCelebration(previousLp);
+          }
+          return; // Don't setState here - celebration handles state updates
+        }
+      }
+
       // Refresh unlock state - a game completion may have unlocked features
       _fetchUnlockState();
       // Also refresh side quests carousel
@@ -190,6 +222,37 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin, 
       setState(() {});
       Logger.debug('Route popped - refreshing side quests, LP, and unlock state', service: 'home');
     }
+  }
+
+  /// Trigger the LP celebration animation for Us 2.0
+  void _triggerLpCelebration(int previousLp) {
+    if (!mounted || !BrandWidgetFactory.isUs2) return;
+
+    Logger.debug('Triggering LP celebration: $previousLp -> ${_arenaService.getLovePoints()}', service: 'home');
+
+    setState(() {
+      _lpBeforeCelebration = previousLp;
+      _showingLpCelebration = true;
+    });
+  }
+
+  /// Called when LP celebration particles arrive at the meter
+  void _onLpCelebrationComplete() {
+    if (!mounted) return;
+
+    // Trigger the connection bar animation using stored previous LP
+    final previousLp = _lpBeforeCelebration ?? (_arenaService.getLovePoints() - 30);
+    _connectionBarKey.currentState?.animateLPGain(previousLp);
+
+    // Refresh state and hide overlay
+    _fetchUnlockState();
+    _refreshSideQuestsFuture();
+    _fetchMagnetCollection();
+
+    setState(() {
+      _showingLpCelebration = false;
+      _lpBeforeCelebration = null;
+    });
   }
 
   /// Called when HomePollingService detects side quest updates (Linked/Word Search turn changes)
@@ -404,6 +467,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin, 
               getDailyQuestGuidance: _getDailyQuestGuidanceState,
               getSideQuestGuidance: _getSideQuestGuidanceState,
               getCooldownStatus: _getCooldownStatus,
+              connectionBarKey: _connectionBarKey,
+              dailyQuestsSectionKey: _dailyQuestsSectionKey,
             ) ?? const SizedBox.shrink();
           },
         ),
@@ -415,6 +480,35 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin, 
                 setState(() => _showingLpIntro = false);
                 widget.onLpIntroVisibilityChanged?.call(false);
               }
+            },
+          ),
+        // LP celebration overlay (flying particles from quest to meter)
+        if (_showingLpCelebration)
+          Builder(
+            builder: (context) {
+              // Calculate particle positions
+              final screenSize = MediaQuery.of(context).size;
+
+              // Start position: center of daily quests section (approximated)
+              // The daily quests carousel is roughly in the middle-upper area
+              final startPosition = Offset(
+                screenSize.width / 2,
+                screenSize.height * 0.55, // ~55% down from top (quest cards area)
+              );
+
+              // End position: LP counter in connection bar (upper right of bar)
+              // Connection bar is at roughly 40% from top, LP is on the right side
+              final endPosition = Offset(
+                screenSize.width - 60, // Right side with some padding
+                screenSize.height * 0.38, // Slightly below hero section
+              );
+
+              return LpCelebrationOverlay(
+                startPosition: startPosition,
+                endPosition: endPosition,
+                onComplete: _onLpCelebrationComplete,
+                lpAmount: _arenaService.getLovePoints() - (_lpBeforeCelebration ?? 0),
+              );
             },
           ),
       ],
@@ -431,6 +525,13 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin, 
     final userCompleted = userId != null && quest.hasUserCompleted(userId);
     final bothCompleted = quest.isCompleted;
     final waitingForPartner = userCompleted && !bothCompleted;
+
+    // Track LP before navigating to daily quests (for Us 2.0 celebration)
+    final isDailyQuest = quest.type == QuestType.quiz || quest.type == QuestType.youOrMe;
+    if (isDailyQuest && BrandWidgetFactory.isUs2) {
+      _lpBeforeQuest = _arenaService.getLovePoints();
+      _navigatedToDailyQuest = true;
+    }
 
     switch (quest.type) {
       case QuestType.quiz:

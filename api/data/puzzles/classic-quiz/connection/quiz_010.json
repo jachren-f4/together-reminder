@@ -1,19 +1,29 @@
 {
   "quizId": "quiz_010",
-  "title": "Connection Quiz 10",
+  "title": "How We Talk & Listen",
   "branch": "connection",
+  "description": "Learn about your conversation patterns and listening styles.",
+  "magnet_id": 6,
   "questions": [
     {
       "id": "quiz_010_q1",
       "text": "What's most important to me when we're having a conversation?",
       "choices": [
-        "That you make eye contact",
         "That you listen without interrupting",
         "That you remember what I say",
         "That you ask follow-up questions",
-        "Other / It depends"
+        "That you put down your phone"
       ],
-      "category": "communication"
+      "category": "conversation",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Conversation needs vary significantly. Non-interruption seekers need verbal space; memory-seekers need evidence of listening; question-askers need curiosity shown; phone-downers need full presence. When our primary conversation need goes unmet, we feel unheard even when our partner is trying to listen.",
+          "framework": "gottman",
+          "whenDifferent": "Different conversation needs mean different things signal 'listening' to each of you. The memory-seeker needs their words retained; the question-asker needs engagement. Show listening in your partner's language.",
+          "whenSame": "Shared conversation needs mean you'll naturally make each other feel heard. You both want the same thing from conversations.",
+          "journalPrompt": "What makes you feel truly listened to? What signals do you look for? Does your partner know what you need during conversations?"
+        }
+      }
     },
     {
       "id": "quiz_010_q2",
@@ -22,10 +32,18 @@
         "Gently and indirectly",
         "Directly but kindly",
         "Through humor or lightheartedness",
-        "By asking questions instead of stating",
-        "Other / It depends"
+        "After thinking carefully about wording"
       ],
-      "category": "communication"
+      "category": "feedback_style",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Feedback delivery reveals how we handle interpersonal tension. Gentle/indirect protects feelings but may be missed; direct/kind prioritizes clarity; humor diffuses tension; careful wording prevents harm. Understanding your partner's natural feedback style helps you receive it even when delivered imperfectly.",
+          "framework": "communication_science",
+          "whenDifferent": "Different feedback styles can cause miscommunication. The indirect giver's hints may be missed by the direct receiver; the humor-user's feedback may not be taken seriously. Learn to recognize feedback in your partner's style.",
+          "whenSame": "Shared feedback styles mean criticism will be delivered and received as intended. You speak the same feedback language.",
+          "journalPrompt": "How do you naturally give feedback? Does your partner receive it well? What happens when you have something difficult to say?"
+        }
+      }
     },
     {
       "id": "quiz_010_q3",
@@ -34,10 +52,20 @@
         "Listen and empathize without solving",
         "Offer solutions and advice",
         "Ask questions to understand better",
-        "Share similar experiences I've had",
-        "Other / It depends"
+        "Just be present and supportive"
       ],
-      "category": "communication"
+      "category": "listening_style",
+      "metadata": {
+        "dimension": "support_style",
+        "poleMapping": ["left", "right", "neutral", "left"],
+        "therapeutic": {
+          "rationale": "Listening styles often clash in relationships. Empathetic listeners validate feelings; solution-givers want to fix; questioners seek understanding; presence-givers offer companionship. The classic 'I just want you to listen' vs. 'I'm trying to help' conflict stems from style mismatch.",
+          "framework": "supportive_communication",
+          "whenDifferent": "Different listening styles cause the most common relationship communication problem. The empathy-listener feels their solutions-giving partner doesn't care; the solutions-giver feels their empathy-listening partner is unhelpful. Ask: 'Do you want me to listen or help solve?'",
+          "whenSame": "Shared listening styles mean you'll naturally respond to problems in ways that feel supportive. You'll give what you'd want to receive.",
+          "journalPrompt": "When your partner shares a problem, what's your instinct? Do they appreciate your listening style? Have you ever asked what they need?"
+        }
+      }
     },
     {
       "id": "quiz_010_q4",
@@ -46,10 +74,20 @@
         "Directly and clearly",
         "With some context about why",
         "Written down so I can process",
-        "At a specific time when we can talk",
-        "Other / It depends"
+        "At a specific time when we can talk"
       ],
-      "category": "communication"
+      "category": "receiving_needs",
+      "metadata": {
+        "dimension": "planning_preference",
+        "poleMapping": ["right", "neutral", "left", "left"],
+        "therapeutic": {
+          "rationale": "Receiving partner needs requires its own skill. Direct receivers want clarity; context-seekers need reasoning; written-processors need time; scheduled-talkers need dedicated space. Communicating needs in the wrong format often means they go unmet even when our partner wants to help.",
+          "framework": "communication_science",
+          "whenDifferent": "Different need-receiving styles mean your partner's needs may not register in your preferred format. The direct receiver may miss gradual hints; the written-processor may not retain verbal requests. Adjust how you express needs to your partner's receiving style.",
+          "whenSame": "Shared need-receiving styles mean your requests will land as intended. You both process needs the same way.",
+          "journalPrompt": "How do you best receive information about what your partner needs? What format helps you actually act on their requests?"
+        }
+      }
     },
     {
       "id": "quiz_010_q5",
@@ -58,12 +96,18 @@
         "Checking in on me during the day",
         "Really listening when I talk",
         "Sharing your feelings openly",
-        "Remembering details I mention",
-        "Other / It depends"
+        "Remembering details I mention"
       ],
-      "category": "communication"
+      "category": "valued_habits",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Daily communication habits build relationship satisfaction over time. Check-ins show ongoing thinking; deep listening shows presence; open sharing shows vulnerability; remembered details show attention. Knowing which of your partner's habits means most helps you prioritize maintaining it.",
+          "framework": "gottman",
+          "whenDifferent": "Different valued habits reveal different communication priorities. Your partner may treasure something you do without realizing its importance. Name what matters most so they can keep doing it.",
+          "whenSame": "Shared valued habits mean the same communication patterns create connection for you both. You're aligned on what matters in daily exchanges.",
+          "journalPrompt": "Which of your partner's communication habits do you most appreciate? Have you told them? What would be lost if they stopped doing it?"
+        }
+      }
     }
-  ],
-  "description": "Learn about your journey of growing closer.",
-  "magnet_id": 6
+  ]
 }

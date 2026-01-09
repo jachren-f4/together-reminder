@@ -1,7 +1,9 @@
 {
   "quizId": "quiz_012",
-  "title": "Attachment Quiz 12",
+  "title": "Building Secure Attachment",
   "branch": "attachment",
+  "description": "Discover how you're building a secure foundation together.",
+  "magnet_id": 9,
   "questions": [
     {
       "id": "quiz_012_q1",
@@ -10,10 +12,18 @@
         "Your predictability and consistency",
         "Freedom to express all my emotions",
         "Knowing you won't leave during hard times",
-        "Balance of closeness and independence",
-        "Other / It depends"
+        "Your calm, regulated presence"
       ],
-      "category": "trust"
+      "category": "emotional_safety",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Emotional safety foundations vary by attachment history. Predictability-seekers need reliability; expression-freedom seekers need acceptance; won't-leave confidence addresses abandonment; calm-presence seekers need co-regulation. Creating your partner's specific safety conditions enables deeper intimacy.",
+          "framework": "attachment_theory",
+          "whenDifferent": "Different safety foundations need different creation. The predictability-seeker may not realize their partner needs expression freedom more than routine. Build your partner's safety, not your own projection.",
+          "whenSame": "Shared safety foundations make security easier. You understand what each other needs because you need the same things.",
+          "journalPrompt": "What makes you feel emotionally safe? Does your partner know? How can you create this safety for each other?"
+        }
+      }
     },
     {
       "id": "quiz_012_q2",
@@ -22,10 +32,18 @@
         "Opening up about my deepest fears",
         "Giving you freedom without anxiety",
         "Asking for help when I need it",
-        "Being vulnerable about my feelings",
-        "Other / It depends"
+        "Being vulnerable about my feelings"
       ],
-      "category": "trust"
+      "category": "trust_expression",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Trust expression varies by attachment style. Fear-sharing shows emotional trust; freedom-giving shows secure attachment; help-asking shows dependency trust; vulnerability shows emotional openness. Recognizing how your partner shows trust helps you see it even when it differs from your expression.",
+          "framework": "attachment_theory",
+          "whenDifferent": "Different trust expressions may be missed. The freedom-giver may not realize their partner's vulnerability is a trust signal; the fear-sharer may not see freedom-giving as trust. Learn your partner's trust language.",
+          "whenSame": "Shared trust expressions make recognition easy. You see each other's trust because you show it the same way.",
+          "journalPrompt": "How do you show your partner you trust them? Do they recognize it? What's your clearest trust signal?"
+        }
+      }
     },
     {
       "id": "quiz_012_q3",
@@ -34,10 +52,18 @@
         "Inconsistency between words and actions",
         "Feeling shut out or kept at distance",
         "Lack of communication or transparency",
-        "Broken promises or commitments",
-        "Other / It depends"
+        "Broken promises or commitments"
       ],
-      "category": "trust"
+      "category": "trust_threats",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Trust threats reveal attachment sensitivities. Inconsistency-sensitivity watches for reliability failures; shut-out sensitivity fears abandonment; communication-lack sensitivity needs transparency; broken-promise sensitivity needs follow-through. Knowing what threatens your partner's trust helps you avoid triggering it.",
+          "framework": "attachment_theory",
+          "whenDifferent": "Different trust threats need different care. Your partner's sensitivity to broken promises may seem extreme if your sensitivity is to feeling shut out. Both are valid.",
+          "whenSame": "Shared trust threats mean you'll both react to the same triggers. Be extra careful with your shared vulnerability.",
+          "journalPrompt": "What most threatens your trust? Where does this sensitivity come from? Does your partner know to be careful here?"
+        }
+      }
     },
     {
       "id": "quiz_012_q4",
@@ -46,10 +72,18 @@
         "Learning to self-soothe and regulate",
         "Communicating needs instead of testing",
         "Building trust through small steps",
-        "Balancing independence and connection",
-        "Other / It depends"
+        "Challenging old fears with new evidence"
       ],
-      "category": "growth"
+      "category": "secure_growth",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Secure attachment development follows different paths. Self-soothing work addresses co-dependency; direct communication replaces manipulation; small-step trust-building addresses avoidance; fear-challenging replaces old programming. Earned secure attachment is possible through intentional work.",
+          "framework": "attachment_theory",
+          "whenDifferent": "Different growth paths complement each other. The self-soothing worker grows in independence while the communication-learner grows in expression. Support each other's specific work.",
+          "whenSame": "Shared growth areas can be worked on together. You understand each other's challenges because you face the same ones.",
+          "journalPrompt": "How are you growing toward more secure attachment? What's working? What's still challenging?"
+        }
+      }
     },
     {
       "id": "quiz_012_q5",
@@ -58,12 +92,18 @@
         "Your unwavering presence and support",
         "Space to grow as an individual",
         "Patience with my healing journey",
-        "Consistent love through ups and downs",
-        "Other / It depends"
+        "Seeing and accepting my true self"
       ],
-      "category": "values"
+      "category": "relationship_gifts",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Greatest relationship gifts reveal attachment healing. Unwavering presence addresses abandonment wounds; growth space addresses engulfment wounds; healing patience addresses self-judgment; true-self acceptance addresses shame wounds. What your partner values most tells you what wound you're helping heal.",
+          "framework": "attachment_theory",
+          "whenDifferent": "Different gifts valued mean you're each providing different healing. The presence-valuer receives abandonment healing; the space-valuer receives autonomy validation. Honor what your partner treasures.",
+          "whenSame": "Shared gift appreciation means you're healing similar wounds. You understand the gift's value because you need the same thing.",
+          "journalPrompt": "What's the greatest gift your partner gives you? Have you told them? What attachment wound does this gift help heal?"
+        }
+      }
     }
-  ],
-  "description": "Discover how you build a safe haven together.",
-  "magnet_id": 9
+  ]
 }

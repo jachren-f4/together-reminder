@@ -1,0 +1,111 @@
+{
+  "quizId": "quiz_016",
+  "title": "Food & Dining",
+  "branch": "lighthearted",
+  "description": "Share your tastes and food experiences.",
+  "magnet_id": 1,
+  "questions": [
+    {
+      "id": "quiz_016_q1",
+      "text": "When it comes to trying new foods, I'm...",
+      "choices": [
+        "Always adventurous - I'll try anything",
+        "Open but cautious",
+        "Pretty set in what I like",
+        "I need to know what's in it first"
+      ],
+      "category": "lifestyle",
+      "metadata": {
+        "dimension": "novelty_preference",
+        "poleMapping": ["right", "neutral", "left", "left"],
+        "therapeutic": {
+          "rationale": "Food adventurousness often reflects broader openness to experience. Adventurous eaters tend to be novelty-seekers; cautious eaters often value comfort and familiarity. Neither is 'better'—they're different relationships with novelty and risk. In relationships, food differences can become daily friction points or opportunities for compromise and gentle expansion.",
+          "framework": "personality_psychology",
+          "whenDifferent": "The adventurer may feel limited by their partner's preferences; the cautious eater may feel pressured or judged. Find restaurants with diverse menus—each person can order what suits them. Don't make food choices a moral issue.",
+          "whenSame": "Matched food adventurousness makes dining together easy. If you're both explorers, hunt for new cuisines together. If you're both comfort-food lovers, enjoy your shared favorites without pressure to branch out.",
+          "journalPrompt": "What's the most unusual thing you've ever eaten? How did it feel to try it? What would it take for you to stretch your food comfort zone?"
+        }
+      }
+    },
+    {
+      "id": "quiz_016_q2",
+      "text": "Cooking at home is something I...",
+      "choices": [
+        "Love and do often",
+        "Enjoy when I have time",
+        "Do out of necessity",
+        "Avoid if possible"
+      ],
+      "category": "lifestyle",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Attitudes toward cooking affect daily life significantly—couples eat together hundreds of times a year. For some, cooking is creative expression and love language; for others, it's a chore. When partners differ, the enthusiastic cook may feel unappreciated; the reluctant cook may feel pressured. Finding a sustainable food preparation rhythm prevents this daily negotiation from becoming a source of tension.",
+          "framework": "domestic_labor",
+          "whenDifferent": "The cook may feel they're always responsible; the non-cook may feel judged. Divide fairly: maybe one cooks, one cleans. Or one shops, one preps. Or alternate. The kitchen shouldn't be one person's burden.",
+          "whenSame": "Matched cooking attitudes simplify meal planning. If you both love it, cook together. If neither does, build meal-prep systems or budget for eating out. No guilt needed.",
+          "journalPrompt": "How do you currently divide food responsibilities? Does it feel fair? What would ideal food preparation look like in your relationship?"
+        }
+      }
+    },
+    {
+      "id": "quiz_016_q3",
+      "text": "My perfect meal out is...",
+      "choices": [
+        "Fine dining experience",
+        "Casual and cozy spot",
+        "Somewhere with atmosphere",
+        "More about the company than food"
+      ],
+      "category": "together",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Restaurant preferences reveal what we value in experiences—elegance, comfort, efficiency, ambiance, or connection. There's no right answer, but couples who don't discuss this may default to one person's preference or spend date nights in places that don't work for one partner. Understanding each other's ideal dining experience helps you plan dates that both of you enjoy.",
+          "framework": "relationship_science",
+          "whenDifferent": "The fine-diner may feel their partner doesn't appreciate special occasions; the casual eater may feel overdressed and uncomfortable. Take turns choosing, and genuinely enter your partner's experience rather than critiquing it.",
+          "whenSame": "Matched dining preferences make restaurant choice easy. You'll naturally gravitate toward the same spots. Build a shared list of favorites for easy date-night decisions.",
+          "journalPrompt": "Describe your ideal restaurant experience. What makes it memorable—the food, the service, the ambiance, or something else? Does your partner know this?"
+        }
+      }
+    },
+    {
+      "id": "quiz_016_q4",
+      "text": "My relationship with food is...",
+      "choices": [
+        "It's a big source of pleasure",
+        "Fuel for my body mostly",
+        "Complicated honestly",
+        "Social and connective"
+      ],
+      "category": "self_care",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Our relationship with food is often loaded with meaning beyond nutrition—pleasure, control, shame, comfort, culture, health. Partners may have very different emotional relationships with eating, shaped by family, diet history, or body image. Understanding this helps couples navigate food-related decisions with sensitivity rather than accidentally triggering each other's complicated feelings.",
+          "framework": "health_psychology",
+          "whenDifferent": "The pleasure-eater may feel judged by a restrictive partner; the complicated-relationship partner may feel triggered by their partner's ease. Approach food differences with curiosity and gentleness. Don't police each other's eating.",
+          "whenSame": "Shared food relationships reduce a common source of silent judgment. If you both find pleasure in food, indulge together guilt-free. If you both treat food as fuel, eat efficiently without feeling pressured to perform foodie enthusiasm.",
+          "journalPrompt": "What emotions come up around food for you? Where did your relationship with eating come from? What does your partner know about your food history?"
+        }
+      }
+    },
+    {
+      "id": "quiz_016_q5",
+      "text": "When we can't decide what to eat, I prefer...",
+      "choices": [
+        "You decide",
+        "I'll decide",
+        "Going back and forth until we agree",
+        "Having a go-to default"
+      ],
+      "category": "together",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "The 'what should we eat' question is a daily decision that can become a recurring micro-conflict. Research on decision fatigue shows that small decisions add up. Couples who have systems—rotating who chooses, default options, or explicit 'I really don't care' signals—reduce this friction. The way you decide what to eat often mirrors larger decision-making patterns.",
+          "framework": "decision_psychology",
+          "whenDifferent": "The 'you decide' person may actually have preferences but not express them; the decider may tire of always choosing. Create a system: alternate who picks, or use decision wheels. Remove the daily negotiation.",
+          "whenSame": "Matched decision styles make 'what to eat' discussions easier. If you both defer, you may need to create structure. If you both like to lead, take turns explicitly. The goal is eliminating this as a recurring stressor.",
+          "journalPrompt": "How often does 'what should we eat' become a frustrating discussion? What would make this easier? Is there an underlying dynamic happening in these moments?"
+        }
+      }
+    }
+  ]
+}

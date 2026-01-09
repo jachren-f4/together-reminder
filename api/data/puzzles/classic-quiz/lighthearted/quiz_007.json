@@ -2,6 +2,8 @@
   "quizId": "quiz_007",
   "title": "Quality Time",
   "branch": "lighthearted",
+  "description": "Learn how you prefer to spend your precious moments together.",
+  "magnet_id": 1,
   "questions": [
     {
       "id": "quiz_007_q1",
@@ -10,10 +12,20 @@
         "A nice dinner out",
         "Something active or adventurous",
         "Cozy night in together",
-        "Trying something new",
-        "Other / Surprise me"
+        "Trying something new"
       ],
-      "category": "together"
+      "category": "together",
+      "metadata": {
+        "dimension": "novelty_preference",
+        "poleMapping": ["neutral", "right", "left", "right"],
+        "therapeutic": {
+          "rationale": "How couples prefer to spend intentional time together reveals their balance between comfort and novelty. Research on relationship satisfaction shows that couples benefit from both: familiar rituals create security, while novel experiences generate excitement and bonding through shared discovery. Neither preference is better—what matters is understanding each other's needs and finding a rhythm that honors both.",
+          "framework": "relationship_science",
+          "whenDifferent": "One of you draws energy from the familiar, the other from the new. This is a common and workable difference—it means you can take turns leading: sometimes the comfort-seeker plans a cozy evening, sometimes the novelty-seeker plans an adventure. The key is neither feeling their preference is always overruled.",
+          "whenSame": "You're naturally aligned on what makes a date feel special. This makes planning easier, but consider occasionally stretching into the other direction together—relationships benefit from both stability and growth.",
+          "journalPrompt": "Think about your last few date nights. Whose preference did they favor? How could you create a rhythm that honors both of your ideal experiences?"
+        }
+      }
     },
     {
       "id": "quiz_007_q2",
@@ -22,10 +34,18 @@
         "Doing an activity together",
         "Relaxing side by side",
         "Going somewhere new",
-        "Deep conversation",
-        "Other / Mix of everything"
+        "Deep conversation"
       ],
-      "category": "together"
+      "category": "together",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Free time reveals what we truly value—when there's no obligation, what do we reach for? Some partners connect through shared activity (doing), others through presence (being), others through exploration (discovering), and others through words (talking). These aren't right or wrong—they're different languages of togetherness. Understanding your partner's preference helps you offer connection in ways they can receive.",
+          "framework": "attachment_theory",
+          "whenDifferent": "You recharge and connect differently during downtime. The activity-oriented partner may feel restless with too much stillness; the presence-oriented partner may feel exhausted by constant doing. Name this difference openly—it's not rejection, it's wiring.",
+          "whenSame": "You naturally sync on how to spend unstructured time. This compatibility is a gift—lean into it while staying curious about other ways of connecting you might not naturally choose.",
+          "journalPrompt": "When you imagine a perfect lazy Sunday together, what are you doing? What about your partner's version might surprise you?"
+        }
+      }
     },
     {
       "id": "quiz_007_q3",
@@ -34,10 +54,18 @@
         "Laughing together",
         "Having a meaningful talk",
         "Physically close",
-        "Working on something together",
-        "Just being in the same space"
+        "Working on something together"
       ],
-      "category": "connection"
+      "category": "connection",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "This question maps closely to the concept of 'love languages'—the different ways people give and receive love. Gary Chapman identified five primary languages: words of affirmation, quality time, physical touch, acts of service, and gifts. Knowing what makes your partner feel closest helps you love them in ways they can feel, not just ways that come naturally to you.",
+          "framework": "love_languages",
+          "whenDifferent": "You each feel connection through different channels. This is normal and important to understand—your partner isn't failing to connect when they're not using your language, they're connecting in theirs. The goal is bilingualism: learning to speak each other's language even when it's not your native one.",
+          "whenSame": "You share a primary connection channel. This makes closeness feel natural and easy between you. Consider whether there are secondary languages you could explore to deepen your repertoire.",
+          "journalPrompt": "Think of a recent moment when you felt especially close to your partner. What were you doing? Now think about what your partner might say—would their moment be the same or different?"
+        }
+      }
     },
     {
       "id": "quiz_007_q4",
@@ -46,10 +74,20 @@
         "A lot - I recharge solo",
         "Some - but I prefer being together",
         "Not much - I'd rather be with you",
-        "It varies week to week",
-        "Other / Depends on life stress"
+        "Balanced - I need both equally"
       ],
-      "category": "self_care"
+      "category": "self_care",
+      "metadata": {
+        "dimension": "social_energy",
+        "poleMapping": ["left", "neutral", "right", "neutral"],
+        "therapeutic": {
+          "rationale": "The need for solitude versus togetherness is one of the most fundamental differences couples navigate. It's rooted in how we regulate our nervous systems—some people restore through quiet and solitude, others through connection and presence. Neither is more loving or more committed. Problems arise when the solitude-seeker's need for space is interpreted as rejection, or when the togetherness-seeker's need for presence is seen as clingy.",
+          "framework": "attachment_theory",
+          "whenDifferent": "This is one of the most common relationship tensions. The partner who needs more alone time isn't pulling away from love—they're refueling so they can show up fully. The partner who needs more togetherness isn't being needy—they're wired to connect. Name this difference clearly and create structures that honor both.",
+          "whenSame": "You're naturally calibrated to similar rhythms of together and apart. This reduces friction in daily life. If you both need lots of alone time, be intentional about connection. If you both need lots of togetherness, be intentional about maintaining individual identities.",
+          "journalPrompt": "How do you currently navigate the balance between alone time and together time? Does your partner know what you need, or do you expect them to guess? What would help?"
+        }
+      }
     },
     {
       "id": "quiz_007_q5",
@@ -58,12 +96,20 @@
         "Taking a class or learning something",
         "Outdoor adventure",
         "Creative project",
-        "Fitness or sports",
-        "Other / Traveling somewhere"
+        "Fitness or sports"
       ],
-      "category": "together"
+      "category": "together",
+      "metadata": {
+        "dimension": "risk_adventure",
+        "poleMapping": ["left", "right", "left", "neutral"],
+        "therapeutic": {
+          "rationale": "Shared novel experiences create what researchers call 'self-expansion'—the sense that being with your partner makes your world bigger. Couples who regularly try new things together report higher relationship satisfaction, not because the activities themselves matter, but because novelty activates the same brain regions as early romantic love. The specific activity matters less than the willingness to explore together.",
+          "framework": "self_expansion_theory",
+          "whenDifferent": "You're drawn to different types of new experiences. The adventure-seeker may find classes too tame; the learning-oriented partner may find outdoor adventure stressful rather than fun. Look for activities that stretch you both just enough—growth happens at the edge of comfort, not deep in the discomfort zone.",
+          "whenSame": "You're naturally drawn to the same type of exploration. This makes it easy to say yes to each other's ideas. Make a list of specific activities in this category and start checking them off together.",
+          "journalPrompt": "What's one thing you've always wanted to try but haven't? What's stopping you? Would doing it with your partner make it more or less appealing?"
+        }
+      }
     }
-  ],
-  "description": "Learn how you prefer to spend your precious moments together.",
-  "magnet_id": 1
+  ]
 }

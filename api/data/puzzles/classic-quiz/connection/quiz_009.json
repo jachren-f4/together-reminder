@@ -1,7 +1,9 @@
 {
   "quizId": "quiz_009",
-  "title": "Connection Quiz 9",
+  "title": "Communication Styles",
   "branch": "connection",
+  "description": "Discover how you each prefer to share and receive information.",
+  "magnet_id": 6,
   "questions": [
     {
       "id": "quiz_009_q1",
@@ -9,11 +11,21 @@
       "choices": [
         "Face-to-face conversation",
         "During a walk or activity",
-        "Via text or written message",
         "In the moment as they happen",
-        "Other / It depends"
+        "After I've had time to think"
       ],
-      "category": "communication"
+      "category": "communication",
+      "metadata": {
+        "dimension": "planning_preference",
+        "poleMapping": ["neutral", "neutral", "right", "left"],
+        "therapeutic": {
+          "rationale": "Communication medium matters more than we realize. Face-to-face allows for full presence; walking reduces intensity; in-the-moment sharing is spontaneous and raw; thinking first enables thoughtful delivery. Partners who prefer different channels may miss or misinterpret important messages.",
+          "framework": "communication_science",
+          "whenDifferent": "Different communication channels can cause friction. The face-to-face person may feel dismissed by indirect communication; the think-first person may feel overwhelmed by immediate demands. Adapt to your partner's receiving channel for important conversations.",
+          "whenSame": "Shared communication channels mean important conversations will flow naturally. You'll both be comfortable with the same medium.",
+          "journalPrompt": "How do you prefer to share important news? Does your partner communicate important things the way you'd prefer to receive them? What channel works best for you?"
+        }
+      }
     },
     {
       "id": "quiz_009_q2",
@@ -22,10 +34,20 @@
         "I need to talk it out immediately",
         "I need space before I can discuss it",
         "I get quiet and withdraw",
-        "I become more direct and assertive",
-        "Other / It depends"
+        "I become more direct and assertive"
       ],
-      "category": "communication"
+      "category": "conflict_style",
+      "metadata": {
+        "dimension": "support_style",
+        "poleMapping": ["right", "left", "left", "right"],
+        "therapeutic": {
+          "rationale": "Upset communication patterns often reflect attachment styles formed early in life. Immediate talkers process externally and need verbal connection; space-needers must self-regulate first; withdrawers protect themselves through distance; assertive communicators become more direct under stress. These patterns often clash when partners differ.",
+          "framework": "attachment_theory",
+          "whenDifferent": "Different upset styles cause significant conflict escalation. The immediate talker may chase the withdrawer; the space-needer feels smothered by the pursuer. Learn each other's patterns: 'When I'm upset, I need X before we can talk productively.'",
+          "whenSame": "Matched upset styles make conflict more manageable. You'll naturally give each other what's needed during tense moments.",
+          "journalPrompt": "What happens to you when you're upset? What do you need before you can talk about it? Does your partner understand your pattern?"
+        }
+      }
     },
     {
       "id": "quiz_009_q3",
@@ -34,10 +56,18 @@
         "Tell me directly what's wrong",
         "Take some time to process first",
         "Express your feelings calmly",
-        "Write it out if it's too emotional",
-        "Other / It depends"
+        "Let me know you need space"
       ],
-      "category": "communication"
+      "category": "receiving_style",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "How we prefer our partner to share their upset differs from our own upset style. Some prefer directness—just tell me; others need calm—not emotional intensity; others appreciate processing time; others want heads-up on space-taking. Knowing your partner's receiving preferences helps you share your upset in ways they can hear.",
+          "framework": "communication_science",
+          "whenDifferent": "Different receiving preferences for upset partners mean your natural sharing style may not land well. The direct-preferrer feels confused by hints; the calm-preferrer feels overwhelmed by intensity. Adjust how you share upset based on how your partner receives it.",
+          "whenSame": "Shared receiving preferences mean your upset communication will be received as intended. You both want the same approach when the other is distressed.",
+          "journalPrompt": "When your partner is upset with you, what helps you hear them? What makes you defensive? What would make receiving their upset easier?"
+        }
+      }
     },
     {
       "id": "quiz_009_q4",
@@ -45,11 +75,19 @@
       "choices": [
         "Gently touch my arm or shoulder",
         "Say my name and wait for eye contact",
-        "Send me a text even if we're together",
         "Wait for a natural break in what I'm doing",
-        "Other / It depends"
+        "Just start talking—I'll catch up"
       ],
-      "category": "communication"
+      "category": "attention",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Attention-getting preferences reflect boundaries and processing styles. Touch-preferrers are physically responsive; name-callers need full focus before continuing; break-waiters need completion; start-talkers can split attention. Partners who interrupt in unwanted ways create small daily friction that accumulates.",
+          "framework": "boundary_theory",
+          "whenDifferent": "Different attention-getting preferences can cause minor but repeated irritation. The touch-preferrer may startle the name-caller; the break-waiter may feel ignored by the start-talker. Small accommodations in how you get attention prevent daily friction.",
+          "whenSame": "Shared attention-getting preferences mean interruptions will feel natural rather than jarring. You'll both appreciate the same approach.",
+          "journalPrompt": "How do you prefer to be interrupted when focused on something? What approach annoys you? Does your partner know what works?"
+        }
+      }
     },
     {
       "id": "quiz_009_q5",
@@ -58,12 +96,18 @@
         "Direct request with reasons why",
         "Gentle suggestion or question",
         "Through appreciation for past help",
-        "With advance notice when possible",
-        "Other / It depends"
+        "With advance notice when possible"
       ],
-      "category": "communication"
+      "category": "requests",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Request styles affect compliance and resentment. Direct-with-reasons satisfies those who need context; gentle suggestion feels less demanding; appreciation-first acknowledges prior contribution; advance notice respects scheduling. Asking in the wrong way can make even willing partners resistant.",
+          "framework": "positive_psychology",
+          "whenDifferent": "Different request preferences can create unnecessary friction. The direct-with-reasons person may feel controlled by advance-notice requests; the appreciation-first person may feel taken for granted by direct requests. Match your asking style to your partner's preference.",
+          "whenSame": "Shared request preferences mean asking for things will feel natural and respectful. You'll both appreciate the same approach to requests.",
+          "journalPrompt": "What makes you want to say yes when your partner asks for something? What makes you resistant? Does your partner know how to ask in ways that work for you?"
+        }
+      }
     }
-  ],
-  "description": "Discover how you create emotional safety together.",
-  "magnet_id": 6
+  ]
 }

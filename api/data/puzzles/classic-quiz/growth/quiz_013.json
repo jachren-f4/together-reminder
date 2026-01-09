@@ -1,0 +1,64 @@
+{
+  "quizId": "quiz_013",
+  "title": "Self-Awareness",
+  "branch": "growth",
+  "questions": [
+    {
+      "id": "quiz_013_q1",
+      "text": "What's something I'm still learning about myself?",
+      "choices": [
+        "What truly makes me happy",
+        "How I handle stress and pressure",
+        "What I need in relationships",
+        "My strengths and limitations"
+      ],
+      "category": "growth"
+    },
+    {
+      "id": "quiz_013_q2",
+      "text": "When I reflect on my past, I tend to focus on...",
+      "choices": [
+        "Lessons learned from mistakes",
+        "Moments I'm proud of",
+        "How far I've come",
+        "What I wish I'd done differently"
+      ],
+      "category": "emotional"
+    },
+    {
+      "id": "quiz_013_q3",
+      "text": "The best way for me to gain self-insight is...",
+      "choices": [
+        "Talking things through with you",
+        "Journaling or quiet reflection",
+        "Getting feedback from others",
+        "Learning from my experiences"
+      ],
+      "category": "communication"
+    },
+    {
+      "id": "quiz_013_q4",
+      "text": "Something I've recently realized about myself is...",
+      "choices": [
+        "I need more balance in my life",
+        "I'm stronger than I thought",
+        "I have room to grow in certain areas",
+        "What I value has shifted"
+      ],
+      "category": "growth"
+    },
+    {
+      "id": "quiz_013_q5",
+      "text": "How has being with you helped me see myself more clearly?",
+      "choices": [
+        "You reflect back my best qualities",
+        "You gently point out my blind spots",
+        "You accept me as I am",
+        "You challenge me to grow"
+      ],
+      "category": "values"
+    }
+  ],
+  "description": "Explore how self-awareness shapes your growth together.",
+  "magnet_id": 11
+}

@@ -2,6 +2,8 @@
   "quizId": "quiz_004",
   "title": "When Things Go Wrong",
   "branch": "lighthearted",
+  "description": "Learn how to be there for each other when things don't go as planned.",
+  "magnet_id": 0,
   "questions": [
     {
       "id": "quiz_004_q1",
@@ -10,10 +12,18 @@
         "Took care of everything so I can rest",
         "Kept me company and pampered me",
         "Gave me space but checked in",
-        "Distracted me with shows or comfort food",
-        "Other / It depends"
+        "Distracted me with shows or comfort food"
       ],
-      "category": "support"
+      "category": "support",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "How we want to be cared for when sick reveals attachment patterns and self-sufficiency needs. Some people regress and want to be fully taken care of; others want company and nurturing; some need space to recover independently; others need distraction from discomfort. Understanding your partner's sick-day needs prevents the well-meaning caretaker from smothering the independence-seeker, or leaving the nurturance-needer feeling abandoned.",
+          "framework": "attachment_theory",
+          "whenDifferent": "The caretaker may hover over a partner who wants space; the space-giver may seem cold to a partner who wants pampering. Ask directly when sick: 'What would help most right now?' Accept the answer even if it's different from what you'd want.",
+          "whenSame": "Matched sick-care preferences mean you'll naturally give what the other needs. You'll intuit whether to stay close or give space. This reduces stress during already-uncomfortable times.",
+          "journalPrompt": "Think about the last time you were sick. What did your partner do? What did you wish they'd done differently? Have you ever explicitly told them what you need when unwell?"
+        }
+      }
     },
     {
       "id": "quiz_004_q2",
@@ -22,10 +32,18 @@
         "Laugh with me and make it lighter",
         "Pretend you didn't notice",
         "Rescue me from the situation",
-        "Reassure me later that it wasn't a big deal",
-        "Other / It depends"
+        "Reassure me later that it wasn't a big deal"
       ],
-      "category": "support"
+      "category": "support",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Embarrassment triggers shame, and how we want partners to respond in those moments is deeply personal. Some people defuse shame through humor; others need the moment to be ignored; others need active rescue; others need later reassurance. The wrong response can deepen embarrassment rather than ease it. Knowing your partner's embarrassment-response preference lets you be helpful rather than accidentally making things worse.",
+          "framework": "shame_resilience",
+          "whenDifferent": "The laugh-it-off person may crack a joke that lands wrong with a partner who wanted the moment ignored; the rescuer may draw more attention to a situation a partner wanted glossed over. Pre-discuss: 'If I'm ever embarrassed in public, what helps you most?'",
+          "whenSame": "Matched embarrassment responses mean you'll instinctively handle each other's awkward moments well. You know what would help because it's what would help you.",
+          "journalPrompt": "Think about a time you were embarrassed in front of your partner. How did they respond? How did that response make you feel? What would have been the ideal response?"
+        }
+      }
     },
     {
       "id": "quiz_004_q3",
@@ -34,19 +52,19 @@
         "You listening without judgment",
         "You helping me figure out a fix",
         "You reminding me it's not the end of the world",
-        "You giving me space to process it",
-        "Other / It depends"
+        "You giving me space to process it"
       ],
       "category": "support",
       "metadata": {
         "dimension": "support_style",
-        "poleMapping": [
-          "left",
-          "right",
-          null,
-          "left",
-          null
-        ]
+        "poleMapping": ["left", "right", "neutral", "left"],
+        "therapeutic": {
+          "rationale": "How we want to be met after making a mistake reveals our relationship with failure and self-compassion. Listeners help us feel less alone; fixers help us move forward; reframers help us gain perspective; space-givers respect our need to process independently. A well-intentioned partner can accidentally worsen shame by offering the wrong kind of support. Understanding this is crucial for repair after mistakes.",
+          "framework": "shame_resilience",
+          "whenDifferent": "The listener may frustrate a partner who wants solutions; the fixer may overwhelm a partner who just needs to vent. After a mistake, ask: 'Do you want me to just listen, help problem-solve, give perspective, or give you space?' Then honor the answer.",
+          "whenSame": "Matched mistake-response needs mean you'll naturally offer what helps. You understand the response that would ease your partner's shame because it's what would ease yours.",
+          "journalPrompt": "Think about a recent mistake you made. What was your internal response? What did you need from your partner? Did you get it? What would have helped most?"
+        }
       }
     },
     {
@@ -56,19 +74,19 @@
         "Just let me vent without trying to fix it",
         "Offer ideas or solutions",
         "Give me a hug and be supportive",
-        "Help me take my mind off it",
-        "Other / It depends"
+        "Help me take my mind off it"
       ],
       "category": "support",
       "metadata": {
         "dimension": "support_style",
-        "poleMapping": [
-          "left",
-          "right",
-          null,
-          null,
-          null
-        ]
+        "poleMapping": ["left", "right", "neutral", "neutral"],
+        "therapeutic": {
+          "rationale": "The venting-versus-fixing dynamic is one of the most common support mismatches in relationships. Research shows that unsolicited advice during frustration often increases rather than decreases stress. Some people genuinely need solutions; others need emotional validation; others need physical comfort; others need distraction. The key is matching support to preference, not offering what you would want.",
+          "framework": "supportive_communication",
+          "whenDifferent": "The venter may feel dismissed by solutions; the solution-seeker may feel unhelped by 'just listening.' The magic words: 'Do you want to vent or do you want help fixing this?' This prevents most support mismatches.",
+          "whenSame": "Matched frustration-response needs mean you'll naturally give each other what works. You won't have to ask because you'll instinctively offer what you'd want yourself.",
+          "journalPrompt": "When you're frustrated, what's your first instinct—to talk it out or to solve it? Does your partner know this? Have you ever felt mismatched in these moments?"
+        }
       }
     },
     {
@@ -78,12 +96,18 @@
         "Talk through what happened",
         "Do something fun to shift the mood",
         "Just be together quietly",
-        "Make a plan for next time",
-        "Other / It depends"
+        "Make a plan for next time"
       ],
-      "category": "support"
+      "category": "support",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Disappointment recovery reveals how we regulate difficult emotions. Talkers process verbally; mood-shifters need distraction; quiet-be-togethers need presence without words; planners need to regain control through action. Partners who don't understand each other's disappointment recovery may inadvertently prolong the low mood by offering the wrong medicine.",
+          "framework": "emotion_regulation",
+          "whenDifferent": "The talker may feel dismissed by a partner who just wants to do something fun; the mood-shifter may feel dragged down by rehashing disappointment. Name your need: 'I need to process this by talking' or 'I need to move on—let's do something fun.'",
+          "whenSame": "Matched disappointment recovery styles mean you'll naturally help each other feel better. You'll instinctively offer what works because it's what works for you too.",
+          "journalPrompt": "Think about a recent disappointment. How did you process it? What role did your partner play? What would have helped you feel better faster?"
+        }
+      }
     }
-  ],
-  "description": "Learn how to be there for each other when things don't go as planned.",
-  "magnet_id": 0
+  ]
 }

@@ -155,7 +155,7 @@ class _PairingScreenState extends State<PairingScreen> {
           MaterialPageRoute(
             builder: (context) => AlreadySubscribedScreen(
               subscriberName: coupleStatus?.subscriberName ?? 'Your partner',
-              onContinue: () => _navigateAfterPaywall(context),
+              onContinue: (ctx) => _navigateAfterPaywall(ctx),
             ),
           ),
         );
@@ -165,7 +165,7 @@ class _PairingScreenState extends State<PairingScreen> {
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(
             builder: (context) => PaywallScreen(
-              onContinue: () => _navigateAfterPaywall(context),
+              onContinue: (ctx) => _navigateAfterPaywall(ctx),
               allowSkip: false, // Hard paywall - must start trial
             ),
           ),

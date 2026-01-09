@@ -3,7 +3,6 @@ import 'package:google_fonts/google_fonts.dart';
 import '../services/unlock_service.dart';
 import '../services/haptic_service.dart';
 import '../services/sound_service.dart';
-import '../services/notification_service.dart';
 import '../services/quest_initialization_service.dart';
 import '../services/storage_service.dart';
 import '../widgets/editorial/editorial.dart';
@@ -132,10 +131,6 @@ class _LpIntroOverlayState extends State<LpIntroOverlay>
 
     // Mark LP intro as shown on server
     await UnlockService().markLpIntroShown();
-
-    // Request notification permission now that user has seen the value
-    // This shows the system permission dialog (gray overlay is expected here)
-    await NotificationService.requestPermission();
 
     // Ensure daily quests are initialized before revealing home screen
     // This prevents the "No Daily Quests Yet" flash when overlay dismisses

@@ -1,0 +1,64 @@
+{
+  "quizId": "quiz_016",
+  "title": "Feedback & Growth",
+  "branch": "growth",
+  "questions": [
+    {
+      "id": "quiz_016_q1",
+      "text": "When you give me feedback, I prefer it to be...",
+      "choices": [
+        "Direct and honest",
+        "Gentle and supportive",
+        "Specific with suggestions",
+        "At the right moment, not in the heat of things"
+      ],
+      "category": "communication"
+    },
+    {
+      "id": "quiz_016_q2",
+      "text": "How do I typically respond to constructive criticism?",
+      "choices": [
+        "I appreciate it and try to learn",
+        "I need time to process before responding",
+        "I can get defensive at first",
+        "I welcome it when delivered kindly"
+      ],
+      "category": "emotional"
+    },
+    {
+      "id": "quiz_016_q3",
+      "text": "What makes me most open to hearing feedback?",
+      "choices": [
+        "Knowing it comes from love",
+        "When I've asked for it",
+        "When it's balanced with positives",
+        "When I trust the person giving it"
+      ],
+      "category": "trust"
+    },
+    {
+      "id": "quiz_016_q4",
+      "text": "When I notice something you could improve, I tend to...",
+      "choices": [
+        "Bring it up gently when the time is right",
+        "Wait for you to ask for my thoughts",
+        "Lead by example rather than saying it",
+        "Be direct because I care about your growth"
+      ],
+      "category": "communication"
+    },
+    {
+      "id": "quiz_016_q5",
+      "text": "The most helpful feedback you've given me was about...",
+      "choices": [
+        "How I communicate or express myself",
+        "How I handle stress or emotions",
+        "My habits or behaviors",
+        "How I show up in our relationship"
+      ],
+      "category": "growth"
+    }
+  ],
+  "description": "Learn how to give and receive feedback that helps you both grow.",
+  "magnet_id": 12
+}

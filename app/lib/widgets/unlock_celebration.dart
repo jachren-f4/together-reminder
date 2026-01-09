@@ -498,7 +498,7 @@ class UnlockCelebrations {
   static Future<void> showLinkedUnlocked(BuildContext context, int lpEarned) {
     return UnlockCelebrationOverlay.show(
       context,
-      featureName: 'Linked',
+      featureName: 'Crossword',
       featureDescription:
           'Work together to solve word puzzles! Take turns guessing the clues.',
       lpEarned: lpEarned,

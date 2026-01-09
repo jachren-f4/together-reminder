@@ -1,7 +1,9 @@
 {
   "quizId": "quiz_003",
-  "title": "Attachment Quiz 3",
+  "title": "Seeking Closeness",
   "branch": "attachment",
+  "description": "Learn how you express your need for connection.",
+  "magnet_id": 7,
   "questions": [
     {
       "id": "quiz_003_q1",
@@ -10,10 +12,18 @@
         "I directly ask for it",
         "I initiate physical contact",
         "I become more attentive to you",
-        "I feel anxious or clingy",
         "I hint but don't always say"
       ],
-      "category": "closeness_seeking"
+      "category": "closeness_seeking",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "How we signal closeness needs reflects attachment communication patterns. Direct askers have secure communication; physical initiators use non-verbal bids; attention-givers hope for reciprocity; hinters learned indirect communication. Clear communication of closeness needs gets them met more reliably.",
+          "framework": "attachment_theory",
+          "whenDifferent": "Different closeness signaling means you may miss each other's bids. The direct asker may not notice the hinter's signals; the hinter may feel the direct asker doesn't need closeness. Learn to read your partner's language.",
+          "whenSame": "Shared closeness signaling means you'll recognize each other's needs. You speak the same attachment language.",
+          "journalPrompt": "How do you show your partner you need more closeness? Do they notice? What would help them understand your signals better?"
+        }
+      }
     },
     {
       "id": "quiz_003_q2",
@@ -22,10 +32,18 @@
         "Previous relationship hurts",
         "Family patterns growing up",
         "Past abandonment or loss",
-        "Learning to be independent",
-        "I've worked through most of it"
+        "Learning to be independent early"
       ],
-      "category": "attachment_history"
+      "category": "attachment_history",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Our attachment history shapes current patterns. Relationship hurts create protective walls; family patterns become templates; abandonment creates hypervigilance; enforced independence creates self-reliance. Understanding your partner's history with compassion helps you not take their patterns personally.",
+          "framework": "attachment_theory",
+          "whenDifferent": "Different attachment histories mean different wounds informing current behavior. Your partner's walls or clinginess may come from experiences you didn't share. Approach their history with curiosity.",
+          "whenSame": "Shared attachment histories suggest similar formative experiences. You may deeply understand each other's patterns because you share similar origins.",
+          "journalPrompt": "What from your past shows up in how you attach to your partner? Have you shared this history with them? How does understanding the origin help?"
+        }
+      }
     },
     {
       "id": "quiz_003_q3",
@@ -34,10 +52,18 @@
         "Very comfortable and direct",
         "Somewhat - depends on the need",
         "I often hint instead",
-        "I struggle and hold back",
-        "I'm learning to be better at it"
+        "I struggle and hold back"
       ],
-      "category": "needs_expression"
+      "category": "needs_expression",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Comfort expressing needs reflects attachment security and childhood experiences. Direct askers learned their needs were valid; flexible types adapt to context; hinters learned indirect routes were safer; holders-back fear rejection or burden. Secure attachment involves trusting that expressing needs won't damage the relationship.",
+          "framework": "attachment_theory",
+          "whenDifferent": "Different needs-expression comfort requires different invitation levels. The direct asker may need to explicitly invite the holder-back to share; the holder-back needs patience and safety.",
+          "whenSame": "Shared needs-expression comfort means you communicate similarly. If you both struggle, create explicit safety for needs-sharing.",
+          "journalPrompt": "How easy is it to ask your partner for what you need? Where did you learn your relationship with asking? What would make it easier?"
+        }
+      }
     },
     {
       "id": "quiz_003_q4",
@@ -46,10 +72,18 @@
         "Unanswered messages",
         "Changes in your mood",
         "Mentions of exes or others",
-        "Time spent apart",
-        "I don't get anxious easily"
+        "Time spent apart"
       ],
-      "category": "anxiety_triggers"
+      "category": "anxiety_triggers",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Relationship anxiety triggers reveal attachment sensitivities. Unanswered-message anxiety suggests abandonment fears; mood-sensitivity suggests hypervigilance for rejection; ex-mentions suggest comparison anxiety; time-apart triggers suggest separation anxiety. Knowing your triggers helps you manage them.",
+          "framework": "attachment_theory",
+          "whenDifferent": "Different triggers mean different things activate each of your attachment systems. What seems trivial to one may be threatening to the other. Treat each other's triggers with care.",
+          "whenSame": "Shared triggers suggest similar attachment sensitivities. Be extra careful with your shared vulnerability—you can both be activated at once.",
+          "journalPrompt": "What triggers relationship anxiety for you? Where does this sensitivity come from? Does your partner know what activates your worry?"
+        }
+      }
     },
     {
       "id": "quiz_003_q5",
@@ -58,12 +92,18 @@
         "Safe and willing",
         "Nervous but I try",
         "I hold back to protect myself",
-        "It takes me time to open up",
-        "I'm more vulnerable than I show"
+        "It takes me time to open up"
       ],
-      "category": "vulnerability"
+      "category": "vulnerability",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Vulnerability comfort is the gateway to deep connection. Safe-and-willing shows secure attachment; nervous-but-trying shows growth edge; holding-back shows self-protection; slow-opening shows cautious trust. True intimacy requires vulnerability from both partners.",
+          "framework": "attachment_theory",
+          "whenDifferent": "Different vulnerability comfort requires different pacing. The safe-and-willing may feel frustrated by the holder-back; the slow-opener may feel pressured. Respect each other's vulnerability pace.",
+          "whenSame": "Shared vulnerability comfort means you'll open at similar speeds. If you both hold back, intentionally create safety for deeper sharing.",
+          "journalPrompt": "How comfortable are you being truly vulnerable with your partner? What would help you open up more? What do you hold back?"
+        }
+      }
     }
-  ],
-  "description": "Learn about what makes you feel safe with each other.",
-  "magnet_id": 7
+  ]
 }

@@ -1,7 +1,9 @@
 {
   "quizId": "quiz_008",
-  "title": "Attachment Quiz 8",
+  "title": "Stress & Connection",
   "branch": "attachment",
+  "description": "Explore how stress affects your attachment and need for connection.",
+  "magnet_id": 8,
   "questions": [
     {
       "id": "quiz_008_q1",
@@ -9,11 +11,19 @@
       "choices": [
         "I understand and give you space",
         "I'm patient but miss you",
-        "I try to help so we can connect sooner",
         "I struggle with feeling secondary",
-        "Other / It depends"
+        "I use the time for my own things"
       ],
-      "category": "emotional"
+      "category": "busy_partner",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Response to partner's busyness reveals attachment activation. Understanding-and-space shows secure attachment; patient-but-missing shows balanced longing; feeling-secondary shows activated anxiety; own-things shows secure independence or avoidance. How you handle your partner's unavailability affects relationship quality.",
+          "framework": "attachment_theory",
+          "whenDifferent": "Different busyness responses can create misunderstanding. The struggling-secondary person may feel abandoned while their partner is simply busy with life. Communicate: 'When I'm busy, it's not about us.'",
+          "whenSame": "Shared busyness responses suggest similar attachment orientations. You'll handle each other's busy times similarly.",
+          "journalPrompt": "How do you feel when your partner is busy or unavailable? What thoughts arise? Does your response help or create more distance?"
+        }
+      }
     },
     {
       "id": "quiz_008_q2",
@@ -22,10 +32,20 @@
         "I seek more closeness and reassurance",
         "I withdraw and need space",
         "I become more independent",
-        "I oscillate between seeking and withdrawing",
-        "Other / It depends"
+        "I stay pretty consistent"
       ],
-      "category": "emotional"
+      "category": "stress_attachment",
+      "metadata": {
+        "dimension": "support_style",
+        "poleMapping": ["right", "left", "left", "neutral"],
+        "therapeutic": {
+          "rationale": "Stress activates attachment systems in predictable ways. Closeness-seekers have anxious attachment activation; withdrawers have avoidant activation; independence-boosters manage through self-reliance; consistent types have secure attachment. Knowing your partner's stress-attachment style helps you respond appropriately rather than personalizing their behavior.",
+          "framework": "attachment_theory",
+          "whenDifferent": "Different stress-attachment styles create relationship challenges. The stress-seeker may chase the stress-withdrawer, who retreats more. Recognize the pattern and don't personalize it.",
+          "whenSame": "Shared stress-attachment styles mean you'll respond to stress similarly. Two seekers will come together; two withdrawers will give space.",
+          "journalPrompt": "When you're stressed, do you move toward your partner or away? Does this help your relationship? What would be healthier?"
+        }
+      }
     },
     {
       "id": "quiz_008_q3",
@@ -34,10 +54,18 @@
         "Quick check-ins throughout the day",
         "Quality over quantity - focused time together",
         "Physical presence even if we're doing separate things",
-        "Staying connected through shared routines",
-        "Other / It depends"
+        "Trust that we're connected even without constant contact"
       ],
-      "category": "values"
+      "category": "busy_connection",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Connection maintenance during busy times reveals attachment needs. Check-inners need frequent contact; quality-focused need depth; presence-seekers need proximity; trust-based need secure confidence. Knowing how your partner maintains connection during busy periods helps you stay close despite demands.",
+          "framework": "attachment_theory",
+          "whenDifferent": "Different busy-time connection needs may cause disconnect. The check-inner may feel neglected by the trust-based partner; the quality-focused may feel the check-inner is superficial. Adapt to each other's needs.",
+          "whenSame": "Shared busy-time connection means you'll maintain closeness the same way during demanding periods.",
+          "journalPrompt": "When life is busy, how do you maintain your connection? Is this working? What would help you stay close during demanding times?"
+        }
+      }
     },
     {
       "id": "quiz_008_q4",
@@ -46,10 +74,18 @@
         "Knowing I'm still a priority",
         "Being included in your plans when possible",
         "Understanding why other things need attention",
-        "Making up for it with quality time later",
-        "Other / It depends"
+        "Nothing special - I trust our bond"
       ],
-      "category": "trust"
+      "category": "value_needs",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Value-feeling needs during partner's commitments reflect attachment security. Priority-needing addresses abandonment fears; inclusion-wanting seeks belonging; understanding-seeking is cognitively flexible; trusting-bond shows secure attachment. Knowing what your partner needs to feel valued when you're busy helps you provide it.",
+          "framework": "attachment_theory",
+          "whenDifferent": "Different value-feeling needs during commitments require awareness. The priority-needer may feel dismissed by the trusting-bond partner's absence; the trusting-bond partner may not realize reassurance is needed.",
+          "whenSame": "Shared value-feeling needs mean you'll naturally provide what the other needs during busy times.",
+          "journalPrompt": "What do you need from your partner when they have other commitments? Do you communicate this? What would help you feel valued?"
+        }
+      }
     },
     {
       "id": "quiz_008_q5",
@@ -58,12 +94,18 @@
         "I give you space without anxiety",
         "I communicate my needs clearly",
         "I trust you without needing constant reassurance",
-        "I support your individual goals",
-        "Other / It depends"
+        "I support your individual goals"
       ],
-      "category": "trust"
+      "category": "security_expression",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "How we show security reflects attachment style. Space-giving without anxiety demonstrates non-anxious attachment; clear communication demonstrates secure expression; trusting without reassurance demonstrates secure confidence; supporting goals demonstrates differentiation. Recognizing how your partner shows security helps you see their trust.",
+          "framework": "attachment_theory",
+          "whenDifferent": "Different security expressions may be misread. The space-giving partner may seem distant; the clear-communicator may seem demanding. Learn to recognize your partner's security signals.",
+          "whenSame": "Shared security expressions mean you'll recognize each other's trust. You show security the same way.",
+          "journalPrompt": "How do you show your partner you feel secure with them? Do they recognize these signals? What does feeling secure look like for you?"
+        }
+      }
     }
-  ],
-  "description": "Explore your needs for independence and togetherness.",
-  "magnet_id": 8
+  ]
 }

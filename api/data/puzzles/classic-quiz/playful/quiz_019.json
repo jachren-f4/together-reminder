@@ -10,8 +10,7 @@
         "Doing nothing together - couch, snacks, no plans",
         "Parallel relaxing - same room, different activities",
         "A mix of together time and solo recharge",
-        "Having some 'me time' before coming back together",
-        "Other / It depends"
+        "Having some 'me time' before coming back together"
       ],
       "category": "lifestyle",
       "metadata": {
@@ -20,8 +19,7 @@
           "right",
           null,
           null,
-          "left",
-          null
+          "left"
         ]
       }
     },
@@ -32,8 +30,7 @@
         "Be close to you, even if we're not really talking",
         "Do something relaxing together like watching a show",
         "Have quiet time in separate spaces, then reconnect",
-        "Take some solo time to fully reset",
-        "Other / It depends"
+        "Take some solo time to fully reset"
       ],
       "category": "lifestyle",
       "metadata": {
@@ -42,8 +39,7 @@
           "right",
           "right",
           null,
-          "left",
-          null
+          "left"
         ]
       }
     },
@@ -54,8 +50,7 @@
         "Doing them together - spa night vibes",
         "Side by side but doing our own thing",
         "Having my own routine, but happy to share sometimes",
-        "These are my solo rituals",
-        "Other / It depends"
+        "These are my solo rituals"
       ],
       "category": "preferences"
     },
@@ -66,8 +61,7 @@
         "Cuddles and connection with you",
         "Your presence nearby while I decompress",
         "A little space first, then coming together",
-        "Some alone time before I'm ready to engage",
-        "Other / It depends"
+        "Some alone time before I'm ready to engage"
       ],
       "category": "communication",
       "metadata": {
@@ -76,8 +70,7 @@
           "right",
           "right",
           null,
-          "left",
-          null
+          "left"
         ]
       }
     },
@@ -88,8 +81,7 @@
         "Find ways to rest together, even if briefly",
         "Check in with each other about how we're doing",
         "Respect when each of us needs space to recharge",
-        "Balance time together with individual downtime",
-        "Other / It depends"
+        "Balance time together with individual downtime"
       ],
       "category": "communication"
     }

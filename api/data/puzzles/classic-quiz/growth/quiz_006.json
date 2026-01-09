@@ -10,9 +10,7 @@
         "Start my own business or creative venture",
         "Make a major career change",
         "Pursue an artistic or athletic goal",
-        "Transform a personal relationship",
-        "Other / It depends"
-      ],
+        "Transform a personal relationship"      ],
       "category": "growth"
     },
     {
@@ -22,9 +20,7 @@
         "Advanced in my career",
         "In a different life stage or location",
         "Having achieved a personal goal",
-        "More balanced and fulfilled",
-        "Other / It depends"
-      ],
+        "More balanced and fulfilled"      ],
       "category": "growth"
     },
     {
@@ -34,9 +30,7 @@
         "Professional achievements",
         "Impact on people I've helped",
         "Creative works or contributions",
-        "A strong family and relationships",
-        "Other / It depends"
-      ],
+        "A strong family and relationships"      ],
       "category": "values"
     },
     {
@@ -46,9 +40,7 @@
         "A creative hobby or art form",
         "Athletic or fitness pursuit",
         "Learning or education goal",
-        "Travel or adventure dreams",
-        "Other / It depends"
-      ],
+        "Travel or adventure dreams"      ],
       "category": "growth"
     },
     {
@@ -58,9 +50,7 @@
         "Achieving my full potential",
         "Making you proud",
         "Creating a better future for us",
-        "Personal satisfaction and fulfillment",
-        "Other / It depends"
-      ],
+        "Personal satisfaction and fulfillment"      ],
       "category": "values"
     }
   ],

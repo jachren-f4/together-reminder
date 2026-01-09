@@ -1,7 +1,9 @@
 {
   "quizId": "quiz_001",
-  "title": "Connection Quiz 1",
+  "title": "Love Languages",
   "branch": "connection",
+  "description": "Discover how you give and receive love in your relationship.",
+  "magnet_id": 5,
   "questions": [
     {
       "id": "quiz_001_q1",
@@ -10,19 +12,17 @@
         "Words of affirmation",
         "Physical touch",
         "Quality time together",
-        "Acts of service",
-        "Receiving thoughtful gifts"
+        "Acts of service"
       ],
       "category": "love_languages",
       "metadata": {
-        "loveLanguage": true,
-        "languageMapping": [
-          "words_of_affirmation",
-          "physical_touch",
-          "quality_time",
-          "acts_of_service",
-          "receiving_gifts"
-        ]
+        "therapeutic": {
+          "rationale": "Gary Chapman's love languages framework revolutionized how we understand relationship satisfaction. Each person has a primary way of feeling loved—and often gives love the way they want to receive it, not the way their partner needs it. Identifying your partner's primary love language is the first step to making them feel truly loved rather than just going through the motions.",
+          "framework": "love_languages",
+          "whenDifferent": "Different love languages is extremely common and often explains why one partner feels unloved despite the other's genuine efforts. The acts-of-service person may not register 'I love you' as meaningful; the words person may feel unappreciated by helpful actions alone. Learn to speak your partner's language, even when it doesn't come naturally.",
+          "whenSame": "Shared primary love languages make love feel effortless—you'll naturally give what your partner needs most. This is a relationship advantage, but don't neglect the other languages entirely.",
+          "journalPrompt": "When was the last time you felt deeply loved by your partner? What were they doing? Does that match what you selected as your love language?"
+        }
       }
     },
     {
@@ -32,19 +32,19 @@
         "Space to process alone",
         "A hug and physical comfort",
         "Someone to listen without fixing",
-        "Distraction and cheering up",
         "Practical help with tasks"
       ],
       "category": "emotional_needs",
       "metadata": {
-        "dimension": "stress_processing",
-        "poleMapping": [
-          "left",
-          null,
-          "right",
-          null,
-          null
-        ]
+        "dimension": "support_style",
+        "poleMapping": ["left", "neutral", "left", "right"],
+        "therapeutic": {
+          "rationale": "How we need support when distressed often reflects our attachment patterns. Some people co-regulate through physical touch; others need verbal processing; others require solitude to self-soothe; others need practical help. Partners who offer the wrong kind of support aren't unloving—they're offering what they would want. Learning your partner's support needs is crucial.",
+          "framework": "attachment_theory",
+          "whenDifferent": "The space-needer may feel smothered by a partner who wants to talk; the talker may feel abandoned by a partner who needs solitude. Ask directly: 'What do you need right now—space, talking, touch, or help?' Then honor the answer.",
+          "whenSame": "Matched support needs mean you'll intuitively give each other what works. You understand because it's what you need too. This is especially valuable during hard times.",
+          "journalPrompt": "Think about the last time you were really down. What did your partner do? Did it help? What would have helped more?"
+        }
       }
     },
     {
@@ -54,19 +54,19 @@
         "Deep conversations",
         "Shared activities or hobbies",
         "Physical intimacy",
-        "Quiet time together",
-        "Going on adventures"
+        "Quiet time together"
       ],
       "category": "connection",
       "metadata": {
-        "loveLanguage": true,
-        "languageMapping": [
-          "words_of_affirmation",
-          "quality_time",
-          "physical_touch",
-          "quality_time",
-          "quality_time"
-        ]
+        "dimension": "connection_style",
+        "poleMapping": ["left", "neutral", "right", "left"],
+        "therapeutic": {
+          "rationale": "Connection pathways differ significantly between people. Deep talkers bond through emotional disclosure; activity-sharers connect through doing; physically intimate partners bond through touch; quiet-time lovers connect through presence. Understanding your partner's primary connection pathway helps you create the closeness they can feel.",
+          "framework": "attachment_theory",
+          "whenDifferent": "The talker may feel disconnected if there haven't been deep conversations; the activity-sharer may feel unloved if you just talk without doing things together. Make sure you're regularly connecting through THEIR preferred pathway, not just yours.",
+          "whenSame": "Shared connection pathways mean you'll naturally drift toward closeness in the same way. You'll both feel connected from the same kinds of moments. Lean into this alignment.",
+          "journalPrompt": "When do you feel most connected to your partner? What pattern do you notice? Does your partner know this is what works for you?"
+        }
       }
     },
     {
@@ -76,12 +76,17 @@
         "Our daily routines together",
         "How we handle disagreements",
         "The way you show affection",
-        "Our shared future plans",
         "Our open communication"
       ],
       "category": "security",
       "metadata": {
-        "valueCategory": "honesty_trust"
+        "therapeutic": {
+          "rationale": "Security in relationships comes from different sources for different people. Some feel secure through predictable routines; others through conflict repair; others through affection; others through honest communication. Knowing what makes your partner feel secure helps you prioritize those elements, especially during uncertain times.",
+          "framework": "attachment_theory",
+          "whenDifferent": "Different security sources mean you may need to intentionally provide what your partner needs even if it's not what reassures you. The routine-person needs consistency; the communication-person needs honesty. Both are valid sources of security.",
+          "whenSame": "Shared security sources mean you'll naturally build a relationship that feels stable to both of you. You're reinforcing the same foundation.",
+          "journalPrompt": "When do you feel most secure in your relationship? When does insecurity creep in? What would your partner need to do to help you feel more secure?"
+        }
       }
     },
     {
@@ -91,22 +96,18 @@
         "After resolving a conflict",
         "During intimate moments",
         "When we laugh together",
-        "When you support my goals",
         "During quiet everyday moments"
       ],
       "category": "intimacy",
       "metadata": {
-        "loveLanguage": true,
-        "languageMapping": [
-          "words_of_affirmation",
-          "physical_touch",
-          "quality_time",
-          "acts_of_service",
-          "quality_time"
-        ]
+        "therapeutic": {
+          "rationale": "Closeness crystallizes at different moments for different people. Post-conflict closeness suggests repair matters deeply; intimate-moment closeness indicates physical bonding; laughter-closeness values playfulness; everyday-moment closeness values presence. Knowing when your partner feels closest helps you create and protect those moments.",
+          "framework": "gottman",
+          "whenDifferent": "Different closeness moments mean you experience the relationship's peak differently. The post-conflict person may actually welcome disagreements as reconnection opportunities; the everyday-moment person may feel the mundane is being neglected. Name what creates closeness for each of you.",
+          "whenSame": "Shared closeness moments mean you're feeling peak connection at the same times. You both leave those moments feeling bonded. Create more of them.",
+          "journalPrompt": "What moment in the past month made you feel closest to your partner? What was happening? How can you recreate the conditions for that closeness?"
+        }
       }
     }
-  ],
-  "description": "Explore the emotional bonds that strengthen your relationship.",
-  "magnet_id": 5
+  ]
 }

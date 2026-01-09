@@ -10,8 +10,7 @@
         "Early morning - I'm a natural early bird",
         "Late morning once I've had time to wake up",
         "Afternoon and evening - I peak later in the day",
-        "Late at night - I come alive after dark",
-        "Other / It depends"
+        "Late at night - I come alive after dark"
       ],
       "category": "lifestyle",
       "metadata": {
@@ -20,8 +19,7 @@
           "right",
           "right",
           "left",
-          "left",
-          null
+          "left"
         ]
       }
     },
@@ -32,8 +30,7 @@
         "Same as weekdays - I like consistency",
         "A bit later, but still before 9am",
         "Mid-morning - let's sleep in a little",
-        "As late as possible - weekends are for sleeping",
-        "Other / It depends"
+        "As late as possible - weekends are for sleeping"
       ],
       "category": "lifestyle",
       "metadata": {
@@ -42,8 +39,7 @@
           "right",
           "right",
           "left",
-          "left",
-          null
+          "left"
         ]
       }
     },
@@ -54,8 +50,7 @@
         "Morning coffee or breakfast together",
         "Daytime activities and adventures",
         "Evening hangs after the day winds down",
-        "Late night talks when everything's quiet",
-        "Other / It depends"
+        "Late night talks when everything's quiet"
       ],
       "category": "lifestyle",
       "metadata": {
@@ -64,8 +59,7 @@
           "right",
           null,
           null,
-          "left",
-          null
+          "left"
         ]
       }
     },
@@ -76,8 +70,7 @@
         "Get tired early and like being in bed by 10pm",
         "Aim for a reasonable hour but it varies",
         "Stay up later than I probably should",
-        "I'm a true night owl - midnight is just the beginning",
-        "Other / It depends"
+        "I'm a true night owl - midnight is just the beginning"
       ],
       "category": "lifestyle",
       "metadata": {
@@ -86,8 +79,7 @@
           "right",
           null,
           "left",
-          "left",
-          null
+          "left"
         ]
       }
     },
@@ -98,8 +90,7 @@
         "Find a middle ground that works for both",
         "Respect each other's rhythms without pressure to change",
         "Have some overlap time but also our own routines",
-        "Slowly sync up over time",
-        "Other / It depends"
+        "Slowly sync up over time"
       ],
       "category": "communication"
     }

@@ -1,7 +1,9 @@
 {
   "quizId": "quiz_005",
-  "title": "Attachment Quiz 5",
+  "title": "Safety & Vulnerability",
   "branch": "attachment",
+  "description": "Explore what makes you feel safe to open up.",
+  "magnet_id": 8,
   "questions": [
     {
       "id": "quiz_005_q1",
@@ -10,10 +12,18 @@
         "Consistent daily communication",
         "Physical closeness and affection",
         "Knowing you're committed to our future",
-        "Your reliability and follow-through",
-        "Other / It depends"
+        "Your reliability and follow-through"
       ],
-      "category": "trust"
+      "category": "security_sources",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Security sources reflect our deepest attachment needs. Communication consistency soothes separation anxiety; physical closeness provides bodily safety; commitment knowledge addresses abandonment fears; reliability builds trust through predictability. Knowing your partner's security source helps you provide exactly what calms their nervous system.",
+          "framework": "attachment_theory",
+          "whenDifferent": "Different security sources mean different things make you feel safe. Your partner's need for commitment confirmation may not resonate if you need physical closeness. Provide what they need, not what you would need.",
+          "whenSame": "Shared security sources mean you naturally reassure each other. You understand what creates safety because it's the same for you.",
+          "journalPrompt": "What makes you feel most secure in love? When is this need met, and when does it go unmet? Have you clearly communicated this need?"
+        }
+      }
     },
     {
       "id": "quiz_005_q2",
@@ -22,10 +32,20 @@
         "Verbal reassurance of your love",
         "Physical comfort and closeness",
         "Quality time and attention",
-        "Consistent actions that show you care",
-        "Other / It depends"
+        "Understanding without judgment"
       ],
-      "category": "emotional"
+      "category": "insecurity_soothing",
+      "metadata": {
+        "dimension": "support_style",
+        "poleMapping": ["neutral", "right", "right", "left"],
+        "therapeutic": {
+          "rationale": "Insecurity soothing needs vary by attachment and love language. Verbal reassurance calms through words; physical comfort calms through touch; quality time calms through presence; understanding calms through validation. Giving the wrong soothing can feel dismissive even when well-intentioned.",
+          "framework": "attachment_theory",
+          "whenDifferent": "Different soothing needs often miss. The verbal-reassurance seeker may feel unloved by the action-giver who doesn't verbalize; the touch-needer may feel abandoned by words alone. Ask: 'What would help right now?'",
+          "whenSame": "Shared soothing needs make comfort intuitive. You'll naturally provide what helps because it's what would help you.",
+          "journalPrompt": "When you feel insecure, what actually helps? What makes it worse? Does your partner know what to do?"
+        }
+      }
     },
     {
       "id": "quiz_005_q3",
@@ -34,10 +54,18 @@
         "Knowing you won't judge me",
         "Your gentle and patient responses",
         "Feeling you truly understand me",
-        "Past experiences of you handling my vulnerability well",
-        "Other / It depends"
+        "Your own vulnerability with me"
       ],
-      "category": "trust"
+      "category": "vulnerability_safety",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Vulnerability safety requires specific conditions. Non-judgment creates psychological safety; gentle responses protect tender feelings; felt understanding validates experience; mutual vulnerability creates equality. Without these conditions, vulnerability feels too risky and intimacy remains shallow.",
+          "framework": "attachment_theory",
+          "whenDifferent": "Different safety conditions mean you each need different things to open up. The mutual-vulnerability seeker needs you to go first. Create your partner's specific conditions.",
+          "whenSame": "Shared vulnerability conditions make opening up easier. You understand what creates safety because you need the same things.",
+          "journalPrompt": "What do you need to feel safe being vulnerable? Has your partner ever created these conditions? What holds you back from full openness?"
+        }
+      }
     },
     {
       "id": "quiz_005_q4",
@@ -46,10 +74,18 @@
         "Opening up about my fears and worries",
         "Being physically affectionate",
         "Sharing my authentic self",
-        "Asking for your help or support",
-        "Other / It depends"
+        "Asking for your help or support"
       ],
-      "category": "emotional"
+      "category": "safety_expression",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "How we show felt-safety varies. Fear-sharing demonstrates emotional trust; physical affection demonstrates bodily trust; authenticity demonstrates self-trust; help-asking demonstrates dependency trust. Recognizing how your partner shows they feel safe helps you see their trust even if it differs from yours.",
+          "framework": "attachment_theory",
+          "whenDifferent": "Different safety expressions may go unrecognized. The fear-sharer may not realize their partner's physical affection means 'I'm safe with you'. Learn to read your partner's safety signals.",
+          "whenSame": "Shared safety expressions mean you'll recognize each other's trust clearly. You show safety the same way.",
+          "journalPrompt": "How do you show your partner you feel safe with them? Do they notice? What's the clearest sign of your trust?"
+        }
+      }
     },
     {
       "id": "quiz_005_q5",
@@ -58,12 +94,18 @@
         "Inconsistent communication or attention",
         "Feeling emotionally distant from you",
         "Uncertainty about the future",
-        "Unresolved conflicts",
-        "Other / It depends"
+        "Unresolved conflicts"
       ],
-      "category": "trust"
+      "category": "security_threats",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Security threats reveal attachment vulnerabilities. Inconsistency triggers abandonment fears; emotional distance triggers intimacy fears; future uncertainty triggers commitment anxiety; unresolved conflict triggers repair anxiety. Knowing what threatens your partner's security helps you avoid accidentally triggering it.",
+          "framework": "attachment_theory",
+          "whenDifferent": "Different security threats mean different things destabilize each of you. What feels minor to one may be alarming to the other. Treat your partner's threats seriously.",
+          "whenSame": "Shared security threats suggest similar vulnerabilities. You understand each other's anxiety because you share it. Be extra careful with your shared trigger.",
+          "journalPrompt": "What makes you feel insecure in relationships? Where does this vulnerability come from? Does your partner know what to avoid?"
+        }
+      }
     }
-  ],
-  "description": "Explore how you respond to stress and seek reassurance.",
-  "magnet_id": 8
+  ]
 }

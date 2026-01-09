@@ -10,9 +10,7 @@
         "I embrace it and adapt quickly",
         "I need time to process and adjust",
         "I resist initially but come around",
-        "I struggle and need extra support",
-        "Other / It depends"
-      ],
+        "I struggle and need extra support"      ],
       "category": "growth"
     },
     {
@@ -22,9 +20,7 @@
         "Your steady presence and support",
         "Having a clear plan forward",
         "Time to process emotions",
-        "Focusing on what I can control",
-        "Other / It depends"
-      ],
+        "Focusing on what I can control"      ],
       "category": "emotional"
     },
     {
@@ -34,9 +30,7 @@
         "Emotional support and encouragement",
         "Practical help and problem-solving",
         "Space to figure it out myself",
-        "Partnership in tackling it together",
-        "Other / It depends"
-      ],
+        "Partnership in tackling it together"      ],
       "category": "communication"
     },
     {
@@ -46,9 +40,7 @@
         "Face them as a united team",
         "Divide and conquer based on strengths",
         "Talk through options before acting",
-        "Support each other's individual coping",
-        "Other / It depends"
-      ],
+        "Support each other's individual coping"      ],
       "category": "values"
     },
     {
@@ -58,9 +50,7 @@
         "I see them as learning opportunities",
         "They're hard but I eventually bounce back",
         "I'm working on being more resilient",
-        "They shake my confidence significantly",
-        "Other / It depends"
-      ],
+        "They shake my confidence significantly"      ],
       "category": "growth"
     }
   ],

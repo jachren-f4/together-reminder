@@ -8,7 +8,6 @@ import { NextRequest, NextResponse } from 'next/server';
 import { withAuthOrDevBypass } from '@/lib/auth/dev-middleware';
 import { query, getClient } from '@/lib/db/pool';
 import { LP_REWARDS, SCORING } from '@/lib/lp/config';
-import { tryAwardDailyLp, LpGrantResult } from '@/lib/lp/grant-service';
 import { recordActivityPlay } from '@/lib/magnets';
 import { readFileSync } from 'fs';
 import { join } from 'path';
@@ -313,7 +312,7 @@ export const POST = withAuthOrDevBypass(async (req, userId, email) => {
     // Determine winner if game complete
     let winnerId = null;
     let nextBranch = null;
-    let lpGrantResult: LpGrantResult | null = null;
+    let lpEarned = 0;
     if (gameComplete) {
       if (newPlayer1Score > newPlayer2Score) {
         winnerId = user1_id;
@@ -322,9 +321,20 @@ export const POST = withAuthOrDevBypass(async (req, userId, email) => {
       }
       // If tied, winnerId stays null
 
-      // Use new daily LP grant system
-      lpGrantResult = await tryAwardDailyLp(client, coupleId, 'linked', matchId);
-      console.log(`🎯 Linked LP Grant Result: lpAwarded=${lpGrantResult.lpAwarded}, alreadyGrantedToday=${lpGrantResult.alreadyGrantedToday}`);
+      // Award LP directly (no daily gating - cooldowns handle frequency)
+      lpEarned = LP_REWARDS.LINKED;
+      await client.query(
+        `UPDATE couples SET total_lp = COALESCE(total_lp, 0) + $1 WHERE id = $2`,
+        [lpEarned, coupleId]
+      );
+
+      // Record LP transaction for audit trail
+      await client.query(
+        `INSERT INTO love_point_transactions (user_id, amount, source, description, created_at)
+         VALUES ($1, $2, $3, $4, NOW()), ($5, $2, $3, $4, NOW())`,
+        [user1_id, lpEarned, 'linked_complete', `linked_complete (${matchId})`, user2_id]
+      );
+      console.log(`🎯 Linked LP Award: awarded=${lpEarned}`);
 
       // Advance branch progression for Linked activity
       // This makes the next puzzle come from the next branch (casual -> romantic -> adult -> casual)
@@ -406,11 +416,10 @@ export const POST = withAuthOrDevBypass(async (req, userId, email) => {
       winnerId,
       newLockedCount,
       nextBranch: gameComplete ? nextBranch : null,  // Branch for next puzzle (0=casual, 1=romantic, 2=adult)
-      // LP status from daily grant system
-      lpEarned: lpGrantResult?.lpAwarded ?? 0,
-      alreadyGrantedToday: lpGrantResult?.alreadyGrantedToday ?? false,
-      resetInMs: lpGrantResult?.resetInMs ?? 0,
-      canPlayMore: lpGrantResult?.canPlayMore ?? true,
+      // LP awarded (no daily gating - cooldowns handle frequency)
+      lpEarned,
+      alreadyGrantedToday: false,
+      canPlayMore: true,
     });
   } catch (error) {
     await client.query('ROLLBACK');

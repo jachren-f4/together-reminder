@@ -1,7 +1,9 @@
 {
   "quizId": "quiz_011",
-  "title": "Connection Quiz 11",
+  "title": "Time & Touch",
   "branch": "connection",
+  "description": "Explore how you share time and physical affection.",
+  "magnet_id": 7,
   "questions": [
     {
       "id": "quiz_011_q1",
@@ -9,11 +11,21 @@
       "choices": [
         "Doing activities we both enjoy",
         "Deep one-on-one conversations",
-        "Just being in the same room together",
         "Trying new experiences together",
-        "Other / It depends"
+        "Relaxing without an agenda"
       ],
-      "category": "values"
+      "category": "quality_time",
+      "metadata": {
+        "dimension": "novelty_preference",
+        "poleMapping": ["neutral", "left", "right", "left"],
+        "therapeutic": {
+          "rationale": "Quality time means different things to different people. Activity-lovers connect through doing; conversationalists bond through talking; novelty-seekers need new experiences; relaxers need low-pressure time. A relationship needs enough of each partner's preferred quality time to feel connected.",
+          "framework": "love_languages",
+          "whenDifferent": "Different quality time preferences mean you feel connected at different moments. The activity-lover may feel bored just sitting; the relaxer may feel exhausted by constant activity. Balance both styles of togetherness.",
+          "whenSame": "Shared quality time preferences mean you'll naturally create connection through the same activities. You experience togetherness the same way.",
+          "journalPrompt": "When do you feel most connected during time together? What kind of time together leaves you feeling most filled up?"
+        }
+      }
     },
     {
       "id": "quiz_011_q2",
@@ -21,11 +33,21 @@
       "choices": [
         "Frequent touches, hugs, and kisses",
         "Moderate - holding hands, occasional hugs",
-        "Minimal during day, more at night",
-        "It varies based on my mood",
-        "Other / It depends"
+        "Minimal during day, more at intimate times",
+        "Light but consistent throughout the day"
       ],
-      "category": "emotional"
+      "category": "physical_affection",
+      "metadata": {
+        "dimension": "connection_style",
+        "poleMapping": ["right", "neutral", "right", "neutral"],
+        "therapeutic": {
+          "rationale": "Physical affection needs vary widely and aren't indicators of love depth. High-touch people feel connected through constant contact; moderate-touch people need some physical connection; context-dependent touchers separate daily and intimate; light-but-consistent touchers prefer ongoing small touches. Touch mismatches cause significant relationship distress.",
+          "framework": "attachment_theory",
+          "whenDifferent": "Different touch needs create one of the most challenging relationship mismatches. The high-touch person may feel rejected by the lower-touch partner; the lower-touch person may feel smothered. Negotiate rather than personalize touch differences.",
+          "whenSame": "Shared touch preferences make physical connection effortless. You'll naturally give and want the same amount of affection.",
+          "journalPrompt": "How much physical affection do you want in daily life? Is there a mismatch with your partner? How do you navigate it?"
+        }
+      }
     },
     {
       "id": "quiz_011_q3",
@@ -34,10 +56,20 @@
         "Most of my free time with you",
         "Daily connection with some solo time",
         "Regular space for individual activities",
-        "It depends on what's happening in life",
-        "Other / It depends"
+        "Roughly equal together and alone"
       ],
-      "category": "values"
+      "category": "togetherness",
+      "metadata": {
+        "dimension": "social_energy",
+        "poleMapping": ["right", "neutral", "left", "neutral"],
+        "therapeutic": {
+          "rationale": "Togetherness needs reflect introversion/extroversion and attachment style. High-togetherness people recharge through connection; balanced people need both; space-needers require solitude to function. Partners with different togetherness needs must negotiate rather than assume their need is 'right.'",
+          "framework": "attachment_theory",
+          "whenDifferent": "Different togetherness needs are extremely common and require explicit negotiation. The high-togetherness partner may feel rejected by the space-needer's need for solitude; the space-needer may feel suffocated by constant togetherness. Neither is wrong—both needs are valid.",
+          "whenSame": "Shared togetherness needs make relationship rhythms natural. You'll both want to be together (or apart) at the same times.",
+          "journalPrompt": "How much time together versus alone do you ideally need? Does your relationship provide this balance? What adjustments would help?"
+        }
+      }
     },
     {
       "id": "quiz_011_q4",
@@ -46,10 +78,20 @@
         "Through physical touch and affection",
         "Through deep conversations",
         "Through shared experiences and memories",
-        "Through everyday acts of love",
-        "Other / It depends"
+        "Through everyday acts of love"
       ],
-      "category": "emotional"
+      "category": "intimacy_maintenance",
+      "metadata": {
+        "dimension": "connection_style",
+        "poleMapping": ["right", "left", "neutral", "neutral"],
+        "therapeutic": {
+          "rationale": "Intimacy maintenance differs significantly between people. Touch-maintainers need physical connection; conversation-maintainers need emotional depth; experience-maintainers need shared activities; acts-of-love maintainers need daily caring. Knowing how your partner maintains intimacy helps you contribute to ongoing closeness.",
+          "framework": "gottman",
+          "whenDifferent": "Different intimacy maintenance styles can lead to feeling disconnected despite both partners' efforts. The touch-maintainer may feel distant when the conversation-maintainer offers talks instead of cuddles. Feed intimacy in your partner's way.",
+          "whenSame": "Shared intimacy maintenance means you'll keep closeness alive through the same activities. You'll both feel the relationship being nurtured.",
+          "journalPrompt": "What maintains intimacy for you? When does closeness fade? What activities or behaviors bring it back?"
+        }
+      }
     },
     {
       "id": "quiz_011_q5",
@@ -58,12 +100,18 @@
         "Eye contact and presence",
         "Verbal affirmation and communication",
         "Feeling desired and wanted",
-        "The emotional closeness after",
-        "Other / It depends"
+        "The emotional closeness afterward"
       ],
-      "category": "emotional"
+      "category": "intimate_connection",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Physical intimacy serves different emotional functions for different people. Presence-seekers need to feel their partner's full attention; verbal-seekers need affirmation during intimacy; desire-seekers need to feel wanted; afterglow-seekers treasure post-intimacy closeness. Understanding what makes intimacy connecting for your partner deepens the experience.",
+          "framework": "relationship_science",
+          "whenDifferent": "Different connection points during intimacy can be accommodated once known. The eye-contact seeker can ask for more presence; the verbal-seeker can request affirmation. Share what makes intimacy feel most connecting.",
+          "whenSame": "Shared connection points mean intimacy will naturally feel bonding in the same ways. You'll both experience the same moments as peak connection.",
+          "journalPrompt": "What makes physical intimacy feel most connecting for you? Have you shared this with your partner? What would deepen your experience?"
+        }
+      }
     }
-  ],
-  "description": "Explore the threads that weave your hearts together.",
-  "magnet_id": 7
+  ]
 }

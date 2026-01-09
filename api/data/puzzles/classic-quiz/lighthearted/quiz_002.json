@@ -2,6 +2,8 @@
   "quizId": "quiz_002",
   "title": "Feeling Appreciated",
   "branch": "lighthearted",
+  "description": "Discover what makes each of you feel truly valued and loved.",
+  "magnet_id": 0,
   "questions": [
     {
       "id": "quiz_002_q1",
@@ -10,10 +12,18 @@
         "Tell me what you love about me",
         "Do something thoughtful without being asked",
         "Make time for just us",
-        "Show affection physically",
-        "Other / It depends"
+        "Show affection physically"
       ],
-      "category": "preferences"
+      "category": "preferences",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "This question directly maps to Gary Chapman's five love languages framework. Words of affirmation, acts of service, quality time, and physical touch are four of the five primary ways people give and receive love. Understanding your partner's primary appreciation language means your efforts to show love will actually land—you'll be loving them in the way they can receive, not just the way that comes naturally to you.",
+          "framework": "love_languages",
+          "whenDifferent": "Different appreciation languages is one of the most common relationship misunderstandings. The acts-of-service person may feel unloved by a partner who gives compliments instead of help; the words person may feel their partner's actions 'don't count.' Learn to speak each other's language, even when it doesn't come naturally.",
+          "whenSame": "Shared appreciation languages make love feel effortless. You'll naturally show love in ways your partner can receive. Don't take this for granted—name it and appreciate the alignment.",
+          "journalPrompt": "When was the last time you felt truly appreciated by your partner? What did they do? How did it make you feel? Does your partner know what makes you feel most valued?"
+        }
+      }
     },
     {
       "id": "quiz_002_q2",
@@ -22,10 +32,18 @@
         "How I look or my appearance",
         "My personality or character",
         "Things I've accomplished or done",
-        "How I make you feel",
-        "Other / It depends"
+        "How I make you feel"
       ],
-      "category": "preferences"
+      "category": "preferences",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Compliments carry different weight depending on what we value about ourselves. Appearance-focused people may need to feel attractive; character-focused people need to feel good; achievement-focused people need to feel competent; impact-focused people need to feel they matter. Generic compliments miss the mark; specific compliments in the right domain can be transformative.",
+          "framework": "positive_psychology",
+          "whenDifferent": "Your partner may value compliments in a domain you rarely think to mention. The achievement-oriented person may not realize their partner needs to hear they're beautiful; the impact-focused person may not realize their partner needs to hear they're capable. Ask: 'What kind of compliment would mean the most to you?'",
+          "whenSame": "When you value the same type of compliments, you'll naturally give each other what lands. You understand why that specific kind of recognition matters because it matters to you too.",
+          "journalPrompt": "What compliment from your partner has stayed with you longest? What category did it fall into? When was the last time you gave your partner a compliment in their preferred domain?"
+        }
+      }
     },
     {
       "id": "quiz_002_q3",
@@ -34,10 +52,18 @@
         "The effort I put into it",
         "That I remembered what you like",
         "That I wanted to make you happy",
-        "Honestly, I don't need recognition",
-        "Other / It depends"
+        "Honestly, I don't need recognition"
       ],
-      "category": "communication"
+      "category": "communication",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "How we want our efforts acknowledged reveals what we need to feel our contributions matter. Effort-noticers need the process valued; memory-noticers need to feel known; intention-noticers need their love recognized; non-recognition-needers may be self-validating or may be suppressing a genuine need. Partners who miss what the other wants noticed may accidentally make them feel invisible despite genuine appreciation.",
+          "framework": "gottman",
+          "whenDifferent": "The effort-noticer may feel dismissed by 'thanks!' without acknowledgment of how much work went in; the intention-noticer may feel unseen if the focus is on the task rather than the love behind it. Be specific in your appreciation: 'I see how much work you put into this' or 'I love that you thought of me.'",
+          "whenSame": "Matched recognition needs mean your appreciation will naturally land. You'll see what your partner wants you to see because you'd want the same thing seen.",
+          "journalPrompt": "Think about something you recently did for your partner. What did you hope they'd notice? Did they? How did their response—or lack of response—make you feel?"
+        }
+      }
     },
     {
       "id": "quiz_002_q4",
@@ -46,10 +72,18 @@
         "Planning a surprise or special moment",
         "Telling others something you're proud of about me",
         "A heartfelt card or message",
-        "Quality time doing something I love",
-        "Other / It depends"
+        "Quality time doing something I love"
       ],
-      "category": "preferences"
+      "category": "preferences",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "How we want to be celebrated reflects our relationship with recognition and our love languages in action. Surprise-lovers value thoughtful planning; public-praisers feel loved when their partner is proud of them to others; written-word people treasure lasting messages; quality-timers want shared experience. Knowing how your partner wants to be celebrated prevents the well-intentioned but mismatched celebration.",
+          "framework": "love_languages",
+          "whenDifferent": "The surprise-lover may plan elaborate celebrations for a partner who just wanted a quiet day together; the public-praiser may brag to friends while their partner cringes. Ask: 'How would you want me to celebrate your birthday/promotion/win?'",
+          "whenSame": "Shared celebration preferences mean special occasions will naturally feel right. You'll plan the kind of celebration you'd both love. Make sure to still ask, though—preferences can shift with context.",
+          "journalPrompt": "Think about your best birthday or celebration. What made it special? What would your dream celebration look like? Have you told your partner?"
+        }
+      }
     },
     {
       "id": "quiz_002_q5",
@@ -58,22 +92,20 @@
         "Have deep, meaningful conversations",
         "Do something fun or adventurous together",
         "Just exist together in comfortable silence",
-        "Are physically close - cuddling, holding hands",
-        "Other / It depends"
+        "Are physically close - cuddling, holding hands"
       ],
       "category": "connection",
       "metadata": {
         "dimension": "social_energy",
-        "poleMapping": [
-          null,
-          "right",
-          "left",
-          null,
-          null
-        ]
+        "poleMapping": ["neutral", "right", "left", "neutral"],
+        "therapeutic": {
+          "rationale": "What creates closeness is highly personal. Deep-talkers bond through emotional intimacy and knowing each other's inner worlds; adventurers bond through shared novel experiences; comfortable-silence people feel closest in calm presence; physical-touchers need bodily connection. These aren't right or wrong—they're different pathways to the same destination. Understanding your partner's closeness pathway helps you create the connection they can feel.",
+          "framework": "attachment_theory",
+          "whenDifferent": "The talker may feel distant if there's been no deep conversation lately; the adventurer may feel disconnected during a quiet week at home. Speak your need: 'I'm craving closeness—can we talk about something real?' or 'Let's do something spontaneous.'",
+          "whenSame": "Matched closeness pathways mean you'll naturally drift toward the same kind of connection. You'll know without asking what will bring you closer. Protect time for this shared pathway.",
+          "journalPrompt": "When did you last feel truly close to your partner? What were you doing? What's the common thread across your moments of deepest connection?"
+        }
       }
     }
-  ],
-  "description": "Discover what makes each of you feel truly valued and loved.",
-  "magnet_id": 0
+  ]
 }

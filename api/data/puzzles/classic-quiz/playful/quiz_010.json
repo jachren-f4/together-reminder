@@ -10,8 +10,7 @@
         "Excited - let's see what happens!",
         "A bit restless without something on the calendar",
         "Relieved - we could use the downtime",
-        "Eager to fill it with something fun",
-        "Other / It depends"
+        "Eager to fill it with something fun"
       ],
       "category": "lifestyle",
       "metadata": {
@@ -20,8 +19,7 @@
           "left",
           "right",
           null,
-          "right",
-          null
+          "right"
         ]
       }
     },
@@ -32,8 +30,7 @@
         "Pack last minute - we'll figure it out",
         "Make a shared packing list ahead of time",
         "Each do our own thing but start a day or two early",
-        "Plan everything together, down to the details",
-        "Other / It depends"
+        "Plan everything together, down to the details"
       ],
       "category": "lifestyle",
       "metadata": {
@@ -42,8 +39,7 @@
           "left",
           "right",
           null,
-          "right",
-          null
+          "right"
         ]
       }
     },
@@ -54,8 +50,7 @@
         "Say yes! Let's do it",
         "Quickly check in with each other and decide",
         "Think about it - I usually need a bit of notice",
-        "Probably pass unless it's really special",
-        "Other / It depends"
+        "Probably pass unless it's really special"
       ],
       "category": "lifestyle",
       "metadata": {
@@ -64,8 +59,7 @@
           "left",
           null,
           "right",
-          "right",
-          null
+          "right"
         ]
       }
     },
@@ -76,8 +70,7 @@
         "Keep it loose and decide day by day",
         "Have a rough idea but stay flexible",
         "Schedule date nights and quality time in advance",
-        "Share a calendar so we always know what's coming",
-        "Other / It depends"
+        "Share a calendar so we always know what's coming"
       ],
       "category": "lifestyle",
       "metadata": {
@@ -86,8 +79,7 @@
           "left",
           null,
           "right",
-          "right",
-          null
+          "right"
         ]
       }
     },
@@ -98,8 +90,7 @@
         "Wander and pick somewhere that looks good",
         "Have a couple options in mind but decide when we're out",
         "Make a reservation so we know what to expect",
-        "Research and pick the perfect spot ahead of time",
-        "Other / It depends"
+        "Research and pick the perfect spot ahead of time"
       ],
       "category": "lifestyle",
       "metadata": {
@@ -108,8 +99,7 @@
           "left",
           null,
           "right",
-          "right",
-          null
+          "right"
         ]
       }
     }

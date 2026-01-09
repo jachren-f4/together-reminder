@@ -1,0 +1,115 @@
+{
+  "quizId": "quiz_014",
+  "title": "Emotional Regulation Together",
+  "branch": "attachment",
+  "description": "Learn how you help each other manage big emotions.",
+  "magnet_id": 9,
+  "questions": [
+    {
+      "id": "quiz_014_q1",
+      "text": "When I'm emotionally overwhelmed, what helps most?",
+      "choices": [
+        "Your calming presence beside me",
+        "Space to collect myself first",
+        "Talking through what I'm feeling",
+        "Physical comfort like a hug"
+      ],
+      "category": "overwhelm_support",
+      "metadata": {
+        "dimension": "support_style",
+        "poleMapping": ["right", "left", "neutral", "right"],
+        "therapeutic": {
+          "rationale": "Overwhelm support needs reveal co-regulation patterns. Presence-needers co-regulate through proximity; space-needers self-regulate first; talk-throughers process externally; physical-comfort seekers regulate through touch. Providing the right support during overwhelm can dramatically shift emotional states.",
+          "framework": "attachment_theory",
+          "whenDifferent": "Different overwhelm support needs require flexibility. The space-needer feels smothered by presence pursuit; the presence-needer feels abandoned by space-giving. Ask before acting.",
+          "whenSame": "Shared overwhelm support makes helping intuitive. You know what helps because it's what would help you.",
+          "journalPrompt": "When emotionally overwhelmed, what actually helps? What makes it worse? Does your partner know?"
+        }
+      }
+    },
+    {
+      "id": "quiz_014_q2",
+      "text": "How do I typically calm down after a strong emotion?",
+      "choices": [
+        "Connection with you helps me settle",
+        "Time alone to process",
+        "Physical activity or movement",
+        "Talking it out until I feel resolved"
+      ],
+      "category": "self_regulation",
+      "metadata": {
+        "dimension": "support_style",
+        "poleMapping": ["right", "left", "neutral", "neutral"],
+        "therapeutic": {
+          "rationale": "Calming-down strategies reveal regulation capacity. Connection-calmers co-regulate through relationship; alone-processors self-regulate; movement-users regulate through body; talk-outers process externally. Knowing your partner's regulation strategy helps you support rather than disrupt their process.",
+          "framework": "attachment_theory",
+          "whenDifferent": "Different calming strategies need respect. The connection-calmer may pursue the alone-processor, disrupting their regulation. Honor your partner's process even when different from yours.",
+          "whenSame": "Shared calming strategies can be done together. Two talk-outers will process together; two alone-processors will respect each other's space.",
+          "journalPrompt": "How do you calm down after strong emotions? Does your current approach work well? What would improve your emotional regulation?"
+        }
+      }
+    },
+    {
+      "id": "quiz_014_q3",
+      "text": "What emotional support do I offer you naturally?",
+      "choices": [
+        "I stay present and listen",
+        "I try to fix or solve problems",
+        "I offer physical comfort",
+        "I give space when needed"
+      ],
+      "category": "support_given",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Natural support style reflects your attachment strengths. Present-listeners offer safety; fixers offer practical help; physical-comforters offer co-regulation; space-givers offer autonomy. Your natural style may or may not match what your partner needs.",
+          "framework": "attachment_theory",
+          "whenDifferent": "Different natural supports mean adapting matters. Your fixing may frustrate a listening-needer; your space-giving may feel cold to a presence-needer. Offer what they need, not what you naturally give.",
+          "whenSame": "Shared support styles mean you'll offer what helps. You naturally provide what would help you, which happens to help your partner too.",
+          "journalPrompt": "What emotional support do you naturally offer? Does it match what your partner needs? How could you adapt?"
+        }
+      }
+    },
+    {
+      "id": "quiz_014_q4",
+      "text": "When we're both stressed, what happens between us?",
+      "choices": [
+        "We support each other and grow closer",
+        "We tend to clash or conflict",
+        "We give each other space",
+        "One of us holds it together for both"
+      ],
+      "category": "mutual_stress",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Mutual stress patterns reveal relationship resilience. Closer-growers have secure stress response; clashers have competing attachment needs; space-givers may avoid; one-holds patterns risk imbalance. How you handle simultaneous stress determines whether hard times strengthen or strain you.",
+          "framework": "gottman",
+          "whenDifferent": "Different mutual stress responses need awareness. If one always holds it together, burnout follows. If you clash, recognize it's two triggered nervous systems, not two opponents.",
+          "whenSame": "Shared mutual stress response is your pattern. Know it, and consciously create what you want rather than defaulting.",
+          "journalPrompt": "When you're both stressed, what happens? Is this pattern serving you? What would healthier mutual stress look like?"
+        }
+      }
+    },
+    {
+      "id": "quiz_014_q5",
+      "text": "How can you help me feel emotionally regulated?",
+      "choices": [
+        "Stay calm even when I'm not",
+        "Validate that my feelings make sense",
+        "Give me time without pressure",
+        "Hold me or be physically close"
+      ],
+      "category": "regulation_help",
+      "metadata": {
+        "dimension": "support_style",
+        "poleMapping": ["neutral", "neutral", "left", "right"],
+        "therapeutic": {
+          "rationale": "Regulation help preferences reveal what calms your nervous system. Calm-staying provides co-regulation; validation confirms you're not crazy; time-giving respects your process; physical closeness offers safety. Your partner is telling you exactly how to help them regulate.",
+          "framework": "attachment_theory",
+          "whenDifferent": "Different regulation help needs guide your response. The time-needer may feel pressured by physical closeness. Provide what your partner needs.",
+          "whenSame": "Shared regulation help makes support intuitive. You know what helps because it's what would help you.",
+          "journalPrompt": "What helps you feel emotionally regulated? Does your partner do these things? Have you asked clearly for what helps?"
+        }
+      }
+    }
+  ]
+}

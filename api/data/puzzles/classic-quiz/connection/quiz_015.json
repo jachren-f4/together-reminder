@@ -1,0 +1,109 @@
+{
+  "quizId": "quiz_015",
+  "title": "Attachment & Security",
+  "branch": "connection",
+  "description": "Understand your patterns of closeness and what makes you feel secure.",
+  "magnet_id": 7,
+  "questions": [
+    {
+      "id": "quiz_015_q1",
+      "text": "When I feel disconnected from you, I typically...",
+      "choices": [
+        "Reach out and seek reassurance",
+        "Wait and see if you notice",
+        "Pull back and protect myself",
+        "Try to create closeness through activity"
+      ],
+      "category": "disconnection_response",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "How we respond to disconnection reveals attachment patterns. Reassurance-seekers actively pursue connection; waiters hope to be seen; protectors defend against hurt; activity-creators try indirect reconnection. Understanding these patterns helps partners recognize bids for connection even when they're indirect or hard to read.",
+          "framework": "attachment_theory",
+          "whenDifferent": "Different disconnection responses can perpetuate distance. The reassurance-seeker may feel their wait-and-see partner doesn't care; the protector may push away the pursuer. Name your patterns to each other.",
+          "whenSame": "Shared disconnection responses mean you'll handle distance similarly—which can help (you understand each other) or harm (no one bridges the gap). Self-awareness is key.",
+          "journalPrompt": "When you feel disconnected, what do you do? Does this help reconnect you or push you further apart? What would help you reconnect more directly?"
+        }
+      }
+    },
+    {
+      "id": "quiz_015_q2",
+      "text": "What triggers my insecurity in relationships?",
+      "choices": [
+        "Not hearing from you for too long",
+        "Signs of criticism or disappointment",
+        "Feeling like a lower priority",
+        "Conflict or tension between us"
+      ],
+      "category": "insecurity_triggers",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Insecurity triggers often connect to early attachment experiences. Silence-sensitives need regular contact; criticism-sensitives need acceptance; priority-sensitives need to feel chosen; conflict-sensitives need harmony. Knowing your partner's triggers helps you avoid accidentally activating their insecurity.",
+          "framework": "attachment_theory",
+          "whenDifferent": "Different triggers mean different things activate each of your insecurities. You may inadvertently trigger your partner without realizing. Name your triggers so they can be avoided or addressed.",
+          "whenSame": "Shared triggers suggest similar attachment wounds. You'll understand each other's sensitivity because you share it. Be extra careful with your shared trigger.",
+          "journalPrompt": "What triggers your insecurity in relationships? Where does this sensitivity come from? Does your partner know, and do they take care with it?"
+        }
+      }
+    },
+    {
+      "id": "quiz_015_q3",
+      "text": "What helps me feel most secure in our relationship?",
+      "choices": [
+        "Regular verbal reassurance",
+        "Consistent daily connection rituals",
+        "Physical affection throughout the day",
+        "Knowing we can handle anything together"
+      ],
+      "category": "security_sources",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Security comes from different sources for different attachment styles. Verbal reassurance provides explicit confirmation; daily rituals provide predictability; physical affection provides bodily connection; joint capability provides confidence in the partnership. Knowing what makes your partner feel secure helps you actively create safety.",
+          "framework": "attachment_theory",
+          "whenDifferent": "Different security sources mean you need different things to feel safe. The verbal-reassurance person may not register daily rituals as security-building; the ritual-person may feel disconnected despite words. Provide security in your partner's way.",
+          "whenSame": "Shared security sources mean you'll naturally build safety through the same behaviors. You understand what creates security because it's what creates security for you.",
+          "journalPrompt": "What makes you feel most secure in your relationship? Is this happening regularly? What would increase your sense of safety?"
+        }
+      }
+    },
+    {
+      "id": "quiz_015_q4",
+      "text": "When I'm anxious about us, what helps most?",
+      "choices": [
+        "Talking about what's worrying me",
+        "Being held or physically comforted",
+        "Getting reassurance that you're committed",
+        "Understanding why I'm feeling anxious"
+      ],
+      "category": "anxiety_soothing",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Relationship anxiety requires specific soothing for different people. Talkers need verbal processing; physical-comfort seekers need touch co-regulation; commitment-reassurance seekers need explicit statements; understanding-seekers need cognitive clarity. Providing the right soothing quickly calms attachment anxiety.",
+          "framework": "attachment_theory",
+          "whenDifferent": "Different anxiety-soothing needs mean your default response may not help your anxious partner. The talker may feel dismissed by distraction; the physical-comfort seeker may feel overwhelmed by processing. Ask: 'What would help right now?'",
+          "whenSame": "Shared anxiety-soothing means you'll naturally calm each other in ways that work. You understand what helps because it's what helps you.",
+          "journalPrompt": "When you feel anxious about your relationship, what helps you calm down? Does your partner know what to do? What happens when they get it right?"
+        }
+      }
+    },
+    {
+      "id": "quiz_015_q5",
+      "text": "In relationships, I'm most afraid of...",
+      "choices": [
+        "Being abandoned or left",
+        "Losing my independence",
+        "Not being good enough",
+        "Being truly known and rejected"
+      ],
+      "category": "core_fears",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Core relationship fears shape attachment behavior. Abandonment-fearers anxiously maintain connection; independence-fearers avoid too much closeness; inadequacy-fearers seek constant validation; known-and-rejected fearers hide their true selves. Understanding your partner's core fear helps you avoid accidentally triggering it and actively soothe it.",
+          "framework": "attachment_theory",
+          "whenDifferent": "Different core fears create different relationship needs. The abandonment-fearer needs reassurance; the independence-fearer needs space. What soothes one fear may trigger another—proceed with awareness.",
+          "whenSame": "Shared core fears suggest similar attachment wounds. You'll deeply understand each other's fear because you share it. Work together to soothe your shared vulnerability.",
+          "journalPrompt": "What's your deepest fear in relationships? Where does it come from? Does your partner know about this fear and treat it with care?"
+        }
+      }
+    }
+  ]
+}

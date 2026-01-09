@@ -1,0 +1,115 @@
+{
+  "quizId": "quiz_013",
+  "title": "Communication & Attachment",
+  "branch": "attachment",
+  "description": "Discover how your attachment style shapes the way you communicate.",
+  "magnet_id": 9,
+  "questions": [
+    {
+      "id": "quiz_013_q1",
+      "text": "How do I communicate when I'm feeling insecure?",
+      "choices": [
+        "I seek reassurance and closeness",
+        "I become quieter and more withdrawn",
+        "I try to act like everything's fine",
+        "I express my feelings openly"
+      ],
+      "category": "insecure_communication",
+      "metadata": {
+        "dimension": "support_style",
+        "poleMapping": ["right", "left", "left", "neutral"],
+        "therapeutic": {
+          "rationale": "Insecurity communication reveals attachment coping. Reassurance-seekers have anxious activation; withdrawers have avoidant activation; fine-actors mask vulnerability; open-expressers have secure communication. How you communicate when insecure determines whether your partner can actually help.",
+          "framework": "attachment_theory",
+          "whenDifferent": "Different insecurity communication creates misunderstanding. The withdrawer seems fine while suffering; the fine-actor may not receive needed support. Communicate directly about what you need.",
+          "whenSame": "Shared insecurity communication means you'll either both reach out or both withdraw. Two withdrawers may both suffer in silence unnecessarily.",
+          "journalPrompt": "When you feel insecure, how do you communicate? Does your partner understand your signals? Would direct communication help?"
+        }
+      }
+    },
+    {
+      "id": "quiz_013_q2",
+      "text": "What's hardest for me to say to you?",
+      "choices": [
+        "When I need you",
+        "When I need space",
+        "When I'm afraid about us",
+        "When I'm hurt by you"
+      ],
+      "category": "difficult_communication",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "What's hardest to say reveals attachment vulnerabilities. Need-saying difficulty suggests avoidant attachment; space-asking difficulty suggests anxious attachment; fear-expressing difficulty suggests catastrophizing; hurt-expressing difficulty suggests conflict avoidance. The hardest thing to say is often the most important.",
+          "framework": "attachment_theory",
+          "whenDifferent": "Different communication difficulties need different support. The partner who can't say 'I need you' needs patience; the partner who can't ask for space needs permission.",
+          "whenSame": "Shared communication difficulties may create gaps. If you both struggle to express hurt, conflicts may go unresolved.",
+          "journalPrompt": "What's the hardest thing for you to say to your partner? Why? What would happen if you said it?"
+        }
+      }
+    },
+    {
+      "id": "quiz_013_q3",
+      "text": "How do I share my emotional needs with you?",
+      "choices": [
+        "Directly and clearly",
+        "Through hints and signals",
+        "Only when pushed to",
+        "I wait for you to notice and ask"
+      ],
+      "category": "need_communication",
+      "metadata": {
+        "dimension": "support_style",
+        "poleMapping": ["neutral", "right", "left", "right"],
+        "therapeutic": {
+          "rationale": "Need-sharing style reflects attachment security. Direct-sharers have secure attachment; hint-givers test responsiveness; pushed-only sharers protect vulnerability; wait-for-noticers test attunement. Clear need-sharing dramatically improves relationship satisfaction.",
+          "framework": "attachment_theory",
+          "whenDifferent": "Different need-sharing styles require adaptation. The hint-giver may feel unheard by the literal partner; the direct-sharer may overwhelm the pushed-only sharer. Learn each other's communication style.",
+          "whenSame": "Shared need-sharing makes understanding easier. Two direct-sharers will know exactly what each other needs; two hint-givers may miss each other's signals.",
+          "journalPrompt": "How do you share your emotional needs? Does your partner understand? Would clearer communication help your relationship?"
+        }
+      }
+    },
+    {
+      "id": "quiz_013_q4",
+      "text": "When I want to feel closer, I typically:",
+      "choices": [
+        "Initiate conversation or quality time",
+        "Increase physical affection",
+        "Do something thoughtful for you",
+        "Ask directly for what I need"
+      ],
+      "category": "closeness_seeking",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Closeness-seeking styles reflect attachment and love languages. Conversation-initiators connect through words; affection-increasers connect through touch; thoughtful-doers connect through acts; direct-askers have secure communication. Understanding how your partner seeks closeness helps you recognize and respond to their bids.",
+          "framework": "attachment_theory",
+          "whenDifferent": "Different closeness-seeking may be missed. The touch-increaser's bid may not register for the conversation-seeker. Notice each other's closeness bids.",
+          "whenSame": "Shared closeness-seeking makes connection natural. You'll both reach out in ways the other recognizes and receives.",
+          "journalPrompt": "How do you seek closeness? Does your partner recognize your bids? How could you make your closeness-seeking clearer?"
+        }
+      }
+    },
+    {
+      "id": "quiz_013_q5",
+      "text": "How do I respond when you share something vulnerable?",
+      "choices": [
+        "I move closer and offer comfort",
+        "I listen carefully without interrupting",
+        "I try to help solve the problem",
+        "I match with my own vulnerability"
+      ],
+      "category": "vulnerability_response",
+      "metadata": {
+        "dimension": "support_style",
+        "poleMapping": ["right", "neutral", "neutral", "neutral"],
+        "therapeutic": {
+          "rationale": "Vulnerability response reveals comfort with emotional closeness. Comfort-movers co-regulate well; careful-listeners provide safe space; problem-solvers may miss emotional need; matchers create mutual vulnerability. How you respond to vulnerability determines whether your partner will share again.",
+          "framework": "attachment_theory",
+          "whenDifferent": "Different vulnerability responses can disconnect. The problem-solver may frustrate the comfort-needer; the matcher may overwhelm the careful-listener. Ask: 'What would help right now?'",
+          "whenSame": "Shared vulnerability responses create predictable safety. You know how each other will respond because you'd respond the same way.",
+          "journalPrompt": "How do you respond when your partner is vulnerable? Does this help them? What would make them feel safer opening up?"
+        }
+      }
+    }
+  ]
+}

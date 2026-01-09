@@ -1,59 +1,121 @@
-# Classic Quiz Deep Branches - Generation Summary
+# Classic Quiz Branches - Content Summary
 
 ## Overview
-Generated additional Classic Quiz JSON files to complete all three deep branches with 12 quizzes each.
+All Classic Quiz JSON files across five branches have been updated to the 4+1 choice model.
 
-## Files Created
+## 4+1 Choice Model
+Each question now has:
+- **4 distinct choices** stored in JSON
+- **1 "It varies" option** hardcoded in the UI (not stored in JSON)
 
-### CONNECTION Branch (8 new quizzes)
-**Theme: Emotional intimacy, communication styles, quality time**
+This reduces cognitive load while still giving users flexibility when no single answer fits.
 
-- `connection/quiz_005.json` - Love languages: how we express/receive love
-- `connection/quiz_006.json` - Love languages: gifts, comfort, security
-- `connection/quiz_007.json` - Emotional needs: stress support, connection moments
-- `connection/quiz_008.json` - Emotional needs: feeling prioritized, sharing feelings
-- `connection/quiz_009.json` - Communication styles: preferences when upset
-- `connection/quiz_010.json` - Communication styles: listening, feedback, needs
-- `connection/quiz_011.json` - Intimacy preferences: quality time, physical affection
-- `connection/quiz_012.json` - Intimacy preferences: dates, presence, daily rituals
+## Branch Structure
 
-### ATTACHMENT Branch (8 new quizzes)
+### ATTACHMENT Branch (20 quizzes)
 **Theme: Security, trust, independence vs togetherness, conflict patterns**
 
-- `attachment/quiz_005.json` - Security needs: what makes us feel safe
-- `attachment/quiz_006.json` - Reassurance patterns: how we seek/give comfort
-- `attachment/quiz_007.json` - Independence vs togetherness: space and connection balance
-- `attachment/quiz_008.json` - Independence vs togetherness: attachment under stress
-- `attachment/quiz_009.json` - Conflict response: pursue vs withdraw patterns
-- `attachment/quiz_010.json` - Conflict response: reconnection and regulation
-- `attachment/quiz_011.json` - Attachment wounds and healing
-- `attachment/quiz_012.json` - Trust building and secure attachment growth
+Files: `attachment/quiz_001.json` through `attachment/quiz_020.json`
 
-### GROWTH Branch (8 new quizzes)
-**Theme: Personal goals, supporting each other, handling change, future vision**
+Topics covered:
+- Security needs and what makes us feel safe
+- Reassurance patterns and comfort-seeking
+- Independence vs togetherness balance
+- Conflict response patterns (pursue/withdraw)
+- Trust building and attachment growth
+- Vulnerability and emotional safety
 
-- `growth/quiz_005.json` - Personal goals and dreams: current focus areas
-- `growth/quiz_006.json` - Personal goals and dreams: future vision and legacy
-- `growth/quiz_007.json` - Supporting each other's growth: encouragement styles
-- `growth/quiz_008.json` - Supporting each other's growth: balance and partnership
-- `growth/quiz_009.json` - Handling change and challenges: adaptation styles
-- `growth/quiz_010.json` - Handling change and challenges: couple growth
-- `growth/quiz_011.json` - Future vision: shared milestones and goals
-- `growth/quiz_012.json` - Future vision: traditions, values, legacy
+### CONNECTION Branch (20 quizzes)
+**Theme: Emotional intimacy, communication styles, quality time**
+
+Files: `connection/quiz_001.json` through `connection/quiz_020.json`
+
+Topics covered:
+- Love languages (giving and receiving)
+- Emotional needs and support styles
+- Communication preferences
+- Intimacy and physical affection
+- Daily connection rituals
+- Conflict and repair patterns
+
+### LIGHTHEARTED Branch (20 quizzes)
+**Theme: Fun, lifestyle preferences, everyday compatibility**
+
+Files: `lighthearted/quiz_001.json` through `lighthearted/quiz_020.json`
+
+Topics covered:
+- Daily preferences and support styles
+- Appreciation and gratitude
+- Everyday moments and routines
+- Dreams and goals
+- Communication styles
+- Support and encouragement
+- Fun and play
+- Food and dining
+- Social life
+- Relaxation and unwinding
+- Pet peeves and quirks
+- Relationship story
+
+### GROWTH Branch (20 quizzes)
+**Theme: Personal development, goals, challenges, future vision**
+
+Files: `growth/quiz_001.json` through `growth/quiz_020.json`
+
+Topics covered:
+- Personal goals and aspirations
+- Relationship growth
+- Overcoming challenges
+- Future vision and dreams
+- Supporting each other's growth
+- Change and adaptation
+- Life transitions
+- Shared goals and values
+- Self-awareness and reflection
+- Learning and curiosity
+- Habits and routines
+- Feedback and improvement
+- Mindset and attitude
+- Balance and priorities
+- Strengths and growth areas
+- Growth milestones
+
+### PLAYFUL Branch (20 quizzes)
+**Theme: Social dynamics, adventure, decision-making, lifestyle preferences**
+
+Files: `playful/quiz_001.json` through `playful/quiz_020.json`
+
+Topics covered:
+- Social energy and friend dynamics
+- Risk and adventure preferences
+- Decision making styles
+- Spontaneity vs planning
+- Traditions and rituals
+- Daily routines and habits
+- Communication preferences
+- Fun and leisure activities
 
 ## Quiz Structure
 Each quiz contains:
 - 5 questions
-- 5 choices per question (including "Other / It depends")
-- Therapy-informed categories: emotional, trust, communication, growth, values
-- Progressive depth within each branch theme
+- 4 choices per question (stored in JSON)
+- UI adds 5th "It varies" option
+- Optional therapeutic metadata with:
+  - `rationale`: Why this question matters
+  - `framework`: Psychological framework (gottman, attachment_theory, love_languages, etc.)
+  - `whenDifferent`: Guidance when partners answer differently
+  - `whenSame`: Guidance when partners answer the same
+  - `journalPrompt`: Reflection question for deeper exploration
+- Optional `dimension` and `poleMapping` for personality profiling
 
 ## Status
-✅ CONNECTION: 12/12 quizzes complete
-✅ ATTACHMENT: 12/12 quizzes complete
-✅ GROWTH: 12/12 quizzes complete
+- ATTACHMENT: 20/20 quizzes complete
+- CONNECTION: 20/20 quizzes complete
+- LIGHTHEARTED: 20/20 quizzes complete
+- GROWTH: 20/20 quizzes complete
+- PLAYFUL: 20/20 quizzes complete
 
-All quiz-order.json files updated to reference quizzes 001-012.
+Total: 100 quizzes, 500 questions, all with 4 choices + UI "It varies" option
 
-## Validation
-All JSON files validated for syntax correctness.
+## Last Updated
+January 2026 - Updated all branches to 4+1 model

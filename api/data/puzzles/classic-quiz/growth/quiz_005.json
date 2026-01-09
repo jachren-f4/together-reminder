@@ -10,9 +10,7 @@
         "Career advancement or professional growth",
         "Health and fitness improvement",
         "Developing a skill or hobby",
-        "Emotional or mental health",
-        "Other / It depends"
-      ],
+        "Emotional or mental health"      ],
       "category": "growth"
     },
     {
@@ -22,9 +20,7 @@
         "A career change or business idea",
         "A creative project or passion",
         "A personal transformation goal",
-        "A place I want to live or travel",
-        "Other / It depends"
-      ],
+        "A place I want to live or travel"      ],
       "category": "growth"
     },
     {
@@ -34,9 +30,7 @@
         "Professional skills and career",
         "Personal relationships and social life",
         "Creative expression and hobbies",
-        "Physical health and wellness",
-        "Other / It depends"
-      ],
+        "Physical health and wellness"      ],
       "category": "growth"
     },
     {
@@ -46,9 +40,7 @@
         "Fear of failure or judgment",
         "Lack of time or resources",
         "Not knowing where to start",
-        "Competing priorities",
-        "Other / It depends"
-      ],
+        "Competing priorities"      ],
       "category": "growth"
     },
     {
@@ -58,9 +50,7 @@
         "Achieving professional recognition",
         "Having meaningful relationships",
         "Making a positive impact on others",
-        "Personal happiness and fulfillment",
-        "Other / It depends"
-      ],
+        "Personal happiness and fulfillment"      ],
       "category": "values"
     }
   ],

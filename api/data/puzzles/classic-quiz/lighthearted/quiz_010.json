@@ -2,6 +2,8 @@
   "quizId": "quiz_010",
   "title": "Travel & Adventure",
   "branch": "lighthearted",
+  "description": "Explore your wanderlust and adventure styles.",
+  "magnet_id": 1,
   "questions": [
     {
       "id": "quiz_010_q1",
@@ -10,10 +12,18 @@
         "Relaxing beach or resort",
         "Exploring cities and culture",
         "Outdoor adventure",
-        "Road trip with flexibility",
-        "Other / Staycation at home"
+        "Road trip with flexibility"
       ],
-      "category": "lifestyle"
+      "category": "lifestyle",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Vacation preferences reveal what we need to feel restored. Some people recharge through stillness and relaxation; others through stimulation and discovery. Neither is 'wasting' a vacation—they're different nervous system needs. Couples who travel well together often learn to blend these styles or take turns choosing. The goal is returning home feeling better, whatever that takes for each of you.",
+          "framework": "self_expansion_theory",
+          "whenDifferent": "The relaxer may feel dragged around on an exhausting sightseeing marathon; the explorer may feel bored on a beach doing 'nothing.' Hybrid trips often work: mornings for adventure, afternoons for rest. Or alternate who picks each trip. Vacation shouldn't be a compromise that leaves both drained.",
+          "whenSame": "Shared vacation styles make trip planning joyful rather than contentious. You'll naturally gravitate toward the same destinations and activities. Use this alignment to dream together about your next adventure.",
+          "journalPrompt": "Think about your best vacation ever. What made it so good? Was it the activity level, the novelty, the relaxation, or the company? How could you recreate those elements?"
+        }
+      }
     },
     {
       "id": "quiz_010_q2",
@@ -22,10 +32,20 @@
         "Plan everything in advance",
         "Have key things planned, wing the rest",
         "Be mostly spontaneous",
-        "Let someone else plan",
-        "Other / Depends on destination"
+        "Let someone else plan"
       ],
-      "category": "together"
+      "category": "together",
+      "metadata": {
+        "dimension": "planning_preference",
+        "poleMapping": ["left", "neutral", "right", "neutral"],
+        "therapeutic": {
+          "rationale": "Planning style reflects deeper orientations toward control, uncertainty, and trust. Planners often feel anxious without a roadmap; spontaneous types feel constrained by too much structure. Travel amplifies these differences because the stakes feel high—you've invested time and money, and you're away from home. Understanding your partner's planning needs prevents vacation fights about 'just going with the flow' versus 'sticking to the itinerary.'",
+          "framework": "personality_psychology",
+          "whenDifferent": "The planner may feel their partner is reckless or doesn't care about the trip's success; the spontaneous partner may feel controlled or that all the fun is being engineered out. Try this: the planner books the essentials (flights, hotels), the spontaneous partner fills in the gaps. Both feel honored.",
+          "whenSame": "Matched planning styles eliminate a major travel conflict. You'll naturally agree on how much to book ahead. If you're both planners, embrace detailed itineraries. If you're both spontaneous, build in flexibility and adventure.",
+          "journalPrompt": "Think about a trip that went wrong. What role did planning (or lack of it) play? How did you and your partner handle the stress? What would you do differently?"
+        }
+      }
     },
     {
       "id": "quiz_010_q3",
@@ -34,10 +54,20 @@
         "High - I love thrills",
         "Medium - calculated risks",
         "Low - I prefer safety",
-        "It depends on the activity",
-        "Other / I'll try anything once"
+        "I'll try anything once"
       ],
-      "category": "lifestyle"
+      "category": "lifestyle",
+      "metadata": {
+        "dimension": "risk_adventure",
+        "poleMapping": ["right", "neutral", "left", "right"],
+        "therapeutic": {
+          "rationale": "Risk tolerance is partly temperamental, partly learned, and deeply personal. What feels thrilling to one person feels terrifying to another—and neither is wrong. In relationships, mismatched risk tolerances can lead to one partner feeling held back or the other feeling pushed beyond their limits. Healthy couples find ways to stretch each other gently while respecting hard boundaries.",
+          "framework": "personality_psychology",
+          "whenDifferent": "The adventurer may feel bored or limited; the safety-seeker may feel pressured or anxious. Don't interpret caution as killing fun, or thrill-seeking as recklessness. Find activities at the edge of both comfort zones—challenging enough to excite, safe enough to enjoy. Sometimes do separate adventures.",
+          "whenSame": "Shared risk tolerance means you'll naturally agree on activities. If you're both thrill-seekers, your adventures will push boundaries together. If you're both cautious, you'll enjoy exploring within your comfort zone without judgment.",
+          "journalPrompt": "What's the most adventurous thing you've ever done? How did it feel before, during, and after? What would it take for you to stretch your comfort zone slightly with your partner?"
+        }
+      }
     },
     {
       "id": "quiz_010_q4",
@@ -46,10 +76,18 @@
         "Good food experiences",
         "Seeing major sights",
         "Relaxation and downtime",
-        "Local/authentic experiences",
-        "Other / Quality time together"
+        "Local/authentic experiences"
       ],
-      "category": "lifestyle"
+      "category": "lifestyle",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Travel priorities reveal what we find meaningful and memorable. The foodie, the sightseer, the relaxer, and the authenticity-seeker all want something different from the same destination. When couples don't discuss this, one person's perfect day (museum marathon) becomes another's exhaustion. Explicit priority-sharing prevents the silent resentment of feeling like your needs don't matter.",
+          "framework": "relationship_science",
+          "whenDifferent": "Build trips that include each person's priority. The foodie picks dinner; the sightseer picks morning activities; afternoons are for relaxation. When one priority must dominate (e.g., a food-focused trip), the other partner should get the next trip's theme.",
+          "whenSame": "Shared travel priorities make every trip feel mutually designed. You'll naturally seek out the same experiences without negotiation. Lean into this alignment—make lists of restaurants, sights, or experiences you both want to try.",
+          "journalPrompt": "What's the one experience you must have on every trip to feel satisfied? Does your partner know this? How could you make sure both of your non-negotiables get met?"
+        }
+      }
     },
     {
       "id": "quiz_010_q5",
@@ -58,12 +96,18 @@
         "A day to recover at home",
         "To jump right back into routine",
         "Time to process and reminisce",
-        "To already plan the next trip",
-        "Other / Depends on the trip"
+        "To already plan the next trip"
       ],
-      "category": "self_care"
+      "category": "self_care",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "How we transition back from travel reveals our recovery needs. Some people need decompression time; others feel restless without structure. Some want to relive the trip; others want to move on. Partners who don't understand each other's re-entry patterns may clash: 'Why are you already back to work?' or 'Why can't you stop talking about the trip?'",
+          "framework": "self_care",
+          "whenDifferent": "The recoverer may feel pushed back into life too fast; the routine-jumper may feel their partner is being dramatic. Give each other permission to transition differently. The reminiscer can journal while the other catches up on email. Honor different rhythms.",
+          "whenSame": "Matched re-entry styles make coming home smoother. You'll naturally give each other the space or engagement you both need. If you both need recovery, protect that day. If you both dive back in, do it together.",
+          "journalPrompt": "How do you typically feel the day after returning from a trip? What would help you transition better? Have you ever discussed post-trip needs with your partner?"
+        }
+      }
     }
-  ],
-  "description": "Explore your wanderlust and adventure styles.",
-  "magnet_id": 1
+  ]
 }

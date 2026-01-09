@@ -10,8 +10,7 @@
         "Try somewhere new we've never been",
         "Go to a reliable favorite we both love",
         "Cook something together at home",
-        "Be spontaneous - decide when we're hungry",
-        "Other / It depends"
+        "Be spontaneous - decide when we're hungry"
       ],
       "category": "lifestyle",
       "metadata": {
@@ -19,7 +18,6 @@
         "poleMapping": [
           "right",
           "left",
-          null,
           null,
           null
         ]
@@ -32,8 +30,7 @@
         "Trying new recipes and experimenting",
         "Making comfort food we both love",
         "One of us cooks while the other keeps company",
-        "Ordering in - cooking isn't really our thing",
-        "Other / It depends"
+        "Ordering in - cooking isn't really our thing"
       ],
       "category": "lifestyle",
       "metadata": {
@@ -41,7 +38,6 @@
         "poleMapping": [
           "right",
           "left",
-          null,
           null,
           null
         ]
@@ -54,8 +50,7 @@
         "Plan meals ahead so we know what's for dinner",
         "Have a few go-to options and decide day-of",
         "Wing it completely - see what we're in the mood for",
-        "Take turns being in charge of dinner",
-        "Other / It depends"
+        "Take turns being in charge of dinner"
       ],
       "category": "lifestyle",
       "metadata": {
@@ -64,7 +59,6 @@
           "right",
           null,
           "left",
-          null,
           null
         ]
       }
@@ -76,8 +70,7 @@
         "A fancy restaurant for a special occasion",
         "A cozy spot with great food and no fuss",
         "Street food or a food market adventure",
-        "Cooking a meal together at home",
-        "Other / It depends"
+        "Cooking a meal together at home"
       ],
       "category": "preferences"
     },
@@ -88,8 +81,7 @@
         "Give it a shot - worst case, we don't like it",
         "Find a place that has options for both of us",
         "Take turns picking so we both get our way sometimes",
-        "Respect that we don't have to like all the same things",
-        "Other / It depends"
+        "Respect that we don't have to like all the same things"
       ],
       "category": "communication"
     }

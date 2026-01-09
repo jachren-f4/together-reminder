@@ -1,0 +1,111 @@
+{
+  "quizId": "quiz_019",
+  "title": "Pet Peeves & Quirks",
+  "branch": "lighthearted",
+  "description": "Share the little things that bother and delight you.",
+  "magnet_id": 0,
+  "questions": [
+    {
+      "id": "quiz_019_q1",
+      "text": "A small thing that bothers me more than it should is...",
+      "choices": [
+        "Mess or clutter",
+        "Running late",
+        "Loud chewing or sounds",
+        "Leaving things open (doors, cabinets)"
+      ],
+      "category": "lifestyle",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Pet peeves seem trivial but can accumulate into genuine resentment over years of cohabitation. What 'shouldn't' bother us often does—and dismissing these reactions doesn't make them go away. Partners who know each other's disproportionate triggers can avoid them out of care, not because they're 'right' but because it costs little to accommodate and means a lot to avoid.",
+          "framework": "relationship_science",
+          "whenDifferent": "Different pet peeves mean different things will grate over time. Share your quirky triggers openly—not as demands but as information. 'This bothers me more than it rationally should' is honest and invites care without judgment.",
+          "whenSame": "Shared pet peeves mean you'll naturally avoid each other's triggers. You understand why the cabinet doors matter. This shared sensitivity can actually strengthen your household harmony.",
+          "journalPrompt": "What's something that bothers you that you've never mentioned because it seems too small? What would it mean to you if your partner adjusted this one thing?"
+        }
+      }
+    },
+    {
+      "id": "quiz_019_q2",
+      "text": "I get irrationally annoyed when...",
+      "choices": [
+        "I'm not given enough information",
+        "Plans change at the last minute",
+        "I feel rushed",
+        "Things are disorganized"
+      ],
+      "category": "communication",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Our 'irrational' annoyances are often connected to deeper needs—for control, predictability, respect, order, or validation. Understanding the need beneath the irritation helps partners see these moments with compassion rather than dismissal. When we know our partner needs information to feel in control, or hates being rushed because it triggers anxiety, we can respond to the need rather than judging the reaction.",
+          "framework": "emotion_focused_therapy",
+          "whenDifferent": "Different triggers often mean different underlying needs. The information-needer wants control; the anti-rusher needs autonomy; the organization-seeker needs order. Learn to see the need behind your partner's annoyance.",
+          "whenSame": "Shared irrational annoyances often mean shared underlying needs. You'll intuitively understand why certain things trigger each other. Use this understanding to be allies rather than adversaries.",
+          "journalPrompt": "When you get irrationally annoyed, what's the real need underneath? Where did this sensitivity come from? Does your partner know its origin?"
+        }
+      }
+    },
+    {
+      "id": "quiz_019_q3",
+      "text": "A quirk about me that partners need to accept is...",
+      "choices": [
+        "I need routines and predictability",
+        "I'm particular about certain things",
+        "I need lots of alone time",
+        "I overthink everything"
+      ],
+      "category": "self_care",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Self-awareness about our own quirks—especially the ones that won't change—is a relationship skill. Knowing your non-negotiable eccentricities and communicating them clearly prevents partners from trying to 'fix' core personality traits. These aren't character flaws; they're features. The question is whether you can accommodate each other's features with grace.",
+          "framework": "personality_psychology",
+          "whenDifferent": "Different non-negotiable quirks means different accommodations needed. The key question isn't 'can I change this' but 'can I live with this?' If a partner's core quirk genuinely conflicts with your needs, that's important information.",
+          "whenSame": "Shared quirks mean built-in understanding. If you're both overthinkers, you won't judge each other's spiraling. If you both need routines, you'll create them together naturally.",
+          "journalPrompt": "What's a core part of who you are that you need a partner to accept, not try to change? Have you communicated this clearly? How would you feel if your partner tried to 'fix' it?"
+        }
+      }
+    },
+    {
+      "id": "quiz_019_q4",
+      "text": "Something that always makes me smile about you is...",
+      "choices": [
+        "Your laugh or expressions",
+        "Little habits I've noticed",
+        "Your focus or concentration face",
+        "The way you light up about things"
+      ],
+      "category": "appreciation",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Noticing and being charmed by a partner's small quirks is a sign of healthy fondness. Gottman's research on 'love maps' shows that couples who maintain awareness of their partner's small details—and find them endearing rather than irritating—have stronger relationships. What you smile about in your partner reflects where you've stored positive sentiment.",
+          "framework": "gottman",
+          "whenDifferent": "Different things making you smile means you're each charmed by different aspects. Tell your partner what delights you—they may not know that their concentration face makes you melt.",
+          "whenSame": "Shared delight in the same quirk often reflects something central to your partner's essence that you both recognize. Name it, appreciate it, protect it.",
+          "journalPrompt": "What small thing about your partner reliably makes you smile? Have you told them? What would it mean to them to know this?"
+        }
+      }
+    },
+    {
+      "id": "quiz_019_q5",
+      "text": "When it comes to habits, I'm...",
+      "choices": [
+        "Very routine-oriented",
+        "Flexible and go-with-the-flow",
+        "Trying to build better ones",
+        "Comfortable with my patterns"
+      ],
+      "category": "lifestyle",
+      "metadata": {
+        "dimension": "planning_preference",
+        "poleMapping": ["left", "right", "neutral", "neutral"],
+        "therapeutic": {
+          "rationale": "Habit orientation affects daily life significantly. Routine-oriented people thrive on predictability and may struggle when patterns are disrupted; flexible people adapt easily but may not maintain consistent structures. Living with someone whose habit orientation differs requires accommodation—the routine person needs some stability; the flexible person needs some spontaneity.",
+          "framework": "personality_psychology",
+          "whenDifferent": "The routine person may feel destabilized by chaos; the flexible person may feel constrained by rigidity. Create some non-negotiable routines AND some unstructured space. Both orientations can coexist.",
+          "whenSame": "Matched habit orientation makes daily life flow. You'll naturally agree on how much structure to maintain. If you're both routine, build rituals together. If you're both flexible, embrace the beautiful chaos.",
+          "journalPrompt": "How do you feel when routines are disrupted? How do you feel when every day is exactly the same? What does your partner need that's different from you?"
+        }
+      }
+    }
+  ]
+}

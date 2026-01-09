@@ -1,7 +1,9 @@
 {
   "quizId": "quiz_006",
-  "title": "Connection Quiz 6",
+  "title": "How You Show You Care",
   "branch": "connection",
+  "description": "Discover the daily ways you express love and find comfort.",
+  "magnet_id": 6,
   "questions": [
     {
       "id": "quiz_006_q1",
@@ -9,11 +11,19 @@
       "choices": [
         "Words of affirmation",
         "Acts of service",
-        "Receiving gifts",
         "Quality time",
         "Physical touch"
       ],
-      "category": "emotional"
+      "category": "love_languages",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Gary Chapman's love languages framework identifies primary ways people receive love: words (verbal affirmation), service (helpful actions), time (undivided attention), and touch (physical affection). Most of us have one or two primary receiving languages—knowing your partner's helps you love them in ways they can actually feel.",
+          "framework": "love_languages",
+          "whenDifferent": "Different receiving languages is the norm, not the exception. The touch-receiver may not feel loved by words alone; the time-receiver may feel unloved despite many acts of service. Learn to give love in your partner's language, not just your own.",
+          "whenSame": "Shared receiving languages mean you'll naturally feel loved by the same things. Your love naturally translates because you speak the same dialect.",
+          "journalPrompt": "Which love language makes you feel most loved? Is your partner speaking it regularly? What would change if they knew this was your primary language?"
+        }
+      }
     },
     {
       "id": "quiz_006_q2",
@@ -21,11 +31,19 @@
       "choices": [
         "That it's something you really wanted",
         "That it shows I was thinking of you",
-        "That it's a surprise",
         "That it's meaningful or sentimental",
-        "Other / It depends"
+        "That you genuinely love it"
       ],
-      "category": "emotional"
+      "category": "giving_style",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Gift-giving reveals what we value in exchanges of care. Want-based givers prioritize fulfilling desires; thought-based givers want to demonstrate attention; sentimental givers seek emotional resonance; reaction-based givers need visible appreciation. Understanding what your partner values in giving helps you receive their gifts in ways that satisfy them.",
+          "framework": "positive_psychology",
+          "whenDifferent": "Different giving values can create disconnection. The sentimental giver may feel hurt if their meaningful gift is casually received; the reaction-seeker needs visible delight. Receive gifts in ways that honor what your partner put into them.",
+          "whenSame": "Shared giving values mean you'll approach presents similarly. You'll understand why each other's gifts matter and how to receive them meaningfully.",
+          "journalPrompt": "When you give your partner a gift, what response would make you feel your gift landed? What makes a gift feel successful to you?"
+        }
+      }
     },
     {
       "id": "quiz_006_q3",
@@ -34,10 +52,18 @@
         "Remembering small details about my life",
         "Making me laugh when I'm stressed",
         "Taking care of me when I'm sick",
-        "Checking in on me throughout the day",
-        "Other / It depends"
+        "Checking in on me throughout the day"
       ],
-      "category": "communication"
+      "category": "care_expression",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Daily care has many faces: remembered details show attention; stress-relief humor shows attunement; sick care shows nurturing; check-ins show consistent thinking. These small expressions of care, what Gottman calls 'bids for connection,' accumulate into deep relationship satisfaction over time.",
+          "framework": "gottman",
+          "whenDifferent": "Different favorite care expressions mean you're each touched by different daily gestures. The detail-rememberer needs to feel known; the check-in lover needs to feel thought of throughout the day. Do your partner's favorite care gesture often.",
+          "whenSame": "Shared care preferences mean the same daily expressions will connect you both. You'll naturally care for each other in ways that land.",
+          "journalPrompt": "What small thing does your partner do that reliably makes you feel cared for? Do they know this is special to you? When did they last do it?"
+        }
+      }
     },
     {
       "id": "quiz_006_q4",
@@ -46,24 +72,40 @@
         "Just sit with me quietly",
         "Give me a long hug",
         "Listen and validate my feelings",
-        "Offer solutions or advice",
-        "Other / It depends"
+        "Offer solutions or advice"
       ],
-      "category": "emotional"
+      "category": "comfort_style",
+      "metadata": {
+        "dimension": "support_style",
+        "poleMapping": ["left", "neutral", "left", "right"],
+        "therapeutic": {
+          "rationale": "Comfort preferences often reflect attachment patterns and emotional processing styles. Quiet presence soothes without demands; hugs provide physical co-regulation; validation normalizes feelings; solutions address problems. Partners often default to giving comfort how they'd want it, not how their partner needs it.",
+          "framework": "attachment_theory",
+          "whenDifferent": "Different comfort needs are extremely common and cause much relationship friction. The validation-seeker feels dismissed by solutions; the solution-seeker feels frustrated by 'just listening.' Ask: 'Do you want me to listen or help fix it?'",
+          "whenSame": "Matched comfort preferences mean you'll naturally soothe each other in ways that work. When one of you is hurting, the other instinctively knows what to do.",
+          "journalPrompt": "When you're upset, what does ideal comfort look like? Does your partner know this? What happens when they comfort you differently than you need?"
+        }
+      }
     },
     {
       "id": "quiz_006_q5",
       "text": "What makes me feel most secure in your love?",
       "choices": [
         "Consistent daily affection",
-        "You introducing me to important people in your life",
         "Making future plans together",
         "How you talk about me to others",
-        "Other / It depends"
+        "Your commitment during hard times"
       ],
-      "category": "trust"
+      "category": "security",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Security in love comes from different sources. Consistent affection provides daily reassurance; future planning shows long-term thinking; positive public speech shows pride; crisis commitment proves reliability. Understanding what makes your partner feel secure helps you provide the specific reassurance they need.",
+          "framework": "attachment_theory",
+          "whenDifferent": "Different security sources mean different things make you feel safe in the relationship. The consistency-needer needs daily proof; the future-planner needs vision. Prioritize what makes your partner feel secure.",
+          "whenSame": "Shared security sources mean you'll build safety in the same way. You're both reassured by the same things, making security easier to maintain.",
+          "journalPrompt": "What makes you feel secure in your partner's love? When do doubts creep in? What would help you feel more consistently safe in the relationship?"
+        }
+      }
     }
-  ],
-  "description": "Discover the ways you support each other emotionally.",
-  "magnet_id": 6
+  ]
 }

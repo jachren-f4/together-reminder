@@ -1,7 +1,9 @@
 {
   "quizId": "quiz_002",
-  "title": "Connection Quiz 2",
+  "title": "Deeper Conversations",
   "branch": "connection",
+  "description": "Explore the topics and memories that bring you closer.",
+  "magnet_id": 5,
   "questions": [
     {
       "id": "quiz_002_q1",
@@ -10,10 +12,18 @@
         "Our dreams and aspirations",
         "Our fears and worries",
         "Our relationship itself",
-        "Memories and the past",
         "Day-to-day feelings"
       ],
-      "category": "communication"
+      "category": "communication",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Gottman's research on 'love maps' shows that couples who know each other's inner worlds have stronger relationships. But we often avoid certain topics—dreams feel vulnerable, fears feel heavy, relationship talks feel risky. Naming the conversation you want opens the door to having it. These deeper conversations are what build true intimacy over time.",
+          "framework": "gottman",
+          "whenDifferent": "Different conversation desires reveal different emotional needs. The dreams-talker wants to be known in their aspirations; the fears-talker needs safety to be vulnerable; the relationship-talker wants meta-awareness. All are important—schedule time for each kind of deeper conversation.",
+          "whenSame": "Shared conversation interests suggest aligned emotional processing styles. You both want to go deep in the same direction. Create space for exactly this kind of talk.",
+          "journalPrompt": "What conversation have you been wanting to have but haven't initiated? What's holding you back? What might open up if you had it?"
+        }
+      }
     },
     {
       "id": "quiz_002_q2",
@@ -22,10 +32,18 @@
         "Our first date or meeting",
         "A trip we took together",
         "A challenge we overcame",
-        "A quiet meaningful moment",
-        "A celebration or milestone"
+        "A quiet meaningful moment"
       ],
-      "category": "memories"
+      "category": "memories",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Shared memories are the narrative foundation of a relationship. Gottman found that how couples tell their story—whether with fondness or cynicism—predicts relationship success. The type of memory that stands out reveals what you value most: beginnings, adventures, resilience, or presence. Sharing favorite memories reinforces the positive story of 'us.'",
+          "framework": "narrative_therapy",
+          "whenDifferent": "Different favorite memories aren't a mismatch—they show the relationship has multiple meaningful dimensions. Share your favorites with each other; your partner may not know which moments stuck with you.",
+          "whenSame": "A shared favorite memory becomes a cornerstone of your relationship story. Return to it often. It's part of what makes you 'you.'",
+          "journalPrompt": "Close your eyes and let your favorite memory of your partner surface. What made it special? Have you told them recently that this moment mattered to you?"
+        }
+      }
     },
     {
       "id": "quiz_002_q3",
@@ -34,10 +52,18 @@
         "Saying 'I love you' often",
         "Physical affection",
         "Doing things for you",
-        "Giving you my full attention",
-        "Thoughtful surprises"
+        "Giving you my full attention"
       ],
-      "category": "love_languages"
+      "category": "love_languages",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "How we express love reveals our native love language—the way caring comes naturally to us. Words-people verbalize; touchers embrace; doers help; attenders focus. Understanding how your partner shows love helps you receive it, even if it's not in your primary language. Their caring is real even when it looks different from yours.",
+          "framework": "love_languages",
+          "whenDifferent": "Different expression styles mean you're each loving in your own language. The doer may feel unappreciated when their partner wants words; the words-person may feel their 'I love yous' go unnoticed. Learn to see love in your partner's language, not just your own.",
+          "whenSame": "Matched expression styles mean your love is easily seen by each other. You naturally give and receive in the same currency. This makes love feel abundant.",
+          "journalPrompt": "How do you show your partner you care? Do they notice? Have you ever asked how your caring lands for them?"
+        }
+      }
     },
     {
       "id": "quiz_002_q4",
@@ -46,10 +72,18 @@
         "Feeling understood",
         "Being accepted as I am",
         "The depth of our trust",
-        "Our ability to be vulnerable",
-        "The comfort of familiarity"
+        "Our ability to be vulnerable"
       ],
-      "category": "emotional_bond"
+      "category": "emotional_bond",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Emotional connection has many facets: understanding, acceptance, trust, and vulnerability. Each represents a different dimension of intimacy. Understanding means being known; acceptance means being loved despite flaws; trust means feeling safe; vulnerability means showing your true self. Knowing which facet your partner values most helps you nurture it.",
+          "framework": "attachment_theory",
+          "whenDifferent": "Different valued facets reveal different core needs. The understanding-seeker needs to be known; the acceptance-seeker needs unconditional love; the trust-seeker needs reliability. All are essential—prioritize your partner's primary need.",
+          "whenSame": "Shared core values in emotional connection suggest deep compatibility in what you need from intimacy. You're both building the same kind of bond.",
+          "journalPrompt": "What do you value most about your emotional connection? When has your partner given you exactly that? When has it been missing?"
+        }
+      }
     },
     {
       "id": "quiz_002_q5",
@@ -58,12 +92,18 @@
         "Remembering little details",
         "Checking in during the day",
         "Making me laugh",
-        "Holding my hand",
         "Making time just for us"
       ],
-      "category": "appreciation"
+      "category": "appreciation",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Small gestures are the daily currency of love. Gottman calls these 'bids for connection'—the tiny moments that say 'you matter.' Remembering details shows attention; checking in shows you're thought of; laughter shows joy; making time shows priority. Knowing which small gesture means most helps you show love in ways that land.",
+          "framework": "gottman",
+          "whenDifferent": "Different valued gestures mean different things make each of you feel loved daily. The detail-rememberer needs to feel known; the check-in person needs to feel thought of. Do your partner's gesture often.",
+          "whenSame": "Shared gesture preferences mean you'll naturally make each other feel loved through the same small moments. These add up to deep daily connection.",
+          "journalPrompt": "What small gesture from your partner makes your day? Does it happen regularly? Have you told them how much it means?"
+        }
+      }
     }
-  ],
-  "description": "Discover how you connect on a deeper level.",
-  "magnet_id": 5
+  ]
 }

@@ -60,14 +60,26 @@ void main() async {
 ```
 
 ### Deferred Permission Request
-Permissions are NOT requested at initialization. They're deferred until after LP intro:
+Permissions are NOT requested at initialization. They're deferred until contextually relevant moments:
+
+1. **After completing a classic quiz** - Shows `NotificationPermissionPopup` explaining value, then system prompt
+2. **When sending a poke/reminder** - User understands they need notifications to remind partner
 
 ```dart
-// In lp_intro_overlay.dart - after user sees value prop
-await NotificationService.requestPermission();
+// In quiz_match_game_screen.dart - after quiz completion
+final isAuthorized = await NotificationService.isAuthorized();
+if (!isAuthorized && mounted) {
+  final shouldEnable = await showDialog<bool>(
+    context: context,
+    builder: (context) => const NotificationPermissionPopup(),
+  );
+  if (shouldEnable == true) {
+    await NotificationService.requestPermission();
+  }
+}
 ```
 
-**Rationale:** Avoid gray permission overlay on first launch before user understands app value.
+**Rationale:** Request permission when user understands the value (waiting for partner's quiz results).
 
 ---
 

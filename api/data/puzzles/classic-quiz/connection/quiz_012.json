@@ -1,7 +1,9 @@
 {
   "quizId": "quiz_012",
-  "title": "Connection Quiz 12",
+  "title": "Daily Connection Rituals",
   "branch": "connection",
+  "description": "Discover the routines that keep your bond strong.",
+  "magnet_id": 7,
   "questions": [
     {
       "id": "quiz_012_q1",
@@ -10,10 +12,20 @@
         "Something planned and special",
         "Spontaneous and adventurous",
         "Quiet and intimate at home",
-        "Active and fun together",
-        "Other / It depends"
+        "New experiences we've never tried"
       ],
-      "category": "values"
+      "category": "dating",
+      "metadata": {
+        "dimension": "planning_preference",
+        "poleMapping": ["left", "right", "left", "right"],
+        "therapeutic": {
+          "rationale": "Date preferences reveal relationship maintenance styles. Planned dates show effort and anticipation; spontaneous dates bring excitement; home dates value privacy and comfort; novel dates create self-expansion. Knowing what kind of dates feel meaningful to your partner helps you create experiences they'll treasure.",
+          "framework": "self_expansion_theory",
+          "whenDifferent": "Different date preferences mean you'll need to alternate or blend styles. The planned-date person may feel unvalued by spontaneity; the spontaneous-date person may feel constrained by structure. Take turns planning dates in each other's preferred style.",
+          "whenSame": "Shared date preferences make planning easy—you'll both enjoy the same kinds of outings. Your natural dating style works for you both.",
+          "journalPrompt": "What kind of dates make you feel most loved and connected? When was your last date that really worked? What made it special?"
+        }
+      }
     },
     {
       "id": "quiz_012_q2",
@@ -22,10 +34,18 @@
         "During vulnerable late-night talks",
         "After we work through a conflict",
         "When we're laughing together",
-        "During quiet, peaceful moments",
-        "Other / It depends"
+        "During quiet, peaceful moments"
       ],
-      "category": "emotional"
+      "category": "emotional_intimacy",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Emotional intimacy peaks at different moments for different people. Late-night-talkers bond through darkness and vulnerability; post-conflict connectors feel closest after repair; laughter-bonders connect through joy; quiet-moment lovers find intimacy in peace. Knowing when your partner feels most intimate helps you recognize and create those moments.",
+          "framework": "gottman",
+          "whenDifferent": "Different intimacy peaks mean you experience closeness at different times. The post-conflict person may actually welcome disagreements as bonding opportunities; the quiet-moment person may find conflict depleting rather than connecting. Both experiences are valid.",
+          "whenSame": "Shared intimacy peaks mean you'll feel closest at the same moments. You'll recognize emotional intimacy the same way.",
+          "journalPrompt": "When do you feel emotionally closest to your partner? How often do these moments happen? What creates them?"
+        }
+      }
     },
     {
       "id": "quiz_012_q3",
@@ -34,10 +54,18 @@
         "Send sweet texts throughout the day",
         "Do small helpful things for you",
         "Physical affection when we're together",
-        "Plan surprises or special moments",
-        "Other / It depends"
+        "Plan surprises or special moments"
       ],
-      "category": "communication"
+      "category": "thinking_of_you",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "How we show we're thinking of our partner reflects our natural love language. Texters share thoughts verbally; helpers show love through service; touchers express through physical connection; planners demonstrate through effort. Understanding how your partner shows 'I'm thinking of you' helps you receive these gestures as intended.",
+          "framework": "love_languages",
+          "whenDifferent": "Different showing styles mean you may miss each other's expressions of thought. The texter's messages may feel insufficient to the touch-lover; the helper's actions may not register for the texter. Learn to see 'I'm thinking of you' in your partner's language.",
+          "whenSame": "Shared showing styles mean your expressions of thought will naturally connect. You'll recognize each other's caring because it looks the same.",
+          "journalPrompt": "How do you show your partner you're thinking of them? Do they notice? How does your partner show you—and do you recognize it?"
+        }
+      }
     },
     {
       "id": "quiz_012_q4",
@@ -46,10 +74,18 @@
         "Putting phones away and focusing",
         "Doing something engaging together",
         "Physical touch while we talk",
-        "Making eye contact",
-        "Other / It depends"
+        "Making eye contact"
       ],
-      "category": "values"
+      "category": "presence",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Full presence requires different conditions for different people. Phone-free zones create space; shared activity creates engagement; touch creates physical grounding; eye contact creates visual connection. Creating conditions for presence helps you actually be together when you're together.",
+          "framework": "mindfulness",
+          "whenDifferent": "Different presence conditions mean you need different setups for full connection. The phone-free person may feel dismissed when their partner checks messages; the activity-needer may feel disconnected just sitting. Create the conditions your partner needs for presence.",
+          "whenSame": "Shared presence conditions make full connection easier. You'll both naturally create the same environment for being together.",
+          "journalPrompt": "What helps you feel fully present with your partner? What distracts you from being truly there? What would help you be more present?"
+        }
+      }
     },
     {
       "id": "quiz_012_q5",
@@ -58,12 +94,20 @@
         "Cuddling and talking about our day",
         "Watching something together",
         "Reading or doing separate activities nearby",
-        "Physical intimacy",
-        "Other / It depends"
+        "A quick goodnight ritual before sleep"
       ],
-      "category": "emotional"
+      "category": "evening_rituals",
+      "metadata": {
+        "dimension": "social_energy",
+        "poleMapping": ["right", "neutral", "left", "neutral"],
+        "therapeutic": {
+          "rationale": "End-of-day rituals set the tone for the relationship. Cuddling-and-talking creates daily emotional check-in; watching together provides low-demand togetherness; parallel activities honor individual decompression; quick rituals maintain connection without energy demands. Matched bedtime routines prevent daily friction.",
+          "framework": "gottman",
+          "whenDifferent": "Different evening preferences can create nightly tension. The cuddler may feel rejected by the parallel-activities person; the tired introvert may feel overwhelmed by the talker. Negotiate a bedtime routine that works for both.",
+          "whenSame": "Shared evening preferences mean nights will flow naturally. You'll both want to end the day the same way.",
+          "journalPrompt": "How do you ideally want to end each day together? Does your current routine match this? What small change would improve your evenings?"
+        }
+      }
     }
-  ],
-  "description": "Discover what keeps your connection thriving.",
-  "magnet_id": 7
+  ]
 }

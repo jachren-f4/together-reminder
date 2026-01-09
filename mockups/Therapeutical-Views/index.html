@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Therapeutic Metadata Views - Index</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            min-height: 100vh;
+            color: #fff;
+            padding: 40px 20px;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, #FFD700, #FFA500);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .subtitle {
+            color: rgba(255,255,255,0.6);
+            margin-bottom: 40px;
+            font-size: 1.1rem;
+        }
+        .metadata-summary {
+            background: rgba(255,255,255,0.05);
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 40px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .metadata-summary h2 {
+            font-size: 1rem;
+            color: #FFD700;
+            margin-bottom: 16px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .metadata-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+        }
+        .metadata-item {
+            background: rgba(255,255,255,0.05);
+            padding: 16px;
+            border-radius: 12px;
+        }
+        .metadata-item h3 {
+            font-size: 0.85rem;
+            color: #FFD700;
+            margin-bottom: 8px;
+        }
+        .metadata-item p {
+            font-size: 0.8rem;
+            color: rgba(255,255,255,0.7);
+            line-height: 1.5;
+        }
+        .section-title {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            color: rgba(255,255,255,0.9);
+        }
+        .mockup-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+        .mockup-card {
+            background: rgba(255,255,255,0.08);
+            border-radius: 16px;
+            padding: 24px;
+            border: 1px solid rgba(255,255,255,0.1);
+            transition: all 0.3s ease;
+            text-decoration: none;
+            color: inherit;
+        }
+        .mockup-card:hover {
+            background: rgba(255,255,255,0.12);
+            transform: translateY(-4px);
+            border-color: rgba(255,215,0,0.3);
+        }
+        .mockup-card h3 {
+            font-size: 1.1rem;
+            margin-bottom: 8px;
+            color: #fff;
+        }
+        .mockup-card p {
+            font-size: 0.9rem;
+            color: rgba(255,255,255,0.6);
+            line-height: 1.5;
+            margin-bottom: 16px;
+        }
+        .mockup-card .surfaces {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+        .mockup-card .tag {
+            background: rgba(255,215,0,0.15);
+            color: #FFD700;
+            font-size: 0.7rem;
+            padding: 4px 10px;
+            border-radius: 20px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .ideas-section {
+            margin-top: 50px;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+        .idea-list {
+            display: grid;
+            gap: 16px;
+        }
+        .idea-item {
+            background: rgba(255,255,255,0.03);
+            padding: 20px;
+            border-radius: 12px;
+            border-left: 3px solid #FFD700;
+        }
+        .idea-item h4 {
+            color: #FFD700;
+            margin-bottom: 8px;
+        }
+        .idea-item p {
+            color: rgba(255,255,255,0.7);
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Surfacing Therapeutic Metadata</h1>
+        <p class="subtitle">Exploring ways to bring quiz insights into the app experience</p>
+
+        <div class="metadata-summary">
+            <h2>Available Metadata from Quizzes</h2>
+            <div class="metadata-grid">
+                <div class="metadata-item">
+                    <h3>rationale</h3>
+                    <p>Why this question matters psychologically. The deeper meaning behind each question.</p>
+                </div>
+                <div class="metadata-item">
+                    <h3>framework</h3>
+                    <p>Psychological basis: Gottman, Attachment Theory, Love Languages, etc.</p>
+                </div>
+                <div class="metadata-item">
+                    <h3>whenDifferent</h3>
+                    <p>Guidance when partners answer differently. Conversation starters.</p>
+                </div>
+                <div class="metadata-item">
+                    <h3>whenSame</h3>
+                    <p>Insight when partners match. Celebrates alignment.</p>
+                </div>
+                <div class="metadata-item">
+                    <h3>journalPrompt</h3>
+                    <p>Reflection question for deeper exploration. Personal growth tool.</p>
+                </div>
+                <div class="metadata-item">
+                    <h3>dimension + poleMapping</h3>
+                    <p>Personality profiling data. Tracks patterns across quizzes.</p>
+                </div>
+            </div>
+        </div>
+
+        <h2 class="section-title">Mockup Explorations</h2>
+        <div class="mockup-grid">
+            <a href="quiz-results-insights.html" class="mockup-card">
+                <h3>1. Quiz Results with Insights</h3>
+                <p>Post-quiz screen showing match vs. differ with therapeutic context for each question.</p>
+                <div class="surfaces">
+                    <span class="tag">whenDifferent</span>
+                    <span class="tag">whenSame</span>
+                    <span class="tag">framework</span>
+                </div>
+            </a>
+
+            <a href="journal-prompts-feed.html" class="mockup-card">
+                <h3>2. Journal Prompts Integration</h3>
+                <p>Journal section populated with personalized prompts generated from quiz questions.</p>
+                <div class="surfaces">
+                    <span class="tag">journalPrompt</span>
+                    <span class="tag">rationale</span>
+                </div>
+            </a>
+
+            <a href="discussion-cards.html" class="mockup-card">
+                <h3>3. Discussion Cards</h3>
+                <p>"Worth Discussing" cards surfaced when partners differ significantly on key questions.</p>
+                <div class="surfaces">
+                    <span class="tag">whenDifferent</span>
+                    <span class="tag">rationale</span>
+                </div>
+            </a>
+
+            <a href="question-deep-dive.html" class="mockup-card">
+                <h3>4. Question Deep Dive</h3>
+                <p>Expandable insight after answering each question during quiz gameplay.</p>
+                <div class="surfaces">
+                    <span class="tag">rationale</span>
+                    <span class="tag">framework</span>
+                </div>
+            </a>
+
+            <a href="us-profile-dimensions.html" class="mockup-card">
+                <h3>5. Us Profile: Dimensions</h3>
+                <p>Visual compatibility profile built from dimension/poleMapping data across all quizzes.</p>
+                <div class="surfaces">
+                    <span class="tag">dimension</span>
+                    <span class="tag">poleMapping</span>
+                </div>
+            </a>
+
+            <a href="weekly-insights-report.html" class="mockup-card">
+                <h3>6. Weekly Insights Report</h3>
+                <p>Aggregated patterns and personalized insights delivered weekly.</p>
+                <div class="surfaces">
+                    <span class="tag">all metadata</span>
+                </div>
+            </a>
+        </div>
+
+        <div class="ideas-section">
+            <h2 class="section-title">Additional Ideas</h2>
+            <div class="idea-list">
+                <div class="idea-item">
+                    <h4>Framework Learning Cards</h4>
+                    <p>Unlock mini-lessons about Gottman, Attachment Theory, etc. as users complete more quizzes. "You've explored 5 questions about attachment. Here's what attachment theory says about your pattern..."</p>
+                </div>
+                <div class="idea-item">
+                    <h4>Couple's Therapy Topics</h4>
+                    <p>For couples in therapy: export a summary of key differences with whenDifferent insights to discuss with their therapist. "Here are 3 areas where you see things differently..."</p>
+                </div>
+                <div class="idea-item">
+                    <h4>Growth Tracking Over Time</h4>
+                    <p>If users re-take quizzes, show how their answers (and alignment) has changed. "6 months ago you said X, now you say Y. Here's what that shift might mean..."</p>
+                </div>
+                <div class="idea-item">
+                    <h4>Date Night Conversation Deck</h4>
+                    <p>Turn journal prompts into a "conversation card" feature for date nights. Swipe through prompts, discuss together, mark favorites.</p>
+                </div>
+                <div class="idea-item">
+                    <h4>Personalized Tips Based on Patterns</h4>
+                    <p>After enough data: "Based on your quizzes, you tend toward anxious attachment while your partner leans avoidant. Here are 3 things that might help..."</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

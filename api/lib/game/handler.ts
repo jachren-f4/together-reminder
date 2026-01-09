@@ -7,12 +7,7 @@
 
 import { query } from '@/lib/db/pool';
 import { awardLP } from '@/lib/lp/award';
-import {
-  tryAwardDailyLpStandalone,
-  getLpStatusStandalone,
-  gameTypeToContentType,
-  LpGrantResult,
-} from '@/lib/lp/grant-service';
+import { LP_REWARDS } from '@/lib/lp/config';
 import { recordActivityPlay, type ActivityType } from '@/lib/magnets';
 import { recalculateAndCacheProfile } from '@/lib/us-profile/cache';
 import { readFileSync } from 'fs';
@@ -492,18 +487,23 @@ export async function submitAnswers(
   let matchPercentage: number | null = null;
   let lpEarned = 0;
   let newStatus = 'active';
-  let lpGrantResult: LpGrantResult | null = null;
 
   if (bothAnswered) {
     matchPercentage = calculateMatchPercentage(updatedPlayer1Answers, updatedPlayer2Answers, match.quizType);
     newStatus = 'completed';
 
-    // Use new daily LP grant system
-    const contentType = gameTypeToContentType(match.quizType);
-    lpGrantResult = await tryAwardDailyLpStandalone(couple.coupleId, contentType, match.id);
-    lpEarned = lpGrantResult.lpAwarded;
+    // Award LP directly (no daily gating - cooldowns handle frequency)
+    const lpAmount = match.quizType === 'affirmation'
+      ? LP_REWARDS.QUIZ_AFFIRMATION
+      : match.quizType === 'you_or_me'
+        ? LP_REWARDS.YOU_OR_ME
+        : LP_REWARDS.QUIZ_CLASSIC;
 
-    console.log(`🎯 LP Grant Result: lpAwarded=${lpGrantResult.lpAwarded}, alreadyGrantedToday=${lpGrantResult.alreadyGrantedToday}, contentType=${contentType}`);
+    const source = `${match.quizType}_complete`;
+    const lpResult = await awardLP(couple.coupleId, lpAmount, source, match.id);
+    lpEarned = lpResult.awarded;
+
+    console.log(`🎯 LP Award Result: awarded=${lpResult.awarded}, newTotal=${lpResult.newTotal}, source=${source}`);
 
     // Advance branch progression
     await advanceBranch(couple.coupleId, match.quizType);
@@ -556,10 +556,9 @@ export async function submitAnswers(
     lpEarned,
     userAnswers: couple.isPlayer1 ? updatedPlayer1Answers : updatedPlayer2Answers,
     partnerAnswers: couple.isPlayer1 ? updatedPlayer2Answers : updatedPlayer1Answers,
-    // Include LP status from daily grant system
-    alreadyGrantedToday: lpGrantResult?.alreadyGrantedToday,
-    resetInMs: lpGrantResult?.resetInMs,
-    canPlayMore: lpGrantResult?.canPlayMore,
+    // No daily LP gating - always fresh award (cooldowns handle frequency)
+    alreadyGrantedToday: false,
+    canPlayMore: true,
   } : null;
 
   return { match: updatedMatch, result: gameResult };
@@ -644,20 +643,10 @@ export async function buildResult(
     partnerScore: couple.isPlayer1 ? match.player2Score : match.player1Score,
   };
 
-  // Optionally check LP grant status for "already earned today" info
+  // No daily LP gating - LP is always awarded on completion (cooldowns handle frequency)
   if (options?.checkLpStatus) {
-    try {
-      const contentType = gameTypeToContentType(match.quizType);
-      // Get current LP status without awarding (read-only check)
-      const lpStatus = await getLpStatusStandalone(couple.coupleId, contentType);
-
-      result.alreadyGrantedToday = lpStatus.alreadyGrantedToday;
-      result.resetInMs = lpStatus.resetInMs;
-      result.canPlayMore = lpStatus.canPlayMore;
-    } catch (error) {
-      console.error('Failed to check LP status:', error);
-      // Don't fail the result - just omit LP status
-    }
+    result.alreadyGrantedToday = false;
+    result.canPlayMore = true;
   }
 
   return result;

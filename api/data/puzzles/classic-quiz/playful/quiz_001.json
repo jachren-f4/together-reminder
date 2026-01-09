@@ -10,8 +10,7 @@
         "Have a close circle of couple friends we see regularly",
         "Keep our social lives mostly separate and cherish our couple time",
         "Be spontaneous - say yes to whatever comes up",
-        "Find a balance between group hangs and just-us time",
-        "Other / It depends"
+        "Find a balance between group hangs and just-us time"
       ],
       "category": "social",
       "metadata": {
@@ -19,7 +18,6 @@
         "poleMapping": [
           "right",
           "left",
-          null,
           null,
           null
         ]
@@ -32,8 +30,7 @@
         "Gives me space without taking it personally",
         "Checks in on me after a while",
         "Joins me in quiet parallel time - same room, doing our own things",
-        "Understands without me having to explain",
-        "Other / It depends"
+        "Understands without me having to explain"
       ],
       "category": "communication",
       "metadata": {
@@ -42,7 +39,6 @@
           "left",
           null,
           "left",
-          null,
           null
         ]
       }
@@ -54,8 +50,7 @@
         "Are out doing something social together",
         "Have a cozy night in, just the two of us",
         "Each do our own thing and reconnect after",
-        "Try something new together, just us",
-        "Other / It depends"
+        "Try something new together, just us"
       ],
       "category": "lifestyle",
       "metadata": {
@@ -64,7 +59,6 @@
           "right",
           "left",
           "left",
-          null,
           null
         ]
       }
@@ -76,8 +70,7 @@
         "At least one social plan with friends or family",
         "Mostly unstructured quality time, just us",
         "A mix of adventure and downtime",
-        "To follow your lead and see what you're in the mood for",
-        "Other / It depends"
+        "To follow your lead and see what you're in the mood for"
       ],
       "category": "lifestyle",
       "metadata": {
@@ -85,7 +78,6 @@
         "poleMapping": [
           "right",
           "left",
-          null,
           null,
           null
         ]
@@ -98,14 +90,12 @@
         "How we'll balance 'people time' vs 'us time'",
         "Whether we recharge in similar or different ways",
         "How we'll handle it when one of us is more social than the other",
-        "What traditions we'll create as a couple",
-        "Other / It depends"
+        "What traditions we'll create as a couple"
       ],
       "category": "growth",
       "metadata": {
         "dimension": "social_energy",
         "poleMapping": [
-          null,
           null,
           null,
           null,

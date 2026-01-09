@@ -132,6 +132,25 @@ class AnimationConstants {
   static const Duration confettiDelay = Duration(milliseconds: 500);
 
   // ============================================
+  // LP CELEBRATION ANIMATION
+  // ============================================
+
+  /// Delay before LP celebration starts (let screen transition complete)
+  static const Duration lpCelebrationDelay = Duration(milliseconds: 200);
+
+  /// Duration for LP particles to fly from quest area to meter
+  static const Duration lpParticleFlight = Duration(milliseconds: 600);
+
+  /// Duration for LP counter to count up and progress bar to fill
+  static const Duration lpCountUp = Duration(milliseconds: 1200);
+
+  /// Number of sparkle/orb particles in LP celebration
+  static const int lpParticleCount = 6;
+
+  /// Stagger delay between each LP particle launch
+  static const Duration lpParticleStagger = Duration(milliseconds: 50);
+
+  // ============================================
   // PARTICLE SETTINGS
   // ============================================
 

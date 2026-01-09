@@ -1,0 +1,111 @@
+{
+  "quizId": "quiz_018",
+  "title": "Growth & Change",
+  "branch": "attachment",
+  "description": "Discover how your attachment style has evolved through this relationship.",
+  "magnet_id": 10,
+  "questions": [
+    {
+      "id": "quiz_018_q1",
+      "text": "How has my attachment security changed since being with you?",
+      "choices": [
+        "I feel significantly more secure",
+        "I'm slowly becoming more secure",
+        "It fluctuates based on how we're doing",
+        "I've always felt fairly secure"
+      ],
+      "category": "security_change",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Security change reflects relationship impact. Significantly-more-secure shows earned security; slow-growth shows gradual healing; fluctuation shows dependent security; always-secure shows baseline stability. Healthy relationships can shift attachment from insecure to earned secure.",
+          "framework": "attachment_theory",
+          "whenDifferent": "Different security change reflects different starting points and trajectories. The significant-changer celebrates healing; the always-secure may not understand the journey. Honor where each is.",
+          "whenSame": "Shared security change means similar growth. You're both being healed by this relationship in similar ways.",
+          "journalPrompt": "How has your attachment security changed? What specific moments or patterns created that change? What would increase security further?"
+        }
+      }
+    },
+    {
+      "id": "quiz_018_q2",
+      "text": "What's the biggest attachment shift I've made in this relationship?",
+      "choices": [
+        "Trusting that someone won't leave",
+        "Allowing myself to depend on someone",
+        "Being comfortable with closeness",
+        "Expressing needs without fear"
+      ],
+      "category": "biggest_shift",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Biggest attachment shifts reveal healed wounds. Trust-in-staying heals abandonment; dependency-allowing heals avoidance; closeness-comfort heals engulfment fear; need-expressing heals suppression. Celebrating your biggest shift acknowledges real growth.",
+          "framework": "attachment_theory",
+          "whenDifferent": "Different biggest shifts celebrate different healing. Each of you is being healed in unique ways by this relationship. Honor each other's specific growth.",
+          "whenSame": "Shared biggest shifts mean similar healing. This relationship is healing similar wounds in both of you.",
+          "journalPrompt": "What's your biggest attachment shift? What made this shift possible? What shift do you still want to make?"
+        }
+      }
+    },
+    {
+      "id": "quiz_018_q3",
+      "text": "What old pattern am I actively working to change?",
+      "choices": [
+        "Seeking too much reassurance",
+        "Pulling away when things get close",
+        "Testing your commitment",
+        "Hiding my true feelings"
+      ],
+      "category": "pattern_change",
+      "metadata": {
+        "dimension": "support_style",
+        "poleMapping": ["right", "left", "right", "left"],
+        "therapeutic": {
+          "rationale": "Pattern-change work shows active attachment growth. Reassurance-reducing addresses anxious patterns; pull-away work addresses avoidance; test-stopping addresses manipulation; feeling-showing addresses suppression. Active work on patterns is the path to earned security.",
+          "framework": "attachment_theory",
+          "whenDifferent": "Different pattern work means supporting different growth. Encourage your partner's specific work even when different from yours.",
+          "whenSame": "Shared pattern work can be done together. You understand each other's challenge because you share it.",
+          "journalPrompt": "What old pattern are you working on? What helps you change it? What support do you need?"
+        }
+      }
+    },
+    {
+      "id": "quiz_018_q4",
+      "text": "What helps me grow into more secure attachment?",
+      "choices": [
+        "Your consistent, predictable love",
+        "Safe experiences that contradict my fears",
+        "Space to process and understand myself",
+        "Your patience with my healing journey"
+      ],
+      "category": "growth_support",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Growth support reveals healing pathways. Consistent-love builds trust over time; safe-contradiction creates new neural pathways; processing-space allows integration; patience-with-healing gives time. Understanding what helps your partner grow helps you actively support their healing.",
+          "framework": "attachment_theory",
+          "whenDifferent": "Different growth support guides how to help each other. The consistent-love needer needs reliability; the processing-space needer needs room. Provide what your partner needs.",
+          "whenSame": "Shared growth support makes helping easy. You know what helps because it's what would help you.",
+          "journalPrompt": "What helps you grow toward more secure attachment? Is this happening in your relationship? What would accelerate your growth?"
+        }
+      }
+    },
+    {
+      "id": "quiz_018_q5",
+      "text": "What's my attachment growth goal?",
+      "choices": [
+        "To feel secure even when apart",
+        "To allow deep closeness without fear",
+        "To trust without needing constant proof",
+        "To express needs clearly and directly"
+      ],
+      "category": "growth_goal",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Attachment growth goals reveal your path to security. Secure-when-apart addresses anxious attachment; closeness-without-fear addresses avoidant attachment; trust-without-proof addresses testing patterns; clear-need-expression addresses suppression. Naming your goal directs your growth energy.",
+          "framework": "attachment_theory",
+          "whenDifferent": "Different growth goals show different journeys. Support your partner's specific goal even when yours differs.",
+          "whenSame": "Shared growth goals mean aligned journeys. You're working toward similar security. Support each other's progress.",
+          "journalPrompt": "What's your attachment growth goal? What would achieving it look like? What's one step you could take toward it?"
+        }
+      }
+    }
+  ]
+}

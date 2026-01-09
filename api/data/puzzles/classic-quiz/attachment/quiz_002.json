@@ -1,7 +1,9 @@
 {
   "quizId": "quiz_002",
-  "title": "Attachment Quiz 2",
+  "title": "Trust & Conflict Patterns",
   "branch": "attachment",
+  "description": "Discover how you build trust and handle disagreements.",
+  "magnet_id": 7,
   "questions": [
     {
       "id": "quiz_002_q1",
@@ -10,10 +12,20 @@
         "I need to resolve it quickly",
         "I tend to withdraw first",
         "I want to talk it through immediately",
-        "I need time to process alone",
-        "I look for compromise fast"
+        "I need time to process alone"
       ],
-      "category": "conflict_style"
+      "category": "conflict_style",
+      "metadata": {
+        "dimension": "support_style",
+        "poleMapping": ["right", "left", "right", "left"],
+        "therapeutic": {
+          "rationale": "Conflict patterns reveal attachment activation under stress. Quick resolvers can't tolerate disconnection; withdrawers protect themselves from overwhelm; immediate talkers process externally; alone-processors need self-regulation. These patterns often reflect childhood experiences with conflict in the family of origin.",
+          "framework": "attachment_theory",
+          "whenDifferent": "Different conflict patterns create the classic pursue-withdraw cycle. The immediate-talker chases the withdrawer, who retreats further, escalating anxiety. Naming your patterns without blame is the first step to changing them.",
+          "whenSame": "Shared conflict patterns can help (two withdrawers give each other space) or hurt (two immediate-talkers may escalate). Know your shared tendencies.",
+          "journalPrompt": "What happens in your body and mind when conflict arises? What do you instinctively do? Where did you learn this pattern?"
+        }
+      }
     },
     {
       "id": "quiz_002_q2",
@@ -22,10 +34,18 @@
         "Very easy - I trust fully",
         "Mostly easy with small doubts",
         "It takes time but I get there",
-        "I struggle but I'm working on it",
-        "Trust comes and goes for me"
+        "I struggle but I'm working on it"
       ],
-      "category": "trust"
+      "category": "trust",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Trust capacity is shaped by attachment history. Easy trusters often had secure early experiences; cautious trusters may have been hurt but recovered; slow-build trusters are protecting themselves; struggling trusters carry significant wounds. Trust is both earned in the present and influenced by the past.",
+          "framework": "attachment_theory",
+          "whenDifferent": "Different trust capacities require different patience levels. The easy-truster may not understand why their partner struggles; the struggling-truster may feel pressured. Meet your partner where they are with trust.",
+          "whenSame": "Shared trust capacity means you'll build (or struggle to build) trust at similar rates. You understand each other's relationship with trust.",
+          "journalPrompt": "How easily do you trust in relationships? Has this changed over time? What would help you trust more fully?"
+        }
+      }
     },
     {
       "id": "quiz_002_q3",
@@ -34,10 +54,20 @@
         "Verbal reassurance",
         "Quality time together",
         "Space to self-soothe",
-        "Physical comfort",
-        "Understanding without judgment"
+        "Physical comfort"
       ],
-      "category": "insecurity_needs"
+      "category": "insecurity_needs",
+      "metadata": {
+        "dimension": "support_style",
+        "poleMapping": ["neutral", "right", "left", "right"],
+        "therapeutic": {
+          "rationale": "What soothes insecurity reveals our attachment system's needs. Verbal reassurance seekers need explicit comfort; quality-time seekers need presence; self-soothers need autonomy; physical comfort seekers need co-regulation through touch. Providing the wrong type of soothing when your partner is insecure can escalate rather than calm.",
+          "framework": "attachment_theory",
+          "whenDifferent": "Different insecurity soothing needs often clash. The verbal-reassurance seeker may feel abandoned by the self-soother's withdrawal; the self-soother may feel smothered by verbal pursuit. Ask: 'What would help right now?'",
+          "whenSame": "Shared insecurity soothing means you'll instinctively provide what helps. You'll calm each other because you need the same thing.",
+          "journalPrompt": "When you feel insecure in your relationship, what helps? What makes it worse? Does your partner know what you need?"
+        }
+      }
     },
     {
       "id": "quiz_002_q4",
@@ -46,10 +76,18 @@
         "Give you space and wait",
         "Try to help or fix things",
         "Feel worried it's about us",
-        "Match your distance",
         "Check in but not push"
       ],
-      "category": "partner_stress"
+      "category": "partner_stress",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Response to partner's stress reveals attachment patterns. Space-givers trust the relationship can handle distance; fixers manage anxiety through action; worry-about-us responders have relationship-specific anxiety; check-in-not-push responders balance concern and respect. The anxious attacher's worst fear is often that their partner's bad mood is about them.",
+          "framework": "attachment_theory",
+          "whenDifferent": "Different stress responses can create misattunement. The worried-about-us person may feel dismissed by the space-giver; the space-giver may feel smothered by worry. Communicate explicitly: 'My stress isn't about us.'",
+          "whenSame": "Shared stress responses mean you'll handle each other's difficult times similarly. You understand what's needed because it's what you'd need.",
+          "journalPrompt": "When your partner is stressed or distant, what's your first thought? Does your response help or add pressure? What would ideal support look like?"
+        }
+      }
     },
     {
       "id": "quiz_002_q5",
@@ -57,13 +95,19 @@
       "choices": [
         "The loss of companionship",
         "Feeling rejected or not enough",
-        "Rebuilding my independence",
         "Missing our daily routines",
         "The emotional pain of loss"
       ],
-      "category": "loss_fear"
+      "category": "loss_fear",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "What we fear losing reveals what we're most attached to. Companionship-losers are attached to partnership itself; rejection-feelers are attached to validation; routine-missers are attached to daily rhythms; pain-feelers are attached to emotional connection. Understanding this helps clarify what the relationship provides.",
+          "framework": "attachment_theory",
+          "whenDifferent": "Different loss fears reveal different relationship functions for each of you. Your partner may fear rejection while you fear routine loss. Both are real fears worth understanding.",
+          "whenSame": "Shared loss fears suggest the relationship serves similar functions for you both. You're attached to the same aspects of being together.",
+          "journalPrompt": "If your relationship ended, what would hurt most? What does this tell you about what you value in the relationship?"
+        }
+      }
     }
-  ],
-  "description": "Discover your comfort patterns and need for closeness.",
-  "magnet_id": 7
+  ]
 }

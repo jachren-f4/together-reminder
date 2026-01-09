@@ -1,0 +1,109 @@
+{
+  "quizId": "quiz_015",
+  "title": "Family Patterns",
+  "branch": "attachment",
+  "description": "Explore how your family of origin shaped your attachment style.",
+  "magnet_id": 10,
+  "questions": [
+    {
+      "id": "quiz_015_q1",
+      "text": "How did my family handle emotional closeness?",
+      "choices": [
+        "Warmly and openly",
+        "Reserved but caring",
+        "Inconsistently - sometimes close, sometimes distant",
+        "Closeness was uncomfortable or avoided"
+      ],
+      "category": "family_closeness",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Family closeness patterns become relationship templates. Warm-open families model secure attachment; reserved-caring families teach understated connection; inconsistent families create anxious attachment; avoidant families create distance comfort. Your family's closeness style lives in your nervous system.",
+          "framework": "family_systems",
+          "whenDifferent": "Different family closeness backgrounds explain different comfort levels. The reserved-family partner may feel overwhelmed by the open-family partner's expressiveness. Neither is wrong.",
+          "whenSame": "Shared family closeness backgrounds create understanding. You learned similar relationship patterns and will recognize each other's style.",
+          "journalPrompt": "How did your family do closeness? How does this show up in your relationship now? What would you like to do differently?"
+        }
+      }
+    },
+    {
+      "id": "quiz_015_q2",
+      "text": "What did I learn about expressing needs as a child?",
+      "choices": [
+        "My needs were heard and met",
+        "I had to be quiet or suppress needs",
+        "Needs were met inconsistently",
+        "Having needs felt burdensome"
+      ],
+      "category": "childhood_needs",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Childhood need-expression shapes adult patterns. Heard-and-met children become secure; quiet-or-suppress children become avoidant; inconsistent-response children become anxious; burden-feeling children feel guilty for needs. Your relationship with needs was formed early.",
+          "framework": "attachment_theory",
+          "whenDifferent": "Different need-expression histories create different comfort. The suppress-learner may not understand the heard-and-met partner's ease with asking. Be patient with each other's learning.",
+          "whenSame": "Shared need-expression history means similar challenges. Two burden-feelers may both struggle to ask, creating unspoken needs.",
+          "journalPrompt": "What did you learn about expressing needs? How does this affect your relationship now? What would healthier need-expression look like?"
+        }
+      }
+    },
+    {
+      "id": "quiz_015_q3",
+      "text": "How was conflict handled in my family?",
+      "choices": [
+        "Openly discussed and resolved",
+        "Avoided or swept under the rug",
+        "Explosively with yelling",
+        "Coldly with silence or withdrawal"
+      ],
+      "category": "family_conflict",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Family conflict patterns become relationship defaults. Open-resolvers learned healthy repair; avoiders learned conflict is dangerous; explosive-families created hypervigilance; cold-withdrawers created distance as safety. You're likely to repeat or overcorrect your family pattern.",
+          "framework": "family_systems",
+          "whenDifferent": "Different family conflict patterns explain different responses. The avoider may frustrate the open-resolver; the explosive-family person may overwhelm the cold-withdrawal person. Name your patterns.",
+          "whenSame": "Shared family conflict patterns may reinforce habits. Two avoiders may never address issues; two explosive backgrounds may escalate easily.",
+          "journalPrompt": "How did your family handle conflict? How does this show up in your relationship? What would you like to do differently?"
+        }
+      }
+    },
+    {
+      "id": "quiz_015_q4",
+      "text": "What role did I play in my family?",
+      "choices": [
+        "The caretaker who helped everyone",
+        "The independent one who needed little",
+        "The peacemaker who avoided conflict",
+        "The achiever who earned approval"
+      ],
+      "category": "family_role",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Family roles shape relationship patterns. Caretakers become over-givers; independents struggle to receive; peacemakers avoid necessary conflict; achievers tie worth to performance. Understanding your family role helps you choose rather than default.",
+          "framework": "family_systems",
+          "whenDifferent": "Different family roles interact in relationships. The caretaker may enable the independent; the peacemaker may frustrate the achiever who wants engagement. Recognize inherited roles.",
+          "whenSame": "Shared family roles may create competition or understanding. Two caretakers may fight to give; two independents may both struggle to receive.",
+          "journalPrompt": "What role did you play in your family? Does this role help or limit your relationship? What would stepping out of the role look like?"
+        }
+      }
+    },
+    {
+      "id": "quiz_015_q5",
+      "text": "What attachment pattern am I healing from my family?",
+      "choices": [
+        "Learning that it's safe to depend on others",
+        "Learning that closeness doesn't mean losing myself",
+        "Learning that people can be consistent",
+        "Learning that I'm worthy of love as I am"
+      ],
+      "category": "family_healing",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Family healing work reveals core attachment repair. Safe-dependence healing addresses avoidant patterns; closeness-without-losing-self heals engulfment fears; consistency-learning heals anxious patterns; worthiness-learning heals shame. Your relationship can be a place of family pattern healing.",
+          "framework": "attachment_theory",
+          "whenDifferent": "Different family healing creates complementary growth. The dependency-learner practices receiving while the worthiness-learner practices self-acceptance. You can help each other heal.",
+          "whenSame": "Shared family healing means similar growth edges. Support each other in the same area while being careful not to reinforce old patterns.",
+          "journalPrompt": "What family pattern are you healing? How is your relationship helping? What support do you need for this healing?"
+        }
+      }
+    }
+  ]
+}

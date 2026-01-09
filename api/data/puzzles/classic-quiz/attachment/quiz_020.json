@@ -1,0 +1,111 @@
+{
+  "quizId": "quiz_020",
+  "title": "Future Security",
+  "branch": "attachment",
+  "description": "Envision and build the secure attachment foundation you want together.",
+  "magnet_id": 11,
+  "questions": [
+    {
+      "id": "quiz_020_q1",
+      "text": "What does secure attachment look like in our future?",
+      "choices": [
+        "Trusting fully even when apart",
+        "Feeling safe to be completely ourselves",
+        "Handling challenges as a united team",
+        "A deep sense of home in each other"
+      ],
+      "category": "future_vision",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Future security visions reveal attachment aspirations. Trusting-when-apart shows separation security; being-ourselves shows authenticity safety; united-challenges shows partnership strength; home-in-each-other shows deep belonging. Shared vision aligns your growth direction.",
+          "framework": "attachment_theory",
+          "whenDifferent": "Different future visions can both be pursued. Your visions may complement—one wanting trust-when-apart while the other wants home-in-each-other can coexist.",
+          "whenSame": "Shared future vision aligns your growth trajectory. You're building toward the same secure attachment goals.",
+          "journalPrompt": "What does your ideal secure attachment future look like? What would it feel like? What steps would get you there?"
+        }
+      }
+    },
+    {
+      "id": "quiz_020_q2",
+      "text": "What's the most important foundation we're building?",
+      "choices": [
+        "Unshakeable trust in our commitment",
+        "Freedom to be vulnerable without fear",
+        "Reliable repair after any conflict",
+        "Deep knowledge of each other's inner world"
+      ],
+      "category": "foundation_building",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Foundation-building priorities reveal security-creating values. Unshakeable-trust addresses abandonment; vulnerability-freedom addresses emotional safety; reliable-repair addresses conflict fear; deep-knowledge addresses intimacy. What you're building determines what you'll have.",
+          "framework": "attachment_theory",
+          "whenDifferent": "Different foundation priorities can both be built. Multiple foundations strengthen the relationship. Work on both.",
+          "whenSame": "Shared foundation priority means aligned building. Focus your joint effort on your shared foundation.",
+          "journalPrompt": "What foundation are you building together? How are you building it? What would strengthen this foundation?"
+        }
+      }
+    },
+    {
+      "id": "quiz_020_q3",
+      "text": "What attachment milestone do I hope we'll reach?",
+      "choices": [
+        "Never doubting your love for me",
+        "Complete comfort with both closeness and space",
+        "Navigating any conflict without fear of losing you",
+        "Being my fullest self and being fully loved"
+      ],
+      "category": "milestone_hope",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Milestone hopes reveal attachment goals. Never-doubting addresses trust anxiety; closeness-space comfort addresses flexibility; conflict-without-fear addresses security during stress; full-self-fully-loved addresses conditional love fears. These milestones are achievable with intentional work.",
+          "framework": "attachment_theory",
+          "whenDifferent": "Different milestones show different journeys. You may be working toward different destinations that can coexist.",
+          "whenSame": "Shared milestone hope aligns your path. You're working toward the same attachment achievement.",
+          "journalPrompt": "What attachment milestone do you hope for? What would achieving it feel like? What's one step toward it?"
+        }
+      }
+    },
+    {
+      "id": "quiz_020_q4",
+      "text": "How do I want to show up as a more securely attached partner?",
+      "choices": [
+        "Trusting you without needing constant proof",
+        "Staying open even when I want to withdraw",
+        "Asking directly for what I need",
+        "Offering reassurance before you ask"
+      ],
+      "category": "growth_intention",
+      "metadata": {
+        "dimension": "support_style",
+        "poleMapping": ["neutral", "right", "neutral", "right"],
+        "therapeutic": {
+          "rationale": "Growth intentions reveal personal development direction. Trust-without-proof addresses testing; open-when-withdraw addresses avoidance; direct-asking addresses suppression; proactive-reassurance addresses attunement. Setting intentions supports actual change.",
+          "framework": "attachment_theory",
+          "whenDifferent": "Different growth intentions show different personal work. Support your partner's specific intention even when different from yours.",
+          "whenSame": "Shared growth intentions mean aligned personal development. You can work on this together.",
+          "journalPrompt": "How do you want to grow as a partner? What would help you become this? What's one thing you could do this week?"
+        }
+      }
+    },
+    {
+      "id": "quiz_020_q5",
+      "text": "What's the greatest gift our secure attachment will give us?",
+      "choices": [
+        "Freedom to take risks knowing you've got me",
+        "Peace that doesn't depend on everything being perfect",
+        "Deep joy from true connection",
+        "Resilience to weather any storm together"
+      ],
+      "category": "secure_gift",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Secure attachment gifts reveal what you're working toward. Risk-taking-freedom shows secure base; imperfection-peace shows acceptance; connection-joy shows intimacy reward; storm-resilience shows partnership strength. These gifts are the reward of attachment work.",
+          "framework": "attachment_theory",
+          "whenDifferent": "Different anticipated gifts show different values. Both gifts can be yours with secure attachment.",
+          "whenSame": "Shared anticipated gift aligns your motivation. You're working toward the same reward.",
+          "journalPrompt": "What gift do you most look forward to from secure attachment? What will that feel like? How will it change your life?"
+        }
+      }
+    }
+  ]
+}

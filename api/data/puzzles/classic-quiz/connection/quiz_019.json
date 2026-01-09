@@ -1,0 +1,111 @@
+{
+  "quizId": "quiz_019",
+  "title": "Boundaries & Independence",
+  "branch": "connection",
+  "description": "Navigate the balance between togetherness and individual identity.",
+  "magnet_id": 8,
+  "questions": [
+    {
+      "id": "quiz_019_q1",
+      "text": "How do I feel about alone time in our relationship?",
+      "choices": [
+        "I need regular time to myself",
+        "I like some solo time but prefer togetherness",
+        "I'd rather do most things together",
+        "I need alone time but feel guilty asking"
+      ],
+      "category": "alone_time",
+      "metadata": {
+        "dimension": "social_energy",
+        "poleMapping": ["left", "neutral", "right", "left"],
+        "therapeutic": {
+          "rationale": "Alone time needs reflect introversion/extroversion and self-definition. Regular-needers require solitude for energy; moderate-needers appreciate balance; flexible people adapt; together-preferrers charge through connection; guilty-askers need but suppress the need. Healthy relationships honor both partners' autonomy needs without personalizing them.",
+          "framework": "boundary_theory",
+          "whenDifferent": "Different alone-time needs require negotiation, not compromise of needs. The regular-needer shouldn't feel guilty; the together-preferrer shouldn't feel rejected. Both needs are valid and can coexist.",
+          "whenSame": "Shared alone-time preferences make navigating togetherness-autonomy natural. You'll both want similar amounts of space.",
+          "journalPrompt": "How much alone time do you need? Are you getting it? What happens when you don't get enough—or get too much?"
+        }
+      }
+    },
+    {
+      "id": "quiz_019_q2",
+      "text": "What's something I need to keep just for myself?",
+      "choices": [
+        "Some friendships outside our relationship",
+        "Hobbies or interests you don't share",
+        "Personal thoughts and processing space",
+        "Nothing—I want to share everything"
+      ],
+      "category": "personal_boundaries",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Healthy relationships include individual identity preservation. Separate friendships maintain social diversity; solo hobbies preserve individual interests; private thoughts maintain internal space; separate finances preserve autonomy; total-sharers blur boundaries (which can be healthy or enmeshed). Partners should support each other's individual selfhood, not erase it.",
+          "framework": "boundary_theory",
+          "whenDifferent": "Different boundary needs are normal and healthy. Your partner's need for separate friendships isn't a rejection; your need for privacy isn't secretiveness. Respect what each person needs to remain a distinct self.",
+          "whenSame": "Shared boundary preferences suggest similar comfort with closeness and autonomy. You're aligned on how much individual space feels right.",
+          "journalPrompt": "What do you need to keep as 'yours' in the relationship? Does your partner respect this? What would threaten this boundary?"
+        }
+      }
+    },
+    {
+      "id": "quiz_019_q3",
+      "text": "How do I feel when you make decisions without consulting me?",
+      "choices": [
+        "Fine—I trust your judgment",
+        "Depends on how big the decision is",
+        "I prefer to be consulted on most things",
+        "Hurt—I want to be included"
+      ],
+      "category": "decision_inclusion",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Decision inclusion expectations reveal partnership assumptions. Trust-first types give autonomy freely; size-dependent types apply context; consultation-preferrers want voice; hurt-feelers need inclusion for security; mixed-feelers evaluate situationally. Understanding where your partner falls helps you know when to include them versus act independently.",
+          "framework": "boundary_theory",
+          "whenDifferent": "Different inclusion needs require explicit discussion. The trust-first type may exclude the consultation-preferrer accidentally; the inclusion-needer may feel smothered by the autonomy-giver's consultation. Clarify expectations.",
+          "whenSame": "Shared inclusion expectations make decision-making flow naturally. You both expect the same level of consultation.",
+          "journalPrompt": "How do you feel when your partner decides things without asking? What decisions must include you? What's truly okay to do independently?"
+        }
+      }
+    },
+    {
+      "id": "quiz_019_q4",
+      "text": "What's most important to me about maintaining my individuality?",
+      "choices": [
+        "Staying connected to my own interests",
+        "Having my own opinions and voice",
+        "Having personal goals beyond our relationship",
+        "Being seen as 'me' not just 'us'"
+      ],
+      "category": "individual_identity",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Individual identity preservation takes different forms. Interest-maintainers protect hobbies; voice-maintainers protect perspective; relationship-maintainers protect social connections; goal-maintainers protect personal ambition; separate-identity maintainers protect self-concept. Healthy couples support each other's distinct personhood rather than merging into one undifferentiated unit.",
+          "framework": "family_systems",
+          "whenDifferent": "Different individuality priorities reveal different aspects of self you each need to protect. Support what your partner needs to remain fully themselves.",
+          "whenSame": "Shared individuality priorities suggest you both value the same aspects of separate selfhood. Protect this together.",
+          "journalPrompt": "What's essential to maintaining your individual identity? Does being in this relationship support or threaten your sense of self?"
+        }
+      }
+    },
+    {
+      "id": "quiz_019_q5",
+      "text": "How do I feel about sharing everything with you?",
+      "choices": [
+        "I want to—openness feels right",
+        "Mostly open, with a few private areas",
+        "I need some things to stay mine",
+        "It feels vulnerable but important"
+      ],
+      "category": "sharing_comfort",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Sharing comfort levels reflect attachment and boundary styles. Total-sharers feel closeness through disclosure; mostly-open types balance connection and privacy; privacy-needers protect internal space; vulnerable-sharers feel exposed but recognize value; strugglers are still calibrating. Healthy sharing is mutually agreed upon, not demanded or resented.",
+          "framework": "boundary_theory",
+          "whenDifferent": "Different sharing comforts require respect, not pressure. The total-sharer shouldn't demand disclosure; the private person shouldn't be pushed. Find a sharing level that works for both.",
+          "whenSame": "Shared sharing comfort makes openness negotiations natural. You're aligned on how much disclosure feels right.",
+          "journalPrompt": "How much do you want to share with your partner? Is there pressure to share more or less than feels comfortable? What would your ideal sharing level be?"
+        }
+      }
+    }
+  ]
+}

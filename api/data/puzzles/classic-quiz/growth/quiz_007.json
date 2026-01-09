@@ -10,9 +10,7 @@
         "Encourage me and believe in me",
         "Give practical help and advice",
         "Hold me accountable",
-        "Give me space to pursue them independently",
-        "Other / It depends"
-      ],
+        "Give me space to pursue them independently"      ],
       "category": "communication"
     },
     {
@@ -22,9 +20,7 @@
         "Remind me why it matters to me",
         "Help me problem-solve",
         "Just listen and empathize",
-        "Celebrate small wins with me",
-        "Other / It depends"
-      ],
+        "Celebrate small wins with me"      ],
       "category": "emotional"
     },
     {
@@ -34,9 +30,7 @@
         "Get excited and enthusiastic with me",
         "Ask thoughtful questions about it",
         "Offer support without being directive",
-        "Help me make a plan to achieve it",
-        "Other / It depends"
-      ],
+        "Help me make a plan to achieve it"      ],
       "category": "communication"
     },
     {
@@ -46,9 +40,7 @@
         "Reassurance that it's okay",
         "Help seeing what I can learn",
         "Space to process my feelings",
-        "Encouragement to keep trying",
-        "Other / It depends"
-      ],
+        "Encouragement to keep trying"      ],
       "category": "emotional"
     },
     {
@@ -58,9 +50,7 @@
         "Make a big deal and celebrate publicly",
         "Intimate acknowledgment just between us",
         "Do something special together",
-        "Express how proud you are of me",
-        "Other / It depends"
-      ],
+        "Express how proud you are of me"      ],
       "category": "values"
     }
   ],

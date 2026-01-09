@@ -2,6 +2,8 @@
   "quizId": "quiz_005",
   "title": "Dreams & Wishes",
   "branch": "lighthearted",
+  "description": "Share your hopes and dreams for your future together.",
+  "magnet_id": 0,
   "questions": [
     {
       "id": "quiz_005_q1",
@@ -10,10 +12,18 @@
         "Traveling somewhere incredible together",
         "Building or creating something meaningful",
         "A lifestyle change (home, location, pace)",
-        "An experience or adventure we'd never forget",
-        "Other / It depends"
+        "An experience or adventure we'd never forget"
       ],
-      "category": "preferences"
+      "category": "preferences",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Shared dreams create what researchers call 'we-ness'—a sense of shared identity and purpose. Couples who dream together have something to build toward, which strengthens commitment and provides meaning during difficult seasons. Understanding your partner's dreams helps you support them and find places where your visions overlap.",
+          "framework": "self_expansion_theory",
+          "whenDifferent": "Different dream types reveal different values—the traveler seeks experience; the builder seeks legacy; the lifestyle-changer seeks transformation; the adventurer seeks intensity. Both dreams matter. Look for ways to honor both: travel to meaningful places, build adventures.",
+          "whenSame": "Shared dream types suggest aligned values about what makes life meaningful. Start planning. Couples who actively work toward shared dreams have stronger relationships.",
+          "journalPrompt": "What dream have you held quietly that you've never shared with your partner? What's stopped you from sharing it? What would it mean to pursue it together?"
+        }
+      }
     },
     {
       "id": "quiz_005_q2",
@@ -22,10 +32,20 @@
         "A cozy, settled life with routines we love",
         "Adventures and new experiences along the way",
         "Growing and evolving together",
-        "Being surrounded by family and friends",
-        "Other / It depends"
+        "Being surrounded by family and friends"
       ],
-      "category": "preferences"
+      "category": "preferences",
+      "metadata": {
+        "dimension": "change_orientation",
+        "poleMapping": ["left", "right", "right", "neutral"],
+        "therapeutic": {
+          "rationale": "Future visions reveal fundamental orientations toward stability versus change. The settler values rootedness and comfort; the adventurer values novelty and growth; the evolver values transformation; the community-builder values connection. These aren't right or wrong—they're different images of a good life. When partners' visions align, building the future feels collaborative. When they diverge, explicit conversation is needed.",
+          "framework": "relationship_science",
+          "whenDifferent": "The settler may fear their partner will never be satisfied; the adventurer may fear stagnation. These visions aren't mutually exclusive—you can have a stable home base from which you adventure. Talk about what each vision looks like specifically.",
+          "whenSame": "Shared future visions are a significant compatibility marker. You're building toward the same destination. Make your shared vision concrete: what does it look like in 5 years? 10 years?",
+          "journalPrompt": "Close your eyes and picture your life together in 10 years. What does a typical Tuesday look like? What about a Saturday? How does your partner's vision compare?"
+        }
+      }
     },
     {
       "id": "quiz_005_q3",
@@ -34,10 +54,18 @@
         "Somewhere by the ocean or water",
         "A vibrant city with lots to do",
         "Somewhere quiet in nature",
-        "A different country or culture",
-        "Other / It depends"
+        "A different country or culture"
       ],
-      "category": "preferences"
+      "category": "preferences",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Place preferences reveal what environment we need to thrive. Water-seekers may need calm; city-lovers need stimulation; nature-seekers need peace; culture-seekers need novelty. Partners with different environmental needs may struggle to agree on where to live, vacation, or retire. Understanding each other's ideal environment helps navigate these decisions.",
+          "framework": "environmental_psychology",
+          "whenDifferent": "The ocean-lover may not understand the city-lover's need for energy; the nature-seeker may feel overwhelmed by their partner's urban preferences. Vacation in both kinds of places. For bigger decisions like moving, find compromise environments or take turns.",
+          "whenSame": "Shared place preferences simplify major life decisions. You'll naturally gravitate toward the same destinations and dream about the same retirement spots. Start a shared list of places to visit.",
+          "journalPrompt": "If money and logistics were no obstacle, where would you want to live with your partner? What does that place offer that you're craving? Does your partner know this dream?"
+        }
+      }
     },
     {
       "id": "quiz_005_q4",
@@ -46,19 +74,19 @@
         "A new hobby or skill",
         "A language or cultural experience",
         "Something adventurous or physical",
-        "A creative project or craft",
-        "Other / It depends"
+        "A creative project or craft"
       ],
       "category": "lifestyle",
       "metadata": {
         "dimension": "novelty_preference",
-        "poleMapping": [
-          "right",
-          "right",
-          "right",
-          "right",
-          null
-        ]
+        "poleMapping": ["right", "right", "right", "right"],
+        "therapeutic": {
+          "rationale": "Shared learning creates 'self-expansion'—the sense that being with your partner makes your world bigger. Research shows that couples who try new things together report higher relationship satisfaction. The specific activity matters less than the shared novelty—you're building something together and seeing each other learn.",
+          "framework": "self_expansion_theory",
+          "whenDifferent": "Different learning interests aren't a problem—they're an opportunity. Take turns: learn their language together this year, try your adventure next year. The goal is shared novelty, not identical interests.",
+          "whenSame": "Shared learning interests make planning easy. You'll naturally want to sign up for the same classes and adventures. Stop talking about it and book something.",
+          "journalPrompt": "What's something you've always wanted to learn but never have? Would doing it with your partner make it more or less appealing? What's stopping you?"
+        }
       }
     },
     {
@@ -68,12 +96,18 @@
         "Where we want to be in 5 or 10 years",
         "Bucket list dreams and adventures",
         "What kind of home we'd create together",
-        "How we want to grow old together",
-        "Other / It depends"
+        "How we want to grow old together"
       ],
-      "category": "communication"
+      "category": "communication",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "The conversations we want to have reveal what's on our minds that we haven't yet voiced. Some couples talk easily about the future; others avoid it. The topics we want to discuss—timeline, adventures, home, aging—point to what we're thinking about and perhaps what we're uncertain about. Naming the conversation you want opens the door to having it.",
+          "framework": "gottman",
+          "whenDifferent": "Different wanted conversations reveal different preoccupations. The timeline-focused partner may be anxious about direction; the aging-focused partner may be thinking about long-term commitment. Both are important. Have all of these conversations eventually.",
+          "whenSame": "Shared conversation interests suggest you're thinking about the same aspects of your future. Stop wishing for the conversation and have it. Tonight.",
+          "journalPrompt": "What 'someday' conversation have you been putting off? What's stopping you from having it? What are you afraid you might learn? What might you gain?"
+        }
+      }
     }
-  ],
-  "description": "Share your hopes and dreams for your future together.",
-  "magnet_id": 0
+  ]
 }

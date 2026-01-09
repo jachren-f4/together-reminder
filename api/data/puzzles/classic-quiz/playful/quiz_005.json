@@ -10,8 +10,7 @@
         "Making something together - cooking, art, a project",
         "Sharing music, movies, or content we've discovered",
         "Writing notes, messages, or keeping a shared journal",
-        "Taking photos or documenting our memories",
-        "Other / It depends"
+        "Taking photos or documenting our memories"
       ],
       "category": "lifestyle"
     },
@@ -22,8 +21,7 @@
         "Cozy and personal - full of things that mean something to us",
         "Clean and calm - a peaceful retreat",
         "Fun and colorful - reflecting our personalities",
-        "Flexible - changing based on what we're into",
-        "Other / It depends"
+        "Flexible - changing based on what we're into"
       ],
       "category": "lifestyle"
     },
@@ -34,8 +32,7 @@
         "Dive in and figure it out together as we go",
         "Start with a rough idea and stay flexible",
         "Plan it out carefully before starting",
-        "Each take on different parts based on our strengths",
-        "Other / It depends"
+        "Each take on different parts based on our strengths"
       ],
       "category": "communication"
     },
@@ -46,8 +43,7 @@
         "Keeping it mostly private - our moments are for us",
         "Occasional posts for special moments",
         "Sharing openly - I love celebrating us publicly",
-        "I don't think about it much either way",
-        "Other / It depends"
+        "I don't think about it much either way"
       ],
       "category": "social"
     },
@@ -58,8 +54,7 @@
         "Handmade or personalized - showing thought and effort",
         "Surprises - something unexpected I didn't know I wanted",
         "Practical things I actually need or use",
-        "Experiences we can enjoy together",
-        "Other / It depends"
+        "Experiences we can enjoy together"
       ],
       "category": "preferences"
     }

@@ -2059,7 +2059,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     Navigator.of(context).push(
       MaterialPageRoute(
         builder: (context) => PaywallScreen(
-          onContinue: () => Navigator.of(context).pop(),
+          onContinue: (ctx) => Navigator.of(ctx).pop(),
         ),
       ),
     );

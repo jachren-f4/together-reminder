@@ -1,7 +1,9 @@
 {
   "quizId": "quiz_011",
-  "title": "Attachment Quiz 11",
+  "title": "Attachment Healing",
   "branch": "attachment",
+  "description": "Explore your attachment wounds and paths to healing.",
+  "magnet_id": 9,
   "questions": [
     {
       "id": "quiz_011_q1",
@@ -10,22 +12,38 @@
         "Consistent love and acceptance",
         "Freedom to be myself",
         "Security and stability",
-        "Growth and partnership",
-        "Other / It depends"
+        "Deep emotional understanding"
       ],
-      "category": "values"
+      "category": "core_needs",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Core relationship needs reflect attachment foundations. Consistent-love seekers need reliability; freedom-seekers need autonomy; security-seekers need predictability; understanding-seekers need attunement. Your deepest need is often the one that was unmet in early attachment experiences.",
+          "framework": "attachment_theory",
+          "whenDifferent": "Different core needs require balance. The freedom-seeker may feel constrained by the security-seeker's needs; the security-seeker may feel anxious about the freedom-seeker's independence. Both needs are valid.",
+          "whenSame": "Shared core needs create alignment but may also create blind spots. You'll understand each other's primary need but may neglect secondary needs.",
+          "journalPrompt": "What's your deepest relationship need? Where does it come from? Is this need being met in your current relationship?"
+        }
+      }
     },
     {
       "id": "quiz_011_q2",
       "text": "How do past relationships affect how I show up with you?",
       "choices": [
         "I'm more cautious and protective",
-        "I seek more reassurance than before",
+        "I seek more reassurance than I'd like",
         "I'm working to trust more fully",
-        "I've healed and feel more secure",
-        "Other / It depends"
+        "I've healed and feel more secure"
       ],
-      "category": "growth"
+      "category": "past_impact",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Past relationship impact reveals ongoing attachment work. Caution-protectors guard against repeat wounds; reassurance-seekers show activated anxiety; trust-workers are consciously healing; healed-secure shows integration. Acknowledging how the past affects the present enables conscious choice rather than reactive pattern.",
+          "framework": "attachment_theory",
+          "whenDifferent": "Different past impacts need different patience. The cautious-protector needs more trust-building; the reassurance-seeker needs more validation. Honor each other's history.",
+          "whenSame": "Shared past impacts create understanding. You know what each other carries because you carry similar wounds.",
+          "journalPrompt": "How do past relationships show up in your current one? Are you reacting to the past or responding to the present?"
+        }
+      }
     },
     {
       "id": "quiz_011_q3",
@@ -34,10 +52,18 @@
         "Your consistent actions matching your words",
         "How you handle my vulnerabilities",
         "Your commitment during hard times",
-        "Open and honest communication",
-        "Other / It depends"
+        "Open and honest communication"
       ],
-      "category": "trust"
+      "category": "trust_building",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Trust-building factors reveal what creates safety. Action-word match builds reliability trust; vulnerability-handling builds emotional trust; hard-time commitment builds abandonment-resistance; honest communication builds transparency trust. Knowing what builds your partner's trust helps you provide it intentionally.",
+          "framework": "attachment_theory",
+          "whenDifferent": "Different trust-building needs mean you're watching for different evidence. The action-matcher may not notice emotional handling; the vulnerability-handler may not track consistency. Provide what your partner needs.",
+          "whenSame": "Shared trust-building values make security easier. You're both looking for the same evidence of trustworthiness.",
+          "journalPrompt": "What has built trust for you in this relationship? What would build it further? Have you communicated this?"
+        }
+      }
     },
     {
       "id": "quiz_011_q4",
@@ -46,10 +72,18 @@
         "Fear of abandonment",
         "Fear of being controlled or smothered",
         "Fear of not being enough",
-        "Fear of being truly seen",
-        "Other / It depends"
+        "Fear of depending on someone"
       ],
-      "category": "growth"
+      "category": "attachment_wounds",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Core attachment wounds drive relationship patterns. Abandonment-fear creates clinginess or preemptive leaving; control-fear creates distance-keeping; not-enough fear creates proving behaviors; dependency-fear creates excessive independence. Naming your wound is the first step to healing it.",
+          "framework": "attachment_theory",
+          "whenDifferent": "Different attachment wounds trigger different protections. The abandonment-fearer may feel triggered by the control-fearer's distance; the control-fearer may feel triggered by the abandonment-fearer's closeness. Compassion for each other's wounds enables healing.",
+          "whenSame": "Shared attachment wounds create deep understanding but may also reinforce patterns. Two abandonment-fearers may both avoid ever leaving, even when needed.",
+          "journalPrompt": "What's your core attachment wound? Where did it come from? How does it show up in your relationship?"
+        }
+      }
     },
     {
       "id": "quiz_011_q5",
@@ -58,12 +92,18 @@
         "Be patient with my insecurities",
         "Respect my need for independence",
         "Provide consistent reassurance",
-        "Create safe space for vulnerability",
-        "Other / It depends"
+        "Create safe space for vulnerability"
       ],
-      "category": "emotional"
+      "category": "healing_support",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Healing support needs vary by attachment wound. Patience supports anxious-type healing; independence-respect supports avoidant-type healing; consistent reassurance addresses abandonment wounds; safe vulnerability space supports trust-building. Your partner is telling you exactly how to help them heal.",
+          "framework": "attachment_theory",
+          "whenDifferent": "Different healing support needs guide how to help each other. The patience-needer needs slow trust-building; the independence-respecter needs space without taking it personally.",
+          "whenSame": "Shared healing support needs make care intuitive. You know what helps because it's what would help you.",
+          "journalPrompt": "What do you need from your partner to heal? Have you asked for it clearly? What would accelerate your healing?"
+        }
+      }
     }
-  ],
-  "description": "Explore the foundations of your trust and security.",
-  "magnet_id": 9
+  ]
 }

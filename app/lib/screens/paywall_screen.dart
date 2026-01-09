@@ -17,8 +17,9 @@ import 'already_subscribed_screen.dart';
 /// - New user (default): Shows free trial offer after pairing
 /// - Lapsed user: Shows "Welcome Back" resubscribe flow
 class PaywallScreen extends StatefulWidget {
-  /// Called when user successfully subscribes or skips (if allowed)
-  final VoidCallback onContinue;
+  /// Called when user successfully subscribes or skips (if allowed).
+  /// Receives BuildContext to ensure navigation uses a mounted context.
+  final void Function(BuildContext context) onContinue;
 
   /// Whether to allow skipping the paywall (for testing/dev)
   final bool allowSkip;
@@ -150,7 +151,7 @@ class _PaywallScreenState extends State<PaywallScreen> {
           );
 
           // Continue to app
-          widget.onContinue();
+          widget.onContinue(context);
         } else {
           throw Exception(result.message ?? 'Activation failed');
         }
@@ -205,7 +206,7 @@ class _PaywallScreenState extends State<PaywallScreen> {
       // Check if already subscribed
       if (_subscriptionService.isPremium) {
         Logger.debug('User already has premium, skipping paywall', service: 'paywall');
-        widget.onContinue();
+        widget.onContinue(context);
         return;
       }
 
@@ -272,7 +273,7 @@ class _PaywallScreenState extends State<PaywallScreen> {
           ),
         );
       } else if (result.success) {
-        widget.onContinue();
+        widget.onContinue(context);
       }
     } on PlatformException catch (e) {
       // User cancelled or other error
@@ -307,7 +308,7 @@ class _PaywallScreenState extends State<PaywallScreen> {
         );
       } else if (result.isRevenueCatRestored) {
         // Own subscription restored
-        widget.onContinue();
+        widget.onContinue(context);
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('No subscription found')),
@@ -779,7 +780,7 @@ class _PaywallScreenState extends State<PaywallScreen> {
         if (widget.allowSkip) ...[
           const SizedBox(height: 24),
           TextButton(
-            onPressed: widget.onContinue,
+            onPressed: () => widget.onContinue(context),
             child: Text(
               'Skip (Dev Only)',
               style: GoogleFonts.nunito(

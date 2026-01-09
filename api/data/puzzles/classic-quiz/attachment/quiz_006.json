@@ -1,7 +1,9 @@
 {
   "quizId": "quiz_006",
-  "title": "Attachment Quiz 6",
+  "title": "Reassurance Needs",
   "branch": "attachment",
+  "description": "Discover how you need to be reassured and comforted.",
+  "magnet_id": 8,
   "questions": [
     {
       "id": "quiz_006_q1",
@@ -10,10 +12,18 @@
         "Hearing that you love me",
         "Physical affection and touch",
         "Seeing you make me a priority",
-        "Knowing you're thinking of me",
-        "Other / It depends"
+        "Actions that prove your commitment"
       ],
-      "category": "emotional"
+      "category": "reassurance_type",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Reassurance types align with love languages and attachment needs. Hearing 'I love you' fills words-of-affirmation needs; physical touch provides bodily reassurance; being prioritized addresses abandonment anxiety; commitment actions build trust through proof. The type that reassures you most reflects your deepest attachment need.",
+          "framework": "attachment_theory",
+          "whenDifferent": "Different reassurance types mean your natural reassurance may not land. The verbal-reassurer may not realize their partner needs touch; the action-taker may not verbalize. Give reassurance in your partner's preferred form.",
+          "whenSame": "Shared reassurance types mean your comfort will naturally register. You understand what reassures because it reassures you too.",
+          "journalPrompt": "What type of reassurance makes you feel most loved and secure? Does your partner provide this? What would help them understand your need?"
+        }
+      }
     },
     {
       "id": "quiz_006_q2",
@@ -22,10 +32,20 @@
         "Frequently throughout the day",
         "Daily, but not constantly",
         "Mostly during stressful times",
-        "Only when things feel uncertain",
-        "Other / It depends"
+        "I rarely need explicit reassurance"
       ],
-      "category": "emotional"
+      "category": "reassurance_frequency",
+      "metadata": {
+        "dimension": "social_energy",
+        "poleMapping": ["right", "neutral", "neutral", "left"],
+        "therapeutic": {
+          "rationale": "Reassurance frequency reflects attachment style intensity. Frequent-needers have anxious attachment activation; daily-needers have moderate needs; stress-triggered seekers are context-dependent; rare-needers have secure attachment or avoidant suppression. There's no right amount—the goal is understanding and meeting each other's needs.",
+          "framework": "attachment_theory",
+          "whenDifferent": "Different reassurance frequencies can strain relationships. The frequent-needer may exhaust the rare-needer; the rare-needer may seem cold to the frequent-needer. Negotiate a rhythm that works for both.",
+          "whenSame": "Shared reassurance frequency makes comfort natural. You'll give and need similar amounts of explicit reassurance.",
+          "journalPrompt": "How often do you need reassurance from your partner? Is this need being met? What happens when it's not?"
+        }
+      }
     },
     {
       "id": "quiz_006_q3",
@@ -34,10 +54,18 @@
         "That you'll stop loving me",
         "That we'll grow apart over time",
         "That I'm not enough for you",
-        "That something will come between us",
-        "Other / It depends"
+        "That I'll lose my independence"
       ],
-      "category": "trust"
+      "category": "relationship_fears",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Relationship fears reveal core attachment wounds. Stop-loving fear indicates abandonment anxiety; growing-apart fear indicates drift anxiety; not-enough fear indicates inadequacy; independence-loss fear indicates engulfment anxiety. Understanding your partner's core fear helps you avoid triggering it and provide specific reassurance.",
+          "framework": "attachment_theory",
+          "whenDifferent": "Different core fears drive different protective behaviors. The abandonment-fearer may cling; the independence-loser may distance. Neither is wrong—both are protecting against their deepest wound.",
+          "whenSame": "Shared core fears suggest similar attachment wounds. You'll understand each other's anxiety because you share it. Be careful not to trigger your shared vulnerability.",
+          "journalPrompt": "What's your deepest fear about your relationship? Where does it come from? Does your partner know and respond to this fear?"
+        }
+      }
     },
     {
       "id": "quiz_006_q4",
@@ -46,24 +74,40 @@
         "Talk through my concerns with me",
         "Hold me and provide physical comfort",
         "Remind me of your commitment",
-        "Show me through consistent actions",
-        "Other / It depends"
+        "Give me space to self-regulate first"
       ],
-      "category": "communication"
+      "category": "worry_reassurance",
+      "metadata": {
+        "dimension": "support_style",
+        "poleMapping": ["neutral", "right", "neutral", "left"],
+        "therapeutic": {
+          "rationale": "Worry-reassurance preferences reveal how our attachment system calms. Talking processes anxiety externally; physical comfort provides co-regulation; commitment reminders address abandonment directly; space allows self-regulation. Providing the wrong reassurance when your partner is worried can escalate rather than calm.",
+          "framework": "attachment_theory",
+          "whenDifferent": "Different worry-reassurance needs cause mismatch. The talk-through person may feel dismissed by the space-giver; the space-needer may feel smothered by pursuit. Ask: 'What would help right now?'",
+          "whenSame": "Shared worry-reassurance means you'll naturally comfort each other effectively. You provide what helps because it's what would help you.",
+          "journalPrompt": "When you're worried about your relationship, what actually helps you calm down? Does your partner know what to do?"
+        }
+      }
     },
     {
       "id": "quiz_006_q5",
       "text": "What makes me feel most certain about your love?",
       "choices": [
         "You telling me regularly",
-        "The way you look at me",
         "How you prioritize our relationship",
         "Your consistency over time",
-        "Other / It depends"
+        "How you respond when I'm struggling"
       ],
-      "category": "trust"
+      "category": "love_certainty",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Love-certainty signals vary by attachment needs. Regular verbalization provides explicit confirmation; prioritization provides choice confirmation; consistency provides reliability certainty; crisis-response provides 'earned' certainty. Knowing what makes your partner feel certain about your love helps you provide that specific evidence.",
+          "framework": "attachment_theory",
+          "whenDifferent": "Different certainty signals mean you may feel differently loved despite equal love. The verbal-certainty person may doubt despite prioritization; the consistency-seeker may not register verbal expressions as deeply.",
+          "whenSame": "Shared certainty signals mean you'll both feel loved by the same things. You understand what proves love because it proves love to you too.",
+          "journalPrompt": "What makes you feel most certain your partner loves you? What evidence do you look for? What would increase your certainty?"
+        }
+      }
     }
-  ],
-  "description": "Discover your patterns of trust and vulnerability.",
-  "magnet_id": 8
+  ]
 }

@@ -1,0 +1,109 @@
+{
+  "quizId": "quiz_016",
+  "title": "Growing Together",
+  "branch": "connection",
+  "description": "Reflect on your journey and how you continue to evolve as a couple.",
+  "magnet_id": 8,
+  "questions": [
+    {
+      "id": "quiz_016_q1",
+      "text": "What area have we grown most in together?",
+      "choices": [
+        "How we communicate",
+        "How we handle conflict",
+        "Our emotional intimacy",
+        "Our ability to support each other"
+      ],
+      "category": "relationship_growth",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Recognizing growth strengthens couples' confidence in their ability to evolve. Communication growth means better understanding; conflict growth means healthier disagreement; intimacy growth means deeper connection; support growth means stronger partnership; understanding growth means knowing each other more deeply. Acknowledging how far you've come reinforces the relationship's resilience.",
+          "framework": "positive_psychology",
+          "whenDifferent": "Different perceived growth areas mean you've each noticed different improvements. Share your perspectives—your partner may be unaware of growth you've observed.",
+          "whenSame": "Shared recognition of growth creates mutual pride in your evolution. You've both felt this shift. Celebrate it explicitly.",
+          "journalPrompt": "How has your relationship improved over time? What's different now compared to a year ago? What growth are you most proud of?"
+        }
+      }
+    },
+    {
+      "id": "quiz_016_q2",
+      "text": "What's something I've learned about myself through our relationship?",
+      "choices": [
+        "What I really need to feel loved",
+        "How I handle (or avoid) conflict",
+        "My capacity for vulnerability",
+        "What kind of partner I want to be"
+      ],
+      "category": "self_discovery",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Relationships are vehicles for self-discovery. Love-needs reveal attachment patterns; conflict-handling reveals coping; vulnerability-capacity reveals trust depth; partner-aspiration reveals values; hidden-parts reveal authentic self. Close relationships function as mirrors, reflecting back parts of ourselves we might not otherwise see.",
+          "framework": "self_expansion_theory",
+          "whenDifferent": "Different self-discoveries mean you've each learned different things through this relationship. Share what you've discovered—it's valuable information about your growth.",
+          "whenSame": "Shared self-discovery suggests the relationship has taught you similar lessons. You've grown in parallel directions.",
+          "journalPrompt": "What have you learned about yourself through this relationship? What do you know now that you didn't know before? What has been surprising?"
+        }
+      }
+    },
+    {
+      "id": "quiz_016_q3",
+      "text": "What's an area where I'd like us to keep growing?",
+      "choices": [
+        "Deeper emotional conversations",
+        "More fun and playfulness",
+        "Better conflict resolution",
+        "Physical and intimate connection"
+      ],
+      "category": "growth_aspirations",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Growth aspirations reveal relationship values and desires. Deeper conversations seek emotional intimacy; playfulness seeks joy; conflict resolution seeks harmony; individual support seeks partnership; intimate connection seeks physical bonding. Naming where you want to grow helps focus relationship development intentionally.",
+          "framework": "gottman",
+          "whenDifferent": "Different growth aspirations reveal different relationship priorities. Your partner may want more playfulness while you want deeper talks. Both are valid—make room for each other's growth desires.",
+          "whenSame": "Shared growth aspirations mean you're aligned on where the relationship should develop. Work on this area together with shared purpose.",
+          "journalPrompt": "Where would you like your relationship to grow? What would that look like? What's preventing this growth now?"
+        }
+      }
+    },
+    {
+      "id": "quiz_016_q4",
+      "text": "What has loving you taught me about love?",
+      "choices": [
+        "That love is a choice you make daily",
+        "That vulnerability is essential",
+        "That compromise doesn't mean losing myself",
+        "That conflict can strengthen bonds"
+      ],
+      "category": "love_lessons",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Each relationship teaches us something about love itself. Daily-choice learners understand love as action; vulnerability-learners understand love as openness; compromise-learners understand love as balance; conflict-learners understand love as repair; capacity-learners understand love as expansion. These lessons become wisdom we carry forward.",
+          "framework": "narrative_therapy",
+          "whenDifferent": "Different love lessons mean this relationship has taught you different truths. Sharing these lessons deepens appreciation for what you've built together.",
+          "whenSame": "Shared love lessons mean you've reached similar understanding through this relationship. You've been taught the same truths by loving each other.",
+          "journalPrompt": "What has this relationship taught you about love? What did you not understand before that you understand now?"
+        }
+      }
+    },
+    {
+      "id": "quiz_016_q5",
+      "text": "What do I hope our relationship looks like in five years?",
+      "choices": [
+        "Even deeper understanding and intimacy",
+        "More adventures and shared experiences",
+        "A calm, secure foundation",
+        "Growing together while honoring individuality"
+      ],
+      "category": "future_vision",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Long-term vision reveals relationship values and priorities. Intimacy-seekers want deeper connection; adventure-seekers want shared experience; security-seekers want stable foundation; growth-seekers want mutual development; legacy-builders want impact beyond themselves. Sharing future visions helps couples align on direction.",
+          "framework": "relationship_science",
+          "whenDifferent": "Different five-year visions may need discussion—but often these can coexist. Adventure and security aren't mutually exclusive. Talk about how to honor both visions.",
+          "whenSame": "Shared future vision means you're heading in the same direction. This alignment is a significant relationship strength.",
+          "journalPrompt": "What do you want your relationship to look like in five years? What would make that vision reality? What are you already doing to get there?"
+        }
+      }
+    }
+  ]
+}

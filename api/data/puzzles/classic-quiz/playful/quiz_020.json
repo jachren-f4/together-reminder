@@ -10,8 +10,7 @@
         "I love having rituals we can count on",
         "Some traditions are nice, but not too rigid",
         "I prefer keeping things spontaneous",
-        "Let's see what naturally develops",
-        "Other / It depends"
+        "Let's see what naturally develops"
       ],
       "category": "lifestyle",
       "metadata": {
@@ -20,8 +19,7 @@
           "left",
           null,
           "right",
-          "right",
-          null
+          "right"
         ]
       }
     },
@@ -32,8 +30,7 @@
         "Build traditions we repeat every year",
         "Have some traditions but also try new things",
         "Do something different each time",
-        "Keep it flexible and go with the flow",
-        "Other / It depends"
+        "Keep it flexible and go with the flow"
       ],
       "category": "preferences",
       "metadata": {
@@ -42,8 +39,7 @@
           "left",
           null,
           "right",
-          "right",
-          null
+          "right"
         ]
       }
     },
@@ -54,8 +50,7 @@
         "Mean everything to me - I love our routines",
         "Are sweet but don't need to happen every single day",
         "Should happen naturally, not as obligations",
-        "Can feel repetitive - I like variety",
-        "Other / It depends"
+        "Can feel repetitive - I like variety"
       ],
       "category": "communication",
       "metadata": {
@@ -64,8 +59,7 @@
           "left",
           "left",
           null,
-          "right",
-          null
+          "right"
         ]
       }
     },
@@ -76,8 +70,7 @@
         "Make it 'our spot' and go there regularly",
         "Go back sometimes, but also explore new places",
         "Try it a couple times then find new favorites",
-        "Always be discovering new spots together",
-        "Other / It depends"
+        "Always be discovering new spots together"
       ],
       "category": "preferences",
       "metadata": {
@@ -86,8 +79,7 @@
           "left",
           null,
           "right",
-          "right",
-          null
+          "right"
         ]
       }
     },
@@ -98,8 +90,7 @@
         "Celebrate them the same special way each time",
         "Have some traditions but add new elements",
         "Do something completely different each year",
-        "Acknowledge them but not make a huge deal",
-        "Other / It depends"
+        "Acknowledge them but not make a huge deal"
       ],
       "category": "preferences"
     }

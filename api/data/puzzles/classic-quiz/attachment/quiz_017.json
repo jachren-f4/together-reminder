@@ -1,0 +1,115 @@
+{
+  "quizId": "quiz_017",
+  "title": "Triggers & Responses",
+  "branch": "attachment",
+  "description": "Understand what activates your attachment system and how you respond.",
+  "magnet_id": 10,
+  "questions": [
+    {
+      "id": "quiz_017_q1",
+      "text": "What triggers my attachment anxiety most?",
+      "choices": [
+        "Feeling like you're pulling away",
+        "Not hearing from you when expected",
+        "Sensing something's wrong but you won't share",
+        "Big life changes or uncertainty"
+      ],
+      "category": "anxiety_triggers",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Attachment anxiety triggers reveal core vulnerabilities. Pulling-away triggers abandonment; no-contact triggers uncertainty; hidden-something triggers exclusion; change-triggers fear instability. Knowing your specific triggers helps you name them when activated rather than react blindly.",
+          "framework": "attachment_theory",
+          "whenDifferent": "Different anxiety triggers need different reassurance. The pulling-away trigger needs pursuit; the no-contact trigger needs communication. Provide specific reassurance for your partner's trigger.",
+          "whenSame": "Shared anxiety triggers mean similar vulnerabilities. You understand each other's anxiety because you share it. Be careful not to trigger your shared vulnerability.",
+          "journalPrompt": "What triggers your attachment anxiety? What happens in your body when triggered? How do you typically respond?"
+        }
+      }
+    },
+    {
+      "id": "quiz_017_q2",
+      "text": "When I'm triggered, my typical response is to:",
+      "choices": [
+        "Pursue closeness to feel secure again",
+        "Withdraw to protect myself",
+        "Become anxious and need reassurance",
+        "Name what's happening and communicate"
+      ],
+      "category": "triggered_response",
+      "metadata": {
+        "dimension": "support_style",
+        "poleMapping": ["right", "left", "right", "neutral"],
+        "therapeutic": {
+          "rationale": "Triggered responses reveal attachment coping. Pursuers have anxious activation; withdrawers have avoidant activation; anxious-reassurance seekers are overtly activated; communicators have secure response skills. Recognizing your trigger response is the first step to choosing differently.",
+          "framework": "attachment_theory",
+          "whenDifferent": "Different trigger responses create predictable dances. The pursuer chases the withdrawer, who retreats further. Name the pattern when you're both triggered.",
+          "whenSame": "Shared trigger responses can amplify or support. Two pursuers may chase each other; two withdrawers may both disappear. Know your shared pattern.",
+          "journalPrompt": "When triggered, what do you do? Does this response help or hurt? What would a healthier response look like?"
+        }
+      }
+    },
+    {
+      "id": "quiz_017_q3",
+      "text": "What helps me recover when my attachment is activated?",
+      "choices": [
+        "Reassurance from you that we're okay",
+        "Time and space to settle my nervous system",
+        "Understanding what actually happened",
+        "Physical comfort and closeness"
+      ],
+      "category": "recovery_support",
+      "metadata": {
+        "dimension": "support_style",
+        "poleMapping": ["right", "left", "neutral", "right"],
+        "therapeutic": {
+          "rationale": "Recovery support needs reveal soothing pathways. Reassurance-seekers need explicit confirmation; space-needers need time; understanding-seekers need cognitive clarity; physical-comfort seekers need touch. Knowing what helps your partner recover helps you provide exactly the right support.",
+          "framework": "attachment_theory",
+          "whenDifferent": "Different recovery needs guide support. The reassurance-seeker may feel dismissed by space-giving; the space-needer may feel smothered by reassurance pursuit. Ask: 'What do you need?'",
+          "whenSame": "Shared recovery needs make support intuitive. You know what helps because it's what would help you.",
+          "journalPrompt": "What helps you recover when activated? What makes it worse? Does your partner know how to help?"
+        }
+      }
+    },
+    {
+      "id": "quiz_017_q4",
+      "text": "How aware am I of my attachment patterns?",
+      "choices": [
+        "Very aware - I can name them in the moment",
+        "Somewhat aware - I notice after the fact",
+        "Learning to recognize them",
+        "Still discovering my patterns"
+      ],
+      "category": "pattern_awareness",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Pattern awareness reflects attachment growth. In-the-moment namers have metacognitive skills; after-the-fact noticers are building awareness; learning-recognizers are in active growth; still-discoverers are beginning. Awareness is the foundation for change—you can't change what you can't see.",
+          "framework": "attachment_theory",
+          "whenDifferent": "Different awareness levels need patience. The in-the-moment namer may need to slow down for the still-discoverer. Both are on valid paths.",
+          "whenSame": "Shared awareness levels mean similar growth stages. You can learn and grow together at your shared pace.",
+          "journalPrompt": "How aware are you of your attachment patterns? What has increased your awareness? What would help you see more clearly?"
+        }
+      }
+    },
+    {
+      "id": "quiz_017_q5",
+      "text": "What do I need from you when I'm in a triggered state?",
+      "choices": [
+        "Patience while I work through it",
+        "Active engagement and reassurance",
+        "Space without taking it personally",
+        "Physical presence without pressure"
+      ],
+      "category": "triggered_support",
+      "metadata": {
+        "dimension": "support_style",
+        "poleMapping": ["neutral", "right", "left", "neutral"],
+        "therapeutic": {
+          "rationale": "Triggered support needs vary by attachment style. Patience-needers need time; active-engagement seekers need pursuit; space-without-personal allows self-regulation; physical-presence provides safety without demand. Your partner is telling you exactly how to support them when triggered.",
+          "framework": "attachment_theory",
+          "whenDifferent": "Different triggered support needs guide response. The active-engagement seeker may feel abandoned by space-giving; the space-needer may feel overwhelmed by active pursuit. Know what your partner needs.",
+          "whenSame": "Shared triggered support makes helping intuitive. You know what helps because it's what would help you.",
+          "journalPrompt": "When triggered, what do you need from your partner? Have you told them clearly? What would ideal support look like?"
+        }
+      }
+    }
+  ]
+}

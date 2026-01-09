@@ -10,8 +10,7 @@
         "Talk it through right away before it builds up",
         "Take a breather and come back to it when we're calm",
         "Find a middle ground we can both live with",
-        "Let the small stuff go - not everything needs a discussion",
-        "Other / It depends"
+        "Let the small stuff go - not everything needs a discussion"
       ],
       "category": "communication",
       "metadata": {
@@ -20,8 +19,7 @@
           "right",
           "left",
           null,
-          "left",
-          null
+          "left"
         ]
       }
     },
@@ -32,8 +30,7 @@
         "Staying in the conversation until we work it out",
         "Taking a break and reconnecting when we're both ready",
         "A bit of humor or lightness to ease the tension",
-        "Knowing you still love me even when we're frustrated",
-        "Other / It depends"
+        "Knowing you still love me even when we're frustrated"
       ],
       "category": "communication",
       "metadata": {
@@ -41,7 +38,6 @@
         "poleMapping": [
           "right",
           "left",
-          null,
           null,
           null
         ]
@@ -54,8 +50,7 @@
         "To resolve it and reconnect quickly",
         "Some time alone to process before coming back together",
         "Reassurance that we're okay",
-        "To understand what happened so we can avoid it next time",
-        "Other / It depends"
+        "To understand what happened so we can avoid it next time"
       ],
       "category": "communication",
       "metadata": {
@@ -63,7 +58,6 @@
         "poleMapping": [
           "right",
           "left",
-          null,
           null,
           null
         ]
@@ -76,8 +70,7 @@
         "Be direct - I'd rather know right away",
         "Give me a heads up that we need to talk, then tell me",
         "Gently, with reassurance that it's not a big deal",
-        "With specific examples so I understand what happened",
-        "Other / It depends"
+        "With specific examples so I understand what happened"
       ],
       "category": "communication",
       "metadata": {
@@ -86,7 +79,6 @@
           "right",
           null,
           "left",
-          null,
           null
         ]
       }
@@ -98,8 +90,7 @@
         "A quick, sincere sorry goes a long way",
         "Actions matter more than words",
         "I need to understand what I did wrong first",
-        "Both people should acknowledge their part",
-        "Other / It depends"
+        "Both people should acknowledge their part"
       ],
       "category": "communication"
     }

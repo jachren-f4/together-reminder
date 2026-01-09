@@ -1,0 +1,64 @@
+{
+  "quizId": "quiz_015",
+  "title": "Habits & Routines",
+  "branch": "growth",
+  "questions": [
+    {
+      "id": "quiz_015_q1",
+      "text": "A habit I'm trying to build or improve is...",
+      "choices": [
+        "Better sleep or morning routine",
+        "Exercise or physical health",
+        "Mindfulness or stress management",
+        "Productivity or time management"
+      ],
+      "category": "growth"
+    },
+    {
+      "id": "quiz_015_q2",
+      "text": "When it comes to breaking bad habits, I find it helps to...",
+      "choices": [
+        "Have accountability from you",
+        "Replace it with something better",
+        "Understand why I do it",
+        "Take it one day at a time"
+      ],
+      "category": "communication"
+    },
+    {
+      "id": "quiz_015_q3",
+      "text": "A routine I'd love for us to build together is...",
+      "choices": [
+        "A morning or evening ritual",
+        "Regular exercise or activity",
+        "Weekly date nights or check-ins",
+        "A shared hobby or project"
+      ],
+      "category": "values"
+    },
+    {
+      "id": "quiz_015_q4",
+      "text": "What helps me stick to positive changes?",
+      "choices": [
+        "Seeing results and progress",
+        "Having support and encouragement",
+        "Making it part of my routine",
+        "Understanding the bigger purpose"
+      ],
+      "category": "growth"
+    },
+    {
+      "id": "quiz_015_q5",
+      "text": "How do you best support my efforts to improve?",
+      "choices": [
+        "Celebrate my wins with me",
+        "Be patient when I slip up",
+        "Join me in the journey",
+        "Remind me why it matters"
+      ],
+      "category": "emotional"
+    }
+  ],
+  "description": "Explore how you build positive habits together.",
+  "magnet_id": 12
+}

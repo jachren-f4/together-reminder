@@ -1,0 +1,109 @@
+{
+  "quizId": "quiz_017",
+  "title": "Gratitude & Appreciation",
+  "branch": "connection",
+  "description": "Celebrate what you value most about each other.",
+  "magnet_id": 8,
+  "questions": [
+    {
+      "id": "quiz_017_q1",
+      "text": "What quality of mine do you most appreciate?",
+      "choices": [
+        "My kindness and caring nature",
+        "My sense of humor and playfulness",
+        "My strength and resilience",
+        "My honesty and authenticity"
+      ],
+      "category": "appreciated_qualities",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Expressing appreciation for specific qualities strengthens bonds and validates identity. Kindness appreciation values nurturing; humor appreciation values playfulness; strength appreciation values resilience; honesty appreciation values authenticity; support appreciation values reliability. Knowing which of your qualities your partner most values reinforces that aspect of your identity.",
+          "framework": "gottman",
+          "whenDifferent": "Different appreciated qualities reveal what each of you sees as the other's core gift. Share what you most appreciate—your partner may not know which quality shines brightest to you.",
+          "whenSame": "Shared appreciated qualities suggest this trait is central to the relationship. It's a defining characteristic that matters to you both.",
+          "journalPrompt": "What quality in your partner do you most appreciate? Have you told them recently? What would it mean to them to hear it?"
+        }
+      }
+    },
+    {
+      "id": "quiz_017_q2",
+      "text": "What do I do that makes you feel most loved?",
+      "choices": [
+        "How I listen when you talk",
+        "Small daily gestures of care",
+        "Physical affection and touch",
+        "Making you a priority in my life"
+      ],
+      "category": "loving_actions",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "The actions that make our partner feel loved become our most important behaviors. Active listening shows attention; daily gestures show consistent caring; physical affection shows bodily love; defending shows loyalty; prioritizing shows choice. Knowing what makes your partner feel loved helps you do more of it intentionally.",
+          "framework": "love_languages",
+          "whenDifferent": "Different love-feeling actions mean you're each touched by different behaviors. Tell your partner what they do that makes you feel most loved—they should keep doing it.",
+          "whenSame": "Shared love-feeling actions mean the same behaviors register as love for you both. You're aligned on what loving behavior looks like.",
+          "journalPrompt": "What does your partner do that makes you feel most loved? When did they last do it? Have you told them how much it matters?"
+        }
+      }
+    },
+    {
+      "id": "quiz_017_q3",
+      "text": "What about our relationship am I most grateful for?",
+      "choices": [
+        "The safety and security we've built",
+        "How much fun we have together",
+        "The depth of our emotional bond",
+        "Our ability to grow and learn together"
+      ],
+      "category": "relationship_gratitude",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Gratitude for relationship aspects reinforces their value. Safety gratitude appreciates security; fun gratitude appreciates joy; emotional-bond gratitude appreciates intimacy; growth gratitude appreciates development; presence gratitude appreciates the fundamental gift of partnership. Expressing gratitude for the relationship itself strengthens commitment.",
+          "framework": "positive_psychology",
+          "whenDifferent": "Different gratitude focuses reveal different relationship values. You may be grateful for safety while your partner is grateful for growth. Both are true—express your specific gratitude.",
+          "whenSame": "Shared gratitude focus means you value the same aspect of your relationship. Protect and nurture what you're both grateful for.",
+          "journalPrompt": "What about your relationship are you most grateful for? When was the last time you expressed this gratitude? What would change if you expressed it more often?"
+        }
+      }
+    },
+    {
+      "id": "quiz_017_q4",
+      "text": "What's something you've done that I'll never forget?",
+      "choices": [
+        "How you supported me through something hard",
+        "A romantic gesture that surprised me",
+        "A sacrifice you made for us",
+        "Showing me a side of yourself no one else sees"
+      ],
+      "category": "memorable_moments",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Memorable moments become relationship touchstones that define the partnership's story. Support memories show reliability; romantic gestures show effort; sacrifices show commitment; presence shows devotion; vulnerability-sharing shows trust. These become the stories couples tell about why they love each other.",
+          "framework": "narrative_therapy",
+          "whenDifferent": "Different unforgettable moments reveal different defining points in your relationship story. Share your moment—your partner may not know it was so significant.",
+          "whenSame": "A shared unforgettable moment becomes a cornerstone of your relationship narrative. Return to this story when you need to remember your bond.",
+          "journalPrompt": "What has your partner done that you'll never forget? Have you told them recently how much it meant? What made it so memorable?"
+        }
+      }
+    },
+    {
+      "id": "quiz_017_q5",
+      "text": "How do I prefer to receive appreciation from you?",
+      "choices": [
+        "Hearing it in words",
+        "Seeing it in your actions",
+        "Physical affection that shows it",
+        "Quality time together"
+      ],
+      "category": "receiving_appreciation",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "How we receive appreciation matters as much as giving it. Verbal receivers need words; action-observers need demonstrated appreciation; physical receivers need touch-expressed gratitude; time receivers need invested presence; public receivers need external acknowledgment. Expressing appreciation in your partner's preferred form ensures it lands.",
+          "framework": "love_languages",
+          "whenDifferent": "Different receiving styles mean your appreciation may not land as intended. The verbal receiver may not register action-appreciation; the public receiver may feel invisible without external acknowledgment. Show appreciation in your partner's preferred form.",
+          "whenSame": "Shared receiving styles mean your appreciation will naturally connect. You'll both feel valued through the same expressions.",
+          "journalPrompt": "How do you most like to receive appreciation? Does your partner express it this way? What would help them know what works for you?"
+        }
+      }
+    }
+  ]
+}

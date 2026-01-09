@@ -1,0 +1,113 @@
+{
+  "quizId": "quiz_018",
+  "title": "Relaxation & Unwinding",
+  "branch": "lighthearted",
+  "description": "Discover how you recharge and decompress.",
+  "magnet_id": 1,
+  "questions": [
+    {
+      "id": "quiz_018_q1",
+      "text": "My go-to way to unwind is...",
+      "choices": [
+        "Screen time (TV, games, scrolling)",
+        "Physical activity or exercise",
+        "Something creative",
+        "Being in nature"
+      ],
+      "category": "self_care",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "How we unwind reflects what our nervous system needs to regulate. Some people need passive rest; others need active discharge; some need creative expression; some need nature's restorative environment; some need true stillness. Partners often judge each other's unwinding choices without understanding they serve different needs. What looks like 'wasting time' to one person is genuine recovery to another.",
+          "framework": "stress_regulation",
+          "whenDifferent": "The active unwinder may judge screen time as lazy; the passive unwinder may feel exhausted watching their partner go for a run. Let each other recover in your own ways. Don't impose your regulation needs on your partner.",
+          "whenSame": "Matched unwinding preferences mean you can recharge together. If you both unwind through TV, watch together. If you both need activity, be active together. Shared recovery rituals strengthen connection.",
+          "journalPrompt": "After a stressful day, what do you reach for? Does it actually help you feel better? What does your partner think of your unwinding choices?"
+        }
+      }
+    },
+    {
+      "id": "quiz_018_q2",
+      "text": "When I'm tired, I prefer...",
+      "choices": [
+        "Being alone to recharge",
+        "Cuddling up together",
+        "Low-energy parallel time",
+        "Light conversation"
+      ],
+      "category": "connection",
+      "metadata": {
+        "dimension": "social_energy",
+        "poleMapping": ["left", "right", "neutral", "right"],
+        "therapeutic": {
+          "rationale": "Fatigue reveals our core attachment and recharge patterns. Some people need solitude when depleted; others draw energy from togetherness; some want presence without demands; some find connection through gentle words; some need silence. Partners who misunderstand each other's tired-state needs may feel rejected ('you don't want to be with me') or smothered ('just give me space').",
+          "framework": "attachment_theory",
+          "whenDifferent": "The solitude-seeker may feel their partner is clingy when tired; the together-seeker may feel abandoned. State your needs explicitly when tired: 'I need alone time—it's not about you.' Agree on how you'll reconnect after recovery.",
+          "whenSame": "Matched tired-state preferences mean evenings flow naturally. You'll both want the same thing at the end of a long day. Lean into this alignment—build rituals around your shared recovery style.",
+          "journalPrompt": "What do you need when you're exhausted? How does your partner respond when you're tired? Do you feel understood in those moments?"
+        }
+      }
+    },
+    {
+      "id": "quiz_018_q3",
+      "text": "My ideal weekend includes...",
+      "choices": [
+        "Lots of activities planned",
+        "A mix of plans and free time",
+        "Mostly unstructured time",
+        "One main activity or outing"
+      ],
+      "category": "together",
+      "metadata": {
+        "dimension": "planning_preference",
+        "poleMapping": ["left", "neutral", "right", "neutral"],
+        "therapeutic": {
+          "rationale": "Weekend expectations often become a battleground for planning versus spontaneity preferences. The planner may see unstructured weekends as wasted; the spontaneous partner may feel scheduled weekends are work, not rest. Since weekends are precious recovery time, alignment here significantly affects relationship satisfaction and individual wellbeing.",
+          "framework": "leisure_psychology",
+          "whenDifferent": "The planner may feel frustrated by their partner's refusal to commit to activities; the spontaneous partner may feel every weekend is a to-do list. Try: one planned activity per weekend day, with the rest unstructured. Or: alternate who plans each weekend.",
+          "whenSame": "Matched weekend styles mean you'll naturally enjoy your time off the same way. If you're both planners, make lists together. If you're both spontaneous, let Saturday morning reveal itself. Either way, weekends restore rather than deplete.",
+          "journalPrompt": "What does your ideal Saturday look like, hour by hour? What about your partner's? Have you ever explicitly compared visions?"
+        }
+      }
+    },
+    {
+      "id": "quiz_018_q4",
+      "text": "When I need to de-stress, I wish you would...",
+      "choices": [
+        "Just hold me",
+        "Take care of practical things",
+        "Give me space",
+        "Distract me with something fun"
+      ],
+      "category": "support",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "What we want from our partner when stressed is often different from what they instinctively offer. Touch-seekers need physical co-regulation; practical helpers need acts of service; space-needers require autonomy; distraction-seekers need mood shifts; explicitness-seekers want to be asked rather than assumed upon. Knowing your partner's de-stress wish list helps you support them effectively.",
+          "framework": "supportive_communication",
+          "whenDifferent": "The touch-seeker may feel abandoned by a space-giver; the space-needer may feel smothered by a hugger. Ask: 'What would help right now?' Accept the answer even if it's different from what you'd want.",
+          "whenSame": "Matched de-stress needs make supporting each other intuitive. You'll naturally offer what works. Appreciate this alignment—explicitly thank your partner when they give you what you need.",
+          "journalPrompt": "When you're stressed, what do you wish your partner would do? Have you ever told them directly? What usually happens instead?"
+        }
+      }
+    },
+    {
+      "id": "quiz_018_q5",
+      "text": "Sleep for me is...",
+      "choices": [
+        "Sacred - don't mess with it",
+        "Flexible - I adjust easily",
+        "Best when cuddled up",
+        "Better alone honestly"
+      ],
+      "category": "lifestyle",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Sleep is foundational to physical and emotional health, and sleep incompatibilities cause significant daily friction. Night owls with early birds, cuddlers with space-needers, light sleepers with heavy sleepers—these differences require negotiation. Since we spend roughly a third of our lives sleeping, getting this right matters more than many couples realize.",
+          "framework": "health_psychology",
+          "whenDifferent": "The sacred-sleeper may resent disruptions; the flexible-sleeper may not understand the big deal. Respect each other's sleep needs: separate blankets, different wake times, even separate sleeping arrangements when needed. Quality sleep protects the relationship.",
+          "whenSame": "Matched sleep styles reduce nightly negotiation. You'll naturally go to bed together, cuddle or give space as both need, and wake similarly. Protect your shared sleep routines.",
+          "journalPrompt": "How does your sleep situation affect your relationship? What adjustments would help both of you sleep better? Is this a topic you've explicitly discussed?"
+        }
+      }
+    }
+  ]
+}

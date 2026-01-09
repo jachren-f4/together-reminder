@@ -1,0 +1,109 @@
+{
+  "quizId": "quiz_020",
+  "title": "Our Story",
+  "branch": "lighthearted",
+  "description": "Reflect on your journey together and where you're headed.",
+  "magnet_id": 1,
+  "questions": [
+    {
+      "id": "quiz_020_q1",
+      "text": "The thing that first drew me to you was...",
+      "choices": [
+        "Your sense of humor",
+        "Your kindness or warmth",
+        "Your confidence or energy",
+        "How we clicked instantly"
+      ],
+      "category": "appreciation",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Remembering what first attracted us to our partner reinforces the positive narrative of the relationship. Gottman's research shows that how couples tell their origin story predicts relationship success—couples who recall the beginning fondly, even after many years, maintain stronger bonds. This question practices the skill of returning to that initial spark.",
+          "framework": "gottman",
+          "whenDifferent": "Different first attractions reveal the multi-faceted nature of appeal. Your partner was drawn to something you might take for granted. Hearing this can be validating and reminder of what you bring to the relationship.",
+          "whenSame": "Shared first attraction points to a defining quality that drew you both together. This quality is likely still central to your connection. Name it, nurture it.",
+          "journalPrompt": "Take yourself back to your first real conversation. What did you notice? What did you feel? What made you want more?"
+        }
+      }
+    },
+    {
+      "id": "quiz_020_q2",
+      "text": "A moment I knew this was special was...",
+      "choices": [
+        "Our first real conversation",
+        "The first time you made me laugh hard",
+        "When you showed vulnerability",
+        "During a challenge we faced together"
+      ],
+      "category": "connection",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Identifying turning-point moments strengthens the couple's shared narrative. These 'this is special' moments become touchstones—stories you return to that remind you why you chose each other. Couples who can articulate specific moments of realization tend to maintain stronger emotional connections.",
+          "framework": "narrative_therapy",
+          "whenDifferent": "Different special moments mean different things sealed the deal for each of you. Sharing these may reveal defining moments your partner didn't know were significant to you.",
+          "whenSame": "A shared turning point suggests a mutual crystallization—you both knew at the same moment. This is a core piece of your origin story. Tell it to others, and to each other.",
+          "journalPrompt": "What was the moment—or series of moments—when you realized this relationship was different? Have you ever told your partner exactly when you knew?"
+        }
+      }
+    },
+    {
+      "id": "quiz_020_q3",
+      "text": "Something we've grown in together is...",
+      "choices": [
+        "How we communicate",
+        "Trust and vulnerability",
+        "Having fun together",
+        "Supporting each other's goals"
+      ],
+      "category": "together",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Recognizing growth together reinforces the narrative that your relationship is evolving, not static. Couples who can name how they've improved together are more resilient—they have evidence that challenges can be overcome and that they're better as a team than they started. This question invites pride in your shared progress.",
+          "framework": "positive_psychology",
+          "whenDifferent": "Different perceived growth areas reveal different priorities and awareness. You may have grown in ways your partner doesn't even recognize—naming this builds shared understanding of your evolution.",
+          "whenSame": "Shared recognition of a growth area means you've both felt the shift. Celebrate this explicitly. Your relationship has developed in a direction you both value.",
+          "journalPrompt": "Compare your relationship today to one year ago—or five years ago. What's different? What's better? What got you here?"
+        }
+      }
+    },
+    {
+      "id": "quiz_020_q4",
+      "text": "One thing I hope never changes about us is...",
+      "choices": [
+        "How we laugh together",
+        "Our honesty with each other",
+        "The way we support each other",
+        "Our physical affection"
+      ],
+      "category": "connection",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Identifying what you want to protect highlights the relationship's core strengths. This is the foundation you're building on—the non-negotiables that make your relationship feel like itself. Couples who can articulate what they never want to lose are more likely to actively protect those qualities.",
+          "framework": "relationship_science",
+          "whenDifferent": "Different protected qualities reveal different relationship values. Both are important—your partner is naming what matters most to them. Listen carefully; this is what they need you to keep alive.",
+          "whenSame": "Shared 'never change' priorities mean you're aligned on what defines your relationship. Treat this quality as sacred. When life gets busy, protect it first.",
+          "journalPrompt": "If your relationship changed in most ways but one thing stayed forever, what would you want that to be? Is this currently threatened or thriving?"
+        }
+      }
+    },
+    {
+      "id": "quiz_020_q5",
+      "text": "When I imagine growing old together, I picture...",
+      "choices": [
+        "Still laughing and being silly",
+        "A comfortable routine together",
+        "Continuing adventures",
+        "Surrounded by family we've built"
+      ],
+      "category": "together",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Sharing long-term visions reveals deep assumptions about what a good life together looks like. The laughter-keeper values perpetual playfulness; the routine-builder values stable comfort; the adventurer values novelty; the family-builder values legacy; the presence-seeker values companionship. These visions guide decisions about how you spend your finite time and resources.",
+          "framework": "relationship_science",
+          "whenDifferent": "Different old-age visions may point to different life priorities worth discussing. Can you adventure AND have comfortable routine? Usually yes—but it takes intentional design.",
+          "whenSame": "Shared long-term vision means you're building toward the same destination. This alignment is a gift. Make decisions that move you toward this shared picture.",
+          "journalPrompt": "Picture yourself at 80 with your partner. What does an ordinary day look like? What matters most in that vision? What do you need to do now to make that future possible?"
+        }
+      }
+    }
+  ]
+}

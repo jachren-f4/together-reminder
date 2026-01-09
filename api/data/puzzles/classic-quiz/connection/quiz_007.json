@@ -1,7 +1,9 @@
 {
   "quizId": "quiz_007",
-  "title": "Connection Quiz 7",
+  "title": "Emotional Safety",
   "branch": "connection",
+  "description": "Learn what makes you feel understood and protected.",
+  "magnet_id": 6,
   "questions": [
     {
       "id": "quiz_007_q1",
@@ -10,22 +12,42 @@
         "Space to decompress alone first",
         "Your presence even if we don't talk",
         "To vent without interruption",
-        "Distraction and fun",
-        "Other / It depends"
+        "Help solving the problem"
       ],
-      "category": "emotional"
+      "category": "stress_support",
+      "metadata": {
+        "dimension": "support_style",
+        "poleMapping": ["left", "neutral", "left", "right"],
+        "therapeutic": {
+          "rationale": "Stress responses vary significantly based on attachment style and temperament. Some people need solitude to self-regulate before connecting; others need presence without demands; others need verbal processing; others need practical assistance. Offering the wrong kind of support when your partner is stressed can feel like abandonment or intrusion.",
+          "framework": "attachment_theory",
+          "whenDifferent": "Different stress needs require conscious adaptation. The space-needer may feel smothered by the presence-giver; the venter may feel dismissed by the problem-solver. State explicitly what you need when stressed: 'I need to be alone for 20 minutes, then I'll want to talk.'",
+          "whenSame": "Matched stress responses mean you'll naturally support each other in ways that help. You understand what's needed because you need the same thing.",
+          "journalPrompt": "What do you actually need when you're stressed? Does your partner know? What happens when they offer the wrong kind of support?"
+        }
+      }
     },
     {
       "id": "quiz_007_q2",
       "text": "How do I feel most emotionally connected to you?",
       "choices": [
         "During vulnerable conversations",
-        "When we work through conflict together",
         "During moments of physical intimacy",
         "Sharing everyday life experiences",
-        "Other / It depends"
+        "In comfortable silence together"
       ],
-      "category": "emotional"
+      "category": "connection_pathway",
+      "metadata": {
+        "dimension": "connection_style",
+        "poleMapping": ["left", "right", "neutral", "left"],
+        "therapeutic": {
+          "rationale": "Emotional connection has multiple pathways: vulnerability creates depth; physical intimacy creates bonding; shared mundane moments create companionship; comfortable silence creates peace. Understanding your partner's primary connection pathway helps you create the closeness they can feel.",
+          "framework": "attachment_theory",
+          "whenDifferent": "Different connection pathways mean you experience closeness at different moments. The vulnerability-connector may feel distant in a physically intimate but emotionally surface relationship; the silence-connector may feel pressured by constant deep talks. Balance both styles.",
+          "whenSame": "Shared connection pathways mean you'll feel bonded at the same moments. You experience 'us' the same way. Prioritize these connection moments.",
+          "journalPrompt": "When do you feel most emotionally connected to your partner? How often does this happen? What would create more of these moments?"
+        }
+      }
     },
     {
       "id": "quiz_007_q3",
@@ -34,10 +56,18 @@
         "Reassurance that everything will be okay",
         "Help with practical tasks",
         "Someone to just listen",
-        "Physical comfort and closeness",
-        "Other / It depends"
+        "Space and patience"
       ],
-      "category": "emotional"
+      "category": "crisis_support",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Our hardest days reveal our deepest needs. Some people need verbal reassurance to calm anxiety; others need practical relief from burden; others need witnessing without fixing; others need solitude and grace. How your partner responds when you're at your lowest profoundly shapes relationship security.",
+          "framework": "emotion_focused_therapy",
+          "whenDifferent": "Different crisis needs can create hurt during already hard times. The reassurance-seeker may feel abandoned by a task-focused partner; the space-needer may feel smothered by closeness. Communicate clearly: 'Today I really need...'",
+          "whenSame": "Matched crisis needs mean you'll instinctively provide what's needed during dark times. This alignment is especially valuable when stakes are highest.",
+          "journalPrompt": "Think about your hardest recent day. What did your partner do? What did you wish they had done? How can you communicate this need clearly?"
+        }
+      }
     },
     {
       "id": "quiz_007_q4",
@@ -45,11 +75,19 @@
       "choices": [
         "When you validate my feelings",
         "When you remember what I've told you",
-        "When you know what I need without asking",
-        "When you support my perspective",
-        "Other / It depends"
+        "When you anticipate what I need",
+        "When you see beneath my surface"
       ],
-      "category": "communication"
+      "category": "understanding",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Feeling understood is a core human need. Validation says 'your feelings make sense'; remembered details say 'I've been listening'; anticipation says 'I know you'; seeing beneath says 'I know the real you.' Each creates a different flavor of being known.",
+          "framework": "emotion_focused_therapy",
+          "whenDifferent": "Different understanding triggers mean different things make you feel seen. The validation-seeker needs emotional acknowledgment; the depth-seeker needs to be seen past their defenses. Know what makes your partner feel understood.",
+          "whenSame": "Shared understanding triggers mean you'll make each other feel known in the same way. You understand what it means to be seen because you need the same thing.",
+          "journalPrompt": "When was the last time you felt truly understood by your partner? What did they do? When do you feel most misunderstood?"
+        }
+      }
     },
     {
       "id": "quiz_007_q5",
@@ -58,12 +96,18 @@
         "Being able to be completely myself",
         "Knowing you won't judge me",
         "Your consistent emotional availability",
-        "How gently you handle my vulnerabilities",
-        "Other / It depends"
+        "How gently you handle my vulnerabilities"
       ],
-      "category": "trust"
+      "category": "emotional_safety",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Emotional safety is the foundation of secure attachment. Authenticity-safety means no masks required; non-judgment safety means all parts accepted; availability-safety means consistently present; gentle handling means vulnerabilities protected. Without emotional safety, deep intimacy is impossible.",
+          "framework": "attachment_theory",
+          "whenDifferent": "Different safety foundations mean different things make the relationship feel secure. The consistency-seeker needs reliability; the non-judgment seeker needs acceptance. Prioritize what makes your partner feel safe.",
+          "whenSame": "Shared safety foundations mean you're building security on the same ground. You both need the same things to feel protected in the relationship.",
+          "journalPrompt": "When do you feel most emotionally safe with your partner? When does safety waver? What would help you feel consistently protected?"
+        }
+      }
     }
-  ],
-  "description": "Learn about your patterns of closeness and care.",
-  "magnet_id": 6
+  ]
 }

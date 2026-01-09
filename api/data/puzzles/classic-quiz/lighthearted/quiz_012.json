@@ -2,6 +2,8 @@
   "quizId": "quiz_012",
   "title": "Dreams & Goals",
   "branch": "lighthearted",
+  "description": "Share your aspirations and visions for the future.",
+  "magnet_id": 1,
   "questions": [
     {
       "id": "quiz_012_q1",
@@ -10,10 +12,20 @@
         "Similar to now, but deeper",
         "Big changes (home, family, location)",
         "More adventures and experiences",
-        "More stable and settled",
-        "Other / I don't plan that far"
+        "More stable and settled"
       ],
-      "category": "together"
+      "category": "together",
+      "metadata": {
+        "dimension": "change_orientation",
+        "poleMapping": ["left", "right", "right", "left"],
+        "therapeutic": {
+          "rationale": "Future visions reveal fundamental orientations toward stability versus change. Some people find security in continuity—deepening what already works. Others need growth and novelty to feel alive. Neither is more committed; they're different ways of imagining a thriving future. When partners' visions diverge significantly, it surfaces important conversations about compatibility and compromise.",
+          "framework": "relationship_science",
+          "whenDifferent": "The stability-seeker may feel their partner is never satisfied; the change-seeker may feel stagnant. This isn't a fight to win—it's a tension to balance. How can you create change while maintaining core stability? How can you deepen while also growing? The answer is usually 'both/and.'",
+          "whenSame": "Shared future visions make long-term planning feel collaborative rather than conflictual. You're naturally building toward the same thing. Use this alignment to get specific: what exactly does your shared vision look like? Making it concrete brings it closer.",
+          "journalPrompt": "Close your eyes and imagine your life five years from now on an ordinary Tuesday. Where are you? What are you doing? Who's there? What's different from now?"
+        }
+      }
     },
     {
       "id": "quiz_012_q2",
@@ -22,10 +34,18 @@
         "Traveling somewhere specific",
         "Learning a new skill",
         "A career or personal achievement",
-        "An adventurous experience",
-        "Other / I don't keep a bucket list"
+        "An adventurous experience"
       ],
-      "category": "lifestyle"
+      "category": "lifestyle",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Bucket lists reveal what we consider meaningful and what we fear missing. They point to values: the traveler values experience, the learner values growth, the achiever values impact, the adventurer values intensity. Sharing these aspirations with a partner creates opportunities to support each other's dreams—or to discover shared dreams to pursue together.",
+          "framework": "self_expansion_theory",
+          "whenDifferent": "Different bucket list items mean different definitions of a life well-lived. This is an opportunity, not a problem. Can you help each other check off items? Can you find places where lists overlap? Your partner's dreams don't diminish yours—they expand your world.",
+          "whenSame": "Shared bucket list priorities suggest shared values about what makes life meaningful. Make a combined list. Start planning. Couples who dream together often stay together because they have shared projects that keep them connected.",
+          "journalPrompt": "What's one thing on your bucket list you've never told anyone? What's stopping you from pursuing it? What would it mean to share this dream with your partner?"
+        }
+      }
     },
     {
       "id": "quiz_012_q3",
@@ -34,10 +54,18 @@
         "Excited and optimistic",
         "Calm and content",
         "A mix of hope and uncertainty",
-        "I prefer to focus on today",
-        "Other / It varies"
+        "I prefer to focus on today"
       ],
-      "category": "lifestyle"
+      "category": "lifestyle",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Emotional orientation toward the future reflects our relationship with uncertainty, our baseline optimism, and sometimes our experiences with plans going awry. Some people draw energy from anticipation; others find it anxiety-provoking. In relationships, these different orientations affect everything from vacation planning to life decisions. Neither is healthier—what matters is understanding each other.",
+          "framework": "positive_psychology",
+          "whenDifferent": "The optimist may feel dragged down by their partner's caution; the present-focused partner may feel pressured to perform excitement they don't feel. Honor both: some conversations can be dreaming and excitement; others can be grounded in today. You don't need the same emotional relationship with the future.",
+          "whenSame": "Matched emotional orientations toward the future mean your planning conversations will have similar energy. If you're both excited, dream big together. If you're both present-focused, create systems that force occasional future-thinking without it feeling burdensome.",
+          "journalPrompt": "What's shaped your emotional relationship with the future? Past experiences where plans worked out—or didn't? What would help you feel more hopeful or more grounded?"
+        }
+      }
     },
     {
       "id": "quiz_012_q4",
@@ -46,10 +74,18 @@
         "A home and family",
         "Shared experiences and memories",
         "Financial stability",
-        "A life of adventure",
-        "Other / Just growing together"
+        "A life of adventure"
       ],
-      "category": "together"
+      "category": "together",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "What couples want to build together reveals their deepest relationship values. The home-builder values rootedness; the memory-maker values connection; the security-builder values safety; the adventurer values intensity. These aren't mutually exclusive, but primary priorities shape decisions about careers, location, time, and money. Misalignment here can feel like a fundamental incompatibility even when love is strong.",
+          "framework": "relationship_science",
+          "whenDifferent": "Different building priorities is a significant finding worth discussing deeply. The question isn't 'who's right' but 'how can we honor both?' Can you build a stable home AND have adventures? Can you create security AND prioritize experiences? Usually yes, but it requires explicit planning.",
+          "whenSame": "Shared building priorities is a powerful alignment. You're working toward the same fundamental goal, which makes sacrifices feel shared rather than one-sided. Get specific about what this looks like and start building together.",
+          "journalPrompt": "If you could only build one thing with your partner over the next decade, what would it be? What would you have to give up for that? Is that trade-off worth it?"
+        }
+      }
     },
     {
       "id": "quiz_012_q5",
@@ -58,12 +94,18 @@
         "Family and relationships",
         "Career and achievement",
         "Experiences and enjoyment",
-        "Making a difference",
-        "Other / Personal growth"
+        "Making a difference"
       ],
-      "category": "lifestyle"
+      "category": "lifestyle",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Core motivations shape how we spend our finite time and energy. The relationship-motivated partner will sacrifice career for family; the achievement-motivated may do the opposite; the experience-seeker prioritizes enjoyment; the purpose-driven seeks impact. Understanding each other's motivations helps couples navigate trade-offs without feeling like their values are being dismissed.",
+          "framework": "values_psychology",
+          "whenDifferent": "Different core motivations isn't a problem—it's information. The key is: do you each have space to pursue what matters to you? Does one partner's motivation consistently win? Can you reframe differences as balance—you bring drive, they bring connection; you bring meaning, they bring joy?",
+          "whenSame": "Shared core motivations mean you'll naturally agree on big life decisions. You'll make similar trade-offs without negotiation. Build a life that centers on this shared motivation—you'll both feel fulfilled.",
+          "journalPrompt": "When do you feel most alive? What were you doing? Who were you with? What does that tell you about what really motivates you, regardless of what you think 'should' matter?"
+        }
+      }
     }
-  ],
-  "description": "Share your aspirations and visions for the future.",
-  "magnet_id": 1
+  ]
 }

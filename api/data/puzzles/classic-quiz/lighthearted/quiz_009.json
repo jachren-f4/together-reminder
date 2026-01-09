@@ -2,6 +2,8 @@
   "quizId": "quiz_009",
   "title": "Celebrations & Milestones",
   "branch": "lighthearted",
+  "description": "Discover how you celebrate life's special moments.",
+  "magnet_id": 1,
   "questions": [
     {
       "id": "quiz_009_q1",
@@ -10,10 +12,20 @@
         "A party with lots of people",
         "Intimate celebration with close ones",
         "A special experience just us",
-        "Low-key acknowledgment is fine",
-        "Other / To be surprised"
+        "Low-key acknowledgment is fine"
       ],
-      "category": "social"
+      "category": "social",
+      "metadata": {
+        "dimension": "social_energy",
+        "poleMapping": ["right", "neutral", "left", "left"],
+        "therapeutic": {
+          "rationale": "Birthday preferences reveal core needs around recognition and celebration. Some people feel loved when they're the center of attention surrounded by many; others feel overwhelmed by that same scenario and crave intimacy. This isn't about being 'high maintenance' or 'low maintenance'—it's about how you best receive love and attention. Understanding this about your partner prevents the well-intentioned surprise party that actually causes distress.",
+          "framework": "love_languages",
+          "whenDifferent": "The partner who wants a big celebration may feel unimportant if their birthday is low-key; the partner who prefers quiet may feel stressed by party planning. The key is celebrating each other the way THEY want to be celebrated, not how you'd want it for yourself.",
+          "whenSame": "Shared celebration styles make birthdays easier to plan. You'll naturally understand what feels special to your partner because it matches what feels special to you. Just remember that preferences can shift with life stages.",
+          "journalPrompt": "Think about your best birthday memory. What made it special? Was it the people, the activity, the surprise, or the intimacy? Does your partner know this about you?"
+        }
+      }
     },
     {
       "id": "quiz_009_q2",
@@ -22,10 +34,18 @@
         "Thoughtfulness over price",
         "Practical things I'll use",
         "Experiences over objects",
-        "The surprise element",
-        "Other / I'm not big on gifts"
+        "The surprise element"
       ],
-      "category": "support"
+      "category": "support",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Gift-giving and receiving is one of Gary Chapman's five love languages, but even those who value gifts can differ significantly in what kind of gifts feel meaningful. Some see thoughtfulness as the ultimate expression of being known; others feel burdened by objects and prefer shared experiences. Understanding your partner's gift language prevents the disappointment of giving something you'd love but they don't value.",
+          "framework": "love_languages",
+          "whenDifferent": "The practical partner may feel confused by 'impractical' sentimental gifts; the experience-lover may feel weighed down by objects. Share your preferences explicitly—don't make your partner guess. Consider: one partner picks the gift type (experience vs thing), the other handles the surprise element.",
+          "whenSame": "Matched gift values make holidays and birthdays much simpler. You'll naturally give gifts that land well because you value the same things. Create a shared wishlist or experience bucket list to make giving even easier.",
+          "journalPrompt": "What's the best gift you've ever received? What made it special? Have you told your partner this story and what it reveals about what you value?"
+        }
+      }
     },
     {
       "id": "quiz_009_q3",
@@ -34,10 +54,20 @@
         "Love celebrating them big",
         "Acknowledge them meaningfully",
         "Don't need a big deal",
-        "Often forget them honestly",
-        "Other / Mixed feelings"
+        "Often forget them honestly"
       ],
-      "category": "together"
+      "category": "together",
+      "metadata": {
+        "dimension": "celebration_importance",
+        "poleMapping": ["right", "neutral", "left", "left"],
+        "therapeutic": {
+          "rationale": "How partners approach anniversaries and milestones often becomes a source of tension. For some, these dates are sacred markers of the relationship's journey; for others, they're arbitrary calendar entries. Neither is wrong—but if one partner feels anniversaries are essential and the other forgets them, it can feel like the relationship itself is being forgotten. This question surfaces expectations before they become resentments.",
+          "framework": "relationship_rituals",
+          "whenDifferent": "The partner who values dates may feel unloved when they're forgotten; the partner who doesn't track dates may feel set up to fail. Create a shared system: calendar reminders, explicit conversations about what 'enough' acknowledgment looks like, and understanding that forgetting a date isn't forgetting the relationship.",
+          "whenSame": "Aligned expectations around special dates prevents one of the most common relationship conflicts. Whether you both love celebrations or both prefer to skip them, you won't be disappointing each other. Just make sure you occasionally mark the relationship's milestones somehow.",
+          "journalPrompt": "How did your family of origin handle birthdays and anniversaries? How might that shape your current expectations? Have you ever asked your partner about theirs?"
+        }
+      }
     },
     {
       "id": "quiz_009_q4",
@@ -46,10 +76,18 @@
         "Want to tell you immediately",
         "Savor it quietly first",
         "Post about it / tell everyone",
-        "Celebrate privately, move on",
-        "Other / Depends on what it is"
+        "Celebrate privately, move on"
       ],
-      "category": "communication"
+      "category": "communication",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Research by Shelly Gable on 'capitalization' shows that how couples respond to good news is as important as how they handle conflict. Sharing good news and receiving an enthusiastic response strengthens bonds. But people differ in how and when they want to share. Some need to process privately first; others feel joy isn't real until it's shared. Knowing your partner's pattern helps you show up when they're ready.",
+          "framework": "positive_psychology",
+          "whenDifferent": "The immediate-sharer may feel hurt if their partner seems uninterested when they burst in with news; the private-processor may feel pressured to share before they're ready. Ask: 'Do you want me to ask about your day, or will you tell me when you're ready?' Respect the rhythm.",
+          "whenSame": "Matched sharing styles mean good news lands well between you. If you both love immediate sharing, you'll naturally celebrate together. If you both process privately, you'll give each other space without feeling shut out.",
+          "journalPrompt": "Think about the last really good thing that happened to you. Who did you tell first, and when? How did your partner respond? How did that response make you feel?"
+        }
+      }
     },
     {
       "id": "quiz_009_q5",
@@ -58,12 +96,18 @@
         "Get really excited about",
         "Enjoy but find a bit stressful",
         "Could take or leave",
-        "Prefer to keep low-key",
-        "Other / Complicated feelings"
+        "Prefer to keep low-key"
       ],
-      "category": "lifestyle"
+      "category": "lifestyle",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Holiday attitudes are deeply shaped by family of origin experiences. For some, holidays evoke warmth and tradition; for others, they trigger stress, loss, or complicated family dynamics. Partners often carry very different emotional associations into shared holidays, leading to conflict when one wants elaborate celebrations and the other wants to hide until January. Understanding each other's history brings compassion to these differences.",
+          "framework": "family_systems",
+          "whenDifferent": "The holiday-lover may feel their partner is a 'grinch'; the holiday-avoider may feel pressured into performances that exhaust them. Dig into the 'why' behind each other's feelings. Create new traditions that honor both of you, even if that means scaling back or celebrating differently than your families did.",
+          "whenSame": "Shared holiday attitudes make the season much smoother. If you both love it, dive in together. If you both find it complicated, give each other permission to opt out of things that drain you. Build a holiday rhythm that's yours, not your families'.",
+          "journalPrompt": "What's your earliest holiday memory? What emotions does it bring up? How has that shaped how you approach holidays now? Have you shared this with your partner?"
+        }
+      }
     }
-  ],
-  "description": "Discover how you celebrate life's special moments.",
-  "magnet_id": 1
+  ]
 }

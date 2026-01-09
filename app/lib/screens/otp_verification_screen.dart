@@ -11,6 +11,7 @@ import '../services/notification_service.dart';
 import '../services/app_bootstrap_service.dart';
 import '../utils/logger.dart';
 import '../widgets/newspaper/newspaper_widgets.dart';
+import 'onboarding_screen.dart';
 import 'pairing_screen.dart';
 import 'main_screen.dart';
 
@@ -61,6 +62,34 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
     _otpController.dispose();
     _focusNode.dispose();
     super.dispose();
+  }
+
+  /// Shows confirmation dialog and navigates to OnboardingScreen if confirmed
+  Future<void> _handleStartOver() async {
+    final shouldStartOver = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Start Over?'),
+        content: const Text('Are you sure you want to cancel and start over?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(true),
+            child: const Text('Start Over'),
+          ),
+        ],
+      ),
+    );
+
+    if (shouldStartOver == true && mounted) {
+      Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(builder: (context) => const OnboardingScreen()),
+        (route) => false,
+      );
+    }
   }
 
   Future<void> _verifyOtp() async {
@@ -165,18 +194,22 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
             await AppBootstrapService.instance.bootstrap();
             Logger.success('Bootstrap completed for returning user', service: 'auth');
           }
+
+          if (!mounted) return;
+
+          // Returning user - go to home (with bottom nav)
+          Navigator.of(context).pushAndRemoveUntil(
+            MaterialPageRoute(builder: (context) => const MainScreen()),
+            (route) => false,
+          );
         } catch (e) {
-          // Log but don't block for returning users - they can still proceed
           Logger.error('Failed to sync profile on server', error: e, service: 'auth');
+          // Sign out to clean up partial auth state
+          await _authService.signOut();
+          setState(() {
+            _errorMessage = 'Could not restore your account. Please try again.';
+          });
         }
-
-        if (!mounted) return;
-
-        // Returning user - go to home (with bottom nav)
-        Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(builder: (context) => const MainScreen()),
-          (route) => false,
-        );
       }
     } catch (e) {
       Logger.error('Error verifying OTP', error: e);
@@ -233,7 +266,15 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
   Widget build(BuildContext context) {
     if (_isUs2) return _buildUs2Screen();
 
-    return Scaffold(
+    // Wrap in PopScope to handle system back button
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) {
+        if (!didPop) {
+          _handleStartOver();
+        }
+      },
+      child: Scaffold(
       body: Container(
         color: NewspaperColors.surface,
         child: SafeArea(
@@ -356,6 +397,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
           ),
         ),
       ),
+      ),
     );
   }
 
@@ -389,8 +431,16 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
   // ============================================
 
   Widget _buildUs2Screen() {
-    return Scaffold(
-      body: Container(
+    // Wrap in PopScope to handle system back button
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) {
+        if (!didPop) {
+          _handleStartOver();
+        }
+      },
+      child: Scaffold(
+        body: Container(
         decoration: const BoxDecoration(
           gradient: Us2Theme.backgroundGradient,
         ),
@@ -576,6 +626,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
           ),
         ),
       ),
+      ),
     );
   }
 
@@ -584,9 +635,9 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
       child: Row(
         children: [
-          // Back button
+          // Back button - shows confirmation dialog to start over
           GestureDetector(
-            onTap: () => Navigator.of(context).pop(),
+            onTap: _handleStartOver,
             child: Container(
               width: 40,
               height: 40,

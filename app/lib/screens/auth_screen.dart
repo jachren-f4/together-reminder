@@ -171,18 +171,22 @@ class _AuthScreenState extends State<AuthScreen> {
           await AppBootstrapService.instance.bootstrap();
           Logger.success('Bootstrap completed for returning user', service: 'auth');
         }
+
+        if (!mounted) return;
+
+        // Returning user - go to home (with bottom nav)
+        Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (context) => const MainScreen()),
+          (route) => false,
+        );
       } catch (e) {
         Logger.error('Failed to restore profile', error: e, service: 'auth');
-        // Don't block - user can try to proceed
+        // Sign out to clean up partial auth state
+        await _authService.signOut();
+        setState(() {
+          _errorMessage = 'Could not restore your account. Please try again.';
+        });
       }
-
-      if (!mounted) return;
-
-      // Returning user - go to home (with bottom nav)
-      Navigator.of(context).pushAndRemoveUntil(
-        MaterialPageRoute(builder: (context) => const MainScreen()),
-        (route) => false,
-      );
     }
   }
 
@@ -193,14 +197,15 @@ class _AuthScreenState extends State<AuthScreen> {
 
     if (success) {
       if (mounted) {
-        Navigator.push(
-          context,
+        // Use pushAndRemoveUntil to prevent backing out of OTP flow
+        Navigator.of(context).pushAndRemoveUntil(
           MaterialPageRoute(
             builder: (context) => OtpVerificationScreen(
               email: email,
               isNewUser: widget.isNewUser,
             ),
           ),
+          (route) => false,
         );
       }
     } else {

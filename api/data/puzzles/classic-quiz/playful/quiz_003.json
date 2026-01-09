@@ -10,8 +10,7 @@
         "Go with our gut and figure it out as we go",
         "Talk through the options and decide together",
         "Each think about it separately, then compare notes",
-        "Take our time - no rush on big decisions",
-        "Other / It depends"
+        "Take our time - no rush on big decisions"
       ],
       "category": "communication",
       "metadata": {
@@ -20,8 +19,7 @@
           "left",
           null,
           "right",
-          "right",
-          null
+          "right"
         ]
       }
     },
@@ -32,8 +30,7 @@
         "See it as a chance to do something spontaneous",
         "Quickly come up with a backup plan together",
         "Acknowledge the disappointment, then move on",
-        "Have a list of backup ideas ready for moments like this",
-        "Other / It depends"
+        "Have a list of backup ideas ready for moments like this"
       ],
       "category": "lifestyle",
       "metadata": {
@@ -42,8 +39,7 @@
           "left",
           null,
           null,
-          "right",
-          null
+          "right"
         ]
       }
     },
@@ -54,8 +50,7 @@
         "Keep it spontaneous - decide when we're already out",
         "Take turns surprising each other",
         "Plan something special together ahead of time",
-        "Have a mix of planned dates and 'let's just see' nights",
-        "Other / It depends"
+        "Have a mix of planned dates and 'let's just see' nights"
       ],
       "category": "lifestyle",
       "metadata": {
@@ -64,7 +59,6 @@
           "left",
           null,
           "right",
-          null,
           null
         ]
       }
@@ -76,8 +70,7 @@
         "Jump in and start making it happen",
         "Brainstorm ideas and narrow down together",
         "Research options before we discuss",
-        "Let you take the lead and give input when asked",
-        "Other / It depends"
+        "Let you take the lead and give input when asked"
       ],
       "category": "communication",
       "metadata": {
@@ -86,7 +79,6 @@
           "left",
           null,
           "right",
-          null,
           null
         ]
       }
@@ -98,8 +90,7 @@
         "Just pick something and adjust if needed",
         "Sleep on it and revisit tomorrow",
         "List out the pros and cons together",
-        "Talk it through until we're both comfortable",
-        "Other / It depends"
+        "Talk it through until we're both comfortable"
       ],
       "category": "communication",
       "metadata": {
@@ -108,7 +99,6 @@
           "left",
           "right",
           "right",
-          null,
           null
         ]
       }

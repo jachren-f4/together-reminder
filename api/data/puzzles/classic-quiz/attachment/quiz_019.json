@@ -1,0 +1,109 @@
+{
+  "quizId": "quiz_019",
+  "title": "Partnership Dynamics",
+  "branch": "attachment",
+  "description": "Explore how your two attachment styles interact and dance together.",
+  "magnet_id": 11,
+  "questions": [
+    {
+      "id": "quiz_019_q1",
+      "text": "What dynamic do we tend to fall into during stress?",
+      "choices": [
+        "One pursues while one withdraws",
+        "We both seek reassurance from each other",
+        "We both pull back and give space",
+        "We stay steady and work through it together"
+      ],
+      "category": "stress_dynamic",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Stress dynamics reveal combined attachment patterns. Pursue-withdraw is the anxious-avoidant pairing; mutual-reassurance is double-anxious; mutual-withdrawal is double-avoidant; steady-together is secure functioning. Most couples have a predictable stress dance.",
+          "framework": "gottman",
+          "whenDifferent": "This question helps you see your joint pattern. Pursue-withdraw is the most common painful cycle. Name it to change it.",
+          "whenSame": "If you both selected the same answer, you agree on your dynamic. This awareness is the foundation for change.",
+          "journalPrompt": "What's your stress dynamic as a couple? How does it affect you? What would a healthier dynamic look like?"
+        }
+      }
+    },
+    {
+      "id": "quiz_019_q2",
+      "text": "How do our attachment styles complement each other?",
+      "choices": [
+        "Your groundedness calms my anxiety",
+        "Your warmth helps me open up more",
+        "Your independence respects my space needs",
+        "Your expressiveness draws me out"
+      ],
+      "category": "complementary_styles",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Complementary attachment creates growth potential. Groundedness-calming helps anxious types settle; warmth-opening helps avoidant types connect; independence-respect honors space needs; expressiveness-drawing helps reserved types share. Different attachment styles can heal each other.",
+          "framework": "attachment_theory",
+          "whenDifferent": "Different answers show what each values in the other. Your partner sees a different gift in your attachment style than you might realize.",
+          "whenSame": "Shared answers suggest alignment in how you see your complementarity. You both appreciate how you balance each other.",
+          "journalPrompt": "How does your partner's attachment style help you? Have you told them? What do you give them in return?"
+        }
+      }
+    },
+    {
+      "id": "quiz_019_q3",
+      "text": "Where do our attachment styles create friction?",
+      "choices": [
+        "I want more closeness than you're comfortable with",
+        "I need more space than you're comfortable with",
+        "We have different communication needs",
+        "We recover from conflict differently"
+      ],
+      "category": "style_friction",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Style friction reveals attachment mismatch points. Closeness-mismatch is anxious-avoidant tension; space-mismatch is avoidant-anxious tension; communication-mismatch affects understanding; recovery-mismatch extends conflict. Identifying friction points allows targeted work.",
+          "framework": "attachment_theory",
+          "whenDifferent": "Different friction answers show each sees different tension. Explore both perspectives—both are valid friction points.",
+          "whenSame": "Shared friction awareness means you're aligned on where work is needed. Address your shared friction point together.",
+          "journalPrompt": "Where do your attachment styles create friction? How do you handle it currently? What would reduce the friction?"
+        }
+      }
+    },
+    {
+      "id": "quiz_019_q4",
+      "text": "What have we learned to do when our styles clash?",
+      "choices": [
+        "Take breaks to self-regulate, then reconnect",
+        "Name the pattern we're in",
+        "Ask for what we need directly",
+        "Give each other grace and patience"
+      ],
+      "category": "clash_skills",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Clash skills show adaptive coping development. Break-taking prevents escalation; pattern-naming creates awareness; direct-asking prevents guessing; grace-giving prevents shame. These skills transform attachment clashes from relationship-threatening to growth opportunities.",
+          "framework": "gottman",
+          "whenDifferent": "Different clash skills show different learned strategies. You may need to combine multiple approaches for effective navigation.",
+          "whenSame": "Shared clash skills mean aligned strategy. You've developed a shared approach to navigating attachment differences.",
+          "journalPrompt": "What do you do when attachment styles clash? What works best? What skill would you like to develop?"
+        }
+      }
+    },
+    {
+      "id": "quiz_019_q5",
+      "text": "How can we better support each other's attachment needs?",
+      "choices": [
+        "More proactive reassurance before anxiety builds",
+        "More respect for space without taking it personally",
+        "More checking in about what each needs",
+        "More patience when one is triggered"
+      ],
+      "category": "mutual_support",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Mutual support improvements guide relationship growth. Proactive-reassurance prevents anxiety escalation; space-respect honors autonomy; checking-in improves attunement; triggered-patience enables recovery. Your partner is telling you how to better support them.",
+          "framework": "attachment_theory",
+          "whenDifferent": "Different support improvements show different needs. Each of you needs different things for better support. Provide what your partner asked for.",
+          "whenSame": "Shared support needs suggest aligned priorities. Focus your shared effort on this improvement.",
+          "journalPrompt": "How could your partner better support your attachment needs? Have you asked directly? What would make the biggest difference?"
+        }
+      }
+    }
+  ]
+}

@@ -98,13 +98,17 @@ class _StepsIntroScreenState extends State<StepsIntroScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                // Footprints illustration
-                _buildFootprintsIllustration(state),
-                const SizedBox(height: 32),
+                // Footprints illustration (skip for Us 2.0)
+                if (!_isUs2) ...[
+                  _buildFootprintsIllustration(state),
+                  const SizedBox(height: 32),
+                ],
 
-                // Avatar circles with status
-                _buildAvatarSection(state, partnerName),
-                const SizedBox(height: 24),
+                // Avatar circles with status (skip for Us 2.0)
+                if (!_isUs2) ...[
+                  _buildAvatarSection(state, partnerName),
+                  const SizedBox(height: 24),
+                ],
 
                 // Equals row with LP bubble
                 _buildRewardRow(),

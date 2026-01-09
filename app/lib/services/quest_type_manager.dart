@@ -508,14 +508,6 @@ class QuestTypeManager {
                   imagePath = manifest.imagePath;
                   Logger.debug('🖼️ Quest ${i + 1} using manifest image: $imagePath', service: 'quest');
                 }
-
-                // For classic quizzes, set quizName from manifest displayName
-                // (affirmation quizzes already have quizName from session)
-                if (activityType == BranchableActivityType.classicQuiz &&
-                    manifest.displayName != null) {
-                  quizName = '${manifest.displayName} Quiz';
-                  Logger.debug('📝 Quest ${i + 1} using manifest title: $quizName', service: 'quest');
-                }
               }
             }
           } catch (e) {

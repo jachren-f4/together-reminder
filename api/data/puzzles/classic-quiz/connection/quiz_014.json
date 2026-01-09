@@ -1,0 +1,115 @@
+{
+  "quizId": "quiz_014",
+  "title": "Conflict & Repair",
+  "branch": "connection",
+  "description": "Learn how you handle disagreements and reconnect afterward.",
+  "magnet_id": 7,
+  "questions": [
+    {
+      "id": "quiz_014_q1",
+      "text": "During conflict, what do I need most from you?",
+      "choices": [
+        "To feel heard and validated",
+        "Space to cool down first",
+        "Calm and non-defensive listening",
+        "Reassurance that we'll be okay"
+      ],
+      "category": "conflict_needs",
+      "metadata": {
+        "dimension": "support_style",
+        "poleMapping": ["left", "left", "left", "neutral"],
+        "therapeutic": {
+          "rationale": "Conflict needs vary dramatically and mismatched approaches escalate rather than resolve. Validation-seekers need to feel understood; space-seekers need time to regulate; calm-seekers need low intensity; reassurance-seekers need relational safety. Giving your partner what they need during conflict de-escalates faster than insisting on your own style.",
+          "framework": "gottman",
+          "whenDifferent": "Different conflict needs are one of the most common relationship challenges. The validation-seeker feels abandoned by the space-seeker; the calm-seeker feels overwhelmed by intensity. Learn to meet your partner's need before pressing your own.",
+          "whenSame": "Shared conflict needs make disagreements more manageable. You'll naturally give each other what helps during tense moments.",
+          "journalPrompt": "What do you most need from your partner during conflict? Do they know this? What happens when they give you something else instead?"
+        }
+      }
+    },
+    {
+      "id": "quiz_014_q2",
+      "text": "What's my typical response when we argue?",
+      "choices": [
+        "I want to talk it through immediately",
+        "I need to withdraw and process alone",
+        "I try to fix or solve the problem",
+        "I get defensive and explain my side"
+      ],
+      "category": "conflict_style",
+      "metadata": {
+        "dimension": "support_style",
+        "poleMapping": ["right", "left", "right", "right"],
+        "therapeutic": {
+          "rationale": "Conflict responses often reflect attachment patterns. Pursuers want immediate resolution through connection; withdrawers need self-regulation before engaging; fixers focus on problem-solving; defenders protect themselves from criticism. Understanding your and your partner's patterns helps you navigate conflict without triggering each other's defenses.",
+          "framework": "attachment_theory",
+          "whenDifferent": "Different conflict responses create the classic pursuer-withdrawer dynamic—one chases while the other retreats, escalating the cycle. Naming your patterns without judgment helps you interrupt them.",
+          "whenSame": "Shared conflict responses can either help (two withdrawers respect space) or harm (two pursuers escalate). Self-awareness about your shared pattern is key.",
+          "journalPrompt": "What's your instinctive response when conflict arises? Does this help or hurt your resolution? What would you need to respond differently?"
+        }
+      }
+    },
+    {
+      "id": "quiz_014_q3",
+      "text": "How do I prefer to repair after we've argued?",
+      "choices": [
+        "Talk through what happened",
+        "Physical reconnection (hug, touch)",
+        "Time to let it pass naturally",
+        "A genuine apology from both sides"
+      ],
+      "category": "repair",
+      "metadata": {
+        "dimension": "connection_style",
+        "poleMapping": ["left", "right", "neutral", "neutral"],
+        "therapeutic": {
+          "rationale": "Repair—the reconnection after rupture—is essential for relationship health. Talk-through repairers need verbal processing; touch-repairers need physical reconnection; time-passers need natural fade; apology-seekers need accountability. Gottman's research shows that successful repair attempts, more than conflict avoidance, predict relationship success.",
+          "framework": "gottman",
+          "whenDifferent": "Different repair styles can extend disconnection unnecessarily. The talk-through repairer may feel unresolved while the time-passer waits; the touch-repairer may feel rejected by the talk-first person. Learn to offer repair in your partner's language.",
+          "whenSame": "Shared repair styles mean you'll naturally reconnect through the same process. Conflict resolution will feel complete to you both at the same time.",
+          "journalPrompt": "How do you know when conflict is truly over? What helps you feel reconnected after a fight? Does your repair style match your partner's?"
+        }
+      }
+    },
+    {
+      "id": "quiz_014_q4",
+      "text": "What makes it hardest for me to move on after conflict?",
+      "choices": [
+        "Feeling like I wasn't heard",
+        "Not understanding why it happened",
+        "Worrying it will happen again",
+        "Lack of genuine apology"
+      ],
+      "category": "conflict_blocks",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Conflict residue—what keeps us from fully moving on—varies by person. Unheard-feelers need validation; understanding-seekers need explanation; worry-holders need reassurance; apology-needers need accountability. Knowing what keeps your partner stuck helps you address the right thing during repair.",
+          "framework": "emotion_focused_therapy",
+          "whenDifferent": "Different sticking points mean you get stuck for different reasons. Your partner may have moved on while you're still waiting for something you need. Name what's keeping you stuck.",
+          "whenSame": "Shared sticking points mean you'll both need the same thing to fully resolve. You understand each other's lingering hurt because it's the same.",
+          "journalPrompt": "After arguments, what keeps you from fully letting go? What would you need to truly move on? Does your partner know what's keeping you stuck?"
+        }
+      }
+    },
+    {
+      "id": "quiz_014_q5",
+      "text": "What's the biggest thing I've learned about conflict in our relationship?",
+      "choices": [
+        "That we can survive disagreements",
+        "How to actually listen to each other",
+        "That repair is more important than avoiding fights",
+        "What my own triggers and patterns are"
+      ],
+      "category": "conflict_growth",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "How we've grown in conflict reveals relationship maturity. Survival-learners have built resilience; listener-learners have developed skills; repair-learners understand reconnection; trigger-aware learners have self-knowledge. Acknowledging conflict growth strengthens confidence in the relationship's ability to weather storms.",
+          "framework": "gottman",
+          "whenDifferent": "Different growth areas reveal different lessons learned. Sharing what you've each learned creates mutual appreciation for how far you've come.",
+          "whenSame": "Shared growth areas suggest aligned conflict development. You've both evolved through similar realizations.",
+          "journalPrompt": "How has your relationship with conflict changed since you got together? What have you learned? What would you still like to improve?"
+        }
+      }
+    }
+  ]
+}

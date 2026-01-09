@@ -1,0 +1,64 @@
+{
+  "quizId": "quiz_014",
+  "title": "Learning Together",
+  "branch": "growth",
+  "questions": [
+    {
+      "id": "quiz_014_q1",
+      "text": "When it comes to learning new things, I prefer to...",
+      "choices": [
+        "Dive in and figure it out",
+        "Research and prepare first",
+        "Learn alongside someone else",
+        "Take my time and go at my own pace"
+      ],
+      "category": "growth"
+    },
+    {
+      "id": "quiz_014_q2",
+      "text": "Something I'd love for us to learn together is...",
+      "choices": [
+        "A new language or skill",
+        "Something creative or artistic",
+        "A sport or physical activity",
+        "Something practical for our life together"
+      ],
+      "category": "values"
+    },
+    {
+      "id": "quiz_014_q3",
+      "text": "When I'm struggling to learn something, I need...",
+      "choices": [
+        "Encouragement to keep going",
+        "Space to work through it myself",
+        "Help breaking it into smaller steps",
+        "Patience and understanding"
+      ],
+      "category": "communication"
+    },
+    {
+      "id": "quiz_014_q4",
+      "text": "What motivates me most to keep learning?",
+      "choices": [
+        "Curiosity and wanting to understand",
+        "Achieving goals and seeing progress",
+        "Becoming better at what I do",
+        "Sharing the experience with others"
+      ],
+      "category": "growth"
+    },
+    {
+      "id": "quiz_014_q5",
+      "text": "The most valuable thing I've learned from our relationship is...",
+      "choices": [
+        "How to communicate more openly",
+        "How to be more patient",
+        "How to love and be loved",
+        "How to work through challenges"
+      ],
+      "category": "emotional"
+    }
+  ],
+  "description": "Discover how you approach learning and growth as a team.",
+  "magnet_id": 12
+}

@@ -1,0 +1,64 @@
+{
+  "quizId": "quiz_018",
+  "title": "Balance & Priorities",
+  "branch": "growth",
+  "questions": [
+    {
+      "id": "quiz_018_q1",
+      "text": "Right now, I'm trying to find better balance between...",
+      "choices": [
+        "Work and personal life",
+        "Time for us and time for myself",
+        "Responsibilities and fun",
+        "Ambition and contentment"
+      ],
+      "category": "growth"
+    },
+    {
+      "id": "quiz_018_q2",
+      "text": "When life gets overwhelming, I tend to...",
+      "choices": [
+        "Push through and keep going",
+        "Pull back and simplify",
+        "Lean on you for support",
+        "Reassess what's really important"
+      ],
+      "category": "emotional"
+    },
+    {
+      "id": "quiz_018_q3",
+      "text": "My top priority in life right now is...",
+      "choices": [
+        "Our relationship and building our future",
+        "My career and professional growth",
+        "Health and personal wellbeing",
+        "Finding happiness and fulfillment"
+      ],
+      "category": "values"
+    },
+    {
+      "id": "quiz_018_q4",
+      "text": "How do you help me maintain balance?",
+      "choices": [
+        "You remind me to take breaks",
+        "You help me see what matters most",
+        "You take things off my plate",
+        "You're patient when I'm stretched thin"
+      ],
+      "category": "communication"
+    },
+    {
+      "id": "quiz_018_q5",
+      "text": "Something I wish I made more time for is...",
+      "choices": [
+        "Quality time with you",
+        "Self-care and rest",
+        "Friends and family",
+        "Hobbies and things I enjoy"
+      ],
+      "category": "values"
+    }
+  ],
+  "description": "Discover how you support each other in finding balance.",
+  "magnet_id": 13
+}
