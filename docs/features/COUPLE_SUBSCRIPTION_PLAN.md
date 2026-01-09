@@ -1263,8 +1263,65 @@ Future<void> _onPairingComplete() async {
 
 All phases 1-6 have been implemented. See the checklist above for details.
 
+**Completed Manual Steps:**
+- [x] Migration `035_couple_subscription.sql` run on Supabase
+
 **Pending Manual Steps:**
-1. Run migration `035_couple_subscription.sql` on Supabase
-2. Configure RevenueCat webhook URL: `https://api-joakim-achrens-projects.vercel.app/api/subscription/webhook`
-3. Add `REVENUECAT_WEBHOOK_SECRET` to Vercel environment variables
-4. Test all scenarios from the Testing Checklist (Phase 7)
+1. Configure RevenueCat webhook URL: `https://api-joakim-achrens-projects.vercel.app/api/subscription/webhook`
+2. Add `REVENUECAT_WEBHOOK_SECRET` to Vercel environment variables
+3. Test all scenarios from the Testing Checklist (Phase 7)
+
+---
+
+## TestFlight Testing: Triple-Tap Dev Bypass
+
+⚠️ **IMPORTANT: DISABLE BEFORE APP STORE RELEASE!**
+
+A triple-tap gesture on the paywall title allows testers to bypass the subscription without paying. This is for TestFlight testing only.
+
+### How to Use
+
+1. On the PaywallScreen, **triple-tap on the "One Subscription. Two Accounts." title**
+2. A confirmation dialog appears
+3. Tap "Activate" to grant your couple a test subscription
+4. Both you and your partner will have premium access (expires in 1 year)
+
+### What It Does
+
+- Calls `POST /api/subscription/activate` with `productId: 'dev_bypass_test'`
+- Sets the couple's subscription status to `active` in the database
+- Sets expiration to 1 year from now
+- Both partners see active subscription
+
+### How to Disable for App Store
+
+Before submitting to App Store, remove or disable the dev bypass:
+
+**Option 1: Remove the code** (recommended for release)
+```dart
+// In paywall_screen.dart, remove GestureDetector wrapper:
+// Change from:
+GestureDetector(
+  onTap: _handleDevTap,
+  child: Text('One Subscription...')
+)
+// To:
+Text('One Subscription...')
+```
+
+**Option 2: Add environment check**
+```dart
+void _handleDevTap() {
+  // Only allow in debug builds
+  if (!kDebugMode) return;
+  // ... rest of code
+}
+```
+
+### Files Involved
+
+| File | Purpose |
+|------|---------|
+| `lib/screens/paywall_screen.dart` | Triple-tap handler and bypass activation |
+| `lib/services/subscription_service.dart` | `activateForCouple()` method |
+| `api/app/api/subscription/activate/route.ts` | API endpoint that sets database |

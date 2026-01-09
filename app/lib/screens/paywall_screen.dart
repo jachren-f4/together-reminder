@@ -85,7 +85,7 @@ class _PaywallScreenState extends State<PaywallScreen> {
     }
   }
 
-  /// Activate dev bypass - grants temporary subscription access
+  /// Activate dev bypass - grants real subscription to the couple via API
   Future<void> _activateDevBypass() async {
     // Haptic feedback
     HapticFeedback.heavyImpact();
@@ -95,7 +95,12 @@ class _PaywallScreenState extends State<PaywallScreen> {
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Dev Bypass'),
-        content: const Text('Bypass paywall for testing?\n\nThis will grant temporary access without subscribing.'),
+        content: const Text(
+          'Activate test subscription for your couple?\n\n'
+          'This will set your couple\'s subscription to active in the database '
+          '(expires in 1 year). Both you and your partner will have premium access.\n\n'
+          'REMEMBER: Disable this before App Store builds!',
+        ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
@@ -103,28 +108,65 @@ class _PaywallScreenState extends State<PaywallScreen> {
           ),
           TextButton(
             onPressed: () => Navigator.pop(context, true),
-            child: const Text('Bypass'),
+            child: const Text('Activate'),
           ),
         ],
       ),
     );
 
     if (confirmed == true && mounted) {
-      // Set dev bypass flag on subscription service
-      _subscriptionService.setDevBypass(true);
-      Logger.info('Dev bypass activated', service: 'paywall');
+      setState(() => _isPurchasing = true);
 
-      // Show success toast
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Dev bypass activated'),
-          backgroundColor: Colors.green,
-          duration: Duration(seconds: 2),
-        ),
-      );
+      try {
+        // Activate subscription via API (sets it in database)
+        final result = await _subscriptionService.activateForCouple(
+          productId: 'dev_bypass_test',
+          expiresAt: DateTime.now().add(const Duration(days: 365)),
+        );
 
-      // Continue to app
-      widget.onContinue();
+        if (!mounted) return;
+
+        if (result == null) {
+          throw Exception('Activation returned null');
+        }
+
+        if (result.status == 'activated' || result.status == 'already_subscribed') {
+          Logger.info('Dev bypass: subscription activated via API', service: 'paywall');
+
+          // Refresh couple status
+          await _subscriptionService.checkCoupleSubscription();
+
+          if (!mounted) return;
+
+          // Show success toast
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(result.status == 'already_subscribed'
+                  ? 'Already subscribed!'
+                  : 'Test subscription activated'),
+              backgroundColor: Colors.green,
+              duration: const Duration(seconds: 2),
+            ),
+          );
+
+          // Continue to app
+          widget.onContinue();
+        } else {
+          throw Exception(result.message ?? 'Activation failed');
+        }
+      } catch (e) {
+        Logger.error('Dev bypass activation failed', error: e, service: 'paywall');
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Activation failed: $e'),
+              backgroundColor: Colors.red,
+            ),
+          );
+        }
+      } finally {
+        if (mounted) setState(() => _isPurchasing = false);
+      }
     }
   }
 
