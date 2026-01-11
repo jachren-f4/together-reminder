@@ -1,65 +1,69 @@
 {
   "author": "Crossword Maker GPT",
-  "title": "Adult Intimacy Puzzle #4",
+  "title": "AI-Built Puzzle",
   "size": {
     "rows": 9,
     "cols": 7
   },
   "clues": {
-    "1": { "type": "emoji", "content": "☀️", "arrow": "down", "target_index": 13 },
-    "2": { "type": "emoji", "content": "🍺", "arrow": "across", "target_index": 8 },
-    "3": { "type": "text", "content": "Casual no", "arrow": "across", "target_index": 16 },
-    "4": { "type": "text", "content": "H_LD", "arrow": "across", "target_index": 20 },
-    "5": { "type": "text", "content": "Filing together", "arrow": "down", "target_index": 29 },
-    "6": { "type": "text", "content": "Before J", "arrow": "down", "target_index": 30 },
-    "7": { "type": "emoji", "content": "☀️", "arrow": "down", "target_index": 31 },
-    "8": { "type": "text", "content": "Boundary word", "arrow": "across", "target_index": 26 },
-    "9": { "type": "emoji", "content": "✨", "arrow": "across", "target_index": 29 },
-    "10": { "type": "text", "content": "After M", "arrow": "across", "target_index": 34 },
-    "11": { "type": "text", "content": "B_R", "arrow": "across", "target_index": 36 },
-    "12": { "type": "text", "content": "Before Y", "arrow": "across", "target_index": 43 },
-    "13": {
-      "across": { "type": "text", "content": "Loud cry", "target_index": 45 },
-      "down": { "type": "text", "content": "First person", "target_index": 51 }
+    "1": { "type": "text", "content": "Perform", "arrow": "down", "target_index": 8 },
+    "2": { "type": "emoji", "content": "👀", "arrow": "down", "target_index": 9 },
+    "3": { "type": "text", "content": "KI__", "arrow": "down", "target_index": 10 },
+    "4": { "type": "text", "content": "Of it", "arrow": "down", "target_index": 11 },
+    "5": { "type": "text", "content": "____B", "arrow": "down", "target_index": 12 },
+    "6": { "type": "text", "content": "Love god", "arrow": "down", "target_index": 13 },
+    "7": { "type": "text", "content": "Longing", "arrow": "across", "target_index": 8 },
+    "8": { "type": "text", "content": "Mollusk", "arrow": "across", "target_index": 15 },
+    "9": {
+      "across": { "type": "text", "content": "Before F", "target_index": 23 },
+      "down": { "type": "text", "content": "Similar", "target_index": 29 }
     },
-    "15": { "type": "text", "content": "BA_", "arrow": "down", "target_index": 61 },
-    "16": { "type": "text", "content": "Not ever", "arrow": "across", "target_index": 57 },
-    "17": { "type": "text", "content": "Before Q", "arrow": "down", "target_index": 8 },
-    "18": { "type": "text", "content": "___do (reverse)", "arrow": "down", "target_index": 9 },
-    "19": { "type": "text", "content": "Before C", "arrow": "down", "target_index": 10 },
-    "20": { "type": "text", "content": "Before O", "arrow": "across", "target_index": 13 },
-    "22": { "type": "text", "content": "_CE", "arrow": "across", "target_index": 38 },
-    "23": { "type": "text", "content": "Before F", "arrow": "down", "target_index": 46 },
-    "24": { "type": "emoji", "content": "❤️", "text": "_OVE", "arrow": "down", "target_index": 47 },
-    "25": {
-      "across": { "type": "text", "content": "Before N", "target_index": 51 },
-      "down": { "type": "text", "content": "Before O", "target_index": 57 }
+    "10": {
+      "across": { "type": "text", "content": "___W", "target_index": 25 },
+      "down": { "type": "text", "content": "Him", "target_index": 31 }
     },
-    "26": { "type": "text", "content": "Before W", "arrow": "down", "target_index": 59 },
-    "27": { "type": "text", "content": "Before F", "arrow": "down", "target_index": 60 }
+    "11": { "type": "text", "content": "Embers", "arrow": "across", "target_index": 29 },
+    "12": {
+      "across": { "type": "text", "content": "Like", "target_index": 33 },
+      "down": { "type": "emoji", "content": "🌹", "target_index": 39 }
+    },
+    "13": { "type": "text", "content": "Roman 50", "arrow": "across", "target_index": 36 },
+    "14": {
+      "across": { "type": "text", "content": "MD show", "target_index": 38 },
+      "down": { "type": "text", "content": "Blend", "target_index": 44 }
+    },
+    "15": { "type": "text", "content": "JO___", "arrow": "down", "target_index": 47 },
+    "16": { "type": "emoji", "content": "🎨", "arrow": "down", "target_index": 48 },
+    "17": { "type": "text", "content": "A__", "arrow": "across", "target_index": 43 },
+    "18": {
+      "across": { "type": "text", "content": "Old wt.", "target_index": 46 },
+      "down": { "type": "text", "content": "LI__", "target_index": 52 }
+    },
+    "19": { "type": "text", "content": "Smoocher", "arrow": "across", "target_index": 50 },
+    "20": { "type": "text", "content": "Pro", "arrow": "across", "target_index": 57 }
   },
-  "date": "2025-11-27",
+  "date": "2026-01-11",
   "grid": [
     ".", ".", ".", ".", ".", ".", ".",
-    ".", "P", "U", "B", ".", ".", "N",
-    ".", ".", "N", "A", "H", ".", "O",
-    ".", ".", ".", ".", ".", "N", "O",
-    ".", "T", "I", "D", "Y", ".", "N",
-    ".", "A", ".", "A", ".", ".", ".",
-    ".", "X", ".", "Y", "E", "L", "L",
-    ".", ".", "M", ".", ".", ".", ".",
-    ".", "N", "E", "V", "E", "R", "."
+    ".", "D", "E", "S", "I", "R", "E",
+    ".", "O", "Y", "S", "T", "E", "R",
+    ".", ".", "E", ".", "S", "H", "O",
+    ".", "A", "S", "H", ".", "A", "S",
+    ".", "L", ".", "E", "R", ".", ".",
+    ".", "I", "M", ".", "O", "K", "A",
+    ".", "K", "I", "S", "S", "E", "R",
+    ".", "E", "X", "P", "E", "R", "T"
   ],
   "gridnums": [
-    0, 17, 18, 19, 0, 0, 1,
-    2, 0, 0, 0, 0, 20, 0,
-    0, 3, 0, 0, 0, 4, 0,
-    0, 5, 6, 7, 8, 0, 0,
-    9, 0, 0, 0, 0, 10, 0,
-    11, 0, 22, 0, 23, 24, 0,
-    12, 0, 13, 0, 0, 0, 0,
-    0, 25, 0, 26, 27, 15, 0,
-    16, 0, 0, 0, 0, 0, 0
+    0, 1, 2, 3, 4, 5, 6,
+    7, 0, 0, 0, 0, 0, 0,
+    8, 0, 0, 0, 0, 0, 0,
+    0, 9, 0, 10, 0, 0, 0,
+    11, 0, 0, 0, 12, 0, 0,
+    13, 0, 14, 0, 0, 15, 16,
+    17, 0, 0, 18, 0, 0, 0,
+    19, 0, 0, 0, 0, 0, 0,
+    20, 0, 0, 0, 0, 0, 0
   ],
   "puzzleId": "puzzle_004"
 }
