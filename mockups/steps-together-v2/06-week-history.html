@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=375, initial-scale=1.0">
+    <title>Steps Together - Week History</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            background: linear-gradient(180deg, #FFF8F6 0%, #FFF0EB 100%);
+            min-height: 100vh;
+            max-width: 375px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        /* Header */
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 20px;
+            padding-top: 50px;
+        }
+
+        .back-btn {
+            width: 40px;
+            height: 40px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            cursor: pointer;
+        }
+
+        .header-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 18px;
+            font-weight: 600;
+            color: #2D2D2D;
+        }
+
+        .header-spacer {
+            width: 40px;
+        }
+
+        /* Content */
+        .content {
+            padding: 0 20px 40px;
+        }
+
+        /* Streak Card */
+        .streak-card {
+            background: linear-gradient(135deg, #FF6B6B 0%, #FF8E53 100%);
+            border-radius: 24px;
+            padding: 24px;
+            color: white;
+            text-align: center;
+            margin-bottom: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .streak-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 60%);
+        }
+
+        .streak-emoji {
+            font-size: 48px;
+            margin-bottom: 12px;
+        }
+
+        .streak-number {
+            font-family: 'Playfair Display', serif;
+            font-size: 56px;
+            font-weight: 700;
+            line-height: 1;
+        }
+
+        .streak-label {
+            font-size: 18px;
+            opacity: 0.9;
+            margin-top: 8px;
+        }
+
+        .streak-subtitle {
+            font-size: 14px;
+            opacity: 0.8;
+            margin-top: 16px;
+        }
+
+        /* Week Summary */
+        .summary-card {
+            background: white;
+            border-radius: 24px;
+            padding: 24px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+            margin-bottom: 20px;
+        }
+
+        .summary-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .summary-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 18px;
+            font-weight: 600;
+            color: #2D2D2D;
+        }
+
+        .summary-week {
+            font-size: 12px;
+            color: #999;
+        }
+
+        /* Stats Row */
+        .stats-row {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .stat-box {
+            flex: 1;
+            background: #F9F9F9;
+            border-radius: 16px;
+            padding: 16px;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-family: 'Playfair Display', serif;
+            font-size: 22px;
+            font-weight: 700;
+            color: #2D2D2D;
+        }
+
+        .stat-label {
+            font-size: 11px;
+            color: #999;
+            margin-top: 4px;
+        }
+
+        /* Daily Breakdown */
+        .days-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .day-item {
+            display: flex;
+            align-items: center;
+            padding: 16px;
+            background: #F9F9F9;
+            border-radius: 16px;
+            gap: 16px;
+        }
+
+        .day-item.today {
+            background: linear-gradient(135deg, rgba(255,107,107,0.1) 0%, rgba(255,142,83,0.1) 100%);
+            border: 1px solid rgba(255,107,107,0.2);
+        }
+
+        .day-item.missed {
+            opacity: 0.6;
+        }
+
+        .day-status {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+
+        .day-status.max {
+            background: linear-gradient(135deg, #FFB347 0%, #FFD89B 100%);
+        }
+
+        .day-status.success {
+            background: linear-gradient(135deg, #4CAF50 0%, #81C784 100%);
+            color: white;
+        }
+
+        .day-status.partial {
+            background: #FFF3E0;
+        }
+
+        .day-status.missed {
+            background: #F5F5F5;
+        }
+
+        .day-status.today {
+            background: linear-gradient(135deg, #FF6B6B 0%, #FF8E53 100%);
+        }
+
+        .day-info {
+            flex: 1;
+        }
+
+        .day-name {
+            font-weight: 600;
+            font-size: 14px;
+            color: #2D2D2D;
+            margin-bottom: 2px;
+        }
+
+        .day-name span {
+            font-weight: 400;
+            color: #999;
+            font-size: 12px;
+            margin-left: 4px;
+        }
+
+        .day-steps {
+            font-size: 12px;
+            color: #666;
+        }
+
+        .day-lp {
+            text-align: right;
+        }
+
+        .day-lp-value {
+            font-family: 'Playfair Display', serif;
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .day-lp-value.max {
+            color: #FF8C00;
+        }
+
+        .day-lp-value.earned {
+            color: #4CAF50;
+        }
+
+        .day-lp-value.pending {
+            color: #FF6B6B;
+        }
+
+        .day-lp-value.zero {
+            color: #CCC;
+        }
+
+        .day-lp-label {
+            font-size: 10px;
+            color: #999;
+        }
+
+        /* Insights Card */
+        .insights-card {
+            background: white;
+            border-radius: 24px;
+            padding: 24px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+            margin-bottom: 20px;
+        }
+
+        .insights-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 16px;
+            font-weight: 600;
+            color: #2D2D2D;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .insight-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 12px 0;
+            border-bottom: 1px solid #F0F0F0;
+        }
+
+        .insight-item:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        .insight-icon {
+            width: 36px;
+            height: 36px;
+            background: #F5F5F5;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+
+        .insight-text {
+            font-size: 13px;
+            color: #666;
+            line-height: 1.4;
+        }
+
+        .insight-text strong {
+            color: #2D2D2D;
+        }
+
+        .insight-text .highlight {
+            color: #FF6B6B;
+            font-weight: 700;
+        }
+
+        /* Best Day Highlight */
+        .best-day {
+            background: linear-gradient(135deg, rgba(255,179,71,0.1) 0%, rgba(255,216,155,0.1) 100%);
+            border: 1px solid rgba(255,179,71,0.3);
+            border-radius: 16px;
+            padding: 16px;
+            text-align: center;
+            margin-top: 16px;
+        }
+
+        .best-day-label {
+            font-size: 11px;
+            color: #FF8C00;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+
+        .best-day-value {
+            font-family: 'Playfair Display', serif;
+            font-size: 24px;
+            font-weight: 700;
+            color: #2D2D2D;
+        }
+
+        .best-day-detail {
+            font-size: 12px;
+            color: #999;
+            margin-top: 4px;
+        }
+
+        /* Navigation hint */
+        .nav-hint {
+            text-align: center;
+            padding: 24px 16px;
+            font-size: 12px;
+            color: #999;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="header">
+        <div class="back-btn">
+            <svg width="20" height="20" fill="none" stroke="#2D2D2D" stroke-width="2">
+                <path d="M15 4L7 12L15 20"/>
+            </svg>
+        </div>
+        <span class="header-title">This Week</span>
+        <div class="header-spacer"></div>
+    </div>
+
+    <!-- Content -->
+    <div class="content">
+        <!-- Streak Card -->
+        <div class="streak-card">
+            <div class="streak-emoji">🔥</div>
+            <div class="streak-number">4</div>
+            <div class="streak-label">Day Streak</div>
+            <div class="streak-subtitle">Your best streak this month! Keep it up!</div>
+        </div>
+
+        <!-- Week Summary -->
+        <div class="summary-card">
+            <div class="summary-header">
+                <span class="summary-title">Week Summary</span>
+                <span class="summary-week">Jan 6 - Jan 12</span>
+            </div>
+
+            <div class="stats-row">
+                <div class="stat-box">
+                    <div class="stat-value">78,450</div>
+                    <div class="stat-label">Total Steps</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-value">99 LP</div>
+                    <div class="stat-label">Earned</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-value">4/7</div>
+                    <div class="stat-label">Goals Hit</div>
+                </div>
+            </div>
+
+            <!-- Daily Breakdown -->
+            <div class="days-list">
+                <!-- Today -->
+                <div class="day-item today">
+                    <div class="day-status today">👟</div>
+                    <div class="day-info">
+                        <div class="day-name">Today <span>Thursday</span></div>
+                        <div class="day-steps">14,200 steps · 12K tier</div>
+                    </div>
+                    <div class="day-lp">
+                        <div class="day-lp-value pending">+21</div>
+                        <div class="day-lp-label">pending</div>
+                    </div>
+                </div>
+
+                <!-- Wednesday - Max Tier -->
+                <div class="day-item">
+                    <div class="day-status max">🏆</div>
+                    <div class="day-info">
+                        <div class="day-name">Wednesday <span>Jan 8</span></div>
+                        <div class="day-steps">22,100 steps · Max tier</div>
+                    </div>
+                    <div class="day-lp">
+                        <div class="day-lp-value max">+30</div>
+                        <div class="day-lp-label">earned</div>
+                    </div>
+                </div>
+
+                <!-- Tuesday -->
+                <div class="day-item">
+                    <div class="day-status success">✓</div>
+                    <div class="day-info">
+                        <div class="day-name">Tuesday <span>Jan 7</span></div>
+                        <div class="day-steps">16,500 steps · 16K tier</div>
+                    </div>
+                    <div class="day-lp">
+                        <div class="day-lp-value earned">+24</div>
+                        <div class="day-lp-label">earned</div>
+                    </div>
+                </div>
+
+                <!-- Monday -->
+                <div class="day-item">
+                    <div class="day-status success">✓</div>
+                    <div class="day-info">
+                        <div class="day-name">Monday <span>Jan 6</span></div>
+                        <div class="day-steps">13,200 steps · 12K tier</div>
+                    </div>
+                    <div class="day-lp">
+                        <div class="day-lp-value earned">+18</div>
+                        <div class="day-lp-label">earned</div>
+                    </div>
+                </div>
+
+                <!-- Sunday - Missed -->
+                <div class="day-item missed">
+                    <div class="day-status missed">—</div>
+                    <div class="day-info">
+                        <div class="day-name">Sunday <span>Jan 5</span></div>
+                        <div class="day-steps">6,800 steps · Below threshold</div>
+                    </div>
+                    <div class="day-lp">
+                        <div class="day-lp-value zero">0</div>
+                        <div class="day-lp-label">missed</div>
+                    </div>
+                </div>
+
+                <!-- Saturday - Partial -->
+                <div class="day-item">
+                    <div class="day-status partial">👀</div>
+                    <div class="day-info">
+                        <div class="day-name">Saturday <span>Jan 4</span></div>
+                        <div class="day-steps">8,400 steps · Below threshold</div>
+                    </div>
+                    <div class="day-lp">
+                        <div class="day-lp-value zero">0</div>
+                        <div class="day-lp-label">missed</div>
+                    </div>
+                </div>
+
+                <!-- Friday - Missed completely -->
+                <div class="day-item missed">
+                    <div class="day-status missed">—</div>
+                    <div class="day-info">
+                        <div class="day-name">Friday <span>Jan 3</span></div>
+                        <div class="day-steps">No data synced</div>
+                    </div>
+                    <div class="day-lp">
+                        <div class="day-lp-value zero">0</div>
+                        <div class="day-lp-label">missed</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Best Day -->
+            <div class="best-day">
+                <div class="best-day-label">🏆 Best Day This Week</div>
+                <div class="best-day-value">22,100 Steps</div>
+                <div class="best-day-detail">Wednesday · You: 11,800 · Sarah: 10,300</div>
+            </div>
+        </div>
+
+        <!-- Insights -->
+        <div class="insights-card">
+            <div class="insights-title">
+                <span>💡</span> Insights
+            </div>
+
+            <div class="insight-item">
+                <div class="insight-icon">📈</div>
+                <div class="insight-text">
+                    You've earned <span class="highlight">72 LP</span> more than last week! Your daily average is up 23%.
+                </div>
+            </div>
+
+            <div class="insight-item">
+                <div class="insight-icon">🎯</div>
+                <div class="insight-text">
+                    <strong>Tip:</strong> You missed 3 days below threshold. Walking just 1,600 more on those days would have earned you <span class="highlight">+45 LP</span>!
+                </div>
+            </div>
+
+            <div class="insight-item">
+                <div class="insight-icon">💪</div>
+                <div class="insight-text">
+                    <strong>Sarah</strong> averaged 8,200 steps this week. You averaged 9,400. Great balance!
+                </div>
+            </div>
+        </div>
+
+        <div class="nav-hint">
+            <a href="index.html" style="color: #FF6B6B;">&larr; Back to overview</a>
+        </div>
+    </div>
+</body>
+</html>

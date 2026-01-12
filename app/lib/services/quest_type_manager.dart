@@ -721,7 +721,7 @@ class QuestTypeManager {
   }) async {
     try {
       final response = await _apiClient.post('/api/sync/daily-quests', body: {
-        'quests': quests.map((q) => {
+        'quests': quests.map((q) => ({
           'id': q.id,
           'questType': q.type.name,
           'contentId': q.contentId,
@@ -729,17 +729,57 @@ class QuestTypeManager {
           'isSideQuest': q.isSideQuest,
           'formatType': q.formatType,
           'quizName': q.quizName,
-        }).toList(),
+        })).toList(),
         'dateKey': dateKey,
       });
 
       if (response.success) {
         Logger.debug('Daily quests synced to Supabase', service: 'quest');
+
+        // Update local quests with enriched metadata from API response
+        final enrichedQuests = response.data?['quests'] as List?;
+        if (enrichedQuests != null) {
+          await _updateLocalQuestsWithMetadata(enrichedQuests);
+        }
       } else {
         Logger.error('Failed to sync daily quests to Supabase: ${response.error}', service: 'quest');
       }
     } catch (e) {
       Logger.error('Error syncing daily quests to Supabase', error: e, service: 'quest');
+    }
+  }
+
+  /// Update local quests with enriched metadata from API response
+  Future<void> _updateLocalQuestsWithMetadata(List<dynamic> enrichedQuests) async {
+    for (final questData in enrichedQuests) {
+      final questMap = questData as Map<String, dynamic>;
+      final questId = questMap['id'] as String;
+      final metadata = questMap['metadata'] as Map<String, dynamic>?;
+
+      if (metadata == null) continue;
+
+      final quizName = metadata['quizName'] as String?;
+      final quizDescription = metadata['quizDescription'] as String?;
+
+      // Update local quest with enriched metadata
+      final localQuest = _storage.getDailyQuest(questId);
+      if (localQuest != null) {
+        bool updated = false;
+
+        if (quizName != null && (localQuest.quizName == null || localQuest.quizName!.isEmpty)) {
+          localQuest.quizName = quizName;
+          updated = true;
+        }
+        if (quizDescription != null && (localQuest.description == null || localQuest.description!.isEmpty)) {
+          localQuest.description = quizDescription;
+          updated = true;
+        }
+
+        if (updated) {
+          await _storage.saveDailyQuest(localQuest);
+          Logger.debug('Updated quest $questId with metadata: $quizName', service: 'quest');
+        }
+      }
     }
   }
 }

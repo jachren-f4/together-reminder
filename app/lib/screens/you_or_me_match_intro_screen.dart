@@ -197,12 +197,11 @@ class _YouOrMeMatchIntroScreenState extends State<YouOrMeMatchIntroScreen>
       final service = YouOrMeMatchService();
       final gameState = await service.getOrCreateMatch();
 
-      // Update DailyQuest with quiz metadata if available
+      // Always update DailyQuest with quiz metadata from API (local may be stale)
       if (widget.questId != null && gameState.quiz != null) {
         final quest = storage.getDailyQuest(widget.questId!);
-        if (quest != null &&
-            (quest.quizName == null || quest.quizName == 'You or Me')) {
-          // Update quest with quiz title and description
+        if (quest != null) {
+          // Always update quest with quiz title and description from API
           quest.quizName = gameState.quiz!.title;
           quest.description = gameState.quiz!.description;
           await storage.saveDailyQuest(quest);

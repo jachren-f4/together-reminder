@@ -200,14 +200,14 @@ class Us2HomeContent extends StatelessWidget {
   String _getQuestTitle(DailyQuest quest) {
     // Check formatType for quiz variants
     if (quest.type == QuestType.quiz && quest.formatType == 'affirmation') {
-      return 'Affirmation Quiz';
+      return quest.quizName ?? 'Affirmation Quiz';
     }
 
     switch (quest.type) {
       case QuestType.question:
         return 'Daily Question';
       case QuestType.quiz:
-        return quest.quizName ?? 'Lighthearted Quiz';
+        return quest.quizName ?? 'Classic Quiz';
       case QuestType.game:
         return 'Game';
       case QuestType.youOrMe:
@@ -266,7 +266,7 @@ class Us2HomeContent extends StatelessWidget {
       case QuestType.youOrMe:
         return '🤔';
       case QuestType.linked:
-        return '🔗';
+        return '🧩';
       case QuestType.wordSearch:
         return '🔍';
       case QuestType.steps:

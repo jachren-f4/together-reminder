@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=390, height=844, initial-scale=1.0">
+    <title>Us 2.0 - Discussion Cards</title>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-start: #FFD1C1;
+            --bg-end: #FFF5F0;
+            --primary-coral: #FF6B6B;
+            --primary-salmon: #FF7B6B;
+            --gradient-start: #FF6B6B;
+            --gradient-end: #FF9F43;
+            --cream: #FFF8F0;
+            --beige: #F5E6D8;
+            --text-dark: #2D2D2D;
+            --text-medium: #6B6B6B;
+            --text-light: #9B9B9B;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            background: linear-gradient(180deg, var(--bg-start) 0%, var(--bg-end) 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .phone-frame {
+            width: 390px;
+            height: 844px;
+            background: linear-gradient(180deg, var(--bg-start) 0%, var(--bg-end) 100%);
+            border-radius: 40px;
+            overflow: hidden;
+            box-shadow: 0 25px 80px rgba(0, 0, 0, 0.15);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .header {
+            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: rgba(255, 255, 255, 0.5);
+            backdrop-filter: blur(10px);
+        }
+
+        .back-button {
+            width: 40px;
+            height: 40px;
+            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.6);
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            cursor: pointer;
+            color: var(--text-dark);
+        }
+
+        .header-content {
+            flex: 1;
+            text-align: center;
+        }
+
+        .header-title {
+            font-family: 'Pacifico', cursive;
+            font-size: 22px;
+            color: var(--primary-coral);
+        }
+
+        .header-subtitle {
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            font-size: 13px;
+            color: var(--text-medium);
+        }
+
+        .card-stack {
+            flex: 1;
+            padding: 20px;
+            position: relative;
+        }
+
+        .discussion-card {
+            background: var(--cream);
+            border-radius: 24px;
+            padding: 24px;
+            position: absolute;
+            width: calc(100% - 40px);
+            box-shadow: 0 15px 50px rgba(255, 107, 107, 0.15);
+        }
+
+        .card-1 { z-index: 3; top: 20px; }
+        .card-2 { z-index: 2; top: 35px; left: 30px; width: calc(100% - 60px); opacity: 0.7; }
+        .card-3 { z-index: 1; top: 50px; left: 40px; width: calc(100% - 80px); opacity: 0.4; }
+
+        .card-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .card-topic {
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--text-medium);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 10px;
+        }
+
+        .card-question {
+            font-family: 'Playfair Display', serif;
+            font-size: 20px;
+            line-height: 1.4;
+            margin-bottom: 20px;
+            color: var(--text-dark);
+        }
+
+        .your-answers {
+            background: rgba(255, 255, 255, 0.6);
+            border-radius: 16px;
+            padding: 16px;
+            margin-bottom: 20px;
+        }
+
+        .answers-label {
+            font-size: 10px;
+            font-weight: 700;
+            color: var(--text-medium);
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .answer-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 10px;
+        }
+
+        .answer-item:last-child { margin-bottom: 0; }
+
+        .answer-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .answer-avatar.you {
+            background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+            color: white;
+        }
+
+        .answer-avatar.partner {
+            background: linear-gradient(135deg, #9C27B0, #E91E63);
+            color: white;
+        }
+
+        .answer-text {
+            font-size: 14px;
+            color: var(--text-dark);
+        }
+
+        .insight-box {
+            background: linear-gradient(135deg, rgba(255, 107, 107, 0.1), rgba(255, 159, 67, 0.05));
+            border-radius: 16px;
+            padding: 16px;
+            margin-bottom: 20px;
+            border-left: 4px solid var(--primary-coral);
+        }
+
+        .insight-title {
+            font-size: 10px;
+            font-weight: 700;
+            color: var(--primary-coral);
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .insight-text {
+            font-size: 14px;
+            line-height: 1.6;
+            color: var(--text-dark);
+        }
+
+        .framework-tag {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.6);
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--text-medium);
+            margin-top: 12px;
+        }
+
+        .conversation-starters {
+            margin-bottom: 20px;
+        }
+
+        .starters-label {
+            font-size: 10px;
+            font-weight: 700;
+            color: var(--text-medium);
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .starter-item {
+            background: rgba(255, 255, 255, 0.6);
+            padding: 12px 14px;
+            border-radius: 12px;
+            font-size: 14px;
+            color: var(--text-dark);
+            margin-bottom: 8px;
+            cursor: pointer;
+            border: 1px solid var(--beige);
+        }
+
+        .starter-item:hover {
+            background: white;
+        }
+
+        .card-actions {
+            display: flex;
+            gap: 12px;
+        }
+
+        .card-btn {
+            flex: 1;
+            padding: 16px;
+            border-radius: 25px;
+            text-align: center;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            border: none;
+        }
+
+        .card-btn.primary {
+            background: linear-gradient(90deg, var(--gradient-start), var(--gradient-end));
+            color: white;
+            box-shadow: 0 8px 25px rgba(255, 107, 107, 0.35);
+        }
+
+        .card-btn.secondary {
+            background: rgba(255, 255, 255, 0.6);
+            color: var(--text-medium);
+            border: 1px solid var(--beige);
+        }
+
+        .swipe-hint {
+            text-align: center;
+            padding: 20px;
+            color: var(--text-light);
+            font-size: 13px;
+            position: absolute;
+            bottom: 80px;
+            width: 100%;
+        }
+
+        .progress-dots {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            padding: 20px;
+            position: absolute;
+            bottom: 40px;
+            width: 100%;
+        }
+
+        .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--beige);
+        }
+
+        .dot.active {
+            background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+            width: 24px;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="phone-frame">
+        <div class="header">
+            <button class="back-button">‹</button>
+            <div class="header-content">
+                <div class="header-title">Worth Discussing</div>
+                <div class="header-subtitle">Topics where you see things differently</div>
+            </div>
+            <div style="width: 40px;"></div>
+        </div>
+
+        <div class="card-stack">
+            <!-- Background cards -->
+            <div class="discussion-card card-3"></div>
+            <div class="discussion-card card-2"></div>
+
+            <!-- Main card -->
+            <div class="discussion-card card-1">
+                <div class="card-badge">💬 Different Perspectives</div>
+
+                <div class="card-topic">Distance Response</div>
+                <div class="card-question">How do you react when you feel your partner pulling away?</div>
+
+                <div class="your-answers">
+                    <div class="answers-label">Your answers</div>
+                    <div class="answer-item">
+                        <div class="answer-avatar you">J</div>
+                        <div class="answer-text">"Reach out more to reconnect"</div>
+                    </div>
+                    <div class="answer-item">
+                        <div class="answer-avatar partner">S</div>
+                        <div class="answer-text">"Pull back myself"</div>
+                    </div>
+                </div>
+
+                <div class="insight-box">
+                    <div class="insight-title">Why this matters</div>
+                    <div class="insight-text">
+                        This is the classic pursuer-distancer dynamic. Jamie's instinct to reach out can feel like pressure to Sarah, who retreats further—which makes Jamie reach out more.
+                    </div>
+                    <div class="framework-tag">Based on Attachment Theory</div>
+                </div>
+
+                <div class="conversation-starters">
+                    <div class="starters-label">Try asking each other</div>
+                    <div class="starter-item">"When I reach out, how does it feel to you?"</div>
+                    <div class="starter-item">"What would help you feel safe coming closer?"</div>
+                </div>
+
+                <div class="card-actions">
+                    <button class="card-btn secondary">Skip</button>
+                    <button class="card-btn primary">Mark Discussed ✓</button>
+                </div>
+            </div>
+
+            <div class="swipe-hint">Swipe to see more topics</div>
+            <div class="progress-dots">
+                <div class="dot active"></div>
+                <div class="dot"></div>
+                <div class="dot"></div>
+                <div class="dot"></div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

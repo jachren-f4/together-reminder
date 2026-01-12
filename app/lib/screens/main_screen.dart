@@ -15,6 +15,7 @@ import 'package:togetherremind/services/subscription_service.dart';
 import 'package:togetherremind/animations/animation_config.dart';
 import 'package:togetherremind/config/animation_constants.dart';
 import 'package:togetherremind/utils/logger.dart';
+import 'package:togetherremind/services/lp_celebration_service.dart';
 
 /// Main app shell with bottom navigation bar
 ///
@@ -246,7 +247,13 @@ class _MainScreenState extends State<MainScreen> with SingleTickerProviderStateM
     // Check for Us 2.0 brand - use custom bottom nav
     final us2Nav = BrandWidgetFactory.us2BottomNav(
       currentIndex: _currentIndex,
-      onTap: (index) => setState(() => _currentIndex = index),
+      onTap: (index) {
+        // Dismiss LP celebration when switching away from home tab
+        if (_currentIndex == 0 && index != 0) {
+          LpCelebrationService.dismiss();
+        }
+        setState(() => _currentIndex = index);
+      },
     );
 
     if (us2Nav != null) {

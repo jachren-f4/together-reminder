@@ -338,9 +338,10 @@ export const POST = withAuthOrDevBypass(async (req, userId, email) => {
 
       // Advance branch progression for Linked activity
       // This makes the next puzzle come from the next branch (casual -> romantic -> adult -> casual)
+      // After 1st completion: branch=1 (romantic), after 2nd: branch=2 (adult), after 3rd: branch=0 (casual)
       const branchResult = await client.query(
         `INSERT INTO branch_progression (couple_id, activity_type, current_branch, total_completions, max_branches)
-         VALUES ($1, 'linked', 0, 1, 3)
+         VALUES ($1, 'linked', 1, 1, 3)
          ON CONFLICT (couple_id, activity_type)
          DO UPDATE SET
            total_completions = branch_progression.total_completions + 1,

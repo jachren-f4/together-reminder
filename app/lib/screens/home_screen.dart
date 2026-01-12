@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
+import '../services/lp_celebration_service.dart';
 import '../config/brand/brand_loader.dart';
 import '../config/brand/brand_config.dart';
 import '../widgets/brand/brand_widget_factory.dart';
@@ -54,6 +55,8 @@ import '../services/unified_game_service.dart';
 import 'inbox_screen.dart';
 import 'steps_intro_screen.dart';
 import 'steps_counter_screen.dart';
+import '../services/steps_auto_claim_service.dart';
+import '../widgets/steps_auto_claim_overlay.dart';
 import 'linked_completion_screen.dart';
 import 'word_search_completion_screen.dart';
 import 'magnet_collection_screen.dart';
@@ -112,7 +115,6 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin, 
   // LP celebration animation state (Us 2.0 only)
   final GlobalKey<Us2ConnectionBarState> _connectionBarKey = GlobalKey<Us2ConnectionBarState>();
   final GlobalKey _dailyQuestsSectionKey = GlobalKey();
-  bool _showingLpCelebration = false;
   int? _lpBeforeQuest; // LP value before navigating to a daily quest
   int? _lpBeforeCelebration; // LP value stored when celebration starts (for connection bar animation)
   bool _navigatedToDailyQuest = false; // Track if we came from a daily quest
@@ -148,9 +150,14 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin, 
 
     // Sync LP from server on initial load - triggers magnet unlock celebration if needed
     // Use postFrameCallback to ensure context is available for showing dialogs
-    WidgetsBinding.instance.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
       if (mounted) {
-        LovePointService.fetchAndSyncFromServer();
+        await LovePointService.fetchAndSyncFromServer();
+      }
+      // Check for Steps auto-claim after LP sync (iOS only)
+      // Skip if LP intro is showing (user just completed welcome quiz)
+      if (mounted && !widget.showLpIntro) {
+        _checkStepsAutoClaim();
       }
     });
 
@@ -230,9 +237,17 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin, 
 
     Logger.debug('Triggering LP celebration: $previousLp -> ${_arenaService.getLovePoints()}', service: 'home');
 
-    setState(() {
-      _lpBeforeCelebration = previousLp;
-      _showingLpCelebration = true;
+    _lpBeforeCelebration = previousLp;
+
+    // Particles rendered inside Us2ConnectionBar - they move with the bar during scroll
+    _connectionBarKey.currentState?.triggerParticleCelebration();
+
+    // Start the counter/progress bar animation
+    _connectionBarKey.currentState?.animateLPGain(previousLp);
+
+    // Call completion handler after animation duration
+    Future.delayed(AnimationConstants.lpParticleFlight, () {
+      if (mounted) _onLpCelebrationComplete();
     });
   }
 
@@ -240,19 +255,12 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin, 
   void _onLpCelebrationComplete() {
     if (!mounted) return;
 
-    // Trigger the connection bar animation using stored previous LP
-    final previousLp = _lpBeforeCelebration ?? (_arenaService.getLovePoints() - 30);
-    _connectionBarKey.currentState?.animateLPGain(previousLp);
-
-    // Refresh state and hide overlay
+    // Refresh state (bar animation already started)
     _fetchUnlockState();
     _refreshSideQuestsFuture();
     _fetchMagnetCollection();
 
-    setState(() {
-      _showingLpCelebration = false;
-      _lpBeforeCelebration = null;
-    });
+    _lpBeforeCelebration = null;
   }
 
   /// Called when HomePollingService detects side quest updates (Linked/Word Search turn changes)
@@ -337,6 +345,55 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin, 
     }
   }
 
+  /// Check for Steps auto-claim reward on app launch (iOS only)
+  /// Shows celebration overlay if yesterday's steps qualify for LP reward
+  Future<void> _checkStepsAutoClaim() async {
+    // Only on iOS
+    if (kIsWeb || !Platform.isIOS) return;
+
+    try {
+      final autoClaimService = StepsAutoClaimService();
+      final result = await autoClaimService.checkAndClaimIfNeeded();
+
+      if (!mounted) return;
+
+      if (result.shouldShowOverlay && result.stepsDay != null) {
+        final user = _storage.getUser();
+        final userName = user?.name ?? 'You';
+
+        // Show the celebration overlay
+        await showStepsAutoClaimOverlay(
+          context: context,
+          stepsDay: result.stepsDay!,
+          isCurrentUserClaimer: result.isCurrentUserClaimer,
+          partnerName: result.partnerName ?? 'Partner',
+          userName: userName,
+        );
+
+        // Mark overlay as shown after dismissal
+        await autoClaimService.markOverlayShown();
+
+        // Refresh LP display
+        if (mounted) {
+          await LovePointService.fetchAndSyncFromServer();
+          setState(() {});
+        }
+
+        Logger.success(
+          'Steps auto-claim overlay shown: ${result.stepsDay!.earnedLP} LP',
+          service: 'steps',
+        );
+      }
+    } catch (e, stackTrace) {
+      Logger.error(
+        'Steps auto-claim check failed',
+        error: e,
+        stackTrace: stackTrace,
+        service: 'steps',
+      );
+    }
+  }
+
   /// Setup callback for real-time LP counter updates
   /// Matches pattern used by quest cards (daily_quests_widget.dart)
   void _setupLPChangeCallback() {
@@ -359,6 +416,13 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin, 
   }
 
   @override
+  void didPushNext() {
+    // Called when a new route is pushed on top (user navigating away)
+    // Dismiss LP celebration so it doesn't show on other screens
+    LpCelebrationService.dismiss();
+  }
+
+  @override
   void dispose() {
     questRouteObserver.unsubscribe(this);
     _pollingService.unsubscribeFromTopic('sideQuests', _onSideQuestUpdate);
@@ -371,6 +435,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin, 
     LovePointService.setLPChangeCallback(null); // Clear LP callback to prevent memory leak
     _pulseController.dispose();
     _lpPulseController.dispose();
+    // Dismiss any active LP celebration
+    LpCelebrationService.dismiss();
     super.dispose();
   }
 
@@ -442,6 +508,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin, 
           builder: (context, snapshot) {
             final sideQuests = snapshot.data ?? [];
 
+            // Particles are now rendered INSIDE Us2ConnectionBar (attempt 17)
             return BrandWidgetFactory.us2HomeContent(
               userName: user?.name ?? 'You',
               partnerName: partner?.name ?? 'Partner',
@@ -458,11 +525,19 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin, 
               dailyQuests: dailyQuests,
               sideQuests: sideQuests,
               onQuestTap: _navigateToQuest,
-              onDebugTap: () {
-                showDialog(
+              onDebugTap: () async {
+                final result = await showDialog<String>(
                   context: context,
                   builder: (context) => const DebugMenu(),
                 );
+                // Handle debug menu actions
+                if (result == 'test_lp_animation' && mounted) {
+                  // Small delay to let dialog close animation complete
+                  await Future.delayed(const Duration(milliseconds: 200));
+                  if (mounted) {
+                    _triggerLpCelebration(_arenaService.getLovePoints() - 30);
+                  }
+                }
               },
               getDailyQuestGuidance: _getDailyQuestGuidanceState,
               getSideQuestGuidance: _getSideQuestGuidanceState,
@@ -480,35 +555,6 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin, 
                 setState(() => _showingLpIntro = false);
                 widget.onLpIntroVisibilityChanged?.call(false);
               }
-            },
-          ),
-        // LP celebration overlay (flying particles from quest to meter)
-        if (_showingLpCelebration)
-          Builder(
-            builder: (context) {
-              // Calculate particle positions
-              final screenSize = MediaQuery.of(context).size;
-
-              // Start position: center of daily quests section (approximated)
-              // The daily quests carousel is roughly in the middle-upper area
-              final startPosition = Offset(
-                screenSize.width / 2,
-                screenSize.height * 0.55, // ~55% down from top (quest cards area)
-              );
-
-              // End position: LP counter in connection bar (upper right of bar)
-              // Connection bar is at roughly 40% from top, LP is on the right side
-              final endPosition = Offset(
-                screenSize.width - 60, // Right side with some padding
-                screenSize.height * 0.38, // Slightly below hero section
-              );
-
-              return LpCelebrationOverlay(
-                startPosition: startPosition,
-                endPosition: endPosition,
-                onComplete: _onLpCelebrationComplete,
-                lpAmount: _arenaService.getLovePoints() - (_lpBeforeCelebration ?? 0),
-              );
             },
           ),
       ],
@@ -707,8 +753,32 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin, 
     }
   }
 
-  void _navigateToLinked() {
-    // Use the same navigation logic as _handleQuestCardTap for linked
+  Future<void> _navigateToLinked() async {
+    // Check if there's an active match and if it's our turn
+    try {
+      final state = await _linkedService.getOrCreateMatch();
+      if (!mounted) return;
+
+      // If match is active and it's my turn, go directly to game
+      if (state.match.status == 'active' && state.isMyTurn) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (_) => const LinkedGameScreen()),
+        ).then((_) {
+          if (mounted) {
+            _refreshSideQuestsFuture();
+            setState(() {});
+          }
+        });
+        return;
+      }
+    } catch (e) {
+      // On error, fall through to intro screen
+      Logger.debug('Failed to check Linked match state, showing intro', service: 'home');
+    }
+
+    // No active match, not my turn, or error - show intro screen
+    if (!mounted) return;
     Navigator.push(
       context,
       MaterialPageRoute(builder: (_) => const LinkedIntroScreen()),
@@ -720,7 +790,32 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin, 
     });
   }
 
-  void _navigateToWordSearch() {
+  Future<void> _navigateToWordSearch() async {
+    // Check if there's an active match and if it's our turn
+    try {
+      final state = await _wordSearchService.getOrCreateMatch();
+      if (!mounted) return;
+
+      // If match is active and it's my turn, go directly to game
+      if (state.match.status == 'active' && state.isMyTurn) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (_) => const WordSearchGameScreen()),
+        ).then((_) {
+          if (mounted) {
+            _refreshSideQuestsFuture();
+            setState(() {});
+          }
+        });
+        return;
+      }
+    } catch (e) {
+      // On error, fall through to intro screen
+      Logger.debug('Failed to check Word Search match state, showing intro', service: 'home');
+    }
+
+    // No active match, not my turn, or error - show intro screen
+    if (!mounted) return;
     Navigator.push(
       context,
       MaterialPageRoute(builder: (_) => const WordSearchIntroScreen()),
@@ -855,11 +950,18 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin, 
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     GestureDetector(
-                      onDoubleTap: () {
-                        showDialog(
+                      onDoubleTap: () async {
+                        final result = await showDialog<String>(
                           context: context,
                           builder: (context) => const DebugMenu(),
                         );
+                        // Handle debug menu actions
+                        if (result == 'test_lp_animation' && mounted) {
+                          await Future.delayed(const Duration(milliseconds: 200));
+                          if (mounted) {
+                            _triggerLpCelebration(_arenaService.getLovePoints() - 30);
+                          }
+                        }
                       },
                       child: Text(
                         _getGreeting(),
@@ -2005,11 +2107,18 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin, 
                 children: [
                   // "LIIA" title with debug menu access
                   GestureDetector(
-                    onDoubleTap: () {
-                      showDialog(
+                    onDoubleTap: () async {
+                      final result = await showDialog<String>(
                         context: context,
                         builder: (context) => const DebugMenu(),
                       );
+                      // Handle debug menu actions
+                      if (result == 'test_lp_animation' && mounted) {
+                        await Future.delayed(const Duration(milliseconds: 200));
+                        if (mounted) {
+                          _triggerLpCelebration(_arenaService.getLovePoints() - 30);
+                        }
+                      }
                     },
                     child: Text(
                       'LIIA',

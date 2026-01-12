@@ -44,6 +44,7 @@ function transformCluesForClient(clues: any, puzzleId: string, baseUrl: string):
 }
 
 // Get puzzle data without solution (for client)
+// Includes cellTypes array to tell client which cells are void/clue/answer
 function getPuzzleForClient(puzzle: any, baseUrl: string = ''): any {
   const { grid, size, clues } = puzzle;
   const cellTypes: string[] = [];
@@ -54,22 +55,37 @@ function getPuzzleForClient(puzzle: any, baseUrl: string = ''): any {
   // For "down" clue with target_index X, clue cell is at X-cols (above answer)
   const clueCellIndices = new Set<number>();
 
-  for (const [clueNum, clueData] of Object.entries(clues)) {
-    const clue = clueData as any;
-    const targetIndex = clue.target_index;
-    if (targetIndex === undefined) continue;
-
+  const addClueCellIndex = (targetIndex: number, direction: string) => {
     let clueCellIndex: number;
-    if (clue.arrow === 'across') {
+    if (direction === 'across') {
       clueCellIndex = targetIndex - 1;
-    } else if (clue.arrow === 'down') {
+    } else if (direction === 'down') {
       clueCellIndex = targetIndex - cols;
     } else {
-      continue;
+      return;
     }
-
     if (clueCellIndex >= 0 && clueCellIndex < grid.length) {
       clueCellIndices.add(clueCellIndex);
+    }
+  };
+
+  for (const [clueNum, clueData] of Object.entries(clues)) {
+    const clue = clueData as any;
+
+    // Check for single-direction format (has 'arrow' key)
+    if (clue.arrow !== undefined) {
+      const targetIndex = clue.target_index;
+      if (targetIndex !== undefined) {
+        addClueCellIndex(targetIndex, clue.arrow);
+      }
+    } else {
+      // Dual-direction format (has 'across' and/or 'down' keys)
+      if (clue.across?.target_index !== undefined) {
+        addClueCellIndex(clue.across.target_index, 'across');
+      }
+      if (clue.down?.target_index !== undefined) {
+        addClueCellIndex(clue.down.target_index, 'down');
+      }
     }
   }
 

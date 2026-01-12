@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=390, height=844, initial-scale=1.0">
+    <title>Us 2.0 - Question Deep Dive</title>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-start: #FFD1C1;
+            --bg-end: #FFF5F0;
+            --primary-coral: #FF6B6B;
+            --primary-salmon: #FF7B6B;
+            --gradient-start: #FF6B6B;
+            --gradient-end: #FF9F43;
+            --cream: #FFF8F0;
+            --beige: #F5E6D8;
+            --text-dark: #2D2D2D;
+            --text-medium: #6B6B6B;
+            --text-light: #9B9B9B;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            background: linear-gradient(180deg, var(--bg-start) 0%, var(--bg-end) 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .phone-frame {
+            width: 390px;
+            height: 844px;
+            background: linear-gradient(180deg, var(--bg-start) 0%, var(--bg-end) 100%);
+            border-radius: 40px;
+            overflow: hidden;
+            box-shadow: 0 25px 80px rgba(0, 0, 0, 0.15);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .quiz-header {
+            padding: 16px 20px;
+            background: rgba(255, 255, 255, 0.5);
+            backdrop-filter: blur(10px);
+        }
+
+        .quiz-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .quiz-badge {
+            background: linear-gradient(135deg, rgba(255, 107, 107, 0.15), rgba(255, 159, 67, 0.1));
+            color: var(--primary-coral);
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .quiz-progress {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-medium);
+        }
+
+        .progress-bar {
+            height: 6px;
+            background: var(--beige);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            width: 40%;
+            background: linear-gradient(90deg, var(--gradient-start), var(--gradient-end));
+            border-radius: 3px;
+        }
+
+        .question-section {
+            padding: 30px 20px 20px;
+        }
+
+        .question-number {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--text-medium);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 12px;
+        }
+
+        .question-text {
+            font-family: 'Playfair Display', serif;
+            font-size: 24px;
+            line-height: 1.4;
+            margin-bottom: 30px;
+            color: var(--text-dark);
+        }
+
+        .choices {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .choice {
+            background: var(--cream);
+            border: 2px solid transparent;
+            border-radius: 16px;
+            padding: 18px 20px;
+            font-size: 15px;
+            color: var(--text-dark);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+        }
+
+        .choice:hover {
+            background: white;
+            border-color: var(--beige);
+        }
+
+        .choice.selected {
+            background: linear-gradient(135deg, rgba(255, 107, 107, 0.1), rgba(255, 159, 67, 0.05));
+            border-color: var(--primary-coral);
+        }
+
+        .expand-hint {
+            text-align: center;
+            padding: 14px;
+            color: var(--primary-coral);
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            background: linear-gradient(135deg, rgba(255, 107, 107, 0.08), rgba(255, 159, 67, 0.05));
+            border-radius: 16px;
+            margin: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .expand-hint:hover {
+            background: linear-gradient(135deg, rgba(255, 107, 107, 0.12), rgba(255, 159, 67, 0.08));
+        }
+
+        /* Deep Dive Overlay */
+        .deep-dive-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(180deg, transparent 0%, var(--bg-end) 15%);
+            padding-top: 40px;
+        }
+
+        .deep-dive-card {
+            background: var(--cream);
+            border-radius: 28px 28px 0 0;
+            border: 1px solid var(--beige);
+            border-bottom: none;
+            overflow: hidden;
+            box-shadow: 0 -10px 40px rgba(255, 107, 107, 0.15);
+        }
+
+        .deep-dive-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 18px 20px;
+            border-bottom: 1px solid var(--beige);
+            background: rgba(255, 255, 255, 0.5);
+        }
+
+        .deep-dive-title {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--primary-coral);
+        }
+
+        .close-btn {
+            color: var(--text-light);
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        .deep-dive-content {
+            padding: 20px;
+            max-height: 350px;
+            overflow-y: auto;
+        }
+
+        .framework-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+            padding: 8px 14px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 20px;
+        }
+
+        .insight-section {
+            margin-bottom: 20px;
+        }
+
+        .insight-label {
+            font-size: 10px;
+            font-weight: 700;
+            color: var(--text-medium);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 10px;
+        }
+
+        .insight-text {
+            font-size: 15px;
+            line-height: 1.6;
+            color: var(--text-dark);
+        }
+
+        .choice-meanings {
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 16px;
+            padding: 16px;
+            margin-bottom: 20px;
+        }
+
+        .choice-meaning-item {
+            display: flex;
+            gap: 12px;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--beige);
+        }
+
+        .choice-meaning-item:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        .choice-letter {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: var(--beige);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--text-medium);
+            flex-shrink: 0;
+        }
+
+        .choice-letter.your-pick {
+            background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+            color: white;
+        }
+
+        .choice-meaning-text {
+            font-size: 13px;
+            color: var(--text-medium);
+            line-height: 1.5;
+        }
+
+        .choice-meaning-text strong {
+            color: var(--text-dark);
+            display: block;
+            margin-bottom: 2px;
+            font-size: 14px;
+        }
+
+        .deep-dive-actions {
+            display: flex;
+            gap: 12px;
+            padding: 16px 20px;
+            background: rgba(255, 255, 255, 0.6);
+            border-top: 1px solid var(--beige);
+        }
+
+        .dd-btn {
+            flex: 1;
+            padding: 16px;
+            border-radius: 25px;
+            text-align: center;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            border: none;
+        }
+
+        .dd-btn.save {
+            background: rgba(255, 255, 255, 0.8);
+            color: var(--text-dark);
+            border: 1px solid var(--beige);
+        }
+
+        .dd-btn.continue {
+            background: linear-gradient(90deg, var(--gradient-start), var(--gradient-end));
+            color: white;
+            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.35);
+        }
+    </style>
+</head>
+<body>
+    <div class="phone-frame">
+        <div class="quiz-header">
+            <div class="quiz-meta">
+                <span class="quiz-badge">🔗 Attachment</span>
+                <span class="quiz-progress">2 of 5</span>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill"></div>
+            </div>
+        </div>
+
+        <div class="question-section">
+            <div class="question-number">Question 2</div>
+            <div class="question-text">How do I react when I feel like you're pulling away?</div>
+
+            <div class="choices">
+                <div class="choice">Give you space and wait</div>
+                <div class="choice selected">Reach out more to reconnect</div>
+                <div class="choice">Feel anxious and need reassurance</div>
+                <div class="choice">Pull back myself</div>
+            </div>
+
+            <div class="expand-hint">
+                💡 Tap to learn why this question matters
+            </div>
+        </div>
+
+        <!-- Deep Dive Overlay -->
+        <div class="deep-dive-overlay">
+            <div class="deep-dive-card">
+                <div class="deep-dive-header">
+                    <div class="deep-dive-title">
+                        <span>💡</span>
+                        <span>Why This Matters</span>
+                    </div>
+                    <span class="close-btn">×</span>
+                </div>
+
+                <div class="deep-dive-content">
+                    <div class="framework-pill">
+                        <span>🔗</span>
+                        <span>Based on Attachment Theory</span>
+                    </div>
+
+                    <div class="insight-section">
+                        <div class="insight-label">The Psychology</div>
+                        <div class="insight-text">
+                            Response to perceived distance reveals attachment activation. Space-givers show secure or avoidant patterns; reach-outers show anxious patterns; pull-backers show avoidant or fearful attachment.
+                        </div>
+                    </div>
+
+                    <div class="insight-section">
+                        <div class="insight-label">What each answer suggests</div>
+                        <div class="choice-meanings">
+                            <div class="choice-meaning-item">
+                                <div class="choice-letter">A</div>
+                                <div class="choice-meaning-text">
+                                    <strong>Give space and wait</strong>
+                                    Secure or avoidant—trusts the relationship can handle distance
+                                </div>
+                            </div>
+                            <div class="choice-meaning-item">
+                                <div class="choice-letter your-pick">B</div>
+                                <div class="choice-meaning-text">
+                                    <strong>Reach out more to reconnect</strong>
+                                    Anxious attachment—seeks reassurance through connection
+                                </div>
+                            </div>
+                            <div class="choice-meaning-item">
+                                <div class="choice-letter">C</div>
+                                <div class="choice-meaning-text">
+                                    <strong>Feel anxious and need reassurance</strong>
+                                    Anxious-preoccupied—strong need for validation
+                                </div>
+                            </div>
+                            <div class="choice-meaning-item">
+                                <div class="choice-letter">D</div>
+                                <div class="choice-meaning-text">
+                                    <strong>Pull back myself</strong>
+                                    Avoidant or fearful—protects self through withdrawal
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="insight-section">
+                        <div class="insight-label">Reflection</div>
+                        <div class="insight-text">
+                            When you sense your partner withdrawing, what's your instinct? Does that response bring you closer or push you apart?
+                        </div>
+                    </div>
+                </div>
+
+                <div class="deep-dive-actions">
+                    <button class="dd-btn save">📝 Save to Journal</button>
+                    <button class="dd-btn continue">Continue →</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

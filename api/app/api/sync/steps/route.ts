@@ -230,8 +230,11 @@ export const GET = withAuthOrDevBypass(async (req, userId) => {
       // Partner steps (flat keys for Flutter)
       partnerTodaySteps: todayData.partner.steps,
       partnerYesterdaySteps: yesterdayData.partner.steps,
-      // Claim status
+      // Claim status - extended for auto-claim overlay
+      yesterdayClaimed: claim !== null,
       yesterdayClaimedBy: claim?.claimed_by || null,
+      yesterdayLpEarned: claim?.lp_earned || null,
+      yesterdayCombinedSteps: claim?.combined_steps || null,
       // Also include user's own data for completeness
       userConnected: userConnection?.is_connected || false,
       userConnectedAt: userConnection?.connected_at || null,

@@ -839,14 +839,16 @@ class _LinkedGameScreenState extends State<LinkedGameScreen>
     double fontSize;
     if (isActuallyEmoji) {
       fontSize = 28; // Large emoji
-    } else if (textLength <= 4) {
+    } else if (textLength <= 3) {
       fontSize = 16;
+    } else if (textLength <= 5) {
+      fontSize = 11;
     } else if (textLength <= 8) {
-      fontSize = 12;
-    } else if (textLength <= 12 || hasSpace) {
       fontSize = 9;
-    } else {
+    } else if (textLength <= 12 || hasSpace) {
       fontSize = 7;
+    } else {
+      fontSize = 6;
     }
 
     return GestureDetector(

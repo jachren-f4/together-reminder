@@ -1,7 +1,6 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import '../../config/animation_constants.dart';
-import '../../config/brand/us2_theme.dart';
 
 /// Overlay widget that shows flying sparkle particles from quest area to LP meter.
 /// Used to celebrate LP gains when returning from daily quests.
@@ -48,19 +47,19 @@ class _LpCelebrationOverlayState extends State<LpCelebrationOverlay>
     final particleCount = AnimationConstants.lpParticleCount;
 
     _particles = List.generate(particleCount, (index) {
-      // Randomize start position slightly (spread around center)
-      final startOffsetX = (random.nextDouble() - 0.5) * 60;
-      final startOffsetY = (random.nextDouble() - 0.5) * 40;
+      // Randomize start position with larger spread (wider burst from center)
+      final startOffsetX = (random.nextDouble() - 0.5) * 120;
+      final startOffsetY = (random.nextDouble() - 0.5) * 80;
 
       // Randomize end position slightly (converge on meter)
-      final endOffsetX = (random.nextDouble() - 0.5) * 20;
-      final endOffsetY = (random.nextDouble() - 0.5) * 10;
+      final endOffsetX = (random.nextDouble() - 0.5) * 30;
+      final endOffsetY = (random.nextDouble() - 0.5) * 15;
 
-      // Random size between 8-14
-      final size = 8.0 + random.nextDouble() * 6.0;
+      // Random size between 12-22 (larger, more visible particles)
+      final size = 12.0 + random.nextDouble() * 10.0;
 
-      // Random arc height (how much curve in the path)
-      final arcHeight = 30.0 + random.nextDouble() * 40.0;
+      // Random arc height (how much curve in the path) - more dramatic arcs
+      final arcHeight = 40.0 + random.nextDouble() * 60.0;
 
       return _ParticleData(
         startOffset: Offset(startOffsetX, startOffsetY),
@@ -80,19 +79,18 @@ class _LpCelebrationOverlayState extends State<LpCelebrationOverlay>
   }
 
   void _startAnimations() async {
-    // Start each particle with staggered delay
+    // Start each particle with staggered delay (only delay by stagger, not cumulative)
     for (var i = 0; i < _controllers.length; i++) {
-      await Future.delayed(_particles[i].delay);
+      if (i > 0) {
+        await Future.delayed(AnimationConstants.lpParticleStagger);
+      }
       if (mounted) {
         _controllers[i].forward();
       }
     }
 
-    // Wait for all particles to complete, then call onComplete
-    await Future.delayed(
-      AnimationConstants.lpParticleFlight +
-          AnimationConstants.lpParticleStagger * (_controllers.length - 1),
-    );
+    // Wait for last particle to complete its flight
+    await Future.delayed(AnimationConstants.lpParticleFlight);
 
     if (mounted && !_hasCalledComplete) {
       _hasCalledComplete = true;
@@ -110,11 +108,17 @@ class _LpCelebrationOverlayState extends State<LpCelebrationOverlay>
 
   @override
   Widget build(BuildContext context) {
-    return IgnorePointer(
-      child: Stack(
-        children: List.generate(_particles.length, (index) {
-          return _buildParticle(index);
-        }),
+    // Use Material + SizedBox.expand for proper Overlay positioning
+    return Material(
+      type: MaterialType.transparency,
+      child: SizedBox.expand(
+        child: IgnorePointer(
+          child: Stack(
+            children: List.generate(_particles.length, (index) {
+              return _buildParticle(index);
+            }),
+          ),
+        ),
       ),
     );
   }
@@ -140,11 +144,11 @@ class _LpCelebrationOverlayState extends State<LpCelebrationOverlay>
           progress,
         );
 
-        // Scale: start at 1.0, shrink to 0.6 as approaching destination
-        final scale = 1.0 - (progress * 0.4);
+        // Scale: start at 1.0, shrink slightly as approaching destination
+        final scale = 1.0 - (progress * 0.2);
 
-        // Opacity: full until 80%, then fade out
-        final opacity = progress < 0.8 ? 1.0 : (1.0 - (progress - 0.8) * 5.0);
+        // Fade out quickly in last 15% of journey
+        final opacity = progress < 0.85 ? 1.0 : (1.0 - (progress - 0.85) / 0.15);
 
         return Positioned(
           left: position.dx - (particle.size * scale / 2),
@@ -180,24 +184,41 @@ class _LpCelebrationOverlayState extends State<LpCelebrationOverlay>
   }
 
   Widget _buildSparkle(double size) {
-    return Container(
+    return SizedBox(
       width: size,
       height: size,
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        gradient: RadialGradient(
-          colors: [
-            Colors.white,
-            Us2Theme.primaryBrandPink.withValues(alpha: 0.8),
-            Us2Theme.gradientAccentEnd.withValues(alpha: 0.6),
-          ],
-          stops: const [0.0, 0.4, 1.0],
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: Us2Theme.glowPink.withValues(alpha: 0.6),
-            blurRadius: size * 1.5,
-            spreadRadius: size * 0.3,
+      child: Stack(
+        children: [
+          // Glow behind the star
+          Center(
+            child: Container(
+              width: size * 0.8,
+              height: size * 0.8,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                boxShadow: [
+                  BoxShadow(
+                    color: const Color(0xFFFFD700), // Gold glow
+                    blurRadius: size * 1.5,
+                    spreadRadius: size * 0.3,
+                  ),
+                ],
+              ),
+            ),
+          ),
+          // Star icon
+          Center(
+            child: Icon(
+              Icons.star,
+              size: size,
+              color: const Color(0xFFFFD700), // Gold star
+              shadows: const [
+                Shadow(
+                  color: Colors.white,
+                  blurRadius: 4,
+                ),
+              ],
+            ),
           ),
         ],
       ),

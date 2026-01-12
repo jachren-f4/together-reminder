@@ -7,6 +7,8 @@ import '../widgets/brand/us2/us2_intro_screen.dart';
 import '../services/linked_service.dart';
 import '../services/love_point_service.dart';
 import '../services/storage_service.dart';
+import '../exceptions/game_exceptions.dart';
+import '../models/cooldown_status.dart';
 import 'linked_game_screen.dart';
 
 /// Introduction screen for Linked crossword game.
@@ -24,6 +26,7 @@ class _LinkedIntroScreenState extends State<LinkedIntroScreen>
   bool _isLoading = false;
   bool _isMyTurn = true;
   LpContentStatus? _lpStatus;
+  CooldownStatus? _cooldownStatus;
 
   @override
   bool get enableConfetti => false;
@@ -51,11 +54,26 @@ class _LinkedIntroScreenState extends State<LinkedIntroScreen>
 
       setState(() {
         _isMyTurn = state.isMyTurn;
+        _cooldownStatus = null; // Clear any previous cooldown
+      });
+    } on CooldownActiveException catch (e) {
+      // Cooldown is active - convert exception to CooldownStatus for display
+      if (!mounted) return;
+      setState(() {
+        _cooldownStatus = CooldownStatus(
+          canPlay: false,
+          remainingInBatch: e.remainingInBatch,
+          cooldownEndsAt: e.cooldownEndsAt,
+          cooldownRemainingMs: e.cooldownRemainingMs,
+        );
       });
     } catch (e) {
-      // Silently fail - will show default state
+      // Silently fail for other errors - will show default state
     }
   }
+
+  /// Whether the game can be started (not on cooldown)
+  bool get _canStart => _cooldownStatus?.isOnCooldown != true && !_isLoading;
 
   void _startGame() {
     setState(() => _isLoading = true);
@@ -269,28 +287,33 @@ class _LinkedIntroScreenState extends State<LinkedIntroScreen>
   /// Build Us 2.0 styled intro screen
   Widget _buildUs2Intro(String? userName, String partnerName) {
     final alreadyEarned = _lpStatus?.alreadyGrantedToday == true;
+    final isOnCooldown = _cooldownStatus?.isOnCooldown == true;
 
     return Us2IntroScreen(
       title: 'Crossword',
       description: 'Take turns solving crossword clues. Connect your words and see how in sync your minds are with $partnerName.',
       imagePath: 'assets/brands/us2/images/quests/linked.png',
-      emoji: '🔗', // Fallback if image fails to load
+      emoji: '🧩', // Fallback if image fails to load
       buttonLabel: _isLoading ? 'Loading...' : 'Start Playing',
-      onStart: _isLoading ? () {} : _startGame,
+      onStart: _canStart ? _startGame : () {},
       onBack: () => Navigator.of(context).pop(),
-      additionalContent: [
-        // Reward badge
-        Us2RewardBadge(
-          text: alreadyEarned ? 'LP earned today' : '+30 LP',
-          icon: Icons.favorite,
-        ),
-        const SizedBox(height: 12),
-        // Turn indicator
-        Us2RewardBadge(
-          text: _isMyTurn ? "It's your turn!" : "Waiting for $partnerName",
-          icon: _isMyTurn ? Icons.play_arrow : Icons.hourglass_empty,
-        ),
-      ],
+      cooldownStatus: _cooldownStatus,
+      activityName: 'Crossword',
+      additionalContent: isOnCooldown
+          ? null // Cooldown layout is shown instead
+          : [
+              // Reward badge
+              Us2RewardBadge(
+                text: alreadyEarned ? 'LP earned today' : '+30 LP',
+                icon: Icons.favorite,
+              ),
+              const SizedBox(height: 12),
+              // Turn indicator
+              Us2RewardBadge(
+                text: _isMyTurn ? "It's your turn!" : "Waiting for $partnerName",
+                icon: _isMyTurn ? Icons.play_arrow : Icons.hourglass_empty,
+              ),
+            ],
     );
   }
 

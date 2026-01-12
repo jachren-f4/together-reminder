@@ -2040,8 +2040,29 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return '${months[date.month - 1]} ${date.day}, ${date.year}';
   }
 
-  /// Open subscription management (App Store/Play Store)
+  /// Open subscription management using RevenueCat Customer Center
+  ///
+  /// Falls back to App Store/Play Store if Customer Center fails.
   Future<void> _openSubscriptionManagement() async {
+    final subscriptionService = SubscriptionService();
+
+    // Try RevenueCat Customer Center first (better UX)
+    final result = await subscriptionService.presentCustomerCenter();
+
+    if (result.wasPresented) {
+      // Customer Center was shown, refresh status
+      if (mounted) {
+        setState(() {});
+      }
+      return;
+    }
+
+    // Fall back to native subscription management
+    _openNativeSubscriptionManagement();
+  }
+
+  /// Open App Store/Play Store subscription management directly
+  Future<void> _openNativeSubscriptionManagement() async {
     // iOS App Store subscription management URL
     const iosUrl = 'https://apps.apple.com/account/subscriptions';
     // Android Play Store subscription management URL

@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=390, height=844, initial-scale=1.0">
+    <title>Us 2.0 - Weekly Insights</title>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-start: #FFD1C1;
+            --bg-end: #FFF5F0;
+            --primary-coral: #FF6B6B;
+            --primary-salmon: #FF7B6B;
+            --gradient-start: #FF6B6B;
+            --gradient-end: #FF9F43;
+            --cream: #FFF8F0;
+            --beige: #F5E6D8;
+            --text-dark: #2D2D2D;
+            --text-medium: #6B6B6B;
+            --text-light: #9B9B9B;
+            --success-green: #4CAF50;
+            --success-bg: #E8F5E9;
+            --warning-amber: #FF9800;
+            --warning-bg: #FFF3E0;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            background: linear-gradient(180deg, var(--bg-start) 0%, var(--bg-end) 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .phone-frame {
+            width: 390px;
+            height: 844px;
+            background: linear-gradient(180deg, var(--bg-start) 0%, var(--bg-end) 100%);
+            border-radius: 40px;
+            overflow: hidden;
+            box-shadow: 0 25px 80px rgba(0, 0, 0, 0.15);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .hero {
+            padding: 32px 24px;
+            text-align: center;
+            background: rgba(255, 255, 255, 0.4);
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 16px;
+        }
+
+        .hero-title {
+            font-family: 'Pacifico', cursive;
+            font-size: 32px;
+            color: var(--primary-coral);
+            margin-bottom: 8px;
+            line-height: 1.2;
+        }
+
+        .hero-subtitle {
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            color: var(--text-medium);
+            font-size: 15px;
+        }
+
+        .hero-date {
+            font-size: 13px;
+            color: var(--text-light);
+            margin-top: 12px;
+        }
+
+        .main-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 0 16px 100px;
+        }
+
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .stat-card {
+            background: var(--cream);
+            border-radius: 16px;
+            padding: 18px 12px;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+        }
+
+        .stat-number {
+            font-family: 'Playfair Display', serif;
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--primary-coral);
+            margin-bottom: 4px;
+        }
+
+        .stat-label {
+            font-size: 10px;
+            font-weight: 700;
+            color: var(--text-medium);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .section {
+            margin-bottom: 24px;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 14px;
+        }
+
+        .section-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 17px;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .section-link {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--primary-coral);
+        }
+
+        .highlight-card {
+            background: linear-gradient(135deg, rgba(255, 107, 107, 0.1), rgba(255, 159, 67, 0.05));
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255, 107, 107, 0.15);
+        }
+
+        .highlight-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 14px;
+        }
+
+        .highlight-emoji {
+            font-size: 24px;
+        }
+
+        .highlight-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .highlight-text {
+            font-size: 15px;
+            line-height: 1.6;
+            color: var(--text-dark);
+            margin-bottom: 16px;
+        }
+
+        .highlight-cta {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+            padding: 12px 18px;
+            border-radius: 25px;
+            font-size: 14px;
+            font-weight: 700;
+            color: white;
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+        }
+
+        .pattern-card {
+            background: var(--cream);
+            border-radius: 16px;
+            padding: 16px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: flex-start;
+            gap: 14px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+        }
+
+        .pattern-indicator {
+            width: 4px;
+            height: 100%;
+            min-height: 60px;
+            border-radius: 2px;
+        }
+
+        .pattern-indicator.positive { background: var(--success-green); }
+        .pattern-indicator.growth { background: var(--primary-coral); }
+        .pattern-indicator.attention { background: var(--warning-amber); }
+
+        .pattern-content {
+            flex: 1;
+        }
+
+        .pattern-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 6px;
+        }
+
+        .pattern-text {
+            font-size: 14px;
+            color: var(--text-medium);
+            line-height: 1.5;
+        }
+
+        .pattern-framework {
+            display: inline-block;
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--text-light);
+            margin-top: 10px;
+            padding: 4px 10px;
+            background: rgba(255, 255, 255, 0.6);
+            border-radius: 6px;
+        }
+
+        .insight-card {
+            background: var(--cream);
+            border-radius: 20px;
+            margin-bottom: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .insight-header {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 16px;
+        }
+
+        .insight-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+        .insight-icon.attachment {
+            background: linear-gradient(135deg, rgba(255, 107, 107, 0.15), rgba(255, 159, 67, 0.1));
+        }
+
+        .insight-icon.communication {
+            background: rgba(33, 150, 243, 0.15);
+        }
+
+        .insight-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 4px;
+        }
+
+        .insight-subtitle {
+            font-size: 13px;
+            color: var(--text-medium);
+        }
+
+        .insight-body {
+            padding: 0 16px 16px;
+        }
+
+        .insight-text {
+            font-size: 14px;
+            line-height: 1.6;
+            color: var(--text-dark);
+        }
+
+        .insight-action {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 14px 16px;
+            background: rgba(255, 255, 255, 0.5);
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--primary-coral);
+            cursor: pointer;
+            border-top: 1px solid var(--beige);
+        }
+
+        .journal-prompts {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .journal-prompt-item {
+            background: var(--cream);
+            border-radius: 14px;
+            padding: 16px;
+            font-size: 14px;
+            color: var(--text-dark);
+            line-height: 1.4;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+        }
+
+        .journal-prompt-item:hover {
+            background: white;
+        }
+
+        .prompt-icon {
+            font-size: 18px;
+        }
+
+        .footer-cta {
+            background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+            border-radius: 20px;
+            padding: 24px;
+            text-align: center;
+            margin-top: 20px;
+            box-shadow: 0 8px 30px rgba(255, 107, 107, 0.3);
+        }
+
+        .footer-cta-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 18px;
+            font-weight: 600;
+            color: white;
+            margin-bottom: 8px;
+        }
+
+        .footer-cta-text {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.9);
+        }
+    </style>
+</head>
+<body>
+    <div class="phone-frame">
+        <div class="hero">
+            <div class="hero-badge">✨ Your Weekly Insights</div>
+            <div class="hero-title">What We Learned About Us</div>
+            <div class="hero-subtitle">Personalized insights from your quizzes</div>
+            <div class="hero-date">Week of January 6 - 12</div>
+        </div>
+
+        <div class="main-content">
+            <div class="stat-grid">
+                <div class="stat-card">
+                    <div class="stat-number">4</div>
+                    <div class="stat-label">Quizzes</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">15</div>
+                    <div class="stat-label">Matched</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">5</div>
+                    <div class="stat-label">To Discuss</div>
+                </div>
+            </div>
+
+            <!-- Key Insight -->
+            <div class="highlight-card">
+                <div class="highlight-header">
+                    <span class="highlight-emoji">💡</span>
+                    <span class="highlight-title">Key Pattern Discovered</span>
+                </div>
+                <div class="highlight-text">
+                    This week revealed a <strong>pursuer-distancer dynamic</strong> in how you handle distance. Jamie tends to reach out more when feeling disconnected, while Sarah pulls back to process. This is one of the most common relationship patterns—and knowing it is the first step to navigating it.
+                </div>
+                <button class="highlight-cta">
+                    📚 Learn about this pattern →
+                </button>
+            </div>
+
+            <!-- Patterns Section -->
+            <div class="section">
+                <div class="section-header">
+                    <span class="section-title">Patterns We Noticed</span>
+                </div>
+
+                <div class="pattern-card">
+                    <div class="pattern-indicator positive"></div>
+                    <div class="pattern-content">
+                        <div class="pattern-title">You're aligned on social energy</div>
+                        <div class="pattern-text">Both of you answered consistently as moderate introverts across multiple quizzes. You'll naturally agree on how much people-time feels right.</div>
+                        <span class="pattern-framework">Personality Psychology</span>
+                    </div>
+                </div>
+
+                <div class="pattern-card">
+                    <div class="pattern-indicator growth"></div>
+                    <div class="pattern-content">
+                        <div class="pattern-title">Different security sources</div>
+                        <div class="pattern-text">Jamie feels most secure with consistent contact; Sarah feels secure with honesty and trust. Neither is wrong—but knowing this helps you reassure each other effectively.</div>
+                        <span class="pattern-framework">Attachment Theory</span>
+                    </div>
+                </div>
+
+                <div class="pattern-card">
+                    <div class="pattern-indicator attention"></div>
+                    <div class="pattern-content">
+                        <div class="pattern-title">Core fears may trigger each other</div>
+                        <div class="pattern-text">Jamie fears abandonment; Sarah fears losing independence. When Jamie reaches out more (to avoid feeling abandoned), Sarah may pull back (to protect independence).</div>
+                        <span class="pattern-framework">Attachment Theory</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Framework Insights -->
+            <div class="section">
+                <div class="section-header">
+                    <span class="section-title">Framework Insights</span>
+                    <span class="section-link">See all ›</span>
+                </div>
+
+                <div class="insight-card">
+                    <div class="insight-header">
+                        <div class="insight-icon attachment">🔗</div>
+                        <div>
+                            <div class="insight-title">Attachment Theory</div>
+                            <div class="insight-subtitle">Based on 8 questions answered</div>
+                        </div>
+                    </div>
+                    <div class="insight-body">
+                        <div class="insight-text">
+                            Your responses suggest Jamie leans <strong>anxious-attached</strong> while Sarah leans <strong>avoidant</strong>. This is a common pairing that can work beautifully with awareness—the key is breaking the pursue-withdraw cycle.
+                        </div>
+                    </div>
+                    <div class="insight-action">
+                        📖 Read: "The Attachment Dance"
+                    </div>
+                </div>
+
+                <div class="insight-card">
+                    <div class="insight-header">
+                        <div class="insight-icon communication">💬</div>
+                        <div>
+                            <div class="insight-title">Communication Styles</div>
+                            <div class="insight-subtitle">Based on 5 questions answered</div>
+                        </div>
+                    </div>
+                    <div class="insight-body">
+                        <div class="insight-text">
+                            You both value <strong>verbal affirmation</strong> and prefer to <strong>talk things through</strong> rather than letting issues sit. This alignment is a relationship strength.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- This Week's Journal Prompts -->
+            <div class="section">
+                <div class="section-header">
+                    <span class="section-title">Reflection Prompts</span>
+                    <span class="section-link">All prompts ›</span>
+                </div>
+
+                <div class="journal-prompts">
+                    <div class="journal-prompt-item">
+                        <span class="prompt-icon">💭</span>
+                        <span>When you sense your partner withdrawing, what's your instinct?</span>
+                    </div>
+                    <div class="journal-prompt-item">
+                        <span class="prompt-icon">❤️</span>
+                        <span>What does your partner do that makes you feel most secure?</span>
+                    </div>
+                    <div class="journal-prompt-item">
+                        <span class="prompt-icon">🌱</span>
+                        <span>Where did your relationship fears originate?</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer CTA -->
+            <div class="footer-cta">
+                <div class="footer-cta-title">Keep discovering each other</div>
+                <div class="footer-cta-text">Complete today's quiz to unlock more insights</div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

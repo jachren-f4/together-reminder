@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Second User - Partner Claimed Overlay - Us 2.0</title>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-start: #FFD1C1;
+            --bg-end: #FFF5F0;
+            --primary-coral: #FF6B6B;
+            --gradient-start: #FF6B6B;
+            --gradient-end: #FF9F43;
+            --cream: #FFF8F0;
+            --beige: #F5E6D8;
+            --text-dark: #2D2D2D;
+            --text-medium: #6B6B6B;
+            --text-light: #9B9B9B;
+            --gold: #FFB347;
+            --gold-light: #FFD89B;
+            --success-green: #4ECDC4;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            background: linear-gradient(180deg, var(--bg-start) 0%, var(--bg-end) 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        /* Phone frame */
+        .phone-frame {
+            width: 375px;
+            height: 812px;
+            background: linear-gradient(180deg, var(--bg-start) 0%, var(--bg-end) 100%);
+            border-radius: 40px;
+            box-shadow: 0 25px 80px rgba(0, 0, 0, 0.3);
+            position: relative;
+            overflow: hidden;
+            border: 8px solid #1a1a1a;
+        }
+
+        /* Simulated home screen behind overlay */
+        .home-blur {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(180deg, var(--bg-start) 0%, var(--bg-end) 100%);
+            filter: blur(3px);
+            opacity: 0.7;
+        }
+
+        .home-content {
+            position: absolute;
+            top: 60px;
+            left: 20px;
+            right: 20px;
+            opacity: 0.4;
+        }
+
+        .home-greeting {
+            font-family: 'Pacifico', cursive;
+            font-size: 28px;
+            color: var(--primary-coral);
+            margin-bottom: 8px;
+        }
+
+        .home-subtitle {
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            color: var(--text-medium);
+            font-size: 14px;
+        }
+
+        /* Dark overlay */
+        .overlay-backdrop {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+        }
+
+        /* Celebration overlay card */
+        .celebration-card {
+            background: var(--cream);
+            border-radius: 32px;
+            padding: 32px 24px;
+            width: 100%;
+            max-width: 320px;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            position: relative;
+            animation: slideUp 0.4s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Confetti particles (simulated) */
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            border-radius: 2px;
+            animation: confettiFall 3s ease-out infinite;
+        }
+
+        .confetti:nth-child(1) { background: #FF6B6B; left: 10%; top: -20px; animation-delay: 0s; }
+        .confetti:nth-child(2) { background: #FFB347; left: 25%; top: -20px; animation-delay: 0.2s; }
+        .confetti:nth-child(3) { background: #4ECDC4; left: 40%; top: -20px; animation-delay: 0.4s; }
+        .confetti:nth-child(4) { background: #FF6B6B; left: 55%; top: -20px; animation-delay: 0.1s; }
+        .confetti:nth-child(5) { background: #FFB347; left: 70%; top: -20px; animation-delay: 0.3s; }
+        .confetti:nth-child(6) { background: #4ECDC4; left: 85%; top: -20px; animation-delay: 0.5s; }
+
+        @keyframes confettiFall {
+            0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(400px) rotate(720deg); opacity: 0; }
+        }
+
+        /* Badge */
+        .steps-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+            color: white;
+            font-size: 11px;
+            font-weight: 700;
+            padding: 6px 16px;
+            border-radius: 20px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 16px;
+        }
+
+        /* Main headline */
+        .headline {
+            font-family: 'Playfair Display', serif;
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 8px;
+            line-height: 1.2;
+        }
+
+        /* Step count */
+        .step-count {
+            font-family: 'Nunito', sans-serif;
+            font-size: 42px;
+            font-weight: 700;
+            color: var(--primary-coral);
+            margin-bottom: 4px;
+        }
+
+        .step-label {
+            font-size: 14px;
+            color: var(--text-medium);
+            margin-bottom: 20px;
+        }
+
+        /* Partner breakdown */
+        .partner-breakdown {
+            display: flex;
+            justify-content: center;
+            gap: 24px;
+            margin-bottom: 20px;
+            padding: 16px;
+            background: white;
+            border-radius: 16px;
+            border: 1px solid var(--beige);
+        }
+
+        .partner-stat {
+            text-align: center;
+        }
+
+        .partner-stat .name {
+            font-size: 12px;
+            color: var(--text-light);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
+        }
+
+        .partner-stat .steps {
+            font-family: 'Nunito', sans-serif;
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-dark);
+        }
+
+        /* Claimed by partner message */
+        .claimed-message {
+            background: linear-gradient(135deg, var(--success-green), #45B7AA);
+            border-radius: 16px;
+            padding: 14px 20px;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .claimed-message .checkmark {
+            font-size: 20px;
+        }
+
+        .claimed-message .text {
+            font-size: 14px;
+            font-weight: 700;
+            color: white;
+        }
+
+        /* LP Reward highlight - already added style */
+        .lp-reward {
+            background: linear-gradient(135deg, var(--gold), var(--gold-light));
+            border-radius: 20px;
+            padding: 16px 24px;
+            margin-bottom: 24px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 15px rgba(255, 179, 71, 0.4);
+            position: relative;
+        }
+
+        .lp-reward .heart {
+            font-size: 24px;
+        }
+
+        .lp-reward .amount {
+            font-family: 'Playfair Display', serif;
+            font-size: 28px;
+            font-weight: 700;
+            color: white;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .lp-reward .added-label {
+            position: absolute;
+            bottom: -10px;
+            right: -10px;
+            background: var(--success-green);
+            color: white;
+            font-size: 10px;
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Dismiss button - more celebratory */
+        .dismiss-button {
+            display: block;
+            width: 100%;
+            padding: 18px 32px;
+            background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+            color: white;
+            font-family: 'Nunito', sans-serif;
+            font-size: 16px;
+            font-weight: 700;
+            border: none;
+            border-radius: 16px;
+            cursor: pointer;
+            box-shadow: 0 8px 25px rgba(255, 107, 107, 0.4);
+            transition: all 0.2s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .dismiss-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 30px rgba(255, 107, 107, 0.5);
+        }
+
+        /* Navigation hint */
+        .nav-hint {
+            margin-top: 16px;
+            font-size: 12px;
+            color: var(--text-light);
+        }
+
+        /* Annotation */
+        .annotation {
+            position: absolute;
+            background: #2D2D2D;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 11px;
+            font-weight: 600;
+            white-space: nowrap;
+            z-index: 100;
+        }
+
+        .annotation::before {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 0;
+            border-style: solid;
+        }
+
+        .annotation.right {
+            left: calc(100% + 20px);
+        }
+
+        .annotation.right::before {
+            right: 100%;
+            top: 50%;
+            transform: translateY(-50%);
+            border-width: 6px 8px 6px 0;
+            border-color: transparent #2D2D2D transparent transparent;
+        }
+
+        /* Title above phone */
+        .mockup-title {
+            position: absolute;
+            top: -50px;
+            left: 0;
+            right: 0;
+            text-align: center;
+        }
+
+        .mockup-title h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .mockup-title .user-badge {
+            display: inline-block;
+            background: var(--success-green);
+            color: white;
+            font-size: 10px;
+            font-weight: 700;
+            padding: 4px 12px;
+            border-radius: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 8px;
+        }
+
+        /* Tech note box */
+        .tech-note {
+            position: absolute;
+            bottom: -80px;
+            left: 0;
+            right: 0;
+            background: rgba(45, 45, 45, 0.9);
+            color: white;
+            padding: 12px 16px;
+            border-radius: 12px;
+            font-size: 11px;
+            line-height: 1.5;
+        }
+
+        .tech-note strong {
+            color: var(--success-green);
+        }
+    </style>
+</head>
+<body>
+    <div style="position: relative;">
+        <div class="mockup-title">
+            <h1>Steps Auto-Claim Overlay</h1>
+            <span class="user-badge">Second User (Partner Claimed)</span>
+        </div>
+
+        <div class="phone-frame">
+            <!-- Blurred home screen behind -->
+            <div class="home-blur"></div>
+            <div class="home-content">
+                <div class="home-greeting">Good morning!</div>
+                <div class="home-subtitle">You and Jake are doing great</div>
+            </div>
+
+            <!-- Dark overlay + celebration card -->
+            <div class="overlay-backdrop">
+                <div class="celebration-card">
+                    <!-- Confetti -->
+                    <div class="confetti"></div>
+                    <div class="confetti"></div>
+                    <div class="confetti"></div>
+                    <div class="confetti"></div>
+                    <div class="confetti"></div>
+                    <div class="confetti"></div>
+
+                    <!-- Badge -->
+                    <span class="steps-badge">Steps Together</span>
+
+                    <!-- Headline -->
+                    <h2 class="headline">Yesterday's Goal<br>Achieved!</h2>
+
+                    <!-- Step count -->
+                    <div class="step-count">12,540</div>
+                    <div class="step-label">combined steps</div>
+
+                    <!-- Partner breakdown -->
+                    <div class="partner-breakdown">
+                        <div class="partner-stat">
+                            <div class="name">You</div>
+                            <div class="steps">6,220</div>
+                        </div>
+                        <div class="partner-stat">
+                            <div class="name">Jake</div>
+                            <div class="steps">6,320</div>
+                        </div>
+                    </div>
+
+                    <!-- Claimed by partner message -->
+                    <div class="claimed-message">
+                        <span class="checkmark">✓</span>
+                        <span class="text">Jake claimed for you both!</span>
+                    </div>
+
+                    <!-- LP Reward - with "Added" label -->
+                    <div class="lp-reward">
+                        <span class="heart">💗</span>
+                        <span class="amount">+20 LP</span>
+                        <span class="added-label">Added</span>
+                    </div>
+
+                    <!-- Dismiss button -->
+                    <button class="dismiss-button">Awesome!</button>
+
+                    <!-- Navigation hint -->
+                    <p class="nav-hint">Your Love Points have been updated</p>
+
+                    <!-- Annotations -->
+                    <span class="annotation right" style="top: 20px; right: -130px;">Same celebration!</span>
+                    <span class="annotation right" style="top: 240px; right: -180px;">Clear partner attribution</span>
+                    <span class="annotation right" style="top: 315px; right: -150px;">"Added" confirms LP</span>
+                    <span class="annotation right" style="top: 385px; right: -180px;">Celebratory dismiss text</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="tech-note">
+            <strong>No FOMO:</strong> Second user gets same celebration + confetti.
+            Partner attribution is positive ("claimed for you both!"), not dismissive.
+        </div>
+    </div>
+</body>
+</html>

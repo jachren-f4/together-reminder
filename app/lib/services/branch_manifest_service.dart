@@ -23,7 +23,7 @@ class BranchManifestService {
     BranchableActivityType.classicQuiz: '🧩',
     BranchableActivityType.affirmation: '❤️',
     BranchableActivityType.youOrMe: '🤝',
-    BranchableActivityType.linked: '🔗',
+    BranchableActivityType.linked: '🧩',
     BranchableActivityType.wordSearch: '🔍',
   };
 

@@ -25,13 +25,15 @@ class StepsDayAdapter extends TypeAdapter<StepsDay> {
       claimed: fields[5] == null ? false : fields[5] as bool,
       earnedLP: fields[6] == null ? 0 : fields[6] as int,
       claimExpiresAt: fields[7] as DateTime?,
+      claimedByUserId: fields[8] as String?,
+      overlayShownAt: fields[9] as DateTime?,
     );
   }
 
   @override
   void write(BinaryWriter writer, StepsDay obj) {
     writer
-      ..writeByte(8)
+      ..writeByte(10)
       ..writeByte(0)
       ..write(obj.dateKey)
       ..writeByte(1)
@@ -47,7 +49,11 @@ class StepsDayAdapter extends TypeAdapter<StepsDay> {
       ..writeByte(6)
       ..write(obj.earnedLP)
       ..writeByte(7)
-      ..write(obj.claimExpiresAt);
+      ..write(obj.claimExpiresAt)
+      ..writeByte(8)
+      ..write(obj.claimedByUserId)
+      ..writeByte(9)
+      ..write(obj.overlayShownAt);
   }
 
   @override

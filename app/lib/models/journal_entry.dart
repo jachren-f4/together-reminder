@@ -243,7 +243,7 @@ class JournalEntry extends HiveObject {
       case JournalEntryType.youOrMe:
         return '🤔';
       case JournalEntryType.linked:
-        return '🔗';
+        return '🧩';
       case JournalEntryType.wordSearch:
         return '🔍';
       case JournalEntryType.stepsTogether:

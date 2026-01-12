@@ -181,35 +181,35 @@ export async function getCurrentBranch(
 }
 
 // =============================================================================
-// Cooldown Management
+// Cooldown Management (DEPRECATED - Use magnets/cooldowns.ts instead)
 // =============================================================================
 
 /**
+ * @deprecated Use getCooldownStatus from magnets/cooldowns.ts instead.
+ * The new system provides 8-hour cooldowns with time-windowed counting.
+ *
  * Check if cooldown is enabled via environment variable.
  * Defaults to true in production.
  */
 export function isCooldownEnabled(): boolean {
+  console.warn('DEPRECATED: isCooldownEnabled() - Use magnets/cooldowns.ts instead');
   return process.env.PUZZLE_COOLDOWN_ENABLED !== 'false';
 }
 
 /**
- * Check if cooldown is active for a puzzle type.
- * Cooldown is active if the couple completed a puzzle today.
+ * @deprecated Use getCooldownStatus from magnets/cooldowns.ts instead.
+ * The new system provides 8-hour cooldowns with time-windowed counting:
+ * - 2 plays within 8h window triggers 8h cooldown
+ * - If plays are >8h apart, count resets
+ *
+ * Old behavior (midnight gating): Cooldown is active if the couple completed
+ * a puzzle today.
  *
  * @param coupleId - The couple's ID
  * @param puzzleType - Type of puzzle ('linked' or 'wordSearch')
  * @param clientLocalDate - Client's local date in YYYY-MM-DD format
  * @param client - Optional database client (for use within transactions)
  * @returns true if cooldown is active (should block new puzzle)
- *
- * @example
- * if (await isCooldownActive(coupleId, 'wordSearch', '2024-01-15')) {
- *   return NextResponse.json({
- *     success: false,
- *     code: 'COOLDOWN_ACTIVE',
- *     message: 'Next puzzle available tomorrow',
- *   });
- * }
  */
 export async function isCooldownActive(
   coupleId: string,
@@ -217,6 +217,8 @@ export async function isCooldownActive(
   clientLocalDate: string | null,
   client?: PoolClient
 ): Promise<boolean> {
+  console.warn('DEPRECATED: isCooldownActive() - Use getCooldownStatus from magnets/cooldowns.ts instead');
+
   if (!isCooldownEnabled() || !clientLocalDate) {
     return false;
   }

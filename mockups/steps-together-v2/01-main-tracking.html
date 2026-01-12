@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=375, initial-scale=1.0">
+    <title>Steps Together - Main Tracking</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            background: linear-gradient(180deg, #FFF8F6 0%, #FFF0EB 100%);
+            min-height: 100vh;
+            max-width: 375px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        /* Header */
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 20px;
+            padding-top: 50px;
+        }
+
+        .back-btn {
+            width: 40px;
+            height: 40px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            cursor: pointer;
+        }
+
+        .header-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 18px;
+            font-weight: 600;
+            color: #2D2D2D;
+        }
+
+        .sync-btn {
+            width: 40px;
+            height: 40px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            cursor: pointer;
+            position: relative;
+        }
+
+        .sync-dot {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            width: 8px;
+            height: 8px;
+            background: #4CAF50;
+            border-radius: 50%;
+            border: 2px solid white;
+        }
+
+        /* Pull to refresh hint */
+        .pull-hint {
+            text-align: center;
+            padding: 8px;
+            color: #999;
+            font-size: 12px;
+        }
+
+        .pull-hint span {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        /* Content */
+        .content {
+            padding: 0 20px 40px;
+        }
+
+        /* Today's Progress Card */
+        .progress-card {
+            background: white;
+            border-radius: 24px;
+            padding: 24px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+            margin-bottom: 16px;
+        }
+
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .progress-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 16px;
+            font-weight: 600;
+            color: #2D2D2D;
+        }
+
+        .live-badge {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: #E8F5E9;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 700;
+            color: #4CAF50;
+        }
+
+        .live-dot {
+            width: 6px;
+            height: 6px;
+            background: #4CAF50;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        /* Combined Ring */
+        .ring-container {
+            position: relative;
+            width: 220px;
+            height: 220px;
+            margin: 0 auto 24px;
+        }
+
+        .ring-svg {
+            width: 100%;
+            height: 100%;
+            transform: rotate(-90deg);
+        }
+
+        .ring-bg {
+            fill: none;
+            stroke: #F0F0F0;
+            stroke-width: 16;
+        }
+
+        .ring-threshold {
+            fill: none;
+            stroke: #E0E0E0;
+            stroke-width: 16;
+            stroke-dasharray: 2 8;
+        }
+
+        .ring-user {
+            fill: none;
+            stroke: url(#userGradient);
+            stroke-width: 16;
+            stroke-linecap: round;
+            stroke-dasharray: 282.74;
+            stroke-dashoffset: 141.37; /* 50% = 7,500 steps of user */
+            transition: stroke-dashoffset 1s ease-out;
+        }
+
+        .ring-partner {
+            fill: none;
+            stroke: url(#partnerGradient);
+            stroke-width: 16;
+            stroke-linecap: round;
+            stroke-dasharray: 282.74;
+            stroke-dashoffset: 169.64; /* Partner adds to user's progress */
+            transition: stroke-dashoffset 1s ease-out;
+        }
+
+        .ring-center {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+        }
+
+        .ring-steps {
+            font-family: 'Playfair Display', serif;
+            font-size: 36px;
+            font-weight: 700;
+            color: #2D2D2D;
+        }
+
+        .ring-goal {
+            font-size: 14px;
+            color: #999;
+            margin-bottom: 4px;
+        }
+
+        .ring-reward {
+            display: inline-block;
+            background: linear-gradient(135deg, #FFB347 0%, #FFD89B 100%);
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 13px;
+            font-weight: 700;
+            color: white;
+            margin-top: 8px;
+        }
+
+        /* Threshold marker */
+        .threshold-marker {
+            position: absolute;
+            top: 50%;
+            left: -4px;
+            transform: translateY(-50%);
+            background: #FF6B6B;
+            color: white;
+            font-size: 9px;
+            font-weight: 700;
+            padding: 2px 6px;
+            border-radius: 8px;
+        }
+
+        /* Partner breakdown */
+        .partner-breakdown {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin-bottom: 20px;
+        }
+
+        .partner-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .partner-color {
+            width: 14px;
+            height: 14px;
+            border-radius: 4px;
+        }
+
+        .partner-color.user {
+            background: linear-gradient(135deg, #FF6B6B 0%, #FF8E53 100%);
+        }
+
+        .partner-color.partner {
+            background: linear-gradient(135deg, #4ECDC4 0%, #45B7AA 100%);
+        }
+
+        .partner-info {
+            text-align: left;
+        }
+
+        .partner-name {
+            font-size: 12px;
+            color: #999;
+        }
+
+        .partner-steps {
+            font-family: 'Playfair Display', serif;
+            font-size: 16px;
+            font-weight: 600;
+            color: #2D2D2D;
+        }
+
+        /* Sync status */
+        .sync-status {
+            text-align: center;
+            font-size: 12px;
+            color: #999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        /* Team message */
+        .team-message {
+            background: linear-gradient(135deg, rgba(255,107,107,0.1) 0%, rgba(255,142,83,0.1) 100%);
+            border-radius: 16px;
+            padding: 16px;
+            text-align: center;
+            margin-top: 16px;
+        }
+
+        .team-message p {
+            font-size: 14px;
+            color: #2D2D2D;
+        }
+
+        .team-message strong {
+            color: #FF6B6B;
+        }
+
+        /* Tier Progress Card */
+        .tier-card {
+            background: white;
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+            margin-bottom: 16px;
+        }
+
+        .tier-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .tier-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 14px;
+            font-weight: 600;
+            color: #2D2D2D;
+        }
+
+        .tier-see-all {
+            font-size: 12px;
+            color: #FF6B6B;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .tier-progress {
+            position: relative;
+        }
+
+        .tier-bar-bg {
+            height: 8px;
+            background: #F0F0F0;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .tier-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #FF6B6B 0%, #FF8E53 100%);
+            border-radius: 4px;
+            width: 60%; /* 12K of 20K */
+            transition: width 0.5s ease-out;
+        }
+
+        .tier-markers {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 8px;
+            font-size: 10px;
+            color: #999;
+        }
+
+        .tier-marker {
+            text-align: center;
+        }
+
+        .tier-marker.active {
+            color: #FF6B6B;
+            font-weight: 700;
+        }
+
+        .tier-marker.current {
+            position: relative;
+        }
+
+        .tier-marker.current::before {
+            content: '';
+            position: absolute;
+            top: -14px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 8px;
+            height: 8px;
+            background: linear-gradient(135deg, #FF6B6B 0%, #FF8E53 100%);
+            border-radius: 50%;
+            border: 2px solid white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .tier-next {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid #F0F0F0;
+        }
+
+        .tier-next-label {
+            font-size: 12px;
+            color: #666;
+        }
+
+        .tier-next-value {
+            font-size: 14px;
+            font-weight: 700;
+            color: #2D2D2D;
+        }
+
+        .tier-next-lp {
+            background: linear-gradient(135deg, #FFB347 0%, #FFD89B 100%);
+            padding: 4px 10px;
+            border-radius: 10px;
+            font-size: 12px;
+            font-weight: 700;
+            color: white;
+        }
+
+        /* Claim Info Card */
+        .claim-card {
+            background: linear-gradient(135deg, #FF6B6B 0%, #FF8E53 100%);
+            border-radius: 20px;
+            padding: 20px;
+            color: white;
+            margin-bottom: 16px;
+        }
+
+        .claim-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 12px;
+        }
+
+        .claim-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .claim-countdown {
+            background: rgba(255,255,255,0.2);
+            padding: 4px 10px;
+            border-radius: 10px;
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        .claim-body {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .claim-text {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .claim-lp {
+            font-family: 'Playfair Display', serif;
+            font-size: 28px;
+            font-weight: 700;
+        }
+
+        .claim-note {
+            margin-top: 12px;
+            font-size: 12px;
+            opacity: 0.8;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* Week Preview */
+        .week-card {
+            background: white;
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+        }
+
+        .week-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .week-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 14px;
+            font-weight: 600;
+            color: #2D2D2D;
+        }
+
+        .week-streak {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 12px;
+            font-weight: 700;
+            color: #FF6B6B;
+        }
+
+        .week-days {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .week-day {
+            text-align: center;
+            flex: 1;
+        }
+
+        .week-day-label {
+            font-size: 10px;
+            color: #999;
+            margin-bottom: 8px;
+        }
+
+        .week-day-circle {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .week-day-circle.success {
+            background: linear-gradient(135deg, #4CAF50 0%, #81C784 100%);
+            color: white;
+        }
+
+        .week-day-circle.partial {
+            background: #FFF3E0;
+            color: #FF9800;
+        }
+
+        .week-day-circle.empty {
+            background: #F5F5F5;
+            color: #CCC;
+        }
+
+        .week-day-circle.today {
+            background: linear-gradient(135deg, #FF6B6B 0%, #FF8E53 100%);
+            color: white;
+            box-shadow: 0 2px 8px rgba(255,107,107,0.4);
+        }
+
+        /* Navigation hint */
+        .nav-hint {
+            text-align: center;
+            padding: 16px;
+            font-size: 12px;
+            color: #999;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="header">
+        <div class="back-btn">
+            <svg width="20" height="20" fill="none" stroke="#2D2D2D" stroke-width="2">
+                <path d="M15 4L7 12L15 20"/>
+            </svg>
+        </div>
+        <span class="header-title">Steps Together</span>
+        <div class="sync-btn">
+            <svg width="18" height="18" fill="none" stroke="#2D2D2D" stroke-width="2">
+                <path d="M1 4v6h6M23 20v-6h-6"/>
+                <path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15"/>
+            </svg>
+            <div class="sync-dot"></div>
+        </div>
+    </div>
+
+    <!-- Pull hint -->
+    <div class="pull-hint">
+        <span>
+            <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M6 2v8M2 6l4 4 4-4"/>
+            </svg>
+            Pull to refresh
+        </span>
+    </div>
+
+    <!-- Content -->
+    <div class="content">
+        <!-- Today's Progress -->
+        <div class="progress-card">
+            <div class="progress-header">
+                <span class="progress-title">Today's Progress</span>
+                <div class="live-badge">
+                    <div class="live-dot"></div>
+                    LIVE
+                </div>
+            </div>
+
+            <!-- Combined Ring -->
+            <div class="ring-container">
+                <svg class="ring-svg" viewBox="0 0 100 100">
+                    <defs>
+                        <linearGradient id="userGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                            <stop offset="0%" style="stop-color:#FF6B6B"/>
+                            <stop offset="100%" style="stop-color:#FF8E53"/>
+                        </linearGradient>
+                        <linearGradient id="partnerGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                            <stop offset="0%" style="stop-color:#4ECDC4"/>
+                            <stop offset="100%" style="stop-color:#45B7AA"/>
+                        </linearGradient>
+                    </defs>
+                    <!-- Background ring -->
+                    <circle class="ring-bg" cx="50" cy="50" r="45"/>
+                    <!-- 10K threshold marker (50% of 20K) -->
+                    <circle cx="50" cy="50" r="45" fill="none" stroke="#DDD" stroke-width="2" stroke-dasharray="1 5" transform="rotate(-90 50 50)"/>
+                    <!-- User progress (coral) -->
+                    <circle class="ring-user" cx="50" cy="50" r="45" style="stroke-dashoffset: 177;"/>
+                    <!-- Partner progress (teal) - continues from user -->
+                    <circle cx="50" cy="50" r="45" fill="none" stroke="url(#partnerGradient)" stroke-width="16" stroke-linecap="round" stroke-dasharray="282.74" style="stroke-dashoffset: 212;" transform="rotate(135 50 50)"/>
+                </svg>
+                <div class="ring-center">
+                    <div class="ring-steps">12,450</div>
+                    <div class="ring-goal">of 20,000 goal</div>
+                    <div class="ring-reward">+18 LP tomorrow</div>
+                </div>
+            </div>
+
+            <!-- Partner Breakdown -->
+            <div class="partner-breakdown">
+                <div class="partner-item">
+                    <div class="partner-color user"></div>
+                    <div class="partner-info">
+                        <div class="partner-name">You</div>
+                        <div class="partner-steps">7,230</div>
+                    </div>
+                </div>
+                <div class="partner-item">
+                    <div class="partner-color partner"></div>
+                    <div class="partner-info">
+                        <div class="partner-name">Sarah</div>
+                        <div class="partner-steps">5,220</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sync Status -->
+            <div class="sync-status">
+                <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="6" cy="6" r="5"/>
+                    <path d="M6 3v3l2 2"/>
+                </svg>
+                Synced 2 min ago · Sarah synced 5 min ago
+            </div>
+
+            <!-- Team Message -->
+            <div class="team-message">
+                <p><strong>Great teamwork!</strong> You're 60% to today's goal. Keep moving together!</p>
+            </div>
+        </div>
+
+        <!-- Tier Progress -->
+        <div class="tier-card">
+            <div class="tier-header">
+                <span class="tier-title">Tier Progress</span>
+                <span class="tier-see-all">See all tiers &rarr;</span>
+            </div>
+
+            <div class="tier-progress">
+                <div class="tier-bar-bg">
+                    <div class="tier-bar-fill"></div>
+                </div>
+                <div class="tier-markers">
+                    <div class="tier-marker active">10K<br><small>15 LP</small></div>
+                    <div class="tier-marker active current">12K<br><small>18 LP</small></div>
+                    <div class="tier-marker">14K<br><small>21 LP</small></div>
+                    <div class="tier-marker">16K<br><small>24 LP</small></div>
+                    <div class="tier-marker">18K<br><small>27 LP</small></div>
+                    <div class="tier-marker">20K<br><small>30 LP</small></div>
+                </div>
+            </div>
+
+            <div class="tier-next">
+                <div>
+                    <div class="tier-next-label">Next tier in</div>
+                    <div class="tier-next-value">1,550 more steps</div>
+                </div>
+                <div class="tier-next-lp">+3 LP</div>
+            </div>
+        </div>
+
+        <!-- Claim Info -->
+        <div class="claim-card">
+            <div class="claim-header">
+                <span class="claim-title">Tomorrow's Claim</span>
+                <span class="claim-countdown">in 8h 23m</span>
+            </div>
+            <div class="claim-body">
+                <div class="claim-text">Based on today's progress,<br>you'll receive</div>
+                <div class="claim-lp">+18 LP</div>
+            </div>
+            <div class="claim-note">
+                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="7" cy="7" r="6"/>
+                    <path d="M7 4v3M7 10h.01"/>
+                </svg>
+                LP is auto-claimed when you open the app tomorrow
+            </div>
+        </div>
+
+        <!-- Week Preview -->
+        <div class="week-card">
+            <div class="week-header">
+                <span class="week-title">This Week</span>
+                <span class="week-streak">🔥 3 day streak</span>
+            </div>
+            <div class="week-days">
+                <div class="week-day">
+                    <div class="week-day-label">Mon</div>
+                    <div class="week-day-circle success">✓</div>
+                </div>
+                <div class="week-day">
+                    <div class="week-day-label">Tue</div>
+                    <div class="week-day-circle success">✓</div>
+                </div>
+                <div class="week-day">
+                    <div class="week-day-label">Wed</div>
+                    <div class="week-day-circle success">✓</div>
+                </div>
+                <div class="week-day">
+                    <div class="week-day-label">Thu</div>
+                    <div class="week-day-circle today">12K</div>
+                </div>
+                <div class="week-day">
+                    <div class="week-day-label">Fri</div>
+                    <div class="week-day-circle empty">-</div>
+                </div>
+                <div class="week-day">
+                    <div class="week-day-label">Sat</div>
+                    <div class="week-day-circle empty">-</div>
+                </div>
+                <div class="week-day">
+                    <div class="week-day-label">Sun</div>
+                    <div class="week-day-circle empty">-</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="nav-hint">
+            <a href="index.html" style="color: #FF6B6B;">&larr; Back to overview</a>
+        </div>
+    </div>
+</body>
+</html>

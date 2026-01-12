@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=375, initial-scale=1.0">
+    <title>Steps Together - Tier Breakdown</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            background: linear-gradient(180deg, #FFF8F6 0%, #FFF0EB 100%);
+            min-height: 100vh;
+            max-width: 375px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        /* Header */
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 20px;
+            padding-top: 50px;
+        }
+
+        .back-btn {
+            width: 40px;
+            height: 40px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            cursor: pointer;
+        }
+
+        .header-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 18px;
+            font-weight: 600;
+            color: #2D2D2D;
+        }
+
+        .header-spacer {
+            width: 40px;
+        }
+
+        /* Content */
+        .content {
+            padding: 0 20px 40px;
+        }
+
+        /* Intro Card */
+        .intro-card {
+            background: white;
+            border-radius: 24px;
+            padding: 24px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .intro-emoji {
+            font-size: 48px;
+            margin-bottom: 12px;
+        }
+
+        .intro-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 22px;
+            font-weight: 700;
+            color: #2D2D2D;
+            margin-bottom: 8px;
+        }
+
+        .intro-text {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.5;
+        }
+
+        /* Current Status */
+        .status-card {
+            background: linear-gradient(135deg, #FF6B6B 0%, #FF8E53 100%);
+            border-radius: 20px;
+            padding: 20px;
+            color: white;
+            margin-bottom: 20px;
+        }
+
+        .status-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .status-left {
+            text-align: left;
+        }
+
+        .status-label {
+            font-size: 12px;
+            opacity: 0.9;
+            margin-bottom: 4px;
+        }
+
+        .status-steps {
+            font-family: 'Playfair Display', serif;
+            font-size: 28px;
+            font-weight: 700;
+        }
+
+        .status-right {
+            text-align: right;
+        }
+
+        .status-tier {
+            font-size: 12px;
+            opacity: 0.9;
+            margin-bottom: 4px;
+        }
+
+        .status-lp {
+            font-family: 'Playfair Display', serif;
+            font-size: 28px;
+            font-weight: 700;
+        }
+
+        /* Tier Ladder */
+        .ladder-card {
+            background: white;
+            border-radius: 24px;
+            padding: 24px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+            margin-bottom: 20px;
+        }
+
+        .ladder-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 16px;
+            font-weight: 600;
+            color: #2D2D2D;
+            margin-bottom: 20px;
+        }
+
+        .ladder {
+            position: relative;
+        }
+
+        /* Vertical line */
+        .ladder::before {
+            content: '';
+            position: absolute;
+            left: 20px;
+            top: 24px;
+            bottom: 24px;
+            width: 3px;
+            background: linear-gradient(180deg, #4CAF50, #FF6B6B, #E0E0E0);
+            border-radius: 2px;
+        }
+
+        .tier-item {
+            display: flex;
+            align-items: center;
+            padding: 16px 0;
+            position: relative;
+        }
+
+        .tier-marker {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 12px;
+            z-index: 1;
+            flex-shrink: 0;
+        }
+
+        .tier-marker.achieved {
+            background: linear-gradient(135deg, #4CAF50 0%, #81C784 100%);
+            color: white;
+        }
+
+        .tier-marker.current {
+            background: linear-gradient(135deg, #FF6B6B 0%, #FF8E53 100%);
+            color: white;
+            box-shadow: 0 0 0 4px rgba(255,107,107,0.3);
+        }
+
+        .tier-marker.locked {
+            background: #F0F0F0;
+            color: #999;
+        }
+
+        .tier-content {
+            flex: 1;
+            margin-left: 16px;
+        }
+
+        .tier-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .tier-name {
+            font-family: 'Playfair Display', serif;
+            font-size: 16px;
+            font-weight: 600;
+            color: #2D2D2D;
+        }
+
+        .tier-name.locked {
+            color: #999;
+        }
+
+        .tier-lp {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .tier-lp-value {
+            font-weight: 700;
+            font-size: 14px;
+        }
+
+        .tier-lp-value.achieved {
+            color: #4CAF50;
+        }
+
+        .tier-lp-value.current {
+            color: #FF6B6B;
+        }
+
+        .tier-lp-value.locked {
+            color: #999;
+        }
+
+        .tier-description {
+            font-size: 12px;
+            color: #999;
+            margin-top: 4px;
+        }
+
+        .tier-progress {
+            margin-top: 8px;
+        }
+
+        .tier-progress-bar {
+            height: 6px;
+            background: #F0F0F0;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .tier-progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #FF6B6B 0%, #FF8E53 100%);
+            border-radius: 3px;
+        }
+
+        .tier-progress-text {
+            font-size: 11px;
+            color: #FF6B6B;
+            font-weight: 600;
+            margin-top: 4px;
+        }
+
+        .tier-badge {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 8px;
+            font-size: 10px;
+            font-weight: 700;
+            margin-left: 8px;
+        }
+
+        .tier-badge.current {
+            background: linear-gradient(135deg, rgba(255,107,107,0.15) 0%, rgba(255,142,83,0.15) 100%);
+            color: #FF6B6B;
+        }
+
+        .tier-badge.max {
+            background: linear-gradient(135deg, rgba(255,179,71,0.15) 0%, rgba(255,216,155,0.15) 100%);
+            color: #FF8C00;
+        }
+
+        /* Info Card */
+        .info-card {
+            background: #F9F9F9;
+            border-radius: 16px;
+            padding: 16px;
+            margin-bottom: 16px;
+        }
+
+        .info-title {
+            font-size: 13px;
+            font-weight: 700;
+            color: #2D2D2D;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .info-text {
+            font-size: 12px;
+            color: #666;
+            line-height: 1.5;
+        }
+
+        /* Navigation hint */
+        .nav-hint {
+            text-align: center;
+            padding: 24px 16px;
+            font-size: 12px;
+            color: #999;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="header">
+        <div class="back-btn">
+            <svg width="20" height="20" fill="none" stroke="#2D2D2D" stroke-width="2">
+                <path d="M15 4L7 12L15 20"/>
+            </svg>
+        </div>
+        <span class="header-title">LP Tiers</span>
+        <div class="header-spacer"></div>
+    </div>
+
+    <!-- Content -->
+    <div class="content">
+        <!-- Intro -->
+        <div class="intro-card">
+            <div class="intro-emoji">📊</div>
+            <div class="intro-title">How LP Tiers Work</div>
+            <div class="intro-text">
+                The more steps you walk together, the more Love Points you earn! Each tier unlocks bonus LP.
+            </div>
+        </div>
+
+        <!-- Current Status -->
+        <div class="status-card">
+            <div class="status-row">
+                <div class="status-left">
+                    <div class="status-label">Today's Steps</div>
+                    <div class="status-steps">14,200</div>
+                </div>
+                <div class="status-right">
+                    <div class="status-tier">Current Tier</div>
+                    <div class="status-lp">+21 LP</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tier Ladder -->
+        <div class="ladder-card">
+            <div class="ladder-title">Tier Ladder</div>
+
+            <div class="ladder">
+                <!-- Max Tier -->
+                <div class="tier-item">
+                    <div class="tier-marker locked">20K</div>
+                    <div class="tier-content">
+                        <div class="tier-header">
+                            <div>
+                                <span class="tier-name locked">20,000 Steps</span>
+                                <span class="tier-badge max">MAX</span>
+                            </div>
+                            <div class="tier-lp">
+                                <span class="tier-lp-value locked">+30 LP</span>
+                            </div>
+                        </div>
+                        <div class="tier-description">5,800 steps to unlock</div>
+                    </div>
+                </div>
+
+                <!-- 18K -->
+                <div class="tier-item">
+                    <div class="tier-marker locked">18K</div>
+                    <div class="tier-content">
+                        <div class="tier-header">
+                            <span class="tier-name locked">18,000 Steps</span>
+                            <div class="tier-lp">
+                                <span class="tier-lp-value locked">+27 LP</span>
+                            </div>
+                        </div>
+                        <div class="tier-description">3,800 steps to unlock</div>
+                    </div>
+                </div>
+
+                <!-- 16K -->
+                <div class="tier-item">
+                    <div class="tier-marker locked">16K</div>
+                    <div class="tier-content">
+                        <div class="tier-header">
+                            <span class="tier-name locked">16,000 Steps</span>
+                            <div class="tier-lp">
+                                <span class="tier-lp-value locked">+24 LP</span>
+                            </div>
+                        </div>
+                        <div class="tier-description">1,800 steps to unlock</div>
+                        <div class="tier-progress">
+                            <div class="tier-progress-bar">
+                                <div class="tier-progress-fill" style="width: 10%;"></div>
+                            </div>
+                            <div class="tier-progress-text">Next tier: 1,800 to go</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 14K - Current -->
+                <div class="tier-item">
+                    <div class="tier-marker current">14K</div>
+                    <div class="tier-content">
+                        <div class="tier-header">
+                            <div>
+                                <span class="tier-name">14,000 Steps</span>
+                                <span class="tier-badge current">YOU'RE HERE</span>
+                            </div>
+                            <div class="tier-lp">
+                                <span class="tier-lp-value current">+21 LP</span>
+                            </div>
+                        </div>
+                        <div class="tier-description">Current tier - 200 steps over</div>
+                    </div>
+                </div>
+
+                <!-- 12K - Achieved -->
+                <div class="tier-item">
+                    <div class="tier-marker achieved">✓</div>
+                    <div class="tier-content">
+                        <div class="tier-header">
+                            <span class="tier-name">12,000 Steps</span>
+                            <div class="tier-lp">
+                                <span class="tier-lp-value achieved">+18 LP</span>
+                            </div>
+                        </div>
+                        <div class="tier-description">Completed</div>
+                    </div>
+                </div>
+
+                <!-- 10K - Achieved -->
+                <div class="tier-item">
+                    <div class="tier-marker achieved">✓</div>
+                    <div class="tier-content">
+                        <div class="tier-header">
+                            <span class="tier-name">10,000 Steps</span>
+                            <div class="tier-lp">
+                                <span class="tier-lp-value achieved">+15 LP</span>
+                            </div>
+                        </div>
+                        <div class="tier-description">Minimum threshold</div>
+                    </div>
+                </div>
+
+                <!-- Below 10K -->
+                <div class="tier-item">
+                    <div class="tier-marker achieved" style="background: #E0E0E0;">
+                        <span style="font-size: 16px;">👟</span>
+                    </div>
+                    <div class="tier-content">
+                        <div class="tier-header">
+                            <span class="tier-name" style="color: #999;">Below 10,000</span>
+                            <div class="tier-lp">
+                                <span class="tier-lp-value" style="color: #999;">0 LP</span>
+                            </div>
+                        </div>
+                        <div class="tier-description">No LP earned below threshold</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Info -->
+        <div class="info-card">
+            <div class="info-title">
+                <span>💡</span> How it works
+            </div>
+            <div class="info-text">
+                Steps are counted from both you and your partner combined. Walk 5,000 steps each to hit the minimum 10,000 threshold and start earning LP! The more you walk together, the more you earn.
+            </div>
+        </div>
+
+        <div class="info-card">
+            <div class="info-title">
+                <span>⏰</span> When do I get my LP?
+            </div>
+            <div class="info-text">
+                LP is automatically claimed when you open the app the next day. Today's steps become claimable tomorrow morning, and you'll see a celebration when you receive them!
+            </div>
+        </div>
+
+        <div class="nav-hint">
+            <a href="index.html" style="color: #FF6B6B;">&larr; Back to overview</a>
+        </div>
+    </div>
+</body>
+</html>

@@ -9,6 +9,18 @@ import '../services/subscription_service.dart';
 import '../utils/logger.dart';
 import 'already_subscribed_screen.dart';
 
+/// Shows the RevenueCat Paywall UI and returns whether purchase/restore succeeded.
+///
+/// This is a convenience function to present the RevenueCat Paywall UI from anywhere
+/// in the app without needing to navigate to a screen.
+///
+/// Returns true if user has premium access after the paywall was dismissed.
+Future<bool> showRevenueCatPaywall(BuildContext context) async {
+  final subscriptionService = SubscriptionService();
+  final result = await subscriptionService.presentPaywall();
+  return result.didPurchaseOrRestore || subscriptionService.isPremium;
+}
+
 /// Paywall screen shown after pairing or when subscription lapses
 ///
 /// This is a "hard paywall" - users must subscribe to access the app.
@@ -16,6 +28,10 @@ import 'already_subscribed_screen.dart';
 /// Two modes:
 /// - New user (default): Shows free trial offer after pairing
 /// - Lapsed user: Shows "Welcome Back" resubscribe flow
+///
+/// Two UI options:
+/// - Custom paywall (default): Our custom-designed paywall
+/// - RevenueCat paywall: RevenueCat's built-in paywall UI (set useRevenueCatPaywall: true)
 class PaywallScreen extends StatefulWidget {
   /// Called when user successfully subscribes or skips (if allowed).
   /// Receives BuildContext to ensure navigation uses a mounted context.
@@ -28,11 +44,16 @@ class PaywallScreen extends StatefulWidget {
   /// Changes messaging from "Start Free Trial" to "Welcome Back"
   final bool isLapsedUser;
 
+  /// Whether to use RevenueCat's built-in paywall UI instead of custom
+  /// Set to true to use RevenueCat's paywall designer
+  final bool useRevenueCatPaywall;
+
   const PaywallScreen({
     super.key,
     required this.onContinue,
     this.allowSkip = false,
     this.isLapsedUser = false,
+    this.useRevenueCatPaywall = false,
   });
 
   @override
@@ -58,8 +79,46 @@ class _PaywallScreenState extends State<PaywallScreen> {
   @override
   void initState() {
     super.initState();
-    _loadOfferings();
-    _startPolling();
+    if (widget.useRevenueCatPaywall) {
+      _presentRevenueCatPaywall();
+    } else {
+      _loadOfferings();
+      _startPolling();
+    }
+  }
+
+  /// Present RevenueCat's built-in paywall
+  Future<void> _presentRevenueCatPaywall() async {
+    // Small delay to ensure the screen is mounted
+    await Future.delayed(const Duration(milliseconds: 100));
+
+    if (!mounted) return;
+
+    // Check if already subscribed
+    if (_subscriptionService.isPremium) {
+      Logger.debug('User already has premium, skipping paywall', service: 'paywall');
+      widget.onContinue(context);
+      return;
+    }
+
+    // Present RevenueCat paywall
+    final result = await _subscriptionService.presentPaywall();
+
+    if (!mounted) return;
+
+    if (result.didPurchaseOrRestore) {
+      // Success - continue
+      widget.onContinue(context);
+    } else if (result.status.name == 'notAvailable') {
+      // Fall back to custom paywall
+      Logger.warn('RevenueCat paywall not available, using custom', service: 'paywall');
+      _loadOfferings();
+      _startPolling();
+    } else {
+      // User cancelled - stay on screen and show custom paywall
+      _loadOfferings();
+      _startPolling();
+    }
   }
 
   @override

@@ -290,10 +290,17 @@ class StepsSyncService {
         );
       }
 
-      // Handle claim status
+      // Handle claim status - extended for auto-claim overlay
+      final yesterdayClaimed = data['yesterdayClaimed'] as bool? ?? false;
       final claimedBy = data['yesterdayClaimedBy'] as String?;
-      if (claimedBy != null) {
-        _healthService.markAsClaimedFromSync(yesterdayDateKey);
+      final lpEarned = data['yesterdayLpEarned'] as int?;
+
+      if (yesterdayClaimed && claimedBy != null) {
+        _healthService.markAsClaimedFromSync(
+          yesterdayDateKey,
+          claimedByUserId: claimedBy,
+          lpEarned: lpEarned,
+        );
       }
 
       Logger.info('Loaded partner data from Supabase', service: 'steps');

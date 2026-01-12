@@ -42,6 +42,14 @@ const QUIZ_FOLDER_MAP: Record<QuizType, string> = {
   you_or_me: 'you-or-me',
 };
 
+/**
+ * The text shown for the 5th "fallback" option in classic quizzes.
+ * This option is always added to classic quiz questions client-side.
+ * Must be kept in sync with Flutter's kClassicQuizFallbackOptionText.
+ */
+export const CLASSIC_QUIZ_FALLBACK_OPTION_TEXT = "It depends / Something else";
+export const CLASSIC_QUIZ_FALLBACK_OPTION_INDEX = 4;
+
 // =============================================================================
 // Quiz Loading
 // =============================================================================
@@ -139,5 +147,12 @@ export function getAnswerText(
 
   // Classic quiz uses choices array
   const choices = question.choices || [];
-  return choices[answerIndex] || `Option ${answerIndex + 1}`;
+  if (answerIndex < choices.length) {
+    return choices[answerIndex];
+  }
+  // Handle the hardcoded 5th fallback option
+  if (answerIndex === CLASSIC_QUIZ_FALLBACK_OPTION_INDEX) {
+    return CLASSIC_QUIZ_FALLBACK_OPTION_TEXT;
+  }
+  return `Option ${answerIndex + 1}`;
 }

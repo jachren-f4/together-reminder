@@ -19,8 +19,12 @@ class RevenueCatConfig {
   /// Default offering identifier
   static const String defaultOffering = 'default';
 
+  /// Product identifiers
+  static const String weeklyProductId = 'weekly';
+  static const String monthlyProductId = 'us2_premium_monthly';
+
   /// Check if RevenueCat is configured
   static bool get isConfigured =>
-      iosApiKey != 'PASTE_YOUR_IOS_API_KEY_HERE' &&
+      iosApiKey.isNotEmpty &&
       !iosApiKey.contains('PASTE');
 }

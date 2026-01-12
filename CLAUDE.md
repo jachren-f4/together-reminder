@@ -359,18 +359,22 @@ LovePointService.setLPChangeCallback(() {
 ### Game-Specific Rules
 
 #### Onboarding Unlock System
-Unlock chain: `Pairing → Welcome Quiz → Classic + Affirmation → You or Me → Linked → Word Search → Steps`
+Unlock chain: `Pairing → Welcome Quiz → LP Intro → Paywall → MainScreen`
+
+After MainScreen: `Classic + Affirmation → You or Me → Linked → Word Search → Steps`
 
 **Key files:**
 - `lib/services/unlock_service.dart` - Server-only state (no Hive)
 - `lib/screens/welcome_quiz_*.dart` - Intro, game, waiting, results
+- `lib/screens/paywall_screen.dart` - Subscription paywall (hard paywall, no skip)
 - `lib/widgets/unlock_celebration.dart` - Post-unlock celebration overlay
-- `lib/widgets/lp_intro_overlay.dart` - First-time LP introduction (shown on home)
+- `lib/widgets/lp_intro_overlay.dart` - First-time LP introduction (shown on results screen)
 
 **Rules:**
-- Navigate to `MainScreen(showLpIntro: true)` after quiz results (includes bottom nav)
 - Welcome Quiz screens use `PopScope(canPop: false)` - users cannot go back
-- LP is introduced on HOME screen after quiz, NOT on quiz intro screen
+- LP intro overlay is shown on Welcome Quiz results screen, NOT on home screen
+- Paywall is shown AFTER LP intro (in `welcome_quiz_results_screen.dart`)
+- Paywall uses `allowSkip: false` - users must start trial to continue
 - Unlock triggers fire from result screens (check `_checkForUnlock()` pattern)
 
 #### Daily Quest Generation

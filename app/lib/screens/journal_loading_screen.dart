@@ -228,7 +228,7 @@ class _JournalLoadingScreenState extends State<JournalLoadingScreen>
               offset: Offset(0, _polaroid3Slide.value - 10),
               child: Transform.rotate(
                 angle: -3 * math.pi / 180,
-                child: _buildMiniPolaroid('🔗', const Color(0xFFE3F2FD)),
+                child: _buildMiniPolaroid('🧩', const Color(0xFFE3F2FD)),
               ),
             ),
           ],

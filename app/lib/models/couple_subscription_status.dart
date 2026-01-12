@@ -196,3 +196,101 @@ class RestoreResult {
 
   bool get hasSubscription => isCoupleActive || isRevenueCatRestored;
 }
+
+/// Result of presenting the RevenueCat Paywall UI.
+class PaywallPresentResult {
+  final PaywallPresentStatus status;
+  final String? error;
+
+  PaywallPresentResult._({
+    required this.status,
+    this.error,
+  });
+
+  /// User successfully purchased
+  factory PaywallPresentResult.purchased() {
+    return PaywallPresentResult._(status: PaywallPresentStatus.purchased);
+  }
+
+  /// User restored a previous purchase
+  factory PaywallPresentResult.restored() {
+    return PaywallPresentResult._(status: PaywallPresentStatus.restored);
+  }
+
+  /// User cancelled without purchasing
+  factory PaywallPresentResult.cancelled() {
+    return PaywallPresentResult._(status: PaywallPresentStatus.cancelled);
+  }
+
+  /// An error occurred
+  factory PaywallPresentResult.error(String error) {
+    return PaywallPresentResult._(
+      status: PaywallPresentStatus.error,
+      error: error,
+    );
+  }
+
+  /// Paywall not available (web platform or not configured)
+  factory PaywallPresentResult.notAvailable() {
+    return PaywallPresentResult._(status: PaywallPresentStatus.notAvailable);
+  }
+
+  /// Whether the user purchased or restored successfully
+  bool get didPurchaseOrRestore =>
+      status == PaywallPresentStatus.purchased ||
+      status == PaywallPresentStatus.restored;
+
+  /// Whether the paywall was shown
+  bool get wasPresented =>
+      status != PaywallPresentStatus.notAvailable &&
+      status != PaywallPresentStatus.error;
+}
+
+/// Status of the paywall presentation.
+enum PaywallPresentStatus {
+  purchased,
+  restored,
+  cancelled,
+  error,
+  notAvailable,
+}
+
+/// Result of presenting the Customer Center.
+class CustomerCenterResult {
+  final CustomerCenterStatus status;
+  final String? error;
+
+  CustomerCenterResult._({
+    required this.status,
+    this.error,
+  });
+
+  /// Customer Center was dismissed normally
+  factory CustomerCenterResult.dismissed() {
+    return CustomerCenterResult._(status: CustomerCenterStatus.dismissed);
+  }
+
+  /// An error occurred
+  factory CustomerCenterResult.error(String error) {
+    return CustomerCenterResult._(
+      status: CustomerCenterStatus.error,
+      error: error,
+    );
+  }
+
+  /// Customer Center not available (web platform or not configured)
+  factory CustomerCenterResult.notAvailable() {
+    return CustomerCenterResult._(status: CustomerCenterStatus.notAvailable);
+  }
+
+  bool get wasPresented =>
+      status != CustomerCenterStatus.notAvailable &&
+      status != CustomerCenterStatus.error;
+}
+
+/// Status of the Customer Center presentation.
+enum CustomerCenterStatus {
+  dismissed,
+  error,
+  notAvailable,
+}

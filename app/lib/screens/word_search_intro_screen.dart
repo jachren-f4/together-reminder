@@ -7,6 +7,8 @@ import '../widgets/brand/us2/us2_intro_screen.dart';
 import '../services/word_search_service.dart';
 import '../services/love_point_service.dart';
 import '../services/storage_service.dart';
+import '../exceptions/game_exceptions.dart';
+import '../models/cooldown_status.dart';
 import 'word_search_game_screen.dart';
 
 /// Introduction screen for Word Search game.
@@ -25,6 +27,7 @@ class _WordSearchIntroScreenState extends State<WordSearchIntroScreen>
   bool _isMyTurn = true;
   int _partnerFoundCount = 0;
   LpContentStatus? _lpStatus;
+  CooldownStatus? _cooldownStatus;
 
   @override
   bool get enableConfetti => false;
@@ -54,11 +57,26 @@ class _WordSearchIntroScreenState extends State<WordSearchIntroScreen>
         _isMyTurn = state.isMyTurn;
         // Count partner's found words
         _partnerFoundCount = state.match.player2WordsFound;
+        _cooldownStatus = null; // Clear any previous cooldown
+      });
+    } on CooldownActiveException catch (e) {
+      // Cooldown is active - convert exception to CooldownStatus for display
+      if (!mounted) return;
+      setState(() {
+        _cooldownStatus = CooldownStatus(
+          canPlay: false,
+          remainingInBatch: e.remainingInBatch,
+          cooldownEndsAt: e.cooldownEndsAt,
+          cooldownRemainingMs: e.cooldownRemainingMs,
+        );
       });
     } catch (e) {
       // Silently fail - will show default state
     }
   }
+
+  /// Whether the game can be started (not on cooldown)
+  bool get _canStart => _cooldownStatus?.isOnCooldown != true && !_isLoading;
 
   void _startGame() {
     setState(() => _isLoading = true);
@@ -279,34 +297,40 @@ class _WordSearchIntroScreenState extends State<WordSearchIntroScreen>
   /// Build Us 2.0 styled intro screen
   Widget _buildUs2Intro(String? userName, String partnerName) {
     final alreadyEarned = _lpStatus?.alreadyGrantedToday == true;
+    final isOnCooldown = _cooldownStatus?.isOnCooldown == true;
 
     return Us2IntroScreen(
       title: 'Word Search',
       description: 'Race to find hidden words! Each word you find earns points for you both.',
-      emoji: '🔍',
+      imagePath: 'assets/brands/us2/images/quests/word-search.png',
+      emoji: '🔍', // Fallback if image fails to load
       buttonLabel: _isLoading ? 'Loading...' : 'Start Playing',
-      onStart: _isLoading ? () {} : _startGame,
+      onStart: _canStart ? _startGame : () {},
       onBack: () => Navigator.of(context).pop(),
-      additionalContent: [
-        // Reward badge
-        Us2RewardBadge(
-          text: alreadyEarned ? 'LP earned today' : '+30 LP',
-          icon: Icons.favorite,
-        ),
-        const SizedBox(height: 12),
-        // Turn indicator
-        Us2RewardBadge(
-          text: _isMyTurn ? "It's your turn!" : "Waiting for $partnerName",
-          icon: _isMyTurn ? Icons.play_arrow : Icons.hourglass_empty,
-        ),
-        if (_partnerFoundCount > 0) ...[
-          const SizedBox(height: 12),
-          Us2RewardBadge(
-            text: '$partnerName found $_partnerFoundCount words',
-            icon: Icons.check_circle,
-          ),
-        ],
-      ],
+      cooldownStatus: _cooldownStatus,
+      activityName: 'Word Search',
+      additionalContent: isOnCooldown
+          ? null // Cooldown layout is shown instead
+          : [
+              // Reward badge
+              Us2RewardBadge(
+                text: alreadyEarned ? 'LP earned today' : '+30 LP',
+                icon: Icons.favorite,
+              ),
+              const SizedBox(height: 12),
+              // Turn indicator
+              Us2RewardBadge(
+                text: _isMyTurn ? "It's your turn!" : "Waiting for $partnerName",
+                icon: _isMyTurn ? Icons.play_arrow : Icons.hourglass_empty,
+              ),
+              if (_partnerFoundCount > 0) ...[
+                const SizedBox(height: 12),
+                Us2RewardBadge(
+                  text: '$partnerName found $_partnerFoundCount words',
+                  icon: Icons.check_circle,
+                ),
+              ],
+            ],
     );
   }
 

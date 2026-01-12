@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=375, initial-scale=1.0">
+    <title>Steps Together - Max Tier</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            background: linear-gradient(180deg, #FFF8F6 0%, #FFF0EB 100%);
+            min-height: 100vh;
+            max-width: 375px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        /* Header */
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 20px;
+            padding-top: 50px;
+        }
+
+        .back-btn, .sync-btn {
+            width: 40px;
+            height: 40px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            cursor: pointer;
+        }
+
+        .header-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 18px;
+            font-weight: 600;
+            color: #2D2D2D;
+        }
+
+        /* Content */
+        .content {
+            padding: 0 20px 40px;
+        }
+
+        /* Hero Card */
+        .hero-card {
+            background: linear-gradient(135deg, #FF6B6B 0%, #FF8E53 100%);
+            border-radius: 24px;
+            padding: 32px 24px;
+            text-align: center;
+            color: white;
+            margin-bottom: 16px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 50%);
+            animation: shimmer 3s infinite;
+        }
+
+        @keyframes shimmer {
+            0%, 100% { transform: rotate(0deg); }
+            50% { transform: rotate(180deg); }
+        }
+
+        .max-badge {
+            display: inline-block;
+            background: rgba(255,255,255,0.25);
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 16px;
+        }
+
+        .hero-emoji {
+            font-size: 64px;
+            margin-bottom: 16px;
+        }
+
+        .hero-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .hero-subtitle {
+            font-size: 16px;
+            opacity: 0.9;
+            margin-bottom: 24px;
+        }
+
+        /* Steps Counter */
+        .steps-counter {
+            background: rgba(255,255,255,0.2);
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .steps-row {
+            display: flex;
+            justify-content: center;
+            align-items: baseline;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+
+        .steps-number {
+            font-family: 'Playfair Display', serif;
+            font-size: 42px;
+            font-weight: 700;
+        }
+
+        .steps-goal {
+            font-size: 18px;
+            opacity: 0.8;
+        }
+
+        .steps-overflow {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .steps-overflow strong {
+            color: #FFD700;
+        }
+
+        /* Partner breakdown */
+        .partner-row {
+            display: flex;
+            justify-content: center;
+            gap: 32px;
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .partner-item {
+            text-align: center;
+        }
+
+        .partner-name {
+            font-size: 12px;
+            opacity: 0.8;
+            margin-bottom: 4px;
+        }
+
+        .partner-value {
+            font-family: 'Playfair Display', serif;
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        /* LP Reward */
+        .lp-reward {
+            background: linear-gradient(135deg, #FFB347 0%, #FFD89B 100%);
+            border-radius: 16px;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 4px 16px rgba(255,179,71,0.4);
+        }
+
+        .lp-info {
+            text-align: left;
+        }
+
+        .lp-label {
+            font-size: 12px;
+            color: rgba(255,255,255,0.9);
+        }
+
+        .lp-subtext {
+            font-size: 11px;
+            color: rgba(255,255,255,0.7);
+        }
+
+        .lp-value {
+            font-family: 'Playfair Display', serif;
+            font-size: 36px;
+            font-weight: 700;
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Stats Card */
+        .stats-card {
+            background: white;
+            border-radius: 20px;
+            padding: 24px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+            margin-bottom: 16px;
+        }
+
+        .stats-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 16px;
+            font-weight: 600;
+            color: #2D2D2D;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .stat-item {
+            background: #F9F9F9;
+            border-radius: 16px;
+            padding: 16px;
+            text-align: center;
+        }
+
+        .stat-emoji {
+            font-size: 24px;
+            margin-bottom: 8px;
+        }
+
+        .stat-value {
+            font-family: 'Playfair Display', serif;
+            font-size: 20px;
+            font-weight: 700;
+            color: #2D2D2D;
+        }
+
+        .stat-label {
+            font-size: 11px;
+            color: #999;
+            margin-top: 4px;
+        }
+
+        /* Progress Bar (Full) */
+        .progress-container {
+            margin-bottom: 20px;
+        }
+
+        .progress-label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            margin-bottom: 8px;
+        }
+
+        .progress-label span:first-child {
+            color: #999;
+        }
+
+        .progress-label span:last-child {
+            color: #4CAF50;
+            font-weight: 700;
+        }
+
+        .progress-bar {
+            height: 12px;
+            background: #E8F5E9;
+            border-radius: 6px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #4CAF50 0%, #81C784 100%);
+            width: 100%;
+            border-radius: 6px;
+        }
+
+        .progress-overflow {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: repeating-linear-gradient(
+                45deg,
+                transparent,
+                transparent 4px,
+                rgba(255,255,255,0.3) 4px,
+                rgba(255,255,255,0.3) 8px
+            );
+        }
+
+        /* Message */
+        .message-card {
+            background: linear-gradient(135deg, rgba(76,175,80,0.1) 0%, rgba(129,199,132,0.1) 100%);
+            border: 1px solid rgba(76,175,80,0.2);
+            border-radius: 16px;
+            padding: 16px;
+            text-align: center;
+            margin-bottom: 16px;
+        }
+
+        .message-text {
+            font-size: 14px;
+            color: #2D2D2D;
+            line-height: 1.5;
+        }
+
+        .message-text strong {
+            color: #4CAF50;
+        }
+
+        /* Week Card */
+        .week-card {
+            background: white;
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+        }
+
+        .week-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .week-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 14px;
+            font-weight: 600;
+            color: #2D2D2D;
+        }
+
+        .week-streak {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 12px;
+            font-weight: 700;
+            color: #FF6B6B;
+        }
+
+        .week-days {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .week-day {
+            text-align: center;
+            flex: 1;
+        }
+
+        .week-day-label {
+            font-size: 10px;
+            color: #999;
+            margin-bottom: 8px;
+        }
+
+        .week-day-circle {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .week-day-circle.success {
+            background: linear-gradient(135deg, #4CAF50 0%, #81C784 100%);
+            color: white;
+        }
+
+        .week-day-circle.max {
+            background: linear-gradient(135deg, #FFB347 0%, #FFD89B 100%);
+            color: white;
+            box-shadow: 0 2px 8px rgba(255,179,71,0.4);
+        }
+
+        .week-day-circle.empty {
+            background: #F5F5F5;
+            color: #CCC;
+        }
+
+        .week-day-lp {
+            font-size: 9px;
+            color: #999;
+            margin-top: 4px;
+        }
+
+        .week-day-lp.highlight {
+            color: #FF6B6B;
+            font-weight: 700;
+        }
+
+        /* Navigation hint */
+        .nav-hint {
+            text-align: center;
+            padding: 24px 16px;
+            font-size: 12px;
+            color: #999;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="header">
+        <div class="back-btn">
+            <svg width="20" height="20" fill="none" stroke="#2D2D2D" stroke-width="2">
+                <path d="M15 4L7 12L15 20"/>
+            </svg>
+        </div>
+        <span class="header-title">Steps Together</span>
+        <div class="sync-btn">
+            <svg width="18" height="18" fill="none" stroke="#2D2D2D" stroke-width="2">
+                <path d="M1 4v6h6M23 20v-6h-6"/>
+            </svg>
+        </div>
+    </div>
+
+    <!-- Content -->
+    <div class="content">
+        <!-- Hero Card -->
+        <div class="hero-card">
+            <div class="max-badge">🏆 MAX TIER ACHIEVED</div>
+            <div class="hero-emoji">🎊</div>
+            <div class="hero-title">Goal Crushed!</div>
+            <div class="hero-subtitle">You've reached the maximum tier together</div>
+
+            <!-- Steps Counter -->
+            <div class="steps-counter">
+                <div class="steps-row">
+                    <span class="steps-number">23,450</span>
+                    <span class="steps-goal">/ 20,000</span>
+                </div>
+                <div class="steps-overflow">
+                    <strong>+3,450 steps</strong> beyond the goal!
+                </div>
+
+                <div class="partner-row">
+                    <div class="partner-item">
+                        <div class="partner-name">You</div>
+                        <div class="partner-value">12,800</div>
+                    </div>
+                    <div class="partner-item">
+                        <div class="partner-name">Sarah</div>
+                        <div class="partner-value">10,650</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- LP Reward -->
+            <div class="lp-reward">
+                <div class="lp-info">
+                    <div class="lp-label">Tomorrow you'll claim</div>
+                    <div class="lp-subtext">Maximum reward unlocked!</div>
+                </div>
+                <div class="lp-value">
+                    <span>💗</span>
+                    <span>+30 LP</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Progress -->
+        <div class="stats-card">
+            <div class="progress-container">
+                <div class="progress-label">
+                    <span>Daily Progress</span>
+                    <span>117% Complete!</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill"></div>
+                    <div class="progress-overflow"></div>
+                </div>
+            </div>
+
+            <div class="stats-title">Today's Achievements</div>
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-emoji">🔥</div>
+                    <div class="stat-value">4 days</div>
+                    <div class="stat-label">Current Streak</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-emoji">🏆</div>
+                    <div class="stat-value">2nd</div>
+                    <div class="stat-label">Max Tier This Week</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-emoji">👟</div>
+                    <div class="stat-value">~9.4 mi</div>
+                    <div class="stat-label">Distance Together</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-emoji">💪</div>
+                    <div class="stat-value">~820</div>
+                    <div class="stat-label">Calories Burned</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Message -->
+        <div class="message-card">
+            <div class="message-text">
+                <strong>Amazing teamwork!</strong> You've maxed out today's LP. Keep the momentum going tomorrow!
+            </div>
+        </div>
+
+        <!-- Week Card -->
+        <div class="week-card">
+            <div class="week-header">
+                <span class="week-title">This Week</span>
+                <span class="week-streak">🔥 4 day streak</span>
+            </div>
+            <div class="week-days">
+                <div class="week-day">
+                    <div class="week-day-label">Mon</div>
+                    <div class="week-day-circle success">✓</div>
+                    <div class="week-day-lp">18 LP</div>
+                </div>
+                <div class="week-day">
+                    <div class="week-day-label">Tue</div>
+                    <div class="week-day-circle max">★</div>
+                    <div class="week-day-lp highlight">30 LP</div>
+                </div>
+                <div class="week-day">
+                    <div class="week-day-label">Wed</div>
+                    <div class="week-day-circle success">✓</div>
+                    <div class="week-day-lp">21 LP</div>
+                </div>
+                <div class="week-day">
+                    <div class="week-day-label">Thu</div>
+                    <div class="week-day-circle max">★</div>
+                    <div class="week-day-lp highlight">30 LP</div>
+                </div>
+                <div class="week-day">
+                    <div class="week-day-label">Fri</div>
+                    <div class="week-day-circle empty">-</div>
+                    <div class="week-day-lp">-</div>
+                </div>
+                <div class="week-day">
+                    <div class="week-day-label">Sat</div>
+                    <div class="week-day-circle empty">-</div>
+                    <div class="week-day-lp">-</div>
+                </div>
+                <div class="week-day">
+                    <div class="week-day-label">Sun</div>
+                    <div class="week-day-circle empty">-</div>
+                    <div class="week-day-lp">-</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="nav-hint">
+            <a href="index.html" style="color: #FF6B6B;">&larr; Back to overview</a>
+        </div>
+    </div>
+</body>
+</html>

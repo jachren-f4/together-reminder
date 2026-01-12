@@ -489,9 +489,14 @@ class _Us2QuestCardState extends State<Us2QuestCard>
 
     // Both completed
     if (bothCompleted) {
+      // Check if there's another play available in the batch
+      final hasAnotherPlay = widget.cooldownStatus != null &&
+          widget.cooldownStatus!.remainingInBatch > 0 &&
+          !widget.cooldownStatus!.isOnCooldown;
+
       return _Us2StatusBadge(
         style: _StatusStyle.completed,
-        text: 'Completed',
+        text: hasAnotherPlay ? '1/2 completed' : 'Completed',
       );
     }
 

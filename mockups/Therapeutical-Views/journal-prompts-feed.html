@@ -2,334 +2,437 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=375, initial-scale=1.0, maximum-scale=1.0">
-    <title>Journal Prompts Feed</title>
+    <meta name="viewport" content="width=390, height=844, initial-scale=1.0">
+    <title>Us 2.0 - Journal Prompts</title>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --bg-start: #FFD1C1;
+            --bg-end: #FFF5F0;
+            --primary-coral: #FF6B6B;
+            --primary-salmon: #FF7B6B;
+            --gradient-start: #FF6B6B;
+            --gradient-end: #FF9F43;
+            --cream: #FFF8F0;
+            --beige: #F5E6D8;
+            --text-dark: #2D2D2D;
+            --text-medium: #6B6B6B;
+            --text-light: #9B9B9B;
+            --success-green: #4CAF50;
+            --success-bg: #E8F5E9;
+        }
+
         * { margin: 0; padding: 0; box-sizing: border-box; }
+
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: #0f0f1a;
+            font-family: 'Nunito', sans-serif;
+            background: linear-gradient(180deg, var(--bg-start) 0%, var(--bg-end) 100%);
             min-height: 100vh;
-            color: #fff;
-            max-width: 375px;
-            margin: 0 auto;
+            display: flex;
+            justify-content: center;
+            padding: 20px;
         }
+
+        .phone-frame {
+            width: 390px;
+            height: 844px;
+            background: linear-gradient(180deg, var(--bg-start) 0%, var(--bg-end) 100%);
+            border-radius: 40px;
+            overflow: hidden;
+            box-shadow: 0 25px 80px rgba(0, 0, 0, 0.15);
+            display: flex;
+            flex-direction: column;
+        }
+
         .header {
-            padding: 60px 20px 20px;
-            background: linear-gradient(180deg, #1a1a2e 0%, #0f0f1a 100%);
+            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: rgba(255, 255, 255, 0.5);
+            backdrop-filter: blur(10px);
         }
-        .header h1 {
-            font-size: 1.8rem;
+
+        .back-button {
+            width: 40px;
+            height: 40px;
+            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.6);
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            cursor: pointer;
+            color: var(--text-dark);
+        }
+
+        .header-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .hero-section {
+            padding: 24px;
+            text-align: center;
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .hero-title {
+            font-family: 'Pacifico', cursive;
+            font-size: 32px;
+            color: var(--primary-coral);
             margin-bottom: 8px;
         }
-        .header p {
-            color: rgba(255,255,255,0.6);
-            font-size: 0.9rem;
+
+        .hero-subtitle {
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            color: var(--text-medium);
+            font-size: 15px;
         }
 
         .tabs {
             display: flex;
             padding: 16px 20px;
-            gap: 10px;
-            background: #0f0f1a;
-            position: sticky;
-            top: 0;
-            z-index: 10;
+            gap: 8px;
+            background: rgba(255, 255, 255, 0.4);
         }
+
         .tab {
             padding: 10px 16px;
             border-radius: 20px;
-            font-size: 0.85rem;
-            background: rgba(255,255,255,0.05);
-            color: rgba(255,255,255,0.5);
+            font-size: 13px;
+            font-weight: 600;
+            background: var(--cream);
+            color: var(--text-medium);
             cursor: pointer;
             white-space: nowrap;
-        }
-        .tab.active {
-            background: rgba(255,215,0,0.15);
-            color: #FFD700;
+            border: 1px solid transparent;
         }
 
-        .prompts-section {
-            padding: 0 16px 100px;
+        .tab.active {
+            background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+            color: white;
+            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
         }
+
+        .main-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            padding-bottom: 100px;
+        }
+
         .section-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 16px 0 12px;
+            margin-bottom: 16px;
         }
+
         .section-title {
-            font-size: 0.75rem;
-            color: rgba(255,255,255,0.4);
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--text-medium);
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 1.5px;
         }
+
         .section-count {
-            font-size: 0.75rem;
-            color: rgba(255,255,255,0.3);
+            font-size: 12px;
+            color: var(--text-light);
         }
 
         .prompt-card {
-            background: rgba(255,255,255,0.05);
-            border-radius: 16px;
-            margin-bottom: 12px;
+            background: var(--cream);
+            border-radius: 20px;
+            margin-bottom: 16px;
             overflow: hidden;
-            border: 1px solid rgba(255,255,255,0.08);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
         }
+
         .prompt-card.featured {
-            background: linear-gradient(135deg, rgba(255,215,0,0.1), rgba(255,165,0,0.05));
-            border-color: rgba(255,215,0,0.15);
+            background: linear-gradient(135deg, rgba(255, 107, 107, 0.1), rgba(255, 159, 67, 0.05));
+            border: 1px solid rgba(255, 107, 107, 0.2);
         }
+
         .prompt-source {
             display: flex;
             align-items: center;
-            gap: 8px;
-            padding: 12px 16px;
-            border-bottom: 1px solid rgba(255,255,255,0.05);
+            gap: 10px;
+            padding: 14px 16px;
+            border-bottom: 1px solid var(--beige);
         }
+
         .source-icon {
-            width: 24px;
-            height: 24px;
-            border-radius: 6px;
+            width: 28px;
+            height: 28px;
+            border-radius: 8px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 0.75rem;
+            font-size: 14px;
         }
-        .source-icon.attachment { background: rgba(233, 30, 99, 0.2); }
-        .source-icon.connection { background: rgba(156, 39, 176, 0.2); }
-        .source-icon.growth { background: rgba(76, 175, 80, 0.2); }
-        .source-icon.lighthearted { background: rgba(255, 193, 7, 0.2); }
+
+        .source-icon.attachment { background: rgba(255, 107, 107, 0.15); }
+        .source-icon.connection { background: rgba(156, 39, 176, 0.15); }
+        .source-icon.growth { background: rgba(76, 175, 80, 0.15); }
+        .source-icon.lighthearted { background: rgba(255, 159, 67, 0.15); }
+
         .source-text {
-            font-size: 0.75rem;
-            color: rgba(255,255,255,0.5);
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-medium);
         }
+
         .source-badge {
             margin-left: auto;
-            font-size: 0.65rem;
-            background: rgba(255,215,0,0.15);
-            color: #FFD700;
-            padding: 3px 8px;
-            border-radius: 10px;
+            font-size: 10px;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+            color: white;
+            padding: 4px 10px;
+            border-radius: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         .prompt-content {
             padding: 16px;
         }
+
         .prompt-text {
-            font-size: 1rem;
+            font-family: 'Playfair Display', serif;
+            font-size: 16px;
             line-height: 1.5;
-            color: rgba(255,255,255,0.9);
+            color: var(--text-dark);
             margin-bottom: 12px;
         }
+
         .prompt-context {
-            font-size: 0.8rem;
-            color: rgba(255,255,255,0.5);
+            font-size: 14px;
+            color: var(--text-medium);
             line-height: 1.5;
-            padding: 12px;
-            background: rgba(255,255,255,0.03);
-            border-radius: 10px;
-            margin-bottom: 12px;
+            padding: 14px;
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 12px;
+            margin-bottom: 16px;
+            border-left: 3px solid var(--primary-coral);
         }
+
         .prompt-actions {
             display: flex;
             gap: 10px;
         }
+
         .prompt-btn {
             flex: 1;
-            padding: 12px;
-            border-radius: 10px;
-            font-size: 0.85rem;
+            padding: 14px;
+            border-radius: 25px;
+            font-size: 14px;
+            font-weight: 700;
             text-align: center;
             cursor: pointer;
-        }
-        .prompt-btn.primary {
-            background: linear-gradient(135deg, #FFD700, #FFA500);
-            color: #1a1a2e;
-            font-weight: 600;
-        }
-        .prompt-btn.secondary {
-            background: rgba(255,255,255,0.08);
-            color: rgba(255,255,255,0.7);
+            border: none;
         }
 
-        .prompt-card.completed {
-            opacity: 0.6;
+        .prompt-btn.primary {
+            background: linear-gradient(90deg, var(--gradient-start), var(--gradient-end));
+            color: white;
+            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
         }
-        .completed-badge {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            padding: 12px 16px;
-            background: rgba(76,175,80,0.1);
-            color: #4CAF50;
-            font-size: 0.8rem;
+
+        .prompt-btn.secondary {
+            background: rgba(255, 255, 255, 0.6);
+            color: var(--text-dark);
+            border: 1px solid var(--beige);
         }
 
         .prompt-mini {
             display: flex;
             align-items: center;
-            gap: 12px;
-            background: rgba(255,255,255,0.05);
-            border-radius: 12px;
-            padding: 14px 16px;
-            margin-bottom: 10px;
+            gap: 14px;
+            background: var(--cream);
+            border-radius: 16px;
+            padding: 16px;
+            margin-bottom: 12px;
             cursor: pointer;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
         }
+
         .prompt-mini:hover {
-            background: rgba(255,255,255,0.08);
+            background: white;
         }
+
         .prompt-mini-icon {
-            width: 36px;
-            height: 36px;
-            border-radius: 10px;
-            background: rgba(255,215,0,0.1);
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, rgba(255, 107, 107, 0.1), rgba(255, 159, 67, 0.1));
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1rem;
-        }
-        .prompt-mini-text {
-            flex: 1;
-            font-size: 0.9rem;
-            color: rgba(255,255,255,0.8);
-            line-height: 1.4;
-        }
-        .prompt-mini-arrow {
-            color: rgba(255,255,255,0.3);
+            font-size: 18px;
         }
 
-        .empty-state {
-            text-align: center;
-            padding: 40px 20px;
-            color: rgba(255,255,255,0.4);
+        .prompt-mini-text {
+            flex: 1;
+            font-size: 14px;
+            color: var(--text-dark);
+            line-height: 1.4;
         }
-        .empty-state-icon {
-            font-size: 3rem;
-            margin-bottom: 16px;
+
+        .prompt-mini-arrow {
+            color: var(--text-light);
+            font-size: 18px;
+        }
+
+        .prompt-card.completed {
+            opacity: 0.7;
+        }
+
+        .completed-badge {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 16px;
+            background: var(--success-bg);
+            color: var(--success-green);
+            font-size: 13px;
+            font-weight: 600;
         }
 
         .floating-btn {
             position: fixed;
-            bottom: 90px;
-            right: 20px;
+            bottom: 100px;
+            right: calc(50% - 175px);
             width: 56px;
             height: 56px;
             border-radius: 50%;
-            background: linear-gradient(135deg, #FFD700, #FFA500);
+            background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.5rem;
-            box-shadow: 0 4px 20px rgba(255,215,0,0.3);
+            font-size: 24px;
+            box-shadow: 0 8px 25px rgba(255, 107, 107, 0.4);
             cursor: pointer;
+            border: none;
         }
     </style>
 </head>
 <body>
-    <div class="header">
-        <h1>Journal</h1>
-        <p>Prompts generated from your quizzes</p>
+    <div class="phone-frame">
+        <div class="header">
+            <button class="back-button">‹</button>
+            <span class="header-title">Journal</span>
+        </div>
+
+        <div class="hero-section">
+            <div class="hero-title">Reflect</div>
+            <div class="hero-subtitle">Prompts generated from your quizzes</div>
+        </div>
+
+        <div class="tabs">
+            <div class="tab active">New (7)</div>
+            <div class="tab">Saved</div>
+            <div class="tab">Completed</div>
+            <div class="tab">Discuss</div>
+        </div>
+
+        <div class="main-content">
+            <div class="section-header">
+                <span class="section-title">Based on Your Differences</span>
+                <span class="section-count">From today's quiz</span>
+            </div>
+
+            <div class="prompt-card featured">
+                <div class="prompt-source">
+                    <div class="source-icon attachment">🔗</div>
+                    <span class="source-text">Separation & Security Quiz</span>
+                    <span class="source-badge">New</span>
+                </div>
+                <div class="prompt-content">
+                    <div class="prompt-text">
+                        When you sense your partner withdrawing, what's your instinct? Does that response bring you closer or push you apart?
+                    </div>
+                    <div class="prompt-context">
+                        💡 You and Sarah answered differently about how you react when feeling distance. Exploring this pattern could help you understand each other better.
+                    </div>
+                    <div class="prompt-actions">
+                        <button class="prompt-btn primary">Write Now</button>
+                        <button class="prompt-btn secondary">Save for Later</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="prompt-card">
+                <div class="prompt-source">
+                    <div class="source-icon attachment">🔗</div>
+                    <span class="source-text">Separation & Security Quiz</span>
+                </div>
+                <div class="prompt-content">
+                    <div class="prompt-text">
+                        What's your deepest fear about relationships? Where did this fear originate?
+                    </div>
+                    <div class="prompt-context">
+                        💡 You fear being abandoned; Sarah fears losing independence. Understanding where these fears come from can build compassion.
+                    </div>
+                    <div class="prompt-actions">
+                        <button class="prompt-btn primary">Write Now</button>
+                        <button class="prompt-btn secondary">Save</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section-header" style="margin-top: 24px;">
+                <span class="section-title">Explore Further</span>
+                <span class="section-count">7 more prompts</span>
+            </div>
+
+            <div class="prompt-mini">
+                <div class="prompt-mini-icon">💭</div>
+                <div class="prompt-mini-text">How do you feel when your partner isn't around?</div>
+                <div class="prompt-mini-arrow">›</div>
+            </div>
+
+            <div class="prompt-mini">
+                <div class="prompt-mini-icon">❤️</div>
+                <div class="prompt-mini-text">What does your partner do that makes you feel most loved?</div>
+                <div class="prompt-mini-arrow">›</div>
+            </div>
+
+            <div class="prompt-mini">
+                <div class="prompt-mini-icon">🌱</div>
+                <div class="prompt-mini-text">What's something you've recently realized about yourself?</div>
+                <div class="prompt-mini-arrow">›</div>
+            </div>
+
+            <div class="prompt-mini">
+                <div class="prompt-mini-icon">🎯</div>
+                <div class="prompt-mini-text">When do you feel most like you and your partner are a team?</div>
+                <div class="prompt-mini-arrow">›</div>
+            </div>
+
+            <div class="section-header" style="margin-top: 24px;">
+                <span class="section-title">Recently Completed</span>
+            </div>
+
+            <div class="prompt-card completed">
+                <div class="completed-badge">
+                    ✓ Completed Jan 8
+                </div>
+                <div class="prompt-content">
+                    <div class="prompt-text">
+                        What makes you feel most secure in love? When your partner does this, how does it affect you?
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <button class="floating-btn">✍️</button>
     </div>
-
-    <div class="tabs">
-        <div class="tab active">New (7)</div>
-        <div class="tab">Saved</div>
-        <div class="tab">Completed</div>
-        <div class="tab">Discuss</div>
-    </div>
-
-    <div class="prompts-section">
-        <div class="section-header">
-            <span class="section-title">Based on your differences</span>
-            <span class="section-count">From today's quiz</span>
-        </div>
-
-        <div class="prompt-card featured">
-            <div class="prompt-source">
-                <div class="source-icon attachment">🔗</div>
-                <span class="source-text">Separation & Security Quiz</span>
-                <span class="source-badge">New</span>
-            </div>
-            <div class="prompt-content">
-                <div class="prompt-text">
-                    When you sense your partner withdrawing, what's your instinct? Does that response bring you closer or push you apart? Where did you learn this pattern?
-                </div>
-                <div class="prompt-context">
-                    💡 You and Sarah answered differently about how you react when feeling distance. Exploring this pattern could help you understand each other better.
-                </div>
-                <div class="prompt-actions">
-                    <div class="prompt-btn primary">Write Now</div>
-                    <div class="prompt-btn secondary">Save for Later</div>
-                </div>
-            </div>
-        </div>
-
-        <div class="prompt-card">
-            <div class="prompt-source">
-                <div class="source-icon attachment">🔗</div>
-                <span class="source-text">Separation & Security Quiz</span>
-            </div>
-            <div class="prompt-content">
-                <div class="prompt-text">
-                    What's your deepest fear about relationships? Where did this fear originate? How does it show up in your current relationship?
-                </div>
-                <div class="prompt-context">
-                    💡 You fear being abandoned; Sarah fears losing independence. Understanding where these fears come from can build compassion.
-                </div>
-                <div class="prompt-actions">
-                    <div class="prompt-btn primary">Write Now</div>
-                    <div class="prompt-btn secondary">Save</div>
-                </div>
-            </div>
-        </div>
-
-        <div class="section-header">
-            <span class="section-title">Explore further</span>
-            <span class="section-count">7 more prompts</span>
-        </div>
-
-        <div class="prompt-mini">
-            <div class="prompt-mini-icon">💭</div>
-            <div class="prompt-mini-text">How do you feel when your partner isn't around?</div>
-            <div class="prompt-mini-arrow">›</div>
-        </div>
-
-        <div class="prompt-mini">
-            <div class="prompt-mini-icon">❤️</div>
-            <div class="prompt-mini-text">What does your partner do that makes you feel most loved?</div>
-            <div class="prompt-mini-arrow">›</div>
-        </div>
-
-        <div class="prompt-mini">
-            <div class="prompt-mini-icon">🌱</div>
-            <div class="prompt-mini-text">What's something you've recently realized about yourself?</div>
-            <div class="prompt-mini-arrow">›</div>
-        </div>
-
-        <div class="prompt-mini">
-            <div class="prompt-mini-icon">🎯</div>
-            <div class="prompt-mini-text">When do you feel most like you and your partner are a team?</div>
-            <div class="prompt-mini-arrow">›</div>
-        </div>
-
-        <div class="section-header">
-            <span class="section-title">Recently completed</span>
-        </div>
-
-        <div class="prompt-card completed">
-            <div class="completed-badge">
-                ✓ Completed Jan 8
-            </div>
-            <div class="prompt-content">
-                <div class="prompt-text">
-                    What makes you feel most secure in love? When your partner does this, how does it affect you?
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="floating-btn">✍️</div>
 </body>
 </html>

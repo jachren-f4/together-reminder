@@ -11,38 +11,9 @@ import { withAuthOrDevBypass } from '@/lib/auth/dev-middleware';
 import { query, getClient } from '@/lib/db/pool';
 import { readFileSync } from 'fs';
 import { join } from 'path';
+import { getCooldownStatus, COOLDOWN_HOURS } from '@/lib/magnets/cooldowns';
 
 export const dynamic = 'force-dynamic';
-
-// Check if cooldown is enabled (defaults to true in production)
-const COOLDOWN_ENABLED = process.env.PUZZLE_COOLDOWN_ENABLED !== 'false';
-
-// Check if cooldown is active (last completion was on client's local date)
-async function isCooldownActive(coupleId: string, clientLocalDate: string | null): Promise<boolean> {
-  if (!COOLDOWN_ENABLED || !clientLocalDate) {
-    return false;
-  }
-
-  // Get most recent completed match
-  const result = await query(
-    `SELECT completed_at FROM linked_matches
-     WHERE couple_id = $1 AND status = 'completed'
-     ORDER BY completed_at DESC LIMIT 1`,
-    [coupleId]
-  );
-
-  if (result.rows.length === 0) {
-    return false; // No completed matches, no cooldown
-  }
-
-  const completedAt = new Date(result.rows[0].completed_at);
-
-  // Check if completion was on the same day as client's local date
-  // We compare the date strings to avoid timezone issues
-  const completedDateStr = completedAt.toISOString().split('T')[0];
-
-  return completedDateStr === clientLocalDate;
-}
 
 // Load puzzle data from branch-specific path
 function loadPuzzle(puzzleId: string, branch?: string): any {
@@ -287,15 +258,6 @@ export const POST = withAuthOrDevBypass(async (req, userId, email) => {
     // Extract base URL for image paths
     const baseUrl = new URL(req.url).origin;
 
-    // Parse request body for localDate
-    let localDate: string | null = null;
-    try {
-      const body = await req.json();
-      localDate = body.localDate || null;
-    } catch {
-      // No body or invalid JSON, continue without localDate
-    }
-
     // Get couple info
     const coupleResult = await query(
       `SELECT id, user1_id, user2_id, first_player_id FROM couples WHERE user1_id = $1 OR user2_id = $1 LIMIT 1`,
@@ -314,14 +276,26 @@ export const POST = withAuthOrDevBypass(async (req, userId, email) => {
     // Get next puzzle for this couple (active match or first uncompleted)
     const { puzzleId, activeMatch, branch } = await getNextPuzzleForCouple(coupleId);
 
-    // If no active match and cooldown is active, return cooldown response
-    if (!activeMatch && await isCooldownActive(coupleId, localDate)) {
-      return NextResponse.json({
-        success: false,
-        code: 'COOLDOWN_ACTIVE',
-        message: 'Next puzzle available tomorrow',
-        cooldownEnabled: true,
-      });
+    // If no active match, check magnet cooldown (8h cooldown after 2 plays)
+    if (!activeMatch) {
+      const cooldownStatus = await getCooldownStatus(coupleId, 'linked');
+      if (!cooldownStatus.canPlay) {
+        // Format remaining time
+        const remainingMs = cooldownStatus.cooldownRemainingMs || 0;
+        const remainingHours = Math.ceil(remainingMs / (1000 * 60 * 60));
+        const message = remainingHours <= 1
+          ? 'Next puzzle available in less than an hour'
+          : `Next puzzle available in ${remainingHours} hours`;
+
+        return NextResponse.json({
+          success: false,
+          code: 'COOLDOWN_ACTIVE',
+          message,
+          cooldownEndsAt: cooldownStatus.cooldownEndsAt?.toISOString() || null,
+          cooldownRemainingMs: cooldownStatus.cooldownRemainingMs,
+          remainingInBatch: cooldownStatus.remainingInBatch,
+        });
+      }
     }
 
     if (!puzzleId) {

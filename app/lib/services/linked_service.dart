@@ -51,7 +51,6 @@ class LinkedService extends SideQuestServiceBase {
       final response = await apiRequest(
         'POST',
         '/api/sync/linked',
-        body: {'localDate': getLocalDate()},
       );
 
       // Check for cooldown response

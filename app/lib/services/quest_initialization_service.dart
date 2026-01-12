@@ -102,17 +102,27 @@ class QuestInitializationService {
       // Step 2: Check if quests already exist locally
       var existingQuests = _storage.getTodayQuests();
       final questsAlreadyExisted = existingQuests.isNotEmpty;
+      final needsMetadataRefresh = questsAlreadyExisted && _questsNeedMetadataRefresh(existingQuests);
 
-      if (questsAlreadyExisted) {
+      if (questsAlreadyExisted && !needsMetadataRefresh) {
         Logger.debug(
-          'Quest init: ${existingQuests.length} quests already exist locally',
+          'Quest init: ${existingQuests.length} quests already exist locally with metadata',
           service: 'quest-init',
         );
       } else {
-        // Initialize related services (moved from main.dart)
-        await _initializeRelatedServices(user.id, partner.pushToken);
+        if (needsMetadataRefresh) {
+          Logger.debug(
+            'Quest init: ${existingQuests.length} quests exist but missing metadata - syncing...',
+            service: 'quest-init',
+          );
+        }
 
-        // Step 3: Try to sync from server
+        // Initialize related services (moved from main.dart)
+        if (!questsAlreadyExisted) {
+          await _initializeRelatedServices(user.id, partner.pushToken);
+        }
+
+        // Step 3: Try to sync from server (also refreshes metadata for existing quests)
         Logger.debug('Attempting to sync quests from server...', service: 'quest-init');
 
         final questService = DailyQuestService(storage: _storage);
@@ -207,5 +217,20 @@ class QuestInitializationService {
       // Don't fail quest initialization if related services fail
       Logger.error('Failed to initialize related services', error: e, service: 'quest-init');
     }
+  }
+
+  /// Check if any quests are missing metadata (quizName)
+  ///
+  /// Used to determine if we need to sync from server even though
+  /// quests exist locally, to populate quiz titles/descriptions.
+  bool _questsNeedMetadataRefresh(List<DailyQuest> quests) {
+    for (final quest in quests) {
+      // Quiz-type quests should have a quizName
+      if (quest.type == QuestType.quiz &&
+          (quest.quizName == null || quest.quizName!.isEmpty)) {
+        return true;
+      }
+    }
+    return false;
   }
 }

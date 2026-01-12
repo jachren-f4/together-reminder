@@ -115,7 +115,7 @@ class _CloseButton extends StatelessWidget {
   }
 }
 
-/// 4px tall progress bar with black fill on gray track
+/// 4px tall progress bar with black fill on gray track (animated)
 class _ProgressBar extends StatelessWidget {
   final double progress;
 
@@ -127,11 +127,18 @@ class _ProgressBar extends StatelessWidget {
       height: 4,
       color: EditorialStyles.inkLight,
       alignment: Alignment.centerLeft,
-      child: FractionallySizedBox(
-        widthFactor: progress.clamp(0.0, 1.0),
-        child: Container(
-          color: EditorialStyles.ink,
-        ),
+      child: TweenAnimationBuilder<double>(
+        tween: Tween<double>(begin: 0, end: progress.clamp(0.0, 1.0)),
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeOut,
+        builder: (context, animatedProgress, child) {
+          return FractionallySizedBox(
+            widthFactor: animatedProgress,
+            child: Container(
+              color: EditorialStyles.ink,
+            ),
+          );
+        },
       ),
     );
   }

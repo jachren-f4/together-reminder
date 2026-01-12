@@ -266,7 +266,7 @@ class _UnlockCelebrationOverlayState extends State<UnlockCelebrationOverlay>
       case 'you or me':
         return '🤔';
       case 'linked':
-        return '🔗';
+        return '🧩';
       case 'word search':
         return '🔍';
       case 'steps together':

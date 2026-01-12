@@ -21,10 +21,12 @@ export type ActivityType =
 
 export const BATCH_SIZE = 2;  // 2 plays before cooldown
 export const COOLDOWN_HOURS = 8;
+export const BATCH_WINDOW_HOURS = 8;  // Time window for counting plays in same batch
 
 export interface CooldownEntry {
   batch_count: number;
   cooldown_until: string | null;  // ISO timestamp
+  last_play_at: string | null;    // ISO timestamp - for time-windowed counting
 }
 
 export interface CooldownsMap {
@@ -93,7 +95,21 @@ export async function getCooldownStatus(
   }
 
   // No cooldown, check batch count
-  const remaining = BATCH_SIZE - entry.batch_count;
+  // But first, check if the last play is stale (>8h ago)
+  // If so, the batch count effectively resets
+  let effectiveBatchCount = entry.batch_count;
+
+  if (entry.last_play_at) {
+    const lastPlayTime = new Date(entry.last_play_at);
+    const hoursSinceLastPlay = (now.getTime() - lastPlayTime.getTime()) / (1000 * 60 * 60);
+
+    if (hoursSinceLastPlay >= BATCH_WINDOW_HOURS) {
+      // First play is stale, batch count resets
+      effectiveBatchCount = 0;
+    }
+  }
+
+  const remaining = BATCH_SIZE - effectiveBatchCount;
   return {
     canPlay: remaining > 0,
     remainingInBatch: Math.max(0, remaining),
@@ -145,16 +161,29 @@ export async function recordActivityPlay(
       const cooldownEnd = new Date(entry.cooldown_until);
       if (cooldownEnd <= now) {
         // Cooldown expired, reset
-        entry = { batch_count: 0, cooldown_until: null };
+        entry = { batch_count: 0, cooldown_until: null, last_play_at: null };
       }
     }
 
     if (!entry) {
-      entry = { batch_count: 0, cooldown_until: null };
+      entry = { batch_count: 0, cooldown_until: null, last_play_at: null };
     }
 
-    // Increment batch count
+    // Check if last play is stale (outside the batch window)
+    // If so, reset the batch count before incrementing
+    if (entry.last_play_at) {
+      const lastPlayTime = new Date(entry.last_play_at);
+      const hoursSinceLastPlay = (now.getTime() - lastPlayTime.getTime()) / (1000 * 60 * 60);
+
+      if (hoursSinceLastPlay >= BATCH_WINDOW_HOURS) {
+        // First play is stale, reset batch count
+        entry.batch_count = 0;
+      }
+    }
+
+    // Increment batch count and update last_play_at
     entry.batch_count += 1;
+    entry.last_play_at = now.toISOString();
 
     let cooldownStarted = false;
     let cooldownEndsAt: Date | null = null;
@@ -253,7 +282,17 @@ export async function getAllCooldownStatuses(
       continue;
     }
 
-    const remaining = BATCH_SIZE - entry.batch_count;
+    // Check if last play is stale (outside the batch window)
+    let effectiveBatchCount = entry.batch_count;
+    if (entry.last_play_at) {
+      const lastPlayTime = new Date(entry.last_play_at);
+      const hoursSinceLastPlay = (now.getTime() - lastPlayTime.getTime()) / (1000 * 60 * 60);
+      if (hoursSinceLastPlay >= BATCH_WINDOW_HOURS) {
+        effectiveBatchCount = 0;
+      }
+    }
+
+    const remaining = BATCH_SIZE - effectiveBatchCount;
     statuses[activityType] = {
       canPlay: remaining > 0,
       remainingInBatch: Math.max(0, remaining),

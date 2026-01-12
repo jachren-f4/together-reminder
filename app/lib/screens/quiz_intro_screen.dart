@@ -212,12 +212,11 @@ class _QuizIntroScreenState extends State<QuizIntroScreen>
       final service = QuizMatchService();
       final gameState = await service.getOrCreateMatch('classic');
 
-      // Update DailyQuest with quiz metadata if available
+      // Always update DailyQuest with quiz metadata from API (local may be stale)
       if (widget.questId != null && gameState.quiz != null) {
         final quest = _storage.getDailyQuest(widget.questId!);
-        if (quest != null &&
-            (quest.quizName == null || quest.quizName == 'Classic Quiz')) {
-          // Update quest with quiz title and description
+        if (quest != null) {
+          // Always update quest with quiz title and description from API
           quest.quizName = gameState.quiz!.title;
           quest.description = gameState.quiz!.description;
           await _storage.saveDailyQuest(quest);
@@ -230,9 +229,13 @@ class _QuizIntroScreenState extends State<QuizIntroScreen>
           // and partner has actually answered
           _partnerCompleted = !gameState.isCompleted && gameState.hasPartnerAnswered;
           _partnerName = _storage.getPartner()?.name;
-          // Store quiz metadata for display
-          _quizTitle ??= gameState.quiz?.title;
-          _quizDescription ??= gameState.quiz?.description;
+          // Always use API values - they're authoritative (local quest may be stale)
+          if (gameState.quiz?.title != null) {
+            _quizTitle = gameState.quiz!.title;
+          }
+          if (gameState.quiz?.description != null) {
+            _quizDescription = gameState.quiz!.description;
+          }
         });
       }
     } catch (e) {

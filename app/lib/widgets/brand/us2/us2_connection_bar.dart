@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:togetherremind/config/animation_constants.dart';
@@ -113,6 +114,10 @@ class Us2ConnectionBarState extends State<Us2ConnectionBar>
   double _previousProgress = 0.0;
   bool _isAnimating = false;
 
+  // Particle celebration animation - rendered inside this widget so they scroll with the bar
+  List<_ParticleState>? _particles;
+  List<AnimationController>? _particleControllers;
+
   @override
   void initState() {
     super.initState();
@@ -171,7 +176,82 @@ class Us2ConnectionBarState extends State<Us2ConnectionBar>
     _progressController.dispose();
     _counterController.dispose();
     _celebrationPulseController.dispose();
+    _disposeParticles();
     super.dispose();
+  }
+
+  void _disposeParticles() {
+    if (_particleControllers != null) {
+      for (final controller in _particleControllers!) {
+        controller.dispose();
+      }
+      _particleControllers = null;
+      _particles = null;
+    }
+  }
+
+  /// Trigger particle celebration animation.
+  /// Particles fly from bottom of bar up to the LP counter.
+  /// Call this BEFORE animateLPGain for best visual effect.
+  void triggerParticleCelebration() {
+    _disposeParticles();
+
+    final random = Random();
+    const particleCount = 25;
+
+    // Create particles with randomized properties
+    _particles = List.generate(particleCount, (index) {
+      // Start: spread across bottom of the bar
+      final startX = 50.0 + random.nextDouble() * 250.0;
+      final startY = 120.0 + random.nextDouble() * 40.0; // Below the bar
+
+      // End: converge on LP counter (top right area)
+      final endX = 280.0 + (random.nextDouble() - 0.5) * 40.0;
+      final endY = 10.0 + (random.nextDouble() - 0.5) * 20.0;
+
+      return _ParticleState(
+        startX: startX,
+        startY: startY,
+        endX: endX,
+        endY: endY,
+        size: 10.0 + random.nextDouble() * 8.0,
+        arcHeight: 20.0 + random.nextDouble() * 40.0,
+      );
+    });
+
+    // Create animation controllers
+    _particleControllers = List.generate(particleCount, (index) {
+      return AnimationController(
+        duration: AnimationConstants.lpParticleFlight,
+        vsync: this,
+      );
+    });
+
+    // Start staggered animations
+    _startParticleAnimations();
+
+    setState(() {});
+  }
+
+  void _startParticleAnimations() async {
+    if (_particleControllers == null) return;
+
+    for (var i = 0; i < _particleControllers!.length; i++) {
+      if (i > 0) {
+        await Future.delayed(AnimationConstants.lpParticleStagger);
+      }
+      if (mounted && _particleControllers != null) {
+        _particleControllers![i].forward();
+      }
+    }
+
+    // Clean up after animation completes
+    await Future.delayed(AnimationConstants.lpParticleFlight);
+    if (mounted) {
+      setState(() {
+        _disposeParticles();
+      });
+    }
   }
 
   @override
@@ -288,19 +368,24 @@ class Us2ConnectionBarState extends State<Us2ConnectionBar>
     final currentMagnetId = unlockedCount > 0 ? unlockedCount : 0;
     final effectiveNextMagnetId = nextMagnetId;
 
-    return GestureDetector(
-      onTap: widget.onTap,
-      child: Container(
-        margin: const EdgeInsets.symmetric(horizontal: 0),
-        padding: const EdgeInsets.fromLTRB(16, 12, 16, 16),
-        decoration: BoxDecoration(
-          gradient: Us2Theme.connectionBarGradient,
-          borderRadius: const BorderRadius.only(
-            topLeft: Radius.circular(Us2Theme.connectionBarBorderRadius),
-            topRight: Radius.circular(Us2Theme.connectionBarBorderRadius),
-          ),
-        ),
-        child: Column(
+    // Wrap in Stack to overlay particles
+    return Stack(
+      clipBehavior: Clip.none,
+      children: [
+        // Main bar content
+        GestureDetector(
+          onTap: widget.onTap,
+          child: Container(
+            margin: const EdgeInsets.symmetric(horizontal: 0),
+            padding: const EdgeInsets.fromLTRB(16, 12, 16, 16),
+            decoration: BoxDecoration(
+              gradient: Us2Theme.connectionBarGradient,
+              borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(Us2Theme.connectionBarBorderRadius),
+                topRight: Radius.circular(Us2Theme.connectionBarBorderRadius),
+              ),
+            ),
+            child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Header row
@@ -434,9 +519,117 @@ class Us2ConnectionBarState extends State<Us2ConnectionBar>
             ),
           ],
         ),
+          ),
+        ),
+        // Particle overlay - rendered above the bar content
+        if (_particles != null && _particleControllers != null)
+          ..._buildParticles(),
+      ],
+    );
+  }
+
+  /// Build particle widgets for the celebration animation
+  List<Widget> _buildParticles() {
+    if (_particles == null || _particleControllers == null) return [];
+
+    return List.generate(_particles!.length, (index) {
+      final particle = _particles![index];
+      final controller = _particleControllers![index];
+
+      return AnimatedBuilder(
+        animation: controller,
+        builder: (context, child) {
+          if (controller.value == 0) return const SizedBox.shrink();
+
+          final progress = Curves.easeInQuad.transform(controller.value);
+
+          // Calculate position along curved arc path
+          final x = particle.startX + (particle.endX - particle.startX) * progress;
+          final linearY = particle.startY + (particle.endY - particle.startY) * progress;
+          final arcOffset = -particle.arcHeight * 4 * progress * (1 - progress);
+          final y = linearY + arcOffset;
+
+          // Scale: start at 1.0, shrink slightly as approaching destination
+          final scale = 1.0 - (progress * 0.2);
+
+          // Fade out quickly in last 15% of journey
+          final opacity = progress < 0.85 ? 1.0 : (1.0 - (progress - 0.85) / 0.15);
+
+          return Positioned(
+            left: x - (particle.size * scale / 2),
+            top: y - (particle.size * scale / 2),
+            child: IgnorePointer(
+              child: Opacity(
+                opacity: opacity.clamp(0.0, 1.0),
+                child: Transform.scale(
+                  scale: scale,
+                  child: _buildSparkle(particle.size),
+                ),
+              ),
+            ),
+          );
+        },
+      );
+    });
+  }
+
+  Widget _buildSparkle(double size) {
+    return SizedBox(
+      width: size,
+      height: size,
+      child: Stack(
+        children: [
+          // Glow behind the star
+          Center(
+            child: Container(
+              width: size * 0.8,
+              height: size * 0.8,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                boxShadow: [
+                  BoxShadow(
+                    color: const Color(0xFFFFD700),
+                    blurRadius: size * 1.5,
+                    spreadRadius: size * 0.3,
+                  ),
+                ],
+              ),
+            ),
+          ),
+          // Star icon
+          Center(
+            child: Icon(
+              Icons.star,
+              size: size,
+              color: const Color(0xFFFFD700),
+              shadows: const [
+                Shadow(color: Colors.white, blurRadius: 4),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
+}
+
+/// Particle state for celebration animation
+class _ParticleState {
+  final double startX;
+  final double startY;
+  final double endX;
+  final double endY;
+  final double size;
+  final double arcHeight;
+
+  _ParticleState({
+    required this.startX,
+    required this.startY,
+    required this.endX,
+    required this.endY,
+    required this.size,
+    required this.arcHeight,
+  });
 }
 
 /// Magnet endpoint - square rounded image (no label per mockup spec)

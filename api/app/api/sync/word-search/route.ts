@@ -13,9 +13,9 @@ import { getCouple, getCoupleBasic } from '@/lib/couple/utils';
 import {
   loadPuzzle,
   getCurrentBranch,
-  isCooldownActive,
   getNextPuzzle,
 } from '@/lib/puzzle/loader';
+import { getCooldownStatus, COOLDOWN_HOURS } from '@/lib/magnets/cooldowns';
 
 export const dynamic = 'force-dynamic';
 
@@ -38,19 +38,10 @@ function getPuzzleForClient(puzzle: any): any {
  * POST /api/sync/word-search
  *
  * Creates a new match if none exists, or returns existing active match.
- * Body: { localDate?: string } - Client's local date in YYYY-MM-DD format for cooldown check
+ * Uses magnet cooldown system (2 plays, then 8h cooldown).
  */
 export const POST = withAuthOrDevBypass(async (req, userId, email) => {
   try {
-    // Parse request body for localDate
-    let localDate: string | null = null;
-    try {
-      const body = await req.json();
-      localDate = body.localDate || null;
-    } catch {
-      // No body or invalid JSON, continue without localDate
-    }
-
     // Get couple info
     const couple = await getCouple(userId);
     if (!couple) {
@@ -65,14 +56,26 @@ export const POST = withAuthOrDevBypass(async (req, userId, email) => {
     // Get next puzzle for this couple (active match or first uncompleted)
     const { puzzleId, activeMatch, branch } = await getNextPuzzle(coupleId, 'wordSearch');
 
-    // If no active match and cooldown is active, return cooldown response
-    if (!activeMatch && await isCooldownActive(coupleId, 'wordSearch', localDate)) {
-      return NextResponse.json({
-        success: false,
-        code: 'COOLDOWN_ACTIVE',
-        message: 'Next puzzle available tomorrow',
-        cooldownEnabled: true,
-      });
+    // If no active match, check magnet cooldown (8h cooldown after 2 plays)
+    if (!activeMatch) {
+      const cooldownStatus = await getCooldownStatus(coupleId, 'wordsearch');
+      if (!cooldownStatus.canPlay) {
+        // Format remaining time
+        const remainingMs = cooldownStatus.cooldownRemainingMs || 0;
+        const remainingHours = Math.ceil(remainingMs / (1000 * 60 * 60));
+        const message = remainingHours <= 1
+          ? 'Next puzzle available in less than an hour'
+          : `Next puzzle available in ${remainingHours} hours`;
+
+        return NextResponse.json({
+          success: false,
+          code: 'COOLDOWN_ACTIVE',
+          message,
+          cooldownEndsAt: cooldownStatus.cooldownEndsAt?.toISOString() || null,
+          cooldownRemainingMs: cooldownStatus.cooldownRemainingMs,
+          remainingInBatch: cooldownStatus.remainingInBatch,
+        });
+      }
     }
 
     if (!puzzleId) {

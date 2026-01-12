@@ -28,6 +28,8 @@ import 'package:togetherremind/theme/app_theme.dart';
 import 'package:togetherremind/utils/logger.dart';
 import 'package:togetherremind/widgets/auth_wrapper.dart';
 import 'package:togetherremind/widgets/daily_quests_widget.dart';
+import 'package:togetherremind/services/lp_celebration_service.dart';
+import 'package:togetherremind/widgets/animations/lp_celebration_overlay.dart';
 
 /// Global navigator key accessor for showing dialogs from services
 class AppNavigator {
@@ -250,30 +252,52 @@ class _TogetherRemindAppState extends State<TogetherRemindApp> with WidgetsBindi
     return ValueListenableBuilder<SerifFont>(
       valueListenable: ThemeConfig().currentFont,
       builder: (context, currentFont, child) {
-        return MaterialApp(
-          navigatorKey: AppNavigator.key,
-          navigatorObservers: [questRouteObserver],
-          title: brand.appName,
-          theme: AppTheme.lightTheme,
-          debugShowCheckedModeBanner: false,
-          home: Builder(
-            builder: (context) {
-              // Set the app context for NotificationService
-              WidgetsBinding.instance.addPostFrameCallback((_) {
-                NotificationService.setAppContext(context);
-              });
+        // === ISSUE A FIX: LP Celebration overlay must NOT follow scroll ===
+        // Attempt 10: Wrap MaterialApp in outer Stack with Directionality
+        // The celebration overlay is a SIBLING to MaterialApp, completely outside
+        // its widget tree, so it won't be affected by any scrolling inside MaterialApp.
+        //
+        // Previous failed attempts (1-9) all placed overlay INSIDE MaterialApp:
+        //   1-5. Various Overlay approaches - all followed scroll
+        //   6. showGeneralDialog - fixed position but blocked scroll
+        //   7. PageRouteBuilder + IgnorePointer - blocked scroll
+        //   8. Custom OverlayRoute - followed scroll
+        //   9. MaterialApp.builder - still inside MaterialApp, followed scroll
+        return Directionality(
+          textDirection: TextDirection.ltr,
+          child: Stack(
+            children: [
+              // Layer 1: MaterialApp (the entire app)
+              MaterialApp(
+                navigatorKey: AppNavigator.key,
+                navigatorObservers: [questRouteObserver],
+                title: brand.appName,
+                theme: AppTheme.lightTheme,
+                debugShowCheckedModeBanner: false,
+                home: Builder(
+                  builder: (context) {
+                    // Set the app context for NotificationService
+                    WidgetsBinding.instance.addPostFrameCallback((_) {
+                      NotificationService.setAppContext(context);
+                    });
 
-              // Use AuthWrapper if Supabase is configured, otherwise fall back to old behavior
-              if (SupabaseConfig.isConfigured) {
-                return const AuthWrapper();
-              } else {
-                // Legacy behavior for development without auth
-                return hasPartner ? const MainScreen() : const OnboardingScreen();
-              }
-            },
+                    // Use AuthWrapper if Supabase is configured, otherwise fall back to old behavior
+                    if (SupabaseConfig.isConfigured) {
+                      return const AuthWrapper();
+                    } else {
+                      // Legacy behavior for development without auth
+                      return hasPartner ? const MainScreen() : const OnboardingScreen();
+                    }
+                  },
+                ),
+              ),
+              // LP celebration particles are rendered inside Us2ConnectionBar widget.
+              // See us2_connection_bar.dart triggerParticleCelebration().
+            ],
           ),
         );
       },
     );
   }
 }
+

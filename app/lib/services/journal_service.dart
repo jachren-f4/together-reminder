@@ -419,7 +419,7 @@ class JournalService {
 
     final entry = JournalEntry.linked(
       entryId: 'journal_linked_${match.matchId}',
-      title: 'Linked Crossword',
+      title: 'Crossword',
       completedAt: match.completedAt ?? DateTime.now(),
       contentId: match.matchId,
       userScore: userScore,

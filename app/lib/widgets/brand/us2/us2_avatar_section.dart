@@ -8,6 +8,7 @@ import 'package:togetherremind/config/brand/us2_theme.dart';
 /// - Avatars positioned at edges with name badges overlaid at bottom
 /// - Left: Partner name (dark text with white glow)
 /// - Right: "You & [PartnerName]" (white text with dark glow - highlighted)
+/// - Characters change based on day of week (device local time)
 class Us2AvatarSection extends StatelessWidget {
   final String userName;
   final String partnerName;
@@ -18,8 +19,36 @@ class Us2AvatarSection extends StatelessWidget {
     required this.partnerName,
   });
 
+  /// Debug override for weekday (1-7, null = use device time)
+  static int? debugWeekdayOverride;
+
+  /// Day names for display
+  static const dayNames = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
+
+  /// Get current weekday (1-7), respecting debug override
+  static int getCurrentWeekday() {
+    return debugWeekdayOverride ?? DateTime.now().weekday;
+  }
+
+  /// Get day name for current weekday
+  static String getCurrentDayName() {
+    final weekday = getCurrentWeekday();
+    return dayNames[weekday - 1];
+  }
+
+  /// Get character image paths based on current weekday (device local time)
+  static ({String female, String male}) getCharacterPaths() {
+    final dayName = getCurrentDayName();
+    return (
+      female: 'assets/brands/us2/images/characters/${dayName}_female.png',
+      male: 'assets/brands/us2/images/characters/${dayName}_male.png',
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    final characterPaths = getCharacterPaths();
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 15),
       child: Row(
@@ -29,17 +58,19 @@ class Us2AvatarSection extends StatelessWidget {
           // Left character (partner)
           Expanded(
             child: _buildCharacter(
-              imagePath: 'assets/brands/us2/images/character_female.png',
+              imagePath: characterPaths.female,
               label: 'PARTY',
               alignment: Alignment.centerLeft,
               isHighlighted: false,
               leftAlignLabel: true,
             ),
           ),
+          // Spacing between characters
+          const SizedBox(width: 36),
           // Right character (user + partner)
           Expanded(
             child: _buildCharacter(
-              imagePath: 'assets/brands/us2/images/character_male.png',
+              imagePath: characterPaths.male,
               label: 'You & $partnerName',
               alignment: Alignment.centerRight,
               isHighlighted: true,

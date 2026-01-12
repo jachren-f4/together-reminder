@@ -444,7 +444,7 @@ class _YouOrMeMatchGameScreenState extends State<YouOrMeMatchGameScreen>
             child: Column(
               children: [
                 EditorialHeader(
-                  title: 'You or Me',
+                  title: _gameState?.quiz?.title ?? 'You or Me',
                   onClose: () => Navigator.of(context).pop(),
                 ),
                 const Expanded(
@@ -468,7 +468,7 @@ class _YouOrMeMatchGameScreenState extends State<YouOrMeMatchGameScreen>
             child: Column(
               children: [
                 EditorialHeader(
-                  title: 'You or Me',
+                  title: _gameState?.quiz?.title ?? 'You or Me',
                   onClose: () => Navigator.of(context).pop(),
                 ),
                 Expanded(
@@ -510,7 +510,7 @@ class _YouOrMeMatchGameScreenState extends State<YouOrMeMatchGameScreen>
             child: Column(
               children: [
                 EditorialHeader(
-                  title: 'You or Me',
+                  title: _gameState?.quiz?.title ?? 'You or Me',
                   onClose: () => Navigator.of(context).pop(),
                 ),
                 const Expanded(
@@ -538,7 +538,8 @@ class _YouOrMeMatchGameScreenState extends State<YouOrMeMatchGameScreen>
     }
 
     final question = questions[currentIndex];
-    final progress = currentIndex / questions.length;
+    // Progress: 0% on Q1, 20% on Q2, etc. Goes to 100% when submitting
+    final progress = _isSubmitting ? 1.0 : currentIndex / questions.length;
     final partnerName = _storage.getPartner()?.name ?? 'Partner';
     final userName = _storage.getUser()?.name ?? 'You';
 
@@ -553,7 +554,7 @@ class _YouOrMeMatchGameScreenState extends State<YouOrMeMatchGameScreen>
               children: [
                 // Header with progress
                 EditorialHeader(
-                  title: 'You or Me',
+                  title: _gameState?.quiz?.title ?? 'You or Me',
                   counter: '${currentIndex + 1} of ${questions.length}',
                   progress: progress,
                   onClose: () => Navigator.of(context).popUntil((route) => route.isFirst),
@@ -921,7 +922,8 @@ class _YouOrMeMatchGameScreenState extends State<YouOrMeMatchGameScreen>
     }
 
     final question = questions[currentIndex];
-    final progress = (currentIndex + 1) / questions.length;
+    // Progress: 0% on Q1, 20% on Q2, etc. Goes to 100% when submitting
+    final progress = _isSubmitting ? 1.0 : currentIndex / questions.length;
     final partnerName = _storage.getPartner()?.name ?? 'Partner';
     final userName = _storage.getUser()?.name ?? 'You';
 
@@ -1075,7 +1077,7 @@ class _YouOrMeMatchGameScreenState extends State<YouOrMeMatchGameScreen>
                 ),
             ],
           ),
-          // Progress bar
+          // Progress bar with animation
           if (progress != null) ...[
             const SizedBox(height: 12),
             Container(
@@ -1086,16 +1088,23 @@ class _YouOrMeMatchGameScreenState extends State<YouOrMeMatchGameScreen>
               ),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(3),
-                child: Align(
-                  alignment: Alignment.centerLeft,
-                  child: FractionallySizedBox(
-                    widthFactor: progress,
-                    child: Container(
-                      decoration: const BoxDecoration(
-                        gradient: Us2Theme.accentGradient,
+                child: TweenAnimationBuilder<double>(
+                  tween: Tween<double>(begin: 0, end: progress),
+                  duration: const Duration(milliseconds: 300),
+                  curve: Curves.easeOut,
+                  builder: (context, animatedProgress, child) {
+                    return Align(
+                      alignment: Alignment.centerLeft,
+                      child: FractionallySizedBox(
+                        widthFactor: animatedProgress,
+                        child: Container(
+                          decoration: const BoxDecoration(
+                            gradient: Us2Theme.accentGradient,
+                          ),
+                        ),
                       ),
-                    ),
-                  ),
+                    );
+                  },
                 ),
               ),
             ),

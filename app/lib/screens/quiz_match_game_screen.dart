@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import '../config/brand/brand_config.dart';
 import '../config/brand/brand_loader.dart';
 import '../config/brand/us2_theme.dart';
+import '../config/quiz_constants.dart';
 import '../models/quiz_match.dart';
 import '../services/quiz_match_service.dart';
 import '../services/daily_quest_service.dart';
@@ -481,7 +482,8 @@ class _QuizMatchGameScreenState extends State<QuizMatchGameScreen>
     }
 
     final currentQuestion = questions[_currentQuestionIndex];
-    final progress = _currentQuestionIndex / questions.length;
+    // Progress: 0% on Q1, 20% on Q2, etc. Goes to 100% when submitting
+    final progress = _isSubmitting ? 1.0 : _currentQuestionIndex / questions.length;
     final isAffirmation = widget.quizType == 'affirmation';
 
     return PopScope(
@@ -528,16 +530,27 @@ class _QuizMatchGameScreenState extends State<QuizMatchGameScreen>
                               else
                                 Expanded(
                                   child: Column(
-                                    children: List.generate(
-                                      currentQuestion.choices.length,
-                                      (index) => Padding(
-                                        padding: const EdgeInsets.only(bottom: 8),
-                                        child: _buildOptionButton(
-                                          currentQuestion.choices[index],
-                                          index,
+                                    children: [
+                                      // Regular choices from quiz JSON
+                                      ...List.generate(
+                                        currentQuestion.choices.length,
+                                        (index) => Padding(
+                                          padding: const EdgeInsets.only(bottom: 8),
+                                          child: _buildOptionButton(
+                                            currentQuestion.choices[index],
+                                            index,
+                                          ),
                                         ),
                                       ),
-                                    ),
+                                      // Hardcoded 5th "It depends" option for classic quiz
+                                      Padding(
+                                        padding: const EdgeInsets.only(bottom: 8),
+                                        child: _buildOptionButton(
+                                          kClassicQuizFallbackOptionText,
+                                          kClassicQuizFallbackOptionIndex,
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ),
 
@@ -700,7 +713,8 @@ class _QuizMatchGameScreenState extends State<QuizMatchGameScreen>
     }
 
     final currentQuestion = questions[_currentQuestionIndex];
-    final progress = (_currentQuestionIndex + 1) / questions.length;
+    // Progress: 0% on Q1, 20% on Q2, etc. Goes to 100% when submitting
+    final progress = _isSubmitting ? 1.0 : _currentQuestionIndex / questions.length;
     final isAffirmation = widget.quizType == 'affirmation';
 
     return PopScope(
@@ -778,6 +792,15 @@ class _QuizMatchGameScreenState extends State<QuizMatchGameScreen>
                                           ),
                                         ),
                                       ),
+                                      // Hardcoded 5th "It depends" option for classic quiz
+                                      if (!isAffirmation)
+                                        Padding(
+                                          padding: const EdgeInsets.only(bottom: 10),
+                                          child: _buildUs2OptionButton(
+                                            kClassicQuizFallbackOptionText,
+                                            kClassicQuizFallbackOptionIndex,
+                                          ),
+                                        ),
                                     ],
                                   ),
                                 ),
@@ -881,7 +904,7 @@ class _QuizMatchGameScreenState extends State<QuizMatchGameScreen>
                 ),
             ],
           ),
-          // Progress bar
+          // Progress bar with animation
           if (progress != null) ...[
             const SizedBox(height: 12),
             Container(
@@ -892,16 +915,23 @@ class _QuizMatchGameScreenState extends State<QuizMatchGameScreen>
               ),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(3),
-                child: Align(
-                  alignment: Alignment.centerLeft,
-                  child: FractionallySizedBox(
-                    widthFactor: progress,
-                    child: Container(
-                      decoration: const BoxDecoration(
-                        gradient: Us2Theme.accentGradient,
+                child: TweenAnimationBuilder<double>(
+                  tween: Tween<double>(begin: 0, end: progress),
+                  duration: const Duration(milliseconds: 300),
+                  curve: Curves.easeOut,
+                  builder: (context, animatedProgress, child) {
+                    return Align(
+                      alignment: Alignment.centerLeft,
+                      child: FractionallySizedBox(
+                        widthFactor: animatedProgress,
+                        child: Container(
+                          decoration: const BoxDecoration(
+                            gradient: Us2Theme.accentGradient,
+                          ),
+                        ),
                       ),
-                    ),
-                  ),
+                    );
+                  },
                 ),
               ),
             ),

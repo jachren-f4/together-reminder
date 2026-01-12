@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '../utils/logger.dart';
 import '../config/brand/brand_loader.dart';
 import '../config/brand/brand_config.dart';
 import '../config/brand/us2_theme.dart';
@@ -8,10 +9,13 @@ import '../services/storage_service.dart';
 import '../services/haptic_service.dart';
 import '../services/sound_service.dart';
 import '../services/app_bootstrap_service.dart';
+import '../services/subscription_service.dart';
 import '../widgets/animations/animations.dart';
 import '../widgets/editorial/editorial.dart';
 import '../widgets/lp_intro_overlay.dart';
 import 'main_screen.dart';
+import 'paywall_screen.dart';
+import 'already_subscribed_screen.dart';
 
 /// Results screen for Welcome Quiz.
 /// Shows match score and answer breakdown.
@@ -73,10 +77,51 @@ class _WelcomeQuizResultsScreenState extends State<WelcomeQuizResultsScreen>
     });
   }
 
-  void _onLpIntroDismissed() {
+  void _onLpIntroDismissed() async {
     if (!mounted) return;
 
-    // Navigate to main screen (without LP intro since we just showed it)
+    // Check subscription status and show paywall if needed
+    final subscriptionService = SubscriptionService();
+
+    // Check couple-level subscription status from server (partner may have already subscribed)
+    Logger.debug('Checking couple subscription status after LP intro...', service: 'welcome_quiz');
+    final coupleStatus = await subscriptionService.checkCoupleSubscription();
+    final isPremium = subscriptionService.isPremium;
+
+    if (!mounted) return;
+
+    if (coupleStatus?.isActive == true && coupleStatus?.subscribedByMe == false) {
+      // Partner already subscribed - show AlreadySubscribedScreen
+      Logger.debug('Partner already subscribed - showing AlreadySubscribedScreen', service: 'welcome_quiz');
+      Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(
+          builder: (context) => AlreadySubscribedScreen(
+            subscriberName: coupleStatus?.subscriberName ?? 'Your partner',
+            onContinue: _navigateToMainScreen,
+          ),
+        ),
+        (route) => false,
+      );
+    } else if (!isPremium) {
+      // Show paywall for non-premium users
+      Logger.debug('Showing paywall - user is not premium', service: 'welcome_quiz');
+      Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(
+          builder: (context) => PaywallScreen(
+            onContinue: _navigateToMainScreen,
+            allowSkip: false, // Hard paywall - must start trial
+          ),
+        ),
+        (route) => false,
+      );
+    } else {
+      // User already has premium, skip paywall
+      Logger.debug('Skipping paywall - user already has premium', service: 'welcome_quiz');
+      _navigateToMainScreen(context);
+    }
+  }
+
+  static void _navigateToMainScreen(BuildContext context) {
     Navigator.of(context).pushAndRemoveUntil(
       MaterialPageRoute(
         builder: (context) => const MainScreen(showLpIntro: false),

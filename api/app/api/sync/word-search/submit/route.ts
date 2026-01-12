@@ -291,9 +291,10 @@ export const POST = withAuthOrDevBypass(async (req, userId, email) => {
 
       // Advance branch progression for Word Search activity
       // This makes the next puzzle come from the next branch (everyday -> passionate -> naughty -> everyday)
+      // After 1st completion: branch=1 (passionate), after 2nd: branch=2 (naughty), after 3rd: branch=0 (everyday)
       const branchResult = await client.query(
         `INSERT INTO branch_progression (couple_id, activity_type, current_branch, total_completions, max_branches)
-         VALUES ($1, 'wordSearch', 0, 1, 3)
+         VALUES ($1, 'wordSearch', 1, 1, 3)
          ON CONFLICT (couple_id, activity_type)
          DO UPDATE SET
            total_completions = branch_progression.total_completions + 1,

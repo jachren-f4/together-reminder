@@ -98,11 +98,24 @@ abstract class SideQuestServiceBase {
   /// Check if response indicates cooldown is active
   ///
   /// Call this after getting a successful response to check for soft cooldown errors.
-  /// Throws [CooldownActiveException] if cooldown is active.
+  /// Throws [CooldownActiveException] if cooldown is active, with details about
+  /// when the cooldown ends and remaining plays.
   void checkCooldownResponse(Map<String, dynamic> response) {
     if (response['code'] == 'COOLDOWN_ACTIVE') {
+      // Parse cooldown details from response
+      DateTime? cooldownEndsAt;
+      if (response['cooldownEndsAt'] != null) {
+        cooldownEndsAt = DateTime.tryParse(response['cooldownEndsAt']);
+      }
+
+      final cooldownRemainingMs = response['cooldownRemainingMs'] as int?;
+      final remainingInBatch = response['remainingInBatch'] as int? ?? 0;
+
       throw CooldownActiveException(
-        response['message'] ?? 'Next puzzle available tomorrow',
+        response['message'] ?? 'Next puzzle available in a few hours',
+        cooldownEndsAt: cooldownEndsAt,
+        cooldownRemainingMs: cooldownRemainingMs,
+        remainingInBatch: remainingInBatch,
       );
     }
   }

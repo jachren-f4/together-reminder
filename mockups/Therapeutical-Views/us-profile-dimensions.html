@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=390, height=844, initial-scale=1.0">
+    <title>Us 2.0 - Your Dimensions</title>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-start: #FFD1C1;
+            --bg-end: #FFF5F0;
+            --primary-coral: #FF6B6B;
+            --primary-salmon: #FF7B6B;
+            --gradient-start: #FF6B6B;
+            --gradient-end: #FF9F43;
+            --cream: #FFF8F0;
+            --beige: #F5E6D8;
+            --text-dark: #2D2D2D;
+            --text-medium: #6B6B6B;
+            --text-light: #9B9B9B;
+            --aligned-green: #4CAF50;
+            --aligned-bg: #E8F5E9;
+            --different-amber: #FF9800;
+            --different-bg: #FFF3E0;
+            --complementary-blue: #2196F3;
+            --complementary-bg: #E3F2FD;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            background: linear-gradient(180deg, var(--bg-start) 0%, var(--bg-end) 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .phone-frame {
+            width: 390px;
+            height: 844px;
+            background: linear-gradient(180deg, var(--bg-start) 0%, var(--bg-end) 100%);
+            border-radius: 40px;
+            overflow: hidden;
+            box-shadow: 0 25px 80px rgba(0, 0, 0, 0.15);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            padding: 20px;
+            text-align: center;
+            background: rgba(255, 255, 255, 0.4);
+        }
+
+        .header-title {
+            font-family: 'Pacifico', cursive;
+            font-size: 28px;
+            color: var(--primary-coral);
+            margin-bottom: 4px;
+        }
+
+        .header-subtitle {
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            color: var(--text-medium);
+            font-size: 14px;
+        }
+
+        .avatars {
+            display: flex;
+            justify-content: center;
+            gap: 24px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .avatar-item {
+            text-align: center;
+        }
+
+        .avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .avatar.you {
+            background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+            color: white;
+        }
+
+        .avatar.partner {
+            background: linear-gradient(135deg, #9C27B0, #E91E63);
+            color: white;
+        }
+
+        .avatar-name {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .legend {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            padding: 10px 20px 20px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12px;
+            color: var(--text-medium);
+        }
+
+        .legend-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .legend-dot.you {
+            background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+        }
+
+        .legend-dot.partner {
+            background: linear-gradient(135deg, #9C27B0, #E91E63);
+        }
+
+        .main-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 0 16px 100px;
+        }
+
+        .aggregate-card {
+            background: linear-gradient(135deg, rgba(255, 107, 107, 0.1), rgba(255, 159, 67, 0.05));
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255, 107, 107, 0.15);
+        }
+
+        .aggregate-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+
+        .aggregate-icon {
+            font-size: 24px;
+        }
+
+        .aggregate-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .aggregate-stats {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .stat-item {
+            flex: 1;
+            text-align: center;
+            padding: 14px 10px;
+            background: rgba(255, 255, 255, 0.6);
+            border-radius: 14px;
+        }
+
+        .stat-number {
+            font-family: 'Playfair Display', serif;
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--primary-coral);
+        }
+
+        .stat-label {
+            font-size: 10px;
+            font-weight: 700;
+            color: var(--text-medium);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .aggregate-text {
+            font-size: 14px;
+            color: var(--text-dark);
+            line-height: 1.5;
+        }
+
+        .section-title {
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--text-medium);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 16px;
+            padding: 0 4px;
+        }
+
+        .dimension-card {
+            background: var(--cream);
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 16px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .dimension-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .dimension-name {
+            font-family: 'Playfair Display', serif;
+            font-size: 17px;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .dimension-status {
+            font-size: 11px;
+            font-weight: 700;
+            padding: 5px 12px;
+            border-radius: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .dimension-status.aligned {
+            background: var(--aligned-bg);
+            color: var(--aligned-green);
+        }
+
+        .dimension-status.different {
+            background: var(--different-bg);
+            color: var(--different-amber);
+        }
+
+        .dimension-status.complementary {
+            background: var(--complementary-bg);
+            color: var(--complementary-blue);
+        }
+
+        .spectrum {
+            position: relative;
+            height: 50px;
+            margin-bottom: 12px;
+        }
+
+        .spectrum-labels {
+            display: flex;
+            justify-content: space-between;
+            font-size: 11px;
+            color: var(--text-light);
+            margin-bottom: 10px;
+        }
+
+        .spectrum-bar {
+            position: absolute;
+            top: 28px;
+            width: 100%;
+            height: 8px;
+            background: linear-gradient(90deg,
+                rgba(156, 39, 176, 0.2) 0%,
+                var(--beige) 50%,
+                rgba(255, 159, 67, 0.2) 100%);
+            border-radius: 4px;
+        }
+
+        .spectrum-marker {
+            position: absolute;
+            top: 24px;
+            transform: translateX(-50%);
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            font-weight: 700;
+            border: 3px solid white;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        .spectrum-marker.you {
+            background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+            color: white;
+        }
+
+        .spectrum-marker.partner {
+            background: linear-gradient(135deg, #9C27B0, #E91E63);
+            color: white;
+        }
+
+        .dimension-insight {
+            font-size: 14px;
+            color: var(--text-dark);
+            line-height: 1.6;
+            padding: 14px;
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 12px;
+        }
+
+        .dimension-insight strong {
+            color: var(--primary-coral);
+        }
+
+        .expand-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            padding: 12px;
+            color: var(--primary-coral);
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="phone-frame">
+        <div class="header">
+            <div class="header-title">Your Dimensions</div>
+            <div class="header-subtitle">How you complement each other</div>
+        </div>
+
+        <div class="avatars">
+            <div class="avatar-item">
+                <div class="avatar you">J</div>
+                <div class="avatar-name">Jamie</div>
+            </div>
+            <div class="avatar-item">
+                <div class="avatar partner">S</div>
+                <div class="avatar-name">Sarah</div>
+            </div>
+        </div>
+
+        <div class="legend">
+            <div class="legend-item">
+                <div class="legend-dot you"></div>
+                <span>Jamie</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-dot partner"></div>
+                <span>Sarah</span>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <!-- Aggregate Summary -->
+            <div class="aggregate-card">
+                <div class="aggregate-header">
+                    <span class="aggregate-icon">📊</span>
+                    <span class="aggregate-title">Compatibility Summary</span>
+                </div>
+                <div class="aggregate-stats">
+                    <div class="stat-item">
+                        <div class="stat-number">6</div>
+                        <div class="stat-label">Dimensions</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">4</div>
+                        <div class="stat-label">Aligned</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">2</div>
+                        <div class="stat-label">Complementary</div>
+                    </div>
+                </div>
+                <div class="aggregate-text">
+                    You're well-aligned on social energy and communication, but bring complementary approaches to planning and risk—which can be a strength if navigated well.
+                </div>
+            </div>
+
+            <div class="section-title">Your Dimensions</div>
+
+            <!-- Social Energy -->
+            <div class="dimension-card">
+                <div class="dimension-header">
+                    <div class="dimension-name">Social Energy</div>
+                    <div class="dimension-status aligned">Aligned</div>
+                </div>
+                <div class="spectrum">
+                    <div class="spectrum-labels">
+                        <span>Introvert</span>
+                        <span>Extrovert</span>
+                    </div>
+                    <div class="spectrum-bar"></div>
+                    <div class="spectrum-marker you" style="left: 35%;">J</div>
+                    <div class="spectrum-marker partner" style="left: 40%;">S</div>
+                </div>
+                <div class="dimension-insight">
+                    <strong>You're both moderate introverts.</strong> You'll naturally agree on social frequency and both need recharge time after people-heavy days.
+                </div>
+            </div>
+
+            <!-- Planning Style -->
+            <div class="dimension-card">
+                <div class="dimension-header">
+                    <div class="dimension-name">Planning Style</div>
+                    <div class="dimension-status different">Different</div>
+                </div>
+                <div class="spectrum">
+                    <div class="spectrum-labels">
+                        <span>Spontaneous</span>
+                        <span>Planner</span>
+                    </div>
+                    <div class="spectrum-bar"></div>
+                    <div class="spectrum-marker you" style="left: 25%;">J</div>
+                    <div class="spectrum-marker partner" style="left: 75%;">S</div>
+                </div>
+                <div class="dimension-insight">
+                    <strong>You see things differently here.</strong> Jamie prefers going with the flow; Sarah likes having a plan. This can cause friction around trips and weekends—but also means you balance each other.
+                </div>
+                <div class="expand-btn">💬 See discussion tips ›</div>
+            </div>
+
+            <!-- Risk & Adventure -->
+            <div class="dimension-card">
+                <div class="dimension-header">
+                    <div class="dimension-name">Risk & Adventure</div>
+                    <div class="dimension-status complementary">Complementary</div>
+                </div>
+                <div class="spectrum">
+                    <div class="spectrum-labels">
+                        <span>Cautious</span>
+                        <span>Adventurous</span>
+                    </div>
+                    <div class="spectrum-bar"></div>
+                    <div class="spectrum-marker you" style="left: 70%;">J</div>
+                    <div class="spectrum-marker partner" style="left: 45%;">S</div>
+                </div>
+                <div class="dimension-insight">
+                    <strong>Jamie pushes; Sarah grounds.</strong> This can work beautifully—Jamie brings excitement, Sarah brings stability. The key is respecting both needs.
+                </div>
+            </div>
+
+            <!-- Attachment Style -->
+            <div class="dimension-card">
+                <div class="dimension-header">
+                    <div class="dimension-name">Attachment Style</div>
+                    <div class="dimension-status different">Different</div>
+                </div>
+                <div class="spectrum">
+                    <div class="spectrum-labels">
+                        <span>Avoidant</span>
+                        <span>Anxious</span>
+                    </div>
+                    <div class="spectrum-bar"></div>
+                    <div class="spectrum-marker you" style="left: 65%;">J</div>
+                    <div class="spectrum-marker partner" style="left: 30%;">S</div>
+                </div>
+                <div class="dimension-insight">
+                    <strong>Classic pursuer-distancer pattern.</strong> Jamie tends to seek closeness; Sarah values independence. Understanding this dynamic is key to avoiding cycles.
+                </div>
+                <div class="expand-btn">📚 Learn about attachment ›</div>
+            </div>
+
+            <!-- Novelty Preference -->
+            <div class="dimension-card">
+                <div class="dimension-header">
+                    <div class="dimension-name">Novelty Preference</div>
+                    <div class="dimension-status aligned">Aligned</div>
+                </div>
+                <div class="spectrum">
+                    <div class="spectrum-labels">
+                        <span>Routine</span>
+                        <span>Variety</span>
+                    </div>
+                    <div class="spectrum-bar"></div>
+                    <div class="spectrum-marker you" style="left: 55%;">J</div>
+                    <div class="spectrum-marker partner" style="left: 60%;">S</div>
+                </div>
+                <div class="dimension-insight">
+                    <strong>You both like mixing it up.</strong> Neither of you gets bored easily—you'll enjoy trying new restaurants, activities, and experiences together.
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

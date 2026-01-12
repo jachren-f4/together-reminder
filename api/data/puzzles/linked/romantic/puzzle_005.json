@@ -1,49 +1,68 @@
 {
   "author": "Crossword Maker GPT",
-  "title": "Adult Intimacy Puzzle #5",
+  "title": "AI-Built Puzzle",
   "size": {
     "rows": 9,
     "cols": 7
   },
   "clues": {
-    "1": { "type": "emoji", "content": "😂", "arrow": "across", "target_index": 8 },
-    "2": { "type": "emoji", "content": "😊", "arrow": "down", "target_index": 20 },
-    "3": { "type": "text", "content": "My very ___", "arrow": "across", "target_index": 15 },
-    "4": { "type": "text", "content": "WI_E", "arrow": "down", "target_index": 26 },
-    "5": { "type": "emoji", "content": "😍", "arrow": "down", "target_index": 29 },
-    "6": { "type": "text", "content": "After H", "arrow": "down", "target_index": 30 },
-    "7": { "type": "text", "content": "Say ___ more", "arrow": "across", "target_index": 26 },
-    "8": { "type": "emoji", "content": "🤗", "arrow": "across", "target_index": 29 },
-    "9": { "type": "text", "content": "Release", "arrow": "down", "target_index": 40 },
-    "10": { "type": "text", "content": "T_UR", "arrow": "across", "target_index": 36 },
-    "11": { "type": "text", "content": "After C", "arrow": "down", "target_index": 48 },
-    "12": { "type": "text", "content": "Joined as one", "arrow": "across", "target_index": 44 },
-    "13": { "type": "text", "content": "ST_R", "arrow": "down", "target_index": 57 },
-    "14": { "type": "text", "content": "After K", "arrow": "down", "target_index": 58 },
-    "15": { "type": "text", "content": "Attentive", "arrow": "across", "target_index": 57 }
+    "1": { "type": "text", "content": "_O_ALT", "arrow": "down", "target_index": 8 },
+    "2": { "type": "text", "content": "Gallery piece", "arrow": "down", "target_index": 9 },
+    "3": { "type": "text", "content": "Grain storage", "arrow": "down", "target_index": 10 },
+    "4": { "type": "text", "content": "A_TITU__", "arrow": "down", "target_index": 11 },
+    "5": { "type": "text", "content": "BI__E", "arrow": "down", "target_index": 12 },
+    "6": { "type": "text", "content": "Slippery fish", "arrow": "down", "target_index": 13 },
+    "7": { "type": "text", "content": "Palace", "arrow": "across", "target_index": 8 },
+    "8": { "type": "text", "content": "Span", "arrow": "across", "target_index": 15 },
+    "9": {
+      "across": { "type": "text", "content": "LIT___", "target_index": 23 },
+      "down": { "type": "text", "content": "Center", "target_index": 29 }
+    },
+    "10": {
+      "across": { "type": "text", "content": "After K", "target_index": 27 },
+      "down": { "type": "text", "content": "Trio", "target_index": 33 }
+    },
+    "11": { "type": "text", "content": "After L", "arrow": "across", "target_index": 29 },
+    "12": {
+      "across": { "type": "text", "content": "After N", "target_index": 31 },
+      "down": { "type": "text", "content": "CO_D__NE_", "target_index": 37 }
+    },
+    "13": {
+      "across": { "type": "text", "content": "After S", "target_index": 33 },
+      "down": { "type": "text", "content": "_A___OAT", "target_index": 39 }
+    },
+    "14": { "type": "text", "content": "N___E_", "arrow": "down", "target_index": 41 },
+    "15": { "type": "text", "content": "Inside", "arrow": "across", "target_index": 36 },
+    "16": {
+      "across": { "type": "text", "content": "Article", "target_index": 39 },
+      "down": { "type": "text", "content": "PER___", "target_index": 45 }
+    },
+    "17": { "type": "text", "content": "Wish", "arrow": "across", "target_index": 43 },
+    "18": { "type": "text", "content": "Beamed", "arrow": "across", "target_index": 50 },
+    "19": { "type": "text", "content": "Drew", "arrow": "across", "target_index": 57 }
   },
-  "date": "2025-11-27",
+  "date": "2026-01-12",
   "grid": [
     ".", ".", ".", ".", ".", ".", ".",
-    ".", "L", "A", "U", "G", "H", ".",
-    ".", "O", "W", "N", ".", ".", "J",
-    ".", ".", ".", ".", ".", "N", "O",
-    ".", "S", "I", "N", "K", ".", "Y",
-    ".", "O", ".", ".", ".", "V", ".",
-    ".", ".", "F", "U", "S", "E", "D",
-    ".", ".", ".", ".", ".", "N", ".",
-    ".", "A", "L", "E", "R", "T", "."
+    ".", "C", "A", "S", "T", "L", "E",
+    ".", "B", "R", "I", "D", "G", "E",
+    ".", ".", "T", "L", "E", ".", "L",
+    ".", "M", ".", "O", ".", "T", ".",
+    ".", "I", "N", ".", "T", "H", "E",
+    ".", "D", "E", "S", "I", "R", "E",
+    ".", "S", "M", "I", "L", "E", "D",
+    ".", "T", "R", "A", "C", "E", "D"
   ],
   "gridnums": [
-    0, 0, 0, 0, 0, 0, 0,
-    1, 0, 0, 0, 0, 0, 2,
-    3, 0, 0, 0, 0, 4, 0,
-    0, 5, 6, 0, 7, 0, 0,
-    8, 0, 0, 0, 0, 9, 0,
-    10, 0, 0, 0, 0, 0, 11,
-    0, 12, 0, 0, 0, 0, 0,
-    0, 13, 14, 0, 0, 0, 0,
-    15, 0, 0, 0, 0, 0, 0
+    0, 1, 2, 3, 4, 5, 6,
+    7, 0, 0, 0, 0, 0, 0,
+    8, 0, 0, 0, 0, 0, 0,
+    0, 9, 0, 0, 0, 10, 0,
+    11, 0, 12, 0, 13, 0, 14,
+    15, 0, 0, 16, 0, 0, 0,
+    17, 0, 0, 0, 0, 0, 0,
+    18, 0, 0, 0, 0, 0, 0,
+    19, 0, 0, 0, 0, 0, 0
   ],
-  "puzzleId": "puzzle_005"
+  "puzzleId": "puzzle_015"
 }

@@ -1,24 +1,29 @@
 import 'dart:async';
-import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import '../config/brand/brand_loader.dart';
 import '../config/brand/brand_config.dart';
 import '../config/brand/us2_theme.dart';
-import '../theme/app_theme.dart';
+import '../painters/combined_ring_painter.dart';
 import '../services/storage_service.dart';
 import '../services/steps_feature_service.dart';
+import '../services/steps_debug_service.dart';
 import '../services/haptic_service.dart';
 import '../services/sound_service.dart';
 import '../models/steps_data.dart';
+import '../widgets/steps_milestone_overlay.dart';
 import 'steps_claim_screen.dart';
+import 'steps_tier_breakdown_screen.dart';
+import 'steps_week_history_screen.dart';
 
-/// Main step tracking view with dual-ring progress visualization.
+/// Main step tracking view with combined ring progress visualization.
 ///
-/// Shows:
-/// - Yesterday section (if claimable reward)
-/// - Today section with dual rings
-/// - Individual step breakdowns
-/// - Sync status
+/// Features:
+/// - Combined progress ring (user + partner)
+/// - Tier progress bar with "See all tiers" navigation
+/// - Claim countdown card
+/// - Week preview with streak
+/// - Team messages
+/// - Milestone celebrations
 class StepsCounterScreen extends StatefulWidget {
   const StepsCounterScreen({super.key});
 
@@ -30,6 +35,7 @@ class _StepsCounterScreenState extends State<StepsCounterScreen>
     with TickerProviderStateMixin {
   final StepsFeatureService _stepsService = StepsFeatureService();
   final StorageService _storage = StorageService();
+  final StepsDebugService _debugService = StepsDebugService();
 
   bool get _isUs2 => BrandLoader().config.brand == Brand.us2;
 
@@ -39,23 +45,39 @@ class _StepsCounterScreenState extends State<StepsCounterScreen>
 
   Timer? _syncTimer;
   bool _isRefreshing = false;
+  int? _lastCelebratedTier;
+
+  // Tier thresholds and LP rewards
+  static const List<int> _tierThresholds = [10000, 12000, 14000, 16000, 18000, 20000];
+  static const List<int> _tierLP = [15, 18, 21, 24, 27, 30];
 
   @override
   void initState() {
     super.initState();
 
-    // Initialize ring animations
     _ringAnimationController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 1500),
     );
 
-    final userProgress = _stepsService.getUserProgress();
-    final partnerProgress = _stepsService.getPartnerProgress();
+    _initializeAnimations();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _ringAnimationController.forward();
+    });
+
+    _startSyncTimer();
+  }
+
+  void _initializeAnimations() {
+    final today = _stepsService.getTodayData();
+    final userSteps = today?.userSteps ?? 0;
+    final partnerSteps = today?.partnerSteps ?? 0;
+    const goal = 20000.0;
 
     _userRingAnimation = Tween<double>(
       begin: 0.0,
-      end: userProgress,
+      end: (userSteps / goal).clamp(0.0, 1.0),
     ).animate(CurvedAnimation(
       parent: _ringAnimationController,
       curve: const Interval(0.0, 0.7, curve: Curves.easeOutCubic),
@@ -63,23 +85,14 @@ class _StepsCounterScreenState extends State<StepsCounterScreen>
 
     _partnerRingAnimation = Tween<double>(
       begin: 0.0,
-      end: partnerProgress,
+      end: (partnerSteps / goal).clamp(0.0, 1.0),
     ).animate(CurvedAnimation(
       parent: _ringAnimationController,
       curve: const Interval(0.2, 0.9, curve: Curves.easeOutCubic),
     ));
-
-    // Start animation after build
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _ringAnimationController.forward();
-    });
-
-    // Start periodic sync
-    _startSyncTimer();
   }
 
   void _startSyncTimer() {
-    // Sync every 60 seconds (app also syncs on launch and resume)
     _syncTimer = Timer.periodic(const Duration(seconds: 60), (_) {
       _refreshData();
     });
@@ -91,15 +104,29 @@ class _StepsCounterScreenState extends State<StepsCounterScreen>
     setState(() => _isRefreshing = true);
 
     try {
+      // Store previous tier for milestone detection
+      final previousData = _stepsService.getTodayData();
+      final previousTier = _getCurrentTier(previousData?.combinedSteps ?? 0);
+
       await _stepsService.syncSteps();
 
-      // Update animations with new values
-      final userProgress = _stepsService.getUserProgress();
-      final partnerProgress = _stepsService.getPartnerProgress();
+      // Check for tier change
+      final newData = _stepsService.getTodayData();
+      final newTier = _getCurrentTier(newData?.combinedSteps ?? 0);
+
+      if (newTier > previousTier && previousTier >= 10000 && _lastCelebratedTier != newTier) {
+        _lastCelebratedTier = newTier;
+        _showMilestoneCelebration(previousTier, newTier, newData!);
+      }
+
+      // Update animations
+      final userSteps = newData?.userSteps ?? 0;
+      final partnerSteps = newData?.partnerSteps ?? 0;
+      const goal = 20000.0;
 
       _userRingAnimation = Tween<double>(
         begin: _userRingAnimation.value,
-        end: userProgress,
+        end: (userSteps / goal).clamp(0.0, 1.0),
       ).animate(CurvedAnimation(
         parent: _ringAnimationController,
         curve: Curves.easeOutCubic,
@@ -107,18 +134,49 @@ class _StepsCounterScreenState extends State<StepsCounterScreen>
 
       _partnerRingAnimation = Tween<double>(
         begin: _partnerRingAnimation.value,
-        end: partnerProgress,
+        end: (partnerSteps / goal).clamp(0.0, 1.0),
       ).animate(CurvedAnimation(
         parent: _ringAnimationController,
         curve: Curves.easeOutCubic,
       ));
 
       _ringAnimationController.forward(from: 0.0);
+
+      HapticService().tap();
     } finally {
       if (mounted) {
         setState(() => _isRefreshing = false);
       }
     }
+  }
+
+  int _getCurrentTier(int combinedSteps) {
+    for (int i = _tierThresholds.length - 1; i >= 0; i--) {
+      if (combinedSteps >= _tierThresholds[i]) {
+        return _tierThresholds[i];
+      }
+    }
+    return 0;
+  }
+
+  int _getTierLP(int tier) {
+    final index = _tierThresholds.indexOf(tier);
+    return index >= 0 ? _tierLP[index] : 0;
+  }
+
+  void _showMilestoneCelebration(int previousTier, int newTier, StepsDay stepsDay) {
+    final partner = _storage.getPartner();
+    showStepsMilestoneOverlay(
+      context: context,
+      previousTier: previousTier,
+      newTier: newTier,
+      combinedSteps: stepsDay.combinedSteps,
+      userSteps: stepsDay.userSteps,
+      partnerSteps: stepsDay.partnerSteps,
+      partnerName: partner?.name ?? 'Partner',
+      previousLP: _getTierLP(previousTier),
+      newLP: _getTierLP(newTier),
+    );
   }
 
   @override
@@ -137,129 +195,207 @@ class _StepsCounterScreenState extends State<StepsCounterScreen>
     final hasClaimable = _stepsService.hasClaimableReward();
 
     final combinedSteps = today?.combinedSteps ?? 0;
-    final isPastGoal = combinedSteps >= 20000;
+    final isAboveThreshold = combinedSteps >= 10000;
 
     return Scaffold(
       backgroundColor: _isUs2 ? Us2Theme.bgGradientEnd : BrandLoader().colors.surface,
       extendBodyBehindAppBar: _isUs2,
-      appBar: AppBar(
-        backgroundColor: _isUs2 ? Colors.transparent : BrandLoader().colors.surface,
-        elevation: 0,
-        leading: _isUs2
-            ? Padding(
-                padding: const EdgeInsets.only(left: 16),
-                child: GestureDetector(
-                  onTap: () => Navigator.pop(context),
-                  child: Container(
-                    width: 40,
-                    height: 40,
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      shape: BoxShape.circle,
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.1),
-                          blurRadius: 10,
-                          offset: const Offset(0, 2),
-                        ),
-                      ],
-                    ),
-                    child: const Icon(Icons.arrow_back, color: Us2Theme.textDark, size: 20),
-                  ),
-                ),
-              )
-            : IconButton(
-                icon: Icon(Icons.arrow_back, color: BrandLoader().colors.textPrimary),
-                onPressed: () => Navigator.pop(context),
-              ),
-        title: Text(
-          'Steps Together',
-          style: _isUs2
-              ? const TextStyle(
-                  fontFamily: Us2Theme.fontHeading,
-                  fontSize: 18,
-                  fontWeight: FontWeight.w600,
-                  color: Us2Theme.textDark,
-                )
-              : AppTheme.headlineFont.copyWith(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w600,
-                  color: BrandLoader().colors.textPrimary,
-                ),
-        ),
-        centerTitle: true,
-        actions: [
-          if (_isRefreshing)
-            Padding(
-              padding: const EdgeInsets.all(16),
-              child: SizedBox(
-                width: 20,
-                height: 20,
-                child: CircularProgressIndicator(
-                  strokeWidth: 2,
-                  color: _isUs2 ? Us2Theme.gradientAccentStart : null,
-                ),
-              ),
-            )
-          else
-            _isUs2
-                ? Padding(
-                    padding: const EdgeInsets.only(right: 16),
-                    child: GestureDetector(
-                      onTap: _refreshData,
-                      child: Container(
-                        width: 40,
-                        height: 40,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          shape: BoxShape.circle,
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withOpacity(0.1),
-                              blurRadius: 10,
-                              offset: const Offset(0, 2),
-                            ),
-                          ],
-                        ),
-                        child: const Icon(Icons.refresh, color: Us2Theme.textDark, size: 18),
-                      ),
-                    ),
-                  )
-                : IconButton(
-                    icon: Icon(Icons.refresh, color: BrandLoader().colors.textPrimary),
-                    onPressed: _refreshData,
-                  ),
-        ],
-      ),
+      appBar: _buildAppBar(),
       body: Container(
         decoration: _isUs2
             ? const BoxDecoration(gradient: Us2Theme.backgroundGradient)
             : null,
-        child: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(24),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              // Yesterday section (if claimable) or Max tier banner
-              if (hasClaimable)
-                _buildYesterdayClaimSection(yesterday!)
-              else if (isPastGoal)
-                _buildMaxTierBanner(),
+        child: RefreshIndicator(
+          onRefresh: _refreshData,
+          color: Us2Theme.gradientAccentStart,
+          child: SafeArea(
+            child: SingleChildScrollView(
+              physics: const AlwaysScrollableScrollPhysics(),
+              padding: const EdgeInsets.all(20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  // Debug indicator
+                  if (_debugService.useMockData)
+                    _buildDebugIndicator(),
 
-              if (hasClaimable || isPastGoal) const SizedBox(height: 24),
+                  // Yesterday claim section
+                  if (hasClaimable)
+                    _buildYesterdayClaimSection(yesterday!),
 
-              // Today section
-              _buildTodaySection(today, connection, partner?.name ?? 'Partner'),
+                  if (hasClaimable) const SizedBox(height: 16),
 
-              const SizedBox(height: 24),
+                  // Today's progress card
+                  _buildTodayProgressCard(today, connection, partner?.name ?? 'Partner'),
 
-              // Tomorrow preview (if not past goal)
-              if (!isPastGoal) _buildTomorrowPreview(today),
-            ],
+                  const SizedBox(height: 16),
+
+                  // Tier progress card (only if above threshold)
+                  if (isAboveThreshold)
+                    _buildTierProgressCard(combinedSteps),
+
+                  if (isAboveThreshold) const SizedBox(height: 16),
+
+                  // Claim info card (if above threshold)
+                  if (isAboveThreshold)
+                    _buildClaimInfoCard(today),
+
+                  if (isAboveThreshold) const SizedBox(height: 16),
+
+                  // Below threshold encouragement
+                  if (!isAboveThreshold)
+                    _buildBelowThresholdCard(combinedSteps),
+
+                  if (!isAboveThreshold) const SizedBox(height: 16),
+
+                  // Week preview card
+                  _buildWeekPreviewCard(),
+
+                  const SizedBox(height: 32),
+                ],
+              ),
+            ),
           ),
         ),
-        ),
+      ),
+    );
+  }
+
+  PreferredSizeWidget _buildAppBar() {
+    return AppBar(
+      backgroundColor: _isUs2 ? Colors.transparent : BrandLoader().colors.surface,
+      elevation: 0,
+      leading: _isUs2
+          ? Padding(
+              padding: const EdgeInsets.only(left: 16),
+              child: GestureDetector(
+                onTap: () => Navigator.pop(context),
+                child: Container(
+                  width: 40,
+                  height: 40,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    shape: BoxShape.circle,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withValues(alpha: 0.1),
+                        blurRadius: 10,
+                        offset: const Offset(0, 2),
+                      ),
+                    ],
+                  ),
+                  child: const Icon(Icons.arrow_back, color: Us2Theme.textDark, size: 20),
+                ),
+              ),
+            )
+          : IconButton(
+              icon: Icon(Icons.arrow_back, color: BrandLoader().colors.textPrimary),
+              onPressed: () => Navigator.pop(context),
+            ),
+      title: Text(
+        'Steps Together',
+        style: _isUs2
+            ? const TextStyle(
+                fontFamily: Us2Theme.fontHeading,
+                fontSize: 18,
+                fontWeight: FontWeight.w600,
+                color: Us2Theme.textDark,
+              )
+            : TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.w600,
+                color: BrandLoader().colors.textPrimary,
+              ),
+      ),
+      centerTitle: true,
+      actions: [
+        if (_isRefreshing)
+          Padding(
+            padding: const EdgeInsets.all(16),
+            child: SizedBox(
+              width: 20,
+              height: 20,
+              child: CircularProgressIndicator(
+                strokeWidth: 2,
+                color: _isUs2 ? Us2Theme.gradientAccentStart : null,
+              ),
+            ),
+          )
+        else
+          _isUs2
+              ? Padding(
+                  padding: const EdgeInsets.only(right: 16),
+                  child: GestureDetector(
+                    onTap: _refreshData,
+                    child: Container(
+                      width: 40,
+                      height: 40,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        shape: BoxShape.circle,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withValues(alpha: 0.1),
+                            blurRadius: 10,
+                            offset: const Offset(0, 2),
+                          ),
+                        ],
+                      ),
+                      child: Stack(
+                        children: [
+                          const Center(
+                            child: Icon(Icons.refresh, color: Us2Theme.textDark, size: 18),
+                          ),
+                          // Green sync dot
+                          Positioned(
+                            top: 8,
+                            right: 8,
+                            child: Container(
+                              width: 8,
+                              height: 8,
+                              decoration: BoxDecoration(
+                                color: const Color(0xFF4CAF50),
+                                shape: BoxShape.circle,
+                                border: Border.all(color: Colors.white, width: 1.5),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                )
+              : IconButton(
+                  icon: Icon(Icons.refresh, color: BrandLoader().colors.textPrimary),
+                  onPressed: _refreshData,
+                ),
+      ],
+    );
+  }
+
+  Widget _buildDebugIndicator() {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 12),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+      decoration: BoxDecoration(
+        color: Colors.orange.shade100,
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: Colors.orange.shade300),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(Icons.bug_report, size: 16, color: Colors.orange.shade700),
+          const SizedBox(width: 6),
+          Text(
+            'MOCK DATA ACTIVE',
+            style: TextStyle(
+              fontSize: 11,
+              fontWeight: FontWeight.w700,
+              color: Colors.orange.shade700,
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -268,9 +404,8 @@ class _StepsCounterScreenState extends State<StepsCounterScreen>
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: _isUs2 ? null : BrandLoader().colors.textPrimary,
-        gradient: _isUs2 ? Us2Theme.accentGradient : null,
-        borderRadius: BorderRadius.circular(16),
+        gradient: Us2Theme.accentGradient,
+        borderRadius: BorderRadius.circular(20),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -280,16 +415,11 @@ class _StepsCounterScreenState extends State<StepsCounterScreen>
             children: [
               Text(
                 'Yesterday',
-                style: _isUs2
-                    ? TextStyle(
-                        fontFamily: Us2Theme.fontHeading,
-                        fontSize: 14,
-                        color: Colors.white.withOpacity(0.8),
-                      )
-                    : AppTheme.headlineFont.copyWith(
-                        fontSize: 14,
-                        color: Colors.white.withOpacity(0.7),
-                      ),
+                style: TextStyle(
+                  fontFamily: Us2Theme.fontHeading,
+                  fontSize: 14,
+                  color: Colors.white.withValues(alpha: 0.8),
+                ),
               ),
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
@@ -297,12 +427,12 @@ class _StepsCounterScreenState extends State<StepsCounterScreen>
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(12),
                 ),
-                child: Text(
+                child: const Text(
                   'Claim Now',
                   style: TextStyle(
                     fontSize: 12,
                     fontWeight: FontWeight.w700,
-                    color: _isUs2 ? Us2Theme.primaryBrandPink : BrandLoader().colors.textPrimary,
+                    color: Us2Theme.gradientAccentStart,
                   ),
                 ),
               ),
@@ -318,43 +448,31 @@ class _StepsCounterScreenState extends State<StepsCounterScreen>
                 children: [
                   Text(
                     _formatNumber(yesterday.combinedSteps),
-                    style: _isUs2
-                        ? const TextStyle(
-                            fontFamily: Us2Theme.fontHeading,
-                            fontSize: 32,
-                            fontWeight: FontWeight.w700,
-                            color: Colors.white,
-                          )
-                        : AppTheme.headlineFont.copyWith(
-                            fontSize: 32,
-                            fontWeight: FontWeight.w700,
-                            color: Colors.white,
-                          ),
+                    style: const TextStyle(
+                      fontFamily: Us2Theme.fontHeading,
+                      fontSize: 32,
+                      fontWeight: FontWeight.w700,
+                      color: Colors.white,
+                    ),
                   ),
                   Text(
                     'combined steps',
                     style: TextStyle(
-                      fontFamily: _isUs2 ? Us2Theme.fontBody : null,
+                      fontFamily: Us2Theme.fontBody,
                       fontSize: 14,
-                      color: Colors.white.withOpacity(_isUs2 ? 0.8 : 0.7),
+                      color: Colors.white.withValues(alpha: 0.8),
                     ),
                   ),
                 ],
               ),
               Text(
                 '+${yesterday.earnedLP} LP',
-                style: _isUs2
-                    ? const TextStyle(
-                        fontFamily: Us2Theme.fontHeading,
-                        fontSize: 24,
-                        fontWeight: FontWeight.w700,
-                        color: Colors.white,
-                      )
-                    : AppTheme.headlineFont.copyWith(
-                        fontSize: 24,
-                        fontWeight: FontWeight.w700,
-                        color: Colors.white,
-                      ),
+                style: const TextStyle(
+                  fontFamily: Us2Theme.fontHeading,
+                  fontSize: 24,
+                  fontWeight: FontWeight.w700,
+                  color: Colors.white,
+                ),
               ),
             ],
           ),
@@ -366,7 +484,7 @@ class _StepsCounterScreenState extends State<StepsCounterScreen>
               onPressed: () => _navigateToClaim(yesterday),
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.white,
-                foregroundColor: _isUs2 ? Us2Theme.primaryBrandPink : BrandLoader().colors.textPrimary,
+                foregroundColor: Us2Theme.gradientAccentStart,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
@@ -374,18 +492,11 @@ class _StepsCounterScreenState extends State<StepsCounterScreen>
               ),
               child: Text(
                 'Claim +${yesterday.earnedLP} Love Points',
-                style: _isUs2
-                    ? const TextStyle(
-                        fontFamily: Us2Theme.fontBody,
-                        fontSize: 14,
-                        fontWeight: FontWeight.w600,
-                        color: Us2Theme.primaryBrandPink,
-                      )
-                    : AppTheme.headlineFont.copyWith(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w600,
-                        color: BrandLoader().colors.textPrimary,
-                      ),
+                style: const TextStyle(
+                  fontFamily: Us2Theme.fontBody,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
+                ),
               ),
             ),
           ),
@@ -394,133 +505,92 @@ class _StepsCounterScreenState extends State<StepsCounterScreen>
     );
   }
 
-  Widget _buildMaxTierBanner() {
-    return Container(
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: _isUs2 ? null : BrandLoader().colors.textPrimary,
-        gradient: _isUs2 ? Us2Theme.accentGradient : null,
-        borderRadius: BorderRadius.circular(16),
-      ),
-      child: Row(
-        children: [
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                  decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.2),
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Text(
-                    'Max Tier Reached!',
-                    style: TextStyle(
-                      fontFamily: _isUs2 ? Us2Theme.fontBody : null,
-                      fontSize: 12,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.white,
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  'Tomorrow you\'ll earn',
-                  style: TextStyle(
-                    fontFamily: _isUs2 ? Us2Theme.fontBody : null,
-                    fontSize: 14,
-                    color: Colors.white.withOpacity(_isUs2 ? 0.8 : 0.7),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          Text(
-            '+30 LP',
-            style: _isUs2
-                ? const TextStyle(
-                    fontFamily: Us2Theme.fontHeading,
-                    fontSize: 36,
-                    fontWeight: FontWeight.w700,
-                    color: Colors.white,
-                  )
-                : AppTheme.headlineFont.copyWith(
-                    fontSize: 36,
-                    fontWeight: FontWeight.w700,
-                    color: Colors.white,
-                  ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildTodaySection(
+  Widget _buildTodayProgressCard(
       StepsDay? today, StepsConnection connection, String partnerName) {
     final userSteps = today?.userSteps ?? 0;
     final partnerSteps = today?.partnerSteps ?? 0;
-    // Check if partner data is still loading (connected but no sync yet for today)
-    final isPartnerLoading = connection.partnerConnected && today?.partnerLastSync == null;
     final combinedSteps = userSteps + partnerSteps;
-    final isPastGoal = combinedSteps >= 20000;
+    final isPartnerLoading = connection.partnerConnected && today?.partnerLastSync == null;
     final projectedLP = _stepsService.getProjectedLP();
+    final progressPercent = ((combinedSteps / 20000) * 100).round();
 
     return Container(
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
-        color: _isUs2 ? Colors.white : const Color(0xFFF5F5F5),
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: _isUs2
-            ? [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.05),
-                  blurRadius: 10,
-                  offset: const Offset(0, 2),
-                ),
-              ]
-            : null,
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(24),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.06),
+            blurRadius: 20,
+            offset: const Offset(0, 4),
+          ),
+        ],
       ),
       child: Column(
         children: [
-          // Header
+          // Header with LIVE badge
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                isPastGoal ? 'Today · Goal Exceeded!' : 'Today · In Progress',
-                style: _isUs2
-                    ? const TextStyle(
-                        fontFamily: Us2Theme.fontHeading,
-                        fontSize: 14,
-                        fontWeight: FontWeight.w600,
-                        color: Us2Theme.textDark,
-                      )
-                    : AppTheme.headlineFont.copyWith(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w600,
-                        color: BrandLoader().colors.textPrimary,
+              const Text(
+                'Today\'s Progress',
+                style: TextStyle(
+                  fontFamily: Us2Theme.fontHeading,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                  color: Us2Theme.textDark,
+                ),
+              ),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFE8F5E9),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Container(
+                      width: 6,
+                      height: 6,
+                      decoration: const BoxDecoration(
+                        color: Color(0xFF4CAF50),
+                        shape: BoxShape.circle,
                       ),
+                    ),
+                    const SizedBox(width: 6),
+                    const Text(
+                      'LIVE',
+                      style: TextStyle(
+                        fontSize: 11,
+                        fontWeight: FontWeight.w700,
+                        color: Color(0xFF4CAF50),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ],
           ),
           const SizedBox(height: 24),
 
-          // Dual ring progress
+          // Combined ring
           SizedBox(
-            width: 240,
-            height: 240,
+            width: 220,
+            height: 220,
             child: AnimatedBuilder(
               animation: _ringAnimationController,
               builder: (context, child) {
                 return CustomPaint(
-                  painter: DualRingPainter(
+                  painter: CombinedRingPainter(
                     userProgress: _userRingAnimation.value,
                     partnerProgress: _partnerRingAnimation.value,
-                    userColor: _isUs2 ? Us2Theme.gradientAccentStart : BrandLoader().colors.textPrimary,
-                    userColorEnd: _isUs2 ? Us2Theme.gradientAccentEnd : null,
-                    partnerColor: const Color(0xFF999999),
-                    backgroundColor: const Color(0xFFE0E0E0),
+                    userColorStart: Us2Theme.gradientAccentStart,
+                    userColorEnd: Us2Theme.gradientAccentEnd,
+                    partnerColorStart: const Color(0xFF4ECDC4),
+                    partnerColorEnd: const Color(0xFF45B7AA),
+                    backgroundColor: const Color(0xFFF0F0F0),
                   ),
                   child: Center(
                     child: Column(
@@ -528,57 +598,41 @@ class _StepsCounterScreenState extends State<StepsCounterScreen>
                       children: [
                         Text(
                           _formatNumber(combinedSteps),
-                          style: _isUs2
-                              ? const TextStyle(
-                                  fontFamily: Us2Theme.fontHeading,
-                                  fontSize: 36,
-                                  fontWeight: FontWeight.w700,
-                                  color: Us2Theme.textDark,
-                                )
-                              : AppTheme.headlineFont.copyWith(
-                                  fontSize: 36,
-                                  fontWeight: FontWeight.w700,
-                                  color: BrandLoader().colors.textPrimary,
-                                ),
+                          style: const TextStyle(
+                            fontFamily: Us2Theme.fontHeading,
+                            fontSize: 36,
+                            fontWeight: FontWeight.w700,
+                            color: Us2Theme.textDark,
+                          ),
                         ),
-                        if (isPastGoal) ...[
-                          Text(
-                            '+${_formatNumber(combinedSteps - 20000)} over goal',
-                            style: TextStyle(
-                              fontFamily: _isUs2 ? Us2Theme.fontBody : null,
-                              fontSize: 14,
-                              color: _isUs2 ? const Color(0xFF4CAF50) : BrandLoader().colors.success,
-                              fontWeight: FontWeight.w600,
-                            ),
+                        const Text(
+                          'of 20,000 goal',
+                          style: TextStyle(
+                            fontFamily: Us2Theme.fontBody,
+                            fontSize: 14,
+                            color: Us2Theme.textLight,
                           ),
-                          Text(
-                            'Goal: 20,000',
-                            style: TextStyle(
-                              fontFamily: _isUs2 ? Us2Theme.fontBody : null,
-                              fontSize: 12,
-                              color: _isUs2 ? Us2Theme.textLight : BrandLoader().colors.textTertiary,
+                        ),
+                        if (projectedLP > 0) ...[
+                          const SizedBox(height: 8),
+                          Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                            decoration: BoxDecoration(
+                              gradient: const LinearGradient(
+                                colors: [Color(0xFFFFB347), Color(0xFFFFD89B)],
+                              ),
+                              borderRadius: BorderRadius.circular(12),
                             ),
-                          ),
-                        ] else ...[
-                          Text(
-                            '/ 20,000',
-                            style: TextStyle(
-                              fontFamily: _isUs2 ? Us2Theme.fontBody : null,
-                              fontSize: 16,
-                              color: _isUs2 ? Us2Theme.textLight : BrandLoader().colors.textTertiary,
-                            ),
-                          ),
-                          const SizedBox(height: 4),
-                          if (projectedLP > 0)
-                            Text(
-                              'Tomorrow: +$projectedLP LP',
-                              style: TextStyle(
-                                fontFamily: _isUs2 ? Us2Theme.fontBody : null,
-                                fontSize: 14,
-                                color: _isUs2 ? Us2Theme.textMedium : BrandLoader().colors.textSecondary,
-                                fontWeight: FontWeight.w600,
+                            child: Text(
+                              '+$projectedLP LP tomorrow',
+                              style: const TextStyle(
+                                fontFamily: Us2Theme.fontBody,
+                                fontSize: 13,
+                                fontWeight: FontWeight.w700,
+                                color: Colors.white,
                               ),
                             ),
+                          ),
                         ],
                       ],
                     ),
@@ -589,46 +643,56 @@ class _StepsCounterScreenState extends State<StepsCounterScreen>
           ),
           const SizedBox(height: 24),
 
-          // Legend
+          // Partner breakdown with teal color
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               _buildLegendItem(
-                  'You',
-                  userSteps,
-                  _isUs2 ? Us2Theme.gradientAccentStart : BrandLoader().colors.textPrimary,
-                  isLoading: false,
-                  isGradient: _isUs2),
-              const SizedBox(width: 32),
-              _buildLegendItem(partnerName, partnerSteps, const Color(0xFF999999), isLoading: isPartnerLoading),
+                'You',
+                userSteps,
+                Us2Theme.gradientAccentStart,
+                isGradient: true,
+              ),
+              const SizedBox(width: 40),
+              _buildLegendItem(
+                partnerName,
+                partnerSteps,
+                const Color(0xFF4ECDC4),
+                isLoading: isPartnerLoading,
+                isTeal: true,
+              ),
             ],
           ),
-          const SizedBox(height: 20),
+          const SizedBox(height: 16),
 
           // Sync status
           _buildSyncStatus(today, connection),
 
-          // Overflow indicator (if past goal)
-          if (isPastGoal) ...[
-            const SizedBox(height: 20),
-            _buildOverflowIndicator(combinedSteps),
-          ],
+          // Team message
+          const SizedBox(height: 16),
+          _buildTeamMessage(progressPercent),
         ],
       ),
     );
   }
 
   Widget _buildLegendItem(String label, int steps, Color color,
-      {bool isLoading = false, bool isGradient = false}) {
+      {bool isLoading = false, bool isGradient = false, bool isTeal = false}) {
     return Row(
       children: [
         Container(
-          width: 12,
-          height: 12,
+          width: 14,
+          height: 14,
           decoration: BoxDecoration(
-            color: isGradient ? null : color,
-            gradient: isGradient ? Us2Theme.accentGradient : null,
-            borderRadius: BorderRadius.circular(2),
+            gradient: isGradient
+                ? Us2Theme.accentGradient
+                : isTeal
+                    ? const LinearGradient(
+                        colors: [Color(0xFF4ECDC4), Color(0xFF45B7AA)],
+                      )
+                    : null,
+            color: (!isGradient && !isTeal) ? color : null,
+            borderRadius: BorderRadius.circular(4),
           ),
         ),
         const SizedBox(width: 8),
@@ -637,36 +701,30 @@ class _StepsCounterScreenState extends State<StepsCounterScreen>
           children: [
             Text(
               label,
-              style: TextStyle(
-                fontFamily: _isUs2 ? Us2Theme.fontBody : null,
+              style: const TextStyle(
+                fontFamily: Us2Theme.fontBody,
                 fontSize: 12,
-                color: _isUs2 ? Us2Theme.textMedium : BrandLoader().colors.textSecondary,
+                color: Us2Theme.textLight,
               ),
             ),
             if (isLoading)
-              SizedBox(
+              const SizedBox(
                 width: 16,
                 height: 16,
                 child: CircularProgressIndicator(
                   strokeWidth: 2,
-                  color: _isUs2 ? Us2Theme.textLight : BrandLoader().colors.textTertiary,
+                  color: Us2Theme.textLight,
                 ),
               )
             else
               Text(
                 _formatNumber(steps),
-                style: _isUs2
-                    ? const TextStyle(
-                        fontFamily: Us2Theme.fontHeading,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                        color: Us2Theme.textDark,
-                      )
-                    : AppTheme.headlineFont.copyWith(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                        color: BrandLoader().colors.textPrimary,
-                      ),
+                style: const TextStyle(
+                  fontFamily: Us2Theme.fontHeading,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                  color: Us2Theme.textDark,
+                ),
               ),
           ],
         ),
@@ -678,175 +736,655 @@ class _StepsCounterScreenState extends State<StepsCounterScreen>
     final lastSync = today?.lastSync;
     final partnerSync = today?.partnerLastSync;
 
-    return Column(
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              Icons.sync,
-              size: 14,
-              color: _isUs2 ? Us2Theme.textLight : BrandLoader().colors.textTertiary,
-            ),
-            const SizedBox(width: 4),
-            Text(
-              lastSync != null
-                  ? 'Last synced ${_formatTimeSince(lastSync)}'
-                  : 'Not synced yet',
-              style: TextStyle(
-                fontFamily: _isUs2 ? Us2Theme.fontBody : null,
-                fontSize: 12,
-                color: _isUs2 ? Us2Theme.textLight : BrandLoader().colors.textTertiary,
-              ),
-            ),
-          ],
-        ),
-        if (connection.partnerConnected && partnerSync != null)
-          Padding(
-            padding: const EdgeInsets.only(top: 4),
-            child: Text(
-              'Partner synced ${_formatTimeSince(partnerSync)}',
-              style: TextStyle(
-                fontFamily: _isUs2 ? Us2Theme.fontBody : null,
-                fontSize: 12,
-                color: _isUs2 ? Us2Theme.textLight : BrandLoader().colors.textTertiary,
-              ),
-            ),
-          ),
-      ],
-    );
-  }
-
-  Widget _buildOverflowIndicator(int combinedSteps) {
-    final percentage = ((combinedSteps / 20000) * 100).round();
-    final successColor = _isUs2 ? const Color(0xFF4CAF50) : BrandLoader().colors.success;
-
-    return Column(
-      children: [
-        Container(
-          height: 8,
-          decoration: BoxDecoration(
-            color: const Color(0xFFE0E0E0),
-            borderRadius: BorderRadius.circular(4),
-          ),
-          child: Stack(
-            children: [
-              // Base 100% fill
-              Container(
-                decoration: BoxDecoration(
-                  color: successColor,
-                  borderRadius: BorderRadius.circular(4),
-                ),
-              ),
-              // Striped overflow pattern
-              Positioned.fill(
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(4),
-                  child: CustomPaint(
-                    painter: StripedPainter(
-                      color: successColor.withOpacity(0.3),
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-        const SizedBox(height: 8),
+        const Icon(Icons.access_time, size: 12, color: Us2Theme.textLight),
+        const SizedBox(width: 4),
         Text(
-          '$percentage% of daily goal · Keep going!',
-          style: TextStyle(
-            fontFamily: _isUs2 ? Us2Theme.fontBody : null,
+          lastSync != null
+              ? 'Synced ${_formatTimeSince(lastSync)}${partnerSync != null ? ' · Partner ${_formatTimeSince(partnerSync)}' : ''}'
+              : 'Not synced yet',
+          style: const TextStyle(
+            fontFamily: Us2Theme.fontBody,
             fontSize: 12,
-            color: _isUs2 ? Us2Theme.textMedium : BrandLoader().colors.textSecondary,
+            color: Us2Theme.textLight,
           ),
         ),
       ],
     );
   }
 
-  Widget _buildTomorrowPreview(StepsDay? today) {
-    final projectedLP = _stepsService.getProjectedLP();
-    final combinedSteps = today?.combinedSteps ?? 0;
-
-    if (projectedLP == 0) {
-      final neededSteps = 10000 - combinedSteps;
-      return Container(
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          border: Border.all(color: _isUs2 ? Us2Theme.beige : BrandLoader().colors.borderLight),
-          borderRadius: BorderRadius.circular(12),
-        ),
-        child: Row(
-          children: [
-            Icon(
-              Icons.directions_walk,
-              color: _isUs2 ? Us2Theme.textLight : BrandLoader().colors.textTertiary,
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Text(
-                'Walk ${_formatNumber(neededSteps)} more steps together to start earning LP!',
-                style: TextStyle(
-                  fontFamily: _isUs2 ? Us2Theme.fontBody : null,
-                  fontSize: 14,
-                  color: _isUs2 ? Us2Theme.textMedium : BrandLoader().colors.textSecondary,
-                ),
-              ),
-            ),
-          ],
-        ),
-      );
+  Widget _buildTeamMessage(int progressPercent) {
+    String message;
+    if (progressPercent >= 100) {
+      message = 'Goal crushed! Amazing teamwork!';
+    } else if (progressPercent >= 75) {
+      message = 'Almost there! Push for the goal!';
+    } else if (progressPercent >= 50) {
+      message = 'Great teamwork! You\'re halfway there!';
+    } else {
+      message = 'Keep walking together!';
     }
 
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        border: Border.all(color: _isUs2 ? Us2Theme.beige : BrandLoader().colors.borderLight),
-        borderRadius: BorderRadius.circular(12),
+        gradient: LinearGradient(
+          colors: [
+            Us2Theme.gradientAccentStart.withValues(alpha: 0.1),
+            Us2Theme.gradientAccentEnd.withValues(alpha: 0.1),
+          ],
+        ),
+        borderRadius: BorderRadius.circular(16),
       ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      child: Text(
+        message,
+        textAlign: TextAlign.center,
+        style: const TextStyle(
+          fontFamily: Us2Theme.fontBody,
+          fontSize: 14,
+          color: Us2Theme.textDark,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTierProgressCard(int combinedSteps) {
+    final currentTierIndex = _tierThresholds.indexWhere((t) => combinedSteps < t);
+    final nextTierIndex = currentTierIndex >= 0 ? currentTierIndex : _tierThresholds.length;
+    final progressPercent = combinedSteps / 20000;
+
+    int? nextTier;
+    int? stepsToNext;
+    int? lpBonus;
+
+    if (nextTierIndex < _tierThresholds.length) {
+      nextTier = _tierThresholds[nextTierIndex];
+      stepsToNext = nextTier - combinedSteps;
+      final currentLP = _stepsService.getProjectedLP();
+      lpBonus = _tierLP[nextTierIndex] - currentLP;
+    }
+
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.06),
+            blurRadius: 20,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                'Tomorrow\'s Reward',
+              const Text(
+                'Tier Progress',
                 style: TextStyle(
-                  fontFamily: _isUs2 ? Us2Theme.fontBody : null,
-                  fontSize: 12,
-                  color: _isUs2 ? Us2Theme.textLight : BrandLoader().colors.textTertiary,
+                  fontFamily: Us2Theme.fontHeading,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
+                  color: Us2Theme.textDark,
                 ),
               ),
-              Text(
-                'Current tier: ${_getTierName(combinedSteps)}',
-                style: TextStyle(
-                  fontFamily: _isUs2 ? Us2Theme.fontBody : null,
-                  fontSize: 14,
-                  color: _isUs2 ? Us2Theme.textMedium : BrandLoader().colors.textSecondary,
+              GestureDetector(
+                onTap: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => StepsTierBreakdownScreen(
+                      currentCombinedSteps: combinedSteps,
+                    ),
+                  ),
+                ),
+                child: const Text(
+                  'See all tiers →',
+                  style: TextStyle(
+                    fontFamily: Us2Theme.fontBody,
+                    fontSize: 12,
+                    fontWeight: FontWeight.w600,
+                    color: Us2Theme.gradientAccentStart,
+                  ),
                 ),
               ),
             ],
           ),
+          const SizedBox(height: 16),
+
+          // Progress bar
+          LayoutBuilder(
+            builder: (context, constraints) => Stack(
+              children: [
+                // Background track
+                Container(
+                  height: 8,
+                  width: constraints.maxWidth,
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFF0F0F0),
+                    borderRadius: BorderRadius.circular(4),
+                  ),
+                ),
+                // Progress fill (left to right)
+                Container(
+                  height: 8,
+                  width: constraints.maxWidth * progressPercent.clamp(0.0, 1.0),
+                  decoration: BoxDecoration(
+                    gradient: Us2Theme.accentGradient,
+                    borderRadius: BorderRadius.circular(4),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 8),
+
+          // Tier markers
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: List.generate(_tierThresholds.length, (index) {
+              final tier = _tierThresholds[index];
+              final isAchieved = combinedSteps >= tier;
+              final isCurrent = index == (nextTierIndex - 1).clamp(0, _tierThresholds.length - 1);
+
+              return Column(
+                children: [
+                  if (isCurrent)
+                    Container(
+                      width: 8,
+                      height: 8,
+                      margin: const EdgeInsets.only(bottom: 4),
+                      decoration: BoxDecoration(
+                        gradient: Us2Theme.accentGradient,
+                        shape: BoxShape.circle,
+                        border: Border.all(color: Colors.white, width: 2),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withValues(alpha: 0.2),
+                            blurRadius: 4,
+                          ),
+                        ],
+                      ),
+                    )
+                  else
+                    const SizedBox(height: 12),
+                  Text(
+                    '${tier ~/ 1000}K',
+                    style: TextStyle(
+                      fontFamily: Us2Theme.fontBody,
+                      fontSize: 10,
+                      fontWeight: isAchieved ? FontWeight.w700 : FontWeight.w400,
+                      color: isAchieved ? Us2Theme.gradientAccentStart : Us2Theme.textLight,
+                    ),
+                  ),
+                ],
+              );
+            }),
+          ),
+
+          if (nextTier != null && stepsToNext != null) ...[
+            const SizedBox(height: 16),
+            Container(
+              padding: const EdgeInsets.only(top: 16),
+              decoration: const BoxDecoration(
+                border: Border(top: BorderSide(color: Color(0xFFF0F0F0))),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        'Next tier in',
+                        style: TextStyle(
+                          fontFamily: Us2Theme.fontBody,
+                          fontSize: 12,
+                          color: Us2Theme.textMedium,
+                        ),
+                      ),
+                      Text(
+                        '${_formatNumber(stepsToNext)} more steps',
+                        style: const TextStyle(
+                          fontFamily: Us2Theme.fontHeading,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w700,
+                          color: Us2Theme.textDark,
+                        ),
+                      ),
+                    ],
+                  ),
+                  if (lpBonus != null && lpBonus > 0)
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                      decoration: BoxDecoration(
+                        gradient: const LinearGradient(
+                          colors: [Color(0xFFFFB347), Color(0xFFFFD89B)],
+                        ),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Text(
+                        '+$lpBonus LP',
+                        style: const TextStyle(
+                          fontFamily: Us2Theme.fontBody,
+                          fontSize: 12,
+                          fontWeight: FontWeight.w700,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                ],
+              ),
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+
+  Widget _buildClaimInfoCard(StepsDay? today) {
+    final projectedLP = _stepsService.getProjectedLP();
+    final now = DateTime.now();
+    final midnight = DateTime(now.year, now.month, now.day + 1);
+    final hoursUntil = midnight.difference(now).inHours;
+    final minutesUntil = midnight.difference(now).inMinutes % 60;
+
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        gradient: Us2Theme.accentGradient,
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Text(
+                'Tomorrow\'s Claim',
+                style: TextStyle(
+                  fontFamily: Us2Theme.fontHeading,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.white,
+                ),
+              ),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                decoration: BoxDecoration(
+                  color: Colors.white.withValues(alpha: 0.2),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Text(
+                  'in ${hoursUntil}h ${minutesUntil}m',
+                  style: const TextStyle(
+                    fontFamily: Us2Theme.fontBody,
+                    fontSize: 11,
+                    fontWeight: FontWeight.w700,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'Based on today\'s progress,\nyou\'ll receive',
+                style: TextStyle(
+                  fontFamily: Us2Theme.fontBody,
+                  fontSize: 14,
+                  color: Colors.white.withValues(alpha: 0.9),
+                ),
+              ),
+              Text(
+                '+$projectedLP LP',
+                style: const TextStyle(
+                  fontFamily: Us2Theme.fontHeading,
+                  fontSize: 28,
+                  fontWeight: FontWeight.w700,
+                  color: Colors.white,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          Row(
+            children: [
+              Icon(Icons.info_outline, size: 14, color: Colors.white.withValues(alpha: 0.8)),
+              const SizedBox(width: 6),
+              Text(
+                'LP is auto-claimed when you open the app tomorrow',
+                style: TextStyle(
+                  fontFamily: Us2Theme.fontBody,
+                  fontSize: 12,
+                  color: Colors.white.withValues(alpha: 0.8),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildBelowThresholdCard(int combinedSteps) {
+    final stepsNeeded = 10000 - combinedSteps;
+    final progress = combinedSteps / 10000;
+
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.06),
+            blurRadius: 20,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Column(
+        children: [
+          const Text('', style: TextStyle(fontSize: 40)),
+          const SizedBox(height: 12),
+          const Text(
+            'Keep walking together!',
+            style: TextStyle(
+              fontFamily: Us2Theme.fontHeading,
+              fontSize: 18,
+              fontWeight: FontWeight.w600,
+              color: Us2Theme.textDark,
+            ),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            'Walk ${_formatNumber(stepsNeeded)} more steps to start earning LP',
+            textAlign: TextAlign.center,
+            style: const TextStyle(
+              fontFamily: Us2Theme.fontBody,
+              fontSize: 14,
+              color: Us2Theme.textMedium,
+            ),
+          ),
+          const SizedBox(height: 16),
+
+          // Progress to 10K
+          LayoutBuilder(
+            builder: (context, constraints) => Stack(
+              children: [
+                // Background track
+                Container(
+                  height: 8,
+                  width: constraints.maxWidth,
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFF0F0F0),
+                    borderRadius: BorderRadius.circular(4),
+                  ),
+                ),
+                // Progress fill (left to right)
+                Container(
+                  height: 8,
+                  width: constraints.maxWidth * progress.clamp(0.0, 1.0),
+                  decoration: BoxDecoration(
+                    gradient: Us2Theme.accentGradient,
+                    borderRadius: BorderRadius.circular(4),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 8),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                _formatNumber(combinedSteps),
+                style: const TextStyle(
+                  fontFamily: Us2Theme.fontBody,
+                  fontSize: 12,
+                  fontWeight: FontWeight.w600,
+                  color: Us2Theme.gradientAccentStart,
+                ),
+              ),
+              const Text(
+                '10,000 (15 LP)',
+                style: TextStyle(
+                  fontFamily: Us2Theme.fontBody,
+                  fontSize: 12,
+                  color: Us2Theme.textLight,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 20),
+
+          // Tips
           Container(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+            padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: _isUs2 ? null : BrandLoader().colors.textPrimary,
-              gradient: _isUs2 ? Us2Theme.accentGradient : null,
+              color: const Color(0xFFFFF8F6),
               borderRadius: BorderRadius.circular(12),
             ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Row(
+                  children: [
+                    Text('', style: TextStyle(fontSize: 16)),
+                    SizedBox(width: 8),
+                    Text(
+                      'Tips to reach your goal',
+                      style: TextStyle(
+                        fontFamily: Us2Theme.fontBody,
+                        fontSize: 13,
+                        fontWeight: FontWeight.w600,
+                        color: Us2Theme.textDark,
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 8),
+                _buildTipRow('Take a walk together after dinner'),
+                _buildTipRow('Park further away when shopping'),
+                _buildTipRow('Take the stairs instead of elevator'),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildTipRow(String tip) {
+    return Padding(
+      padding: const EdgeInsets.only(top: 4),
+      child: Row(
+        children: [
+          const Icon(Icons.check_circle, size: 14, color: Color(0xFF4CAF50)),
+          const SizedBox(width: 8),
+          Expanded(
             child: Text(
-              '+$projectedLP LP',
+              tip,
               style: const TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w700,
-                color: Colors.white,
+                fontFamily: Us2Theme.fontBody,
+                fontSize: 12,
+                color: Us2Theme.textMedium,
               ),
             ),
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildWeekPreviewCard() {
+    final now = DateTime.now();
+    final weekData = <_WeekDayData>[];
+    int streak = 0;
+
+    // Build week data
+    for (int i = 6; i >= 0; i--) {
+      final date = now.subtract(Duration(days: i));
+      final dateKey = '${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}';
+      final stepsDay = _storage.getStepsDay(dateKey);
+      final isToday = i == 0;
+
+      weekData.add(_WeekDayData(
+        dayName: _getShortDayName(date.weekday),
+        steps: stepsDay?.combinedSteps ?? 0,
+        isToday: isToday,
+        isSuccess: (stepsDay?.combinedSteps ?? 0) >= 10000,
+        isMax: (stepsDay?.combinedSteps ?? 0) >= 20000,
+      ));
+    }
+
+    // Calculate streak from the end
+    for (int i = weekData.length - 1; i >= 0; i--) {
+      if (weekData[i].isSuccess) {
+        streak++;
+      } else if (!weekData[i].isToday) {
+        break;
+      }
+    }
+
+    return GestureDetector(
+      onTap: () => Navigator.push(
+        context,
+        MaterialPageRoute(builder: (_) => const StepsWeekHistoryScreen()),
+      ),
+      child: Container(
+        padding: const EdgeInsets.all(20),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(20),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.06),
+              blurRadius: 20,
+              offset: const Offset(0, 4),
+            ),
+          ],
+        ),
+        child: Column(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Text(
+                  'This Week',
+                  style: TextStyle(
+                    fontFamily: Us2Theme.fontHeading,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                    color: Us2Theme.textDark,
+                  ),
+                ),
+                Row(
+                  children: [
+                    const Text('', style: TextStyle(fontSize: 14)),
+                    const SizedBox(width: 4),
+                    Text(
+                      '$streak day streak of 10K+ together',
+                      style: const TextStyle(
+                        fontFamily: Us2Theme.fontBody,
+                        fontSize: 12,
+                        fontWeight: FontWeight.w700,
+                        color: Us2Theme.gradientAccentStart,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+            const SizedBox(height: 16),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: weekData.map((day) => _buildWeekDayCircle(day)).toList(),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildWeekDayCircle(_WeekDayData day) {
+    Color bgColor;
+    Color textColor;
+    String content;
+
+    if (day.isToday) {
+      bgColor = Us2Theme.gradientAccentStart;
+      textColor = Colors.white;
+      content = day.steps >= 10000 ? '${day.steps ~/ 1000}K' : '';
+    } else if (day.isMax) {
+      bgColor = const Color(0xFFFFB347);
+      textColor = Colors.white;
+      content = '';
+    } else if (day.isSuccess) {
+      bgColor = const Color(0xFF4CAF50);
+      textColor = Colors.white;
+      content = '';
+    } else if (day.steps > 0) {
+      bgColor = const Color(0xFFFFF3E0);
+      textColor = const Color(0xFFFF9800);
+      content = '';
+    } else {
+      bgColor = const Color(0xFFF5F5F5);
+      textColor = const Color(0xFFCCCCCC);
+      content = '-';
+    }
+
+    return Column(
+      children: [
+        Text(
+          day.dayName,
+          style: const TextStyle(
+            fontFamily: Us2Theme.fontBody,
+            fontSize: 10,
+            color: Us2Theme.textLight,
+          ),
+        ),
+        const SizedBox(height: 8),
+        Container(
+          width: 36,
+          height: 36,
+          decoration: BoxDecoration(
+            color: day.isToday ? null : bgColor,
+            gradient: day.isToday ? Us2Theme.accentGradient : null,
+            shape: BoxShape.circle,
+            boxShadow: day.isToday
+                ? [
+                    BoxShadow(
+                      color: Us2Theme.gradientAccentStart.withValues(alpha: 0.4),
+                      blurRadius: 8,
+                      offset: const Offset(0, 2),
+                    ),
+                  ]
+                : null,
+          ),
+          child: Center(
+            child: Text(
+              content,
+              style: TextStyle(
+                fontFamily: Us2Theme.fontBody,
+                fontSize: 12,
+                fontWeight: FontWeight.w700,
+                color: textColor,
+              ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 
@@ -860,7 +1398,6 @@ class _StepsCounterScreenState extends State<StepsCounterScreen>
         builder: (_) => StepsClaimScreen(stepsDay: yesterday),
       ),
     ).then((_) {
-      // Refresh after returning from claim
       if (mounted) setState(() {});
     });
   }
@@ -883,136 +1420,24 @@ class _StepsCounterScreenState extends State<StepsCounterScreen>
     return '${diff.inDays} days ago';
   }
 
-  String _getTierName(int combinedSteps) {
-    if (combinedSteps >= 20000) return '20K';
-    if (combinedSteps >= 18000) return '18K';
-    if (combinedSteps >= 16000) return '16K';
-    if (combinedSteps >= 14000) return '14K';
-    if (combinedSteps >= 12000) return '12K';
-    if (combinedSteps >= 10000) return '10K';
-    return 'Below 10K';
+  String _getShortDayName(int weekday) {
+    const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+    return days[(weekday - 1) % 7];
   }
 }
 
-/// Custom painter for dual-ring progress visualization
-class DualRingPainter extends CustomPainter {
-  final double userProgress;
-  final double partnerProgress;
-  final Color userColor;
-  final Color? userColorEnd; // For gradient support (Us 2.0)
-  final Color partnerColor;
-  final Color backgroundColor;
+class _WeekDayData {
+  final String dayName;
+  final int steps;
+  final bool isToday;
+  final bool isSuccess;
+  final bool isMax;
 
-  DualRingPainter({
-    required this.userProgress,
-    required this.partnerProgress,
-    required this.userColor,
-    this.userColorEnd,
-    required this.partnerColor,
-    required this.backgroundColor,
+  _WeekDayData({
+    required this.dayName,
+    required this.steps,
+    required this.isToday,
+    required this.isSuccess,
+    required this.isMax,
   });
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final center = Offset(size.width / 2, size.height / 2);
-    final outerRadius = size.width / 2 - 10;
-    final innerRadius = outerRadius - 30;
-    const strokeWidth = 14.0;
-
-    // Background paint
-    final bgPaint = Paint()
-      ..color = backgroundColor
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = strokeWidth
-      ..strokeCap = StrokeCap.round;
-
-    // User ring paint (outer) - with optional gradient
-    final userPaint = Paint()
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = strokeWidth
-      ..strokeCap = StrokeCap.round;
-
-    if (userColorEnd != null) {
-      // Use sweep gradient for Us 2.0
-      userPaint.shader = SweepGradient(
-        startAngle: -math.pi / 2,
-        endAngle: 3 * math.pi / 2,
-        colors: [userColor, userColorEnd!],
-      ).createShader(Rect.fromCircle(center: center, radius: outerRadius));
-    } else {
-      userPaint.color = userColor;
-    }
-
-    // Partner ring paint (inner)
-    final partnerPaint = Paint()
-      ..color = partnerColor
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = strokeWidth
-      ..strokeCap = StrokeCap.round;
-
-    // Draw background rings
-    canvas.drawCircle(center, outerRadius, bgPaint);
-    canvas.drawCircle(center, innerRadius, bgPaint);
-
-    // Draw progress rings
-    const startAngle = -math.pi / 2; // Start from top
-
-    // User ring (outer) - clockwise
-    if (userProgress > 0) {
-      final userSweep = 2 * math.pi * userProgress.clamp(0.0, 1.0);
-      canvas.drawArc(
-        Rect.fromCircle(center: center, radius: outerRadius),
-        startAngle,
-        userSweep,
-        false,
-        userPaint,
-      );
-    }
-
-    // Partner ring (inner) - clockwise
-    if (partnerProgress > 0) {
-      final partnerSweep = 2 * math.pi * partnerProgress.clamp(0.0, 1.0);
-      canvas.drawArc(
-        Rect.fromCircle(center: center, radius: innerRadius),
-        startAngle,
-        partnerSweep,
-        false,
-        partnerPaint,
-      );
-    }
-  }
-
-  @override
-  bool shouldRepaint(DualRingPainter oldDelegate) {
-    return oldDelegate.userProgress != userProgress ||
-        oldDelegate.partnerProgress != partnerProgress ||
-        oldDelegate.userColorEnd != userColorEnd;
-  }
-}
-
-/// Custom painter for striped overflow pattern
-class StripedPainter extends CustomPainter {
-  final Color color;
-
-  StripedPainter({required this.color});
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final paint = Paint()
-      ..color = color
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 3;
-
-    const spacing = 8.0;
-    for (double i = -size.height; i < size.width + size.height; i += spacing) {
-      canvas.drawLine(
-        Offset(i, 0),
-        Offset(i + size.height, size.height),
-        paint,
-      );
-    }
-  }
-
-  @override
-  bool shouldRepaint(StripedPainter oldDelegate) => false;
 }

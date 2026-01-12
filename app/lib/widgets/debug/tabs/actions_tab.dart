@@ -25,6 +25,7 @@ import '../../../utils/logger.dart';
 import '../../../config/theme_config.dart';
 import '../../../services/nav_style_service.dart';
 import '../../brand/brand_widget_factory.dart';
+import '../../brand/us2/us2_avatar_section.dart';
 import '../components/debug_section_card.dart';
 
 /// Actions tab for testing tools and data management
@@ -549,6 +550,70 @@ class _ActionsTabState extends State<ActionsTab> {
     }
   }
 
+  /// Set or clear cooldown for testing side quest gating
+  Future<void> _setCooldown({
+    required String activityType,
+    required bool setCooldown,
+    int cooldownMinutes = 480, // Default 8 hours (same as production)
+  }) async {
+    setState(() => _isProcessing = true);
+
+    try {
+      final authService = AuthService();
+      final uri = Uri.parse('${SupabaseConfig.apiUrl}/api/debug/cooldown');
+      final headers = await authService.getAuthHeaders();
+
+      final response = await http.post(
+        uri,
+        headers: {
+          ...headers,
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode({
+          'activityType': activityType,
+          'action': setCooldown ? 'set' : 'clear',
+          'cooldownMinutes': cooldownMinutes,
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        final message = data['message'] as String? ?? 'Success';
+
+        Logger.success(message, service: 'debug');
+
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(message),
+              duration: const Duration(seconds: 2),
+              backgroundColor: setCooldown ? Colors.orange : Colors.green,
+            ),
+          );
+        }
+      } else {
+        Logger.warn('Cooldown control failed: ${response.statusCode} ${response.body}', service: 'debug');
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Failed: ${response.body}'),
+              backgroundColor: Colors.red,
+            ),
+          );
+        }
+      }
+    } catch (e) {
+      Logger.error('Error setting cooldown', error: e, service: 'debug');
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error: $e'), backgroundColor: Colors.red),
+        );
+      }
+    } finally {
+      setState(() => _isProcessing = false);
+    }
+  }
+
   Future<void> _resetUserData() async {
     // Show confirmation dialog
     final confirmed = await showDialog<bool>(
@@ -786,6 +851,118 @@ class _ActionsTabState extends State<ActionsTab> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
+          // Test LP Animation (Us 2.0)
+          DebugSectionCard(
+            title: '✨ TEST LP ANIMATION',
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: Colors.purple.shade50,
+                    borderRadius: BorderRadius.circular(6),
+                  ),
+                  child: Text(
+                    'Test the Us 2.0 LP celebration animation.\nCloses debug menu and triggers animation on home screen.',
+                    style: TextStyle(
+                      fontSize: 10,
+                      color: Colors.purple.shade800,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 12),
+                ElevatedButton.icon(
+                  onPressed: () {
+                    // Close debug menu and return signal to trigger animation
+                    Navigator.of(context).pop('test_lp_animation');
+                  },
+                  icon: const Icon(Icons.auto_awesome, size: 18),
+                  label: const Text('Test LP Animation'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.purple,
+                    foregroundColor: Colors.white,
+                    minimumSize: const Size(double.infinity, 44),
+                  ),
+                ),
+              ],
+            ),
+          ),
+
+          // Character Weekday Override (Us 2.0)
+          if (BrandWidgetFactory.isUs2)
+            DebugSectionCard(
+              title: '📅 CHARACTER WEEKDAY',
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: Colors.orange.shade50,
+                      borderRadius: BorderRadius.circular(6),
+                    ),
+                    child: Text(
+                      'Override weekday for testing character images.\n'
+                      'Current: ${Us2AvatarSection.getCurrentDayName().toUpperCase()} '
+                      '(${Us2AvatarSection.debugWeekdayOverride != null ? "override" : "device time"})',
+                      style: TextStyle(
+                        fontSize: 10,
+                        color: Colors.orange.shade800,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  Wrap(
+                    spacing: 6,
+                    runSpacing: 6,
+                    children: List.generate(7, (index) {
+                      final weekday = index + 1; // 1-7
+                      final dayName = Us2AvatarSection.dayNames[index];
+                      final isSelected = Us2AvatarSection.getCurrentWeekday() == weekday;
+                      return SizedBox(
+                        width: 80,
+                        child: ElevatedButton(
+                          onPressed: () {
+                            Us2AvatarSection.debugWeekdayOverride = weekday;
+                            Navigator.of(context).pop();
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: isSelected
+                                ? Colors.orange
+                                : Colors.grey.shade200,
+                            foregroundColor: isSelected
+                                ? Colors.white
+                                : Colors.grey.shade700,
+                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                            minimumSize: const Size(0, 36),
+                          ),
+                          child: Text(
+                            dayName.substring(0, 3).toUpperCase(),
+                            style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w600),
+                          ),
+                        ),
+                      );
+                    }),
+                  ),
+                  const SizedBox(height: 8),
+                  OutlinedButton(
+                    onPressed: () {
+                      setState(() {
+                        Us2AvatarSection.debugWeekdayOverride = null;
+                      });
+                    },
+                    style: OutlinedButton.styleFrom(
+                      foregroundColor: Colors.orange.shade700,
+                      side: BorderSide(color: Colors.orange.shade300),
+                      minimumSize: const Size(double.infinity, 36),
+                    ),
+                    child: const Text('Reset to Device Time'),
+                  ),
+                ],
+              ),
+            ),
+
           // Award LP (for testing magnet unlocks)
           DebugSectionCard(
             title: '💰 AWARD LP',
@@ -831,6 +1008,134 @@ class _ActionsTabState extends State<ActionsTab> {
                           backgroundColor: Colors.green.shade700,
                           foregroundColor: Colors.white,
                           minimumSize: const Size(0, 44),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+
+          // Cooldown Control (for testing side quest gating)
+          DebugSectionCard(
+            title: '⏱️ COOLDOWN CONTROL',
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: Colors.orange.shade50,
+                    borderRadius: BorderRadius.circular(6),
+                  ),
+                  child: Text(
+                    'Test the 8-hour cooldown system for Linked and Word Search.\n'
+                    'Set: Triggers 8-hour cooldown (blocks starting new games)\n'
+                    'Clear: Removes cooldown (allows play)',
+                    style: TextStyle(
+                      fontSize: 10,
+                      color: Colors.orange.shade800,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 12),
+                // Linked controls
+                Text(
+                  'CROSSWORD (LINKED)',
+                  style: TextStyle(
+                    fontSize: 10,
+                    fontWeight: FontWeight.w700,
+                    color: Colors.grey.shade600,
+                    letterSpacing: 1,
+                  ),
+                ),
+                const SizedBox(height: 6),
+                Row(
+                  children: [
+                    Expanded(
+                      child: ElevatedButton.icon(
+                        onPressed: _isProcessing
+                            ? null
+                            : () => _setCooldown(
+                                  activityType: 'linked',
+                                  setCooldown: true,
+                                ),
+                        icon: const Icon(Icons.timer, size: 16),
+                        label: const Text('Set Cooldown'),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.orange,
+                          foregroundColor: Colors.white,
+                          minimumSize: const Size(0, 40),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: ElevatedButton.icon(
+                        onPressed: _isProcessing
+                            ? null
+                            : () => _setCooldown(
+                                  activityType: 'linked',
+                                  setCooldown: false,
+                                ),
+                        icon: const Icon(Icons.timer_off, size: 16),
+                        label: const Text('Clear'),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.green,
+                          foregroundColor: Colors.white,
+                          minimumSize: const Size(0, 40),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 12),
+                // Word Search controls
+                Text(
+                  'WORD SEARCH',
+                  style: TextStyle(
+                    fontSize: 10,
+                    fontWeight: FontWeight.w700,
+                    color: Colors.grey.shade600,
+                    letterSpacing: 1,
+                  ),
+                ),
+                const SizedBox(height: 6),
+                Row(
+                  children: [
+                    Expanded(
+                      child: ElevatedButton.icon(
+                        onPressed: _isProcessing
+                            ? null
+                            : () => _setCooldown(
+                                  activityType: 'wordsearch',
+                                  setCooldown: true,
+                                ),
+                        icon: const Icon(Icons.timer, size: 16),
+                        label: const Text('Set Cooldown'),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.orange,
+                          foregroundColor: Colors.white,
+                          minimumSize: const Size(0, 40),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: ElevatedButton.icon(
+                        onPressed: _isProcessing
+                            ? null
+                            : () => _setCooldown(
+                                  activityType: 'wordsearch',
+                                  setCooldown: false,
+                                ),
+                        icon: const Icon(Icons.timer_off, size: 16),
+                        label: const Text('Clear'),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.green,
+                          foregroundColor: Colors.white,
+                          minimumSize: const Size(0, 40),
                         ),
                       ),
                     ),

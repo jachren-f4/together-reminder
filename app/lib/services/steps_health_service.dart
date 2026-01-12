@@ -220,13 +220,13 @@ class StepsHealthService {
       final yesterday = DateTime.now().subtract(const Duration(days: 1));
       final dateKey = '${yesterday.year}-${yesterday.month.toString().padLeft(2, '0')}-${yesterday.day.toString().padLeft(2, '0')}';
 
+      // Calculate claim expiry (48 hours after end of yesterday)
+      final endOfYesterday = DateTime(yesterday.year, yesterday.month, yesterday.day + 1);
+      final claimExpiry = endOfYesterday.add(const Duration(hours: 48));
+
       // Get or create yesterday's step data
       var stepsDay = _storage.getStepsDay(dateKey);
       if (stepsDay == null) {
-        // Calculate claim expiry (48 hours after end of yesterday)
-        final endOfYesterday = DateTime(yesterday.year, yesterday.month, yesterday.day + 1);
-        final claimExpiry = endOfYesterday.add(const Duration(hours: 48));
-
         stepsDay = StepsDay(
           dateKey: dateKey,
           userSteps: steps,
@@ -236,6 +236,11 @@ class StepsHealthService {
       } else {
         stepsDay.userSteps = steps;
         stepsDay.lastSync = DateTime.now();
+        // FIX: Ensure claimExpiresAt is set even on existing entries
+        // This handles the case where updatePartnerSteps() created the entry first
+        if (stepsDay.claimExpiresAt == null) {
+          stepsDay.claimExpiresAt = claimExpiry;
+        }
       }
 
       // Calculate earned LP
@@ -279,15 +284,30 @@ class StepsHealthService {
     var stepsDay = _storage.getStepsDay(dateKey);
     if (stepsDay == null) {
       // Create new entry if it doesn't exist
+      // Calculate claim expiry for yesterday's date (48 hours after end of that day)
+      DateTime? claimExpiry;
+      if (dateKey == yesterdayDateKey) {
+        final yesterday = DateTime.now().subtract(const Duration(days: 1));
+        final endOfYesterday = DateTime(yesterday.year, yesterday.month, yesterday.day + 1);
+        claimExpiry = endOfYesterday.add(const Duration(hours: 48));
+      }
+
       stepsDay = StepsDay(
         dateKey: dateKey,
         partnerSteps: steps,
         lastSync: DateTime.now(),
         partnerLastSync: syncTime,
+        claimExpiresAt: claimExpiry,
       );
     } else {
       stepsDay.partnerSteps = steps;
       stepsDay.partnerLastSync = syncTime;
+      // FIX: Ensure claimExpiresAt is set for yesterday if missing
+      if (dateKey == yesterdayDateKey && stepsDay.claimExpiresAt == null) {
+        final yesterday = DateTime.now().subtract(const Duration(days: 1));
+        final endOfYesterday = DateTime(yesterday.year, yesterday.month, yesterday.day + 1);
+        stepsDay.claimExpiresAt = endOfYesterday.add(const Duration(hours: 48));
+      }
     }
 
     // Recalculate earned LP
@@ -315,23 +335,49 @@ class StepsHealthService {
   }
 
   /// Mark a day's reward as claimed
-  Future<void> markAsClaimed(String dateKey) async {
+  Future<void> markAsClaimed(String dateKey, {String? claimedByUserId}) async {
     final stepsDay = _storage.getStepsDay(dateKey);
     if (stepsDay != null) {
       stepsDay.claimed = true;
+      if (claimedByUserId != null) {
+        stepsDay.claimedByUserId = claimedByUserId;
+      }
       await _storage.updateStepsDay(stepsDay);
       Logger.success('Marked $dateKey steps reward as claimed', service: 'steps');
     }
   }
 
-  /// Mark a day's reward as claimed (called from Firebase sync)
-  /// Prevents double-claiming when partner claims first
-  void markAsClaimedFromSync(String dateKey) {
+  /// Mark that the auto-claim overlay was shown for a day
+  Future<void> markOverlayShown(String dateKey) async {
     final stepsDay = _storage.getStepsDay(dateKey);
-    if (stepsDay != null && !stepsDay.claimed) {
+    if (stepsDay != null) {
+      stepsDay.overlayShownAt = DateTime.now();
+      await _storage.updateStepsDay(stepsDay);
+      Logger.debug('Marked $dateKey overlay as shown', service: 'steps');
+    }
+  }
+
+  /// Mark a day's reward as claimed (called from server sync)
+  /// Prevents double-claiming when partner claims first
+  void markAsClaimedFromSync(
+    String dateKey, {
+    String? claimedByUserId,
+    int? lpEarned,
+  }) {
+    final stepsDay = _storage.getStepsDay(dateKey);
+    if (stepsDay != null) {
+      final wasAlreadyClaimed = stepsDay.claimed;
       stepsDay.claimed = true;
+      if (claimedByUserId != null) {
+        stepsDay.claimedByUserId = claimedByUserId;
+      }
+      if (lpEarned != null) {
+        stepsDay.earnedLP = lpEarned;
+      }
       _storage.updateStepsDay(stepsDay);
-      Logger.debug('Marked $dateKey as claimed from Firebase sync', service: 'steps');
+      if (!wasAlreadyClaimed) {
+        Logger.debug('Marked $dateKey as claimed from server sync (by: $claimedByUserId)', service: 'steps');
+      }
     }
   }
 

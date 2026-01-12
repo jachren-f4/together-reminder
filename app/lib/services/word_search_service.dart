@@ -26,7 +26,6 @@ class WordSearchService extends SideQuestServiceBase {
       final response = await apiRequest(
         'POST',
         '/api/sync/word-search',
-        body: {'localDate': getLocalDate()},
       );
 
       // Check for cooldown response

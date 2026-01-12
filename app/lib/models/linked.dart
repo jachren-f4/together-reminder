@@ -343,7 +343,7 @@ class LinkedPuzzle {
 
     return LinkedPuzzle(
       puzzleId: json['puzzleId'] ?? 'unknown',
-      title: json['title'] ?? 'Linked Puzzle',
+      title: json['title'] ?? 'Crossword Puzzle',
       author: json['author'] ?? 'Unknown',
       rows: size['rows'] as int,
       cols: size['cols'] as int,

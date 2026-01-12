@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:purchases_flutter/purchases_flutter.dart';
+import 'package:purchases_ui_flutter/purchases_ui_flutter.dart';
 import '../config/dev_config.dart';
 import '../config/revenuecat_config.dart';
 import '../models/couple_subscription_status.dart';
@@ -354,6 +355,130 @@ class SubscriptionService with ChangeNotifier {
   bool get isInitialized => _isInitialized;
 
   // ============================================================================
+  // REVENUECAT PAYWALL UI
+  // ============================================================================
+
+  /// Present the RevenueCat Paywall UI
+  ///
+  /// Returns PaywallResult indicating what happened:
+  /// - purchased: User successfully purchased
+  /// - restored: User restored a previous purchase
+  /// - cancelled: User dismissed without purchasing
+  /// - error: An error occurred
+  ///
+  /// If purchase/restore succeeded, also activates subscription for couple.
+  Future<PaywallPresentResult> presentPaywall() async {
+    if (kIsWeb) {
+      Logger.warn('RevenueCat Paywall not available on web', service: 'subscription');
+      return PaywallPresentResult.notAvailable();
+    }
+
+    if (!RevenueCatConfig.isConfigured) {
+      Logger.warn('RevenueCat not configured', service: 'subscription');
+      return PaywallPresentResult.notAvailable();
+    }
+
+    try {
+      Logger.debug('Presenting RevenueCat Paywall', service: 'subscription');
+
+      final result = await RevenueCatUI.presentPaywall();
+
+      Logger.debug('Paywall result: $result', service: 'subscription');
+
+      // Refresh customer info after paywall interaction
+      _customerInfo = await Purchases.getCustomerInfo();
+      _updatePremiumCache();
+
+      // Check if user now has premium
+      if (isPremium) {
+        // Activate for couple with the product they purchased
+        final productId = _customerInfo?.entitlements.active[RevenueCatConfig.premiumEntitlement]
+            ?.productIdentifier;
+
+        if (productId != null) {
+          await _activateForCoupleWithRetry(productId);
+        }
+
+        notifyListeners();
+        return PaywallPresentResult.purchased();
+      }
+
+      // Map the result
+      switch (result) {
+        case PaywallResult.purchased:
+          return PaywallPresentResult.purchased();
+        case PaywallResult.restored:
+          return PaywallPresentResult.restored();
+        case PaywallResult.cancelled:
+          return PaywallPresentResult.cancelled();
+        case PaywallResult.error:
+          return PaywallPresentResult.error('Paywall error occurred');
+        default:
+          return PaywallPresentResult.cancelled();
+      }
+    } catch (e) {
+      Logger.error('Failed to present paywall', error: e, service: 'subscription');
+      return PaywallPresentResult.error(e.toString());
+    }
+  }
+
+  /// Present the RevenueCat Paywall UI if user doesn't have premium
+  ///
+  /// Convenience method that only shows paywall if needed.
+  /// Returns true if user has (or now has) premium access.
+  Future<bool> presentPaywallIfNeeded() async {
+    if (isPremium) {
+      Logger.debug('User already has premium, skipping paywall', service: 'subscription');
+      return true;
+    }
+
+    final result = await presentPaywall();
+    return result.didPurchaseOrRestore;
+  }
+
+  // ============================================================================
+  // CUSTOMER CENTER
+  // ============================================================================
+
+  /// Present the RevenueCat Customer Center
+  ///
+  /// The Customer Center allows users to:
+  /// - View their subscription details
+  /// - Manage their subscription (upgrade/downgrade/cancel)
+  /// - Restore purchases
+  /// - Contact support
+  ///
+  /// Returns CustomerCenterResult indicating what happened.
+  Future<CustomerCenterResult> presentCustomerCenter() async {
+    if (kIsWeb) {
+      Logger.warn('Customer Center not available on web', service: 'subscription');
+      return CustomerCenterResult.notAvailable();
+    }
+
+    if (!RevenueCatConfig.isConfigured) {
+      Logger.warn('RevenueCat not configured', service: 'subscription');
+      return CustomerCenterResult.notAvailable();
+    }
+
+    try {
+      Logger.debug('Presenting Customer Center', service: 'subscription');
+
+      await RevenueCatUI.presentCustomerCenter();
+
+      // Refresh customer info after customer center interaction
+      _customerInfo = await Purchases.getCustomerInfo();
+      _updatePremiumCache();
+      notifyListeners();
+
+      Logger.debug('Customer Center dismissed', service: 'subscription');
+      return CustomerCenterResult.dismissed();
+    } catch (e) {
+      Logger.error('Failed to present Customer Center', error: e, service: 'subscription');
+      return CustomerCenterResult.error(e.toString());
+    }
+  }
+
+  // ============================================================================
   // PRIVATE HELPERS
   // ============================================================================
 
@@ -632,7 +757,9 @@ class SubscriptionService with ChangeNotifier {
   }
 
   /// Dispose resources
+  @override
   void dispose() {
     _premiumStatusController.close();
+    super.dispose();
   }
 }

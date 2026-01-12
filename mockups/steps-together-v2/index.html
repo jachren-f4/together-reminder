@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=375, initial-scale=1.0">
+    <title>Steps Together v2 - Overview</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            background: linear-gradient(180deg, #FFF8F6 0%, #FFF0EB 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+            color: #2D2D2D;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 32px;
+            font-weight: 700;
+            color: #2D2D2D;
+            margin-bottom: 8px;
+            text-align: center;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 40px;
+            font-size: 16px;
+        }
+
+        .section {
+            background: white;
+            border-radius: 20px;
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+        }
+
+        .section h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 20px;
+            font-weight: 600;
+            color: #2D2D2D;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section h2 .number {
+            width: 28px;
+            height: 28px;
+            background: linear-gradient(135deg, #FF6B6B 0%, #FF8E53 100%);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Nunito', sans-serif;
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        .issue {
+            background: #FFF5F5;
+            border-left: 3px solid #FF6B6B;
+            padding: 12px 16px;
+            margin-bottom: 12px;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .issue strong {
+            color: #FF6B6B;
+        }
+
+        .solution {
+            background: #F0FFF4;
+            border-left: 3px solid #4CAF50;
+            padding: 12px 16px;
+            margin-bottom: 12px;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .solution strong {
+            color: #4CAF50;
+        }
+
+        .mockup-links {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 16px;
+            margin-top: 32px;
+        }
+
+        .mockup-link {
+            display: block;
+            background: white;
+            border-radius: 16px;
+            padding: 20px;
+            text-decoration: none;
+            color: #2D2D2D;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+            transition: transform 0.2s, box-shadow 0.2s;
+            border: 2px solid transparent;
+        }
+
+        .mockup-link:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            border-color: #FF6B6B;
+        }
+
+        .mockup-link h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .mockup-link p {
+            font-size: 13px;
+            color: #666;
+            line-height: 1.4;
+        }
+
+        .mockup-link .arrow {
+            display: inline-block;
+            margin-top: 12px;
+            color: #FF6B6B;
+            font-weight: 700;
+            font-size: 14px;
+        }
+
+        .badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #FF6B6B 0%, #FF8E53 100%);
+            color: white;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 16px;
+        }
+
+        .comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-top: 16px;
+        }
+
+        .comparison-item {
+            padding: 16px;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .comparison-item.before {
+            background: #F5F5F5;
+        }
+
+        .comparison-item.after {
+            background: linear-gradient(135deg, rgba(255,107,107,0.1) 0%, rgba(255,142,83,0.1) 100%);
+        }
+
+        .comparison-item .label {
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #999;
+            margin-bottom: 8px;
+        }
+
+        .comparison-item.after .label {
+            color: #FF6B6B;
+        }
+
+        ul {
+            margin-left: 20px;
+            margin-top: 8px;
+        }
+
+        li {
+            margin-bottom: 6px;
+            line-height: 1.5;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <span class="badge">Steps Together v2</span>
+        <h1>Redesign Overview</h1>
+        <p class="subtitle">Comprehensive improvements based on UX evaluation</p>
+
+        <!-- Issue 1: Ring Progress -->
+        <div class="section">
+            <h2><span class="number">1</span> Fixed Ring Progress</h2>
+            <div class="issue">
+                <strong>Before:</strong> Each ring showed progress toward 20K individual steps. If both partners walk 5K each (10K combined = 15 LP), rings are only 25% full despite earning LP.
+            </div>
+            <div class="solution">
+                <strong>After:</strong> Single combined ring that fills as both partners contribute. Clear visual threshold at 10K where LP starts. Each partner's contribution shown as a segment.
+            </div>
+        </div>
+
+        <!-- Issue 2: Tomorrow's Reward -->
+        <div class="section">
+            <h2><span class="number">2</span> Clearer Reward Messaging</h2>
+            <div class="issue">
+                <strong>Before:</strong> "Tomorrow's Reward" and "Tomorrow: +15 LP" was confusing. Users thought it was predicting tomorrow's steps.
+            </div>
+            <div class="solution">
+                <strong>After:</strong> "Today's Progress" with clear explanation: "Claim tomorrow for +15 LP". Added countdown to claim time.
+            </div>
+        </div>
+
+        <!-- Issue 3: Tier Explanation -->
+        <div class="section">
+            <h2><span class="number">3</span> Tier Breakdown</h2>
+            <div class="issue">
+                <strong>Before:</strong> Tier system (10K/12K/14K.../20K) mentioned but never explained. Users don't understand LP scaling.
+            </div>
+            <div class="solution">
+                <strong>After:</strong> Visual tier ladder showing all thresholds with LP values. Current tier highlighted. Next milestone clearly shown.
+            </div>
+        </div>
+
+        <!-- Issue 4: Partner Color -->
+        <div class="section">
+            <h2><span class="number">4</span> Warmer Partner Color</h2>
+            <div class="comparison">
+                <div class="comparison-item before">
+                    <div class="label">Before</div>
+                    <div style="width: 40px; height: 40px; background: #999999; border-radius: 50%; margin: 0 auto;"></div>
+                    <div style="margin-top: 8px; font-size: 13px; color: #666;">Cold gray</div>
+                </div>
+                <div class="comparison-item after">
+                    <div class="label">After</div>
+                    <div style="width: 40px; height: 40px; background: linear-gradient(135deg, #4ECDC4 0%, #45B7AA 100%); border-radius: 50%; margin: 0 auto;"></div>
+                    <div style="margin-top: 8px; font-size: 13px; color: #666;">Warm teal</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Issue 5-10: Other Improvements -->
+        <div class="section">
+            <h2><span class="number">5</span> Additional Improvements</h2>
+            <ul>
+                <li><strong>Pull-to-refresh:</strong> Added swipe-down gesture indicator</li>
+                <li><strong>Sync status:</strong> Prominent syncing animation in header</li>
+                <li><strong>Milestone celebrations:</strong> Confetti burst when crossing tier thresholds</li>
+                <li><strong>7-day history:</strong> Week view showing past achievements and streaks</li>
+                <li><strong>Auto-claim focused:</strong> Removed manual claim, celebration-only overlay</li>
+                <li><strong>"Together" feeling:</strong> Encouraging team messages, combined progress emphasis</li>
+            </ul>
+        </div>
+
+        <!-- Mockup Links -->
+        <h2 style="font-family: 'Playfair Display', serif; font-size: 24px; margin: 40px 0 20px;">View Mockups</h2>
+
+        <div class="mockup-links">
+            <a href="01-main-tracking.html" class="mockup-link">
+                <h3>Main Tracking Screen</h3>
+                <p>Redesigned progress ring, tier indicator, and clearer reward messaging</p>
+                <span class="arrow">View mockup &rarr;</span>
+            </a>
+
+            <a href="02-below-threshold.html" class="mockup-link">
+                <h3>Below 10K Threshold</h3>
+                <p>Encouraging state when partners haven't reached LP threshold yet</p>
+                <span class="arrow">View mockup &rarr;</span>
+            </a>
+
+            <a href="03-milestone-celebration.html" class="mockup-link">
+                <h3>Milestone Celebration</h3>
+                <p>Confetti burst when crossing a new tier threshold</p>
+                <span class="arrow">View mockup &rarr;</span>
+            </a>
+
+            <a href="04-max-tier.html" class="mockup-link">
+                <h3>Max Tier Reached</h3>
+                <p>Celebration state when hitting 20K+ combined steps</p>
+                <span class="arrow">View mockup &rarr;</span>
+            </a>
+
+            <a href="05-tier-breakdown.html" class="mockup-link">
+                <h3>Tier Breakdown</h3>
+                <p>Expanded view showing all LP tiers and current progress</p>
+                <span class="arrow">View mockup &rarr;</span>
+            </a>
+
+            <a href="06-week-history.html" class="mockup-link">
+                <h3>Week History</h3>
+                <p>7-day view with streak tracking and past achievements</p>
+                <span class="arrow">View mockup &rarr;</span>
+            </a>
+        </div>
+    </div>
+</body>
+</html>

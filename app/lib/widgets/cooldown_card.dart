@@ -53,12 +53,43 @@ class _CooldownCardState extends State<CooldownCard> {
   /// Format activity name for display (e.g., "Classic Quiz" -> "classic quizzes")
   String _formatActivityPlural() {
     final name = widget.activityName.toLowerCase();
+
+    // Handle each activity type appropriately
     if (name.contains('quiz')) {
       // "Classic Quiz" -> "classic quizzes", "Affirmation Quiz" -> "affirmation quizzes"
-      return name.replaceAll(' quiz', ' quizzes').replaceAll('quiz', 'quizzes');
+      return name.replaceAll(' quiz', ' quizzes');
     }
-    // "You or Me" -> "You or Me"
+    if (name == 'you or me') {
+      return 'You or Me games';
+    }
+    if (name == 'crossword') {
+      return 'crosswords';
+    }
+    if (name == 'word search') {
+      return 'word searches';
+    }
+
     return widget.activityName;
+  }
+
+  /// Get the header text for the timer (e.g., "MORE QUIZZES IN")
+  String _getTimerHeader() {
+    final name = widget.activityName.toLowerCase();
+
+    if (name.contains('quiz')) {
+      return 'MORE QUIZZES IN';
+    }
+    if (name == 'you or me') {
+      return 'MORE GAMES IN';
+    }
+    if (name == 'crossword') {
+      return 'MORE CROSSWORDS IN';
+    }
+    if (name == 'word search') {
+      return 'MORE PUZZLES IN';
+    }
+
+    return 'MORE IN';
   }
 
   @override
@@ -142,7 +173,7 @@ class _CooldownCardState extends State<CooldownCard> {
             child: Column(
               children: [
                 Text(
-                  'MORE QUIZZES IN',
+                  _getTimerHeader(),
                   style: GoogleFonts.nunito(
                     fontSize: 10,
                     fontWeight: FontWeight.w700,

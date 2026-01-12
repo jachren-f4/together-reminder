@@ -4,6 +4,7 @@ import '../config/animation_constants.dart';
 import '../config/brand/brand_config.dart';
 import '../config/brand/brand_loader.dart';
 import '../config/brand/us2_theme.dart';
+import '../config/quiz_constants.dart';
 import '../models/quiz_match.dart';
 import '../services/storage_service.dart';
 import '../services/unlock_service.dart';
@@ -11,6 +12,16 @@ import '../services/quiz_match_service.dart';
 import '../widgets/animations/animations.dart';
 import '../widgets/editorial/editorial.dart';
 import '../widgets/unlock_celebration.dart';
+
+/// Helper to get answer text, handling the fallback option for classic quiz
+String _getAnswerText(int answerIndex, List<String> choices) {
+  if (answerIndex < 0) return '—';
+  if (answerIndex < choices.length) return choices[answerIndex];
+  if (answerIndex == kClassicQuizFallbackOptionIndex) {
+    return kClassicQuizFallbackOptionText;
+  }
+  return '—';
+}
 
 /// Results screen for Quiz Match (server-centric architecture)
 ///
@@ -553,17 +564,13 @@ class _QuizMatchResultsScreenState extends State<QuizMatchResultsScreen>
               children: [
                 _buildAnswerRow(
                   label: userName,
-                  answer: userAnswer >= 0 && userAnswer < choices.length
-                      ? choices[userAnswer]
-                      : '—',
+                  answer: _getAnswerText(userAnswer, choices),
                   isHighlighted: isMatch,
                 ),
                 const SizedBox(height: 8),
                 _buildAnswerRow(
                   label: partnerName,
-                  answer: partnerAnswer >= 0 && partnerAnswer < choices.length
-                      ? choices[partnerAnswer]
-                      : '—',
+                  answer: _getAnswerText(partnerAnswer, choices),
                   isHighlighted: isMatch,
                 ),
               ],
@@ -1094,17 +1101,13 @@ class _QuizMatchResultsScreenState extends State<QuizMatchResultsScreen>
               children: [
                 _buildUs2AnswerRow(
                   label: userName,
-                  answer: userAnswer >= 0 && userAnswer < choices.length
-                      ? choices[userAnswer]
-                      : '—',
+                  answer: _getAnswerText(userAnswer, choices),
                   isHighlighted: isMatch,
                 ),
                 const SizedBox(height: 10),
                 _buildUs2AnswerRow(
                   label: partnerName,
-                  answer: partnerAnswer >= 0 && partnerAnswer < choices.length
-                      ? choices[partnerAnswer]
-                      : '—',
+                  answer: _getAnswerText(partnerAnswer, choices),
                   isHighlighted: isMatch,
                 ),
               ],

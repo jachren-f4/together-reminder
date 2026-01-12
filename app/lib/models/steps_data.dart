@@ -38,6 +38,15 @@ class StepsDay extends HiveObject {
   @HiveField(7)
   DateTime? claimExpiresAt;
 
+  /// User ID of who claimed this reward (null if not claimed)
+  @HiveField(8)
+  String? claimedByUserId;
+
+  /// Timestamp when this day's auto-claim overlay was shown to this user
+  /// Used to prevent showing the same celebration twice
+  @HiveField(9)
+  DateTime? overlayShownAt;
+
   StepsDay({
     required this.dateKey,
     this.userSteps = 0,
@@ -47,6 +56,8 @@ class StepsDay extends HiveObject {
     this.claimed = false,
     this.earnedLP = 0,
     this.claimExpiresAt,
+    this.claimedByUserId,
+    this.overlayShownAt,
   });
 
   /// Combined steps from both partners
@@ -71,6 +82,27 @@ class StepsDay extends HiveObject {
   bool get isExpired {
     if (claimExpiresAt == null) return false;
     return DateTime.now().isAfter(claimExpiresAt!);
+  }
+
+  /// Whether the auto-claim overlay should be shown for this day.
+  /// Returns true if:
+  /// - Combined steps >= 10,000
+  /// - Claim hasn't expired
+  /// - Overlay hasn't been shown to this user yet
+  /// Note: Does NOT check if claimed - we show overlay even if partner claimed
+  bool get shouldShowOverlay {
+    if (claimExpiresAt == null) return false;
+    if (DateTime.now().isAfter(claimExpiresAt!)) return false;
+    if (overlayShownAt != null) return false;
+    if (partnerLastSync == null) return false;
+    if (combinedSteps < 10000) return false;
+    return true;
+  }
+
+  /// Whether this day's reward was claimed by the partner (not current user)
+  bool wasClaimedByPartner(String currentUserId) {
+    if (!claimed || claimedByUserId == null) return false;
+    return claimedByUserId != currentUserId;
   }
 
   /// Calculate LP earned based on combined steps
