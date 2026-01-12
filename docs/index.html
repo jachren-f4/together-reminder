@@ -98,6 +98,29 @@
         .support-email:hover {
             background: #c96a52;
         }
+        .contact-form {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .contact-form input,
+        .contact-form textarea {
+            padding: 12px 16px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            font-size: 16px;
+            font-family: inherit;
+            resize: vertical;
+        }
+        .contact-form input:focus,
+        .contact-form textarea:focus {
+            outline: none;
+            border-color: #E07A5F;
+        }
+        .contact-form button {
+            border: none;
+            cursor: pointer;
+        }
         .footer {
             margin-top: 40px;
             color: #999;
@@ -141,8 +164,12 @@
 
         <div class="support-section">
             <h2>Need Help?</h2>
-            <p>Have questions, feedback, or running into issues? We're here to help!</p>
-            <a href="mailto:support@togetherremind.com" class="support-email">Contact Support</a>
+            <p>Have questions, feedback, or running into issues? Send us a message!</p>
+            <form action="https://formspree.io/f/YOUR_FORM_ID" method="POST" class="contact-form">
+                <input type="email" name="email" placeholder="Your email" required>
+                <textarea name="message" placeholder="How can we help?" rows="4" required></textarea>
+                <button type="submit" class="support-email">Send Message</button>
+            </form>
         </div>
 
         <div class="footer">
