@@ -24,6 +24,8 @@ import 'welcome_quiz_intro_screen.dart';
 import 'package:togetherremind/test/test_keys.dart';
 import 'package:togetherremind/theme/app_theme.dart';
 import 'package:togetherremind/widgets/newspaper/newspaper_widgets.dart';
+import 'package:togetherremind/widgets/partner_left_dialog.dart';
+import 'package:togetherremind/services/user_notification_service.dart';
 import '../utils/logger.dart';
 
 class PairingScreen extends StatefulWidget {
@@ -66,6 +68,16 @@ class _PairingScreenState extends State<PairingScreen> {
     _generateRemoteCode(); // Auto-generate pairing code on load
     _listenForPairingConfirmation();
     _startGlobalPairingPolling(); // Poll for pairing status (works for QR code flow too)
+    _checkForPartnerLeftNotification(); // Check if partner deleted their account
+  }
+
+  /// Check if there's a partner_left notification and show dialog
+  Future<void> _checkForPartnerLeftNotification() async {
+    final notification = await UserNotificationService().checkForPartnerLeft();
+    if (notification != null && mounted) {
+      // Show dialog explaining what happened
+      await PartnerLeftDialog.show(context, notification);
+    }
   }
 
   /// Start polling for pairing status globally (not just for Remote tab)

@@ -241,13 +241,22 @@ export const DELETE = withAuth(async (req, userId, email) => {
           [userId]
         );
 
-        // 3. Delete the couple entirely
+        // 3. Notify partner that their partner left
+        if (partnerId) {
+          await client.query(
+            `INSERT INTO user_notifications (user_id, type, message) VALUES ($1, $2, $3)`,
+            [partnerId, 'partner_left', 'Your partner has left Us 2.0']
+          );
+          console.log(`[Account Delete] Notified partner: ${partnerId}`);
+        }
+
+        // 4. Delete the couple entirely
         // Partner will need to re-pair with someone else
         await client.query(`DELETE FROM couples WHERE id = $1`, [coupleId]);
         console.log(`[Account Delete] Deleted couple: ${coupleId}`);
       }
 
-      // 4. Delete from users table (if exists)
+      // 5. Delete from users table (if exists)
       await safeDelete(client,
         `DELETE FROM users WHERE id = $1`,
         [userId]
@@ -256,7 +265,7 @@ export const DELETE = withAuth(async (req, userId, email) => {
       console.log(`[Account Delete] Database deletion complete for user: ${userId}`);
     });
 
-    // 5. Delete from Supabase auth.users (outside transaction, uses Supabase client)
+    // 6. Delete from Supabase auth.users (outside transaction, uses Supabase client)
     console.log(`[Account Delete] Deleting from auth.users: ${userId}`);
     const supabase = createClient();
     const { error: authError } = await supabase.auth.admin.deleteUser(userId);
