@@ -65,10 +65,11 @@ Add a "Delete Account" option to the Settings screen that permanently deletes th
 - [x] On success: Clear local data, navigate to OnboardingScreen
 - [x] On error: Show error snackbar
 
-### Phase 3: Partner Notification (Optional Enhancement)
-- [ ] When account deleted, partner's next app open shows message
-- [ ] Message: "Your partner has left Us 2.0"
-- [ ] Partner returns to unpaired state (can re-pair with someone else)
+### Phase 3: Partner Notification (DONE)
+- [x] When account deleted, partner's next app open shows message
+- [x] Message: "Your partner has left Us 2.0"
+- [x] Partner returns to unpaired state (can re-pair with someone else)
+- See `docs/plans/PARTNER_LEFT_NOTIFICATION.md` for full implementation details
 
 ### Phase 4: Testing
 - [ ] Test deletion flow end-to-end
