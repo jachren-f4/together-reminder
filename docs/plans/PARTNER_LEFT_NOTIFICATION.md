@@ -14,7 +14,7 @@ Store a one-time notification record when a user deletes their account. The part
 
 ### Phase 1: Database
 
-- [ ] Create `user_notifications` table in Supabase:
+- [x] Create `user_notifications` table in Supabase:
   ```sql
   CREATE TABLE user_notifications (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -34,7 +34,7 @@ Store a one-time notification record when a user deletes their account. The part
   - Changed from setting `user1_id`/`user2_id` to NULL (violated NOT NULL constraint)
   - Now deletes the couple row when user deletes account
 
-- [ ] Update `api/app/api/account/delete/route.ts` to notify partner:
+- [x] Update `api/app/api/account/delete/route.ts` to notify partner:
   - Before deleting couple, insert notification for partner:
     ```typescript
     if (partnerId) {
@@ -45,17 +45,17 @@ Store a one-time notification record when a user deletes their account. The part
     }
     ```
 
-- [ ] Create `GET /api/user/notifications` endpoint:
+- [x] Create `GET /api/user/notifications` endpoint:
   - Returns unread notifications for the authenticated user
   - Response: `{ notifications: [{ id, type, message, created_at }] }`
 
-- [ ] Create `POST /api/user/notifications/dismiss` endpoint:
+- [x] Create `POST /api/user/notifications/dismiss` endpoint:
   - Marks notification as read (sets `read_at`)
   - Body: `{ notificationId: string }`
 
 ### Phase 3: Flutter App
 
-- [ ] Create `NotificationCheckService` in `lib/services/`:
+- [x] Create `UserNotificationService` in `lib/services/`:
   ```dart
   class NotificationCheckService {
     Future<List<UserNotification>> checkForNotifications() async {
@@ -68,16 +68,15 @@ Store a one-time notification record when a user deletes their account. The part
   }
   ```
 
-- [ ] Create `PartnerLeftDialog` widget in `lib/widgets/`:
+- [x] Create `PartnerLeftDialog` widget in `lib/widgets/`:
   - Shows message: "Your partner has left Us 2.0"
   - Subtext: "You can pair with someone new to continue."
   - Single "OK" button that dismisses
 
-- [ ] Update app startup flow (in `main.dart` or `app_bootstrap_service.dart`):
-  - After user is authenticated and has no couple
-  - Check for `partner_left` notification
-  - If found, show `PartnerLeftDialog` before routing to pairing
-  - On dismiss, call API to mark as read
+- [x] Update app startup flow (in `pairing_screen.dart`):
+  - PairingScreen checks for `partner_left` notification in initState
+  - If found, shows `PartnerLeftDialog` before allowing pairing
+  - On dismiss, calls API to mark as read
 
 ### Phase 4: Edge Cases
 
@@ -101,17 +100,17 @@ Store a one-time notification record when a user deletes their account. The part
 
 ---
 
-## Files to Create/Modify
+## Files Created/Modified
 
 | File | Action |
 |------|--------|
-| Supabase | CREATE TABLE `user_notifications` |
-| `api/app/api/account/delete/route.ts` | MODIFY - Insert partner notification |
-| `api/app/api/user/notifications/route.ts` | CREATE - GET notifications |
-| `api/app/api/user/notifications/dismiss/route.ts` | CREATE - POST dismiss |
-| `app/lib/services/notification_check_service.dart` | CREATE |
-| `app/lib/widgets/partner_left_dialog.dart` | CREATE |
-| `app/lib/services/app_bootstrap_service.dart` | MODIFY - Check notifications |
+| Supabase | CREATED TABLE `user_notifications` |
+| `api/app/api/account/delete/route.ts` | MODIFIED - Insert partner notification |
+| `api/app/api/user/notifications/route.ts` | CREATED - GET notifications |
+| `api/app/api/user/notifications/dismiss/route.ts` | CREATED - POST dismiss |
+| `app/lib/services/user_notification_service.dart` | CREATED |
+| `app/lib/widgets/partner_left_dialog.dart` | CREATED |
+| `app/lib/screens/pairing_screen.dart` | MODIFIED - Check notifications on mount |
 
 ---
 
