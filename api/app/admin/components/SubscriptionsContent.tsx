@@ -25,6 +25,7 @@ interface SubscriptionTrend {
   newTrials: number;
   conversions: number;
   churned: number;
+  [key: string]: string | number;  // Index signature for chart compatibility
 }
 
 interface RecentCancellation {

@@ -14,10 +14,8 @@ import {
   Cell,
 } from 'recharts';
 
-interface LineChartData {
-  date: string;
-  [key: string]: string | number;
-}
+// Use a more permissive type for chart data compatibility
+type LineChartData = Record<string, string | number>;
 
 interface LineChartProps {
   data: LineChartData[];
@@ -77,6 +75,7 @@ interface PieChartData {
   name: string;
   value: number;
   color: string;
+  [key: string]: string | number;  // Index signature for recharts compatibility
 }
 
 interface DonutChartProps {
@@ -96,7 +95,7 @@ export function AdminDonutChart({ data, height = 300 }: DonutChartProps) {
           outerRadius={80}
           paddingAngle={2}
           dataKey="value"
-          label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+          label={({ name, percent }) => `${name} ${((percent ?? 0) * 100).toFixed(0)}%`}
           labelLine={false}
         >
           {data.map((entry, index) => (

@@ -22,6 +22,7 @@ interface DailyStats {
   newUsers: number;
   newCouples: number;
   activeUsers: number;
+  [key: string]: string | number;  // Index signature for chart compatibility
 }
 
 interface PairingStats {
