@@ -241,34 +241,10 @@ export const DELETE = withAuth(async (req, userId, email) => {
           [userId]
         );
 
-        // 3. Update couple: set this user's column to NULL
-        // If partner exists, they become unpaired. If both NULL, delete couple.
-        if (isPlayer1) {
-          await client.query(
-            `UPDATE couples SET user1_id = NULL WHERE id = $1`,
-            [coupleId]
-          );
-        } else {
-          await client.query(
-            `UPDATE couples SET user2_id = NULL WHERE id = $1`,
-            [coupleId]
-          );
-        }
-
-        // Check if both users are now NULL, if so delete the couple
-        const coupleCheck = await client.query(
-          `SELECT user1_id, user2_id FROM couples WHERE id = $1`,
-          [coupleId]
-        );
-
-        if (coupleCheck.rows.length > 0) {
-          const { user1_id, user2_id } = coupleCheck.rows[0];
-          if (!user1_id && !user2_id) {
-            // Both users gone, delete couple
-            await client.query(`DELETE FROM couples WHERE id = $1`, [coupleId]);
-            console.log(`[Account Delete] Deleted empty couple: ${coupleId}`);
-          }
-        }
+        // 3. Delete the couple entirely
+        // Partner will need to re-pair with someone else
+        await client.query(`DELETE FROM couples WHERE id = $1`, [coupleId]);
+        console.log(`[Account Delete] Deleted couple: ${coupleId}`);
       }
 
       // 4. Delete from users table (if exists)
