@@ -37,8 +37,8 @@ export async function OPTIONS() {
 }
 
 /**
- * Helper to safely delete from a table (ignores if table doesn't exist)
- * Uses SAVEPOINT to prevent transaction abort on missing tables
+ * Helper to safely delete from a table (ignores schema mismatches)
+ * Uses SAVEPOINT to prevent transaction abort on missing tables/columns
  */
 async function safeDelete(
   client: PoolClient,
@@ -56,8 +56,10 @@ async function safeDelete(
     // Rollback to savepoint to keep transaction valid
     await client.query(`ROLLBACK TO SAVEPOINT ${savepointName}`);
 
-    // Table might not exist - that's OK
-    if (e.code === '42P01') {
+    // Ignorable schema mismatch errors:
+    // 42P01 = undefined table
+    // 42703 = undefined column
+    if (e.code === '42P01' || e.code === '42703') {
       return 0;
     }
     // Re-throw other errors
@@ -197,8 +199,8 @@ export const DELETE = withAuth(async (req, userId, email) => {
           [coupleId]
         );
         await safeDelete(client,
-          `DELETE FROM love_point_transactions WHERE couple_id = $1`,
-          [coupleId]
+          `DELETE FROM love_point_transactions WHERE user_id = $1`,
+          [userId]
         );
         await safeDelete(client,
           `DELETE FROM user_love_points WHERE user_id = $1`,
