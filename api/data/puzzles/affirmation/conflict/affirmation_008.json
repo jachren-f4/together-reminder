@@ -1,0 +1,115 @@
+{
+  "quizId": "affirmation_008",
+  "title": "Staying Engaged",
+  "category": "conflict",
+  "branch": "conflict",
+  "description": "Explore how you stay present versus withdraw during conflict",
+  "magnet_id": 16,
+  "questions": [
+    {
+      "id": "affirmation_008_q1",
+      "text": "I can stay present during difficult conversations without shutting down.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Shutting down during conflict—stonewalling—leaves partners feeling abandoned. Staying present, even when it's hard, shows commitment to working through issues together.",
+          "framework": "gottman",
+          "whenDifferent": "If one partner shuts down, explore what triggers the withdrawal. Overwhelm? Self-protection? Understanding the cause helps address it with compassion.",
+          "whenSame": "Mutual ability to stay present creates complete conversations.",
+          "journalPrompt": "What makes you shut down during conflict? What helps you stay engaged?"
+        }
+      }
+    },
+    {
+      "id": "affirmation_008_q2",
+      "text": "I feel my partner's presence with me even during hard conversations.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Feeling your partner stay engaged during conflict—not checking out or walking away—provides security that you can work through things together.",
+          "framework": "eft",
+          "whenDifferent": "If one partner doesn't experience engagement, explore what disengagement looks like. Physical leaving? Emotional withdrawal? Identifying it helps address it.",
+          "whenSame": "Mutual engagement during conflict creates partnership in problem-solving.",
+          "journalPrompt": "How does your partner show engagement during conflict? When do they disengage?"
+        }
+      }
+    },
+    {
+      "id": "affirmation_008_q3",
+      "text": "When I feel overwhelmed, I can ask for a break without abandoning the conversation.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Strategic breaks differ from abandonment. Asking for a break with a plan to return shows care for both yourself and the conversation.",
+          "framework": "gottman",
+          "whenDifferent": "If breaks feel like abandonment to one partner, establish a break protocol. 'I need 20 minutes, then I'll come back' creates safety.",
+          "whenSame": "Shared ability to take healthy breaks without abandoning creates sustainable conflict.",
+          "journalPrompt": "How do you handle overwhelm during conflict? Do breaks help?"
+        }
+      }
+    },
+    {
+      "id": "affirmation_008_q4",
+      "text": "Neither of us uses silence as a weapon.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Silence can be a pause or a punishment. Using silence to punish—the cold shoulder, refusing to engage—creates insecurity and damages trust.",
+          "framework": "gottman",
+          "whenDifferent": "If one partner experiences weaponized silence, name it directly. The silent partner may not realize how their withdrawal is landing.",
+          "whenSame": "Mutual commitment to engaged silence (pausing) over punishing silence creates safety.",
+          "journalPrompt": "Is silence ever used as punishment between you? What does that feel like?"
+        }
+      }
+    },
+    {
+      "id": "affirmation_008_q5",
+      "text": "We can have hard conversations without one of us completely checking out.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Complete checkout during conflict leaves one partner alone with the issue. Staying present—even partially—shows the relationship matters more than discomfort.",
+          "framework": "eft",
+          "whenDifferent": "If one partner checks out, explore together what would help them stay. Shorter conversations? Different approach? Lower intensity?",
+          "whenSame": "Mutual presence during hard conversations enables resolution.",
+          "journalPrompt": "What helps both of you stay present during difficult conversations?"
+        }
+      }
+    }
+  ]
+}

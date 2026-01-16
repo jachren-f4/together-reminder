@@ -1,0 +1,69 @@
+{
+  "author": "Crossword Maker GPT",
+  "title": "AI-Built Puzzle",
+  "theme": "laundry",
+  "size": {
+    "rows": 9,
+    "cols": 7
+  },
+  "clues": {
+    "1": { "type": "text", "content": "Block", "arrow": "down", "target_index": 8 },
+    "2": { "type": "emoji", "content": "📰 wire", "arrow": "down", "target_index": 9 },
+    "3": { "type": "text", "content": "Braid", "arrow": "down", "target_index": 10 },
+    "4": { "type": "text", "content": "1000", "arrow": "down", "target_index": 11 },
+    "5": { "type": "emoji", "content": "⌨️ key", "arrow": "down", "target_index": 12 },
+    "6": { "type": "emoji", "content": "2️⃣", "arrow": "down", "target_index": 13 },
+    "7": { "type": "emoji", "content": "🧺", "arrow": "across", "target_index": 8 },
+    "8": { "type": "text", "content": "Mimic", "arrow": "across", "target_index": 15 },
+    "9": {
+      "across": { "type": "emoji", "content": "🧭 dir", "target_index": 19 },
+      "down": { "type": "text", "content": "Un-done", "target_index": 25 }
+    },
+    "10": { "type": "emoji", "content": "🏴‍☠️", "arrow": "across", "target_index": 22 },
+    "11": {
+      "across": { "type": "text", "content": "Alliance", "target_index": 24 },
+      "down": { "type": "text", "content": "Prelude", "target_index": 30 }
+    },
+    "12": { "type": "emoji", "content": "🚿 off", "arrow": "across", "target_index": 29 },
+    "13": { "type": "text", "content": "Essay", "arrow": "down", "target_index": 41 },
+    "14": {
+      "across": { "type": "text", "content": "Fuel", "target_index": 37 },
+      "down": { "type": "emoji", "content": "💪 core", "target_index": 43 }
+    },
+    "15": { "type": "text", "content": "Abbr.", "arrow": "across", "target_index": 43 },
+    "16": {
+      "across": { "type": "emoji", "content": "🅿️", "target_index": 48 },
+      "down": { "type": "text", "content": "Europs", "target_index": 54 }
+    },
+    "17": { "type": "emoji", "content": "🇧🇷", "arrow": "across", "target_index": 50 },
+    "18": {
+      "across": { "type": "emoji", "content": "🧊", "target_index": 53 },
+      "down": { "type": "emoji", "content": "🅰️", "target_index": 59 }
+    },
+    "19": { "type": "text", "content": "Lathered", "arrow": "across", "target_index": 57 }
+  },
+  "date": "2026-01-13",
+  "grid": [
+    ".", ".", ".", ".", ".", ".", ".",
+    ".", "B", "A", "S", "K", "E", "T",
+    ".", "A", "P", "E", ".", "N", "W",
+    ".", "R", ".", "N", "A", "T", "O",
+    ".", "R", "I", "N", "S", "E", ".",
+    ".", ".", "N", "I", "T", "R", "O",
+    ".", "A", "T", "T", "R", ".", "P",
+    ".", "B", "R", ".", "I", "C", "E",
+    ".", "S", "O", "A", "P", "E", "D"
+  ],
+  "gridnums": [
+    0, 1, 2, 3, 4, 5, 6,
+    7, 0, 0, 0, 0, 0, 0,
+    8, 0, 0, 0, 9, 0, 0,
+    10, 0, 11, 0, 0, 0, 0,
+    12, 0, 0, 0, 0, 0, 13,
+    0, 14, 0, 0, 0, 0, 0,
+    15, 0, 0, 0, 0, 16, 0,
+    17, 0, 0, 18, 0, 0, 0,
+    19, 0, 0, 0, 0, 0, 0
+  ],
+  "puzzleId": "puzzle_051"
+}

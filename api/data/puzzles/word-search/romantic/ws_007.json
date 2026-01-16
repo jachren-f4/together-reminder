@@ -1,0 +1,24 @@
+{
+  "puzzleId": "ws_007",
+  "title": "Romantic VII",
+  "theme": "romantic",
+  "size": {
+    "rows": 10,
+    "cols": 10
+  },
+  "grid": "EJMDQGNEYNLNISEHSURCYNGNOVXNSTESTALCYLPEVLOOPKEIRVEMVXAMBAIEYEYGSXAQNNPOFAITHHGIRPLETTERCNNHOANRAEYG",
+  "words": {
+    "LOVE": "34,DL",
+    "CRUSH": "19,L",
+    "CHAMPAGNE": "88,UL",
+    "EVENING": "39,D",
+    "GENTLE": "5,DL",
+    "POEM": "81,U",
+    "YEARN": "98,L",
+    "LETTER": "82,R",
+    "OCEAN": "24,DR",
+    "SPRING": "28,D",
+    "DINE": "3,DL",
+    "FAITH": "72,R"
+  }
+}

@@ -1,0 +1,109 @@
+{
+  "quizId": "quiz_006",
+  "title": "Repair Attempts",
+  "branch": "conflict",
+  "description": "Explore how you try to de-escalate and reconnect during conflict.",
+  "magnet_id": 16,
+  "questions": [
+    {
+      "id": "quiz_006_q1",
+      "text": "When conflict is escalating, I try to de-escalate by...",
+      "choices": [
+        "Using humor or lightness to break tension",
+        "Saying 'I'm sorry' or 'I didn't mean it that way'",
+        "Reaching out physically (touch, hand-hold)",
+        "Asking to start over or slow down"
+      ],
+      "category": "repair_style",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Repair attempts are bids to de-escalate conflict. Humor breaks tension; apologies soften; physical touch reconnects; restart requests reset. Successful repair attempts predict relationship success more than conflict frequency.",
+          "framework": "gottman",
+          "whenDifferent": "Different repair styles are all valid. Learn to recognize your partner's repair attempts even if different from yours.",
+          "whenSame": "Shared repair style makes de-escalation feel natural and coordinated.",
+          "journalPrompt": "How do you try to de-escalate when conflict is getting too intense?"
+        }
+      }
+    },
+    {
+      "id": "quiz_006_q2",
+      "text": "When my partner tries to de-escalate during conflict, I usually...",
+      "choices": [
+        "Appreciate it and respond positively",
+        "Sometimes miss it in the moment",
+        "Find it hard to shift gears that quickly",
+        "Depend on whether I'm still too upset"
+      ],
+      "category": "repair_reception",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Receiving repair attempts is as important as making them. Appreciators allow de-escalation; missers need awareness; gear-shift-strugglers need time; upset-dependers have conditions. Rejected repairs predict relationship failure.",
+          "framework": "gottman",
+          "whenDifferent": "Different reception patterns need different approaches. The misser needs help recognizing repairs; the gear-shift-struggler needs patience.",
+          "whenSame": "Shared repair reception creates predictable de-escalation.",
+          "journalPrompt": "How do you respond when your partner tries to make things better during conflict?"
+        }
+      }
+    },
+    {
+      "id": "quiz_006_q3",
+      "text": "A repair attempt that works well for me is when my partner...",
+      "choices": [
+        "Acknowledges my feelings are valid",
+        "Takes some responsibility",
+        "Shows affection or reaches for me",
+        "Uses humor to lighten things"
+      ],
+      "category": "repair_preferences",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Effective repairs vary by person. Validation works for some; responsibility-taking works for others; affection reconnects; humor lightens. Knowing what works for your partner helps you repair effectively.",
+          "framework": "gottman",
+          "whenDifferent": "Different repair preferences require different giving. Learn what actually works for your partner, not what works for you.",
+          "whenSame": "Shared repair preference makes successful repair more likely.",
+          "journalPrompt": "What repair attempt from your partner would help you de-escalate? Have you told them?"
+        }
+      }
+    },
+    {
+      "id": "quiz_006_q4",
+      "text": "The thing that makes it hard to accept repair attempts is...",
+      "choices": [
+        "I'm still too upset to shift",
+        "It feels like they're trying to end it too fast",
+        "I don't feel heard enough yet",
+        "I struggle to let go of my position"
+      ],
+      "category": "repair_barriers",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Barriers to accepting repair prevent de-escalation. Upset-stuckness needs time; too-fast-ending feels dismissive; not-heard-yet needs more listening; position-attachment is ego. Naming barriers helps address them.",
+          "framework": "gottman",
+          "whenDifferent": "Different barriers need different solutions. The not-heard-yet partner needs more listening before repair; the too-upset partner needs pause.",
+          "whenSame": "Shared barriers help you understand why repairs sometimes fail.",
+          "journalPrompt": "What makes it hard for you to accept your partner's repair attempts? What would help?"
+        }
+      }
+    },
+    {
+      "id": "quiz_006_q5",
+      "text": "I want us to get better at repair attempts because...",
+      "choices": [
+        "Conflict shouldn't damage our connection",
+        "I want us to recover quickly from disagreements",
+        "I don't like how bad things can get",
+        "Repair shows we value each other more than being right"
+      ],
+      "category": "repair_motivation",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Motivation for repair reflects relationship values. Connection-protectors prioritize relationship; quick-recoverers value efficiency; damage-limiters prevent harm; value-demonstrators show priorities. All motivations support repair skill development.",
+          "framework": "gottman",
+          "whenDifferent": "Different motivations can all drive improvement. What matters is commitment to better repair.",
+          "whenSame": "Shared motivation aligns your reasons for developing repair skills.",
+          "journalPrompt": "Why do you want to get better at repairing during conflict? What would be different?"
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Us 2.0 Analytics - Overview</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        .sidebar-link.active {
+            background-color: #4F46E5;
+            color: white;
+        }
+        .metric-card {
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        @media (min-width: 768px) {
+            .metric-card:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+            }
+        }
+        /* Mobile menu overlay */
+        .sidebar-overlay {
+            transition: opacity 0.3s;
+        }
+        .sidebar-panel {
+            transition: transform 0.3s;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <!-- Mobile Header -->
+    <header class="lg:hidden fixed top-0 left-0 right-0 bg-white border-b border-gray-200 z-40">
+        <div class="flex items-center justify-between px-4 py-3">
+            <button onclick="openSidebar()" class="p-2 -ml-2 text-gray-600">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+                </svg>
+            </button>
+            <h1 class="text-lg font-bold text-gray-900">Us 2.0 Analytics</h1>
+            <button class="p-2 -mr-2 text-gray-600" title="Refresh">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+                </svg>
+            </button>
+        </div>
+    </header>
+
+    <!-- Mobile Sidebar Overlay -->
+    <div id="sidebarOverlay" class="sidebar-overlay fixed inset-0 bg-black/50 z-50 lg:hidden hidden" onclick="closeSidebar()"></div>
+
+    <div class="flex">
+        <!-- Sidebar -->
+        <aside id="sidebar" class="sidebar-panel w-64 bg-white border-r border-gray-200 min-h-screen fixed z-50 -translate-x-full lg:translate-x-0">
+            <div class="p-6 border-b border-gray-200">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h1 class="text-xl font-bold text-gray-900">Us 2.0 Analytics</h1>
+                        <p class="text-sm text-gray-500 mt-1">Admin Dashboard</p>
+                    </div>
+                    <button onclick="closeSidebar()" class="lg:hidden p-2 -mr-2 text-gray-400 hover:text-gray-600">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+            <nav class="p-4 space-y-1">
+                <a href="admin-overview.html" class="sidebar-link active flex items-center px-4 py-3 text-sm font-medium rounded-lg">
+                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+                    </svg>
+                    Overview
+                </a>
+                <a href="#" class="sidebar-link flex items-center px-4 py-3 text-sm font-medium text-gray-600 rounded-lg hover:bg-gray-100">
+                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+                    </svg>
+                    Users
+                </a>
+                <a href="admin-retention.html" class="sidebar-link flex items-center px-4 py-3 text-sm font-medium text-gray-600 rounded-lg hover:bg-gray-100">
+                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+                    </svg>
+                    Retention
+                </a>
+                <a href="#" class="sidebar-link flex items-center px-4 py-3 text-sm font-medium text-gray-600 rounded-lg hover:bg-gray-100">
+                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                    </svg>
+                    Engagement
+                </a>
+                <a href="admin-subscriptions.html" class="sidebar-link flex items-center px-4 py-3 text-sm font-medium text-gray-600 rounded-lg hover:bg-gray-100">
+                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/>
+                    </svg>
+                    Subscriptions
+                </a>
+                <a href="#" class="sidebar-link flex items-center px-4 py-3 text-sm font-medium text-gray-600 rounded-lg hover:bg-gray-100">
+                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                    </svg>
+                    Real-time
+                </a>
+            </nav>
+            <div class="absolute bottom-0 left-0 right-0 p-4 border-t border-gray-200">
+                <div class="flex items-center">
+                    <div class="w-8 h-8 bg-indigo-100 rounded-full flex items-center justify-center">
+                        <span class="text-indigo-600 font-medium text-sm">JA</span>
+                    </div>
+                    <div class="ml-3">
+                        <p class="text-sm font-medium text-gray-700">joakim@example.com</p>
+                        <a href="admin-login.html" class="text-xs text-gray-500 hover:text-gray-700">Sign out</a>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="lg:ml-64 flex-1 p-4 lg:p-8 pt-20 lg:pt-8">
+            <!-- Header -->
+            <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-6 lg:mb-8">
+                <div>
+                    <h2 class="text-xl lg:text-2xl font-bold text-gray-900">Dashboard Overview</h2>
+                    <p class="text-gray-500 text-sm lg:text-base mt-1">Monitor your app's key metrics</p>
+                </div>
+                <!-- Time Range Picker - Responsive -->
+                <div class="flex flex-wrap items-center gap-2">
+                    <div class="flex bg-white rounded-lg border border-gray-200 p-1">
+                        <button class="px-3 lg:px-4 py-2 text-sm font-medium text-gray-500 hover:text-gray-700 rounded-md">1D</button>
+                        <button class="px-3 lg:px-4 py-2 text-sm font-medium text-gray-500 hover:text-gray-700 rounded-md">7D</button>
+                        <button class="px-3 lg:px-4 py-2 text-sm font-medium bg-indigo-600 text-white rounded-md">30D</button>
+                        <button class="px-3 lg:px-4 py-2 text-sm font-medium text-gray-500 hover:text-gray-700 rounded-md">90D</button>
+                    </div>
+                    <button class="hidden sm:flex items-center px-4 py-2 bg-white border border-gray-200 rounded-lg text-sm font-medium text-gray-600 hover:bg-gray-50">
+                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                        </svg>
+                        Custom
+                    </button>
+                    <button class="hidden lg:block p-2 bg-white border border-gray-200 rounded-lg text-gray-500 hover:bg-gray-50" title="Refresh">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Summary Cards - Row 1 -->
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-6 mb-4 lg:mb-6">
+                <div class="metric-card bg-white rounded-xl border border-gray-200 p-4 lg:p-6">
+                    <div class="flex items-center justify-between">
+                        <p class="text-sm font-medium text-gray-500">Total Users</p>
+                        <span class="flex items-center text-xs font-medium text-green-600 bg-green-50 px-2 py-1 rounded-full">
+                            <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M5.293 9.707a1 1 0 010-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 01-1.414 1.414L11 7.414V15a1 1 0 11-2 0V7.414L6.707 9.707a1 1 0 01-1.414 0z" clip-rule="evenodd"/>
+                            </svg>
+                            12%
+                        </span>
+                    </div>
+                    <p class="text-2xl lg:text-3xl font-bold text-gray-900 mt-2">2,847</p>
+                    <p class="text-xs lg:text-sm text-gray-500 mt-1">+342 this period</p>
+                </div>
+
+                <div class="metric-card bg-white rounded-xl border border-gray-200 p-4 lg:p-6">
+                    <div class="flex items-center justify-between">
+                        <p class="text-xs lg:text-sm font-medium text-gray-500">Total Couples</p>
+                        <span class="hidden sm:flex items-center text-xs font-medium text-green-600 bg-green-50 px-2 py-1 rounded-full">
+                            <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M5.293 9.707a1 1 0 010-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 01-1.414 1.414L11 7.414V15a1 1 0 11-2 0V7.414L6.707 9.707a1 1 0 01-1.414 0z" clip-rule="evenodd"/>
+                            </svg>
+                            8%
+                        </span>
+                    </div>
+                    <p class="text-2xl lg:text-3xl font-bold text-gray-900 mt-2">1,284</p>
+                    <p class="text-xs lg:text-sm text-gray-500 mt-1">+98 this period</p>
+                </div>
+
+                <div class="metric-card bg-white rounded-xl border border-gray-200 p-4 lg:p-6">
+                    <div class="flex items-center justify-between">
+                        <p class="text-xs lg:text-sm font-medium text-gray-500">DAU</p>
+                        <span class="hidden sm:flex items-center text-xs font-medium text-red-600 bg-red-50 px-2 py-1 rounded-full">
+                            <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M14.707 10.293a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 111.414-1.414L9 12.586V5a1 1 0 012 0v7.586l2.293-2.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                            </svg>
+                            3%
+                        </span>
+                    </div>
+                    <p class="text-2xl lg:text-3xl font-bold text-gray-900 mt-2">156</p>
+                    <p class="text-xs lg:text-sm text-gray-500 mt-1">Active today</p>
+                </div>
+
+                <div class="metric-card bg-white rounded-xl border border-gray-200 p-4 lg:p-6">
+                    <div class="flex items-center justify-between">
+                        <p class="text-xs lg:text-sm font-medium text-gray-500">WAU</p>
+                        <span class="hidden sm:flex items-center text-xs font-medium text-green-600 bg-green-50 px-2 py-1 rounded-full">
+                            <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M5.293 9.707a1 1 0 010-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 01-1.414 1.414L11 7.414V15a1 1 0 11-2 0V7.414L6.707 9.707a1 1 0 01-1.414 0z" clip-rule="evenodd"/>
+                            </svg>
+                            5%
+                        </span>
+                    </div>
+                    <p class="text-2xl lg:text-3xl font-bold text-gray-900 mt-2">487</p>
+                    <p class="text-xs lg:text-sm text-gray-500 mt-1">Last 7 days</p>
+                </div>
+            </div>
+
+            <!-- Summary Cards - Row 2 -->
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-6 mb-6 lg:mb-8">
+                <div class="metric-card bg-white rounded-xl border border-gray-200 p-4 lg:p-6">
+                    <div class="flex items-center justify-between">
+                        <p class="text-xs lg:text-sm font-medium text-gray-500">MAU</p>
+                    </div>
+                    <p class="text-2xl lg:text-3xl font-bold text-gray-900 mt-2">892</p>
+                    <p class="text-xs lg:text-sm text-gray-500 mt-1">Last 30 days</p>
+                </div>
+
+                <div class="metric-card bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl p-4 lg:p-6 text-white">
+                    <p class="text-xs lg:text-sm font-medium text-indigo-100">Active Subs</p>
+                    <p class="text-2xl lg:text-3xl font-bold mt-2">234</p>
+                    <p class="text-xs lg:text-sm text-indigo-200 mt-1">18.2% of couples</p>
+                </div>
+
+                <div class="metric-card bg-white rounded-xl border border-gray-200 p-4 lg:p-6">
+                    <p class="text-xs lg:text-sm font-medium text-gray-500">Trial Users</p>
+                    <p class="text-2xl lg:text-3xl font-bold text-gray-900 mt-2">89</p>
+                    <p class="text-xs lg:text-sm text-gray-500 mt-1">6.9% of couples</p>
+                </div>
+
+                <div class="metric-card bg-white rounded-xl border border-gray-200 p-4 lg:p-6">
+                    <p class="text-xs lg:text-sm font-medium text-gray-500">Total LP</p>
+                    <p class="text-2xl lg:text-3xl font-bold text-gray-900 mt-2">1.2M</p>
+                    <p class="text-xs lg:text-sm text-gray-500 mt-1">+45K this period</p>
+                </div>
+            </div>
+
+            <!-- Charts Row -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-6 mb-6 lg:mb-8">
+                <!-- New Users Chart -->
+                <div class="bg-white rounded-xl border border-gray-200 p-4 lg:p-6">
+                    <div class="flex items-center justify-between mb-4 lg:mb-6">
+                        <h3 class="text-base lg:text-lg font-semibold text-gray-900">New Users</h3>
+                        <span class="text-xs lg:text-sm text-gray-500">Last 30 days</span>
+                    </div>
+                    <canvas id="newUsersChart" height="200"></canvas>
+                </div>
+
+                <!-- New Couples Chart -->
+                <div class="bg-white rounded-xl border border-gray-200 p-4 lg:p-6">
+                    <div class="flex items-center justify-between mb-4 lg:mb-6">
+                        <h3 class="text-base lg:text-lg font-semibold text-gray-900">New Couples</h3>
+                        <span class="text-xs lg:text-sm text-gray-500">Last 30 days</span>
+                    </div>
+                    <canvas id="newCouplesChart" height="200"></canvas>
+                </div>
+            </div>
+
+            <!-- Games by Type & Pairing Conversion -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 lg:gap-6 mb-6 lg:mb-8">
+                <!-- Games by Type -->
+                <div class="lg:col-span-2 bg-white rounded-xl border border-gray-200 p-4 lg:p-6">
+                    <div class="flex items-center justify-between mb-4 lg:mb-6">
+                        <h3 class="text-base lg:text-lg font-semibold text-gray-900">Games Played by Type</h3>
+                        <span class="text-xs lg:text-sm text-gray-500">This period</span>
+                    </div>
+                    <canvas id="gamesByTypeChart" height="140"></canvas>
+                </div>
+
+                <!-- Pairing Conversion -->
+                <div class="bg-white rounded-xl border border-gray-200 p-4 lg:p-6">
+                    <h3 class="text-base lg:text-lg font-semibold text-gray-900 mb-4 lg:mb-6">Pairing Funnel</h3>
+                    <div class="space-y-4">
+                        <div>
+                            <div class="flex justify-between text-sm mb-1">
+                                <span class="text-gray-600">Invites Created</span>
+                                <span class="font-medium">1,847</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-3">
+                                <div class="bg-indigo-600 h-3 rounded-full" style="width: 100%"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between text-sm mb-1">
+                                <span class="text-gray-600">Invites Used</span>
+                                <span class="font-medium">1,284</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-3">
+                                <div class="bg-green-500 h-3 rounded-full" style="width: 69.5%"></div>
+                            </div>
+                        </div>
+                        <div class="pt-4 border-t border-gray-100">
+                            <div class="flex justify-between items-center">
+                                <span class="text-sm text-gray-600">Conversion Rate</span>
+                                <span class="text-2xl font-bold text-green-600">69.5%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Stats Row -->
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-6">
+                <div class="bg-white rounded-xl border border-gray-200 p-4 lg:p-6">
+                    <div class="flex items-center">
+                        <div class="p-2 lg:p-3 bg-blue-100 rounded-lg">
+                            <svg class="w-5 h-5 lg:w-6 lg:h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                            </svg>
+                        </div>
+                        <div class="ml-3 lg:ml-4">
+                            <p class="text-xs lg:text-sm text-gray-500">Quest Completion</p>
+                            <p class="text-lg lg:text-xl font-bold text-gray-900">78.4%</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl border border-gray-200 p-4 lg:p-6">
+                    <div class="flex items-center">
+                        <div class="p-2 lg:p-3 bg-green-100 rounded-lg">
+                            <svg class="w-5 h-5 lg:w-6 lg:h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/>
+                            </svg>
+                        </div>
+                        <div class="ml-3 lg:ml-4">
+                            <p class="text-xs lg:text-sm text-gray-500">D7 Retention</p>
+                            <p class="text-lg lg:text-xl font-bold text-gray-900">42.3%</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl border border-gray-200 p-4 lg:p-6">
+                    <div class="flex items-center">
+                        <div class="p-2 lg:p-3 bg-purple-100 rounded-lg">
+                            <svg class="w-5 h-5 lg:w-6 lg:h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                            </svg>
+                        </div>
+                        <div class="ml-3 lg:ml-4">
+                            <p class="text-xs lg:text-sm text-gray-500">Trial Conversion</p>
+                            <p class="text-lg lg:text-xl font-bold text-gray-900">24.6%</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl border border-gray-200 p-4 lg:p-6">
+                    <div class="flex items-center">
+                        <div class="p-2 lg:p-3 bg-orange-100 rounded-lg">
+                            <svg class="w-5 h-5 lg:w-6 lg:h-6 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
+                            </svg>
+                        </div>
+                        <div class="ml-3 lg:ml-4">
+                            <p class="text-xs lg:text-sm text-gray-500">Push Enabled</p>
+                            <p class="text-lg lg:text-xl font-bold text-gray-900">67.2%</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <div class="mt-6 lg:mt-8 text-center text-xs lg:text-sm text-gray-400 pb-4">
+                <p>Last updated: Jan 13, 2026 at 14:32 UTC</p>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Mobile sidebar toggle
+        function openSidebar() {
+            document.getElementById('sidebar').classList.remove('-translate-x-full');
+            document.getElementById('sidebarOverlay').classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeSidebar() {
+            document.getElementById('sidebar').classList.add('-translate-x-full');
+            document.getElementById('sidebarOverlay').classList.add('hidden');
+            document.body.style.overflow = '';
+        }
+    </script>
+
+    <script>
+        // New Users Chart
+        const newUsersCtx = document.getElementById('newUsersChart').getContext('2d');
+        new Chart(newUsersCtx, {
+            type: 'line',
+            data: {
+                labels: ['Dec 14', 'Dec 17', 'Dec 20', 'Dec 23', 'Dec 26', 'Dec 29', 'Jan 1', 'Jan 4', 'Jan 7', 'Jan 10', 'Jan 13'],
+                datasets: [{
+                    label: 'New Users',
+                    data: [12, 19, 15, 22, 18, 25, 32, 28, 35, 42, 38],
+                    borderColor: 'rgb(99, 102, 241)',
+                    backgroundColor: 'rgba(99, 102, 241, 0.1)',
+                    fill: true,
+                    tension: 0.4,
+                    pointRadius: 4,
+                    pointBackgroundColor: 'rgb(99, 102, 241)'
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { display: false }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: { color: 'rgba(0,0,0,0.05)' }
+                    },
+                    x: {
+                        grid: { display: false }
+                    }
+                }
+            }
+        });
+
+        // New Couples Chart
+        const newCouplesCtx = document.getElementById('newCouplesChart').getContext('2d');
+        new Chart(newCouplesCtx, {
+            type: 'line',
+            data: {
+                labels: ['Dec 14', 'Dec 17', 'Dec 20', 'Dec 23', 'Dec 26', 'Dec 29', 'Jan 1', 'Jan 4', 'Jan 7', 'Jan 10', 'Jan 13'],
+                datasets: [{
+                    label: 'New Couples',
+                    data: [5, 8, 7, 10, 9, 12, 15, 13, 17, 20, 18],
+                    borderColor: 'rgb(16, 185, 129)',
+                    backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                    fill: true,
+                    tension: 0.4,
+                    pointRadius: 4,
+                    pointBackgroundColor: 'rgb(16, 185, 129)'
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { display: false }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: { color: 'rgba(0,0,0,0.05)' }
+                    },
+                    x: {
+                        grid: { display: false }
+                    }
+                }
+            }
+        });
+
+        // Games by Type Chart
+        const gamesByTypeCtx = document.getElementById('gamesByTypeChart').getContext('2d');
+        new Chart(gamesByTypeCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Classic Quiz', 'Affirmation', 'You or Me', 'Linked', 'Word Search'],
+                datasets: [{
+                    label: 'Games Played',
+                    data: [1245, 1089, 876, 654, 432],
+                    backgroundColor: [
+                        'rgba(99, 102, 241, 0.8)',
+                        'rgba(168, 85, 247, 0.8)',
+                        'rgba(236, 72, 153, 0.8)',
+                        'rgba(14, 165, 233, 0.8)',
+                        'rgba(34, 197, 94, 0.8)'
+                    ],
+                    borderRadius: 8
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { display: false }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: { color: 'rgba(0,0,0,0.05)' }
+                    },
+                    x: {
+                        grid: { display: false }
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>

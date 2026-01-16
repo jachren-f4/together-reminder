@@ -1,0 +1,115 @@
+{
+  "quizId": "affirmation_011",
+  "title": "Lifestyle Expectations",
+  "category": "finances",
+  "branch": "finances",
+  "description": "Assess how aligned you feel about lifestyle and money",
+  "magnet_id": 15,
+  "questions": [
+    {
+      "id": "affirmation_011_q1",
+      "text": "I feel my partner and I have compatible lifestyle expectations.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Lifestyle expectations—where you live, how you travel, what you own—have financial implications. Compatible expectations reduce future conflict about spending.",
+          "framework": "financial_therapy",
+          "whenDifferent": "A compatibility gap deserves honest conversation. Different expectations aren't deal-breakers but need acknowledgment and negotiation.",
+          "whenSame": "Shared lifestyle expectations create alignment about what you're building toward financially.",
+          "journalPrompt": "What lifestyle do you envision for yourself? Does your partner share this vision?"
+        }
+      }
+    },
+    {
+      "id": "affirmation_011_q2",
+      "text": "I trust my partner doesn't expect me to financially overextend.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Trust that your partner won't pressure you to spend beyond your means creates safety. Partners who feel pressured to maintain certain lifestyles experience ongoing stress.",
+          "framework": "attachment_theory",
+          "whenDifferent": "If one partner feels pressure to overextend, discuss expectations openly. The other partner may not realize the stress they're creating.",
+          "whenSame": "Mutual trust about not overextending creates financial security.",
+          "journalPrompt": "Do you ever feel pressure to spend more than you're comfortable with?"
+        }
+      }
+    },
+    {
+      "id": "affirmation_011_q3",
+      "text": "I feel we can be happy without needing expensive things.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Belief that your happiness doesn't depend on expensive things reduces financial pressure. Couples who can enjoy simple pleasures together have more relationship resilience.",
+          "framework": "positive_psychology",
+          "whenDifferent": "Different beliefs about what's needed for happiness reflect different values. Explore what each partner truly needs to feel content.",
+          "whenSame": "Shared belief in happiness without expensive things creates financial flexibility.",
+          "journalPrompt": "What brings you happiness that doesn't cost much? Does your partner value the same things?"
+        }
+      }
+    },
+    {
+      "id": "affirmation_011_q4",
+      "text": "I believe we agree on what's worth spending extra money on.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Agreement on what's worth premium spending—quality food, experiences, comfort, convenience—reflects shared values about what matters.",
+          "framework": "financial_therapy",
+          "whenDifferent": "Different priorities about 'worth spending on' often reflect different upbringings or values. Neither is wrong; both need respect.",
+          "whenSame": "Shared priorities about where to spend extra create natural alignment in financial decisions.",
+          "journalPrompt": "What's worth spending extra money on to you? Where do you prefer to economize?"
+        }
+      }
+    },
+    {
+      "id": "affirmation_011_q5",
+      "text": "I feel comfortable with the lifestyle we can realistically afford.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Comfort with your realistic lifestyle—not aspirational or inflated—creates contentment. Chronic dissatisfaction with what's affordable breeds resentment.",
+          "framework": "positive_psychology",
+          "whenDifferent": "If one partner is less comfortable with your realistic lifestyle, explore what feels lacking. Is it about circumstances or expectations?",
+          "whenSame": "Shared comfort with your realistic lifestyle creates contentment and reduces financial pressure.",
+          "journalPrompt": "Are you content with the lifestyle you can actually afford? What would help?"
+        }
+      }
+    }
+  ]
+}

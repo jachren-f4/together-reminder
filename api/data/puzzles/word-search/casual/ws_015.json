@@ -1,0 +1,24 @@
+{
+  "puzzleId": "ws_015",
+  "title": "Casual XV",
+  "theme": "casual",
+  "size": {
+    "rows": 10,
+    "cols": 10
+  },
+  "grid": "OQOUAHHEENYSFFGHGIQIILHTVOFUXCSRATSLOLAEKFGZEVFDCLSRHSLLIHCFYINGIGGLESZEFASXEBDZONHZPIVGZKCDHCOUCHYO",
+  "words": {
+    "SAFE": "74,L",
+    "LAUGH": "49,UL",
+    "GOOD": "14,DR",
+    "COUCH": "93,R",
+    "CHILL": "58,L",
+    "STARS": "34,L",
+    "COZY": "90,U",
+    "NAP": "62,DR",
+    "SELFIE": "53,UR",
+    "FRIEND": "41,D",
+    "GIGGLES": "63,R",
+    "NICE": "9,D"
+  }
+}

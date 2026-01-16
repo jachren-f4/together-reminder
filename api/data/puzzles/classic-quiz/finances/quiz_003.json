@@ -1,0 +1,113 @@
+{
+  "quizId": "quiz_003",
+  "title": "Generosity & Giving",
+  "branch": "finances",
+  "description": "Explore how you think about giving—to each other, to others, and what generosity means to you.",
+  "magnet_id": 15,
+  "questions": [
+    {
+      "id": "quiz_003_q1",
+      "text": "When it comes to giving gifts, I tend to...",
+      "choices": [
+        "Put a lot of thought into finding the perfect thing",
+        "Keep it simple and practical",
+        "Prefer experiences over physical gifts",
+        "Give spontaneously when something feels right"
+      ],
+      "category": "generosity",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Gift-giving styles often reflect love languages and values. Thoughtful givers show love through effort; practical givers show love through usefulness; experience-givers prioritize memories; spontaneous givers follow intuition. Mismatched expectations can lead to disappointment on both sides.",
+          "framework": "love_languages",
+          "whenDifferent": "The thoughtful giver may feel the practical giver doesn't care; the practical giver may feel pressured by elaborate expectations. Share what gifts mean to you—it's about the meaning, not the price tag.",
+          "whenSame": "Matched gift styles make celebrations easier. You'll naturally give in ways that land well.",
+          "journalPrompt": "What's the best gift you've ever received? What made it special—the item or the meaning behind it?"
+        }
+      }
+    },
+    {
+      "id": "quiz_003_q2",
+      "text": "When one of us wants to spend money on the other, I believe...",
+      "choices": [
+        "It should feel balanced over time",
+        "Whoever has more should give more freely",
+        "We shouldn't keep score",
+        "It depends on what we're each comfortable with"
+      ],
+      "category": "financial_values",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Beliefs about reciprocity in giving reveal deeper values about fairness, generosity, and partnership. Some need balance to feel equal; others give freely without tracking. Unspoken expectations create resentment.",
+          "framework": "financial_therapy",
+          "whenDifferent": "The balance-seeker may feel taken advantage of; the no-score-keeper may feel the relationship is being transactionalized. Name your belief and understand your partner's.",
+          "whenSame": "Shared beliefs make giving feel natural. But check in—circumstances change, and so might feelings about balance.",
+          "journalPrompt": "Do you keep track of who's given more? How does imbalance (real or perceived) make you feel?"
+        }
+      }
+    },
+    {
+      "id": "quiz_003_q3",
+      "text": "When it comes to giving to family or friends, I feel...",
+      "choices": [
+        "We should be generous when we can",
+        "We need to take care of ourselves first",
+        "It depends on the situation and who's asking",
+        "We should discuss it together before committing"
+      ],
+      "category": "generosity",
+      "metadata": {
+        "dimension": "conflict_approach",
+        "poleMapping": ["right", "left", "neutral", "right"],
+        "therapeutic": {
+          "rationale": "Generosity to others outside the relationship can create tension—especially when one partner feels the other is overgiving or withholding. Values about family obligation, friendship, and boundaries all play in.",
+          "framework": "gottman",
+          "whenDifferent": "The generous giver may feel the cautious partner is selfish; the cautious partner may feel the giver doesn't prioritize them. Both are usually trying to protect something important.",
+          "whenSame": "Shared giving values prevent a common conflict. You'll naturally agree on when to help and when to hold back.",
+          "journalPrompt": "Has giving to others ever caused tension in a relationship? What was really at stake?"
+        }
+      }
+    },
+    {
+      "id": "quiz_003_q4",
+      "text": "The most meaningful way to be generous with my partner is...",
+      "choices": [
+        "Giving my time and attention",
+        "Surprising them with thoughtful gestures",
+        "Supporting their goals and dreams",
+        "Being there when things are hard"
+      ],
+      "category": "generosity",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Generosity isn't just about money—it's about what you give of yourself. Knowing how your partner experiences generosity helps you give in ways that actually land.",
+          "framework": "love_languages",
+          "whenDifferent": "You may be generous in ways your partner doesn't fully register. The time-giver may not realize their partner needs more surprise gestures. Ask: 'How do you most feel my generosity?'",
+          "whenSame": "Matched generosity values mean you'll naturally give what each other treasures. Lean into it.",
+          "journalPrompt": "When has your partner been generous with you in a way that really touched you? Did you tell them?"
+        }
+      }
+    },
+    {
+      "id": "quiz_003_q5",
+      "text": "When we disagree about whether to spend on something, I'd want us to...",
+      "choices": [
+        "Talk it through until we're both comfortable",
+        "Defer to whoever feels more strongly",
+        "Find a compromise that works for both",
+        "Take time to think before deciding together"
+      ],
+      "category": "financial_decisions",
+      "metadata": {
+        "dimension": "conflict_approach",
+        "poleMapping": ["right", "neutral", "right", "left"],
+        "therapeutic": {
+          "rationale": "How you navigate spending disagreements predicts how you'll handle financial conflict generally. This is less about the money and more about how you make decisions together when you don't agree.",
+          "framework": "gottman",
+          "whenDifferent": "Different conflict styles need bridging. The talk-it-through person may feel the defer-to-one approach avoids real conversation; the compromise-seeker may get frustrated by endless discussion. Name your style.",
+          "whenSame": "Matched decision styles make disagreements smoother—though any style has pitfalls. Know your shared tendency's blind spots.",
+          "journalPrompt": "Think of a recent disagreement about spending. How did you resolve it? What would you do differently?"
+        }
+      }
+    }
+  ]
+}

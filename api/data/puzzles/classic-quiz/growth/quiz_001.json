@@ -1,82 +1,111 @@
 {
   "quizId": "quiz_001",
-  "title": "Growth Quiz 1",
+  "title": "Supporting Each Other's Goals",
   "branch": "growth",
+  "description": "Explore how you support each other's personal growth and aspirations.",
+  "magnet_id": 9,
   "questions": [
     {
       "id": "quiz_001_q1",
-      "text": "What's my biggest personal goal right now?",
+      "text": "When it comes to supporting my partner's goals, I naturally tend to...",
       "choices": [
-        "Career advancement",
-        "Health and wellness",
-        "Creative pursuits",
-        "Financial stability"
+        "Offer encouragement and believe in them",
+        "Help with practical steps and actions",
+        "Give them space to figure it out",
+        "Join them and do it together"
       ],
-      "category": "personal_goals",
+      "category": "support_style",
       "metadata": {
-        "valueCategory": "work_life_balance"
+        "dimension": "support_style",
+        "poleMapping": ["left", "right", "left", "right"],
+        "therapeutic": {
+          "rationale": "How we support our partner's goals reflects our love language and attachment style. Encouragers offer emotional support; helpers offer practical action; space-givers respect autonomy; joiners create shared experience. Giving the wrong kind of support can feel unsupportive despite good intentions.",
+          "framework": "love_languages",
+          "whenDifferent": "Different support styles can frustrate. The encouragement-wanter may feel the helper is trying to take over; the space-needer may feel the joiner is intruding. Ask: 'What kind of support would help you most?'",
+          "whenSame": "Shared support styles mean you'll naturally give each other what works. You understand because it's what you'd want too.",
+          "journalPrompt": "How do you naturally support your partner? Is that what they actually need?"
+        }
       }
     },
     {
       "id": "quiz_001_q2",
-      "text": "How has our relationship helped me grow?",
+      "text": "The best way my partner can support my personal goals is by...",
       "choices": [
-        "Made me more patient",
-        "Helped me communicate better",
-        "Made me more confident",
-        "Taught me to be vulnerable"
+        "Believing in me and saying so",
+        "Helping me stay accountable",
+        "Giving me time and space to work on them",
+        "Being interested and asking about my progress"
       ],
-      "category": "relationship_growth"
+      "category": "support_needs",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Knowing what support you need—and communicating it—prevents the common pattern of partners trying hard but missing the mark. Belief-needers want faith; accountability-needers want structure; space-needers want autonomy; interest-needers want engagement.",
+          "framework": "gottman",
+          "whenDifferent": "Different support needs require adaptation. Your partner may not intuitively know what you need—tell them explicitly.",
+          "whenSame": "Matched support needs make helping each other natural. You instinctively give what your partner wants.",
+          "journalPrompt": "What support from your partner would most help your goals? Have you asked for it?"
+        }
+      }
     },
     {
       "id": "quiz_001_q3",
-      "text": "What's something I want to learn or try?",
+      "text": "When my partner is working toward something important, I feel...",
       "choices": [
-        "A new skill or hobby",
-        "Travel to new places",
-        "Further education",
-        "A physical challenge"
+        "Proud and excited for them",
+        "Eager to help however I can",
+        "Happy to give them the space they need",
+        "A little left out if I'm not involved"
       ],
-      "category": "aspirations",
+      "category": "partner_goals",
       "metadata": {
-        "valueCategory": "adventure_growth"
+        "therapeutic": {
+          "rationale": "How we feel about our partner's independent pursuits reveals attachment patterns. Pride shows secure support; eagerness shows involvement desire; space-giving shows respect for autonomy; feeling left out shows connection needs. All are understandable reactions.",
+          "framework": "attachment_theory",
+          "whenDifferent": "The left-out feeler may need more inclusion; the space-giver may need to remember to connect. Balance supporting independence with maintaining connection.",
+          "whenSame": "Shared feelings about partner goals create aligned expectations about involvement during growth pursuits.",
+          "journalPrompt": "How do you feel when your partner is focused on their own goals? What do you need during those times?"
+        }
       }
     },
     {
       "id": "quiz_001_q4",
-      "text": "What area of my life am I working to improve?",
+      "text": "In our relationship, personal goals should be...",
       "choices": [
-        "Work-life balance",
-        "Mental health",
-        "Physical health",
-        "Relationships with others"
+        "Fully supported even if they don't involve us",
+        "Balanced with time for the relationship",
+        "Shared when possible, individual when needed",
+        "Discussed together before committing"
       ],
-      "category": "self_improvement",
+      "category": "goal_philosophy",
       "metadata": {
-        "valueCategory": "work_life_balance"
+        "therapeutic": {
+          "rationale": "Beliefs about individual vs. couple goals shape how you navigate growth. Full-supporters prioritize individual flourishing; balancers protect relationship time; sharers seek overlap; discussers want partnership in decisions. Misaligned beliefs cause tension.",
+          "framework": "gottman",
+          "whenDifferent": "Different philosophies need negotiation. The full-supporter may feel the discusser is controlling; the discusser may feel the full-supporter is disconnected. Find your shared approach.",
+          "whenSame": "Shared philosophy about personal goals makes navigating individual growth easier.",
+          "journalPrompt": "What role should individual goals play in your relationship? How do you balance self and us?"
+        }
       }
     },
     {
       "id": "quiz_001_q5",
-      "text": "How do I prefer to receive support for my goals?",
+      "text": "I'd love for us to grow together by...",
       "choices": [
-        "Encouragement and cheerleading",
-        "Practical help and actions",
-        "Space to figure it out",
-        "Join me in the journey"
+        "Pursuing shared goals and dreams",
+        "Supporting each other's individual paths",
+        "Learning and trying new things together",
+        "Becoming better partners to each other"
       ],
-      "category": "support_style",
+      "category": "growth_vision",
       "metadata": {
-        "loveLanguage": true,
-        "languageMapping": [
-          "words_of_affirmation",
-          "acts_of_service",
-          null,
-          "quality_time"
-        ]
+        "therapeutic": {
+          "rationale": "Growth visions reveal what you want your relationship to become. Shared-goal seekers want joint pursuits; individual-supporters want mutual flourishing; learners want novelty; better-partners want relationship improvement. Naming your vision helps you pursue it.",
+          "framework": "positive_psychology",
+          "whenDifferent": "Different growth visions can all be pursued—they're not mutually exclusive. Discuss which feels most important right now.",
+          "whenSame": "Shared growth vision aligns your development as a couple. You're aiming for the same future.",
+          "journalPrompt": "What does growing together look like to you? What would make your relationship even better?"
+        }
       }
     }
-  ],
-  "description": "Explore how you grow and evolve together as partners.",
-  "magnet_id": 9
+  ]
 }

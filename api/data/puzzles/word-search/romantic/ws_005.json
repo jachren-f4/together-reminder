@@ -1,0 +1,24 @@
+{
+  "puzzleId": "ws_005",
+  "title": "Romantic V",
+  "theme": "romantic",
+  "size": {
+    "rows": 10,
+    "cols": 10
+  },
+  "grid": "ZTREASUREWSUGNTEACEATHOECFANRZRTWNNRMPILOTAXITGKSTLDANGELIERLXGCRFKEDACRUSHADNIEETAMLUOSIHCAPTIVATEW",
+  "words": {
+    "ANGEL": "52,R",
+    "DESIRE": "68,U",
+    "CARING": "17,DL",
+    "GENTLE": "12,DR",
+    "SOULMATE": "87,L",
+    "TREASURE": "1,R",
+    "WINK": "99,UL",
+    "CAPTIVATE": "90,R",
+    "DANCE": "51,UR",
+    "STROLL": "10,D",
+    "HEART": "89,U",
+    "CRUSH": "70,R"
+  }
+}

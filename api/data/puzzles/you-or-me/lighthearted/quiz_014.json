@@ -1,0 +1,39 @@
+{
+  "quizId": "quiz_014",
+  "title": "Weather Moods",
+  "branch": "lighthearted",
+  "questions": [
+    {
+      "id": "quiz_014_q1",
+      "category": "preferences",
+      "prompt": "Who loves",
+      "content": "Rainy days more"
+    },
+    {
+      "id": "quiz_014_q2",
+      "category": "personality",
+      "prompt": "Who is more",
+      "content": "Energized by sunny weather"
+    },
+    {
+      "id": "quiz_014_q3",
+      "category": "habits",
+      "prompt": "Who would",
+      "content": "Want to go outside right after it snows"
+    },
+    {
+      "id": "quiz_014_q4",
+      "category": "preferences",
+      "prompt": "Who is more",
+      "content": "Affected by gloomy weather"
+    },
+    {
+      "id": "quiz_014_q5",
+      "category": "leisure",
+      "prompt": "Who would",
+      "content": "Rather cuddle during a thunderstorm"
+    }
+  ],
+  "description": "Sunshine or rain? Discover how weather affects your moods!",
+  "magnet_id": 1
+}

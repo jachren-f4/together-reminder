@@ -1,0 +1,109 @@
+{
+  "quizId": "quiz_014",
+  "title": "Splurges & Treats",
+  "branch": "finances",
+  "description": "Explore how you think about indulging and treating yourselves.",
+  "magnet_id": 17,
+  "questions": [
+    {
+      "id": "quiz_014_q1",
+      "text": "When it comes to splurging, I tend to...",
+      "choices": [
+        "Rarely do it—I feel guilty spending on extras",
+        "Do it occasionally when something feels special",
+        "Enjoy it—life's too short not to",
+        "Only when I feel we've earned it"
+      ],
+      "category": "spending_style",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Splurging tendencies reveal our relationship with pleasure and guilt. Rarely-splurgers feel guilty; occasional types balance; enjoyers embrace pleasure; earners need justification. Partners often have different comfort with indulgence.",
+          "framework": "financial_therapy",
+          "whenDifferent": "The enjoyer may feel the rarely-splurger is depriving themselves; the rarely-splurger may feel the enjoyer is irresponsible. Both are managing different emotional relationships with spending.",
+          "whenSame": "Shared splurging tendencies mean you'll naturally agree on when indulgence is okay.",
+          "journalPrompt": "How do you feel after you splurge on something? Satisfied? Guilty? Where does that feeling come from?"
+        }
+      }
+    },
+    {
+      "id": "quiz_014_q2",
+      "text": "The things worth splurging on for me are...",
+      "choices": [
+        "Experiences and travel",
+        "Quality items that last",
+        "Food and dining",
+        "Hobbies and personal interests"
+      ],
+      "category": "spending_priorities",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Splurge categories reveal joy sources. Experience-lovers value memories; quality-buyers value durability; food-lovers value pleasure; hobby-spenders value passion. Knowing your partner's joy-spending helps you support it.",
+          "framework": "love_languages",
+          "whenDifferent": "Different splurge values may feel like the other doesn't understand what brings you joy. Share why these things matter to you—not just that they do.",
+          "whenSame": "Shared splurge priorities make treats feel mutual. You naturally want to indulge in the same ways.",
+          "journalPrompt": "What's something you love splurging on? What makes it worth it to you?"
+        }
+      }
+    },
+    {
+      "id": "quiz_014_q3",
+      "text": "When my partner wants to splurge on something, I usually...",
+      "choices": [
+        "Support it—their joy matters to me",
+        "Think about whether we can afford it",
+        "Want to understand why it matters to them",
+        "Feel fine as long as it's their money"
+      ],
+      "category": "spending_attitudes",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Reactions to partner splurging reveal trust, boundaries, and values. Supporters prioritize joy; affordability-checkers prioritize security; understanders seek connection; autonomy-granters respect independence. These reactions shape money dynamics.",
+          "framework": "gottman",
+          "whenDifferent": "The supporter may feel the affordability-checker is controlling; the affordability-checker may feel the supporter doesn't take finances seriously. Both care—about different things.",
+          "whenSame": "Shared reactions mean you'll respond to each other's splurges similarly.",
+          "journalPrompt": "How do you feel when your partner wants to spend on something you wouldn't? What do you do with that feeling?"
+        }
+      }
+    },
+    {
+      "id": "quiz_014_q4",
+      "text": "Treating each other is something I think we should...",
+      "choices": [
+        "Do often—it shows love and appreciation",
+        "Do occasionally to keep it special",
+        "Not worry about—we share everything anyway",
+        "Balance—sometimes me, sometimes you"
+      ],
+      "category": "treating",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Treating philosophy reveals love expression values. Frequent-treaters show love through gifts; occasional-treaters preserve meaning; sharers see no distinction; balancers track reciprocity. Partners may have different philosophies.",
+          "framework": "love_languages",
+          "whenDifferent": "The frequent-treater may feel the occasional-treater doesn't show love; the occasional-treater may feel the frequent-treater is excessive. Understand what treating means to each of you.",
+          "whenSame": "Shared treating philosophy makes gift-giving easy and meaningful.",
+          "journalPrompt": "What does it mean to you when your partner treats you? What does it mean when you treat them?"
+        }
+      }
+    },
+    {
+      "id": "quiz_014_q5",
+      "text": "After a splurge, I typically feel...",
+      "choices": [
+        "Happy—it was worth it",
+        "A bit of buyer's remorse",
+        "Depends on what it was",
+        "Ready to get back on track financially"
+      ],
+      "category": "spending_emotions",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Post-splurge feelings reveal emotional patterns. Happy-feelers have peace with pleasure; remorse-feelers have guilt; depends-types are context-driven; back-on-trackers feel temporary deviation. These patterns affect enjoyment.",
+          "framework": "financial_therapy",
+          "whenDifferent": "The happy-feeler may not understand the remorse-feeler's guilt; the remorse-feeler may envy the happy-feeler's peace. Share what's behind your post-splurge feelings.",
+          "whenSame": "Shared post-splurge feelings mean you process indulgence similarly.",
+          "journalPrompt": "What do you feel after you buy something special for yourself? What would help you feel better about it?"
+        }
+      }
+    }
+  ]
+}

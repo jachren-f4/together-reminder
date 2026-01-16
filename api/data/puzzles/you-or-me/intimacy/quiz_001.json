@@ -1,0 +1,39 @@
+{
+  "quizId": "quiz_001",
+  "title": "Affection Styles",
+  "branch": "intimacy",
+  "questions": [
+    {
+      "id": "quiz_001_q1",
+      "category": "preferences",
+      "prompt": "Who is more likely to...",
+      "content": "Reach for the other's hand while walking"
+    },
+    {
+      "id": "quiz_001_q2",
+      "category": "habits",
+      "prompt": "Who would...",
+      "content": "Initiate a spontaneous hug"
+    },
+    {
+      "id": "quiz_001_q3",
+      "category": "personality",
+      "prompt": "Who is more...",
+      "content": "Comfortable with public displays of affection"
+    },
+    {
+      "id": "quiz_001_q4",
+      "category": "preferences",
+      "prompt": "Who prefers...",
+      "content": "Cuddling on the couch over sitting side by side"
+    },
+    {
+      "id": "quiz_001_q5",
+      "category": "habits",
+      "prompt": "Who is more likely to...",
+      "content": "Give a kiss goodbye even when in a rush"
+    }
+  ],
+  "description": "Discover how you each like to show and receive physical affection!",
+  "magnet_id": 10
+}

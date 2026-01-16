@@ -1,0 +1,39 @@
+{
+  "quizId": "quiz_013",
+  "title": "Little Moments",
+  "branch": "connection",
+  "questions": [
+    {
+      "id": "quiz_013_q1",
+      "category": "connection",
+      "prompt": "Who notices more...",
+      "content": "The small everyday moments together"
+    },
+    {
+      "id": "quiz_013_q2",
+      "category": "expression",
+      "prompt": "Who is more likely to...",
+      "content": "Point out something beautiful to share"
+    },
+    {
+      "id": "quiz_013_q3",
+      "category": "needs",
+      "prompt": "Who treasures more...",
+      "content": "Quiet moments of just being together"
+    },
+    {
+      "id": "quiz_013_q4",
+      "category": "communication",
+      "prompt": "Who is more...",
+      "content": "Likely to pause and appreciate a good moment"
+    },
+    {
+      "id": "quiz_013_q5",
+      "category": "vulnerability",
+      "prompt": "Who would...",
+      "content": "Remember the little details about your day"
+    }
+  ],
+  "description": "It's the little things that matter most—explore how you cherish them!",
+  "magnet_id": 5
+}

@@ -1,59 +1,109 @@
 {
   "quizId": "quiz_005",
-  "title": "Growth Quiz 5",
+  "title": "Celebrating Wins",
   "branch": "growth",
+  "description": "Explore how you acknowledge and celebrate each other's achievements.",
+  "magnet_id": 9,
   "questions": [
     {
       "id": "quiz_005_q1",
-      "text": "What personal goal am I most focused on right now?",
+      "text": "When something good happens to me, I want you to...",
       "choices": [
-        "Career advancement or professional growth",
-        "Health and fitness improvement",
-        "Developing a skill or hobby",
-        "Emotional or mental health"      ],
-      "category": "growth"
+        "Celebrate enthusiastically with me",
+        "Listen and share in my happiness",
+        "Ask questions and show genuine interest",
+        "Acknowledge it warmly but simply"
+      ],
+      "category": "celebration_needs",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "How we want our wins celebrated reflects our love language and validation needs. Enthusiastic celebrators want energy; listeners want presence; questioners want engagement; acknowledgers want recognition. Gottman's research shows how partners respond to good news is crucial for relationship health.",
+          "framework": "gottman",
+          "whenDifferent": "Different celebration needs require learning your partner's preferred response. The enthusiast may overwhelm the simple-acknowledger; adjust to what your partner actually wants.",
+          "whenSame": "Matched celebration preferences mean you'll naturally give each other what you need when good things happen.",
+          "journalPrompt": "How do you want your partner to respond when good things happen to you? Have you told them?"
+        }
+      }
     },
     {
       "id": "quiz_005_q2",
-      "text": "What dream have I not shared with many people?",
+      "text": "When you achieve something, I naturally...",
       "choices": [
-        "A career change or business idea",
-        "A creative project or passion",
-        "A personal transformation goal",
-        "A place I want to live or travel"      ],
-      "category": "growth"
+        "Feel genuinely happy for you",
+        "Want to celebrate and mark the moment",
+        "Think about how I can support more of this",
+        "Feel proud to be your partner"
+      ],
+      "category": "partner_success_response",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Responses to partner success reflect attachment and relationship orientation. Genuine happiness shows secure attachment; celebration shows expressiveness; future-support shows investment; pride shows positive identification with partner. All are healthy responses.",
+          "framework": "gottman",
+          "whenDifferent": "Different responses to partner success are all valid expressions of care. What matters is that positive response is present.",
+          "whenSame": "Matched responses to partner success create reciprocal joy when good things happen.",
+          "journalPrompt": "How do you feel when your partner succeeds? Does your partner know that's how you feel?"
+        }
+      }
     },
     {
       "id": "quiz_005_q3",
-      "text": "What area of my life do I most want to develop?",
+      "text": "For me, what makes a celebration meaningful is...",
       "choices": [
-        "Professional skills and career",
-        "Personal relationships and social life",
-        "Creative expression and hobbies",
-        "Physical health and wellness"      ],
-      "category": "growth"
+        "That you're genuinely present and happy",
+        "Making it a special occasion",
+        "Your words of acknowledgment",
+        "Sharing the moment together, however simple"
+      ],
+      "category": "celebration_meaning",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "What makes celebration meaningful reveals core emotional needs. Presence-seekers value attention; occasion-makers value ritual; word-seekers value verbal affirmation; sharers value togetherness. Knowing this helps partners celebrate in ways that truly land.",
+          "framework": "love_languages",
+          "whenDifferent": "Different celebration values require learning what resonates for your partner. The elaborate celebration may miss the mark if your partner just wants your presence.",
+          "whenSame": "Shared celebration values mean your instinctive way of celebrating will match what your partner actually wants.",
+          "journalPrompt": "What makes a celebration feel meaningful to you? Is that what you usually receive?"
+        }
+      }
     },
     {
       "id": "quiz_005_q4",
-      "text": "What's holding me back from pursuing a dream?",
+      "text": "I wish we celebrated more often when...",
       "choices": [
-        "Fear of failure or judgment",
-        "Lack of time or resources",
-        "Not knowing where to start",
-        "Competing priorities"      ],
-      "category": "growth"
+        "Small wins happen, not just big ones",
+        "We overcome something difficult together",
+        "One of us grows or improves",
+        "We reach milestones as a couple"
+      ],
+      "category": "celebration_gaps",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Celebration gaps reveal what's being under-acknowledged. Small wins need daily recognition; overcoming difficulty deserves honor; growth needs encouragement; milestones need marking. Expanding what you celebrate strengthens the relationship.",
+          "framework": "positive_psychology",
+          "whenDifferent": "Different celebration gaps point to different kinds of acknowledgment you each need more of. This is valuable data for improving how you appreciate each other.",
+          "whenSame": "Shared celebration gaps create clear direction for expanding how you acknowledge each other.",
+          "journalPrompt": "What would you like to celebrate more often in your relationship? What's stopping you?"
+        }
+      }
     },
     {
       "id": "quiz_005_q5",
-      "text": "How do I define success for myself?",
+      "text": "Celebrating wins together helps us...",
       "choices": [
-        "Achieving professional recognition",
-        "Having meaningful relationships",
-        "Making a positive impact on others",
-        "Personal happiness and fulfillment"      ],
-      "category": "values"
+        "Build a positive culture in our relationship",
+        "Feel more connected and appreciative",
+        "Stay motivated to keep growing",
+        "Remember that we're on each other's team"
+      ],
+      "category": "celebration_value",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Understanding celebration's value reinforces the behavior. Positive culture prevents negativity cycles; connection deepens bonds; motivation sustains effort; team-feeling reinforces partnership. Research shows couples who celebrate well have higher satisfaction.",
+          "framework": "gottman",
+          "whenDifferent": "All these benefits are real. Celebration provides multiple forms of relationship nourishment.",
+          "whenSame": "Shared understanding of celebration's value creates motivation to acknowledge each other's wins more often.",
+          "journalPrompt": "How does celebrating together benefit your relationship? What would more celebration look like?"
+        }
+      }
     }
-  ],
-  "description": "Explore your capacity for change and adaptation.",
-  "magnet_id": 10
+  ]
 }

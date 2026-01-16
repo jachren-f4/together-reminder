@@ -1,0 +1,109 @@
+{
+  "quizId": "quiz_004",
+  "title": "Respect During Conflict",
+  "branch": "conflict",
+  "description": "Explore how you maintain respect and prevent contempt during disagreements.",
+  "magnet_id": 15,
+  "questions": [
+    {
+      "id": "quiz_004_q1",
+      "text": "Even when I'm upset with my partner, I try to...",
+      "choices": [
+        "Remember they're a good person having a hard moment",
+        "Avoid saying things I'll regret",
+        "Focus on the issue, not attack their character",
+        "All of these—respect is non-negotiable"
+      ],
+      "category": "respect_maintenance",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Maintaining respect during conflict predicts relationship success. Contempt—the opposite of respect—is the single strongest predictor of divorce. These strategies all prevent contempt: seeing the good, restraint, and issue-focus.",
+          "framework": "gottman",
+          "whenDifferent": "All these strategies prevent contempt. Different emphases are fine—the key is maintaining fundamental respect during conflict.",
+          "whenSame": "Shared commitment to respect during conflict creates a safe foundation.",
+          "journalPrompt": "How do you maintain respect when you're upset? When is it hardest?"
+        }
+      }
+    },
+    {
+      "id": "quiz_004_q2",
+      "text": "When frustrated, I'm most likely to slip into...",
+      "choices": [
+        "Eye-rolling or dismissive body language",
+        "Sarcasm or mocking",
+        "Harsh words or name-calling",
+        "I generally maintain composure"
+      ],
+      "category": "contempt_awareness",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Contempt shows in various forms. Eye-rolling signals dismissal; sarcasm mocks; harsh words attack. Even maintained composure may hide contempt. Awareness of your contempt signals is the first step to eliminating them.",
+          "framework": "gottman",
+          "whenDifferent": "Different contempt expressions are all damaging. Be honest about your patterns and work to eliminate them.",
+          "whenSame": "Shared awareness helps you call out contempt when you see it in yourselves.",
+          "journalPrompt": "When you're frustrated, what behaviors slip out that you're not proud of?"
+        }
+      }
+    },
+    {
+      "id": "quiz_004_q3",
+      "text": "If I noticed myself feeling contempt, I'd want to...",
+      "choices": [
+        "Take a break before saying something harmful",
+        "Remember what I love about my partner",
+        "Examine what's really bothering me underneath",
+        "Address it directly—contempt signals something important"
+      ],
+      "category": "contempt_management",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Contempt management strategies all have value. Breaks prevent damage; remembering positives builds fondness; examining underneath finds root issues; addressing directly creates honesty. Contempt that lingers destroys relationships.",
+          "framework": "gottman",
+          "whenDifferent": "Different strategies can complement each other. Use multiple approaches when contempt arises.",
+          "whenSame": "Shared strategy creates alignment about how to handle contempt when it surfaces.",
+          "journalPrompt": "Have you ever felt contempt toward your partner? What was really going on underneath?"
+        }
+      }
+    },
+    {
+      "id": "quiz_004_q4",
+      "text": "What helps me stay respectful during conflict is...",
+      "choices": [
+        "Remembering we're on the same team",
+        "Keeping the big picture in mind",
+        "My commitment to never be cruel",
+        "Taking breaks when I'm too heated"
+      ],
+      "category": "respect_strategies",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Respect maintenance strategies vary. Team-rememberers stay allied; big-picture thinkers keep perspective; commitment-holders have firm values; break-takers regulate. All prevent the escalation that leads to contempt.",
+          "framework": "gottman",
+          "whenDifferent": "Different strategies can all work. Share what helps you so your partner understands your approach.",
+          "whenSame": "Shared strategies create aligned coping during conflict.",
+          "journalPrompt": "What helps you stay respectful when you're upset? What would help even more?"
+        }
+      }
+    },
+    {
+      "id": "quiz_004_q5",
+      "text": "The line I never want to cross during conflict is...",
+      "choices": [
+        "Personal attacks or name-calling",
+        "Bringing up things that will deeply wound",
+        "Threatening the relationship",
+        "Any of these—all are off-limits"
+      ],
+      "category": "conflict_boundaries",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Conflict boundaries protect relationships. Personal attacks damage; deep wounds cause lasting harm; relationship threats create insecurity. Having explicit off-limits behaviors prevents irreparable damage during heated moments.",
+          "framework": "gottman",
+          "whenDifferent": "All these lines are important. Agree on your shared off-limits list before conflict happens.",
+          "whenSame": "Shared boundaries create clear rules of engagement that protect your relationship.",
+          "journalPrompt": "What lines should never be crossed in your conflicts? Have you ever crossed them?"
+        }
+      }
+    }
+  ]
+}

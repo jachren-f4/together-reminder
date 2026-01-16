@@ -1,0 +1,109 @@
+{
+  "quizId": "quiz_011",
+  "title": "Boundaries & Respect",
+  "branch": "intimacy",
+  "description": "Explore how you navigate boundaries and respect in your intimate life.",
+  "magnet_id": 17,
+  "questions": [
+    {
+      "id": "quiz_011_q1",
+      "text": "When it comes to setting intimate boundaries, I find it...",
+      "choices": [
+        "Natural—I know what I'm comfortable with",
+        "Sometimes difficult—I don't want to disappoint",
+        "Important but vulnerable",
+        "An ongoing process as I learn about myself"
+      ],
+      "category": "boundary_setting",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Boundary-setting ease varies. Natural-setters are clear; people-pleasers struggle with disappointing; vulnerable-feelers find it hard but necessary; learners are discovering. Your partner can't respect boundaries they don't know about.",
+          "framework": "gottman",
+          "whenDifferent": "The natural-setter may not understand why their partner struggles; the people-pleaser may need more safety to be honest. Create space for boundary conversations.",
+          "whenSame": "Shared ease with boundaries makes intimate communication flow more smoothly.",
+          "journalPrompt": "How easy or hard is it for you to set boundaries? What makes it easier?"
+        }
+      }
+    },
+    {
+      "id": "quiz_011_q2",
+      "text": "I want my partner to respond to my boundaries by...",
+      "choices": [
+        "Respecting them without question",
+        "Understanding why they matter to me",
+        "Checking in gently if they want to understand more",
+        "Simply accepting and moving on"
+      ],
+      "category": "boundary_response",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Preferred boundary responses vary. Respect-without-question types want immediate acceptance; understanding-seekers want to be known; check-in types welcome gentle curiosity; move-on types don't want to dwell. Knowing your partner's preference helps you respond well.",
+          "framework": "gottman",
+          "whenDifferent": "Different preferences are fine—the key is that boundaries are ultimately respected. Some questions for understanding are okay; pressure to change is not.",
+          "whenSame": "Shared response preference creates predictability around boundary conversations.",
+          "journalPrompt": "How do you want your partner to respond when you set a boundary? What would feel supportive?"
+        }
+      }
+    },
+    {
+      "id": "quiz_011_q3",
+      "text": "Boundaries in intimacy, to me, are...",
+      "choices": [
+        "Non-negotiable—they define what's okay for me",
+        "Important but sometimes flexible with trust",
+        "Something I'm still figuring out",
+        "Subject to evolve as we grow together"
+      ],
+      "category": "boundary_views",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Views on boundaries vary. Non-negotiable types have firm limits; flexible-with-trust types bend with safety; figuring-out types are discovering; evolvers see change as natural. All views are valid—the key is consent.",
+          "framework": "gottman",
+          "whenDifferent": "Different views are fine—what matters is that both partners' limits are respected in the moment. Even flexible boundaries can have firm moments.",
+          "whenSame": "Shared boundary philosophy creates aligned expectations about how limits work.",
+          "journalPrompt": "How do you think about your intimate boundaries? Are they firm or flexible? Why?"
+        }
+      }
+    },
+    {
+      "id": "quiz_011_q4",
+      "text": "If I ever felt my boundaries weren't being respected, I'd want to...",
+      "choices": [
+        "Address it directly in the moment",
+        "Talk about it afterward when calm",
+        "Trust my partner to check in with me",
+        "Have an established safe word or signal"
+      ],
+      "category": "boundary_protection",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Boundary protection preferences vary. Direct-addressers speak up immediately; afterward-talkers process later; trust-checkers want partner initiation; signal-users want non-verbal options. Having a plan before it's needed creates safety.",
+          "framework": "gottman",
+          "whenDifferent": "Multiple approaches can coexist. Having both a safe word AND the ability to talk afterward covers more ground.",
+          "whenSame": "Shared preference creates a clear plan for how to handle boundary moments.",
+          "journalPrompt": "What would you do if you felt a boundary wasn't being respected? Do you have a plan?"
+        }
+      }
+    },
+    {
+      "id": "quiz_011_q5",
+      "text": "The foundation of respect in our intimate life should be...",
+      "choices": [
+        "Ongoing, enthusiastic consent",
+        "Knowing each other deeply over time",
+        "Never assuming—always checking in",
+        "Trust built through consistent care"
+      ],
+      "category": "respect_foundation",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Respect foundations vary but all lead to consent. Ongoing-consent types check continuously; knowers build deep understanding; never-assumers verify; trust-builders rely on patterns. All can coexist in healthy relationships.",
+          "framework": "gottman",
+          "whenDifferent": "All these foundations support each other. Emphasize different aspects without abandoning the core of consent.",
+          "whenSame": "Shared foundation philosophy aligns your approach to respect in intimacy.",
+          "journalPrompt": "What does respect look like in your intimate life? How do you want it to feel?"
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,111 @@
+{
+  "quizId": "quiz_005",
+  "title": "Communicating About Intimacy",
+  "branch": "intimacy",
+  "description": "Explore how you talk about your intimate life together.",
+  "magnet_id": 16,
+  "questions": [
+    {
+      "id": "quiz_005_q1",
+      "text": "Talking about our intimate life feels...",
+      "choices": [
+        "Natural—I'm comfortable discussing it",
+        "Important but a bit vulnerable",
+        "Awkward—I'd rather show than tell",
+        "Easier at some times than others"
+      ],
+      "category": "communication_comfort",
+      "metadata": {
+        "dimension": "stress_processing",
+        "poleMapping": ["right", "neutral", "left", "neutral"],
+        "therapeutic": {
+          "rationale": "Comfort discussing intimacy varies widely. Natural-talkers communicate easily; vulnerable-but-willing types push through discomfort; show-don't-tellers prefer action; variable types have context-dependent comfort. Mismatched comfort creates communication gaps.",
+          "framework": "gottman",
+          "whenDifferent": "The natural-talker may push conversations the uncomfortable partner dreads; the show-don't-teller may leave the talker feeling disconnected. Go at the pace of the less comfortable person.",
+          "whenSame": "Shared comfort level makes intimate communication flow more easily.",
+          "journalPrompt": "How comfortable are you talking about your intimate life? What makes it easier or harder?"
+        }
+      }
+    },
+    {
+      "id": "quiz_005_q2",
+      "text": "When I want something different in our intimate life, I tend to...",
+      "choices": [
+        "Bring it up directly",
+        "Hint or suggest subtly",
+        "Show them through actions",
+        "Wait and hope they notice"
+      ],
+      "category": "communication_style",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "How we communicate desires shapes whether they're met. Direct-askers get clarity; hint-droppers hope for pickup; action-showers demonstrate; waiters often stay unsatisfied. Clearer communication leads to better outcomes.",
+          "framework": "gottman",
+          "whenDifferent": "Different styles may mean missed messages. The direct-asker may overwhelm the subtle partner; the hint-dropper's messages may be missed entirely. Find a communication style that works for both.",
+          "whenSame": "Shared communication style makes understanding each other easier. You'll naturally send and receive messages similarly.",
+          "journalPrompt": "How do you typically communicate what you want intimately? Does your partner know what you want?"
+        }
+      }
+    },
+    {
+      "id": "quiz_005_q3",
+      "text": "If my partner told me something they'd like to try, I'd want to...",
+      "choices": [
+        "Listen openly without judgment",
+        "Understand why it appeals to them",
+        "Share my honest reaction respectfully",
+        "All of these—open dialogue matters"
+      ],
+      "category": "communication_response",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "How we receive intimate requests affects whether partners feel safe sharing. Open-listeners create safety; understanders seek connection; honest-sharers maintain boundaries; all-of-these types value complete dialogue. Judgment shuts down communication.",
+          "framework": "gottman",
+          "whenDifferent": "All these responses are healthy. The key is creating safety for requests while maintaining your own boundaries.",
+          "whenSame": "Shared response values create mutual safety for intimate communication.",
+          "journalPrompt": "How do you respond when your partner shares an intimate request? Do you create safety for their vulnerability?"
+        }
+      }
+    },
+    {
+      "id": "quiz_005_q4",
+      "text": "The conversation I'd most want us to have about our intimate life is...",
+      "choices": [
+        "What we each enjoy and want more of",
+        "How to keep things fresh and connected",
+        "How to navigate when we're not in sync",
+        "How to feel even safer with each other"
+      ],
+      "category": "communication_needs",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Desired conversations reveal needs. Enjoyment-focusers want pleasure optimization; freshness-seekers want novelty; sync-navigators want conflict resolution; safety-builders want deeper trust. All are important conversations.",
+          "framework": "gottman",
+          "whenDifferent": "Different conversation priorities are fine—you can have all of them. Start with whatever feels most pressing.",
+          "whenSame": "Shared conversation priority focuses your intimate communication. You're both wanting to address the same thing.",
+          "journalPrompt": "What conversation about intimacy would help your relationship most right now?"
+        }
+      }
+    },
+    {
+      "id": "quiz_005_q5",
+      "text": "Giving feedback about intimate experiences is something I...",
+      "choices": [
+        "Do naturally—I want us both to enjoy",
+        "Find difficult but know it's important",
+        "Prefer to do in the moment, gently",
+        "Would rather do afterward, not during"
+      ],
+      "category": "communication_style",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Feedback style affects improvement. Natural-feedbackers communicate easily; difficult-but-trying types push through; in-the-moment types redirect live; afterward-talkers process later. All can work if feedback actually happens.",
+          "framework": "gottman",
+          "whenDifferent": "Different feedback styles need coordination. The in-the-moment partner may surprise the afterward-talker; the natural-feedbacker may overwhelm the finds-it-difficult partner. Agree on your approach.",
+          "whenSame": "Shared feedback style makes giving and receiving input smoother. You'll naturally communicate about experiences similarly.",
+          "journalPrompt": "How do you feel about giving feedback about intimate experiences? What would make it easier?"
+        }
+      }
+    }
+  ]
+}

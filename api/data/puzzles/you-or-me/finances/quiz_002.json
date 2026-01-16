@@ -1,0 +1,39 @@
+{
+  "quizId": "quiz_002",
+  "title": "Money Mindset",
+  "branch": "finances",
+  "questions": [
+    {
+      "id": "quiz_002_q1",
+      "category": "personality",
+      "prompt": "Who is more...",
+      "content": "Optimistic about financial goals"
+    },
+    {
+      "id": "quiz_002_q2",
+      "category": "habits",
+      "prompt": "Who would...",
+      "content": "Create a budget spreadsheet for fun"
+    },
+    {
+      "id": "quiz_002_q3",
+      "category": "preferences",
+      "prompt": "Who is more likely to...",
+      "content": "Research before a big purchase"
+    },
+    {
+      "id": "quiz_002_q4",
+      "category": "personality",
+      "prompt": "Who thinks more about...",
+      "content": "Long-term financial dreams"
+    },
+    {
+      "id": "quiz_002_q5",
+      "category": "habits",
+      "prompt": "Who would...",
+      "content": "Notice a good sale from across the store"
+    }
+  ],
+  "description": "Discover how you each think about money—planning, dreaming, and spotting opportunities!",
+  "magnet_id": 8
+}

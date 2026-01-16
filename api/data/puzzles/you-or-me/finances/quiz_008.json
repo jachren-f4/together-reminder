@@ -1,0 +1,39 @@
+{
+  "quizId": "quiz_008",
+  "title": "Financial Goals",
+  "branch": "finances",
+  "questions": [
+    {
+      "id": "quiz_008_q1",
+      "category": "personality",
+      "prompt": "Who is more motivated by...",
+      "content": "Seeing progress toward a goal"
+    },
+    {
+      "id": "quiz_008_q2",
+      "category": "habits",
+      "prompt": "Who would...",
+      "content": "Track expenses to see where money goes"
+    },
+    {
+      "id": "quiz_008_q3",
+      "category": "preferences",
+      "prompt": "Who is more likely to...",
+      "content": "Set a specific savings target"
+    },
+    {
+      "id": "quiz_008_q4",
+      "category": "personality",
+      "prompt": "Who gets more excited about...",
+      "content": "Reaching a financial milestone together"
+    },
+    {
+      "id": "quiz_008_q5",
+      "category": "habits",
+      "prompt": "Who would...",
+      "content": "Suggest a fun challenge to save money"
+    }
+  ],
+  "description": "Goals and milestones—discover what motivates each of you financially!",
+  "magnet_id": 9
+}

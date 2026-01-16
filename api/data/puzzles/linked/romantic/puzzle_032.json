@@ -1,0 +1,72 @@
+{
+  "author": "Crossword Maker GPT",
+  "title": "AI-Built Puzzle",
+  "theme": "manhood",
+  "size": {
+    "rows": 9,
+    "cols": 7
+  },
+  "clues": {
+    "1": { "type": "text", "content": "TE_T", "arrow": "down", "target_index": 8 },
+    "2": { "type": "text", "content": "Care", "arrow": "down", "target_index": 9 },
+    "3": { "type": "text", "content": "Kingly", "arrow": "down", "target_index": 10 },
+    "4": { "type": "text", "content": "M__IE", "arrow": "down", "target_index": 11 },
+    "5": { "type": "text", "content": "HI bird", "arrow": "down", "target_index": 12 },
+    "6": { "type": "text", "content": "Tender", "arrow": "down", "target_index": 13 },
+    "7": { "type": "text", "content": "Powerful", "arrow": "across", "target_index": 8 },
+    "8": {
+      "across": { "type": "text", "content": "Dike", "target_index": 16 },
+      "down": { "type": "text", "content": "Per", "target_index": 22 }
+    },
+    "9": { "type": "emoji", "content": "❤️", "arrow": "across", "target_index": 22 },
+    "10": {
+      "across": { "type": "text", "content": "A__UAL", "target_index": 26 },
+      "down": { "type": "text", "content": "U_U___", "target_index": 32 }
+    },
+    "11": { "type": "text", "content": "ST_R", "arrow": "across", "target_index": 29 },
+    "12": {
+      "across": { "type": "text", "content": "Aid", "target_index": 31 },
+      "down": { "type": "text", "content": "Veggie", "target_index": 37 }
+    },
+    "13": { "type": "text", "content": "Pop", "arrow": "across", "target_index": 36 },
+    "14": {
+      "across": { "type": "text", "content": "FUE_", "target_index": 41 },
+      "down": { "type": "text", "content": "C_V__", "target_index": 47 }
+    },
+    "15": { "type": "text", "content": "Asia hub", "arrow": "across", "target_index": 43 },
+    "16": {
+      "across": { "type": "text", "content": "PI___", "target_index": 46 },
+      "down": { "type": "text", "content": "__ girl", "target_index": 52 }
+    },
+    "17": {
+      "across": { "type": "text", "content": "Ceremony", "target_index": 51 },
+      "down": { "type": "text", "content": "CHAR_", "target_index": 57 }
+    },
+    "18": { "type": "text", "content": "SAF_", "arrow": "down", "target_index": 62 },
+    "19": { "type": "text", "content": "Grown-up", "arrow": "across", "target_index": 57 }
+  },
+  "date": "2026-01-13",
+  "grid": [
+    ".", ".", ".", ".", ".", ".", ".",
+    ".", "S", "T", "R", "O", "N", "G",
+    ".", ".", "L", "E", "V", "E", "E",
+    ".", "E", "C", "G", ".", "N", "N",
+    ".", "A", ".", "A", "B", "E", "T",
+    ".", "C", "O", "L", "A", ".", "L",
+    ".", "H", "K", ".", "N", "O", "E",
+    ".", ".", "R", "I", "T", "E", ".",
+    ".", "M", "A", "T", "U", "R", "E"
+  ],
+  "gridnums": [
+    0, 1, 2, 3, 4, 5, 6,
+    7, 0, 0, 0, 0, 0, 0,
+    0, 8, 0, 0, 0, 0, 0,
+    9, 0, 0, 0, 10, 0, 0,
+    11, 0, 12, 0, 0, 0, 0,
+    13, 0, 0, 0, 0, 14, 0,
+    15, 0, 0, 16, 0, 0, 0,
+    0, 17, 0, 0, 0, 0, 18,
+    19, 0, 0, 0, 0, 0, 0
+  ],
+  "puzzleId": "puzzle_043"
+}

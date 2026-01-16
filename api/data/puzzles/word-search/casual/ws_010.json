@@ -1,0 +1,24 @@
+{
+  "puzzleId": "ws_010",
+  "title": "Casual X",
+  "theme": "casual",
+  "size": {
+    "rows": 10,
+    "cols": 10
+  },
+  "grid": "TMDTELGANELAOAERSJIBPAWEVXTNCRNNUNMASZEEWOCGSLEEPENMOYHERBNZNWAMZROHYEULIEHOFQNIPLBNRBCOTGIXXMEDAEZR",
+  "words": {
+    "FOREST": "76,U",
+    "NICE": "8,D",
+    "RELAX": "65,U",
+    "DREAM": "95,UL",
+    "MOON": "63,UL",
+    "COZY": "86,UL",
+    "WINE": "61,DR",
+    "LAUGH": "10,DR",
+    "NEAT": "33,U",
+    "BREEZE": "19,D",
+    "SLEEP": "44,R",
+    "PLAY": "80,UR"
+  }
+}

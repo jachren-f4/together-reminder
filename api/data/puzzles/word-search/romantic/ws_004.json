@@ -1,0 +1,24 @@
+{
+  "puzzleId": "ws_004",
+  "title": "Romantic IV",
+  "theme": "romantic",
+  "size": {
+    "rows": 10,
+    "cols": 10
+  },
+  "grid": "VISLATEPRGNACUDDLEBNONWEEDHCEIIHIFTAAREPSSSAOAICPOSIHHVSDYHHARINEKNIWVPENDDVAQTYRHGOGNIRACXCSSERACYC",
+  "words": {
+    "DEVOTED": "74,U",
+    "CARING": "89,L",
+    "HOPING": "59,U",
+    "CARESS": "97,L",
+    "WINK": "68,L",
+    "PASSION": "70,U",
+    "PETALS": "7,L",
+    "CHERISH": "91,U",
+    "CUDDLE": "12,R",
+    "DATE": "56,UL",
+    "DESIRE": "73,UR",
+    "WISHING": "22,D"
+  }
+}

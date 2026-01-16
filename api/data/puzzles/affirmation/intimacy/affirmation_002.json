@@ -1,0 +1,115 @@
+{
+  "quizId": "affirmation_002",
+  "title": "Physical Closeness",
+  "category": "intimacy",
+  "branch": "intimacy",
+  "description": "Explore how physical closeness feels emotionally",
+  "magnet_id": 16,
+  "questions": [
+    {
+      "id": "affirmation_002_q1",
+      "text": "Physical closeness with my partner feels nourishing.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Nourishing closeness feeds you emotionally, not just physically. When touch depletes rather than nourishes, something in the dynamic needs attention.",
+          "framework": "attachment_theory",
+          "whenDifferent": "If closeness doesn't feel nourishing for one partner, explore what would help. Sometimes it's about pacing, context, or emotional connection before physical.",
+          "whenSame": "Shared experience of nourishing closeness is a relationship strength that sustains connection.",
+          "journalPrompt": "When does physical closeness feel most nourishing to you?"
+        }
+      }
+    },
+    {
+      "id": "affirmation_002_q2",
+      "text": "I sense my partner is emotionally present when we're physically close.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Emotional presence during physical closeness transforms touch into connection. Without presence, physical contact can feel empty or mechanical.",
+          "framework": "eft",
+          "whenDifferent": "If one partner doesn't sense presence, explore what presence looks like for them. Eye contact? Attention? Slowing down? The other partner may be present but not showing it.",
+          "whenSame": "Shared sense of emotional presence during closeness deepens your physical connection.",
+          "journalPrompt": "How do you know when your partner is emotionally present during physical closeness?"
+        }
+      }
+    },
+    {
+      "id": "affirmation_002_q3",
+      "text": "I feel at ease in my body when I'm with my partner.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Ease in your body reflects safety in the relationship. Tension, self-consciousness, or discomfort signal barriers worth understanding—whether about the relationship, your body, or past experiences.",
+          "framework": "attachment_theory",
+          "whenDifferent": "If one partner doesn't feel ease, approach with curiosity not pressure. Body discomfort often has roots that deserve compassionate exploration.",
+          "whenSame": "Shared bodily ease creates comfort and openness in your physical relationship.",
+          "journalPrompt": "What helps you feel at ease in your body when you're with your partner?"
+        }
+      }
+    },
+    {
+      "id": "affirmation_002_q4",
+      "text": "Touch between us feels like connection, not just contact.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Touch that creates connection carries intention and presence. Touch that's just contact—routine, distracted, obligatory—doesn't feed the relationship the same way.",
+          "framework": "love_languages",
+          "whenDifferent": "If touch feels like just contact for one partner, explore what would make it feel more connecting. Intention? Timing? The quality of attention?",
+          "whenSame": "Shared experience of connecting touch strengthens your bond through physical moments.",
+          "journalPrompt": "What's the difference for you between touch that connects and touch that's just contact?"
+        }
+      }
+    },
+    {
+      "id": "affirmation_002_q5",
+      "text": "I feel our physical closeness brings us emotionally closer.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Physical closeness ideally strengthens emotional bonds. When it doesn't—or when it creates distance—something in the cycle of physical and emotional connection needs attention.",
+          "framework": "eft",
+          "whenDifferent": "If physical closeness doesn't bring one partner emotionally closer, explore what's missing. Do they need more emotional connection first? Different kinds of closeness?",
+          "whenSame": "Mutual experience of physical closeness creating emotional closeness is a powerful positive cycle.",
+          "journalPrompt": "How does physical closeness affect your emotional connection?"
+        }
+      }
+    }
+  ]
+}

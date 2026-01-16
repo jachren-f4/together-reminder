@@ -1,0 +1,39 @@
+{
+  "quizId": "quiz_014",
+  "title": "Tender Moments",
+  "branch": "intimacy",
+  "questions": [
+    {
+      "id": "quiz_014_q1",
+      "category": "preferences",
+      "prompt": "Who melts more from...",
+      "content": "Forehead kisses"
+    },
+    {
+      "id": "quiz_014_q2",
+      "category": "habits",
+      "prompt": "Who is more likely to...",
+      "content": "Hold hands without thinking about it"
+    },
+    {
+      "id": "quiz_014_q3",
+      "category": "personality",
+      "prompt": "Who is more...",
+      "content": "Sentimental about your special moments"
+    },
+    {
+      "id": "quiz_014_q4",
+      "category": "preferences",
+      "prompt": "Who treasures more...",
+      "content": "Lazy morning cuddles"
+    },
+    {
+      "id": "quiz_014_q5",
+      "category": "habits",
+      "prompt": "Who would...",
+      "content": "Slow dance in the living room spontaneously"
+    }
+  ],
+  "description": "The sweetest little moments—discover what makes your heart flutter!",
+  "magnet_id": 12
+}

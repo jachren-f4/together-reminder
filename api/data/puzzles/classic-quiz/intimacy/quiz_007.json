@@ -1,0 +1,111 @@
+{
+  "quizId": "quiz_007",
+  "title": "Vulnerability & Trust",
+  "branch": "intimacy",
+  "description": "Explore how vulnerability and trust shape your intimate connection.",
+  "magnet_id": 16,
+  "questions": [
+    {
+      "id": "quiz_007_q1",
+      "text": "Feeling vulnerable during intimacy is something I...",
+      "choices": [
+        "Welcome—it deepens connection",
+        "Sometimes struggle with",
+        "Am learning to be more comfortable with",
+        "Tend to protect myself from"
+      ],
+      "category": "vulnerability",
+      "metadata": {
+        "dimension": "stress_processing",
+        "poleMapping": ["right", "left", "neutral", "left"],
+        "therapeutic": {
+          "rationale": "Vulnerability comfort in intimacy reveals attachment patterns. Welcomers find intimacy freeing; strugglers want closeness but fear exposure; learners are growing; protectors have walls. These patterns often trace to early experiences.",
+          "framework": "attachment_theory",
+          "whenDifferent": "The welcomer may not understand the protector's walls; the protector may envy the welcomer's ease. Different comfort levels need patience and safety.",
+          "whenSame": "Shared vulnerability comfort creates mutual understanding. You know what intimacy requires emotionally for each other.",
+          "journalPrompt": "How comfortable are you being vulnerable during intimacy? What makes it easier or harder?"
+        }
+      }
+    },
+    {
+      "id": "quiz_007_q2",
+      "text": "What helps me feel safe being intimate is...",
+      "choices": [
+        "Knowing I'm truly accepted as I am",
+        "Trust built over time together",
+        "Feeling emotionally connected first",
+        "Knowing my partner respects my limits"
+      ],
+      "category": "safety_needs",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Safety sources vary. Acceptance-needers want unconditional regard; trust-builders need track record; connection-needers want emotional closeness; limit-respecters need boundary honor. Knowing your partner's safety source helps you provide it.",
+          "framework": "attachment_theory",
+          "whenDifferent": "Different safety needs mean providing different things. The acceptance-needer may need more verbal affirmation; the limit-respecter may need more check-ins.",
+          "whenSame": "Shared safety source makes creating intimacy easier. You naturally provide what your partner needs.",
+          "journalPrompt": "What makes you feel truly safe being intimate? What would destroy that safety?"
+        }
+      }
+    },
+    {
+      "id": "quiz_007_q3",
+      "text": "When I feel insecure about something intimate, I tend to...",
+      "choices": [
+        "Share it with my partner",
+        "Keep it to myself",
+        "Work through it internally first",
+        "Need reassurance without asking directly"
+      ],
+      "category": "insecurity_response",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Insecurity handling affects intimacy quality. Sharers process with their partner; keepers suffer silently; internal-workers process alone; indirect-seekers hope for mind-reading. Partners can't address what they don't know about.",
+          "framework": "attachment_theory",
+          "whenDifferent": "The sharer may overwhelm the keeper; the keeper may leave the sharer feeling shut out. Find a way to let your partner in on your insecurities.",
+          "whenSame": "Shared insecurity response means you process similarly. You understand each other's internal experience.",
+          "journalPrompt": "When you feel insecure about something intimate, what do you do with that feeling? Does your partner know?"
+        }
+      }
+    },
+    {
+      "id": "quiz_007_q4",
+      "text": "The trust I need to feel fully open intimately comes from...",
+      "choices": [
+        "How my partner treats me outside the bedroom",
+        "Consistent respect during intimate moments",
+        "Knowing my partner keeps intimate things private",
+        "All of these—trust is holistic"
+      ],
+      "category": "trust_foundation",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Trust foundations for intimacy vary. Daily-treatment watchers see patterns; moment-focusers need consistent respect; privacy-needers require discretion; holistic types need all three. Understanding your trust foundation helps your partner build it.",
+          "framework": "gottman",
+          "whenDifferent": "Different trust foundations mean emphasizing different behaviors. All are important—understand which matters most to your partner.",
+          "whenSame": "Shared trust foundation makes building safety straightforward. You're both looking for the same things.",
+          "journalPrompt": "What builds your trust for intimacy? What would break it?"
+        }
+      }
+    },
+    {
+      "id": "quiz_007_q5",
+      "text": "I want my partner to know that in intimate moments, I need...",
+      "choices": [
+        "Patience with my pace",
+        "Verbal reassurance and connection",
+        "Physical gentleness and attunement",
+        "To feel like the focus isn't on performance"
+      ],
+      "category": "intimate_needs",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Intimate needs reveal vulnerabilities. Pace-needers feel rushed; reassurance-needers need words; attunement-needers need physical presence; non-performance-needers fear judgment. Naming these needs helps your partner provide them.",
+          "framework": "gottman",
+          "whenDifferent": "Different needs require different giving. Learn what your partner most needs and prioritize providing it.",
+          "whenSame": "Shared needs mean you understand each other's intimate vulnerabilities intuitively.",
+          "journalPrompt": "What do you most need from your partner during intimate moments? Have you told them?"
+        }
+      }
+    }
+  ]
+}

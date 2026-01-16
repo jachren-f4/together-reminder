@@ -1,0 +1,39 @@
+{
+  "quizId": "quiz_010",
+  "title": "Financial Comfort",
+  "branch": "finances",
+  "questions": [
+    {
+      "id": "quiz_010_q1",
+      "category": "personality",
+      "prompt": "Who feels more...",
+      "content": "At ease discussing money matters"
+    },
+    {
+      "id": "quiz_010_q2",
+      "category": "preferences",
+      "prompt": "Who is more likely to...",
+      "content": "Feel content with what they have"
+    },
+    {
+      "id": "quiz_010_q3",
+      "category": "habits",
+      "prompt": "Who would...",
+      "content": "Check their balance just to feel reassured"
+    },
+    {
+      "id": "quiz_010_q4",
+      "category": "personality",
+      "prompt": "Who is more...",
+      "content": "Relaxed about unexpected expenses"
+    },
+    {
+      "id": "quiz_010_q5",
+      "category": "preferences",
+      "prompt": "Who feels better having...",
+      "content": "A financial cushion for peace of mind"
+    }
+  ],
+  "description": "Security and peace of mind—discover what makes you each feel financially comfortable.",
+  "magnet_id": 9
+}

@@ -1,0 +1,69 @@
+{
+  "author": "Crossword Maker GPT",
+  "title": "AI-Built Puzzle",
+  "theme": "romance",
+  "size": {
+    "rows": 9,
+    "cols": 7
+  },
+  "clues": {
+    "1": { "type": "text", "content": "_ENDER", "arrow": "down", "target_index": 8 },
+    "2": { "type": "text", "content": "Delete", "arrow": "down", "target_index": 9 },
+    "3": { "type": "text", "content": "Nope", "arrow": "down", "target_index": 10 },
+    "4": { "type": "text", "content": "Resides", "arrow": "down", "target_index": 11 },
+    "5": { "type": "text", "content": "WEAL_H", "arrow": "down", "target_index": 12 },
+    "6": { "type": "text", "content": "Heave", "arrow": "down", "target_index": 13 },
+    "7": { "type": "text", "content": "Sore", "arrow": "across", "target_index": 8 },
+    "8": {
+      "across": { "type": "text", "content": "Tier", "target_index": 16 },
+      "down": { "type": "text", "content": "Talcum", "target_index": 22 }
+    },
+    "9": {
+      "across": { "type": "text", "content": "WEAL_H", "target_index": 20 },
+      "down": { "type": "text", "content": "Country", "target_index": 26 }
+    },
+    "10": { "type": "text", "content": "Obvious", "arrow": "across", "target_index": 22 },
+    "11": { "type": "text", "content": "PC base", "arrow": "across", "target_index": 29 },
+    "12": {
+      "across": { "type": "text", "content": "Resin", "target_index": 32 },
+      "down": { "type": "text", "content": "Mimics", "target_index": 38 }
+    },
+    "13": { "type": "emoji", "content": "💰", "arrow": "across", "target_index": 36 },
+    "14": { "type": "text", "content": "POW_ER", "arrow": "across", "target_index": 43 },
+    "15": {
+      "across": { "type": "text", "content": "Tire ltr", "target_index": 45 },
+      "down": { "type": "text", "content": "Roman 6", "target_index": 51 }
+    },
+    "16": { "type": "text", "content": "__-13", "arrow": "down", "target_index": 55 },
+    "17": { "type": "text", "content": "Dec. 31", "arrow": "across", "target_index": 50 },
+    "18": {
+      "across": { "type": "text", "content": "Opus", "target_index": 54 },
+      "down": { "type": "text", "content": "RIS_NG", "target_index": 60 }
+    },
+    "19": { "type": "text", "content": "Growing", "arrow": "across", "target_index": 57 }
+  },
+  "date": "2026-01-13",
+  "grid": [
+    ".", ".", ".", ".", ".", ".", ".",
+    ".", "T", "E", "N", "D", "E", "R",
+    ".", ".", "R", "O", "W", ".", "E",
+    ".", "P", "A", "T", "E", "N", "T",
+    ".", "O", "S", ".", "L", "A", "C",
+    ".", "W", "E", "A", "L", "T", "H",
+    ".", "D", ".", "P", "S", "I", ".",
+    ".", "E", "V", "E", ".", "O", "P",
+    ".", "R", "I", "S", "I", "N", "G"
+  ],
+  "gridnums": [
+    0, 1, 2, 3, 4, 5, 6,
+    7, 0, 0, 0, 0, 0, 0,
+    0, 8, 0, 0, 0, 9, 0,
+    10, 0, 0, 0, 0, 0, 0,
+    11, 0, 0, 12, 0, 0, 0,
+    13, 0, 0, 0, 0, 0, 0,
+    14, 0, 15, 0, 0, 0, 16,
+    17, 0, 0, 0, 18, 0, 0,
+    19, 0, 0, 0, 0, 0, 0
+  ],
+  "puzzleId": "puzzle_038"
+}

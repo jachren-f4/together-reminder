@@ -1,59 +1,109 @@
 {
   "quizId": "quiz_007",
-  "title": "Growth Quiz 7",
+  "title": "Evolving Interests",
   "branch": "growth",
+  "description": "Explore how your interests and passions change and grow together.",
+  "magnet_id": 10,
   "questions": [
     {
       "id": "quiz_007_q1",
-      "text": "How do I most want you to support my goals?",
+      "text": "When my interests or passions change, I...",
       "choices": [
-        "Encourage me and believe in me",
-        "Give practical help and advice",
-        "Hold me accountable",
-        "Give me space to pursue them independently"      ],
-      "category": "communication"
+        "Love exploring the new direction",
+        "Sometimes worry about losing what I loved",
+        "Wonder if you'll still connect with me",
+        "See it as natural growth"
+      ],
+      "category": "interest_change_response",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Responses to changing interests reflect attachment and identity concerns. Exploration-lovers embrace novelty; loss-worriers fear abandonment of self; connection-wonderers fear partner disconnection; natural-growers normalize change. All reveal valid concerns.",
+          "framework": "self_expansion_theory",
+          "whenDifferent": "Different responses to changing interests are normal. The explorer and the loss-worrier may need different reassurance.",
+          "whenSame": "Shared responses to changing interests create mutual understanding during personal evolution.",
+          "journalPrompt": "How do you feel when your interests change? What do you need from your partner during these shifts?"
+        }
+      }
     },
     {
       "id": "quiz_007_q2",
-      "text": "What's the best way you can help when I'm struggling with a goal?",
+      "text": "When you develop a new interest I don't share, I...",
       "choices": [
-        "Remind me why it matters to me",
-        "Help me problem-solve",
-        "Just listen and empathize",
-        "Celebrate small wins with me"      ],
-      "category": "emotional"
+        "Am curious and want to learn about it",
+        "Am happy you have something you love",
+        "Sometimes feel left out",
+        "Try to find ways to connect with it"
+      ],
+      "category": "partner_new_interest",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Responses to partner's separate interests reveal attachment security. Curiosity shows openness; happiness shows security; left-out feelings show connection needs; connection-seeking shows effort. All are understandable responses.",
+          "framework": "attachment_theory",
+          "whenDifferent": "Different responses to separate interests are all valid. The left-out feeler needs more inclusion; the happiness-feeler may need to offer more connection.",
+          "whenSame": "Matched responses create aligned expectations about how to handle separate interests.",
+          "journalPrompt": "How do you feel when your partner develops interests you don't share? Is that working for you both?"
+        }
+      }
     },
     {
       "id": "quiz_007_q3",
-      "text": "How do I want you to react when I share a new dream or goal?",
+      "text": "It's important to me that we...",
       "choices": [
-        "Get excited and enthusiastic with me",
-        "Ask thoughtful questions about it",
-        "Offer support without being directive",
-        "Help me make a plan to achieve it"      ],
-      "category": "communication"
+        "Have some interests we share",
+        "Support each other's separate passions",
+        "Stay curious about each other's worlds",
+        "Grow together even as we change individually"
+      ],
+      "category": "interest_values",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Values about shared vs. separate interests reflect needs for togetherness and autonomy. Shared interests create connection; supporting separate passions creates space; curiosity maintains knowledge; growing together balances both. All are healthy values.",
+          "framework": "gottman",
+          "whenDifferent": "Different values about interests require balance. Too much overlap may feel suffocating; too little may feel disconnected. Find your right balance.",
+          "whenSame": "Shared values about interests create clear expectations for how you'll navigate passions together.",
+          "journalPrompt": "What's the right balance of shared and separate interests for your relationship?"
+        }
+      }
     },
     {
       "id": "quiz_007_q4",
-      "text": "What do I need from you when I fail or face setbacks?",
+      "text": "Something I'd love to share with you is...",
       "choices": [
-        "Reassurance that it's okay",
-        "Help seeing what I can learn",
-        "Space to process my feelings",
-        "Encouragement to keep trying"      ],
-      "category": "emotional"
+        "An interest or hobby I'm passionate about",
+        "A new experience I want us to try",
+        "A goal or dream I'm working toward",
+        "A part of my world you haven't seen yet"
+      ],
+      "category": "sharing_desire",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Desires to share reveal what we value and want our partner to know. Passions represent our energy; new experiences represent growth; goals represent aspirations; unseen worlds represent intimacy. Sharing deepens connection.",
+          "framework": "self_expansion_theory",
+          "whenDifferent": "Different sharing desires point to different invitations. All are opportunities for deeper connection.",
+          "whenSame": "Matched sharing desires create clear opportunities for exploring together.",
+          "journalPrompt": "What would you love to share with your partner that you haven't yet?"
+        }
+      }
     },
     {
       "id": "quiz_007_q5",
-      "text": "How can you best celebrate my achievements with me?",
+      "text": "I believe interests in a relationship should...",
       "choices": [
-        "Make a big deal and celebrate publicly",
-        "Intimate acknowledgment just between us",
-        "Do something special together",
-        "Express how proud you are of me"      ],
-      "category": "values"
+        "Include both shared and individual pursuits",
+        "Evolve and grow over time",
+        "Be sources of connection, not competition",
+        "Be respected even when not understood"
+      ],
+      "category": "interest_philosophy",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Beliefs about interests shape how couples navigate passions. Shared-and-individual balances togetherness and autonomy; evolution normalizes change; connection prevents competition; respect without understanding honors difference.",
+          "framework": "gottman",
+          "whenDifferent": "All these beliefs support healthy interest navigation. They're complementary perspectives.",
+          "whenSame": "Shared philosophy about interests creates aligned expectations for how passions fit in your relationship.",
+          "journalPrompt": "What role should individual and shared interests play in your relationship?"
+        }
+      }
     }
-  ],
-  "description": "Learn about your goals for personal and shared growth.",
-  "magnet_id": 10
+  ]
 }

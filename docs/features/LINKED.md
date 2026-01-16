@@ -489,6 +489,165 @@ Server tracks progression in `branch_progressions` table.
 
 ---
 
+## Importing Puzzles from Crossword Builder
+
+### Source Location
+Puzzles are generated using Crossword Maker GPT and stored at:
+```
+/Users/joakimachren/Desktop/crosswordmaker_gpt/output/puzzle-{NNN}/
+```
+
+Each puzzle folder contains:
+- `puzzle_{NNN}.json` - The puzzle data (this is what we import)
+- `puzzle_{NNN}.html` - HTML preview
+- `grid.html` - Grid visualization
+- `state.json` - Internal builder state (not needed)
+
+### Import Mapping
+
+The source uses different numbering than our system. Track the mapping here:
+
+| Source (crosswordmaker_gpt) | Our System (romantic branch) | Imported |
+|-----------------------------|------------------------------|----------|
+| puzzle-001 to puzzle-046 | puzzle_001 to puzzle_034 | ✅ |
+| puzzle-047 | puzzle_035 | ✅ |
+| puzzle-048 | puzzle_036 | ✅ |
+| puzzle-049 | puzzle_037 | ✅ |
+| puzzle-050 | puzzle_038 | ✅ |
+| puzzle-051 | puzzle_039 | ✅ |
+| puzzle-069 | puzzle_040 | ✅ |
+| puzzle-070 | puzzle_041 | ✅ |
+| puzzle-071 | puzzle_042 | ✅ |
+| puzzle-072 | puzzle_043 | ✅ |
+| puzzle-073 | puzzle_044 | ✅ |
+| puzzle-074 | puzzle_045 | ✅ |
+| puzzle-075 | puzzle_046 | ✅ |
+| puzzle-076 | puzzle_047 | ✅ |
+| puzzle-077 | puzzle_048 | ✅ |
+| puzzle-078 | puzzle_049 | ✅ |
+| puzzle-097 | puzzle_050 | ✅ |
+| puzzle-098 | puzzle_051 | ✅ |
+| puzzle-099 | puzzle_052 | ✅ |
+| puzzle-100 | puzzle_053 | ✅ |
+| puzzle-102 | puzzle_054 | ✅ |
+| puzzle-104 | puzzle_055 | ✅ |
+| puzzle-107 | puzzle_056 | ✅ |
+| puzzle-108 | puzzle_057 | ✅ |
+| puzzle-117 | puzzle_058 | ✅ |
+| puzzle-119 | puzzle_059 | ✅ |
+
+**Next puzzle to import:** Source puzzle-120 → puzzle_060
+
+### Import Steps
+
+1. **Check available puzzles:**
+   ```bash
+   # List source folders with JSON files
+   for dir in /Users/joakimachren/Desktop/crosswordmaker_gpt/output/puzzle-*; do
+     if ls "$dir"/*.json 2>/dev/null | grep -qv state.json; then
+       echo "$(basename $dir): $(ls "$dir"/*.json | grep -v state.json)"
+     fi
+   done
+   ```
+
+2. **Copy and rename:**
+   ```bash
+   cd /Users/joakimachren/Desktop/togetherremind/api/data/puzzles/linked/romantic
+   cp /Users/joakimachren/Desktop/crosswordmaker_gpt/output/puzzle-{SOURCE}/puzzle_{SOURCE}.json puzzle_{TARGET}.json
+   ```
+
+3. **Update puzzleId in the JSON:**
+   ```bash
+   sed -i '' 's/"puzzleId": "puzzle_{SOURCE}"/"puzzleId": "puzzle_{TARGET}"/' puzzle_{TARGET}.json
+   ```
+
+4. **Update puzzle-order.json:**
+   Add the new puzzle ID to the array in `puzzle-order.json`.
+
+5. **Update this mapping table** with the new entry.
+
+### Format Notes
+
+The JSON format from Crossword Maker GPT is **identical** to our system format. No transformation needed beyond:
+- Renaming the file
+- Updating the `puzzleId` field inside the JSON
+
+### Emoji Enhancement
+
+After importing puzzles, review text clues for emoji opportunities. Good emoji candidates are:
+
+| Text Clue Pattern | Emoji | Answer Examples |
+|-------------------|-------|-----------------|
+| Card suit, Hearts | ❤️ | HEARTS |
+| Oak, Tree | 🌳 | TREE |
+| Foot part | 🦶 | TOE |
+| Child, Son | 👦 | SON, KID |
+| Fiery, Hot | 🔥 | ARDENT, HEATED |
+| Basket | 🧺 | CRATE, HAMPER |
+| Riches, Wealth | 💰 | WEALTH, MONEY |
+| Wall art, Picture | 🖼️ | MURAL |
+| Horses | 🐴 | MARES, STEEDS |
+| Frost, Ice | ❄️ | ICE |
+| Jewel, Gem | 💎 | GEM, GEMS |
+| Mouse, Rodent | 🐭 | RODENT |
+| Stadium, Arena | 🏟️ | ARENA |
+| Sofa, Couch | 🛋️ | SETTEE, COUCH |
+| Steps, Stairs | 🪜 | TREADS, STAIR |
+| Gift, Present | 🎁 | TALENT, AWARD |
+| Stop, Halt | 🛑 | END, HALT |
+| Barrel, Keg | 🛢️ | KEG |
+| Legume, Pea | 🫛 | PEA |
+| Home, House | 🏠 | DIGS, ABODE |
+| Cubes, Ice | 🧊 | ICE |
+| Brew, Beer | 🍺 | ALE, TEA |
+| Fete, Party | 🎉 | GALA |
+| Feast, Meal | 🍽️ | GALA, MEAL |
+
+**To convert a text clue to emoji:**
+```json
+// Before
+{ "type": "text", "content": "Jewel", "arrow": "across", "target_index": 22 }
+
+// After
+{ "type": "emoji", "content": "💎", "arrow": "across", "target_index": 22 }
+```
+
+**Emojis added to puzzles 035-049 (Jan 2026):**
+- puzzle_035: ❤️, 🌳, 🦶
+- puzzle_036: 👦
+- puzzle_037: 🧺, 🔥
+- puzzle_038: 💰
+- puzzle_039: 🖼️, 🐴
+- puzzle_040: 🐜, 🍵 (original)
+- puzzle_041: 👽 (original), ❄️, 💎
+- puzzle_042: 🍵, 🇨🇦 (original), 🌳, 🐭
+- puzzle_043: 🎵 (original)
+- puzzle_044: 🇪🇺 (original), 🏟️, 🛋️, 🪜
+- puzzle_045: 🎁, 🛑, 🛢️
+- puzzle_046: 🫛, 💎
+- puzzle_047: 🏠 (×2), 🧊
+- puzzle_048: 🍺, 🎉
+- puzzle_049: 🛋️, 🍽️
+
+**Emojis added to puzzles 005-034 (Jan 2026):**
+- puzzle_005: 🖼️ (Gallery piece), 🏰 (Palace)
+- puzzle_014: 🐢 (Turtle), 💋 (Mwah!)
+- puzzle_019: 🌹 (Roses)
+- puzzle_020: 🦌 (Deer), 🥚 (Eggs), 🤡 (Clown)
+- puzzle_022: 🏖️ (Beach)
+- puzzle_024: ❄️ (Frost), 🍞 (Bread)
+- puzzle_027: 🍷 (Merlot)
+- puzzle_030: 🏨 (Inn)
+- puzzle_032: ❤️ (Heart)
+- puzzle_033: 🌳 (Shade tree), 😊 (Grins)
+
+**Emojis added to puzzles 050-059 (Jan 2026):**
+- puzzle_050: 🫧 (Bubbles), 🪿 (Goose)
+- puzzle_052: 👻 (Ghost!)
+- puzzle_053: ⛸️ (Rink)
+
+---
+
 ## LinkedClue Model
 
 ```dart

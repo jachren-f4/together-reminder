@@ -1,0 +1,109 @@
+{
+  "quizId": "quiz_015",
+  "title": "Growing Through Conflict",
+  "branch": "conflict",
+  "description": "Explore how conflict can become an opportunity for deeper connection.",
+  "magnet_id": 18,
+  "questions": [
+    {
+      "id": "quiz_015_q1",
+      "text": "I believe conflict in relationships can...",
+      "choices": [
+        "Deepen understanding if handled well",
+        "Reveal important things about each other",
+        "Strengthen the bond when navigated together",
+        "All of these—conflict has potential"
+      ],
+      "category": "conflict_potential",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Seeing conflict's potential enables growth. Deeper-understanding seekers learn through conflict; revealer-types gain insight; bond-strengtheners connect through challenges. This perspective transforms conflict from threat to opportunity.",
+          "framework": "positive_psychology",
+          "whenDifferent": "All these potentials are real. Conflict managed well provides all of them.",
+          "whenSame": "Shared belief in conflict's potential creates aligned approach to disagreements.",
+          "journalPrompt": "What good has come from conflict in your relationship? What made that possible?"
+        }
+      }
+    },
+    {
+      "id": "quiz_015_q2",
+      "text": "What I've learned about myself through conflict is...",
+      "choices": [
+        "My triggers and where they come from",
+        "How I handle stress and emotion",
+        "What I need to feel safe and heard",
+        "Areas where I want to grow"
+      ],
+      "category": "self_learning",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Conflict teaches self-knowledge. Trigger-learners understand their history; stress-handlers know their patterns; need-identifiers know their requirements; growth-area seers know their edges. This self-awareness enables better conflict.",
+          "framework": "positive_psychology",
+          "whenDifferent": "Different learnings are all valuable. Share what you've learned about yourself.",
+          "whenSame": "Shared self-learning focus creates mutual growth through conflict.",
+          "journalPrompt": "What has conflict taught you about yourself? Has that knowledge helped?"
+        }
+      }
+    },
+    {
+      "id": "quiz_015_q3",
+      "text": "What I've learned about my partner through conflict is...",
+      "choices": [
+        "What they need when they're upset",
+        "Their sensitivities and vulnerabilities",
+        "How much they care about us",
+        "How we're different and why"
+      ],
+      "category": "partner_learning",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Conflict reveals partners. Need-learners know how to support; sensitivity-learners know what to protect; care-seers recognize investment; difference-understanders know the gaps. This knowledge deepens intimacy.",
+          "framework": "gottman",
+          "whenDifferent": "Different learnings are all valuable. Share what you've learned about each other.",
+          "whenSame": "Shared partner learning creates mutual understanding gained through conflict.",
+          "journalPrompt": "What has conflict taught you about your partner? How has that helped?"
+        }
+      }
+    },
+    {
+      "id": "quiz_015_q4",
+      "text": "The conflict skill I most want to develop is...",
+      "choices": [
+        "Staying calm when I'm triggered",
+        "Listening better when I'm upset",
+        "Expressing myself without attacking",
+        "Repairing more quickly after conflict"
+      ],
+      "category": "skill_growth",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Growth areas in conflict are personal. Calm-stayers work on regulation; better-listeners work on attention; non-attackers work on expression; quick-repairers work on reconnection. Naming your edge enables focused development.",
+          "framework": "gottman",
+          "whenDifferent": "Different skill goals reflect different growth edges. Support each other's development.",
+          "whenSame": "Shared skill focus creates aligned growth work.",
+          "journalPrompt": "What conflict skill do you most want to develop? What would help you grow?"
+        }
+      }
+    },
+    {
+      "id": "quiz_015_q5",
+      "text": "My hope for how we handle conflict going forward is...",
+      "choices": [
+        "That we keep getting better at it together",
+        "That conflict brings us closer instead of apart",
+        "That we feel safe even when we disagree",
+        "That we see each conflict as a chance to understand each other more"
+      ],
+      "category": "conflict_vision",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Future conflict visions guide development. Improvement-hopers see trajectory; closeness-hopers see connection; safety-hopers see security; understanding-hopers see learning. Shared vision aligns your conflict growth.",
+          "framework": "positive_psychology",
+          "whenDifferent": "All these hopes support healthy conflict. You can achieve all of them.",
+          "whenSame": "Shared vision creates aligned goals for your conflict future.",
+          "journalPrompt": "What do you hope for in how you handle conflict going forward?"
+        }
+      }
+    }
+  ]
+}

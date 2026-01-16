@@ -1,0 +1,24 @@
+{
+  "puzzleId": "ws_008",
+  "title": "Romantic VIII",
+  "theme": "romantic",
+  "size": {
+    "rows": 10,
+    "cols": 10
+  },
+  "grid": "TTCNSWAYHCXHCHVCKFANLGGRAXOFDSENYIURZLNERITELSMODCIRJWAEHWIASANTIRDENREHGXGRNREBDSNQTILSHMUHGENTLEAE",
+  "words": {
+    "DELIGHT": "66,UL",
+    "FLOWERS": "27,D",
+    "SHARING": "81,U",
+    "CRUSH": "12,DR",
+    "YEARN": "32,DR",
+    "TWIRL": "42,DR",
+    "EMBRACE": "99,U",
+    "GENTLE": "92,R",
+    "DINE": "48,D",
+    "CHARM": "2,DR",
+    "DESIRE": "80,U",
+    "SWAY": "4,R"
+  }
+}

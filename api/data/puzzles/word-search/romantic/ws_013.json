@@ -1,0 +1,24 @@
+{
+  "puzzleId": "ws_013",
+  "title": "Romantic XIII",
+  "theme": "romantic",
+  "size": {
+    "rows": 10,
+    "cols": 10
+  },
+  "grid": "TYENOHFCIGETBIJCXKNISKOLHLRIWTNESGHTTUMYUOZAECIDUASKPEETNALYYPSNEAHWFEYANUBRAEDAPOKEDYBWRRCKRZSSWFZN",
+  "words": {
+    "HONEY": "5,L",
+    "HAPPY": "34,DL",
+    "ALWAYS": "49,DL",
+    "BREEZE": "86,UL",
+    "BAND": "74,UR",
+    "TWIRL": "29,L",
+    "YEARN": "59,D",
+    "CONNECTING": "90,UR",
+    "SUNSET": "50,U",
+    "TOGETHER": "11,DR",
+    "FAITH": "68,UL",
+    "DUSK": "84,UL"
+  }
+}

@@ -1,0 +1,71 @@
+{
+  "author": "Crossword Maker GPT",
+  "title": "AI-Built Puzzle",
+  "size": {
+    "rows": 9,
+    "cols": 7
+  },
+  "clues": {
+    "1": { "type": "text", "content": "GIR_", "arrow": "down", "target_index": 8 },
+    "2": { "type": "text", "content": "Spa sigh", "arrow": "down", "target_index": 9 },
+    "3": { "type": "text", "content": "Slims", "arrow": "down", "target_index": 10 },
+    "4": { "type": "text", "content": "That's", "arrow": "down", "target_index": 11 },
+    "5": { "type": "text", "content": "Other", "arrow": "down", "target_index": 12 },
+    "6": { "type": "text", "content": "Planted", "arrow": "down", "target_index": 13 },
+    "7": { "type": "text", "content": "Women", "arrow": "across", "target_index": 8 },
+    "8": {
+      "across": { "type": "text", "content": "Passage", "target_index": 16 },
+      "down": { "type": "text", "content": "Type", "target_index": 22 }
+    },
+    "9": { "type": "text", "content": "Her", "arrow": "across", "target_index": 22 },
+    "10": {
+      "across": { "type": "text", "content": "🇸🇪", "target_index": 26 },
+      "down": { "type": "text", "content": "Things", "target_index": 32 }
+    },
+    "11": { "type": "text", "content": "HELL_", "arrow": "across", "target_index": 29 },
+    "12": {
+      "across": { "type": "text", "content": "Knotted", "target_index": 31 },
+      "down": { "type": "text", "content": "Every", "target_index": 37 }
+    },
+    "13": { "type": "text", "content": "Relax", "arrow": "across", "target_index": 36 },
+    "14": {
+      "across": { "type": "text", "content": "LOV_", "target_index": 41 },
+      "down": { "type": "text", "content": "CA___", "target_index": 47 }
+    },
+    "15": { "type": "text", "content": "Brit bye", "arrow": "across", "target_index": 43 },
+    "16": {
+      "across": { "type": "text", "content": "Finish", "target_index": 46 },
+      "down": { "type": "text", "content": "CH__S", "target_index": 52 }
+    },
+    "17": {
+      "across": { "type": "text", "content": "Blend in", "target_index": 51 },
+      "down": { "type": "text", "content": "3rd", "target_index": 57 }
+    },
+    "18": { "type": "text", "content": "WOMA_", "arrow": "down", "target_index": 62 },
+    "19": { "type": "text", "content": "Selected", "arrow": "across", "target_index": 57 }
+  },
+  "date": "2026-01-12",
+  "grid": [
+    ".", ".", ".", ".", ".", ".", ".",
+    ".", "L", "A", "D", "I", "E", "S",
+    ".", ".", "A", "I", "S", "L", "E",
+    ".", "S", "H", "E", ".", "S", "E",
+    ".", "O", ".", "T", "I", "E", "D",
+    ".", "R", "E", "S", "T", ".", "E",
+    ".", "T", "A", ".", "E", "N", "D",
+    ".", ".", "C", "A", "M", "O", ".",
+    ".", "C", "H", "O", "S", "E", "N"
+  ],
+  "gridnums": [
+    0, 1, 2, 3, 4, 5, 6,
+    7, 0, 0, 0, 0, 0, 0,
+    0, 8, 0, 0, 0, 0, 0,
+    9, 0, 0, 0, 10, 0, 0,
+    11, 0, 12, 0, 0, 0, 0,
+    13, 0, 0, 0, 0, 14, 0,
+    15, 0, 0, 16, 0, 0, 0,
+    0, 17, 0, 0, 0, 0, 18,
+    19, 0, 0, 0, 0, 0, 0
+  ],
+  "puzzleId": "puzzle_033"
+}

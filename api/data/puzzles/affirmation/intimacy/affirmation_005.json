@@ -1,0 +1,115 @@
+{
+  "quizId": "affirmation_005",
+  "title": "Expressing Needs",
+  "category": "intimacy",
+  "branch": "intimacy",
+  "description": "Explore how safe it feels to express physical and emotional needs",
+  "magnet_id": 16,
+  "questions": [
+    {
+      "id": "affirmation_005_q1",
+      "text": "I can express what I need physically without fear.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Expressing physical needs requires courage and safety. Fear of judgment, rejection, or disappointing your partner can silence important communication.",
+          "framework": "attachment_theory",
+          "whenDifferent": "If one partner can't express needs without fear, explore what creates the fear. Building safety for expression takes intentional effort.",
+          "whenSame": "Mutual ability to express physical needs creates clarity and connection.",
+          "journalPrompt": "What physical needs are easy to express? What feels harder to ask for?"
+        }
+      }
+    },
+    {
+      "id": "affirmation_005_q2",
+      "text": "My partner seems genuinely interested in understanding what I need.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Genuine interest in understanding—not just hearing—your partner's needs demonstrates care. This interest invites more open sharing.",
+          "framework": "eft",
+          "whenDifferent": "If one partner doesn't feel interest in their needs, explore how curiosity could be shown more clearly.",
+          "whenSame": "Mutual genuine interest in each other's needs creates a learning orientation toward intimacy.",
+          "journalPrompt": "How does your partner show interest in understanding your needs?"
+        }
+      }
+    },
+    {
+      "id": "affirmation_005_q3",
+      "text": "I feel heard when I share what matters to me physically.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Being heard—really heard, not just acknowledged—about physical needs validates that your experience matters. Feeling unheard leads to silence or resentment.",
+          "framework": "gottman",
+          "whenDifferent": "If one partner doesn't feel heard, explore what 'heard' looks like for them. Sometimes partners hear but don't show it in recognizable ways.",
+          "whenSame": "Mutual feeling of being heard creates confidence to keep sharing.",
+          "journalPrompt": "When have you felt most heard about your physical needs? What made the difference?"
+        }
+      }
+    },
+    {
+      "id": "affirmation_005_q4",
+      "text": "I'm learning what my partner needs, and that feels good.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "A learning orientation toward your partner's needs—curiosity rather than assumption—keeps intimacy growing. When learning feels good rather than burdensome, connection deepens.",
+          "framework": "positive_psychology",
+          "whenDifferent": "If learning doesn't feel good for one partner, explore why. Is there pressure? Confusion? Criticism when they get it wrong?",
+          "whenSame": "Mutual enjoyment of learning about each other creates ongoing discovery in intimacy.",
+          "journalPrompt": "What have you learned about your partner's needs? What are you still curious about?"
+        }
+      }
+    },
+    {
+      "id": "affirmation_005_q5",
+      "text": "There's space in our relationship for both of our needs.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "When both partners' needs have space, neither feels they have to choose between themselves and the relationship. One-sided dynamics breed resentment.",
+          "framework": "eft",
+          "whenDifferent": "If one partner doesn't feel space for their needs, explore what's taking up the space. Whose needs tend to dominate?",
+          "whenSame": "Mutual sense that both needs have space creates balanced, sustainable intimacy.",
+          "journalPrompt": "Do both of your needs get attention? What would create more space for yours?"
+        }
+      }
+    }
+  ]
+}

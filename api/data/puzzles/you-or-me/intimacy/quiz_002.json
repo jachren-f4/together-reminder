@@ -1,0 +1,39 @@
+{
+  "quizId": "quiz_002",
+  "title": "Romance & Gestures",
+  "branch": "intimacy",
+  "questions": [
+    {
+      "id": "quiz_002_q1",
+      "category": "personality",
+      "prompt": "Who is more...",
+      "content": "Likely to plan a romantic surprise"
+    },
+    {
+      "id": "quiz_002_q2",
+      "category": "preferences",
+      "prompt": "Who would rather...",
+      "content": "Receive a love note vs. a grand gesture"
+    },
+    {
+      "id": "quiz_002_q3",
+      "category": "habits",
+      "prompt": "Who is more likely to...",
+      "content": "Remember the little things that matter"
+    },
+    {
+      "id": "quiz_002_q4",
+      "category": "personality",
+      "prompt": "Who gets more...",
+      "content": "Swept up in romantic moments"
+    },
+    {
+      "id": "quiz_002_q5",
+      "category": "preferences",
+      "prompt": "Who would...",
+      "content": "Set up a candlelit dinner at home"
+    }
+  ],
+  "description": "Grand gestures or quiet moments? Explore your romantic styles!",
+  "magnet_id": 10
+}

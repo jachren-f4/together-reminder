@@ -1,0 +1,39 @@
+{
+  "quizId": "quiz_008",
+  "title": "Date Night",
+  "branch": "intimacy",
+  "questions": [
+    {
+      "id": "quiz_008_q1",
+      "category": "habits",
+      "prompt": "Who is more likely to...",
+      "content": "Plan a special date night"
+    },
+    {
+      "id": "quiz_008_q2",
+      "category": "preferences",
+      "prompt": "Who would rather...",
+      "content": "Try a new restaurant vs. go to a favorite spot"
+    },
+    {
+      "id": "quiz_008_q3",
+      "category": "personality",
+      "prompt": "Who gets more excited about...",
+      "content": "Getting dressed up for each other"
+    },
+    {
+      "id": "quiz_008_q4",
+      "category": "preferences",
+      "prompt": "Who would...",
+      "content": "Prefer a cozy night in over going out"
+    },
+    {
+      "id": "quiz_008_q5",
+      "category": "habits",
+      "prompt": "Who is more likely to...",
+      "content": "Suggest trying something new together"
+    }
+  ],
+  "description": "Date night vibes—explore how you each like to spend special time together!",
+  "magnet_id": 11
+}

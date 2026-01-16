@@ -1,0 +1,115 @@
+{
+  "quizId": "affirmation_012",
+  "title": "Money & Values",
+  "category": "finances",
+  "branch": "finances",
+  "description": "Assess how your deeper values connect to money",
+  "magnet_id": 15,
+  "questions": [
+    {
+      "id": "affirmation_012_q1",
+      "text": "I feel my partner understands what money means to me emotionally.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Money carries emotional weight—security, freedom, status, love. When your partner understands your emotional relationship with money, they can better support you.",
+          "framework": "financial_therapy",
+          "whenDifferent": "If one partner doesn't feel understood, share your money story—what you learned growing up, what money represents to you.",
+          "whenSame": "Mutual understanding of each other's emotional relationship with money creates deeper connection.",
+          "journalPrompt": "What does money mean to you beyond paying bills? Does your partner know this?"
+        }
+      }
+    },
+    {
+      "id": "affirmation_012_q2",
+      "text": "I believe our financial choices reflect values I'm proud of.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Financial choices that align with your values feel good; those that don't create cognitive dissonance. Pride in your financial choices indicates values alignment.",
+          "framework": "positive_psychology",
+          "whenDifferent": "If one partner isn't proud of financial choices, explore what feels out of alignment. What values aren't being honored?",
+          "whenSame": "Shared pride in financial choices reflects shared values being lived out.",
+          "journalPrompt": "What financial choices make you proud? Which ones feel inconsistent with your values?"
+        }
+      }
+    },
+    {
+      "id": "affirmation_012_q3",
+      "text": "I feel my partner's money background helps me understand them better.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Understanding your partner's financial background—how they grew up, what they learned about money—creates compassion for their financial behaviors and beliefs.",
+          "framework": "family_systems",
+          "whenDifferent": "If one partner doesn't feel their background is understood or relevant, more sharing is needed. Money behaviors often make sense in context.",
+          "whenSame": "Mutual understanding of financial backgrounds creates empathy in financial matters.",
+          "journalPrompt": "What did you learn about money growing up? How does it affect you now?"
+        }
+      }
+    },
+    {
+      "id": "affirmation_012_q4",
+      "text": "I believe we share similar beliefs about what money is for.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Core beliefs about money's purpose—security, experiences, freedom, helping others—shape all financial decisions. Aligned beliefs create natural partnership.",
+          "framework": "financial_therapy",
+          "whenDifferent": "Different beliefs about money's purpose need discussion. Neither is wrong, but understanding each other's 'why' builds bridges.",
+          "whenSame": "Shared beliefs about money's purpose create a unified approach to financial life.",
+          "journalPrompt": "What is money for, in your view? How does your partner see it?"
+        }
+      }
+    },
+    {
+      "id": "affirmation_012_q5",
+      "text": "I feel our approach to money supports what matters most to us.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "When your financial approach supports your deepest values—family, experiences, security, growth—money becomes a tool for what matters rather than a source of stress.",
+          "framework": "positive_psychology",
+          "whenDifferent": "If one partner doesn't feel your approach supports what matters, explore the gap. What values feel unsupported financially?",
+          "whenSame": "Shared sense that your approach supports what matters creates purpose in your financial life.",
+          "journalPrompt": "What matters most to you that money can help support? Is your current approach doing that?"
+        }
+      }
+    }
+  ]
+}

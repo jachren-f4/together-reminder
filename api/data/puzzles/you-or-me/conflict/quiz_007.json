@@ -1,0 +1,39 @@
+{
+  "quizId": "quiz_007",
+  "title": "Cool Down",
+  "branch": "conflict",
+  "questions": [
+    {
+      "id": "quiz_007_q1",
+      "category": "preferences",
+      "prompt": "Who needs more...",
+      "content": "Space to cool down when upset"
+    },
+    {
+      "id": "quiz_007_q2",
+      "category": "habits",
+      "prompt": "Who is more likely to...",
+      "content": "Take deep breaths to stay centered"
+    },
+    {
+      "id": "quiz_007_q3",
+      "category": "personality",
+      "prompt": "Who calms down faster by...",
+      "content": "Being physically close to the other"
+    },
+    {
+      "id": "quiz_007_q4",
+      "category": "preferences",
+      "prompt": "Who would...",
+      "content": "Prefer a quiet activity to decompress"
+    },
+    {
+      "id": "quiz_007_q5",
+      "category": "habits",
+      "prompt": "Who bounces back more quickly...",
+      "content": "After letting off steam"
+    }
+  ],
+  "description": "Space or closeness? Discover what helps you each find calm.",
+  "magnet_id": 14
+}

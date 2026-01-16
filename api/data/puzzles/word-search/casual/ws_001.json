@@ -1,0 +1,24 @@
+{
+  "puzzleId": "ws_001",
+  "title": "Casual I",
+  "theme": "casual",
+  "size": {
+    "rows": 10,
+    "cols": 10
+  },
+  "grid": "DENZPBSHBKOHYPPAHPDSEIADXELHOOPXRLEAFLEFMAIVVXLFETWLVVXIDEHTAIEFTIDCRSRQRSTIURFEDJUQZODDURNIARCINWPC",
+  "words": {
+    "RIVER": "32,D",
+    "REST": "89,U",
+    "COUCH": "94,UR",
+    "STILL": "73,UR",
+    "RAIN": "93,L",
+    "LEAF": "33,R",
+    "DEN": "0,R",
+    "FRUIT": "78,L",
+    "SOFT": "19,D",
+    "RELAX": "68,UL",
+    "HAPPY": "16,L",
+    "DRAW": "80,U"
+  }
+}

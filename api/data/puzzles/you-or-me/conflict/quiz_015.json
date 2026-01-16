@@ -1,0 +1,39 @@
+{
+  "quizId": "quiz_015",
+  "title": "Stronger Every Day",
+  "branch": "conflict",
+  "questions": [
+    {
+      "id": "quiz_015_q1",
+      "category": "personality",
+      "prompt": "Who is more...",
+      "content": "Committed to working through anything together"
+    },
+    {
+      "id": "quiz_015_q2",
+      "category": "habits",
+      "prompt": "Who would...",
+      "content": "Remind the other how far you've come"
+    },
+    {
+      "id": "quiz_015_q3",
+      "category": "preferences",
+      "prompt": "Who appreciates more...",
+      "content": "How you've learned to navigate challenges"
+    },
+    {
+      "id": "quiz_015_q4",
+      "category": "personality",
+      "prompt": "Who is more...",
+      "content": "Proud of how you handle tough moments now"
+    },
+    {
+      "id": "quiz_015_q5",
+      "category": "habits",
+      "prompt": "Who is more likely to...",
+      "content": "Express gratitude for your partnership"
+    }
+  ],
+  "description": "Every challenge makes you stronger—celebrate your growth as a team!",
+  "magnet_id": 15
+}

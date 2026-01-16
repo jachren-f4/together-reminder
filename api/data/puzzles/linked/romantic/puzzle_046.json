@@ -1,0 +1,72 @@
+{
+  "author": "Crossword Maker GPT",
+  "title": "AI-Built Puzzle",
+  "theme": "books",
+  "size": {
+    "rows": 9,
+    "cols": 7
+  },
+  "clues": {
+    "1": { "type": "text", "content": "CU_", "arrow": "down", "target_index": 8 },
+    "2": { "type": "text", "content": "G___", "arrow": "down", "target_index": 9 },
+    "3": { "type": "text", "content": "Domain", "arrow": "down", "target_index": 10 },
+    "4": { "type": "text", "content": "BOA__", "arrow": "down", "target_index": 11 },
+    "5": { "type": "text", "content": "R____S", "arrow": "down", "target_index": 12 },
+    "6": { "type": "text", "content": "Hidden", "arrow": "down", "target_index": 13 },
+    "7": { "type": "text", "content": "Cask", "arrow": "across", "target_index": 8 },
+    "8": {
+      "across": { "type": "text", "content": "Press", "target_index": 16 },
+      "down": { "type": "text", "content": "Leaf", "target_index": 22 }
+    },
+    "9": { "type": "emoji", "content": "🫛", "arrow": "across", "target_index": 22 },
+    "10": {
+      "across": { "type": "text", "content": "E_I_", "target_index": 26 },
+      "down": { "type": "text", "content": "Value", "target_index": 32 }
+    },
+    "11": { "type": "text", "content": "Grade", "arrow": "across", "target_index": 29 },
+    "12": {
+      "across": { "type": "text", "content": "Trim", "target_index": 31 },
+      "down": { "type": "text", "content": "Tweak", "target_index": 37 }
+    },
+    "13": { "type": "emoji", "content": "💎", "arrow": "across", "target_index": 36 },
+    "14": {
+      "across": { "type": "text", "content": "OW_", "target_index": 41 },
+      "down": { "type": "text", "content": "Ratite", "target_index": 47 }
+    },
+    "15": { "type": "text", "content": "Name", "arrow": "across", "target_index": 43 },
+    "16": {
+      "across": { "type": "text", "content": "Kit", "target_index": 46 },
+      "down": { "type": "text", "content": "Brit OK", "target_index": 52 }
+    },
+    "17": {
+      "across": { "type": "text", "content": "Entry", "target_index": 51 },
+      "down": { "type": "text", "content": "HA_", "target_index": 57 }
+    },
+    "18": { "type": "text", "content": "HA_", "arrow": "down", "target_index": 62 },
+    "19": { "type": "text", "content": "State", "arrow": "across", "target_index": 57 }
+  },
+  "date": "2026-01-13",
+  "grid": [
+    ".", ".", ".", ".", ".", ".", ".",
+    ".", "B", "A", "R", "R", "E", "L",
+    ".", ".", "M", "E", "D", "I", "A",
+    ".", "P", "E", "A", ".", "D", "T",
+    ".", "A", ".", "L", "A", "C", "E",
+    ".", "G", "E", "M", "S", ".", "N",
+    ".", "E", "D", ".", "S", "E", "T",
+    ".", ".", "I", "T", "E", "M", ".",
+    ".", "S", "T", "A", "T", "U", "S"
+  ],
+  "gridnums": [
+    0, 1, 2, 3, 4, 5, 6,
+    7, 0, 0, 0, 0, 0, 0,
+    0, 8, 0, 0, 0, 0, 0,
+    9, 0, 0, 0, 10, 0, 0,
+    11, 0, 12, 0, 0, 0, 0,
+    13, 0, 0, 0, 0, 14, 0,
+    15, 0, 0, 16, 0, 0, 0,
+    0, 17, 0, 0, 0, 0, 18,
+    19, 0, 0, 0, 0, 0, 0
+  ],
+  "puzzleId": "puzzle_046"
+}

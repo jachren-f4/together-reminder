@@ -1,0 +1,115 @@
+{
+  "quizId": "affirmation_015",
+  "title": "Financial Partnership",
+  "category": "finances",
+  "branch": "finances",
+  "description": "Assess the overall health of your financial partnership",
+  "magnet_id": 15,
+  "questions": [
+    {
+      "id": "affirmation_015_q1",
+      "text": "I feel satisfied with how we handle money as a couple.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Overall satisfaction with your financial partnership is the bottom line. This captures whether your approach—whatever it is—is working for you.",
+          "framework": "gottman",
+          "whenDifferent": "A satisfaction gap is a clear signal for conversation. The less satisfied partner can identify what would help.",
+          "whenSame": "Shared satisfaction with how you handle money indicates a healthy financial partnership.",
+          "journalPrompt": "On a scale of 1-10, how satisfied are you with how you handle money together? What would raise it?"
+        }
+      }
+    },
+    {
+      "id": "affirmation_015_q2",
+      "text": "I trust that money won't come between us.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Trust that money won't damage your relationship provides security. This confidence allows you to face financial challenges without fear.",
+          "framework": "attachment_theory",
+          "whenDifferent": "If one partner worries about money coming between you, explore what drives that fear. Past experiences? Current tensions?",
+          "whenSame": "Shared trust that money won't threaten your relationship creates deep security.",
+          "journalPrompt": "Do you ever worry that money could come between you? What would help address that?"
+        }
+      }
+    },
+    {
+      "id": "affirmation_015_q3",
+      "text": "I feel my partner and I are building something meaningful together financially.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Feeling like you're building something meaningful—whatever that means to you—gives financial life purpose. Without this sense, money management feels like chores.",
+          "framework": "positive_psychology",
+          "whenDifferent": "If one partner doesn't feel you're building something meaningful, explore what would create that sense. What are you building toward?",
+          "whenSame": "Shared sense of building something meaningful creates motivation and partnership.",
+          "journalPrompt": "What are you building financially? Does it feel meaningful to you?"
+        }
+      }
+    },
+    {
+      "id": "affirmation_015_q4",
+      "text": "I believe our financial partnership makes us stronger as a couple.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Belief that handling money together strengthens your bond reflects healthy integration of finances and relationship. When money weakens connection, something needs attention.",
+          "framework": "gottman",
+          "whenDifferent": "If one partner doesn't feel strengthened by financial partnership, explore what would help. Is money a source of connection or disconnection?",
+          "whenSame": "Mutual belief that financial partnership strengthens you is a relationship asset.",
+          "journalPrompt": "Does handling money together bring you closer or create distance?"
+        }
+      }
+    },
+    {
+      "id": "affirmation_015_q5",
+      "text": "I feel hopeful about what we can accomplish together financially.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Hope about your financial future together provides motivation and resilience. This forward-looking optimism helps you persist through challenges.",
+          "framework": "positive_psychology",
+          "whenDifferent": "If one partner is less hopeful, explore specific concerns. Hope can be built through shared vision and small wins.",
+          "whenSame": "Shared hope about what you can accomplish together is a powerful motivator.",
+          "journalPrompt": "What do you hope to accomplish financially together? What would make that possible?"
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,111 @@
+{
+  "quizId": "quiz_004",
+  "title": "Initiation & Response",
+  "branch": "intimacy",
+  "description": "Explore how you approach initiating intimacy and responding to your partner.",
+  "magnet_id": 15,
+  "questions": [
+    {
+      "id": "quiz_004_q1",
+      "text": "When it comes to initiating intimacy, I tend to...",
+      "choices": [
+        "Initiate often—I'm comfortable making the first move",
+        "Wait for signals that my partner is interested",
+        "Prefer my partner to initiate most of the time",
+        "Initiate sometimes, but I like it mutual"
+      ],
+      "category": "initiation_style",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Initiation patterns shape intimate dynamics. Frequent-initiators take the lead; signal-readers watch for cues; prefer-receiver types are more passive; mutual-seekers share responsibility. Imbalanced initiation creates resentment.",
+          "framework": "gottman",
+          "whenDifferent": "The frequent-initiator may feel undesired if always pursuing; the prefer-receiver may never feel safe to initiate. Talk about what's behind your pattern.",
+          "whenSame": "Matched initiation patterns create balance. You'll share the responsibility naturally.",
+          "journalPrompt": "How do you feel about initiating intimacy? What makes it easy or hard for you?"
+        }
+      }
+    },
+    {
+      "id": "quiz_004_q2",
+      "text": "How I prefer my partner to initiate is...",
+      "choices": [
+        "Directly and clearly—I like knowing",
+        "Subtly with hints and buildup",
+        "Through physical closeness that escalates",
+        "By creating a romantic mood first"
+      ],
+      "category": "initiation_preferences",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Initiation preferences affect reception. Direct-lovers want clarity; hint-lovers enjoy subtlety; escalation-lovers like gradual buildup; mood-setters want romance first. Mismatched styles mean missed signals.",
+          "framework": "love_languages",
+          "whenDifferent": "The direct-lover may miss subtle hints; the hint-lover may find directness unsexy. Learn your partner's style and adjust your approach.",
+          "whenSame": "Matched preferences make initiation smooth. You'll naturally approach each other in appealing ways.",
+          "journalPrompt": "What's the most appealing way for your partner to initiate? What turns you off?"
+        }
+      }
+    },
+    {
+      "id": "quiz_004_q3",
+      "text": "When my partner isn't in the mood after I initiate, I tend to feel...",
+      "choices": [
+        "Understanding—it's not personal",
+        "A little disappointed but okay",
+        "Rejected even if I know I shouldn't",
+        "Fine as long as we connect in other ways"
+      ],
+      "category": "rejection_response",
+      "metadata": {
+        "dimension": "stress_processing",
+        "poleMapping": ["right", "neutral", "left", "right"],
+        "therapeutic": {
+          "rationale": "Rejection response reveals attachment security. Understanding types don't personalize; disappointed-but-okay types feel it but recover; rejection-feelers struggle with no; connection-seekers redirect. How you handle 'no' affects your partner's safety to say it.",
+          "framework": "attachment_theory",
+          "whenDifferent": "The rejection-feeler's pain is real, but making your partner feel guilty for saying no creates pressure. The understanding partner can help the rejection-feeler feel safe.",
+          "whenSame": "Shared rejection response means you understand each other's experience on both sides.",
+          "journalPrompt": "How do you feel when your partner says no? What would help you feel okay about it?"
+        }
+      }
+    },
+    {
+      "id": "quiz_004_q4",
+      "text": "I want my partner to feel safe saying 'not tonight' because...",
+      "choices": [
+        "Genuine desire matters more than obligation",
+        "Pressure ruins the experience for both",
+        "I want honesty in our relationship",
+        "All of these—consent is foundational"
+      ],
+      "category": "consent_values",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Values around freely-given intimacy reveal relationship health. All these reasons are valid and important. Partners who feel safe saying no feel safe saying yes enthusiastically.",
+          "framework": "gottman",
+          "whenDifferent": "These are all good reasons—different emphasis is fine. The key is creating genuine safety for both yes and no.",
+          "whenSame": "Shared values around consent create safety. You both prioritize freely-given intimacy.",
+          "journalPrompt": "How important is it that your partner feels completely free to say no? Does your behavior match that value?"
+        }
+      }
+    },
+    {
+      "id": "quiz_004_q5",
+      "text": "The ideal balance of who initiates would be...",
+      "choices": [
+        "Roughly equal between us",
+        "Whoever feels it more in the moment",
+        "Mostly my partner—I prefer responding",
+        "Mostly me—I'm comfortable leading"
+      ],
+      "category": "initiation_balance",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Desired initiation balance reflects preferences about roles and dynamics. Equal-sharers value mutual effort; in-the-moment types are flexible; response-preferers are more passive; leader-preferers enjoy initiating. Articulating this prevents resentment.",
+          "framework": "gottman",
+          "whenDifferent": "Different preferences need negotiation. If both prefer responding, neither initiates. If both prefer leading, you may compete. Find your workable balance.",
+          "whenSame": "Shared ideal balance makes planning your dynamic easier. You agree on how initiation should flow.",
+          "journalPrompt": "What balance of initiation would feel right to you? Is that what's happening now?"
+        }
+      }
+    }
+  ]
+}

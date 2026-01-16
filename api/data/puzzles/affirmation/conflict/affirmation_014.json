@@ -1,0 +1,115 @@
+{
+  "quizId": "affirmation_014",
+  "title": "Growth Through Conflict",
+  "category": "conflict",
+  "branch": "conflict",
+  "description": "Explore how conflicts contribute to your relationship growth",
+  "magnet_id": 16,
+  "questions": [
+    {
+      "id": "affirmation_014_q1",
+      "text": "Our conflicts have helped us understand each other better.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Conflict handled well increases understanding. When disagreements reveal what matters to each person, partners know each other more deeply afterward.",
+          "framework": "positive_psychology",
+          "whenDifferent": "If conflicts haven't increased understanding, explore what's been learned. Sometimes the lessons are there but unacknowledged.",
+          "whenSame": "Mutual sense that conflicts build understanding transforms disagreement into connection.",
+          "journalPrompt": "What have you learned about your partner through your conflicts?"
+        }
+      }
+    },
+    {
+      "id": "affirmation_014_q2",
+      "text": "We've gotten better at handling disagreements over time.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Improving at conflict indicates learning and growth. Couples who get better at disagreeing build confidence that they can handle challenges together.",
+          "framework": "positive_psychology",
+          "whenDifferent": "If improvement isn't felt, explore what would help. Sometimes progress has happened but isn't recognized; sometimes new skills are needed.",
+          "whenSame": "Shared perception of improvement creates confidence in your conflict skills.",
+          "journalPrompt": "How has your conflict style changed since you've been together?"
+        }
+      }
+    },
+    {
+      "id": "affirmation_014_q3",
+      "text": "Some of our best conversations have come after working through something difficult.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Post-conflict conversations can be deeply connecting—vulnerability has been shared, defenses are down, understanding is fresh. These moments can bring couples closer than they were before.",
+          "framework": "eft",
+          "whenDifferent": "If post-conflict connection doesn't happen, explore what's getting in the way. Lingering hurt? Exhaustion? Sometimes explicit reconnection helps.",
+          "whenSame": "Shared experience of connection after conflict creates positive association with repair.",
+          "journalPrompt": "Have conflicts ever led to closer connection afterward? What made that possible?"
+        }
+      }
+    },
+    {
+      "id": "affirmation_014_q4",
+      "text": "I feel like I've grown as a person through navigating conflict with my partner.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Relationship conflict, when handled well, develops emotional intelligence, communication skills, and self-awareness. Growing through conflict is a gift relationships can offer.",
+          "framework": "positive_psychology",
+          "whenDifferent": "If personal growth hasn't occurred, explore what would help. Sometimes we grow without noticing; sometimes the conflict patterns prevent growth.",
+          "whenSame": "Mutual experience of personal growth through conflict enriches both individuals and the relationship.",
+          "journalPrompt": "How have you grown through navigating conflict with your partner?"
+        }
+      }
+    },
+    {
+      "id": "affirmation_014_q5",
+      "text": "Our relationship is stronger for having worked through difficult things together.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Relationships that survive challenges often emerge stronger. Knowing you can weather storms together builds confidence and trust in your partnership.",
+          "framework": "attachment_theory",
+          "whenDifferent": "If the relationship doesn't feel stronger, explore what's preventing that. Unhealed wounds? Ongoing patterns? Understanding the gap helps address it.",
+          "whenSame": "Shared sense of strength from challenges creates resilient partnership.",
+          "journalPrompt": "Has your relationship been strengthened by what you've worked through?"
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "puzzleId": "ws_001",
+  "title": "Romantic I",
+  "theme": "romantic",
+  "size": {
+    "rows": 10,
+    "cols": 10
+  },
+  "grid": "AGHSULBJALQGNIRACTYZPDRTWLTCOJLAATZRQSJKEJESAGJGBZDPYCLLORTSGGTUDDQLGKEVOLWVAFASAVQJBWVGZUEUCTHGILED",
+  "words": {
+    "YEARN": "52,U",
+    "LOVE": "73,L",
+    "BLUSH": "6,L",
+    "STROLL": "59,L",
+    "GAZE": "68,D",
+    "DELIGHT": "99,L",
+    "ATTRACT": "8,DL",
+    "DUSK": "99,U",
+    "JOY": "38,U",
+    "WALTZ": "85,UR",
+    "CARING": "16,L",
+    "PLEDGE": "20,D"
+  }
+}

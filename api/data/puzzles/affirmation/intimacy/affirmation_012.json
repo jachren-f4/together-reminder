@@ -1,0 +1,115 @@
+{
+  "quizId": "affirmation_012",
+  "title": "Playfulness & Lightness",
+  "category": "intimacy",
+  "branch": "intimacy",
+  "description": "Explore playfulness and lightness in your physical connection",
+  "magnet_id": 16,
+  "questions": [
+    {
+      "id": "affirmation_012_q1",
+      "text": "There's room for playfulness in our physical connection.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Playfulness in physical connection signals safety and joy. When couples can be playful, intimacy becomes lighter and more fun.",
+          "framework": "positive_psychology",
+          "whenDifferent": "If one partner doesn't experience playfulness, explore what would create room for it. Less pressure? More safety? Different context?",
+          "whenSame": "Shared playfulness in physical connection adds joy to your intimacy.",
+          "journalPrompt": "How does playfulness show up in your physical connection?"
+        }
+      }
+    },
+    {
+      "id": "affirmation_012_q2",
+      "text": "We can laugh together in physically close moments.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Laughter during physical moments signals ease and connection. Couples who can laugh together don't take themselves too seriously, reducing pressure.",
+          "framework": "gottman",
+          "whenDifferent": "If laughter feels inappropriate to one partner, explore why. Some take physical moments very seriously; others need lightness.",
+          "whenSame": "Shared laughter in close moments creates joyful intimacy.",
+          "journalPrompt": "Can you laugh together during physical moments? How does that feel?"
+        }
+      }
+    },
+    {
+      "id": "affirmation_012_q3",
+      "text": "Physical closeness doesn't feel heavy or overly serious.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "When physical closeness feels heavy, there's often pressure or anxiety present. Lightness suggests ease and genuine desire rather than obligation.",
+          "framework": "attachment_theory",
+          "whenDifferent": "If closeness feels heavy for one partner, explore what's creating the weight. Expectations? Pressure? Unresolved issues?",
+          "whenSame": "Shared lightness around physical closeness creates ease and invitation.",
+          "journalPrompt": "Does physical closeness ever feel heavy? What creates that?"
+        }
+      }
+    },
+    {
+      "id": "affirmation_012_q4",
+      "text": "My partner and I can be silly together physically.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Silliness requires safety—you can't be silly if you're worried about judgment. Physical silliness shows deep comfort with each other.",
+          "framework": "positive_psychology",
+          "whenDifferent": "If silliness feels uncomfortable, explore why. Some people need more structure; others bloom with playfulness.",
+          "whenSame": "Mutual comfort with physical silliness indicates deep ease together.",
+          "journalPrompt": "Can you be physically silly with your partner? What makes that possible or difficult?"
+        }
+      }
+    },
+    {
+      "id": "affirmation_012_q5",
+      "text": "There's joy in our physical connection, not just need.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Physical connection driven by joy differs from connection driven only by need. Joy makes intimacy something you want, not just something you need.",
+          "framework": "positive_psychology",
+          "whenDifferent": "If joy is missing for one partner, explore what would bring more of it. Connection has become obligatory for some couples.",
+          "whenSame": "Shared joy in physical connection makes intimacy life-giving.",
+          "journalPrompt": "Does your physical connection feel joyful? What brings joy to it?"
+        }
+      }
+    }
+  ]
+}

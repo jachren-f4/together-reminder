@@ -1,0 +1,115 @@
+{
+  "quizId": "affirmation_011",
+  "title": "Perpetual Issues",
+  "category": "conflict",
+  "branch": "conflict",
+  "description": "Explore how you handle ongoing differences that may never fully resolve",
+  "magnet_id": 16,
+  "questions": [
+    {
+      "id": "affirmation_011_q1",
+      "text": "I accept that some of our differences may never completely go away.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Research shows 69% of couple conflicts are perpetual—rooted in personality or lifestyle differences that won't fully resolve. Accepting this reality reduces frustration.",
+          "framework": "gottman",
+          "whenDifferent": "If one partner can't accept perpetual issues, explore what acceptance would mean. It's not giving up—it's working with reality rather than against it.",
+          "whenSame": "Shared acceptance of perpetual issues reduces unnecessary frustration.",
+          "journalPrompt": "What differences between you might be perpetual? How does that feel to consider?"
+        }
+      }
+    },
+    {
+      "id": "affirmation_011_q2",
+      "text": "We can discuss recurring issues without it feeling hopeless.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Discussing perpetual issues can feel futile if resolution is the only goal. When couples can engage these topics with curiosity rather than despair, the dialogue itself becomes connecting.",
+          "framework": "gottman",
+          "whenDifferent": "If recurring discussions feel hopeless, reframe the goal. Understanding each other better—not fixing the difference—can be enough.",
+          "whenSame": "Shared ability to discuss recurring issues without despair keeps dialogue open.",
+          "journalPrompt": "How do you feel when recurring issues come up? What would help it feel less hopeless?"
+        }
+      }
+    },
+    {
+      "id": "affirmation_011_q3",
+      "text": "I can appreciate my partner's perspective on our ongoing differences, even if I don't share it.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Appreciating your partner's different perspective—rather than just tolerating it—transforms perpetual issues from battles into bridges. Their view has validity even when you disagree.",
+          "framework": "positive_psychology",
+          "whenDifferent": "If one partner can't appreciate the other's perspective, explore what prevents it. Sometimes feeling unheard makes it hard to hear in return.",
+          "whenSame": "Mutual appreciation of different perspectives creates respect within disagreement.",
+          "journalPrompt": "Can you appreciate why your partner sees things differently on recurring issues?"
+        }
+      }
+    },
+    {
+      "id": "affirmation_011_q4",
+      "text": "Our perpetual differences don't threaten our relationship.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Perpetual issues become threatening when gridlocked—when there's no movement, no dialogue, only pain. When differences can coexist with connection, they're manageable.",
+          "framework": "gottman",
+          "whenDifferent": "If perpetual issues feel threatening, explore what would reduce the threat. Sometimes it's about how issues are discussed, not the issues themselves.",
+          "whenSame": "Shared sense that perpetual issues aren't threatening creates stability.",
+          "journalPrompt": "Do your ongoing differences feel manageable or threatening? What makes the difference?"
+        }
+      }
+    },
+    {
+      "id": "affirmation_011_q5",
+      "text": "We've found ways to live with our differences that work for both of us.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Living with differences requires creative compromise—solutions that honor both partners' needs even if neither gets everything they want. These accommodations demonstrate care.",
+          "framework": "gottman",
+          "whenDifferent": "If accommodations don't work for one partner, revisit them together. Workable compromises require both voices in the design.",
+          "whenSame": "Shared sense that your compromises work creates sustainable peace.",
+          "journalPrompt": "What accommodations have you found for your differences? Do they feel fair?"
+        }
+      }
+    }
+  ]
+}

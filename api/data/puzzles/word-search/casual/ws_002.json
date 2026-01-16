@@ -1,0 +1,24 @@
+{
+  "puzzleId": "ws_002",
+  "title": "Casual II",
+  "theme": "casual",
+  "size": {
+    "rows": 10,
+    "cols": 10
+  },
+  "grid": "GENTLEWALKTTADYGNTLBSPRPHSTROLBUPEEGYVSQYAGBAAHUUEHCIMOTRTXKBVECRFSCOAFSOSMILEJBOCFUNNYUCJTYJSUNNYUE",
+  "words": {
+    "COCOA": "81,UR",
+    "SMILE": "73,R",
+    "HAPPY": "50,UR",
+    "TREATS": "11,DR",
+    "SURF": "38,DL",
+    "BAKE": "79,U",
+    "GENTLE": "0,R",
+    "GAMES": "35,DL",
+    "VIBES": "61,UR",
+    "SUNNY": "93,R",
+    "FUNNY": "82,R",
+    "WALK": "6,R"
+  }
+}

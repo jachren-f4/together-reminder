@@ -1,0 +1,113 @@
+{
+  "quizId": "quiz_008",
+  "title": "Stress & Intimacy",
+  "branch": "intimacy",
+  "description": "Explore how life stress affects your intimate connection.",
+  "magnet_id": 16,
+  "questions": [
+    {
+      "id": "quiz_008_q1",
+      "text": "When I'm stressed, my desire for intimacy usually...",
+      "choices": [
+        "Decreases—I have less energy for it",
+        "Increases—it helps me feel connected",
+        "Stays about the same",
+        "Varies depending on the type of stress"
+      ],
+      "category": "stress_impact",
+      "metadata": {
+        "dimension": "stress_processing",
+        "poleMapping": ["left", "right", "neutral", "neutral"],
+        "therapeutic": {
+          "rationale": "Stress-desire patterns vary widely. Decrease-types need bandwidth; increase-types use intimacy to cope; steady-types aren't affected; variable-types depend on context. Misunderstanding your partner's pattern causes conflict during stress.",
+          "framework": "gottman",
+          "whenDifferent": "The increase-type may feel rejected by the decrease-type during stress; the decrease-type may feel pressured. Neither is wrong—understand each other's stress response.",
+          "whenSame": "Shared stress-desire pattern means you'll sync up during stressful times. This alignment helps during hard seasons.",
+          "journalPrompt": "What happens to your desire when you're stressed? Why do you think that is?"
+        }
+      }
+    },
+    {
+      "id": "quiz_008_q2",
+      "text": "During stressful seasons, I'd want us to...",
+      "choices": [
+        "Give each other more grace about intimacy",
+        "Make intimacy a priority to stay connected",
+        "Talk about what we each need right now",
+        "Find low-effort ways to stay close"
+      ],
+      "category": "stress_management",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Stress season strategies differ. Grace-givers lower expectations; prioritizers maintain connection; talkers process needs; effort-adjusters find middle ground. Agreeing on your stress strategy helps during hard times.",
+          "framework": "gottman",
+          "whenDifferent": "The prioritizer may feel the grace-giver is giving up; the grace-giver may feel the prioritizer is adding pressure. Find your shared approach before stress hits.",
+          "whenSame": "Shared strategy makes navigating stressful seasons easier. You'll naturally respond similarly.",
+          "journalPrompt": "How do you want to handle intimacy during stressful times? What would feel supportive?"
+        }
+      }
+    },
+    {
+      "id": "quiz_008_q3",
+      "text": "When stress affects our intimate connection, I tend to...",
+      "choices": [
+        "Feel disappointed but understanding",
+        "Worry about the relationship",
+        "Accept it as temporary",
+        "Want to talk about how to reconnect"
+      ],
+      "category": "stress_response",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Responses to stress-affected intimacy reveal attachment. Disappointed-but-understanding types are secure; worriers are anxious; accepters are patient; talkers process actively. These responses shape recovery.",
+          "framework": "attachment_theory",
+          "whenDifferent": "The worrier may need reassurance the accepter doesn't think to give; the talker may push conversations the disappointed partner doesn't need. Know each other's responses.",
+          "whenSame": "Shared response means you'll experience and process stress-affected intimacy similarly.",
+          "journalPrompt": "How do you feel when stress affects your intimate life? What do you need from your partner?"
+        }
+      }
+    },
+    {
+      "id": "quiz_008_q4",
+      "text": "The type of connection that helps me most during stress is...",
+      "choices": [
+        "Physical closeness without pressure",
+        "Talking and emotional support",
+        "Acts of care and help",
+        "Space to manage my own stress"
+      ],
+      "category": "stress_support",
+      "metadata": {
+        "dimension": "support_style",
+        "poleMapping": ["right", "right", "right", "left"],
+        "therapeutic": {
+          "rationale": "Stress support needs vary. Closeness-needers want physical presence; talkers need emotional processing; acts-needers want practical help; space-needers want autonomy. Giving the wrong support feels unsupportive.",
+          "framework": "love_languages",
+          "whenDifferent": "The closeness-needer may feel rejected by the space-needer's withdrawal; the space-needer may feel smothered by physical pursuit. Ask: 'What kind of support do you need right now?'",
+          "whenSame": "Matched stress support needs make comforting each other intuitive.",
+          "journalPrompt": "What kind of support helps you most when you're stressed? What doesn't help?"
+        }
+      }
+    },
+    {
+      "id": "quiz_008_q5",
+      "text": "After a stressful period, reconnecting intimately feels...",
+      "choices": [
+        "Natural—we bounce back easily",
+        "Important—it helps us feel like us again",
+        "Something we need to be intentional about",
+        "Like it takes time to get back to normal"
+      ],
+      "category": "reconnection",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Reconnection patterns vary. Natural-bouncers recover quickly; importance-placers prioritize it; intentional types need effort; time-needers recover slowly. Understanding your pattern helps set expectations.",
+          "framework": "gottman",
+          "whenDifferent": "The natural-bouncer may not understand why their partner needs more time; the time-needer may feel pressured to reconnect before ready. Honor each other's pace.",
+          "whenSame": "Shared reconnection pattern means you'll recover from stressful seasons at similar rates.",
+          "journalPrompt": "How do you reconnect intimately after stress? What helps? What doesn't?"
+        }
+      }
+    }
+  ]
+}

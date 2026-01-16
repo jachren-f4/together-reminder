@@ -1,0 +1,115 @@
+{
+  "quizId": "affirmation_011",
+  "title": "Romance & Tenderness",
+  "category": "intimacy",
+  "branch": "intimacy",
+  "description": "Explore how romance and tenderness show up in your physical connection",
+  "magnet_id": 16,
+  "questions": [
+    {
+      "id": "affirmation_011_q1",
+      "text": "There's tenderness in how my partner touches me.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Tender touch communicates care and presence. When touch has tenderness, it feeds emotional as well as physical needs.",
+          "framework": "love_languages",
+          "whenDifferent": "If one partner doesn't experience tenderness, explore what tenderness looks like for them. The touching partner may express care differently.",
+          "whenSame": "Shared experience of tender touch deepens your emotional-physical connection.",
+          "journalPrompt": "How does tenderness show up in your partner's touch?"
+        }
+      }
+    },
+    {
+      "id": "affirmation_011_q2",
+      "text": "I feel cherished in our physical moments together.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Feeling cherished—not just wanted—adds a layer of emotional meaning to physical connection. This sense of being precious creates deep security.",
+          "framework": "attachment_theory",
+          "whenDifferent": "If one partner doesn't feel cherished, explore what would create that feeling. More words? Slower pace? Different approach?",
+          "whenSame": "Mutual feeling of being cherished makes physical moments emotionally nourishing.",
+          "journalPrompt": "What makes you feel cherished during physical moments?"
+        }
+      }
+    },
+    {
+      "id": "affirmation_011_q3",
+      "text": "Romance still shows up in how we connect physically.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Romance in physical connection—intention, anticipation, specialness—keeps the spark alive. Without it, physical connection can become routine.",
+          "framework": "positive_psychology",
+          "whenDifferent": "If romance has faded for one partner, explore what romance looks like for them and what would bring it back.",
+          "whenSame": "Shared sense of ongoing romance enriches your physical connection.",
+          "journalPrompt": "What does romance in physical connection look like for you?"
+        }
+      }
+    },
+    {
+      "id": "affirmation_011_q4",
+      "text": "My partner makes me feel special through physical affection.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Feeling special through affection—not just one of many possible recipients—creates secure attachment. This uniqueness communicates commitment.",
+          "framework": "attachment_theory",
+          "whenDifferent": "If one partner doesn't feel special, explore what would create that feeling. The other partner may assume it's obvious.",
+          "whenSame": "Mutual feeling of being made special through affection strengthens your bond.",
+          "journalPrompt": "What makes your partner's affection feel special to you?"
+        }
+      }
+    },
+    {
+      "id": "affirmation_011_q5",
+      "text": "There's warmth and care in how we are physical together.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Warmth and care as the tone of physical connection creates safety. Without this underlying warmth, physical contact can feel mechanical or disconnected.",
+          "framework": "eft",
+          "whenDifferent": "If warmth and care are missing for one partner, explore what would bring more of it. Intention? Presence? Words?",
+          "whenSame": "Shared experience of warmth and care creates a loving physical dynamic.",
+          "journalPrompt": "What creates the sense of warmth and care in your physical connection?"
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "puzzleId": "ws_002",
+  "title": "Romantic II",
+  "theme": "romantic",
+  "size": {
+    "rows": 10,
+    "cols": 10
+  },
+  "grid": "RMEDROCKTIEZUDEKSCNSTOWRAUFTEVTLZSDTZDSUEMBRACEDELLRALWAYSRHEOESIMORPSBREEZENYMUNOISSAPVTRETAMLUOSIC",
+  "words": {
+    "PASSION": "86,L",
+    "EMBRACE": "40,R",
+    "CRUSH": "99,U",
+    "PROMISE": "68,L",
+    "DATE": "13,DR",
+    "DUO": "3,DL",
+    "LETTER": "50,U",
+    "PRESENT": "68,U",
+    "BREEZE": "70,R",
+    "SOULMATE": "97,L",
+    "DUSK": "34,UR",
+    "ALWAYS": "52,R"
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "quizId": "quiz_015",
+  "title": "Childhood Throwbacks",
+  "branch": "lighthearted",
+  "questions": [
+    {
+      "id": "quiz_015_q1",
+      "category": "personality",
+      "prompt": "Who was more",
+      "content": "Of a troublemaker as a kid"
+    },
+    {
+      "id": "quiz_015_q2",
+      "category": "habits",
+      "prompt": "Who would",
+      "content": "Still enjoy playing with toys or games from childhood"
+    },
+    {
+      "id": "quiz_015_q3",
+      "category": "preferences",
+      "prompt": "Who is more",
+      "content": "Nostalgic about their childhood"
+    },
+    {
+      "id": "quiz_015_q4",
+      "category": "social",
+      "prompt": "Who had more",
+      "content": "Imaginary friends growing up"
+    },
+    {
+      "id": "quiz_015_q5",
+      "category": "personality",
+      "prompt": "Who would",
+      "content": "Still get excited about their favorite childhood snack"
+    }
+  ],
+  "description": "Take a trip down memory lane and share your childhood stories!",
+  "magnet_id": 1
+}

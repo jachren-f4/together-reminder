@@ -38,6 +38,7 @@ class SubscriptionService with ChangeNotifier {
 
   // State
   bool _isInitialized = false;
+  String? _initializationError;  // Stores error if initialization failed
   CustomerInfo? _customerInfo;
 
   // Couple-level subscription status (one subscription, two accounts)
@@ -85,6 +86,7 @@ class SubscriptionService with ChangeNotifier {
     if (kIsWeb) {
       Logger.info('SubscriptionService: Skipping on web platform', service: 'subscription');
       _isInitialized = true;
+      _initializationError = null;
       return;
     }
 
@@ -92,6 +94,7 @@ class SubscriptionService with ChangeNotifier {
     if (!RevenueCatConfig.isConfigured) {
       Logger.warn('RevenueCat not configured - subscription features disabled', service: 'subscription');
       _isInitialized = true;
+      _initializationError = 'API key not configured';
       return;
     }
 
@@ -119,11 +122,13 @@ class SubscriptionService with ChangeNotifier {
       _updatePremiumCache();
 
       _isInitialized = true;
+      _initializationError = null;
       Logger.info('SubscriptionService initialized successfully', service: 'subscription');
       Logger.debug('Premium status: $isPremium', service: 'subscription');
     } catch (e) {
       Logger.error('Failed to initialize SubscriptionService', error: e, service: 'subscription');
       _isInitialized = true; // Mark as initialized to prevent repeated attempts
+      _initializationError = e.toString();
     }
   }
 
@@ -227,20 +232,69 @@ class SubscriptionService with ChangeNotifier {
     }
   }
 
+  // Last error from getOfferings (for debugging)
+  String? _lastOfferingsError;
+
+  /// Get last offerings fetch error (for debugging)
+  String? get lastOfferingsError => _lastOfferingsError;
+
   /// Get available offerings for the paywall
   ///
   /// Returns null if offerings couldn't be fetched.
   Future<Offerings?> getOfferings() async {
-    if (kIsWeb || !RevenueCatConfig.isConfigured) return null;
+    _lastOfferingsError = null;
+
+    if (kIsWeb) {
+      _lastOfferingsError = 'Web platform not supported';
+      return null;
+    }
+
+    if (!RevenueCatConfig.isConfigured) {
+      _lastOfferingsError = 'RevenueCat not configured';
+      return null;
+    }
+
+    if (_initializationError != null) {
+      _lastOfferingsError = 'SDK init failed: $_initializationError';
+      return null;
+    }
 
     try {
       final offerings = await Purchases.getOfferings();
       Logger.debug('Fetched offerings: ${offerings.current?.identifier}', service: 'subscription');
+
+      // Additional debug info
+      if (offerings.current == null) {
+        _lastOfferingsError = 'No current offering set in RevenueCat dashboard';
+      } else if (offerings.current!.availablePackages.isEmpty) {
+        _lastOfferingsError = 'Current offering has no packages';
+      }
+
       return offerings;
     } catch (e) {
       Logger.error('Failed to fetch offerings', error: e, service: 'subscription');
+      _lastOfferingsError = e.toString();
       return null;
     }
+  }
+
+  /// Get detailed debug info about the SDK state
+  Map<String, dynamic> getDebugInfo() {
+    return {
+      'isInitialized': _isInitialized,
+      'initializationError': _initializationError,
+      'isInitializedSuccessfully': isInitializedSuccessfully,
+      'isConfigured': RevenueCatConfig.isConfigured,
+      'apiKeyPrefix': RevenueCatConfig.iosApiKey.length > 10
+          ? '${RevenueCatConfig.iosApiKey.substring(0, 10)}...'
+          : RevenueCatConfig.iosApiKey,
+      'entitlementId': RevenueCatConfig.premiumEntitlement,
+      'lastOfferingsError': _lastOfferingsError,
+      'hasCustomerInfo': _customerInfo != null,
+      'isPremium': isPremium,
+      'isDevBypassActive': _devBypass,
+      'platform': kIsWeb ? 'web' : (Platform.isIOS ? 'iOS' : 'Android'),
+    };
   }
 
   /// Purchase a package
@@ -353,6 +407,12 @@ class SubscriptionService with ChangeNotifier {
 
   /// Check if subscription service is ready
   bool get isInitialized => _isInitialized;
+
+  /// Get initialization error (null if successful)
+  String? get initializationError => _initializationError;
+
+  /// Check if initialization actually succeeded (no error)
+  bool get isInitializedSuccessfully => _isInitialized && _initializationError == null;
 
   // ============================================================================
   // REVENUECAT PAYWALL UI

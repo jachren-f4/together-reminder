@@ -1,0 +1,39 @@
+{
+  "quizId": "quiz_014",
+  "title": "Patience & Grace",
+  "branch": "conflict",
+  "questions": [
+    {
+      "id": "quiz_014_q1",
+      "category": "personality",
+      "prompt": "Who is more...",
+      "content": "Patient when the other is having a rough day"
+    },
+    {
+      "id": "quiz_014_q2",
+      "category": "habits",
+      "prompt": "Who would...",
+      "content": "Give the other the benefit of the doubt"
+    },
+    {
+      "id": "quiz_014_q3",
+      "category": "preferences",
+      "prompt": "Who is quicker to...",
+      "content": "Assume good intentions"
+    },
+    {
+      "id": "quiz_014_q4",
+      "category": "personality",
+      "prompt": "Who is more...",
+      "content": "Understanding when plans change unexpectedly"
+    },
+    {
+      "id": "quiz_014_q5",
+      "category": "habits",
+      "prompt": "Who is more likely to...",
+      "content": "Respond with kindness even when frustrated"
+    }
+  ],
+  "description": "Grace under pressure—discover how you show patience with each other!",
+  "magnet_id": 15
+}

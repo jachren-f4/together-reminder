@@ -1,0 +1,111 @@
+{
+  "quizId": "quiz_012",
+  "title": "Emotional Safety",
+  "branch": "intimacy",
+  "description": "Explore what emotional safety means for your intimate connection.",
+  "magnet_id": 17,
+  "questions": [
+    {
+      "id": "quiz_012_q1",
+      "text": "Emotional safety during intimacy means...",
+      "choices": [
+        "Knowing I won't be judged or criticized",
+        "Feeling fully accepted and loved",
+        "Being able to be my authentic self",
+        "All of these—safety is multifaceted"
+      ],
+      "category": "safety_definition",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Emotional safety definitions shape what you need. Non-judgment seekers fear criticism; acceptance-needers want unconditional love; authenticity-seekers want freedom to be real; multifaceted types need all three. Naming your definition helps your partner provide it.",
+          "framework": "attachment_theory",
+          "whenDifferent": "All these aspects of safety matter—emphasize what your partner most needs while maintaining all three.",
+          "whenSame": "Shared safety definition focuses your effort on the same target.",
+          "journalPrompt": "What does emotional safety during intimacy mean to you? When do you feel safest?"
+        }
+      }
+    },
+    {
+      "id": "quiz_012_q2",
+      "text": "What would make me feel less safe emotionally during intimacy is...",
+      "choices": [
+        "Criticism or negative comments about my body",
+        "Feeling rushed or pressured",
+        "Sensing my partner is distracted or checked out",
+        "Lack of emotional connection before physical"
+      ],
+      "category": "safety_threats",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Knowing what threatens safety helps partners avoid it. Criticism-sensitive types need affirmation; pressure-averse types need patience; presence-needers want attention; connection-needers want emotional depth first. These are often unspoken.",
+          "framework": "attachment_theory",
+          "whenDifferent": "Avoid ALL of these threats regardless of your own vulnerability pattern. Your partner's safety triggers matter as much as yours.",
+          "whenSame": "Shared vulnerability pattern means you'll instinctively avoid hurting each other in the same ways.",
+          "journalPrompt": "What makes you feel emotionally unsafe during intimacy? Has that happened before? What did you need?"
+        }
+      }
+    },
+    {
+      "id": "quiz_012_q3",
+      "text": "After an intimate moment, what I most need emotionally is...",
+      "choices": [
+        "Continued closeness and affection",
+        "Verbal affirmation and connection",
+        "Quiet presence without words",
+        "To feel like it meant something to my partner"
+      ],
+      "category": "aftercare_needs",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Post-intimacy emotional needs vary. Closeness-needers want physical continuation; verbal-needers want words; quiet-presence types want peaceful together-time; meaning-seekers want validation. Aftercare is often overlooked but crucial for safety.",
+          "framework": "attachment_theory",
+          "whenDifferent": "Different needs require different giving. The closeness-needer may cling when their partner needs quiet; the quiet-needer may seem distant. Share and honor each other's needs.",
+          "whenSame": "Matched aftercare needs make post-intimacy transitions seamless.",
+          "journalPrompt": "What do you need emotionally after being intimate? Are you getting that now?"
+        }
+      }
+    },
+    {
+      "id": "quiz_012_q4",
+      "text": "When I share something vulnerable about intimacy, I need my partner to...",
+      "choices": [
+        "Listen without trying to fix it",
+        "Reassure me that it's okay",
+        "Share something vulnerable too",
+        "Remember it and honor it going forward"
+      ],
+      "category": "vulnerability_response",
+      "metadata": {
+        "dimension": "support_style",
+        "poleMapping": ["left", "right", "right", "right"],
+        "therapeutic": {
+          "rationale": "Vulnerability responses shape whether we share again. Listeners validate; reassurers comfort; mutual-sharers connect; rememberers demonstrate care. The wrong response shuts down future vulnerability.",
+          "framework": "attachment_theory",
+          "whenDifferent": "Different needs require different responses. Ask what your partner needs before launching into your default mode.",
+          "whenSame": "Matched vulnerability response needs make processing intimate vulnerability together natural.",
+          "journalPrompt": "When you share something vulnerable, what response helps? What doesn't?"
+        }
+      }
+    },
+    {
+      "id": "quiz_012_q5",
+      "text": "I feel emotionally closest to my partner during intimacy when...",
+      "choices": [
+        "There's eye contact and presence",
+        "We communicate throughout",
+        "I feel completely desired and wanted",
+        "We're emotionally connected before we begin"
+      ],
+      "category": "connection_triggers",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Closeness triggers vary. Eye-contact types need visual connection; communicators need verbal exchange; desired-feelers need to feel wanted; pre-connectors need emotional warmth first. Knowing your partner's trigger helps you create it.",
+          "framework": "gottman",
+          "whenDifferent": "Different triggers are fine—you can provide all of these with awareness. Learn what your partner most needs.",
+          "whenSame": "Shared closeness trigger makes deep connection during intimacy easier.",
+          "journalPrompt": "When do you feel most emotionally close during intimacy? What creates that feeling?"
+        }
+      }
+    }
+  ]
+}

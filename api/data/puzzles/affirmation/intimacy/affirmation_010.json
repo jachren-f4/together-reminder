@@ -1,0 +1,115 @@
+{
+  "quizId": "affirmation_010",
+  "title": "Body Acceptance",
+  "category": "intimacy",
+  "branch": "intimacy",
+  "description": "Explore how accepted you feel in your body within your relationship",
+  "magnet_id": 16,
+  "questions": [
+    {
+      "id": "affirmation_010_q1",
+      "text": "I feel accepted by my partner exactly as I am physically.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Physical acceptance—feeling your body is welcomed as it is—creates safety for intimacy. Conditional acceptance based on appearance undermines this foundation.",
+          "framework": "attachment_theory",
+          "whenDifferent": "If one partner doesn't feel accepted, explore what creates that feeling. Comments? Looks? Comparisons? The other partner needs to know.",
+          "whenSame": "Mutual physical acceptance creates freedom to be present in your bodies together.",
+          "journalPrompt": "Do you feel your body is accepted as it is? What affects that feeling?"
+        }
+      }
+    },
+    {
+      "id": "affirmation_010_q2",
+      "text": "My partner's way of looking at me makes me feel good about my body.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "How your partner looks at you communicates acceptance or judgment. A loving gaze can heal body image wounds; a critical gaze can deepen them.",
+          "framework": "eft",
+          "whenDifferent": "If one partner's gaze doesn't feel good, explore what they're perceiving. Sometimes it's about the receiver's interpretation; sometimes the giver needs awareness.",
+          "whenSame": "Mutual experience of affirming gazes strengthens body confidence in your relationship.",
+          "journalPrompt": "How does your partner look at you? What does their gaze communicate?"
+        }
+      }
+    },
+    {
+      "id": "affirmation_010_q3",
+      "text": "I don't feel I need to hide parts of my body from my partner.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Hiding parts of your body signals shame or fear of judgment. When you can be fully seen without needing to hide, intimacy can be more complete.",
+          "framework": "attachment_theory",
+          "whenDifferent": "If one partner hides parts of themselves, approach with compassion. This often connects to deeper body image issues that deserve gentle attention.",
+          "whenSame": "Mutual freedom from hiding creates full physical presence with each other.",
+          "journalPrompt": "Are there parts of yourself you hide from your partner? What would help you feel safer?"
+        }
+      }
+    },
+    {
+      "id": "affirmation_010_q4",
+      "text": "My partner seems comfortable with my body, including its imperfections.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Perceiving your partner's comfort with your imperfections allows you to relax. Sensing discomfort—real or imagined—creates self-consciousness.",
+          "framework": "eft",
+          "whenDifferent": "If one partner doesn't sense comfort with their imperfections, the other can express acceptance more clearly. Sometimes silence is misread as judgment.",
+          "whenSame": "Shared sense of comfort with each other's imperfections creates acceptance.",
+          "journalPrompt": "How does your partner respond to your physical imperfections?"
+        }
+      }
+    },
+    {
+      "id": "affirmation_010_q5",
+      "text": "Being with my partner helps me appreciate my own body more.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Relationships can heal or harm body image. When your partner's love helps you appreciate your body, intimacy becomes a source of healing.",
+          "framework": "positive_psychology",
+          "whenDifferent": "If one partner's body image isn't helped by the relationship, explore what would help. More verbal appreciation? Different types of touch?",
+          "whenSame": "Mutual body appreciation through your relationship is a gift you give each other.",
+          "journalPrompt": "How has your relationship affected how you feel about your body?"
+        }
+      }
+    }
+  ]
+}

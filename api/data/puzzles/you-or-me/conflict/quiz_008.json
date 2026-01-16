@@ -1,0 +1,39 @@
+{
+  "quizId": "quiz_008",
+  "title": "Listening & Understanding",
+  "branch": "conflict",
+  "questions": [
+    {
+      "id": "quiz_008_q1",
+      "category": "habits",
+      "prompt": "Who is more likely to...",
+      "content": "Ask clarifying questions"
+    },
+    {
+      "id": "quiz_008_q2",
+      "category": "personality",
+      "prompt": "Who tends to...",
+      "content": "Reflect back what they heard"
+    },
+    {
+      "id": "quiz_008_q3",
+      "category": "preferences",
+      "prompt": "Who is more...",
+      "content": "Patient when the other is struggling to explain"
+    },
+    {
+      "id": "quiz_008_q4",
+      "category": "habits",
+      "prompt": "Who would...",
+      "content": "Notice when the other needs to be heard more than fixed"
+    },
+    {
+      "id": "quiz_008_q5",
+      "category": "personality",
+      "prompt": "Who is more likely to...",
+      "content": "Put themselves in the other's shoes"
+    }
+  ],
+  "description": "Feeling heard matters—explore how you listen and understand each other.",
+  "magnet_id": 14
+}

@@ -1,0 +1,39 @@
+{
+  "quizId": "quiz_013",
+  "title": "New Adventures",
+  "branch": "growth",
+  "questions": [
+    {
+      "id": "quiz_013_q1",
+      "category": "learning",
+      "prompt": "Who is more excited to...",
+      "content": "Try something completely new together"
+    },
+    {
+      "id": "quiz_013_q2",
+      "category": "resilience",
+      "prompt": "Who bounces back faster from...",
+      "content": "A plan that didn't work out"
+    },
+    {
+      "id": "quiz_013_q3",
+      "category": "support",
+      "prompt": "Who is more encouraging when...",
+      "content": "The other wants to step outside their comfort zone"
+    },
+    {
+      "id": "quiz_013_q4",
+      "category": "future",
+      "prompt": "Who is more likely to...",
+      "content": "Suggest a spontaneous adventure"
+    },
+    {
+      "id": "quiz_013_q5",
+      "category": "mutual_growth",
+      "prompt": "Who gets more excited about...",
+      "content": "Learning a new skill together"
+    }
+  ],
+  "description": "Growth happens when you try new things—explore your adventurous sides!",
+  "magnet_id": 9
+}

@@ -1,0 +1,39 @@
+{
+  "quizId": "quiz_015",
+  "title": "Better Together",
+  "branch": "growth",
+  "questions": [
+    {
+      "id": "quiz_015_q1",
+      "category": "mutual_growth",
+      "prompt": "Who has grown more since...",
+      "content": "You've been together"
+    },
+    {
+      "id": "quiz_015_q2",
+      "category": "support",
+      "prompt": "Who is more...",
+      "content": "Patient when the other is working through something"
+    },
+    {
+      "id": "quiz_015_q3",
+      "category": "learning",
+      "prompt": "Who has taught the other more about...",
+      "content": "Seeing things from a different perspective"
+    },
+    {
+      "id": "quiz_015_q4",
+      "category": "resilience",
+      "prompt": "Who inspires the other more to...",
+      "content": "Keep going when things get tough"
+    },
+    {
+      "id": "quiz_015_q5",
+      "category": "future",
+      "prompt": "Who is more excited about...",
+      "content": "All the ways you'll grow together"
+    }
+  ],
+  "description": "You make each other better—celebrate how you've grown together!",
+  "magnet_id": 9
+}

@@ -1,0 +1,39 @@
+{
+  "quizId": "quiz_009",
+  "title": "Budget Vibes",
+  "branch": "finances",
+  "questions": [
+    {
+      "id": "quiz_009_q1",
+      "category": "personality",
+      "prompt": "Who is more...",
+      "content": "Likely to know exactly what's in their account"
+    },
+    {
+      "id": "quiz_009_q2",
+      "category": "habits",
+      "prompt": "Who would...",
+      "content": "Enjoy organizing finances into categories"
+    },
+    {
+      "id": "quiz_009_q3",
+      "category": "preferences",
+      "prompt": "Who prefers...",
+      "content": "Flexibility over strict budgets"
+    },
+    {
+      "id": "quiz_009_q4",
+      "category": "personality",
+      "prompt": "Who feels more...",
+      "content": "Satisfied after balancing the books"
+    },
+    {
+      "id": "quiz_009_q5",
+      "category": "habits",
+      "prompt": "Who would...",
+      "content": "Round up purchases in their head"
+    }
+  ],
+  "description": "Spreadsheet lover or go-with-the-flow? Explore your budgeting personalities!",
+  "magnet_id": 9
+}

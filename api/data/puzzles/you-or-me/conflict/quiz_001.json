@@ -1,0 +1,39 @@
+{
+  "quizId": "quiz_001",
+  "title": "Communication Styles",
+  "branch": "conflict",
+  "questions": [
+    {
+      "id": "quiz_001_q1",
+      "category": "preferences",
+      "prompt": "Who is more likely to...",
+      "content": "Want to talk things through right away"
+    },
+    {
+      "id": "quiz_001_q2",
+      "category": "personality",
+      "prompt": "Who is more...",
+      "content": "Comfortable expressing when something's bothering them"
+    },
+    {
+      "id": "quiz_001_q3",
+      "category": "habits",
+      "prompt": "Who would...",
+      "content": "Prefer to process before discussing"
+    },
+    {
+      "id": "quiz_001_q4",
+      "category": "preferences",
+      "prompt": "Who is more likely to...",
+      "content": "Use humor to lighten tense moments"
+    },
+    {
+      "id": "quiz_001_q5",
+      "category": "personality",
+      "prompt": "Who tends to...",
+      "content": "Stay calm when things get heated"
+    }
+  ],
+  "description": "Discover how you each communicate when things get tricky!",
+  "magnet_id": 13
+}

@@ -1,0 +1,115 @@
+{
+  "quizId": "affirmation_001",
+  "title": "Financial Trust",
+  "category": "finances",
+  "branch": "finances",
+  "description": "Assess how much you trust each other with money matters",
+  "magnet_id": 15,
+  "questions": [
+    {
+      "id": "affirmation_001_q1",
+      "text": "I trust my partner's judgment when it comes to money.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Financial trust starts with trusting your partner's judgment—their ability to make sound decisions. This is observable even early in a relationship through how they talk about and handle their own finances.",
+          "framework": "financial_therapy",
+          "whenDifferent": "A trust gap here is worth exploring. The lower-trust partner may have observed something concerning, or may be projecting past experiences. Discuss what builds financial confidence.",
+          "whenSame": "Matched trust levels create alignment. Whether high or still developing, you're on the same page about where you stand.",
+          "journalPrompt": "What have you observed about your partner that shapes your trust in their financial judgment?"
+        }
+      }
+    },
+    {
+      "id": "affirmation_001_q2",
+      "text": "My partner seems open and honest about money matters.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Financial openness is observable through how freely your partner discusses money—their situation, their views, their concerns. Secrecy or avoidance early on often continues later.",
+          "framework": "gottman",
+          "whenDifferent": "If one partner senses less openness, explore what creates that feeling. Some people are private about money due to upbringing, not deception.",
+          "whenSame": "Shared perception of openness creates a foundation for future financial partnership.",
+          "journalPrompt": "How comfortable is your partner talking about money? How comfortable are you?"
+        }
+      }
+    },
+    {
+      "id": "affirmation_001_q3",
+      "text": "I feel comfortable being financially transparent with my partner.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Your own comfort with transparency reflects both your trust in your partner and your relationship with money. Discomfort may signal fear of judgment, shame about your situation, or past negative experiences.",
+          "framework": "attachment_theory",
+          "whenDifferent": "Different comfort levels are common. The less comfortable partner may need more safety, time, or to work through their own money baggage first.",
+          "whenSame": "Matched comfort with transparency means you're ready for similar levels of financial openness.",
+          "journalPrompt": "What makes it easy or hard for you to be financially open with your partner?"
+        }
+      }
+    },
+    {
+      "id": "affirmation_001_q4",
+      "text": "I believe my partner and I share similar values about money.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Shared money values—what's worth spending on, the importance of saving, views on generosity—matter more than identical incomes or spending habits. Values alignment predicts financial harmony.",
+          "framework": "financial_therapy",
+          "whenDifferent": "A values gap is significant and worth discussing early. Different values don't doom a relationship but do require negotiation and mutual respect.",
+          "whenSame": "Perceived values alignment is a strong foundation. Confirm this by discussing what you each prioritize financially.",
+          "journalPrompt": "What are your core values about money? Do you know your partner's?"
+        }
+      }
+    },
+    {
+      "id": "affirmation_001_q5",
+      "text": "I believe we can navigate financial decisions well together.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Confidence in your ability to make financial decisions together reflects optimism about your partnership. This belief—even before you've tested it much—shapes how you'll approach money as a team.",
+          "framework": "positive_psychology",
+          "whenDifferent": "If one partner is less confident, explore what's driving that. Past relationship experiences? Concerns about compatibility? Naming it helps address it.",
+          "whenSame": "Shared confidence in your financial future together is a strength to build on.",
+          "journalPrompt": "What makes you confident—or uncertain—about making financial decisions together?"
+        }
+      }
+    }
+  ]
+}

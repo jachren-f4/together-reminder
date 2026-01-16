@@ -1,0 +1,39 @@
+{
+  "quizId": "quiz_007",
+  "title": "Connection Rituals",
+  "branch": "intimacy",
+  "questions": [
+    {
+      "id": "quiz_007_q1",
+      "category": "habits",
+      "prompt": "Who is more likely to...",
+      "content": "Check in about each other's day"
+    },
+    {
+      "id": "quiz_007_q2",
+      "category": "preferences",
+      "prompt": "Who values more...",
+      "content": "A goodnight kiss every night"
+    },
+    {
+      "id": "quiz_007_q3",
+      "category": "personality",
+      "prompt": "Who is more...",
+      "content": "Intentional about creating couple rituals"
+    },
+    {
+      "id": "quiz_007_q4",
+      "category": "habits",
+      "prompt": "Who would...",
+      "content": "Remember to say goodbye properly"
+    },
+    {
+      "id": "quiz_007_q5",
+      "category": "preferences",
+      "prompt": "Who enjoys more...",
+      "content": "Morning coffee or tea together"
+    }
+  ],
+  "description": "The little rituals that keep you connected—discover yours!",
+  "magnet_id": 11
+}

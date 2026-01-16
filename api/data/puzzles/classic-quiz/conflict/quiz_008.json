@@ -1,0 +1,109 @@
+{
+  "quizId": "quiz_008",
+  "title": "Forgiveness & Letting Go",
+  "branch": "conflict",
+  "description": "Explore how you process hurt and move toward forgiveness.",
+  "magnet_id": 16,
+  "questions": [
+    {
+      "id": "quiz_008_q1",
+      "text": "When my partner has hurt me, I tend to...",
+      "choices": [
+        "Forgive fairly easily once they apologize",
+        "Need time to process before I can let go",
+        "Struggle to fully release it",
+        "Forgive but sometimes bring it up again"
+      ],
+      "category": "forgiveness_pattern",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Forgiveness patterns vary. Quick-forgivers move fast; time-needers process; struggle-forgivers carry hurt longer; bring-up-againers haven't fully released. None is right or wrong, but patterns affect relationship healing.",
+          "framework": "gottman",
+          "whenDifferent": "The quick-forgiver may not understand why their partner holds on; the struggle-forgiver may feel the quick-forgiver dismisses hurts. Honor each other's pace.",
+          "whenSame": "Shared forgiveness pattern creates aligned expectations about healing timelines.",
+          "journalPrompt": "How do you typically process hurt and move toward forgiveness?"
+        }
+      }
+    },
+    {
+      "id": "quiz_008_q2",
+      "text": "Forgiveness to me means...",
+      "choices": [
+        "Letting go of resentment, not forgetting",
+        "Choosing to move forward together",
+        "Rebuilding trust over time",
+        "Accepting that everyone makes mistakes"
+      ],
+      "category": "forgiveness_meaning",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Forgiveness definitions shape expectations. Letting-go types release resentment; forward-movers choose progress; trust-rebuilders need action; mistake-accepters normalize error. Knowing your partner's definition helps you meet their needs.",
+          "framework": "positive_psychology",
+          "whenDifferent": "Different definitions may cause confusion. One partner may think they've forgiven while the other still needs something. Clarify what forgiveness means to each of you.",
+          "whenSame": "Shared meaning creates aligned understanding of what forgiveness involves.",
+          "journalPrompt": "What does forgiveness mean to you? What does it require?"
+        }
+      }
+    },
+    {
+      "id": "quiz_008_q3",
+      "text": "What helps me forgive is...",
+      "choices": [
+        "Understanding why they did what they did",
+        "Seeing genuine remorse and changed behavior",
+        "Time and space to process my feelings",
+        "Remembering the bigger picture of our relationship"
+      ],
+      "category": "forgiveness_support",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Forgiveness enablers vary. Understanding-seekers need context; remorse-seers need evidence; time-needers need space; big-picture thinkers need perspective. Knowing what helps you forgive helps your partner support healing.",
+          "framework": "gottman",
+          "whenDifferent": "Different enablers require different partner responses. The understanding-seeker needs explanation; the time-needer needs patience.",
+          "whenSame": "Shared enablers make supporting each other's forgiveness process easier.",
+          "journalPrompt": "What helps you forgive when you've been hurt? What would help even more?"
+        }
+      }
+    },
+    {
+      "id": "quiz_008_q4",
+      "text": "The thing that makes forgiveness hardest for me is...",
+      "choices": [
+        "When I don't understand why they did it",
+        "When the same thing keeps happening",
+        "When the apology doesn't feel genuine",
+        "When the hurt went very deep"
+      ],
+      "category": "forgiveness_barriers",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Forgiveness barriers reveal what blocks healing. Confusion needs understanding; repetition needs change; insincerity needs genuine remorse; deep hurts need more time. Naming barriers helps address them.",
+          "framework": "gottman",
+          "whenDifferent": "Different barriers need different responses. The repetition-barrier needs commitment to change; the deep-hurt barrier needs patience.",
+          "whenSame": "Shared barriers create mutual understanding about what makes forgiveness hard.",
+          "journalPrompt": "What makes forgiveness hardest for you? Is there anything unforgiven lingering?"
+        }
+      }
+    },
+    {
+      "id": "quiz_008_q5",
+      "text": "After I've forgiven, I want...",
+      "choices": [
+        "To truly move on without bringing it up",
+        "Continued awareness that it mattered",
+        "Gradual rebuilding of trust",
+        "Some acknowledgment that healing took work"
+      ],
+      "category": "post_forgiveness",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Post-forgiveness needs vary. Move-on types want closure; awareness-wanters need continued acknowledgment; trust-rebuilders need action over time; work-acknowledgers need validation. These needs affect whether forgiveness sticks.",
+          "framework": "gottman",
+          "whenDifferent": "Different post-forgiveness needs may clash. The move-on type may feel the awareness-wanter is holding on; the awareness-wanter may feel the move-on type has forgotten. Honor both needs.",
+          "whenSame": "Shared post-forgiveness needs create aligned expectations about what comes after.",
+          "journalPrompt": "What do you need after you've forgiven? Does that happen in your relationship?"
+        }
+      }
+    }
+  ]
+}

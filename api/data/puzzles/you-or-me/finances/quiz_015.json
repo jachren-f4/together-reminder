@@ -1,0 +1,39 @@
+{
+  "quizId": "quiz_015",
+  "title": "Dream Big",
+  "branch": "finances",
+  "questions": [
+    {
+      "id": "quiz_015_q1",
+      "category": "preferences",
+      "prompt": "Who dreams more about...",
+      "content": "Owning a dream home someday"
+    },
+    {
+      "id": "quiz_015_q2",
+      "category": "personality",
+      "prompt": "Who is more excited about...",
+      "content": "Imagining your ideal retirement"
+    },
+    {
+      "id": "quiz_015_q3",
+      "category": "habits",
+      "prompt": "Who would...",
+      "content": "Make a vision board for financial goals"
+    },
+    {
+      "id": "quiz_015_q4",
+      "category": "preferences",
+      "prompt": "Who thinks more about...",
+      "content": "Building something together long-term"
+    },
+    {
+      "id": "quiz_015_q5",
+      "category": "personality",
+      "prompt": "Who gets more excited about...",
+      "content": "Talking about future possibilities"
+    }
+  ],
+  "description": "What are your biggest dreams together? Explore your financial aspirations!",
+  "magnet_id": 9
+}

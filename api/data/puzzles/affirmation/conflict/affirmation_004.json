@@ -1,0 +1,115 @@
+{
+  "quizId": "affirmation_004",
+  "title": "How Conflicts Begin",
+  "category": "conflict",
+  "branch": "conflict",
+  "description": "Explore how disagreements typically start between you",
+  "magnet_id": 16,
+  "questions": [
+    {
+      "id": "affirmation_004_q1",
+      "text": "When my partner brings up a concern, it usually feels approachable.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "How concerns are raised determines how conversations go. Soft, approachable openings invite dialogue; harsh startups trigger defensiveness before real conversation begins.",
+          "framework": "gottman",
+          "whenDifferent": "If one partner doesn't find the other's approach approachable, specific feedback helps. What would make it easier to hear?",
+          "whenSame": "Mutual sense of approachable openings creates space for addressing real issues.",
+          "journalPrompt": "How does your partner typically bring up concerns? How does that feel?"
+        }
+      }
+    },
+    {
+      "id": "affirmation_004_q2",
+      "text": "I try to bring up issues in a way my partner can hear.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Considering how your partner receives information shows care for the relationship, not just the issue. Tailoring your approach increases the chance of being heard.",
+          "framework": "gottman",
+          "whenDifferent": "Different self-perceptions here are revealing. One partner may think they're gentle while the other experiences them as harsh. Check the landing, not the intention.",
+          "whenSame": "Mutual effort to be hearable creates constructive conflict.",
+          "journalPrompt": "How do you try to make issues easier for your partner to hear?"
+        }
+      }
+    },
+    {
+      "id": "affirmation_004_q3",
+      "text": "Our disagreements don't usually start with blame or criticism.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Blame and criticism at the start put partners on defense immediately. Starting with feelings and needs rather than accusations keeps conversation productive.",
+          "framework": "gottman",
+          "whenDifferent": "If one partner experiences blame at startup, explore what's happening. The other may not realize how their words land. Reframing 'you always' to 'I feel' helps.",
+          "whenSame": "Shared avoidance of blaming startups allows real issues to be discussed.",
+          "journalPrompt": "How do your disagreements typically begin? What sets the tone?"
+        }
+      }
+    },
+    {
+      "id": "affirmation_004_q4",
+      "text": "I can raise something difficult without it immediately escalating.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "When raising issues leads to immediate escalation, partners stop raising issues—and problems fester. Being able to broach difficult topics calmly is essential.",
+          "framework": "eft",
+          "whenDifferent": "If topics escalate quickly for one partner, explore what triggers the escalation. Is it the topic? The timing? The approach? Breaking the pattern requires understanding it.",
+          "whenSame": "Shared ability to raise difficult topics calmly creates a safe relationship environment.",
+          "journalPrompt": "What topics tend to escalate quickly? What would help them stay calm?"
+        }
+      }
+    },
+    {
+      "id": "affirmation_004_q5",
+      "text": "The way we start difficult conversations gives us a good chance of resolving them.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Research shows conversations end the way they begin 96% of the time. Good startups create resolution; harsh startups create more conflict. The beginning matters enormously.",
+          "framework": "gottman",
+          "whenDifferent": "If one partner doesn't feel optimistic about how conversations start, explore what would improve the opening. Timing? Tone? Framing?",
+          "whenSame": "Shared confidence in your conversation startups predicts successful resolution.",
+          "journalPrompt": "What makes for a good start to difficult conversations between you?"
+        }
+      }
+    }
+  ]
+}

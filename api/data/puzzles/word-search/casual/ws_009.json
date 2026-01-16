@@ -1,0 +1,24 @@
+{
+  "puzzleId": "ws_009",
+  "title": "Casual IX",
+  "theme": "casual",
+  "size": {
+    "rows": 10,
+    "cols": 10
+  },
+  "grid": "SFWANJAMOIDNDDLCOBRIEKUAISKKDYSSUNELFREYLGCRJTEJASHIEEEEASYPPNGABRUNCHENMHBRIGHTQPARTNERGWFGPIZZAMDF",
+  "words": {
+    "EASY": "55,R",
+    "PICNIC": "60,UR",
+    "SERENE": "25,DL",
+    "LIGHT": "40,DR",
+    "JOKES": "5,DR",
+    "PARTNER": "81,R",
+    "BRUNCH": "64,R",
+    "PARK": "59,UL",
+    "TEAM": "45,DL",
+    "BRIGHT": "74,R",
+    "PIZZA": "92,R",
+    "LAUGH": "14,DL"
+  }
+}

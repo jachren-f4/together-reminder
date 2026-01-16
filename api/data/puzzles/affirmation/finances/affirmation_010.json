@@ -1,0 +1,115 @@
+{
+  "quizId": "affirmation_010",
+  "title": "Financial Independence",
+  "category": "finances",
+  "branch": "finances",
+  "description": "Assess how you balance togetherness and autonomy with money",
+  "magnet_id": 15,
+  "questions": [
+    {
+      "id": "affirmation_010_q1",
+      "text": "I feel I have appropriate financial autonomy in our relationship.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Financial autonomy—having some money you control without accounting for every purchase—preserves individuality within partnership. Too little feels controlling; too much feels disconnected.",
+          "framework": "family_systems",
+          "whenDifferent": "Different autonomy needs require negotiation. The partner wanting more autonomy isn't rejecting partnership; the partner wanting more togetherness isn't controlling.",
+          "whenSame": "Shared sense of appropriate autonomy creates balance between independence and partnership.",
+          "journalPrompt": "How much financial autonomy do you need to feel like yourself within your relationship?"
+        }
+      }
+    },
+    {
+      "id": "affirmation_010_q2",
+      "text": "I respect my partner's need for some financial independence.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Respecting your partner's autonomy needs—even if different from yours—shows acceptance. Trying to control all spending often backfires.",
+          "framework": "gottman",
+          "whenDifferent": "If one partner doesn't feel respected in their autonomy needs, explore what would help. Clear agreements? Less questioning about purchases?",
+          "whenSame": "Mutual respect for independence needs creates trust and reduces financial friction.",
+          "journalPrompt": "How do you show respect for your partner's financial independence?"
+        }
+      }
+    },
+    {
+      "id": "affirmation_010_q3",
+      "text": "I feel comfortable making small purchases without consulting my partner.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Comfort with small independent purchases reflects appropriate autonomy. Feeling you need permission for every purchase suggests an imbalanced dynamic.",
+          "framework": "financial_therapy",
+          "whenDifferent": "Different comfort levels with independent spending need discussion. What counts as 'small'? What requires consultation?",
+          "whenSame": "Shared comfort with independent small purchases indicates agreed-upon autonomy.",
+          "journalPrompt": "At what spending level do you feel you should consult your partner? Do they agree?"
+        }
+      }
+    },
+    {
+      "id": "affirmation_010_q4",
+      "text": "I believe we balance individual and shared financial priorities well.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Balancing personal priorities (hobbies, self-care, individual goals) with shared ones (experiences together, joint goals) requires ongoing negotiation. Feeling balanced indicates success.",
+          "framework": "financial_therapy",
+          "whenDifferent": "Different perceptions of balance may mean one partner feels their priorities are overshadowed. Discuss what would feel more balanced.",
+          "whenSame": "Shared sense of balance between individual and shared priorities creates satisfaction.",
+          "journalPrompt": "Do your individual financial priorities get enough attention alongside shared ones?"
+        }
+      }
+    },
+    {
+      "id": "affirmation_010_q5",
+      "text": "I trust that my partner's personal spending is reasonable.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Trusting your partner's independent spending choices allows autonomy without anxiety. Distrust often leads to monitoring or conflict.",
+          "framework": "attachment_theory",
+          "whenDifferent": "If one partner doesn't trust the other's spending, explore specific concerns. Is it about amounts? Categories? Past behavior?",
+          "whenSame": "Mutual trust in each other's independent spending creates freedom within partnership.",
+          "journalPrompt": "What would help you trust your partner's personal spending more fully?"
+        }
+      }
+    }
+  ]
+}

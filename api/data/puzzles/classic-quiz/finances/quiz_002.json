@@ -1,0 +1,113 @@
+{
+  "quizId": "quiz_002",
+  "title": "Financial Transparency",
+  "branch": "finances",
+  "description": "Explore how open you want to be about money with each other.",
+  "magnet_id": 15,
+  "questions": [
+    {
+      "id": "quiz_002_q1",
+      "text": "When it comes to knowing what my partner earns, I feel...",
+      "choices": [
+        "I'd want to know early on - it's practical info",
+        "I'd want to know eventually, but no rush",
+        "It's private unless we're combining finances",
+        "It doesn't really matter to me"
+      ],
+      "category": "financial_transparency",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Attitudes about income transparency vary widely based on upbringing, culture, and past experiences. Some see it as basic practical info; others as deeply private. Neither is wrong, but assumptions cause friction.",
+          "framework": "financial_therapy",
+          "whenDifferent": "If one wants to know and one values privacy, don't push—but do name the difference. Ask: 'What makes this feel private for you?' Understanding the why matters more than the number.",
+          "whenSame": "Shared transparency comfort makes this easy. If you both want to know, share when it feels right. If you both prefer privacy, respect that—but revisit as your partnership deepens.",
+          "journalPrompt": "How did your family handle talking about income? Was it open or secret? How does that shape your view now?"
+        }
+      }
+    },
+    {
+      "id": "quiz_002_q2",
+      "text": "When it comes to debt, my view is...",
+      "choices": [
+        "Being debt-free should be a priority",
+        "Some debt is fine if it's manageable",
+        "Debt is a tool - it depends on what it's for",
+        "I try not to stress about it"
+      ],
+      "category": "financial_values",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Attitudes toward debt are deeply personal and often rooted in upbringing. Some see any debt as failure; others see it as strategic. These beliefs shape major life decisions—education, homes, lifestyle.",
+          "framework": "financial_therapy",
+          "whenDifferent": "Different debt philosophies can clash when making big decisions. The debt-averse partner may feel anxious about a mortgage; the debt-tolerant partner may feel held back. Understand the belief beneath the position.",
+          "whenSame": "Shared debt philosophy makes big decisions easier. But stay curious—views can shift with life circumstances.",
+          "journalPrompt": "What did your family believe about debt? How has that shaped your own view?"
+        }
+      }
+    },
+    {
+      "id": "quiz_002_q3",
+      "text": "For everyday spending, I think we should...",
+      "choices": [
+        "Each do our own thing, no need to share",
+        "Mention bigger purchases but not everything",
+        "Be pretty open about what we're spending on",
+        "Know exactly where the money goes"
+      ],
+      "category": "financial_transparency",
+      "metadata": {
+        "dimension": "planning_style",
+        "poleMapping": ["left", "neutral", "right", "right"],
+        "therapeutic": {
+          "rationale": "Day-to-day spending visibility preferences reflect comfort with structure vs. autonomy. Some find tracking reassuring; others find it controlling. This shapes what 'normal' financial life feels like.",
+          "framework": "gottman",
+          "whenDifferent": "The tracker may feel anxious without visibility; the autonomous spender may feel monitored. Find a middle ground—maybe shared visibility for joint expenses, freedom for personal spending.",
+          "whenSame": "Matched preferences make daily money life smooth. Two trackers can nerd out on budgets together. Two autonomous spenders just need to ensure the big picture stays healthy.",
+          "journalPrompt": "How would you feel if your partner wanted to see all your purchases? How about if they never asked?"
+        }
+      }
+    },
+    {
+      "id": "quiz_002_q4",
+      "text": "When I'm stressed about money, I tend to...",
+      "choices": [
+        "Talk about it right away",
+        "Process it alone first, then share",
+        "Keep it to myself unless it's serious",
+        "Avoid thinking about it"
+      ],
+      "category": "financial_stress",
+      "metadata": {
+        "dimension": "stress_processing",
+        "poleMapping": ["right", "neutral", "left", "left"],
+        "therapeutic": {
+          "rationale": "How we process financial stress mirrors broader stress patterns. External processors need to talk; internal processors need space first. Neither is hiding—they're coping differently.",
+          "framework": "gottman",
+          "whenDifferent": "The talker may feel shut out by the processor's silence; the processor may feel pressured by the talker's urgency. Ask: 'Do you need space or company right now?'",
+          "whenSame": "Two talkers can spiral together—watch for that. Two processors may both suffer in silence. Create a ritual for surfacing money stress before it builds.",
+          "journalPrompt": "When money stress hits, what's your first instinct? Does your partner know what helps you?"
+        }
+      }
+    },
+    {
+      "id": "quiz_002_q5",
+      "text": "The level of financial openness I want in a relationship is...",
+      "choices": [
+        "Full transparency - no money secrets",
+        "Mostly open with room for some privacy",
+        "Open about shared stuff, private about personal",
+        "Each person manages their own, we share what's needed"
+      ],
+      "category": "financial_transparency",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Your ideal transparency level reflects deep values about partnership, autonomy, and trust. Some couples merge everything; others maintain strong financial independence. What matters is alignment, not a 'right' answer.",
+          "framework": "financial_therapy",
+          "whenDifferent": "Different ideals need negotiation. The full-transparency person may feel the private person is hiding something; the private person may feel controlled. Find where you both feel trusted AND trusting.",
+          "whenSame": "Shared transparency ideals make money life easier to design. Build systems that match your shared vision.",
+          "journalPrompt": "What does trust around money look like to you? What would break it?"
+        }
+      }
+    }
+  ]
+}

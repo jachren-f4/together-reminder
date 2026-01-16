@@ -1,0 +1,39 @@
+{
+  "quizId": "quiz_010",
+  "title": "Openness & Sharing",
+  "branch": "intimacy",
+  "questions": [
+    {
+      "id": "quiz_010_q1",
+      "category": "personality",
+      "prompt": "Who is more...",
+      "content": "Open about their feelings"
+    },
+    {
+      "id": "quiz_010_q2",
+      "category": "habits",
+      "prompt": "Who is more likely to...",
+      "content": "Share what's on their mind"
+    },
+    {
+      "id": "quiz_010_q3",
+      "category": "preferences",
+      "prompt": "Who feels more...",
+      "content": "Comfortable being vulnerable"
+    },
+    {
+      "id": "quiz_010_q4",
+      "category": "personality",
+      "prompt": "Who would...",
+      "content": "Open up about hopes and dreams"
+    },
+    {
+      "id": "quiz_010_q5",
+      "category": "habits",
+      "prompt": "Who is more likely to...",
+      "content": "Ask deeper questions"
+    }
+  ],
+  "description": "Vulnerability and openness—discover how you share your inner worlds!",
+  "magnet_id": 11
+}

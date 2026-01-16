@@ -1,0 +1,24 @@
+{
+  "puzzleId": "ws_015",
+  "title": "Romantic XV",
+  "theme": "romantic",
+  "size": {
+    "rows": 10,
+    "cols": 10
+  },
+  "grid": "CCHERISHRJTCOMMITTEDDEMZEXURHEEYEARNWWRSVGPWJIZUCZOHULSHSHTMTVOHEAZLEOEXILEDAGEODNHRDWGWUPGITAHTZEGO",
+  "words": {
+    "YEARN": "31,R",
+    "TREASURE": "92,UR",
+    "SWEET": "54,UL",
+    "HOLD": "51,DR",
+    "WALTZ": "85,UR",
+    "DEVOTED": "20,D",
+    "WISHING": "36,DL",
+    "HUG": "63,UL",
+    "GEM": "77,UR",
+    "CHERISH": "1,R",
+    "PLEDGE": "42,DR",
+    "COMMITTED": "11,R"
+  }
+}

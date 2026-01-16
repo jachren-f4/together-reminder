@@ -1,0 +1,24 @@
+{
+  "puzzleId": "ws_007",
+  "title": "Casual VII",
+  "theme": "casual",
+  "size": {
+    "rows": 10,
+    "cols": 10
+  },
+  "grid": "AEZJSMAERDPGIGYTGDOTGYTVEFDENSUMGRONMDQGNWRRKMTOJOSZESPVHLCOMSAVIEGDEDTGTBXPUYFPWWEYMOARCPYSNSWOLLEM",
+  "words": {
+    "SNUG": "50,U",
+    "LAUGH": "96,U",
+    "DREAM": "9,L",
+    "DEN": "26,R",
+    "COMFY": "58,UL",
+    "GENTLE": "13,DR",
+    "VIBES": "55,DL",
+    "FOREST": "25,DL",
+    "MOVIE": "45,UL",
+    "GOOD": "39,D",
+    "GREAT": "32,D",
+    "MELLOW": "99,L"
+  }
+}

@@ -1,0 +1,113 @@
+{
+  "quizId": "quiz_007",
+  "title": "Financial Goals",
+  "branch": "finances",
+  "description": "Explore what you're each working toward financially and how you can support each other.",
+  "magnet_id": 16,
+  "questions": [
+    {
+      "id": "quiz_007_q1",
+      "text": "The financial goal that matters most to me right now is...",
+      "choices": [
+        "Building an emergency fund or safety net",
+        "Paying off debt or obligations",
+        "Saving for something specific",
+        "Growing wealth for the future"
+      ],
+      "category": "financial_goals",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Current financial priorities reveal what stage you're in and what feels urgent. Safety-net builders need security; debt-payers need freedom; specific-savers have a target; wealth-growers think long-term. Knowing your partner's priority helps you support it.",
+          "framework": "financial_therapy",
+          "whenDifferent": "Different priorities may compete for resources. The debt-payer may clash with the saver; the safety-net builder may clash with the wealth-grower. Can you sequence goals or pursue both?",
+          "whenSame": "Shared priority focuses your joint effort. You're working toward the same goal together.",
+          "journalPrompt": "What financial goal keeps you up at night? What would achieving it change for you?"
+        }
+      }
+    },
+    {
+      "id": "quiz_007_q2",
+      "text": "When I think about financial goals, I tend to...",
+      "choices": [
+        "Set specific targets with timelines",
+        "Have general direction without strict plans",
+        "Focus on one goal at a time",
+        "Keep multiple goals in motion"
+      ],
+      "category": "financial_goals",
+      "metadata": {
+        "dimension": "planning_style",
+        "poleMapping": ["right", "left", "neutral", "neutral"],
+        "therapeutic": {
+          "rationale": "Goal-setting style reflects broader planning orientation. Target-setters are structured; direction-havers are flexible; single-focusers concentrate; multi-taskers spread effort. Partners often have different styles.",
+          "framework": "gottman",
+          "whenDifferent": "The target-setter may feel the direction-haver lacks commitment; the direction-haver may feel the target-setter is rigid. Both approaches can work—find what works for you as a couple.",
+          "whenSame": "Shared goal-setting style makes planning easier. You'll naturally approach goals the same way.",
+          "journalPrompt": "How do you typically set and pursue goals? What helps you follow through?"
+        }
+      }
+    },
+    {
+      "id": "quiz_007_q3",
+      "text": "I'd love for us to work toward...",
+      "choices": [
+        "Financial freedom and flexibility",
+        "A major purchase or milestone",
+        "Being able to give generously",
+        "Security for whatever comes"
+      ],
+      "category": "financial_goals",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Shared goals create partnership and motivation. Freedom-seekers want options; milestone-seekers want achievement; givers want impact; security-seekers want protection. Naming a shared goal aligns your efforts.",
+          "framework": "financial_therapy",
+          "whenDifferent": "Different aspirations may need sequencing. The freedom-seeker and the milestone-seeker can both get what they want—maybe not at the same time. Talk about order and timing.",
+          "whenSame": "Shared aspiration is powerful. You're rowing in the same direction.",
+          "journalPrompt": "What would reaching this goal together mean to you? What would it make possible?"
+        }
+      }
+    },
+    {
+      "id": "quiz_007_q4",
+      "text": "When we hit a financial goal, I'd want us to...",
+      "choices": [
+        "Celebrate, then set the next one",
+        "Take time to enjoy the achievement",
+        "Roll the momentum into something bigger",
+        "Reassess what matters most now"
+      ],
+      "category": "financial_goals",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "How you respond to achieving goals reveals your relationship with progress. Quick-movers keep pushing; pausers savor; momentum-builders compound; reassessors reflect. Partners may have different rhythms.",
+          "framework": "positive_psychology",
+          "whenDifferent": "The quick-mover may feel the pauser is complacent; the pauser may feel the quick-mover never savors. Make room for both celebration and forward motion.",
+          "whenSame": "Shared celebration style means you'll transition from goal to goal similarly. Enjoy your aligned rhythm.",
+          "journalPrompt": "When you achieve something, do you pause to enjoy it or move quickly to what's next? Where does that come from?"
+        }
+      }
+    },
+    {
+      "id": "quiz_007_q5",
+      "text": "The best way my partner can support my financial goals is...",
+      "choices": [
+        "Encouraging me and believing in my plans",
+        "Helping with practical steps and accountability",
+        "Giving me space to manage my own goals",
+        "Working on them together as a team"
+      ],
+      "category": "financial_support",
+      "metadata": {
+        "dimension": "support_style",
+        "poleMapping": ["left", "right", "left", "right"],
+        "therapeutic": {
+          "rationale": "Support preferences for goals mirror general support styles. Encouragers want belief; helpers want action; space-needers want autonomy; teamers want partnership. Giving the wrong support feels unsupportive.",
+          "framework": "gottman",
+          "whenDifferent": "The encouragement-seeker may feel the helper is controlling; the helper may feel the encourager is passive. Ask: 'What kind of support would help you most right now?'",
+          "whenSame": "Matched support preferences make helping feel natural. You'll instinctively give what your partner needs.",
+          "journalPrompt": "When you're working toward something, what does ideal support from your partner look like?"
+        }
+      }
+    }
+  ]
+}

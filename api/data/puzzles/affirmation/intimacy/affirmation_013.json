@@ -1,0 +1,115 @@
+{
+  "quizId": "affirmation_013",
+  "title": "Intimacy Communication",
+  "category": "intimacy",
+  "branch": "intimacy",
+  "description": "Explore how you communicate about physical closeness",
+  "magnet_id": 16,
+  "questions": [
+    {
+      "id": "affirmation_013_q1",
+      "text": "I can talk to my partner about what feels good physically.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Communicating about what feels good improves physical connection over time. Without this communication, partners guess—sometimes correctly, sometimes not.",
+          "framework": "gottman",
+          "whenDifferent": "If one partner can't talk about this, explore what makes it difficult. Embarrassment? Fear of hurting feelings? Building safety for this conversation helps.",
+          "whenSame": "Mutual ability to communicate about what feels good creates learning and improvement.",
+          "journalPrompt": "How easy is it to tell your partner what feels good? What would make it easier?"
+        }
+      }
+    },
+    {
+      "id": "affirmation_013_q2",
+      "text": "I sense receptiveness when I share something about our physical connection.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Receptivity to feedback about physical connection encourages more sharing. Defensiveness or hurt closes down communication.",
+          "framework": "eft",
+          "whenDifferent": "If one partner doesn't experience receptivity, explore what happens when they share. The listening partner may not realize how they respond.",
+          "whenSame": "Mutual receptivity to physical feedback creates ongoing improvement.",
+          "journalPrompt": "How does your partner respond when you share something about your physical connection?"
+        }
+      }
+    },
+    {
+      "id": "affirmation_013_q3",
+      "text": "We can navigate conversations about physical needs without it becoming tense.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Conversations about physical needs can easily become charged. When they stay calm, couples can address real issues rather than getting lost in defensiveness.",
+          "framework": "gottman",
+          "whenDifferent": "If these conversations become tense, explore what triggers the tension. Feeling criticized? Fear of inadequacy? Understanding triggers helps.",
+          "whenSame": "Shared ability to discuss needs calmly creates productive conversations.",
+          "journalPrompt": "What makes conversations about physical needs feel safe or tense?"
+        }
+      }
+    },
+    {
+      "id": "affirmation_013_q4",
+      "text": "I feel understood when I try to express something about intimacy.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Feeling understood when discussing intimacy encourages continued openness. Feeling misunderstood leads to giving up on communication.",
+          "framework": "eft",
+          "whenDifferent": "If one partner doesn't feel understood, explore what's getting lost. Sometimes it's about how things are said; sometimes about how they're heard.",
+          "whenSame": "Mutual understanding in intimacy conversations builds confidence to keep sharing.",
+          "journalPrompt": "Do you feel understood when you try to express something about intimacy?"
+        }
+      }
+    },
+    {
+      "id": "affirmation_013_q5",
+      "text": "Talking about physical closeness brings us closer, not further apart.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Conversations about intimacy should ideally strengthen connection. When they create distance, something in how the conversation happens needs attention.",
+          "framework": "positive_psychology",
+          "whenDifferent": "If talking creates distance for one partner, explore what happens in these conversations that pushes them away.",
+          "whenSame": "Shared experience of connection through intimacy conversations is a strength.",
+          "journalPrompt": "How do conversations about physical closeness affect your connection?"
+        }
+      }
+    }
+  ]
+}

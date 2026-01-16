@@ -1,0 +1,39 @@
+{
+  "quizId": "quiz_002",
+  "title": "Reconnection",
+  "branch": "conflict",
+  "questions": [
+    {
+      "id": "quiz_002_q1",
+      "category": "habits",
+      "prompt": "Who is more likely to...",
+      "content": "Reach out first after tension"
+    },
+    {
+      "id": "quiz_002_q2",
+      "category": "preferences",
+      "prompt": "Who would...",
+      "content": "Use a hug to signal 'we're okay'"
+    },
+    {
+      "id": "quiz_002_q3",
+      "category": "personality",
+      "prompt": "Who is more...",
+      "content": "Quick to move past small disagreements"
+    },
+    {
+      "id": "quiz_002_q4",
+      "category": "habits",
+      "prompt": "Who would...",
+      "content": "Suggest doing something fun together to reconnect"
+    },
+    {
+      "id": "quiz_002_q5",
+      "category": "preferences",
+      "prompt": "Who is more likely to...",
+      "content": "Say 'I love you' even when frustrated"
+    }
+  ],
+  "description": "How do you find your way back to each other? Explore your reconnection styles!",
+  "magnet_id": 13
+}

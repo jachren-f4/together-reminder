@@ -1,0 +1,24 @@
+{
+  "puzzleId": "ws_004",
+  "title": "Casual IV",
+  "theme": "casual",
+  "size": {
+    "rows": 10,
+    "cols": 10
+  },
+  "grid": "HPGSLOWARTAGASDGWIOIOPURPANMSQUQEATINPEMSADULNHMLWMWSAYZECFENTKLENQRIFENOHPRNOEATELEAFHURSGOODRLODFB",
+  "words": {
+    "READ": "75,UL",
+    "LEAF": "82,R",
+    "GOOD": "90,R",
+    "CHIPS": "57,UL",
+    "SAFE": "89,U",
+    "PARTNER": "1,DR",
+    "PHONE": "74,L",
+    "DREAM": "14,DL",
+    "FUNNY": "98,UL",
+    "SLOW": "3,R",
+    "LAUGH": "44,UL",
+    "SELFIE": "28,D"
+  }
+}

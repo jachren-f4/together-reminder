@@ -1,0 +1,39 @@
+{
+  "quizId": "quiz_014",
+  "title": "Fantasy Worlds",
+  "branch": "playful",
+  "questions": [
+    {
+      "id": "quiz_014_q1",
+      "category": "imagination",
+      "prompt": "Who would...",
+      "content": "Want to live in a fantasy movie world"
+    },
+    {
+      "id": "quiz_014_q2",
+      "category": "personality",
+      "prompt": "Who is more...",
+      "content": "Likely to daydream about winning the lottery"
+    },
+    {
+      "id": "quiz_014_q3",
+      "category": "imagination",
+      "prompt": "Who would...",
+      "content": "Befriend a dragon if they existed"
+    },
+    {
+      "id": "quiz_014_q4",
+      "category": "quirks",
+      "prompt": "Who is more...",
+      "content": "Likely to have an elaborate dream life"
+    },
+    {
+      "id": "quiz_014_q5",
+      "category": "imagination",
+      "prompt": "Who would...",
+      "content": "Make a better superhero sidekick"
+    }
+  ],
+  "description": "If anything were possible, where would you go? Explore your fantasy worlds!",
+  "magnet_id": 3
+}

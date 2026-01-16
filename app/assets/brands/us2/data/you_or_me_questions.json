@@ -111,7 +111,7 @@
     {
       "id": "yom_q019",
       "prompt": "Who would...",
-      "content": "Apologize first after an argument",
+      "content": "Reach out first to reconnect",
       "category": "actions"
     },
     {
@@ -189,7 +189,7 @@
     {
       "id": "yom_q032",
       "prompt": "Who's more likely to...",
-      "content": "Forget an anniversary",
+      "content": "Plan a surprise celebration",
       "category": "scenarios"
     },
     {
@@ -219,7 +219,7 @@
     {
       "id": "yom_q037",
       "prompt": "Who's more likely to...",
-      "content": "Spend hours on their phone",
+      "content": "Get lost in a good book or podcast",
       "category": "scenarios"
     },
     {
@@ -255,7 +255,7 @@
     {
       "id": "yom_q043",
       "prompt": "Who's more likely to...",
-      "content": "Win an argument",
+      "content": "Make the other laugh during a disagreement",
       "category": "scenarios"
     },
     {
@@ -291,7 +291,7 @@
     {
       "id": "yom_q049",
       "prompt": "Which of you...",
-      "content": "Is the better listener",
+      "content": "Asks the most follow-up questions",
       "category": "comparative"
     },
     {
@@ -351,7 +351,7 @@
     {
       "id": "yom_q059",
       "prompt": "Which of you...",
-      "content": "Is better at keeping secrets",
+      "content": "Would plan a better surprise party",
       "category": "comparative"
     },
     {

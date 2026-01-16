@@ -1,0 +1,111 @@
+{
+  "quizId": "quiz_006",
+  "title": "Lifestyle Expectations",
+  "branch": "finances",
+  "description": "Discover what kind of life you each envision and how money fits into that picture.",
+  "magnet_id": 15,
+  "questions": [
+    {
+      "id": "quiz_006_q1",
+      "text": "When I think about the lifestyle I want, I prioritize...",
+      "choices": [
+        "Security and stability above all",
+        "Comfort with room for enjoyment",
+        "Experiences and adventure over things",
+        "Flexibility to adapt as life changes"
+      ],
+      "category": "lifestyle",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Lifestyle priorities reveal core values about what makes life good. Security-seekers need stability; comfort-seekers balance; experience-seekers prioritize memories; flexibility-seekers stay open. These values drive major financial decisions.",
+          "framework": "financial_therapy",
+          "whenDifferent": "Different lifestyle priorities can create tension about how to spend resources. The security-seeker may feel the experience-seeker is reckless; the experience-seeker may feel the security-seeker is missing out. Both are valid ways to live.",
+          "whenSame": "Shared lifestyle priorities make planning easier. You're naturally aiming for the same kind of life.",
+          "journalPrompt": "What does your ideal life look like day-to-day? What would you need financially to have that?"
+        }
+      }
+    },
+    {
+      "id": "quiz_006_q2",
+      "text": "My approach to lifestyle spending is...",
+      "choices": [
+        "Live below our means and build wealth",
+        "Enjoy what we earn—life is short",
+        "Invest in things that improve quality of life",
+        "Keep it simple; less is more"
+      ],
+      "category": "financial_values",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Spending philosophy shapes daily life. Below-means builds wealth but may sacrifice joy; enjoy-now prioritizes experience but may sacrifice security; quality-investors balance; minimalists need less. Partners often have different philosophies.",
+          "framework": "financial_therapy",
+          "whenDifferent": "Different spending philosophies clash over everyday decisions. The saver may feel the enjoyer doesn't care about the future; the enjoyer may feel the saver is joyless. Find the philosophy that works for both.",
+          "whenSame": "Shared spending philosophy makes daily financial life harmonious. You naturally agree on how to allocate resources.",
+          "journalPrompt": "How do you feel when you spend money on yourself? Guilty? Satisfied? Where does that feeling come from?"
+        }
+      }
+    },
+    {
+      "id": "quiz_006_q3",
+      "text": "When it comes to where we live, I value...",
+      "choices": [
+        "Location and convenience most",
+        "Space and comfort most",
+        "Affordability and practicality most",
+        "Flexibility to move when life calls"
+      ],
+      "category": "lifestyle",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Housing values often conflict in relationships—location vs. space vs. cost vs. flexibility. This is one of the biggest financial decisions couples make, and values here matter enormously.",
+          "framework": "financial_therapy",
+          "whenDifferent": "Different housing values require real negotiation. The location-prioritizer may clash with the space-prioritizer; the affordability-focuser may clash with both. What's non-negotiable for each of you?",
+          "whenSame": "Shared housing values make one of life's biggest decisions easier. You'll naturally agree on what matters in a home.",
+          "journalPrompt": "What's most important to you in where you live? What would you sacrifice for it?"
+        }
+      }
+    },
+    {
+      "id": "quiz_006_q4",
+      "text": "I'd rather spend money on...",
+      "choices": [
+        "Travel and experiences",
+        "A comfortable home",
+        "Quality food and dining",
+        "Hobbies and personal interests"
+      ],
+      "category": "lifestyle",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Spending preferences reveal what brings you joy and meaning. Travel-lovers value novelty; home-lovers value sanctuary; food-lovers value pleasure; hobby-spenders value passion. Knowing your partner's joy-spending helps you support it.",
+          "framework": "love_languages",
+          "whenDifferent": "Different joy-spending can feel like the other doesn't value what you value. The traveler may not understand the home-investor; the foodie may not understand the hobbyist. Respect each other's joy source.",
+          "whenSame": "Shared joy-spending makes life planning fun. You'll naturally want to invest in the same things.",
+          "journalPrompt": "What do you love spending money on? What feels like a waste to you?"
+        }
+      }
+    },
+    {
+      "id": "quiz_006_q5",
+      "text": "If our incomes changed significantly, I'd want us to...",
+      "choices": [
+        "Adjust our lifestyle accordingly",
+        "Maintain our current lifestyle as much as possible",
+        "Use the change to pursue what matters most",
+        "Have a conversation about what it means for us"
+      ],
+      "category": "financial_values",
+      "metadata": {
+        "dimension": "conflict_approach",
+        "poleMapping": ["neutral", "left", "neutral", "right"],
+        "therapeutic": {
+          "rationale": "How you respond to income changes reveals adaptability and values. Adjusters are flexible; maintainers value stability; opportunity-seekers reprioritize; talkers process together. Changes—up or down—test these instincts.",
+          "framework": "gottman",
+          "whenDifferent": "Different change responses can create tension during transitions. The adjuster may feel the maintainer is in denial; the maintainer may feel the adjuster is overreacting. Talk about the change before making decisions.",
+          "whenSame": "Shared change response means you'll navigate transitions similarly. This alignment helps during uncertain times.",
+          "journalPrompt": "How have you handled financial changes in the past? What helped? What would you do differently?"
+        }
+      }
+    }
+  ]
+}

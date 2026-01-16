@@ -1,0 +1,111 @@
+{
+  "quizId": "quiz_005",
+  "title": "Flooding & Overwhelm",
+  "branch": "conflict",
+  "description": "Explore how you experience and manage feeling overwhelmed during conflict.",
+  "magnet_id": 16,
+  "questions": [
+    {
+      "id": "quiz_005_q1",
+      "text": "During intense conflict, I sometimes experience...",
+      "choices": [
+        "Racing heart, tension, or physical stress",
+        "Difficulty thinking clearly or finding words",
+        "An urge to escape or shut down",
+        "All of these—conflict overwhelms my system"
+      ],
+      "category": "flooding_experience",
+      "metadata": {
+        "dimension": "stress_processing",
+        "poleMapping": ["left", "left", "left", "left"],
+        "therapeutic": {
+          "rationale": "Flooding is a physiological state where conflict overwhelms your nervous system. Physical symptoms, cognitive impairment, and escape urges are common signs. When flooded, productive conversation is impossible.",
+          "framework": "gottman",
+          "whenDifferent": "Different flooding experiences are all valid. The person who doesn't flood may not understand their partner's overwhelm. Both need to recognize flooding when it happens.",
+          "whenSame": "Shared flooding experience creates mutual understanding of how conflict affects you both.",
+          "journalPrompt": "What happens in your body during intense conflict? How do you know when you're overwhelmed?"
+        }
+      }
+    },
+    {
+      "id": "quiz_005_q2",
+      "text": "When I'm getting overwhelmed in a conflict, I need to...",
+      "choices": [
+        "Take a break and calm down",
+        "Slow things down and breathe",
+        "Ask my partner to speak more softly",
+        "Push through—stopping feels like avoiding"
+      ],
+      "category": "flooding_response",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Flooding responses matter. Breaks allow nervous system recovery; slowing down helps regulation; asking for softer speech sets limits; pushing through often backfires—flooded people can't be productive. Knowing your need helps.",
+          "framework": "gottman",
+          "whenDifferent": "Different responses need different partner support. The break-needer may need permission to pause; the push-through type may need encouragement to take breaks.",
+          "whenSame": "Shared flooding response creates aligned expectations about managing overwhelm.",
+          "journalPrompt": "What helps you when you're overwhelmed in conflict? What makes it worse?"
+        }
+      }
+    },
+    {
+      "id": "quiz_005_q3",
+      "text": "When my partner seems overwhelmed during conflict, I try to...",
+      "choices": [
+        "Soften my approach and slow down",
+        "Suggest we take a break",
+        "Give them space to regulate",
+        "I sometimes don't notice until too late"
+      ],
+      "category": "partner_awareness",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Noticing partner flooding prevents escalation. Softening helps; break suggestions help; space helps; not noticing allows harm. Learning your partner's flooding signals—and responding—is a crucial skill.",
+          "framework": "gottman",
+          "whenDifferent": "Different approaches can all help. The key is noticing and responding, not the specific response.",
+          "whenSame": "Shared approach to partner overwhelm creates mutual care during conflict.",
+          "journalPrompt": "How do you notice when your partner is getting overwhelmed? What do you do?"
+        }
+      }
+    },
+    {
+      "id": "quiz_005_q4",
+      "text": "Taking a break during conflict feels...",
+      "choices": [
+        "Necessary and healthy",
+        "Like avoiding or giving up",
+        "Difficult but sometimes needed",
+        "Depends on whether we agree to return"
+      ],
+      "category": "break_attitudes",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Break attitudes affect whether breaks happen. Those who see breaks as healthy use them well; those who see avoidance may push through flooding; difficulty accepters are conflicted; return-conditioners have appropriate concerns.",
+          "framework": "gottman",
+          "whenDifferent": "The break-positive partner may feel the break-resistant partner won't let them regulate; the break-resistant partner may feel abandoned. Agree on break protocols in advance.",
+          "whenSame": "Shared break attitudes make using breaks natural and non-threatening.",
+          "journalPrompt": "How do you feel about taking breaks during conflict? What would make breaks work better?"
+        }
+      }
+    },
+    {
+      "id": "quiz_005_q5",
+      "text": "A healthy break during conflict would include...",
+      "choices": [
+        "Agreeing on when we'll return to talk",
+        "Self-soothing rather than rehearsing arguments",
+        "Trusting the break isn't abandonment",
+        "All of these—breaks need structure"
+      ],
+      "category": "break_structure",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Effective breaks have structure. Return agreements prevent indefinite avoidance; self-soothing (not ruminating) allows recovery; trust prevents attachment anxiety. Gottman recommends at least 20 minutes for physiological calm.",
+          "framework": "gottman",
+          "whenDifferent": "All these elements help breaks work. Discuss what you each need for breaks to feel safe.",
+          "whenSame": "Shared break structure creates clear expectations that make breaks productive.",
+          "journalPrompt": "What would make breaks during conflict feel safe and productive for you?"
+        }
+      }
+    }
+  ]
+}

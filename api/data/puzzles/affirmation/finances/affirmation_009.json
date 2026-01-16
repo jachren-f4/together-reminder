@@ -1,0 +1,115 @@
+{
+  "quizId": "affirmation_009",
+  "title": "Financial Teamwork",
+  "category": "finances",
+  "branch": "finances",
+  "description": "Assess how well you function as a financial team",
+  "magnet_id": 15,
+  "questions": [
+    {
+      "id": "affirmation_009_q1",
+      "text": "I feel like we're on the same team when it comes to money.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Feeling like financial teammates—rather than opponents or strangers—creates partnership. This 'us vs. the problem' mindset helps you tackle challenges together.",
+          "framework": "gottman",
+          "whenDifferent": "If one partner doesn't feel like teammates, explore what creates that sense. Is it about decision-making? Communication? Different goals?",
+          "whenSame": "Shared sense of being on the same team is foundational for financial partnership.",
+          "journalPrompt": "What would make you feel more like financial teammates?"
+        }
+      }
+    },
+    {
+      "id": "affirmation_009_q2",
+      "text": "I believe my partner and I complement each other's financial strengths.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Partners often have different financial strengths—one may be better at budgeting, another at earning, another at researching purchases. Seeing these as complementary builds team spirit.",
+          "framework": "positive_psychology",
+          "whenDifferent": "If one partner doesn't see complementary strengths, explore what strengths each person brings. They may not recognize their own contributions.",
+          "whenSame": "Mutual recognition of complementary strengths creates appreciation and effective teamwork.",
+          "journalPrompt": "What financial strengths does your partner bring that you lack?"
+        }
+      }
+    },
+    {
+      "id": "affirmation_009_q3",
+      "text": "I trust my partner to handle certain financial responsibilities.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Delegating financial responsibilities requires trust. Couples who can divide financial labor effectively function as a more efficient team.",
+          "framework": "financial_therapy",
+          "whenDifferent": "Different trust levels in delegation may reflect different experiences. The less-trusting partner may need more transparency or different task division.",
+          "whenSame": "Shared trust in delegation allows you to divide financial labor effectively.",
+          "journalPrompt": "What financial tasks would you trust your partner to handle? What would you prefer to keep?"
+        }
+      }
+    },
+    {
+      "id": "affirmation_009_q4",
+      "text": "I feel we communicate well about money matters.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Financial communication is a specific skill. Couples who communicate well about money keep each other informed, make decisions together, and avoid surprises.",
+          "framework": "gottman",
+          "whenDifferent": "Different perceptions of communication quality suggest room for improvement. The less satisfied partner can identify what's missing.",
+          "whenSame": "Shared satisfaction with financial communication indicates an effective system.",
+          "journalPrompt": "What would improve how you and your partner communicate about money?"
+        }
+      }
+    },
+    {
+      "id": "affirmation_009_q5",
+      "text": "I believe we make better financial decisions together than alone.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Belief that partnership improves decisions reflects appreciation for what you each bring. Couples who believe this are more likely to consult each other.",
+          "framework": "positive_psychology",
+          "whenDifferent": "If one partner doesn't see the partnership value, explore why. Does one partner dominate decisions? Does the other not engage?",
+          "whenSame": "Mutual belief in the value of partnership decision-making strengthens your team.",
+          "journalPrompt": "How do your partner's perspectives improve your financial decisions?"
+        }
+      }
+    }
+  ]
+}

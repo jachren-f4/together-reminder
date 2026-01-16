@@ -1,0 +1,39 @@
+{
+  "quizId": "quiz_012",
+  "title": "Growing Stronger",
+  "branch": "conflict",
+  "questions": [
+    {
+      "id": "quiz_012_q1",
+      "category": "personality",
+      "prompt": "Who is more...",
+      "content": "Optimistic that challenges make you stronger"
+    },
+    {
+      "id": "quiz_012_q2",
+      "category": "habits",
+      "prompt": "Who is more likely to...",
+      "content": "Reflect on what you learned after a disagreement"
+    },
+    {
+      "id": "quiz_012_q3",
+      "category": "preferences",
+      "prompt": "Who would...",
+      "content": "Appreciate growing through tough conversations"
+    },
+    {
+      "id": "quiz_012_q4",
+      "category": "personality",
+      "prompt": "Who tends to...",
+      "content": "See disagreements as opportunities to understand each other better"
+    },
+    {
+      "id": "quiz_012_q5",
+      "category": "habits",
+      "prompt": "Who is more likely to...",
+      "content": "Feel closer after working through something hard"
+    }
+  ],
+  "description": "Every challenge is a chance to grow—explore your growth mindset together!",
+  "magnet_id": 15
+}

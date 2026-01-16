@@ -96,3 +96,6 @@ lib/generated_plugin_registrant.dart
 builds/
 functions/
 .vercel
+
+# Local Netlify folder
+.netlify

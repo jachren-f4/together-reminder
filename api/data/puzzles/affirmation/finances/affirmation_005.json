@@ -1,0 +1,115 @@
+{
+  "quizId": "affirmation_005",
+  "title": "Financial Security",
+  "category": "finances",
+  "branch": "finances",
+  "description": "Assess how secure you feel about finances in your relationship",
+  "magnet_id": 15,
+  "questions": [
+    {
+      "id": "affirmation_005_q1",
+      "text": "I feel confident about our ability to handle financial challenges together.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Confidence in facing financial challenges together reflects trust in your partnership's resilience. This belief shapes how you'll approach difficult times.",
+          "framework": "positive_psychology",
+          "whenDifferent": "Different confidence levels may reflect different past experiences with financial stress. Discuss what would help the less confident partner feel more secure.",
+          "whenSame": "Shared confidence in handling challenges together is a relationship strength.",
+          "journalPrompt": "What gives you confidence—or doubt—about facing financial challenges as a couple?"
+        }
+      }
+    },
+    {
+      "id": "affirmation_005_q2",
+      "text": "I trust my partner would be responsible if we faced financial difficulty.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Trust in your partner's responsibility during hard times is essential for security. This is often based on how they handle their own financial stresses now.",
+          "framework": "attachment_theory",
+          "whenDifferent": "A trust gap here needs exploration. What has the less-trusting partner observed that concerns them?",
+          "whenSame": "Mutual trust in each other's responsibility during difficulty creates a secure foundation.",
+          "journalPrompt": "How does your partner handle financial stress? What does that tell you about them?"
+        }
+      }
+    },
+    {
+      "id": "affirmation_005_q3",
+      "text": "I don't worry that money issues would threaten our relationship.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Fear that money could threaten your relationship creates underlying anxiety. Confidence that your bond is stronger than financial stress allows you to face challenges as a team.",
+          "framework": "gottman",
+          "whenDifferent": "If one partner worries more about money threatening the relationship, explore what drives that fear. Past experiences? Current observations?",
+          "whenSame": "Shared confidence that money won't threaten your bond creates security.",
+          "journalPrompt": "Do you ever worry that money issues could damage your relationship? What drives that?"
+        }
+      }
+    },
+    {
+      "id": "affirmation_005_q4",
+      "text": "I feel my partner and I have similar comfort levels with financial risk.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Risk tolerance affects everything from career moves to investments to lifestyle choices. Partners with very different risk profiles may struggle to make financial decisions together.",
+          "framework": "financial_therapy",
+          "whenDifferent": "Different risk tolerances aren't wrong—they need negotiation. The risk-averse partner's security needs and the risk-tolerant partner's growth needs both matter.",
+          "whenSame": "Similar risk tolerance makes financial decision-making smoother.",
+          "journalPrompt": "Are you more financially cautious or adventurous? How does your partner compare?"
+        }
+      }
+    },
+    {
+      "id": "affirmation_005_q5",
+      "text": "I believe we would support each other through a financial setback.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Belief in mutual support during setbacks is the essence of partnership. This confidence allows you to take appropriate risks knowing you're not alone.",
+          "framework": "attachment_theory",
+          "whenDifferent": "If one partner doubts they'd be supported, explore what creates that doubt. Sometimes it's about how support is expressed rather than whether it exists.",
+          "whenSame": "Mutual belief in supporting each other through setbacks is foundational security.",
+          "journalPrompt": "How would you want your partner to support you through a financial setback?"
+        }
+      }
+    }
+  ]
+}

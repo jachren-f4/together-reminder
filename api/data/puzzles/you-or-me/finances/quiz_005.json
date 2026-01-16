@@ -1,0 +1,39 @@
+{
+  "quizId": "quiz_005",
+  "title": "Future Planning",
+  "branch": "finances",
+  "questions": [
+    {
+      "id": "quiz_005_q1",
+      "category": "personality",
+      "prompt": "Who thinks more about...",
+      "content": "Where you'll be in five years"
+    },
+    {
+      "id": "quiz_005_q2",
+      "category": "habits",
+      "prompt": "Who is more likely to...",
+      "content": "Set aside money for a rainy day"
+    },
+    {
+      "id": "quiz_005_q3",
+      "category": "preferences",
+      "prompt": "Who would...",
+      "content": "Enjoy planning a dream vacation budget"
+    },
+    {
+      "id": "quiz_005_q4",
+      "category": "personality",
+      "prompt": "Who is more...",
+      "content": "Excited about retirement dreams"
+    },
+    {
+      "id": "quiz_005_q5",
+      "category": "habits",
+      "prompt": "Who would...",
+      "content": "Create a savings goal and stick to it"
+    }
+  ],
+  "description": "Dream big together—explore how you each think about the future!",
+  "magnet_id": 8
+}

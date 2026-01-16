@@ -1,0 +1,73 @@
+{
+  "author": "Crossword Maker GPT",
+  "title": "AI-Built Puzzle",
+  "theme": "romance",
+  "size": {
+    "rows": 9,
+    "cols": 7
+  },
+  "clues": {
+    "1": { "type": "text", "content": "Embraced", "arrow": "down", "target_index": 8 },
+    "2": { "type": "text", "content": "Span", "arrow": "down", "target_index": 9 },
+    "3": { "type": "text", "content": "Tennis gp", "arrow": "down", "target_index": 10 },
+    "4": { "type": "text", "content": "Map abbr", "arrow": "down", "target_index": 11 },
+    "5": { "type": "text", "content": "Ebb", "arrow": "down", "target_index": 12 },
+    "6": { "type": "text", "content": "Tally", "arrow": "down", "target_index": 13 },
+    "7": { "type": "emoji", "content": "❤️", "arrow": "across", "target_index": 8 },
+    "8": { "type": "text", "content": "Sensual", "arrow": "across", "target_index": 15 },
+    "9": { "type": "text", "content": "Calif. city", "arrow": "across", "target_index": 22 },
+    "10": {
+      "across": { "type": "text", "content": "Old Tokyo", "target_index": 25 },
+      "down": { "type": "text", "content": "__day", "target_index": 31 }
+    },
+    "11": { "type": "text", "content": "SPEE_", "arrow": "across", "target_index": 29 },
+    "12": {
+      "across": { "type": "text", "content": "PAS_", "target_index": 31 },
+      "down": { "type": "emoji", "content": "🌳", "target_index": 37 }
+    },
+    "13": {
+      "across": { "type": "text", "content": "Dither", "target_index": 33 },
+      "down": { "type": "text", "content": "Comfort", "target_index": 39 }
+    },
+    "14": {
+      "across": { "type": "emoji", "content": "🦶", "target_index": 37 },
+      "down": { "type": "text", "content": "Blunder", "target_index": 43 }
+    },
+    "15": {
+      "across": { "type": "text", "content": "BAS_", "target_index": 41 },
+      "down": { "type": "text", "content": "2000 lbs", "target_index": 47 }
+    },
+    "16": { "type": "text", "content": "ER: abbr", "arrow": "across", "target_index": 43 },
+    "17": {
+      "across": { "type": "text", "content": "By", "target_index": 46 },
+      "down": { "type": "text", "content": "Cool air", "target_index": 52 }
+    },
+    "18": { "type": "text", "content": "Bible pt.", "arrow": "down", "target_index": 55 },
+    "19": { "type": "text", "content": "Logic", "arrow": "across", "target_index": 50 },
+    "20": { "type": "text", "content": "New", "arrow": "across", "target_index": 57 }
+  },
+  "date": "2026-01-13",
+  "grid": [
+    ".", ".", ".", ".", ".", ".", ".",
+    ".", "H", "E", "A", "R", "T", "S",
+    ".", "E", "R", "O", "T", "I", "C",
+    ".", "L", "A", ".", "E", "D", "O",
+    ".", "D", ".", "T", ".", "E", "R",
+    ".", ".", "T", "O", "E", ".", "E",
+    ".", "E", "R", ".", "A", "T", ".",
+    ".", "R", "E", "A", "S", "O", "N",
+    ".", "R", "E", "C", "E", "N", "T"
+  ],
+  "gridnums": [
+    0, 1, 2, 3, 4, 5, 6,
+    7, 0, 0, 0, 0, 0, 0,
+    8, 0, 0, 0, 0, 0, 0,
+    9, 0, 0, 10, 0, 0, 0,
+    11, 0, 12, 0, 13, 0, 0,
+    0, 14, 0, 0, 0, 15, 0,
+    16, 0, 0, 17, 0, 0, 18,
+    19, 0, 0, 0, 0, 0, 0,
+    20, 0, 0, 0, 0, 0, 0
+  ],
+  "puzzleId": "puzzle_035"
+}

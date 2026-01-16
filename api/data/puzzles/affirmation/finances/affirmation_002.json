@@ -1,0 +1,115 @@
+{
+  "quizId": "affirmation_002",
+  "title": "Money Conversations",
+  "category": "finances",
+  "branch": "finances",
+  "description": "Assess how comfortably you discuss money together",
+  "magnet_id": 15,
+  "questions": [
+    {
+      "id": "affirmation_002_q1",
+      "text": "I feel at ease when money comes up in conversation with my partner.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Your emotional response when money comes up reveals how safe the topic feels. Tension or anxiety around money discussions often signals unspoken fears or past negative experiences.",
+          "framework": "financial_therapy",
+          "whenDifferent": "If one partner feels more tension, explore what creates that. The relaxed partner may be unaware they're triggering discomfort.",
+          "whenSame": "Shared ease—or shared discomfort—means you're starting from the same place and can work on it together.",
+          "journalPrompt": "What emotion do you notice when money comes up with your partner?"
+        }
+      }
+    },
+    {
+      "id": "affirmation_002_q2",
+      "text": "I believe we can talk about money without it becoming a conflict.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Belief in your ability to discuss money calmly shapes how you approach these conversations. Pessimism here often becomes self-fulfilling—expecting conflict creates defensiveness.",
+          "framework": "gottman",
+          "whenDifferent": "Different confidence levels suggest different past experiences. The less confident partner may need reassurance that disagreement won't mean disaster.",
+          "whenSame": "Shared belief in your ability to discuss money calmly is a foundation to build on.",
+          "journalPrompt": "What would make money conversations feel safer for you?"
+        }
+      }
+    },
+    {
+      "id": "affirmation_002_q3",
+      "text": "I trust my partner would listen if I had concerns about money.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Trust that you'll be heard is essential for raising financial concerns. Without it, worries go unspoken until they become resentments or crises.",
+          "framework": "gottman",
+          "whenDifferent": "A trust gap here means one partner doesn't feel safe raising concerns. The other partner needs to create more space for difficult conversations.",
+          "whenSame": "Mutual trust that concerns will be heard creates safety for honest financial communication.",
+          "journalPrompt": "Is there a money concern you've hesitated to raise? What holds you back?"
+        }
+      }
+    },
+    {
+      "id": "affirmation_002_q4",
+      "text": "I'm confident we could work through a financial disagreement.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Confidence in your ability to resolve financial disagreements reflects trust in your partnership. This optimism helps you approach differences as solvable rather than threatening.",
+          "framework": "positive_psychology",
+          "whenDifferent": "If one partner is less confident, explore what's driving that doubt. Past experiences? Observed patterns? Naming it helps address it.",
+          "whenSame": "Shared confidence in your ability to resolve financial differences is a relationship strength.",
+          "journalPrompt": "What gives you confidence—or doubt—about handling financial disagreements together?"
+        }
+      }
+    },
+    {
+      "id": "affirmation_002_q5",
+      "text": "I see any money differences between us as workable, not worrying.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "How you view your financial differences matters. Seeing them as workable promotes collaboration; seeing them as worrying creates anxiety and distance.",
+          "framework": "financial_therapy",
+          "whenDifferent": "If one partner is more worried about differences, explore what specifically concerns them. Often it's not the difference itself but what it represents.",
+          "whenSame": "Shared perspective on your differences—whether optimistic or concerned—means you can address them together.",
+          "journalPrompt": "What money differences between you feel workable? Which feel more concerning?"
+        }
+      }
+    }
+  ]
+}

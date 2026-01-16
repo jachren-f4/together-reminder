@@ -1,0 +1,39 @@
+{
+  "quizId": "quiz_013",
+  "title": "Pet Peeves & Quirks",
+  "branch": "playful",
+  "questions": [
+    {
+      "id": "quiz_013_q1",
+      "category": "quirks",
+      "prompt": "Who is more...",
+      "content": "Bothered by dishes left in the sink"
+    },
+    {
+      "id": "quiz_013_q2",
+      "category": "personality",
+      "prompt": "Who would...",
+      "content": "Reorganize a messy closet for fun"
+    },
+    {
+      "id": "quiz_013_q3",
+      "category": "quirks",
+      "prompt": "Who is more...",
+      "content": "Particular about how towels are folded"
+    },
+    {
+      "id": "quiz_013_q4",
+      "category": "humor",
+      "prompt": "Who would...",
+      "content": "Straighten a crooked picture frame immediately"
+    },
+    {
+      "id": "quiz_013_q5",
+      "category": "personality",
+      "prompt": "Who is more...",
+      "content": "Likely to notice a tiny stain on their shirt all day"
+    }
+  ],
+  "description": "Discover your funny little pet peeves and quirks!",
+  "magnet_id": 3
+}

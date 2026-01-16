@@ -1,59 +1,111 @@
 {
   "quizId": "quiz_010",
-  "title": "Growth Quiz 10",
+  "title": "Personal Space & Togetherness",
   "branch": "growth",
+  "description": "Explore how you balance individual needs with couple time.",
+  "magnet_id": 10,
   "questions": [
     {
       "id": "quiz_010_q1",
-      "text": "What change are we facing that I'm most anxious about?",
+      "text": "When it comes to alone time, I...",
       "choices": [
-        "Career or financial changes",
-        "Relationship milestones or transitions",
-        "Family or living situation changes",
-        "Personal growth that affects our dynamic"      ],
-      "category": "emotional"
+        "Need regular time to recharge by myself",
+        "Enjoy it occasionally but prefer being together",
+        "Can take it or leave it depending on the day",
+        "Sometimes forget I need it until I'm depleted"
+      ],
+      "category": "alone_time_needs",
+      "metadata": {
+        "dimension": "social_energy",
+        "poleMapping": ["left", "right", "right", "left"],
+        "therapeutic": {
+          "rationale": "Alone time needs reflect introversion/extroversion and self-care awareness. Regular needers require solitude to function; togetherness-preferrers energize through connection; flexible types adapt; depleted-discoverers need better self-awareness. Understanding this prevents resentment.",
+          "framework": "attachment_theory",
+          "whenDifferent": "Different alone time needs can cause friction. The recharge-needer may seem distant; the togetherness-preferer may seem needy. Negotiate what works for both.",
+          "whenSame": "Matched alone time needs create natural rhythm of together and apart.",
+          "journalPrompt": "How much alone time do you need? Does your partner understand and respect this?"
+        }
+      }
     },
     {
       "id": "quiz_010_q2",
-      "text": "How do I want us to grow together as a couple?",
+      "text": "I feel best when we...",
       "choices": [
-        "Build deeper emotional intimacy",
-        "Create more shared experiences",
-        "Develop better communication",
-        "Align our future goals and values"      ],
-      "category": "growth"
+        "Have dedicated quality time just for us",
+        "Are comfortable being alone together",
+        "Balance couple time with individual pursuits",
+        "Stay connected even when doing our own things"
+      ],
+      "category": "togetherness_preference",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Togetherness preferences reveal connection needs. Dedicated-time lovers need focused attention; alone-together types need presence without pressure; balancers need rhythm; connected-apart types need ongoing thread. All are valid ways of being together.",
+          "framework": "gottman",
+          "whenDifferent": "Different togetherness preferences require negotiation. The dedicated-time lover may feel the balancer is distant. Find what works for both.",
+          "whenSame": "Matched togetherness preferences create natural harmony in how you spend time.",
+          "journalPrompt": "What kind of togetherness feels best to you? Is that what you're experiencing?"
+        }
+      }
     },
     {
       "id": "quiz_010_q3",
-      "text": "What pattern or habit do I want to change about myself?",
+      "text": "When you need space, I...",
       "choices": [
-        "How I communicate or handle conflict",
-        "My emotional reactions or triggers",
-        "Work-life balance or priorities",
-        "Self-care and health habits"      ],
-      "category": "growth"
+        "Respect it and give you room",
+        "Sometimes take it personally at first",
+        "Am happy to have my own time too",
+        "Check in to make sure we're okay"
+      ],
+      "category": "partner_space_response",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Responses to partner's space needs reveal attachment security. Respecters have secure acceptance; personal-takers may have anxious attachment; happy-for-own-time shows secure independence; checkers may need reassurance. Understanding your response helps you improve it.",
+          "framework": "attachment_theory",
+          "whenDifferent": "Different responses to space needs are normal. The personal-taker may need reassurance that space isn't rejection.",
+          "whenSame": "Matched responses create smooth navigation of space needs.",
+          "journalPrompt": "How do you respond when your partner needs space? Is that response serving your relationship?"
+        }
+      }
     },
     {
       "id": "quiz_010_q4",
-      "text": "What do I admire most about how you handle challenges?",
+      "text": "I wish we had more...",
       "choices": [
-        "Your resilience and positive attitude",
-        "Your problem-solving abilities",
-        "Your emotional strength",
-        "Your ability to stay calm"      ],
-      "category": "values"
+        "Intentional quality time together",
+        "Comfortable companionship without agenda",
+        "Respect for each other's individual needs",
+        "Balance between together and apart"
+      ],
+      "category": "togetherness_desires",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Togetherness desires reveal what's missing. Intentional-time wishers want more focus; companionship-wishers want more ease; respect-wishers want more autonomy; balance-wishers want better rhythm. Naming what you want helps you create it.",
+          "framework": "gottman",
+          "whenDifferent": "Different togetherness desires point to different needs. Both are valid and can often both be addressed.",
+          "whenSame": "Shared desires create clear direction for improving your together/apart balance.",
+          "journalPrompt": "What would you like more of in terms of together and apart time?"
+        }
+      }
     },
     {
       "id": "quiz_010_q5",
-      "text": "How can we support each other through change?",
+      "text": "I believe healthy couples...",
       "choices": [
-        "Check in regularly about how we're feeling",
-        "Be patient with each other's process",
-        "Focus on what's not changing",
-        "Adapt our routines and expectations"      ],
-      "category": "communication"
+        "Maintain their individual identities",
+        "Prioritize their relationship",
+        "Find a balance that works for both",
+        "Support each other's need for space and closeness"
+      ],
+      "category": "togetherness_philosophy",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Beliefs about togetherness shape expectations. Identity-maintainers protect individuality; relationship-prioritizers protect connection; balancers seek both; flexible-supporters adapt to needs. All perspectives have value.",
+          "framework": "gottman",
+          "whenDifferent": "Different beliefs about togetherness require conversation. Find the balance that honors both perspectives.",
+          "whenSame": "Shared philosophy creates aligned expectations about space and togetherness.",
+          "journalPrompt": "What do you believe about balancing individuality and togetherness in relationships?"
+        }
+      }
     }
-  ],
-  "description": "Learn about building a future of continuous growth.",
-  "magnet_id": 10
+  ]
 }

@@ -45,7 +45,7 @@ void main() async {
   // CRITICAL: Validate production safety FIRST
   // This will crash the app immediately if dev bypass flags are enabled in release builds
   // Prevents accidentally shipping dev mode to App Store
-  // DevConfig.validateProductionSafety(); // TEMP DISABLED for TestFlight testing
+  DevConfig.validateProductionSafety();
 
   // Initialize brand configuration FIRST (before any other initialization)
   BrandLoader().initialize();

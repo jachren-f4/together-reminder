@@ -1,0 +1,115 @@
+{
+  "quizId": "affirmation_008",
+  "title": "Rhythm & Timing",
+  "category": "intimacy",
+  "branch": "intimacy",
+  "description": "Explore how aligned you feel about the rhythm of physical connection",
+  "magnet_id": 16,
+  "questions": [
+    {
+      "id": "affirmation_008_q1",
+      "text": "I feel we're generally in sync about when closeness feels right.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Timing alignment reduces the friction of mismatched desire. When you're in sync about when closeness feels right, there's less rejection and pursuit.",
+          "framework": "gottman",
+          "whenDifferent": "Different perceptions of timing sync indicate a pattern worth exploring. Who tends to want closeness when? How are mismatches handled?",
+          "whenSame": "Shared sense of timing alignment creates natural opportunities for connection.",
+          "journalPrompt": "How in sync are you about when physical closeness feels right?"
+        }
+      }
+    },
+    {
+      "id": "affirmation_008_q2",
+      "text": "I can tell when my partner is open to closeness.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Reading your partner's openness helps you approach at good moments. Missing these signals leads to poorly-timed attempts that can feel like rejection.",
+          "framework": "eft",
+          "whenDifferent": "If one partner can't read openness signals, the other can make them clearer. Some people signal subtly; others need to learn to read those cues.",
+          "whenSame": "Mutual ability to read each other's openness creates smoother initiation.",
+          "journalPrompt": "How do you know when your partner is open to closeness?"
+        }
+      }
+    },
+    {
+      "id": "affirmation_008_q3",
+      "text": "I feel respected when either of us isn't in the mood for closeness.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "How mismatched timing is handled matters more than whether it happens. Graceful handling preserves connection; poor handling creates hurt or pressure.",
+          "framework": "gottman",
+          "whenDifferent": "If timing mismatches aren't handled well, explore what would feel better for each person. Both the initiator and the declining partner have needs.",
+          "whenSame": "Shared sense that timing mismatches are handled with care creates safety around closeness.",
+          "journalPrompt": "How do you handle it when one of you isn't in the mood? Does that feel okay?"
+        }
+      }
+    },
+    {
+      "id": "affirmation_008_q4",
+      "text": "I don't feel pressure around the timing of physical closeness.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Pressure around timing—whether to be ready, to want more, or to perform—undermines genuine desire. Freedom from pressure allows authentic connection.",
+          "framework": "attachment_theory",
+          "whenDifferent": "If one partner feels pressure, explore where it comes from. The other partner? Internal expectations? Understanding the source helps relieve it.",
+          "whenSame": "Mutual freedom from pressure creates space for desire to emerge naturally.",
+          "journalPrompt": "Do you ever feel pressure about timing or frequency? What would relieve that?"
+        }
+      }
+    },
+    {
+      "id": "affirmation_008_q5",
+      "text": "Our physical rhythms feel compatible, even if not identical.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Compatible rhythms don't mean identical ones—they mean workable differences. Partners with different rhythms can still feel aligned if they navigate the difference well.",
+          "framework": "positive_psychology",
+          "whenDifferent": "If rhythms don't feel compatible, explore what would help. Is it about frequency? Timing? How differences are discussed?",
+          "whenSame": "Shared sense of compatible rhythms creates peace around physical connection.",
+          "journalPrompt": "How compatible do your physical rhythms feel? What would make them feel more so?"
+        }
+      }
+    }
+  ]
+}

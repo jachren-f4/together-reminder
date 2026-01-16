@@ -1,0 +1,115 @@
+{
+  "quizId": "affirmation_009",
+  "title": "Respect During Conflict",
+  "category": "conflict",
+  "branch": "conflict",
+  "description": "Explore how respect is maintained during disagreements",
+  "magnet_id": 16,
+  "questions": [
+    {
+      "id": "affirmation_009_q1",
+      "text": "Even when we're upset, we treat each other with basic respect.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Maintaining respect during conflict is a relationship baseline. Anger doesn't justify disrespect. Couples who hold this line protect their foundation even in difficult moments.",
+          "framework": "gottman",
+          "whenDifferent": "If respect breaks down during conflict, identify specific behaviors that cross the line. Creating clear boundaries about what's not acceptable helps.",
+          "whenSame": "Mutual commitment to respect during conflict protects your relationship.",
+          "journalPrompt": "What does respect during conflict look like for you? When has it been missing?"
+        }
+      }
+    },
+    {
+      "id": "affirmation_009_q2",
+      "text": "I feel safe from hurtful words even when we're upset with each other.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Name-calling and hurtful language inflict wounds that outlast the argument. These words are hard to unhear and erode trust over time.",
+          "framework": "gottman",
+          "whenDifferent": "If hurtful language occurs, it needs direct attention. The speaking partner must understand the damage; the receiving partner deserves an apology and commitment to change.",
+          "whenSame": "Mutual avoidance of hurtful language protects your emotional safety.",
+          "journalPrompt": "Have hurtful words been used in your conflicts? What impact have they had?"
+        }
+      }
+    },
+    {
+      "id": "affirmation_009_q3",
+      "text": "I still feel valued as a person even when my partner disagrees with me.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Disagreement about issues shouldn't translate to devaluation of the person. Feeling valued even during conflict reflects secure attachment.",
+          "framework": "attachment_theory",
+          "whenDifferent": "If disagreement feels like devaluation, explore what creates that feeling. Tone? Words? Or internal interpretation? Both external and internal factors can be addressed.",
+          "whenSame": "Mutual feeling of being valued during disagreement creates security.",
+          "journalPrompt": "Do you feel valued during disagreements? What would help?"
+        }
+      }
+    },
+    {
+      "id": "affirmation_009_q4",
+      "text": "We don't bring up past mistakes to win current arguments.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Kitchen-sinking—bringing in past grievances—derails current discussions and signals that past issues aren't truly resolved. It also feels disrespectful and unfair.",
+          "framework": "gottman",
+          "whenDifferent": "If past issues keep surfacing, they may need dedicated attention. Bringing them up in current fights suggests they're still unhealed.",
+          "whenSame": "Shared commitment to staying on topic creates focused, resolvable conflict.",
+          "journalPrompt": "Do past issues get brought into current conflicts? What might that mean?"
+        }
+      }
+    },
+    {
+      "id": "affirmation_009_q5",
+      "text": "I trust my partner won't use my vulnerabilities against me in a fight.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Using shared vulnerabilities as weapons is a profound betrayal. Trust that intimate knowledge won't be weaponized is essential for continued openness.",
+          "framework": "attachment_theory",
+          "whenDifferent": "If vulnerabilities have been weaponized, this needs serious repair. The offending partner must understand the breach of trust they've created.",
+          "whenSame": "Mutual trust that vulnerabilities are safe creates deep security.",
+          "journalPrompt": "Do you trust your partner with your vulnerabilities, even during conflict?"
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,39 @@
+{
+  "quizId": "quiz_015",
+  "title": "Future Dreams",
+  "branch": "connection",
+  "questions": [
+    {
+      "id": "quiz_015_q1",
+      "category": "connection",
+      "prompt": "Who thinks more about...",
+      "content": "What your life together will look like in 10 years"
+    },
+    {
+      "id": "quiz_015_q2",
+      "category": "expression",
+      "prompt": "Who is more...",
+      "content": "Excited to share dreams and goals"
+    },
+    {
+      "id": "quiz_015_q3",
+      "category": "needs",
+      "prompt": "Who values more...",
+      "content": "Having shared goals as a couple"
+    },
+    {
+      "id": "quiz_015_q4",
+      "category": "communication",
+      "prompt": "Who would...",
+      "content": "Bring up future plans spontaneously"
+    },
+    {
+      "id": "quiz_015_q5",
+      "category": "vulnerability",
+      "prompt": "Who is more...",
+      "content": "Open about their hopes and fears for the future"
+    }
+  ],
+  "description": "Where are you headed together? Dream about your future as a couple!",
+  "magnet_id": 5
+}

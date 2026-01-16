@@ -1,0 +1,39 @@
+{
+  "quizId": "quiz_013",
+  "title": "Clearing the Air",
+  "branch": "conflict",
+  "questions": [
+    {
+      "id": "quiz_013_q1",
+      "category": "personality",
+      "prompt": "Who is more...",
+      "content": "Relieved after talking things through"
+    },
+    {
+      "id": "quiz_013_q2",
+      "category": "habits",
+      "prompt": "Who would...",
+      "content": "Bring up something that's been on their mind"
+    },
+    {
+      "id": "quiz_013_q3",
+      "category": "preferences",
+      "prompt": "Who values more...",
+      "content": "Getting everything out in the open"
+    },
+    {
+      "id": "quiz_013_q4",
+      "category": "personality",
+      "prompt": "Who feels lighter after...",
+      "content": "A good heart-to-heart conversation"
+    },
+    {
+      "id": "quiz_013_q5",
+      "category": "habits",
+      "prompt": "Who is more likely to...",
+      "content": "Check in to make sure everything's okay"
+    }
+  ],
+  "description": "Nothing beats clearing the air—explore how you work through things together!",
+  "magnet_id": 15
+}

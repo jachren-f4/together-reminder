@@ -1,0 +1,115 @@
+{
+  "quizId": "affirmation_006",
+  "title": "Defensiveness & Openness",
+  "category": "conflict",
+  "branch": "conflict",
+  "description": "Explore how open or defensive you are during disagreements",
+  "magnet_id": 16,
+  "questions": [
+    {
+      "id": "affirmation_006_q1",
+      "text": "I can hear my partner's concerns without immediately defending myself.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Defensiveness blocks connection. When you can hear a concern before defending, you show your partner their feelings matter—even if you see things differently.",
+          "framework": "gottman",
+          "whenDifferent": "If one partner immediately defends, explore what triggers the defense. Feeling attacked? Shame? Understanding the trigger helps pause the automatic response.",
+          "whenSame": "Mutual ability to listen before defending creates receptive dialogue.",
+          "journalPrompt": "What happens inside you when your partner raises a concern? What makes you defensive?"
+        }
+      }
+    },
+    {
+      "id": "affirmation_006_q2",
+      "text": "I sense openness in my partner when I share concerns with them.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Shutting down or counter-attacking are defensive moves that prevent real dialogue. Partners who can receive feedback openly create space for growth.",
+          "framework": "gottman",
+          "whenDifferent": "If one partner experiences defensiveness, explore how feedback is given and received. Sometimes delivery triggers defense; sometimes it's the receiver's pattern.",
+          "whenSame": "Mutual openness to feedback creates a growth-oriented relationship.",
+          "journalPrompt": "How does your partner typically respond to feedback? How do you?"
+        }
+      }
+    },
+    {
+      "id": "affirmation_006_q3",
+      "text": "I can admit when I've contributed to a problem.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Taking responsibility for your part—without taking all the blame—shows maturity and moves conflicts toward resolution. Refusing to own any contribution keeps you stuck.",
+          "framework": "gottman",
+          "whenDifferent": "If one partner struggles to admit contribution, explore what makes it hard. Fear of being blamed for everything? Shame? Creating safety for admission helps.",
+          "whenSame": "Mutual willingness to admit contribution accelerates conflict resolution.",
+          "journalPrompt": "How easy or hard is it for you to admit your part in problems?"
+        }
+      }
+    },
+    {
+      "id": "affirmation_006_q4",
+      "text": "We can talk about what went wrong without it becoming about who's at fault.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Focusing on fault creates winners and losers. Focusing on what went wrong—the pattern, the misunderstanding—creates partners solving a problem together.",
+          "framework": "gottman",
+          "whenDifferent": "If conversations become about fault, notice who shifts to blame and when. Breaking the pattern requires catching it in the moment.",
+          "whenSame": "Shared focus on understanding rather than blaming creates collaborative problem-solving.",
+          "journalPrompt": "Do your discussions about problems focus on fault or understanding?"
+        }
+      }
+    },
+    {
+      "id": "affirmation_006_q5",
+      "text": "There's room for both of us to be right about different parts of a conflict.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Most conflicts contain valid points on both sides. When there's room for both perspectives to have merit, partners don't have to defeat each other to be heard.",
+          "framework": "eft",
+          "whenDifferent": "If one partner doesn't feel room for both to be right, explore what creates the either/or dynamic. Zero-sum thinking makes every conflict a battle.",
+          "whenSame": "Shared acceptance that both can be right creates generous conflict.",
+          "journalPrompt": "Can you both be right about different aspects of a disagreement? What helps that?"
+        }
+      }
+    }
+  ]
+}

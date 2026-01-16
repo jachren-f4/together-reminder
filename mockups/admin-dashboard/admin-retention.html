@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Us 2.0 Analytics - Retention</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        .sidebar-link.active {
+            background-color: #4F46E5;
+            color: white;
+        }
+        .retention-cell {
+            transition: all 0.2s;
+        }
+        @media (min-width: 768px) {
+            .retention-cell:hover {
+                transform: scale(1.05);
+            }
+        }
+        .sidebar-overlay {
+            transition: opacity 0.3s;
+        }
+        .sidebar-panel {
+            transition: transform 0.3s;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <!-- Mobile Header -->
+    <header class="lg:hidden fixed top-0 left-0 right-0 bg-white border-b border-gray-200 z-40">
+        <div class="flex items-center justify-between px-4 py-3">
+            <button onclick="openSidebar()" class="p-2 -ml-2 text-gray-600">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+                </svg>
+            </button>
+            <h1 class="text-lg font-bold text-gray-900">Retention</h1>
+            <button class="p-2 -mr-2 text-gray-600" title="Refresh">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+                </svg>
+            </button>
+        </div>
+    </header>
+
+    <!-- Mobile Sidebar Overlay -->
+    <div id="sidebarOverlay" class="sidebar-overlay fixed inset-0 bg-black/50 z-50 lg:hidden hidden" onclick="closeSidebar()"></div>
+
+    <div class="flex">
+        <!-- Sidebar -->
+        <aside id="sidebar" class="sidebar-panel w-64 bg-white border-r border-gray-200 min-h-screen fixed z-50 -translate-x-full lg:translate-x-0">
+            <div class="p-6 border-b border-gray-200">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h1 class="text-xl font-bold text-gray-900">Us 2.0 Analytics</h1>
+                        <p class="text-sm text-gray-500 mt-1">Admin Dashboard</p>
+                    </div>
+                    <button onclick="closeSidebar()" class="lg:hidden p-2 -mr-2 text-gray-400 hover:text-gray-600">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+            <nav class="p-4 space-y-1">
+                <a href="admin-overview.html" class="sidebar-link flex items-center px-4 py-3 text-sm font-medium text-gray-600 rounded-lg hover:bg-gray-100">
+                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+                    </svg>
+                    Overview
+                </a>
+                <a href="#" class="sidebar-link flex items-center px-4 py-3 text-sm font-medium text-gray-600 rounded-lg hover:bg-gray-100">
+                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+                    </svg>
+                    Users
+                </a>
+                <a href="admin-retention.html" class="sidebar-link active flex items-center px-4 py-3 text-sm font-medium rounded-lg">
+                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+                    </svg>
+                    Retention
+                </a>
+                <a href="#" class="sidebar-link flex items-center px-4 py-3 text-sm font-medium text-gray-600 rounded-lg hover:bg-gray-100">
+                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                    </svg>
+                    Engagement
+                </a>
+                <a href="admin-subscriptions.html" class="sidebar-link flex items-center px-4 py-3 text-sm font-medium text-gray-600 rounded-lg hover:bg-gray-100">
+                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/>
+                    </svg>
+                    Subscriptions
+                </a>
+                <a href="#" class="sidebar-link flex items-center px-4 py-3 text-sm font-medium text-gray-600 rounded-lg hover:bg-gray-100">
+                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                    </svg>
+                    Real-time
+                </a>
+            </nav>
+            <div class="absolute bottom-0 left-0 right-0 p-4 border-t border-gray-200">
+                <div class="flex items-center">
+                    <div class="w-8 h-8 bg-indigo-100 rounded-full flex items-center justify-center">
+                        <span class="text-indigo-600 font-medium text-sm">JA</span>
+                    </div>
+                    <div class="ml-3">
+                        <p class="text-sm font-medium text-gray-700">joakim@example.com</p>
+                        <a href="admin-login.html" class="text-xs text-gray-500 hover:text-gray-700">Sign out</a>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="lg:ml-64 flex-1 p-4 lg:p-8 pt-20 lg:pt-8">
+            <!-- Header -->
+            <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-6 lg:mb-8">
+                <div>
+                    <h2 class="text-xl lg:text-2xl font-bold text-gray-900">Retention Analytics</h2>
+                    <p class="text-gray-500 text-sm lg:text-base mt-1">Track user retention over time</p>
+                </div>
+                <div class="flex items-center gap-2">
+                    <select class="px-3 lg:px-4 py-2 bg-white border border-gray-200 rounded-lg text-sm font-medium text-gray-600">
+                        <option>Last 8 weeks</option>
+                        <option>Last 12 weeks</option>
+                        <option>Last 16 weeks</option>
+                    </select>
+                    <button class="hidden lg:block p-2 bg-white border border-gray-200 rounded-lg text-gray-500 hover:bg-gray-50" title="Refresh">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Summary Cards -->
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-6 mb-6 lg:mb-8">
+                <div class="bg-white rounded-xl border border-gray-200 p-4 lg:p-6">
+                    <p class="text-xs lg:text-sm font-medium text-gray-500">Avg D1 Retention</p>
+                    <p class="text-2xl lg:text-3xl font-bold text-gray-900 mt-2">68.4%</p>
+                    <p class="text-xs lg:text-sm text-green-600 mt-1">+2.3% vs prior</p>
+                </div>
+                <div class="bg-white rounded-xl border border-gray-200 p-4 lg:p-6">
+                    <p class="text-xs lg:text-sm font-medium text-gray-500">Avg D7 Retention</p>
+                    <p class="text-2xl lg:text-3xl font-bold text-gray-900 mt-2">42.1%</p>
+                    <p class="text-xs lg:text-sm text-green-600 mt-1">+1.8% vs prior</p>
+                </div>
+                <div class="bg-white rounded-xl border border-gray-200 p-4 lg:p-6">
+                    <p class="text-xs lg:text-sm font-medium text-gray-500">Avg D30 Retention</p>
+                    <p class="text-2xl lg:text-3xl font-bold text-gray-900 mt-2">24.6%</p>
+                    <p class="text-xs lg:text-sm text-red-600 mt-1">-0.5% vs prior</p>
+                </div>
+                <div class="bg-white rounded-xl border border-gray-200 p-4 lg:p-6">
+                    <p class="text-xs lg:text-sm font-medium text-gray-500">Churned (30d)</p>
+                    <p class="text-2xl lg:text-3xl font-bold text-gray-900 mt-2">392</p>
+                    <p class="text-xs lg:text-sm text-gray-500 mt-1">30.5% of couples</p>
+                </div>
+            </div>
+
+            <!-- Retention Cohort Table -->
+            <div class="bg-white rounded-xl border border-gray-200 p-4 lg:p-6 mb-6 lg:mb-8">
+                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4 lg:mb-6">
+                    <div>
+                        <h3 class="text-base lg:text-lg font-semibold text-gray-900">Weekly Cohort Retention</h3>
+                        <p class="text-xs lg:text-sm text-gray-500 mt-1">Percentage of couples still active on each day</p>
+                    </div>
+                    <button class="hidden sm:flex items-center px-4 py-2 text-sm font-medium text-gray-600 bg-gray-100 rounded-lg hover:bg-gray-200">
+                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+                        </svg>
+                        Export CSV
+                    </button>
+                </div>
+
+                <div class="overflow-x-auto -mx-4 lg:mx-0">
+                    <div class="inline-block min-w-full align-middle px-4 lg:px-0">
+                        <table class="min-w-full">
+                            <thead>
+                                <tr class="text-left text-xs lg:text-sm font-medium text-gray-500 border-b border-gray-200">
+                                    <th class="pb-3 pr-3 whitespace-nowrap">Cohort</th>
+                                    <th class="pb-3 px-2 text-center">Size</th>
+                                    <th class="pb-3 px-2 text-center">D1</th>
+                                    <th class="pb-3 px-2 text-center">D7</th>
+                                    <th class="pb-3 px-2 text-center hidden sm:table-cell">D14</th>
+                                    <th class="pb-3 px-2 text-center hidden sm:table-cell">D30</th>
+                                </tr>
+                            </thead>
+                            <tbody class="text-xs lg:text-sm">
+                                <tr class="border-b border-gray-100">
+                                    <td class="py-3 pr-3 font-medium text-gray-900 whitespace-nowrap">Jan 6-12</td>
+                                    <td class="py-3 px-2 text-center text-gray-600">142</td>
+                                    <td class="py-3 px-2 text-center">
+                                        <span class="retention-cell inline-block px-2 py-1 rounded-full text-white text-xs font-medium" style="background-color: rgba(34, 197, 94, 0.9)">72%</span>
+                                    </td>
+                                    <td class="py-3 px-2 text-center">
+                                        <span class="text-gray-400">-</span>
+                                    </td>
+                                    <td class="py-3 px-2 text-center hidden sm:table-cell">
+                                        <span class="text-gray-400">-</span>
+                                    </td>
+                                    <td class="py-3 px-2 text-center hidden sm:table-cell">
+                                        <span class="text-gray-400">-</span>
+                                    </td>
+                                </tr>
+                                <tr class="border-b border-gray-100">
+                                    <td class="py-3 pr-3 font-medium text-gray-900 whitespace-nowrap">Dec 30-Jan 5</td>
+                                    <td class="py-3 px-2 text-center text-gray-600">128</td>
+                                    <td class="py-3 px-2 text-center">
+                                        <span class="retention-cell inline-block px-2 py-1 rounded-full text-white text-xs font-medium" style="background-color: rgba(34, 197, 94, 0.9)">70%</span>
+                                    </td>
+                                    <td class="py-3 px-2 text-center">
+                                        <span class="retention-cell inline-block px-2 py-1 rounded-full text-white text-xs font-medium" style="background-color: rgba(234, 179, 8, 0.8)">44%</span>
+                                    </td>
+                                    <td class="py-3 px-2 text-center hidden sm:table-cell">
+                                        <span class="text-gray-400">-</span>
+                                    </td>
+                                    <td class="py-3 px-2 text-center hidden sm:table-cell">
+                                        <span class="text-gray-400">-</span>
+                                    </td>
+                                </tr>
+                                <tr class="border-b border-gray-100">
+                                    <td class="py-3 pr-3 font-medium text-gray-900 whitespace-nowrap">Dec 23-29</td>
+                                    <td class="py-3 px-2 text-center text-gray-600">156</td>
+                                    <td class="py-3 px-2 text-center">
+                                        <span class="retention-cell inline-block px-2 py-1 rounded-full text-white text-xs font-medium" style="background-color: rgba(34, 197, 94, 0.85)">68%</span>
+                                    </td>
+                                    <td class="py-3 px-2 text-center">
+                                        <span class="retention-cell inline-block px-2 py-1 rounded-full text-white text-xs font-medium" style="background-color: rgba(234, 179, 8, 0.75)">41%</span>
+                                    </td>
+                                    <td class="py-3 px-2 text-center hidden sm:table-cell">
+                                        <span class="retention-cell inline-block px-2 py-1 rounded-full text-white text-xs font-medium" style="background-color: rgba(249, 115, 22, 0.7)">32%</span>
+                                    </td>
+                                    <td class="py-3 px-2 text-center hidden sm:table-cell">
+                                        <span class="text-gray-400">-</span>
+                                    </td>
+                                </tr>
+                                <tr class="border-b border-gray-100">
+                                    <td class="py-3 pr-3 font-medium text-gray-900 whitespace-nowrap">Dec 16-22</td>
+                                    <td class="py-3 px-2 text-center text-gray-600">134</td>
+                                    <td class="py-3 px-2 text-center">
+                                        <span class="retention-cell inline-block px-2 py-1 rounded-full text-white text-xs font-medium" style="background-color: rgba(34, 197, 94, 0.9)">71%</span>
+                                    </td>
+                                    <td class="py-3 px-2 text-center">
+                                        <span class="retention-cell inline-block px-2 py-1 rounded-full text-white text-xs font-medium" style="background-color: rgba(234, 179, 8, 0.8)">45%</span>
+                                    </td>
+                                    <td class="py-3 px-2 text-center hidden sm:table-cell">
+                                        <span class="retention-cell inline-block px-2 py-1 rounded-full text-white text-xs font-medium" style="background-color: rgba(249, 115, 22, 0.75)">35%</span>
+                                    </td>
+                                    <td class="py-3 px-2 text-center hidden sm:table-cell">
+                                        <span class="text-gray-400">-</span>
+                                    </td>
+                                </tr>
+                                <tr class="border-b border-gray-100">
+                                    <td class="py-3 pr-3 font-medium text-gray-900 whitespace-nowrap">Dec 9-15</td>
+                                    <td class="py-3 px-2 text-center text-gray-600">118</td>
+                                    <td class="py-3 px-2 text-center">
+                                        <span class="retention-cell inline-block px-2 py-1 rounded-full text-white text-xs font-medium" style="background-color: rgba(34, 197, 94, 0.85)">67%</span>
+                                    </td>
+                                    <td class="py-3 px-2 text-center">
+                                        <span class="retention-cell inline-block px-2 py-1 rounded-full text-white text-xs font-medium" style="background-color: rgba(234, 179, 8, 0.75)">40%</span>
+                                    </td>
+                                    <td class="py-3 px-2 text-center hidden sm:table-cell">
+                                        <span class="retention-cell inline-block px-2 py-1 rounded-full text-white text-xs font-medium" style="background-color: rgba(249, 115, 22, 0.65)">30%</span>
+                                    </td>
+                                    <td class="py-3 px-2 text-center hidden sm:table-cell">
+                                        <span class="retention-cell inline-block px-2 py-1 rounded-full text-white text-xs font-medium" style="background-color: rgba(239, 68, 68, 0.7)">21%</span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="py-3 pr-3 font-medium text-gray-900 whitespace-nowrap">Dec 2-8</td>
+                                    <td class="py-3 px-2 text-center text-gray-600">145</td>
+                                    <td class="py-3 px-2 text-center">
+                                        <span class="retention-cell inline-block px-2 py-1 rounded-full text-white text-xs font-medium" style="background-color: rgba(34, 197, 94, 0.85)">66%</span>
+                                    </td>
+                                    <td class="py-3 px-2 text-center">
+                                        <span class="retention-cell inline-block px-2 py-1 rounded-full text-white text-xs font-medium" style="background-color: rgba(234, 179, 8, 0.7)">38%</span>
+                                    </td>
+                                    <td class="py-3 px-2 text-center hidden sm:table-cell">
+                                        <span class="retention-cell inline-block px-2 py-1 rounded-full text-white text-xs font-medium" style="background-color: rgba(249, 115, 22, 0.6)">28%</span>
+                                    </td>
+                                    <td class="py-3 px-2 text-center hidden sm:table-cell">
+                                        <span class="retention-cell inline-block px-2 py-1 rounded-full text-white text-xs font-medium" style="background-color: rgba(239, 68, 68, 0.7)">20%</span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Legend -->
+                <div class="mt-4 lg:mt-6 flex flex-wrap items-center justify-center gap-3 lg:gap-6 text-xs lg:text-sm">
+                    <div class="flex items-center">
+                        <span class="w-3 h-3 lg:w-4 lg:h-4 rounded" style="background-color: rgba(34, 197, 94, 0.9)"></span>
+                        <span class="ml-2 text-gray-600">60%+</span>
+                    </div>
+                    <div class="flex items-center">
+                        <span class="w-3 h-3 lg:w-4 lg:h-4 rounded" style="background-color: rgba(234, 179, 8, 0.8)"></span>
+                        <span class="ml-2 text-gray-600">40-60%</span>
+                    </div>
+                    <div class="flex items-center">
+                        <span class="w-3 h-3 lg:w-4 lg:h-4 rounded" style="background-color: rgba(249, 115, 22, 0.7)"></span>
+                        <span class="ml-2 text-gray-600">25-40%</span>
+                    </div>
+                    <div class="flex items-center">
+                        <span class="w-3 h-3 lg:w-4 lg:h-4 rounded" style="background-color: rgba(239, 68, 68, 0.7)"></span>
+                        <span class="ml-2 text-gray-600">&lt;25%</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Retention Curve & Churn Analysis -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-6">
+                <div class="bg-white rounded-xl border border-gray-200 p-4 lg:p-6">
+                    <h3 class="text-base lg:text-lg font-semibold text-gray-900 mb-4 lg:mb-6">Retention Curve</h3>
+                    <canvas id="retentionCurve" height="200"></canvas>
+                </div>
+
+                <!-- Churn Analysis -->
+                <div class="bg-white rounded-xl border border-gray-200 p-4 lg:p-6">
+                    <h3 class="text-base lg:text-lg font-semibold text-gray-900 mb-4 lg:mb-6">Churn Analysis</h3>
+                    <div class="space-y-3">
+                        <div class="flex items-center justify-between p-3 lg:p-4 bg-gray-50 rounded-lg">
+                            <div>
+                                <p class="text-sm font-medium text-gray-900">Inactive 7+ days</p>
+                                <p class="text-xs text-gray-500 mt-1">Recently at risk</p>
+                            </div>
+                            <div class="text-right">
+                                <p class="text-xl lg:text-2xl font-bold text-yellow-600">187</p>
+                                <p class="text-xs text-gray-500">14.6%</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center justify-between p-3 lg:p-4 bg-gray-50 rounded-lg">
+                            <div>
+                                <p class="text-sm font-medium text-gray-900">Inactive 14+ days</p>
+                                <p class="text-xs text-gray-500 mt-1">High churn risk</p>
+                            </div>
+                            <div class="text-right">
+                                <p class="text-xl lg:text-2xl font-bold text-orange-600">284</p>
+                                <p class="text-xs text-gray-500">22.1%</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center justify-between p-3 lg:p-4 bg-gray-50 rounded-lg">
+                            <div>
+                                <p class="text-sm font-medium text-gray-900">Inactive 30+ days</p>
+                                <p class="text-xs text-gray-500 mt-1">Churned</p>
+                            </div>
+                            <div class="text-right">
+                                <p class="text-xl lg:text-2xl font-bold text-red-600">392</p>
+                                <p class="text-xs text-gray-500">30.5%</p>
+                            </div>
+                        </div>
+                        <div class="pt-3 border-t border-gray-200">
+                            <div class="flex items-center justify-between">
+                                <p class="text-sm font-medium text-gray-600">Active (30 days)</p>
+                                <p class="text-lg font-bold text-green-600">892 (69.5%)</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <div class="mt-6 lg:mt-8 text-center text-xs lg:text-sm text-gray-400 pb-4">
+                <p>Last updated: Jan 13, 2026 at 14:32 UTC</p>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Mobile sidebar toggle
+        function openSidebar() {
+            document.getElementById('sidebar').classList.remove('-translate-x-full');
+            document.getElementById('sidebarOverlay').classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeSidebar() {
+            document.getElementById('sidebar').classList.add('-translate-x-full');
+            document.getElementById('sidebarOverlay').classList.add('hidden');
+            document.body.style.overflow = '';
+        }
+    </script>
+
+    <script>
+        // Retention Curve Chart
+        const ctx = document.getElementById('retentionCurve').getContext('2d');
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: ['D0', 'D1', 'D3', 'D7', 'D14', 'D21', 'D30'],
+                datasets: [{
+                    label: 'Retention %',
+                    data: [100, 68, 52, 42, 30, 24, 20],
+                    borderColor: 'rgb(99, 102, 241)',
+                    backgroundColor: 'rgba(99, 102, 241, 0.1)',
+                    fill: true,
+                    tension: 0.4,
+                    pointRadius: 4,
+                    pointBackgroundColor: 'rgb(99, 102, 241)',
+                    pointBorderColor: 'white',
+                    pointBorderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { display: false }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 100,
+                        grid: { color: 'rgba(0,0,0,0.05)' },
+                        ticks: {
+                            callback: function(value) {
+                                return value + '%';
+                            }
+                        }
+                    },
+                    x: {
+                        grid: { display: false }
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,111 @@
+{
+  "quizId": "quiz_001",
+  "title": "Physical Affection Styles",
+  "branch": "intimacy",
+  "description": "Discover how you each like to give and receive physical affection.",
+  "magnet_id": 15,
+  "questions": [
+    {
+      "id": "quiz_001_q1",
+      "text": "When it comes to physical affection, I naturally tend to...",
+      "choices": [
+        "Give it freely throughout the day",
+        "Save it for meaningful moments",
+        "Match my partner's energy",
+        "Need to feel emotionally connected first"
+      ],
+      "category": "affection_style",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Affection-giving patterns reveal attachment style and love expression. Frequent givers show love through constant touch; moment-savers create significance; matchers adapt; connection-needers link physical and emotional. Partners often have different patterns.",
+          "framework": "love_languages",
+          "whenDifferent": "The frequent giver may feel rejected by the moment-saver; the moment-saver may feel overwhelmed by constant touch. Neither is wrong—share what touch means to you.",
+          "whenSame": "Shared affection patterns create natural harmony. You'll instinctively give what your partner wants.",
+          "journalPrompt": "How do you naturally express affection? Where did you learn that pattern?"
+        }
+      }
+    },
+    {
+      "id": "quiz_001_q2",
+      "text": "The type of physical touch that makes me feel most loved is...",
+      "choices": [
+        "Gentle, tender touches (hand-holding, caressing)",
+        "Close contact (cuddling, being held)",
+        "Playful touch (tickling, wrestling, playfulness)",
+        "Passionate touch (kissing, intimacy)"
+      ],
+      "category": "affection_preferences",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Touch preferences vary widely. Gentle-touch lovers feel loved through tenderness; close-contact lovers need proximity; playful-touch lovers connect through fun; passionate-touch lovers feel loved through desire. Knowing your partner's language matters.",
+          "framework": "love_languages",
+          "whenDifferent": "Different touch preferences may leave one partner feeling unloved despite effort. The gentle-toucher may not realize their partner needs more passion; the passion-lover may not realize their partner needs more tenderness.",
+          "whenSame": "Shared touch preference makes connection easier. You naturally speak the same physical language.",
+          "journalPrompt": "What kind of touch makes you feel most loved and connected? Be specific."
+        }
+      }
+    },
+    {
+      "id": "quiz_001_q3",
+      "text": "In terms of how much physical affection I need, I'd say...",
+      "choices": [
+        "A lot—I'm very physically oriented",
+        "A moderate amount—quality over quantity",
+        "It varies depending on my mood and stress",
+        "Less than most—I show love other ways"
+      ],
+      "category": "affection_needs",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Affection needs vary by person and aren't right or wrong. High-need partners feel disconnected without regular touch; moderate-need partners prioritize meaning; variable-need partners fluctuate; low-need partners connect differently. Mismatched needs cause pain.",
+          "framework": "attachment_theory",
+          "whenDifferent": "The high-need partner may feel rejected; the low-need partner may feel pressured. Neither is wrong—find your compromise zone and check in regularly.",
+          "whenSame": "Matched affection needs prevent a common relationship pain point. You'll naturally satisfy each other.",
+          "journalPrompt": "How much physical affection do you need to feel connected? Has that changed over time?"
+        }
+      }
+    },
+    {
+      "id": "quiz_001_q4",
+      "text": "When I'm stressed or upset, physical affection usually...",
+      "choices": [
+        "Helps me feel better and more grounded",
+        "Feels like too much—I need space first",
+        "Depends on what I'm stressed about",
+        "Is welcome if I initiate it"
+      ],
+      "category": "affection_context",
+      "metadata": {
+        "dimension": "stress_processing",
+        "poleMapping": ["right", "left", "neutral", "left"],
+        "therapeutic": {
+          "rationale": "How we receive touch during stress reveals coping patterns. Touch-soothers are calmed by contact; space-needers are overwhelmed; context-dependers vary; initiators need control. Misreading your partner's stress-touch needs backfires.",
+          "framework": "attachment_theory",
+          "whenDifferent": "The touch-soother may feel rejected when their stressed partner pulls away; the space-needer may feel smothered by comfort attempts. Ask: 'Do you want me close right now?'",
+          "whenSame": "Shared stress-touch preferences make comforting each other intuitive.",
+          "journalPrompt": "When you're really stressed, does touch help or feel like too much? What do you need?"
+        }
+      }
+    },
+    {
+      "id": "quiz_001_q5",
+      "text": "Public displays of affection make me feel...",
+      "choices": [
+        "Happy—I like showing we're together",
+        "Slightly uncomfortable—I prefer privacy",
+        "Fine with small gestures, not big ones",
+        "Depends on the setting and who's around"
+      ],
+      "category": "affection_context",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "PDA comfort reveals personality and cultural background. PDA-lovers feel proud; private types feel exposed; moderate types have limits; context-readers adapt. Mismatched comfort creates awkward moments and hurt feelings.",
+          "framework": "love_languages",
+          "whenDifferent": "The PDA-lover may feel their private partner is ashamed; the private partner may feel the PDA-lover is showing off. Neither is true—it's just comfort level. Find your shared zone.",
+          "whenSame": "Shared PDA comfort prevents public awkwardness. You'll naturally match in social settings.",
+          "journalPrompt": "How do you feel about affection in public? Where does that comfort level come from?"
+        }
+      }
+    }
+  ]
+}

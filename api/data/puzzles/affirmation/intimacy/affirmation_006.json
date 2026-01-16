@@ -1,0 +1,115 @@
+{
+  "quizId": "affirmation_006",
+  "title": "Non-Sexual Touch",
+  "category": "intimacy",
+  "branch": "intimacy",
+  "description": "Explore how you experience everyday physical affection",
+  "magnet_id": 16,
+  "questions": [
+    {
+      "id": "affirmation_006_q1",
+      "text": "Casual touch from my partner—a hand on my back, a brush of fingers—feels connecting.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Casual, everyday touch maintains connection between more intimate moments. When small touches feel connecting, the relationship has a warm physical baseline.",
+          "framework": "love_languages",
+          "whenDifferent": "If casual touch doesn't feel connecting for one partner, explore what it does feel like. Some need different types of touch to feel connection.",
+          "whenSame": "Mutual connection through casual touch creates an ongoing physical bond.",
+          "journalPrompt": "What everyday touches from your partner make you feel connected?"
+        }
+      }
+    },
+    {
+      "id": "affirmation_006_q2",
+      "text": "I enjoy physical affection that isn't leading anywhere.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Affection without expectation creates safety. When touch always leads somewhere, some partners feel they can't relax into simple closeness.",
+          "framework": "attachment_theory",
+          "whenDifferent": "If one partner doesn't enjoy non-escalating affection, explore what's behind that. Do they feel it should lead somewhere? Does it feel incomplete?",
+          "whenSame": "Shared enjoyment of affection for its own sake creates more opportunities for connection.",
+          "journalPrompt": "How do you feel about physical affection that's just for closeness, not leading anywhere?"
+        }
+      }
+    },
+    {
+      "id": "affirmation_006_q3",
+      "text": "My partner's touch throughout the day reminds me I matter to them.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Touch as a reminder of mattering fulfills a deep attachment need. These small physical bids say 'I'm thinking of you' without words.",
+          "framework": "attachment_theory",
+          "whenDifferent": "If touch doesn't communicate mattering for one partner, explore what would. They may need different expressions of care.",
+          "whenSame": "Mutual feeling of mattering through touch strengthens your daily connection.",
+          "journalPrompt": "How does your partner's touch make you feel throughout the day?"
+        }
+      }
+    },
+    {
+      "id": "affirmation_006_q4",
+      "text": "I feel comfortable with how much physical affection we share day-to-day.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Comfort with the amount of everyday affection suggests alignment. Discomfort—wanting more or less—signals a conversation worth having.",
+          "framework": "love_languages",
+          "whenDifferent": "Different comfort levels indicate different needs. Neither is wrong, but the gap needs acknowledgment and negotiation.",
+          "whenSame": "Shared comfort with your level of everyday affection creates ease.",
+          "journalPrompt": "Would you like more, less, or different everyday physical affection?"
+        }
+      }
+    },
+    {
+      "id": "affirmation_006_q5",
+      "text": "Physical affection flows naturally between us.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Natural flow suggests comfort and attunement. When affection feels forced or awkward, something in the dynamic may need attention.",
+          "framework": "eft",
+          "whenDifferent": "If affection doesn't flow naturally for one partner, explore what interrupts the flow. Self-consciousness? Uncertainty about welcome?",
+          "whenSame": "Shared experience of natural flow indicates comfortable physical connection.",
+          "journalPrompt": "When does physical affection flow most naturally between you?"
+        }
+      }
+    }
+  ]
+}

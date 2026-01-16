@@ -1,0 +1,24 @@
+{
+  "puzzleId": "ws_019",
+  "title": "Casual XIX",
+  "theme": "casual",
+  "size": {
+    "rows": 10,
+    "cols": 10
+  },
+  "grid": "RSJTILIEAGEPEPLVALSJIABIAHJIMSYPTCFNTMTKMSEFORESTCXAWEAFGQYAIHEILQFUDNVHKRNSREESNDFLDENPECOQRENTRAPT",
+  "words": {
+    "DEN": "68,DL",
+    "FOREST": "43,R",
+    "WINE": "52,DR",
+    "TEA": "3,DL",
+    "NAP": "35,UL",
+    "DREAM": "84,UL",
+    "STILL": "41,UR",
+    "SNACKS": "79,U",
+    "SMILE": "47,U",
+    "PARTNER": "98,L",
+    "SLEEP": "75,UL",
+    "COFFEE": "33,DR"
+  }
+}

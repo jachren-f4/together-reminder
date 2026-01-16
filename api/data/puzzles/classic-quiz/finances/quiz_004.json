@@ -1,0 +1,113 @@
+{
+  "quizId": "quiz_004",
+  "title": "Financial Stress",
+  "branch": "finances",
+  "description": "Understand how you each experience and cope with money worries.",
+  "magnet_id": 15,
+  "questions": [
+    {
+      "id": "quiz_004_q1",
+      "text": "When money feels tight, my instinct is to...",
+      "choices": [
+        "Cut back immediately on non-essentials",
+        "Stay calm and trust it will work out",
+        "Make a detailed plan to get back on track",
+        "Feel anxious until things improve"
+      ],
+      "category": "financial_stress",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Financial stress responses are deeply ingrained—often from childhood experiences with scarcity or security. Some spring into action; others freeze; others trust. Understanding your partner's stress response helps you support rather than judge.",
+          "framework": "financial_therapy",
+          "whenDifferent": "The cutter may feel the calm partner isn't taking it seriously; the calm partner may feel the cutter is overreacting. Both are trying to feel safe—just differently.",
+          "whenSame": "Shared stress responses mean you'll react similarly—which can be stabilizing or amplifying. Two anxious responders may spiral together; two calm ones may miss warning signs.",
+          "journalPrompt": "How did your family respond when money was tight? How does that show up in you now?"
+        }
+      }
+    },
+    {
+      "id": "quiz_004_q2",
+      "text": "What triggers the most financial anxiety for me is...",
+      "choices": [
+        "Unexpected expenses or emergencies",
+        "Not knowing where we stand financially",
+        "Feeling like we're falling behind others",
+        "Disagreements about money with my partner"
+      ],
+      "category": "financial_stress",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Financial anxiety has different triggers for different people. Knowing your partner's specific trigger helps you avoid accidentally activating it—and helps you offer the right reassurance.",
+          "framework": "financial_therapy",
+          "whenDifferent": "Different triggers mean different things set off each of your alarms. What feels minor to one may be alarming to the other. Take your partner's trigger seriously, even if it's not yours.",
+          "whenSame": "Shared triggers mean you'll both react to the same situations. This can create understanding—or amplified panic. Be aware of your shared vulnerability.",
+          "journalPrompt": "What's the financial situation that makes you most anxious? Where does that fear come from?"
+        }
+      }
+    },
+    {
+      "id": "quiz_004_q3",
+      "text": "When I'm worried about money, I need my partner to...",
+      "choices": [
+        "Listen and validate how I'm feeling",
+        "Help me problem-solve and make a plan",
+        "Reassure me that we'll be okay",
+        "Give me space to process it first"
+      ],
+      "category": "financial_support",
+      "metadata": {
+        "dimension": "support_style",
+        "poleMapping": ["left", "right", "neutral", "left"],
+        "therapeutic": {
+          "rationale": "Support needs during financial stress often mirror general support preferences—but money can amplify them. The listener/validator offers emotional support; the problem-solver offers practical help. Mismatched support feels like no support.",
+          "framework": "gottman",
+          "whenDifferent": "The listener may frustrate the problem-solver who wants action; the problem-solver may frustrate the listener who wants empathy first. Ask: 'What kind of support would help right now?'",
+          "whenSame": "Matched support needs make stressful moments easier. You'll naturally offer what helps.",
+          "journalPrompt": "When you're stressed about money, what does helpful support actually look like? What makes it worse?"
+        }
+      }
+    },
+    {
+      "id": "quiz_004_q4",
+      "text": "My relationship with financial security is...",
+      "choices": [
+        "I need a solid cushion to feel safe",
+        "I'm comfortable with some uncertainty",
+        "Security matters, but so does enjoying life now",
+        "I try not to think about it too much"
+      ],
+      "category": "financial_values",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Security needs vary widely and shape major life decisions—how much to save, what risks to take, when to splurge. Partners with different security needs often clash about what's 'enough.'",
+          "framework": "financial_therapy",
+          "whenDifferent": "The security-seeker may feel the uncertainty-tolerant partner is reckless; the uncertainty-tolerant partner may feel the security-seeker is fearful. Neither is wrong—you just have different thresholds.",
+          "whenSame": "Shared security orientation makes financial planning easier. You'll naturally agree on how much cushion is enough.",
+          "journalPrompt": "How much money in savings would make you feel truly secure? Where does that number come from?"
+        }
+      }
+    },
+    {
+      "id": "quiz_004_q5",
+      "text": "When we face a financial setback, I hope we...",
+      "choices": [
+        "Face it together as a team",
+        "Give each other grace and avoid blame",
+        "Focus on solutions, not feelings",
+        "Take time to process before problem-solving"
+      ],
+      "category": "financial_stress",
+      "metadata": {
+        "dimension": "stress_processing",
+        "poleMapping": ["right", "neutral", "right", "left"],
+        "therapeutic": {
+          "rationale": "How couples navigate setbacks predicts relationship resilience. The team-facers prioritize unity; the grace-givers prioritize emotional safety; the solution-focusers prioritize action; the processors prioritize thoughtfulness. All are valid—alignment matters.",
+          "framework": "gottman",
+          "whenDifferent": "Different setback approaches can clash in the heat of the moment. The solution-focuser may seem cold to the grace-giver; the processor may seem slow to the team-facer. Name your needs before crisis hits.",
+          "whenSame": "Shared setback approach means you'll naturally handle hard times the same way. This is a strength—lean into it.",
+          "journalPrompt": "Think of a setback you've faced (financial or otherwise). What helped you get through it? What would have helped more?"
+        }
+      }
+    }
+  ]
+}

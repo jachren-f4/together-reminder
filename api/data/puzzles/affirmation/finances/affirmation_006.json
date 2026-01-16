@@ -1,0 +1,115 @@
+{
+  "quizId": "affirmation_006",
+  "title": "Generosity & Giving",
+  "category": "finances",
+  "branch": "finances",
+  "description": "Assess how aligned you feel about generosity with money",
+  "magnet_id": 15,
+  "questions": [
+    {
+      "id": "affirmation_006_q1",
+      "text": "I feel my partner and I have similar values about generosity.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Generosity values—how much to give, to whom, and why—reflect deep beliefs about money's purpose. Misalignment here can create ongoing friction.",
+          "framework": "financial_therapy",
+          "whenDifferent": "Different generosity values often stem from different upbringings or beliefs about money. Understanding the 'why' builds respect even when you differ.",
+          "whenSame": "Shared generosity values create alignment on an important aspect of financial life.",
+          "journalPrompt": "What role does generosity play in how you think about money?"
+        }
+      }
+    },
+    {
+      "id": "affirmation_006_q2",
+      "text": "I feel comfortable with how my partner treats me when it comes to paying for things.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "How you handle paying for things together reflects values about fairness, generosity, and gender roles. Discomfort here often signals unspoken expectations.",
+          "framework": "gottman",
+          "whenDifferent": "If one partner is uncomfortable, discuss expectations openly. Often assumptions about 'how it should be' are never articulated.",
+          "whenSame": "Shared comfort with how you handle paying creates ease in your daily interactions.",
+          "journalPrompt": "What expectations do you have about paying for things in your relationship? Are they being met?"
+        }
+      }
+    },
+    {
+      "id": "affirmation_006_q3",
+      "text": "I trust my partner's judgment about giving money to family or friends.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Giving to family and friends is often a sensitive area where values and obligations intersect. Trust in your partner's judgment here prevents future conflict.",
+          "framework": "family_systems",
+          "whenDifferent": "Different comfort with family giving often reflects different family dynamics. Explore the expectations each of you carries from your families.",
+          "whenSame": "Shared trust about giving to family creates alignment on a potentially contentious issue.",
+          "journalPrompt": "What expectations does your family have about financial help? Does your partner know?"
+        }
+      }
+    },
+    {
+      "id": "affirmation_006_q4",
+      "text": "I feel my partner is generous with me in ways that matter.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Feeling your partner's generosity—in whatever form matters to you—builds connection. Generosity isn't just about money; it's about giving what you have to give.",
+          "framework": "love_languages",
+          "whenDifferent": "If one partner doesn't feel the other's generosity, explore what form of generosity they need. The giving partner may be generous in ways the other doesn't recognize.",
+          "whenSame": "Mutual feeling of receiving generosity strengthens your bond.",
+          "journalPrompt": "How does your partner show generosity toward you? What generosity do you most appreciate?"
+        }
+      }
+    },
+    {
+      "id": "affirmation_006_q5",
+      "text": "I believe we balance generosity to others with taking care of ourselves.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Balancing generosity with self-care prevents resentment. Couples who give beyond their means—whether to family, charity, or experiences—can create financial strain.",
+          "framework": "financial_therapy",
+          "whenDifferent": "Different perceptions of balance may mean one partner feels the other is too generous or too stingy. Discuss what 'balanced' looks like to each of you.",
+          "whenSame": "Shared sense of balance between giving and self-care creates sustainable generosity.",
+          "journalPrompt": "Do you ever feel your generosity—or your partner's—comes at a cost to your relationship?"
+        }
+      }
+    }
+  ]
+}

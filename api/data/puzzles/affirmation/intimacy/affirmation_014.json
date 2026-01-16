@@ -1,0 +1,115 @@
+{
+  "quizId": "affirmation_014",
+  "title": "Growing Together Physically",
+  "category": "intimacy",
+  "branch": "intimacy",
+  "description": "Explore how your physical connection develops over time",
+  "magnet_id": 16,
+  "questions": [
+    {
+      "id": "affirmation_014_q1",
+      "text": "I feel like we're learning about each other physically over time.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "A learning orientation toward physical connection keeps it growing. When partners stop learning about each other, intimacy can stagnate.",
+          "framework": "positive_psychology",
+          "whenDifferent": "If learning has stopped for one partner, explore what would revive curiosity. New experiences? More communication? Different approach?",
+          "whenSame": "Mutual sense of ongoing learning creates a growing physical connection.",
+          "journalPrompt": "What are you still learning about your partner physically?"
+        }
+      }
+    },
+    {
+      "id": "affirmation_014_q2",
+      "text": "Our physical connection has room to evolve and change.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Room for evolution means not being stuck in fixed patterns. Physical connection that can change adapts to different life stages and circumstances.",
+          "framework": "positive_psychology",
+          "whenDifferent": "If one partner doesn't feel room for evolution, explore what feels stuck. Is it about openness? Communication? Willingness to try new things?",
+          "whenSame": "Shared sense of room to evolve creates adaptability in your physical connection.",
+          "journalPrompt": "How has your physical connection changed? How might it continue to evolve?"
+        }
+      }
+    },
+    {
+      "id": "affirmation_014_q3",
+      "text": "I feel we're getting better at physical connection over time.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Perceiving improvement motivates continued investment. When physical connection feels stagnant or declining, discouragement can set in.",
+          "framework": "positive_psychology",
+          "whenDifferent": "Different perceptions of improvement warrant discussion. One partner may see growth the other doesn't, or they may have different standards.",
+          "whenSame": "Shared sense of improvement creates optimism about your physical future.",
+          "journalPrompt": "In what ways has your physical connection improved? Where would you like more growth?"
+        }
+      }
+    },
+    {
+      "id": "affirmation_014_q4",
+      "text": "I sense openness to exploring and growing in how we connect physically.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Openness to exploration keeps physical connection alive and growing. Rigidity or refusal to grow can leave partners feeling stuck.",
+          "framework": "positive_psychology",
+          "whenDifferent": "If one partner doesn't sense openness, explore what creates that perception. The other partner may be open but not showing it, or may have fears.",
+          "whenSame": "Mutual openness to exploration enables continued growth.",
+          "journalPrompt": "How open does your partner seem to exploring and growing physically?"
+        }
+      }
+    },
+    {
+      "id": "affirmation_014_q5",
+      "text": "I look forward to how our physical connection might deepen.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Anticipation about future deepening reflects hope and investment. Dreading or feeling indifferent about physical future signals disconnection.",
+          "framework": "positive_psychology",
+          "whenDifferent": "If one partner doesn't look forward to deepening, explore what's behind that. Exhaustion? Disconnection? Fear?",
+          "whenSame": "Shared anticipation for deepening creates hope and motivation.",
+          "journalPrompt": "What do you hope for in your physical connection going forward?"
+        }
+      }
+    }
+  ]
+}

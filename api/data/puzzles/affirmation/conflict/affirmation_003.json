@@ -1,0 +1,115 @@
+{
+  "quizId": "affirmation_003",
+  "title": "Feeling Heard in Conflict",
+  "category": "conflict",
+  "branch": "conflict",
+  "description": "Explore whether you feel listened to during disagreements",
+  "magnet_id": 16,
+  "questions": [
+    {
+      "id": "affirmation_003_q1",
+      "text": "Even when we disagree, I feel my partner is really listening.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Feeling heard during disagreement is often more important than agreeing. When partners truly listen—even while disagreeing—conflicts become conversations rather than battles.",
+          "framework": "gottman",
+          "whenDifferent": "If one partner doesn't feel heard, explore what listening looks like for them. Eye contact? Reflecting back? Not interrupting? The other may be listening but not showing it.",
+          "whenSame": "Mutual feeling of being heard during conflict creates productive disagreements.",
+          "journalPrompt": "What helps you feel heard when you're disagreeing with your partner?"
+        }
+      }
+    },
+    {
+      "id": "affirmation_003_q2",
+      "text": "I sense my partner trying to understand my point before responding.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Understanding before responding shows respect and curiosity. When partners respond before understanding, conversations become two monologues rather than dialogue.",
+          "framework": "gottman",
+          "whenDifferent": "If one partner doesn't feel understood first, explore what happens instead. Interruption? Quick rebuttals? Slowing down to understand is a learnable skill.",
+          "whenSame": "Mutual commitment to understanding first creates meaningful exchange during conflict.",
+          "journalPrompt": "Does your partner try to understand you before responding? How can you tell?"
+        }
+      }
+    },
+    {
+      "id": "affirmation_003_q3",
+      "text": "I don't have to repeat myself multiple times to be heard.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Needing to repeat yourself signals you don't feel received. When partners absorb what's said the first time, speakers feel valued and heard.",
+          "framework": "eft",
+          "whenDifferent": "If one partner repeats themselves often, explore what's happening. Is the message unclear? Is the listener distracted or defensive? Both sides contribute to the pattern.",
+          "whenSame": "Mutual feeling of being heard the first time creates efficient, respectful communication.",
+          "journalPrompt": "How often do you find yourself repeating the same point? What do you think is happening?"
+        }
+      }
+    },
+    {
+      "id": "affirmation_003_q4",
+      "text": "I feel understood when I explain my perspective during disagreements.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Accurate reflection proves listening happened. When your partner can mirror your point—even while disagreeing with it—you know they've genuinely taken it in.",
+          "framework": "gottman",
+          "whenDifferent": "If one partner can't reflect accurately, it may be about listening skills or about the speaker's clarity. Both can work on their side of the exchange.",
+          "whenSame": "Mutual ability to reflect each other accurately creates foundation for resolving differences.",
+          "journalPrompt": "Can your partner accurately summarize your point during disagreements?"
+        }
+      }
+    },
+    {
+      "id": "affirmation_003_q5",
+      "text": "I feel my perspective matters to my partner, even in conflict.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Feeling that your perspective matters—that it's considered, not dismissed—sustains engagement in difficult conversations. Dismissal leads to withdrawal or escalation.",
+          "framework": "eft",
+          "whenDifferent": "If one partner doesn't feel their perspective matters, explore what communicates dismissal. Tone? Speed of response? Lack of acknowledgment?",
+          "whenSame": "Mutual sense that both perspectives matter creates collaborative conflict.",
+          "journalPrompt": "What makes you feel your perspective matters—or doesn't—during conflict?"
+        }
+      }
+    }
+  ]
+}

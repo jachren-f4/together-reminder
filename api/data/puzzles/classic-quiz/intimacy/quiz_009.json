@@ -1,0 +1,111 @@
+{
+  "quizId": "quiz_009",
+  "title": "Body Image & Confidence",
+  "branch": "intimacy",
+  "description": "Explore how you feel about your body and how that affects intimacy.",
+  "magnet_id": 17,
+  "questions": [
+    {
+      "id": "quiz_009_q1",
+      "text": "When it comes to feeling comfortable in my body during intimacy, I...",
+      "choices": [
+        "Generally feel confident and at ease",
+        "Have moments of self-consciousness",
+        "Struggle with this more than I'd like",
+        "Am working on being kinder to myself"
+      ],
+      "category": "body_confidence",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Body confidence during intimacy affects enjoyment and presence. Confident types are free to enjoy; moment-of-doubt types manage occasional insecurity; strugglers carry ongoing discomfort; workers are actively healing. This is deeply personal.",
+          "framework": "attachment_theory",
+          "whenDifferent": "The confident partner may not understand the struggler's experience; the struggler may envy their partner's ease. Be gentle with each other's body journeys.",
+          "whenSame": "Shared body confidence level creates mutual understanding of this vulnerable area.",
+          "journalPrompt": "How do you feel about your body during intimacy? What would help you feel more at ease?"
+        }
+      }
+    },
+    {
+      "id": "quiz_009_q2",
+      "text": "What helps me feel confident and attractive is...",
+      "choices": [
+        "Verbal affirmation from my partner",
+        "How my partner looks at me",
+        "Taking care of myself and feeling good",
+        "Feeling genuinely desired"
+      ],
+      "category": "confidence_sources",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Confidence sources vary. Verbal-needers want words; look-readers watch expressions; self-care types build internal confidence; desire-needers want to feel wanted. Knowing your partner's source helps you provide it.",
+          "framework": "love_languages",
+          "whenDifferent": "Different sources mean providing different things. The verbal-needer may not feel affirmed by looks alone; the desire-needer may not feel affirmed by self-care compliments.",
+          "whenSame": "Shared confidence source makes affirming each other intuitive.",
+          "journalPrompt": "What makes you feel attractive and confident? Does your partner know how to help you feel this way?"
+        }
+      }
+    },
+    {
+      "id": "quiz_009_q3",
+      "text": "When I'm feeling self-conscious about my body, I'd want my partner to...",
+      "choices": [
+        "Offer reassurance and affirmation",
+        "Not make a big deal of it",
+        "Create a judgment-free space",
+        "Be patient while I work through it"
+      ],
+      "category": "support_needs",
+      "metadata": {
+        "dimension": "support_style",
+        "poleMapping": ["right", "left", "right", "left"],
+        "therapeutic": {
+          "rationale": "Support needs during body insecurity vary. Reassurance-seekers want active affirmation; low-key types want normalcy; judgment-free seekers want acceptance; patience-needers want time. Mismatched support backfires.",
+          "framework": "love_languages",
+          "whenDifferent": "The reassurance-seeker may feel dismissed if their partner doesn't make a big deal; the low-key type may feel smothered by constant affirmation. Ask what helps.",
+          "whenSame": "Matched support needs make helping each other through body struggles intuitive.",
+          "journalPrompt": "What do you need from your partner when you're feeling self-conscious? What doesn't help?"
+        }
+      }
+    },
+    {
+      "id": "quiz_009_q4",
+      "text": "My view on aging and how it affects intimacy is...",
+      "choices": [
+        "Bodies change—attraction can grow and deepen",
+        "I worry about it sometimes",
+        "I'm working on accepting my changing body",
+        "Connection matters more than appearance"
+      ],
+      "category": "aging_attitudes",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Aging attitudes affect long-term intimacy. Growth-mindset types see deepening; worriers have anxiety; accepters are working toward peace; connection-focusers prioritize depth. These attitudes shape how intimacy evolves.",
+          "framework": "positive_psychology",
+          "whenDifferent": "The worrier may need reassurance the growth-mindset partner doesn't think to give. Be explicit about your long-term attraction and commitment.",
+          "whenSame": "Shared aging attitude helps you face body changes together with similar outlooks.",
+          "journalPrompt": "How do you feel about your body changing as you age? What do you need from your partner as this happens?"
+        }
+      }
+    },
+    {
+      "id": "quiz_009_q5",
+      "text": "The environment that helps me feel most comfortable being intimate is...",
+      "choices": [
+        "Low lighting where I feel less exposed",
+        "Whatever feels natural—I'm not particular",
+        "One where I feel emotionally safe first",
+        "One where I know I'm desired"
+      ],
+      "category": "comfort_conditions",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Environmental comfort needs vary. Low-light lovers manage exposure; natural-feelers are flexible; emotional-safety seekers need connection; desire-needers want to feel wanted. Setting matters more than we often discuss.",
+          "framework": "gottman",
+          "whenDifferent": "Different environmental needs are easy to accommodate once known. The low-light lover may not realize their partner doesn't need it; share your preferences.",
+          "whenSame": "Shared environmental preferences make setting up for intimacy easier.",
+          "journalPrompt": "What environment helps you feel most comfortable being intimate? Have you shared this with your partner?"
+        }
+      }
+    }
+  ]
+}

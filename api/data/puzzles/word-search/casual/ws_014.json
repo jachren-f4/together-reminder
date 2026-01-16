@@ -1,0 +1,24 @@
+{
+  "puzzleId": "ws_014",
+  "title": "Casual XIV",
+  "theme": "casual",
+  "size": {
+    "rows": 10,
+    "cols": 10
+  },
+  "grid": "XFNYMVCBELPHHGUALKYLEIWTHXAXZIJNCOELTMOTWTENLLVSCSSCRRILILESRPHEECEMNRMUIIASBMSBZXGHLTILMIMYFMCLSSQI",
+  "words": {
+    "CHIPS": "94,UL",
+    "LAUGH": "16,L",
+    "PICNIC": "10,DR",
+    "COZY": "48,U",
+    "CHILL": "51,DR",
+    "MELLOW": "77,UL",
+    "SMILE": "78,UL",
+    "TREATS": "41,DR",
+    "LAKE": "35,UR",
+    "SERENE": "75,UL",
+    "STILL": "49,U",
+    "REST": "69,UL"
+  }
+}

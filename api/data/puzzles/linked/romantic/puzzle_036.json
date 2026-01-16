@@ -1,0 +1,72 @@
+{
+  "author": "Crossword Maker GPT",
+  "title": "AI-Built Puzzle",
+  "theme": "romance",
+  "size": {
+    "rows": 9,
+    "cols": 7
+  },
+  "clues": {
+    "1": { "type": "emoji", "content": "👦", "arrow": "down", "target_index": 8 },
+    "2": { "type": "text", "content": "K_SSES", "arrow": "down", "target_index": 9 },
+    "3": { "type": "text", "content": "Ballad", "arrow": "down", "target_index": 10 },
+    "4": { "type": "text", "content": "Rotate", "arrow": "down", "target_index": 11 },
+    "5": { "type": "text", "content": "SER_NADE", "arrow": "down", "target_index": 12 },
+    "6": { "type": "text", "content": "Dearest", "arrow": "down", "target_index": 13 },
+    "7": { "type": "text", "content": "X marks", "arrow": "across", "target_index": 8 },
+    "8": { "type": "text", "content": "K_SSES", "arrow": "across", "target_index": 15 },
+    "9": {
+      "across": { "type": "text", "content": "K__T", "target_index": 17 },
+      "down": { "type": "text", "content": "Greek H", "target_index": 23 }
+    },
+    "10": {
+      "across": { "type": "text", "content": "S_EETEST", "target_index": 20 },
+      "down": { "type": "text", "content": "Cavity", "target_index": 26 }
+    },
+    "11": { "type": "text", "content": "Obtain", "arrow": "across", "target_index": 22 },
+    "12": {
+      "across": { "type": "text", "content": "Bearing", "target_index": 30 },
+      "down": { "type": "text", "content": "Powder", "target_index": 36 }
+    },
+    "13": { "type": "text", "content": "Bronze", "arrow": "across", "target_index": 36 },
+    "14": {
+      "across": { "type": "text", "content": "EI_H_", "target_index": 40 },
+      "down": { "type": "text", "content": "Fish", "target_index": 46 }
+    },
+    "15": { "type": "text", "content": "SEREN_DE", "arrow": "across", "target_index": 43 },
+    "16": {
+      "across": { "type": "text", "content": "Yearn", "target_index": 45 },
+      "down": { "type": "text", "content": "F__ST", "target_index": 51 }
+    },
+    "17": { "type": "text", "content": "Beach", "arrow": "across", "target_index": 50 },
+    "18": {
+      "across": { "type": "text", "content": "SWEETE_T", "target_index": 55 },
+      "down": { "type": "text", "content": "K_SSES", "target_index": 61 }
+    },
+    "19": { "type": "text", "content": "Kudos", "arrow": "across", "target_index": 57 }
+  },
+  "date": "2026-01-13",
+  "grid": [
+    ".", ".", ".", ".", ".", ".", ".",
+    ".", "K", "I", "S", "S", "E", "S",
+    ".", "I", ".", "E", "P", ".", "W",
+    ".", "D", "E", "R", "I", "V", "E",
+    ".", ".", "T", "E", "N", "U", "E",
+    ".", "T", "A", "N", ".", "G", "T",
+    ".", "A", ".", "A", "C", "H", "E",
+    ".", "L", "I", "D", "O", ".", "S",
+    ".", "C", "R", "E", "D", "I", "T"
+  ],
+  "gridnums": [
+    0, 1, 2, 3, 4, 5, 6,
+    7, 0, 0, 0, 0, 0, 0,
+    8, 0, 9, 0, 0, 10, 0,
+    11, 0, 0, 0, 0, 0, 0,
+    0, 12, 0, 0, 0, 0, 0,
+    13, 0, 0, 0, 14, 0, 0,
+    15, 0, 16, 0, 0, 0, 0,
+    17, 0, 0, 0, 0, 18, 0,
+    19, 0, 0, 0, 0, 0, 0
+  ],
+  "puzzleId": "puzzle_036"
+}

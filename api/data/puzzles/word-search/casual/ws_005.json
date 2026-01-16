@@ -1,0 +1,24 @@
+{
+  "puzzleId": "ws_005",
+  "title": "Casual V",
+  "theme": "casual",
+  "size": {
+    "rows": 10,
+    "cols": 10
+  },
+  "grid": "FZWSEBIVDBVKKOBDCRLYKZNTLMUAJMSTARSLKOAOLFSVQEIELLFXPTHMTPRCDPIEACPLAYYIESNEABIVPARKOLREPXLYWINEVTBH",
+  "words": {
+    "VIBES": "7,L",
+    "STARS": "30,R",
+    "PILLOW": "57,UL",
+    "TREATS": "97,UL",
+    "BEACH": "98,UL",
+    "LAKE": "18,DL",
+    "PLAY": "66,R",
+    "PARK": "80,R",
+    "TEAM": "56,UR",
+    "CLOUD": "59,UL",
+    "WINE": "92,R",
+    "PIE": "52,D"
+  }
+}

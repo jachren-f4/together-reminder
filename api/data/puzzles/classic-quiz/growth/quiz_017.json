@@ -1,7 +1,9 @@
 {
   "quizId": "quiz_017",
-  "title": "Mindset & Attitude",
+  "title": "Mindset & Resilience",
   "branch": "growth",
+  "description": "Explore how your attitudes and outlooks influence each other.",
+  "magnet_id": 13,
   "questions": [
     {
       "id": "quiz_017_q1",
@@ -12,53 +14,98 @@
         "I need to take it one step at a time",
         "It's hard but I'll get through it"
       ],
-      "category": "growth"
+      "category": "obstacle_mindset",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Obstacle mindsets reveal resilience patterns. Way-finders see solutions; learners see growth; step-takers manage overwhelm; perseverers see endurance. All are healthy approaches that can complement each other.",
+          "framework": "positive_psychology",
+          "whenDifferent": "Different mindsets can support each other. The way-finder can inspire the perseverer; the step-taker can ground the way-finder.",
+          "whenSame": "Matched mindsets create aligned approach to obstacles.",
+          "journalPrompt": "What's your typical mindset when facing obstacles? How does it help or hinder you?"
+        }
+      }
     },
     {
       "id": "quiz_017_q2",
-      "text": "What shapes my attitude most on a daily basis?",
-      "choices": [
-        "How well I slept and my energy",
-        "What's happening at work or in life",
-        "My connections with people I love",
-        "Whether I'm working toward something meaningful"
-      ],
-      "category": "emotional"
-    },
-    {
-      "id": "quiz_017_q3",
-      "text": "When I'm feeling negative, what helps me shift?",
+      "text": "When I'm feeling negative or down, what helps most is...",
       "choices": [
         "Talking it out with you",
         "Physical activity or getting outside",
         "Time alone to reset",
         "Focusing on what I'm grateful for"
       ],
-      "category": "communication"
+      "category": "mood_recovery",
+      "metadata": {
+        "dimension": "stress_processing",
+        "poleMapping": ["right", "right", "left", "left"],
+        "therapeutic": {
+          "rationale": "Mood recovery strategies vary. Talkers need connection; movement-seekers need physical release; alone-time seekers need solitude; gratitude-focusers need perspective. Knowing what helps your partner shift allows targeted support.",
+          "framework": "positive_psychology",
+          "whenDifferent": "Different recovery strategies require flexibility. What helps you may not help your partner. Ask what they need.",
+          "whenSame": "Matched recovery strategies make supporting each other through low moods intuitive.",
+          "journalPrompt": "What helps you when you're feeling negative? Does your partner know this about you?"
+        }
+      }
+    },
+    {
+      "id": "quiz_017_q3",
+      "text": "You positively influence my mindset by...",
+      "choices": [
+        "Helping me see the bigger picture",
+        "Grounding me when I'm spiraling",
+        "Believing in me when I don't",
+        "Bringing lightness and humor"
+      ],
+      "category": "partner_influence",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Partner influence on mindset reveals how you help each other. Perspective-givers widen view; grounders provide stability; believers provide faith; humor-bringers provide levity. Knowing your role helps you play it well.",
+          "framework": "gottman",
+          "whenDifferent": "Different influences are all valuable. You each contribute unique gifts to each other's mindset.",
+          "whenSame": "Matched appreciation shows you value similar contributions to each other's wellbeing.",
+          "journalPrompt": "How does your partner positively influence your mindset? Have you told them?"
+        }
+      }
     },
     {
       "id": "quiz_017_q4",
-      "text": "I believe that most things in life...",
+      "text": "I believe most things in life...",
       "choices": [
         "Can be improved with effort",
         "Happen for a reason",
         "Are what you make of them",
         "Balance out over time"
       ],
-      "category": "values"
+      "category": "life_philosophy",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Life philosophies shape how we approach everything. Improvers believe in agency; reason-seekers find meaning; makers emphasize creation; balancers trust time. Understanding your partner's philosophy helps you understand their reactions.",
+          "framework": "positive_psychology",
+          "whenDifferent": "Different life philosophies can complement each other. The improver and the balancer can teach each other.",
+          "whenSame": "Shared philosophy creates aligned worldview and approach to life.",
+          "journalPrompt": "What's your philosophy about life? How does it shape how you approach challenges?"
+        }
+      }
     },
     {
       "id": "quiz_017_q5",
-      "text": "How do you positively influence my mindset?",
+      "text": "I believe couples are more resilient when they...",
       "choices": [
-        "You help me see the bigger picture",
-        "You ground me when I'm spiraling",
-        "You believe in me when I don't",
-        "You bring lightness and humor"
+        "Face challenges as a united team",
+        "Balance each other's perspectives",
+        "Create safety to be honest about struggles",
+        "Remember what matters most to them"
       ],
-      "category": "emotional"
+      "category": "couple_resilience",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Beliefs about couple resilience reveal what you trust. Team-facers trust partnership; balancers trust complementarity; safety-creators trust honesty; priority-rememberers trust values. All contribute to couple resilience.",
+          "framework": "gottman",
+          "whenDifferent": "All these factors contribute to resilience. Your different emphases can strengthen your partnership.",
+          "whenSame": "Shared resilience philosophy creates aligned approach to facing life together.",
+          "journalPrompt": "What makes couples resilient? How are you building that in your relationship?"
+        }
+      }
     }
-  ],
-  "description": "Explore how your attitudes and outlooks influence each other.",
-  "magnet_id": 13
+  ]
 }

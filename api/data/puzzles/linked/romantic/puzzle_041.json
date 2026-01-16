@@ -1,0 +1,72 @@
+{
+  "author": "Crossword Maker GPT",
+  "title": "AI-Built Puzzle",
+  "theme": "movies",
+  "size": {
+    "rows": 9,
+    "cols": 7
+  },
+  "clues": {
+    "1": { "type": "text", "content": "After B", "arrow": "down", "target_index": 8 },
+    "2": { "type": "emoji", "content": "❄️", "arrow": "down", "target_index": 9 },
+    "3": { "type": "text", "content": "Called", "arrow": "down", "target_index": 10 },
+    "4": { "type": "emoji", "content": "👽", "arrow": "down", "target_index": 11 },
+    "5": { "type": "text", "content": "List", "arrow": "down", "target_index": 12 },
+    "6": { "type": "text", "content": "Painter", "arrow": "down", "target_index": 13 },
+    "7": { "type": "text", "content": "Theater", "arrow": "across", "target_index": 8 },
+    "8": {
+      "across": { "type": "text", "content": "Provide", "target_index": 16 },
+      "down": { "type": "text", "content": "Core", "target_index": 22 }
+    },
+    "9": { "type": "emoji", "content": "💎", "arrow": "across", "target_index": 22 },
+    "10": {
+      "across": { "type": "text", "content": "COU__", "target_index": 26 },
+      "down": { "type": "text", "content": "Molars", "target_index": 32 }
+    },
+    "11": { "type": "text", "content": "Self", "arrow": "across", "target_index": 29 },
+    "12": {
+      "across": { "type": "text", "content": "Case", "target_index": 31 },
+      "down": { "type": "text", "content": "Atoms", "target_index": 37 }
+    },
+    "13": { "type": "text", "content": "Flank", "arrow": "across", "target_index": 36 },
+    "14": {
+      "across": { "type": "text", "content": "YELL_", "target_index": 41 },
+      "down": { "type": "text", "content": "Chem ion", "target_index": 47 }
+    },
+    "15": { "type": "text", "content": "Toward", "arrow": "across", "target_index": 43 },
+    "16": {
+      "across": { "type": "text", "content": "Chow", "target_index": 46 },
+      "down": { "type": "text", "content": "R__", "target_index": 52 }
+    },
+    "17": {
+      "across": { "type": "text", "content": "Memo", "target_index": 51 },
+      "down": { "type": "text", "content": "Top", "target_index": 57 }
+    },
+    "18": { "type": "text", "content": "Top", "arrow": "down", "target_index": 62 },
+    "19": { "type": "text", "content": "Wheeze", "arrow": "across", "target_index": 57 }
+  },
+  "date": "2026-01-13",
+  "grid": [
+    ".", ".", ".", ".", ".", ".", ".",
+    ".", "C", "I", "N", "E", "M", "A",
+    ".", ".", "C", "A", "T", "E", "R",
+    ".", "G", "E", "M", ".", "N", "T",
+    ".", "I", ".", "E", "T", "U", "I",
+    ".", "S", "I", "D", "E", ".", "S",
+    ".", "T", "O", ".", "E", "A", "T",
+    ".", ".", "N", "O", "T", "E", ".",
+    ".", "A", "S", "T", "H", "M", "A"
+  ],
+  "gridnums": [
+    0, 1, 2, 3, 4, 5, 6,
+    7, 0, 0, 0, 0, 0, 0,
+    0, 8, 0, 0, 0, 0, 0,
+    9, 0, 0, 0, 10, 0, 0,
+    11, 0, 12, 0, 0, 0, 0,
+    13, 0, 0, 0, 0, 14, 0,
+    15, 0, 0, 16, 0, 0, 0,
+    0, 17, 0, 0, 0, 0, 18,
+    19, 0, 0, 0, 0, 0, 0
+  ],
+  "puzzleId": "puzzle_041"
+}

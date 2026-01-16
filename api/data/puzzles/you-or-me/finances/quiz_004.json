@@ -1,0 +1,39 @@
+{
+  "quizId": "quiz_004",
+  "title": "Shopping Adventures",
+  "branch": "finances",
+  "questions": [
+    {
+      "id": "quiz_004_q1",
+      "category": "preferences",
+      "prompt": "Who would rather...",
+      "content": "Shop in-store vs. online"
+    },
+    {
+      "id": "quiz_004_q2",
+      "category": "habits",
+      "prompt": "Who is more likely to...",
+      "content": "Have items sitting in their cart for weeks"
+    },
+    {
+      "id": "quiz_004_q3",
+      "category": "personality",
+      "prompt": "Who gets more...",
+      "content": "Excited about a clearance section"
+    },
+    {
+      "id": "quiz_004_q4",
+      "category": "habits",
+      "prompt": "Who would...",
+      "content": "Compare prices across multiple stores"
+    },
+    {
+      "id": "quiz_004_q5",
+      "category": "preferences",
+      "prompt": "Who is more likely to...",
+      "content": "Buy the upgraded version"
+    }
+  ],
+  "description": "Online or in-store? Clearance hunter or premium seeker? Discover your shopping styles!",
+  "magnet_id": 8
+}

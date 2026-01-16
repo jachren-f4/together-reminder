@@ -1,0 +1,69 @@
+{
+  "author": "Crossword Maker GPT",
+  "title": "AI-Built Puzzle",
+  "size": {
+    "rows": 9,
+    "cols": 7
+  },
+  "clues": {
+    "1": { "type": "text", "content": "HEL__", "arrow": "down", "target_index": 8 },
+    "2": { "type": "text", "content": "Hurt", "arrow": "down", "target_index": 9 },
+    "3": { "type": "text", "content": "A__NCY", "arrow": "down", "target_index": 10 },
+    "4": { "type": "text", "content": "Paddle", "arrow": "down", "target_index": 11 },
+    "5": { "type": "text", "content": "Yoko ____", "arrow": "down", "target_index": 12 },
+    "6": { "type": "text", "content": "Dir. set", "arrow": "down", "target_index": 13 },
+    "7": { "type": "text", "content": "Reef pool", "arrow": "across", "target_index": 8 },
+    "8": { "type": "emoji", "content": "🌊s", "arrow": "across", "target_index": 15 },
+    "9": {
+      "across": { "type": "text", "content": "BEAC_", "target_index": 23 },
+      "down": { "type": "text", "content": "Ship rear", "target_index": 29 }
+    },
+    "10": {
+      "across": { "type": "text", "content": "Fish eggs", "target_index": 25 },
+      "down": { "type": "text", "content": "@ key", "target_index": 31 }
+    },
+    "11": { "type": "emoji", "content": "🌊", "arrow": "across", "target_index": 29 },
+    "12": {
+      "across": { "type": "text", "content": "AN__ER", "target_index": 33 },
+      "down": { "type": "emoji", "content": "🐋", "target_index": 39 }
+    },
+    "13": { "type": "text", "content": "HEA_", "arrow": "across", "target_index": 36 },
+    "14": {
+      "across": { "type": "text", "content": "__ward", "target_index": 38 },
+      "down": { "type": "text", "content": "___logy", "target_index": 44 }
+    },
+    "15": { "type": "text", "content": "Aussie $", "arrow": "down", "target_index": 47 },
+    "16": { "type": "emoji", "content": "✓", "arrow": "down", "target_index": 48 },
+    "17": { "type": "text", "content": "For ex.", "arrow": "across", "target_index": 43 },
+    "18": {
+      "across": { "type": "text", "content": "Manta ___", "target_index": 46 },
+      "down": { "type": "text", "content": "CU_TO_", "target_index": 52 }
+    },
+    "19": { "type": "text", "content": "Save", "arrow": "across", "target_index": 50 },
+    "20": { "type": "text", "content": "Roamers", "arrow": "across", "target_index": 57 }
+  },
+  "date": "2026-01-12",
+  "grid": [
+    ".", ".", ".", ".", ".", ".", ".",
+    ".", "L", "A", "G", "O", "O", "N",
+    ".", "O", "C", "E", "A", "N", "S",
+    ".", ".", "H", ".", "R", "O", "E",
+    ".", "S", "E", "A", ".", "S", "W",
+    ".", "T", ".", "T", "O", ".", ".",
+    ".", "E", "G", ".", "R", "A", "Y",
+    ".", "R", "E", "S", "C", "U", "E",
+    ".", "N", "O", "M", "A", "D", "S"
+  ],
+  "gridnums": [
+    0, 1, 2, 3, 4, 5, 6,
+    7, 0, 0, 0, 0, 0, 0,
+    8, 0, 0, 0, 0, 0, 0,
+    0, 9, 0, 10, 0, 0, 0,
+    11, 0, 0, 0, 12, 0, 0,
+    13, 0, 14, 0, 0, 15, 16,
+    17, 0, 0, 18, 0, 0, 0,
+    19, 0, 0, 0, 0, 0, 0,
+    20, 0, 0, 0, 0, 0, 0
+  ],
+  "puzzleId": "puzzle_028"
+}

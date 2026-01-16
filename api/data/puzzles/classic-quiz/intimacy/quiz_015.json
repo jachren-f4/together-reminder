@@ -1,0 +1,109 @@
+{
+  "quizId": "quiz_015",
+  "title": "Growing Together Intimately",
+  "branch": "intimacy",
+  "description": "Explore your vision for how your intimate connection can continue to grow.",
+  "magnet_id": 18,
+  "questions": [
+    {
+      "id": "quiz_015_q1",
+      "text": "What I most want for our intimate life going forward is...",
+      "choices": [
+        "Deeper emotional connection through it",
+        "Maintained passion and desire",
+        "Freedom to explore and grow together",
+        "Consistent closeness and safety"
+      ],
+      "category": "intimacy_vision",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Future intimacy visions reveal priorities. Depth-seekers want emotional growth; passion-maintainers want desire; freedom-seekers want exploration; safety-seekers want security. Shared vision aligns your efforts.",
+          "framework": "gottman",
+          "whenDifferent": "Different visions can coexist with awareness. The depth-seeker and passion-maintainer both want good things—find how to pursue both.",
+          "whenSame": "Shared vision provides a north star for your intimate life together.",
+          "journalPrompt": "What do you most want for your intimate life? What would make it even better?"
+        }
+      }
+    },
+    {
+      "id": "quiz_015_q2",
+      "text": "I believe the key to maintaining a fulfilling intimate life is...",
+      "choices": [
+        "Never stopping the pursuit of each other",
+        "Creating safety for honesty and vulnerability",
+        "Balancing routine with intentional novelty",
+        "Prioritizing it even when life gets busy"
+      ],
+      "category": "intimacy_beliefs",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Beliefs about sustaining intimacy shape behavior. Pursuers stay actively interested; safety-creators focus on emotional foundation; balancers mix comfort and novelty; prioritizers protect time. All approaches can work.",
+          "framework": "gottman",
+          "whenDifferent": "Different beliefs are fine—all four of these contribute to fulfilling intimacy. Discuss what each of you most wants to focus on.",
+          "whenSame": "Shared belief focuses your efforts. You're investing in the same approach.",
+          "journalPrompt": "What do you believe keeps intimate connection alive? Are you doing those things?"
+        }
+      }
+    },
+    {
+      "id": "quiz_015_q3",
+      "text": "An area of our intimate life I'd love for us to grow in is...",
+      "choices": [
+        "Communication and openness",
+        "Playfulness and spontaneity",
+        "Emotional depth and vulnerability",
+        "Physical connection and passion"
+      ],
+      "category": "growth_areas",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Growth area desires reveal where you want development. Communication-growers want more dialogue; playfulness-seekers want more fun; depth-seekers want emotional intimacy; physical-focusers want more passion. Naming growth areas enables movement.",
+          "framework": "positive_psychology",
+          "whenDifferent": "Different growth areas can both be pursued. Start with the area that feels most pressing or achievable.",
+          "whenSame": "Shared growth focus aligns your development efforts. You're working on the same thing.",
+          "journalPrompt": "What area of your intimate life do you most want to grow? What would that look like?"
+        }
+      }
+    },
+    {
+      "id": "quiz_015_q4",
+      "text": "I see our intimate connection as...",
+      "choices": [
+        "A lifelong journey of discovery together",
+        "A source of deep comfort and security",
+        "An adventure that keeps evolving",
+        "A foundation that supports everything else"
+      ],
+      "category": "intimacy_meaning",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "How you see intimacy shapes how you approach it. Journey-seers expect ongoing growth; comfort-seers want stability; adventure-seers want novelty; foundation-seers see it as support. These views color your intimate relationship.",
+          "framework": "positive_psychology",
+          "whenDifferent": "Different views can enrich each other. The adventure-seer can help the comfort-seer grow; the comfort-seer can help the adventure-seer feel grounded.",
+          "whenSame": "Shared view of intimacy creates aligned meaning and expectations.",
+          "journalPrompt": "How do you see your intimate connection? What role does it play in your relationship and life?"
+        }
+      }
+    },
+    {
+      "id": "quiz_015_q5",
+      "text": "My hope for us in this area of our relationship is...",
+      "choices": [
+        "That we keep talking and stay connected",
+        "That we feel safe to be fully ourselves",
+        "That we never stop desiring each other",
+        "That we grow closer through every season"
+      ],
+      "category": "intimacy_hopes",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Hopes for intimacy reveal deepest values. Talking-hopers value communication; safety-hopers value acceptance; desire-hopers value passion; closeness-hopers value deepening. Sharing hopes creates shared goals.",
+          "framework": "gottman",
+          "whenDifferent": "All these hopes are beautiful and compatible. You can pursue all of them.",
+          "whenSame": "Shared hopes align your vision for your intimate future together.",
+          "journalPrompt": "What's your deepest hope for your intimate life together? Have you shared that with your partner?"
+        }
+      }
+    }
+  ]
+}

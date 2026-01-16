@@ -1,0 +1,109 @@
+{
+  "quizId": "quiz_002",
+  "title": "Raising Concerns",
+  "branch": "conflict",
+  "description": "Explore how you bring up issues and concerns with your partner.",
+  "magnet_id": 15,
+  "questions": [
+    {
+      "id": "quiz_002_q1",
+      "text": "When something bothers me, I tend to...",
+      "choices": [
+        "Bring it up fairly quickly",
+        "Wait to see if it keeps bothering me",
+        "Hint at it and hope they notice",
+        "Keep it to myself unless it's really big"
+      ],
+      "category": "raising_issues",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Issue-raising patterns affect relationship health. Quick-raisers address early; waiters filter for importance; hinters hope for mind-reading; keepers suppress. Gottman research shows gentle startup prevents escalation.",
+          "framework": "gottman",
+          "whenDifferent": "The quick-raiser may overwhelm the keeper; the keeper may explode after too much buildup. Find a sustainable pattern for raising issues.",
+          "whenSame": "Shared raising patterns create predictability about how issues surface.",
+          "journalPrompt": "How do you typically raise concerns? Does it work well for you?"
+        }
+      }
+    },
+    {
+      "id": "quiz_002_q2",
+      "text": "The difference between a complaint and criticism is something I...",
+      "choices": [
+        "Understand and try to complain rather than criticize",
+        "Sometimes blur when I'm upset",
+        "Haven't thought much about",
+        "Find challenging to navigate in the moment"
+      ],
+      "category": "communication_awareness",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Complaint vs. criticism awareness is crucial. Complaints address behavior ('I felt hurt when...'); criticism attacks character ('You always...'). This distinction predicts relationship success. Awareness helps but applying it when upset is hard.",
+          "framework": "gottman",
+          "whenDifferent": "Different awareness levels are fine—this is learnable. The key is being open to feedback about how your concerns land.",
+          "whenSame": "Shared awareness helps you both raise issues constructively.",
+          "journalPrompt": "Do you tend toward complaints or criticisms? How do you think your partner experiences how you raise issues?"
+        }
+      }
+    },
+    {
+      "id": "quiz_002_q3",
+      "text": "When I need to raise a difficult topic, I prefer to...",
+      "choices": [
+        "Find a calm moment and bring it up gently",
+        "Just say it—I'm direct",
+        "Write it down first to organize my thoughts",
+        "Wait for the right time, which sometimes never comes"
+      ],
+      "category": "communication_style",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Difficult topic approaches vary. Calm-moment seekers set the stage; direct types dive in; writers organize; waiters delay. All can work, but indefinite waiting creates buildup and resentment.",
+          "framework": "gottman",
+          "whenDifferent": "Different approaches can complement. The direct type can learn timing from the calm-moment seeker; the waiter can learn from the direct type that issues don't resolve themselves.",
+          "whenSame": "Shared approach creates aligned expectations about how hard topics surface.",
+          "journalPrompt": "How do you approach difficult conversations? What would make them easier?"
+        }
+      }
+    },
+    {
+      "id": "quiz_002_q4",
+      "text": "When I raise a concern, I hope my partner will...",
+      "choices": [
+        "Listen and try to understand my perspective",
+        "Not get defensive or take it personally",
+        "Work with me to find a solution",
+        "Acknowledge my feelings are valid"
+      ],
+      "category": "communication_needs",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Desired responses to concerns shape satisfaction. Listen-hopers want understanding; non-defensive hopers want openness; solution-seekers want action; validation-seekers want acknowledgment. All are reasonable needs.",
+          "framework": "gottman",
+          "whenDifferent": "All these responses are valuable—they can all happen. Share which matters most so your partner knows where to start.",
+          "whenSame": "Shared hopes for response create aligned expectations about what good receiving looks like.",
+          "journalPrompt": "What response do you most want when you raise a concern? Are you getting it?"
+        }
+      }
+    },
+    {
+      "id": "quiz_002_q5",
+      "text": "Something that makes it hard for me to raise issues is...",
+      "choices": [
+        "Fear of my partner's reaction",
+        "Worry about hurting them",
+        "Not knowing how to say it well",
+        "Past experiences where it didn't go well"
+      ],
+      "category": "communication_barriers",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Barriers to raising issues prevent healthy communication. Fear of reaction creates walking on eggshells; worry about hurting leads to suppression; skill gaps are solvable; past wounds need healing. Naming barriers helps address them.",
+          "framework": "gottman",
+          "whenDifferent": "Different barriers need different solutions. Fear of reaction may signal safety issues; skill gaps are teachable; past wounds may need repair.",
+          "whenSame": "Shared barriers create mutual understanding about why issues go unaddressed.",
+          "journalPrompt": "What makes it hard for you to raise concerns? What would help?"
+        }
+      }
+    }
+  ]
+}

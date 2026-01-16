@@ -1,0 +1,111 @@
+{
+  "quizId": "quiz_014",
+  "title": "Intimacy Through Life Changes",
+  "branch": "intimacy",
+  "description": "Explore how you navigate intimacy through life's transitions and challenges.",
+  "magnet_id": 18,
+  "questions": [
+    {
+      "id": "quiz_014_q1",
+      "text": "When major life changes happen, I expect our intimate life to...",
+      "choices": [
+        "Adapt—some seasons will be different",
+        "Remain a priority even when things are hard",
+        "Need extra attention to maintain",
+        "Naturally ebb and flow"
+      ],
+      "category": "change_expectations",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Expectations about intimacy through change vary. Adapters accept fluctuation; prioritizers maintain focus; attention-givers work at it; flow-accepters trust natural rhythm. Shared expectations prevent disappointment during transitions.",
+          "framework": "gottman",
+          "whenDifferent": "The prioritizer may feel the adapter is giving up; the adapter may feel the prioritizer has unrealistic expectations. Align before life changes hit.",
+          "whenSame": "Shared expectations make navigating life transitions together smoother.",
+          "journalPrompt": "What do you expect from your intimate life during major life changes? Is that realistic?"
+        }
+      }
+    },
+    {
+      "id": "quiz_014_q2",
+      "text": "During difficult seasons, what I'd need most for our intimate connection is...",
+      "choices": [
+        "Grace and patience without pressure",
+        "Effort to maintain some connection",
+        "Open communication about what's happening",
+        "Reassurance that we're still okay"
+      ],
+      "category": "difficult_times_needs",
+      "metadata": {
+        "dimension": "support_style",
+        "poleMapping": ["left", "right", "right", "right"],
+        "therapeutic": {
+          "rationale": "Needs during hard times vary. Grace-needers want pressure removed; effort-makers want maintained connection; communicators want processing; reassurance-seekers need relationship security. Giving the wrong thing can hurt.",
+          "framework": "attachment_theory",
+          "whenDifferent": "Different needs require different support. Ask: 'What do you need from me right now about our intimate life?'",
+          "whenSame": "Shared needs during difficult times means you'll naturally support each other well.",
+          "journalPrompt": "What do you need for your intimate connection during life's hard seasons? Are you getting it?"
+        }
+      }
+    },
+    {
+      "id": "quiz_014_q3",
+      "text": "If our intimate life changed significantly due to health or circumstances, I'd want us to...",
+      "choices": [
+        "Find new ways to connect and be intimate",
+        "Talk openly about what we're each feeling",
+        "Give it time while supporting each other",
+        "Seek help if we're struggling to navigate it"
+      ],
+      "category": "adaptation",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Responses to forced change vary. Adapters find alternatives; talkers process together; time-givers are patient; help-seekers use resources. Having a shared approach before crisis helps.",
+          "framework": "gottman",
+          "whenDifferent": "All these approaches can work together. The key is staying connected and communicating through the change.",
+          "whenSame": "Shared adaptation approach provides a roadmap for navigating unexpected changes.",
+          "journalPrompt": "How would you handle significant changes to your intimate life? What would you need from your partner?"
+        }
+      }
+    },
+    {
+      "id": "quiz_014_q4",
+      "text": "My view on how intimacy should evolve over a long relationship is...",
+      "choices": [
+        "It deepens and becomes more meaningful",
+        "It changes but can stay passionate",
+        "It naturally shifts in focus and frequency",
+        "It requires intentional effort to keep growing"
+      ],
+      "category": "long_term_views",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Long-term intimacy views shape expectations. Deepeners see increasing meaning; passion-maintainers believe in sustained heat; shifters accept natural change; efforters believe in intentionality. These views affect how you invest.",
+          "framework": "gottman",
+          "whenDifferent": "Different views may lead to different efforts. The passion-maintainer may feel the shifter is giving up; the shifter may feel the passion-maintainer has unrealistic expectations.",
+          "whenSame": "Shared long-term view aligns your expectations and efforts over time.",
+          "journalPrompt": "What do you hope your intimate life looks like in 10, 20, 30 years? What would make that possible?"
+        }
+      }
+    },
+    {
+      "id": "quiz_014_q5",
+      "text": "The conversation I'd want us to keep having about our intimate life is...",
+      "choices": [
+        "What's working and what we want more of",
+        "How we're both feeling about it",
+        "How to keep growing and exploring together",
+        "That we're still attracted to each other"
+      ],
+      "category": "ongoing_communication",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Ongoing conversation focus shapes growth. What's-working types optimize; feeling-checkers maintain emotional connection; growth-focusers expand; attraction-affirmers maintain desire. All are valuable ongoing conversations.",
+          "framework": "gottman",
+          "whenDifferent": "All these conversations matter—have all of them. Prioritize whatever feels most needed right now.",
+          "whenSame": "Shared conversation focus means you'll naturally discuss the same aspects of your intimate life.",
+          "journalPrompt": "What conversation about intimacy would you like to have regularly? Are you having it?"
+        }
+      }
+    }
+  ]
+}

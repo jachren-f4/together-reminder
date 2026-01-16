@@ -1,0 +1,24 @@
+{
+  "puzzleId": "ws_013",
+  "title": "Casual XIII",
+  "theme": "casual",
+  "size": {
+    "rows": 10,
+    "cols": 10
+  },
+  "grid": "IMVEJNMCCGZGBRIYOUNYDNMAICSURFWEREOVNMWIMQNAEEEAQNEJPDUFTRPNMATFYLFIWIEQFVRKEORJSSTARSUACWFPLAYIYAFJ",
+  "words": {
+    "SURF": "26,R",
+    "LEAF": "65,DR",
+    "STARS": "81,R",
+    "DEN": "20,DR",
+    "COFFEE": "88,UL",
+    "WRITE": "89,UL",
+    "NAP": "36,DR",
+    "RAIN": "32,UR",
+    "MEMES": "40,D",
+    "PLAY": "91,R",
+    "COCOA": "7,DL",
+    "RIVER": "13,DR"
+  }
+}

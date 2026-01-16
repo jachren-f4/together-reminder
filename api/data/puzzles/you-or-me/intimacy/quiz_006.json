@@ -1,0 +1,39 @@
+{
+  "quizId": "quiz_006",
+  "title": "Spontaneous Moments",
+  "branch": "intimacy",
+  "questions": [
+    {
+      "id": "quiz_006_q1",
+      "category": "personality",
+      "prompt": "Who is more...",
+      "content": "Spontaneous with romantic gestures"
+    },
+    {
+      "id": "quiz_006_q2",
+      "category": "habits",
+      "prompt": "Who would...",
+      "content": "Surprise the other with breakfast in bed"
+    },
+    {
+      "id": "quiz_006_q3",
+      "category": "preferences",
+      "prompt": "Who is more likely to...",
+      "content": "Suggest a spontaneous slow dance at home"
+    },
+    {
+      "id": "quiz_006_q4",
+      "category": "personality",
+      "prompt": "Who gets more excited by...",
+      "content": "Unexpected romantic moments"
+    },
+    {
+      "id": "quiz_006_q5",
+      "category": "habits",
+      "prompt": "Who would...",
+      "content": "Pull the other close for no reason"
+    }
+  ],
+  "description": "Surprise and delight! Explore your spontaneous romantic sides.",
+  "magnet_id": 11
+}

@@ -1,0 +1,39 @@
+{
+  "quizId": "quiz_014",
+  "title": "Rainy Day Ready",
+  "branch": "finances",
+  "questions": [
+    {
+      "id": "quiz_014_q1",
+      "category": "personality",
+      "prompt": "Who feels more secure with...",
+      "content": "A safety net for unexpected expenses"
+    },
+    {
+      "id": "quiz_014_q2",
+      "category": "habits",
+      "prompt": "Who is more likely to...",
+      "content": "Think ahead about 'what ifs'"
+    },
+    {
+      "id": "quiz_014_q3",
+      "category": "preferences",
+      "prompt": "Who would...",
+      "content": "Rather be over-prepared than caught off guard"
+    },
+    {
+      "id": "quiz_014_q4",
+      "category": "personality",
+      "prompt": "Who stays calmer when...",
+      "content": "An unexpected expense comes up"
+    },
+    {
+      "id": "quiz_014_q5",
+      "category": "habits",
+      "prompt": "Who is more...",
+      "content": "Optimistic that things will work out financially"
+    }
+  ],
+  "description": "How do you handle the unexpected? Explore your rainy day mindsets!",
+  "magnet_id": 9
+}

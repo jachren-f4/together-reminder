@@ -1,0 +1,115 @@
+{
+  "quizId": "affirmation_007",
+  "title": "Complaints vs. Criticism",
+  "category": "conflict",
+  "branch": "conflict",
+  "description": "Explore how issues are raised—behavior-focused or character-focused",
+  "magnet_id": 16,
+  "questions": [
+    {
+      "id": "affirmation_007_q1",
+      "text": "When concerns come up, I feel addressed for what I did, not who I am.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Complaints address behavior ('I felt hurt when...'); criticism attacks character ('You're so selfish'). The difference determines whether partners feel correctable or condemned.",
+          "framework": "gottman",
+          "whenDifferent": "If one partner experiences character attacks, specific examples help. The other partner may not realize they've crossed from complaint to criticism.",
+          "whenSame": "Mutual focus on issues rather than character keeps conflict constructive.",
+          "journalPrompt": "Does your partner tend to address issues or attack character? How about you?"
+        }
+      }
+    },
+    {
+      "id": "affirmation_007_q2",
+      "text": "I try to address specific situations rather than making 'you always' or 'you never' statements.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "'Always' and 'never' statements overgeneralize and put partners on defense. Addressing specific situations keeps the conversation solvable and fair.",
+          "framework": "gottman",
+          "whenDifferent": "If one partner uses absolutes, they may feel unheard about recurring issues. Finding other ways to communicate patterns helps.",
+          "whenSame": "Mutual commitment to specifics creates accurate, productive discussions.",
+          "journalPrompt": "How often do 'always' and 'never' show up in your conflicts? What triggers them?"
+        }
+      }
+    },
+    {
+      "id": "affirmation_007_q3",
+      "text": "I feel like a good person who made a mistake, not a bad person, when my partner raises concerns.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "How concerns are raised determines whether you feel like a good person who erred or a fundamentally flawed person. The former invites growth; the latter invites shame.",
+          "framework": "eft",
+          "whenDifferent": "If one partner feels like a bad person, explore what creates that feeling. Is it the words used? Tone? Or their own shame sensitivity? Both factors can be addressed.",
+          "whenSame": "Mutual experience of being treated as good people creates safety for growth.",
+          "journalPrompt": "After your partner raises a concern, do you feel correctable or condemned?"
+        }
+      }
+    },
+    {
+      "id": "affirmation_007_q4",
+      "text": "Our disagreements focus on solving problems, not proving who's worse.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Conflicts that become about who's the bigger problem miss the point. Focusing on solving the issue rather than establishing fault creates teamwork.",
+          "framework": "gottman",
+          "whenDifferent": "If conflicts become about who's worse, notice when the shift happens. Redirecting back to the issue at hand keeps things productive.",
+          "whenSame": "Shared focus on problem-solving rather than blame creates effective conflict.",
+          "journalPrompt": "Do your conflicts focus on solving problems or determining who's wrong?"
+        }
+      }
+    },
+    {
+      "id": "affirmation_007_q5",
+      "text": "I can separate what my partner did from who they are.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Separating behavior from identity allows you to be upset about something your partner did while still loving who they are. Conflating the two creates relationship-threatening conflicts.",
+          "framework": "eft",
+          "whenDifferent": "If one partner struggles to separate behavior from identity, explore what triggers the conflation. Hurt often makes us see patterns as character.",
+          "whenSame": "Mutual ability to separate actions from identity protects the relationship during conflict.",
+          "journalPrompt": "When you're upset with your partner, can you still see them as a good person?"
+        }
+      }
+    }
+  ]
+}

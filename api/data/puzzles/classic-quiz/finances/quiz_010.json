@@ -1,0 +1,111 @@
+{
+  "quizId": "quiz_010",
+  "title": "Family & Money",
+  "branch": "finances",
+  "description": "Explore how family relationships intersect with your financial life.",
+  "magnet_id": 16,
+  "questions": [
+    {
+      "id": "quiz_010_q1",
+      "text": "When it comes to financially helping family members, I believe...",
+      "choices": [
+        "We should help when we can—family comes first",
+        "We need to take care of ourselves before others",
+        "It depends on the situation and our relationship",
+        "We should discuss it together case by case"
+      ],
+      "category": "family_finances",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Family financial support is a major tension point for couples. Family-firsters prioritize obligation; self-firsters prioritize boundaries; situational types evaluate; discussers want partnership. Unspoken expectations cause conflict.",
+          "framework": "family_systems",
+          "whenDifferent": "The family-first person may feel their partner is selfish; the self-first person may feel their partner is enmeshed. Both are usually trying to protect something important. Name your values.",
+          "whenSame": "Shared philosophy prevents a common conflict. You'll naturally agree on when and how to help family.",
+          "journalPrompt": "What obligations do you feel toward family financially? Where does that sense of obligation come from?"
+        }
+      }
+    },
+    {
+      "id": "quiz_010_q2",
+      "text": "If family wanted to give us financial help, I'd feel...",
+      "choices": [
+        "Grateful—it's generous and I'd accept",
+        "Hesitant—I prefer to be independent",
+        "Complicated—it depends on the strings attached",
+        "Like we should discuss it together first"
+      ],
+      "category": "family_finances",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Receiving family help brings up independence, obligation, and power. Grateful-accepters see generosity; hesitant types guard independence; complicated-feelers see strings; discussers want partnership. These feelings often surprise us.",
+          "framework": "family_systems",
+          "whenDifferent": "The accepter may not understand the hesitant partner's discomfort; the hesitant partner may not understand why the accepter wants to take the help. Talk about what the money means, not just the money.",
+          "whenSame": "Shared feelings make these situations easier. You'll naturally respond the same way to family generosity.",
+          "journalPrompt": "How do you feel about accepting help from family? What does it mean to you when you do?"
+        }
+      }
+    },
+    {
+      "id": "quiz_010_q3",
+      "text": "The financial lessons I learned from my family are...",
+      "choices": [
+        "Mostly positive—I want to carry them forward",
+        "Mixed—some I'll keep, some I'll change",
+        "Mostly things I want to do differently",
+        "Something I haven't thought much about"
+      ],
+      "category": "family_finances",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Family financial patterns pass down through generations. Positive-inheritors continue patterns; mixed-inheritors select; change-seekers break patterns; unexamined types may repeat unconsciously. Awareness allows choice.",
+          "framework": "family_systems",
+          "whenDifferent": "Different family experiences shape different financial instincts. The positive-inheritor may not understand why their partner wants to change everything. Share your family money stories.",
+          "whenSame": "Shared orientation toward family patterns means you're doing similar work. Support each other's financial growth journey.",
+          "journalPrompt": "What money lessons did your family teach you—spoken or unspoken? Which do you want to keep?"
+        }
+      }
+    },
+    {
+      "id": "quiz_010_q4",
+      "text": "When family and money create tension, I tend to...",
+      "choices": [
+        "Protect the family relationship first",
+        "Protect our financial boundaries first",
+        "Try to find a middle ground",
+        "Feel stressed and unsure how to handle it"
+      ],
+      "category": "family_finances",
+      "metadata": {
+        "dimension": "conflict_approach",
+        "poleMapping": ["right", "left", "right", "neutral"],
+        "therapeutic": {
+          "rationale": "Family-money tension reveals loyalties and priorities. Relationship-protectors prioritize harmony; boundary-protectors prioritize limits; middle-grounders balance; stressed types need support. This often becomes a couple conflict.",
+          "framework": "gottman",
+          "whenDifferent": "The relationship-protector may feel their partner doesn't value family; the boundary-protector may feel their partner doesn't prioritize them. Both loyalties matter—how can you honor both?",
+          "whenSame": "Shared tendency means you'll approach family-money conflict similarly. This alignment helps when issues arise.",
+          "journalPrompt": "Think of a time family and money created tension. How did you handle it? What would you do differently?"
+        }
+      }
+    },
+    {
+      "id": "quiz_010_q5",
+      "text": "Talking about money with my family feels...",
+      "choices": [
+        "Natural—we're pretty open about it",
+        "Awkward—we don't really discuss it",
+        "Complicated—there's history there",
+        "Different than talking about it with my partner"
+      ],
+      "category": "family_finances",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Family money communication patterns shape our comfort with financial conversations. Open-family backgrounds normalize money talk; awkward-family backgrounds create avoidance; complicated histories add emotional weight. These patterns follow us.",
+          "framework": "family_systems",
+          "whenDifferent": "Different family communication styles may mean different comfort levels. The open-family partner may push for conversations the awkward-family partner finds uncomfortable. Go at the pace of the less comfortable person.",
+          "whenSame": "Shared family communication patterns mean similar comfort levels. You understand each other's baseline.",
+          "journalPrompt": "How did your family talk (or not talk) about money? How does that affect your relationship now?"
+        }
+      }
+    }
+  ]
+}

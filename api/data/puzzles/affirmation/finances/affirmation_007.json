@@ -1,0 +1,115 @@
+{
+  "quizId": "affirmation_007",
+  "title": "Financial Fairness",
+  "category": "finances",
+  "branch": "finances",
+  "description": "Assess how fair and equitable your financial dynamic feels",
+  "magnet_id": 15,
+  "questions": [
+    {
+      "id": "affirmation_007_q1",
+      "text": "I feel our financial dynamic is fair, given our circumstances.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Perceived fairness matters more than strict equality. Partners who feel the arrangement is fair—whatever form that takes—experience less resentment.",
+          "framework": "gottman",
+          "whenDifferent": "A fairness gap is significant. The partner who feels it's unfair needs to articulate what would feel more equitable.",
+          "whenSame": "Shared sense of fairness creates stability in your financial relationship.",
+          "journalPrompt": "What does 'fair' look like to you financially? Is that what you have?"
+        }
+      }
+    },
+    {
+      "id": "affirmation_007_q2",
+      "text": "I don't feel financial pressure or obligation from my partner.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Financial pressure in a relationship can feel controlling or create resentment. Healthy partnerships avoid using money as leverage.",
+          "framework": "attachment_theory",
+          "whenDifferent": "If one partner feels pressure, explore what's creating that feeling. Sometimes it's unspoken expectations rather than explicit demands.",
+          "whenSame": "Mutual freedom from financial pressure creates a healthier dynamic.",
+          "journalPrompt": "Do you ever feel financially pressured in your relationship? What creates that?"
+        }
+      }
+    },
+    {
+      "id": "affirmation_007_q3",
+      "text": "I believe income differences don't create power imbalance between us.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Income differences are common but can create unhealthy dynamics if the higher earner holds more power. Healthy couples separate earning from decision-making authority.",
+          "framework": "family_systems",
+          "whenDifferent": "Different perceptions of power balance need attention. The partner feeling less powerful may be experiencing something the other doesn't see.",
+          "whenSame": "Shared perception that income doesn't equal power creates equality in your partnership.",
+          "journalPrompt": "Does earning more or less affect how decisions get made in your relationship?"
+        }
+      }
+    },
+    {
+      "id": "affirmation_007_q4",
+      "text": "I feel respected regardless of my financial contribution.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Respect shouldn't depend on financial contribution. Partners who feel valued regardless of income bring their full selves to the relationship.",
+          "framework": "gottman",
+          "whenDifferent": "If one partner feels less respected due to finances, this needs immediate attention. Respect is foundational.",
+          "whenSame": "Mutual respect regardless of financial contribution creates a secure partnership.",
+          "journalPrompt": "Does your financial contribution—or your partner's—affect how respected you feel?"
+        }
+      }
+    },
+    {
+      "id": "affirmation_007_q5",
+      "text": "I believe we would adjust fairly if our financial situations changed.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Confidence that your dynamic would adapt to changes—job loss, career change, illness—reflects trust in your partnership's flexibility and fairness.",
+          "framework": "positive_psychology",
+          "whenDifferent": "If one partner doubts adaptability, explore what concerns them. Is it based on observed rigidity or past experiences?",
+          "whenSame": "Shared confidence in adapting fairly to changes creates security about your future.",
+          "journalPrompt": "How would your financial dynamic need to change if circumstances shifted dramatically?"
+        }
+      }
+    }
+  ]
+}

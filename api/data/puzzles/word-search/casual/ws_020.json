@@ -1,0 +1,24 @@
+{
+  "puzzleId": "ws_020",
+  "title": "Casual XX",
+  "theme": "casual",
+  "size": {
+    "rows": 10,
+    "cols": 10
+  },
+  "grid": "FHPYUECFCTFSGQDANESWLRFULNOORMEJUMAPAIHCNDNPALTCEPPENPQEOBNSLRYSIMPLENACIBAKEYRYYFRIENDLEQACREWDOBSY",
+  "words": {
+    "WRITE": "19,DL",
+    "CREW": "91,R",
+    "FUNNY": "22,D",
+    "CALM": "6,DL",
+    "SERENE": "98,U",
+    "LAUGH": "45,UL",
+    "BAKE": "73,R",
+    "SIMPLE": "63,R",
+    "PLAY": "50,D",
+    "FRIEND": "81,R",
+    "PHONE": "49,UL",
+    "CANDY": "47,UL"
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "quizId": "quiz_013",
+  "title": "Unspoken Language",
+  "branch": "intimacy",
+  "questions": [
+    {
+      "id": "quiz_013_q1",
+      "category": "personality",
+      "prompt": "Who is better at...",
+      "content": "Reading the other's mood without words"
+    },
+    {
+      "id": "quiz_013_q2",
+      "category": "habits",
+      "prompt": "Who is more likely to...",
+      "content": "Communicate through a gentle touch"
+    },
+    {
+      "id": "quiz_013_q3",
+      "category": "preferences",
+      "prompt": "Who values more...",
+      "content": "Comfortable silences together"
+    },
+    {
+      "id": "quiz_013_q4",
+      "category": "personality",
+      "prompt": "Who notices more...",
+      "content": "When the other needs extra love"
+    },
+    {
+      "id": "quiz_013_q5",
+      "category": "habits",
+      "prompt": "Who would...",
+      "content": "Give a knowing look across a crowded room"
+    }
+  ],
+  "description": "Sometimes no words are needed—explore how you communicate without speaking!",
+  "magnet_id": 12
+}

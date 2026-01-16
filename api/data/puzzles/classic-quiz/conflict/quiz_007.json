@@ -1,0 +1,109 @@
+{
+  "quizId": "quiz_007",
+  "title": "Apology Languages",
+  "branch": "conflict",
+  "description": "Explore how you apologize and what makes apologies meaningful to you.",
+  "magnet_id": 16,
+  "questions": [
+    {
+      "id": "quiz_007_q1",
+      "text": "When I need to apologize, I tend to...",
+      "choices": [
+        "Say 'I'm sorry' and explain what I did wrong",
+        "Focus on making things right with actions",
+        "Express how bad I feel about hurting them",
+        "Ask what I can do to make it better"
+      ],
+      "category": "apology_style",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Apology styles vary like love languages. Verbal-apologizers use words; action-takers make amends; feeling-expressers show remorse; askers seek input. The apology that works for you may not work for your partner.",
+          "framework": "love_languages",
+          "whenDifferent": "Different apology styles may miss each other. The action-taker's partner may want words; the verbal-apologizer's partner may want changed behavior. Learn what your partner needs.",
+          "whenSame": "Shared apology style makes apologies feel natural and effective.",
+          "journalPrompt": "How do you typically apologize? Does it seem to work for your partner?"
+        }
+      }
+    },
+    {
+      "id": "quiz_007_q2",
+      "text": "An apology feels meaningful to me when it includes...",
+      "choices": [
+        "Acknowledgment of what they did and its impact",
+        "Genuine remorse—not just words",
+        "A commitment to change or not repeat it",
+        "All of these—real apologies are complete"
+      ],
+      "category": "apology_needs",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Meaningful apology components vary. Acknowledgment validates; remorse shows care; commitment gives hope; complete-needers want all three. Knowing what your partner needs helps you apologize effectively.",
+          "framework": "gottman",
+          "whenDifferent": "Different needs require different apologies. Learn which component matters most to your partner.",
+          "whenSame": "Shared apology needs create aligned expectations about what counts as a real apology.",
+          "journalPrompt": "What makes an apology feel meaningful to you? What's missing when apologies fall flat?"
+        }
+      }
+    },
+    {
+      "id": "quiz_007_q3",
+      "text": "The hardest part of apologizing for me is...",
+      "choices": [
+        "Admitting I was wrong",
+        "Knowing what to say",
+        "Feeling vulnerable",
+        "Apologizing doesn't feel that hard to me"
+      ],
+      "category": "apology_barriers",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Apology barriers prevent repair. Admitting-wrong struggles involve ego; not-knowing is skill; vulnerability is exposure; easy-apologizers have lower barriers. Understanding your barrier helps you overcome it.",
+          "framework": "gottman",
+          "whenDifferent": "Different barriers need different support. The vulnerability-struggler may need safety; the not-knower may need scripts.",
+          "whenSame": "Shared barriers create mutual understanding about why apologies are hard.",
+          "journalPrompt": "What makes apologizing hard for you? What would make it easier?"
+        }
+      }
+    },
+    {
+      "id": "quiz_007_q4",
+      "text": "After my partner apologizes, I usually...",
+      "choices": [
+        "Accept it and move forward",
+        "Need some time before I fully feel better",
+        "Want to talk through what happened",
+        "Depend on how sincere it feels"
+      ],
+      "category": "apology_reception",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Post-apology responses vary. Quick-movers process fast; time-needers process slow; talkers need discussion; sincerity-readers evaluate. How you receive apologies affects whether your partner feels safe apologizing.",
+          "framework": "gottman",
+          "whenDifferent": "Different responses need acknowledgment. The quick-mover may feel their slow partner holds grudges; the time-needer may feel rushed. Honor each other's pace.",
+          "whenSame": "Shared response creates aligned expectations about post-apology recovery.",
+          "journalPrompt": "What do you need after your partner apologizes? Does that happen?"
+        }
+      }
+    },
+    {
+      "id": "quiz_007_q5",
+      "text": "I believe apologies in relationships should...",
+      "choices": [
+        "Happen when someone does something hurtful",
+        "Focus on impact, not just intent",
+        "Include changed behavior, not just words",
+        "Be given freely without keeping score"
+      ],
+      "category": "apology_beliefs",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Apology beliefs shape expectations. Hurt-based believers apologize for harm; impact-focusers own effect regardless of intent; behavior-changers value action; score-avoiders give freely. Aligned beliefs prevent resentment about apologies.",
+          "framework": "gottman",
+          "whenDifferent": "Different beliefs may cause frustration. The impact-focuser may want apologies the intent-focuser doesn't think are needed. Discuss your beliefs.",
+          "whenSame": "Shared beliefs create aligned expectations about when and how apologies happen.",
+          "journalPrompt": "What are your beliefs about apologies in relationships? Where did those come from?"
+        }
+      }
+    }
+  ]
+}

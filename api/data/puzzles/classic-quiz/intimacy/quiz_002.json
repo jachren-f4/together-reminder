@@ -1,0 +1,109 @@
+{
+  "quizId": "quiz_002",
+  "title": "Emotional & Physical Connection",
+  "branch": "intimacy",
+  "description": "Explore how emotional closeness and physical intimacy connect for you.",
+  "magnet_id": 15,
+  "questions": [
+    {
+      "id": "quiz_002_q1",
+      "text": "For me, emotional connection and physical intimacy are...",
+      "choices": [
+        "Deeply linked—I need one for the other",
+        "Related but can exist separately",
+        "Physical helps me feel emotionally close",
+        "Emotional closeness makes physical better"
+      ],
+      "category": "connection_style",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "The emotional-physical link varies by person. Deeply-linked types can't separate them; separators compartmentalize; physical-first types connect through body; emotional-first types need safety first. Misunderstanding this causes major conflict.",
+          "framework": "attachment_theory",
+          "whenDifferent": "The emotional-first partner may feel used if physical comes before emotional; the physical-first partner may feel rejected waiting for emotional connection. Neither is wrong—understand each other's pathway.",
+          "whenSame": "Shared connection style means you'll naturally sync up. You understand each other's pathway to intimacy.",
+          "journalPrompt": "How do emotional and physical connection relate for you? Which comes first, or do they happen together?"
+        }
+      }
+    },
+    {
+      "id": "quiz_002_q2",
+      "text": "I feel most emotionally connected to my partner when...",
+      "choices": [
+        "We have deep, meaningful conversations",
+        "We share physical closeness and touch",
+        "We spend quality time together doing things",
+        "They show they really understand me"
+      ],
+      "category": "connection_needs",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Connection pathways reveal love languages. Conversation-connectors bond through words; physical-connectors bond through touch; activity-connectors bond through shared experience; understanding-seekers bond through being known. Partners often differ.",
+          "framework": "love_languages",
+          "whenDifferent": "Different pathways may mean missing each other's bids for connection. The talker may not realize their partner is connecting through touch; the activity-lover may not realize their partner needs more words.",
+          "whenSame": "Shared connection pathway makes bonding natural. You instinctively give what your partner needs.",
+          "journalPrompt": "When do you feel most connected to your partner? What's happening in those moments?"
+        }
+      }
+    },
+    {
+      "id": "quiz_002_q3",
+      "text": "When we're not physically intimate for a while, I tend to...",
+      "choices": [
+        "Feel disconnected and miss the closeness",
+        "Not notice much if we're emotionally close",
+        "Feel concerned about the relationship",
+        "Understand—life gets busy sometimes"
+      ],
+      "category": "intimacy_needs",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Reactions to intimacy gaps reveal needs and meanings. Disconnection-feelers need physical to feel close; emotion-focusers prioritize other connection; concern-feelers read it as trouble; understanders are flexible. Partners often react differently.",
+          "framework": "attachment_theory",
+          "whenDifferent": "The disconnection-feeler may feel rejected during dry spells; the understander may not realize their partner is struggling. Check in during busy times.",
+          "whenSame": "Shared reactions mean you'll experience intimacy gaps similarly. This alignment helps during stressful seasons.",
+          "journalPrompt": "How do you feel when physical intimacy decreases? What meaning do you make of it?"
+        }
+      }
+    },
+    {
+      "id": "quiz_002_q4",
+      "text": "After being physically intimate, I usually want to...",
+      "choices": [
+        "Stay close, cuddle, and connect",
+        "Have some quiet time together",
+        "Talk and share what's on my mind",
+        "Go about normal activities feeling good"
+      ],
+      "category": "intimacy_style",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Post-intimacy needs reveal how you process connection. Cuddlers extend closeness; quiet-timers process internally; talkers deepen through words; activity-resumers feel complete. Mismatched needs can hurt feelings.",
+          "framework": "attachment_theory",
+          "whenDifferent": "The cuddler may feel abandoned if their partner gets up; the activity-resumer may feel smothered by extended closeness. Share your needs without judgment.",
+          "whenSame": "Matched post-intimacy needs create seamless transitions. You naturally want the same thing after.",
+          "journalPrompt": "What do you need after being physically intimate? What makes you feel most cared for?"
+        }
+      }
+    },
+    {
+      "id": "quiz_002_q5",
+      "text": "The balance between emotional and physical intimacy I want is...",
+      "choices": [
+        "Heavy on emotional, physical flows from there",
+        "Heavy on physical, it creates emotional closeness",
+        "Equal emphasis on both",
+        "Flexible depending on the season of life"
+      ],
+      "category": "intimacy_balance",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Desired intimacy balance reveals priorities. Emotional-heavy types need feelings first; physical-heavy types connect through body; equal-balancers want both; flexible types adapt. Articulating your ideal helps your partner understand.",
+          "framework": "gottman",
+          "whenDifferent": "Different balance preferences need negotiation. The emotional-heavy partner may feel the physical-heavy partner is shallow; the physical-heavy partner may feel the emotional-heavy partner is withholding.",
+          "whenSame": "Shared balance preference aligns your intimacy expectations. You're naturally aiming for the same relationship.",
+          "journalPrompt": "What balance of emotional and physical intimacy feels ideal to you? What does that look like day-to-day?"
+        }
+      }
+    }
+  ]
+}

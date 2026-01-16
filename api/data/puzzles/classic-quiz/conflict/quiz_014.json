@@ -1,0 +1,109 @@
+{
+  "quizId": "quiz_014",
+  "title": "Conflict & Trust",
+  "branch": "conflict",
+  "description": "Explore how conflict affects trust and how trust enables healthy conflict.",
+  "magnet_id": 18,
+  "questions": [
+    {
+      "id": "quiz_014_q1",
+      "text": "For me, healthy conflict requires trusting that...",
+      "choices": [
+        "My partner won't use my vulnerabilities against me",
+        "Conflict won't threaten our relationship",
+        "We can disagree and still love each other",
+        "All of these—trust is the foundation"
+      ],
+      "category": "trust_requirements",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Trust requirements for healthy conflict vary. Vulnerability-protectors need safety; relationship-security seekers need stability; love-despite-disagreement believers need acceptance. Without trust, conflict becomes dangerous.",
+          "framework": "gottman",
+          "whenDifferent": "All these trust requirements are important. Ensure all are present for safe conflict.",
+          "whenSame": "Shared trust requirements create aligned understanding of what makes conflict safe.",
+          "journalPrompt": "What trust do you need to engage in healthy conflict? Is that trust present?"
+        }
+      }
+    },
+    {
+      "id": "quiz_014_q2",
+      "text": "After conflict, my trust in my partner is usually...",
+      "choices": [
+        "Unchanged—conflict doesn't affect it",
+        "Temporarily shaken, then restored",
+        "Dependent on how the conflict went",
+        "Strengthened if we handled it well"
+      ],
+      "category": "trust_impact",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Trust impact from conflict varies. Unchanged-types have stable trust; shaken-then-restored types recover; dependent-types evaluate; strengthened-types grow through conflict. Understanding your pattern helps you communicate.",
+          "framework": "attachment_theory",
+          "whenDifferent": "Different trust patterns may cause confusion. The unchanged-type may not understand the shaken partner's experience. Be patient with each other's processing.",
+          "whenSame": "Shared trust impact pattern creates aligned post-conflict experiences.",
+          "journalPrompt": "How does conflict affect your trust in your partner? How do you rebuild it?"
+        }
+      }
+    },
+    {
+      "id": "quiz_014_q3",
+      "text": "Something that damages my trust during conflict is when...",
+      "choices": [
+        "Things I shared in confidence are used against me",
+        "My partner says hurtful things they don't mean",
+        "I feel like they're not fighting fair",
+        "The relationship itself is threatened"
+      ],
+      "category": "trust_damage",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Trust damage sources vary. Confidence-breach is betrayal; hurtful-words wound; unfair-fighting violates rules; relationship-threats create insecurity. Knowing what damages your partner's trust helps you avoid it.",
+          "framework": "gottman",
+          "whenDifferent": "Different damage sources require avoiding different behaviors. Learn and avoid your partner's trust-damaging triggers.",
+          "whenSame": "Shared damage sources create clear boundaries about what to never do.",
+          "journalPrompt": "What damages your trust during conflict? Has your partner done those things?"
+        }
+      }
+    },
+    {
+      "id": "quiz_014_q4",
+      "text": "Trust is rebuilt after conflict by...",
+      "choices": [
+        "Consistent caring behavior over time",
+        "Genuine apology and changed actions",
+        "Talking through what happened",
+        "Time and experiencing safety again"
+      ],
+      "category": "trust_rebuilding",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Trust rebuilding approaches vary. Consistency-needers watch patterns; apology-needers want acknowledgment; talkers process verbally; time-needers restore naturally. Knowing what rebuilds trust helps repair.",
+          "framework": "gottman",
+          "whenDifferent": "Different rebuilding needs require different effort. Learn what rebuilds trust for your partner specifically.",
+          "whenSame": "Shared rebuilding approach creates aligned repair efforts.",
+          "journalPrompt": "What rebuilds your trust after conflict? Are you getting that?"
+        }
+      }
+    },
+    {
+      "id": "quiz_014_q5",
+      "text": "I want conflict to ultimately build trust by showing that...",
+      "choices": [
+        "We can handle hard things together",
+        "We're committed even when we disagree",
+        "We respect each other even in difficulty",
+        "We can grow through challenges"
+      ],
+      "category": "trust_growth",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Conflict can build trust when navigated well. Handling-hard-things demonstrates capability; commitment despite disagreement demonstrates security; respect-in-difficulty demonstrates values; growing-through-challenges demonstrates development. Healthy conflict strengthens.",
+          "framework": "gottman",
+          "whenDifferent": "All these trust-building outcomes are valuable. Conflict managed well provides all of them.",
+          "whenSame": "Shared vision for trust-building through conflict creates aligned goals.",
+          "journalPrompt": "How do you want conflict to affect trust in your relationship?"
+        }
+      }
+    }
+  ]
+}

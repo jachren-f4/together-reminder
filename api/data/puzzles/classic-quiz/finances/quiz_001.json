@@ -1,0 +1,111 @@
+{
+  "quizId": "quiz_001",
+  "title": "Spending & Saving Styles",
+  "branch": "finances",
+  "description": "Discover how you each relate to money and what that means for your partnership.",
+  "magnet_id": 15,
+  "questions": [
+    {
+      "id": "quiz_001_q1",
+      "text": "When it comes to money, I'm more of a...",
+      "choices": [
+        "Saver - security feels good",
+        "Spender - experiences matter more than savings",
+        "Planner - I like knowing where it all goes",
+        "Relaxed - I don't think about it much"
+      ],
+      "category": "financial_style",
+      "metadata": {
+        "dimension": "planning_style",
+        "poleMapping": ["right", "left", "right", "left"],
+        "therapeutic": {
+          "rationale": "Our money personality forms early and runs deep. Understanding each other's baseline orientation helps you anticipate how you'll navigate finances together—whether that's splitting a dinner bill or buying a house someday.",
+          "framework": "financial_therapy",
+          "whenDifferent": "Saver-spender pairs are common and can balance each other beautifully—or drive each other crazy. The key is seeing your partner's style as a strength, not a flaw.",
+          "whenSame": "Shared money styles make some things easier, but watch for blind spots. Two savers may forget to enjoy; two spenders may need external guardrails.",
+          "journalPrompt": "What's your earliest memory about money? How do you think it shaped your approach today?"
+        }
+      }
+    },
+    {
+      "id": "quiz_001_q2",
+      "text": "If we were planning something expensive together, I'd want us to...",
+      "choices": [
+        "Research and compare options thoroughly first",
+        "Talk through what matters most to each of us",
+        "Have whoever cares more take the lead",
+        "Decide spontaneously when it feels right"
+      ],
+      "category": "financial_decisions",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "How you'd approach a big decision together reveals expectations about teamwork, control, and communication—before any money is actually involved.",
+          "framework": "gottman",
+          "whenDifferent": "Different approaches aren't dealbreakers—they're data. The researcher can gather info while the talker ensures both voices are heard. Name your preferences early.",
+          "whenSame": "Shared decision-making styles make future choices smoother. But even aligned couples benefit from occasionally stretching into the other's approach.",
+          "journalPrompt": "Think of a decision you made together (any size). What worked about how you approached it?"
+        }
+      }
+    },
+    {
+      "id": "quiz_001_q3",
+      "text": "When it comes to treating each other, I believe...",
+      "choices": [
+        "We should split things fairly",
+        "Whoever has more should treat more often",
+        "Taking turns feels right",
+        "It shouldn't matter—we're a team"
+      ],
+      "category": "financial_values",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Attitudes about who pays reveal deeper beliefs about fairness, generosity, and partnership. There's no right answer, but unspoken assumptions cause friction.",
+          "framework": "financial_therapy",
+          "whenDifferent": "Different views on treating can create awkwardness or resentment if unspoken. Have the conversation before it becomes a pattern that bothers someone.",
+          "whenSame": "Shared beliefs make this easy—but circumstances change. Check in as your situations evolve.",
+          "journalPrompt": "How do you feel when your partner pays for you? How about when you pay for them?"
+        }
+      }
+    },
+    {
+      "id": "quiz_001_q4",
+      "text": "Something I'd want us to be aligned on financially is...",
+      "choices": [
+        "How much to save vs. spend on experiences",
+        "Being open about what we earn and owe",
+        "What we're each comfortable spending without checking in",
+        "Long-term goals, even if they're far off"
+      ],
+      "category": "financial_alignment",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "This reveals what financial alignment means to you—and it varies widely. Some need transparency; others need autonomy; others need shared dreams. Knowing your partner's priority helps you build trust in the right currency.",
+          "framework": "gottman",
+          "whenDifferent": "Different priorities aren't conflict—they're a roadmap for conversations to have. Both matter; tackle them in order of urgency for your stage.",
+          "whenSame": "Shared priority gives you a clear starting point. Build alignment there first, then expand.",
+          "journalPrompt": "What would make you feel like true financial partners? What's the first conversation you'd need to have?"
+        }
+      }
+    },
+    {
+      "id": "quiz_001_q5",
+      "text": "The money conversation I'd most like us to have is about...",
+      "choices": [
+        "What we each learned about money growing up",
+        "Dreams or goals we haven't fully talked through yet",
+        "How we're really feeling about where we are financially",
+        "Something we've been avoiding or tiptoeing around"
+      ],
+      "category": "financial_communication",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Every couple—new or established—has money conversations they haven't had yet. Naming the one you want invites your partner into deeper territory, whether that's first-time sharing or long-overdue honesty.",
+          "framework": "gottman",
+          "whenDifferent": "Different desired conversations reveal different needs. One may want to understand history; another may want to address tension. Both are valid—take turns.",
+          "whenSame": "Shared desire points to a conversation you're both ready for. Have it soon.",
+          "journalPrompt": "What money conversation have you been wanting to have but haven't? What's held you back?"
+        }
+      }
+    }
+  ]
+}

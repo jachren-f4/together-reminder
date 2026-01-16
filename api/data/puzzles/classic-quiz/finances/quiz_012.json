@@ -1,0 +1,111 @@
+{
+  "quizId": "quiz_012",
+  "title": "Debt & Obligations",
+  "branch": "finances",
+  "description": "Explore your feelings about debt and financial commitments.",
+  "magnet_id": 17,
+  "questions": [
+    {
+      "id": "quiz_012_q1",
+      "text": "My overall feeling about debt is...",
+      "choices": [
+        "Avoid it whenever possible",
+        "It's a tool—depends on how you use it",
+        "Some debt is just part of life",
+        "It makes me uncomfortable regardless"
+      ],
+      "category": "debt_attitudes",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Debt attitudes are deeply emotional and often inherited. Avoiders see it as dangerous; tool-users see it strategically; accepters see it as normal; uncomfortable types have anxiety regardless of logic. These feelings shape major decisions.",
+          "framework": "financial_therapy",
+          "whenDifferent": "Different debt attitudes can clash on mortgages, education loans, car purchases. The avoider may feel the tool-user is reckless; the tool-user may feel the avoider is limiting. Understand the feeling beneath the position.",
+          "whenSame": "Shared debt attitudes make major decisions easier. You'll naturally agree on when debt is acceptable.",
+          "journalPrompt": "What did your family teach you about debt—explicitly or implicitly? How does that show up now?"
+        }
+      }
+    },
+    {
+      "id": "quiz_012_q2",
+      "text": "When it comes to paying off debt, I prefer to...",
+      "choices": [
+        "Attack it aggressively—get it gone",
+        "Pay it down steadily while living life",
+        "Focus on high-interest debt first",
+        "Whatever minimizes stress"
+      ],
+      "category": "debt_management",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Debt payoff strategy reveals values and anxiety levels. Aggressive payers want freedom fast; steady payers want balance; strategic payers optimize; stress-minimizers prioritize peace. Partners may have different approaches.",
+          "framework": "financial_therapy",
+          "whenDifferent": "The aggressive payer may feel the steady payer isn't taking it seriously; the steady payer may feel the aggressive payer is sacrificing too much. Find the pace that works for both.",
+          "whenSame": "Shared payoff philosophy makes tackling debt easier. You'll naturally agree on the approach.",
+          "journalPrompt": "How do you feel when you think about debt you have (or might have)? What would paying it off change?"
+        }
+      }
+    },
+    {
+      "id": "quiz_012_q3",
+      "text": "Financial obligations (loans, bills, commitments) make me feel...",
+      "choices": [
+        "Responsible—I take them seriously",
+        "Weighed down—they're always on my mind",
+        "Neutral—they're just part of life",
+        "Motivated to reduce them"
+      ],
+      "category": "debt_attitudes",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "How obligations feel emotionally varies. Responsible-feelers take them in stride; weighed-down types carry anxiety; neutral types aren't bothered; motivated types want freedom. These feelings affect quality of life.",
+          "framework": "financial_therapy",
+          "whenDifferent": "The weighed-down partner may need more reassurance; the neutral partner may not understand the anxiety. Take your partner's emotional experience seriously.",
+          "whenSame": "Shared emotional experience with obligations means you understand each other's relationship with commitments.",
+          "journalPrompt": "How do financial obligations affect your daily mood? Do they weigh on you or fade into the background?"
+        }
+      }
+    },
+    {
+      "id": "quiz_012_q4",
+      "text": "Before taking on new debt or obligations, I need...",
+      "choices": [
+        "To be certain we can handle it",
+        "To understand why it's worth it",
+        "To talk it through together",
+        "To feel like we have no other choice"
+      ],
+      "category": "debt_management",
+      "metadata": {
+        "dimension": "planning_style",
+        "poleMapping": ["right", "neutral", "right", "right"],
+        "therapeutic": {
+          "rationale": "What you need before committing reveals decision-making values. Certainty-seekers need safety; worth-understanders need justification; talkers need partnership; no-choice types are reluctant. These needs affect major decisions.",
+          "framework": "gottman",
+          "whenDifferent": "Different needs may clash when decisions arise. The certainty-seeker may feel the worth-understander is too willing; the worth-understander may feel the certainty-seeker is too cautious.",
+          "whenSame": "Shared needs make taking on obligations easier to navigate. You'll naturally align on the process.",
+          "journalPrompt": "Think of a financial obligation you've taken on. What did you need to feel okay about it?"
+        }
+      }
+    },
+    {
+      "id": "quiz_012_q5",
+      "text": "The conversation I'd want us to have about any debt is...",
+      "choices": [
+        "How to get out of it as fast as possible",
+        "How it fits into our bigger picture",
+        "How we both feel about it",
+        "What we can learn from it"
+      ],
+      "category": "debt_attitudes",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Debt conversations can focus on action, strategy, feelings, or growth. Fast-escapers want plans; big-picture thinkers want context; feeling-focusers want emotional processing; learners want meaning. All approaches have value.",
+          "framework": "gottman",
+          "whenDifferent": "The fast-escaper may feel the feeling-focuser is stalling; the feeling-focuser may feel the fast-escaper is dismissive. Make room for both practical and emotional conversations.",
+          "whenSame": "Shared conversation focus means you'll approach debt discussions the same way.",
+          "journalPrompt": "If you had (or have) debt, what would you most want to talk about with your partner?"
+        }
+      }
+    }
+  ]
+}

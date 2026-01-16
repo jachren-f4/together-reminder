@@ -1,0 +1,115 @@
+{
+  "quizId": "affirmation_010",
+  "title": "Forgiveness & Letting Go",
+  "category": "conflict",
+  "branch": "conflict",
+  "description": "Explore how you move past hurts and conflicts",
+  "magnet_id": 16,
+  "questions": [
+    {
+      "id": "affirmation_010_q1",
+      "text": "When my partner apologizes sincerely, I can let go of the hurt.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Accepting apologies and releasing hurt allows relationships to move forward. Holding onto resentment after sincere repair attempts keeps couples stuck.",
+          "framework": "positive_psychology",
+          "whenDifferent": "If one partner struggles to let go after apologies, explore what's missing. Do the apologies feel complete? Is there a pattern that makes trusting change hard?",
+          "whenSame": "Mutual ability to accept apologies and move on creates a fresh-start dynamic.",
+          "journalPrompt": "What helps you let go after your partner apologizes? What makes it hard?"
+        }
+      }
+    },
+    {
+      "id": "affirmation_010_q2",
+      "text": "I sense my partner letting go after I've apologized sincerely.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Receiving forgiveness after sincere apology is essential for repair. When apologies don't lead to forgiveness, partners stop trying to make amends.",
+          "framework": "eft",
+          "whenDifferent": "If one partner doesn't receive forgiveness, explore what's happening. Are the apologies landing? Is there accumulated hurt? Understanding the barrier helps.",
+          "whenSame": "Mutual capacity for forgiveness creates a complete repair cycle.",
+          "journalPrompt": "Does your partner forgive you after you apologize? What affects that?"
+        }
+      }
+    },
+    {
+      "id": "affirmation_010_q3",
+      "text": "We don't keep score of past wrongs.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Score-keeping creates a tit-for-tat dynamic that poisons relationships. Letting go of the ledger allows each situation to be addressed on its own merits.",
+          "framework": "gottman",
+          "whenDifferent": "If one partner keeps score, explore what the score-keeping is trying to communicate. Often it signals accumulated hurt or unfairness that needs attention.",
+          "whenSame": "Shared commitment to not keeping score frees you from the past.",
+          "journalPrompt": "Is there a mental ledger in your relationship? What would help let it go?"
+        }
+      }
+    },
+    {
+      "id": "affirmation_010_q4",
+      "text": "Once we've worked through something, it truly feels resolved.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "True resolution means issues don't keep resurfacing. When conflicts feel genuinely resolved, couples can move forward without dragging the past.",
+          "framework": "eft",
+          "whenDifferent": "If issues keep returning, they may not have been fully resolved. What was missed in the original conversation? Sometimes deeper needs were unaddressed.",
+          "whenSame": "Shared experience of genuine resolution creates trust in your repair process.",
+          "journalPrompt": "Do resolved conflicts stay resolved? What makes some issues keep returning?"
+        }
+      }
+    },
+    {
+      "id": "affirmation_010_q5",
+      "text": "I believe my partner wants to grow from our conflicts, not just move past them.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Growing from conflict rather than just surviving it creates learning. Believing your partner wants to grow builds trust that patterns will actually change.",
+          "framework": "positive_psychology",
+          "whenDifferent": "If one partner doesn't sense growth orientation, explore what creates that impression. Are apologies followed by change? Does reflection happen?",
+          "whenSame": "Mutual commitment to growing from conflict creates an improving relationship.",
+          "journalPrompt": "Do your conflicts lead to growth? What would help you learn more from them?"
+        }
+      }
+    }
+  ]
+}

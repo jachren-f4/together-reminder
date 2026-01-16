@@ -1,0 +1,109 @@
+{
+  "quizId": "quiz_010",
+  "title": "Romance & Passion",
+  "branch": "intimacy",
+  "description": "Explore what keeps the spark alive in your relationship.",
+  "magnet_id": 17,
+  "questions": [
+    {
+      "id": "quiz_010_q1",
+      "text": "What romance means to me is...",
+      "choices": [
+        "Thoughtful gestures that show you're thinking of me",
+        "Quality time focused entirely on us",
+        "Physical affection and closeness",
+        "Words that express love and desire"
+      ],
+      "category": "romance_meaning",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Romance definitions vary like love languages. Gesture-lovers want tangible care; time-lovers want presence; touch-lovers want physical closeness; word-lovers want verbal expression. Knowing your partner's definition helps you romance them well.",
+          "framework": "love_languages",
+          "whenDifferent": "Different definitions mean different effort. The gesture-lover may not feel romanced by words alone; the word-lover may not notice gestures without verbal context. Learn each other's definition.",
+          "whenSame": "Shared romance definition makes romantic efforts land. You naturally give what your partner wants.",
+          "journalPrompt": "What feels romantic to you? Think of a time you felt truly romanced—what made it special?"
+        }
+      }
+    },
+    {
+      "id": "quiz_010_q2",
+      "text": "Keeping passion alive in a relationship requires...",
+      "choices": [
+        "Intentional effort and prioritization",
+        "Novelty and trying new things together",
+        "Maintaining emotional connection first",
+        "Making time despite busy lives"
+      ],
+      "category": "passion_maintenance",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Passion maintenance beliefs shape behavior. Effort-believers prioritize; novelty-seekers introduce variety; connection-focusers maintain emotional depth; time-makers protect together-time. All approaches can work.",
+          "framework": "gottman",
+          "whenDifferent": "Different beliefs may mean different efforts. The novelty-seeker may feel the connection-focuser is boring; the connection-focuser may feel the novelty-seeker is shallow. Both contribute to passion.",
+          "whenSame": "Shared belief aligns your passion maintenance efforts. You'll invest in the same things.",
+          "journalPrompt": "What do you think keeps passion alive? Are you doing those things?"
+        }
+      }
+    },
+    {
+      "id": "quiz_010_q3",
+      "text": "The romantic gesture that would mean most to me is...",
+      "choices": [
+        "A surprise planned with thought and care",
+        "Simple daily expressions of love",
+        "Creating special memories together",
+        "Physical expressions of desire and attraction"
+      ],
+      "category": "romance_preferences",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Gesture preferences reveal what makes you feel loved. Surprise-lovers want planned effort; daily-expression lovers want consistency; memory-makers want shared experiences; physical-lovers want desire shown. These preferences guide romantic giving.",
+          "framework": "love_languages",
+          "whenDifferent": "Different preferences mean adjusting your giving. The surprise-lover may not feel romanced by daily expressions alone. Learn what your partner most values.",
+          "whenSame": "Shared preference makes romantic giving intuitive. You naturally want the same things.",
+          "journalPrompt": "What romantic gesture would make you feel incredibly loved? Have you told your partner?"
+        }
+      }
+    },
+    {
+      "id": "quiz_010_q4",
+      "text": "I feel most desired by my partner when they...",
+      "choices": [
+        "Tell me directly that they want me",
+        "Initiate physical closeness",
+        "Look at me in a certain way",
+        "Make me a priority over other things"
+      ],
+      "category": "desire_expression",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Feeling desired matters deeply, but what triggers that feeling varies. Tell-me types need verbal; initiators-respond types feel wanted when pursued; look-readers notice expressions; priority-needers feel desired through attention. Know your partner's trigger.",
+          "framework": "love_languages",
+          "whenDifferent": "Different triggers mean different expressions. The verbal-needer may not feel desired by looks alone; the priority-needer may not feel desired without tangible time.",
+          "whenSame": "Shared trigger makes expressing desire effectively easier.",
+          "journalPrompt": "When do you feel most desired by your partner? What makes you feel wanted?"
+        }
+      }
+    },
+    {
+      "id": "quiz_010_q5",
+      "text": "The balance of comfort and excitement I want in our intimate life is...",
+      "choices": [
+        "Mostly comfortable with sparks of excitement",
+        "Regular excitement with comfortable foundation",
+        "Depends on the season of life",
+        "Deep comfort is more important than excitement"
+      ],
+      "category": "intimacy_balance",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Comfort-excitement balance is personal. Comfort-preferers want security with occasional spark; excitement-seekers want more stimulation; flexible types adapt; depth-seekers prioritize emotional safety. Partners often differ here.",
+          "framework": "gottman",
+          "whenDifferent": "Different balance preferences need negotiation. The excitement-seeker may feel the comfort-preferer is boring; the comfort-preferer may feel the excitement-seeker is exhausting. Find your sustainable balance.",
+          "whenSame": "Shared balance preference aligns your expectations. You're aiming for the same kind of intimate life.",
+          "journalPrompt": "What balance of comfort and excitement feels right to you? Is that what you have now?"
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "puzzleId": "ws_006",
+  "title": "Romantic VI",
+  "theme": "romantic",
+  "size": {
+    "rows": 10,
+    "cols": 10
+  },
+  "grid": "SWGEIFXYUPFOQOSETEYALBIHTSVNGSIDINNEROUSREWOXADHLITVEDESIREOROTRKRLDVNATAISIVLQGEEDNUGFOFRHDPGDRIHNY",
+  "words": {
+    "DUSK": "94,U",
+    "DINNER": "31,R",
+    "DESIRE": "53,R",
+    "DEVOTED": "31,D",
+    "DATE": "82,U",
+    "HOLD": "97,U",
+    "FLIRT": "10,D",
+    "PASSION": "9,D",
+    "LOVE": "48,UL",
+    "HONEY": "47,U",
+    "HEART": "90,U",
+    "RING": "63,D"
+  }
+}

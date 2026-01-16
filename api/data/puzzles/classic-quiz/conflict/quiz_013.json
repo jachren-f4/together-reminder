@@ -1,0 +1,111 @@
+{
+  "quizId": "quiz_013",
+  "title": "Conflict Avoidance",
+  "branch": "conflict",
+  "description": "Explore patterns of avoiding conflict and what's underneath them.",
+  "magnet_id": 18,
+  "questions": [
+    {
+      "id": "quiz_013_q1",
+      "text": "When it comes to avoiding conflict, I tend to...",
+      "choices": [
+        "Avoid when I can—it's uncomfortable",
+        "Pick my battles—some aren't worth it",
+        "Address most things—avoiding builds resentment",
+        "Depend on the issue and timing"
+      ],
+      "category": "avoidance_pattern",
+      "metadata": {
+        "dimension": "conflict_approach",
+        "poleMapping": ["left", "neutral", "right", "neutral"],
+        "therapeutic": {
+          "rationale": "Avoidance patterns vary. Frequent-avoiders find conflict threatening; battle-pickers are strategic; addressers prioritize resolution; dependent-types adapt. Some avoidance is healthy; too much builds resentment.",
+          "framework": "gottman",
+          "whenDifferent": "The avoider may frustrate the addresser; the addresser may overwhelm the avoider. Find balance between addressing issues and picking battles.",
+          "whenSame": "Shared avoidance pattern creates aligned approach to when to engage.",
+          "journalPrompt": "How much do you avoid conflict? Is that working for you?"
+        }
+      }
+    },
+    {
+      "id": "quiz_013_q2",
+      "text": "When I avoid bringing something up, it's usually because...",
+      "choices": [
+        "I don't want to upset my partner",
+        "I'm not sure it's worth the conflict",
+        "I'm afraid of how it might go",
+        "I'm still figuring out how I feel"
+      ],
+      "category": "avoidance_reasons",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Avoidance reasons reveal underlying concerns. Partner-protectors avoid to spare feelings; worth-evaluators are strategic; fear-avoiders have anxiety; figuring-out types need time. Understanding your reasons helps you evaluate if avoidance is serving you.",
+          "framework": "gottman",
+          "whenDifferent": "Different reasons may need different responses. Fear-based avoidance may need safety building; worth-evaluating may be healthy.",
+          "whenSame": "Shared avoidance reasons create mutual understanding about what drives silence.",
+          "journalPrompt": "Why do you avoid bringing things up? Is that serving your relationship?"
+        }
+      }
+    },
+    {
+      "id": "quiz_013_q3",
+      "text": "The downside of avoiding conflict for me is...",
+      "choices": [
+        "Resentment builds up over time",
+        "Issues don't get resolved",
+        "I feel like I'm not being honest",
+        "It can come out in worse ways later"
+      ],
+      "category": "avoidance_costs",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Avoidance costs are real. Resentment-buildup poisons slowly; unresolved-issues persist; inauthenticity damages intimacy; worse-later explosions cause more damage. Recognizing costs motivates change.",
+          "framework": "gottman",
+          "whenDifferent": "Different experienced costs can all motivate addressing avoidance patterns.",
+          "whenSame": "Shared awareness of avoidance costs creates aligned motivation to change.",
+          "journalPrompt": "What's the cost of avoiding conflict in your relationship? Is it worth it?"
+        }
+      }
+    },
+    {
+      "id": "quiz_013_q4",
+      "text": "What would help me avoid conflict less is...",
+      "choices": [
+        "Knowing my partner can hear hard things",
+        "Having a gentler way to bring things up",
+        "Trusting that conflict won't damage us",
+        "Building confidence in my own voice"
+      ],
+      "category": "avoidance_solutions",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Solutions to avoidance vary. Partner-trust needs safer reception; gentle-way needs skills; damage-trust needs relationship security; voice-confidence needs self-development. Naming what would help enables change.",
+          "framework": "gottman",
+          "whenDifferent": "Different solutions require different work. Some are about partner response; some are about self-development.",
+          "whenSame": "Shared needed solutions create aligned work to reduce avoidance.",
+          "journalPrompt": "What would help you bring up difficult things more easily?"
+        }
+      }
+    },
+    {
+      "id": "quiz_013_q5",
+      "text": "I want my partner to know that when I don't bring something up...",
+      "choices": [
+        "It doesn't mean nothing's wrong",
+        "I may need them to ask or create space",
+        "I'm protecting the relationship, not hiding",
+        "I'm working on being more direct"
+      ],
+      "category": "avoidance_message",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Messages about avoidance help partners understand. Something-wrong types hide distress; space-needers want invitation; relationship-protectors have good intentions; working-on-it types are growing. Communicating this creates understanding.",
+          "framework": "gottman",
+          "whenDifferent": "Different messages may all be true at different times. Share what's most important for your partner to understand.",
+          "whenSame": "Shared message creates mutual understanding about what avoidance means.",
+          "journalPrompt": "What do you want your partner to understand about your silence?"
+        }
+      }
+    }
+  ]
+}

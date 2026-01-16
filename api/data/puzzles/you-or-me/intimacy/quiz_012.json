@@ -1,0 +1,39 @@
+{
+  "quizId": "quiz_012",
+  "title": "Together as One",
+  "branch": "intimacy",
+  "questions": [
+    {
+      "id": "quiz_012_q1",
+      "category": "preferences",
+      "prompt": "Who feels more...",
+      "content": "Recharged after quality couple time"
+    },
+    {
+      "id": "quiz_012_q2",
+      "category": "habits",
+      "prompt": "Who is more likely to...",
+      "content": "Prioritize couple time in a busy week"
+    },
+    {
+      "id": "quiz_012_q3",
+      "category": "personality",
+      "prompt": "Who is more...",
+      "content": "Attentive to the other's needs"
+    },
+    {
+      "id": "quiz_012_q4",
+      "category": "preferences",
+      "prompt": "Who would...",
+      "content": "Notice when the other needs closeness"
+    },
+    {
+      "id": "quiz_012_q5",
+      "category": "habits",
+      "prompt": "Who is more likely to...",
+      "content": "Create special moments just for you two"
+    }
+  ],
+  "description": "Your intimate partnership—discover how you nurture your bond!",
+  "magnet_id": 12
+}

@@ -1,0 +1,70 @@
+{
+  "author": "Crossword Maker GPT",
+  "title": "AI-Built Puzzle",
+  "theme": "united-states",
+  "size": {
+    "rows": 9,
+    "cols": 7
+  },
+  "clues": {
+    "1": { "type": "text", "content": "Besides", "arrow": "down", "target_index": 8 },
+    "2": { "type": "text", "content": "BE_T", "arrow": "down", "target_index": 9 },
+    "3": { "type": "text", "content": "ATL St", "arrow": "down", "target_index": 10 },
+    "4": { "type": "text", "content": "Lease", "arrow": "down", "target_index": 11 },
+    "5": { "type": "text", "content": "Modify", "arrow": "down", "target_index": 12 },
+    "6": { "type": "text", "content": "Declare", "arrow": "down", "target_index": 13 },
+    "7": { "type": "text", "content": "Raptors", "arrow": "across", "target_index": 8 },
+    "8": { "type": "text", "content": "SEA_", "arrow": "across", "target_index": 15 },
+    "9": {
+      "across": { "type": "text", "content": "_CCR__I_", "target_index": 17 },
+      "down": { "type": "text", "content": "Twang", "target_index": 23 }
+    },
+    "10": { "type": "text", "content": "_OF_", "arrow": "across", "target_index": 22 },
+    "11": {
+      "across": { "type": "text", "content": "S_R__", "target_index": 25 },
+      "down": { "type": "text", "content": "Every-", "target_index": 31 }
+    },
+    "12": { "type": "text", "content": "Bio-", "arrow": "across", "target_index": 29 },
+    "13": {
+      "across": { "type": "text", "content": "O__ER", "target_index": 33 },
+      "down": { "type": "text", "content": "Meetup", "target_index": 39 }
+    },
+    "14": {
+      "across": { "type": "text", "content": "_LI_BE_", "target_index": 37 },
+      "down": { "type": "text", "content": "Jog", "target_index": 43 }
+    },
+    "15": {
+      "across": { "type": "text", "content": "HOP_", "target_index": 41 },
+      "down": { "type": "text", "content": "Leeward", "target_index": 47 }
+    },
+    "16": { "type": "text", "content": "Urinary", "arrow": "across", "target_index": 43 },
+    "17": { "type": "text", "content": "__VER", "arrow": "down", "target_index": 55 },
+    "18": { "type": "text", "content": "Joined", "arrow": "across", "target_index": 50 },
+    "19": { "type": "text", "content": "HI__", "arrow": "across", "target_index": 57 },
+    "20": { "type": "text", "content": "F__L_NG", "arrow": "across", "target_index": 60 }
+  },
+  "date": "2026-01-13",
+  "grid": [
+    ".", ".", ".", ".", ".", ".", ".",
+    ".", "E", "A", "G", "L", "E", "S",
+    ".", "L", ".", "A", "E", "D", "T",
+    ".", "S", "A", ".", "T", "I", "A",
+    ".", "E", "C", "O", ".", "T", "T",
+    ".", ".", "C", "M", "D", ".", "E",
+    ".", "R", "E", "N", "A", "L", ".",
+    ".", "U", "N", "I", "T", "E", "D",
+    ".", "N", "T", ".", "E", "E", "I"
+  ],
+  "gridnums": [
+    0, 1, 2, 3, 4, 5, 6,
+    7, 0, 0, 0, 0, 0, 0,
+    8, 0, 9, 0, 0, 0, 0,
+    10, 0, 0, 11, 0, 0, 0,
+    12, 0, 0, 0, 13, 0, 0,
+    0, 14, 0, 0, 0, 15, 0,
+    16, 0, 0, 0, 0, 0, 17,
+    18, 0, 0, 0, 0, 0, 0,
+    19, 0, 0, 20, 0, 0, 0
+  ],
+  "puzzleId": "puzzle_042"
+}

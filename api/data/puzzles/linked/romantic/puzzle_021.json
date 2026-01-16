@@ -1,0 +1,72 @@
+{
+  "author": "Crossword Maker GPT",
+  "title": "AI-Built Puzzle",
+  "size": {
+    "rows": 9,
+    "cols": 7
+  },
+  "clues": {
+    "1": { "type": "text", "content": "Conceal", "arrow": "down", "target_index": 8 },
+    "2": { "type": "text", "content": "Gala", "arrow": "down", "target_index": 9 },
+    "3": { "type": "text", "content": "M_P", "arrow": "down", "target_index": 10 },
+    "4": { "type": "text", "content": "Matter", "arrow": "down", "target_index": 11 },
+    "5": { "type": "text", "content": "Go for", "arrow": "down", "target_index": 12 },
+    "6": { "type": "text", "content": "Alike", "arrow": "down", "target_index": 13 },
+    "7": { "type": "text", "content": "Loves", "arrow": "across", "target_index": 8 },
+    "8": { "type": "text", "content": "4", "arrow": "across", "target_index": 15 },
+    "9": {
+      "across": { "type": "text", "content": "Epoch", "target_index": 18 },
+      "down": { "type": "text", "content": "Red-pen", "target_index": 24 }
+    },
+    "10": { "type": "text", "content": "Letter", "arrow": "across", "target_index": 22 },
+    "11": {
+      "across": { "type": "text", "content": "G__", "target_index": 26 },
+      "down": { "type": "text", "content": "_____d", "target_index": 32 }
+    },
+    "12": { "type": "text", "content": "Closes", "arrow": "across", "target_index": 29 },
+    "13": {
+      "across": { "type": "text", "content": "After D", "target_index": 34 },
+      "down": { "type": "text", "content": "Zest", "target_index": 40 }
+    },
+    "14": {
+      "across": { "type": "text", "content": "Mosaic", "target_index": 37 },
+      "down": { "type": "text", "content": "Adam's", "target_index": 43 }
+    },
+    "15": { "type": "text", "content": "Poetic", "arrow": "down", "target_index": 48 },
+    "16": { "type": "text", "content": "8th", "arrow": "across", "target_index": 43 },
+    "17": {
+      "across": { "type": "text", "content": "____r", "target_index": 45 },
+      "down": { "type": "text", "content": "NO__", "target_index": 51 }
+    },
+    "18": { "type": "text", "content": "Pronoun", "arrow": "across", "target_index": 50 },
+    "19": {
+      "across": { "type": "text", "content": "Asphalt", "target_index": 53 },
+      "down": { "type": "text", "content": "CA_", "target_index": 59 }
+    },
+    "20": { "type": "text", "content": "Calm", "arrow": "across", "target_index": 57 }
+  },
+  "date": "2026-01-12",
+  "grid": [
+    ".", ".", ".", ".", ".", ".", ".",
+    ".", "H", "E", "A", "R", "T", "S",
+    ".", "I", "V", ".", "E", "R", "A",
+    ".", "D", "E", "E", ".", "Y", "M",
+    ".", "E", "N", "D", "S", ".", "E",
+    ".", ".", "T", "I", "L", "E", ".",
+    ".", "H", ".", "T", "A", "L", "E",
+    ".", "I", "T", ".", "T", "A", "R",
+    ".", "S", "E", "R", "E", "N", "E"
+  ],
+  "gridnums": [
+    0, 1, 2, 3, 4, 5, 6,
+    7, 0, 0, 0, 0, 0, 0,
+    8, 0, 0, 9, 0, 0, 0,
+    10, 0, 0, 0, 11, 0, 0,
+    12, 0, 0, 0, 0, 13, 0,
+    0, 14, 0, 0, 0, 0, 15,
+    16, 0, 17, 0, 0, 0, 0,
+    18, 0, 0, 19, 0, 0, 0,
+    20, 0, 0, 0, 0, 0, 0
+  ],
+  "puzzleId": "puzzle_031"
+}

@@ -1,0 +1,24 @@
+{
+  "puzzleId": "ws_018",
+  "title": "Casual XVIII",
+  "theme": "casual",
+  "size": {
+    "rows": 10,
+    "cols": 10
+  },
+  "grid": "EUWOLLIPBDSZLSJCOMFYRKEGUDSGHQABAEENUOTHTGYCRENRFBSANSLBFYCTQARPACPFXHDOMKHEFYONYIEABZRWTCSUTRTTAERG",
+  "words": {
+    "SOFT": "26,DR",
+    "SIMPLE": "90,UR",
+    "EASY": "75,UL",
+    "GREAT": "99,L",
+    "COFFEE": "89,UL",
+    "PILLOW": "7,L",
+    "SUNNY": "13,DR",
+    "COMFY": "15,R",
+    "BREEZE": "55,UL",
+    "DANCE": "70,UR",
+    "STARS": "50,U",
+    "CHAT": "65,DL"
+  }
+}

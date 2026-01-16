@@ -1,0 +1,109 @@
+{
+  "quizId": "quiz_012",
+  "title": "Perpetual Problems",
+  "branch": "conflict",
+  "description": "Explore how you navigate ongoing differences that may never fully resolve.",
+  "magnet_id": 17,
+  "questions": [
+    {
+      "id": "quiz_012_q1",
+      "text": "My view on ongoing differences that keep coming up is...",
+      "choices": [
+        "They're normal—all couples have them",
+        "They're frustrating but manageable",
+        "They worry me about our compatibility",
+        "They can be opportunities for growth"
+      ],
+      "category": "perpetual_beliefs",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Views on perpetual problems affect how you cope. Normalizers accept them; frustrated-but-managing types cope; worry-types question the relationship; growth-seers find meaning. Gottman found 69% of couple conflicts are perpetual.",
+          "framework": "gottman",
+          "whenDifferent": "The normalizer may not understand the worrier's concern; the worrier may not accept that some issues never resolve. Share your views.",
+          "whenSame": "Shared view creates aligned expectations about ongoing differences.",
+          "journalPrompt": "How do you feel about issues that keep coming up? What would help you cope better?"
+        }
+      }
+    },
+    {
+      "id": "quiz_012_q2",
+      "text": "When we keep having the same argument, I tend to...",
+      "choices": [
+        "Get frustrated that it's not resolved",
+        "Look for new approaches to discuss it",
+        "Accept that we see things differently here",
+        "Wonder what's really underneath the issue"
+      ],
+      "category": "recurring_response",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Responses to recurring conflicts vary. Frustration-feelers want resolution; new-approach seekers try different tactics; accepters make peace with difference; underneath-lookers seek root causes. All can be adaptive responses.",
+          "framework": "gottman",
+          "whenDifferent": "Different responses can complement. The accepter can help the frustrated partner find peace; the new-approach seeker can help the accepter stay engaged.",
+          "whenSame": "Shared response creates aligned approach to recurring conflicts.",
+          "journalPrompt": "How do you respond to recurring conflicts? Is it working?"
+        }
+      }
+    },
+    {
+      "id": "quiz_012_q3",
+      "text": "I believe that ongoing differences in a relationship...",
+      "choices": [
+        "Don't have to mean the relationship is bad",
+        "Require active management and dialogue",
+        "Reveal fundamental values or personality",
+        "Can either divide or deepen us"
+      ],
+      "category": "perpetual_meaning",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Beliefs about what perpetual problems mean vary. Not-bad believers separate issue from relationship; active-managers see work needed; revealer-types see core differences; divide-or-deepen types see choice. These beliefs shape response.",
+          "framework": "gottman",
+          "whenDifferent": "Different beliefs may cause different worry levels. The not-bad believer may seem dismissive to the revealer-type. Share what ongoing differences mean to you.",
+          "whenSame": "Shared meaning creates aligned understanding of what ongoing differences signify.",
+          "journalPrompt": "What do ongoing differences mean about your relationship? What do you make of them?"
+        }
+      }
+    },
+    {
+      "id": "quiz_012_q4",
+      "text": "The key to living with ongoing differences is...",
+      "choices": [
+        "Finding humor and lightness about them",
+        "Respecting the valid reasons behind each view",
+        "Creating workarounds that honor both people",
+        "Accepting each other fully, differences included"
+      ],
+      "category": "perpetual_coping",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Coping strategies for perpetual problems vary. Humor-finders lighten; respect-givers honor; workaround-creators problem-solve; accepters embrace. All can help couples live with differences that won't resolve.",
+          "framework": "gottman",
+          "whenDifferent": "Different coping strategies can all help. Use multiple approaches together.",
+          "whenSame": "Shared coping strategy creates aligned approach to managing ongoing differences.",
+          "journalPrompt": "What helps you live with differences that won't resolve? What would help more?"
+        }
+      }
+    },
+    {
+      "id": "quiz_012_q5",
+      "text": "What I most want my partner to understand about our ongoing differences is...",
+      "choices": [
+        "They don't change how I feel about us",
+        "I'm still committed to working on them",
+        "I accept and love them despite our differences",
+        "We're more alike than different"
+      ],
+      "category": "perpetual_message",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Messages about ongoing differences reveal priorities. Unchanged-feeling types prioritize relationship over issues; commitment-expressers show dedication; acceptance-givers show love; similarity-focusers emphasize common ground. Hearing this message can reassure.",
+          "framework": "gottman",
+          "whenDifferent": "Different messages can all be shared. Your partner may need to hear several of these.",
+          "whenSame": "Shared message means you both want your partner to know the same thing.",
+          "journalPrompt": "What do you most want your partner to understand about your ongoing differences?"
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,115 @@
+{
+  "quizId": "affirmation_003",
+  "title": "Vulnerability & Safety",
+  "category": "intimacy",
+  "branch": "intimacy",
+  "description": "Explore how safe you feel being vulnerable with each other",
+  "magnet_id": 16,
+  "questions": [
+    {
+      "id": "affirmation_003_q1",
+      "text": "I can let my guard down when I'm with my partner.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Letting your guard down requires feeling safe. When you can relax your defenses with your partner, you create space for authentic connection and intimacy.",
+          "framework": "attachment_theory",
+          "whenDifferent": "If one partner can't let their guard down, explore what would help create safety. This is about the relationship environment, not a personal failing.",
+          "whenSame": "Mutual ability to let guards down creates a foundation for deep intimacy.",
+          "journalPrompt": "What helps you let your guard down with your partner? What keeps it up?"
+        }
+      }
+    },
+    {
+      "id": "affirmation_003_q2",
+      "text": "I feel held with care when I'm vulnerable with my partner.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "How vulnerability is received matters as much as whether it's offered. Partners who handle each other's vulnerable moments with care build trust for future openness.",
+          "framework": "eft",
+          "whenDifferent": "If one partner doesn't feel their vulnerability is handled with care, specific examples help. The other partner may not realize how their responses land.",
+          "whenSame": "Mutual experience of careful handling of vulnerability creates a safe container for intimacy.",
+          "journalPrompt": "When you've been vulnerable with your partner, how have they responded?"
+        }
+      }
+    },
+    {
+      "id": "affirmation_003_q3",
+      "text": "I don't worry about being judged when I'm open with my partner.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Fear of judgment closes us off. When you trust your partner won't judge your needs, desires, or body, you can be more fully present and open.",
+          "framework": "attachment_theory",
+          "whenDifferent": "If one partner fears judgment, explore what creates that fear. Past comments? Perceived reactions? Understanding the source helps address it.",
+          "whenSame": "Shared freedom from judgment fears creates an accepting environment for intimacy.",
+          "journalPrompt": "What would you be more open about if you knew you wouldn't be judged?"
+        }
+      }
+    },
+    {
+      "id": "affirmation_003_q4",
+      "text": "Being vulnerable with my partner brings us closer.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Vulnerability that creates closeness reinforces itself—you take a risk, feel closer, and become more willing to risk again. When vulnerability doesn't lead to closeness, the cycle breaks.",
+          "framework": "eft",
+          "whenDifferent": "If vulnerability doesn't create closeness for one partner, explore what happens instead. Does it create distance? Anxiety? Understanding the pattern helps.",
+          "whenSame": "Shared experience of vulnerability creating closeness is a powerful relationship strength.",
+          "journalPrompt": "Think of a time being vulnerable brought you closer. What made that possible?"
+        }
+      }
+    },
+    {
+      "id": "affirmation_003_q5",
+      "text": "I feel my partner trusts me with their vulnerability too.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Mutual vulnerability creates balance. When only one partner is vulnerable, the relationship can feel one-sided. Sensing your partner's trust to be vulnerable with you is connecting.",
+          "framework": "attachment_theory",
+          "whenDifferent": "If one partner doesn't feel trusted with the other's vulnerability, explore what would help. Some people show vulnerability differently than others expect.",
+          "whenSame": "Mutual trust to be vulnerable with each other creates reciprocal intimacy.",
+          "journalPrompt": "How does your partner show they trust you with their vulnerable side?"
+        }
+      }
+    }
+  ]
+}

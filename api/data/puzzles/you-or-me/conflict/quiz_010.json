@@ -1,0 +1,39 @@
+{
+  "quizId": "quiz_010",
+  "title": "Repair Moves",
+  "branch": "conflict",
+  "questions": [
+    {
+      "id": "quiz_010_q1",
+      "category": "habits",
+      "prompt": "Who is more likely to...",
+      "content": "Make a small gesture to show they care"
+    },
+    {
+      "id": "quiz_010_q2",
+      "category": "preferences",
+      "prompt": "Who would...",
+      "content": "Cook a favorite meal as a peace offering"
+    },
+    {
+      "id": "quiz_010_q3",
+      "category": "personality",
+      "prompt": "Who is more...",
+      "content": "Affectionate when trying to reconnect"
+    },
+    {
+      "id": "quiz_010_q4",
+      "category": "habits",
+      "prompt": "Who would...",
+      "content": "Send a sweet text to break the ice"
+    },
+    {
+      "id": "quiz_010_q5",
+      "category": "preferences",
+      "prompt": "Who is more likely to...",
+      "content": "Acknowledge their part in things"
+    }
+  ],
+  "description": "The little moves that bring you back together—discover your repair styles!",
+  "magnet_id": 15
+}

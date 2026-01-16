@@ -1,0 +1,115 @@
+{
+  "quizId": "affirmation_012",
+  "title": "Fighting Fair",
+  "category": "conflict",
+  "branch": "conflict",
+  "description": "Explore whether conflicts stay within healthy boundaries",
+  "magnet_id": 16,
+  "questions": [
+    {
+      "id": "affirmation_012_q1",
+      "text": "There are unspoken rules about what's off-limits in our arguments.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Healthy couples have implicit or explicit rules about fighting fair—lines that won't be crossed even in anger. These boundaries protect the relationship from conflict damage.",
+          "framework": "gottman",
+          "whenDifferent": "If one partner doesn't sense fair-fighting rules, discuss what should be off-limits. Making boundaries explicit creates shared understanding.",
+          "whenSame": "Shared understanding of boundaries creates safety during conflict.",
+          "journalPrompt": "What's off-limits in your arguments? Are these rules clear to both of you?"
+        }
+      }
+    },
+    {
+      "id": "affirmation_012_q2",
+      "text": "We argue about the issue at hand, not everything at once.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Staying on topic keeps conflicts resolvable. When arguments expand to include every grievance, they become overwhelming and nothing gets resolved.",
+          "framework": "gottman",
+          "whenDifferent": "If conflicts expand beyond the issue, notice when that happens and gently redirect. 'Can we focus on this one thing right now?'",
+          "whenSame": "Mutual ability to stay on topic creates focused, productive conflict.",
+          "journalPrompt": "Do your arguments stay focused or expand? What triggers the expansion?"
+        }
+      }
+    },
+    {
+      "id": "affirmation_012_q3",
+      "text": "Neither of us threatens the relationship during arguments.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Threats to leave or end the relationship create profound insecurity. Using breakup as leverage in arguments damages trust and makes every conflict feel existential.",
+          "framework": "attachment_theory",
+          "whenDifferent": "If relationship threats occur, they need direct attention. This pattern creates trauma and prevents healthy conflict. Committing to stop is essential.",
+          "whenSame": "Mutual commitment to not threatening the relationship creates security.",
+          "journalPrompt": "Has leaving ever been threatened during arguments? What impact has that had?"
+        }
+      }
+    },
+    {
+      "id": "affirmation_012_q4",
+      "text": "Our conflicts don't get physical or include destroying things.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Physical aggression and destruction are never acceptable in conflict. These behaviors indicate need for professional help and create lasting harm.",
+          "framework": "gottman",
+          "whenDifferent": "If physical aggression or destruction occurs, this is a serious concern requiring immediate attention, possibly including professional intervention.",
+          "whenSame": "Shared commitment to non-violent conflict is a fundamental relationship requirement.",
+          "journalPrompt": "Have conflicts ever become physical or destructive? What support might help?"
+        }
+      }
+    },
+    {
+      "id": "affirmation_012_q5",
+      "text": "I feel safe during our arguments, even when they're heated.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Feeling safe during conflict is foundational. When safety is present, disagreements can be productive. When it's absent, survival mode prevents resolution.",
+          "framework": "attachment_theory",
+          "whenDifferent": "If one partner doesn't feel safe, this is priority one. Explore what creates danger—real or perceived—and address it directly.",
+          "whenSame": "Mutual feeling of safety during conflict creates the conditions for resolution.",
+          "journalPrompt": "Do you feel safe during arguments? What would help you feel safer?"
+        }
+      }
+    }
+  ]
+}

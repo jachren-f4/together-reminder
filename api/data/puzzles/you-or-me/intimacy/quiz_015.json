@@ -1,0 +1,39 @@
+{
+  "quizId": "quiz_015",
+  "title": "Deepening Trust",
+  "branch": "intimacy",
+  "questions": [
+    {
+      "id": "quiz_015_q1",
+      "category": "personality",
+      "prompt": "Who feels more comfortable...",
+      "content": "Being completely themselves around the other"
+    },
+    {
+      "id": "quiz_015_q2",
+      "category": "preferences",
+      "prompt": "Who values more...",
+      "content": "Feeling emotionally safe together"
+    },
+    {
+      "id": "quiz_015_q3",
+      "category": "habits",
+      "prompt": "Who is more likely to...",
+      "content": "Share their innermost thoughts"
+    },
+    {
+      "id": "quiz_015_q4",
+      "category": "personality",
+      "prompt": "Who has opened up more...",
+      "content": "Since you've been together"
+    },
+    {
+      "id": "quiz_015_q5",
+      "category": "preferences",
+      "prompt": "Who cherishes more...",
+      "content": "The trust you've built together"
+    }
+  ],
+  "description": "True intimacy is built on trust—explore how you've grown closer!",
+  "magnet_id": 12
+}

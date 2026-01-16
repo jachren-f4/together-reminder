@@ -1,59 +1,111 @@
 {
   "quizId": "quiz_006",
-  "title": "Growth Quiz 6",
+  "title": "Accountability & Encouragement",
   "branch": "growth",
+  "description": "Discover how you help each other stay on track with goals.",
+  "magnet_id": 10,
   "questions": [
     {
       "id": "quiz_006_q1",
-      "text": "What would I do if I knew I couldn't fail?",
+      "text": "When it comes to accountability, I prefer you to...",
       "choices": [
-        "Start my own business or creative venture",
-        "Make a major career change",
-        "Pursue an artistic or athletic goal",
-        "Transform a personal relationship"      ],
-      "category": "growth"
+        "Check in regularly on my progress",
+        "Wait for me to bring it up",
+        "Gently remind me when I'm off track",
+        "Believe in me and let me handle it"
+      ],
+      "category": "accountability_preference",
+      "metadata": {
+        "dimension": "support_style",
+        "poleMapping": ["right", "left", "right", "left"],
+        "therapeutic": {
+          "rationale": "Accountability preferences reflect autonomy needs and support styles. Regular check-ins provide structure; waiting respects initiative; gentle reminders offer guidance; belief provides space. Mismatched accountability can feel like nagging or abandonment.",
+          "framework": "gottman",
+          "whenDifferent": "Different accountability needs require explicit conversation. What feels supportive to one may feel intrusive to another. Ask what actually helps.",
+          "whenSame": "Matched accountability preferences make supporting each other's goals natural and welcomed.",
+          "journalPrompt": "What kind of accountability helps you most? Have you told your partner what you need?"
+        }
+      }
     },
     {
       "id": "quiz_006_q2",
-      "text": "Where do I see myself in 5 years?",
+      "text": "When you're working toward something important, I want to...",
       "choices": [
-        "Advanced in my career",
-        "In a different life stage or location",
-        "Having achieved a personal goal",
-        "More balanced and fulfilled"      ],
-      "category": "growth"
+        "Be your biggest cheerleader",
+        "Help with the practical steps",
+        "Give you space to focus",
+        "Celebrate your progress along the way"
+      ],
+      "category": "support_offering",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "How we want to support reflects our giving style. Cheerleaders offer emotional fuel; helpers offer practical action; space-givers offer respect; celebrators offer acknowledgment. Knowing your partner's preference ensures your support lands.",
+          "framework": "love_languages",
+          "whenDifferent": "Your natural support style may not match what your partner needs. Be flexible and ask what would actually help.",
+          "whenSame": "Matched support offerings and needs create smooth goal-pursuit dynamics.",
+          "journalPrompt": "How do you naturally want to support your partner? Is that what they actually need?"
+        }
+      }
     },
     {
       "id": "quiz_006_q3",
-      "text": "What legacy do I want to leave?",
+      "text": "Encouragement from you means the most when...",
       "choices": [
-        "Professional achievements",
-        "Impact on people I've helped",
-        "Creative works or contributions",
-        "A strong family and relationships"      ],
-      "category": "values"
+        "I'm struggling and need to keep going",
+        "I've achieved something, big or small",
+        "I'm doubting myself",
+        "You notice effort even without results"
+      ],
+      "category": "encouragement_timing",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "When encouragement matters most reveals emotional needs. Struggle-needers want perseverance support; achievement-needers want acknowledgment; doubt-needers want reassurance; effort-noticers want to be seen. Timing matters as much as the words.",
+          "framework": "positive_psychology",
+          "whenDifferent": "Different timing needs mean watching for when your partner needs encouragement most. What helps in struggle may differ from what helps after success.",
+          "whenSame": "Matched timing preferences mean you'll naturally offer encouragement when it's most needed.",
+          "journalPrompt": "When does encouragement mean the most to you? Is your partner aware of this timing?"
+        }
+      }
     },
     {
       "id": "quiz_006_q4",
-      "text": "What passion have I put on hold that I want to revive?",
+      "text": "When I fall short of a goal, I need you to...",
       "choices": [
-        "A creative hobby or art form",
-        "Athletic or fitness pursuit",
-        "Learning or education goal",
-        "Travel or adventure dreams"      ],
-      "category": "growth"
+        "Help me understand what happened",
+        "Remind me it's okay and I can try again",
+        "Give me space to be disappointed",
+        "Focus on what I did accomplish"
+      ],
+      "category": "setback_support",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Setback response needs vary. Understanding-seekers want analysis; try-again types want hope; space-needers want room to process; accomplishment-focusers want perspective. Wrong response to setback can feel invalidating.",
+          "framework": "gottman",
+          "whenDifferent": "Different setback needs require asking what would help, not assuming. The analysis-lover may frustrate the space-needer.",
+          "whenSame": "Matched setback responses create natural support when things don't go as planned.",
+          "journalPrompt": "What do you need from your partner when you fall short of a goal?"
+        }
+      }
     },
     {
       "id": "quiz_006_q5",
-      "text": "What motivates me most to grow and improve?",
+      "text": "I believe the best way to help someone grow is to...",
       "choices": [
-        "Achieving my full potential",
-        "Making you proud",
-        "Creating a better future for us",
-        "Personal satisfaction and fulfillment"      ],
-      "category": "values"
+        "Believe in them more than they believe in themselves",
+        "Be honest even when it's hard",
+        "Create safety for them to take risks",
+        "Walk alongside them on the journey"
+      ],
+      "category": "growth_philosophy",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Growth philosophies shape how we support. Believers offer faith; honest ones offer truth; safety-creators offer security; walkers offer presence. All are valuable approaches to helping someone grow.",
+          "framework": "positive_psychology",
+          "whenDifferent": "Different growth philosophies can complement each other. The believer and the honest one together offer both faith and truth.",
+          "whenSame": "Shared growth philosophy creates aligned approach to supporting each other's development.",
+          "journalPrompt": "How do you believe you can best help your partner grow? Is that what they actually need?"
+        }
+      }
     }
-  ],
-  "description": "Discover how you inspire each other to be better.",
-  "magnet_id": 10
+  ]
 }

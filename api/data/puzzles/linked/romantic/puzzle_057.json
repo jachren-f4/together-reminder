@@ -1,0 +1,70 @@
+{
+  "author": "Crossword Maker GPT",
+  "title": "AI-Built Puzzle",
+  "theme": "kitchen",
+  "size": {
+    "rows": 9,
+    "cols": 7
+  },
+  "clues": {
+    "1": { "type": "text", "content": "O__", "arrow": "down", "target_index": 8 },
+    "2": { "type": "text", "content": "🍚 Grain", "arrow": "down", "target_index": 9 },
+    "3": { "type": "text", "content": "Old you", "arrow": "down", "target_index": 10 },
+    "4": { "type": "text", "content": "Std org", "arrow": "down", "target_index": 11 },
+    "5": { "type": "text", "content": "TV std", "arrow": "down", "target_index": 12 },
+    "6": { "type": "text", "content": "Ball", "arrow": "down", "target_index": 13 },
+    "7": { "type": "text", "content": "🍳 pan", "arrow": "across", "target_index": 8 },
+    "8": { "type": "text", "content": "Party", "arrow": "across", "target_index": 15 },
+    "9": {
+      "across": { "type": "text", "content": "BA_K", "target_index": 23 },
+      "down": { "type": "text", "content": "SHE+AC", "target_index": 29 }
+    },
+    "10": {
+      "across": { "type": "text", "content": "___O", "target_index": 25 },
+      "down": { "type": "text", "content": "A or __", "target_index": 31 }
+    },
+    "11": { "type": "text", "content": "Brine", "arrow": "across", "target_index": 29 },
+    "12": {
+      "across": { "type": "text", "content": "Calif.", "target_index": 33 },
+      "down": { "type": "text", "content": "🔥 Bake", "target_index": 39 }
+    },
+    "13": { "type": "text", "content": "EAC_", "arrow": "across", "target_index": 36 },
+    "14": {
+      "across": { "type": "text", "content": "Veto", "target_index": 38 },
+      "down": { "type": "text", "content": "RE___N", "target_index": 44 }
+    },
+    "15": { "type": "text", "content": "🧊 Cube", "arrow": "down", "target_index": 47 },
+    "16": { "type": "text", "content": "...", "arrow": "down", "target_index": 48 },
+    "17": { "type": "text", "content": "P__CH", "arrow": "across", "target_index": 43 },
+    "18": {
+      "across": { "type": "text", "content": "Compete", "target_index": 46 },
+      "down": { "type": "text", "content": "O__EN", "target_index": 52 }
+    },
+    "19": { "type": "text", "content": "Facet", "arrow": "across", "target_index": 50 },
+    "20": { "type": "text", "content": "______T", "arrow": "across", "target_index": 57 }
+  },
+  "date": "2026-01-13",
+  "grid": [
+    ".", ".", ".", ".", ".", ".", ".",
+    ".", "F", "R", "Y", "I", "N", "G",
+    ".", "F", "I", "E", "S", "T", "A",
+    ".", ".", "C", ".", "O", "S", "L",
+    ".", "S", "E", "A", ".", "C", "A",
+    ".", "H", ".", "N", "O", ".", ".",
+    ".", "E", "A", ".", "V", "I", "E",
+    ".", "A", "S", "P", "E", "C", "T",
+    ".", "C", "O", "N", "N", "E", "C"
+  ],
+  "gridnums": [
+    0, 1, 2, 3, 4, 5, 6,
+    7, 0, 0, 0, 0, 0, 0,
+    8, 0, 0, 0, 0, 0, 0,
+    0, 9, 0, 10, 0, 0, 0,
+    11, 0, 0, 0, 12, 0, 0,
+    13, 0, 14, 0, 0, 15, 16,
+    17, 0, 0, 18, 0, 0, 0,
+    19, 0, 0, 0, 0, 0, 0,
+    20, 0, 0, 0, 0, 0, 0
+  ],
+  "puzzleId": "puzzle_057"
+}

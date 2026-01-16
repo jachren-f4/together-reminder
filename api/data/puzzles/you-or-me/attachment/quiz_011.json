@@ -7,7 +7,7 @@
       "id": "quiz_011_q1",
       "category": "trust",
       "prompt": "Who is more comfortable with...",
-      "content": "Giving the other full access to their phone"
+      "content": "Sharing what's on their mind spontaneously"
     },
     {
       "id": "quiz_011_q2",
@@ -19,7 +19,7 @@
       "id": "quiz_011_q3",
       "category": "conflict",
       "prompt": "Who is more willing to...",
-      "content": "Apologize first after disagreements"
+      "content": "Reach out first to make things right"
     },
     {
       "id": "quiz_011_q4",

@@ -1,64 +1,111 @@
 {
   "quizId": "quiz_003",
-  "title": "Growth Quiz 3",
+  "title": "Overcoming Challenges Together",
   "branch": "growth",
+  "description": "Discover how you face difficulties as a team.",
+  "magnet_id": 9,
   "questions": [
     {
       "id": "quiz_003_q1",
-      "text": "What's holding me back from growing?",
+      "text": "When we face a challenge together, my first instinct is to...",
       "choices": [
-        "Fear of failure",
-        "Not enough time",
-        "Self-doubt",
-        "Unclear direction"
+        "Analyze the situation and make a plan",
+        "Focus on staying calm and grounded",
+        "Talk through it with you right away",
+        "Take action and figure it out as we go"
       ],
-      "category": "growth_barriers"
+      "category": "challenge_response",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Initial responses to challenges reflect problem-solving styles. Analyzers need understanding before action; calmers prioritize emotional regulation; talkers need verbal processing; actors need movement. Knowing your partner's first instinct helps you work together.",
+          "framework": "communication_science",
+          "whenDifferent": "Different first instincts can complement each other. The analyzer can plan while the actor starts executing. The talker can process while the calmer provides stability.",
+          "whenSame": "Shared first instincts create immediate synchrony when challenges arise.",
+          "journalPrompt": "What's your first instinct when facing a challenge? How does it work with your partner's approach?"
+        }
+      }
     },
     {
       "id": "quiz_003_q2",
-      "text": "How do I handle setbacks or failure?",
+      "text": "During tough times, I need you to...",
       "choices": [
-        "I bounce back quickly",
-        "I need time to process",
-        "I get frustrated but push through",
-        "I look for lessons learned"
+        "Be my rock and stay steady",
+        "Problem-solve alongside me",
+        "Just listen and understand",
+        "Remind me we'll get through this"
       ],
-      "category": "setback_response"
+      "category": "support_needs",
+      "metadata": {
+        "dimension": "support_style",
+        "poleMapping": ["left", "right", "left", "right"],
+        "therapeutic": {
+          "rationale": "Support needs during challenges vary. Rock-seekers need stability; problem-solvers need collaboration; listeners need to be heard; reassurance-seekers need hope. Giving the wrong type of support can feel unhelpful despite good intentions.",
+          "framework": "gottman",
+          "whenDifferent": "Different support needs require adaptation. Ask 'What would help you most right now?' rather than assuming what your partner needs.",
+          "whenSame": "Matched support needs make helping each other during tough times intuitive.",
+          "journalPrompt": "What kind of support do you need most during challenges? Have you clearly communicated this?"
+        }
+      }
     },
     {
       "id": "quiz_003_q3",
-      "text": "What would make me feel more fulfilled?",
+      "text": "What I've learned about us from past challenges is...",
       "choices": [
-        "Achieving a big goal",
-        "More meaningful connections",
-        "Better balance in life",
-        "Making a difference"
+        "We're stronger than we realized",
+        "Communication is key for us",
+        "We handle stress differently",
+        "We always find our way back to each other"
       ],
-      "category": "fulfillment"
+      "category": "challenge_learning",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "What couples learn from challenges becomes part of their shared story. Recognizing strength builds confidence; valuing communication reinforces connection; acknowledging differences builds understanding; trusting reconnection builds security.",
+          "framework": "narrative_therapy",
+          "whenDifferent": "Different learnings from challenges are complementary. Both perspectives add richness to your shared narrative.",
+          "whenSame": "Shared learnings from challenges create aligned understanding of what helps you succeed together.",
+          "journalPrompt": "What has facing challenges together taught you about your relationship?"
+        }
+      }
     },
     {
       "id": "quiz_003_q4",
-      "text": "How do I want to grow as a partner?",
+      "text": "After we overcome something difficult, I like to...",
       "choices": [
-        "Be more supportive",
-        "Communicate more openly",
-        "Be more present",
-        "Handle conflict better"
+        "Celebrate and acknowledge our success",
+        "Reflect on what we learned",
+        "Move forward without dwelling",
+        "Feel grateful and closer to you"
       ],
-      "category": "partner_growth"
+      "category": "post_challenge",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "How couples process success after challenges matters. Celebrators need acknowledgment; reflectors need learning; movers need progress; gratitude-feelers need connection. Post-challenge rituals can strengthen the relationship.",
+          "framework": "positive_psychology",
+          "whenDifferent": "Different post-challenge needs may feel mismatched. The reflector may want to process while the mover wants to move on. Make room for both.",
+          "whenSame": "Shared post-challenge preferences create natural closure rituals after difficult times.",
+          "journalPrompt": "How do you like to process success after overcoming something difficult together?"
+        }
+      }
     },
     {
       "id": "quiz_003_q5",
-      "text": "What lesson has love taught me?",
+      "text": "I believe challenges in a relationship...",
       "choices": [
-        "Patience is essential",
-        "Vulnerability is strength",
-        "Communication matters most",
-        "Love is a daily choice"
+        "Can make us stronger if we face them together",
+        "Reveal what really matters to us",
+        "Test our commitment and communication",
+        "Are opportunities for growth"
       ],
-      "category": "love_lessons"
+      "category": "challenge_philosophy",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Beliefs about challenges shape how couples approach difficulties. Growth-oriented beliefs help couples see challenges as opportunities rather than threats. This reframe supports resilience and connection.",
+          "framework": "positive_psychology",
+          "whenDifferent": "All these beliefs support healthy challenge navigation. They're different angles on the same growth-oriented perspective.",
+          "whenSame": "Shared beliefs about challenges create aligned expectations and approach when difficulties arise.",
+          "journalPrompt": "What do you believe about challenges in relationships? How does that belief help you?"
+        }
+      }
     }
-  ],
-  "description": "Learn about supporting each other's growth and dreams.",
-  "magnet_id": 9
+  ]
 }

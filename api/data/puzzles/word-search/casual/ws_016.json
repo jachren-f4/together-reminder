@@ -1,0 +1,24 @@
+{
+  "puzzleId": "ws_016",
+  "title": "Casual XVI",
+  "theme": "casual",
+  "size": {
+    "rows": 10,
+    "cols": 10
+  },
+  "grid": "OSMLWFHNATWRIVERCERPZXJTLLWNEIYUXFOOTINLCEOULBHWTLTIDSRATSROVYNNUFBZAWHKCCWMRQPLYDFGISTILLSWELLPFRMF",
+  "words": {
+    "TEXT": "50,UR",
+    "WINE": "47,U",
+    "PICNIC": "95,UL",
+    "CLOUD": "16,DL",
+    "STILL": "85,R",
+    "STARS": "57,L",
+    "SWELL": "90,R",
+    "FUNNY": "65,L",
+    "RIVER": "11,R",
+    "PILLOW": "19,D",
+    "PARTNER": "78,U",
+    "SLOW": "53,UR"
+  }
+}

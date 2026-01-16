@@ -1,0 +1,39 @@
+{
+  "quizId": "quiz_013",
+  "title": "Lazy Day Vibes",
+  "branch": "lighthearted",
+  "questions": [
+    {
+      "id": "quiz_013_q1",
+      "category": "leisure",
+      "prompt": "Who is more",
+      "content": "Likely to stay in pajamas all day"
+    },
+    {
+      "id": "quiz_013_q2",
+      "category": "habits",
+      "prompt": "Who would",
+      "content": "Rather nap on the couch than in bed"
+    },
+    {
+      "id": "quiz_013_q3",
+      "category": "preferences",
+      "prompt": "Who is more",
+      "content": "Likely to order food instead of cooking on lazy days"
+    },
+    {
+      "id": "quiz_013_q4",
+      "category": "personality",
+      "prompt": "Who would",
+      "content": "Watch the same comfort movie for the 100th time"
+    },
+    {
+      "id": "quiz_013_q5",
+      "category": "leisure",
+      "prompt": "Who is more",
+      "content": "Likely to lose track of time scrolling their phone"
+    }
+  ],
+  "description": "When it's time to do nothing, how do you each unwind?",
+  "magnet_id": 1
+}

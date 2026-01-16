@@ -1,0 +1,109 @@
+{
+  "quizId": "quiz_013",
+  "title": "Earning Differences",
+  "branch": "finances",
+  "description": "Explore how earning differences affect your relationship dynamic.",
+  "magnet_id": 17,
+  "questions": [
+    {
+      "id": "quiz_013_q1",
+      "text": "When it comes to who earns more in a relationship, I believe...",
+      "choices": [
+        "It doesn't matter—we're a team",
+        "It can create power dynamics to watch",
+        "Whoever earns more may feel more pressure",
+        "It naturally affects how we split things"
+      ],
+      "category": "earning_dynamics",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Beliefs about earning differences reveal values about equality, power, and partnership. Team-viewers minimize difference; power-watchers see dynamics; pressure-seers empathize with earners; splitters see practical implications. These beliefs shape how you navigate differences.",
+          "framework": "financial_therapy",
+          "whenDifferent": "Different beliefs may surface if earning gaps grow. The team-viewer may not see the power-watcher's concerns; the splitter may seem transactional to the team-viewer. Name your beliefs before they become issues.",
+          "whenSame": "Shared beliefs about earning differences mean you'll navigate them similarly.",
+          "journalPrompt": "How do you feel about earning differences in relationships? Has that affected a relationship before?"
+        }
+      }
+    },
+    {
+      "id": "quiz_013_q2",
+      "text": "If one of us earns significantly more, I'd want that person to...",
+      "choices": [
+        "Contribute more to shared expenses",
+        "Treat us both to nice things",
+        "Not feel responsible for carrying more",
+        "Decide together how to handle it"
+      ],
+      "category": "earning_dynamics",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Expectations of higher earners reveal fairness values. Proportional-contributors see fairness in ratios; treaters see generosity; burden-relievers see emotional cost; discussers want partnership. Unspoken expectations cause resentment.",
+          "framework": "financial_therapy",
+          "whenDifferent": "Different expectations may clash if income gaps exist or grow. The proportional-contributor may feel the burden-reliever doesn't contribute enough; the burden-reliever may feel pressured. Talk about it explicitly.",
+          "whenSame": "Shared expectations make navigating income differences easier. You agree on what's fair.",
+          "journalPrompt": "If you earned significantly more than your partner, how would you want to handle it? What if they earned more?"
+        }
+      }
+    },
+    {
+      "id": "quiz_013_q3",
+      "text": "If one of us took time off work (for any reason), I'd feel...",
+      "choices": [
+        "Supportive—we make decisions together",
+        "Concerned about the financial impact",
+        "Depends on the reason and our situation",
+        "Like we'd need to plan carefully first"
+      ],
+      "category": "earning_dynamics",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Reactions to work breaks reveal values about partnership, security, and roles. Supportive types prioritize partnership; concerned types prioritize security; contextual types evaluate; planners need preparation. These reactions surface during career transitions.",
+          "framework": "gottman",
+          "whenDifferent": "The supportive partner may feel the concerned partner is unsupportive; the concerned partner may feel the supportive partner is unrealistic. Both care—just about different things.",
+          "whenSame": "Shared reactions mean you'll navigate career changes similarly.",
+          "journalPrompt": "How would you feel if your partner wanted to take time off work? What would you need to feel okay about it?"
+        }
+      }
+    },
+    {
+      "id": "quiz_013_q4",
+      "text": "My feelings about my own earning power are...",
+      "choices": [
+        "Confident—I feel good about my contribution",
+        "Working on it—I want to earn more",
+        "Complicated—it affects how I feel about myself",
+        "Not central to my identity"
+      ],
+      "category": "earning_identity",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Earning identity affects self-worth and relationship dynamics. Confident types are secure; working-on-it types have goals; complicated types have identity tied to income; non-central types find worth elsewhere. Partners' earning identities interact.",
+          "framework": "financial_therapy",
+          "whenDifferent": "Different earning identities may create misunderstanding. The confident partner may not see the complicated partner's struggle; the non-central partner may not understand why it matters so much.",
+          "whenSame": "Shared earning identity means you understand each other's relationship with work and income.",
+          "journalPrompt": "How does your earning power affect how you feel about yourself? Is that healthy?"
+        }
+      }
+    },
+    {
+      "id": "quiz_013_q5",
+      "text": "The conversation I'd want us to have about earning is...",
+      "choices": [
+        "How to support each other's career growth",
+        "How earnings affect our dynamic, honestly",
+        "How to make sure neither feels lesser",
+        "Our goals and how earnings help us get there"
+      ],
+      "category": "earning_dynamics",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Desired conversations reveal priorities. Career-supporters want mutual growth; dynamic-explorers want honesty; equality-guarders want emotional safety; goal-focusers want alignment. All conversations are valuable.",
+          "framework": "gottman",
+          "whenDifferent": "Different conversation priorities reveal different concerns. Make room for all of them—they're all important.",
+          "whenSame": "Shared conversation priority focuses your earning discussions.",
+          "journalPrompt": "What would you most want your partner to understand about your relationship with earning?"
+        }
+      }
+    }
+  ]
+}

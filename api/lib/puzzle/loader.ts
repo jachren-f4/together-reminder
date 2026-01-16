@@ -39,8 +39,8 @@ const PUZZLE_CONFIG: Record<PuzzleType, BranchConfig> = {
   wordSearch: {
     activityType: 'wordSearch',
     folder: 'word-search',
-    branches: ['everyday', 'passionate', 'naughty'],
-    defaultBranch: 'everyday',
+    branches: ['casual', 'everyday', 'romantic', 'passionate', 'naughty'],
+    defaultBranch: 'casual',
     orderFile: 'puzzle-order.json',
   },
 };

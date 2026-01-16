@@ -1,0 +1,113 @@
+{
+  "quizId": "quiz_009",
+  "title": "Risk & Security",
+  "branch": "finances",
+  "description": "Explore your comfort with financial risk and what security means to you.",
+  "magnet_id": 16,
+  "questions": [
+    {
+      "id": "quiz_009_q1",
+      "text": "When it comes to financial risk, I'm generally...",
+      "choices": [
+        "Conservative—I prefer safe and steady",
+        "Moderate—calculated risks are okay",
+        "Comfortable—risk is part of growth",
+        "It depends on what's at stake"
+      ],
+      "category": "financial_risk",
+      "metadata": {
+        "dimension": "risk_adventure",
+        "poleMapping": ["left", "neutral", "right", "neutral"],
+        "therapeutic": {
+          "rationale": "Risk tolerance is partly temperamental, partly learned. Conservative types prioritize safety; moderate types balance; comfortable types embrace uncertainty. Partners with different risk tolerances often clash on investments, career moves, and major decisions.",
+          "framework": "financial_therapy",
+          "whenDifferent": "The conservative partner may feel the risk-taker is reckless; the risk-taker may feel the conservative partner holds them back. Neither is wrong—you need to find your shared comfort zone.",
+          "whenSame": "Shared risk tolerance makes financial decisions easier. You naturally agree on how much uncertainty is acceptable.",
+          "journalPrompt": "What's shaped your relationship with financial risk? A good experience? A bad one? Your family?"
+        }
+      }
+    },
+    {
+      "id": "quiz_009_q2",
+      "text": "Financial security to me means...",
+      "choices": [
+        "Having enough saved for any emergency",
+        "Knowing our basic needs are always covered",
+        "Freedom to make choices without money stress",
+        "Not having to worry about money day-to-day"
+      ],
+      "category": "financial_security",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Security means different things to different people. Emergency-focusers need a cushion; basics-focusers need stability; choice-focusers need freedom; worry-free focusers need peace. Knowing your partner's definition helps you build toward it.",
+          "framework": "financial_therapy",
+          "whenDifferent": "Different security definitions may mean different targets. The emergency-focuser may save more than the worry-free focuser thinks necessary. Understand each other's 'enough.'",
+          "whenSame": "Shared security definition aligns your goals. You're working toward the same feeling of safety.",
+          "journalPrompt": "What would make you feel financially secure? Be specific. Is that achievable?"
+        }
+      }
+    },
+    {
+      "id": "quiz_009_q3",
+      "text": "When considering a financial opportunity with some risk, I want to...",
+      "choices": [
+        "Research thoroughly before deciding",
+        "Trust my gut if it feels right",
+        "Talk it through with my partner first",
+        "Err on the side of caution"
+      ],
+      "category": "financial_decisions",
+      "metadata": {
+        "dimension": "planning_style",
+        "poleMapping": ["right", "left", "right", "right"],
+        "therapeutic": {
+          "rationale": "How you approach risky opportunities reveals your decision-making style. Researchers want data; gut-trusters want intuition; talkers want partnership; caution-errers want safety. These styles interact in couples.",
+          "framework": "gottman",
+          "whenDifferent": "Different approaches may clash when opportunities arise. The gut-truster may feel the researcher is slow; the caution-errer may feel the gut-truster is impulsive. Honor both inputs.",
+          "whenSame": "Shared approach makes evaluating opportunities easier. You'll naturally move at the same pace.",
+          "journalPrompt": "Think of a financial risk you took (or didn't). How did you decide? What would you do differently?"
+        }
+      }
+    },
+    {
+      "id": "quiz_009_q4",
+      "text": "If one of us wanted to take a big financial risk, I'd want us to...",
+      "choices": [
+        "Discuss it fully and both be on board",
+        "Support each other even if we're unsure",
+        "Make sure it doesn't jeopardize our security",
+        "Have a backup plan before proceeding"
+      ],
+      "category": "financial_decisions",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "How couples handle one person's risk-taking reveals trust and boundaries. Full-discussers need consensus; supporters prioritize partnership; security-guarders prioritize safety; planners need contingencies. All are valid.",
+          "framework": "gottman",
+          "whenDifferent": "Different approaches may create tension when risks arise. The supporter may feel the discusser is unsupportive; the security-guarder may feel the supporter is careless. Find your shared approach before crisis.",
+          "whenSame": "Shared approach means you'll handle risk-taking the same way. This alignment helps during uncertain decisions.",
+          "journalPrompt": "How would you feel if your partner wanted to take a big financial risk? What would you need to feel okay?"
+        }
+      }
+    },
+    {
+      "id": "quiz_009_q5",
+      "text": "The role of financial safety nets (savings, insurance, etc.) in our life should be...",
+      "choices": [
+        "A top priority—we build these first",
+        "Important but balanced with living life now",
+        "There when needed, not obsessed over",
+        "Discussed together based on our situation"
+      ],
+      "category": "financial_security",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Safety net philosophy reveals anxiety levels and values. Prioritizers need security first; balancers want both safety and enjoyment; light-touchers trust things will work out; discussers want alignment. These values shape major decisions.",
+          "framework": "financial_therapy",
+          "whenDifferent": "The prioritizer may feel the light-toucher is irresponsible; the light-toucher may feel the prioritizer is fear-driven. Both perspectives have wisdom—find your balance.",
+          "whenSame": "Shared philosophy makes planning easier. You agree on how important safety nets are.",
+          "journalPrompt": "How much in savings would make you sleep well at night? What's driving that number?"
+        }
+      }
+    }
+  ]
+}

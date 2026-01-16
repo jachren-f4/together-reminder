@@ -1,0 +1,111 @@
+{
+  "quizId": "quiz_011",
+  "title": "Post-Conflict Reconnection",
+  "branch": "conflict",
+  "description": "Explore how you reconnect and heal after disagreements.",
+  "magnet_id": 17,
+  "questions": [
+    {
+      "id": "quiz_011_q1",
+      "text": "After a conflict is resolved, I need...",
+      "choices": [
+        "Physical reconnection—a hug or closeness",
+        "Verbal reassurance that we're okay",
+        "Some time before I feel fully normal",
+        "To just move on and get back to regular life"
+      ],
+      "category": "reconnection_needs",
+      "metadata": {
+        "dimension": "support_style",
+        "poleMapping": ["right", "right", "left", "left"],
+        "therapeutic": {
+          "rationale": "Post-conflict reconnection needs vary. Physical-connectors need touch; verbal-reassurance seekers need words; time-needers process slowly; movers-on want normalcy. Mismatched needs delay healing.",
+          "framework": "attachment_theory",
+          "whenDifferent": "The physical-connector may feel rejected by the time-needer; the mover-on may feel the verbal-reassurer is dwelling. Share and honor each other's needs.",
+          "whenSame": "Shared reconnection needs make post-conflict recovery seamless.",
+          "journalPrompt": "What do you need after a conflict to feel reconnected? Are you getting it?"
+        }
+      }
+    },
+    {
+      "id": "quiz_011_q2",
+      "text": "The time it takes me to fully recover from conflict is usually...",
+      "choices": [
+        "Quick—I bounce back fast once it's resolved",
+        "A few hours to settle back to normal",
+        "A day or more depending on the conflict",
+        "Varies a lot based on what happened"
+      ],
+      "category": "recovery_time",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Recovery time varies by person and conflict. Quick-recoverers process fast; hours-needers take moderate time; day-plus needers process slow; variable types depend on severity. Expecting your partner to match your pace causes frustration.",
+          "framework": "gottman",
+          "whenDifferent": "The quick-recoverer may feel their slow partner holds grudges; the slow-recoverer may feel rushed. Honor each other's pace.",
+          "whenSame": "Matched recovery time creates aligned expectations about post-conflict normalcy.",
+          "journalPrompt": "How long does it take you to fully recover from conflict? Is that okay with your partner?"
+        }
+      }
+    },
+    {
+      "id": "quiz_011_q3",
+      "text": "Something that helps me reconnect after conflict is...",
+      "choices": [
+        "Doing something normal together",
+        "Talking about what happened and what we learned",
+        "Affection and physical closeness",
+        "Hearing that my partner still loves me"
+      ],
+      "category": "reconnection_methods",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Reconnection methods vary. Normal-activity returners want routine; talkers want processing; affection-seekers want touch; love-affirmation seekers want words. Knowing what works for your partner helps you reconnect effectively.",
+          "framework": "love_languages",
+          "whenDifferent": "Different methods may miss each other. The talker may not realize their partner is reconnecting through activity; the affection-seeker may not realize their partner is reconnecting through words.",
+          "whenSame": "Shared reconnection methods make post-conflict healing natural.",
+          "journalPrompt": "What helps you feel reconnected after a conflict? Have you told your partner?"
+        }
+      }
+    },
+    {
+      "id": "quiz_011_q4",
+      "text": "After conflict, I sometimes struggle with...",
+      "choices": [
+        "Lingering hurt even after resolution",
+        "Anxiety that it might happen again",
+        "Feeling emotionally drained",
+        "I usually recover without struggle"
+      ],
+      "category": "recovery_challenges",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Post-conflict struggles reveal vulnerabilities. Lingering-hurt types need more healing time; anxiety types need reassurance; drained types need rest; easy-recoverers have resilience. Naming struggles helps partners support recovery.",
+          "framework": "attachment_theory",
+          "whenDifferent": "Different struggles need different support. The lingering-hurt partner may need more processing; the anxious partner may need more reassurance.",
+          "whenSame": "Shared struggles create mutual understanding about post-conflict challenges.",
+          "journalPrompt": "What do you struggle with after conflict? What would help?"
+        }
+      }
+    },
+    {
+      "id": "quiz_011_q5",
+      "text": "I know we've truly reconnected after conflict when...",
+      "choices": [
+        "We can laugh together again",
+        "Physical affection feels natural again",
+        "We're talking normally without tension",
+        "I feel emotionally safe with them again"
+      ],
+      "category": "reconnection_signs",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Reconnection indicators vary. Laughter-indicators notice humor return; affection-indicators notice touch ease; conversation-indicators notice normal talk; safety-feelers notice emotional security. Knowing your indicator helps you recognize reconnection.",
+          "framework": "gottman",
+          "whenDifferent": "Different indicators may mean different timelines. One partner may feel reconnected before the other. Check in rather than assume.",
+          "whenSame": "Shared indicators mean you'll recognize reconnection at the same time.",
+          "journalPrompt": "How do you know when you've truly reconnected after a conflict?"
+        }
+      }
+    }
+  ]
+}

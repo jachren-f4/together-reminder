@@ -1,0 +1,113 @@
+{
+  "quizId": "quiz_006",
+  "title": "Comfort & Exploration",
+  "branch": "intimacy",
+  "description": "Explore your openness to trying new things in your intimate life.",
+  "magnet_id": 16,
+  "questions": [
+    {
+      "id": "quiz_006_q1",
+      "text": "When it comes to trying new things intimately, I'm generally...",
+      "choices": [
+        "Open and curious—I enjoy exploring",
+        "Selectively open—some things interest me",
+        "Comfortable with familiar patterns",
+        "Cautious—I need to feel very safe first"
+      ],
+      "category": "exploration_openness",
+      "metadata": {
+        "dimension": "novelty_preference",
+        "poleMapping": ["right", "neutral", "left", "left"],
+        "therapeutic": {
+          "rationale": "Exploration openness varies by person. Open-explorers enjoy novelty; selective types are discerning; familiar-pattern types prefer routine; cautious types need high safety. Neither is right or wrong—it's personal.",
+          "framework": "gottman",
+          "whenDifferent": "The explorer may feel the cautious partner is closed; the cautious partner may feel pressured. Create safety first, then explore at the pace of the more cautious partner.",
+          "whenSame": "Shared exploration openness makes navigating novelty easier. You'll naturally want similar levels of variety.",
+          "journalPrompt": "How do you feel about trying new things intimately? What makes you open or hesitant?"
+        }
+      }
+    },
+    {
+      "id": "quiz_006_q2",
+      "text": "My comfort zone in intimacy is something I'd like to...",
+      "choices": [
+        "Gently expand over time",
+        "Keep mostly as it is",
+        "Explore more actively",
+        "Think about and discuss first"
+      ],
+      "category": "exploration_goals",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Comfort zone goals reveal growth orientation. Gentle-expanders want slow growth; keepers are content; active-explorers want more novelty; thinkers want planning first. Partners may have different growth goals.",
+          "framework": "positive_psychology",
+          "whenDifferent": "Different comfort zone goals need navigation. The active-explorer may frustrate the keeper; the keeper may bore the explorer. Find growth that feels safe for both.",
+          "whenSame": "Shared comfort zone goals align your intimate growth. You're aiming for the same trajectory.",
+          "journalPrompt": "What's your relationship with your comfort zone? Do you want to expand it or protect it?"
+        }
+      }
+    },
+    {
+      "id": "quiz_006_q3",
+      "text": "If my partner suggested something outside my comfort zone, I'd want to...",
+      "choices": [
+        "Hear them out with an open mind",
+        "Take time to think about it",
+        "Understand why it appeals to them",
+        "Be honest about my limits without shame"
+      ],
+      "category": "exploration_response",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "How we receive stretch requests affects safety. Open-minders create possibility; time-takers process carefully; understanding-seekers connect; limit-setters maintain boundaries. All responses can be healthy.",
+          "framework": "gottman",
+          "whenDifferent": "All these responses are healthy. The key is that both partners feel safe making requests and safe declining them.",
+          "whenSame": "Shared response approach creates predictability when stretch requests happen.",
+          "journalPrompt": "How do you respond when asked to try something new? What do you need to feel safe?"
+        }
+      }
+    },
+    {
+      "id": "quiz_006_q4",
+      "text": "The balance between routine and novelty I prefer in intimacy is...",
+      "choices": [
+        "Mostly routine with occasional surprises",
+        "Regular variety and experimentation",
+        "Depends on the season of life",
+        "Deep connection matters more than variety"
+      ],
+      "category": "exploration_balance",
+      "metadata": {
+        "dimension": "novelty_preference",
+        "poleMapping": ["left", "right", "neutral", "left"],
+        "therapeutic": {
+          "rationale": "Routine-novelty balance is deeply personal. Routine-preferers find security in patterns; variety-seekers need stimulation; flexible types adapt; connection-focusers prioritize depth over breadth.",
+          "framework": "gottman",
+          "whenDifferent": "The variety-seeker may feel bored; the routine-preferer may feel pressured. Find your sustainable balance.",
+          "whenSame": "Shared balance preference makes planning your intimate life easier. You naturally want similar patterns.",
+          "journalPrompt": "What balance of routine and novelty feels right to you? What does that look like?"
+        }
+      }
+    },
+    {
+      "id": "quiz_006_q5",
+      "text": "When we try something new and it doesn't work, I'd want us to...",
+      "choices": [
+        "Laugh it off—it's part of exploring",
+        "Talk about what didn't work",
+        "Move on without dwelling",
+        "Appreciate that we tried together"
+      ],
+      "category": "exploration_mindset",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Failure response affects willingness to explore. Laughers reduce pressure; talkers process; movers-on let it go; appreciators focus on attempt. How you handle awkwardness determines whether you'll try again.",
+          "framework": "gottman",
+          "whenDifferent": "Different responses can complement each other. The key is avoiding shame or blame when experiments don't work.",
+          "whenSame": "Shared failure response creates safety for experimentation. You'll handle awkward moments similarly.",
+          "journalPrompt": "How do you handle it when something intimate doesn't go well? What response from your partner would help?"
+        }
+      }
+    }
+  ]
+}

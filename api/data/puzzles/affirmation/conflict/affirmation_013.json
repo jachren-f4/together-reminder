@@ -1,0 +1,115 @@
+{
+  "quizId": "affirmation_013",
+  "title": "Emotional Safety in Conflict",
+  "category": "conflict",
+  "branch": "conflict",
+  "description": "Explore how emotionally safe you feel during disagreements",
+  "magnet_id": 16,
+  "questions": [
+    {
+      "id": "affirmation_013_q1",
+      "text": "I can show my emotions during conflict without being dismissed.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Emotions during conflict are information, not obstacles. When partners can express emotions without dismissal—'you're overreacting'—they feel validated and heard.",
+          "framework": "eft",
+          "whenDifferent": "If emotions are dismissed, explore what happens for each partner when feelings arise. Understanding each person's relationship with emotions helps.",
+          "whenSame": "Mutual acceptance of emotions during conflict creates space for authentic expression.",
+          "journalPrompt": "How are your emotions received during conflict? Do you feel dismissed or validated?"
+        }
+      }
+    },
+    {
+      "id": "affirmation_013_q2",
+      "text": "My emotions feel safe, not weaponized, in our conflicts.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Using emotions against someone—'see, you're too sensitive' or 'you always get emotional'—weaponizes vulnerability. It shuts down authentic expression.",
+          "framework": "attachment_theory",
+          "whenDifferent": "If emotions are weaponized, this pattern needs direct attention. It creates emotional unsafety that prevents real connection.",
+          "whenSame": "Mutual respect for emotions during conflict creates trust to be authentic.",
+          "journalPrompt": "Have your emotions ever been used against you? What was the impact?"
+        }
+      }
+    },
+    {
+      "id": "affirmation_013_q3",
+      "text": "I feel comfortable being vulnerable during disagreements.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Vulnerability during conflict—admitting fear, hurt, or uncertainty—often leads to resolution. Without safety for vulnerability, conflicts stay on the surface.",
+          "framework": "eft",
+          "whenDifferent": "If vulnerability doesn't feel safe during conflict, explore what would create safety. Sometimes explicit reassurance helps.",
+          "whenSame": "Mutual comfort with vulnerability during conflict enables deeper resolution.",
+          "journalPrompt": "Can you be vulnerable during disagreements? What helps or hinders that?"
+        }
+      }
+    },
+    {
+      "id": "affirmation_013_q4",
+      "text": "I feel my emotions are received, not just my words.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Responding to feelings beneath words shows emotional attunement. When partners only respond to content—missing the emotion—conversations don't reach the real issue.",
+          "framework": "eft",
+          "whenDifferent": "If feelings aren't responded to, the responding partner may need help noticing emotions. 'It sounds like you're feeling...' is a learnable skill.",
+          "whenSame": "Mutual attunement to feelings beneath words creates deep understanding.",
+          "journalPrompt": "Does your partner respond to how you feel or just what you say?"
+        }
+      }
+    },
+    {
+      "id": "affirmation_013_q5",
+      "text": "After conflict, I still feel emotionally safe with my partner.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Healthy conflict doesn't leave lasting emotional damage. If safety is compromised after disagreements, something in the conflict pattern is causing harm.",
+          "framework": "attachment_theory",
+          "whenDifferent": "If emotional safety is damaged by conflict, explore what's causing the harm. Specific words? Behaviors? Understanding the damage helps prevent it.",
+          "whenSame": "Mutual preservation of emotional safety through conflict indicates healthy patterns.",
+          "journalPrompt": "How do you feel emotionally after conflicts? Safe or shaken?"
+        }
+      }
+    }
+  ]
+}

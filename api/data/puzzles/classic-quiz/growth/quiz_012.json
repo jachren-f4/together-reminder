@@ -1,59 +1,109 @@
 {
   "quizId": "quiz_012",
-  "title": "Growth Quiz 12",
+  "title": "Shared Values",
   "branch": "growth",
+  "description": "Discover the values that guide you both and how they shape your relationship.",
+  "magnet_id": 11,
   "questions": [
     {
       "id": "quiz_012_q1",
-      "text": "What does my ideal future with you look like?",
+      "text": "The value that matters most to me in our relationship is...",
       "choices": [
-        "Stable, comfortable life together",
-        "Adventurous and full of experiences",
-        "Focused on family and community",
-        "Balanced between stability and growth"      ],
-      "category": "values"
+        "Honesty and trust",
+        "Respect and kindness",
+        "Growth and support",
+        "Love and connection"
+      ],
+      "category": "core_relationship_value",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Core relationship values reveal what we consider non-negotiable. Honesty-valuers prioritize truth; respect-valuers prioritize dignity; growth-valuers prioritize development; love-valuers prioritize connection. Aligned values predict relationship success.",
+          "framework": "gottman",
+          "whenDifferent": "All these values are essential to healthy relationships. Different priorities can coexist when all are present.",
+          "whenSame": "Shared core values create strong foundation and mutual understanding of what matters most.",
+          "journalPrompt": "What value matters most to you in your relationship? Does your partner know this?"
+        }
+      }
     },
     {
       "id": "quiz_012_q2",
-      "text": "What tradition or ritual do I want us to create together?",
+      "text": "A value I see us living out together is...",
       "choices": [
-        "Regular date nights or quality time",
-        "Annual trips or adventures",
-        "Daily connection rituals",
-        "Special ways to celebrate milestones"      ],
-      "category": "values"
+        "Making each other a priority",
+        "Supporting each other's growth",
+        "Treating each other with respect",
+        "Being honest even when it's hard"
+      ],
+      "category": "lived_values",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Recognizing lived values strengthens them. Priority-making shows investment; growth-supporting shows encouragement; respect-showing shows dignity; honesty-practicing shows truth. Naming what you do well reinforces it.",
+          "framework": "positive_psychology",
+          "whenDifferent": "Different observations about your lived values are both true. You may notice different strengths.",
+          "whenSame": "Shared recognition of lived values creates mutual appreciation for what you do well together.",
+          "journalPrompt": "What values do you see yourselves living out as a couple? What makes you proud?"
+        }
+      }
     },
     {
       "id": "quiz_012_q3",
-      "text": "What's the most important value I want us to share?",
+      "text": "A value I'd like us to strengthen together is...",
       "choices": [
-        "Commitment and loyalty",
-        "Growth and self-improvement",
-        "Adventure and spontaneity",
-        "Family and community"      ],
-      "category": "values"
+        "Intentional quality time",
+        "Better communication",
+        "More patience with each other",
+        "Deeper appreciation and gratitude"
+      ],
+      "category": "values_to_grow",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Values we want to strengthen reveal growth areas. Time-seeking shows presence needs; communication-building shows connection needs; patience-growing shows acceptance needs; appreciation-deepening shows gratitude needs. Naming desires enables change.",
+          "framework": "gottman",
+          "whenDifferent": "Different growth areas are both valid. You can work on multiple values simultaneously.",
+          "whenSame": "Shared growth priorities create clear direction for strengthening your relationship.",
+          "journalPrompt": "What value would you like to strengthen in your relationship? What would that look like?"
+        }
+      }
     },
     {
       "id": "quiz_012_q4",
-      "text": "How do I envision us handling future challenges?",
+      "text": "When our values conflict, I believe we should...",
       "choices": [
-        "With open communication",
-        "As a unified team",
-        "Supporting each other's individual approaches",
-        "With flexibility and adaptation"      ],
-      "category": "growth"
+        "Talk through it until we understand each other",
+        "Find a compromise that honors both",
+        "Take time to reflect before deciding",
+        "Trust that we'll figure it out together"
+      ],
+      "category": "value_conflict",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Value conflict approaches reveal processing styles. Talkers need verbal resolution; compromisers need mutual honoring; reflectors need processing time; trusters need faith in the process. Aligned approaches smooth value conflicts.",
+          "framework": "gottman",
+          "whenDifferent": "Different conflict approaches require flexibility. The talker and reflector may need to blend their styles.",
+          "whenSame": "Matched conflict approaches create smoother navigation of value differences.",
+          "journalPrompt": "How do you prefer to handle it when your values conflict? Is that working?"
+        }
+      }
     },
     {
       "id": "quiz_012_q5",
-      "text": "What legacy do I want us to build together?",
+      "text": "I believe shared values in a relationship...",
       "choices": [
-        "A strong family",
-        "Impact on our community",
-        "Memories and experiences",
-        "A life well-lived with no regrets"      ],
-      "category": "values"
+        "Are essential for long-term success",
+        "Can be developed and grown together",
+        "Matter less than how we handle differences",
+        "Provide a foundation while we each stay individuals"
+      ],
+      "category": "value_philosophy",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Beliefs about shared values shape expectations. Essential-believers need alignment; developers see growth; difference-handlers focus on process; foundation-builders balance shared and individual. All are healthy perspectives.",
+          "framework": "positive_psychology",
+          "whenDifferent": "Different beliefs about values can coexist. What matters is ongoing conversation about what matters.",
+          "whenSame": "Shared philosophy about values creates aligned expectations for how values fit in your relationship.",
+          "journalPrompt": "What role do shared values play in your relationship? Are you aligned on what matters most?"
+        }
+      }
     }
-  ],
-  "description": "Discover the ways you evolve as individuals and partners.",
-  "magnet_id": 11
+  ]
 }

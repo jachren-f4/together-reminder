@@ -1,0 +1,115 @@
+{
+  "quizId": "affirmation_003",
+  "title": "Spending Alignment",
+  "category": "finances",
+  "branch": "finances",
+  "description": "Assess how aligned you feel about spending priorities",
+  "magnet_id": 15,
+  "questions": [
+    {
+      "id": "affirmation_003_q1",
+      "text": "I feel my partner and I have compatible views on what's worth spending money on.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Compatibility in spending priorities reduces future conflict. Even before merging finances, you can observe what your partner values enough to spend on—and whether that aligns with your values.",
+          "framework": "financial_therapy",
+          "whenDifferent": "A perceived gap in spending compatibility deserves discussion. Often couples discover more alignment than expected once they understand each other's reasoning.",
+          "whenSame": "Shared sense of spending compatibility creates confidence about your financial future together.",
+          "journalPrompt": "What does your partner spend on that you admire? What concerns you?"
+        }
+      }
+    },
+    {
+      "id": "affirmation_003_q2",
+      "text": "I respect how my partner chooses to spend their money.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Respect for your partner's spending choices—even when different from yours—reflects acceptance. Judgment about spending often becomes control or conflict later.",
+          "framework": "gottman",
+          "whenDifferent": "If one partner feels less respected for their spending, explore what's driving the judgment. Understanding the 'why' behind spending often builds respect.",
+          "whenSame": "Mutual respect for each other's spending choices creates space for individuality within partnership.",
+          "journalPrompt": "Is there something your partner spends on that you struggle to respect? What would help?"
+        }
+      }
+    },
+    {
+      "id": "affirmation_003_q3",
+      "text": "I believe we could agree on big purchases together.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Confidence in making big decisions together reflects trust in your partnership. Even before facing major purchases, this belief shapes how you approach financial planning.",
+          "framework": "positive_psychology",
+          "whenDifferent": "Different confidence levels may reflect different decision-making styles. Discuss how you'd approach a big purchase to build shared confidence.",
+          "whenSame": "Shared confidence in making big decisions together is a foundation for future financial partnership.",
+          "journalPrompt": "How would you approach a major purchase decision together? What might be challenging?"
+        }
+      }
+    },
+    {
+      "id": "affirmation_003_q4",
+      "text": "I don't feel judged by my partner for my spending choices.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Feeling judged for spending creates shame and secrecy. Partners who feel accepted spend more openly and honestly, even when their choices differ.",
+          "framework": "attachment_theory",
+          "whenDifferent": "If one partner feels judged, the other may not realize how their comments land. Discuss what creates the sense of judgment.",
+          "whenSame": "Mutual freedom from judgment creates an environment where you can be honest about money.",
+          "journalPrompt": "Do you ever hide spending from your partner? What drives that?"
+        }
+      }
+    },
+    {
+      "id": "affirmation_003_q5",
+      "text": "I feel we balance enjoying money now with being responsible for the future.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "The tension between present enjoyment and future security is universal. Feeling balanced here suggests you've found—or believe you can find—a middle ground that works for both.",
+          "framework": "financial_therapy",
+          "whenDifferent": "Different perceptions of balance often reflect different risk tolerances or life experiences. Explore what 'balanced' means to each of you.",
+          "whenSame": "Shared sense of balance creates alignment on how to approach spending and saving.",
+          "journalPrompt": "Do you lean more toward enjoying now or saving for later? Does your partner know this about you?"
+        }
+      }
+    }
+  ]
+}

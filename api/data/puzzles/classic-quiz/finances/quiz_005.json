@@ -1,0 +1,113 @@
+{
+  "quizId": "quiz_005",
+  "title": "Big Purchase Decisions",
+  "branch": "finances",
+  "description": "Explore how you approach major financial decisions together.",
+  "magnet_id": 15,
+  "questions": [
+    {
+      "id": "quiz_005_q1",
+      "text": "Before a big purchase, I need to...",
+      "choices": [
+        "Research extensively and compare options",
+        "Talk it through and get a gut feeling",
+        "Sleep on it for a while",
+        "Know we can afford it comfortably"
+      ],
+      "category": "financial_decisions",
+      "metadata": {
+        "dimension": "planning_style",
+        "poleMapping": ["right", "left", "right", "right"],
+        "therapeutic": {
+          "rationale": "Decision-making processes vary—some need data, others need discussion, others need time, others need certainty. Knowing your partner's process helps you support rather than rush or frustrate them.",
+          "framework": "gottman",
+          "whenDifferent": "The researcher may feel the gut-feeler is impulsive; the gut-feeler may feel the researcher is overthinking. Both are trying to make a good decision—just differently.",
+          "whenSame": "Shared decision processes make big purchases smoother. You'll naturally move at the same pace.",
+          "journalPrompt": "Think of a big purchase you're proud of. What made you feel ready to decide?"
+        }
+      }
+    },
+    {
+      "id": "quiz_005_q2",
+      "text": "When it comes to 'how much is too much,' I tend to...",
+      "choices": [
+        "Have a firm number in mind and stick to it",
+        "Be flexible if something is really worth it",
+        "Focus on value, not just price",
+        "Feel uncomfortable spending a lot regardless"
+      ],
+      "category": "financial_values",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Spending thresholds reveal risk tolerance and values. Some are firm on budgets; others flex for quality; some focus on ROI; some are uncomfortable with big spending period. These orientations shape every major purchase.",
+          "framework": "financial_therapy",
+          "whenDifferent": "The firm-number person may feel the flexible person is careless; the flexible person may feel the firm-number person is rigid. Understand what drives each approach.",
+          "whenSame": "Shared spending thresholds prevent a common conflict. You'll naturally agree on what's reasonable.",
+          "journalPrompt": "What's the most you've ever spent on one thing? How did you feel about it afterward?"
+        }
+      }
+    },
+    {
+      "id": "quiz_005_q3",
+      "text": "I feel best about a big purchase when...",
+      "choices": [
+        "We both genuinely agree it's the right call",
+        "We've done our homework and feel informed",
+        "It aligns with our bigger goals",
+        "It feels exciting, not just practical"
+      ],
+      "category": "financial_decisions",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "What makes a purchase feel 'right' varies—agreement, information, alignment, or excitement. Knowing your partner's satisfaction criteria helps you make decisions that feel good to both.",
+          "framework": "gottman",
+          "whenDifferent": "The agreement-seeker may not feel settled without explicit buy-in; the excitement-seeker may feel the practical partner is killing the joy. Both needs are valid.",
+          "whenSame": "Shared satisfaction criteria mean you'll both feel good about purchases for the same reasons.",
+          "journalPrompt": "When has a purchase felt really right? What made it feel that way?"
+        }
+      }
+    },
+    {
+      "id": "quiz_005_q4",
+      "text": "If we disagreed about a big purchase, I'd want us to...",
+      "choices": [
+        "Keep talking until we find common ground",
+        "Hear each other out, then compromise",
+        "Let whoever cares more have the final say",
+        "Wait until we're both truly ready"
+      ],
+      "category": "financial_decisions",
+      "metadata": {
+        "dimension": "conflict_approach",
+        "poleMapping": ["right", "right", "neutral", "left"],
+        "therapeutic": {
+          "rationale": "Disagreement navigation predicts how you'll handle financial conflict. The keep-talking approach values consensus; compromise values efficiency; defer-to-one values passion; waiting values readiness.",
+          "framework": "gottman",
+          "whenDifferent": "Different approaches can frustrate in the moment. The consensus-seeker may feel the compromiser gives up too easily; the waiter may feel the talker is pressuring. Name your style ahead of time.",
+          "whenSame": "Shared disagreement approach means you'll navigate conflict the same way. Know your style's strengths and blind spots.",
+          "journalPrompt": "How do you usually handle it when you and your partner want different things? What works?"
+        }
+      }
+    },
+    {
+      "id": "quiz_005_q5",
+      "text": "The role of big purchases in our life together should be...",
+      "choices": [
+        "Carefully planned milestones",
+        "Flexible based on opportunities that arise",
+        "Balanced between practical and fun",
+        "Minimal—experiences matter more than things"
+      ],
+      "category": "financial_values",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "How you view big purchases reveals life values—milestone-markers plan ahead; opportunists stay flexible; balancers want both; minimalists prioritize differently. Alignment here shapes major life decisions.",
+          "framework": "financial_therapy",
+          "whenDifferent": "Different views on big purchases can create friction over houses, cars, vacations. The milestone-planner may clash with the opportunist; the minimalist may clash with both. Talk about the 'why' behind your view.",
+          "whenSame": "Shared views make planning easier. You'll naturally agree on what role big purchases play in your life.",
+          "journalPrompt": "What big purchases matter most to you? What would you happily skip? Why?"
+        }
+      }
+    }
+  ]
+}

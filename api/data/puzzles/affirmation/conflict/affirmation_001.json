@@ -1,0 +1,115 @@
+{
+  "quizId": "affirmation_001",
+  "title": "Safety to Disagree",
+  "category": "conflict",
+  "branch": "conflict",
+  "description": "Explore how safe it feels to have different opinions",
+  "magnet_id": 16,
+  "questions": [
+    {
+      "id": "affirmation_001_q1",
+      "text": "I can share a different opinion without worrying it will damage us.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Healthy relationships have room for disagreement. When sharing a different opinion feels dangerous, partners often silence themselves, which leads to distance and resentment over time.",
+          "framework": "gottman",
+          "whenDifferent": "If one partner fears disagreement will cause damage, explore what happens when they disagree. Does the other partner withdraw? Escalate? Understanding the pattern helps.",
+          "whenSame": "Shared safety to disagree creates space for both partners to be authentic.",
+          "journalPrompt": "What happens between you when you share different opinions?"
+        }
+      }
+    },
+    {
+      "id": "affirmation_001_q2",
+      "text": "My partner seems genuinely interested in my perspective, even when they disagree.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Interest in your partner's perspective—even during disagreement—communicates respect. When partners stop being curious about each other's views, conflicts become about winning rather than understanding.",
+          "framework": "gottman",
+          "whenDifferent": "If one partner doesn't feel interest in their perspective, explore how the other shows (or fails to show) curiosity during disagreements.",
+          "whenSame": "Mutual curiosity about each other's perspectives creates productive disagreements.",
+          "journalPrompt": "How does your partner show interest in your perspective during disagreements?"
+        }
+      }
+    },
+    {
+      "id": "affirmation_001_q3",
+      "text": "Disagreements don't make me question whether we're okay.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "When disagreements trigger relationship anxiety—'Does this mean we're not right for each other?'—even minor conflicts become threatening. Secure couples can disagree without doubting their foundation.",
+          "framework": "attachment_theory",
+          "whenDifferent": "If disagreements trigger relationship doubt for one partner, explore what would help them feel more secure. Sometimes explicit reassurance during conflict helps.",
+          "whenSame": "Shared confidence that disagreements don't threaten the relationship creates security.",
+          "journalPrompt": "Do disagreements ever make you question your relationship? What triggers that?"
+        }
+      }
+    },
+    {
+      "id": "affirmation_001_q4",
+      "text": "I can be honest about what I think without fear of my partner's reaction.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Fear of your partner's reaction leads to walking on eggshells. When you can be honest without bracing for a negative response, authentic communication becomes possible.",
+          "framework": "eft",
+          "whenDifferent": "If one partner fears reactions, explore what reactions they're anticipating. Anger? Withdrawal? Hurt? The other partner needs to understand how their responses land.",
+          "whenSame": "Mutual freedom from fear of reactions creates open, honest communication.",
+          "journalPrompt": "What reactions from your partner do you find yourself trying to avoid?"
+        }
+      }
+    },
+    {
+      "id": "affirmation_001_q5",
+      "text": "Our relationship feels strong enough to handle differences.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Confidence that your relationship can handle differences reflects secure attachment. This confidence allows partners to bring up difficult topics rather than avoiding them.",
+          "framework": "attachment_theory",
+          "whenDifferent": "If one partner doesn't feel the relationship can handle differences, explore what would build that confidence. Successful navigation of past conflicts? Reassurance?",
+          "whenSame": "Shared confidence in your relationship's strength creates willingness to address real issues.",
+          "journalPrompt": "What differences have you navigated successfully? What made that possible?"
+        }
+      }
+    }
+  ]
+}

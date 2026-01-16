@@ -1,0 +1,24 @@
+{
+  "puzzleId": "ws_003",
+  "title": "Romantic III",
+  "theme": "romantic",
+  "size": {
+    "rows": 10,
+    "cols": 10
+  },
+  "grid": "YYAUEKIDYEIALNPLSLWCACWAGNTUCNLEMSBEUNDAKRCRRELJEDGNIMAERDVGYTNWFWDQOXSHFWTGXNLFFLIRTWXEEYYPHONEYXBT",
+  "words": {
+    "HONEY": "92,R",
+    "DUSK": "38,UL",
+    "BELOVED": "98,U",
+    "WARM": "65,UL",
+    "TENDER": "99,UL",
+    "FLIRT": "80,R",
+    "SWAY": "33,UL",
+    "DREAMING": "57,L",
+    "TWIRL": "74,UL",
+    "DANCE": "49,U",
+    "GENTLE": "59,UL",
+    "ANGEL": "2,DR"
+  }
+}

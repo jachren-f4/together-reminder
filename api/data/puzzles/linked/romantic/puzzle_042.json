@@ -1,0 +1,73 @@
+{
+  "author": "Crossword Maker GPT",
+  "title": "AI-Built Puzzle",
+  "theme": "family",
+  "size": {
+    "rows": 9,
+    "cols": 7
+  },
+  "clues": {
+    "1": { "type": "emoji", "content": "🌳", "arrow": "down", "target_index": 8 },
+    "2": { "type": "text", "content": "Age", "arrow": "down", "target_index": 9 },
+    "3": { "type": "text", "content": "BRA__", "arrow": "down", "target_index": 10 },
+    "4": { "type": "text", "content": "I___", "arrow": "down", "target_index": 11 },
+    "5": { "type": "text", "content": "Finales", "arrow": "down", "target_index": 12 },
+    "6": { "type": "text", "content": "A_____N", "arrow": "down", "target_index": 13 },
+    "7": { "type": "text", "content": "Gentle", "arrow": "across", "target_index": 8 },
+    "8": { "type": "emoji", "content": "🐭", "arrow": "across", "target_index": 15 },
+    "9": { "type": "text", "content": "TH__", "arrow": "across", "target_index": 22 },
+    "10": {
+      "across": { "type": "text", "content": "Promos", "target_index": 25 },
+      "down": { "type": "text", "content": "DA__", "target_index": 31 }
+    },
+    "11": { "type": "text", "content": "MOR_", "arrow": "across", "target_index": 29 },
+    "12": {
+      "across": { "type": "emoji", "content": "🍵", "target_index": 31 },
+      "down": { "type": "text", "content": "Powder", "target_index": 37 }
+    },
+    "13": {
+      "across": { "type": "text", "content": "COA__", "target_index": 33 },
+      "down": { "type": "text", "content": "Joint", "target_index": 39 }
+    },
+    "14": {
+      "across": { "type": "text", "content": "___E", "target_index": 37 },
+      "down": { "type": "text", "content": "Math fn", "target_index": 43 }
+    },
+    "15": {
+      "across": { "type": "text", "content": "DE_Y", "target_index": 41 },
+      "down": { "type": "text", "content": "Apply", "target_index": 47 }
+    },
+    "16": { "type": "emoji", "content": "🇨🇦", "arrow": "across", "target_index": 43 },
+    "17": {
+      "across": { "type": "text", "content": "Greek N", "target_index": 46 },
+      "down": { "type": "text", "content": "M.D.", "target_index": 52 }
+    },
+    "18": { "type": "text", "content": "AC_IO_", "arrow": "down", "target_index": 55 },
+    "19": { "type": "text", "content": "Eldest", "arrow": "across", "target_index": 50 },
+    "20": { "type": "text", "content": "Display", "arrow": "across", "target_index": 57 }
+  },
+  "date": "2026-01-13",
+  "grid": [
+    ".", ".", ".", ".", ".", ".", ".",
+    ".", "T", "E", "N", "D", "E", "R",
+    ".", "R", "O", "D", "E", "N", "T",
+    ".", "E", "N", ".", "A", "D", "S",
+    ".", "E", ".", "T", ".", "S", "T",
+    ".", ".", "T", "A", "K", ".", "N",
+    ".", "C", "A", ".", "N", "U", ".",
+    ".", "O", "L", "D", "E", "S", "T",
+    ".", "S", "C", "R", "E", "E", "N"
+  ],
+  "gridnums": [
+    0, 1, 2, 3, 4, 5, 6,
+    7, 0, 0, 0, 0, 0, 0,
+    8, 0, 0, 0, 0, 0, 0,
+    9, 0, 0, 10, 0, 0, 0,
+    11, 0, 12, 0, 13, 0, 0,
+    0, 14, 0, 0, 0, 15, 0,
+    16, 0, 0, 17, 0, 0, 18,
+    19, 0, 0, 0, 0, 0, 0,
+    20, 0, 0, 0, 0, 0, 0
+  ],
+  "puzzleId": "puzzle_042"
+}

@@ -1,0 +1,24 @@
+{
+  "puzzleId": "ws_017",
+  "title": "Casual XVII",
+  "theme": "casual",
+  "size": {
+    "rows": 10,
+    "cols": 10
+  },
+  "grid": "ASLCYOQWRGXMWPOMYJWCEPPEKOCALMWARMETLYKBHLDRATGWAYCWOLLEMKZPFTKRFFECAXCJSELGGIGZUDAAHCNURBLXODATLUJH",
+  "words": {
+    "COOL": "3,DR",
+    "WARM": "30,R",
+    "MELLOW": "56,L",
+    "READ": "63,D",
+    "SWEET": "1,DR",
+    "CALM": "26,R",
+    "PAINT": "59,DL",
+    "BAKE": "39,DL",
+    "HAPPY": "40,UR",
+    "BRUNCH": "89,L",
+    "GIGGLES": "78,L",
+    "TALK": "35,DL"
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "quizId": "quiz_014",
+  "title": "Comfort & Care",
+  "branch": "connection",
+  "questions": [
+    {
+      "id": "quiz_014_q1",
+      "category": "needs",
+      "prompt": "Who needs more...",
+      "content": "Reassurance when feeling down"
+    },
+    {
+      "id": "quiz_014_q2",
+      "category": "expression",
+      "prompt": "Who is better at...",
+      "content": "Sensing when the other needs comfort"
+    },
+    {
+      "id": "quiz_014_q3",
+      "category": "connection",
+      "prompt": "Who is more...",
+      "content": "Nurturing when the other is sick"
+    },
+    {
+      "id": "quiz_014_q4",
+      "category": "vulnerability",
+      "prompt": "Who would...",
+      "content": "Ask for a hug when they need one"
+    },
+    {
+      "id": "quiz_014_q5",
+      "category": "communication",
+      "prompt": "Who is more...",
+      "content": "Likely to check in throughout the day"
+    }
+  ],
+  "description": "How do you comfort and care for each other? Explore your nurturing sides!",
+  "magnet_id": 5
+}

@@ -1,7 +1,9 @@
 {
   "quizId": "quiz_019",
-  "title": "Strengths & Growth Areas",
+  "title": "Complementary Strengths",
   "branch": "growth",
+  "description": "Explore how your strengths complement each other and make you stronger together.",
+  "magnet_id": 13,
   "questions": [
     {
       "id": "quiz_019_q1",
@@ -12,53 +14,96 @@
         "My determination and follow-through",
         "My creativity and problem-solving"
       ],
-      "category": "growth"
+      "category": "personal_strength",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Naming strengths builds confidence and self-awareness. Calm-under-pressure types regulate well; empaths connect deeply; determined types persist; creatives innovate. Knowing your strengths helps you contribute them to the relationship.",
+          "framework": "positive_psychology",
+          "whenDifferent": "Different strengths are complementary. Your partnership benefits from diverse capabilities.",
+          "whenSame": "Shared strengths create alignment in certain areas while potentially creating gaps in others.",
+          "journalPrompt": "What's one of your greatest strengths? How does it help your relationship?"
+        }
+      }
     },
     {
       "id": "quiz_019_q2",
-      "text": "An area where I know I need to grow is...",
+      "text": "An area where I know I want to grow is...",
       "choices": [
         "Being more patient",
         "Communicating my needs better",
         "Managing stress and emotions",
         "Being more present and attentive"
       ],
-      "category": "growth"
+      "category": "growth_edge",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Naming growth edges shows self-awareness. Patience-builders work on acceptance; communicators work on expression; stress-managers work on regulation; presence-builders work on attention. Acknowledging edges invites support.",
+          "framework": "positive_psychology",
+          "whenDifferent": "Different growth edges are individual. Understanding your partner's edge helps you support without judging.",
+          "whenSame": "Shared growth edges create opportunity for mutual development.",
+          "journalPrompt": "What's an area where you want to grow? How can your partner support you?"
+        }
+      }
     },
     {
       "id": "quiz_019_q3",
-      "text": "What strength do you bring that complements mine?",
+      "text": "A strength you bring that complements mine is...",
       "choices": [
         "You're strong where I'm weak",
         "You balance my intensity or energy",
         "You see things from a different angle",
         "You bring out the best in me"
       ],
-      "category": "values"
+      "category": "complementary_strength",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Recognizing complementary strengths honors partnership. Weakness-fillers complete; balancers moderate; angle-bringers diversify; best-bringers elevate. Acknowledging your partner's contribution strengthens appreciation.",
+          "framework": "gottman",
+          "whenDifferent": "Different recognitions are both valid. You may notice different ways you complement each other.",
+          "whenSame": "Matched recognition shows aligned appreciation for how you work together.",
+          "journalPrompt": "What strength does your partner bring that complements yours? Have you told them?"
+        }
+      }
     },
     {
       "id": "quiz_019_q4",
-      "text": "How do you help me work on my growth areas?",
+      "text": "You help me with my growth edges by...",
       "choices": [
-        "You're patient with my progress",
-        "You model what I'm working toward",
-        "You gently hold me accountable",
-        "You love me through my imperfections"
+        "Being patient with my progress",
+        "Modeling what I'm working toward",
+        "Gently holding me accountable",
+        "Loving me through my imperfections"
       ],
-      "category": "emotional"
+      "category": "growth_support",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Growth support takes different forms. Patient supporters give time; modelers demonstrate; accountable supporters provide structure; unconditional lovers provide safety. Knowing how your partner helps you honors their contribution.",
+          "framework": "gottman",
+          "whenDifferent": "Different forms of support are all valuable. You each contribute unique gifts to each other's growth.",
+          "whenSame": "Matched appreciation shows you value similar support in your growth.",
+          "journalPrompt": "How does your partner help you with your growth edges? Have you acknowledged this?"
+        }
+      }
     },
     {
       "id": "quiz_019_q5",
-      "text": "Together, I think we're strongest at...",
+      "text": "Together, I believe we're strongest at...",
       "choices": [
         "Supporting each other through hard times",
-        "Having fun and enjoying life",
+        "Having fun and enjoying life together",
         "Communicating and working through issues",
         "Building toward shared goals"
       ],
-      "category": "trust"
+      "category": "couple_strength",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Naming couple strengths builds shared identity. Support-strengths show resilience; fun-strengths show joy; communication-strengths show connection; goal-strengths show direction. Recognizing what you do well together reinforces it.",
+          "framework": "gottman",
+          "whenDifferent": "Different perceptions of strength are both valid. You may notice different aspects of your partnership.",
+          "whenSame": "Matched perception creates shared pride in your relationship's strengths.",
+          "journalPrompt": "What are you strongest at as a couple? How can you build on that strength?"
+        }
+      }
     }
-  ],
-  "description": "Explore how your strengths complement and grow together.",
-  "magnet_id": 13
+  ]
 }

@@ -1,0 +1,115 @@
+{
+  "quizId": "affirmation_014",
+  "title": "Financial Boundaries",
+  "category": "finances",
+  "branch": "finances",
+  "description": "Assess how well you navigate financial boundaries",
+  "magnet_id": 15,
+  "questions": [
+    {
+      "id": "affirmation_014_q1",
+      "text": "I feel comfortable setting financial boundaries in our relationship.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Financial boundaries—what you're willing to spend, share, or commit to—protect your wellbeing. Comfort setting them indicates a healthy dynamic.",
+          "framework": "attachment_theory",
+          "whenDifferent": "If one partner is uncomfortable setting boundaries, explore what makes it hard. Fear of conflict? Feeling selfish? These can be addressed.",
+          "whenSame": "Shared comfort with boundaries creates space for honest financial communication.",
+          "journalPrompt": "What financial boundaries are important to you? Have you communicated them?"
+        }
+      }
+    },
+    {
+      "id": "affirmation_014_q2",
+      "text": "I trust my partner respects my financial boundaries.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Trust that your boundaries will be respected is essential. Partners who feel their limits are ignored experience resentment and withdrawal.",
+          "framework": "gottman",
+          "whenDifferent": "If one partner doesn't feel their boundaries are respected, specific examples help. What boundaries have been crossed?",
+          "whenSame": "Mutual trust in boundary respect creates safety in your financial relationship.",
+          "journalPrompt": "Have your financial boundaries been respected? Which ones matter most?"
+        }
+      }
+    },
+    {
+      "id": "affirmation_014_q3",
+      "text": "I feel we navigate financial decisions involving family well.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Financial decisions involving extended family—gifts, loans, support—require careful navigation. Feeling good about how you handle these indicates healthy boundaries.",
+          "framework": "family_systems",
+          "whenDifferent": "Different experiences with family financial decisions often reflect different family pressures. Discuss what each family expects.",
+          "whenSame": "Shared sense of navigating family finances well creates unified approach to boundary-setting.",
+          "journalPrompt": "How do you handle financial requests or expectations from family?"
+        }
+      }
+    },
+    {
+      "id": "affirmation_014_q4",
+      "text": "I believe we can say no to financial pressures together.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Confidence in saying no together—to purchases, requests, social pressures—reflects partnership strength. United boundaries are easier to maintain.",
+          "framework": "gottman",
+          "whenDifferent": "If one partner doubts your ability to say no together, explore what creates that doubt. Past experiences? Different pressure tolerances?",
+          "whenSame": "Shared confidence in saying no together creates a united front against financial pressure.",
+          "journalPrompt": "What financial pressures do you face? Can you resist them together?"
+        }
+      }
+    },
+    {
+      "id": "affirmation_014_q5",
+      "text": "I feel our financial boundaries protect rather than restrict us.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Healthy boundaries feel protective, not restrictive. When financial limits feel like deprivation rather than wisdom, resentment builds.",
+          "framework": "positive_psychology",
+          "whenDifferent": "If one partner feels restricted rather than protected, explore what would help. Are the boundaries too tight? Not explained well?",
+          "whenSame": "Shared sense that boundaries are protective creates positive feelings about financial limits.",
+          "journalPrompt": "Do your financial boundaries feel helpful or limiting? What would shift that?"
+        }
+      }
+    }
+  ]
+}

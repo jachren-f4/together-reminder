@@ -1,0 +1,39 @@
+{
+  "quizId": "quiz_003",
+  "title": "Processing Styles",
+  "branch": "conflict",
+  "questions": [
+    {
+      "id": "quiz_003_q1",
+      "category": "preferences",
+      "prompt": "Who needs more...",
+      "content": "Time alone to gather their thoughts"
+    },
+    {
+      "id": "quiz_003_q2",
+      "category": "habits",
+      "prompt": "Who is more likely to...",
+      "content": "Think things over before responding"
+    },
+    {
+      "id": "quiz_003_q3",
+      "category": "personality",
+      "prompt": "Who processes emotions more by...",
+      "content": "Talking them through out loud"
+    },
+    {
+      "id": "quiz_003_q4",
+      "category": "preferences",
+      "prompt": "Who would...",
+      "content": "Go for a walk to clear their head"
+    },
+    {
+      "id": "quiz_003_q5",
+      "category": "habits",
+      "prompt": "Who is more likely to...",
+      "content": "Sleep on it before continuing a conversation"
+    }
+  ],
+  "description": "How do you each process when things feel heavy? Explore your styles!",
+  "magnet_id": 13
+}

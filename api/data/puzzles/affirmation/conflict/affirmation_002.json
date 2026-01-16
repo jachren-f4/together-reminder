@@ -1,0 +1,115 @@
+{
+  "quizId": "affirmation_002",
+  "title": "Repair & Reconnection",
+  "category": "conflict",
+  "branch": "conflict",
+  "description": "Explore how you come back together after disagreements",
+  "magnet_id": 16,
+  "questions": [
+    {
+      "id": "affirmation_002_q1",
+      "text": "After a disagreement, I trust we'll find our way back to each other.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Trust in reconnection provides a safety net during conflict. When you know you'll find your way back, disagreements feel less threatening and easier to navigate.",
+          "framework": "attachment_theory",
+          "whenDifferent": "If one partner doesn't trust in reconnection, explore past experiences. Have there been conflicts that didn't resolve? Building repair patterns creates this trust.",
+          "whenSame": "Shared trust in finding your way back provides security during difficult moments.",
+          "journalPrompt": "What helps you trust that you'll reconnect after disagreements?"
+        }
+      }
+    },
+    {
+      "id": "affirmation_002_q2",
+      "text": "I notice my partner reaching toward me after we've had tension.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Repair attempts—reaching out after conflict—are one of the strongest predictors of relationship success. Partners who make efforts to reconnect show the relationship matters more than being right.",
+          "framework": "gottman",
+          "whenDifferent": "If one partner doesn't see repair efforts, explore how the other attempts to reconnect. Repair attempts can be subtle and easily missed.",
+          "whenSame": "Mutual recognition of repair efforts creates a positive cycle of reconnection.",
+          "journalPrompt": "How does your partner try to reconnect after tension between you?"
+        }
+      }
+    },
+    {
+      "id": "affirmation_002_q3",
+      "text": "I can tell when my partner is trying to make things better between us.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Recognizing repair attempts matters as much as making them. When partners miss each other's bids to reconnect, conflicts last longer than they need to.",
+          "framework": "gottman",
+          "whenDifferent": "If one partner can't recognize repair attempts, explore what signals the other uses. Learning each other's repair language improves reconnection.",
+          "whenSame": "Mutual ability to recognize repair attempts shortens the distance after conflict.",
+          "journalPrompt": "What signals does your partner give when they're trying to make things better?"
+        }
+      }
+    },
+    {
+      "id": "affirmation_002_q4",
+      "text": "We don't let disagreements linger unresolved for too long.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "While some space after conflict is healthy, prolonged distance creates lasting damage. Couples who find their way back in reasonable time maintain their connection.",
+          "framework": "gottman",
+          "whenDifferent": "Different perceptions of 'too long' are common. One partner's 'giving space' may feel like abandonment to the other. Discuss what timeline feels right.",
+          "whenSame": "Shared sense of timely resolution creates trust in your repair process.",
+          "journalPrompt": "How long do disagreements typically last between you? Does that feel okay?"
+        }
+      }
+    },
+    {
+      "id": "affirmation_002_q5",
+      "text": "Coming back together after conflict feels natural for us.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Natural reconnection suggests you've developed repair patterns that work. When reconnection feels forced or awkward, there may be unprocessed hurt or unclear pathways back.",
+          "framework": "eft",
+          "whenDifferent": "If reconnection doesn't feel natural, explore what gets in the way. Pride? Lingering hurt? Unclear signals? Identifying barriers helps remove them.",
+          "whenSame": "Shared ease in reconnecting is a relationship strength that supports navigating conflict.",
+          "journalPrompt": "What makes coming back together after conflict easy or difficult?"
+        }
+      }
+    }
+  ]
+}

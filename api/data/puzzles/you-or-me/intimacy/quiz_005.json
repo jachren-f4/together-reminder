@@ -1,0 +1,39 @@
+{
+  "quizId": "quiz_005",
+  "title": "Sweet Nothings",
+  "branch": "intimacy",
+  "questions": [
+    {
+      "id": "quiz_005_q1",
+      "category": "habits",
+      "prompt": "Who is more likely to...",
+      "content": "Say 'I love you' first each day"
+    },
+    {
+      "id": "quiz_005_q2",
+      "category": "personality",
+      "prompt": "Who is more...",
+      "content": "Expressive with words of affection"
+    },
+    {
+      "id": "quiz_005_q3",
+      "category": "preferences",
+      "prompt": "Who would...",
+      "content": "Leave a sweet note for the other to find"
+    },
+    {
+      "id": "quiz_005_q4",
+      "category": "habits",
+      "prompt": "Who is more likely to...",
+      "content": "Give unexpected compliments"
+    },
+    {
+      "id": "quiz_005_q5",
+      "category": "personality",
+      "prompt": "Who gets more...",
+      "content": "Warm and fuzzy from hearing kind words"
+    }
+  ],
+  "description": "Words of love—discover how you each express and receive verbal affection!",
+  "magnet_id": 10
+}

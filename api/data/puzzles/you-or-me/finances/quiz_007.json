@@ -1,0 +1,39 @@
+{
+  "quizId": "quiz_007",
+  "title": "Money Talk",
+  "branch": "finances",
+  "questions": [
+    {
+      "id": "quiz_007_q1",
+      "category": "personality",
+      "prompt": "Who is more comfortable...",
+      "content": "Talking about money openly"
+    },
+    {
+      "id": "quiz_007_q2",
+      "category": "habits",
+      "prompt": "Who would...",
+      "content": "Bring up an exciting financial idea first"
+    },
+    {
+      "id": "quiz_007_q3",
+      "category": "preferences",
+      "prompt": "Who is more likely to...",
+      "content": "Share when they find a great deal"
+    },
+    {
+      "id": "quiz_007_q4",
+      "category": "personality",
+      "prompt": "Who enjoys...",
+      "content": "Dreaming together about big purchases"
+    },
+    {
+      "id": "quiz_007_q5",
+      "category": "habits",
+      "prompt": "Who would...",
+      "content": "Celebrate reaching a savings milestone"
+    }
+  ],
+  "description": "How do you talk about money? Explore your financial communication styles!",
+  "magnet_id": 9
+}

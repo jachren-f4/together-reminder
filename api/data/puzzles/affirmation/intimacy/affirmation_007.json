@@ -1,0 +1,115 @@
+{
+  "quizId": "affirmation_007",
+  "title": "Comfort & Ease",
+  "category": "intimacy",
+  "branch": "intimacy",
+  "description": "Explore how comfortable and at ease you feel together physically",
+  "magnet_id": 16,
+  "questions": [
+    {
+      "id": "affirmation_007_q1",
+      "text": "I feel relaxed in my partner's physical presence.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Physical relaxation in your partner's presence indicates safety. Tension may signal unresolved issues, anxiety, or dynamics worth exploring.",
+          "framework": "attachment_theory",
+          "whenDifferent": "If one partner isn't relaxed, explore what creates tension. Is it about the relationship? Their own body? Past experiences?",
+          "whenSame": "Shared physical relaxation in each other's presence creates a calm foundation.",
+          "journalPrompt": "What helps you relax in your partner's physical presence?"
+        }
+      }
+    },
+    {
+      "id": "affirmation_007_q2",
+      "text": "Being physically close doesn't bring up anxiety for me.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Physical closeness that triggers anxiety rather than comfort signals something worth understanding—whether about the relationship, past experiences, or personal patterns.",
+          "framework": "attachment_theory",
+          "whenDifferent": "If closeness creates anxiety for one partner, approach with compassion. Anxiety often has roots that deserve gentle exploration.",
+          "whenSame": "Shared freedom from anxiety during closeness creates space for connection.",
+          "journalPrompt": "Does physical closeness ever bring up anxiety? What might that be about?"
+        }
+      }
+    },
+    {
+      "id": "affirmation_007_q3",
+      "text": "I can be myself physically around my partner.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Being yourself physically—not performing or hiding—requires acceptance. When you can exist naturally in your body with your partner, intimacy deepens.",
+          "framework": "eft",
+          "whenDifferent": "If one partner can't be themselves physically, explore what they're hiding or performing. Building acceptance takes time and intention.",
+          "whenSame": "Mutual ability to be yourselves physically creates authentic intimacy.",
+          "journalPrompt": "What aspects of your physical self do you feel free to show? What do you hold back?"
+        }
+      }
+    },
+    {
+      "id": "affirmation_007_q4",
+      "text": "My partner seems comfortable in their body around me.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Sensing your partner's comfort in their body affects your experience. Their ease invites your ease; their discomfort can create concern or confusion.",
+          "framework": "eft",
+          "whenDifferent": "If one partner senses the other's discomfort, naming it gently opens conversation. Body comfort is often a sensitive topic that benefits from compassion.",
+          "whenSame": "Shared perception of mutual body comfort creates relaxed physical connection.",
+          "journalPrompt": "How comfortable does your partner seem in their body around you?"
+        }
+      }
+    },
+    {
+      "id": "affirmation_007_q5",
+      "text": "Physical moments with my partner feel natural, not effortful.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Naturalness in physical moments suggests compatibility and ease. When physical connection requires effort, exploring what's creating friction can help.",
+          "framework": "positive_psychology",
+          "whenDifferent": "If physical moments feel effortful for one partner, explore what's creating the effort. Mismatched rhythms? Uncertainty about what to do?",
+          "whenSame": "Shared naturalness in physical moments indicates comfortable compatibility.",
+          "journalPrompt": "When do physical moments feel most natural? When do they feel effortful?"
+        }
+      }
+    }
+  ]
+}

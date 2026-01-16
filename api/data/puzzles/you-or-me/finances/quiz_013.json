@@ -1,0 +1,39 @@
+{
+  "quizId": "quiz_013",
+  "title": "Money & Memories",
+  "branch": "finances",
+  "questions": [
+    {
+      "id": "quiz_013_q1",
+      "category": "preferences",
+      "prompt": "Who values more...",
+      "content": "Spending on experiences vs. things"
+    },
+    {
+      "id": "quiz_013_q2",
+      "category": "habits",
+      "prompt": "Who is more likely to...",
+      "content": "Splurge on a memorable trip"
+    },
+    {
+      "id": "quiz_013_q3",
+      "category": "personality",
+      "prompt": "Who treasures more...",
+      "content": "Photos and souvenirs from adventures"
+    },
+    {
+      "id": "quiz_013_q4",
+      "category": "preferences",
+      "prompt": "Who would rather...",
+      "content": "Have a fancy dinner out vs. a cozy night in"
+    },
+    {
+      "id": "quiz_013_q5",
+      "category": "habits",
+      "prompt": "Who is more likely to...",
+      "content": "Start a savings jar for a special experience"
+    }
+  ],
+  "description": "Experiences or things? Explore what you value spending on together!",
+  "magnet_id": 9
+}

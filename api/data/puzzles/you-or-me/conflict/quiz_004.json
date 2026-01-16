@@ -1,0 +1,39 @@
+{
+  "quizId": "quiz_004",
+  "title": "Tension Breakers",
+  "branch": "conflict",
+  "questions": [
+    {
+      "id": "quiz_004_q1",
+      "category": "habits",
+      "prompt": "Who is more likely to...",
+      "content": "Crack a joke to ease the mood"
+    },
+    {
+      "id": "quiz_004_q2",
+      "category": "preferences",
+      "prompt": "Who would...",
+      "content": "Offer a cup of tea or snack as a peace gesture"
+    },
+    {
+      "id": "quiz_004_q3",
+      "category": "personality",
+      "prompt": "Who is better at...",
+      "content": "Finding the lighter side of a situation"
+    },
+    {
+      "id": "quiz_004_q4",
+      "category": "habits",
+      "prompt": "Who would...",
+      "content": "Put on music to shift the energy"
+    },
+    {
+      "id": "quiz_004_q5",
+      "category": "preferences",
+      "prompt": "Who is more likely to...",
+      "content": "Suggest a change of scenery when things feel stuck"
+    }
+  ],
+  "description": "Discover your secret weapons for breaking tension!",
+  "magnet_id": 13
+}

@@ -1,0 +1,39 @@
+{
+  "quizId": "quiz_011",
+  "title": "Teamwork in Tension",
+  "branch": "conflict",
+  "questions": [
+    {
+      "id": "quiz_011_q1",
+      "category": "personality",
+      "prompt": "Who is better at...",
+      "content": "Remembering you're on the same team"
+    },
+    {
+      "id": "quiz_011_q2",
+      "category": "habits",
+      "prompt": "Who would...",
+      "content": "Remind the other that you'll figure it out together"
+    },
+    {
+      "id": "quiz_011_q3",
+      "category": "preferences",
+      "prompt": "Who is more likely to...",
+      "content": "Focus on solving the problem vs. being right"
+    },
+    {
+      "id": "quiz_011_q4",
+      "category": "personality",
+      "prompt": "Who tends to...",
+      "content": "Stay solution-focused during disagreements"
+    },
+    {
+      "id": "quiz_011_q5",
+      "category": "habits",
+      "prompt": "Who would...",
+      "content": "Suggest taking a break and coming back to it"
+    }
+  ],
+  "description": "You're a team! Explore how you work together through tricky moments.",
+  "magnet_id": 15
+}

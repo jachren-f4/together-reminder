@@ -1,0 +1,39 @@
+{
+  "quizId": "quiz_013",
+  "title": "Safe Haven",
+  "branch": "attachment",
+  "questions": [
+    {
+      "id": "quiz_013_q1",
+      "category": "comfort",
+      "prompt": "Who feels most at ease...",
+      "content": "When you're both home together"
+    },
+    {
+      "id": "quiz_013_q2",
+      "category": "security",
+      "prompt": "Who is more...",
+      "content": "Relaxed after receiving a goodnight text"
+    },
+    {
+      "id": "quiz_013_q3",
+      "category": "reassurance",
+      "prompt": "Who appreciates more...",
+      "content": "Knowing what the plan is for the day"
+    },
+    {
+      "id": "quiz_013_q4",
+      "category": "trust",
+      "prompt": "Who feels most grounded when...",
+      "content": "You've had quality time together"
+    },
+    {
+      "id": "quiz_013_q5",
+      "category": "comfort",
+      "prompt": "Who finds more comfort in...",
+      "content": "Your shared routines and rituals"
+    }
+  ],
+  "description": "Home is where the heart is—explore what makes you feel safe together!",
+  "magnet_id": 7
+}

@@ -1,0 +1,39 @@
+{
+  "quizId": "quiz_011",
+  "title": "Money & Fun",
+  "branch": "finances",
+  "questions": [
+    {
+      "id": "quiz_011_q1",
+      "category": "preferences",
+      "prompt": "Who would rather...",
+      "content": "Save for a big trip vs. many small adventures"
+    },
+    {
+      "id": "quiz_011_q2",
+      "category": "habits",
+      "prompt": "Who is more likely to...",
+      "content": "Suggest a free date idea"
+    },
+    {
+      "id": "quiz_011_q3",
+      "category": "personality",
+      "prompt": "Who gets more creative with...",
+      "content": "Having fun on a budget"
+    },
+    {
+      "id": "quiz_011_q4",
+      "category": "preferences",
+      "prompt": "Who would...",
+      "content": "Splurge on a special occasion without hesitation"
+    },
+    {
+      "id": "quiz_011_q5",
+      "category": "habits",
+      "prompt": "Who is more likely to...",
+      "content": "Find the best happy hour deals"
+    }
+  ],
+  "description": "Fun doesn't have to be expensive! Explore how you each balance money and enjoyment.",
+  "magnet_id": 9
+}

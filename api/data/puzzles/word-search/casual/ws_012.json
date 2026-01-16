@@ -1,0 +1,24 @@
+{
+  "puzzleId": "ws_012",
+  "title": "Casual XII",
+  "theme": "casual",
+  "size": {
+    "rows": 10,
+    "cols": 10
+  },
+  "grid": "DSQARELAXSCTEKNALBWEYAYJLLCEMEZEUFQSLOLVORCOOLSTRFCTNICENDWJZRGDWEUBYYNQOAGLAUGHCOPSOFTDBLGKOKXYQFYW",
+  "words": {
+    "SOFT": "83,R",
+    "GENTLE": "74,UR",
+    "COZY": "50,U",
+    "GOOD": "90,UR",
+    "NICE": "52,R",
+    "LAUGH": "75,R",
+    "COOL": "42,R",
+    "SWELL": "9,DL",
+    "TREATS": "51,U",
+    "BLANKET": "17,L",
+    "RELAX": "4,R",
+    "AWESOME": "73,UR"
+  }
+}

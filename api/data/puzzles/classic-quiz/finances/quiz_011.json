@@ -1,0 +1,113 @@
+{
+  "quizId": "quiz_011",
+  "title": "Financial Communication",
+  "branch": "finances",
+  "description": "Explore how you talk about money and what makes those conversations work.",
+  "magnet_id": 16,
+  "questions": [
+    {
+      "id": "quiz_011_q1",
+      "text": "When it comes to talking about money, I'm naturally...",
+      "choices": [
+        "Pretty open—it doesn't stress me out",
+        "A bit guarded—it feels vulnerable",
+        "Practical—I talk about it when needed",
+        "Avoidant—I'd rather not if I can help it"
+      ],
+      "category": "financial_communication",
+      "metadata": {
+        "dimension": "stress_processing",
+        "poleMapping": ["right", "left", "neutral", "left"],
+        "therapeutic": {
+          "rationale": "Money conversation comfort varies widely. Open types discuss freely; guarded types feel exposed; practical types are functional; avoidant types struggle. Partners often have different comfort levels, creating communication gaps.",
+          "framework": "gottman",
+          "whenDifferent": "The open partner may push conversations the guarded partner finds overwhelming; the guarded partner may leave the open partner feeling shut out. Meet in the middle—scheduled, boundaried money talks.",
+          "whenSame": "Shared comfort levels make money conversations easier to navigate. You understand each other's pace.",
+          "journalPrompt": "How do you feel when money comes up in conversation? Where does that feeling come from?"
+        }
+      }
+    },
+    {
+      "id": "quiz_011_q2",
+      "text": "The money conversations I'd most want us to have regularly are about...",
+      "choices": [
+        "How we're doing against our goals",
+        "Any worries or stress either of us has",
+        "Upcoming expenses or decisions",
+        "Our dreams and what we're working toward"
+      ],
+      "category": "financial_communication",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Preferred money conversations reveal what matters most. Goal-trackers want progress; stress-sharers want emotional safety; planners want practical alignment; dreamers want vision. All are valuable—make room for each.",
+          "framework": "gottman",
+          "whenDifferent": "Different conversation priorities may leave one partner unsatisfied. The stress-sharer may feel the goal-tracker is cold; the goal-tracker may feel the stress-sharer is dwelling. Alternate between types.",
+          "whenSame": "Shared conversation priority focuses your money talks. You naturally want to discuss the same things.",
+          "journalPrompt": "What money conversation have you been wanting to have? What's stopped you from having it?"
+        }
+      }
+    },
+    {
+      "id": "quiz_011_q3",
+      "text": "When money conversations get tense, I tend to...",
+      "choices": [
+        "Push through until we resolve it",
+        "Take a break and come back to it",
+        "Get quiet and withdraw",
+        "Try to lighten the mood or change the subject"
+      ],
+      "category": "financial_communication",
+      "metadata": {
+        "dimension": "conflict_approach",
+        "poleMapping": ["right", "neutral", "left", "left"],
+        "therapeutic": {
+          "rationale": "Tension responses reveal conflict patterns. Push-throughers pursue resolution; break-takers regulate; withdrawers protect; mood-lighteners deflect. Mismatched styles can escalate conflict.",
+          "framework": "gottman",
+          "whenDifferent": "The push-througher may feel the withdrawer is avoiding; the withdrawer may feel the push-througher is attacking. Learn to signal when you need a break—and commit to coming back.",
+          "whenSame": "Shared tension response means you'll navigate conflict similarly. Know your shared style's blind spots.",
+          "journalPrompt": "What happens in your body when money conversations get tense? What do you need in those moments?"
+        }
+      }
+    },
+    {
+      "id": "quiz_011_q4",
+      "text": "I feel best about our financial communication when...",
+      "choices": [
+        "We're both being completely honest",
+        "The conversation stays calm and respectful",
+        "We end up on the same page",
+        "I feel heard and understood"
+      ],
+      "category": "financial_communication",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "What makes money conversations feel good varies. Honesty-seekers want truth; calm-seekers want safety; alignment-seekers want agreement; understanding-seekers want empathy. Knowing your partner's need helps you provide it.",
+          "framework": "gottman",
+          "whenDifferent": "Different needs may mean different satisfaction criteria. The honesty-seeker may push harder than the calm-seeker can handle; the understanding-seeker may feel the alignment-seeker is just trying to win.",
+          "whenSame": "Shared criteria mean you'll both feel good about conversations for the same reasons.",
+          "journalPrompt": "What makes a money conversation feel successful to you? What makes it feel like a failure?"
+        }
+      }
+    },
+    {
+      "id": "quiz_011_q5",
+      "text": "I'd like us to talk about money...",
+      "choices": [
+        "More often than we do now",
+        "Less often—we're good",
+        "About the same, but differently",
+        "When it comes up naturally"
+      ],
+      "category": "financial_communication",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Frequency preferences reveal current satisfaction. More-often seekers feel under-discussed; less-often seekers feel over-discussed; differently-seekers want quality change; natural-flow types resist structure. Naming this helps you adjust.",
+          "framework": "gottman",
+          "whenDifferent": "Different frequency needs require negotiation. The more-often partner may need scheduled check-ins; the less-often partner may need bounded conversations. Find your rhythm.",
+          "whenSame": "Shared frequency preference means you're aligned on how much money talk is right. Maintain your rhythm.",
+          "journalPrompt": "How often do you talk about money now? Is it enough? Too much? What would be ideal?"
+        }
+      }
+    }
+  ]
+}

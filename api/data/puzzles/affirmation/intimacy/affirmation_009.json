@@ -1,0 +1,115 @@
+{
+  "quizId": "affirmation_009",
+  "title": "Emotional-Physical Connection",
+  "category": "intimacy",
+  "branch": "intimacy",
+  "description": "Explore how emotional and physical intimacy connect for you",
+  "magnet_id": 16,
+  "questions": [
+    {
+      "id": "affirmation_009_q1",
+      "text": "Emotional closeness and physical closeness feel connected for us.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "When emotional and physical intimacy reinforce each other, both deepen. When they feel separate, one may flourish while the other suffers.",
+          "framework": "eft",
+          "whenDifferent": "Different experiences of this connection may reflect different needs. Some need emotional connection before physical; others connect emotionally through physical closeness.",
+          "whenSame": "Shared sense of emotional-physical connection creates an integrated intimacy.",
+          "journalPrompt": "How do emotional and physical closeness relate for you?"
+        }
+      }
+    },
+    {
+      "id": "affirmation_009_q2",
+      "text": "Physical closeness helps me feel emotionally connected to my partner.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "For some, physical closeness opens emotional channels. Understanding this pathway helps partners recognize how physical connection serves their emotional bond.",
+          "framework": "attachment_theory",
+          "whenDifferent": "Different experiences of this pathway are normal. The partner for whom this isn't true may need emotional connection to come first.",
+          "whenSame": "Shared experience of physical closeness creating emotional connection reinforces both.",
+          "journalPrompt": "Does physical closeness help you feel emotionally connected? How so?"
+        }
+      }
+    },
+    {
+      "id": "affirmation_009_q3",
+      "text": "Emotional distance between us affects how physical closeness feels.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "For many, emotional distance makes physical closeness feel hollow or forced. Understanding this connection helps couples address the emotional foundation.",
+          "framework": "eft",
+          "whenDifferent": "Different sensitivities to this are common. The partner more affected needs the other to understand how emotional distance impacts them physically.",
+          "whenSame": "Shared awareness of how emotional distance affects physical closeness helps you prioritize emotional connection.",
+          "journalPrompt": "How does emotional distance affect your desire for physical closeness?"
+        }
+      }
+    },
+    {
+      "id": "affirmation_009_q4",
+      "text": "I feel emotionally held during physically close moments.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Feeling emotionally held during physical closeness—not just physically present—creates the deepest intimacy. This sense of being held meets attachment needs.",
+          "framework": "attachment_theory",
+          "whenDifferent": "If one partner doesn't feel emotionally held, explore what would create that sense. Presence? Words? Eye contact? Pace?",
+          "whenSame": "Mutual feeling of being emotionally held during physical closeness deepens your bond.",
+          "journalPrompt": "What helps you feel emotionally held during physical closeness?"
+        }
+      }
+    },
+    {
+      "id": "affirmation_009_q5",
+      "text": "Physical intimacy deepens my emotional trust in my partner.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "When physical intimacy builds emotional trust, each vulnerable moment strengthens your bond. When it doesn't, there may be a disconnect worth exploring.",
+          "framework": "attachment_theory",
+          "whenDifferent": "If physical intimacy doesn't build trust for one partner, explore what's missing. Do they need more emotional safety first?",
+          "whenSame": "Shared experience of physical intimacy building trust creates a positive spiral of deepening connection.",
+          "journalPrompt": "How does physical intimacy affect your emotional trust in your partner?"
+        }
+      }
+    }
+  ]
+}

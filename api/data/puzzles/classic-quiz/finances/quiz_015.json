@@ -1,0 +1,111 @@
+{
+  "quizId": "quiz_015",
+  "title": "Financial Future",
+  "branch": "finances",
+  "description": "Explore your vision for your financial life together and what you're building toward.",
+  "magnet_id": 17,
+  "questions": [
+    {
+      "id": "quiz_015_q1",
+      "text": "When I imagine our financial future, I hope for...",
+      "choices": [
+        "Complete financial freedom and flexibility",
+        "Security without worry about money",
+        "The ability to be generous with ourselves and others",
+        "Enough to live well without excess"
+      ],
+      "category": "financial_vision",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Financial future visions reveal core values. Freedom-seekers want options; security-seekers want safety; generosity-seekers want impact; enough-seekers want simplicity. Shared vision aligns your efforts.",
+          "framework": "financial_therapy",
+          "whenDifferent": "Different visions may compete for resources. The freedom-seeker may clash with the security-seeker on how much to save vs. invest. Talk about what's behind each vision.",
+          "whenSame": "Shared vision means you're working toward the same financial life. This alignment is powerful.",
+          "journalPrompt": "What does your ideal financial future look like? What would be possible that isn't now?"
+        }
+      }
+    },
+    {
+      "id": "quiz_015_q2",
+      "text": "The financial milestone I most want us to reach is...",
+      "choices": [
+        "Being debt-free",
+        "Owning a home (or our dream home)",
+        "Having substantial savings or investments",
+        "Being able to retire when we want"
+      ],
+      "category": "financial_goals",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Priority milestones reveal what financial success means to you. Debt-free seekers want freedom from obligation; home-owners want stability; savers want security; retirees want time freedom. Partners may prioritize differently.",
+          "framework": "financial_therapy",
+          "whenDifferent": "Different priorities may need sequencing. Can you pay off debt while saving for a home? Talk about order and timeline—both goals may be achievable.",
+          "whenSame": "Shared milestone focus directs your joint effort. You're working toward the same target.",
+          "journalPrompt": "What financial milestone would change how you feel about your life? Why that one?"
+        }
+      }
+    },
+    {
+      "id": "quiz_015_q3",
+      "text": "When it comes to retirement, my thinking is...",
+      "choices": [
+        "Plan early—I want to be prepared",
+        "It's far away—I'll figure it out later",
+        "Work as long as I enjoy it",
+        "Have options, even if I keep working"
+      ],
+      "category": "retirement",
+      "metadata": {
+        "dimension": "planning_style",
+        "poleMapping": ["right", "left", "neutral", "neutral"],
+        "therapeutic": {
+          "rationale": "Retirement thinking reveals time orientation and security needs. Early-planners prioritize future security; later-thinkers prioritize present; work-enjoyers find purpose; option-havers want flexibility. Partners often have different timelines.",
+          "framework": "financial_therapy",
+          "whenDifferent": "The early-planner may feel the later-thinker is irresponsible; the later-thinker may feel the early-planner is missing the present. Both perspectives have wisdom.",
+          "whenSame": "Shared retirement thinking makes long-term planning easier. You're naturally aligned on timeline.",
+          "journalPrompt": "How do you think about retirement? Does it feel real and worth planning, or distant and abstract?"
+        }
+      }
+    },
+    {
+      "id": "quiz_015_q4",
+      "text": "What I most want to build together financially is...",
+      "choices": [
+        "A secure foundation for whatever comes",
+        "Resources to create the life we want",
+        "Something to pass on or give back",
+        "Freedom from financial stress"
+      ],
+      "category": "financial_vision",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "What you're building reveals purpose. Foundation-builders want security; life-creators want possibility; legacy-builders want impact; stress-freedom seekers want peace. Shared purpose strengthens partnership.",
+          "framework": "financial_therapy",
+          "whenDifferent": "Different building purposes may shape different strategies. The legacy-builder may want to invest differently than the stress-freedom seeker. Talk about what you're ultimately building toward.",
+          "whenSame": "Shared building purpose aligns your financial decisions. Every choice serves the same goal.",
+          "journalPrompt": "What are you trying to build financially? Why does that matter to you?"
+        }
+      }
+    },
+    {
+      "id": "quiz_015_q5",
+      "text": "The financial conversation I hope we keep having is...",
+      "choices": [
+        "Are we on track toward our goals?",
+        "What do we want our life to look like?",
+        "How are we feeling about money right now?",
+        "What can we do differently or better?"
+      ],
+      "category": "financial_communication",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Ongoing conversation focus reveals what sustains you. Track-checkers want progress; vision-explorers want alignment; feeling-checkers want emotional safety; improvers want growth. All are valuable—make room for each.",
+          "framework": "gottman",
+          "whenDifferent": "Different ongoing conversation needs may leave one partner unsatisfied. The feeling-checker may need more emotional processing than the track-checker offers. Rotate between types.",
+          "whenSame": "Shared ongoing focus means your financial conversations will naturally center on what matters to both of you.",
+          "journalPrompt": "What financial conversation do you most look forward to having with your partner? What conversation do you avoid?"
+        }
+      }
+    }
+  ]
+}

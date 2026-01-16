@@ -7,12 +7,12 @@
   },
   "clues": {
     "1": { "type": "text", "content": "_O_ALT", "arrow": "down", "target_index": 8 },
-    "2": { "type": "text", "content": "Gallery piece", "arrow": "down", "target_index": 9 },
+    "2": { "type": "emoji", "content": "🖼️", "arrow": "down", "target_index": 9 },
     "3": { "type": "text", "content": "Grain storage", "arrow": "down", "target_index": 10 },
     "4": { "type": "text", "content": "A_TITU__", "arrow": "down", "target_index": 11 },
     "5": { "type": "text", "content": "BI__E", "arrow": "down", "target_index": 12 },
     "6": { "type": "text", "content": "Slippery fish", "arrow": "down", "target_index": 13 },
-    "7": { "type": "text", "content": "Palace", "arrow": "across", "target_index": 8 },
+    "7": { "type": "emoji", "content": "🏰", "arrow": "across", "target_index": 8 },
     "8": { "type": "text", "content": "Span", "arrow": "across", "target_index": 15 },
     "9": {
       "across": { "type": "text", "content": "LIT___", "target_index": 23 },

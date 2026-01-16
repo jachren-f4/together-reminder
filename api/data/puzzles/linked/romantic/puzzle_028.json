@@ -1,0 +1,70 @@
+{
+  "author": "Crossword Maker GPT",
+  "title": "AI-Built Puzzle",
+  "theme": "luxury",
+  "size": {
+    "rows": 9,
+    "cols": 7
+  },
+  "clues": {
+    "1": { "type": "text", "content": "Move", "arrow": "down", "target_index": 8 },
+    "2": { "type": "text", "content": "Spoken", "arrow": "down", "target_index": 9 },
+    "3": { "type": "text", "content": "🎬 city", "arrow": "down", "target_index": 10 },
+    "4": { "type": "text", "content": "Helix", "arrow": "down", "target_index": 11 },
+    "5": { "type": "text", "content": "Carton", "arrow": "down", "target_index": 12 },
+    "6": { "type": "text", "content": "Want", "arrow": "down", "target_index": 13 },
+    "7": { "type": "text", "content": "Gilded", "arrow": "across", "target_index": 8 },
+    "8": { "type": "text", "content": "Citrus", "arrow": "across", "target_index": 15 },
+    "9": {
+      "across": { "type": "text", "content": "PL_Y", "target_index": 23 },
+      "down": { "type": "text", "content": "Skips", "target_index": 29 }
+    },
+    "10": {
+      "across": { "type": "text", "content": "Era", "target_index": 25 },
+      "down": { "type": "text", "content": "__ or die", "target_index": 31 }
+    },
+    "11": { "type": "text", "content": "Ancient", "arrow": "across", "target_index": 29 },
+    "12": {
+      "across": { "type": "text", "content": "💾 card", "target_index": 33 },
+      "down": { "type": "text", "content": "Vegas", "target_index": 39 }
+    },
+    "13": { "type": "text", "content": "GY_", "arrow": "across", "target_index": 36 },
+    "14": {
+      "across": { "type": "text", "content": "Atop", "target_index": 38 },
+      "down": { "type": "text", "content": "B___+DAY", "target_index": 44 }
+    },
+    "15": { "type": "text", "content": "Sup", "arrow": "down", "target_index": 47 },
+    "16": { "type": "text", "content": "SA___", "arrow": "down", "target_index": 48 },
+    "17": { "type": "text", "content": "CHA__", "arrow": "across", "target_index": 43 },
+    "18": {
+      "across": { "type": "text", "content": "Slither", "target_index": 46 },
+      "down": { "type": "text", "content": "🇷🇺", "target_index": 52 }
+    },
+    "19": { "type": "text", "content": "TH+OAT", "arrow": "across", "target_index": 50 },
+    "20": { "type": "text", "content": "STUN+S", "arrow": "across", "target_index": 57 }
+  },
+  "date": "2026-01-13",
+  "grid": [
+    ".", ".", ".", ".", ".", ".", ".",
+    ".", "G", "O", "L", "D", "E", "N",
+    ".", "O", "R", "A", "N", "G", "E",
+    ".", ".", "A", ".", "A", "G", "E",
+    ".", "O", "L", "D", ".", "S", "D",
+    ".", "M", ".", "O", "N", ".", ".",
+    ".", "I", "R", ".", "E", "E", "L",
+    ".", "T", "H", "R", "O", "A", "T",
+    ".", "S", "T", "U", "N", "T", "S"
+  ],
+  "gridnums": [
+    0, 1, 2, 3, 4, 5, 6,
+    7, 0, 0, 0, 0, 0, 0,
+    8, 0, 0, 0, 0, 0, 0,
+    0, 9, 0, 10, 0, 0, 0,
+    11, 0, 0, 0, 12, 0, 0,
+    13, 0, 14, 0, 0, 15, 16,
+    17, 0, 0, 18, 0, 0, 0,
+    19, 0, 0, 0, 0, 0, 0,
+    20, 0, 0, 0, 0, 0, 0
+  ],
+  "puzzleId": "puzzle_039"
+}

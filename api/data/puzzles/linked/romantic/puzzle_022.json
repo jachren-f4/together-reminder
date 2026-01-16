@@ -1,0 +1,69 @@
+{
+  "author": "Crossword Maker GPT",
+  "title": "AI-Built Puzzle",
+  "size": {
+    "rows": 9,
+    "cols": 7
+  },
+  "clues": {
+    "1": { "type": "emoji", "content": "🏖️", "arrow": "down", "target_index": 8 },
+    "2": { "type": "text", "content": "_FTER", "arrow": "down", "target_index": 9 },
+    "3": { "type": "text", "content": "Iron", "arrow": "down", "target_index": 10 },
+    "4": { "type": "text", "content": "St.", "arrow": "down", "target_index": 11 },
+    "5": { "type": "text", "content": "Coral", "arrow": "down", "target_index": 12 },
+    "6": { "type": "text", "content": "Keys", "arrow": "down", "target_index": 13 },
+    "7": { "type": "text", "content": "Africa", "arrow": "across", "target_index": 8 },
+    "8": { "type": "text", "content": "_FTER", "arrow": "across", "target_index": 15 },
+    "9": {
+      "across": { "type": "text", "content": "Nights", "target_index": 17 },
+      "down": { "type": "text", "content": "East", "target_index": 23 }
+    },
+    "10": { "type": "text", "content": "Reject", "arrow": "across", "target_index": 22 },
+    "11": {
+      "across": { "type": "text", "content": "Moray", "target_index": 25 },
+      "down": { "type": "text", "content": "Guru", "target_index": 31 }
+    },
+    "12": { "type": "text", "content": "Parched", "arrow": "across", "target_index": 29 },
+    "13": {
+      "across": { "type": "text", "content": "Iron", "target_index": 33 },
+      "down": { "type": "text", "content": "DE____", "target_index": 39 }
+    },
+    "14": {
+      "across": { "type": "text", "content": "Atom", "target_index": 37 },
+      "down": { "type": "text", "content": "Bleat", "target_index": 43 }
+    },
+    "15": {
+      "across": { "type": "text", "content": "LO_E", "target_index": 41 },
+      "down": { "type": "text", "content": "Siesta", "target_index": 47 }
+    },
+    "16": { "type": "text", "content": "Start", "arrow": "across", "target_index": 43 },
+    "17": { "type": "text", "content": "6th note", "arrow": "down", "target_index": 55 },
+    "18": { "type": "text", "content": "Beast", "arrow": "across", "target_index": 50 },
+    "19": { "type": "text", "content": "Near", "arrow": "across", "target_index": 57 },
+    "20": { "type": "text", "content": "Resort", "arrow": "across", "target_index": 60 }
+  },
+  "date": "2026-01-12",
+  "grid": [
+    ".", ".", ".", ".", ".", ".", ".",
+    ".", "S", "A", "F", "A", "R", "I",
+    ".", "A", ".", "E", "V", "E", "S",
+    ".", "N", "O", ".", "E", "E", "L",
+    ".", "D", "R", "Y", ".", "F", "E",
+    ".", ".", "I", "O", "N", ".", "S",
+    ".", "B", "E", "G", "I", "N", ".",
+    ".", "A", "N", "I", "M", "A", "L",
+    ".", "A", "T", ".", "S", "P", "A"
+  ],
+  "gridnums": [
+    0, 1, 2, 3, 4, 5, 6,
+    7, 0, 0, 0, 0, 0, 0,
+    8, 0, 9, 0, 0, 0, 0,
+    10, 0, 0, 11, 0, 0, 0,
+    12, 0, 0, 0, 13, 0, 0,
+    0, 14, 0, 0, 0, 15, 0,
+    16, 0, 0, 0, 0, 0, 17,
+    18, 0, 0, 0, 0, 0, 0,
+    19, 0, 0, 20, 0, 0, 0
+  ],
+  "puzzleId": "puzzle_032"
+}

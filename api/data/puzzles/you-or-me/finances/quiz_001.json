@@ -1,0 +1,39 @@
+{
+  "quizId": "quiz_001",
+  "title": "Spending Style",
+  "branch": "finances",
+  "questions": [
+    {
+      "id": "quiz_001_q1",
+      "category": "habits",
+      "prompt": "Who is more likely to...",
+      "content": "Save up for something special"
+    },
+    {
+      "id": "quiz_001_q2",
+      "category": "preferences",
+      "prompt": "Who would rather...",
+      "content": "Treat themselves to something nice after a hard week"
+    },
+    {
+      "id": "quiz_001_q3",
+      "category": "personality",
+      "prompt": "Who is more...",
+      "content": "Likely to hunt for the best deal"
+    },
+    {
+      "id": "quiz_001_q4",
+      "category": "habits",
+      "prompt": "Who would...",
+      "content": "Check reviews before making a purchase"
+    },
+    {
+      "id": "quiz_001_q5",
+      "category": "preferences",
+      "prompt": "Who is more likely to...",
+      "content": "Buy something just because it made them smile"
+    }
+  ],
+  "description": "Explore your spending personalities—who saves, who splurges, and who hunts for deals!",
+  "magnet_id": 8
+}

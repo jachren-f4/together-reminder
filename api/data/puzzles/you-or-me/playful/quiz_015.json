@@ -1,0 +1,39 @@
+{
+  "quizId": "quiz_015",
+  "title": "Guilty Pleasures",
+  "branch": "playful",
+  "questions": [
+    {
+      "id": "quiz_015_q1",
+      "category": "quirks",
+      "prompt": "Who is more...",
+      "content": "Likely to binge a reality TV show"
+    },
+    {
+      "id": "quiz_015_q2",
+      "category": "personality",
+      "prompt": "Who would...",
+      "content": "Eat dessert before dinner"
+    },
+    {
+      "id": "quiz_015_q3",
+      "category": "humor",
+      "prompt": "Who is more...",
+      "content": "Likely to sing dramatically in the shower"
+    },
+    {
+      "id": "quiz_015_q4",
+      "category": "quirks",
+      "prompt": "Who would...",
+      "content": "Stay up way too late scrolling their phone"
+    },
+    {
+      "id": "quiz_015_q5",
+      "category": "personality",
+      "prompt": "Who is more...",
+      "content": "Likely to have a secret snack stash"
+    }
+  ],
+  "description": "We all have them! Discover each other's guilty pleasures.",
+  "magnet_id": 3
+}

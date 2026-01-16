@@ -1,0 +1,39 @@
+{
+  "quizId": "quiz_009",
+  "title": "Morning & Night",
+  "branch": "intimacy",
+  "questions": [
+    {
+      "id": "quiz_009_q1",
+      "category": "preferences",
+      "prompt": "Who is more...",
+      "content": "Affectionate in the morning"
+    },
+    {
+      "id": "quiz_009_q2",
+      "category": "habits",
+      "prompt": "Who would...",
+      "content": "Stay up late talking in bed"
+    },
+    {
+      "id": "quiz_009_q3",
+      "category": "personality",
+      "prompt": "Who is more...",
+      "content": "Cuddly when waking up"
+    },
+    {
+      "id": "quiz_009_q4",
+      "category": "preferences",
+      "prompt": "Who prefers...",
+      "content": "Falling asleep close together"
+    },
+    {
+      "id": "quiz_009_q5",
+      "category": "habits",
+      "prompt": "Who is more likely to...",
+      "content": "Reach for the other in the middle of the night"
+    }
+  ],
+  "description": "From sunrise to midnight—explore your cozy rhythms!",
+  "magnet_id": 11
+}

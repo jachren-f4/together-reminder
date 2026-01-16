@@ -1,0 +1,24 @@
+{
+  "puzzleId": "ws_011",
+  "title": "Romantic XI",
+  "theme": "romantic",
+  "size": {
+    "rows": 10,
+    "cols": 10
+  },
+  "grid": "GNITCENNOCSRDZFTMEOPLEIADWSRJCJHINNIZMAHBTVUGLETFWHEMECIGAMHEGAAHGNLADVOBUGHJPHIOTQSTTPUSELGFKYYENOH",
+  "words": {
+    "TWILIGHT": "15,D",
+    "BEAUTY": "40,DR",
+    "HAPPY": "59,DL",
+    "CONNECTING": "9,L",
+    "TOGETHER": "81,U",
+    "MAGIC": "58,L",
+    "FAITH": "14,DL",
+    "WARM": "49,UL",
+    "RING": "11,DR",
+    "POEM": "19,L",
+    "LOVE": "90,U",
+    "HONEY": "99,L"
+  }
+}

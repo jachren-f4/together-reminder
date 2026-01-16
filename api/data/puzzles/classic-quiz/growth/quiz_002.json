@@ -1,64 +1,111 @@
 {
   "quizId": "quiz_002",
-  "title": "Growth Quiz 2",
+  "title": "Growing Through Change",
   "branch": "growth",
+  "description": "Explore how you navigate life transitions and changes together.",
+  "magnet_id": 9,
   "questions": [
     {
       "id": "quiz_002_q1",
-      "text": "What's my biggest dream for our future together?",
+      "text": "When big changes happen in our lives, I tend to...",
       "choices": [
-        "Building a home together",
-        "Traveling the world",
-        "Starting a family",
-        "Growing old together"
+        "Adapt quickly and embrace the new",
+        "Need time to process and adjust",
+        "Focus on what we can control",
+        "Lean on you more than usual"
       ],
-      "category": "shared_dreams"
+      "category": "change_response",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "How we respond to change reveals our coping patterns and attachment needs. Quick adapters thrive on novelty; processors need integration time; controllers seek agency; leaners need connection during uncertainty. Knowing each other's patterns helps you support each other.",
+          "framework": "attachment_theory",
+          "whenDifferent": "Different change responses can cause friction. The quick adapter may feel the processor is resistant; the processor may feel rushed. Give each other space to handle change in your own way while staying connected.",
+          "whenSame": "Shared change responses create natural synchrony during transitions. You'll naturally support each other because you understand the experience.",
+          "journalPrompt": "How do you typically respond to major changes? What do you need from your partner during transitions?"
+        }
+      }
     },
     {
       "id": "quiz_002_q2",
-      "text": "What challenge have I overcome that shaped me?",
+      "text": "The kind of change that challenges me most is...",
       "choices": [
-        "A difficult relationship",
-        "Career or financial hardship",
-        "Health struggles",
-        "Personal loss or grief"
+        "Unexpected or sudden changes",
+        "Changes I didn't choose",
+        "Changes that affect our relationship",
+        "Changes in routine or stability"
       ],
-      "category": "resilience"
+      "category": "change_challenge",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Understanding what types of change are hardest helps couples prepare for and support each other through life transitions. Unexpected changes test flexibility; unchosen changes test acceptance; relationship changes test security; routine changes test adaptability.",
+          "framework": "positive_psychology",
+          "whenDifferent": "Different change sensitivities mean you may struggle with different aspects of the same transition. Be aware of what's hardest for your partner.",
+          "whenSame": "Shared change sensitivities mean you'll need similar support during certain types of transitions.",
+          "journalPrompt": "What type of change is hardest for you? How can your partner help during those times?"
+        }
+      }
     },
     {
       "id": "quiz_002_q3",
-      "text": "What's one thing I want to change about myself?",
+      "text": "When we're going through change together, I need...",
       "choices": [
-        "Being more patient",
-        "Communicating better",
-        "Taking better care of myself",
-        "Being more present"
+        "Extra reassurance about us",
+        "Open conversation about what's happening",
+        "Space to process on my own first",
+        "A sense of what comes next"
       ],
-      "category": "personal_change"
+      "category": "change_needs",
+      "metadata": {
+        "dimension": "stress_processing",
+        "poleMapping": ["right", "right", "left", "right"],
+        "therapeutic": {
+          "rationale": "Needs during change reflect attachment and communication styles. Reassurance-seekers need security confirmation; talkers need verbal processing; space-needers need solitude first; planners need future clarity. Explicitly stating needs prevents misunderstandings.",
+          "framework": "attachment_theory",
+          "whenDifferent": "Different needs during change require flexibility. The space-needer may seem distant to the reassurance-seeker. Communicate your needs explicitly.",
+          "whenSame": "Matched needs during change make supporting each other intuitive. You'll naturally provide what your partner wants.",
+          "journalPrompt": "What do you most need from your partner when life is changing? Have you told them?"
+        }
+      }
     },
     {
       "id": "quiz_002_q4",
-      "text": "How do I want our relationship to grow?",
+      "text": "Looking back, a change that made us stronger was...",
       "choices": [
-        "Deeper emotional connection",
-        "More adventure and fun",
-        "Better communication",
-        "More intimacy"
+        "A challenge we overcame together",
+        "A move or major life transition",
+        "A growth period for one of us",
+        "A difficult time we survived"
       ],
-      "category": "relationship_goals"
+      "category": "growth_evidence",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Reflecting on past changes that strengthened the relationship builds confidence for future transitions. It creates a shared narrative of resilience and reminds couples of their capability.",
+          "framework": "narrative_therapy",
+          "whenDifferent": "Different memories of strengthening changes are all valid. You may remember different aspects of the same event as most meaningful.",
+          "whenSame": "Shared memory of a strengthening change creates a powerful reference point for future challenges.",
+          "journalPrompt": "What past change made your relationship stronger? What did you learn from navigating it together?"
+        }
+      }
     },
     {
       "id": "quiz_002_q5",
-      "text": "What value do I want to live by more?",
+      "text": "I believe change in a relationship...",
       "choices": [
-        "Authenticity",
-        "Kindness",
-        "Courage",
-        "Gratitude"
+        "Is inevitable and can be positive",
+        "Requires intentional effort to navigate",
+        "Can bring us closer if we let it",
+        "Is something we should embrace together"
       ],
-      "category": "values"
+      "category": "change_philosophy",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Beliefs about change shape how couples approach transitions. Seeing change as inevitable normalizes it; seeing it as requiring effort honors the work; seeing it as closeness-building creates hope; embracing it together emphasizes partnership.",
+          "framework": "positive_psychology",
+          "whenDifferent": "All these beliefs support healthy change navigation. Discuss which perspective feels most true for each of you.",
+          "whenSame": "Shared philosophy about change creates aligned expectations for how you'll handle life transitions.",
+          "journalPrompt": "What do you believe about change in relationships? How does that belief serve you?"
+        }
+      }
     }
-  ],
-  "description": "Discover your shared journey of personal development.",
-  "magnet_id": 9
+  ]
 }

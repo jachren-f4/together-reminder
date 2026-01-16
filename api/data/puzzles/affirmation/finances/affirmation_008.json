@@ -1,0 +1,115 @@
+{
+  "quizId": "affirmation_008",
+  "title": "Money Stress",
+  "category": "finances",
+  "branch": "finances",
+  "description": "Assess how money affects your emotional wellbeing together",
+  "magnet_id": 15,
+  "questions": [
+    {
+      "id": "affirmation_008_q1",
+      "text": "Money worries don't negatively affect my mood in our relationship.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Financial stress often spills into relationship mood—creating irritability, withdrawal, or conflict. Awareness of this connection is the first step to managing it.",
+          "framework": "financial_therapy",
+          "whenDifferent": "If one partner's money stress affects the relationship more, explore how to create boundaries between financial worry and relationship quality.",
+          "whenSame": "Shared experience—whether stress-free or stressed—means you can address it together.",
+          "journalPrompt": "How does financial stress show up in how you relate to your partner?"
+        }
+      }
+    },
+    {
+      "id": "affirmation_008_q2",
+      "text": "I sense healthy coping when money stress comes up between us.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "How your partner handles financial stress—whether through avoidance, anxiety, blame, or problem-solving—affects your relationship. Healthy coping protects the partnership.",
+          "framework": "attachment_theory",
+          "whenDifferent": "If one partner sees unhealthy coping, discuss specific behaviors and their impact. Often people don't realize how their stress response affects others.",
+          "whenSame": "Shared perception of healthy coping creates confidence in facing financial challenges.",
+          "journalPrompt": "How does your partner cope with money stress? How does it affect you?"
+        }
+      }
+    },
+    {
+      "id": "affirmation_008_q3",
+      "text": "I can talk to my partner when I'm feeling financially stressed.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Being able to share financial stress with your partner provides emotional support and prevents isolation. Hiding stress often makes it worse.",
+          "framework": "gottman",
+          "whenDifferent": "If one partner can't share stress easily, explore what makes it difficult. Fear of judgment? Not wanting to worry the other? These barriers can be addressed.",
+          "whenSame": "Mutual ability to share financial stress creates emotional partnership around money.",
+          "journalPrompt": "What makes it easy or hard to share money worries with your partner?"
+        }
+      }
+    },
+    {
+      "id": "affirmation_008_q4",
+      "text": "I feel supported when I'm anxious about money.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Supportive responses to financial anxiety strengthen your bond. Dismissive or critical responses leave you feeling alone with your worries.",
+          "framework": "attachment_theory",
+          "whenDifferent": "If one partner doesn't feel supported, discuss what support looks like. Sometimes partners try to help by minimizing worries, which doesn't feel supportive.",
+          "whenSame": "Mutual feeling of support during financial stress creates security.",
+          "journalPrompt": "What kind of support do you need when you're worried about money?"
+        }
+      }
+    },
+    {
+      "id": "affirmation_008_q5",
+      "text": "I believe we can keep money stress from damaging our connection.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Confidence that you can protect your relationship from financial stress reflects emotional maturity and commitment. This belief helps you stay connected during difficult times.",
+          "framework": "positive_psychology",
+          "whenDifferent": "If one partner is less confident, explore what would help. Specific agreements about how to handle stress? More communication?",
+          "whenSame": "Shared confidence in protecting your connection from money stress is a relationship strength.",
+          "journalPrompt": "What would help you keep financial stress from affecting your relationship?"
+        }
+      }
+    }
+  ]
+}

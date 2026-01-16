@@ -1,0 +1,109 @@
+{
+  "quizId": "quiz_013",
+  "title": "Non-Sexual Intimacy",
+  "branch": "intimacy",
+  "description": "Explore the forms of closeness that don't involve sex but strengthen your bond.",
+  "magnet_id": 17,
+  "questions": [
+    {
+      "id": "quiz_013_q1",
+      "text": "The non-sexual physical connection I value most is...",
+      "choices": [
+        "Cuddling and holding each other",
+        "Casual touches throughout the day",
+        "Long hugs that feel meaningful",
+        "Physical closeness while doing other things"
+      ],
+      "category": "nonsexual_touch",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Non-sexual touch preferences vary. Cuddlers want extended closeness; casual-touchers want constant low-level connection; hug-lovers want meaningful moments; proximity-seekers want parallel togetherness. All build intimacy differently.",
+          "framework": "love_languages",
+          "whenDifferent": "Different preferences mean giving in different ways. The cuddler may not realize casual touches mean love; the casual-toucher may not realize their partner needs more extended closeness.",
+          "whenSame": "Shared non-sexual touch preference creates natural physical connection patterns.",
+          "journalPrompt": "What non-sexual physical touch do you most value? Are you getting enough of it?"
+        }
+      }
+    },
+    {
+      "id": "quiz_013_q2",
+      "text": "The role of non-sexual intimacy in our relationship should be...",
+      "choices": [
+        "Central—it's the foundation of everything",
+        "Frequent—it maintains daily connection",
+        "Important—but I don't need a lot",
+        "Natural—it should flow without thinking"
+      ],
+      "category": "intimacy_role",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Views on non-sexual intimacy's role vary. Central-viewers build everything on it; frequent-wanters need regular doses; important-but-less types need less; natural-flow types don't want to plan it. Alignment here prevents feeling over or under-connected.",
+          "framework": "gottman",
+          "whenDifferent": "Different needs require adjustment. The central-viewer may feel neglected by the important-but-less partner; the important-but-less partner may feel smothered. Find your balance.",
+          "whenSame": "Shared view on non-sexual intimacy's role aligns your expectations.",
+          "journalPrompt": "How important is non-sexual intimacy to you? What role does it play in feeling connected?"
+        }
+      }
+    },
+    {
+      "id": "quiz_013_q3",
+      "text": "I feel close to my partner through non-physical intimacy when we...",
+      "choices": [
+        "Have deep conversations about life",
+        "Share comfortable silence together",
+        "Laugh and have fun together",
+        "Support each other through challenges"
+      ],
+      "category": "emotional_intimacy",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Emotional intimacy pathways vary. Deep-talkers connect through conversation; silence-sharers connect through presence; laughter-lovers connect through joy; support-sharers connect through hardship. Knowing your partner's pathway helps you walk it.",
+          "framework": "gottman",
+          "whenDifferent": "Different pathways can all be traveled. The deep-talker may not realize laughter counts as intimacy for their partner; the silence-sharer may not realize their partner needs more words.",
+          "whenSame": "Shared emotional intimacy pathway makes connection feel natural and aligned.",
+          "journalPrompt": "What creates emotional intimacy for you outside of physical touch? How do you feel closest?"
+        }
+      }
+    },
+    {
+      "id": "quiz_013_q4",
+      "text": "When we haven't had non-sexual closeness in a while, I tend to...",
+      "choices": [
+        "Feel disconnected and miss it",
+        "Not notice unless it's been a long time",
+        "Initiate reconnection in some way",
+        "Feel it affecting other parts of our relationship"
+      ],
+      "category": "intimacy_needs",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Responses to intimacy gaps reveal attachment needs. Disconnection-feelers need regular closeness; not-noticers are lower-need; initiators take action; whole-relationship feelers see ripple effects. Understanding your partner's response helps during busy times.",
+          "framework": "attachment_theory",
+          "whenDifferent": "The disconnection-feeler may suffer silently while the not-noticer doesn't realize. Check in during busy seasons.",
+          "whenSame": "Shared response to intimacy gaps means you'll notice and address disconnection similarly.",
+          "journalPrompt": "How do you feel when non-sexual intimacy has been lacking? What do you need?"
+        }
+      }
+    },
+    {
+      "id": "quiz_013_q5",
+      "text": "The daily ritual of connection I'd most value is...",
+      "choices": [
+        "A meaningful greeting and goodbye",
+        "Time set aside just to be together",
+        "Physical affection throughout the day",
+        "Checking in about each other's lives"
+      ],
+      "category": "connection_rituals",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Connection rituals ground relationships. Greeting-valuing types want transitions honored; together-time types want dedicated moments; touch-throughout types want constant contact; check-in types want emotional tracking. Rituals create predictable connection.",
+          "framework": "gottman",
+          "whenDifferent": "Different rituals can coexist. You can have meaningful greetings AND dedicated time AND physical affection. Build rituals that serve both of you.",
+          "whenSame": "Shared ritual preference makes building daily connection patterns easy.",
+          "journalPrompt": "What daily connection ritual would make you feel most loved and connected?"
+        }
+      }
+    }
+  ]
+}

@@ -18,14 +18,14 @@
     {
       "id": "quiz_012_q3",
       "category": "conflict",
-      "prompt": "Who finds it harder to...",
-      "content": "Move on after arguments"
+      "prompt": "Who takes more time to...",
+      "content": "Process disagreements before moving on"
     },
     {
       "id": "quiz_012_q4",
       "category": "trust",
       "prompt": "Who is more open to...",
-      "content": "Sharing passwords and private information"
+      "content": "Sharing everyday thoughts and observations"
     },
     {
       "id": "quiz_012_q5",

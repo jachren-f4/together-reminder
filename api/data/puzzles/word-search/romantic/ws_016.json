@@ -1,0 +1,24 @@
+{
+  "puzzleId": "ws_016",
+  "title": "Romantic XVI",
+  "theme": "romantic",
+  "size": {
+    "rows": 10,
+    "cols": 10
+  },
+  "grid": "DREAMINGNKSMRAHCNUGINNMECIBBRSOXWUNRAEYSIWIEEHSURCSCVEZLVEQASEZTAKWSYKAELTPOTIOHPABELOVEDCWASFHOPING",
+  "words": {
+    "EVENING": "61,UR",
+    "YEARN": "38,L",
+    "FLOWERS": "93,UR",
+    "BELOVED": "82,R",
+    "WALTZ": "90,UR",
+    "CHARM": "15,L",
+    "PASSION": "80,U",
+    "HOPING": "94,R",
+    "DREAMING": "0,R",
+    "CRUSH": "49,L",
+    "KISS": "9,D",
+    "BREEZE": "26,DL"
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "puzzleId": "ws_003",
+  "title": "Casual III",
+  "theme": "casual",
+  "size": {
+    "rows": 10,
+    "cols": 10
+  },
+  "grid": "PIEMYDEKHCVLOOCBHUAHZRJMEMESPILDJECSWFPPCLALMOQEYSTLKELOKATAEIPSBASAOUXTAACGEEZTTSBORRSEWRIMVHGKWXMA",
+  "words": {
+    "GREAT": "94,UR",
+    "PARK": "62,DR",
+    "AWESOME": "99,UL",
+    "COOL": "14,L",
+    "PIE": "0,R",
+    "MEMES": "23,R",
+    "CHIPS": "9,D",
+    "CAKE": "74,UR",
+    "STILL": "81,U",
+    "TEXT": "50,D",
+    "HAPPY": "8,D",
+    "SLOW": "63,UR"
+  }
+}

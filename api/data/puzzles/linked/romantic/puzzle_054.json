@@ -1,0 +1,73 @@
+{
+  "author": "Crossword Maker GPT",
+  "title": "AI-Built Puzzle",
+  "theme": "moving",
+  "size": {
+    "rows": 9,
+    "cols": 7
+  },
+  "clues": {
+    "1": { "type": "text", "content": "📦 UAVs", "arrow": "down", "target_index": 8 },
+    "2": { "type": "text", "content": "🚚 crew", "arrow": "down", "target_index": 9 },
+    "3": { "type": "text", "content": "O__", "arrow": "down", "target_index": 10 },
+    "4": { "type": "text", "content": "N__", "arrow": "down", "target_index": 11 },
+    "5": { "type": "text", "content": "E__S", "arrow": "down", "target_index": 12 },
+    "6": { "type": "text", "content": "S___", "arrow": "down", "target_index": 13 },
+    "7": { "type": "text", "content": "Buzzes", "arrow": "across", "target_index": 8 },
+    "8": { "type": "text", "content": "Sincere", "arrow": "across", "target_index": 15 },
+    "9": { "type": "text", "content": "O__", "arrow": "across", "target_index": 22 },
+    "10": {
+      "across": { "type": "text", "content": "☕ brew", "target_index": 25 },
+      "down": { "type": "text", "content": "T___", "target_index": 31 }
+    },
+    "11": { "type": "text", "content": "_OW", "arrow": "across", "target_index": 29 },
+    "12": {
+      "across": { "type": "text", "content": "D__", "target_index": 31 },
+      "down": { "type": "text", "content": "Trial", "target_index": 37 }
+    },
+    "13": {
+      "across": { "type": "text", "content": "S_ + I", "target_index": 33 },
+      "down": { "type": "text", "content": "Chances", "target_index": 39 }
+    },
+    "14": {
+      "across": { "type": "text", "content": "Heckle", "target_index": 37 },
+      "down": { "type": "text", "content": "Damp", "target_index": 43 }
+    },
+    "15": {
+      "across": { "type": "text", "content": "D_", "target_index": 41 },
+      "down": { "type": "text", "content": "📦 job", "target_index": 47 }
+    },
+    "16": { "type": "text", "content": "You + I", "arrow": "across", "target_index": 43 },
+    "17": {
+      "across": { "type": "text", "content": "📦 lawyer", "target_index": 46 },
+      "down": { "type": "text", "content": "D___", "target_index": 52 }
+    },
+    "18": { "type": "text", "content": "E___", "arrow": "down", "target_index": 55 },
+    "19": { "type": "text", "content": "Lessons", "arrow": "across", "target_index": 50 },
+    "20": { "type": "text", "content": "Fringe", "arrow": "across", "target_index": 57 }
+  },
+  "date": "2026-01-13",
+  "grid": [
+    ".", ".", ".", ".", ".", ".", ".",
+    ".", "D", "R", "O", "N", "E", "S",
+    ".", "H", "O", "N", "E", "S", "T",
+    ".", "O", "D", ".", "T", "E", "A",
+    ".", "W", ".", "D", ".", "S", "I",
+    ".", ".", "B", "O", "O", ".", "R",
+    ".", "W", "E", ".", "D", "A", ".",
+    ".", "E", "T", "U", "D", "E", "S",
+    ".", "T", "A", "S", "S", "E", "L"
+  ],
+  "gridnums": [
+    0, 1, 2, 3, 4, 5, 6,
+    7, 0, 0, 0, 0, 0, 0,
+    8, 0, 0, 0, 0, 0, 0,
+    9, 0, 0, 10, 0, 0, 0,
+    11, 0, 12, 0, 13, 0, 0,
+    0, 14, 0, 0, 0, 15, 0,
+    16, 0, 0, 17, 0, 0, 18,
+    19, 0, 0, 0, 0, 0, 0,
+    20, 0, 0, 0, 0, 0, 0
+  ],
+  "puzzleId": "puzzle_054"
+}

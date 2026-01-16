@@ -1,59 +1,111 @@
 {
   "quizId": "quiz_011",
-  "title": "Growth Quiz 11",
+  "title": "Our Future Vision",
   "branch": "growth",
+  "description": "Explore how you envision your future together and align on shared dreams.",
+  "magnet_id": 11,
   "questions": [
     {
       "id": "quiz_011_q1",
-      "text": "What future milestone am I most excited about for us?",
+      "text": "When I think about our future together, I feel...",
       "choices": [
-        "Living together or buying a home",
-        "Marriage or long-term commitment",
-        "Starting a family",
-        "Achieving our shared goals"      ],
-      "category": "growth"
+        "Excited about what we'll build",
+        "Secure and grounded",
+        "Curious about where we'll go",
+        "Grateful we're on this journey together"
+      ],
+      "category": "future_feelings",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Feelings about the future reveal attachment security and optimism. Excitement shows anticipation; security shows groundedness; curiosity shows openness; gratitude shows appreciation. Sharing these feelings deepens connection around your shared future.",
+          "framework": "attachment_theory",
+          "whenDifferent": "Different feelings about the future are all positive orientations. The excited and the grounded can balance each other.",
+          "whenSame": "Shared feelings about the future create emotional alignment around your shared journey.",
+          "journalPrompt": "What do you feel when you think about your future together? Have you shared this with your partner?"
+        }
+      }
     },
     {
       "id": "quiz_011_q2",
-      "text": "Where do I see us living in the future?",
+      "text": "The dream I'm most excited to pursue with you is...",
       "choices": [
-        "Where we are now",
-        "In a different city or state",
-        "Closer to family",
-        "Somewhere new and adventurous"      ],
-      "category": "values"
+        "Building a home and life together",
+        "Adventures and experiences we'll share",
+        "Growing our family or community",
+        "Achieving goals that matter to us both"
+      ],
+      "category": "shared_dreams",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Shared dreams reveal what couples value most. Home-builders prioritize stability; adventure-seekers prioritize experience; family-growers prioritize connection; goal-achievers prioritize accomplishment. Aligning on dreams prevents future conflict.",
+          "framework": "positive_psychology",
+          "whenDifferent": "Different dreams aren't mutually exclusive. Most couples can pursue multiple types of shared dreams. Discuss priorities.",
+          "whenSame": "Matched dreams create clear shared direction and motivation.",
+          "journalPrompt": "What dream are you most excited to pursue together? Have you talked about it?"
+        }
+      }
     },
     {
       "id": "quiz_011_q3",
-      "text": "What shared goal matters most to me for our future?",
+      "text": "When we discuss the future, I need us to...",
       "choices": [
-        "Financial security and stability",
-        "Building a family",
-        "Creating a home together",
-        "Traveling and having adventures"      ],
-      "category": "values"
+        "Dream big without limiting ourselves",
+        "Be practical about what's possible",
+        "Stay flexible and open to change",
+        "Make concrete plans and timelines"
+      ],
+      "category": "planning_style",
+      "metadata": {
+        "dimension": "planning_style",
+        "poleMapping": ["left", "right", "left", "right"],
+        "therapeutic": {
+          "rationale": "Future planning styles vary. Big dreamers need inspiration; practical planners need feasibility; flexible types need adaptability; concrete planners need structure. Misaligned styles can create frustration in future discussions.",
+          "framework": "gottman",
+          "whenDifferent": "Different planning styles need balance. The dreamer and the practical planner can check each other's tendencies. Find a middle ground.",
+          "whenSame": "Matched planning styles create smooth future discussions.",
+          "journalPrompt": "How do you like to plan for the future? Does your partner approach it differently?"
+        }
+      }
     },
     {
       "id": "quiz_011_q4",
-      "text": "How important is it that we align on future plans?",
+      "text": "What gives me confidence in our future is...",
       "choices": [
-        "Critical - we need to be on the same page",
-        "Important but we can compromise",
-        "We should each have some independence",
-        "It varies by the specific plan"      ],
-      "category": "values"
+        "How we've overcome challenges before",
+        "Our shared values and vision",
+        "The way we communicate and connect",
+        "How committed we are to each other"
+      ],
+      "category": "future_confidence",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Sources of future confidence reveal what couples trust most. Challenge-overcomers trust their resilience; value-sharers trust their alignment; communicators trust their connection; commitment-trusters trust their dedication. Knowing this strengthens confidence.",
+          "framework": "gottman",
+          "whenDifferent": "Different confidence sources are all valid. Together, they provide multiple reasons to feel secure about your future.",
+          "whenSame": "Shared confidence sources reinforce what you both trust most about your relationship.",
+          "journalPrompt": "What gives you confidence in your future together? Have you told your partner?"
+        }
+      }
     },
     {
       "id": "quiz_011_q5",
-      "text": "What gives me confidence in our future together?",
+      "text": "I believe our future will be shaped by...",
       "choices": [
-        "How we've overcome challenges",
-        "Our shared values and vision",
-        "The strength of our communication",
-        "How we support each other's growth"      ],
-      "category": "trust"
+        "The choices we make together",
+        "How we grow and evolve as people",
+        "Our commitment to each other",
+        "The love and care we continue to show"
+      ],
+      "category": "future_philosophy",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Beliefs about what shapes the future reveal agency and priority. Choice-believers emphasize decisions; growth-believers emphasize development; commitment-believers emphasize dedication; love-believers emphasize connection. All perspectives are valuable.",
+          "framework": "positive_psychology",
+          "whenDifferent": "All these factors shape a couple's future. Your different emphases can complement each other.",
+          "whenSame": "Shared beliefs about what shapes your future create aligned approach to building it.",
+          "journalPrompt": "What do you believe will most shape your future together?"
+        }
+      }
     }
-  ],
-  "description": "Explore how you help each other reach your potential.",
-  "magnet_id": 11
+  ]
 }

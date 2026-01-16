@@ -1,0 +1,111 @@
+{
+  "quizId": "quiz_010",
+  "title": "Triggers & Sensitivities",
+  "branch": "conflict",
+  "description": "Explore what triggers you during conflict and why.",
+  "magnet_id": 17,
+  "questions": [
+    {
+      "id": "quiz_010_q1",
+      "text": "The thing that triggers me most during conflict is feeling...",
+      "choices": [
+        "Dismissed or not taken seriously",
+        "Blamed or attacked",
+        "Misunderstood or not heard",
+        "Controlled or cornered"
+      ],
+      "category": "conflict_triggers",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Conflict triggers often trace to core wounds. Dismissal-sensitive people need to matter; blame-sensitive people need safety; misunderstanding-sensitive people need to be known; control-sensitive people need autonomy. Knowing triggers prevents accidental harm.",
+          "framework": "attachment_theory",
+          "whenDifferent": "Different triggers require different care. Avoid your partner's triggers just as you'd want them to avoid yours.",
+          "whenSame": "Shared triggers create mutual understanding about what's most painful.",
+          "journalPrompt": "What triggers you most during conflict? Where did that sensitivity come from?"
+        }
+      }
+    },
+    {
+      "id": "quiz_010_q2",
+      "text": "When I'm triggered, I typically...",
+      "choices": [
+        "Get louder or more intense",
+        "Withdraw or shut down",
+        "Get tearful or emotional",
+        "Become cold or distant"
+      ],
+      "category": "trigger_response",
+      "metadata": {
+        "dimension": "stress_processing",
+        "poleMapping": ["right", "left", "right", "left"],
+        "therapeutic": {
+          "rationale": "Trigger responses reveal coping patterns. Intensity-escalators fight; withdrawers flee; emotional-expressers feel; cold-distancers freeze. Recognizing your response helps you manage it and helps your partner understand.",
+          "framework": "attachment_theory",
+          "whenDifferent": "Different responses can escalate each other. The intensity-escalator may flood the withdrawer; the withdrawer may trigger the intensity-escalator's pursuit. Know your dance.",
+          "whenSame": "Shared trigger response helps you recognize when you're both activated.",
+          "journalPrompt": "What do you do when you're triggered? How does your partner usually respond?"
+        }
+      }
+    },
+    {
+      "id": "quiz_010_q3",
+      "text": "I want my partner to know that when I'm triggered...",
+      "choices": [
+        "I need extra patience and gentleness",
+        "I may need space before I can talk",
+        "I'm reacting to old pain, not just this moment",
+        "I still love them even if I don't show it well"
+      ],
+      "category": "trigger_needs",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Trigger needs help partners respond well. Patience-needers need softness; space-needers need room; old-pain-namers need understanding; love-affirmers need reassurance. Communicating needs before triggers happen is essential.",
+          "framework": "attachment_theory",
+          "whenDifferent": "Different needs require different support. Learn what your partner needs when triggered.",
+          "whenSame": "Shared trigger needs make supporting each other during activation easier.",
+          "journalPrompt": "What do you need from your partner when you're triggered? Have you told them?"
+        }
+      }
+    },
+    {
+      "id": "quiz_010_q4",
+      "text": "Something from my past that affects how I handle conflict is...",
+      "choices": [
+        "How conflict was handled in my family",
+        "Past relationships where conflict went badly",
+        "Times when I wasn't heard or respected",
+        "I try not to let the past affect me"
+      ],
+      "category": "conflict_history",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Past experiences shape present conflict responses. Family patterns are deeply ingrained; past relationship wounds create fear; not-heard experiences create sensitivity; denial may hide unprocessed pain. Understanding your history helps you grow.",
+          "framework": "family_systems",
+          "whenDifferent": "Different histories create different sensitivities. Share your stories to understand each other's triggers.",
+          "whenSame": "Shared historical influences create mutual understanding about where patterns come from.",
+          "journalPrompt": "How does your past affect how you handle conflict now? What patterns do you notice?"
+        }
+      }
+    },
+    {
+      "id": "quiz_010_q5",
+      "text": "Knowing each other's triggers should help us...",
+      "choices": [
+        "Avoid accidentally hurting each other",
+        "Be more compassionate during conflict",
+        "Understand reactions that might seem extreme",
+        "All of these—trigger awareness protects us"
+      ],
+      "category": "trigger_purpose",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Trigger awareness serves relationship health. Avoiding hurt prevents wounds; compassion softens responses; understanding prevents judgment. Shared trigger knowledge is intimate information that requires care.",
+          "framework": "gottman",
+          "whenDifferent": "All these purposes are valuable. Trigger awareness should make conflict safer, not be used as a weapon.",
+          "whenSame": "Shared understanding of trigger awareness purpose creates aligned commitment to using this knowledge well.",
+          "journalPrompt": "How do you want trigger knowledge to be used in your relationship?"
+        }
+      }
+    }
+  ]
+}

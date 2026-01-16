@@ -57,6 +57,9 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+	<key>UIRequiredDeviceCapabilities</key>
+	<array>
+	</array>
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>

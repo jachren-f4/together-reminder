@@ -1,0 +1,39 @@
+{
+  "quizId": "quiz_012",
+  "title": "Financial Teamwork",
+  "branch": "finances",
+  "questions": [
+    {
+      "id": "quiz_012_q1",
+      "category": "personality",
+      "prompt": "Who is more likely to...",
+      "content": "Suggest a shared financial goal"
+    },
+    {
+      "id": "quiz_012_q2",
+      "category": "habits",
+      "prompt": "Who would...",
+      "content": "Remember to pay a shared bill"
+    },
+    {
+      "id": "quiz_012_q3",
+      "category": "preferences",
+      "prompt": "Who is more excited about...",
+      "content": "Planning something special together"
+    },
+    {
+      "id": "quiz_012_q4",
+      "category": "personality",
+      "prompt": "Who enjoys more...",
+      "content": "Brainstorming ways to reach goals faster"
+    },
+    {
+      "id": "quiz_012_q5",
+      "category": "habits",
+      "prompt": "Who would...",
+      "content": "Celebrate a win by treating you both"
+    }
+  ],
+  "description": "Two heads are better than one! Discover how you work together on money matters.",
+  "magnet_id": 9
+}

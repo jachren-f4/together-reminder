@@ -1,0 +1,24 @@
+{
+  "puzzleId": "ws_011",
+  "title": "Casual XI",
+  "theme": "casual",
+  "size": {
+    "rows": 10,
+    "cols": 10
+  },
+  "grid": "CZCHEERFULRZRLLSTARSEXTUZLSROOSEGWAWITQETLMIIOTTPLFPMMGECNSGAMNAPGKOFLEIOKRFLMCILSWIFCREWUTWHGUALXSB",
+  "words": {
+    "REST": "10,D",
+    "STARS": "15,R",
+    "NAP": "62,R",
+    "LEAF": "80,U",
+    "LAUGH": "96,L",
+    "CREW": "85,R",
+    "STILL": "58,UL",
+    "GIGGLES": "32,DR",
+    "SWIM": "26,DL",
+    "COCOA": "78,UL",
+    "CHEERFUL": "2,R",
+    "SIMPLE": "81,U"
+  }
+}

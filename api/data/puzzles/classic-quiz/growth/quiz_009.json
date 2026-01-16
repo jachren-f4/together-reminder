@@ -1,59 +1,111 @@
 {
   "quizId": "quiz_009",
-  "title": "Growth Quiz 9",
+  "title": "Handling Setbacks",
   "branch": "growth",
+  "description": "Explore how you support each other through disappointments and setbacks.",
+  "magnet_id": 10,
   "questions": [
     {
       "id": "quiz_009_q1",
-      "text": "How do I typically respond to unexpected change?",
+      "text": "When I experience a setback, my first reaction is usually...",
       "choices": [
-        "I embrace it and adapt quickly",
-        "I need time to process and adjust",
-        "I resist initially but come around",
-        "I struggle and need extra support"      ],
-      "category": "growth"
+        "Disappointment that I need to sit with",
+        "Analyzing what went wrong",
+        "Wanting to talk it through with you",
+        "Pushing forward and trying again"
+      ],
+      "category": "setback_reaction",
+      "metadata": {
+        "dimension": "stress_processing",
+        "poleMapping": ["left", "left", "right", "right"],
+        "therapeutic": {
+          "rationale": "Initial setback reactions reveal processing styles. Disappointment-sitters need emotional space; analyzers need understanding; talkers need connection; pushers need action. Knowing your partner's pattern helps you respond appropriately.",
+          "framework": "attachment_theory",
+          "whenDifferent": "Different setback reactions require flexibility. The pusher may not understand why the sitter needs time; the talker may overwhelm the analyzer. Give each other grace.",
+          "whenSame": "Matched setback reactions create natural understanding of what each other needs when things go wrong.",
+          "journalPrompt": "What's your first reaction to setbacks? Does your partner respond in a way that helps?"
+        }
+      }
     },
     {
       "id": "quiz_009_q2",
-      "text": "What helps me navigate difficult life transitions?",
+      "text": "After a disappointment, I need you to...",
       "choices": [
-        "Your steady presence and support",
-        "Having a clear plan forward",
-        "Time to process emotions",
-        "Focusing on what I can control"      ],
-      "category": "emotional"
+        "Just be with me without trying to fix it",
+        "Help me see the bigger picture",
+        "Remind me of my strengths",
+        "Give me space then check in later"
+      ],
+      "category": "disappointment_support",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Support needs after disappointment vary. Presence-needers want companionship; perspective-needers want reframing; strength-reminders want affirmation; space-then-checkin types need a sequence. Wrong support can feel dismissive or intrusive.",
+          "framework": "gottman",
+          "whenDifferent": "Different disappointment support needs require explicit communication. Ask what would actually help rather than assuming.",
+          "whenSame": "Matched support needs make comforting each other after disappointments intuitive.",
+          "journalPrompt": "What do you need from your partner after a disappointment? Have you told them?"
+        }
+      }
     },
     {
       "id": "quiz_009_q3",
-      "text": "When facing a major challenge, what do I need most?",
+      "text": "What helps me recover from setbacks is...",
       "choices": [
-        "Emotional support and encouragement",
-        "Practical help and problem-solving",
-        "Space to figure it out myself",
-        "Partnership in tackling it together"      ],
-      "category": "communication"
+        "Time and self-compassion",
+        "Understanding what I can learn from it",
+        "Support and encouragement from you",
+        "Getting back on track with small steps"
+      ],
+      "category": "recovery_approach",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Recovery approaches reflect resilience patterns. Time-needers require patience; learners extract value; support-seekers need connection; action-takers need movement. Understanding your partner's recovery path helps you support appropriately.",
+          "framework": "positive_psychology",
+          "whenDifferent": "Different recovery approaches are all valid. The action-taker may not understand the time-needer's pace. Respect each other's process.",
+          "whenSame": "Matched recovery approaches create synchronized healing from setbacks.",
+          "journalPrompt": "What helps you recover from setbacks? Is your partner able to support that process?"
+        }
+      }
     },
     {
       "id": "quiz_009_q4",
-      "text": "How do I prefer we handle challenges that affect us both?",
+      "text": "When you're going through a setback, I want to...",
       "choices": [
-        "Face them as a united team",
-        "Divide and conquer based on strengths",
-        "Talk through options before acting",
-        "Support each other's individual coping"      ],
-      "category": "values"
+        "Be there for you however you need",
+        "Help you see you'll get through this",
+        "Take things off your plate to lighten the load",
+        "Let you process while staying close"
+      ],
+      "category": "giving_support",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Support-giving instincts reflect care styles. Adaptive supporters follow partner's lead; hope-givers provide perspective; load-lighteners offer practical help; close-waiters offer patient presence. All are caring responses.",
+          "framework": "gottman",
+          "whenDifferent": "Your support instinct may not match what your partner needs. Be willing to adjust your approach.",
+          "whenSame": "Matched support-giving and receiving creates natural comfort during difficult times.",
+          "journalPrompt": "How do you naturally want to support your partner through setbacks? Is that what they need?"
+        }
+      }
     },
     {
       "id": "quiz_009_q5",
-      "text": "What's my relationship with failure and setbacks?",
+      "text": "I believe setbacks in life...",
       "choices": [
-        "I see them as learning opportunities",
-        "They're hard but I eventually bounce back",
-        "I'm working on being more resilient",
-        "They shake my confidence significantly"      ],
-      "category": "growth"
+        "Are opportunities for growth if we let them be",
+        "Are hard but survivable with the right support",
+        "Can make us stronger together",
+        "Are inevitable and we shouldn't be too hard on ourselves"
+      ],
+      "category": "setback_philosophy",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Beliefs about setbacks shape how we process them. Growth-opportunity seers extract value; survivability believers maintain hope; stronger-together believers leverage partnership; inevitability accepters practice self-compassion. All are healthy frames.",
+          "framework": "positive_psychology",
+          "whenDifferent": "Different setback philosophies can complement each other, offering multiple sources of comfort.",
+          "whenSame": "Shared setback philosophy creates aligned approach to navigating life's disappointments.",
+          "journalPrompt": "What do you believe about setbacks? How does that belief help you?"
+        }
+      }
     }
-  ],
-  "description": "Discover your approaches to learning and improvement.",
-  "magnet_id": 10
+  ]
 }

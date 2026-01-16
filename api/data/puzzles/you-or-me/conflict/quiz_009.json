@@ -1,0 +1,39 @@
+{
+  "quizId": "quiz_009",
+  "title": "Letting Go",
+  "branch": "conflict",
+  "questions": [
+    {
+      "id": "quiz_009_q1",
+      "category": "personality",
+      "prompt": "Who is more...",
+      "content": "Quick to forgive and move forward"
+    },
+    {
+      "id": "quiz_009_q2",
+      "category": "habits",
+      "prompt": "Who is more likely to...",
+      "content": "Not hold onto small grievances"
+    },
+    {
+      "id": "quiz_009_q3",
+      "category": "preferences",
+      "prompt": "Who finds it easier to...",
+      "content": "Start fresh the next day"
+    },
+    {
+      "id": "quiz_009_q4",
+      "category": "personality",
+      "prompt": "Who tends to...",
+      "content": "Focus on the bigger picture"
+    },
+    {
+      "id": "quiz_009_q5",
+      "category": "habits",
+      "prompt": "Who would...",
+      "content": "Suggest leaving the past in the past"
+    }
+  ],
+  "description": "Moving forward together—discover how you each let things go.",
+  "magnet_id": 14
+}

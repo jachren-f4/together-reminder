@@ -748,6 +748,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 children: [
                   _buildUs2EmailVerificationRow(),
                   _buildUs2SignOutButton(),
+                  _buildUs2DeleteAccountButton(),
                 ],
               ),
 
@@ -1371,7 +1372,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   Widget _buildUs2SignOutButton() {
     return Padding(
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsets.fromLTRB(20, 20, 20, 8),
       child: GestureDetector(
         onTap: _showLogoutConfirmation,
         child: Container(
@@ -1396,6 +1397,40 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 ),
               ),
               const Icon(Icons.chevron_right, color: Color(0xFFFF6B6B), size: 20),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildUs2DeleteAccountButton() {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(20, 8, 20, 20),
+      child: GestureDetector(
+        onTap: _showDeleteAccountConfirmation,
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            border: Border.all(color: const Color(0xFFCC0000), width: 2),
+            borderRadius: BorderRadius.circular(16),
+          ),
+          child: Row(
+            children: [
+              const Icon(Icons.delete_forever, color: Color(0xFFCC0000), size: 20),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Text(
+                  'Delete Account',
+                  style: GoogleFonts.nunito(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                    color: const Color(0xFFCC0000),
+                  ),
+                ),
+              ),
+              const Icon(Icons.chevron_right, color: Color(0xFFCC0000), size: 20),
             ],
           ),
         ),
@@ -1468,6 +1503,232 @@ class _SettingsScreenState extends State<SettingsScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('Error signing out: $e'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    }
+  }
+
+  void _showDeleteAccountConfirmation() {
+    final TextEditingController confirmController = TextEditingController();
+    bool isDeleteEnabled = false;
+
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => StatefulBuilder(
+        builder: (context, setDialogState) => AlertDialog(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+          title: Row(
+            children: [
+              const Icon(Icons.warning_amber_rounded, color: Color(0xFFCC0000), size: 28),
+              const SizedBox(width: 12),
+              Text(
+                'Delete Account?',
+                style: GoogleFonts.playfairDisplay(
+                  fontSize: 20,
+                  fontWeight: FontWeight.w600,
+                  color: const Color(0xFFCC0000),
+                ),
+              ),
+            ],
+          ),
+          content: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'This will permanently delete:',
+                  style: GoogleFonts.nunito(
+                    fontSize: 15,
+                    fontWeight: FontWeight.w600,
+                    color: Us2Theme.textDark,
+                  ),
+                ),
+                const SizedBox(height: 12),
+                _buildDeleteWarningItem('All quizzes and game progress'),
+                _buildDeleteWarningItem('Love Points and rewards'),
+                _buildDeleteWarningItem('Your partner connection'),
+                const SizedBox(height: 16),
+                Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFFFF0F0),
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: const Color(0xFFCC0000).withOpacity(0.3)),
+                  ),
+                  child: Text(
+                    'This action cannot be undone.',
+                    style: GoogleFonts.nunito(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w700,
+                      color: const Color(0xFFCC0000),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 20),
+                Text(
+                  'Type DELETE to confirm:',
+                  style: GoogleFonts.nunito(
+                    fontSize: 14,
+                    color: Us2Theme.textMedium,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                TextField(
+                  controller: confirmController,
+                  autofocus: true,
+                  textCapitalization: TextCapitalization.characters,
+                  decoration: InputDecoration(
+                    hintText: 'DELETE',
+                    hintStyle: GoogleFonts.nunito(color: Us2Theme.textLight),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: BorderSide(color: Us2Theme.beige),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: const BorderSide(color: Color(0xFFCC0000), width: 2),
+                    ),
+                    contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                  ),
+                  onChanged: (value) {
+                    setDialogState(() {
+                      isDeleteEnabled = value.toUpperCase() == 'DELETE';
+                    });
+                  },
+                ),
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                confirmController.dispose();
+                Navigator.pop(context);
+              },
+              child: Text(
+                'Cancel',
+                style: GoogleFonts.nunito(
+                  fontWeight: FontWeight.w600,
+                  color: Us2Theme.textMedium,
+                ),
+              ),
+            ),
+            TextButton(
+              onPressed: isDeleteEnabled
+                  ? () {
+                      confirmController.dispose();
+                      Navigator.pop(context);
+                      _performAccountDeletion();
+                    }
+                  : null,
+              child: Text(
+                'Delete Account',
+                style: GoogleFonts.nunito(
+                  color: isDeleteEnabled ? const Color(0xFFCC0000) : Us2Theme.textLight,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildDeleteWarningItem(String text) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 6),
+      child: Row(
+        children: [
+          const Icon(Icons.remove_circle, color: Color(0xFFCC0000), size: 16),
+          const SizedBox(width: 8),
+          Expanded(
+            child: Text(
+              text,
+              style: GoogleFonts.nunito(
+                fontSize: 14,
+                color: Us2Theme.textMedium,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future<void> _performAccountDeletion() async {
+    // Show loading dialog
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const CircularProgressIndicator(),
+            const SizedBox(height: 20),
+            Text(
+              'Deleting account...',
+              style: GoogleFonts.nunito(
+                fontSize: 16,
+                color: Us2Theme.textDark,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+
+    try {
+      final apiClient = ApiClient();
+      final response = await apiClient.delete('/api/account/delete');
+
+      // Close loading dialog
+      if (mounted) Navigator.pop(context);
+
+      if (response.success) {
+        // Clear local data
+        await _authService.signOut();
+        await _storageService.clearAllData();
+
+        if (mounted) {
+          // Show success message briefly
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Account deleted successfully'),
+              backgroundColor: Colors.green,
+            ),
+          );
+
+          // Navigate to onboarding
+          Navigator.of(context).pushAndRemoveUntil(
+            MaterialPageRoute(builder: (context) => const OnboardingScreen()),
+            (route) => false,
+          );
+        }
+      } else {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(response.error ?? 'Failed to delete account'),
+              backgroundColor: Colors.red,
+            ),
+          );
+        }
+      }
+    } catch (e) {
+      // Close loading dialog
+      if (mounted) Navigator.pop(context);
+
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error deleting account: $e'),
             backgroundColor: Colors.red,
           ),
         );

@@ -1,7 +1,9 @@
 {
   "quizId": "quiz_020",
-  "title": "Growth Milestones",
+  "title": "Celebrating Growth Milestones",
   "branch": "growth",
+  "description": "Celebrate how far you've come and where you're headed together.",
+  "magnet_id": 14,
   "questions": [
     {
       "id": "quiz_020_q1",
@@ -12,7 +14,16 @@
         "My confidence and self-worth",
         "My clarity about what I want in life"
       ],
-      "category": "growth"
+      "category": "personal_growth",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Recognizing personal growth builds confidence. Emotion-handlers improved regulation; communicators improved connection; confidence-builders improved self-worth; clarity-finders improved direction. Naming growth honors the journey.",
+          "framework": "positive_psychology",
+          "whenDifferent": "Different growth areas are both valid. You've each developed in your own ways.",
+          "whenSame": "Shared growth areas show you've developed in similar directions.",
+          "journalPrompt": "What's the biggest way you've grown? Does your partner know this about your journey?"
+        }
+      }
     },
     {
       "id": "quiz_020_q2",
@@ -23,7 +34,16 @@
         "Supporting each other through challenges",
         "Creating a life we're proud of"
       ],
-      "category": "values"
+      "category": "couple_milestone",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Recognizing shared milestones strengthens the relationship narrative. Conflict-navigators improved resolution; trust-builders improved intimacy; challenge-supporters improved resilience; life-creators improved partnership. Celebrating milestones honors shared growth.",
+          "framework": "narrative_therapy",
+          "whenDifferent": "Different milestone memories are both valid. You may highlight different aspects of your shared growth.",
+          "whenSame": "Matched milestones create shared pride in what you've accomplished together.",
+          "journalPrompt": "What growth milestone have you achieved as a couple? Have you celebrated it?"
+        }
+      }
     },
     {
       "id": "quiz_020_q3",
@@ -34,7 +54,16 @@
         "Building healthier habits",
         "Showing up better in relationships"
       ],
-      "category": "growth"
+      "category": "growth_pride",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Pride in growth builds confidence. Fear-overcomers conquered obstacles; self-aware types gained insight; habit-builders created change; relationship-improvers enhanced connection. Feeling proud of growth motivates continued development.",
+          "framework": "positive_psychology",
+          "whenDifferent": "Different sources of pride are both valid. You've each accomplished meaningful growth.",
+          "whenSame": "Shared pride creates aligned appreciation for the growth you've both achieved.",
+          "journalPrompt": "What growth are you most proud of? Have you shared this with your partner?"
+        }
+      }
     },
     {
       "id": "quiz_020_q4",
@@ -45,7 +74,16 @@
         "Deepening our relationship",
         "Finding more balance and peace"
       ],
-      "category": "growth"
+      "category": "next_milestone",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Next milestones reveal future focus. Goal-achievers pursue accomplishment; resilience-builders pursue strength; relationship-deepeners pursue connection; balance-finders pursue peace. Naming next steps creates accountability and direction.",
+          "framework": "positive_psychology",
+          "whenDifferent": "Different next milestones are individual. Understanding your partner's goals helps you support them.",
+          "whenSame": "Shared next milestones create opportunity for pursuing growth together.",
+          "journalPrompt": "What's the next growth milestone you're working toward? How can your partner support you?"
+        }
+      }
     },
     {
       "id": "quiz_020_q5",
@@ -56,9 +94,16 @@
         "Built something meaningful",
         "Loved each other through it all"
       ],
-      "category": "values"
+      "category": "long_term_vision",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Long-term visions guide present choices. Continuous-growers value development; dream-supporters value encouragement; meaning-builders value creation; love-through-all types value connection. Sharing this vision aligns your trajectory.",
+          "framework": "positive_psychology",
+          "whenDifferent": "All these visions are beautiful and compatible. You can achieve all of them together.",
+          "whenSame": "Shared vision creates aligned hope for your long-term future.",
+          "journalPrompt": "What do you hope you'll see when you look back on your relationship years from now?"
+        }
+      }
     }
-  ],
-  "description": "Celebrate how far you've come and where you're headed together.",
-  "magnet_id": 14
+  ]
 }

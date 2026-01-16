@@ -1,0 +1,115 @@
+{
+  "quizId": "affirmation_004",
+  "title": "Financial Goals",
+  "category": "finances",
+  "branch": "finances",
+  "description": "Assess how aligned you feel about financial aspirations",
+  "magnet_id": 15,
+  "questions": [
+    {
+      "id": "affirmation_004_q1",
+      "text": "I feel my partner and I want similar things financially in life.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Aligned financial aspirations—whether modest or ambitious—create partnership. Misaligned goals create tension when one partner's dreams require the other's sacrifice.",
+          "framework": "financial_therapy",
+          "whenDifferent": "A gap here is significant. Discuss what you each want your financial life to look like. Alignment can be built through understanding, not assumed.",
+          "whenSame": "Shared sense of financial alignment creates a foundation for planning together.",
+          "journalPrompt": "What does your ideal financial life look like? Have you shared this with your partner?"
+        }
+      }
+    },
+    {
+      "id": "affirmation_004_q2",
+      "text": "I believe we share similar priorities about what to save for.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Saving priorities reveal values—security, experiences, family, freedom. Partners who prioritize differently may struggle to feel like a financial team.",
+          "framework": "financial_therapy",
+          "whenDifferent": "Different saving priorities need discussion, not assumption. What feels essential to one partner may seem optional to the other.",
+          "whenSame": "Aligned saving priorities make financial planning feel collaborative rather than contentious.",
+          "journalPrompt": "What are you saving for—or want to save for? Does your partner share these priorities?"
+        }
+      }
+    },
+    {
+      "id": "affirmation_004_q3",
+      "text": "I feel excited about building a financial future with my partner.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Excitement about your financial future together reflects optimism and commitment. Dread or anxiety here suggests concerns worth exploring.",
+          "framework": "positive_psychology",
+          "whenDifferent": "If one partner is excited and the other isn't, explore what's dampening enthusiasm. Often it's specific concerns rather than general pessimism.",
+          "whenSame": "Shared excitement about your financial future is a motivating force for building together.",
+          "journalPrompt": "What excites you about your financial future together? What concerns you?"
+        }
+      }
+    },
+    {
+      "id": "affirmation_004_q4",
+      "text": "I trust that my partner considers our future, not just the present.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Trust that your partner thinks about the future reflects confidence in their commitment and responsibility. This is observable through how they talk about and plan for what's ahead.",
+          "framework": "attachment_theory",
+          "whenDifferent": "If one partner doubts the other's future-orientation, discuss what creates that impression. Some show care differently than others expect.",
+          "whenSame": "Mutual trust in each other's future-thinking creates security about your financial partnership.",
+          "journalPrompt": "How does your partner show they're thinking about your future together?"
+        }
+      }
+    },
+    {
+      "id": "affirmation_004_q5",
+      "text": "I believe we can support each other's individual financial goals.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Supporting individual goals within partnership shows respect for each person's autonomy. Partners who feel supported pursue their aspirations without guilt.",
+          "framework": "gottman",
+          "whenDifferent": "If one partner feels less confident about support, explore what individual goals feel unsupported. Sometimes it's about communication, not actual opposition.",
+          "whenSame": "Mutual belief in supporting individual goals creates space for both partnership and personal growth.",
+          "journalPrompt": "What individual financial goal matters most to you? Does your partner know and support it?"
+        }
+      }
+    }
+  ]
+}

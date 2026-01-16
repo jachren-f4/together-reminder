@@ -7,13 +7,13 @@
       "id": "quiz_009_q1",
       "category": "independence",
       "prompt": "Who is more comfortable with...",
-      "content": "Not knowing where the other is"
+      "content": "Giving space without needing updates"
     },
     {
       "id": "quiz_009_q2",
       "category": "security",
-      "prompt": "Who overthinks more about...",
-      "content": "Small changes in behavior"
+      "prompt": "Who is more attuned to...",
+      "content": "Subtle shifts in mood or energy"
     },
     {
       "id": "quiz_009_q3",

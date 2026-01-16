@@ -1,0 +1,115 @@
+{
+  "quizId": "affirmation_001",
+  "title": "Warmth & Attraction",
+  "category": "intimacy",
+  "branch": "intimacy",
+  "description": "Explore how you experience attraction and warmth between you",
+  "magnet_id": 16,
+  "questions": [
+    {
+      "id": "affirmation_001_q1",
+      "text": "I can sense when my partner is drawn to me.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Being able to read your partner's attraction creates security. When you can sense their interest, you feel more confident reaching for closeness. Missing these signals can create doubt.",
+          "framework": "attachment_theory",
+          "whenDifferent": "If one partner struggles to sense attraction, explore how the other expresses it. Some show interest subtly; others need to learn to be more visible with their warmth.",
+          "whenSame": "Shared ability to read each other's attraction signals creates a secure foundation for physical connection.",
+          "journalPrompt": "How does your partner show they're drawn to you? What signals do you notice?"
+        }
+      }
+    },
+    {
+      "id": "affirmation_001_q2",
+      "text": "My partner's attention makes me feel warm inside.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "The emotional response to your partner's attention reveals the health of your connection. Warmth suggests safety and welcome; anxiety or discomfort suggests something worth exploring.",
+          "framework": "eft",
+          "whenDifferent": "If attention doesn't create warmth for one partner, gently explore what it does create. Is there pressure? Self-consciousness? Understanding this helps.",
+          "whenSame": "Mutual warmth in response to each other's attention is a sign of secure connection.",
+          "journalPrompt": "What do you feel when your partner gives you their full attention?"
+        }
+      }
+    },
+    {
+      "id": "affirmation_001_q3",
+      "text": "I can be present in my body when I'm close with my partner.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Being present in your body during closeness requires feeling safe. Disconnection or dissociation during physical moments often signals past experiences or current relationship concerns worth addressing.",
+          "framework": "attachment_theory",
+          "whenDifferent": "If one partner struggles with presence, approach with compassion. This often connects to vulnerability, body image, or past experiences that deserve gentle exploration.",
+          "whenSame": "Shared ability to be present in your bodies during closeness creates deeper connection.",
+          "journalPrompt": "What helps you stay present in your body when you're close with your partner?"
+        }
+      }
+    },
+    {
+      "id": "affirmation_001_q4",
+      "text": "I feel my partner makes space for closeness with me.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Feeling that your partner creates space for closeness—rather than just tolerating it or being too busy—communicates that you matter. This sense of being welcomed feeds secure attachment.",
+          "framework": "eft",
+          "whenDifferent": "If one partner doesn't feel space is made for them, explore what would create that feeling. Is it about time? Attention? Initiative? Naming the gap helps close it.",
+          "whenSame": "Mutual feeling that space is made for closeness creates security and invitation.",
+          "journalPrompt": "Does your partner make space for closeness? What would more of that look like?"
+        }
+      }
+    },
+    {
+      "id": "affirmation_001_q5",
+      "text": "Physical attention from my partner feels genuine and welcome.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Attention that feels genuine (not obligatory) and welcome (not intrusive) hits the sweet spot. When physical attention feels forced or unwanted, it creates distance rather than connection.",
+          "framework": "love_languages",
+          "whenDifferent": "If attention doesn't feel genuine or welcome, explore what's missing. Timing? Approach? Context? The giving partner needs to know how their attention lands.",
+          "whenSame": "Mutual experience of genuine, welcome attention creates positive physical connection.",
+          "journalPrompt": "What makes physical attention from your partner feel genuine? What makes it feel welcome?"
+        }
+      }
+    }
+  ]
+}

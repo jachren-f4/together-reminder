@@ -1,0 +1,39 @@
+{
+  "quizId": "quiz_003",
+  "title": "Quality Time",
+  "branch": "intimacy",
+  "questions": [
+    {
+      "id": "quiz_003_q1",
+      "category": "preferences",
+      "prompt": "Who values more...",
+      "content": "Uninterrupted one-on-one time"
+    },
+    {
+      "id": "quiz_003_q2",
+      "category": "habits",
+      "prompt": "Who is more likely to...",
+      "content": "Put away their phone during couple time"
+    },
+    {
+      "id": "quiz_003_q3",
+      "category": "personality",
+      "prompt": "Who enjoys more...",
+      "content": "Doing nothing together in comfortable silence"
+    },
+    {
+      "id": "quiz_003_q4",
+      "category": "preferences",
+      "prompt": "Who would rather...",
+      "content": "Stay in together vs. go out with friends"
+    },
+    {
+      "id": "quiz_003_q5",
+      "category": "habits",
+      "prompt": "Who is more likely to...",
+      "content": "Suggest a lazy day just the two of you"
+    }
+  ],
+  "description": "How do you spend your together time? Explore your quality time preferences!",
+  "magnet_id": 10
+}

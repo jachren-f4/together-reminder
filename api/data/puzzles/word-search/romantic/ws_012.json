@@ -1,0 +1,24 @@
+{
+  "puzzleId": "ws_012",
+  "title": "Romantic XII",
+  "theme": "romantic",
+  "size": {
+    "rows": 10,
+    "cols": 10
+  },
+  "grid": "ZDARLINGEMAJEKSUDNCXSTROLLGHAQRIOAQAEELZOYAZPRCTWVMWLMINAOAAAYASAIRNYDNHHDCXEVSOCDFBLISSXREVDVLBSHBE",
+  "words": {
+    "CHAMPAGNE": "80,UR",
+    "STROLL": "20,R",
+    "CARESS": "46,D",
+    "DATE": "69,UL",
+    "DANCE": "73,UR",
+    "DUSK": "16,L",
+    "ALWAYS": "28,D",
+    "BLISS": "83,R",
+    "DARLING": "1,R",
+    "CHERISH": "18,DL",
+    "ADORE": "59,D",
+    "ROMANCE": "30,D"
+  }
+}

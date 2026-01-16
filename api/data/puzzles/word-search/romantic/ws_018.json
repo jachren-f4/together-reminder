@@ -1,0 +1,24 @@
+{
+  "puzzleId": "ws_018",
+  "title": "Romantic XVIII",
+  "theme": "romantic",
+  "size": {
+    "rows": 10,
+    "cols": 10
+  },
+  "grid": "EZAGLEZGVXQWJIRSNTDDZYJJVINEEYPRJEMRRMVNELEAVNABOWSREVUUERLAFRODESYAEDDSQHGRZCBBSSIKSEOEIQRHYTHMRFMU",
+  "words": {
+    "YEARN": "66,U",
+    "DREAMING": "70,UR",
+    "KISS": "83,L",
+    "FOREVER": "97,UL",
+    "RHYTHM": "90,R",
+    "GAZE": "3,L",
+    "SHORE": "84,UL",
+    "BELOVED": "78,U",
+    "DAWN": "69,U",
+    "EMBRACE": "27,D",
+    "SUNRISE": "65,U",
+    "PLEDGE": "30,DR"
+  }
+}

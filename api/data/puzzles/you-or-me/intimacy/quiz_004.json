@@ -1,0 +1,39 @@
+{
+  "quizId": "quiz_004",
+  "title": "Touch & Comfort",
+  "branch": "intimacy",
+  "questions": [
+    {
+      "id": "quiz_004_q1",
+      "category": "preferences",
+      "prompt": "Who enjoys more...",
+      "content": "Back rubs and massages"
+    },
+    {
+      "id": "quiz_004_q2",
+      "category": "habits",
+      "prompt": "Who is more likely to...",
+      "content": "Rest their head on the other's shoulder"
+    },
+    {
+      "id": "quiz_004_q3",
+      "category": "personality",
+      "prompt": "Who finds more comfort in...",
+      "content": "Physical closeness when stressed"
+    },
+    {
+      "id": "quiz_004_q4",
+      "category": "preferences",
+      "prompt": "Who would...",
+      "content": "Fall asleep faster while cuddling"
+    },
+    {
+      "id": "quiz_004_q5",
+      "category": "habits",
+      "prompt": "Who reaches for...",
+      "content": "Physical comfort when feeling down"
+    }
+  ],
+  "description": "Explore how touch brings you comfort and connection!",
+  "magnet_id": 10
+}

@@ -1,0 +1,39 @@
+{
+  "quizId": "quiz_003",
+  "title": "Generosity",
+  "branch": "finances",
+  "questions": [
+    {
+      "id": "quiz_003_q1",
+      "category": "personality",
+      "prompt": "Who is more likely to...",
+      "content": "Pick up the check for friends"
+    },
+    {
+      "id": "quiz_003_q2",
+      "category": "habits",
+      "prompt": "Who would...",
+      "content": "Give a generous tip for great service"
+    },
+    {
+      "id": "quiz_003_q3",
+      "category": "preferences",
+      "prompt": "Who is more...",
+      "content": "Likely to buy a thoughtful gift just because"
+    },
+    {
+      "id": "quiz_003_q4",
+      "category": "personality",
+      "prompt": "Who would...",
+      "content": "Donate to a cause that touches their heart"
+    },
+    {
+      "id": "quiz_003_q5",
+      "category": "habits",
+      "prompt": "Who is more likely to...",
+      "content": "Surprise someone with a treat"
+    }
+  ],
+  "description": "Explore your generous sides—who picks up the check and who loves giving gifts!",
+  "magnet_id": 8
+}

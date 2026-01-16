@@ -12,14 +12,14 @@
     {
       "id": "quiz_010_q2",
       "category": "security",
-      "prompt": "Who worries more when...",
-      "content": "The other seems distant or quiet"
+      "prompt": "Who is more likely to...",
+      "content": "Check in when things feel off"
     },
     {
       "id": "quiz_010_q3",
       "category": "conflict",
       "prompt": "Who is more likely to...",
-      "content": "Bring up unresolved issues later"
+      "content": "Return to conversations after reflecting"
     },
     {
       "id": "quiz_010_q4",

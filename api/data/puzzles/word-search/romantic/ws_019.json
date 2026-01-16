@@ -1,0 +1,24 @@
+{
+  "puzzleId": "ws_019",
+  "title": "Romantic XIX",
+  "theme": "romantic",
+  "size": {
+    "rows": 10,
+    "cols": 10
+  },
+  "grid": "OTMOQNWARMMSXOYSWOONSUDRODPFWDFRVPPLEDGELTEVAWBAJDLXHOXFDTRWOGROWINGMLRVNAEZAGXZTBDCLLBBRTSBPDIAMOND",
+  "words": {
+    "SWOON": "15,R",
+    "WAVE": "45,L",
+    "STROLL": "90,U",
+    "TRUST": "41,U",
+    "BAND": "86,U",
+    "PLEDGE": "34,R",
+    "WARM": "6,R",
+    "DEAR": "25,DR",
+    "GAZE": "77,L",
+    "GROWING": "61,R",
+    "DIAMOND": "93,R",
+    "BLOOM": "46,UL"
+  }
+}

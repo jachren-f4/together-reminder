@@ -1,59 +1,109 @@
 {
   "quizId": "quiz_008",
-  "title": "Growth Quiz 8",
+  "title": "Motivation & Drive",
   "branch": "growth",
+  "description": "Discover what motivates each of you and how you fuel each other's ambitions.",
+  "magnet_id": 10,
   "questions": [
     {
       "id": "quiz_008_q1",
-      "text": "What growth goal can I best support you in right now?",
+      "text": "What motivates me most in life is...",
       "choices": [
-        "Your career or professional development",
-        "Your health and wellness journey",
-        "Your creative or personal projects",
-        "Your emotional or mental health"      ],
-      "category": "growth"
+        "Making a difference or having impact",
+        "Learning, growing, and improving",
+        "Security and providing for those I love",
+        "Freedom and experiencing life fully"
+      ],
+      "category": "core_motivation",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Core motivations reveal what drives us at the deepest level. Impact-seekers want significance; growth-seekers want development; security-seekers want stability; freedom-seekers want experience. Understanding your partner's core motivation helps you support what matters most.",
+          "framework": "positive_psychology",
+          "whenDifferent": "Different core motivations are common and complementary. The security-seeker and freedom-seeker may need to balance stability and adventure.",
+          "whenSame": "Shared core motivations create aligned life direction and mutual understanding of priorities.",
+          "journalPrompt": "What motivates you most deeply in life? Does your partner understand this about you?"
+        }
+      }
     },
     {
       "id": "quiz_008_q2",
-      "text": "How do I best show support for your ambitions?",
+      "text": "When I feel unmotivated, what helps most is...",
       "choices": [
-        "Giving you time and space to pursue them",
-        "Actively helping and participating",
-        "Being your biggest cheerleader",
-        "Making sacrifices to help you succeed"      ],
-      "category": "values"
+        "Remembering why it matters",
+        "Breaking things into smaller steps",
+        "Encouragement and belief from you",
+        "Taking a break and coming back fresh"
+      ],
+      "category": "motivation_recovery",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Motivation recovery strategies vary. Purpose-rememberers reconnect to meaning; step-breakers reduce overwhelm; encouragement-needers need external support; break-takers need rest. Knowing what helps your partner refuel allows targeted support.",
+          "framework": "positive_psychology",
+          "whenDifferent": "Different recovery strategies require flexibility. What helps you may not help your partner. Ask what they actually need.",
+          "whenSame": "Matched recovery strategies make helping each other regain motivation intuitive.",
+          "journalPrompt": "What helps you when you're feeling unmotivated? Have you told your partner?"
+        }
+      }
     },
     {
       "id": "quiz_008_q3",
-      "text": "What can I do to help you grow without pushing too hard?",
+      "text": "You help fuel my motivation by...",
       "choices": [
-        "Express belief in your abilities",
-        "Ask how I can help instead of directing",
-        "Celebrate progress without pressure",
-        "Respect your timeline and process"      ],
-      "category": "communication"
+        "Believing in me even when I doubt myself",
+        "Celebrating my progress along the way",
+        "Giving me space to pursue what matters",
+        "Being a partner who inspires me"
+      ],
+      "category": "partner_motivation_role",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "How partners fuel motivation reveals support needs. Belief provides confidence; celebration provides acknowledgment; space provides autonomy; inspiration provides modeling. Understanding your role in your partner's motivation helps you play it well.",
+          "framework": "gottman",
+          "whenDifferent": "Different motivation fuel needs require learning what actually helps your partner. Your natural offering may not match their need.",
+          "whenSame": "Matched motivation fuel creates natural synergy in supporting each other's drive.",
+          "journalPrompt": "How does your partner fuel your motivation? Have you told them what helps most?"
+        }
+      }
     },
     {
       "id": "quiz_008_q4",
-      "text": "How do we balance supporting each other's individual growth?",
+      "text": "When it comes to ambition, I...",
       "choices": [
-        "Taking turns prioritizing each person's goals",
-        "Finding goals we can work on together",
-        "Maintaining independence while staying connected",
-        "Regular check-ins about what each person needs"      ],
-      "category": "values"
+        "Have clear goals I'm working toward",
+        "Am still figuring out what I want",
+        "Balance ambition with contentment",
+        "Care more about purpose than achievement"
+      ],
+      "category": "ambition_relationship",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Relationships with ambition vary. Goal-havers have clarity; figure-outers are exploring; balancers value both striving and being; purpose-seekers prioritize meaning over metrics. No approach is better—what matters is understanding your partner's orientation.",
+          "framework": "positive_psychology",
+          "whenDifferent": "Different ambition orientations can complement or create tension. The goal-haver and contentment-balancer may need to find middle ground.",
+          "whenSame": "Matched ambition orientations create aligned approach to striving and success.",
+          "journalPrompt": "What's your relationship with ambition? How does it affect your relationship with your partner?"
+        }
+      }
     },
     {
       "id": "quiz_008_q5",
-      "text": "What's most important about supporting each other's dreams?",
+      "text": "I believe supporting each other's ambitions means...",
       "choices": [
-        "Never competing or feeling threatened",
-        "Celebrating wins together genuinely",
-        "Being honest about concerns",
-        "Staying committed even when it's hard"      ],
-      "category": "trust"
+        "Making sacrifices when needed for each other's goals",
+        "Encouraging without pushing",
+        "Creating space for individual pursuits",
+        "Aligning our ambitions toward shared dreams"
+      ],
+      "category": "ambition_support_philosophy",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Beliefs about ambition support shape how couples navigate individual goals. Sacrifice-makers prioritize partner goals; encouragers provide emotional support; space-creators protect autonomy; aligners seek shared direction. All approaches have merit.",
+          "framework": "gottman",
+          "whenDifferent": "Different support philosophies require conversation about expectations. The sacrifice-maker may feel unreciprocated by the space-creator.",
+          "whenSame": "Shared support philosophy creates clear expectations for how you'll navigate each other's ambitions.",
+          "journalPrompt": "What does supporting each other's ambitions mean to you? Are you getting and giving that support?"
+        }
+      }
     }
-  ],
-  "description": "Explore how you navigate life transitions together.",
-  "magnet_id": 10
+  ]
 }

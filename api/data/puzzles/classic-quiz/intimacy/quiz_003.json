@@ -1,0 +1,109 @@
+{
+  "quizId": "quiz_003",
+  "title": "Desire & Frequency",
+  "branch": "intimacy",
+  "description": "Explore your expectations and feelings about intimate frequency.",
+  "magnet_id": 15,
+  "questions": [
+    {
+      "id": "quiz_003_q1",
+      "text": "When it comes to how often I desire physical intimacy, I'd say...",
+      "choices": [
+        "Frequently—it's important to me",
+        "Regularly but not constantly",
+        "It varies a lot for me",
+        "Less often than many people"
+      ],
+      "category": "desire_frequency",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Desire frequency is one of the most common sources of couple conflict. High-desire partners feel rejected when turned down; lower-desire partners feel pressured. Neither is wrong—desire varies naturally between people.",
+          "framework": "gottman",
+          "whenDifferent": "Desire discrepancy is normal but needs management. The higher-desire partner shouldn't feel like a burden; the lower-desire partner shouldn't feel inadequate. Find your compromise frequency.",
+          "whenSame": "Matched desire frequency is a gift. You'll naturally want intimacy at similar rates.",
+          "journalPrompt": "How often do you ideally want physical intimacy? Has that changed over time or in different relationships?"
+        }
+      }
+    },
+    {
+      "id": "quiz_003_q2",
+      "text": "My desire for intimacy is most affected by...",
+      "choices": [
+        "How emotionally connected I feel",
+        "My stress levels and what's happening in life",
+        "How physically rested and well I am",
+        "The quality of recent intimate experiences"
+      ],
+      "category": "desire_factors",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Desire triggers vary. Emotional-connectors need closeness first; stress-affected types fluctuate with life; physical-wellness types need rest; quality-focusers respond to good experiences. Knowing your partner's triggers helps you nurture desire.",
+          "framework": "gottman",
+          "whenDifferent": "Different desire triggers mean different nurturing. The emotional-connector may not respond to physical cues; the stress-affected partner may need life to calm down first. Learn each other's accelerators.",
+          "whenSame": "Shared desire triggers make nurturing intimacy easier. You'll naturally create the right conditions.",
+          "journalPrompt": "What increases your desire? What decreases it? Be honest and specific."
+        }
+      }
+    },
+    {
+      "id": "quiz_003_q3",
+      "text": "When there's a difference in desire between us, I'd want us to...",
+      "choices": [
+        "Talk about it openly without blame",
+        "Find compromises that work for both",
+        "Give each other grace without pressure",
+        "Understand it's normal and not take it personally"
+      ],
+      "category": "desire_management",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "How couples handle desire differences predicts relationship satisfaction. Talkers process openly; compromisers find middle ground; grace-givers prioritize acceptance; normalizers reduce shame. All approaches can work.",
+          "framework": "gottman",
+          "whenDifferent": "Different handling preferences are fine—you can do all of these. The key is avoiding criticism, defensiveness, and shutting down.",
+          "whenSame": "Shared handling approach makes navigating differences smoother. You'll naturally respond to mismatches the same way.",
+          "journalPrompt": "How do you want desire differences handled? What response would hurt? What would help?"
+        }
+      }
+    },
+    {
+      "id": "quiz_003_q4",
+      "text": "When I'm not in the mood but my partner is, I usually...",
+      "choices": [
+        "Am open to seeing if the mood develops",
+        "Am honest about where I'm at",
+        "Feel guilty even though I know I shouldn't",
+        "Try to connect in other ways instead"
+      ],
+      "category": "desire_response",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Responses to desire mismatch reveal patterns. Open-to-trying types sometimes warm up; honest types communicate directly; guilt-feelers struggle with saying no; alternative-connectors redirect. Understanding your pattern helps you communicate.",
+          "framework": "gottman",
+          "whenDifferent": "Different responses are fine—the key is communication. The honest partner should feel safe saying no; the open-to-trying partner shouldn't feel obligated.",
+          "whenSame": "Shared response patterns help you predict and understand each other during mismatches.",
+          "journalPrompt": "How do you feel when you're not in the mood but your partner is? What do you need in those moments?"
+        }
+      }
+    },
+    {
+      "id": "quiz_003_q5",
+      "text": "For me, quality vs. quantity of intimacy is...",
+      "choices": [
+        "Quality matters most—depth over frequency",
+        "Both matter equally to me",
+        "Frequency matters—regular connection is important",
+        "I'd rather have quality, but frequency builds connection"
+      ],
+      "category": "desire_values",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Quality vs. quantity preference reveals intimacy values. Quality-focusers want depth; both-wanters balance; frequency-focusers want regularity; quality-preferers-who-value-frequency see the role of both. Partners often prioritize differently.",
+          "framework": "gottman",
+          "whenDifferent": "Different priorities may clash. The quality-focuser may not understand why frequency matters; the frequency-focuser may not understand why one good experience isn't enough for a while.",
+          "whenSame": "Shared priority makes planning your intimate life easier. You agree on what matters most.",
+          "journalPrompt": "What matters more to you—how often you're intimate or how good it is when you are? Why?"
+        }
+      }
+    }
+  ]
+}

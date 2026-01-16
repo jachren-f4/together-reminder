@@ -1,0 +1,70 @@
+{
+  "author": "Crossword Maker GPT",
+  "title": "AI-Built Puzzle",
+  "theme": "companionship",
+  "size": {
+    "rows": 9,
+    "cols": 7
+  },
+  "clues": {
+    "1": { "type": "text", "content": "Expert", "arrow": "down", "target_index": 8 },
+    "2": { "type": "text", "content": "Provoke", "arrow": "down", "target_index": 9 },
+    "3": { "type": "text", "content": "Ω letter", "arrow": "down", "target_index": 10 },
+    "4": { "type": "text", "content": "Topic", "arrow": "down", "target_index": 11 },
+    "5": { "type": "text", "content": "Time", "arrow": "down", "target_index": 12 },
+    "6": { "type": "text", "content": "Outing", "arrow": "down", "target_index": 13 },
+    "7": { "type": "text", "content": "Revered", "arrow": "across", "target_index": 8 },
+    "8": { "type": "emoji", "content": "📷", "arrow": "across", "target_index": 15 },
+    "9": { "type": "text", "content": "Prior to", "arrow": "across", "target_index": 22 },
+    "10": {
+      "across": { "type": "text", "content": "Located", "target_index": 26 },
+      "down": { "type": "text", "content": "Soldier", "target_index": 32 }
+    },
+    "11": {
+      "across": { "type": "text", "content": "Oval", "target_index": 30 },
+      "down": { "type": "text", "content": "Deer 🦌", "target_index": 36 }
+    },
+    "12": {
+      "across": { "type": "text", "content": "LON_", "target_index": 34 },
+      "down": { "type": "text", "content": "Finished", "target_index": 40 }
+    },
+    "13": { "type": "text", "content": "BLOO_", "arrow": "across", "target_index": 36 },
+    "14": {
+      "across": { "type": "text", "content": "Assist", "target_index": 38 },
+      "down": { "type": "text", "content": "Solo", "target_index": 44 }
+    },
+    "15": { "type": "text", "content": "Mesh", "arrow": "down", "target_index": 48 },
+    "16": { "type": "text", "content": "FL__D", "arrow": "across", "target_index": 43 },
+    "17": { "type": "text", "content": "LE_A_Y", "arrow": "down", "target_index": 52 },
+    "18": {
+      "across": { "type": "text", "content": "Lit", "target_index": 47 },
+      "down": { "type": "text", "content": "PA__", "target_index": 53 }
+    },
+    "19": { "type": "text", "content": "Motor", "arrow": "across", "target_index": 50 },
+    "20": { "type": "text", "content": "Private", "arrow": "across", "target_index": 57 }
+  },
+  "date": "2026-01-13",
+  "grid": [
+    ".", ".", ".", ".", ".", ".", ".",
+    ".", "A", "D", "O", "R", "E", "D",
+    ".", "C", "A", "M", "E", "R", "A",
+    ".", "E", "R", "E", ".", "A", "T",
+    ".", ".", "E", "G", "G", ".", "E",
+    ".", "D", ".", "A", "I", "D", ".",
+    ".", "O", "O", ".", ".", "O", "N",
+    ".", "E", "N", "G", "I", "N", "E",
+    ".", "S", "E", "C", "R", "E", "T"
+  ],
+  "gridnums": [
+    0, 1, 2, 3, 4, 5, 6,
+    7, 0, 0, 0, 0, 0, 0,
+    8, 0, 0, 0, 0, 0, 0,
+    9, 0, 0, 0, 10, 0, 0,
+    0, 11, 0, 0, 0, 12, 0,
+    13, 0, 14, 0, 0, 0, 15,
+    16, 0, 0, 17, 18, 0, 0,
+    19, 0, 0, 0, 0, 0, 0,
+    20, 0, 0, 0, 0, 0, 0
+  ],
+  "puzzleId": "puzzle_040"
+}

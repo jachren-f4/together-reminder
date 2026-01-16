@@ -1,0 +1,24 @@
+{
+  "puzzleId": "ws_017",
+  "title": "Romantic XVII",
+  "theme": "romantic",
+  "size": {
+    "rows": 10,
+    "cols": 10
+  },
+  "grid": "IGNINEVEHVECNAMORMOLJROSESOWNRHHOLDOSWAIDREAMINGSWSSERACURETBONDINGSHYHNTJZZGCUAZQHYMCLEARTQKISSESTV",
+  "words": {
+    "HOLD": "31,R",
+    "VOW": "9,DL",
+    "SNUGGLE": "36,D",
+    "CARESS": "55,L",
+    "KISSES": "92,R",
+    "SWOON": "48,UL",
+    "ROMANCE": "16,L",
+    "TWIRL": "59,U",
+    "DREAMING": "40,R",
+    "ROSES": "21,R",
+    "BONDING": "60,R",
+    "EVENING": "7,L"
+  }
+}

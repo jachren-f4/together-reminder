@@ -1,64 +1,111 @@
 {
   "quizId": "quiz_004",
-  "title": "Growth Quiz 4",
+  "title": "Curiosity & Exploration",
   "branch": "growth",
+  "description": "Discover how you explore new interests and experiences together.",
+  "magnet_id": 9,
   "questions": [
     {
       "id": "quiz_004_q1",
-      "text": "Where do I see myself in five years?",
+      "text": "When it comes to trying new things, I tend to...",
       "choices": [
-        "Advanced in my career",
-        "Starting new adventures",
-        "Settled and stable",
-        "Growing a family"
+        "Jump in enthusiastically",
+        "Research and prepare first",
+        "Need encouragement to start",
+        "Prefer to watch others do it first"
       ],
-      "category": "future_vision"
+      "category": "novelty_approach",
+      "metadata": {
+        "dimension": "risk_adventure",
+        "poleMapping": ["right", "left", "left", "left"],
+        "therapeutic": {
+          "rationale": "Approach to new experiences reflects openness and risk tolerance. Enthusiasts embrace novelty; researchers minimize uncertainty; encouragement-needers require support; observers learn vicariously. Understanding this helps couples navigate new experiences together.",
+          "framework": "self_expansion_theory",
+          "whenDifferent": "Different approaches to novelty can be complementary. The enthusiast can inspire while the researcher ensures safety. Meet in the middle.",
+          "whenSame": "Shared approach to new things creates natural synchrony when exploring together.",
+          "journalPrompt": "How do you approach trying new things? What helps you step outside your comfort zone?"
+        }
+      }
     },
     {
       "id": "quiz_004_q2",
-      "text": "What do I admire most about how you've grown?",
+      "text": "I feel most curious about...",
       "choices": [
-        "Your emotional awareness",
-        "Your persistence",
-        "Your openness to change",
-        "Your self-care journey"
+        "Learning about people and relationships",
+        "Understanding how things work",
+        "Exploring new places and cultures",
+        "Developing skills and abilities"
       ],
-      "category": "partner_admiration"
+      "category": "curiosity_domain",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Curiosity domains reveal what energizes us. People-curious types love connection; mechanism-curious types love understanding; exploration-curious types love novelty; skill-curious types love mastery. Sharing curiosity creates connection.",
+          "framework": "positive_psychology",
+          "whenDifferent": "Different curiosity domains can enrich each other. Your partner's interests can expand your world.",
+          "whenSame": "Shared curiosity domains create natural overlap in what you want to explore together.",
+          "journalPrompt": "What are you most curious about in life? How might you share that curiosity with your partner?"
+        }
+      }
     },
     {
       "id": "quiz_004_q3",
-      "text": "What's one thing we should try together?",
+      "text": "When you're excited about something new, I...",
       "choices": [
-        "A new adventure or travel",
-        "A shared hobby or class",
-        "A wellness practice",
-        "A challenge or goal"
+        "Get excited too and want to explore it with you",
+        "Love hearing about it even if it's not my thing",
+        "Am happy to support your interest",
+        "Sometimes wish you'd include me more"
       ],
-      "category": "shared_growth"
+      "category": "partner_curiosity",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "How we respond to our partner's interests affects connection. Joining creates shared experience; appreciating creates acceptance; supporting creates space; wanting inclusion signals connection needs. All responses are valid.",
+          "framework": "gottman",
+          "whenDifferent": "Different responses to partner interests work together. The supporter creates space while the joiner creates connection. Balance both.",
+          "whenSame": "Matched responses to partner interests create aligned expectations about involvement in each other's explorations.",
+          "journalPrompt": "How do you respond when your partner is excited about something new? Is that what they need?"
+        }
+      }
     },
     {
       "id": "quiz_004_q4",
-      "text": "How do I measure personal success?",
+      "text": "Something I'd love for us to explore together is...",
       "choices": [
-        "By my happiness",
-        "By my achievements",
-        "By my relationships",
-        "By my impact on others"
+        "A new hobby or creative pursuit",
+        "Travel to somewhere we've never been",
+        "A deeper understanding of each other",
+        "A skill we could learn as a team"
       ],
-      "category": "success_definition"
+      "category": "shared_exploration",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Shared exploration aspirations point to growth opportunities. Hobbies create shared identity; travel creates memories; deeper understanding creates intimacy; team skills create collaboration. Naming desires helps make them happen.",
+          "framework": "self_expansion_theory",
+          "whenDifferent": "Different exploration desires aren't mutually exclusive. You can pursue multiple types of shared experiences.",
+          "whenSame": "Shared exploration desires create clear direction for your next adventure together.",
+          "journalPrompt": "What would you love to explore together? What's stopping you from starting?"
+        }
+      }
     },
     {
       "id": "quiz_004_q5",
-      "text": "What's the most important thing for our relationship's future?",
+      "text": "Exploring new things together helps us...",
       "choices": [
-        "Maintaining open communication",
-        "Continuing to have fun together",
-        "Supporting each other's dreams",
-        "Working through challenges together"
+        "Keep our relationship fresh and exciting",
+        "Learn more about each other",
+        "Create memories we'll treasure",
+        "Grow closer through shared experiences"
       ],
-      "category": "relationship_future"
+      "category": "exploration_value",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Beliefs about exploration's value shape how couples prioritize novelty. Freshness prevents stagnation; learning deepens knowledge; memories create history; closeness strengthens bonds. Research shows shared novel experiences boost relationship satisfaction.",
+          "framework": "self_expansion_theory",
+          "whenDifferent": "All these benefits are real. Shared exploration provides multiple forms of relationship nourishment.",
+          "whenSame": "Shared understanding of exploration's value creates motivation to keep trying new things together.",
+          "journalPrompt": "How does exploring new things together benefit your relationship? When did you last do this?"
+        }
+      }
     }
-  ],
-  "description": "Uncover how you face challenges and learn together.",
-  "magnet_id": 9
+  ]
 }

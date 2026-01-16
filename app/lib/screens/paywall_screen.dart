@@ -1,13 +1,20 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:purchases_flutter/purchases_flutter.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../config/brand/us2_theme.dart';
+import '../config/revenuecat_config.dart';
 import '../services/subscription_service.dart';
 import '../utils/logger.dart';
 import 'already_subscribed_screen.dart';
+
+/// Legal page URLs (GitHub Pages)
+const String _privacyPolicyUrl = 'https://jachren-f4.github.io/together-reminder/privacy.html';
+const String _termsOfUseUrl = 'https://jachren-f4.github.io/together-reminder/terms.html';
 
 /// Shows the RevenueCat Paywall UI and returns whether purchase/restore succeeded.
 ///
@@ -75,6 +82,9 @@ class _PaywallScreenState extends State<PaywallScreen> {
   /// Triple-tap bypass for testing
   int _devTapCount = 0;
   DateTime? _lastTapTime;
+
+  /// Debug overlay state
+  bool _showDebugOverlay = false;
 
   @override
   void initState() {
@@ -271,6 +281,15 @@ class _PaywallScreenState extends State<PaywallScreen> {
 
       // Load offerings
       final offerings = await _subscriptionService.getOfferings();
+
+      // Debug logging
+      Logger.debug('Offerings loaded: ${offerings != null ? "yes" : "null"}', service: 'paywall');
+      Logger.debug('Current offering: ${offerings?.current?.identifier ?? "none"}', service: 'paywall');
+      Logger.debug('Packages count: ${offerings?.current?.availablePackages.length ?? 0}', service: 'paywall');
+      if (_subscriptionService.lastOfferingsError != null) {
+        Logger.debug('Offerings error: ${_subscriptionService.lastOfferingsError}', service: 'paywall');
+      }
+
       if (mounted) {
         setState(() {
           _offerings = offerings;
@@ -282,15 +301,23 @@ class _PaywallScreenState extends State<PaywallScreen> {
       if (mounted) {
         setState(() {
           _isLoading = false;
-          _errorMessage = 'Unable to load subscription options';
+          _errorMessage = 'Unable to load subscription options: $e';
         });
       }
     }
   }
 
   Future<void> _startTrial() async {
+    Logger.debug('_startTrial called', service: 'paywall');
+    Logger.debug('offerings: ${_offerings != null ? "present" : "null"}', service: 'paywall');
+    Logger.debug('current: ${_offerings?.current?.identifier ?? "null"}', service: 'paywall');
+    Logger.debug('packages: ${_offerings?.current?.availablePackages.length ?? 0}', service: 'paywall');
+
     final package = _offerings?.current?.availablePackages.firstOrNull;
+    Logger.debug('selected package: ${package?.identifier ?? "null"}', service: 'paywall');
+
     if (package == null) {
+      Logger.warn('No package available for purchase', service: 'paywall');
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('No subscription available')),
       );
@@ -412,6 +439,9 @@ class _PaywallScreenState extends State<PaywallScreen> {
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
       child: Column(
         children: [
+          // DEBUG: Collapsible debug overlay (only in debug builds)
+          if (kDebugMode) _buildDebugOverlay(),
+
           // Hero Section
           _buildHero(),
           const SizedBox(height: 24),
@@ -825,13 +855,9 @@ class _PaywallScreenState extends State<PaywallScreen> {
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            _buildLegalLink('Terms of Service', () {
-              // TODO: Open terms URL
-            }),
+            _buildLegalLink('Terms of Use', () => _openUrl(_termsOfUseUrl)),
             const SizedBox(width: 20),
-            _buildLegalLink('Privacy Policy', () {
-              // TODO: Open privacy URL
-            }),
+            _buildLegalLink('Privacy Policy', () => _openUrl(_privacyPolicyUrl)),
           ],
         ),
 
@@ -861,7 +887,232 @@ class _PaywallScreenState extends State<PaywallScreen> {
         style: GoogleFonts.nunito(
           fontSize: 12,
           color: Us2Theme.textLight,
+          decoration: TextDecoration.underline,
+          decorationColor: Us2Theme.textLight.withValues(alpha: 0.5),
         ),
+      ),
+    );
+  }
+
+  /// Open a URL in the system browser
+  Future<void> _openUrl(String url) async {
+    final uri = Uri.parse(url);
+    try {
+      if (await canLaunchUrl(uri)) {
+        await launchUrl(uri, mode: LaunchMode.externalApplication);
+      } else {
+        Logger.warn('Could not launch URL: $url', service: 'paywall');
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Could not open link')),
+          );
+        }
+      }
+    } catch (e) {
+      Logger.error('Error opening URL: $url', error: e, service: 'paywall');
+    }
+  }
+
+  // ==========================================================================
+  // DEBUG OVERLAY (Remove before production release)
+  // ==========================================================================
+
+  String _getDebugInfo() {
+    final packages = _offerings?.current?.availablePackages ?? [];
+    final packageInfo = packages.map((p) =>
+      '  - ${p.identifier}: ${p.storeProduct.identifier} (${p.storeProduct.priceString})'
+    ).join('\n');
+
+    final allOfferings = _offerings?.all.keys.toList() ?? [];
+    final debugInfo = _subscriptionService.getDebugInfo();
+
+    return '''
+=== PAYWALL DEBUG INFO ===
+Timestamp: ${DateTime.now().toIso8601String()}
+
+--- SDK STATUS ---
+Platform: ${debugInfo['platform']}
+API Key: ${debugInfo['apiKeyPrefix']}
+Entitlement: ${debugInfo['entitlementId']}
+isConfigured: ${debugInfo['isConfigured']}
+SDK Initialized: ${debugInfo['isInitialized']}
+Init Success: ${debugInfo['isInitializedSuccessfully']}
+Init Error: ${debugInfo['initializationError'] ?? 'none'}
+
+--- OFFERINGS ---
+Offerings Object: ${_offerings != null ? "LOADED" : "NULL"}
+All Offerings: $allOfferings
+Current Offering: ${_offerings?.current?.identifier ?? "NULL"}
+Packages Count: ${packages.length}
+${packageInfo.isNotEmpty ? 'Packages:\n$packageInfo' : 'Packages: NONE'}
+
+--- ERRORS ---
+Last Offerings Error: ${_subscriptionService.lastOfferingsError ?? 'none'}
+Screen Error: ${_errorMessage ?? 'none'}
+
+--- STATE ---
+hasCustomerInfo: ${debugInfo['hasCustomerInfo']}
+isPremium: ${debugInfo['isPremium']}
+devBypassActive: ${debugInfo['isDevBypassActive']}
+isLoading: $_isLoading
+isPurchasing: $_isPurchasing
+isRestoring: $_isRestoring
+Button Enabled: ${!_isPurchasing && !_isRestoring && _offerings != null}
+==============================
+''';
+  }
+
+  Widget _buildDebugOverlay() {
+    return Column(
+      children: [
+        // Toggle button - small floating button
+        Align(
+          alignment: Alignment.topRight,
+          child: GestureDetector(
+            onTap: () => setState(() => _showDebugOverlay = !_showDebugOverlay),
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+              decoration: BoxDecoration(
+                color: _showDebugOverlay
+                    ? Colors.red.withValues(alpha: 0.9)
+                    : Colors.black.withValues(alpha: 0.5),
+                borderRadius: BorderRadius.circular(16),
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(
+                    _showDebugOverlay ? Icons.close : Icons.bug_report,
+                    color: Colors.white,
+                    size: 14,
+                  ),
+                  const SizedBox(width: 4),
+                  Text(
+                    _showDebugOverlay ? 'Close' : 'Debug',
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 11,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+
+        // Debug panel (expanded)
+        if (_showDebugOverlay) ...[
+          const SizedBox(height: 8),
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: Colors.black.withValues(alpha: 0.85),
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(color: Colors.white24),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Header with copy button
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text(
+                      'DEBUG INFO',
+                      style: TextStyle(
+                        color: Colors.amber,
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        Clipboard.setData(ClipboardData(text: _getDebugInfo()));
+                        HapticFeedback.mediumImpact();
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text('Debug info copied to clipboard'),
+                            duration: Duration(seconds: 2),
+                          ),
+                        );
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                        decoration: BoxDecoration(
+                          color: Colors.blue,
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: const Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(Icons.copy, color: Colors.white, size: 12),
+                            SizedBox(width: 4),
+                            Text(
+                              'Copy',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 11,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 8),
+                const Divider(color: Colors.white24, height: 1),
+                const SizedBox(height: 8),
+
+                // Debug info
+                _debugRow('Configured', RevenueCatConfig.isConfigured ? 'YES ✓' : 'NO ✗', RevenueCatConfig.isConfigured),
+                _debugRow('SDK Init', _subscriptionService.isInitialized ? 'YES ✓' : 'NO ✗', _subscriptionService.isInitialized),
+                _debugRow('Init OK', _subscriptionService.isInitializedSuccessfully ? 'YES ✓' : 'NO ✗', _subscriptionService.isInitializedSuccessfully),
+                if (_subscriptionService.initializationError != null)
+                  _debugRow('Init Err', _subscriptionService.initializationError!, false),
+                _debugRow('Offerings', _offerings != null ? 'LOADED ✓' : 'NULL ✗', _offerings != null),
+                _debugRow('Current', _offerings?.current?.identifier ?? 'NULL', _offerings?.current != null),
+                _debugRow('Packages', '${_offerings?.current?.availablePackages.length ?? 0}', (_offerings?.current?.availablePackages.length ?? 0) > 0),
+                if (_subscriptionService.lastOfferingsError != null)
+                  _debugRow('Offer Err', _subscriptionService.lastOfferingsError!, false),
+                _debugRow('Button', !_isPurchasing && !_isRestoring && _offerings != null ? 'ENABLED ✓' : 'DISABLED ✗', !_isPurchasing && !_isRestoring && _offerings != null),
+                if (_errorMessage != null)
+                  _debugRow('Scr Err', _errorMessage!, false),
+              ],
+            ),
+          ),
+          const SizedBox(height: 16),
+        ],
+      ],
+    );
+  }
+
+  Widget _debugRow(String label, String value, bool isOk) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 2),
+      child: Row(
+        children: [
+          SizedBox(
+            width: 70,
+            child: Text(
+              label,
+              style: const TextStyle(color: Colors.white60, fontSize: 11),
+            ),
+          ),
+          Expanded(
+            child: Text(
+              value,
+              style: TextStyle(
+                color: isOk ? Colors.greenAccent : Colors.redAccent,
+                fontSize: 11,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

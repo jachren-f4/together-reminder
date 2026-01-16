@@ -1,0 +1,39 @@
+{
+  "quizId": "quiz_015",
+  "title": "Feeling Supported",
+  "branch": "attachment",
+  "questions": [
+    {
+      "id": "quiz_015_q1",
+      "category": "reassurance",
+      "prompt": "Who feels most supported when...",
+      "content": "The other listens without trying to fix things"
+    },
+    {
+      "id": "quiz_015_q2",
+      "category": "comfort",
+      "prompt": "Who values more...",
+      "content": "Having someone to share good news with first"
+    },
+    {
+      "id": "quiz_015_q3",
+      "category": "security",
+      "prompt": "Who appreciates more...",
+      "content": "Being encouraged to pursue their dreams"
+    },
+    {
+      "id": "quiz_015_q4",
+      "category": "trust",
+      "prompt": "Who feels most loved when...",
+      "content": "The other stands up for them"
+    },
+    {
+      "id": "quiz_015_q5",
+      "category": "comfort",
+      "prompt": "Who turns to the other more...",
+      "content": "When they need to talk through a decision"
+    }
+  ],
+  "description": "What does feeling truly supported look like? Explore together!",
+  "magnet_id": 7
+}

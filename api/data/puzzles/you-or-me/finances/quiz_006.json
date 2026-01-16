@@ -1,0 +1,39 @@
+{
+  "quizId": "quiz_006",
+  "title": "Treats & Rewards",
+  "branch": "finances",
+  "questions": [
+    {
+      "id": "quiz_006_q1",
+      "category": "preferences",
+      "prompt": "Who is more likely to...",
+      "content": "Splurge on a nice meal out"
+    },
+    {
+      "id": "quiz_006_q2",
+      "category": "habits",
+      "prompt": "Who would...",
+      "content": "Justify a purchase by saying 'I deserve this'"
+    },
+    {
+      "id": "quiz_006_q3",
+      "category": "personality",
+      "prompt": "Who gets more joy from...",
+      "content": "Treating themselves to something small"
+    },
+    {
+      "id": "quiz_006_q4",
+      "category": "preferences",
+      "prompt": "Who would rather...",
+      "content": "Buy experiences over things"
+    },
+    {
+      "id": "quiz_006_q5",
+      "category": "habits",
+      "prompt": "Who is more likely to...",
+      "content": "Add something extra at checkout"
+    }
+  ],
+  "description": "Life is for living! Discover how you each like to treat yourselves.",
+  "magnet_id": 8
+}

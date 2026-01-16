@@ -1,64 +1,109 @@
 {
   "quizId": "quiz_013",
-  "title": "Self-Awareness",
+  "title": "Self-Awareness Together",
   "branch": "growth",
+  "description": "Explore how being with your partner helps you understand yourself better.",
+  "magnet_id": 11,
   "questions": [
     {
       "id": "quiz_013_q1",
-      "text": "What's something I'm still learning about myself?",
+      "text": "Being with you has helped me see...",
       "choices": [
-        "What truly makes me happy",
-        "How I handle stress and pressure",
-        "What I need in relationships",
-        "My strengths and limitations"
+        "My patterns and tendencies more clearly",
+        "My strengths I didn't fully appreciate",
+        "Areas where I want to grow",
+        "Who I am when I feel safe and loved"
       ],
-      "category": "growth"
+      "category": "partner_mirror",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Partners serve as mirrors reflecting ourselves. Pattern-seers gain self-knowledge; strength-seers gain confidence; growth-seers gain direction; safe-self seers gain security. Relationships that enhance self-awareness are deeply connecting.",
+          "framework": "self_expansion_theory",
+          "whenDifferent": "Different insights from being together are all valuable. Your partner helps you see different parts of yourself.",
+          "whenSame": "Matched insights show you're both gaining similar self-awareness from your relationship.",
+          "journalPrompt": "What has being with your partner helped you see about yourself?"
+        }
+      }
     },
     {
       "id": "quiz_013_q2",
-      "text": "When I reflect on my past, I tend to focus on...",
+      "text": "When you gently point out something about me, I...",
       "choices": [
-        "Lessons learned from mistakes",
-        "Moments I'm proud of",
-        "How far I've come",
-        "What I wish I'd done differently"
+        "Appreciate the insight and try to learn",
+        "Need time to process before responding",
+        "Sometimes feel defensive at first",
+        "Am grateful you know me well enough to see it"
       ],
-      "category": "emotional"
+      "category": "receiving_reflection",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Receiving partner feedback reveals openness and security. Learners embrace growth; processors need time; defensive types may feel vulnerable; grateful types feel seen. Understanding your pattern helps you improve reception.",
+          "framework": "gottman",
+          "whenDifferent": "Different reception patterns are normal. The processor and the learner may need different approaches to feedback conversations.",
+          "whenSame": "Matched reception creates smoother feedback exchanges.",
+          "journalPrompt": "How do you receive it when your partner points out something about you? Could you receive it better?"
+        }
+      }
     },
     {
       "id": "quiz_013_q3",
-      "text": "The best way for me to gain self-insight is...",
+      "text": "Something I've learned about myself through us is...",
       "choices": [
-        "Talking things through with you",
-        "Journaling or quiet reflection",
-        "Getting feedback from others",
-        "Learning from my experiences"
+        "How I show love and what I need",
+        "How I handle stress and conflict",
+        "What triggers me and where that comes from",
+        "What I value most in a partner"
       ],
-      "category": "communication"
+      "category": "relationship_learning",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Relationship learning reveals self-knowledge gained through partnership. Love-language learners understand expression; stress-handlers understand reactions; trigger-understanders know their history; value-clarifiers know their needs. All are valuable insights.",
+          "framework": "attachment_theory",
+          "whenDifferent": "Different learnings are all valuable. You've each gained different self-knowledge from your relationship.",
+          "whenSame": "Matched learnings show you've grown in similar areas through your relationship.",
+          "journalPrompt": "What have you learned about yourself through being in this relationship?"
+        }
+      }
     },
     {
       "id": "quiz_013_q4",
-      "text": "Something I've recently realized about myself is...",
+      "text": "I want you to help me grow by...",
       "choices": [
-        "I need more balance in my life",
-        "I'm stronger than I thought",
-        "I have room to grow in certain areas",
-        "What I value has shifted"
+        "Believing in me and encouraging me",
+        "Being honest about what you see",
+        "Being patient with my process",
+        "Growing alongside me as partners"
       ],
-      "category": "growth"
+      "category": "growth_invitation",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Growth invitations reveal what support we need. Belief-seekers need faith; honesty-seekers need truth; patience-seekers need time; co-growers need partnership. Explicitly inviting support helps partners provide it.",
+          "framework": "positive_psychology",
+          "whenDifferent": "Different growth invitations require learning what your partner needs. What helps you may not help them.",
+          "whenSame": "Matched growth invitations create natural support dynamics.",
+          "journalPrompt": "What kind of support helps you grow? Have you explicitly invited your partner to provide it?"
+        }
+      }
     },
     {
       "id": "quiz_013_q5",
-      "text": "How has being with you helped me see myself more clearly?",
+      "text": "I believe being in a relationship should...",
       "choices": [
-        "You reflect back my best qualities",
-        "You gently point out my blind spots",
-        "You accept me as I am",
-        "You challenge me to grow"
+        "Help us become better versions of ourselves",
+        "Reveal parts of us we couldn't see alone",
+        "Challenge us to grow while feeling supported",
+        "Make us more self-aware and self-accepting"
       ],
-      "category": "values"
+      "category": "relationship_growth_philosophy",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Beliefs about relationship growth shape expectations. Better-selves believers see improvement; revealer believers see discovery; challenge-seekers see supported growth; awareness believers see understanding. All are healthy views of relationship as growth opportunity.",
+          "framework": "self_expansion_theory",
+          "whenDifferent": "All these benefits are real. Relationships can provide all forms of growth.",
+          "whenSame": "Shared philosophy about relationship growth creates aligned expectations for how you'll develop together.",
+          "journalPrompt": "How do you believe being in a relationship should help you grow?"
+        }
+      }
     }
-  ],
-  "description": "Explore how self-awareness shapes your growth together.",
-  "magnet_id": 11
+  ]
 }

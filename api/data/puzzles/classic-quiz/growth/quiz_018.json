@@ -2,6 +2,8 @@
   "quizId": "quiz_018",
   "title": "Balance & Priorities",
   "branch": "growth",
+  "description": "Discover how you support each other in finding balance.",
+  "magnet_id": 13,
   "questions": [
     {
       "id": "quiz_018_q1",
@@ -12,7 +14,16 @@
         "Responsibilities and fun",
         "Ambition and contentment"
       ],
-      "category": "growth"
+      "category": "balance_challenge",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Balance challenges reveal current struggles. Work/life balancers need boundaries; us/me balancers need both connection and autonomy; responsibility/fun balancers need permission; ambition/contentment balancers need peace. Naming the challenge helps address it.",
+          "framework": "positive_psychology",
+          "whenDifferent": "Different balance challenges are individual. Understanding your partner's current struggle helps you support them.",
+          "whenSame": "Shared balance challenges create opportunity for mutual support and growth.",
+          "journalPrompt": "What balance are you trying to find right now? How can your partner help?"
+        }
+      }
     },
     {
       "id": "quiz_018_q2",
@@ -23,7 +34,16 @@
         "Lean on you for support",
         "Reassess what's really important"
       ],
-      "category": "emotional"
+      "category": "overwhelm_response",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Overwhelm responses reveal coping patterns. Pushers power through; simplifiers reduce load; leaners seek support; reassessors find clarity. Knowing your partner's pattern helps you respond appropriately when they're stressed.",
+          "framework": "attachment_theory",
+          "whenDifferent": "Different overwhelm responses require flexibility. The pusher and the puller-back may not understand each other's approach.",
+          "whenSame": "Matched responses create understanding when you're both stressed.",
+          "journalPrompt": "How do you respond when life gets overwhelming? Is that approach serving you?"
+        }
+      }
     },
     {
       "id": "quiz_018_q3",
@@ -34,18 +54,36 @@
         "Health and personal wellbeing",
         "Finding happiness and fulfillment"
       ],
-      "category": "values"
+      "category": "current_priority",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Current priorities reveal focus areas. Relationship-prioritizers invest in partnership; career-prioritizers invest in work; health-prioritizers invest in wellbeing; happiness-prioritizers invest in fulfillment. Knowing priorities prevents misunderstanding about time allocation.",
+          "framework": "gottman",
+          "whenDifferent": "Different priorities are normal and can coexist. Understanding your partner's current focus prevents resentment about time spent.",
+          "whenSame": "Shared priorities create aligned focus and mutual investment.",
+          "journalPrompt": "What's your top priority right now? Does your partner understand this?"
+        }
+      }
     },
     {
       "id": "quiz_018_q4",
-      "text": "How do you help me maintain balance?",
+      "text": "You help me maintain balance by...",
       "choices": [
-        "You remind me to take breaks",
-        "You help me see what matters most",
-        "You take things off my plate",
-        "You're patient when I'm stretched thin"
+        "Reminding me to take breaks",
+        "Helping me see what matters most",
+        "Taking things off my plate",
+        "Being patient when I'm stretched thin"
       ],
-      "category": "communication"
+      "category": "partner_balance_support",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Partner balance support takes different forms. Break-reminders provide rest; priority-clarifiers provide perspective; load-lighteners provide relief; patient ones provide acceptance. Knowing how your partner helps you honors their contribution.",
+          "framework": "gottman",
+          "whenDifferent": "Different types of support are all valuable. You each contribute unique gifts to each other's balance.",
+          "whenSame": "Matched appreciation shows you value similar support.",
+          "journalPrompt": "How does your partner help you maintain balance? Have you thanked them?"
+        }
+      }
     },
     {
       "id": "quiz_018_q5",
@@ -56,9 +94,16 @@
         "Friends and family",
         "Hobbies and things I enjoy"
       ],
-      "category": "values"
+      "category": "time_desires",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Time desires reveal what's missing. Quality-time seekers need more connection; self-care seekers need more rest; friend/family seekers need more relationships; hobby seekers need more enjoyment. Naming what you need helps create it.",
+          "framework": "positive_psychology",
+          "whenDifferent": "Different time desires point to different gaps. Both are valid and important to address.",
+          "whenSame": "Shared desires create clear direction for making time together.",
+          "journalPrompt": "What do you wish you had more time for? What would it take to create that time?"
+        }
+      }
     }
-  ],
-  "description": "Discover how you support each other in finding balance.",
-  "magnet_id": 13
+  ]
 }

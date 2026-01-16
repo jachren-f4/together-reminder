@@ -1,0 +1,69 @@
+{
+  "author": "Crossword Maker GPT",
+  "title": "AI-Built Puzzle",
+  "theme": "happiness",
+  "size": {
+    "rows": 9,
+    "cols": 7
+  },
+  "clues": {
+    "1": { "type": "text", "content": "AD_USTIN_", "arrow": "down", "target_index": 8 },
+    "2": { "type": "text", "content": "Cheers!", "arrow": "down", "target_index": 9 },
+    "3": { "type": "text", "content": "Shout", "arrow": "down", "target_index": 10 },
+    "4": { "type": "text", "content": "_L__E", "arrow": "down", "target_index": 11 },
+    "5": { "type": "text", "content": "Pause word", "arrow": "down", "target_index": 12 },
+    "6": { "type": "text", "content": "UK biz sch", "arrow": "down", "target_index": 13 },
+    "7": { "type": "text", "content": "Elated", "arrow": "across", "target_index": 8 },
+    "8": { "type": "text", "content": "Shines", "arrow": "across", "target_index": 15 },
+    "9": {
+      "across": { "type": "emoji", "content": "🌳", "target_index": 23 },
+      "down": { "type": "text", "content": "Notions", "target_index": 29 }
+    },
+    "10": {
+      "across": { "type": "text", "content": "PAC_", "target_index": 27 },
+      "down": { "type": "text", "content": "Tableau", "target_index": 33 }
+    },
+    "11": { "type": "text", "content": "TR_O", "arrow": "across", "target_index": 29 },
+    "12": {
+      "across": { "type": "text", "content": "TAL_", "target_index": 31 },
+      "down": { "type": "text", "content": "Serene", "target_index": 37 }
+    },
+    "13": {
+      "across": { "type": "text", "content": "MI_T", "target_index": 33 },
+      "down": { "type": "text", "content": "KHR", "target_index": 39 }
+    },
+    "14": { "type": "text", "content": "Mine finds", "arrow": "down", "target_index": 41 },
+    "15": { "type": "text", "content": "Current", "arrow": "across", "target_index": 36 },
+    "16": {
+      "across": { "type": "text", "content": "_AIN__AT", "target_index": 39 },
+      "down": { "type": "text", "content": "Aspen gear", "target_index": 45 }
+    },
+    "17": { "type": "text", "content": "Simpler", "arrow": "across", "target_index": 43 },
+    "18": { "type": "text", "content": "Ethene type", "arrow": "across", "target_index": 50 },
+    "19": { "type": "emoji", "content": "😊", "arrow": "across", "target_index": 57 }
+  },
+  "date": "2026-01-13",
+  "grid": [
+    ".", ".", ".", ".", ".", ".", ".",
+    ".", "J", "O", "Y", "F", "U", "L",
+    ".", "G", "L", "E", "A", "M", "S",
+    ".", ".", "E", "L", "M", ".", "E",
+    ".", "I", ".", "L", ".", "S", ".",
+    ".", "D", "C", ".", "R", "C", "O",
+    ".", "E", "A", "S", "I", "E", "R",
+    ".", "A", "L", "K", "E", "N", "E",
+    ".", "S", "M", "I", "L", "E", "S"
+  ],
+  "gridnums": [
+    0, 1, 2, 3, 4, 5, 6,
+    7, 0, 0, 0, 0, 0, 0,
+    8, 0, 0, 0, 0, 0, 0,
+    0, 9, 0, 0, 0, 10, 0,
+    11, 0, 12, 0, 13, 0, 14,
+    15, 0, 0, 16, 0, 0, 0,
+    17, 0, 0, 0, 0, 0, 0,
+    18, 0, 0, 0, 0, 0, 0,
+    19, 0, 0, 0, 0, 0, 0
+  ],
+  "puzzleId": "puzzle_044"
+}

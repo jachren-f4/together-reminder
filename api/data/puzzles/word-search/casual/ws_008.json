@@ -1,0 +1,24 @@
+{
+  "puzzleId": "ws_008",
+  "title": "Casual VIII",
+  "theme": "casual",
+  "size": {
+    "rows": 10,
+    "cols": 10
+  },
+  "grid": "EIVOMEIZAYVZVXDJCYNRSWEETMGNTIPFRZCNUYAEANAPEFPPRDRSYAEPILGFTITLALAGWPNFIHLKGGTWEEQOEITAHCRGWJFXSDOK",
+  "words": {
+    "FUNNY": "45,UR",
+    "LAKE": "57,DL",
+    "SWEET": "20,R",
+    "PILLOW": "47,DL",
+    "HAPPY": "73,UR",
+    "CHAT": "89,L",
+    "SILLY": "96,UL",
+    "NEAT": "35,DL",
+    "NAP": "41,R",
+    "DANCE": "49,UL",
+    "MOVIE": "4,L",
+    "PARTNER": "30,D"
+  }
+}

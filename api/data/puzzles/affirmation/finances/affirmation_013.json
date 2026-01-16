@@ -1,0 +1,115 @@
+{
+  "quizId": "affirmation_013",
+  "title": "Financial Growth",
+  "category": "finances",
+  "branch": "finances",
+  "description": "Assess how you're developing financially as a couple",
+  "magnet_id": 15,
+  "questions": [
+    {
+      "id": "affirmation_013_q1",
+      "text": "I feel we're getting better at handling money together over time.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Perceiving financial growth—even in small ways—builds confidence and motivation. Couples who feel they're improving stay engaged with their financial life together.",
+          "framework": "positive_psychology",
+          "whenDifferent": "Different perceptions of growth may mean one partner sees progress the other doesn't. Share specific improvements you've noticed.",
+          "whenSame": "Shared sense of financial growth together is motivating and builds partnership.",
+          "journalPrompt": "How have you grown in handling money together? What's improved?"
+        }
+      }
+    },
+    {
+      "id": "affirmation_013_q2",
+      "text": "I believe we learn from our financial mistakes together.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Learning from mistakes—rather than blaming or shaming—creates growth. Couples who treat financial missteps as learning opportunities improve over time.",
+          "framework": "gottman",
+          "whenDifferent": "If one partner doesn't feel mistakes become learning, explore what happens after financial missteps. Is there blame? Avoidance? Discussion?",
+          "whenSame": "Shared commitment to learning from mistakes creates resilient financial partnership.",
+          "journalPrompt": "What's a financial mistake you've learned from together? What changed?"
+        }
+      }
+    },
+    {
+      "id": "affirmation_013_q3",
+      "text": "I feel comfortable discussing how to improve our financial habits.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Comfort discussing improvements suggests a growth mindset and safe communication. Discomfort may indicate fear of criticism or defensiveness.",
+          "framework": "gottman",
+          "whenDifferent": "If one partner is uncomfortable with improvement discussions, explore what makes it difficult. Framing matters—growth vs. criticism.",
+          "whenSame": "Shared comfort discussing improvements enables ongoing development as a financial team.",
+          "journalPrompt": "What financial habit would you like to improve together? Can you discuss this openly?"
+        }
+      }
+    },
+    {
+      "id": "affirmation_013_q4",
+      "text": "I believe my partner wants to grow financially as much as I do.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Believing your partner is equally committed to financial growth creates teamwork. Feeling like you're the only one who cares creates resentment.",
+          "framework": "positive_psychology",
+          "whenDifferent": "If one partner doubts the other's commitment to growth, discuss financial aspirations. Sometimes caring looks different than expected.",
+          "whenSame": "Shared commitment to financial growth creates aligned motivation.",
+          "journalPrompt": "What does financial growth mean to you? Does your partner share this aspiration?"
+        }
+      }
+    },
+    {
+      "id": "affirmation_013_q5",
+      "text": "I feel optimistic about our financial future together.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Optimism about your financial future together reflects confidence in your partnership and trajectory. This positive outlook helps you persist through challenges.",
+          "framework": "positive_psychology",
+          "whenDifferent": "If one partner is less optimistic, explore specific concerns. Targeted pessimism is more addressable than general doom.",
+          "whenSame": "Shared optimism about your financial future creates energy and motivation.",
+          "journalPrompt": "What makes you optimistic—or worried—about your financial future together?"
+        }
+      }
+    }
+  ]
+}

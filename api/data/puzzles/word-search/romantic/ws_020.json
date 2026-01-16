@@ -1,0 +1,24 @@
+{
+  "puzzleId": "ws_020",
+  "title": "Romantic XX",
+  "theme": "romantic",
+  "size": {
+    "rows": 10,
+    "cols": 10
+  },
+  "grid": "UTSRGAMZXRORZOKNENOFAILPUCISOYDLTCNLEVBAOFLALSMHIGRMMRHTIAFGEOISWXHJTMRWUCAFERVETLRERULLATBMAAMHONEY",
+  "words": {
+    "FAITH": "58,L",
+    "ROMANCE": "70,UR",
+    "WARM": "64,D",
+    "GIVING": "59,UL",
+    "SOULMATE": "2,DR",
+    "TWIRL": "80,UR",
+    "FLIRT": "41,U",
+    "ROSES": "9,DL",
+    "ALLURE": "88,L",
+    "ADORE": "20,D",
+    "HONEY": "95,R",
+    "BLUSH": "90,UR"
+  }
+}

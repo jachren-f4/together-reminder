@@ -1,0 +1,24 @@
+{
+  "puzzleId": "ws_009",
+  "title": "Romantic IX",
+  "theme": "romantic",
+  "size": {
+    "rows": 10,
+    "cols": 10
+  },
+  "grid": "PRSEITRILFCIUULCWTACSHFIYGRSBTRKAWAEGARLENEMASNUKIVIOSPDEONSOWUBKAISHSLRDPYQGQOXEPLEDGENTRCAPTIVATEA",
+  "words": {
+    "HONEY": "68,UL",
+    "SNUGGLE": "69,UL",
+    "TREASURE": "17,DL",
+    "PLEDGE": "81,R",
+    "CHAMPAGNE": "10,DR",
+    "FLIRT": "9,L",
+    "LOVE": "70,U",
+    "TRUE": "29,DL",
+    "CAPTIVATE": "90,R",
+    "BAND": "28,DL",
+    "ROSES": "89,UL",
+    "WINK": "61,U"
+  }
+}

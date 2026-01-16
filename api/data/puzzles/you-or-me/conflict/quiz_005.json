@@ -1,0 +1,39 @@
+{
+  "quizId": "quiz_005",
+  "title": "Expressing Feelings",
+  "branch": "conflict",
+  "questions": [
+    {
+      "id": "quiz_005_q1",
+      "category": "personality",
+      "prompt": "Who is more...",
+      "content": "Direct about what's bothering them"
+    },
+    {
+      "id": "quiz_005_q2",
+      "category": "habits",
+      "prompt": "Who is more likely to...",
+      "content": "Write down thoughts before sharing them"
+    },
+    {
+      "id": "quiz_005_q3",
+      "category": "preferences",
+      "prompt": "Who finds it easier to...",
+      "content": "Express frustration in the moment"
+    },
+    {
+      "id": "quiz_005_q4",
+      "category": "personality",
+      "prompt": "Who tends to...",
+      "content": "Show feelings through actions more than words"
+    },
+    {
+      "id": "quiz_005_q5",
+      "category": "habits",
+      "prompt": "Who is more likely to...",
+      "content": "Need encouragement to open up about what's wrong"
+    }
+  ],
+  "description": "Words or actions? Explore how you each express what's on your heart.",
+  "magnet_id": 13
+}

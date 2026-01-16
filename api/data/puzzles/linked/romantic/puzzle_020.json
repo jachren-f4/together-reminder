@@ -1,0 +1,69 @@
+{
+  "author": "Crossword Maker GPT",
+  "title": "AI-Built Puzzle",
+  "size": {
+    "rows": 9,
+    "cols": 7
+  },
+  "clues": {
+    "1": { "type": "text", "content": "Awful", "arrow": "down", "target_index": 8 },
+    "2": { "type": "text", "content": "Symbol", "arrow": "down", "target_index": 9 },
+    "3": { "type": "text", "content": "Swipe", "arrow": "down", "target_index": 10 },
+    "4": { "type": "text", "content": "__-fi", "arrow": "down", "target_index": 11 },
+    "5": { "type": "emoji", "content": "🥚", "arrow": "down", "target_index": 12 },
+    "6": { "type": "text", "content": "Writers", "arrow": "down", "target_index": 13 },
+    "7": { "type": "text", "content": "Diagonal", "arrow": "across", "target_index": 8 },
+    "8": { "type": "text", "content": "In play", "arrow": "across", "target_index": 15 },
+    "9": { "type": "emoji", "content": "🦌", "arrow": "across", "target_index": 22 },
+    "10": {
+      "across": { "type": "text", "content": "Fr. year", "target_index": 26 },
+      "down": { "type": "text", "content": "Circle #", "target_index": 32 }
+    },
+    "11": {
+      "across": { "type": "text", "content": "Snooze", "target_index": 30 },
+      "down": { "type": "text", "content": "Oceans", "target_index": 36 }
+    },
+    "12": {
+      "across": { "type": "text", "content": "BO_S", "target_index": 34 },
+      "down": { "type": "text", "content": "Rollers", "target_index": 40 }
+    },
+    "13": { "type": "text", "content": "BO_S", "arrow": "across", "target_index": 36 },
+    "14": {
+      "across": { "type": "text", "content": "Cover", "target_index": 38 },
+      "down": { "type": "text", "content": "Brew", "target_index": 44 }
+    },
+    "15": { "type": "text", "content": "Lace", "arrow": "down", "target_index": 48 },
+    "16": { "type": "text", "content": "T__M", "arrow": "across", "target_index": 43 },
+    "17": { "type": "text", "content": "Laptop", "arrow": "down", "target_index": 52 },
+    "18": {
+      "across": { "type": "emoji", "content": "🤡", "target_index": 47 },
+      "down": { "type": "text", "content": "Pirate", "target_index": 53 }
+    },
+    "19": { "type": "text", "content": "Andean", "arrow": "across", "target_index": 50 },
+    "20": { "type": "text", "content": "Hush", "arrow": "across", "target_index": 57 }
+  },
+  "date": "2026-01-12",
+  "grid": [
+    ".", ".", ".", ".", ".", ".", ".",
+    ".", "B", "I", "S", "H", "O", "P",
+    ".", "A", "C", "T", "I", "V", "E",
+    ".", "D", "O", "E", ".", "A", "N",
+    ".", ".", "N", "A", "P", ".", "S",
+    ".", "S", ".", "L", "I", "D", ".",
+    ".", "E", "A", ".", ".", "I", "T",
+    ".", "A", "L", "P", "A", "C", "A",
+    ".", "S", "E", "C", "R", "E", "T"
+  ],
+  "gridnums": [
+    0, 1, 2, 3, 4, 5, 6,
+    7, 0, 0, 0, 0, 0, 0,
+    8, 0, 0, 0, 0, 0, 0,
+    9, 0, 0, 0, 10, 0, 0,
+    0, 11, 0, 0, 0, 12, 0,
+    13, 0, 14, 0, 0, 0, 15,
+    16, 0, 0, 17, 18, 0, 0,
+    19, 0, 0, 0, 0, 0, 0,
+    20, 0, 0, 0, 0, 0, 0
+  ],
+  "puzzleId": "puzzle_030"
+}

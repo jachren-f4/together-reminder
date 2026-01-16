@@ -1,0 +1,111 @@
+{
+  "quizId": "quiz_008",
+  "title": "Independence vs. Togetherness",
+  "branch": "finances",
+  "description": "Explore how you balance financial autonomy with partnership.",
+  "magnet_id": 16,
+  "questions": [
+    {
+      "id": "quiz_008_q1",
+      "text": "When it comes to managing money, I believe couples should...",
+      "choices": [
+        "Merge everything—what's mine is ours",
+        "Keep things mostly separate with some shared",
+        "Have a shared pool for joint expenses, rest separate",
+        "Figure out what works for their unique situation"
+      ],
+      "category": "financial_independence",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Money merging preferences reveal values about autonomy, trust, and partnership. Full-mergers prioritize unity; separators prioritize independence; hybrid approachers balance both. There's no right answer—only alignment.",
+          "framework": "financial_therapy",
+          "whenDifferent": "Different merging preferences can feel threatening. The merger may feel the separator doesn't trust; the separator may feel the merger is controlling. Both can be expressions of love.",
+          "whenSame": "Shared merging philosophy makes designing your system easier. You agree on the basic structure.",
+          "journalPrompt": "What does money merging (or not) represent to you? What would it mean about your relationship?"
+        }
+      }
+    },
+    {
+      "id": "quiz_008_q2",
+      "text": "Having money that's 'just mine' feels...",
+      "choices": [
+        "Important for my sense of independence",
+        "Nice but not essential",
+        "Unnecessary if we're truly partners",
+        "Complicated—I have mixed feelings"
+      ],
+      "category": "financial_independence",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Personal money represents autonomy and identity for some, and separateness for others. Independence-needers require their own funds; partnership-focusers see separation as distance. Feelings here are deeply personal.",
+          "framework": "financial_therapy",
+          "whenDifferent": "The independence-needer may feel controlled without personal money; the partnership-focuser may feel shut out by it. Understand the meaning behind the preference.",
+          "whenSame": "Shared feelings about personal money make this easier to navigate. You understand each other's needs.",
+          "journalPrompt": "How do you feel about having (or not having) money that's just yours? Where does that feeling come from?"
+        }
+      }
+    },
+    {
+      "id": "quiz_008_q3",
+      "text": "Before spending on something just for me, I feel like I should...",
+      "choices": [
+        "Check in with my partner first",
+        "Use my own discretionary money freely",
+        "Consider whether it affects us, then decide",
+        "It depends on how much it costs"
+      ],
+      "category": "financial_independence",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Personal spending autonomy reflects boundaries and trust. Check-in-firsters prioritize partnership; free-spenders prioritize autonomy; considerers balance; cost-dependers have thresholds. Expectations here often go unspoken.",
+          "framework": "gottman",
+          "whenDifferent": "Different autonomy expectations can create friction. The check-inner may feel the free-spender is selfish; the free-spender may feel the check-inner is controlling. Agree on boundaries explicitly.",
+          "whenSame": "Shared autonomy expectations prevent a common conflict. You naturally agree on how personal spending works.",
+          "journalPrompt": "How would you feel if your partner spent money without telling you? What if they wanted you to check in about everything?"
+        }
+      }
+    },
+    {
+      "id": "quiz_008_q4",
+      "text": "Financial decisions that affect both of us should be...",
+      "choices": [
+        "Made together, always",
+        "Made together for big things, solo for small",
+        "Discussed but one person can decide",
+        "Trusted to whoever handles that area"
+      ],
+      "category": "financial_decisions",
+      "metadata": {
+        "dimension": "conflict_approach",
+        "poleMapping": ["right", "neutral", "left", "left"],
+        "therapeutic": {
+          "rationale": "Joint decision-making style reveals power dynamics and trust. Always-togethers maximize input; threshold-setters are practical; discussers trust judgment; delegators specialize. Misalignment creates power struggles.",
+          "framework": "gottman",
+          "whenDifferent": "The always-together person may feel shut out by delegation; the delegator may feel micromanaged by joint decisions. Find the balance that honors both needs.",
+          "whenSame": "Shared decision-making style makes financial choices smoother. You agree on how decisions get made.",
+          "journalPrompt": "How do you feel when decisions are made without your input? What level of involvement feels right?"
+        }
+      }
+    },
+    {
+      "id": "quiz_008_q5",
+      "text": "The balance I want between financial independence and togetherness is...",
+      "choices": [
+        "Mostly togetherness with some personal freedom",
+        "Mostly independence with clear shared responsibilities",
+        "Equal balance—both matter a lot to me",
+        "Flexible depending on the season of life"
+      ],
+      "category": "financial_independence",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "The independence-togetherness balance is deeply personal and often unspoken. Naming your ideal helps your partner understand what you need and helps you design a system that works.",
+          "framework": "financial_therapy",
+          "whenDifferent": "Different balances require negotiation. The togetherness-leaner may feel the independence-leaner is distant; the independence-leaner may feel the togetherness-leaner is enmeshed. Both needs are valid.",
+          "whenSame": "Shared balance makes designing your financial life easier. You're aiming for the same structure.",
+          "journalPrompt": "What does financial partnership mean to you? What does financial independence mean? How do you want to balance them?"
+        }
+      }
+    }
+  ]
+}

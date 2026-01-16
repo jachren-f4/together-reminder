@@ -1,0 +1,39 @@
+{
+  "quizId": "quiz_014",
+  "title": "Expressing Care",
+  "branch": "attachment",
+  "questions": [
+    {
+      "id": "quiz_014_q1",
+      "category": "trust",
+      "prompt": "Who is more likely to...",
+      "content": "Show love through actions rather than words"
+    },
+    {
+      "id": "quiz_014_q2",
+      "category": "reassurance",
+      "prompt": "Who appreciates more...",
+      "content": "Hearing 'I'm thinking of you' during the day"
+    },
+    {
+      "id": "quiz_014_q3",
+      "category": "comfort",
+      "prompt": "Who is more...",
+      "content": "Expressive with affectionate gestures"
+    },
+    {
+      "id": "quiz_014_q4",
+      "category": "security",
+      "prompt": "Who values more...",
+      "content": "Consistent small acts of love"
+    },
+    {
+      "id": "quiz_014_q5",
+      "category": "trust",
+      "prompt": "Who would...",
+      "content": "Remember the little things that matter to the other"
+    }
+  ],
+  "description": "How do you show you care? Explore your ways of expressing love!",
+  "magnet_id": 7
+}

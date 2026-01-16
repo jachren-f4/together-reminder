@@ -1,64 +1,111 @@
 {
   "quizId": "quiz_014",
-  "title": "Learning Together",
+  "title": "Learning As Partners",
   "branch": "growth",
+  "description": "Discover how you learn new things together and support each other's growth.",
+  "magnet_id": 12,
   "questions": [
     {
       "id": "quiz_014_q1",
-      "text": "When it comes to learning new things, I prefer to...",
+      "text": "When it comes to learning something new, I prefer to...",
       "choices": [
-        "Dive in and figure it out",
-        "Research and prepare first",
+        "Jump in and learn by doing",
+        "Research and understand first",
         "Learn alongside someone else",
         "Take my time and go at my own pace"
       ],
-      "category": "growth"
+      "category": "learning_style",
+      "metadata": {
+        "dimension": "risk_adventure",
+        "poleMapping": ["right", "left", "right", "left"],
+        "therapeutic": {
+          "rationale": "Learning styles affect how couples tackle new things together. Doers learn through action; researchers learn through understanding; social learners thrive with partners; self-paced learners need space. Matching these creates better shared learning experiences.",
+          "framework": "positive_psychology",
+          "whenDifferent": "Different learning styles require patience. The doer may frustrate the researcher. Find approaches that work for both.",
+          "whenSame": "Matched learning styles create smooth shared learning experiences.",
+          "journalPrompt": "How do you prefer to learn new things? Does your partner learn differently?"
+        }
+      }
     },
     {
       "id": "quiz_014_q2",
-      "text": "Something I'd love for us to learn together is...",
+      "text": "Something I'd love to learn together with you is...",
       "choices": [
-        "A new language or skill",
+        "A new language or communication skill",
         "Something creative or artistic",
         "A sport or physical activity",
         "Something practical for our life together"
       ],
-      "category": "values"
+      "category": "shared_learning",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Shared learning desires reveal what couples want to explore together. Language/communication deepens connection; creativity expands expression; physical activities build shared experiences; practical skills enhance daily life. Naming desires makes them happen.",
+          "framework": "self_expansion_theory",
+          "whenDifferent": "Different learning interests aren't mutually exclusive. You can pursue multiple types of shared learning.",
+          "whenSame": "Matched learning desires create clear direction for your next growth adventure together.",
+          "journalPrompt": "What would you love to learn together? What's stopping you from starting?"
+        }
+      }
     },
     {
       "id": "quiz_014_q3",
       "text": "When I'm struggling to learn something, I need...",
       "choices": [
-        "Encouragement to keep going",
+        "Encouragement to keep trying",
         "Space to work through it myself",
         "Help breaking it into smaller steps",
         "Patience and understanding"
       ],
-      "category": "communication"
+      "category": "learning_support",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Support needs during learning struggles vary. Encouragement-needers want motivation; space-needers want autonomy; step-helpers want structure; patience-needers want acceptance. Knowing your partner's needs helps you support effectively.",
+          "framework": "gottman",
+          "whenDifferent": "Different support needs require flexibility. What helps you when stuck may not help your partner.",
+          "whenSame": "Matched support needs make helping each other through learning challenges intuitive.",
+          "journalPrompt": "What do you need when you're struggling to learn something? Have you told your partner?"
+        }
+      }
     },
     {
       "id": "quiz_014_q4",
-      "text": "What motivates me most to keep learning?",
-      "choices": [
-        "Curiosity and wanting to understand",
-        "Achieving goals and seeing progress",
-        "Becoming better at what I do",
-        "Sharing the experience with others"
-      ],
-      "category": "growth"
-    },
-    {
-      "id": "quiz_014_q5",
       "text": "The most valuable thing I've learned from our relationship is...",
       "choices": [
         "How to communicate more openly",
-        "How to be more patient",
+        "How to be more patient and accepting",
         "How to love and be loved",
-        "How to work through challenges"
+        "How to work through challenges together"
       ],
-      "category": "emotional"
+      "category": "relationship_lessons",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Relationship lessons reveal what partners have gained. Communication learners improved expression; patience learners improved acceptance; love learners improved connection; challenge-workers improved resilience. Naming lessons honors the growth.",
+          "framework": "self_expansion_theory",
+          "whenDifferent": "Different lessons learned are both valid. You've each grown in different ways through your relationship.",
+          "whenSame": "Matched lessons create shared appreciation for how your relationship has helped you grow.",
+          "journalPrompt": "What's the most valuable thing your relationship has taught you?"
+        }
+      }
+    },
+    {
+      "id": "quiz_014_q5",
+      "text": "I believe learning together helps couples...",
+      "choices": [
+        "Stay connected and engaged",
+        "Grow in the same direction",
+        "Have fun and create memories",
+        "Discover new things about each other"
+      ],
+      "category": "learning_value",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Beliefs about shared learning shape how couples prioritize it. Connection believers see bonding; direction believers see alignment; fun believers see joy; discovery believers see deepening. Research shows learning together strengthens relationships.",
+          "framework": "self_expansion_theory",
+          "whenDifferent": "All these benefits are real. Shared learning provides multiple forms of relationship nourishment.",
+          "whenSame": "Shared understanding of learning's value creates motivation to keep growing together.",
+          "journalPrompt": "How does learning together benefit your relationship? When did you last learn something new together?"
+        }
+      }
     }
-  ],
-  "description": "Discover how you approach learning and growth as a team.",
-  "magnet_id": 12
+  ]
 }

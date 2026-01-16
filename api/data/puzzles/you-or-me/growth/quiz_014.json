@@ -1,0 +1,39 @@
+{
+  "quizId": "quiz_014",
+  "title": "Celebrating Wins",
+  "branch": "growth",
+  "questions": [
+    {
+      "id": "quiz_014_q1",
+      "category": "support",
+      "prompt": "Who is more likely to...",
+      "content": "Celebrate the other's achievements enthusiastically"
+    },
+    {
+      "id": "quiz_014_q2",
+      "category": "learning",
+      "prompt": "Who recognizes more...",
+      "content": "Their own progress and growth"
+    },
+    {
+      "id": "quiz_014_q3",
+      "category": "mutual_growth",
+      "prompt": "Who would...",
+      "content": "Plan a celebration for relationship milestones"
+    },
+    {
+      "id": "quiz_014_q4",
+      "category": "resilience",
+      "prompt": "Who is better at...",
+      "content": "Finding silver linings in setbacks"
+    },
+    {
+      "id": "quiz_014_q5",
+      "category": "future",
+      "prompt": "Who is more excited about...",
+      "content": "Setting new goals together"
+    }
+  ],
+  "description": "Big or small, wins matter! Explore how you celebrate growth together.",
+  "magnet_id": 9
+}

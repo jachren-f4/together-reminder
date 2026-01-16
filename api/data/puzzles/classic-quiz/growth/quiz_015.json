@@ -1,64 +1,109 @@
 {
   "quizId": "quiz_015",
-  "title": "Habits & Routines",
+  "title": "Building Habits Together",
   "branch": "growth",
+  "description": "Explore how you support each other in building and maintaining positive habits.",
+  "magnet_id": 12,
   "questions": [
     {
       "id": "quiz_015_q1",
-      "text": "A habit I'm trying to build or improve is...",
+      "text": "A positive habit I'm trying to build or maintain is...",
       "choices": [
         "Better sleep or morning routine",
         "Exercise or physical health",
         "Mindfulness or stress management",
         "Productivity or time management"
       ],
-      "category": "growth"
+      "category": "personal_habits",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Personal habit goals reveal what we're working on. Sleep/routine builders need consistency; exercise/health builders need motivation; mindfulness builders need calm; productivity builders need focus. Sharing goals invites support.",
+          "framework": "positive_psychology",
+          "whenDifferent": "Different habit goals are individual. You can each pursue your own priorities while supporting each other.",
+          "whenSame": "Matched habit goals create opportunity for shared pursuit and mutual accountability.",
+          "journalPrompt": "What habit are you currently working on? How could your partner support you?"
+        }
+      }
     },
     {
       "id": "quiz_015_q2",
-      "text": "When it comes to breaking bad habits, I find it helps to...",
+      "text": "When you're working on a habit, I can best support you by...",
       "choices": [
-        "Have accountability from you",
-        "Replace it with something better",
-        "Understand why I do it",
-        "Take it one day at a time"
+        "Joining you and doing it together",
+        "Cheering you on and celebrating progress",
+        "Giving you space and not interfering",
+        "Helping remove obstacles or distractions"
       ],
-      "category": "communication"
+      "category": "habit_support",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Habit support styles vary. Joiners provide company; cheerleaders provide motivation; space-givers provide autonomy; obstacle-removers provide practical help. Knowing how your partner wants to be supported enables effective help.",
+          "framework": "gottman",
+          "whenDifferent": "Different support preferences require learning what your partner actually needs, not assuming.",
+          "whenSame": "Matched support preferences make helping each other with habits natural.",
+          "journalPrompt": "How can you best support your partner's habits? Have you asked what they need?"
+        }
+      }
     },
     {
       "id": "quiz_015_q3",
       "text": "A routine I'd love for us to build together is...",
       "choices": [
-        "A morning or evening ritual",
-        "Regular exercise or activity",
-        "Weekly date nights or check-ins",
+        "A morning or evening connection ritual",
+        "Regular exercise or activity together",
+        "Weekly date nights or quality time",
         "A shared hobby or project"
       ],
-      "category": "values"
+      "category": "shared_routines",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Shared routine desires reveal what couples want more of. Connection rituals build intimacy; shared exercise builds health together; date nights build intentional time; hobbies build shared identity. Naming desires helps create them.",
+          "framework": "gottman",
+          "whenDifferent": "Different routine desires aren't mutually exclusive. You can build multiple shared routines over time.",
+          "whenSame": "Matched routine desires create clear direction for building something together.",
+          "journalPrompt": "What routine would you love to build together? What would it take to start?"
+        }
+      }
     },
     {
       "id": "quiz_015_q4",
-      "text": "What helps me stick to positive changes?",
+      "text": "What helps me stick to positive changes is...",
       "choices": [
         "Seeing results and progress",
-        "Having support and encouragement",
+        "Having accountability and support",
         "Making it part of my routine",
         "Understanding the bigger purpose"
       ],
-      "category": "growth"
+      "category": "change_sustainability",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Change sustainability factors vary. Results-seekers need visible progress; accountability-seekers need external support; routine-makers need consistency; purpose-understanders need meaning. Knowing what works for your partner helps you support effectively.",
+          "framework": "positive_psychology",
+          "whenDifferent": "Different sustainability factors require different types of support. What works for you may not work for your partner.",
+          "whenSame": "Matched factors make supporting each other's changes intuitive.",
+          "journalPrompt": "What helps you stick to positive changes? Does your partner know this about you?"
+        }
+      }
     },
     {
       "id": "quiz_015_q5",
-      "text": "How do you best support my efforts to improve?",
+      "text": "When one of us slips on a habit, I believe we should...",
       "choices": [
-        "Celebrate my wins with me",
-        "Be patient when I slip up",
-        "Join me in the journey",
-        "Remind me why it matters"
+        "Be compassionate and non-judgmental",
+        "Get back on track together",
+        "Learn from what happened",
+        "Remember that setbacks are normal"
       ],
-      "category": "emotional"
+      "category": "habit_setback",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Responses to habit setbacks reveal supportiveness. Compassion-givers normalize struggle; back-on-track types provide partnership; learners extract value; normalizers reduce shame. Healthy setback responses encourage persistence.",
+          "framework": "positive_psychology",
+          "whenDifferent": "All these responses support healthy habit recovery. They're complementary approaches.",
+          "whenSame": "Shared setback philosophy creates aligned, supportive response to inevitable slip-ups.",
+          "journalPrompt": "How do you respond when you or your partner slips on a habit? Is that response helpful?"
+        }
+      }
     }
-  ],
-  "description": "Explore how you build positive habits together.",
-  "magnet_id": 12
+  ]
 }

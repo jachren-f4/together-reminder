@@ -1,0 +1,73 @@
+{
+  "author": "Crossword Maker GPT",
+  "title": "AI-Built Puzzle",
+  "theme": "vacationing",
+  "size": {
+    "rows": 9,
+    "cols": 7
+  },
+  "clues": {
+    "1": { "type": "text", "content": "Voyage", "arrow": "down", "target_index": 8 },
+    "2": { "type": "text", "content": "Restore", "arrow": "down", "target_index": 9 },
+    "3": { "type": "text", "content": "GR_DE", "arrow": "down", "target_index": 10 },
+    "4": { "type": "text", "content": "v.", "arrow": "down", "target_index": 11 },
+    "5": { "type": "text", "content": "Nosh", "arrow": "down", "target_index": 12 },
+    "6": { "type": "text", "content": "DE____", "arrow": "down", "target_index": 13 },
+    "7": { "type": "text", "content": "Journey", "arrow": "across", "target_index": 8 },
+    "8": { "type": "text", "content": "__PLY", "arrow": "across", "target_index": 15 },
+    "9": {
+      "across": { "type": "text", "content": "Perched", "target_index": 18 },
+      "down": { "type": "text", "content": "Hammer", "target_index": 24 }
+    },
+    "10": { "type": "text", "content": "Lodge", "arrow": "across", "target_index": 22 },
+    "11": {
+      "across": { "type": "text", "content": "Brit ta", "target_index": 26 },
+      "down": { "type": "text", "content": "Propose", "target_index": 32 }
+    },
+    "12": { "type": "text", "content": "Summit", "arrow": "across", "target_index": 29 },
+    "13": {
+      "across": { "type": "text", "content": "MU_T", "target_index": 34 },
+      "down": { "type": "text", "content": "Ireland", "target_index": 40 }
+    },
+    "14": {
+      "across": { "type": "emoji", "content": "🍷", "target_index": 37 },
+      "down": { "type": "text", "content": "Coach", "target_index": 43 }
+    },
+    "15": { "type": "text", "content": "Gloomy", "arrow": "down", "target_index": 48 },
+    "16": { "type": "text", "content": "A_OUT", "arrow": "across", "target_index": 43 },
+    "17": {
+      "across": { "type": "text", "content": "Aloha!", "target_index": 45 },
+      "down": { "type": "text", "content": "S. Amer.", "target_index": 51 }
+    },
+    "18": { "type": "text", "content": "We", "arrow": "across", "target_index": 50 },
+    "19": {
+      "across": { "type": "text", "content": "Period", "target_index": 53 },
+      "down": { "type": "text", "content": "RA_N", "target_index": 59 }
+    },
+    "20": { "type": "text", "content": "Cruised", "arrow": "across", "target_index": 57 }
+  },
+  "date": "2026-01-13",
+  "grid": [
+    ".", ".", ".", ".", ".", ".", ".",
+    ".", "T", "R", "A", "V", "E", "L",
+    ".", "R", "E", ".", "S", "A", "T",
+    ".", "I", "N", "N", ".", "T", "A",
+    ".", "P", "E", "A", "K", ".", "S",
+    ".", ".", "W", "I", "N", "E", ".",
+    ".", "B", ".", "L", "E", "I", "S",
+    ".", "U", "S", ".", "E", "R", "A",
+    ".", "S", "A", "I", "L", "E", "D"
+  ],
+  "gridnums": [
+    0, 1, 2, 3, 4, 5, 6,
+    7, 0, 0, 0, 0, 0, 0,
+    8, 0, 0, 9, 0, 0, 0,
+    10, 0, 0, 0, 11, 0, 0,
+    12, 0, 0, 0, 0, 13, 0,
+    0, 14, 0, 0, 0, 0, 15,
+    16, 0, 17, 0, 0, 0, 0,
+    18, 0, 0, 19, 0, 0, 0,
+    20, 0, 0, 0, 0, 0, 0
+  ],
+  "puzzleId": "puzzle_037"
+}

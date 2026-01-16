@@ -1,0 +1,115 @@
+{
+  "quizId": "affirmation_015",
+  "title": "Conflict Partnership",
+  "category": "conflict",
+  "branch": "conflict",
+  "description": "Reflect on your overall approach to conflict as a team",
+  "magnet_id": 16,
+  "questions": [
+    {
+      "id": "affirmation_015_q1",
+      "text": "I feel we're on the same team, even when we disagree.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Same-team mentality transforms conflict from adversarial to collaborative. When you're both trying to solve a problem rather than defeat each other, resolution comes easier.",
+          "framework": "gottman",
+          "whenDifferent": "If one partner doesn't feel like teammates during conflict, explore what creates the adversarial feeling. Competition? Blame? Understanding helps shift the dynamic.",
+          "whenSame": "Shared sense of teamwork during disagreement creates collaborative conflict.",
+          "journalPrompt": "Do you feel like teammates or opponents during disagreements?"
+        }
+      }
+    },
+    {
+      "id": "affirmation_015_q2",
+      "text": "Conflict doesn't make me doubt that we're good together.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Secure couples can disagree without questioning compatibility. When conflict triggers relationship doubt, even small disagreements become threatening.",
+          "framework": "attachment_theory",
+          "whenDifferent": "If conflict triggers compatibility doubts, explore what would provide reassurance. Sometimes the conflict pattern, not the conflict itself, creates doubt.",
+          "whenSame": "Shared confidence in your compatibility despite conflict creates security.",
+          "journalPrompt": "Does conflict make you doubt your relationship? What would help?"
+        }
+      }
+    },
+    {
+      "id": "affirmation_015_q3",
+      "text": "I trust that my partner wants to work things out with me.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Trusting your partner's commitment to resolution provides security. Even during conflict, knowing they want to work it out sustains engagement.",
+          "framework": "eft",
+          "whenDifferent": "If trust in commitment to resolution is low, explore what creates that doubt. Actions during conflict? Follow-through afterward? Identifying the source helps.",
+          "whenSame": "Mutual trust in each other's commitment to resolution creates secure conflict.",
+          "journalPrompt": "Do you trust your partner wants to work things out? What affects that trust?"
+        }
+      }
+    },
+    {
+      "id": "affirmation_015_q4",
+      "text": "Our approach to conflict reflects our care for each other.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "How couples fight reveals how they love. When conflict is handled with care—for the issue and for each other—it demonstrates the relationship's health.",
+          "framework": "eft",
+          "whenDifferent": "If conflict doesn't reflect care, explore what's happening instead. Often care is present but gets obscured by hurt or defense.",
+          "whenSame": "Mutual sense that conflict shows care creates positive framing of disagreements.",
+          "journalPrompt": "Does how you fight reflect how you love each other?"
+        }
+      }
+    },
+    {
+      "id": "affirmation_015_q5",
+      "text": "I feel hopeful about how we'll handle conflicts in the future.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Hope for future conflict handling reflects confidence in your skills and your partner. This optimism supports continued investment in improving together.",
+          "framework": "positive_psychology",
+          "whenDifferent": "If hope is low, explore what would build it. Specific skill improvements? Different patterns? Understanding what's needed helps create change.",
+          "whenSame": "Shared hope for future conflict creates motivation to keep growing together.",
+          "journalPrompt": "What makes you hopeful—or less hopeful—about how you'll handle future conflicts?"
+        }
+      }
+    }
+  ]
+}

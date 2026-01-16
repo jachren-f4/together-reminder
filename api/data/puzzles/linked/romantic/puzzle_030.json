@@ -1,0 +1,73 @@
+{
+  "author": "Crossword Maker GPT",
+  "title": "AI-Built Puzzle",
+  "theme": "mediterranean",
+  "size": {
+    "rows": 9,
+    "cols": 7
+  },
+  "clues": {
+    "1": { "type": "text", "content": "Floor sq", "arrow": "down", "target_index": 8 },
+    "2": { "type": "text", "content": "Pal", "arrow": "down", "target_index": 9 },
+    "3": { "type": "text", "content": "SA_E", "arrow": "down", "target_index": 10 },
+    "4": { "type": "text", "content": "__D", "arrow": "down", "target_index": 11 },
+    "5": { "type": "text", "content": "Line", "arrow": "down", "target_index": 12 },
+    "6": { "type": "text", "content": "_AR_HA__", "arrow": "down", "target_index": 13 },
+    "7": { "type": "emoji", "content": "🏨", "arrow": "across", "target_index": 8 },
+    "8": { "type": "text", "content": "CLA__", "arrow": "across", "target_index": 15 },
+    "9": {
+      "across": { "type": "text", "content": "Curr.", "target_index": 18 },
+      "down": { "type": "text", "content": "Sound", "target_index": 24 }
+    },
+    "10": { "type": "text", "content": "Ignited", "arrow": "across", "target_index": 22 },
+    "11": {
+      "across": { "type": "text", "content": "D_E_L", "target_index": 26 },
+      "down": { "type": "text", "content": "Setting", "target_index": 32 }
+    },
+    "12": { "type": "text", "content": "Prides", "arrow": "across", "target_index": 29 },
+    "13": {
+      "across": { "type": "text", "content": "RI_E", "target_index": 34 },
+      "down": { "type": "text", "content": "Style", "target_index": 40 }
+    },
+    "14": {
+      "across": { "type": "text", "content": "Formerly", "target_index": 37 },
+      "down": { "type": "text", "content": "Rested", "target_index": 43 }
+    },
+    "15": { "type": "text", "content": "Sibling", "arrow": "down", "target_index": 48 },
+    "16": { "type": "text", "content": "RI_E", "arrow": "across", "target_index": 43 },
+    "17": {
+      "across": { "type": "text", "content": "Slippery", "target_index": 45 },
+      "down": { "type": "text", "content": "AU__", "target_index": 51 }
+    },
+    "18": { "type": "text", "content": "FL__", "arrow": "across", "target_index": 50 },
+    "19": {
+      "across": { "type": "text", "content": "CO_T__N", "target_index": 53 },
+      "down": { "type": "text", "content": "BLAC_", "target_index": 59 }
+    },
+    "20": { "type": "text", "content": "Coins", "arrow": "across", "target_index": 57 }
+  },
+  "date": "2026-01-13",
+  "grid": [
+    ".", ".", ".", ".", ".", ".", ".",
+    ".", "T", "A", "V", "E", "R", "N",
+    ".", "I", "M", ".", "N", "O", "W",
+    ".", "L", "I", "T", ".", "W", "L",
+    ".", "E", "G", "O", "S", ".", "S",
+    ".", ".", "O", "N", "C", "E", ".",
+    ".", "S", ".", "E", "E", "L", "S",
+    ".", "A", "T", ".", "N", "A", "I",
+    ".", "T", "O", "K", "E", "N", "S"
+  ],
+  "gridnums": [
+    0, 1, 2, 3, 4, 5, 6,
+    7, 0, 0, 0, 0, 0, 0,
+    8, 0, 0, 9, 0, 0, 0,
+    10, 0, 0, 0, 11, 0, 0,
+    12, 0, 0, 0, 0, 13, 0,
+    0, 14, 0, 0, 0, 0, 15,
+    16, 0, 17, 0, 0, 0, 0,
+    18, 0, 0, 19, 0, 0, 0,
+    20, 0, 0, 0, 0, 0, 0
+  ],
+  "puzzleId": "puzzle_041"
+}

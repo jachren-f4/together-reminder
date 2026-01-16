@@ -1,0 +1,69 @@
+{
+  "author": "Crossword Maker GPT",
+  "title": "AI-Built Puzzle",
+  "theme": "dating",
+  "size": {
+    "rows": 9,
+    "cols": 7
+  },
+  "clues": {
+    "1": { "type": "text", "content": "FIN_", "arrow": "down", "target_index": 8 },
+    "2": { "type": "text", "content": "Venue", "arrow": "down", "target_index": 9 },
+    "3": { "type": "text", "content": "Pharaoh", "arrow": "down", "target_index": 10 },
+    "4": { "type": "text", "content": "Mean to", "arrow": "down", "target_index": 11 },
+    "5": { "type": "text", "content": "CA_", "arrow": "down", "target_index": 12 },
+    "6": { "type": "text", "content": "Terrific", "arrow": "down", "target_index": 13 },
+    "7": { "type": "text", "content": "Romance", "arrow": "across", "target_index": 8 },
+    "8": {
+      "across": { "type": "text", "content": "Bolt", "target_index": 16 },
+      "down": { "type": "text", "content": "Covert", "target_index": 22 }
+    },
+    "9": {
+      "across": { "type": "text", "content": "OVE_", "target_index": 20 },
+      "down": { "type": "text", "content": "Ate away", "target_index": 26 }
+    },
+    "10": { "type": "emoji", "content": "🛋️", "arrow": "across", "target_index": 22 },
+    "11": { "type": "text", "content": "K__N", "arrow": "across", "target_index": 29 },
+    "12": {
+      "across": { "type": "text", "content": "Chapter", "target_index": 32 },
+      "down": { "type": "text", "content": "Jot", "target_index": 38 }
+    },
+    "13": { "type": "text", "content": "Can't", "arrow": "across", "target_index": 36 },
+    "14": { "type": "text", "content": "OVE_", "arrow": "across", "target_index": 43 },
+    "15": {
+      "across": { "type": "text", "content": "Quirky", "target_index": 45 },
+      "down": { "type": "text", "content": "NE__", "target_index": 51 }
+    },
+    "16": { "type": "text", "content": "B__", "arrow": "down", "target_index": 55 },
+    "17": { "type": "emoji", "content": "🍽️", "arrow": "across", "target_index": 50 },
+    "18": {
+      "across": { "type": "text", "content": "F__D", "target_index": 54 },
+      "down": { "type": "text", "content": "IDE_", "target_index": 60 }
+    },
+    "19": { "type": "text", "content": "Walks on", "arrow": "across", "target_index": 57 }
+  },
+  "date": "2026-01-13",
+  "grid": [
+    ".", ".", ".", ".", ".", ".", ".",
+    ".", "D", "A", "T", "I", "N", "G",
+    ".", ".", "R", "U", "N", ".", "R",
+    ".", "S", "E", "T", "T", "E", "E",
+    ".", "E", "N", ".", "E", "R", "A",
+    ".", "C", "A", "N", "N", "O", "T",
+    ".", "R", ".", "O", "D", "D", ".",
+    ".", "E", "A", "T", ".", "E", "U",
+    ".", "T", "R", "E", "A", "D", "S"
+  ],
+  "gridnums": [
+    0, 1, 2, 3, 4, 5, 6,
+    7, 0, 0, 0, 0, 0, 0,
+    0, 8, 0, 0, 0, 9, 0,
+    10, 0, 0, 0, 0, 0, 0,
+    11, 0, 0, 12, 0, 0, 0,
+    13, 0, 0, 0, 0, 0, 0,
+    14, 0, 15, 0, 0, 0, 16,
+    17, 0, 0, 0, 18, 0, 0,
+    19, 0, 0, 0, 0, 0, 0
+  ],
+  "puzzleId": "puzzle_049"
+}

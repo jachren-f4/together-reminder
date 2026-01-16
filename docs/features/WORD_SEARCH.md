@@ -46,8 +46,17 @@
 - **Completion LP:** 30 LP shared when puzzle is completed
 
 ### Branches
-Themed puzzle content with progression:
-- **everyday** → **passionate** → **naughty** → (cycles back)
+Themed puzzle content with progression (100 puzzles total, 20 per branch):
+
+| Branch | Theme | Example Words |
+|--------|-------|---------------|
+| casual | Light, fun, friendship | LAUGH, SMILE, COZY, RELAX |
+| everyday | Daily life together | WALK, DATE, COUPLE, GIFT |
+| romantic | Love & romance | LOVE, HEART, KISS, DANCE |
+| passionate | Intense romantic | YEARN, ADORE, TWILIGHT |
+| naughty | Adult/intimate | FIGURE, SILK, EXPOSED |
+
+**Rotation:** casual → everyday → romantic → passionate → naughty → (cycles back)
 
 ---
 
@@ -265,8 +274,10 @@ Use hint to reveal cell.
 Branches advance on puzzle completion:
 
 ```
-everyday → passionate → naughty → everyday → ...
+casual → everyday → romantic → passionate → naughty → casual → ...
 ```
+
+With 100 puzzles (20 per branch × 5 branches), couples can play ~100 unique puzzles before any repeats.
 
 Same cooldown system as Linked.
 
@@ -284,6 +295,25 @@ Same cooldown system as Linked.
 ---
 
 ## Changelog
+
+### 2025-01-13: Expanded to 100 Puzzles (5 Branches)
+**Change:** Added two new branches (casual, romantic) to increase content from 60 to 100 puzzles.
+
+**New Branches:**
+- **casual** (20 puzzles): Light, fun words like LAUGH, SMILE, COZY, RELAX
+- **romantic** (20 puzzles): Love-themed words like LOVE, HEART, KISS, DANCE
+
+**New Rotation Order:** casual → everyday → romantic → passionate → naughty
+
+**Files Changed:**
+- `api/lib/puzzle/loader.ts` - Updated branches array and default branch
+- `api/data/puzzles/word-search/casual/` - 20 new puzzles (ws_001 to ws_020)
+- `api/data/puzzles/word-search/romantic/` - 20 new puzzles (ws_001 to ws_020)
+- `api/scripts/generate_word_search_puzzles.ts` - New generator script
+
+**Impact:** Couples now have ~100 unique puzzles before any content repeats.
+
+---
 
 ### 2024-12-19: Two-Phase Selection System
 **Problem:** When drawing words vertically or horizontally, slight finger movement would cause the selection to snap to diagonal. Once diagonal direction was locked, the selection couldn't follow straight movements.

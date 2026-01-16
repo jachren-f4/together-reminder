@@ -1,0 +1,70 @@
+{
+  "author": "Crossword Maker GPT",
+  "title": "AI-Built Puzzle",
+  "theme": "intimacy",
+  "size": {
+    "rows": 9,
+    "cols": 7
+  },
+  "clues": {
+    "1": { "type": "text", "content": "Our kin", "arrow": "down", "target_index": 8 },
+    "2": { "type": "text", "content": "Among", "arrow": "down", "target_index": 9 },
+    "3": { "type": "text", "content": "Email subj", "arrow": "down", "target_index": 10 },
+    "4": { "type": "text", "content": "Spouse", "arrow": "down", "target_index": 11 },
+    "5": { "type": "text", "content": "Fri. cry", "arrow": "down", "target_index": 12 },
+    "6": { "type": "text", "content": "Layers", "arrow": "down", "target_index": 13 },
+    "7": { "type": "text", "content": "Affection", "arrow": "across", "target_index": 8 },
+    "8": { "type": "text", "content": "Surface", "arrow": "across", "target_index": 15 },
+    "9": {
+      "across": { "type": "text", "content": "NE_GH", "target_index": 23 },
+      "down": { "type": "text", "content": "Refuge", "target_index": 29 }
+    },
+    "10": {
+      "across": { "type": "text", "content": "Taboo act", "target_index": 25 },
+      "down": { "type": "text", "content": "And: Lat", "target_index": 31 }
+    },
+    "11": { "type": "text", "content": "Tribute", "arrow": "across", "target_index": 29 },
+    "12": {
+      "across": { "type": "text", "content": "_AL_E", "target_index": 33 },
+      "down": { "type": "text", "content": "By mouth", "target_index": 39 }
+    },
+    "13": { "type": "text", "content": "OKR_", "arrow": "across", "target_index": 36 },
+    "14": {
+      "across": { "type": "text", "content": "__wards", "target_index": 38 },
+      "down": { "type": "text", "content": "NYC hrs", "target_index": 44 }
+    },
+    "15": { "type": "text", "content": "-ane gas", "arrow": "down", "target_index": 47 },
+    "16": { "type": "text", "content": "M___IGHT", "arrow": "down", "target_index": 48 },
+    "17": { "type": "text", "content": "Sweden", "arrow": "across", "target_index": 43 },
+    "18": {
+      "across": { "type": "text", "content": "Algerian", "target_index": 46 },
+      "down": { "type": "text", "content": "See!", "target_index": 52 }
+    },
+    "19": { "type": "text", "content": "Atoll", "arrow": "across", "target_index": 50 },
+    "20": { "type": "text", "content": "Swiped", "arrow": "across", "target_index": 57 }
+  },
+  "date": "2026-01-13",
+  "grid": [
+    ".", ".", ".", ".", ".", ".", ".",
+    ".", "W", "A", "R", "M", "T", "H",
+    ".", "E", "M", "E", "R", "G", "E",
+    ".", ".", "I", ".", "S", "I", "N",
+    ".", "O", "D", "E", ".", "F", "S",
+    ".", "A", ".", "T", "O", ".", ".",
+    ".", "S", "E", ".", "R", "A", "I",
+    ".", "I", "S", "L", "A", "N", "D",
+    ".", "S", "T", "O", "L", "E", "N"
+  ],
+  "gridnums": [
+    0, 1, 2, 3, 4, 5, 6,
+    7, 0, 0, 0, 0, 0, 0,
+    8, 0, 0, 0, 0, 0, 0,
+    0, 9, 0, 10, 0, 0, 0,
+    11, 0, 0, 0, 12, 0, 0,
+    13, 0, 14, 0, 0, 15, 16,
+    17, 0, 0, 18, 0, 0, 0,
+    19, 0, 0, 0, 0, 0, 0,
+    20, 0, 0, 0, 0, 0, 0
+  ],
+  "puzzleId": "puzzle_045"
+}

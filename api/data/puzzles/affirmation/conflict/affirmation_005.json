@@ -1,0 +1,115 @@
+{
+  "quizId": "affirmation_005",
+  "title": "Managing Intensity",
+  "category": "conflict",
+  "branch": "conflict",
+  "description": "Explore how you handle emotional intensity during conflict",
+  "magnet_id": 16,
+  "questions": [
+    {
+      "id": "affirmation_005_q1",
+      "text": "When conflict gets heated, we can usually bring the temperature down.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "The ability to de-escalate is crucial. When couples can bring down intensity, conflicts don't spiral into damage. Without this skill, small issues become relationship wounds.",
+          "framework": "gottman",
+          "whenDifferent": "If one partner doesn't experience successful de-escalation, explore what works and what doesn't. Humor? Breaks? Touch? Different approaches work for different couples.",
+          "whenSame": "Shared ability to de-escalate protects your relationship during difficult moments.",
+          "journalPrompt": "What helps bring the temperature down when things get heated between you?"
+        }
+      }
+    },
+    {
+      "id": "affirmation_005_q2",
+      "text": "I can stay calm enough to think clearly during disagreements.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "When we're flooded with emotion, our thinking brain goes offline. Staying calm enough to think clearly allows you to respond rather than just react.",
+          "framework": "gottman",
+          "whenDifferent": "Different levels of emotional regulation are normal. Partners can support each other by noticing flooding and taking breaks before damage is done.",
+          "whenSame": "Mutual ability to stay regulated creates thoughtful rather than reactive conflict.",
+          "journalPrompt": "What helps you stay calm during disagreements? What overwhelms you?"
+        }
+      }
+    },
+    {
+      "id": "affirmation_005_q3",
+      "text": "We know when to take a break before things go too far.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Strategic breaks prevent escalation and regrettable words. Knowing when you're approaching the point of no return—and pausing—is a protective relationship skill.",
+          "framework": "gottman",
+          "whenDifferent": "If one partner doesn't recognize when breaks are needed, discuss signals. Physical signs of flooding (racing heart, tension) indicate it's time to pause.",
+          "whenSame": "Shared awareness of when to pause protects you from saying things you'll regret.",
+          "journalPrompt": "How do you know when you need a break? Do you take them soon enough?"
+        }
+      }
+    },
+    {
+      "id": "affirmation_005_q4",
+      "text": "After taking space, we come back to finish the conversation.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Breaks only work if couples return to the conversation. Taking space without returning can feel like abandonment or avoidance. The return matters as much as the pause.",
+          "framework": "eft",
+          "whenDifferent": "If one partner doesn't experience consistent return, explore what happens after breaks. Does the issue get dropped? Does one partner avoid? Committing to return builds trust.",
+          "whenSame": "Shared commitment to returning after breaks creates complete repair cycles.",
+          "journalPrompt": "What happens after you take space from a conflict? Do you come back to it?"
+        }
+      }
+    },
+    {
+      "id": "affirmation_005_q5",
+      "text": "Our conflicts don't usually leave lasting emotional damage.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Healthy conflict resolves without permanent wounds. When conflicts leave lasting damage—hurt that doesn't heal, words that can't be forgotten—the relationship accumulates injuries.",
+          "framework": "attachment_theory",
+          "whenDifferent": "If one partner carries lasting damage from conflicts, explore what's causing the wounds. Specific words? Behaviors? Understanding the damage helps prevent future harm.",
+          "whenSame": "Mutual experience of conflict without lasting damage indicates healthy patterns.",
+          "journalPrompt": "Have any of your conflicts left lasting hurt? What made those different?"
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,69 @@
+{
+  "author": "Crossword Maker GPT",
+  "title": "AI-Built Puzzle",
+  "size": {
+    "rows": 9,
+    "cols": 7
+  },
+  "clues": {
+    "1": { "type": "text", "content": "E__TY", "arrow": "down", "target_index": 8 },
+    "2": { "type": "text", "content": "Vow", "arrow": "down", "target_index": 9 },
+    "3": { "type": "text", "content": "ME__O", "arrow": "down", "target_index": 10 },
+    "4": { "type": "text", "content": "C___S", "arrow": "down", "target_index": 11 },
+    "5": { "type": "text", "content": "___RM_US", "arrow": "down", "target_index": 12 },
+    "6": { "type": "text", "content": "_E_UR_E_", "arrow": "down", "target_index": 13 },
+    "7": { "type": "emoji", "content": "👩", "arrow": "across", "target_index": 8 },
+    "8": { "type": "text", "content": "Guardian", "arrow": "across", "target_index": 15 },
+    "9": {
+      "across": { "type": "text", "content": "ABOU_", "target_index": 23 },
+      "down": { "type": "text", "content": "Refine", "target_index": 29 }
+    },
+    "10": {
+      "across": { "type": "emoji", "content": "👦", "target_index": 25 },
+      "down": { "type": "text", "content": "QUI__", "target_index": 31 }
+    },
+    "11": { "type": "text", "content": "Female", "arrow": "across", "target_index": 29 },
+    "12": {
+      "across": { "type": "text", "content": "Either", "target_index": 33 },
+      "down": { "type": "text", "content": "Zone", "target_index": 39 }
+    },
+    "13": { "type": "text", "content": "CLAI_", "arrow": "across", "target_index": 36 },
+    "14": {
+      "across": { "type": "text", "content": "Thanks!", "target_index": 38 },
+      "down": { "type": "emoji", "content": "💨", "target_index": 44 }
+    },
+    "15": { "type": "text", "content": "Munch", "arrow": "down", "target_index": 47 },
+    "16": { "type": "text", "content": "Arid", "arrow": "down", "target_index": 48 },
+    "17": { "type": "text", "content": "B__CH", "arrow": "across", "target_index": 43 },
+    "18": {
+      "across": { "type": "text", "content": "Crimson", "target_index": 46 },
+      "down": { "type": "text", "content": "Born as", "target_index": 52 }
+    },
+    "19": { "type": "text", "content": "Straight", "arrow": "across", "target_index": 50 },
+    "20": { "type": "text", "content": "Pact", "arrow": "across", "target_index": 57 }
+  },
+  "date": "2026-01-12",
+  "grid": [
+    ".", ".", ".", ".", ".", ".", ".",
+    ".", "M", "O", "T", "H", "E", "R",
+    ".", "P", "A", "R", "E", "N", "T",
+    ".", ".", "T", ".", "S", "O", "N",
+    ".", "S", "H", "E", ".", "O", "R",
+    ".", "M", ".", "T", "A", ".", ".",
+    ".", "E", "A", ".", "R", "E", "D",
+    ".", "L", "I", "N", "E", "A", "R",
+    ".", "T", "R", "E", "A", "T", "Y"
+  ],
+  "gridnums": [
+    0, 1, 2, 3, 4, 5, 6,
+    7, 0, 0, 0, 0, 0, 0,
+    8, 0, 0, 0, 0, 0, 0,
+    0, 9, 0, 10, 0, 0, 0,
+    11, 0, 0, 0, 12, 0, 0,
+    13, 0, 14, 0, 0, 15, 16,
+    17, 0, 0, 18, 0, 0, 0,
+    19, 0, 0, 0, 0, 0, 0,
+    20, 0, 0, 0, 0, 0, 0
+  ],
+  "puzzleId": "puzzle_026"
+}

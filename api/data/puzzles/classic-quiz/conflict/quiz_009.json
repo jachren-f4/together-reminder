@@ -1,0 +1,109 @@
+{
+  "quizId": "quiz_009",
+  "title": "Fighting Fair",
+  "branch": "conflict",
+  "description": "Explore the rules of engagement that make conflict productive.",
+  "magnet_id": 17,
+  "questions": [
+    {
+      "id": "quiz_009_q1",
+      "text": "A rule I think is important for conflict is...",
+      "choices": [
+        "No name-calling or personal attacks",
+        "Stay on the topic at hand",
+        "Don't bring up the past",
+        "All of these should be rules"
+      ],
+      "category": "conflict_rules",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Conflict rules protect relationships. No attacks prevents contempt; staying on topic prevents escalation; no past-bringing prevents kitchen-sinking. Agreed-upon rules make conflict safer and more productive.",
+          "framework": "gottman",
+          "whenDifferent": "All these rules are valuable. Discuss which feel most important and create your shared rulebook.",
+          "whenSame": "Shared rules create clear expectations about how conflict should go.",
+          "journalPrompt": "What rules do you think conflict should follow? Are those rules being followed in your relationship?"
+        }
+      }
+    },
+    {
+      "id": "quiz_009_q2",
+      "text": "Something I try to do during conflict is...",
+      "choices": [
+        "Use 'I' statements instead of 'you' accusations",
+        "Listen to understand, not just to respond",
+        "Take responsibility for my part",
+        "Keep my voice calm even when upset"
+      ],
+      "category": "conflict_skills",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Conflict skills make disagreements productive. I-statements reduce defensiveness; understanding-listening creates safety; taking responsibility de-escalates; calm voice prevents flooding. All are learnable skills.",
+          "framework": "gottman",
+          "whenDifferent": "Different skills focus on different aspects. All are valuable—notice which you each prioritize and develop others.",
+          "whenSame": "Shared skill focus creates aligned effort to fight fairly.",
+          "journalPrompt": "What conflict skills do you practice? Which do you want to develop?"
+        }
+      }
+    },
+    {
+      "id": "quiz_009_q3",
+      "text": "The thing I find hardest during conflict is...",
+      "choices": [
+        "Staying calm and not escalating",
+        "Really listening when I'm upset",
+        "Not bringing up old grievances",
+        "Taking responsibility for my part"
+      ],
+      "category": "conflict_challenges",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Conflict challenges reveal growth edges. Calm-strugglers have regulation issues; listening-strugglers have focus issues; old-grievance bringers have accumulation; responsibility-avoiders have defensiveness. Naming challenges enables work.",
+          "framework": "gottman",
+          "whenDifferent": "Different challenges need different development. Support each other's growth areas.",
+          "whenSame": "Shared challenges create mutual understanding about what's hard.",
+          "journalPrompt": "What's hardest for you during conflict? What would help you grow in that area?"
+        }
+      }
+    },
+    {
+      "id": "quiz_009_q4",
+      "text": "I believe productive conflict requires...",
+      "choices": [
+        "Both people feeling heard",
+        "Willingness to find common ground",
+        "Commitment to the relationship over winning",
+        "All of these are essential"
+      ],
+      "category": "conflict_beliefs",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Beliefs about productive conflict shape behavior. Being-heard focusers prioritize validation; common-ground seekers prioritize resolution; relationship-over-winning types prioritize partnership. Aligned beliefs guide conflict approach.",
+          "framework": "gottman",
+          "whenDifferent": "All these beliefs support productive conflict. Discuss which feels most important when conflicts arise.",
+          "whenSame": "Shared beliefs create aligned expectations about what productive conflict requires.",
+          "journalPrompt": "What do you believe makes conflict productive? Is that what you experience?"
+        }
+      }
+    },
+    {
+      "id": "quiz_009_q5",
+      "text": "After a fair fight, I want to feel...",
+      "choices": [
+        "Like we're closer for having worked through it",
+        "Like we both got to say what we needed",
+        "Like we found a real solution",
+        "Like our relationship is stronger"
+      ],
+      "category": "conflict_outcomes",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Desired conflict outcomes reveal values. Closeness-seekers want enhanced connection; expression-valuers want voice; solution-focusers want resolution; strength-seekers want growth. Knowing your goal helps guide conflict.",
+          "framework": "gottman",
+          "whenDifferent": "Different desired outcomes are all valid. Ideally conflict provides all of these.",
+          "whenSame": "Shared desired outcome creates aligned vision for what good conflict looks like.",
+          "journalPrompt": "What do you want to feel after a conflict? Is that what usually happens?"
+        }
+      }
+    }
+  ]
+}

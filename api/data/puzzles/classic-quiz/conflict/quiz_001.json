@@ -1,0 +1,115 @@
+{
+  "quizId": "quiz_001",
+  "title": "Conflict Styles",
+  "branch": "conflict",
+  "description": "Discover how you naturally approach disagreements and differences.",
+  "magnet_id": 15,
+  "questions": [
+    {
+      "id": "quiz_001_q1",
+      "text": "When a disagreement arises, my natural instinct is to...",
+      "choices": [
+        "Address it directly and work it out",
+        "Take time to think before responding",
+        "Avoid it if possible—conflict is uncomfortable",
+        "Depend on how important the issue is"
+      ],
+      "category": "conflict_approach",
+      "metadata": {
+        "dimension": "conflict_approach",
+        "poleMapping": ["right", "neutral", "left", "neutral"],
+        "therapeutic": {
+          "rationale": "Conflict approach reveals attachment and coping patterns. Direct-addressers engage immediately; thinkers need processing time; avoiders find conflict threatening; importance-weighers are strategic. Mismatched styles cause frustration.",
+          "framework": "gottman",
+          "whenDifferent": "The direct-addresser may feel the avoider doesn't care; the avoider may feel the direct-addresser is aggressive. Neither is wrong—find your shared pace.",
+          "whenSame": "Shared conflict approach makes navigating disagreements smoother. You'll naturally move at the same speed.",
+          "journalPrompt": "How do you typically respond when conflict arises? Where did you learn that pattern?"
+        }
+      }
+    },
+    {
+      "id": "quiz_001_q2",
+      "text": "During an argument, I tend to...",
+      "choices": [
+        "Stay focused on the issue at hand",
+        "Get emotional and need to express feelings",
+        "Shut down and need space",
+        "Try to find a quick resolution"
+      ],
+      "category": "conflict_behavior",
+      "metadata": {
+        "dimension": "stress_processing",
+        "poleMapping": ["right", "right", "left", "right"],
+        "therapeutic": {
+          "rationale": "Argument behavior reveals regulation patterns. Issue-focusers stay logical; emotion-expressers need to release; shut-downers get overwhelmed; quick-resolvers want peace. Understanding your partner's pattern prevents escalation.",
+          "framework": "gottman",
+          "whenDifferent": "The emotion-expresser may feel the shut-downer doesn't care; the shut-downer may feel flooded by emotion. Both need different things to feel safe.",
+          "whenSame": "Matched argument patterns help you navigate conflict similarly.",
+          "journalPrompt": "What happens to you during an argument? What do you need in those moments?"
+        }
+      }
+    },
+    {
+      "id": "quiz_001_q3",
+      "text": "The thing I find hardest about conflict is...",
+      "choices": [
+        "Staying calm when I'm upset",
+        "Feeling like we're disconnected",
+        "Worrying it means something's wrong with us",
+        "Not knowing when or how it will resolve"
+      ],
+      "category": "conflict_challenges",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Conflict challenges reveal vulnerabilities. Calm-strugglers have regulation difficulty; disconnection-feelers have attachment anxiety; worry-types catastrophize; uncertainty-strugglers need resolution. Naming your challenge helps your partner support you.",
+          "framework": "attachment_theory",
+          "whenDifferent": "Different challenges need different support. The disconnection-feeler needs reassurance; the uncertainty-struggler needs a path forward.",
+          "whenSame": "Shared challenges create mutual understanding of what's hard about conflict.",
+          "journalPrompt": "What's hardest for you about conflict? What would make it easier?"
+        }
+      }
+    },
+    {
+      "id": "quiz_001_q4",
+      "text": "I believe conflict in a relationship is...",
+      "choices": [
+        "Normal and can be healthy if handled well",
+        "Something to minimize as much as possible",
+        "An opportunity to understand each other better",
+        "Uncomfortable but necessary sometimes"
+      ],
+      "category": "conflict_beliefs",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Conflict beliefs shape how you engage. Normal-viewers accept it; minimizers avoid; opportunity-seers embrace it; necessary-evil types tolerate it. Beliefs affect whether conflict is productive or destructive.",
+          "framework": "gottman",
+          "whenDifferent": "The opportunity-seer may seem to invite conflict; the minimizer may seem to suppress important issues. Both have wisdom—find balance.",
+          "whenSame": "Shared conflict beliefs create aligned expectations about disagreements.",
+          "journalPrompt": "What do you believe about conflict in relationships? Where did that belief come from?"
+        }
+      }
+    },
+    {
+      "id": "quiz_001_q5",
+      "text": "After a conflict, what I most need is...",
+      "choices": [
+        "Reassurance that we're okay",
+        "Time and space to recover",
+        "To talk through what happened",
+        "Physical reconnection"
+      ],
+      "category": "conflict_recovery",
+      "metadata": {
+        "dimension": "support_style",
+        "poleMapping": ["right", "left", "right", "right"],
+        "therapeutic": {
+          "rationale": "Post-conflict needs vary. Reassurance-seekers need relationship security; space-needers need recovery time; talkers need processing; physical-reconnectors need touch. Giving the wrong thing delays healing.",
+          "framework": "attachment_theory",
+          "whenDifferent": "The reassurance-seeker may feel abandoned by the space-needer's withdrawal; the space-needer may feel smothered by pursuit. Name your needs before conflict.",
+          "whenSame": "Matched recovery needs make post-conflict reconnection smoother.",
+          "journalPrompt": "What do you need after a conflict? Does your partner know?"
+        }
+      }
+    }
+  ]
+}

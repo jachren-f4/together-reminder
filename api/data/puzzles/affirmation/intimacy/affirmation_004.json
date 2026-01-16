@@ -1,0 +1,115 @@
+{
+  "quizId": "affirmation_004",
+  "title": "Reaching & Responding",
+  "category": "intimacy",
+  "branch": "intimacy",
+  "description": "Explore how you reach for each other and respond to bids for closeness",
+  "magnet_id": 16,
+  "questions": [
+    {
+      "id": "affirmation_004_q1",
+      "text": "I feel warmth coming back when I reach for my partner.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "How your partner responds when you reach for them shapes how safe it feels to keep reaching. Warm responses encourage connection; cold or absent responses create withdrawal.",
+          "framework": "eft",
+          "whenDifferent": "If one partner doesn't feel responded to warmly, explore specific moments. The other partner may not realize how their responses feel.",
+          "whenSame": "Mutual warm responsiveness creates a positive cycle of reaching and connecting.",
+          "journalPrompt": "How does your partner typically respond when you reach for closeness?"
+        }
+      }
+    },
+    {
+      "id": "affirmation_004_q2",
+      "text": "I notice when my partner is reaching for closeness with me.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Noticing your partner's bids for connection is the first step to responding. Missing these signals—whether through distraction or different expectations—can leave partners feeling unseen.",
+          "framework": "gottman",
+          "whenDifferent": "If one partner doesn't notice the other's reaching, explore how each person signals. Bids for connection can be subtle and easily missed.",
+          "whenSame": "Mutual attunement to each other's reaching creates opportunity for connection.",
+          "journalPrompt": "How does your partner signal they want closeness? Are there signals you might miss?"
+        }
+      }
+    },
+    {
+      "id": "affirmation_004_q3",
+      "text": "I feel comfortable initiating closeness with my partner.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Comfort initiating reflects feeling safe to want and ask. Discomfort may signal fear of rejection, unclear signals from partner, or patterns worth examining.",
+          "framework": "attachment_theory",
+          "whenDifferent": "If one partner is uncomfortable initiating, explore what would help. Is it about how past initiations were received? Fear of rejection?",
+          "whenSame": "Shared comfort initiating creates balance in who reaches for whom.",
+          "journalPrompt": "What makes it easy or hard for you to initiate closeness?"
+        }
+      }
+    },
+    {
+      "id": "affirmation_004_q4",
+      "text": "My partner's way of reaching for me feels inviting, not pressuring.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "The quality of how we reach matters. Reaching that feels inviting creates openness; reaching that feels pressuring creates resistance. Both partners need to understand how their approach lands.",
+          "framework": "eft",
+          "whenDifferent": "If one partner feels pressured rather than invited, this needs attention. The reaching partner can learn to adjust their approach.",
+          "whenSame": "Mutual experience of inviting (not pressuring) approaches creates safety to connect.",
+          "journalPrompt": "What makes your partner's approach feel inviting versus pressuring?"
+        }
+      }
+    },
+    {
+      "id": "affirmation_004_q5",
+      "text": "There's a good flow of reaching and responding between us.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Healthy intimacy has flow—reaching, responding, mutual pursuit. When the dance feels stuck or one-sided, exploring the pattern can help restore balance.",
+          "framework": "eft",
+          "whenDifferent": "Different perceptions of the flow suggest different experiences. One partner may be reaching more and feeling unmet; the other may not realize the imbalance.",
+          "whenSame": "Shared sense of good flow indicates a healthy pattern of connection.",
+          "journalPrompt": "Does the reaching and responding feel balanced between you? What would improve the flow?"
+        }
+      }
+    }
+  ]
+}

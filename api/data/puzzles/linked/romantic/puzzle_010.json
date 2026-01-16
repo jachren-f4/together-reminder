@@ -1,0 +1,69 @@
+{
+  "author": "Crossword Maker GPT",
+  "title": "AI-Built Puzzle",
+  "size": {
+    "rows": 9,
+    "cols": 7
+  },
+  "clues": {
+    "1": { "type": "text", "content": "C_EA_", "arrow": "down", "target_index": 8 },
+    "2": { "type": "text", "content": "F____", "arrow": "down", "target_index": 9 },
+    "3": { "type": "text", "content": "CRI__", "arrow": "down", "target_index": 10 },
+    "4": { "type": "text", "content": "A_T_CH_D", "arrow": "down", "target_index": 11 },
+    "5": { "type": "text", "content": "____ER", "arrow": "down", "target_index": 12 },
+    "6": { "type": "text", "content": "E____E", "arrow": "down", "target_index": 13 },
+    "7": { "type": "text", "content": "Hear out", "arrow": "across", "target_index": 8 },
+    "8": { "type": "text", "content": "Mend", "arrow": "across", "target_index": 15 },
+    "9": {
+      "across": { "type": "text", "content": "FIE_D", "target_index": 23 },
+      "down": { "type": "emoji", "content": "Had ❤️", "target_index": 29 }
+    },
+    "10": {
+      "across": { "type": "text", "content": "Greek η", "target_index": 25 },
+      "down": { "type": "text", "content": "_B_UT", "target_index": 31 }
+    },
+    "11": { "type": "text", "content": "_AR_I_C", "arrow": "across", "target_index": 29 },
+    "12": {
+      "across": { "type": "text", "content": "C_AN_E", "target_index": 33 },
+      "down": { "type": "emoji", "content": "😇 ring", "target_index": 39 }
+    },
+    "13": { "type": "text", "content": "Top mark", "arrow": "across", "target_index": 36 },
+    "14": {
+      "across": { "type": "emoji", "content": "😮", "target_index": 38 },
+      "down": { "type": "text", "content": "Evening", "target_index": 44 }
+    },
+    "15": { "type": "text", "content": "ACT__I_Y", "arrow": "down", "target_index": 47 },
+    "16": { "type": "text", "content": "Letter D", "arrow": "down", "target_index": 48 },
+    "17": { "type": "text", "content": "Do-__", "arrow": "across", "target_index": 43 },
+    "18": {
+      "across": { "type": "text", "content": "Help", "target_index": 46 },
+      "down": { "type": "text", "content": "AB__E", "target_index": 52 }
+    },
+    "19": { "type": "text", "content": "Grow", "arrow": "across", "target_index": 50 },
+    "20": { "type": "text", "content": "Commit", "arrow": "across", "target_index": 57 }
+  },
+  "date": "2026-01-12",
+  "grid": [
+    ".", ".", ".", ".", ".", ".", ".",
+    ".", "L", "I", "S", "T", "E", "N",
+    ".", "R", "E", "P", "A", "I", "R",
+    ".", ".", "L", ".", "E", "T", "A",
+    ".", "C", "D", "A", ".", "H", "G",
+    ".", "A", ".", "O", "H", ".", ".",
+    ".", "R", "E", ".", "A", "I", "D",
+    ".", "E", "V", "O", "L", "V", "E",
+    ".", "D", "E", "V", "O", "T", "E"
+  ],
+  "gridnums": [
+    0, 1, 2, 3, 4, 5, 6,
+    7, 0, 0, 0, 0, 0, 0,
+    8, 0, 0, 0, 0, 0, 0,
+    0, 9, 0, 10, 0, 0, 0,
+    11, 0, 0, 0, 12, 0, 0,
+    13, 0, 14, 0, 0, 15, 16,
+    17, 0, 0, 18, 0, 0, 0,
+    19, 0, 0, 0, 0, 0, 0,
+    20, 0, 0, 0, 0, 0, 0
+  ],
+  "puzzleId": "puzzle_020"
+}

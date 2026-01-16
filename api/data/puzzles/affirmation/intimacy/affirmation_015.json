@@ -1,0 +1,115 @@
+{
+  "quizId": "affirmation_015",
+  "title": "Physical Partnership",
+  "category": "intimacy",
+  "branch": "intimacy",
+  "description": "Reflect on your overall physical connection",
+  "magnet_id": 16,
+  "questions": [
+    {
+      "id": "affirmation_015_q1",
+      "text": "I feel good about our physical connection overall.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Overall positive feeling about your physical connection captures the cumulative effect of many small moments. This general sense matters for relationship satisfaction.",
+          "framework": "gottman",
+          "whenDifferent": "Different overall feelings indicate different experiences. The less satisfied partner's concerns need attention without defensiveness.",
+          "whenSame": "Shared positive feeling about physical connection is a relationship strength.",
+          "journalPrompt": "How do you feel about your physical connection overall? What affects that feeling most?"
+        }
+      }
+    },
+    {
+      "id": "affirmation_015_q2",
+      "text": "Physical closeness is a source of connection, not stress, in our relationship.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Physical closeness should ideally add to relationship wellbeing. When it becomes a source of stress, the dynamic needs attention.",
+          "framework": "eft",
+          "whenDifferent": "If physical closeness creates stress for one partner, explore what's stressful. Pressure? Mismatched needs? Unresolved issues?",
+          "whenSame": "Shared experience of physical closeness as connecting is a positive foundation.",
+          "journalPrompt": "Is physical closeness more often connecting or stressful? What affects that?"
+        }
+      }
+    },
+    {
+      "id": "affirmation_015_q3",
+      "text": "I feel my partner and I are on the same team when it comes to our physical connection.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Feeling like teammates in physical connection means you're working together rather than against each other. This partnership approach solves problems collaboratively.",
+          "framework": "gottman",
+          "whenDifferent": "If one partner doesn't feel like teammates, explore what creates that. Is there blame? Different goals? Sense of being adversaries?",
+          "whenSame": "Mutual sense of teamwork creates collaborative approach to physical connection.",
+          "journalPrompt": "Do you feel like teammates in your physical connection? What would strengthen that?"
+        }
+      }
+    },
+    {
+      "id": "affirmation_015_q4",
+      "text": "Our physical connection reflects the love in our relationship.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "When physical connection reflects emotional love, the two strengthen each other. A disconnect between love and physical expression deserves attention.",
+          "framework": "eft",
+          "whenDifferent": "If physical connection doesn't reflect love for one partner, explore the gap. Is love present but not showing physically? Is physical present but disconnected from emotion?",
+          "whenSame": "Shared sense that physical connection reflects love integrates both dimensions of intimacy.",
+          "journalPrompt": "Does your physical connection reflect the love you feel? What would align them more?"
+        }
+      }
+    },
+    {
+      "id": "affirmation_015_q5",
+      "text": "I feel hopeful about our physical connection going forward.",
+      "type": "scale",
+      "scaleLabels": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neutral",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Hope for the future of your physical connection provides motivation to work on it. Hopelessness often leads to giving up.",
+          "framework": "positive_psychology",
+          "whenDifferent": "If one partner lacks hope, explore what's taken it. Specific concerns? General pessimism? Understanding the hopelessness helps address it.",
+          "whenSame": "Shared hope about your physical future creates motivation for continued investment.",
+          "journalPrompt": "What makes you hopeful—or less hopeful—about your physical connection going forward?"
+        }
+      }
+    }
+  ]
+}

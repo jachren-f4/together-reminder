@@ -1,0 +1,24 @@
+{
+  "puzzleId": "ws_014",
+  "title": "Romantic XIV",
+  "theme": "romantic",
+  "size": {
+    "rows": 10,
+    "cols": 10
+  },
+  "grid": "JWPEDADOREBNVLSWCKRCQACQEIETOHEVAWGWRDUEPZCAFUENDRWIMDVVSJUIBONDINGRRSHMELODYITHUNITEDNNUCTHGILEDGDD",
+  "words": {
+    "MAGIC": "52,UR",
+    "UNITED": "80,R",
+    "MELODY": "71,R",
+    "BONDING": "60,R",
+    "JEWEL": "57,UL",
+    "SUNRISE": "69,UL",
+    "RING": "67,D",
+    "WAVE": "33,L",
+    "DUO": "48,U",
+    "DELIGHT": "96,L",
+    "CHERISH": "19,D",
+    "ADORE": "5,R"
+  }
+}

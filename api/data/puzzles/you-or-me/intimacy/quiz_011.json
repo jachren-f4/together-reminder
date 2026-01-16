@@ -1,0 +1,39 @@
+{
+  "quizId": "quiz_011",
+  "title": "Keeping the Spark",
+  "branch": "intimacy",
+  "questions": [
+    {
+      "id": "quiz_011_q1",
+      "category": "habits",
+      "prompt": "Who is more likely to...",
+      "content": "Flirt even after being together a while"
+    },
+    {
+      "id": "quiz_011_q2",
+      "category": "personality",
+      "prompt": "Who is more...",
+      "content": "Playful and teasing"
+    },
+    {
+      "id": "quiz_011_q3",
+      "category": "preferences",
+      "prompt": "Who would...",
+      "content": "Suggest recreating your first date"
+    },
+    {
+      "id": "quiz_011_q4",
+      "category": "habits",
+      "prompt": "Who is more likely to...",
+      "content": "Send a flirty text during the day"
+    },
+    {
+      "id": "quiz_011_q5",
+      "category": "personality",
+      "prompt": "Who gets more joy from...",
+      "content": "Making the other laugh and smile"
+    }
+  ],
+  "description": "Keep the magic alive! Explore how you each nurture your connection.",
+  "magnet_id": 12
+}

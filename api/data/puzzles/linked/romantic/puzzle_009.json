@@ -1,0 +1,69 @@
+{
+  "author": "Crossword Maker GPT",
+  "title": "AI-Built Puzzle",
+  "size": {
+    "rows": 9,
+    "cols": 7
+  },
+  "clues": {
+    "1": { "type": "text", "content": "Ta-__!", "arrow": "down", "target_index": 8 },
+    "2": { "type": "text", "content": "On _", "arrow": "down", "target_index": 9 },
+    "3": { "type": "text", "content": "Hence", "arrow": "down", "target_index": 10 },
+    "4": { "type": "text", "content": "B__thd_y", "arrow": "down", "target_index": 11 },
+    "5": { "type": "text", "content": "Engines", "arrow": "down", "target_index": 12 },
+    "6": { "type": "text", "content": "On edge", "arrow": "down", "target_index": 13 },
+    "7": { "type": "text", "content": "Wanting", "arrow": "across", "target_index": 8 },
+    "8": { "type": "text", "content": "Loved up", "arrow": "across", "target_index": 15 },
+    "9": {
+      "across": { "type": "text", "content": "A_ain", "target_index": 23 },
+      "down": { "type": "text", "content": "Nile's _", "target_index": 29 }
+    },
+    "10": {
+      "across": { "type": "text", "content": "Average", "target_index": 25 },
+      "down": { "type": "text", "content": "A__ual", "target_index": 31 }
+    },
+    "11": { "type": "text", "content": "Hideaway", "arrow": "across", "target_index": 29 },
+    "12": {
+      "across": { "type": "text", "content": "Co_tl_", "target_index": 33 },
+      "down": { "type": "text", "content": "Pakistan", "target_index": 39 }
+    },
+    "13": { "type": "text", "content": "Abov_", "arrow": "across", "target_index": 36 },
+    "14": {
+      "across": { "type": "text", "content": "Greek 13", "target_index": 38 },
+      "down": { "type": "text", "content": "Stone", "target_index": 44 }
+    },
+    "15": { "type": "text", "content": "Adv_s__", "arrow": "down", "target_index": 47 },
+    "16": { "type": "text", "content": "_c_o_s", "arrow": "down", "target_index": 48 },
+    "17": { "type": "text", "content": "BU__E", "arrow": "across", "target_index": 43 },
+    "18": {
+      "across": { "type": "text", "content": "Inlet", "target_index": 46 },
+      "down": { "type": "text", "content": "Refusal", "target_index": 52 }
+    },
+    "19": { "type": "text", "content": "Loving", "arrow": "across", "target_index": 50 },
+    "20": { "type": "text", "content": "Flings", "arrow": "across", "target_index": 57 }
+  },
+  "date": "2026-01-12",
+  "grid": [
+    ".", ".", ".", ".", ".", ".", ".",
+    ".", "D", "E", "S", "I", "R", "E",
+    ".", "A", "D", "O", "R", "E", "D",
+    ".", ".", "G", ".", "A", "V", "G",
+    ".", "D", "E", "N", ".", "S", "Y",
+    ".", "E", ".", "N", "U", ".", ".",
+    ".", "L", "G", ".", "R", "I", "A",
+    ".", "T", "E", "N", "D", "E", "R",
+    ".", "A", "M", "O", "U", "R", "S"
+  ],
+  "gridnums": [
+    0, 1, 2, 3, 4, 5, 6,
+    7, 0, 0, 0, 0, 0, 0,
+    8, 0, 0, 0, 0, 0, 0,
+    0, 9, 0, 10, 0, 0, 0,
+    11, 0, 0, 0, 12, 0, 0,
+    13, 0, 14, 0, 0, 15, 16,
+    17, 0, 0, 18, 0, 0, 0,
+    19, 0, 0, 0, 0, 0, 0,
+    20, 0, 0, 0, 0, 0, 0
+  ],
+  "puzzleId": "puzzle_019"
+}

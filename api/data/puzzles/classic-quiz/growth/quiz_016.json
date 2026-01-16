@@ -1,7 +1,9 @@
 {
   "quizId": "quiz_016",
-  "title": "Feedback & Growth",
+  "title": "Giving & Receiving Feedback",
   "branch": "growth",
+  "description": "Learn how to give and receive feedback that helps you both grow.",
+  "magnet_id": 12,
   "questions": [
     {
       "id": "quiz_016_q1",
@@ -10,45 +12,61 @@
         "Direct and honest",
         "Gentle and supportive",
         "Specific with suggestions",
-        "At the right moment, not in the heat of things"
+        "Timed well, not in the heat of things"
       ],
-      "category": "communication"
+      "category": "feedback_preference",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Feedback preferences shape how information lands. Direct types want clarity; gentle types want care; specific types want actionability; timing-sensitive types need the right moment. Misaligned feedback delivery can cause hurt instead of growth.",
+          "framework": "gottman",
+          "whenDifferent": "Different feedback preferences require adaptation. What feels caring to you may feel too soft or too harsh to your partner.",
+          "whenSame": "Matched feedback preferences create smooth, effective communication about growth areas.",
+          "journalPrompt": "How do you prefer to receive feedback? Have you told your partner?"
+        }
+      }
     },
     {
       "id": "quiz_016_q2",
-      "text": "How do I typically respond to constructive criticism?",
+      "text": "When I have feedback for you, I tend to...",
       "choices": [
-        "I appreciate it and try to learn",
-        "I need time to process before responding",
-        "I can get defensive at first",
-        "I welcome it when delivered kindly"
+        "Share it directly because I care",
+        "Wait for the right moment",
+        "Soften it to avoid hurt",
+        "Ask if you're open to hearing it first"
       ],
-      "category": "emotional"
+      "category": "giving_feedback",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Feedback-giving styles reflect care and communication patterns. Direct sharers prioritize truth; moment-waiters prioritize timing; softeners prioritize feelings; askers prioritize consent. Understanding your style helps you adjust to your partner's needs.",
+          "framework": "gottman",
+          "whenDifferent": "Different giving styles may need adjustment. Your approach may not match what your partner needs.",
+          "whenSame": "Matched styles create natural feedback dynamics.",
+          "journalPrompt": "How do you tend to give feedback? Is that working for your partner?"
+        }
+      }
     },
     {
       "id": "quiz_016_q3",
-      "text": "What makes me most open to hearing feedback?",
+      "text": "What makes me most open to hearing feedback is...",
       "choices": [
         "Knowing it comes from love",
         "When I've asked for it",
         "When it's balanced with positives",
         "When I trust the person giving it"
       ],
-      "category": "trust"
+      "category": "feedback_openness",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Openness factors reveal what enables receptivity. Love-needer need safety; askers need control; balance-needers need affirmation; trust-needers need security. Knowing what opens your partner up helps feedback land well.",
+          "framework": "gottman",
+          "whenDifferent": "Different openness factors require understanding your partner's needs, not assuming they're like yours.",
+          "whenSame": "Matched openness factors create natural conditions for productive feedback.",
+          "journalPrompt": "What makes you most open to hearing feedback? Does your partner know this?"
+        }
+      }
     },
     {
       "id": "quiz_016_q4",
-      "text": "When I notice something you could improve, I tend to...",
-      "choices": [
-        "Bring it up gently when the time is right",
-        "Wait for you to ask for my thoughts",
-        "Lead by example rather than saying it",
-        "Be direct because I care about your growth"
-      ],
-      "category": "communication"
-    },
-    {
-      "id": "quiz_016_q5",
       "text": "The most helpful feedback you've given me was about...",
       "choices": [
         "How I communicate or express myself",
@@ -56,9 +74,36 @@
         "My habits or behaviors",
         "How I show up in our relationship"
       ],
-      "category": "growth"
+      "category": "valuable_feedback",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Remembering valuable feedback honors past growth. Communication feedback improved expression; stress feedback improved regulation; habit feedback improved behavior; relationship feedback improved partnership. Acknowledging helpful feedback encourages more.",
+          "framework": "positive_psychology",
+          "whenDifferent": "Different valued feedback shows you've grown in different areas. Both memories are valid.",
+          "whenSame": "Matched memories show you both valued similar growth conversations.",
+          "journalPrompt": "What's the most helpful feedback your partner has given you? Did you thank them?"
+        }
+      }
+    },
+    {
+      "id": "quiz_016_q5",
+      "text": "I believe feedback in a relationship should...",
+      "choices": [
+        "Be given lovingly and received openly",
+        "Help us grow without hurting each other",
+        "Be invited rather than imposed",
+        "Balance honesty with kindness"
+      ],
+      "category": "feedback_philosophy",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Feedback philosophies shape how couples communicate about growth. Love/openness believers emphasize safety; growth/no-hurt believers emphasize care; invitation believers emphasize consent; balance believers emphasize both truth and kindness. All are healthy approaches.",
+          "framework": "gottman",
+          "whenDifferent": "Different feedback philosophies can blend. The core is that feedback should serve growth while preserving connection.",
+          "whenSame": "Shared philosophy creates aligned expectations for how you'll share feedback.",
+          "journalPrompt": "What role should feedback play in your relationship? Are you both comfortable with how it's given?"
+        }
+      }
     }
-  ],
-  "description": "Learn how to give and receive feedback that helps you both grow.",
-  "magnet_id": 12
+  ]
 }

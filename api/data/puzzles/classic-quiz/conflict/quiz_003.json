@@ -1,0 +1,111 @@
+{
+  "quizId": "quiz_003",
+  "title": "Receiving Feedback",
+  "branch": "conflict",
+  "description": "Explore how you respond when your partner raises concerns with you.",
+  "magnet_id": 15,
+  "questions": [
+    {
+      "id": "quiz_003_q1",
+      "text": "When my partner raises a concern about something I did, my first reaction is usually...",
+      "choices": [
+        "To listen and try to understand",
+        "To feel defensive and explain myself",
+        "To feel hurt or criticized",
+        "Depends on how they bring it up"
+      ],
+      "category": "feedback_reception",
+      "metadata": {
+        "dimension": "conflict_approach",
+        "poleMapping": ["right", "left", "left", "neutral"],
+        "therapeutic": {
+          "rationale": "First reactions to feedback reveal defensiveness patterns. Listeners stay open; defenders protect; hurt-feelers personalize; delivery-dependent types are conditional. Defensiveness is one of Gottman's Four Horsemen.",
+          "framework": "gottman",
+          "whenDifferent": "The listener may not understand why their partner gets defensive; the defensive partner may feel attacked. Work on creating safety for feedback.",
+          "whenSame": "Shared first reactions create predictability about how feedback conversations start.",
+          "journalPrompt": "How do you typically react when your partner raises a concern? What's happening inside you?"
+        }
+      }
+    },
+    {
+      "id": "quiz_003_q2",
+      "text": "When I feel defensive, I tend to...",
+      "choices": [
+        "Explain why I did what I did",
+        "Point out what they did wrong too",
+        "Shut down and withdraw",
+        "Get upset or emotional"
+      ],
+      "category": "defensiveness_patterns",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Defensive behaviors vary. Explainers justify; counter-attackers deflect; withdrawers escape; emoters express distress. All block hearing your partner's concern. Recognizing your pattern is the first step to changing it.",
+          "framework": "gottman",
+          "whenDifferent": "Different defensive patterns have different impacts. Counter-attacking escalates; withdrawing leaves issues unresolved. Both need attention.",
+          "whenSame": "Shared defensive pattern helps you recognize when you're both doing it.",
+          "journalPrompt": "What do you do when you feel defensive? What's behind that behavior?"
+        }
+      }
+    },
+    {
+      "id": "quiz_003_q3",
+      "text": "What helps me receive feedback without getting defensive is...",
+      "choices": [
+        "When it's delivered gently and kindly",
+        "When I feel secure in the relationship",
+        "When I have time to process before responding",
+        "When I remind myself my partner is on my team"
+      ],
+      "category": "feedback_support",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Conditions for non-defensiveness vary. Gentle-delivery needers require soft startup; security-needers require relationship safety; processors need time; reminder-needers use cognitive reframing. Knowing your conditions helps your partner give feedback effectively.",
+          "framework": "gottman",
+          "whenDifferent": "Different conditions are fine—your partner can adjust delivery while you work on your reception. Meet in the middle.",
+          "whenSame": "Shared conditions make supporting each other's feedback reception easier.",
+          "journalPrompt": "What helps you stay open when receiving feedback? What can your partner do? What can you do?"
+        }
+      }
+    },
+    {
+      "id": "quiz_003_q4",
+      "text": "The hardest feedback for me to hear is about...",
+      "choices": [
+        "How I made my partner feel",
+        "Patterns I keep repeating",
+        "Things that feel core to who I am",
+        "Times when I was unaware I hurt them"
+      ],
+      "category": "feedback_sensitivity",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Feedback sensitivities reveal vulnerabilities. Impact-feedback is hard when you didn't intend harm; pattern-feedback feels like character indictment; core-identity feedback feels existential; unawareness-feedback triggers shame. Knowing your sensitivity helps you prepare.",
+          "framework": "attachment_theory",
+          "whenDifferent": "Different sensitivities mean different vulnerabilities. Be extra gentle with your partner's sensitive areas.",
+          "whenSame": "Shared sensitivity creates mutual understanding about what's hardest to hear.",
+          "journalPrompt": "What feedback is hardest for you to receive? Why is that particular type so difficult?"
+        }
+      }
+    },
+    {
+      "id": "quiz_003_q5",
+      "text": "I want to get better at receiving feedback because...",
+      "choices": [
+        "I want my partner to feel heard",
+        "I know it helps us grow together",
+        "I don't want defensiveness to damage us",
+        "I want to be a better partner"
+      ],
+      "category": "growth_motivation",
+      "metadata": {
+        "therapeutic": {
+          "rationale": "Motivation for growth affects commitment. Partner-focusers prioritize their partner's experience; growth-focusers see relationship development; damage-avoiders prevent harm; self-improvers want personal growth. All motivations can drive positive change.",
+          "framework": "positive_psychology",
+          "whenDifferent": "Different motivations are all valid and can coexist. What matters is the commitment to improving.",
+          "whenSame": "Shared motivation aligns your reasons for working on feedback reception.",
+          "journalPrompt": "Why do you want to get better at receiving feedback? What would be different if you did?"
+        }
+      }
+    }
+  ]
+}
