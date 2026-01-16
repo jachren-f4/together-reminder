@@ -195,6 +195,12 @@ class _MainScreenState extends State<MainScreen> with SingleTickerProviderStateM
         _showPaywall = false;
       });
       Logger.debug('Paywall completed, showing app content', service: 'main');
+
+      // If we're coming from a pushed screen (like AlreadySubscribedScreen),
+      // we need to pop it to return to MainScreen
+      if (Navigator.of(ctx).canPop()) {
+        Navigator.of(ctx).pop();
+      }
     }
   }
 
