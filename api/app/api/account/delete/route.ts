@@ -38,20 +38,29 @@ export async function OPTIONS() {
 
 /**
  * Helper to safely delete from a table (ignores if table doesn't exist)
+ * Uses SAVEPOINT to prevent transaction abort on missing tables
  */
 async function safeDelete(
   client: PoolClient,
   sql: string,
   params: any[] = []
 ): Promise<number> {
+  const savepointName = `sp_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
+
   try {
+    await client.query(`SAVEPOINT ${savepointName}`);
     const result = await client.query(sql, params);
+    await client.query(`RELEASE SAVEPOINT ${savepointName}`);
     return result.rowCount ?? 0;
   } catch (e: any) {
+    // Rollback to savepoint to keep transaction valid
+    await client.query(`ROLLBACK TO SAVEPOINT ${savepointName}`);
+
     // Table might not exist - that's OK
     if (e.code === '42P01') {
       return 0;
     }
+    // Re-throw other errors
     throw e;
   }
 }
