@@ -177,10 +177,10 @@ export const POST = withAuthOrDevBypass(async (req, userId, email) => {
       );
     }
 
-    // Get current branch for this couple (needed to load correct puzzle file)
-    const branch = await getCurrentBranchFolder(coupleId, client);
+    // Use the branch stored with the match (not current branch, which may have changed)
+    const branch = match.branch || 'casual';
 
-    // Load puzzle with positions from correct branch
+    // Load puzzle with positions from the match's branch
     const puzzle = loadPuzzle(match.puzzle_id, branch);
     if (!puzzle) {
       await client.query('ROLLBACK');

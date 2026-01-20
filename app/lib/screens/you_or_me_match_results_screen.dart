@@ -9,7 +9,7 @@ import '../services/storage_service.dart';
 import '../services/unlock_service.dart';
 import '../widgets/animations/animations.dart';
 import '../widgets/editorial/editorial.dart';
-import '../widgets/unlock_celebration.dart';
+import '../widgets/unlock_popup.dart';
 
 /// Results screen for You-or-Me Match (bulk submission)
 ///
@@ -68,10 +68,10 @@ class _YouOrMeMatchResultsScreenState extends State<YouOrMeMatchResultsScreen>
     final result = await unlockService.notifyCompletion(UnlockTrigger.youOrMe);
 
     if (result != null && result.hasNewUnlocks && mounted) {
-      // Show unlock celebration after a brief delay for confetti to settle
+      // Show unlock popup after a brief delay for confetti to settle
       await Future.delayed(const Duration(milliseconds: 800));
       if (mounted) {
-        await UnlockCelebrations.showLinkedUnlocked(context, result.lpAwarded);
+        await UnlockPopup.show(context, featureType: UnlockFeatureType.crossword);
       }
     }
   }
@@ -112,13 +112,15 @@ class _YouOrMeMatchResultsScreenState extends State<YouOrMeMatchResultsScreen>
               ),
             ),
 
-            // Content
+            // Content with fade gradient overlay
             Expanded(
-              child: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // Score summary section with bounce entrance
+              child: Stack(
+                children: [
+                  SingleChildScrollView(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // Score summary section with bounce entrance
                     BounceInWidget(
                       delay: AnimationConstants.cardEntranceDelay,
                       child: Padding(
@@ -275,6 +277,29 @@ class _YouOrMeMatchResultsScreenState extends State<YouOrMeMatchResultsScreen>
                   ],
                 ),
               ),
+                  // Fade gradient overlay at bottom of scrollable area
+                  Positioned(
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    child: IgnorePointer(
+                      child: Container(
+                        height: 60,
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
+                            colors: [
+                              Colors.transparent,
+                              EditorialStyles.paper,
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
 
             // Footer
@@ -329,14 +354,15 @@ class _YouOrMeMatchResultsScreenState extends State<YouOrMeMatchResultsScreen>
             ),
           ),
           child: SafeArea(
-            child: Column(
-              children: [
-                // Header
-                _buildUs2Header(),
+            bottom: false, // Allow content to extend into bottom safe area
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  // Header
+                  _buildUs2Header(),
 
-                // Content
-                Expanded(
-                  child: SingleChildScrollView(
+                  // Content
+                  Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 20),
                     child: Column(
                       children: [
@@ -462,17 +488,20 @@ class _YouOrMeMatchResultsScreenState extends State<YouOrMeMatchResultsScreen>
                       ],
                     ),
                   ),
-                ),
 
-                // Footer button
-                Container(
-                  padding: const EdgeInsets.all(20),
-                  child: _buildUs2Button(
-                    'Return Home',
-                    () => Navigator.of(context).popUntil((route) => route.isFirst),
+                  // Return Home button (inside scroll)
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: _buildUs2Button(
+                      'Return Home',
+                      () => Navigator.of(context).popUntil((route) => route.isFirst),
+                    ),
                   ),
-                ),
-              ],
+
+                  // Extra padding for home indicator safe area
+                  SizedBox(height: MediaQuery.of(context).padding.bottom + 30),
+                ],
+              ),
             ),
           ),
         ),

@@ -145,10 +145,10 @@ export const POST = withAuthOrDevBypass(async (req, userId, email) => {
       );
     }
 
-    // Get current branch for this couple
-    const branch = await getCurrentBranchFolder(coupleId, client);
+    // Use the branch stored with the match
+    const branch = match.branch || 'casual';
 
-    // Load puzzle from correct branch
+    // Load puzzle from the match's branch
     const puzzle = loadPuzzle(match.puzzle_id, branch);
     if (!puzzle) {
       await client.query('ROLLBACK');

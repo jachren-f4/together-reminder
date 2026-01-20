@@ -110,15 +110,15 @@ export const POST = withAuthOrDevBypass(async (req, userId, email) => {
 
       const insertResult = await query(
         `INSERT INTO word_search_matches (
-          couple_id, puzzle_id, status, found_words,
+          couple_id, puzzle_id, branch, status, found_words,
           current_turn_user_id, turn_number, words_found_this_turn,
           player1_words_found, player2_words_found,
           player1_hints, player2_hints,
           player1_id, player2_id, created_at
         )
-        VALUES ($1, $2, 'active', '[]', $3, 1, 0, 0, 0, 3, 3, $4, $5, NOW())
+        VALUES ($1, $2, $3, 'active', '[]', $4, 1, 0, 0, 0, 3, 3, $5, $6, NOW())
         RETURNING *`,
-        [coupleId, puzzleId, firstPlayer, user1Id, user2Id]
+        [coupleId, puzzleId, branch, firstPlayer, user1Id, user2Id]
       );
 
       match = insertResult.rows[0];
@@ -213,10 +213,10 @@ export const GET = withAuthOrDevBypass(async (req, userId, email) => {
       ? JSON.parse(match.found_words)
       : match.found_words || [];
 
-    // Get current branch for this couple
-    const branch = await getCurrentBranch(coupleId, 'wordSearch');
+    // Use the branch stored with the match
+    const branch = match.branch || 'casual';
 
-    // Load puzzle for client from correct branch
+    // Load puzzle for client from the match's branch
     const puzzle = loadPuzzle('wordSearch', match.puzzle_id, branch);
 
     return NextResponse.json({

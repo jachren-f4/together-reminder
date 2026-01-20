@@ -110,10 +110,10 @@ export const GET = withAuthOrDevBypass(async (req, userId, email, context) => {
       ? JSON.parse(match.found_words)
       : match.found_words || [];
 
-    // Get current branch for this couple
-    const branch = await getCurrentBranchFolder(coupleId);
+    // Use the branch stored with the match
+    const branch = match.branch || 'casual';
 
-    // Load puzzle for client from correct branch
+    // Load puzzle for client from the match's branch
     const puzzle = loadPuzzle(match.puzzle_id, branch);
 
     return NextResponse.json({

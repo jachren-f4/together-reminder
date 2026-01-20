@@ -11,7 +11,7 @@ import '../services/unlock_service.dart';
 import '../services/quiz_match_service.dart';
 import '../widgets/animations/animations.dart';
 import '../widgets/editorial/editorial.dart';
-import '../widgets/unlock_celebration.dart';
+import '../widgets/unlock_popup.dart';
 
 /// Helper to get answer text, handling the fallback option for classic quiz
 String _getAnswerText(int answerIndex, List<String> choices) {
@@ -67,6 +67,9 @@ class _QuizMatchResultsScreenState extends State<QuizMatchResultsScreen>
   ServerQuiz? _fetchedQuiz;
   bool _isLoading = false;
   String? _error;
+
+  /// Whether to show LP explanation card (first classic quiz only)
+  bool _showLpExplanationCard = false;
 
   /// Check if Us 2.0 brand is active
   bool get _isUs2 => BrandLoader().config.brand == Brand.us2;
@@ -136,6 +139,15 @@ class _QuizMatchResultsScreenState extends State<QuizMatchResultsScreen>
     final match = _match;
     if (match == null) return;
 
+    // Check if we should show LP explanation card (first classic quiz only)
+    final isClassicQuiz = match.quizType == 'classic';
+    final hasSeenCard = StorageService().hasSeenLpExplanationCard();
+    if (isClassicQuiz && !hasSeenCard) {
+      _showLpExplanationCard = true;
+      // Mark as seen so it only shows once
+      StorageService().markLpExplanationCardSeen();
+    }
+
     // Trigger celebration confetti after a brief delay
     Future.delayed(AnimationConstants.confettiDelay, () {
       if (mounted) triggerConfetti();
@@ -171,12 +183,10 @@ class _QuizMatchResultsScreenState extends State<QuizMatchResultsScreen>
     final shouldShow = await unlockService.shouldShowYouOrMeCelebration();
 
     if (shouldShow && mounted) {
-      // Show unlock celebration after a brief delay for confetti to settle
+      // Show unlock popup after a brief delay for confetti to settle
       await Future.delayed(const Duration(milliseconds: 800));
       if (mounted) {
-        // Use LP from result if available, otherwise default to 0
-        final lpAwarded = result?.lpAwarded ?? 0;
-        await UnlockCelebrations.showYouOrMeUnlocked(context, lpAwarded);
+        await UnlockPopup.show(context, featureType: UnlockFeatureType.youOrMe);
         // Mark as seen so this user won't see it again
         await unlockService.markCelebrationSeen('you_or_me');
       }
@@ -726,17 +736,15 @@ class _QuizMatchResultsScreenState extends State<QuizMatchResultsScreen>
         body: Container(
           decoration: const BoxDecoration(gradient: Us2Theme.backgroundGradient),
           child: SafeArea(
-            child: Column(
-              children: [
-                // Header
-                _buildUs2Header(),
+            bottom: false, // Allow content to extend into bottom safe area
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Header
+                  _buildUs2Header(),
 
-                // Content
-                Expanded(
-                  child: SingleChildScrollView(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
+                  // Content
                         // Score Summary
                         Container(
                           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
@@ -828,18 +836,24 @@ class _QuizMatchResultsScreenState extends State<QuizMatchResultsScreen>
                                 textAlign: TextAlign.center,
                               ),
                               const SizedBox(height: 24),
-                              // Stats pills
+                              // Stats pills - hide LP pill if showing explanation card
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   _buildUs2StatPill('$totalQuestions questions', false),
-                                  const SizedBox(width: 12),
-                                  _buildUs2StatPill('+$lp LP', true),
+                                  if (!_showLpExplanationCard) ...[
+                                    const SizedBox(width: 12),
+                                    _buildUs2StatPill('+$lp LP', true),
+                                  ],
                                 ],
                               ),
                             ],
                           ),
                         ),
+
+                        // LP Explanation card (first classic quiz only)
+                        if (_showLpExplanationCard)
+                          _buildUs2LpExplanationCard(lp),
 
                         // Divider
                         Container(
@@ -881,48 +895,45 @@ class _QuizMatchResultsScreenState extends State<QuizMatchResultsScreen>
                             );
                           }),
 
-                        const SizedBox(height: 24),
-                      ],
-                    ),
-                  ),
-                ),
+                  const SizedBox(height: 24),
 
-                // Footer
-                Container(
-                  padding: const EdgeInsets.all(20),
-                  decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.5),
-                  ),
-                  child: GestureDetector(
-                    onTap: () => Navigator.of(context).popUntil((route) => route.isFirst),
-                    child: Container(
-                      width: double.infinity,
-                      padding: const EdgeInsets.symmetric(vertical: 18),
-                      decoration: BoxDecoration(
-                        gradient: Us2Theme.accentGradient,
-                        borderRadius: BorderRadius.circular(30),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Us2Theme.glowPink.withOpacity(0.4),
-                            blurRadius: 25,
-                            offset: const Offset(0, 8),
-                          ),
-                        ],
-                      ),
-                      child: Center(
-                        child: Text(
-                          'Return Home',
-                          style: GoogleFonts.nunito(
-                            fontSize: 17,
-                            fontWeight: FontWeight.w700,
-                            color: Colors.white,
+                  // Return Home button (inside scroll)
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: GestureDetector(
+                      onTap: () => Navigator.of(context).popUntil((route) => route.isFirst),
+                      child: Container(
+                        width: double.infinity,
+                        padding: const EdgeInsets.symmetric(vertical: 18),
+                        decoration: BoxDecoration(
+                          gradient: Us2Theme.accentGradient,
+                          borderRadius: BorderRadius.circular(30),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Us2Theme.glowPink.withOpacity(0.4),
+                              blurRadius: 25,
+                              offset: const Offset(0, 8),
+                            ),
+                          ],
+                        ),
+                        child: Center(
+                          child: Text(
+                            'Return Home',
+                            style: GoogleFonts.nunito(
+                              fontSize: 17,
+                              fontWeight: FontWeight.w700,
+                              color: Colors.white,
+                            ),
                           ),
                         ),
                       ),
                     ),
                   ),
-                ),
-              ],
+
+                  // Extra padding for home indicator safe area
+                  SizedBox(height: MediaQuery.of(context).padding.bottom + 30),
+                ],
+              ),
             ),
           ),
         ),
@@ -1151,6 +1162,95 @@ class _QuizMatchResultsScreenState extends State<QuizMatchResultsScreen>
           ),
         ),
       ],
+    );
+  }
+
+  /// Build Us 2.0 LP explanation card (shown on first classic quiz only)
+  Widget _buildUs2LpExplanationCard(int lp) {
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.06),
+            blurRadius: 20,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Header row
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'Love Points Earned',
+                style: GoogleFonts.playfairDisplay(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w700,
+                  color: Us2Theme.textDark,
+                ),
+              ),
+              // LP badge with gold gradient
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+                decoration: BoxDecoration(
+                  gradient: const LinearGradient(
+                    colors: [Color(0xFFFFD700), Color(0xFFFFA500)],
+                  ),
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                child: Text(
+                  '+$lp LP',
+                  style: GoogleFonts.nunito(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w700,
+                    color: const Color(0xFF5D4E37),
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          // Explanation text with cream background
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: const Color(0xFFFFF8F0),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: RichText(
+              text: TextSpan(
+                style: GoogleFonts.nunito(
+                  fontSize: 14,
+                  color: const Color(0xFF5A5A5A),
+                  height: 1.5,
+                ),
+                children: [
+                  const TextSpan(text: 'You earned LP from '),
+                  TextSpan(
+                    text: 'participation',
+                    style: GoogleFonts.nunito(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w700,
+                      color: const Color(0xFFFF5E62),
+                    ),
+                  ),
+                  const TextSpan(
+                    text: '! Match score shows how aligned you are, but you earn LP just for playing.',
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

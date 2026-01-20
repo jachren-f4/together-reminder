@@ -10,7 +10,8 @@ import '../models/linked.dart';
 import '../widgets/linked/answer_cell.dart';
 import '../widgets/linked/turn_complete_dialog.dart';
 import '../widgets/linked/partner_first_dialog.dart';
-import '../widgets/unlock_celebration.dart';
+import '../widgets/linked/linked_tutorial_overlay.dart';
+import '../widgets/unlock_popup.dart';
 import 'linked_completion_screen.dart';
 import '../config/brand/brand_loader.dart';
 import '../config/brand/brand_config.dart';
@@ -52,6 +53,18 @@ class _LinkedGameScreenState extends State<LinkedGameScreen>
   final Map<int, _CellAnimationState> _cellAnimations = {};
   bool _showTurnComplete = false;
   bool _showPartnerFirst = false;
+  bool _showTutorial = false;
+  bool _showClueHintBanner = false;
+
+  // Triple-tap detection for tutorial trigger (dev feature)
+  int _titleTapCount = 0;
+  DateTime? _lastTitleTap;
+
+  // GlobalKeys for tutorial highlights
+  final GlobalKey _clueKey = GlobalKey();
+  final GlobalKey _rackKey = GlobalKey();
+  final GlobalKey _submitKey = GlobalKey();
+  bool _clueKeyAssigned = false; // Track if clue key has been assigned this build
 
   // Grid key and cell positions for floating points
   final GlobalKey _gridKey = GlobalKey();
@@ -106,6 +119,12 @@ class _LinkedGameScreenState extends State<LinkedGameScreen>
         // Show dialog if it's not my turn when entering the game
         final showPartnerTurnDialog = !gameState.isMyTurn;
 
+        // Check if tutorial should be shown (first time playing Linked)
+        final shouldShowTutorial = !StorageService().hasSeenLinkedTutorial();
+
+        // Check if clue hint banner should be shown (first time, after tutorial)
+        final shouldShowClueHint = !StorageService().hasSeenLinkedClueHint() && !shouldShowTutorial;
+
         setState(() {
           _gameState = gameState;
           _isLoading = false;
@@ -115,10 +134,22 @@ class _LinkedGameScreenState extends State<LinkedGameScreen>
           _highlightedCells.clear();
           _cellAnimations.clear();
           _showTurnComplete = false;
-          _showPartnerFirst = showPartnerTurnDialog;
+          _showPartnerFirst = showPartnerTurnDialog && !shouldShowTutorial;
+          _showTutorial = shouldShowTutorial;
+          _showClueHintBanner = shouldShowClueHint;
           _currentWordIndex = -1;
           _lastResult = null;
         });
+
+        // Auto-dismiss clue hint banner after 10 seconds
+        if (shouldShowClueHint) {
+          Future.delayed(const Duration(seconds: 10), () {
+            if (mounted && _showClueHintBanner) {
+              StorageService().markLinkedClueHintSeen();
+              setState(() => _showClueHintBanner = false);
+            }
+          });
+        }
         startPolling();
         _checkGameCompletion();
       }
@@ -184,6 +215,9 @@ class _LinkedGameScreenState extends State<LinkedGameScreen>
 
   @override
   Widget build(BuildContext context) {
+    // Reset clue key tracking for this build
+    _clueKeyAssigned = false;
+
     return Scaffold(
       backgroundColor: _isUs2 ? null : BrandLoader().colors.background,
       body: Container(
@@ -212,6 +246,35 @@ class _LinkedGameScreenState extends State<LinkedGameScreen>
                 puzzleType: 'puzzle',
                 onGoBack: () => Navigator.of(context).pop(),
                 onStay: () => setState(() => _showPartnerFirst = false),
+              ),
+            ),
+          // Tutorial overlay (first time playing Linked)
+          if (_showTutorial)
+            Positioned.fill(
+              child: LinkedTutorialOverlay(
+                clueKey: _clueKey,
+                rackKey: _rackKey,
+                submitKey: _submitKey,
+                onComplete: () {
+                  StorageService().markLinkedTutorialSeen();
+                  setState(() {
+                    _showTutorial = false;
+                    // Show partner first dialog after tutorial if it's partner's turn
+                    if (_gameState != null && !_gameState!.isMyTurn) {
+                      _showPartnerFirst = true;
+                    }
+                  });
+                },
+                onSkip: () {
+                  StorageService().markLinkedTutorialSeen();
+                  setState(() {
+                    _showTutorial = false;
+                    // Show partner first dialog after tutorial if it's partner's turn
+                    if (_gameState != null && !_gameState!.isMyTurn) {
+                      _showPartnerFirst = true;
+                    }
+                  });
+                },
               ),
             ),
           ],
@@ -356,10 +419,90 @@ class _LinkedGameScreenState extends State<LinkedGameScreen>
         children: [
           _buildHeader(),
           Expanded(child: _buildGridWithOverlay()),
+          // Clue hint banner (first time only)
+          if (_showClueHintBanner && _isUs2) _buildClueHintBanner(),
           _buildBottomSection(),
         ],
       ),
     );
+  }
+
+  /// Build clue hint banner for first-time users
+  Widget _buildClueHintBanner() {
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      decoration: BoxDecoration(
+        gradient: const LinearGradient(
+          colors: [Color(0xFFE3F2FD), Color(0xFFBBDEFB)],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Row(
+        children: [
+          // Blue circle with ?
+          Container(
+            width: 24,
+            height: 24,
+            decoration: const BoxDecoration(
+              color: Color(0xFF1976D2),
+              shape: BoxShape.circle,
+            ),
+            child: const Center(
+              child: Text(
+                '?',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(width: 10),
+          // Hint text
+          const Expanded(
+            child: Text(
+              'Tap on a clue to take a closer look.',
+              style: TextStyle(
+                fontSize: 13,
+                fontWeight: FontWeight.w600,
+                color: Color(0xFF1565C0),
+              ),
+            ),
+          ),
+          // Dismiss button
+          GestureDetector(
+            onTap: () {
+              StorageService().markLinkedClueHintSeen();
+              setState(() => _showClueHintBanner = false);
+            },
+            child: const Icon(
+              Icons.close,
+              size: 18,
+              color: Color(0xFF1565C0),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// Triple-tap on title triggers tutorial (dev feature)
+  void _onTitleTap() {
+    final now = DateTime.now();
+    if (_lastTitleTap != null && now.difference(_lastTitleTap!).inMilliseconds < 500) {
+      _titleTapCount++;
+      if (_titleTapCount >= 3) {
+        _titleTapCount = 0;
+        setState(() => _showTutorial = true);
+      }
+    } else {
+      _titleTapCount = 1;
+    }
+    _lastTitleTap = now;
   }
 
   /// Header: ← Linked | You: 0 | Taija: 30
@@ -384,13 +527,16 @@ class _LinkedGameScreenState extends State<LinkedGameScreen>
             child: const Text('←', style: TextStyle(fontSize: 20)),
           ),
           const SizedBox(width: 16),
-          // Title
-          const Text(
-            'CROSSWORD',
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.w400,
-              letterSpacing: 2,
+          // Title (triple-tap to show tutorial)
+          GestureDetector(
+            onTap: _onTitleTap,
+            child: const Text(
+              'CROSSWORD',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.w400,
+                letterSpacing: 2,
+              ),
             ),
           ),
           const Spacer(),
@@ -481,15 +627,18 @@ class _LinkedGameScreenState extends State<LinkedGameScreen>
             ),
           ),
           const SizedBox(width: 10),
-          // Title - compact
-          Text(
-            'CROSSWORD',
-            style: TextStyle(
-              fontFamily: Us2Theme.fontHeading,
-              fontSize: 16,
-              fontWeight: FontWeight.w700,
-              color: Us2Theme.textDark,
-              letterSpacing: 1.5,
+          // Title - compact (triple-tap to show tutorial)
+          GestureDetector(
+            onTap: _onTitleTap,
+            child: Text(
+              'CROSSWORD',
+              style: TextStyle(
+                fontFamily: Us2Theme.fontHeading,
+                fontSize: 16,
+                fontWeight: FontWeight.w700,
+                color: Us2Theme.textDark,
+                letterSpacing: 1.5,
+              ),
             ),
           ),
           const Spacer(),
@@ -783,7 +932,10 @@ class _LinkedGameScreenState extends State<LinkedGameScreen>
       // Regular single clue cell - use target_index based lookup
       final clue = puzzle.getClueAtCell(index);
       if (clue != null) {
-        return _buildClueCell(clue);
+        // Assign clue key to first clue cell in top rows (for tutorial highlight)
+        final useClueKey = !_clueKeyAssigned && index < 12;
+        if (useClueKey) _clueKeyAssigned = true;
+        return _buildClueCell(clue, useKey: useClueKey);
       }
       // Fallback if clue not found
       return Container(color: BrandLoader().colors.selected);
@@ -817,7 +969,7 @@ class _LinkedGameScreenState extends State<LinkedGameScreen>
     return _buildAnswerCell(index, null, AnswerCellState.empty);
   }
 
-  Widget _buildClueCell(LinkedClue clue) {
+  Widget _buildClueCell(LinkedClue clue, {bool useKey = false}) {
     final isDown = clue.arrow == 'down';
     final displayText = clue.content.toUpperCase();
 
@@ -854,6 +1006,7 @@ class _LinkedGameScreenState extends State<LinkedGameScreen>
     return GestureDetector(
       onTap: () => _showClueDialog(clue),
       child: Container(
+        key: useKey ? _clueKey : null,
         decoration: _isUs2
             ? BoxDecoration(
                 gradient: Us2Theme.clueCellGradient,
@@ -997,19 +1150,121 @@ class _LinkedGameScreenState extends State<LinkedGameScreen>
   }
 
   void _showClueDialog(LinkedClue clue) {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text('Clue ${clue.number}'),
-        content: Text(clue.content),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('OK'),
+    // Dismiss hint banner when user taps a clue
+    if (_showClueHintBanner) {
+      StorageService().markLinkedClueHintSeen();
+      setState(() => _showClueHintBanner = false);
+    }
+
+    // Determine direction text
+    final directionText = clue.arrow == 'down' ? 'Down' : 'Across';
+
+    // Detect if content is actually an emoji
+    final isActuallyEmoji = clue.type == 'emoji' &&
+        clue.content.length <= 2 &&
+        !RegExp(r'^[a-zA-Z0-9\s]+$').hasMatch(clue.content);
+
+    if (_isUs2) {
+      // Us 2.0 styled dialog
+      showDialog(
+        context: context,
+        builder: (context) => Dialog(
+          backgroundColor: Colors.transparent,
+          child: Container(
+            constraints: const BoxConstraints(maxWidth: 320),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(20),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.2),
+                  blurRadius: 48,
+                  offset: const Offset(0, 16),
+                ),
+              ],
+            ),
+            padding: const EdgeInsets.all(24),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                // Large emoji or text
+                Text(
+                  isActuallyEmoji ? clue.content : clue.content.toUpperCase(),
+                  style: TextStyle(
+                    fontSize: isActuallyEmoji ? 64 : 24,
+                    fontWeight: FontWeight.w700,
+                    color: Us2Theme.textDark,
+                  ),
+                ),
+                const SizedBox(height: 16),
+                // Text hint if available
+                if (clue.text != null && clue.text!.isNotEmpty)
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 8),
+                    child: Text(
+                      clue.text!,
+                      style: const TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w600,
+                        color: Us2Theme.textDark,
+                        height: 1.4,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                // Direction hint
+                Text(
+                  '\u2022 $directionText',
+                  style: const TextStyle(
+                    fontSize: 13,
+                    color: Color(0xFF888888),
+                  ),
+                ),
+                const SizedBox(height: 20),
+                // Got it button
+                GestureDetector(
+                  onTap: () => Navigator.pop(context),
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 14),
+                    decoration: BoxDecoration(
+                      gradient: const LinearGradient(
+                        colors: [Color(0xFFFF6B6B), Color(0xFFFF9F43)],
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                      ),
+                      borderRadius: BorderRadius.circular(25),
+                    ),
+                    child: const Text(
+                      'Got it',
+                      style: TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w700,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
-        ],
-      ),
-    );
+        ),
+      );
+    } else {
+      // Original dialog for other brands
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text('Clue ${clue.number}'),
+          content: Text(clue.content),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('OK'),
+            ),
+          ],
+        ),
+      );
+    }
   }
 
   /// Build a split clue cell containing two clues (across on top, down on bottom)
@@ -1553,6 +1808,8 @@ class _LinkedGameScreenState extends State<LinkedGameScreen>
                 SizedBox(height: _isUs2 ? (isDragTarget ? 8 : 4) : 10),
                 // Always show 5 tile slots to prevent layout shift
                 Row(
+                  key: _rackKey,
+                  mainAxisSize: MainAxisSize.min,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: List.generate(5, (index) {
                     // Show actual letter if available, otherwise empty slot
@@ -1706,32 +1963,28 @@ class _LinkedGameScreenState extends State<LinkedGameScreen>
     final hasPlacements = _draftPlacements.isNotEmpty;
     final hintsRemaining = _gameState!.myVision;
     final isMyTurn = _gameState!.isMyTurn;
-    final partnerName = StorageService().getPartner()?.name ?? 'Partner';
     final isDisabled = !isMyTurn || _showTurnComplete || _isSubmitting;
 
     // Determine button state and text
-    String buttonText;
+    // Button always says "SUBMIT TURN" for clarity
+    const String buttonText = 'SUBMIT TURN';
     bool buttonEnabled;
     Color buttonBgColor;
     Color buttonTextColor;
 
     if (_isSubmitting) {
-      buttonText = 'SUBMITTING...';
       buttonEnabled = false;
       buttonBgColor = BrandLoader().colors.disabled;
       buttonTextColor = BrandLoader().colors.textOnPrimary;
     } else if (_showTurnComplete || !isMyTurn) {
-      buttonText = "${partnerName.toUpperCase()}'S TURN";
       buttonEnabled = false;
       buttonBgColor = BrandLoader().colors.background;
       buttonTextColor = BrandLoader().colors.textSecondary;
     } else if (hasPlacements) {
-      buttonText = 'SUBMIT TURN';
       buttonEnabled = true;
       buttonBgColor = BrandLoader().colors.textPrimary;
       buttonTextColor = BrandLoader().colors.textOnPrimary;
     } else {
-      buttonText = 'PLACE LETTERS';
       buttonEnabled = false;
       buttonBgColor = BrandLoader().colors.divider;
       buttonTextColor = BrandLoader().colors.disabled;
@@ -1799,6 +2052,7 @@ class _LinkedGameScreenState extends State<LinkedGameScreen>
             child: GestureDetector(
               onTap: buttonEnabled ? _submitTurn : null,
               child: Container(
+                key: _submitKey,
                 padding: const EdgeInsets.symmetric(vertical: 12),
                 decoration: BoxDecoration(
                   color: buttonBgColor,
@@ -1879,6 +2133,7 @@ class _LinkedGameScreenState extends State<LinkedGameScreen>
               child: Opacity(
                 opacity: buttonEnabled ? 1.0 : 0.6,
                 child: Container(
+                  key: _submitKey,
                   padding: const EdgeInsets.symmetric(vertical: 8),
                   decoration: BoxDecoration(
                     gradient: buttonEnabled
@@ -2044,7 +2299,7 @@ class _LinkedGameScreenState extends State<LinkedGameScreen>
       // Show unlock celebration after a brief delay
       await Future.delayed(const Duration(milliseconds: 500));
       if (mounted) {
-        await UnlockCelebrations.showWordSearchUnlocked(context, result.lpAwarded);
+        await UnlockPopup.show(context, featureType: UnlockFeatureType.wordSearch);
       }
     }
   }

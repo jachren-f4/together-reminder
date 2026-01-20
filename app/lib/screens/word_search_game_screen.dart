@@ -15,7 +15,7 @@ import '../config/brand/us2_theme.dart';
 import '../theme/app_theme.dart';
 import '../widgets/linked/turn_complete_dialog.dart';
 import '../widgets/linked/partner_first_dialog.dart';
-import '../widgets/unlock_celebration.dart';
+import '../widgets/unlock_popup.dart';
 import '../animations/animation_config.dart';
 import '../mixins/game_polling_mixin.dart';
 import 'word_search_completion_screen.dart';
@@ -406,10 +406,10 @@ class _WordSearchGameScreenState extends State<WordSearchGameScreen>
     final result = await unlockService.notifyCompletion(UnlockTrigger.wordSearch);
 
     if (result != null && result.hasNewUnlocks && mounted) {
-      // Show unlock celebration after a brief delay for word found overlay
+      // Show unlock popup after a brief delay for word found overlay
       await Future.delayed(const Duration(milliseconds: 1800));
       if (mounted) {
-        await UnlockCelebrations.showStepsUnlocked(context, result.lpAwarded);
+        await UnlockPopup.show(context, featureType: UnlockFeatureType.stepsTogether);
       }
     }
   }
@@ -984,8 +984,11 @@ class _WordSearchGameScreenState extends State<WordSearchGameScreen>
 
     final localPos = gridBox.globalToLocal(globalPosition);
 
-    final col = (localPos.dx / _cellSize).floor();
-    final row = (localPos.dy / _cellSize).floor();
+    // Account for 2px spacing between cells
+    const spacing = 2.0;
+    final unitSize = _cellSize + spacing;
+    final col = (localPos.dx / unitSize).floor();
+    final row = (localPos.dy / unitSize).floor();
 
     if (row >= 0 && row < puzzle.rows && col >= 0 && col < puzzle.cols) {
       return GridPosition(row, col);
@@ -1001,9 +1004,12 @@ class _WordSearchGameScreenState extends State<WordSearchGameScreen>
 
   // Get the center position of a cell in local coordinates
   Offset _getCellCenter(GridPosition cell) {
+    // Account for 2px spacing between cells
+    const spacing = 2.0;
+    final unitSize = _cellSize + spacing;
     return Offset(
-      (cell.col + 0.5) * _cellSize,
-      (cell.row + 0.5) * _cellSize,
+      cell.col * unitSize + _cellSize / 2,
+      cell.row * unitSize + _cellSize / 2,
     );
   }
 
@@ -1106,9 +1112,18 @@ class _WordSearchGameScreenState extends State<WordSearchGameScreen>
     GridPosition? nextCell;
 
     if (_selectedPositions.length < 2) {
-      // PHASE 1: First 2 cells - use angle snapping to establish direction
-      nextCell = _getNextCellByDirection(lastCell, localPos);
-      if (nextCell == null) return;
+      // PHASE 1: First 2 cells - use direct hit-testing for accurate direction
+      // This prevents issues with diagonal selection (e.g., bottom-left to top-right)
+      final directHitCell = _getCellFromPosition(details.globalPosition);
+      if (directHitCell == null) return;
+      // Only accept adjacent cells (including diagonals)
+      final rowDiff = (directHitCell.row - lastCell.row).abs();
+      final colDiff = (directHitCell.col - lastCell.col).abs();
+      if (rowDiff <= 1 && colDiff <= 1 && (rowDiff > 0 || colDiff > 0)) {
+        nextCell = directHitCell;
+      } else {
+        return; // Not adjacent, ignore
+      }
     } else {
       // PHASE 2: Direction established - continue in that direction based on distance
       // Get the established direction from first 2 cells
@@ -1122,9 +1137,12 @@ class _WordSearchGameScreenState extends State<WordSearchGameScreen>
       final expectedNextCol = lastCell.col + dCol;
 
       // Check if finger has moved far enough toward next cell
+      // Account for 2px spacing between cells
+      const spacing = 2.0;
+      final unitSize = _cellSize + spacing;
       final nextCellCenter = Offset(
-        (expectedNextCol + 0.5) * _cellSize,
-        (expectedNextRow + 0.5) * _cellSize,
+        expectedNextCol * unitSize + _cellSize / 2,
+        expectedNextRow * unitSize + _cellSize / 2,
       );
       final lastCellCenter = _getCellCenter(lastCell);
 
@@ -1209,7 +1227,10 @@ class _WordSearchGameScreenState extends State<WordSearchGameScreen>
         final gridSize = constraints.maxWidth < constraints.maxHeight
             ? constraints.maxWidth
             : constraints.maxHeight;
-        _cellSize = gridSize / puzzle.cols;
+        // Account for 2px spacing between cells (9 gaps for 10 columns)
+        const spacing = 2.0;
+        final totalSpacing = spacing * (puzzle.cols - 1);
+        _cellSize = (gridSize - totalSpacing) / puzzle.cols;
 
         return AnimatedBuilder(
           animation: _shakeAnimation,
@@ -1856,6 +1877,9 @@ class _WordSearchLinePainter extends CustomPainter {
   final bool isSelecting;
   final double pulseValue;
 
+  // Spacing between cells in the GridView
+  static const double _spacing = 2.0;
+
   _WordSearchLinePainter({
     required this.cellSize,
     required this.selectedPositions,
@@ -1864,6 +1888,15 @@ class _WordSearchLinePainter extends CustomPainter {
     required this.isSelecting,
     required this.pulseValue,
   });
+
+  // Helper to get cell center accounting for spacing
+  Offset _cellCenter(int row, int col) {
+    final unitSize = cellSize + _spacing;
+    return Offset(
+      col * unitSize + cellSize / 2,
+      row * unitSize + cellSize / 2,
+    );
+  }
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -1883,12 +1916,10 @@ class _WordSearchLinePainter extends CustomPainter {
         final firstPos = positions.first;
         final lastPos = positions.last;
 
-        final startX = (firstPos['col']! + 0.5) * cellSize;
-        final startY = (firstPos['row']! + 0.5) * cellSize;
-        final endX = (lastPos['col']! + 0.5) * cellSize;
-        final endY = (lastPos['row']! + 0.5) * cellSize;
+        final start = _cellCenter(firstPos['row']!, firstPos['col']!);
+        final end = _cellCenter(lastPos['row']!, lastPos['col']!);
 
-        canvas.drawLine(Offset(startX, startY), Offset(endX, endY), paint);
+        canvas.drawLine(start, end, paint);
       }
     }
 
@@ -1913,28 +1944,25 @@ class _WordSearchLinePainter extends CustomPainter {
         final first = selectedPositions.first;
         final last = selectedPositions.last;
 
-        final startX = (first.col + 0.5) * cellSize;
-        final startY = (first.row + 0.5) * cellSize;
-        final endX = (last.col + 0.5) * cellSize;
-        final endY = (last.row + 0.5) * cellSize;
+        final start = _cellCenter(first.row, first.col);
+        final end = _cellCenter(last.row, last.col);
 
         // Draw glow layer first
-        canvas.drawLine(Offset(startX, startY), Offset(endX, endY), glowPaint);
+        canvas.drawLine(start, end, glowPaint);
         // Draw main line on top
-        canvas.drawLine(Offset(startX, startY), Offset(endX, endY), paint);
+        canvas.drawLine(start, end, paint);
       } else if (selectedPositions.length == 1) {
         // Draw pulsing circle for single cell selection
         final pos = selectedPositions.first;
-        final centerX = (pos.col + 0.5) * cellSize;
-        final centerY = (pos.row + 0.5) * cellSize;
+        final center = _cellCenter(pos.row, pos.col);
 
         canvas.drawCircle(
-          Offset(centerX, centerY),
+          center,
           cellSize * 0.35 * pulseValue,
           glowPaint,
         );
         canvas.drawCircle(
-          Offset(centerX, centerY),
+          center,
           cellSize * 0.25,
           paint..style = PaintingStyle.fill,
         );

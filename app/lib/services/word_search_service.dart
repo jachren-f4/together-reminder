@@ -101,13 +101,15 @@ class WordSearchService extends SideQuestServiceBase {
     required List<GridPosition> positions,
   }) async {
     try {
+      final positionsJson = positions.map((p) => p.toJson()).toList();
+
       final response = await apiRequest(
         'POST',
         '/api/sync/word-search/submit',
         body: {
           'matchId': matchId,
           'word': word.toUpperCase(),
-          'positions': positions.map((p) => p.toJson()).toList(),
+          'positions': positionsJson,
         },
       );
 

@@ -72,7 +72,7 @@ class _StepsIntroScreenState extends State<StepsIntroScreen> {
                 onPressed: () => Navigator.pop(context),
               ),
         title: Text(
-          'Steps Together',
+          _isUs2 ? 'Steps' : 'Steps Together',
           style: _isUs2
               ? const TextStyle(
                   fontFamily: Us2Theme.fontHeading,
@@ -93,44 +93,79 @@ class _StepsIntroScreenState extends State<StepsIntroScreen> {
             ? const BoxDecoration(gradient: Us2Theme.backgroundGradient)
             : null,
         child: SafeArea(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.all(24),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                // Footprints illustration (skip for Us 2.0)
-                if (!_isUs2) ...[
-                  _buildFootprintsIllustration(state),
-                  const SizedBox(height: 32),
-                ],
+          child: _isUs2
+              ? _buildUs2Layout(state, partnerName)
+              : SingleChildScrollView(
+                  padding: const EdgeInsets.all(24),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      // Footprints illustration
+                      _buildFootprintsIllustration(state),
+                      const SizedBox(height: 32),
 
-                // Avatar circles with status (skip for Us 2.0)
-                if (!_isUs2) ...[
-                  _buildAvatarSection(state, partnerName),
-                  const SizedBox(height: 24),
-                ],
+                      // Avatar circles with status
+                      _buildAvatarSection(state, partnerName),
+                      const SizedBox(height: 24),
 
-                // Equals row with LP bubble
-                _buildRewardRow(),
-                const SizedBox(height: 32),
+                      // Equals row with LP bubble
+                      _buildRewardRow(),
+                      const SizedBox(height: 32),
 
-                // Title and description
-                _buildTitleSection(state, partnerName),
-                const SizedBox(height: 32),
+                      // Title and description
+                      _buildTitleSection(state, partnerName),
+                      const SizedBox(height: 32),
 
-                // How it works / Reward tiers section
-                if (state == StepsFeatureState.waitingForPartner)
-                  _buildRewardTiersSection()
-                else
-                  _buildHowItWorksSection(),
-                const SizedBox(height: 32),
+                      // How it works / Reward tiers section
+                      if (state == StepsFeatureState.waitingForPartner)
+                        _buildRewardTiersSection()
+                      else
+                        _buildHowItWorksSection(),
+                      const SizedBox(height: 32),
 
-                // Action buttons
-                _buildActionButtons(state, partnerName),
-              ],
-            ),
-          ),
+                      // Action buttons
+                      _buildActionButtons(state, partnerName),
+                    ],
+                  ),
+                ),
         ),
+      ),
+    );
+  }
+
+  /// Us 2.0 compact layout - designed to fit above the fold without scrolling
+  Widget _buildUs2Layout(StepsFeatureState state, String partnerName) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 24),
+      child: Column(
+        children: [
+          const SizedBox(height: 16),
+
+          // Title and subtitle (compact)
+          _buildTitleSection(state, partnerName),
+          const SizedBox(height: 20),
+
+          // Ring preview card (for not-yet-connected states)
+          if (state != StepsFeatureState.waitingForPartner) ...[
+            _buildUs2RingPreviewCard(),
+            const SizedBox(height: 20),
+          ],
+
+          // How it works / Reward tiers section (compact)
+          if (state == StepsFeatureState.waitingForPartner)
+            _buildRewardTiersSection()
+          else
+            _buildHowItWorksSection(),
+
+          // Spacer pushes button to bottom
+          const Spacer(),
+
+          // Action buttons
+          Padding(
+            padding: const EdgeInsets.only(bottom: 20),
+            child: _buildActionButtons(state, partnerName),
+          ),
+        ],
       ),
     );
   }
@@ -358,44 +393,43 @@ class _StepsIntroScreenState extends State<StepsIntroScreen> {
 
     switch (state) {
       case StepsFeatureState.neitherConnected:
-        title = 'Steps Together';
-        description =
-            'Connect Apple Health to combine your daily steps with $partnerName\'s and earn Love Points together!';
+        title = _isUs2 ? 'Steps' : 'Steps Together';
+        description = _isUs2
+            ? 'Walk more, earn more.\nYou don\'t need to be next to each other!'
+            : 'Connect Apple Health to combine your daily steps with $partnerName\'s and earn Love Points together!';
         break;
       case StepsFeatureState.partnerConnected:
-        title = 'Steps Together';
-        description =
-            '$partnerName is already connected! Join them to start earning Love Points for your combined steps.';
+        title = _isUs2 ? 'Steps' : 'Steps Together';
+        description = _isUs2
+            ? 'Walk more, earn more.\nYou don\'t need to be next to each other!'
+            : '$partnerName is already connected! Join them to start earning Love Points for your combined steps.';
         break;
       case StepsFeatureState.waitingForPartner:
         title = 'Almost There!';
-        description =
-            'You\'re connected! Once $partnerName connects too, you\'ll start earning Love Points together.';
+        description = _isUs2
+            ? 'You\'re connected! Once $partnerName connects, you\'ll start earning Love Points.'
+            : 'You\'re connected! Once $partnerName connects too, you\'ll start earning Love Points together.';
         break;
       default:
-        title = 'Steps Together';
-        description = 'Walk together, earn together.';
+        title = _isUs2 ? 'Steps' : 'Steps Together';
+        description = _isUs2 ? 'Walk more, earn more.' : 'Walk together, earn together.';
     }
 
     return Column(
       children: [
-        Text(
-          title,
-          style: _isUs2
-              ? const TextStyle(
-                  fontFamily: Us2Theme.fontHeading,
-                  fontSize: 28,
-                  fontWeight: FontWeight.w700,
-                  color: Us2Theme.textDark,
-                )
-              : AppTheme.headlineFont.copyWith(
-                  fontSize: 28,
-                  fontWeight: FontWeight.w700,
-                  color: BrandLoader().colors.textPrimary,
-                ),
-          textAlign: TextAlign.center,
-        ),
-        const SizedBox(height: 12),
+        // Only show title in body for non-Us2 brand (Us2 has title in AppBar)
+        if (!_isUs2) ...[
+          Text(
+            title,
+            style: AppTheme.headlineFont.copyWith(
+              fontSize: 28,
+              fontWeight: FontWeight.w700,
+              color: BrandLoader().colors.textPrimary,
+            ),
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: 12),
+        ],
         Text(
           description,
           style: TextStyle(
@@ -410,21 +444,254 @@ class _StepsIntroScreenState extends State<StepsIntroScreen> {
     );
   }
 
+  /// Ring preview card for Us 2.0 intro screen
+  /// Shows sample dual-ring visualization with LP rewards
+  Widget _buildUs2RingPreviewCard() {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.06),
+            blurRadius: 20,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Column(
+        children: [
+          // "This could be you two!" label
+          Text(
+            'This could be you two!',
+            style: TextStyle(
+              fontFamily: Us2Theme.fontBody,
+              fontSize: 13,
+              color: Us2Theme.textMedium,
+            ),
+          ),
+          const SizedBox(height: 10),
+
+          // Dual-ring visualization
+          SizedBox(
+            width: 140,
+            height: 140,
+            child: CustomPaint(
+              painter: _RingPreviewPainter(),
+              child: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Text(
+                      '13,838',
+                      style: TextStyle(
+                        fontFamily: Us2Theme.fontHeading,
+                        fontSize: 22,
+                        fontWeight: FontWeight.w700,
+                        color: Us2Theme.textDark,
+                      ),
+                    ),
+                    const Text(
+                      'of 20,000 goal',
+                      style: TextStyle(
+                        fontFamily: Us2Theme.fontBody,
+                        fontSize: 10,
+                        color: Us2Theme.textLight,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(height: 12),
+
+          // Legend with step counts
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              // You
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Container(
+                    width: 10,
+                    height: 10,
+                    decoration: BoxDecoration(
+                      gradient: Us2Theme.accentGradient,
+                      borderRadius: BorderRadius.circular(2),
+                    ),
+                  ),
+                  const SizedBox(width: 6),
+                  Text(
+                    'You ',
+                    style: TextStyle(
+                      fontFamily: Us2Theme.fontBody,
+                      fontSize: 12,
+                      color: Us2Theme.textMedium,
+                    ),
+                  ),
+                  const Text(
+                    '7,190',
+                    style: TextStyle(
+                      fontFamily: Us2Theme.fontBody,
+                      fontSize: 12,
+                      fontWeight: FontWeight.w700,
+                      color: Us2Theme.textDark,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(width: 20),
+              // Partner
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Container(
+                    width: 10,
+                    height: 10,
+                    decoration: BoxDecoration(
+                      color: const Color(0xFF4ECDC4),
+                      borderRadius: BorderRadius.circular(2),
+                    ),
+                  ),
+                  const SizedBox(width: 6),
+                  Text(
+                    'Partner ',
+                    style: TextStyle(
+                      fontFamily: Us2Theme.fontBody,
+                      fontSize: 12,
+                      color: Us2Theme.textMedium,
+                    ),
+                  ),
+                  const Text(
+                    '6,648',
+                    style: TextStyle(
+                      fontFamily: Us2Theme.fontBody,
+                      fontSize: 12,
+                      fontWeight: FontWeight.w700,
+                      color: Us2Theme.textDark,
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+
+          // Divider
+          Container(
+            height: 1,
+            color: const Color(0xFFF0F0F0),
+          ),
+          const SizedBox(height: 10),
+
+          // LP Rewards row
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              // 10K steps badge
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFFFF8F0),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      '10K steps',
+                      style: TextStyle(
+                        fontFamily: Us2Theme.fontBody,
+                        fontSize: 11,
+                        color: Us2Theme.textMedium,
+                      ),
+                    ),
+                    const SizedBox(width: 6),
+                    const Text(
+                      '+15 LP',
+                      style: TextStyle(
+                        fontFamily: Us2Theme.fontBody,
+                        fontSize: 11,
+                        fontWeight: FontWeight.w700,
+                        color: Color(0xFFFF9F43),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(width: 12),
+              // 20K steps badge
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFFFF8F0),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      '20K steps',
+                      style: TextStyle(
+                        fontFamily: Us2Theme.fontBody,
+                        fontSize: 11,
+                        color: Us2Theme.textMedium,
+                      ),
+                    ),
+                    const SizedBox(width: 6),
+                    const Text(
+                      '+30 LP',
+                      style: TextStyle(
+                        fontFamily: Us2Theme.fontBody,
+                        fontSize: 11,
+                        fontWeight: FontWeight.w700,
+                        color: Color(0xFFFF9F43),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget _buildHowItWorksSection() {
-    final steps = [
-      {
-        'number': '1',
-        'text': 'Connect Apple Health to share your step count',
-      },
-      {
-        'number': '2',
-        'text': 'Walk throughout the day - steps sync automatically',
-      },
-      {
-        'number': '3',
-        'text': 'Open the app tomorrow to claim your combined reward',
-      },
-    ];
+    // Shorter text for Us 2.0
+    final steps = _isUs2
+        ? [
+            {
+              'number': '1',
+              'text': 'Connect Apple Health',
+            },
+            {
+              'number': '2',
+              'text': 'Walk throughout the day. Phone in pocket or Apple Watch counts your steps',
+            },
+            {
+              'number': '3',
+              'text': 'Claim your reward tomorrow',
+            },
+          ]
+        : [
+            {
+              'number': '1',
+              'text': 'Connect Apple Health to share your step count',
+            },
+            {
+              'number': '2',
+              'text': 'Walk throughout the day - steps sync automatically',
+            },
+            {
+              'number': '3',
+              'text': 'Open the app tomorrow to claim your combined reward',
+            },
+          ];
 
     return Container(
       padding: const EdgeInsets.all(20),
@@ -912,4 +1179,66 @@ class _StepsIntroScreenState extends State<StepsIntroScreen> {
     }
     return fallback;
   }
+}
+
+/// Custom painter for dual-ring preview visualization
+class _RingPreviewPainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    final center = Offset(size.width / 2, size.height / 2);
+    const strokeWidth = 8.0;
+    const startAngle = -90 * (3.14159 / 180); // Start from top
+
+    // Background circles
+    final bgPaint = Paint()
+      ..color = const Color(0xFFF0F0F0)
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = strokeWidth
+      ..strokeCap = StrokeCap.round;
+
+    // Outer ring (user) - 7,190 / 20,000 = 36%
+    const outerRadius = 60.0;
+    canvas.drawCircle(center, outerRadius, bgPaint);
+
+    // Inner ring (partner) - 6,648 / 20,000 = 33%
+    const innerRadius = 48.0;
+    canvas.drawCircle(center, innerRadius, bgPaint);
+
+    // User ring (coral gradient)
+    final userPaint = Paint()
+      ..shader = const LinearGradient(
+        colors: [Color(0xFFFF6B6B), Color(0xFFFF9F43)],
+      ).createShader(Rect.fromCircle(center: center, radius: outerRadius))
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = strokeWidth
+      ..strokeCap = StrokeCap.round;
+
+    const userSweep = 0.36 * 2 * 3.14159; // 36%
+    canvas.drawArc(
+      Rect.fromCircle(center: center, radius: outerRadius),
+      startAngle,
+      userSweep,
+      false,
+      userPaint,
+    );
+
+    // Partner ring (teal)
+    final partnerPaint = Paint()
+      ..color = const Color(0xFF4ECDC4)
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = strokeWidth
+      ..strokeCap = StrokeCap.round;
+
+    const partnerSweep = 0.33 * 2 * 3.14159; // 33%
+    canvas.drawArc(
+      Rect.fromCircle(center: center, radius: innerRadius),
+      startAngle,
+      partnerSweep,
+      false,
+      partnerPaint,
+    );
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }
