@@ -1,0 +1,52 @@
+{
+  "author": "Crossword Maker GPT",
+  "title": "AI-Built Puzzle",
+  "theme": "general",
+  "size": {
+    "rows": 7,
+    "cols": 5
+  },
+  "clues": {
+    "1": { "type": "emoji", "content": "☕ bean", "arrow": "down", "target_index": 6 },
+    "2": { "type": "text", "content": "_n ant", "arrow": "down", "target_index": 7 },
+    "3": { "type": "text", "content": "Fee", "arrow": "down", "target_index": 8 },
+    "4": { "type": "emoji", "content": "📮", "arrow": "down", "target_index": 9 },
+    "5": { "type": "emoji", "content": "🐱s", "arrow": "across", "target_index": 6 },
+    "6": { "type": "text", "content": "Before P", "arrow": "across", "target_index": 11 },
+    "7": {
+      "across": { "type": "text", "content": "Overtime", "target_index": 13 },
+      "down": { "type": "text", "content": "🇳🇴 city", "target_index": 17 }
+    },
+    "8": { "type": "text", "content": "Dark drink", "arrow": "across", "target_index": 16 },
+    "9": { "type": "text", "content": "__ if", "arrow": "across", "target_index": 21 },
+    "10": {
+      "across": { "type": "text", "content": "Meters", "target_index": 24 },
+      "down": { "type": "text", "content": "Scottish", "target_index": 28 }
+    },
+    "11": {
+      "across": { "type": "emoji", "content": "🏃 track", "target_index": 27 },
+      "down": { "type": "text", "content": "Grade", "target_index": 31 }
+    },
+    "12": { "type": "text", "content": "Acts", "arrow": "across", "target_index": 31 }
+  },
+  "date": "2026-01-21",
+  "grid": [
+    ".", ".", ".", ".", ".",
+    ".", "C", "A", "T", "S",
+    ".", "O", ".", "O", "T",
+    ".", "C", "O", "L", "A",
+    ".", "A", "S", ".", "M",
+    ".", ".", "L", "A", "P",
+    ".", "D", "O", "E", "S"
+  ],
+  "gridnums": [
+    0, 1, 2, 3, 4,
+    5, 0, 0, 0, 0,
+    6, 0, 7, 0, 0,
+    8, 0, 0, 0, 0,
+    9, 0, 0, 10, 0,
+    0, 11, 0, 0, 0,
+    12, 0, 0, 0, 0
+  ],
+  "puzzleId": "puzzle_5x7_001"
+}

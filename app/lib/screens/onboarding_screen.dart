@@ -1,4 +1,6 @@
+import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:video_player/video_player.dart';
 import 'package:togetherremind/config/brand/brand_config.dart';
@@ -155,6 +157,7 @@ class _OnboardingScreenState extends State<OnboardingScreen>
 
   Widget _buildUs2Screen() {
     return Scaffold(
+      backgroundColor: Colors.black,
       body: Stack(
         fit: StackFit.expand,
         children: [
@@ -220,24 +223,27 @@ class _OnboardingScreenState extends State<OnboardingScreen>
 
   Widget _buildVideoBackground() {
     if (_isVideoInitialized && _videoController != null) {
-      return SizedBox.expand(
-        child: FittedBox(
-          fit: BoxFit.cover,
-          child: SizedBox(
-            width: _videoController!.value.size.width,
-            height: _videoController!.value.size.height,
-            child: VideoPlayer(_videoController!),
+      // Stack with black behind video prevents flash before first frame renders
+      return Stack(
+        fit: StackFit.expand,
+        children: [
+          const ColoredBox(color: Colors.black),
+          SizedBox.expand(
+            child: FittedBox(
+              fit: BoxFit.cover,
+              child: SizedBox(
+                width: _videoController!.value.size.width,
+                height: _videoController!.value.size.height,
+                child: VideoPlayer(_videoController!),
+              ),
+            ),
           ),
-        ),
+        ],
       );
     }
 
-    // Fallback gradient while video loads
-    return Container(
-      decoration: const BoxDecoration(
-        gradient: Us2Theme.backgroundGradient,
-      ),
-    );
+    // Solid black while video loads - matches native splash screen
+    return const ColoredBox(color: Colors.black);
   }
 
   Widget _buildUs2Logo() {
@@ -279,49 +285,27 @@ class _OnboardingScreenState extends State<OnboardingScreen>
   }
 
   Widget _buildUs2Tagline() {
-    return Text(
-      'Grow closer, one moment at a time',
-      style: GoogleFonts.playfairDisplay(
-        fontSize: 16,
-        fontStyle: FontStyle.italic,
-        color: Colors.white.withValues(alpha: 0.9),
-        shadows: [
-          // Dark outline effect (reduced 50%)
-          const Shadow(
-            offset: Offset(-1.0, -1.0),
-            blurRadius: 1,
-            color: Colors.black26,
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(30),
+      child: BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+          decoration: BoxDecoration(
+            color: Colors.black.withValues(alpha: 0.35),
+            borderRadius: BorderRadius.circular(30),
           ),
-          const Shadow(
-            offset: Offset(1.0, -1.0),
-            blurRadius: 1,
-            color: Colors.black26,
+          child: Text(
+            'Grow closer, one moment at a time',
+            style: GoogleFonts.playfairDisplay(
+              fontSize: 16,
+              fontStyle: FontStyle.italic,
+              color: Colors.white,
+            ),
+            textAlign: TextAlign.center,
           ),
-          const Shadow(
-            offset: Offset(-1.0, 1.0),
-            blurRadius: 1,
-            color: Colors.black26,
-          ),
-          const Shadow(
-            offset: Offset(1.0, 1.0),
-            blurRadius: 1,
-            color: Colors.black26,
-          ),
-          // Soft drop shadow
-          const Shadow(
-            offset: Offset(0, 2),
-            blurRadius: 4,
-            color: Colors.black45,
-          ),
-          // Additional glow for depth
-          const Shadow(
-            offset: Offset(0, 0),
-            blurRadius: 8,
-            color: Colors.black26,
-          ),
-        ],
+        ),
       ),
-      textAlign: TextAlign.center,
     );
   }
 
@@ -626,7 +610,7 @@ class _OverlappingCirclesSymbol extends StatelessWidget {
   }
 }
 
-/// Animated pulsing heart for Us 2.0 logo
+/// Animated pulsing illustrated heart for Us 2.0 logo
 class _AnimatedHeart extends StatefulWidget {
   @override
   State<_AnimatedHeart> createState() => _AnimatedHeartState();
@@ -644,7 +628,7 @@ class _AnimatedHeartState extends State<_AnimatedHeart>
       duration: const Duration(milliseconds: 2000),
       vsync: this,
     );
-    _scaleAnimation = Tween<double>(begin: 1.0, end: 1.2).animate(
+    _scaleAnimation = Tween<double>(begin: 1.0, end: 1.15).animate(
       CurvedAnimation(
         parent: _controller,
         curve: Curves.easeInOut,
@@ -663,17 +647,22 @@ class _AnimatedHeartState extends State<_AnimatedHeart>
   Widget build(BuildContext context) {
     return ScaleTransition(
       scale: _scaleAnimation,
-      child: Text(
-        '❤',
-        style: GoogleFonts.pacifico(
-          fontSize: 16,
-          color: Colors.white,
-          shadows: [
-            Shadow(
-              blurRadius: 10,
-              color: Us2Theme.glowPink.withValues(alpha: 0.8),
+      child: Container(
+        width: 20,
+        height: 20,
+        decoration: BoxDecoration(
+          boxShadow: [
+            BoxShadow(
+              blurRadius: 12,
+              color: Us2Theme.glowPink.withValues(alpha: 0.7),
+              offset: Offset.zero,
             ),
           ],
+        ),
+        child: SvgPicture.asset(
+          'assets/brands/us2/images/heart_icon.svg',
+          width: 20,
+          height: 20,
         ),
       ),
     );

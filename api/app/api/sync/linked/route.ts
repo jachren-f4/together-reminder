@@ -30,15 +30,26 @@ function loadPuzzle(puzzleId: string, branch?: string): any {
 }
 
 // Load puzzle order config from branch-specific path
-function loadPuzzleOrder(branch?: string): string[] {
+// If gridProgression is true, use puzzle-order-v2.json (5x7 -> 6x8 -> 7x9 progression)
+// Otherwise use puzzle-order.json (original 7x9 puzzles first)
+function loadPuzzleOrder(branch?: string, gridProgression: boolean = false): string[] {
   try {
     // Use branch path (default to 'casual' if no branch specified)
     const branchFolder = branch || 'casual';
-    const orderPath = join(process.cwd(), 'data', 'puzzles', 'linked', branchFolder, 'puzzle-order.json');
+
+    // Use v2 order file if client supports grid progression
+    const orderFileName = gridProgression ? 'puzzle-order-v2.json' : 'puzzle-order.json';
+    const orderPath = join(process.cwd(), 'data', 'puzzles', 'linked', branchFolder, orderFileName);
+
     const orderData = readFileSync(orderPath, 'utf-8');
     const config = JSON.parse(orderData);
     return config.puzzles || [];
   } catch (error) {
+    // If v2 file doesn't exist, fall back to original
+    if (gridProgression) {
+      console.log(`puzzle-order-v2.json not found for branch ${branch}, falling back to puzzle-order.json`);
+      return loadPuzzleOrder(branch, false);
+    }
     console.error('Failed to load puzzle order:', error);
     // Fallback to default
     return ['puzzle_001'];
@@ -76,12 +87,12 @@ function getBranchFolderName(activityType: string, branchIndex: number): string 
 }
 
 // Get next puzzle for couple (finds first uncompleted puzzle in order for current branch)
-async function getNextPuzzleForCouple(coupleId: string): Promise<{ puzzleId: string | null; activeMatch: any | null; branch: string }> {
+async function getNextPuzzleForCouple(coupleId: string, gridProgression: boolean = false): Promise<{ puzzleId: string | null; activeMatch: any | null; branch: string }> {
   // Get current branch for this couple
   const branch = await getCurrentBranch(coupleId);
 
-  // Load puzzle order for this branch
-  const puzzleOrder = loadPuzzleOrder(branch);
+  // Load puzzle order for this branch (use v2 if client supports grid progression)
+  const puzzleOrder = loadPuzzleOrder(branch, gridProgression);
 
   // Check for any active match first
   const activeResult = await query(
@@ -258,6 +269,15 @@ export const POST = withAuthOrDevBypass(async (req, userId, email) => {
     // Extract base URL for image paths
     const baseUrl = new URL(req.url).origin;
 
+    // Parse request body to check for gridProgression flag
+    let gridProgression = false;
+    try {
+      const body = await req.json();
+      gridProgression = body.gridProgression === true;
+    } catch {
+      // No body or invalid JSON - use default (no grid progression)
+    }
+
     // Get couple info
     const coupleResult = await query(
       `SELECT id, user1_id, user2_id, first_player_id FROM couples WHERE user1_id = $1 OR user2_id = $1 LIMIT 1`,
@@ -274,7 +294,8 @@ export const POST = withAuthOrDevBypass(async (req, userId, email) => {
     const { id: coupleId, user1_id, user2_id, first_player_id } = coupleResult.rows[0];
 
     // Get next puzzle for this couple (active match or first uncompleted)
-    const { puzzleId, activeMatch, branch } = await getNextPuzzleForCouple(coupleId);
+    // Pass gridProgression flag to use v2 puzzle order if client supports it
+    const { puzzleId, activeMatch, branch } = await getNextPuzzleForCouple(coupleId, gridProgression);
 
     // If no active match, check magnet cooldown (8h cooldown after 2 plays)
     if (!activeMatch) {
