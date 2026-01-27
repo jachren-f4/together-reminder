@@ -16,6 +16,7 @@ import 'linked_completion_screen.dart';
 import '../config/brand/brand_loader.dart';
 import '../config/brand/brand_config.dart';
 import '../config/brand/us2_theme.dart';
+import '../config/linked_constants.dart';
 import '../theme/app_theme.dart';
 import '../mixins/game_polling_mixin.dart';
 
@@ -1149,16 +1150,22 @@ class _LinkedGameScreenState extends State<LinkedGameScreen>
         child: Stack(
           children: [
             Center(
-              child: Text(
-                isActuallyEmoji ? clue.content : displayText,
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontFamily: isActuallyEmoji ? null : 'Arial',
-                  fontSize: fontSize,
-                  fontWeight: FontWeight.w800,
-                  letterSpacing: 0,
-                  height: 1.05,
-                  color: _isUs2 ? Us2Theme.textDark : BrandLoader().colors.textPrimary,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 2),
+                child: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Text(
+                    isActuallyEmoji ? clue.content : displayText,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontFamily: isActuallyEmoji ? null : 'Arial',
+                      fontSize: fontSize,
+                      fontWeight: FontWeight.w800,
+                      letterSpacing: 0,
+                      height: 1.05,
+                      color: _isUs2 ? Us2Theme.textDark : BrandLoader().colors.textPrimary,
+                    ),
+                  ),
                 ),
               ),
             ),
@@ -1475,7 +1482,8 @@ class _LinkedGameScreenState extends State<LinkedGameScreen>
     }
 
     // Text or emoji content - use FittedBox for auto-scaling
-    final textContent = clue.type == 'emoji' ? clue.content : displayText;
+    // Uppercase any text mixed with emoji (emojis don't have case, so toUpperCase() preserves them)
+    final textContent = clue.type == 'emoji' ? clue.content.toUpperCase() : displayText;
     final isEmoji = clue.type == 'emoji';
     final maxFontSize = isEmoji ? 22.0 : 16.0;
 
@@ -1913,12 +1921,12 @@ class _LinkedGameScreenState extends State<LinkedGameScreen>
                     ),
                   ),
                 SizedBox(height: _isUs2 ? (isDragTarget ? 8 : 4) : 10),
-                // Always show 5 tile slots to prevent layout shift
+                // Always show rackSize tile slots to prevent layout shift
                 Row(
                   key: _rackKey,
                   mainAxisSize: MainAxisSize.min,
                   mainAxisAlignment: MainAxisAlignment.center,
-                  children: List.generate(5, (index) {
+                  children: List.generate(LinkedConstants.rackSize, (index) {
                     // Show actual letter if available, otherwise empty slot
                     final hasLetter = index < rack.length;
                     final letter = hasLetter ? rack[index] : '';
