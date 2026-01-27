@@ -157,7 +157,10 @@ class _PaywallScreenState extends State<PaywallScreen> {
 
     if (_devTapCount >= 3) {
       _devTapCount = 0;
-      _activateDevBypass();
+      // Only allow dev bypass in debug builds - never in release
+      if (kDebugMode) {
+        _activateDevBypass();
+      }
     }
   }
 
