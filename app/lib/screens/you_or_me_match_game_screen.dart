@@ -943,70 +943,63 @@ class _YouOrMeMatchGameScreenState extends State<YouOrMeMatchGameScreen>
                       progress: progress,
                     ),
 
-                    // Content: Question card + Answer buttons centered together
-                    Expanded(
+                    // Question card - takes 80% of available space
+                    Flexible(
+                      flex: 8,
                       child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 20),
-                        child: Column(
-                          children: [
-                            // Question card (compact)
-                            SlideTransition(
-                              position: _slideAnimation,
-                              child: Transform.rotate(
-                                angle: _rotateAnimation.value,
-                                child: FadeTransition(
-                                  opacity: _fadeAnimation,
-                                  child: Container(
-                                    width: double.infinity,
-                                    padding: const EdgeInsets.all(28),
-                                    decoration: BoxDecoration(
-                                      color: Us2Theme.cream,
-                                      borderRadius: BorderRadius.circular(24),
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: Colors.black.withOpacity(0.08),
-                                          blurRadius: 20,
-                                          offset: const Offset(0, 8),
-                                        ),
-                                      ],
+                        padding: const EdgeInsets.all(20),
+                        child: SlideTransition(
+                          position: _slideAnimation,
+                          child: Transform.rotate(
+                            angle: _rotateAnimation.value,
+                            child: FadeTransition(
+                              opacity: _fadeAnimation,
+                              child: Container(
+                                width: double.infinity,
+                                padding: const EdgeInsets.all(28),
+                                decoration: BoxDecoration(
+                                  color: Us2Theme.cream,
+                                  borderRadius: BorderRadius.circular(24),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black.withOpacity(0.08),
+                                      blurRadius: 20,
+                                      offset: const Offset(0, 8),
                                     ),
-                                    child: Stack(
-                                      children: [
-                                        // Question text
-                                        Center(
-                                          child: Text(
-                                            question.content,
-                                            style: GoogleFonts.playfairDisplay(
-                                              fontSize: 24,
-                                              fontWeight: FontWeight.w600,
-                                              color: Us2Theme.textDark,
-                                              height: 1.4,
-                                            ),
-                                            textAlign: TextAlign.center,
-                                          ),
+                                  ],
+                                ),
+                                child: Stack(
+                                  children: [
+                                    // Question text
+                                    Center(
+                                      child: Text(
+                                        question.content,
+                                        style: GoogleFonts.playfairDisplay(
+                                          fontSize: 24,
+                                          fontWeight: FontWeight.w600,
+                                          color: Us2Theme.textDark,
+                                          height: 1.4,
                                         ),
-                                        // Decision stamp overlay
-                                        if (_tempSelectedAnswer != null)
-                                          _buildUs2DecisionStamp(_tempSelectedAnswer == 'me'),
-                                      ],
+                                        textAlign: TextAlign.center,
+                                      ),
                                     ),
-                                  ),
+                                    // Decision stamp overlay
+                                    if (_tempSelectedAnswer != null)
+                                      _buildUs2DecisionStamp(_tempSelectedAnswer == 'me'),
+                                  ],
                                 ),
                               ),
                             ),
-
-                            // Spacer to push buttons toward center
-                            const Spacer(),
-
-                            // Answer buttons (thumb-friendly center position)
-                            _buildUs2AnswerButtons(userName, partnerName),
-
-                            // Bottom spacer (equal to top spacer for centering)
-                            const Spacer(),
-                          ],
+                          ),
                         ),
                       ),
                     ),
+
+                    // Answer buttons
+                    _buildUs2AnswerButtons(userName, partnerName),
+
+                    // Bottom spacer to push buttons up
+                    const Flexible(flex: 2, child: SizedBox()),
                   ],
                 ),
               ),
@@ -1125,120 +1118,70 @@ class _YouOrMeMatchGameScreenState extends State<YouOrMeMatchGameScreen>
     );
   }
 
-  /// Build Us 2.0 styled answer buttons (thumb-friendly, centered)
+  /// Build Us 2.0 styled answer buttons
   Widget _buildUs2AnswerButtons(String userName, String partnerName) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        // "Me" button - filled coral gradient
-        _buildUs2AnswerButtonFilled(
-          label: userName,
-          onTap: () => _handleAnswer('me'),
-        ),
-        const SizedBox(width: 16),
-        // "Partner" button - outlined style
-        _buildUs2AnswerButtonOutlined(
-          label: partnerName,
-          onTap: () => _handleAnswer('you'),
-        ),
-      ],
-    );
-  }
-
-  /// Build Us 2.0 "Me" button - filled coral gradient with white text
-  Widget _buildUs2AnswerButtonFilled({
-    required String label,
-    required VoidCallback onTap,
-  }) {
-    return GestureDetector(
-      onTap: _isSubmitting ? null : onTap,
-      child: AnimatedScale(
-        scale: _isSubmitting ? 1.0 : 1.0,
-        duration: const Duration(milliseconds: 100),
-        child: Container(
-          width: 140,
-          height: 70,
-          decoration: BoxDecoration(
-            gradient: const LinearGradient(
-              colors: [Color(0xFFFF6B6B), Color(0xFFFF9F43)],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
-            borderRadius: BorderRadius.circular(35),
-            boxShadow: [
-              BoxShadow(
-                color: const Color(0xFFFF6B6B).withOpacity(0.4),
-                blurRadius: 15,
-                offset: const Offset(0, 4),
-              ),
-            ],
+    return Container(
+      padding: const EdgeInsets.all(20),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          // "Me" button - filled coral gradient
+          _buildUs2AnswerButton(
+            label: userName,
+            filled: true,
+            onTap: () => _handleAnswer('me'),
           ),
-          child: Material(
-            color: Colors.transparent,
-            child: InkWell(
-              onTap: _isSubmitting ? null : onTap,
-              borderRadius: BorderRadius.circular(35),
-              splashColor: Colors.white.withOpacity(0.2),
-              child: Center(
-                child: Text(
-                  label.length > 10 ? '${label.substring(0, 10)}...' : label,
-                  style: GoogleFonts.nunito(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w700,
-                    color: Colors.white,
-                  ),
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ),
-            ),
+          const SizedBox(width: 16),
+          // "Partner" button - outlined style
+          _buildUs2AnswerButton(
+            label: partnerName,
+            filled: false,
+            onTap: () => _handleAnswer('you'),
           ),
-        ),
+        ],
       ),
     );
   }
 
-  /// Build Us 2.0 "Partner" button - outlined style with coral accent
-  Widget _buildUs2AnswerButtonOutlined({
+  /// Build Us 2.0 styled answer button
+  Widget _buildUs2AnswerButton({
     required String label,
+    required bool filled,
     required VoidCallback onTap,
   }) {
     return GestureDetector(
       onTap: _isSubmitting ? null : onTap,
       child: Container(
         width: 140,
-        height: 70,
+        height: 56,
         decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(35),
-          border: Border.all(
-            color: const Color(0xFFFF6B6B),
-            width: 3,
-          ),
+          gradient: filled
+              ? const LinearGradient(
+                  colors: [Color(0xFFFF6B6B), Color(0xFFFF9F43)],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                )
+              : null,
+          color: filled ? null : Colors.white,
+          borderRadius: BorderRadius.circular(28),
+          border: filled ? null : Border.all(color: const Color(0xFFFF6B6B), width: 3),
           boxShadow: [
             BoxShadow(
-              color: const Color(0xFFFF6B6B).withOpacity(0.2),
+              color: const Color(0xFFFF6B6B).withOpacity(filled ? 0.4 : 0.2),
               blurRadius: 15,
               offset: const Offset(0, 4),
             ),
           ],
         ),
-        child: Material(
-          color: Colors.transparent,
-          child: InkWell(
-            onTap: _isSubmitting ? null : onTap,
-            borderRadius: BorderRadius.circular(35),
-            splashColor: const Color(0xFFFF6B6B).withOpacity(0.1),
-            child: Center(
-              child: Text(
-                label.length > 10 ? '${label.substring(0, 10)}...' : label,
-                style: GoogleFonts.nunito(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w700,
-                  color: const Color(0xFFFF6B6B),
-                ),
-                overflow: TextOverflow.ellipsis,
-              ),
+        child: Center(
+          child: Text(
+            label.length > 10 ? '${label.substring(0, 10)}...' : label,
+            style: GoogleFonts.nunito(
+              fontSize: 18,
+              fontWeight: FontWeight.w700,
+              color: filled ? Colors.white : const Color(0xFFFF6B6B),
             ),
+            overflow: TextOverflow.ellipsis,
           ),
         ),
       ),
