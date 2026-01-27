@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=1284, height=2778">
+  <title>Us 2.0 App Store Screenshots</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Nunito:wght@400;600;700;800&family=Pacifico&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Nunito', sans-serif; }
+
+    .screenshot-card {
+      width: 1284px;
+      height: 2778px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 50px 40px 0;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Backgrounds */
+    .bg-warm-gradient { background: linear-gradient(165deg, #FFE5DC 0%, #FFF5F0 50%, #FFEEE6 100%); }
+    .bg-coral { background: linear-gradient(165deg, #FF8A7A 0%, #FF6B5B 100%); }
+    .bg-purple { background: linear-gradient(165deg, #A87BFF 0%, #8B5CF6 100%); }
+    .bg-blue { background: linear-gradient(165deg, #7BC5FF 0%, #5BA3E0 100%); }
+    .bg-teal { background: linear-gradient(165deg, #5ECFCF 0%, #3BA8A8 100%); }
+    .bg-orange { background: linear-gradient(165deg, #FFC07B 0%, #FF9F43 100%); }
+    .bg-gold { background: linear-gradient(165deg, #FFE066 0%, #FFD700 100%); }
+    .bg-rose { background: linear-gradient(165deg, #F7A8B8 0%, #E88BA0 100%); }
+    .bg-dark { background: linear-gradient(165deg, #3D3D3D 0%, #1A1A1A 100%); }
+
+    .marketing-text {
+      text-align: center;
+      margin-bottom: 30px;
+      z-index: 10;
+    }
+
+    .headline {
+      font-family: 'Playfair Display', serif;
+      font-size: 100px;
+      font-weight: 800;
+      line-height: 1.05;
+      margin-bottom: 16px;
+      letter-spacing: -3px;
+    }
+    .headline-dark { color: #2D2D2D; }
+    .headline-light { color: #FFFFFF; text-shadow: 0 4px 30px rgba(0,0,0,0.2); }
+
+    .subheadline {
+      font-family: 'Nunito', sans-serif;
+      font-size: 40px;
+      font-weight: 600;
+    }
+    .subheadline-dark { color: rgba(45, 45, 45, 0.7); }
+    .subheadline-light { color: rgba(255, 255, 255, 0.9); }
+
+    .phone-bezel {
+      background: #1A1A1A;
+      border-radius: 70px;
+      padding: 12px;
+      box-shadow: 0 60px 120px rgba(0,0,0,0.3), 0 30px 60px rgba(0,0,0,0.2);
+      z-index: 10;
+    }
+
+    .phone-screen {
+      border-radius: 58px;
+      overflow: hidden;
+      position: relative;
+      width: 1100px;
+      height: 2381px;
+      background: #FFF5F0;
+    }
+
+    .phone-screen img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: top center;
+    }
+
+    .phone-notch {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 240px;
+      height: 38px;
+      background: #1A1A1A;
+      border-radius: 0 0 24px 24px;
+      z-index: 20;
+    }
+
+    /* CTA Frame */
+    .cta-content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      width: 100%;
+      text-align: center;
+    }
+
+    .app-icon {
+      width: 360px;
+      height: 360px;
+      border-radius: 80px;
+      background: linear-gradient(135deg, #FF6B6B 0%, #FF9F43 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 80px;
+      box-shadow: 0 40px 80px rgba(255,107,107,0.4), 0 20px 40px rgba(0,0,0,0.15);
+    }
+
+    .app-icon-text {
+      font-family: 'Pacifico', cursive;
+      font-size: 100px;
+      color: white;
+      text-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+
+    .cta-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 96px;
+      font-weight: 700;
+      color: #FFFFFF;
+      margin-bottom: 40px;
+    }
+
+    .cta-subtitle {
+      font-family: 'Nunito', sans-serif;
+      font-size: 44px;
+      color: rgba(255,255,255,0.85);
+      margin-bottom: 80px;
+    }
+
+    .cta-button {
+      background: white;
+      color: #FF6B6B;
+      font-family: 'Nunito', sans-serif;
+      font-size: 44px;
+      font-weight: 700;
+      padding: 36px 90px;
+      border-radius: 60px;
+      box-shadow: 0 15px 40px rgba(0,0,0,0.25);
+    }
+  </style>
+</head>
+<body>
+  <!-- Frame 1: Home -->
+  <div id="frame-1" class="screenshot-card bg-warm-gradient">
+    <div class="marketing-text">
+      <h1 class="headline headline-dark">5 Minutes.<br>Together.</h1>
+      <p class="subheadline subheadline-dark">Daily activities for couples</p>
+    </div>
+    <div class="phone-bezel">
+      <div class="phone-screen">
+        <div class="phone-notch"></div>
+        <img src="../../captures_resized/01-home.png" alt="Home screen">
+      </div>
+    </div>
+  </div>
+
+  <!-- Frame 2: Quiz -->
+  <div id="frame-2" class="screenshot-card bg-coral">
+    <div class="marketing-text">
+      <h1 class="headline headline-light">How Well Do<br>You Know Me?</h1>
+      <p class="subheadline subheadline-light">Answer. Compare. Connect.</p>
+    </div>
+    <div class="phone-bezel">
+      <div class="phone-screen">
+        <div class="phone-notch"></div>
+        <img src="../../captures_resized/02-quiz.png" alt="Quiz game">
+      </div>
+    </div>
+  </div>
+
+  <!-- Frame 3: Insights -->
+  <div id="frame-3" class="screenshot-card bg-purple">
+    <div class="marketing-text">
+      <h1 class="headline headline-light">Understand<br>Each Other</h1>
+      <p class="subheadline subheadline-light">Discover what makes you different</p>
+    </div>
+    <div class="phone-bezel">
+      <div class="phone-screen">
+        <div class="phone-notch"></div>
+        <img src="../../captures_resized/03-insights.png" alt="Insights">
+      </div>
+    </div>
+  </div>
+
+  <!-- Frame 4: Word Search -->
+  <div id="frame-4" class="screenshot-card bg-blue">
+    <div class="marketing-text">
+      <h1 class="headline headline-light">Solve It<br>Together</h1>
+      <p class="subheadline subheadline-light">Collaborative word puzzles</p>
+    </div>
+    <div class="phone-bezel">
+      <div class="phone-screen">
+        <div class="phone-notch"></div>
+        <img src="../../captures_resized/04-word-search.png" alt="Word Search">
+      </div>
+    </div>
+  </div>
+
+  <!-- Frame 5: Alignment -->
+  <div id="frame-5" class="screenshot-card bg-teal">
+    <div class="marketing-text">
+      <h1 class="headline headline-light">See Where<br>You Align</h1>
+      <p class="subheadline subheadline-light">Track your compatibility</p>
+    </div>
+    <div class="phone-bezel">
+      <div class="phone-screen">
+        <div class="phone-notch"></div>
+        <img src="../../captures_resized/05-alignment.png" alt="Alignment">
+      </div>
+    </div>
+  </div>
+
+  <!-- Frame 6: Steps -->
+  <div id="frame-6" class="screenshot-card bg-orange">
+    <div class="marketing-text">
+      <h1 class="headline headline-light">Move<br>Together</h1>
+      <p class="subheadline subheadline-light">Turn steps into rewards</p>
+    </div>
+    <div class="phone-bezel">
+      <div class="phone-screen">
+        <div class="phone-notch"></div>
+        <img src="../../captures_resized/06-steps.png" alt="Steps counter">
+      </div>
+    </div>
+  </div>
+
+  <!-- Frame 7: Collection -->
+  <div id="frame-7" class="screenshot-card bg-gold">
+    <div class="marketing-text">
+      <h1 class="headline headline-dark">Earn. Unlock.<br>Collect.</h1>
+      <p class="subheadline subheadline-dark">Rewards that mean something</p>
+    </div>
+    <div class="phone-bezel">
+      <div class="phone-screen">
+        <div class="phone-notch"></div>
+        <img src="../../captures_resized/07-collection.png" alt="Collection">
+      </div>
+    </div>
+  </div>
+
+  <!-- Frame 8: CTA -->
+  <div id="frame-8" class="screenshot-card bg-dark">
+    <div class="cta-content">
+      <div class="app-icon">
+        <span class="app-icon-text">Us</span>
+      </div>
+      <h1 class="cta-title">Start Your Free Trial</h1>
+      <p class="cta-subtitle">7 days free. Cancel anytime.</p>
+      <div class="cta-button">Download Now</div>
+    </div>
+  </div>
+
+  <!-- Frame 9: Crossword -->
+  <div id="frame-9" class="screenshot-card bg-rose">
+    <div class="marketing-text">
+      <h1 class="headline headline-light">Think<br>Together</h1>
+      <p class="subheadline subheadline-light">Collaborative crossword puzzles</p>
+    </div>
+    <div class="phone-bezel">
+      <div class="phone-screen">
+        <div class="phone-notch"></div>
+        <img src="../../captures_resized/09-crossword.png" alt="Crossword">
+      </div>
+    </div>
+  </div>
+</body>
+</html>

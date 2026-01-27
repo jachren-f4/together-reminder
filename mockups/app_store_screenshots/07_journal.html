@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=393, height=852, initial-scale=1.0">
+    <title>Us 2.0 - Journal</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&family=Nunito:wght@400;500;600;700&family=Caveat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            background: #FFF8F0;
+            min-height: 100vh;
+            width: 393px;
+            margin: 0 auto;
+            overflow-x: hidden;
+        }
+
+        .phone-frame {
+            width: 393px;
+            min-height: 852px;
+            background: #FFF8F0;
+            position: relative;
+            padding-top: 47px;
+            padding-bottom: 34px;
+        }
+
+        /* Paper lines effect */
+        .phone-frame::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: repeating-linear-gradient(
+                transparent,
+                transparent 31px,
+                rgba(200, 180, 160, 0.15) 31px,
+                rgba(200, 180, 160, 0.15) 32px
+            );
+            pointer-events: none;
+        }
+
+        /* Radial gradient at top */
+        .phone-frame::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(
+                ellipse at 50% 0%,
+                rgba(255, 209, 193, 0.4) 0%,
+                transparent 60%
+            );
+            pointer-events: none;
+        }
+
+        /* Status bar */
+        .status-bar {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 47px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 14px 28px 0;
+            font-size: 14px;
+            font-weight: 600;
+            z-index: 10;
+        }
+
+        .content {
+            position: relative;
+            z-index: 5;
+            padding: 0 20px;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            padding: 20px 0 16px;
+        }
+
+        .header h1 {
+            font-family: 'Caveat', cursive;
+            font-size: 36px;
+            font-weight: 600;
+            color: #2D2D2D;
+        }
+
+        /* Week Navigation */
+        .week-nav {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            margin-bottom: 16px;
+        }
+
+        .tape-bg {
+            position: absolute;
+            width: 220px;
+            height: 36px;
+            background: rgba(255, 220, 150, 0.7);
+            border-radius: 2px;
+            transform: rotate(-1deg);
+        }
+
+        .nav-row {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            position: relative;
+        }
+
+        .nav-btn {
+            width: 36px;
+            height: 36px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            color: #2D2D2D;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+        }
+
+        .week-dates {
+            font-family: 'Nunito', sans-serif;
+            font-size: 14px;
+            font-weight: 600;
+            color: #2D2D2D;
+        }
+
+        /* Weekly Insights Card */
+        .insights-card {
+            background: white;
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 16px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .insights-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+
+        .insights-header span {
+            font-size: 18px;
+        }
+
+        .insights-header h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 16px;
+            font-weight: 600;
+            color: #2D2D2D;
+        }
+
+        .insight-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+
+        .insight-row:last-child {
+            margin-bottom: 0;
+        }
+
+        .insight-icon {
+            font-size: 16px;
+            flex-shrink: 0;
+        }
+
+        .insight-content {
+            flex: 1;
+        }
+
+        .insight-headline {
+            font-family: 'Nunito', sans-serif;
+            font-size: 13px;
+            font-weight: 700;
+            color: #2D2D2D;
+        }
+
+        .insight-detail {
+            font-family: 'Nunito', sans-serif;
+            font-size: 11px;
+            color: #707070;
+            line-height: 1.4;
+        }
+
+        /* Tap Hint */
+        .tap-hint {
+            text-align: center;
+            font-family: 'Nunito', sans-serif;
+            font-size: 12px;
+            color: #707070;
+            font-style: italic;
+            margin-bottom: 12px;
+        }
+
+        /* Day Section */
+        .day-section {
+            margin-bottom: 20px;
+        }
+
+        .day-label {
+            font-family: 'Caveat', cursive;
+            font-size: 20px;
+            font-weight: 600;
+            color: #2D2D2D;
+            margin-bottom: 12px;
+            padding-left: 8px;
+        }
+
+        /* Polaroid Grid */
+        .polaroids {
+            display: flex;
+            gap: 12px;
+            overflow-x: auto;
+            padding: 8px 0;
+        }
+
+        .polaroid {
+            flex-shrink: 0;
+            width: 150px;
+            background: white;
+            box-shadow: 2px 4px 8px rgba(0, 0, 0, 0.12);
+        }
+
+        .polaroid.rotate-left {
+            transform: rotate(-2deg);
+        }
+
+        .polaroid.rotate-right {
+            transform: rotate(1.5deg);
+        }
+
+        .polaroid-image {
+            aspect-ratio: 1;
+            margin: 8px;
+            border-radius: 2px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .polaroid-image.quiz {
+            background: linear-gradient(135deg, #FFEBEE, #FFCDD2);
+        }
+
+        .polaroid-image.affirmation {
+            background: linear-gradient(135deg, #FCE4EC, #F8BBD9);
+        }
+
+        .polaroid-image.you-or-me {
+            background: linear-gradient(135deg, #FFF3E0, #FFE0B2);
+        }
+
+        .polaroid-image.linked {
+            background: linear-gradient(135deg, #E3F2FD, #BBDEFB);
+        }
+
+        .polaroid-image.word-search {
+            background: linear-gradient(135deg, #E8F5E9, #A5D6A7);
+        }
+
+        .polaroid-image.steps {
+            background: linear-gradient(135deg, #F3E5F5, #E1BEE7);
+        }
+
+        .polaroid-emoji {
+            font-size: 40px;
+        }
+
+        .time-badge {
+            position: absolute;
+            top: 6px;
+            right: 6px;
+            background: rgba(255, 255, 255, 0.8);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 9px;
+            font-weight: 500;
+            color: #666666;
+        }
+
+        .result-tag {
+            position: absolute;
+            bottom: 8px;
+            background: white;
+            padding: 4px 10px;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+            font-size: 10px;
+            font-weight: 600;
+            color: #2D2D2D;
+        }
+
+        .polaroid-caption {
+            padding: 4px 8px 8px;
+            text-align: center;
+        }
+
+        .polaroid-title {
+            font-family: 'Caveat', cursive;
+            font-size: 14px;
+            font-weight: 600;
+            color: #2D2D2D;
+            line-height: 1.2;
+        }
+
+        .polaroid-type {
+            font-family: 'Nunito', sans-serif;
+            font-size: 9px;
+            color: #888888;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Bottom Nav */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 393px;
+            height: 83px;
+            background: white;
+            border-top: 1px solid #F0F0F0;
+            display: flex;
+            justify-content: space-around;
+            align-items: flex-start;
+            padding-top: 10px;
+            padding-bottom: 34px;
+            z-index: 100;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            font-size: 10px;
+            font-weight: 600;
+            color: #B0B0B0;
+        }
+
+        .nav-item.active {
+            color: transparent;
+            background: linear-gradient(135deg, #FF6B6B, #FF9F43);
+            -webkit-background-clip: text;
+            background-clip: text;
+        }
+
+        .nav-icon {
+            font-size: 20px;
+        }
+
+        /* Home indicator */
+        .home-indicator {
+            position: fixed;
+            bottom: 8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 134px;
+            height: 5px;
+            background: #1A1A1A;
+            border-radius: 3px;
+            z-index: 101;
+        }
+    </style>
+</head>
+<body>
+    <div class="phone-frame">
+        <!-- Status Bar -->
+        <div class="status-bar">
+            <span class="time">9:41</span>
+            <div class="icons">
+                <span>📶</span>
+                <span>📡</span>
+                <span>🔋</span>
+            </div>
+        </div>
+
+        <div class="content">
+            <!-- Header -->
+            <div class="header">
+                <h1>Our Journal</h1>
+            </div>
+
+            <!-- Week Navigation -->
+            <div class="week-nav">
+                <div class="tape-bg"></div>
+                <div class="nav-row">
+                    <div class="nav-btn">‹</div>
+                    <span class="week-dates">Jan 20 - Jan 26</span>
+                    <div class="nav-btn">›</div>
+                </div>
+            </div>
+
+            <!-- Weekly Insights -->
+            <div class="insights-card">
+                <div class="insights-header">
+                    <span>💕</span>
+                    <h3>This Week's Story</h3>
+                </div>
+                <div class="insight-row">
+                    <span class="insight-icon">🎯</span>
+                    <div class="insight-content">
+                        <div class="insight-headline">Learning About Each Other</div>
+                        <div class="insight-detail">You explored 24 questions together, with 18 aligned perspectives</div>
+                    </div>
+                </div>
+                <div class="insight-row">
+                    <span class="insight-icon">📅</span>
+                    <div class="insight-content">
+                        <div class="insight-headline">5 Days Connected</div>
+                        <div class="insight-detail">You checked in together on 5 out of 7 days this week</div>
+                    </div>
+                </div>
+                <div class="insight-row">
+                    <span class="insight-icon">🎮</span>
+                    <div class="insight-content">
+                        <div class="insight-headline">12 Activities Completed</div>
+                        <div class="insight-detail">8 Quizzes, 3 Games, 1 Steps Together</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tap Hint -->
+            <div class="tap-hint">Tap a memory to see more details</div>
+
+            <!-- Saturday -->
+            <div class="day-section">
+                <div class="day-label">Saturday</div>
+                <div class="polaroids">
+                    <div class="polaroid rotate-left">
+                        <div class="polaroid-image quiz">
+                            <span class="polaroid-emoji">💭</span>
+                            <div class="time-badge">2:30 PM</div>
+                            <div class="result-tag">5 aligned</div>
+                        </div>
+                        <div class="polaroid-caption">
+                            <div class="polaroid-title">Connection Basics</div>
+                            <div class="polaroid-type">Classic Quiz</div>
+                        </div>
+                    </div>
+                    <div class="polaroid rotate-right">
+                        <div class="polaroid-image affirmation">
+                            <span class="polaroid-emoji">🌹</span>
+                            <div class="time-badge">4:15 PM</div>
+                            <div class="result-tag">4 aligned - 2 different</div>
+                        </div>
+                        <div class="polaroid-caption">
+                            <div class="polaroid-title">Feel-Good Foundations</div>
+                            <div class="polaroid-type">Affirmation Quiz</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Friday -->
+            <div class="day-section">
+                <div class="day-label">Friday</div>
+                <div class="polaroids">
+                    <div class="polaroid rotate-right">
+                        <div class="polaroid-image linked">
+                            <span class="polaroid-emoji">🔗</span>
+                            <div class="time-badge">8:45 PM</div>
+                            <div class="result-tag">You 60 - 45 Partner</div>
+                        </div>
+                        <div class="polaroid-caption">
+                            <div class="polaroid-title">Crossword</div>
+                            <div class="polaroid-type">Linked Puzzle</div>
+                        </div>
+                    </div>
+                    <div class="polaroid rotate-left">
+                        <div class="polaroid-image you-or-me">
+                            <span class="polaroid-emoji">🤔</span>
+                            <div class="time-badge">9:20 PM</div>
+                            <div class="result-tag">7 aligned - 3 different</div>
+                        </div>
+                        <div class="polaroid-caption">
+                            <div class="polaroid-title">You or Me</div>
+                            <div class="polaroid-type">Partner Game</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Thursday -->
+            <div class="day-section">
+                <div class="day-label">Thursday</div>
+                <div class="polaroids">
+                    <div class="polaroid rotate-left">
+                        <div class="polaroid-image word-search">
+                            <span class="polaroid-emoji">🔍</span>
+                            <div class="time-badge">7:00 PM</div>
+                            <div class="result-tag">You 45 - 30 Partner</div>
+                        </div>
+                        <div class="polaroid-caption">
+                            <div class="polaroid-title">Word Search</div>
+                            <div class="polaroid-type">Puzzle Game</div>
+                        </div>
+                    </div>
+                    <div class="polaroid rotate-right">
+                        <div class="polaroid-image steps">
+                            <span class="polaroid-emoji">👟</span>
+                            <div class="time-badge">10:30 PM</div>
+                            <div class="result-tag">85% of goal</div>
+                        </div>
+                        <div class="polaroid-caption">
+                            <div class="polaroid-title">Steps Together</div>
+                            <div class="polaroid-type">Daily Activity</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom Nav -->
+        <div class="bottom-nav">
+            <div class="nav-item">
+                <span class="nav-icon">🏠</span>
+                <span>Home</span>
+            </div>
+            <div class="nav-item active">
+                <span class="nav-icon">📖</span>
+                <span>Journal</span>
+            </div>
+            <div class="nav-item">
+                <span class="nav-icon">👤</span>
+                <span>Profile</span>
+            </div>
+        </div>
+
+        <div class="home-indicator"></div>
+    </div>
+</body>
+</html>

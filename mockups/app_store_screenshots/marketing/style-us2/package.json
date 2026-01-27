@@ -1,0 +1,12 @@
+{
+  "name": "us2-app-store-screenshots",
+  "version": "1.0.0",
+  "description": "App Store screenshot generator for Us 2.0",
+  "main": "capture.js",
+  "scripts": {
+    "generate": "node capture.js"
+  },
+  "dependencies": {
+    "puppeteer": "^21.0.0"
+  }
+}

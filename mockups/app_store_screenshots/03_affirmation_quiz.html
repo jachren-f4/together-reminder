@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=393, height=852, initial-scale=1.0">
+    <title>Us 2.0 - Affirmation Quiz</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&family=Nunito:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            background: #FAFAFA;
+            min-height: 100vh;
+            width: 393px;
+            margin: 0 auto;
+            overflow-x: hidden;
+        }
+
+        .phone-frame {
+            width: 393px;
+            min-height: 852px;
+            background: #FAFAFA;
+            position: relative;
+            padding-top: 47px;
+            padding-bottom: 34px;
+        }
+
+        /* Status bar */
+        .status-bar {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 47px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 14px 28px 0;
+            font-size: 14px;
+            font-weight: 600;
+            background: #FAFAFA;
+        }
+
+        /* Progress Bar */
+        .progress-bar {
+            position: fixed;
+            top: 47px;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: #F0F0F0;
+            z-index: 100;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: #1A1A1A;
+            width: 83.3%;
+            transition: width 0.3s ease;
+        }
+
+        /* Header */
+        .quiz-header {
+            padding: 60px 20px 30px;
+            text-align: center;
+        }
+
+        .question-number {
+            font-size: 14px;
+            font-weight: 600;
+            color: #6E6E6E;
+            margin-bottom: 12px;
+        }
+
+        .question-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 30px;
+            font-weight: 700;
+            color: #1A1A1A;
+            letter-spacing: -1px;
+            line-height: 1.25;
+        }
+
+        .question-title em {
+            font-style: italic;
+        }
+
+        /* Answer Container */
+        .answer-container {
+            background: #FFFEFD;
+            border: 2px solid #F0F0F0;
+            border-radius: 16px;
+            padding: 32px 24px;
+            margin: 0 20px;
+        }
+
+        /* Scale Options */
+        .scale-options {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 16px;
+        }
+
+        .scale-option {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            flex: 1;
+        }
+
+        .heart-icon {
+            font-size: 36px;
+            opacity: 0.3;
+            transition: all 0.2s ease;
+        }
+
+        .scale-option.selected .heart-icon {
+            opacity: 1;
+            transform: scale(1.1);
+        }
+
+        .scale-option:nth-child(1) .heart-icon { color: #E8E8E8; }
+        .scale-option:nth-child(2) .heart-icon { color: #FFCDD2; }
+        .scale-option:nth-child(3) .heart-icon { color: #EF9A9A; }
+        .scale-option:nth-child(4) .heart-icon { color: #E57373; }
+        .scale-option:nth-child(5) .heart-icon { color: #EF5350; }
+
+        .scale-option.selected:nth-child(1) .heart-icon { color: #BDBDBD; }
+        .scale-option.selected:nth-child(2) .heart-icon { color: #F48FB1; }
+        .scale-option.selected:nth-child(3) .heart-icon { color: #EC407A; }
+        .scale-option.selected:nth-child(4) .heart-icon { color: #E91E63; }
+        .scale-option.selected:nth-child(5) .heart-icon { color: #C2185B; }
+
+        /* Scale Labels */
+        .scale-labels {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 8px;
+        }
+
+        .scale-label {
+            font-size: 10px;
+            color: #6E6E6E;
+            text-align: center;
+            flex: 1;
+        }
+
+        .scale-label:first-child {
+            text-align: left;
+        }
+
+        .scale-label:last-child {
+            text-align: right;
+        }
+
+        /* Next Button */
+        .next-button {
+            position: fixed;
+            bottom: 54px;
+            left: 20px;
+            right: 20px;
+            max-width: 353px;
+            padding: 18px;
+            background: #1A1A1A;
+            color: #FFFEFD;
+            border: none;
+            border-radius: 16px;
+            font-family: 'Nunito', sans-serif;
+            font-size: 17px;
+            font-weight: 600;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            cursor: pointer;
+        }
+
+        /* Home indicator */
+        .home-indicator {
+            position: fixed;
+            bottom: 8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 134px;
+            height: 5px;
+            background: #1A1A1A;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body>
+    <div class="phone-frame">
+        <!-- Status Bar -->
+        <div class="status-bar">
+            <span class="time">9:41</span>
+            <div class="icons">
+                <span>📶</span>
+                <span>📡</span>
+                <span>🔋</span>
+            </div>
+        </div>
+
+        <!-- Progress Bar -->
+        <div class="progress-bar">
+            <div class="progress-fill" style="width: 83.3%;"></div>
+        </div>
+
+        <!-- Quiz Header -->
+        <div class="quiz-header">
+            <div class="question-number">Question 5 of 6</div>
+            <h1 class="question-title">When I share my <em>feelings</em>, my partner responds with understanding</h1>
+        </div>
+
+        <!-- Answer Container -->
+        <div class="answer-container">
+            <div class="scale-options">
+                <div class="scale-option">
+                    <span class="heart-icon">💗</span>
+                </div>
+                <div class="scale-option">
+                    <span class="heart-icon">💗</span>
+                </div>
+                <div class="scale-option">
+                    <span class="heart-icon">💗</span>
+                </div>
+                <div class="scale-option selected">
+                    <span class="heart-icon">💗</span>
+                </div>
+                <div class="scale-option">
+                    <span class="heart-icon">💗</span>
+                </div>
+            </div>
+            <div class="scale-labels">
+                <span class="scale-label">Strongly<br>disagree</span>
+                <span class="scale-label"></span>
+                <span class="scale-label">Neutral</span>
+                <span class="scale-label"></span>
+                <span class="scale-label">Strongly<br>agree</span>
+            </div>
+        </div>
+
+        <!-- Next Button -->
+        <button class="next-button">Next</button>
+
+        <div class="home-indicator"></div>
+    </div>
+</body>
+</html>

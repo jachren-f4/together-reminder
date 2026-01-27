@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=390, height=844, initial-scale=1.0">
+    <title>Us 2.0 - Value Proposition</title>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&family=Playfair+Display:ital,wght@0,600;1,600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            background: linear-gradient(180deg, #FFF5F0 0%, #FFE8E0 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            padding: 20px 0;
+        }
+
+        .phone-frame {
+            width: 393px;
+            height: 852px;
+            background: linear-gradient(180deg, #FFF5F0 0%, #FFE8E0 100%);
+            overflow: hidden;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .safe-area-top {
+            height: 47px;
+        }
+
+        .content {
+            flex: 1;
+            padding: 0 20px;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+        }
+
+        /* Header - Compact */
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .tag {
+            display: inline-block;
+            padding: 6px 14px;
+            background: white;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            color: #FF6B8A;
+            box-shadow: 0 2px 10px rgba(255, 107, 138, 0.15);
+            margin-bottom: 12px;
+        }
+
+        .title {
+            font-family: 'Playfair Display', serif;
+            font-size: 28px;
+            font-weight: 600;
+            color: #2D2D2D;
+            line-height: 1.2;
+        }
+
+        .title-gradient {
+            font-style: italic;
+            background: linear-gradient(135deg, #FF6B8A 0%, #FF8E53 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Benefits Grid */
+        .benefits-grid {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        /* Featured Card - Larger image */
+        .featured-card {
+            background: white;
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+            position: relative;
+            overflow: hidden;
+        }
+
+
+        .featured-content {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .featured-image {
+            width: 88px;
+            height: 88px;
+            border-radius: 16px;
+            object-fit: cover;
+            flex-shrink: 0;
+        }
+
+        .featured-text h3 {
+            font-size: 18px;
+            font-weight: 700;
+            color: #2D2D2D;
+            margin-bottom: 6px;
+        }
+
+        .featured-text p {
+            font-size: 14px;
+            color: #6B6B6B;
+            line-height: 1.4;
+        }
+
+        /* Regular Cards Row */
+        .cards-row {
+            display: flex;
+            gap: 12px;
+        }
+
+        .benefit-card {
+            flex: 1;
+            background: white;
+            border-radius: 20px;
+            padding: 16px 14px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+            text-align: center;
+        }
+
+        .card-image {
+            width: 72px;
+            height: 72px;
+            border-radius: 16px;
+            object-fit: cover;
+            margin: 0 auto 12px;
+            display: block;
+        }
+
+        .card-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: 14px;
+            background: linear-gradient(135deg, rgba(255, 107, 138, 0.12) 0%, rgba(255, 142, 83, 0.12) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 12px;
+        }
+
+        .card-icon svg {
+            width: 28px;
+            height: 28px;
+        }
+
+        .benefit-card h4 {
+            font-size: 16px;
+            font-weight: 700;
+            color: #2D2D2D;
+            margin-bottom: 4px;
+        }
+
+        .benefit-card p {
+            font-size: 13px;
+            color: #6B6B6B;
+            line-height: 1.4;
+        }
+
+        /* Footer */
+        .footer {
+            padding: 16px 20px 36px;
+        }
+
+        .get-started-btn {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #FF6B8A 0%, #FF8E53 100%);
+            border: none;
+            border-radius: 16px;
+            color: white;
+            font-family: 'Nunito', sans-serif;
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 8px 25px rgba(255, 107, 138, 0.4);
+        }
+
+        /* Home indicator */
+        .home-indicator {
+            position: fixed;
+            bottom: 8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 134px;
+            height: 5px;
+            background: #1A1A1A;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body>
+    <svg width="0" height="0" style="position: absolute;">
+        <defs>
+            <linearGradient id="iconGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" style="stop-color:#FF6B8A"/>
+                <stop offset="100%" style="stop-color:#FF8E53"/>
+            </linearGradient>
+        </defs>
+    </svg>
+
+    <div class="phone-frame">
+        <div class="safe-area-top"></div>
+
+        <div class="content">
+            <div class="header">
+                <div class="tag">WHAT YOU'LL GET</div>
+                <h1 class="title">
+                    Everything you need to fall in love <span class="title-gradient">again</span>
+                </h1>
+            </div>
+
+            <div class="benefits-grid">
+                <!-- Featured Card -->
+                <div class="featured-card">
+                    <div class="featured-content">
+                        <img src="assets/new_classic_quiz.png" alt="Daily Questions" class="featured-image">
+                        <div class="featured-text">
+                            <h3>Daily conversation starters</h3>
+                            <p>Fun questions that spark meaningful talks and help you learn something new about each other</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Row 1 -->
+                <div class="cards-row">
+                    <div class="benefit-card">
+                        <img src="assets/new_word_search.png" alt="Fun Games" class="card-image">
+                        <h4>Fun games</h4>
+                        <p>Play together & grow closer</p>
+                    </div>
+                    <div class="benefit-card">
+                        <div class="card-icon">
+                            <svg viewBox="0 0 24 24" fill="none">
+                                <circle cx="12" cy="12" r="9" stroke="url(#iconGradient)" stroke-width="2"/>
+                                <path d="M12 7V12L15 15" stroke="url(#iconGradient)" stroke-width="2" stroke-linecap="round"/>
+                            </svg>
+                        </div>
+                        <h4>5 min/day</h4>
+                        <p>Small habit, big impact</p>
+                    </div>
+                </div>
+
+                <!-- Row 2 -->
+                <div class="cards-row">
+                    <div class="benefit-card">
+                        <img src="assets/new_you_or_me.png" alt="Love Points" class="card-image">
+                        <h4>Love Points</h4>
+                        <p>Track your journey together</p>
+                    </div>
+                    <div class="benefit-card">
+                        <img src="assets/linked.png" alt="Synced Together" class="card-image">
+                        <h4>Synced together</h4>
+                        <p>Always connected</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <button class="get-started-btn">Get Started</button>
+        </div>
+
+        <div class="home-indicator"></div>
+    </div>
+</body>
+</html>
