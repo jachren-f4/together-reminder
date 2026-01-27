@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phase 1.2 - Welcome Quiz Intro Fix</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Nunito:wght@400;600;700&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Nunito', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #FAFAFA;
+            color: #3A3A3A;
+            display: flex;
+            gap: 40px;
+            padding: 40px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .mockup-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .mockup-label {
+            font-size: 14px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #6E6E6E;
+            padding: 8px 16px;
+            background: #F0F0F0;
+            border-radius: 8px;
+        }
+
+        .mockup-label.before { background: #FFE5E5; color: #C62828; }
+        .mockup-label.after { background: #E5FFE5; color: #2E7D32; }
+
+        .phone {
+            width: 390px;
+            height: 844px;
+            background: linear-gradient(180deg, #FFD1C1 0%, #FFF5F0 100%);
+            border-radius: 50px;
+            overflow: hidden;
+            position: relative;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+        }
+
+        .screen-content {
+            padding: 60px 24px 120px;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Badge */
+        .badge {
+            align-self: center;
+            background: linear-gradient(135deg, #FF6B6B, #FF9F43);
+            color: white;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 24px;
+        }
+
+        /* BEFORE: Emoji in circle */
+        .hero-before {
+            width: 120px;
+            height: 120px;
+            background: #F5E6D8;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            align-self: center;
+            margin-bottom: 24px;
+            filter: grayscale(100%);
+        }
+
+        .hero-before .emoji {
+            font-size: 60px;
+        }
+
+        /* AFTER: Illustration */
+        .hero-after {
+            width: 160px;
+            height: 160px;
+            align-self: center;
+            margin-bottom: 24px;
+            position: relative;
+        }
+
+        .couple-illustration {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #FFF8F0, #FFE8D8);
+            border-radius: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 8px 24px rgba(255, 107, 107, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .couple-illustration svg {
+            width: 100px;
+            height: 100px;
+        }
+
+        .title {
+            font-family: 'Playfair Display', serif;
+            font-size: 32px;
+            font-weight: 700;
+            text-align: center;
+            color: #3A3A3A;
+            margin-bottom: 12px;
+        }
+
+        .subtitle {
+            font-size: 16px;
+            text-align: center;
+            color: #5A5A5A;
+            line-height: 1.5;
+            margin-bottom: 32px;
+        }
+
+        /* Info card */
+        .info-card {
+            background: white;
+            border-radius: 20px;
+            padding: 24px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+            flex: 1;
+        }
+
+        .info-card h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .info-card h3 .emoji {
+            font-size: 20px;
+        }
+
+        /* AFTER: Icon instead of emoji */
+        .info-card h3 .icon {
+            width: 24px;
+            height: 24px;
+            background: linear-gradient(135deg, #FF6B6B, #FF9F43);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        .steps {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .step {
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+        }
+
+        .step-number {
+            width: 28px;
+            height: 28px;
+            background: #3A3A3A;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 14px;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        .step-text {
+            font-size: 15px;
+            line-height: 1.5;
+            padding-top: 4px;
+        }
+
+        /* Button */
+        .btn-container {
+            position: absolute;
+            bottom: 40px;
+            left: 24px;
+            right: 24px;
+        }
+
+        .btn-primary {
+            width: 100%;
+            background: linear-gradient(180deg, white, #FFF8F0);
+            color: #FF5E62;
+            padding: 18px;
+            border-radius: 16px;
+            font-size: 17px;
+            font-weight: 700;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+        }
+
+        /* Notes section */
+        .notes {
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 30px;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .notes h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: #3A3A3A;
+        }
+
+        .notes h3 {
+            font-size: 16px;
+            font-weight: 700;
+            margin: 20px 0 10px;
+            color: #FF5E62;
+        }
+
+        .notes ul {
+            margin-left: 20px;
+            line-height: 1.8;
+        }
+
+        .notes li {
+            margin-bottom: 8px;
+        }
+    </style>
+</head>
+<body>
+    <!-- BEFORE -->
+    <div class="mockup-container">
+        <div class="mockup-label before">Before (Current)</div>
+        <div class="phone">
+            <div class="screen-content">
+                <div class="badge">Welcome Quiz</div>
+
+                <div class="hero-before">
+                    <span class="emoji">💕</span>
+                </div>
+
+                <div class="title">Get to Know<br>Each Other</div>
+                <div class="subtitle">Answer questions about your relationship and see how well you match!</div>
+
+                <div class="info-card">
+                    <h3><span class="emoji">🎯</span> How it works</h3>
+                    <div class="steps">
+                        <div class="step">
+                            <div class="step-number">1</div>
+                            <div class="step-text">Answer 5 questions about your relationship</div>
+                        </div>
+                        <div class="step">
+                            <div class="step-number">2</div>
+                            <div class="step-text">Wait for your partner to complete theirs</div>
+                        </div>
+                        <div class="step">
+                            <div class="step-number">3</div>
+                            <div class="step-text">See your match results together!</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="btn-container">
+                <div class="btn-primary">Start Quiz</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- AFTER -->
+    <div class="mockup-container">
+        <div class="mockup-label after">After (Recommended)</div>
+        <div class="phone">
+            <div class="screen-content">
+                <div class="badge">Welcome Quiz</div>
+
+                <div class="hero-after">
+                    <div class="couple-illustration">
+                        <!-- Interlinked hearts SVG -->
+                        <svg viewBox="0 0 100 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <defs>
+                                <linearGradient id="heart1Grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" style="stop-color:#FF6B6B"/>
+                                    <stop offset="100%" style="stop-color:#FF8E8E"/>
+                                </linearGradient>
+                                <linearGradient id="heart2Grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" style="stop-color:#FF9F43"/>
+                                    <stop offset="100%" style="stop-color:#FFB56B"/>
+                                </linearGradient>
+                            </defs>
+                            <!-- Left heart -->
+                            <path d="M30 55C30 55 10 40 10 25C10 18 15 12 22 12C26 12 29 14 30 17C31 14 34 12 38 12C45 12 50 18 50 25C50 40 30 55 30 55Z" fill="url(#heart1Grad)" opacity="0.9"/>
+                            <!-- Right heart (slightly overlapping) -->
+                            <path d="M70 55C70 55 50 40 50 25C50 18 55 12 62 12C66 12 69 14 70 17C71 14 74 12 78 12C85 12 90 18 90 25C90 40 70 55 70 55Z" fill="url(#heart2Grad)" opacity="0.9"/>
+                            <!-- Connection spark -->
+                            <circle cx="50" cy="30" r="4" fill="#FFD700"/>
+                            <circle cx="50" cy="30" r="6" fill="#FFD700" opacity="0.3"/>
+                        </svg>
+                    </div>
+                </div>
+
+                <div class="title">Get to Know<br>Each Other</div>
+                <div class="subtitle">Answer questions about your relationship and see how well you match!</div>
+
+                <div class="info-card">
+                    <h3><span class="icon">?</span> How it works</h3>
+                    <div class="steps">
+                        <div class="step">
+                            <div class="step-number">1</div>
+                            <div class="step-text">Answer 5 questions about your relationship</div>
+                        </div>
+                        <div class="step">
+                            <div class="step-number">2</div>
+                            <div class="step-text">Wait for your partner to complete theirs</div>
+                        </div>
+                        <div class="step">
+                            <div class="step-number">3</div>
+                            <div class="step-text">See your match results together!</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="btn-container">
+                <div class="btn-primary">Start Quiz</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Design Notes -->
+    <div class="notes">
+        <h2>Phase 1.2: Welcome Quiz Intro Improvements</h2>
+
+        <h3>Issues Addressed</h3>
+        <ul>
+            <li><strong>Emoji in circle:</strong> Grayscale heart emoji in circle felt generic and "lost"</li>
+            <li><strong>Target emoji:</strong> 🎯 in info card adds unnecessary visual noise</li>
+            <li><strong>Animation overload:</strong> 5 staggered bounce animations felt busy</li>
+        </ul>
+
+        <h3>Changes Made</h3>
+        <ul>
+            <li><strong>Hero illustration:</strong> Replaced emoji circle with illustrated card showing couple concept</li>
+            <li><strong>Icon replacement:</strong> Changed 🎯 to branded gradient circle with "?" icon</li>
+            <li><strong>Cleaner hierarchy:</strong> Removed grayscale filter, using brand colors directly</li>
+        </ul>
+
+        <h3>Animation Recommendations</h3>
+        <ul>
+            <li>Reduce to 2 animations: Hero fade-in (400ms) + Content slide-up (600ms)</li>
+            <li>Button appears last with subtle scale (800ms)</li>
+            <li>Remove individual step animations - they appear with card</li>
+        </ul>
+
+        <h3>Asset Requirements</h3>
+        <ul>
+            <li>Create illustration asset: <code>assets/brands/us2/images/welcome_quiz_hero.png</code></li>
+            <li>Consider: Lottie animation of couple/hearts for premium feel</li>
+            <li>Fallback: Simple geometric illustration (shown in mockup)</li>
+        </ul>
+
+        <h2 style="margin-top: 40px; padding-top: 20px; border-top: 3px solid #FF5E62;">📋 Implementation Task List</h2>
+        <p style="color: #666; margin-bottom: 20px;">Coding agent: Complete each task below. Check off when done. Follow the "After" mockup exactly.</p>
+
+        <h3>Create Hero Illustration Asset</h3>
+        <ul style="list-style: none; margin-left: 0;">
+            <li>☐ Create <code>assets/brands/us2/images/welcome_quiz_hero.svg</code> (or .png)</li>
+            <li>☐ Use interlinked hearts design as shown in mockup SVG</li>
+            <li>☐ Heart 1: Gradient #FF6B6B → #FF8E8E</li>
+            <li>☐ Heart 2: Gradient #FF9F43 → #FFB56B</li>
+            <li>☐ Include connection spark (golden circle at overlap)</li>
+        </ul>
+
+        <h3>Update Welcome Quiz Intro Screen (<code>welcome_quiz_intro_screen.dart</code>)</h3>
+        <ul style="list-style: none; margin-left: 0;">
+            <li>☐ Replace 💕 emoji circle with illustration card</li>
+            <li>☐ Create white card container (300×180px) with rounded corners</li>
+            <li>☐ Load SVG/image asset inside card</li>
+            <li>☐ Remove grayscale filter from hero section</li>
+        </ul>
+
+        <h3>Replace Target Emoji in Info Card</h3>
+        <ul style="list-style: none; margin-left: 0;">
+            <li>☐ Remove 🎯 emoji from "How it works" title</li>
+            <li>☐ Add branded icon: coral gradient circle (24px) with white "?" text</li>
+            <li>☐ Or simply remove icon entirely (title alone is sufficient)</li>
+        </ul>
+
+        <h3>Reduce Animations</h3>
+        <ul style="list-style: none; margin-left: 0;">
+            <li>☐ Remove individual step bounce animations</li>
+            <li>☐ Keep only: Hero fade-in (400ms) + Content slide-up (600ms) + Button scale (800ms)</li>
+            <li>☐ Steps appear with card (no staggered animation)</li>
+        </ul>
+
+        <h3>Testing Checklist</h3>
+        <ul style="list-style: none; margin-left: 0;">
+            <li>☐ Screen matches "After" mockup</li>
+            <li>☐ No emoji visible (💕 and 🎯 both removed)</li>
+            <li>☐ Illustration displays correctly in hero card</li>
+            <li>☐ Animations are smooth and not overwhelming</li>
+            <li>☐ "Start Quiz" button works correctly</li>
+        </ul>
+    </div>
+</body>
+</html>

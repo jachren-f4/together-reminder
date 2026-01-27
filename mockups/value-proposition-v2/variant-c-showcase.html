@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=390, height=844, initial-scale=1.0">
+    <title>Value Proposition V2 - Variant C: Showcase</title>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&family=Playfair+Display:ital,wght@0,600;1,600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            background: linear-gradient(180deg, #FFF5F0 0%, #FFE8E0 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            padding: 20px 0;
+        }
+
+        .phone-frame {
+            width: 390px;
+            height: 844px;
+            background: linear-gradient(180deg, #FFF5F0 0%, #FFE8E0 100%);
+            border-radius: 40px;
+            overflow: hidden;
+            box-shadow: 0 25px 80px rgba(0,0,0,0.15);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .safe-area-top {
+            height: 50px;
+        }
+
+        .content {
+            flex: 1;
+            padding: 0 20px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .tag {
+            display: inline-block;
+            padding: 8px 16px;
+            background: white;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            color: #FF6B8A;
+            box-shadow: 0 2px 10px rgba(255, 107, 138, 0.15);
+            margin-bottom: 16px;
+        }
+
+        .title {
+            font-family: 'Playfair Display', serif;
+            font-size: 30px;
+            font-weight: 600;
+            color: #2D2D2D;
+            line-height: 1.2;
+        }
+
+        .title-gradient {
+            font-style: italic;
+            background: linear-gradient(135deg, #FF6B8A 0%, #FF8E53 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Image Showcase - 2x2 grid of large images */
+        .showcase-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .showcase-card {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+        }
+
+        .showcase-image {
+            width: 100%;
+            height: 100px;
+            object-fit: cover;
+            display: block;
+        }
+
+        .showcase-text {
+            padding: 12px;
+            text-align: center;
+        }
+
+        .showcase-text h4 {
+            font-size: 15px;
+            font-weight: 700;
+            color: #2D2D2D;
+            margin-bottom: 2px;
+        }
+
+        .showcase-text p {
+            font-size: 12px;
+            color: #6B6B6B;
+            line-height: 1.3;
+        }
+
+        /* Bottom benefits row */
+        .benefits-row {
+            display: flex;
+            gap: 12px;
+        }
+
+        .mini-card {
+            flex: 1;
+            background: white;
+            border-radius: 16px;
+            padding: 14px 10px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+            text-align: center;
+        }
+
+        .mini-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, rgba(255, 107, 138, 0.15) 0%, rgba(255, 142, 83, 0.15) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 8px;
+        }
+
+        .mini-icon svg {
+            width: 22px;
+            height: 22px;
+        }
+
+        .mini-card h4 {
+            font-size: 14px;
+            font-weight: 700;
+            color: #2D2D2D;
+        }
+
+        /* Footer */
+        .footer {
+            padding: 20px 20px 36px;
+        }
+
+        .get-started-btn {
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(135deg, #FF6B8A 0%, #FF8E53 100%);
+            border: none;
+            border-radius: 16px;
+            color: white;
+            font-family: 'Nunito', sans-serif;
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 8px 25px rgba(255, 107, 138, 0.4);
+        }
+
+        .variant-label {
+            position: absolute;
+            top: 60px;
+            right: 20px;
+            background: #6B6B6B;
+            color: white;
+            padding: 4px 10px;
+            border-radius: 8px;
+            font-size: 10px;
+            font-weight: 700;
+        }
+    </style>
+</head>
+<body>
+    <svg width="0" height="0" style="position: absolute;">
+        <defs>
+            <linearGradient id="iconGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" style="stop-color:#FF6B8A"/>
+                <stop offset="100%" style="stop-color:#FF8E53"/>
+            </linearGradient>
+        </defs>
+    </svg>
+
+    <div class="phone-frame">
+        <div class="safe-area-top"></div>
+        <span class="variant-label">VARIANT C</span>
+
+        <div class="content">
+            <div class="header">
+                <div class="tag">WHAT YOU'LL GET</div>
+                <h1 class="title">
+                    Fall in love <span class="title-gradient">again</span>
+                </h1>
+            </div>
+
+            <!-- 2x2 Showcase Grid -->
+            <div class="showcase-grid">
+                <div class="showcase-card">
+                    <img src="images/new_classic_quiz.png" alt="Daily Questions" class="showcase-image">
+                    <div class="showcase-text">
+                        <h4>Daily questions</h4>
+                        <p>Spark meaningful talks</p>
+                    </div>
+                </div>
+
+                <div class="showcase-card">
+                    <img src="images/new_word_search.png" alt="Fun Games" class="showcase-image">
+                    <div class="showcase-text">
+                        <h4>Fun games</h4>
+                        <p>Play together</p>
+                    </div>
+                </div>
+
+                <div class="showcase-card">
+                    <img src="images/new_you_or_me.png" alt="Love Points" class="showcase-image">
+                    <div class="showcase-text">
+                        <h4>Love Points</h4>
+                        <p>Track your journey</p>
+                    </div>
+                </div>
+
+                <div class="showcase-card">
+                    <img src="images/linked.png" alt="Synced Together" class="showcase-image">
+                    <div class="showcase-text">
+                        <h4>Synced together</h4>
+                        <p>Always connected</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bottom mini cards -->
+            <div class="benefits-row">
+                <div class="mini-card">
+                    <div class="mini-icon">
+                        <svg viewBox="0 0 24 24" fill="none">
+                            <circle cx="12" cy="12" r="9" stroke="url(#iconGradient)" stroke-width="2"/>
+                            <path d="M12 7V12L15 15" stroke="url(#iconGradient)" stroke-width="2" stroke-linecap="round"/>
+                        </svg>
+                    </div>
+                    <h4>5 min/day</h4>
+                </div>
+                <div class="mini-card">
+                    <div class="mini-icon">
+                        <svg viewBox="0 0 24 24" fill="none">
+                            <path d="M12 21C12 21 4 14 4 8.5C4 5.42 6.42 3 9.5 3C11.24 3 12 4 12 4C12 4 12.76 3 14.5 3C17.58 3 20 5.42 20 8.5C20 14 12 21 12 21Z" stroke="url(#iconGradient)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+                    <h4>For couples</h4>
+                </div>
+                <div class="mini-card">
+                    <div class="mini-icon">
+                        <svg viewBox="0 0 24 24" fill="none">
+                            <path d="M9 12L11 14L15 10" stroke="url(#iconGradient)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <circle cx="12" cy="12" r="9" stroke="url(#iconGradient)" stroke-width="2"/>
+                        </svg>
+                    </div>
+                    <h4>Both included</h4>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <button class="get-started-btn">Get Started</button>
+        </div>
+    </div>
+</body>
+</html>

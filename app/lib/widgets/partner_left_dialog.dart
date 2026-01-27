@@ -78,7 +78,7 @@ class PartnerLeftDialog extends StatelessWidget {
             child: ElevatedButton(
               onPressed: onDismiss,
               style: ElevatedButton.styleFrom(
-                backgroundColor: Us2Theme.primaryGold,
+                backgroundColor: Us2Theme.primaryBrandPink,
                 foregroundColor: Colors.white,
                 padding: const EdgeInsets.symmetric(vertical: 14),
                 shape: RoundedRectangleBorder(

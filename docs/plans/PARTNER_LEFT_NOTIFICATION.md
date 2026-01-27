@@ -80,7 +80,7 @@ Store a one-time notification record when a user deletes their account. The part
 
 ### Phase 4: Edge Cases
 
-- [ ] Handle case where partner also deletes before seeing notification (notification becomes orphaned - OK, just won't be shown)
+- [x] Handle case where partner also deletes before seeing notification (notification becomes orphaned - OK, just won't be shown)
 - [ ] Clean up old notifications periodically (optional - add `created_at < NOW() - INTERVAL '30 days'` cleanup)
 
 ---

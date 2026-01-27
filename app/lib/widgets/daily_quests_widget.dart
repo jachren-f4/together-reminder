@@ -242,7 +242,7 @@ class _DailyQuestsWidgetState extends State<DailyQuestsWidget> with RouteAware {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    'DAILY QUESTS',
+                    'QUIZZES',
                     style: AppTheme.headlineFont.copyWith(
                       fontSize: 28,
                       fontWeight: FontWeight.w700,
@@ -305,7 +305,7 @@ class _DailyQuestsWidgetState extends State<DailyQuestsWidget> with RouteAware {
           Icon(Icons.calendar_today, size: 48, color: BrandLoader().colors.textTertiary),
           const SizedBox(height: 12),
           Text(
-            'No Daily Quests Yet',
+            'No Quizzes Yet',
             style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.w600,
@@ -314,7 +314,7 @@ class _DailyQuestsWidgetState extends State<DailyQuestsWidget> with RouteAware {
           ),
           const SizedBox(height: 6),
           Text(
-            'Check back tomorrow for new quests!',
+            'Check back tomorrow for new quizzes!',
             style: TextStyle(
               fontSize: 14,
               color: BrandLoader().colors.textSecondary,
@@ -396,7 +396,7 @@ class _DailyQuestsWidgetState extends State<DailyQuestsWidget> with RouteAware {
             const SizedBox(width: 14),
             Expanded(
               child: Text(
-                'Way to go! You\'ve completed your Daily Quests',
+                'Way to go! You\'ve completed your Quizzes',
                 style: TextStyle(
                   fontSize: 15,
                   fontWeight: FontWeight.w600,

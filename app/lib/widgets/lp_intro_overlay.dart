@@ -391,156 +391,356 @@ class _LpIntroOverlayState extends State<LpIntroOverlay>
               child: SingleChildScrollView(
                 padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
                 child: _showContent
-                    ? BounceInWidget(
-                        delay: Duration.zero,
-                        child: Container(
-                          width: double.infinity,
-                          constraints: const BoxConstraints(maxWidth: 340),
-                          padding: const EdgeInsets.all(28),
-                          decoration: BoxDecoration(
-                            color: Us2Theme.cream,
-                            borderRadius: BorderRadius.circular(28),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black.withValues(alpha: 0.3),
-                                blurRadius: 40,
-                                offset: const Offset(0, 20),
+                    ? TweenAnimationBuilder<double>(
+                        tween: Tween(begin: 0.9, end: 1.0),
+                        duration: const Duration(milliseconds: 300),
+                        curve: Curves.easeOut,
+                        builder: (context, scale, child) {
+                          return Transform.scale(
+                            scale: scale,
+                            child: Container(
+                              width: double.infinity,
+                              constraints: const BoxConstraints(maxWidth: 340),
+                              padding: const EdgeInsets.all(28),
+                              decoration: BoxDecoration(
+                                color: Us2Theme.cream,
+                                borderRadius: BorderRadius.circular(28),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black.withValues(alpha: 0.3),
+                                    blurRadius: 40,
+                                    offset: const Offset(0, 20),
+                                  ),
+                                ],
                               ),
-                            ],
-                          ),
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              // Pulsing heart emoji
-                              _buildPulsingHeart(),
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  // LP Coin Icon (replacing emoji)
+                                  _buildLpCoinIcon(),
 
-                              const SizedBox(height: 16),
+                                  const SizedBox(height: 20),
 
-                              // Title
-                              Text(
-                                'Love Points',
-                                style: GoogleFonts.playfairDisplay(
-                                  fontSize: 28,
-                                  fontWeight: FontWeight.w700,
-                                  color: Us2Theme.textDark,
-                                ),
-                              ),
-
-                              const SizedBox(height: 12),
-
-                              // Subtitle - mentions destinations
-                              Text(
-                                'Complete quests together to earn Love Points and unlock romantic destinations!',
-                                textAlign: TextAlign.center,
-                                style: GoogleFonts.nunito(
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.w500,
-                                  color: Us2Theme.textMedium,
-                                  height: 1.5,
-                                ),
-                              ),
-
-                              const SizedBox(height: 24),
-
-                              // Connection bar preview with animation
-                              AnimatedBuilder(
-                                animation: _meterAnimation,
-                                builder: (context, child) {
-                                  return _buildUs2JourneyBar(
-                                    progress: _meterAnimation.value,
-                                    destinationAsset: destinationAsset,
-                                    lpThreshold: lpThreshold,
-                                  );
-                                },
-                              ),
-
-                              const SizedBox(height: 16),
-
-                              // First destination hint
-                              Text.rich(
-                                TextSpan(
-                                  children: [
-                                    TextSpan(
-                                      text: 'First stop: ',
-                                      style: GoogleFonts.nunito(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w500,
-                                        fontStyle: FontStyle.italic,
-                                        color: Us2Theme.textLight,
-                                      ),
+                                  // Title
+                                  Text(
+                                    'You earned Love Points!',
+                                    style: GoogleFonts.playfairDisplay(
+                                      fontSize: 24,
+                                      fontWeight: FontWeight.w700,
+                                      color: Us2Theme.textDark,
                                     ),
-                                    TextSpan(
-                                      text: destinationName,
-                                      style: GoogleFonts.nunito(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w700,
-                                        color: Us2Theme.primaryBrandPink,
-                                      ),
+                                    textAlign: TextAlign.center,
+                                  ),
+
+                                  const SizedBox(height: 8),
+
+                                  // Subtitle
+                                  Text(
+                                    'Play together daily to unlock rewards',
+                                    textAlign: TextAlign.center,
+                                    style: GoogleFonts.nunito(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w500,
+                                      color: Us2Theme.textMedium,
                                     ),
-                                  ],
-                                ),
-                              ),
+                                  ),
 
-                              const SizedBox(height: 24),
+                                  const SizedBox(height: 20),
 
-                              // Let's Go button
-                              GestureDetector(
-                                onTap: _isProcessing ? null : _dismiss,
-                                child: AnimatedOpacity(
-                                  opacity: _isProcessing ? 0.7 : 1.0,
-                                  duration: const Duration(milliseconds: 200),
-                                  child: Container(
-                                    width: double.infinity,
-                                    height: 52,
+                                  // Centered LP badge
+                                  Container(
+                                    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 10),
                                     decoration: BoxDecoration(
-                                      gradient: const LinearGradient(
-                                        colors: [
-                                          Color(0xFFFF6B6B),
-                                          Color(0xFFFF9F43),
-                                        ],
-                                      ),
-                                      borderRadius: BorderRadius.circular(26),
+                                      gradient: Us2Theme.accentGradient,
+                                      borderRadius: BorderRadius.circular(20),
                                       boxShadow: [
                                         BoxShadow(
-                                          color: const Color(0xFFFF6B6B).withValues(alpha: 0.4),
-                                          blurRadius: 16,
-                                          offset: const Offset(0, 6),
+                                          color: Us2Theme.glowPink.withValues(alpha: 0.4),
+                                          blurRadius: 12,
+                                          offset: const Offset(0, 4),
                                         ),
                                       ],
                                     ),
-                                    child: Center(
-                                      child: _isProcessing
-                                          ? const SizedBox(
-                                              width: 20,
-                                              height: 20,
-                                              child: CircularProgressIndicator(
-                                                strokeWidth: 2,
-                                                valueColor: AlwaysStoppedAnimation<Color>(
-                                                  Colors.white,
-                                                ),
-                                              ),
-                                            )
-                                          : Text(
-                                              "Let's Go!",
-                                              style: GoogleFonts.nunito(
-                                                fontSize: 16,
-                                                fontWeight: FontWeight.w700,
-                                                color: Colors.white,
-                                              ),
-                                            ),
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Text(
+                                          '+${widget.lpAwarded}',
+                                          style: GoogleFonts.nunito(
+                                            fontSize: 20,
+                                            fontWeight: FontWeight.w700,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                        const SizedBox(width: 4),
+                                        Text(
+                                          'LP',
+                                          style: GoogleFonts.nunito(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w700,
+                                            color: Colors.white.withValues(alpha: 0.9),
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                   ),
-                                ),
+
+                                  const SizedBox(height: 24),
+
+                                  // Journey progress bar (clean design)
+                                  AnimatedBuilder(
+                                    animation: _meterAnimation,
+                                    builder: (context, child) {
+                                      return _buildUs2JourneyBarClean(
+                                        progress: _meterAnimation.value,
+                                        destinationAsset: destinationAsset,
+                                        destinationName: destinationName,
+                                        lpThreshold: lpThreshold,
+                                      );
+                                    },
+                                  ),
+
+                                  const SizedBox(height: 24),
+
+                                  // Continue button
+                                  GestureDetector(
+                                    onTap: _isProcessing ? null : _dismiss,
+                                    child: AnimatedOpacity(
+                                      opacity: _isProcessing ? 0.7 : 1.0,
+                                      duration: const Duration(milliseconds: 200),
+                                      child: Container(
+                                        width: double.infinity,
+                                        height: 52,
+                                        decoration: BoxDecoration(
+                                          gradient: const LinearGradient(
+                                            colors: [
+                                              Color(0xFFFF6B6B),
+                                              Color(0xFFFF9F43),
+                                            ],
+                                          ),
+                                          borderRadius: BorderRadius.circular(26),
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color: const Color(0xFFFF6B6B).withValues(alpha: 0.4),
+                                              blurRadius: 16,
+                                              offset: const Offset(0, 6),
+                                            ),
+                                          ],
+                                        ),
+                                        child: Center(
+                                          child: _isProcessing
+                                              ? const SizedBox(
+                                                  width: 20,
+                                                  height: 20,
+                                                  child: CircularProgressIndicator(
+                                                    strokeWidth: 2,
+                                                    valueColor: AlwaysStoppedAnimation<Color>(
+                                                      Colors.white,
+                                                    ),
+                                                  ),
+                                                )
+                                              : Text(
+                                                  'Continue',
+                                                  style: GoogleFonts.nunito(
+                                                    fontSize: 16,
+                                                    fontWeight: FontWeight.w700,
+                                                    color: Colors.white,
+                                                  ),
+                                                ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
                               ),
-                            ],
-                          ),
-                        ),
+                            ),
+                          );
+                        },
                       )
                     : const SizedBox.shrink(),
               ),
             ),
           ),
         ),
+      ),
+    );
+  }
+
+  /// LP Coin icon - custom branded icon replacing emoji
+  Widget _buildLpCoinIcon() {
+    return Container(
+      width: 72,
+      height: 72,
+      decoration: BoxDecoration(
+        gradient: Us2Theme.accentGradient,
+        shape: BoxShape.circle,
+        boxShadow: [
+          BoxShadow(
+            color: Us2Theme.glowPink.withValues(alpha: 0.4),
+            blurRadius: 24,
+            offset: const Offset(0, 8),
+          ),
+        ],
+      ),
+      child: Center(
+        child: Container(
+          width: 48,
+          height: 48,
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                Color(0xFFFFD700), // Gold start
+                Color(0xFFFFA500), // Gold end
+              ],
+            ),
+            shape: BoxShape.circle,
+          ),
+          child: Center(
+            child: Text(
+              'LP',
+              style: GoogleFonts.nunito(
+                fontSize: 18,
+                fontWeight: FontWeight.w800,
+                color: const Color(0xFF5D4E37), // Brown text
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  /// Clean journey progress bar without bouncing heart
+  Widget _buildUs2JourneyBarClean({
+    required double progress,
+    required String destinationAsset,
+    required String destinationName,
+    required int lpThreshold,
+  }) {
+    final currentLp = (widget.lpAwarded * progress).round();
+    final lpToGo = lpThreshold - currentLp;
+    final fillPercent = (currentLp / lpThreshold).clamp(0.0, 1.0);
+
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Us2Theme.beige,
+        borderRadius: BorderRadius.circular(16),
+      ),
+      child: Column(
+        children: [
+          // Header row
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'Journey Progress',
+                style: GoogleFonts.nunito(
+                  fontSize: 13,
+                  fontWeight: FontWeight.w600,
+                  color: Us2Theme.textMedium,
+                ),
+              ),
+              Text(
+                '$currentLp / $lpThreshold LP',
+                style: GoogleFonts.nunito(
+                  fontSize: 13,
+                  fontWeight: FontWeight.w700,
+                  color: Us2Theme.textDark,
+                ),
+              ),
+            ],
+          ),
+
+          const SizedBox(height: 12),
+
+          // Progress track (clean, no bouncing heart)
+          Container(
+            height: 12,
+            width: double.infinity,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(6),
+            ),
+            child: Stack(
+              children: [
+                // Fill
+                FractionallySizedBox(
+                  widthFactor: fillPercent,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      gradient: Us2Theme.accentGradient,
+                      borderRadius: BorderRadius.circular(6),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+
+          const SizedBox(height: 14),
+
+          // Reward preview row
+          Row(
+            children: [
+              // Destination image
+              Container(
+                width: 40,
+                height: 40,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(
+                    color: Us2Theme.textLight.withValues(alpha: 0.2),
+                    width: 1,
+                  ),
+                ),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(7),
+                  child: Image.asset(
+                    destinationAsset,
+                    fit: BoxFit.cover,
+                    errorBuilder: (context, error, stackTrace) {
+                      // Fallback to emoji
+                      return Container(
+                        color: Us2Theme.cream,
+                        child: const Center(
+                          child: Text('🗼', style: TextStyle(fontSize: 20)),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ),
+              const SizedBox(width: 12),
+              // Reward info
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      destinationName,
+                      style: GoogleFonts.playfairDisplay(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
+                        color: Us2Theme.textDark,
+                      ),
+                    ),
+                    Text(
+                      '$lpToGo LP to go',
+                      style: GoogleFonts.nunito(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w500,
+                        color: Us2Theme.textLight,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }

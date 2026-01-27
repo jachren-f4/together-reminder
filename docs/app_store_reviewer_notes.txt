@@ -1,0 +1,21 @@
+NOTE FOR REVIEWER: Build 74 - Subscription fixes
+
+This demo account has an EXPIRED subscription to test the paywall flow.
+
+The app uses email verification (no password). You'll need access to the Gmail inbox to get the code.
+
+LOGIN INSTRUCTIONS:
+1. Enter email: us2appreview2026@gmail.com
+2. Tap "Continue" - a verification code will be sent
+3. Open Gmail (gmail.com) and sign in:
+   - Email: us2appreview2026@gmail.com
+   - Gmail password: Us2Review!Apple2026#
+4. Find the email from "Us 2.0" with the 8-digit code
+5. Enter the code in the app
+6. The subscription paywall will appear (expired subscription)
+7. You can test the full purchase flow from there
+
+ACCOUNT DELETION (if needed):
+1. Open the app and navigate to Settings (gear icon in bottom navigation)
+2. Scroll down and tap "Delete Account"
+3. Confirm deletion

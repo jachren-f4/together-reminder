@@ -5,6 +5,7 @@ import '../../services/steps_feature_service.dart';
 import '../../services/haptic_service.dart';
 import '../../services/sound_service.dart';
 import '../../config/brand/brand_loader.dart';
+import '../../config/brand/brand_config.dart';
 import '../../theme/app_theme.dart';
 import '../../animations/animation_config.dart';
 
@@ -32,6 +33,8 @@ class _StepsQuestCardState extends State<StepsQuestCard>
     with SingleTickerProviderStateMixin {
   final StepsFeatureService _stepsService = StepsFeatureService();
   final StorageService _storage = StorageService();
+
+  bool get _isUs2 => BrandLoader().config.brand == Brand.us2;
 
   late AnimationController _pressController;
   late Animation<double> _scaleAnimation;
@@ -222,18 +225,18 @@ class _StepsQuestCardState extends State<StepsQuestCard>
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        // "Steps Together" - title
+                        // Title
                         Text(
-                          'Steps Together',
+                          _isUs2 ? 'Steps' : 'Steps Together',
                           style: AppTheme.headlineFont.copyWith(
                             fontSize: 16,
                             fontWeight: FontWeight.w600,
                           ),
                         ),
                         const SizedBox(height: 4),
-                        // "Walk together, earn together" - gray italic
+                        // Subtitle
                         Text(
-                          'Walk together, earn together',
+                          _isUs2 ? 'Walk more, earn more' : 'Walk together, earn together',
                           style: AppTheme.headlineFont.copyWith(
                             fontSize: 12,
                             color: const Color(0xFF666666),
@@ -432,7 +435,7 @@ class _StepsQuestCardState extends State<StepsQuestCard>
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Steps Together',
+                          _isUs2 ? 'Steps' : 'Steps Together',
                           style: AppTheme.headlineFont.copyWith(
                             fontSize: 16,
                             fontWeight: FontWeight.w600,
@@ -615,7 +618,7 @@ class _StepsQuestCardState extends State<StepsQuestCard>
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Steps Together',
+                          _isUs2 ? 'Steps' : 'Steps Together',
                           style: AppTheme.headlineFont.copyWith(
                             fontSize: 16,
                             fontWeight: FontWeight.w600,

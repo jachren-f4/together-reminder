@@ -1,0 +1,843 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phase 6 - Steps Feature Rename</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Nunito:wght@400;600;700&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Nunito', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #FAFAFA;
+            color: #3A3A3A;
+            display: flex;
+            gap: 40px;
+            padding: 40px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .mockup-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .mockup-label {
+            font-size: 14px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #6E6E6E;
+            padding: 8px 16px;
+            background: #F0F0F0;
+            border-radius: 8px;
+        }
+
+        .mockup-label.before { background: #FFE5E5; color: #C62828; }
+        .mockup-label.after { background: #E5FFE5; color: #2E7D32; }
+
+        .phone {
+            width: 390px;
+            height: 844px;
+            background: linear-gradient(180deg, #FFD1C1 0%, #FFF5F0 100%);
+            border-radius: 50px;
+            overflow: hidden;
+            position: relative;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+        }
+
+        .screen-content {
+            padding: 60px 24px 40px;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header */
+        .header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .back-btn {
+            width: 44px;
+            height: 44px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: #3A3A3A;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        /* Hero section */
+        .hero {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        .hero-emoji {
+            font-size: 72px;
+            margin-bottom: 16px;
+        }
+
+        .hero-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        .hero-subtitle {
+            font-size: 16px;
+            color: #5A5A5A;
+            line-height: 1.5;
+            max-width: 300px;
+            margin: 0 auto;
+        }
+
+        /* Confusing text highlight */
+        .confusing {
+            background: #FFEB3B;
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+
+        /* Clear text */
+        .clear-text {
+            background: #C8E6C9;
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+
+        /* How it works card */
+        .how-card {
+            background: white;
+            border-radius: 20px;
+            padding: 24px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+            margin-bottom: 24px;
+        }
+
+        .how-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+
+        .steps {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .step {
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+        }
+
+        .step-number {
+            width: 28px;
+            height: 28px;
+            background: linear-gradient(135deg, #FF6B6B, #FF9F43);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 14px;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        .step-text {
+            font-size: 15px;
+            line-height: 1.5;
+            padding-top: 4px;
+        }
+
+        /* Tips card */
+        .tips-card {
+            background: white;
+            border-radius: 20px;
+            padding: 24px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+            flex: 1;
+        }
+
+        .tips-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+
+        .tip {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+
+        .tip:last-child {
+            margin-bottom: 0;
+        }
+
+        .tip-bullet {
+            color: #FF5E62;
+            font-size: 16px;
+        }
+
+        .tip-text {
+            font-size: 14px;
+            color: #5A5A5A;
+            line-height: 1.5;
+        }
+
+        /* Counter screen elements */
+        .counter-card {
+            background: white;
+            border-radius: 24px;
+            padding: 32px 24px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .step-count {
+            font-family: 'Playfair Display', serif;
+            font-size: 48px;
+            font-weight: 700;
+            color: #FF5E62;
+            margin-bottom: 8px;
+        }
+
+        .step-goal {
+            font-size: 14px;
+            color: #888;
+            margin-bottom: 20px;
+        }
+
+        .progress-bar {
+            height: 12px;
+            background: #F0F0F0;
+            border-radius: 6px;
+            overflow: hidden;
+            margin-bottom: 16px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            width: 45%;
+            background: linear-gradient(90deg, #FF6B6B, #FF9F43);
+            border-radius: 6px;
+        }
+
+        .team-message {
+            font-size: 16px;
+            font-weight: 600;
+            color: #3A3A3A;
+            padding: 12px;
+            background: #FFF0EE;
+            border-radius: 12px;
+        }
+
+        /* Clarification banner */
+        .clarification {
+            background: linear-gradient(135deg, #E3F2FD, #BBDEFB);
+            border-radius: 12px;
+            padding: 12px 16px;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .clarification-icon {
+            font-size: 20px;
+        }
+
+        .clarification-text {
+            font-size: 13px;
+            color: #1565C0;
+            font-weight: 600;
+        }
+
+        /* Notes section */
+        .notes {
+            max-width: 1000px;
+            margin: 40px auto;
+            padding: 30px;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .notes h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: #3A3A3A;
+        }
+
+        .notes h3 {
+            font-size: 16px;
+            font-weight: 700;
+            margin: 20px 0 10px;
+            color: #FF5E62;
+        }
+
+        .notes ul {
+            margin-left: 20px;
+            line-height: 1.8;
+        }
+
+        .notes li {
+            margin-bottom: 8px;
+        }
+
+        .message-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 16px 0;
+        }
+
+        .message-table th,
+        .message-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #F0F0F0;
+            vertical-align: top;
+        }
+
+        .message-table th {
+            background: #F8F8F8;
+            font-weight: 700;
+        }
+
+        .bad { color: #C62828; }
+        .good { color: #2E7D32; }
+    </style>
+</head>
+<body>
+    <!-- BEFORE: Intro Screen -->
+    <div class="mockup-container">
+        <div class="mockup-label before">Before: Intro (Confusing)</div>
+        <div class="phone">
+            <div class="screen-content">
+                <div class="header">
+                    <div class="back-btn">‹</div>
+                </div>
+
+                <div class="hero">
+                    <div class="hero-emoji">👟</div>
+                    <div class="hero-title">Steps Together</div>
+                    <div class="hero-subtitle">
+                        <span class="confusing">Walk together</span>, earn together.
+                    </div>
+                </div>
+
+                <div class="how-card">
+                    <div class="how-title">How it works</div>
+                    <div class="steps">
+                        <div class="step">
+                            <div class="step-number">1</div>
+                            <div class="step-text">Connect Apple Health to share your step count</div>
+                        </div>
+                        <div class="step">
+                            <div class="step-number">2</div>
+                            <div class="step-text">Walk throughout the day - steps sync automatically</div>
+                        </div>
+                        <div class="step">
+                            <div class="step-number">3</div>
+                            <div class="step-text">Open the app tomorrow to claim your combined reward</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tips-card">
+                    <div class="tips-title">Tips</div>
+                    <div class="tip">
+                        <span class="tip-bullet">•</span>
+                        <span class="tip-text"><span class="confusing">Take a walk together</span> after dinner</span>
+                    </div>
+                    <div class="tip">
+                        <span class="tip-bullet">•</span>
+                        <span class="tip-text">Park further away when shopping</span>
+                    </div>
+                    <div class="tip">
+                        <span class="tip-bullet">•</span>
+                        <span class="tip-text">Take the stairs instead of elevator</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- AFTER: Intro Screen (Compact with Ring Preview) -->
+    <div class="mockup-container">
+        <div class="mockup-label after">After: Intro (Compact)</div>
+        <div class="phone">
+            <div class="screen-content">
+                <div class="header">
+                    <div class="back-btn">‹</div>
+                </div>
+
+                <div class="hero" style="margin-bottom: 24px;">
+                    <div class="hero-title" style="font-size: 32px; margin-bottom: 12px;">Steps</div>
+                    <div class="hero-subtitle" style="max-width: 300px; font-size: 15px; line-height: 1.5;">
+                        Walk more, earn more.<br>
+                        You don't need to be next to each other!
+                    </div>
+                </div>
+
+                <!-- Ring Preview -->
+                <div style="background: white; border-radius: 20px; padding: 16px 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.06); margin-bottom: 20px;">
+                    <!-- Example label -->
+                    <div style="text-align: center; margin-bottom: 10px;">
+                        <span style="font-size: 13px; color: #5A5A5A;">This could be you two!</span>
+                    </div>
+                    <div style="width: 140px; height: 140px; margin: 0 auto 12px; position: relative;">
+                        <svg viewBox="0 0 100 100" style="width: 100%; height: 100%; transform: rotate(-90deg);">
+                            <!-- User ring: 7,190 / 20,000 = 36% of 264 = 95 -->
+                            <circle cx="50" cy="50" r="42" fill="none" stroke="#F0F0F0" stroke-width="8"/>
+                            <circle cx="50" cy="50" r="42" fill="none" stroke="url(#previewGrad1)" stroke-width="8" stroke-dasharray="95 264" stroke-linecap="round"/>
+                            <!-- Partner ring: 6,648 / 20,000 = 33% of 214 = 71 -->
+                            <circle cx="50" cy="50" r="34" fill="none" stroke="#F0F0F0" stroke-width="8"/>
+                            <circle cx="50" cy="50" r="34" fill="none" stroke="#4ECDC4" stroke-width="8" stroke-dasharray="71 214" stroke-linecap="round"/>
+                            <defs>
+                                <linearGradient id="previewGrad1" x1="0%" y1="0%" x2="100%" y2="0%">
+                                    <stop offset="0%" style="stop-color:#FF6B6B"/>
+                                    <stop offset="100%" style="stop-color:#FF9F43"/>
+                                </linearGradient>
+                            </defs>
+                        </svg>
+                        <div style="position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+                            <div style="font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 700; color: #3A3A3A;">13,838</div>
+                            <div style="font-size: 10px; color: #888;">of 20,000 goal</div>
+                        </div>
+                    </div>
+                    <!-- Legend with step counts -->
+                    <div style="display: flex; justify-content: center; gap: 20px; font-size: 12px; margin-bottom: 12px;">
+                        <div style="display: flex; align-items: center; gap: 6px;">
+                            <div style="width: 10px; height: 10px; background: linear-gradient(135deg, #FF6B6B, #FF9F43); border-radius: 2px;"></div>
+                            <span style="color: #555;">You <strong>7,190</strong></span>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 6px;">
+                            <div style="width: 10px; height: 10px; background: #4ECDC4; border-radius: 2px;"></div>
+                            <span style="color: #555;">Partner <strong>6,648</strong></span>
+                        </div>
+                    </div>
+                    <!-- LP Rewards -->
+                    <div style="display: flex; justify-content: center; gap: 12px; padding-top: 10px; border-top: 1px solid #F0F0F0;">
+                        <div style="display: flex; align-items: center; gap: 6px; background: #FFF8F0; padding: 6px 10px; border-radius: 8px;">
+                            <span style="font-size: 11px; color: #666;">10K steps</span>
+                            <span style="font-size: 11px; font-weight: 700; color: #FF9F43;">+15 LP</span>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 6px; background: #FFF8F0; padding: 6px 10px; border-radius: 8px;">
+                            <span style="font-size: 11px; color: #666;">20K steps</span>
+                            <span style="font-size: 11px; font-weight: 700; color: #FF9F43;">+30 LP</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Compact How it works -->
+                <div class="how-card" style="padding: 16px 20px; margin-bottom: 20px;">
+                    <div class="how-title" style="font-size: 14px; margin-bottom: 12px;">How it works</div>
+                    <div class="steps" style="gap: 10px;">
+                        <div class="step">
+                            <div class="step-number" style="width: 22px; height: 22px; font-size: 12px;">1</div>
+                            <div class="step-text" style="font-size: 13px; padding-top: 2px;">Connect Apple Health</div>
+                        </div>
+                        <div class="step">
+                            <div class="step-number" style="width: 22px; height: 22px; font-size: 12px;">2</div>
+                            <div class="step-text" style="font-size: 13px; padding-top: 2px;">Walk throughout the day. Phone in pocket or Apple Watch counts your steps</div>
+                        </div>
+                        <div class="step">
+                            <div class="step-number" style="width: 22px; height: 22px; font-size: 12px;">3</div>
+                            <div class="step-text" style="font-size: 13px; padding-top: 2px;">Claim your reward tomorrow</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Spacer pushes button to bottom -->
+                <div style="flex: 1;"></div>
+
+                <!-- Connect button -->
+                <div style="text-align: center; padding-bottom: 20px;">
+                    <div style="background: linear-gradient(135deg, #FF6B6B, #FF9F43); color: white; font-weight: 700; font-size: 16px; padding: 16px 32px; border-radius: 28px; display: inline-block; box-shadow: 0 4px 16px rgba(255, 107, 107, 0.4);">
+                        Connect to Apple Health
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- BEFORE: Counter Screen (matches actual app structure) -->
+    <div class="mockup-container">
+        <div class="mockup-label before">Before: Counter (Confusing)</div>
+        <div class="phone">
+            <div class="screen-content" style="padding: 60px 16px 20px;">
+                <!-- AppBar -->
+                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px;">
+                    <div class="back-btn">‹</div>
+                    <div style="font-family: 'Playfair Display', serif; font-size: 18px; font-weight: 600;"><span class="confusing">Steps Together</span></div>
+                    <div class="back-btn" style="font-size: 16px;">↻</div>
+                </div>
+
+                <!-- Today's Progress Card with Ring -->
+                <div class="counter-card" style="padding: 20px; margin-bottom: 12px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                        <div style="font-family: 'Playfair Display', serif; font-size: 14px; font-weight: 600;">Today's Progress</div>
+                        <div style="background: #E8F5E9; padding: 4px 10px; border-radius: 12px; display: flex; align-items: center; gap: 6px;">
+                            <div style="width: 6px; height: 6px; background: #4CAF50; border-radius: 50%;"></div>
+                            <span style="font-size: 11px; font-weight: 700; color: #4CAF50;">LIVE</span>
+                        </div>
+                    </div>
+
+                    <!-- Ring visualization (simplified) -->
+                    <div style="width: 160px; height: 160px; margin: 0 auto 16px; position: relative;">
+                        <svg viewBox="0 0 100 100" style="width: 100%; height: 100%; transform: rotate(-90deg);">
+                            <circle cx="50" cy="50" r="42" fill="none" stroke="#F0F0F0" stroke-width="8"/>
+                            <circle cx="50" cy="50" r="42" fill="none" stroke="url(#userGrad)" stroke-width="8" stroke-dasharray="60 264" stroke-linecap="round"/>
+                            <circle cx="50" cy="50" r="34" fill="none" stroke="#F0F0F0" stroke-width="8"/>
+                            <circle cx="50" cy="50" r="34" fill="none" stroke="#4ECDC4" stroke-width="8" stroke-dasharray="45 214" stroke-linecap="round"/>
+                            <defs>
+                                <linearGradient id="userGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                                    <stop offset="0%" style="stop-color:#FF6B6B"/>
+                                    <stop offset="100%" style="stop-color:#FF9F43"/>
+                                </linearGradient>
+                            </defs>
+                        </svg>
+                        <div style="position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+                            <div style="font-family: 'Playfair Display', serif; font-size: 24px; font-weight: 700;">4,523</div>
+                            <div style="font-size: 12px; color: #888;">of 20,000 goal</div>
+                        </div>
+                    </div>
+
+                    <!-- Legend -->
+                    <div style="display: flex; justify-content: center; gap: 32px; margin-bottom: 12px;">
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <div style="width: 12px; height: 12px; background: linear-gradient(135deg, #FF6B6B, #FF9F43); border-radius: 3px;"></div>
+                            <div><div style="font-size: 11px; color: #888;">You</div><div style="font-size: 14px; font-weight: 600;">2,523</div></div>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <div style="width: 12px; height: 12px; background: #4ECDC4; border-radius: 3px;"></div>
+                            <div><div style="font-size: 11px; color: #888;">Partner</div><div style="font-size: 14px; font-weight: 600;">2,000</div></div>
+                        </div>
+                    </div>
+
+                    <!-- Team message -->
+                    <div class="team-message">
+                        <span class="confusing">Keep walking together!</span> 💪
+                    </div>
+                </div>
+
+                <!-- Below Threshold Card -->
+                <div class="counter-card" style="padding: 20px; text-align: center;">
+                    <div style="font-size: 32px; margin-bottom: 8px;">👟</div>
+                    <div style="font-family: 'Playfair Display', serif; font-size: 16px; font-weight: 600; margin-bottom: 8px;"><span class="confusing">Keep walking together!</span></div>
+                    <div style="font-size: 13px; color: #666; margin-bottom: 16px;">Walk 5,477 more steps to start earning LP</div>
+
+                    <div class="progress-bar" style="margin-bottom: 8px;">
+                        <div class="progress-fill"></div>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; font-size: 11px; margin-bottom: 16px;">
+                        <span style="color: #FF5E62; font-weight: 600;">4,523</span>
+                        <span style="color: #888;">10,000 (15 LP)</span>
+                    </div>
+
+                    <!-- Tips -->
+                    <div style="background: #FFF8F6; border-radius: 12px; padding: 12px; text-align: left;">
+                        <div style="font-size: 12px; font-weight: 600; margin-bottom: 8px;">💡 Tips to reach your goal</div>
+                        <div style="font-size: 11px; color: #666; display: flex; align-items: center; gap: 6px; margin-bottom: 4px;">
+                            <span style="color: #4CAF50;">✓</span> <span class="confusing">Take a walk together after dinner</span>
+                        </div>
+                        <div style="font-size: 11px; color: #666; display: flex; align-items: center; gap: 6px; margin-bottom: 4px;">
+                            <span style="color: #4CAF50;">✓</span> Park further away when shopping
+                        </div>
+                        <div style="font-size: 11px; color: #666; display: flex; align-items: center; gap: 6px;">
+                            <span style="color: #4CAF50;">✓</span> Take the stairs instead of elevator
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Week Preview (partial, at bottom) -->
+                <div class="counter-card" style="padding: 16px; margin-top: 12px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <span style="font-size: 13px; font-weight: 600;">This Week</span>
+                        <span style="font-size: 11px; color: #FF5E62; font-weight: 600;">🔥 <span class="confusing">2 day streak of 10K+ together</span></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- AFTER: Counter Screen (matches actual app structure) -->
+    <div class="mockup-container">
+        <div class="mockup-label after">After: Counter (Renamed)</div>
+        <div class="phone">
+            <div class="screen-content" style="padding: 60px 16px 20px;">
+                <!-- AppBar -->
+                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px;">
+                    <div class="back-btn">‹</div>
+                    <div style="font-family: 'Playfair Display', serif; font-size: 18px; font-weight: 600;"><span class="clear-text">Steps</span></div>
+                    <div class="back-btn" style="font-size: 16px;">↻</div>
+                </div>
+
+                <!-- Today's Progress Card with Ring -->
+                <div class="counter-card" style="padding: 20px; margin-bottom: 12px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                        <div style="font-family: 'Playfair Display', serif; font-size: 14px; font-weight: 600;">Today's Progress</div>
+                        <div style="background: #E8F5E9; padding: 4px 10px; border-radius: 12px; display: flex; align-items: center; gap: 6px;">
+                            <div style="width: 6px; height: 6px; background: #4CAF50; border-radius: 50%;"></div>
+                            <span style="font-size: 11px; font-weight: 700; color: #4CAF50;">LIVE</span>
+                        </div>
+                    </div>
+
+                    <!-- Ring visualization (simplified) -->
+                    <div style="width: 160px; height: 160px; margin: 0 auto 16px; position: relative;">
+                        <svg viewBox="0 0 100 100" style="width: 100%; height: 100%; transform: rotate(-90deg);">
+                            <circle cx="50" cy="50" r="42" fill="none" stroke="#F0F0F0" stroke-width="8"/>
+                            <circle cx="50" cy="50" r="42" fill="none" stroke="url(#userGrad2)" stroke-width="8" stroke-dasharray="60 264" stroke-linecap="round"/>
+                            <circle cx="50" cy="50" r="34" fill="none" stroke="#F0F0F0" stroke-width="8"/>
+                            <circle cx="50" cy="50" r="34" fill="none" stroke="#4ECDC4" stroke-width="8" stroke-dasharray="45 214" stroke-linecap="round"/>
+                            <defs>
+                                <linearGradient id="userGrad2" x1="0%" y1="0%" x2="100%" y2="0%">
+                                    <stop offset="0%" style="stop-color:#FF6B6B"/>
+                                    <stop offset="100%" style="stop-color:#FF9F43"/>
+                                </linearGradient>
+                            </defs>
+                        </svg>
+                        <div style="position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+                            <div style="font-family: 'Playfair Display', serif; font-size: 24px; font-weight: 700;">4,523</div>
+                            <div style="font-size: 12px; color: #888;">of 20,000 goal</div>
+                        </div>
+                    </div>
+
+                    <!-- Legend -->
+                    <div style="display: flex; justify-content: center; gap: 32px; margin-bottom: 12px;">
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <div style="width: 12px; height: 12px; background: linear-gradient(135deg, #FF6B6B, #FF9F43); border-radius: 3px;"></div>
+                            <div><div style="font-size: 11px; color: #888;">You</div><div style="font-size: 14px; font-weight: 600;">2,523</div></div>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <div style="width: 12px; height: 12px; background: #4ECDC4; border-radius: 3px;"></div>
+                            <div><div style="font-size: 11px; color: #888;">Partner</div><div style="font-size: 14px; font-weight: 600;">2,000</div></div>
+                        </div>
+                    </div>
+
+                    <!-- Team message -->
+                    <div class="team-message">
+                        <span class="clear-text">Keep walking!</span> Every step counts. 💪
+                    </div>
+                </div>
+
+                <!-- Below Threshold Card -->
+                <div class="counter-card" style="padding: 20px; text-align: center;">
+                    <div style="font-size: 32px; margin-bottom: 8px;">👟</div>
+                    <div style="font-family: 'Playfair Display', serif; font-size: 16px; font-weight: 600; margin-bottom: 8px;"><span class="clear-text">Keep walking!</span></div>
+                    <div style="font-size: 13px; color: #666; margin-bottom: 16px;">Walk 5,477 more steps to start earning LP</div>
+
+                    <div class="progress-bar" style="margin-bottom: 8px;">
+                        <div class="progress-fill"></div>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; font-size: 11px; margin-bottom: 16px;">
+                        <span style="color: #FF5E62; font-weight: 600;">4,523</span>
+                        <span style="color: #888;">10,000 (15 LP)</span>
+                    </div>
+
+                    <!-- Tips (moved from intro screen) -->
+                    <div style="background: #FFF8F6; border-radius: 12px; padding: 12px; text-align: left;">
+                        <div style="font-size: 12px; font-weight: 600; margin-bottom: 8px;">💡 Tips to reach your goal</div>
+                        <div style="font-size: 11px; color: #666; display: flex; align-items: center; gap: 6px; margin-bottom: 4px;">
+                            <span style="color: #4CAF50;">✓</span> <span class="clear-text">Take a walk after dinner</span>
+                        </div>
+                        <div style="font-size: 11px; color: #666; display: flex; align-items: center; gap: 6px; margin-bottom: 4px;">
+                            <span style="color: #4CAF50;">✓</span> Park further away when shopping
+                        </div>
+                        <div style="font-size: 11px; color: #666; display: flex; align-items: center; gap: 6px; margin-bottom: 4px;">
+                            <span style="color: #4CAF50;">✓</span> Take the stairs instead of elevator
+                        </div>
+                        <div style="font-size: 11px; color: #666; display: flex; align-items: center; gap: 6px;">
+                            <span style="color: #4CAF50;">✓</span> <span class="clear-text">Go for a morning walk</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Week Preview (partial, at bottom) -->
+                <div class="counter-card" style="padding: 16px; margin-top: 12px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <span style="font-size: 13px; font-weight: 600;">This Week</span>
+                        <span style="font-size: 11px; color: #FF5E62; font-weight: 600;">🔥 <span class="clear-text">2 day streak</span></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Design Notes -->
+    <div class="notes">
+        <h2>Phase 6: Steps Feature Rename</h2>
+
+        <h3>Root Cause</h3>
+        <ul>
+            <li><strong>The word "together" fundamentally implies physical proximity</strong></li>
+            <li>No amount of explanatory copy can overcome this semantic issue</li>
+            <li>Users think they need to walk side-by-side with their partner</li>
+            <li>Feature underutilized due to this core misunderstanding</li>
+        </ul>
+
+        <h3>Solution: Complete Rename + Compact Layout</h3>
+        <ul>
+            <li><strong>Rename feature:</strong> "Steps Together" → "Steps"</li>
+            <li><strong>Remove "together" from ALL copy</strong> - not just "walk together"</li>
+            <li>Don't try to explain "together but not physically together" - just avoid the word</li>
+            <li><strong>Compact intro screen</strong> to avoid scrolling:
+                <ul>
+                    <li>❌ Remove sneaker emoji (saves vertical space)</li>
+                    <li>❌ Remove Tips card (move to counter screen instead)</li>
+                    <li>✅ Merge clarification into subtitle (single text block)</li>
+                    <li>✅ Shorten "How it works" step text</li>
+                </ul>
+            </li>
+        </ul>
+
+        <h3>Name & Copy Changes</h3>
+        <table class="message-table">
+            <tr>
+                <th>Location</th>
+                <th class="bad">Before</th>
+                <th class="good">After</th>
+            </tr>
+            <tr>
+                <td>Feature name</td>
+                <td class="bad">"Steps Together"</td>
+                <td class="good">"Steps"</td>
+            </tr>
+            <tr>
+                <td>Intro headline</td>
+                <td class="bad">"Walk together, earn together."</td>
+                <td class="good">"Walk more, earn more."</td>
+            </tr>
+            <tr>
+                <td>Intro subtitle</td>
+                <td class="bad">(varies)</td>
+                <td class="good">"Walk more, earn more. Your steps automatically combine with your partner's. You don't need to be next to each other!"</td>
+            </tr>
+            <tr>
+                <td>Counter message</td>
+                <td class="bad">"Keep walking together!"</td>
+                <td class="good">"Keep walking! Every step counts toward your daily goal."</td>
+            </tr>
+            <tr>
+                <td>Tips</td>
+                <td class="bad">"Take a walk together after dinner"</td>
+                <td class="good">"Take a walk after dinner" / "Go for a morning walk"</td>
+            </tr>
+            <tr>
+                <td>Clarification</td>
+                <td class="bad">(none - separate banner)</td>
+                <td class="good">(merged into subtitle - see above)</td>
+            </tr>
+        </table>
+
+        <h3>Key Messaging Principles</h3>
+        <ul>
+            <li><strong>Never use "together":</strong> It implies physical proximity</li>
+            <li><strong>Emphasize "automatic":</strong> Steps combine/sync without coordination</li>
+            <li><strong>Focus on individual action:</strong> "Your steps count"</li>
+            <li><strong>Partner mentioned only in context of combining:</strong> "combine with your partner's"</li>
+        </ul>
+
+        <h3>Files to Modify</h3>
+        <ul>
+            <li><code>app/lib/screens/steps_intro_screen.dart</code> - Feature name, tagline, how it works, tips</li>
+            <li><code>app/lib/screens/steps_counter_screen.dart</code> - Encouragement message, tips</li>
+            <li><code>app/lib/widgets/brand/us2/us2_bottom_nav.dart</code> - Nav label</li>
+            <li>Any other file referencing "Steps Together" in UI copy</li>
+        </ul>
+
+        <h3>Words to Avoid</h3>
+        <ul>
+            <li><strong class="bad">Never use:</strong> "together", "as a team", "sync up", "at the same time", "side-by-side"</li>
+            <li><strong class="good">Safe to use:</strong> "combine", "add up", "automatically", "sync automatically", "your steps"</li>
+        </ul>
+
+        <h2 style="margin-top: 40px; padding-top: 20px; border-top: 3px solid #FF5E62;">📋 Implementation Task List</h2>
+        <p style="color: #666; margin-bottom: 20px;">Coding agent: Complete each task below. Check off when done. Follow the "After" mockups exactly.</p>
+
+        <h3>Steps Intro Screen (<code>steps_intro_screen.dart</code>)</h3>
+        <ul style="list-style: none; margin-left: 0;">
+            <li>☐ Change AppBar title from "Steps Together" → "Steps"</li>
+            <li>☐ Remove sneaker emoji from hero section</li>
+            <li>☐ Change hero title from "Steps Together" → "Steps"</li>
+            <li>☐ Change subtitle to: "Walk more, earn more. You don't need to be next to each other!"</li>
+            <li>☐ Add ring preview card with:
+                <ul>
+                    <li>☐ "This could be you two!" label at top (13px, regular style, #5A5A5A)</li>
+                    <li>☐ Dual-ring visualization (150px) - outer coral gradient, inner teal</li>
+                    <li>☐ Sample data: "13,838 of 20,000 goal" in center</li>
+                    <li>☐ Legend: "You 7,190" (coral) and "Partner 6,648" (teal)</li>
+                    <li>☐ LP rewards row: "10K steps +15 LP" and "20K steps +30 LP" badges</li>
+                </ul>
+            </li>
+            <li>☐ Update "How it works" section:
+                <ul>
+                    <li>☐ Step 1: "Connect Apple Health"</li>
+                    <li>☐ Step 2: "Walk throughout the day. Phone in pocket or Apple Watch counts your steps"</li>
+                    <li>☐ Step 3: "Claim your reward tomorrow"</li>
+                </ul>
+            </li>
+            <li>☐ Remove Tips card entirely (tips moved to counter screen)</li>
+            <li>☐ Change button text to "Connect to Apple Health"</li>
+        </ul>
+
+        <h3>Steps Counter Screen (<code>steps_counter_screen.dart</code>)</h3>
+        <ul style="list-style: none; margin-left: 0;">
+            <li>☐ Change AppBar title from "Steps Together" → "Steps" (line ~296)</li>
+            <li>☐ Change team message from "Keep walking together!" → "Keep walking! Every step counts." (line ~767)</li>
+            <li>☐ Change below threshold title from "Keep walking together!" → "Keep walking!" (line ~1101)</li>
+            <li>☐ Change tip from "Take a walk together after dinner" → "Take a walk after dinner" (line ~1197)</li>
+            <li>☐ Change week streak text from "$streak day streak of 10K+ together" → "$streak day streak" (line ~1297)</li>
+        </ul>
+
+        <h3>Bottom Navigation (<code>us2_bottom_nav.dart</code>)</h3>
+        <ul style="list-style: none; margin-left: 0;">
+            <li>☐ Change nav label from "Steps Together" → "Steps" (if applicable)</li>
+        </ul>
+
+        <h3>Global Search & Replace</h3>
+        <ul style="list-style: none; margin-left: 0;">
+            <li>☐ Search entire codebase for "Steps Together" in UI strings and replace with "Steps"</li>
+            <li>☐ Search for "walk together" and "walking together" - remove "together" from all instances</li>
+            <li>☐ Verify no UI-facing text contains the word "together" in Steps feature</li>
+        </ul>
+
+        <h3>Testing Checklist</h3>
+        <ul style="list-style: none; margin-left: 0;">
+            <li>☐ Intro screen matches "After: Intro (Compact)" mockup exactly</li>
+            <li>☐ Counter screen matches "After: Counter (Renamed)" mockup exactly</li>
+            <li>☐ No scrolling required on intro screen (all content fits above fold)</li>
+            <li>☐ Ring preview shows dual-ring with different arc lengths</li>
+            <li>☐ LP reward badges display correctly</li>
+            <li>☐ All "together" references removed from UI</li>
+        </ul>
+    </div>
+</body>
+</html>

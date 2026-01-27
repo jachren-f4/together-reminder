@@ -795,7 +795,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         initialDate: null,
         onDateSelected: (date) async {
           Navigator.pop(context);
-          final success = await _coupleStatsService.setAnniversaryDate(date);
+          final success = await _coupleStatsService.setAnniversaryDate(date, overwrite: true);
           if (success && mounted) {
             _loadCoupleStats();
           }
@@ -890,7 +890,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         initialDate: _coupleStats?.anniversaryDate,
         onDateSelected: (date) async {
           Navigator.pop(context);
-          final success = await _coupleStatsService.setAnniversaryDate(date);
+          final success = await _coupleStatsService.setAnniversaryDate(date, overwrite: true);
           if (success && mounted) {
             _loadCoupleStats();
           }

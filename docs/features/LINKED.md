@@ -13,6 +13,8 @@
 | API Routes | `api/app/api/sync/linked/*.ts` |
 | Puzzle Loader | `api/lib/puzzle/loader.ts` |
 | Puzzle Content | `api/data/puzzles/linked/{branch}/` |
+| Puzzle Order (legacy) | `api/data/puzzles/linked/{branch}/puzzle-order.json` |
+| Puzzle Order (v2) | `api/data/puzzles/linked/{branch}/puzzle-order-v2.json` |
 
 ---
 
@@ -39,6 +41,117 @@
                     POST /api/sync/linked/submit
                     GET  /api/sync/linked/{matchId}
 ```
+
+---
+
+## Grid Size Progression
+
+New players start with smaller, easier puzzles and graduate to larger ones:
+
+### Progression Order
+
+| # | Puzzle IDs | Grid Size | Difficulty |
+|---|------------|-----------|------------|
+| 1-4 | `puzzle_5x7_001` - `puzzle_5x7_004` | 5×7 (35 cells) | Easy |
+| 5-8 | `puzzle_6x8_001` - `puzzle_6x8_004` | 6×8 (48 cells) | Medium |
+| 9+ | `puzzle_001` onwards | 7×9 (63 cells) | Full |
+
+### How It Works
+
+1. **Client** sends `gridProgression: true` in POST request:
+   ```dart
+   // linked_service.dart
+   final response = await apiRequest(
+     'POST',
+     '/api/sync/linked',
+     body: { 'gridProgression': true },
+   );
+   ```
+
+2. **Server** checks the flag and loads the appropriate puzzle order:
+   ```typescript
+   // route.ts
+   const orderFileName = gridProgression
+     ? 'puzzle-order-v2.json'   // 5×7 → 6×8 → 7×9
+     : 'puzzle-order.json';      // 7×9 only (legacy)
+   ```
+
+3. **Puzzle order files** define the sequence:
+   ```
+   api/data/puzzles/linked/{branch}/puzzle-order-v2.json  // New progression
+   api/data/puzzles/linked/{branch}/puzzle-order.json     // Legacy (7×9 first)
+   ```
+
+### Puzzle JSON Format
+
+All puzzle sizes use the same JSON format. The `size` field determines dimensions:
+
+```json
+{
+  "size": {
+    "rows": 7,    // Height (y-axis)
+    "cols": 5     // Width (x-axis)
+  },
+  "grid": [
+    ".", ".", ".", ".", ".",     // Row 0 (5 cells)
+    ".", "C", "A", "T", "S",     // Row 1
+    ".", "O", ".", "O", "T",     // Row 2
+    ".", "C", "O", "L", "A",     // Row 3
+    ".", "A", "S", ".", "M",     // Row 4
+    ".", ".", "L", "A", "P",     // Row 5
+    ".", "D", "O", "E", "S"      // Row 6
+  ],
+  "gridnums": [ ... ],           // 35 numbers for 5×7
+  "clues": { ... },
+  "puzzleId": "puzzle_5x7_001"
+}
+```
+
+**Grid array layout:** Row-major order, `grid[row * cols + col]`
+
+### Supported Sizes
+
+| Size | Cells | Use Case |
+|------|-------|----------|
+| 5×7 | 35 | Starter puzzles for new players |
+| 6×8 | 48 | Intermediate difficulty |
+| 7×9 | 63 | Standard full-size puzzles |
+
+The game screen automatically adapts to any grid size - cell dimensions and layout are calculated from `puzzle.size`.
+
+### File Locations
+
+```
+api/data/puzzles/linked/
+├── casual/
+│   ├── puzzle-order.json      # Legacy order (7×9 first)
+│   ├── puzzle-order-v2.json   # New progression (5×7 → 6×8 → 7×9)
+│   ├── puzzle_5x7_001.json    # Starter puzzles
+│   ├── puzzle_5x7_002.json
+│   ├── puzzle_5x7_003.json
+│   ├── puzzle_5x7_004.json
+│   ├── puzzle_6x8_001.json    # Medium puzzles
+│   ├── puzzle_6x8_002.json
+│   ├── puzzle_6x8_003.json
+│   ├── puzzle_6x8_004.json
+│   ├── puzzle_001.json        # Full-size puzzles
+│   └── ...
+├── romantic/
+│   └── (same structure)
+└── adult/
+    └── (same structure)
+```
+
+### Adding New Puzzle Sizes
+
+To add a new size (e.g., 8×10):
+
+1. **Create puzzle JSON** with correct `size.rows` and `size.cols`
+2. **Name consistently:** `puzzle_8x10_001.json`
+3. **Update `puzzle-order-v2.json`** to include new puzzles in desired position
+4. **Copy to all branches** (casual, romantic, adult)
+
+The game screen handles any rectangular grid - no code changes needed.
 
 ---
 
@@ -507,6 +620,24 @@ Each puzzle folder contains:
 
 The source uses different numbering than our system. Track the mapping here:
 
+#### 5×7 Starter Puzzles (all branches)
+| Source | Our System | Size | Imported |
+|--------|------------|------|----------|
+| puzzle-126 | puzzle_5x7_002 | 5×7 | ✅ |
+| puzzle-128 | puzzle_5x7_003 | 5×7 | ✅ |
+| puzzle-129 | puzzle_5x7_004 | 5×7 | ✅ |
+
+*Note: puzzle_5x7_001 was created manually*
+
+#### 6×8 Medium Puzzles (all branches)
+| Source | Our System | Size | Imported |
+|--------|------------|------|----------|
+| puzzle-136 | puzzle_6x8_001 | 6×8 | ✅ |
+| puzzle-137 | puzzle_6x8_002 | 6×8 | ✅ |
+| puzzle-138 | puzzle_6x8_003 | 6×8 | ✅ |
+| puzzle-139 | puzzle_6x8_004 | 6×8 | ✅ |
+
+#### 7×9 Full-Size Puzzles (romantic branch)
 | Source (crosswordmaker_gpt) | Our System (romantic branch) | Imported |
 |-----------------------------|------------------------------|----------|
 | puzzle-001 to puzzle-046 | puzzle_001 to puzzle_034 | ✅ |

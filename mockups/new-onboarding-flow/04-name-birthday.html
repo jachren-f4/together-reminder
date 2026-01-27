@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Name + Birthday | Us 2.0</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&family=Pacifico&family=Playfair+Display:ital,wght@0,600;0,700;1,400;1,600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-gradient-start: #FFD1C1;
+            --bg-gradient-end: #FFF5F0;
+            --primary-pink: #FF5E62;
+            --gradient-start: #FF6B6B;
+            --gradient-end: #FF9F43;
+            --cream: #FFF8F0;
+            --text-dark: #3A3A3A;
+            --text-medium: #5A5A5A;
+            --text-light: #707070;
+            --glow-pink: rgba(255, 107, 107, 0.5);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            background: linear-gradient(180deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .phone-frame {
+            width: 375px;
+            height: 812px;
+            background: linear-gradient(180deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
+            border-radius: 40px;
+            box-shadow: 0 25px 80px rgba(255, 94, 98, 0.3);
+            overflow: hidden;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header with back button */
+        .header {
+            padding: 50px 20px 16px;
+            display: flex;
+            align-items: center;
+        }
+
+        .back-button {
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 8px rgba(255, 94, 98, 0.15);
+            cursor: pointer;
+            border: none;
+        }
+
+        .back-button svg {
+            width: 20px;
+            height: 20px;
+            fill: var(--text-dark);
+        }
+
+        /* Content */
+        .content {
+            flex: 1;
+            padding: 0 24px;
+            overflow-y: auto;
+        }
+
+        /* Large step number */
+        .step-number {
+            font-family: 'Playfair Display', serif;
+            font-size: 100px;
+            font-weight: 700;
+            line-height: 1;
+            background: linear-gradient(90deg, var(--gradient-start), var(--gradient-end));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .step-label {
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            color: var(--text-medium);
+            margin-bottom: 24px;
+        }
+
+        .title {
+            font-family: 'Playfair Display', serif;
+            font-size: 28px;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 32px;
+        }
+
+        /* Form fields */
+        .field-group {
+            margin-bottom: 24px;
+        }
+
+        .field-label {
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            color: var(--text-medium);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .optional-tag {
+            font-size: 10px;
+            font-weight: 600;
+            color: var(--text-light);
+            background: rgba(0,0,0,0.05);
+            padding: 2px 8px;
+            border-radius: 10px;
+            letter-spacing: 0.5px;
+        }
+
+        .text-input {
+            width: 100%;
+            padding: 18px 20px;
+            font-family: 'Nunito', sans-serif;
+            font-size: 18px;
+            color: var(--text-dark);
+            background: white;
+            border: none;
+            border-radius: 16px;
+            outline: none;
+            transition: box-shadow 0.2s ease;
+        }
+
+        .text-input:focus {
+            box-shadow: 0 0 0 2px var(--primary-pink);
+        }
+
+        .text-input::placeholder {
+            color: var(--text-light);
+        }
+
+        /* Date input with validation */
+        .date-input-container {
+            position: relative;
+        }
+
+        .date-input {
+            width: 100%;
+            padding: 18px 50px 18px 20px;
+            font-family: 'Nunito', sans-serif;
+            font-size: 18px;
+            color: var(--text-dark);
+            background: white;
+            border: none;
+            border-radius: 16px;
+            outline: none;
+            transition: box-shadow 0.2s ease;
+            cursor: pointer;
+        }
+
+        .date-input:focus {
+            box-shadow: 0 0 0 2px var(--primary-pink);
+        }
+
+        .validation-check {
+            position: absolute;
+            right: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 24px;
+            height: 24px;
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.2s ease;
+        }
+
+        .validation-check.visible {
+            opacity: 1;
+        }
+
+        .validation-check svg {
+            width: 14px;
+            height: 14px;
+            fill: white;
+        }
+
+        /* Helper text */
+        .helper-text {
+            font-size: 13px;
+            color: var(--text-light);
+            margin-top: 8px;
+            font-style: italic;
+        }
+
+        /* Footer */
+        .footer {
+            padding: 20px 24px 40px;
+        }
+
+        .btn-primary {
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(90deg, var(--gradient-start), var(--gradient-end));
+            border: none;
+            border-radius: 16px;
+            color: white;
+            font-family: 'Nunito', sans-serif;
+            font-size: 16px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            cursor: pointer;
+            box-shadow: 0 8px 25px var(--glow-pink);
+            transition: all 0.2s ease;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 35px var(--glow-pink);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        /* Navigation */
+        .nav-link {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: white;
+            padding: 12px 20px;
+            border-radius: 30px;
+            text-decoration: none;
+            color: var(--text-dark);
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-back {
+            left: 20px;
+            right: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="phone-frame">
+        <!-- Header -->
+        <div class="header">
+            <button class="back-button" onclick="window.location.href='03-carousel-3.html'">
+                <svg viewBox="0 0 24 24">
+                    <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/>
+                </svg>
+            </button>
+        </div>
+
+        <!-- Content -->
+        <div class="content">
+            <div class="step-number">1</div>
+            <div class="step-label">OF 3 STEPS</div>
+
+            <h1 class="title">Tell us about yourself</h1>
+
+            <!-- Name field -->
+            <div class="field-group">
+                <label class="field-label">YOUR NAME</label>
+                <input type="text" class="text-input" placeholder="Enter your first name" id="nameInput" oninput="validateForm()">
+            </div>
+
+            <!-- Birthday field -->
+            <div class="field-group">
+                <label class="field-label">
+                    YOUR BIRTHDAY
+                    <span class="optional-tag">OPTIONAL</span>
+                </label>
+                <div class="date-input-container">
+                    <input type="date" class="date-input" id="birthdayInput" onchange="validateForm()">
+                    <div class="validation-check" id="birthdayCheck">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
+                        </svg>
+                    </div>
+                </div>
+                <p class="helper-text">We will send you a special surprise on your birthday!</p>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <button class="btn-primary" id="continueBtn" disabled onclick="window.location.href='07-anniversary.html'">Continue</button>
+        </div>
+    </div>
+
+    <a href="03-carousel-3.html" class="nav-link nav-back">&larr; Previous</a>
+    <a href="07-anniversary.html" class="nav-link">Next &rarr;</a>
+
+    <script>
+        function validateForm() {
+            const name = document.getElementById('nameInput').value.trim();
+            const birthday = document.getElementById('birthdayInput').value;
+            const continueBtn = document.getElementById('continueBtn');
+            const birthdayCheck = document.getElementById('birthdayCheck');
+
+            // Enable button if name is filled
+            continueBtn.disabled = name.length === 0;
+
+            // Show checkmark if birthday is filled
+            if (birthday) {
+                birthdayCheck.classList.add('visible');
+            } else {
+                birthdayCheck.classList.remove('visible');
+            }
+        }
+    </script>
+</body>
+</html>

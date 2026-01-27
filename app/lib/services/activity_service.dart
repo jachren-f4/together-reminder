@@ -2,6 +2,8 @@ import '../models/activity_item.dart';
 import '../models/daily_quest.dart';
 import '../services/storage_service.dart';
 import '../services/poke_service.dart';
+import '../config/brand/brand_loader.dart';
+import '../config/brand/brand_config.dart';
 
 /// Service to aggregate all activities from different sources into a unified view
 class ActivityService {
@@ -390,9 +392,9 @@ class ActivityService {
       case 5: // QuestType.wordSearch
         return 'Word Search';
       case 6: // QuestType.steps
-        return 'Steps Together';
+        return BrandLoader().config.brand == Brand.us2 ? 'Steps' : 'Steps Together';
       default:
-        return 'Daily Quest';
+        return 'Quiz';
     }
   }
 

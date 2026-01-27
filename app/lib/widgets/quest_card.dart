@@ -5,6 +5,7 @@ import '../services/sound_service.dart';
 import '../services/haptic_service.dart';
 import '../services/couple_preferences_service.dart';
 import '../config/brand/brand_loader.dart';
+import '../config/brand/brand_config.dart';
 import '../theme/app_theme.dart';
 import '../animations/animation_config.dart';
 import 'animated_checkmark.dart';
@@ -63,6 +64,7 @@ class _QuestCardState extends State<QuestCard>
   bool _hasActiveGame = false; // Whether a game is in progress
   bool _firstPlayerLoaded = false; // Guard to prevent repeated async calls
 
+  bool get _isUs2 => BrandLoader().config.brand == Brand.us2;
   bool get _isExpired => widget.quest.isExpired;
 
   @override
@@ -507,7 +509,7 @@ class _QuestCardState extends State<QuestCard>
       case QuestType.wordSearch:
         return 'Find twelve hidden words';
       case QuestType.steps:
-        return 'Walk together, earn together';
+        return _isUs2 ? 'Walk more, earn more' : 'Walk together, earn together';
       default:
         return '';
     }
@@ -866,7 +868,7 @@ class _QuestCardState extends State<QuestCard>
       case QuestType.wordSearch:
         return 'Word Search';
       case QuestType.steps:
-        return 'Steps Together';
+        return _isUs2 ? 'Steps' : 'Steps Together';
     }
   }
 }

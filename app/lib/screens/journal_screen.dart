@@ -334,9 +334,9 @@ class _JournalScreenState extends State<JournalScreen> {
             const SizedBox(height: 12),
             _buildInsightRow(
               icon: '🎮',
-              headline: '${_insights!.totalQuestsCompleted} Quests Completed',
-              detail: '${_insights!.dailyQuestsCompleted} Daily, '
-                  '${_insights!.sideQuestsCompleted} Side Quests, '
+              headline: '${_insights!.totalQuestsCompleted} Activities Completed',
+              detail: '${_insights!.dailyQuestsCompleted} Quizzes, '
+                  '${_insights!.sideQuestsCompleted} Games, '
                   '${_insights!.stepsTogetherCompleted} Steps Together',
             ),
           ],

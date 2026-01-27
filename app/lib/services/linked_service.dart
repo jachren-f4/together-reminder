@@ -51,6 +51,11 @@ class LinkedService extends SideQuestServiceBase {
       final response = await apiRequest(
         'POST',
         '/api/sync/linked',
+        body: {
+          // Enable grid progression (5x7 -> 6x8 -> 7x9 difficulty curve)
+          // This tells the API to use puzzle-order-v2.json instead of puzzle-order.json
+          'gridProgression': true,
+        },
       );
 
       // Check for cooldown response

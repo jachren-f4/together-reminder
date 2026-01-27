@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comparison V3 - Minimal Checklist | Us 2.0</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&family=Pacifico&family=Playfair+Display:ital,wght@0,600;0,700;1,400;1,600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-gradient-start: #FFD1C1;
+            --bg-gradient-end: #FFF5F0;
+            --primary-pink: #FF5E62;
+            --gradient-start: #FF6B6B;
+            --gradient-end: #FF9F43;
+            --cream: #FFF8F0;
+            --text-dark: #3A3A3A;
+            --text-medium: #5A5A5A;
+            --text-light: #707070;
+            --glow-pink: rgba(255, 107, 107, 0.5);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            background: linear-gradient(180deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .phone-frame {
+            width: 375px;
+            height: 812px;
+            background: linear-gradient(180deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
+            border-radius: 40px;
+            box-shadow: 0 25px 80px rgba(255, 94, 98, 0.3);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .content {
+            flex: 1;
+            padding: 60px 24px 24px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .title {
+            font-family: 'Playfair Display', serif;
+            font-size: 28px;
+            font-weight: 600;
+            color: var(--text-dark);
+            text-align: center;
+            margin-bottom: 8px;
+            line-height: 1.3;
+        }
+
+        .subtitle {
+            font-size: 15px;
+            color: var(--text-medium);
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        /* Checklist */
+        .checklist {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 16px;
+        }
+
+        .check-item {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            background: white;
+            padding: 20px;
+            border-radius: 20px;
+            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.1);
+            transition: transform 0.2s ease;
+        }
+
+        .check-item:hover {
+            transform: translateX(4px);
+        }
+
+        .check-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            box-shadow: 0 4px 12px rgba(255, 107, 107, 0.3);
+        }
+
+        .check-icon svg {
+            width: 22px;
+            height: 22px;
+            fill: white;
+        }
+
+        .check-content {
+            flex: 1;
+        }
+
+        .check-title {
+            font-weight: 700;
+            color: var(--text-dark);
+            font-size: 16px;
+            margin-bottom: 2px;
+        }
+
+        .check-desc {
+            font-size: 13px;
+            color: var(--text-light);
+        }
+
+        .footer {
+            padding: 20px 24px 40px;
+        }
+
+        .btn-primary {
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(90deg, var(--gradient-start), var(--gradient-end));
+            border: none;
+            border-radius: 16px;
+            color: white;
+            font-family: 'Nunito', sans-serif;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 8px 25px var(--glow-pink);
+        }
+
+        /* Variant navigation */
+        .variant-nav {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 8px;
+            background: white;
+            padding: 8px 16px;
+            border-radius: 30px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .variant-link {
+            padding: 8px 16px;
+            border-radius: 20px;
+            text-decoration: none;
+            color: var(--text-medium);
+            font-weight: 600;
+            font-size: 14px;
+            transition: all 0.2s ease;
+        }
+
+        .variant-link:hover {
+            background: var(--cream);
+            color: var(--text-dark);
+        }
+
+        .variant-link.active {
+            background: linear-gradient(90deg, var(--gradient-start), var(--gradient-end));
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="phone-frame">
+        <div class="content">
+            <h1 class="title">Everything you need</h1>
+            <p class="subtitle">to keep your spark alive</p>
+
+            <div class="checklist">
+                <div class="check-item">
+                    <div class="check-icon">
+                        <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                    </div>
+                    <div class="check-content">
+                        <div class="check-title">Daily conversation starters</div>
+                        <div class="check-desc">Never run out of things to talk about</div>
+                    </div>
+                </div>
+
+                <div class="check-item">
+                    <div class="check-icon">
+                        <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                    </div>
+                    <div class="check-content">
+                        <div class="check-title">Fun couple activities</div>
+                        <div class="check-desc">Games and quizzes to play together</div>
+                    </div>
+                </div>
+
+                <div class="check-item">
+                    <div class="check-icon">
+                        <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                    </div>
+                    <div class="check-content">
+                        <div class="check-title">Track your connection</div>
+                        <div class="check-desc">Watch your bond grow stronger</div>
+                    </div>
+                </div>
+
+                <div class="check-item">
+                    <div class="check-icon">
+                        <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                    </div>
+                    <div class="check-content">
+                        <div class="check-title">Gentle reminders</div>
+                        <div class="check-desc">Stay connected even when busy</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <button class="btn-primary">Continue</button>
+        </div>
+    </div>
+
+    <!-- Variant navigation -->
+    <nav class="variant-nav">
+        <a href="14-comparison-v1.html" class="variant-link">V1</a>
+        <a href="14-comparison-v2.html" class="variant-link">V2</a>
+        <a href="14-comparison-v3.html" class="variant-link active">V3</a>
+    </nav>
+</body>
+</html>

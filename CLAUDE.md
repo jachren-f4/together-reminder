@@ -182,11 +182,56 @@ See `docs/WHITE_LABEL_GUIDE.md` for complete guide.
 
 ### Implementing from Mockups
 
-When implementing UI from `mockups/*.html` files:
-1. **Read the mockup HTML first** - before writing any code
-2. **Copy assets** from `mockups/` to `app/assets/` before implementing
-3. **Use exact text** - don't paraphrase labels (e.g., "CONNECTION BAR" not "MAGNET COLLECTION")
-4. **Verify after** - compare screenshot against mockup before marking complete
+**CRITICAL: When implementing UI from `mockups/*.html` files, you MUST follow these steps exactly:**
+
+#### Step 1: Read All Documentation First
+Before writing ANY code:
+1. **Read the HTML mockup file** - understand the visual structure
+2. **Read the spec file** (if exists, e.g., `UNLOCK_POPUP_SPEC.md`) - extract exact values
+3. **Read the implementation checklist** (HTML comments at bottom of mockup) - note all requirements
+
+#### Step 2: Extract Values Before Coding
+Create a mental (or written) list of:
+- All colors (exact hex values)
+- All dimensions (pixels)
+- All font sizes, weights, families
+- All spacing/padding values
+- All border radius values
+- All shadow specifications
+- All gradient specifications
+- All animation parameters
+- All text content (exact wording)
+
+#### Step 3: Implement with Exact Values
+- **Use exact hex colors** - not "similar" colors
+- **Use exact pixel values** - not approximations
+- **Use exact text** - don't paraphrase (e.g., "CONNECTION BAR" not "MAGNET COLLECTION")
+- **Copy assets** from `mockups/` to `app/assets/` before implementing
+
+#### Step 4: Verify Against Checklist
+After implementation, go through the HTML checklist item by item:
+- [ ] Verify each dimension matches
+- [ ] Verify each color matches
+- [ ] Verify each font style matches
+- [ ] Verify each spacing value matches
+- [ ] Verify animations are implemented
+- [ ] Verify all text content matches exactly
+
+#### Step 5: Visual Comparison
+Compare your Flutter implementation screenshot against the HTML mockup before marking complete.
+
+#### Common Mistakes to Avoid
+- Using similar but not exact colors (e.g., `Colors.red` instead of `Color(0xFFFF6B6B)`)
+- Rounding pixel values (e.g., 16 instead of 15)
+- Missing letter-spacing on text
+- Missing shadows or using wrong shadow values
+- Forgetting animations
+- Paraphrasing button text or labels
+
+#### Mockup File Locations
+| Mockup Type | Location | Spec File |
+|-------------|----------|-----------|
+| Unlock Popups | `mockups/unlock-popup/*.html` | `mockups/unlock-popup/UNLOCK_POPUP_SPEC.md` |
 
 ### Initialization & Storage
 
@@ -397,6 +442,11 @@ Uses RELATIVE encoding, not absolute:
 - Clue cells: Rendered inline at `linked_game_screen.dart:468` (not `clue_cell.dart`)
 - Answer colors: Defined inline at `linked_game_screen.dart:749-775`
 - Use `Color.alphaBlend()` for solid colors (prevents dark grid bleed-through)
+
+#### Linked Configuration
+Rack size centralized in two files (must stay in sync):
+- Flutter: `lib/config/linked_constants.dart`
+- API: `api/lib/linked/config.ts`
 
 #### Side Quest Polling (Linked, Word Search)
 
@@ -907,6 +957,7 @@ class _GameScreenState extends State<GameScreen> with GamePollingMixin {
 
 | Document | Contents |
 |----------|----------|
+| `docs/features/ADMIN_DASHBOARD.md` | Admin analytics dashboard, metrics, authentication |
 | `docs/features/AUTHENTICATION.md` | Auth flows, OTP, dev bypass, session restoration |
 | `docs/features/DAILY_QUESTS.md` | Quest generation, sync, completion tracking |
 | `docs/features/QUIZ_MATCH.md` | Classic/Affirmation quiz, waiting screens, results |

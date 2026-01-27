@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../config/brand/brand_loader.dart';
 import '../config/brand/brand_config.dart';
@@ -202,7 +203,7 @@ class _WelcomeQuizIntroScreenState extends State<WelcomeQuizIntroScreen>
                       BounceInWidget(
                         delay: const Duration(milliseconds: 1000),
                         child: Text(
-                          'Completing this unlocks: Daily Quests',
+                          'Completing this unlocks: Quizzes',
                           textAlign: TextAlign.center,
                           style: EditorialStyles.labelUppercase.copyWith(
                             color: EditorialStyles.ink.withOpacity(0.6),
@@ -262,8 +263,8 @@ class _WelcomeQuizIntroScreenState extends State<WelcomeQuizIntroScreen>
                         children: [
                           const SizedBox(height: 20),
 
-                          // Heart emoji circle
-                          _buildUs2EmojiCircle(),
+                          // Hero illustration with interlinked hearts
+                          _buildUs2HeroIllustration(),
 
                           const SizedBox(height: 24),
 
@@ -287,7 +288,7 @@ class _WelcomeQuizIntroScreenState extends State<WelcomeQuizIntroScreen>
 
                           // Unlock preview
                           Text(
-                            'COMPLETING THIS UNLOCKS: DAILY QUESTS',
+                            'COMPLETING THIS UNLOCKS: QUIZZES',
                             textAlign: TextAlign.center,
                             style: GoogleFonts.nunito(
                               fontSize: 12,
@@ -348,25 +349,30 @@ class _WelcomeQuizIntroScreenState extends State<WelcomeQuizIntroScreen>
     );
   }
 
-  Widget _buildUs2EmojiCircle() {
+  Widget _buildUs2HeroIllustration() {
     return Container(
-      width: 100,
-      height: 100,
+      width: 160,
+      height: 160,
       decoration: BoxDecoration(
-        color: Colors.white,
-        shape: BoxShape.circle,
+        gradient: const LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [Color(0xFFFFF8F0), Color(0xFFFFE8D8)],
+        ),
+        borderRadius: BorderRadius.circular(24),
         boxShadow: [
           BoxShadow(
             color: Us2Theme.glowPink.withOpacity(0.2),
-            blurRadius: 30,
+            blurRadius: 24,
             offset: const Offset(0, 8),
           ),
         ],
       ),
-      child: const Center(
-        child: Text(
-          '💕',
-          style: TextStyle(fontSize: 48),
+      child: Center(
+        child: SvgPicture.asset(
+          'assets/brands/us2/images/welcome_quiz_hero.svg',
+          width: 100,
+          height: 80,
         ),
       ),
     );
@@ -391,7 +397,25 @@ class _WelcomeQuizIntroScreenState extends State<WelcomeQuizIntroScreen>
         children: [
           Row(
             children: [
-              const Text('🎯', style: TextStyle(fontSize: 24)),
+              // Branded gradient circle with "?" icon (replacing 🎯 emoji)
+              Container(
+                width: 24,
+                height: 24,
+                decoration: const BoxDecoration(
+                  gradient: Us2Theme.accentGradient,
+                  shape: BoxShape.circle,
+                ),
+                child: const Center(
+                  child: Text(
+                    '?',
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w700,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+              ),
               const SizedBox(width: 12),
               Text(
                 'How It Works',

@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phase 1.4 - LP Intro Overlay Fix</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Nunito:wght@400;600;700&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Nunito', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #FAFAFA;
+            color: #3A3A3A;
+            display: flex;
+            gap: 40px;
+            padding: 40px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .mockup-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .mockup-label {
+            font-size: 14px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #6E6E6E;
+            padding: 8px 16px;
+            background: #F0F0F0;
+            border-radius: 8px;
+        }
+
+        .mockup-label.before { background: #FFE5E5; color: #C62828; }
+        .mockup-label.after { background: #E5FFE5; color: #2E7D32; }
+
+        .phone {
+            width: 390px;
+            height: 844px;
+            background: linear-gradient(180deg, #FFD1C1 0%, #FFF5F0 100%);
+            border-radius: 50px;
+            overflow: hidden;
+            position: relative;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Dark overlay */
+        .overlay-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+        }
+
+        /* BEFORE: Busy overlay card */
+        .overlay-card-before {
+            background: #FFF8F0;
+            border-radius: 24px;
+            padding: 32px 24px;
+            width: 100%;
+            max-width: 340px;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .emoji-header {
+            font-size: 48px;
+            margin-bottom: 16px;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.15); }
+        }
+
+        .overlay-title-before {
+            font-family: 'Playfair Display', serif;
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        .overlay-text-before {
+            font-size: 15px;
+            color: #5A5A5A;
+            line-height: 1.5;
+            margin-bottom: 20px;
+        }
+
+        .overlay-text-before em {
+            font-style: italic;
+            font-size: 14px;
+        }
+
+        /* Journey bar - BEFORE (complex) */
+        .journey-bar-before {
+            background: linear-gradient(90deg, #FF7B6B, #FF9F43);
+            border-radius: 16px;
+            padding: 16px;
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .journey-progress {
+            height: 8px;
+            background: rgba(255,255,255,0.3);
+            border-radius: 4px;
+            margin-bottom: 12px;
+            position: relative;
+        }
+
+        .journey-fill {
+            height: 100%;
+            width: 15%;
+            background: white;
+            border-radius: 4px;
+            position: relative;
+        }
+
+        .journey-heart {
+            position: absolute;
+            right: -12px;
+            top: -8px;
+            font-size: 24px;
+            animation: bounce 1s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-4px); }
+        }
+
+        .journey-destination {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .destination-img {
+            width: 48px;
+            height: 48px;
+            background: white;
+            border-radius: 8px;
+        }
+
+        .destination-text {
+            color: white;
+            font-size: 14px;
+            text-align: left;
+        }
+
+        .lp-badge-before {
+            position: absolute;
+            top: -10px;
+            right: 30%;
+            background: linear-gradient(135deg, #FFD700, #FFA500);
+            color: #5D4E37;
+            padding: 6px 12px;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 700;
+            animation: pop 0.5s ease-out;
+        }
+
+        @keyframes pop {
+            0% { transform: scale(0); }
+            80% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+
+        /* AFTER: Clean overlay card */
+        .overlay-card-after {
+            background: #FFF8F0;
+            border-radius: 24px;
+            padding: 32px 24px;
+            width: 100%;
+            max-width: 340px;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .lp-icon {
+            width: 72px;
+            height: 72px;
+            background: linear-gradient(135deg, #FF6B6B, #FF9F43);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            box-shadow: 0 8px 24px rgba(255, 107, 107, 0.4);
+        }
+
+        .lp-icon-inner {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, #FFD700, #FFA500);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: inset 0 -3px 6px rgba(0,0,0,0.1);
+        }
+
+        .lp-icon-inner span {
+            font-size: 24px;
+            font-weight: 700;
+            color: #5D4E37;
+        }
+
+        .overlay-title-after {
+            font-family: 'Playfair Display', serif;
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: #3A3A3A;
+        }
+
+        .overlay-subtitle {
+            font-size: 14px;
+            color: #5A5A5A;
+            margin-bottom: 24px;
+        }
+
+        /* Journey bar - AFTER (simple hero) */
+        .journey-bar-after {
+            background: #F5E6D8;
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .journey-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .journey-label {
+            font-size: 13px;
+            font-weight: 600;
+            color: #5A5A5A;
+        }
+
+        .journey-points {
+            font-size: 14px;
+            font-weight: 700;
+            color: #FF5E62;
+        }
+
+        .journey-track {
+            height: 12px;
+            background: white;
+            border-radius: 6px;
+            overflow: hidden;
+            margin-bottom: 12px;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .journey-track-fill {
+            height: 100%;
+            width: 15%;
+            background: linear-gradient(90deg, #FF6B6B, #FF9F43);
+            border-radius: 6px;
+            transition: width 1.5s ease-out;
+        }
+
+        .journey-reward {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: white;
+            border-radius: 12px;
+            padding: 12px;
+        }
+
+        .reward-img {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, #FFE8D8, #FFD4C8);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+
+        .reward-info {
+            text-align: left;
+            flex: 1;
+        }
+
+        .reward-name {
+            font-size: 14px;
+            font-weight: 700;
+            color: #3A3A3A;
+        }
+
+        .reward-points {
+            font-size: 12px;
+            color: #5A5A5A;
+        }
+
+        /* Earned badge */
+        .earned-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: linear-gradient(135deg, #FF6B6B, #FF9F43);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+
+        .btn-overlay {
+            width: 100%;
+            background: #3A3A3A;
+            color: white;
+            padding: 16px;
+            border-radius: 14px;
+            font-size: 16px;
+            font-weight: 700;
+            text-align: center;
+        }
+
+        /* Notes section */
+        .notes {
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 30px;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .notes h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: #3A3A3A;
+        }
+
+        .notes h3 {
+            font-size: 16px;
+            font-weight: 700;
+            margin: 20px 0 10px;
+            color: #FF5E62;
+        }
+
+        .notes ul {
+            margin-left: 20px;
+            line-height: 1.8;
+        }
+
+        .notes li {
+            margin-bottom: 8px;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 16px 0;
+        }
+
+        .comparison-table th,
+        .comparison-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #F0F0F0;
+        }
+
+        .comparison-table th {
+            background: #F8F8F8;
+            font-weight: 700;
+        }
+
+        .comparison-table .bad { color: #C62828; }
+        .comparison-table .good { color: #2E7D32; }
+    </style>
+</head>
+<body>
+    <!-- BEFORE -->
+    <div class="mockup-container">
+        <div class="mockup-label before">Before (Busy)</div>
+        <div class="phone">
+            <div class="overlay-bg">
+                <div class="overlay-card-before">
+                    <div class="emoji-header">💗</div>
+                    <div class="overlay-title-before">Love Points!</div>
+                    <div class="overlay-text-before">
+                        You've earned Love Points! Collect more to unlock special destinations for you and your partner.
+                        <br><br>
+                        <em>Play activities daily to fill your journey bar!</em>
+                    </div>
+
+                    <div class="journey-bar-before">
+                        <div class="lp-badge-before">+30 LP</div>
+                        <div class="journey-progress">
+                            <div class="journey-fill">
+                                <span class="journey-heart">💗</span>
+                            </div>
+                        </div>
+                        <div class="journey-destination">
+                            <div class="destination-img"></div>
+                            <div class="destination-text">
+                                <strong>Paris Getaway</strong><br>
+                                500 LP to unlock
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="btn-overlay">Got it!</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- AFTER -->
+    <div class="mockup-container">
+        <div class="mockup-label after">After (Clean)</div>
+        <div class="phone">
+            <div class="overlay-bg">
+                <div class="overlay-card-after">
+                    <div class="lp-icon">
+                        <div class="lp-icon-inner">
+                            <span>LP</span>
+                        </div>
+                    </div>
+
+                    <div class="overlay-title-after">You earned Love Points!</div>
+                    <div class="overlay-subtitle">Play together daily to unlock rewards</div>
+
+                    <div class="earned-badge">
+                        <span>+30</span>
+                        <span>LP</span>
+                    </div>
+
+                    <div class="journey-bar-after">
+                        <div class="journey-header">
+                            <span class="journey-label">Journey Progress</span>
+                            <span class="journey-points">30 / 500 LP</span>
+                        </div>
+                        <div class="journey-track">
+                            <div class="journey-track-fill"></div>
+                        </div>
+                        <div class="journey-reward">
+                            <div class="reward-img">🗼</div>
+                            <div class="reward-info">
+                                <div class="reward-name">Paris Getaway</div>
+                                <div class="reward-points">470 LP to go</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="btn-overlay">Continue</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Design Notes -->
+    <div class="notes">
+        <h2>Phase 1.4: LP Intro Overlay Improvements</h2>
+
+        <h3>Issues Addressed</h3>
+        <ul>
+            <li><strong>Emoji overload:</strong> 3 different emoji types with competing animations</li>
+            <li><strong>Animation chaos:</strong> 5+ simultaneous animations (pulse, bounce, pop, fade)</li>
+            <li><strong>Typography mess:</strong> 4 font sizes, italic mixed with regular</li>
+            <li><strong>Unclear messaging:</strong> "Fill your journey bar" but what does LP mean?</li>
+        </ul>
+
+        <h3>Before vs After Comparison</h3>
+        <table class="comparison-table">
+            <tr>
+                <th>Element</th>
+                <th class="bad">Before</th>
+                <th class="good">After</th>
+            </tr>
+            <tr>
+                <td>Header icon</td>
+                <td class="bad">💗 emoji (48px, pulsing)</td>
+                <td class="good">Custom LP coin icon (72px, static)</td>
+            </tr>
+            <tr>
+                <td>Progress indicator</td>
+                <td class="bad">Heart emoji bouncing on track</td>
+                <td class="good">Clean gradient fill bar</td>
+            </tr>
+            <tr>
+                <td>LP badge</td>
+                <td class="bad">Floating, popping animation</td>
+                <td class="good">Centered, prominent placement</td>
+            </tr>
+            <tr>
+                <td>Animations</td>
+                <td class="bad">5 simultaneous</td>
+                <td class="good">1 (progress bar fill only)</td>
+            </tr>
+            <tr>
+                <td>Font sizes</td>
+                <td class="bad">28px, 15px, 14px, 14px italic</td>
+                <td class="good">24px, 14px, 16px (3 sizes)</td>
+            </tr>
+        </table>
+
+        <h3>Key Design Decisions</h3>
+        <ul>
+            <li><strong>LP coin icon:</strong> Creates brand recognition - "LP" text inside golden coin</li>
+            <li><strong>Progress bar as hero:</strong> The fill animation IS the celebration (no extra bouncing hearts)</li>
+            <li><strong>Clear hierarchy:</strong> Title → Subtitle → Earned amount → Progress → CTA</li>
+            <li><strong>Reward preview:</strong> Shows destination with "X LP to go" (concrete goal)</li>
+        </ul>
+
+        <h3>Animation Spec</h3>
+        <ul>
+            <li><strong>Overlay fade:</strong> 400ms ease-out</li>
+            <li><strong>Card scale:</strong> 0.9 → 1.0, 300ms ease-out</li>
+            <li><strong>Progress fill:</strong> 0% → 15%, 1500ms ease-out (starts after 500ms delay)</li>
+            <li><strong>No other animations</strong> - let the progress bar be the focus</li>
+        </ul>
+
+        <h2 style="margin-top: 40px; padding-top: 20px; border-top: 3px solid #FF5E62;">📋 Implementation Task List</h2>
+        <p style="color: #666; margin-bottom: 20px;">Coding agent: Complete each task below. Check off when done. Follow the "After" mockup exactly.</p>
+
+        <h3>Create LP Coin Icon Widget</h3>
+        <ul style="list-style: none; margin-left: 0;">
+            <li>☐ Create custom LP icon (72px outer, 48px inner)</li>
+            <li>☐ Outer circle: coral gradient (#FF6B6B → #FF9F43)</li>
+            <li>☐ Inner circle: gold gradient (#FFD700 → #FFA500)</li>
+            <li>☐ "LP" text in center (24px, bold, #5D4E37)</li>
+            <li>☐ Add shadow: 0 8px 24px rgba(255, 107, 107, 0.4)</li>
+        </ul>
+
+        <h3>Update LP Intro Overlay (<code>lp_intro_overlay.dart</code>)</h3>
+        <ul style="list-style: none; margin-left: 0;">
+            <li>☐ Replace 💗 emoji header with LP coin icon</li>
+            <li>☐ Change title to "You earned Love Points!"</li>
+            <li>☐ Change subtitle to "Play together daily to unlock rewards"</li>
+            <li>☐ Add centered LP badge: "+30 LP" in gradient pill</li>
+        </ul>
+
+        <h3>Redesign Journey Progress Bar</h3>
+        <ul style="list-style: none; margin-left: 0;">
+            <li>☐ Create "Journey Progress" card with beige background (#F5E6D8)</li>
+            <li>☐ Header: "Journey Progress" label + "30 / 500 LP" on right</li>
+            <li>☐ Track: 12px height, white background, coral gradient fill</li>
+            <li>☐ Remove bouncing heart emoji from track</li>
+            <li>☐ Reward preview: destination image + name + "X LP to go"</li>
+        </ul>
+
+        <h3>Simplify Animations</h3>
+        <ul style="list-style: none; margin-left: 0;">
+            <li>☐ Remove pulse animation from header icon</li>
+            <li>☐ Remove bounce animation from LP badge</li>
+            <li>☐ Remove heart animation on progress track</li>
+            <li>☐ Keep ONLY: overlay fade (400ms) + card scale (300ms) + progress fill (1500ms)</li>
+        </ul>
+
+        <h3>Typography Cleanup</h3>
+        <ul style="list-style: none; margin-left: 0;">
+            <li>☐ Title: 24px Playfair Display, #3A3A3A</li>
+            <li>☐ Subtitle: 14px Nunito, #5A5A5A</li>
+            <li>☐ LP badge: 16px bold, white text</li>
+            <li>☐ Remove italic text (was on "Play activities daily...")</li>
+        </ul>
+
+        <h3>Testing Checklist</h3>
+        <ul style="list-style: none; margin-left: 0;">
+            <li>☐ Screen matches "After" mockup</li>
+            <li>☐ No emoji visible (💗 removed)</li>
+            <li>☐ LP coin icon displays with gradient</li>
+            <li>☐ Progress bar fills smoothly (no bouncing heart)</li>
+            <li>☐ Only 3 animations total (fade, scale, fill)</li>
+            <li>☐ Typography is consistent (no italic)</li>
+        </ul>
+    </div>
+</body>
+</html>

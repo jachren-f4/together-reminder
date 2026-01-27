@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Testimonials V3 - Scrollable Wall | Us 2.0</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&family=Pacifico&family=Playfair+Display:ital,wght@0,600;0,700;1,400;1,600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-gradient-start: #FFD1C1;
+            --bg-gradient-end: #FFF5F0;
+            --primary-pink: #FF5E62;
+            --gradient-start: #FF6B6B;
+            --gradient-end: #FF9F43;
+            --cream: #FFF8F0;
+            --text-dark: #3A3A3A;
+            --text-medium: #5A5A5A;
+            --text-light: #707070;
+            --glow-pink: rgba(255, 107, 107, 0.5);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            background: linear-gradient(180deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .phone-frame {
+            width: 375px;
+            height: 812px;
+            background: linear-gradient(180deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
+            border-radius: 40px;
+            box-shadow: 0 25px 80px rgba(255, 94, 98, 0.3);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header-section {
+            padding: 60px 24px 20px;
+            text-align: center;
+            background: linear-gradient(180deg, var(--bg-gradient-start) 0%, transparent 100%);
+            position: relative;
+            z-index: 2;
+        }
+
+        .header-row {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 8px;
+        }
+
+        .hero-heart {
+            width: 36px;
+            height: 36px;
+        }
+
+        .hero-heart svg {
+            width: 100%;
+            height: 100%;
+            filter: drop-shadow(0 3px 8px rgba(255, 107, 107, 0.4));
+        }
+
+        .title {
+            font-family: 'Playfair Display', serif;
+            font-size: 24px;
+            font-weight: 600;
+            color: var(--text-dark);
+            line-height: 1.3;
+        }
+
+        .subtitle {
+            font-size: 14px;
+            color: var(--text-medium);
+        }
+
+        /* Scrollable testimonial wall */
+        .testimonial-wall {
+            flex: 1;
+            overflow-y: auto;
+            padding: 0 16px 20px;
+            -webkit-overflow-scrolling: touch;
+            mask-image: linear-gradient(to bottom, transparent 0%, black 3%, black 97%, transparent 100%);
+            -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 3%, black 97%, transparent 100%);
+        }
+
+        .testimonial-wall::-webkit-scrollbar {
+            width: 0;
+        }
+
+        /* Masonry-like grid with varied sizes */
+        .testimonial-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .testimonial-row {
+            display: flex;
+            gap: 12px;
+        }
+
+        .testimonial-card {
+            background: white;
+            border-radius: 20px;
+            padding: 18px;
+            box-shadow: 0 4px 16px rgba(255, 107, 107, 0.1);
+            flex: 1;
+        }
+
+        .testimonial-card.featured {
+            background: linear-gradient(135deg, white 0%, var(--cream) 100%);
+            border: 1px solid rgba(255, 107, 107, 0.15);
+        }
+
+        .testimonial-card.full-width {
+            flex: none;
+            width: 100%;
+        }
+
+        .quote-text {
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            font-size: 15px;
+            color: var(--text-dark);
+            line-height: 1.5;
+            margin-bottom: 14px;
+        }
+
+        .testimonial-card.small .quote-text {
+            font-size: 13px;
+            margin-bottom: 10px;
+        }
+
+        .quote-author {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .author-avatars {
+            display: flex;
+        }
+
+        .avatar {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid white;
+        }
+
+        .avatar:last-child {
+            margin-left: -10px;
+        }
+
+        .avatar svg {
+            width: 14px;
+            height: 14px;
+            fill: white;
+        }
+
+        .testimonial-card.small .avatar {
+            width: 24px;
+            height: 24px;
+        }
+
+        .testimonial-card.small .avatar:last-child {
+            margin-left: -8px;
+        }
+
+        .testimonial-card.small .avatar svg {
+            width: 12px;
+            height: 12px;
+        }
+
+        .author-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .author-name {
+            font-weight: 700;
+            color: var(--text-dark);
+            font-size: 13px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .author-detail {
+            font-size: 11px;
+            color: var(--text-light);
+        }
+
+        .testimonial-card.small .author-name {
+            font-size: 12px;
+        }
+
+        .testimonial-card.small .author-detail {
+            font-size: 10px;
+        }
+
+        /* Scroll indicator */
+        .scroll-indicator {
+            text-align: center;
+            padding: 8px 0;
+            font-size: 12px;
+            color: var(--text-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .scroll-indicator svg {
+            width: 16px;
+            height: 16px;
+            fill: var(--text-light);
+            animation: bounce 2s ease-in-out infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(4px); }
+        }
+
+        .footer {
+            padding: 16px 24px 40px;
+            background: linear-gradient(0deg, var(--bg-gradient-end) 60%, transparent 100%);
+        }
+
+        .btn-primary {
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(90deg, var(--gradient-start), var(--gradient-end));
+            border: none;
+            border-radius: 16px;
+            color: white;
+            font-family: 'Nunito', sans-serif;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 8px 25px var(--glow-pink);
+        }
+
+        /* Variant navigation */
+        .variant-nav {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 8px;
+            background: white;
+            padding: 8px 16px;
+            border-radius: 30px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .variant-link {
+            padding: 8px 16px;
+            border-radius: 20px;
+            text-decoration: none;
+            color: var(--text-medium);
+            font-weight: 600;
+            font-size: 14px;
+            transition: all 0.2s ease;
+        }
+
+        .variant-link:hover {
+            background: var(--cream);
+            color: var(--text-dark);
+        }
+
+        .variant-link.active {
+            background: linear-gradient(90deg, var(--gradient-start), var(--gradient-end));
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="phone-frame">
+        <div class="header-section">
+            <div class="header-row">
+                <div class="hero-heart">
+                    <svg viewBox="0 0 24 24">
+                        <defs>
+                            <linearGradient id="heartGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" style="stop-color:#FF6B6B"/>
+                                <stop offset="100%" style="stop-color:#FF9F43"/>
+                            </linearGradient>
+                        </defs>
+                        <path fill="url(#heartGradient)" d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                    </svg>
+                </div>
+                <h1 class="title">Couples love Us 2.0</h1>
+            </div>
+            <p class="subtitle">Scroll to read their stories</p>
+        </div>
+
+        <div class="testimonial-wall">
+            <div class="testimonial-grid">
+                <!-- Featured full-width card -->
+                <div class="testimonial-card featured full-width">
+                    <p class="quote-text">"We used to just scroll on our phones together. Now we actually talk and laugh every night. It completely changed our evenings."</p>
+                    <div class="quote-author">
+                        <div class="author-avatars">
+                            <div class="avatar"><svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg></div>
+                            <div class="avatar"><svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg></div>
+                        </div>
+                        <div class="author-info">
+                            <div class="author-name">Sarah & Mike</div>
+                            <div class="author-detail">Together 3 years</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Row of two smaller cards -->
+                <div class="testimonial-row">
+                    <div class="testimonial-card small">
+                        <p class="quote-text">"The quizzes became our evening ritual!"</p>
+                        <div class="quote-author">
+                            <div class="author-avatars">
+                                <div class="avatar"><svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg></div>
+                                <div class="avatar"><svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg></div>
+                            </div>
+                            <div class="author-info">
+                                <div class="author-name">Emma & James</div>
+                                <div class="author-detail">7 years</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="testimonial-card small">
+                        <p class="quote-text">"Perfect for long distance couples."</p>
+                        <div class="quote-author">
+                            <div class="author-avatars">
+                                <div class="avatar"><svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg></div>
+                                <div class="avatar"><svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg></div>
+                            </div>
+                            <div class="author-info">
+                                <div class="author-name">Lily & Noah</div>
+                                <div class="author-detail">2 years</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Another full-width -->
+                <div class="testimonial-card full-width">
+                    <p class="quote-text">"After 15 years of marriage, we thought we knew everything about each other. This app proved us wonderfully wrong!"</p>
+                    <div class="quote-author">
+                        <div class="author-avatars">
+                            <div class="avatar"><svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg></div>
+                            <div class="avatar"><svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg></div>
+                        </div>
+                        <div class="author-info">
+                            <div class="author-name">Rachel & David</div>
+                            <div class="author-detail">Together 15 years</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Row of two -->
+                <div class="testimonial-row">
+                    <div class="testimonial-card small">
+                        <p class="quote-text">"Like a relationship coach in your pocket!"</p>
+                        <div class="quote-author">
+                            <div class="author-avatars">
+                                <div class="avatar"><svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg></div>
+                                <div class="avatar"><svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg></div>
+                            </div>
+                            <div class="author-info">
+                                <div class="author-name">Mia & Alex</div>
+                                <div class="author-detail">1 year</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="testimonial-card small">
+                        <p class="quote-text">"Our morning coffee ritual now!"</p>
+                        <div class="quote-author">
+                            <div class="author-avatars">
+                                <div class="avatar"><svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg></div>
+                                <div class="avatar"><svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg></div>
+                            </div>
+                            <div class="author-info">
+                                <div class="author-name">Olivia & Ben</div>
+                                <div class="author-detail">5 years</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- More full-width cards -->
+                <div class="testimonial-card featured full-width">
+                    <p class="quote-text">"We've tried other couple apps before, but this is the only one we've actually stuck with. The activities are genuinely fun."</p>
+                    <div class="quote-author">
+                        <div class="author-avatars">
+                            <div class="avatar"><svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg></div>
+                            <div class="avatar"><svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg></div>
+                        </div>
+                        <div class="author-info">
+                            <div class="author-name">Grace & Tom</div>
+                            <div class="author-detail">Together 4 years</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="testimonial-row">
+                    <div class="testimonial-card small">
+                        <p class="quote-text">"Makes us feel like we're dating again."</p>
+                        <div class="quote-author">
+                            <div class="author-avatars">
+                                <div class="avatar"><svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg></div>
+                                <div class="avatar"><svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg></div>
+                            </div>
+                            <div class="author-info">
+                                <div class="author-name">Amy & Chris</div>
+                                <div class="author-detail">10 years</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="testimonial-card small">
+                        <p class="quote-text">"Simple, beautiful, and actually useful."</p>
+                        <div class="quote-author">
+                            <div class="author-avatars">
+                                <div class="avatar"><svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg></div>
+                                <div class="avatar"><svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg></div>
+                            </div>
+                            <div class="author-info">
+                                <div class="author-name">Zoe & Liam</div>
+                                <div class="author-detail">6 months</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="scroll-indicator">
+                    <svg viewBox="0 0 24 24"><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg>
+                    <span>Keep scrolling for more</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <button class="btn-primary">Continue</button>
+        </div>
+    </div>
+
+    <nav class="variant-nav">
+        <a href="14-testimonials-v1.html" class="variant-link">V1</a>
+        <a href="14-testimonials-v2.html" class="variant-link">V2</a>
+        <a href="14-testimonials-v3.html" class="variant-link active">V3</a>
+    </nav>
+</body>
+</html>

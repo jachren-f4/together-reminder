@@ -319,7 +319,7 @@ class _AlreadySubscribedScreenState extends State<AlreadySubscribedScreen>
         ),
         child: Center(
           child: Text(
-            "Let's Go! ❤️",
+            "Let's Go!",
             style: GoogleFonts.nunito(
               fontSize: 16,
               fontWeight: FontWeight.w700,

@@ -1,0 +1,88 @@
+# Linked Variable Grid Size Implementation Progress
+
+Started: 2025-01-21
+
+## Tasks
+
+### API Changes
+- [x] Modify loadPuzzleOrder() to accept gridProgression parameter
+- [x] Read gridProgression flag from request body in POST handler
+- [x] Create puzzle-order-v2.json for casual branch
+- [x] Create puzzle-order-v2.json for romantic branch
+- [x] Create puzzle-order-v2.json for adult branch
+
+### Flutter Changes
+- [x] Add gridProgression: true to linked API calls in linked_service.dart
+- [x] Update _buildGrid() to use LayoutBuilder for full-width rendering
+- [x] Update _buildUs2Grid() to use LayoutBuilder for full-width rendering
+- [x] Verify tutorial overlay positioning with different grid sizes
+
+### Content (Puzzle Files) - PENDING USER ACTION
+- [ ] Create 5×7 puzzle files for casual branch (4 puzzles)
+- [ ] Create 5×7 puzzle files for romantic branch (4 puzzles)
+- [ ] Create 5×7 puzzle files for adult branch (4 puzzles)
+- [ ] Create 6×8 puzzle files for casual branch (4 puzzles)
+- [ ] Create 6×8 puzzle files for romantic branch (4 puzzles)
+- [ ] Create 6×8 puzzle files for adult branch (4 puzzles)
+
+### Testing
+- [ ] Test backwards compatibility (old build gets 7×9 first)
+- [ ] Test new build gets 5×7 first
+- [ ] Test grid rendering on 5×7
+- [ ] Test grid rendering on 6×8
+- [ ] Test tutorial overlay on all grid sizes
+
+---
+
+## Progress Log
+
+### 2025-01-21
+
+**API Changes Completed:**
+- Modified `api/app/api/sync/linked/route.ts`:
+  - `loadPuzzleOrder()` now accepts `gridProgression` parameter
+  - Falls back to puzzle-order.json if v2 file doesn't exist
+  - POST handler reads `gridProgression` from request body
+  - Passes flag through to `getNextPuzzleForCouple()`
+
+**Puzzle Order Files Created:**
+- `api/data/puzzles/linked/casual/puzzle-order-v2.json`
+- `api/data/puzzles/linked/romantic/puzzle-order-v2.json`
+- `api/data/puzzles/linked/adult/puzzle-order-v2.json`
+
+All v2 files have the new progression structure:
+- puzzle_5x7_001 through puzzle_5x7_004 (beginner)
+- puzzle_6x8_001 through puzzle_6x8_004 (intermediate)
+- puzzle_001+ (standard 7×9)
+
+**Flutter Changes Completed:**
+- Modified `app/lib/services/linked_service.dart`:
+  - `getOrCreateMatch()` now sends `gridProgression: true` in request body
+
+- Modified `app/lib/screens/linked_game_screen.dart`:
+  - `_buildGrid()` now uses LayoutBuilder for full-width rendering
+  - `_buildUs2Grid()` now uses LayoutBuilder for full-width rendering
+  - Cell size is calculated as: (availableWidth - spacing) / cols
+  - Grid height is calculated as: (cellSize * rows) + spacing
+  - Smaller grids (5 cols) will have ~40% larger cells than 7 cols
+
+**Tutorial Overlay Verification:**
+- The `LinkedTutorialOverlay` uses `GlobalKey.findRenderObject()` to find
+  widget positions at runtime
+- The spotlight highlight is drawn at the actual position of the target widget
+- This is already dynamic and will work correctly with any grid size
+- The tutorial card is centered on screen, which should not overlap with
+  clue cells at the top of the grid (they are in different vertical positions)
+
+**What's Still Needed:**
+1. Create actual 5×7 puzzle content files (using Crossword Maker GPT)
+2. Create actual 6×8 puzzle content files (using Crossword Maker GPT)
+3. Test the full flow with real puzzles
+
+**How to Test Now (without new puzzle files):**
+Since the API falls back to puzzle-order.json when v2 puzzles don't exist,
+the current implementation will:
+- New builds: Try to load 5x7 puzzles, fail, fall back to 7×9 puzzles
+- Old builds: Load 7×9 puzzles directly
+
+To fully test, need to create at least one puzzle_5x7_001.json file.

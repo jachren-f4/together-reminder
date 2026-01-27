@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:togetherremind/config/brand/brand_config.dart';
+import 'package:togetherremind/config/brand/brand_loader.dart';
 import 'package:togetherremind/config/brand/us2_theme.dart';
 import 'package:togetherremind/models/reminder.dart';
 import 'package:togetherremind/services/storage_service.dart';

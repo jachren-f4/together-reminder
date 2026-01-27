@@ -9,6 +9,8 @@ import 'tabs/lp_sync_tab.dart';
 import 'tabs/actions_tab.dart';
 import 'tabs/polling_tab.dart';
 import 'tabs/steps_debug_tab.dart';
+import 'tabs/unlock_popup_tab.dart';
+import 'tabs/onboarding_preview_tab.dart';
 
 /// Enhanced debug menu with tab-based interface
 class DebugMenu extends StatefulWidget {
@@ -24,7 +26,7 @@ class _DebugMenuState extends State<DebugMenu> with SingleTickerProviderStateMix
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 7, vsync: this);
+    _tabController = TabController(length: 9, vsync: this);
   }
 
   @override
@@ -122,7 +124,9 @@ class _DebugMenuState extends State<DebugMenu> with SingleTickerProviderStateMix
                 ),
                 indicatorSize: TabBarIndicatorSize.tab,
                 tabs: const [
+                  Tab(text: 'Onboarding'),
                   Tab(text: 'Actions'),
+                  Tab(text: 'Unlock'),
                   Tab(text: 'Steps'),
                   Tab(text: 'Polling'),
                   Tab(text: 'Overview'),
@@ -140,7 +144,9 @@ class _DebugMenuState extends State<DebugMenu> with SingleTickerProviderStateMix
                 child: TabBarView(
                   controller: _tabController,
                   children: const [
+                    OnboardingPreviewTab(),
                     ActionsTab(),
+                    UnlockPopupTab(),
                     StepsDebugTab(),
                     PollingTab(),
                     OverviewTab(),

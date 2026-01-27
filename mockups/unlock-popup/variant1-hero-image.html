@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=390, height=844, initial-scale=1.0">
+    <title>Unlock Popup - Variant 1: Hero Image</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            background: linear-gradient(180deg, #FFF5F5 0%, #FFF0F0 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .phone-frame {
+            width: 390px;
+            height: 844px;
+            background: rgba(0, 0, 0, 0.6);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .popup {
+            width: 340px;
+            background: white;
+            border-radius: 28px;
+            overflow: hidden;
+            box-shadow: 0 25px 80px rgba(0, 0, 0, 0.3);
+        }
+
+        .hero-image {
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(135deg, #FFE5E0 0%, #FFD5CC 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .hero-image img {
+            max-width: 80%;
+            max-height: 160px;
+            object-fit: contain;
+            filter: drop-shadow(0 10px 30px rgba(255, 107, 107, 0.3));
+        }
+
+        .sparkle {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+            clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+            animation: sparkle 1.5s ease-in-out infinite;
+        }
+
+        .sparkle:nth-child(1) { top: 20px; left: 30px; animation-delay: 0s; }
+        .sparkle:nth-child(2) { top: 40px; right: 40px; animation-delay: 0.3s; width: 15px; height: 15px; }
+        .sparkle:nth-child(3) { bottom: 30px; left: 50px; animation-delay: 0.6s; width: 12px; height: 12px; }
+
+        @keyframes sparkle {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(0.8); }
+        }
+
+        .content {
+            padding: 28px 24px 24px;
+            text-align: center;
+        }
+
+        .badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #FF6B6B 0%, #FF9F43 100%);
+            color: white;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            padding: 6px 14px;
+            border-radius: 20px;
+            margin-bottom: 16px;
+        }
+
+        .title {
+            font-family: 'Playfair Display', serif;
+            font-size: 28px;
+            font-weight: 700;
+            color: #2D2D2D;
+            margin-bottom: 12px;
+        }
+
+        .description {
+            font-size: 15px;
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 24px;
+        }
+
+        .continue-btn {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #FF6B6B 0%, #FF9F43 100%);
+            border: none;
+            border-radius: 16px;
+            color: white;
+            font-family: 'Nunito', sans-serif;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 8px 24px rgba(255, 107, 107, 0.4);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .continue-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 32px rgba(255, 107, 107, 0.5);
+        }
+    </style>
+</head>
+<body>
+    <div class="phone-frame">
+        <div class="popup">
+            <div class="hero-image">
+                <div class="sparkle"></div>
+                <div class="sparkle"></div>
+                <div class="sparkle"></div>
+                <img src="word-search.png" alt="Word Search">
+            </div>
+            <div class="content">
+                <div class="badge">NEW FEATURE UNLOCKED</div>
+                <h1 class="title">Word Search</h1>
+                <p class="description">Find hidden words together in a fun puzzle! Work as a team to discover all the words.</p>
+                <button class="continue-btn">Let's Play!</button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

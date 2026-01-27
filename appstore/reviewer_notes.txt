@@ -1,0 +1,44 @@
+Hi there!
+
+Thank you for reviewing Us 2.0. Below are the demo account credentials and some notes about our HealthKit integration.
+
+---
+
+DEMO ACCOUNT
+
+Email: us2appreview2026@gmail.com
+Gmail Password: Us2Review!Apple2026#
+
+Note: The app uses email verification (no app password). The Gmail password is only needed to access the inbox for the verification code.
+
+LOGIN INSTRUCTIONS
+
+1. Open the Us 2.0 app
+2. Enter email: us2appreview2026@gmail.com
+3. Tap "Continue" - a verification code will be sent to the email
+4. Open Gmail (gmail.com) and sign in:
+   - Email: us2appreview2026@gmail.com
+   - Gmail password: Us2Review!Apple2026#
+5. Find the email from "Us 2.0" with the 8-digit verification code
+6. Enter the code in the app
+7. You will see the home screen with daily activities
+
+---
+
+HEALTHKIT USAGE - STEPS FEATURE
+
+The Steps feature uses HealthKit to help couples stay active together by tracking and comparing daily step counts.
+
+How to access:
+1. Log in with the demo account above
+2. On the home screen, scroll to the Games carousel (below the Quizzes carousel)
+3. Scroll right to find the Steps card (3rd position)
+4. Tap to open
+
+How it works:
+- Grant HealthKit permission when prompted
+- Both partners see each other's daily step progress
+- Couples earn Love Points (15-30 LP) when reaching step goals together
+
+Why HealthKit is required:
+Steps is a core engagement feature that turns daily fitness into a shared couple activity with rewards. It reads step data from HealthKit to display progress, compare partner activity, and award Love Points for staying active together.

@@ -47,10 +47,15 @@ class CoupleStats {
   });
 
   factory CoupleStats.fromJson(Map<String, dynamic> json) {
+    // Parse anniversary as local date to avoid timezone shifts
+    DateTime? anniversaryDate;
+    if (json['anniversaryDate'] != null) {
+      final utcDate = DateTime.parse(json['anniversaryDate'] as String);
+      anniversaryDate = DateTime(utcDate.year, utcDate.month, utcDate.day);
+    }
+
     return CoupleStats(
-      anniversaryDate: json['anniversaryDate'] != null
-          ? DateTime.parse(json['anniversaryDate'] as String)
-          : null,
+      anniversaryDate: anniversaryDate,
       user1: UserActivityStats.fromJson(json['user1'] as Map<String, dynamic>),
       user2: UserActivityStats.fromJson(json['user2'] as Map<String, dynamic>),
       currentUserId: json['currentUserId'] as String,
@@ -142,7 +147,9 @@ class CoupleStatsService {
       final box = Hive.box(_appMetadataBox);
       final dateStr = box.get(_anniversaryDateKey) as String?;
       if (dateStr != null) {
-        return DateTime.parse(dateStr);
+        // Parse as local date to avoid timezone shifts
+        final utcDate = DateTime.parse(dateStr);
+        return DateTime(utcDate.year, utcDate.month, utcDate.day);
       }
       return null;
     } catch (e) {
@@ -154,17 +161,22 @@ class CoupleStatsService {
 
   /// Set or update the anniversary date
   ///
-  /// Updates both server and local cache
-  Future<bool> setAnniversaryDate(DateTime date) async {
+  /// Updates both server and local cache.
+  /// Set [overwrite] to true when user explicitly changes date from settings.
+  /// When false (default), uses "first one wins" - won't overwrite existing date.
+  Future<bool> setAnniversaryDate(DateTime date, {bool overwrite = false}) async {
     try {
-      Logger.info('Setting anniversary date: $date', service: 'couplestats');
+      Logger.info('Setting anniversary date: $date (overwrite: $overwrite)', service: 'couplestats');
 
       final dateStr = date.toIso8601String().split('T')[0];
 
       // Update server
       final response = await _apiClient.post(
         '/api/sync/couple-preferences',
-        body: {'anniversaryDate': dateStr},
+        body: {
+          'anniversaryDate': dateStr,
+          if (overwrite) 'overwrite': true,
+        },
       );
 
       if (!response.success) {

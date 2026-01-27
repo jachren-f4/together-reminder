@@ -91,10 +91,18 @@ export const POST = withAuthOrDevBypass(async (req, userId) => {
         }
 
         if (anniversaryDate !== undefined) {
-            updates.push(`anniversary_date = $${paramIndex}`);
-            // anniversaryDate can be null (to delete) or a date string
-            values.push(anniversaryDate ? new Date(anniversaryDate) : null);
-            paramIndex++;
+            // "First one wins" - only set anniversary if not already set
+            // Unless explicitly clearing (null) or overwrite flag is true
+            const shouldSetAnniversary =
+                anniversaryDate === null ||  // Allow clearing
+                body.overwrite === true ||   // Allow explicit overwrite from settings
+                couple.anniversary_date === null;  // First one wins
+
+            if (shouldSetAnniversary) {
+                updates.push(`anniversary_date = $${paramIndex}`);
+                values.push(anniversaryDate ? new Date(anniversaryDate) : null);
+                paramIndex++;
+            }
         }
 
         updates.push('updated_at = NOW()');

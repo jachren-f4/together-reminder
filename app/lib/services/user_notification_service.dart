@@ -46,7 +46,7 @@ class UserNotificationService {
         parser: (json) => json,
       );
 
-      if (!response.isSuccess || response.data == null) {
+      if (!response.success || response.data == null) {
         Logger.debug('Failed to fetch notifications: ${response.error}', service: 'notification');
         return [];
       }
@@ -87,7 +87,7 @@ class UserNotificationService {
         parser: (json) => json,
       );
 
-      if (response.isSuccess) {
+      if (response.success) {
         Logger.debug('Dismissed notification: $notificationId', service: 'notification');
         return true;
       } else {

@@ -185,12 +185,17 @@ class SubscriptionService with ChangeNotifier {
       return true;
     }
 
-    // On web, always return false (no IAP support)
-    if (kIsWeb) return false;
-
     // Check couple-level subscription first (partner may have subscribed)
+    // This works on all platforms including web
     if (_coupleSubscriptionStatus?.isActive == true) {
       return true;
+    }
+
+    // If server explicitly says expired, trust that over RevenueCat
+    // This prevents showing premium when a different Apple ID on the device
+    // has an active subscription that doesn't belong to this couple
+    if (_coupleSubscriptionStatus?.status == 'expired') {
+      return false;
     }
 
     // Check cached couple status (for offline partner access)
@@ -203,12 +208,20 @@ class SubscriptionService with ChangeNotifier {
       }
     }
 
+    // If cached status is expired, trust that
+    if (cachedCoupleStatus?.status == 'expired') {
+      return false;
+    }
+
+    // On web, no RevenueCat support - rely on couple subscription only
+    if (kIsWeb) return false;
+
     // If not configured, return false
     if (!RevenueCatConfig.isConfigured) return false;
 
-    // Check cached customer info first (RevenueCat)
+    // Check RevenueCat for users who haven't checked server yet (new purchase/restore)
     if (_customerInfo != null) {
-      return _customerInfo!.entitlements.active.containsKey(RevenueCatConfig.premiumEntitlement);
+      return _hasRevenueCatPremium();
     }
 
     // Fall back to Hive cache for offline access
@@ -311,10 +324,14 @@ class SubscriptionService with ChangeNotifier {
       _customerInfo = await Purchases.purchasePackage(package);
       _updatePremiumCache();
 
-      // Check if purchase gave us premium entitlement
-      final hasEntitlement = _customerInfo!.entitlements.active.containsKey(
-        RevenueCatConfig.premiumEntitlement,
-      );
+      // CRITICAL: Clear couple status (in-memory AND cache) after successful purchase.
+      // This allows isPremium to check RevenueCat directly even if server
+      // still says "expired" (activation may have failed).
+      // The status will be refreshed when we call checkCoupleSubscription() later.
+      _clearCoupleStatus();
+
+      // Check if purchase gave us premium entitlement (using fuzzy match for Unicode variations)
+      final hasEntitlement = _hasRevenueCatPremium();
 
       if (hasEntitlement) {
         // Activate subscription for the couple (with retry)
@@ -378,15 +395,18 @@ class SubscriptionService with ChangeNotifier {
         _customerInfo = await Purchases.restorePurchases();
         _updatePremiumCache();
 
-        final hasEntitlement = _customerInfo!.entitlements.active.containsKey(
-          RevenueCatConfig.premiumEntitlement,
-        );
+        // CRITICAL: Clear couple status (in-memory AND cache) after successful restore.
+        // This allows isPremium to check RevenueCat directly even if server
+        // still says "expired" (previous status check may have been stale).
+        _clearCoupleStatus();
 
-        if (hasEntitlement) {
+        // Use fuzzy matching for Unicode variations in entitlement name
+        final entitlement = _getPremiumEntitlement();
+
+        if (entitlement != null) {
           // Subscriber restored - also activate for couple
           await _activateForCoupleWithRetry(
-            _customerInfo!.entitlements.active[RevenueCatConfig.premiumEntitlement]
-                ?.productIdentifier ?? 'restored',
+            entitlement.productIdentifier ?? 'restored',
           );
 
           notifyListeners();
@@ -452,8 +472,9 @@ class SubscriptionService with ChangeNotifier {
       // Check if user now has premium
       if (isPremium) {
         // Activate for couple with the product they purchased
-        final productId = _customerInfo?.entitlements.active[RevenueCatConfig.premiumEntitlement]
-            ?.productIdentifier;
+        // Use fuzzy matching for Unicode variations in entitlement name
+        final entitlement = _getPremiumEntitlement();
+        final productId = entitlement?.productIdentifier;
 
         if (productId != null) {
           await _activateForCoupleWithRetry(productId);
@@ -542,6 +563,37 @@ class SubscriptionService with ChangeNotifier {
   // PRIVATE HELPERS
   // ============================================================================
 
+  /// Get the premium entitlement from customer info using fuzzy matching.
+  ///
+  /// RevenueCat sometimes returns entitlement names with different Unicode
+  /// characters (e.g., U+2024 ONE DOT LEADER instead of U+002E FULL STOP).
+  /// This method finds the entitlement regardless of such variations.
+  EntitlementInfo? _getPremiumEntitlement() {
+    if (_customerInfo == null) return null;
+
+    // First try exact match
+    final exactMatch = _customerInfo!.entitlements.active[RevenueCatConfig.premiumEntitlement];
+    if (exactMatch != null) return exactMatch;
+
+    // Fall back to fuzzy matching
+    for (final entry in _customerInfo!.entitlements.active.entries) {
+      if (RevenueCatConfig.isPremiumEntitlement(entry.key)) {
+        Logger.debug(
+          'Found entitlement via fuzzy match: "${entry.key}" (expected: "${RevenueCatConfig.premiumEntitlement}")',
+          service: 'subscription',
+        );
+        return entry.value;
+      }
+    }
+
+    return null;
+  }
+
+  /// Check if customer has premium entitlement (using fuzzy matching).
+  bool _hasRevenueCatPremium() {
+    return _getPremiumEntitlement() != null;
+  }
+
   void _onCustomerInfoUpdated(CustomerInfo customerInfo) {
     Logger.debug('Customer info updated', service: 'subscription');
     _customerInfo = customerInfo;
@@ -551,7 +603,8 @@ class SubscriptionService with ChangeNotifier {
   }
 
   void _updatePremiumCache() {
-    final premium = _customerInfo?.entitlements.active.containsKey(RevenueCatConfig.premiumEntitlement) ?? false;
+    // Use fuzzy matching for Unicode variations in entitlement name
+    final premium = _hasRevenueCatPremium();
 
     // Cache in Hive for offline access
     try {
@@ -656,11 +709,9 @@ class SubscriptionService with ChangeNotifier {
     final pending = _getPendingActivation();
     if (pending == null) return;
 
-    // Only retry if we have a valid RevenueCat entitlement
+    // Only retry if we have a valid RevenueCat entitlement (use fuzzy matching)
     if (!kIsWeb && RevenueCatConfig.isConfigured && _customerInfo != null) {
-      final hasEntitlement = _customerInfo!.entitlements.active.containsKey(
-        RevenueCatConfig.premiumEntitlement,
-      );
+      final hasEntitlement = _hasRevenueCatPremium();
 
       if (hasEntitlement) {
         Logger.info('Retrying pending activation for: $pending', service: 'subscription');
@@ -679,23 +730,24 @@ class SubscriptionService with ChangeNotifier {
   /// Check if current user has RevenueCat entitlement.
   ///
   /// Used to determine if user can transfer subscription to new couple on re-pair.
+  /// Uses fuzzy matching for Unicode variations in entitlement name.
   bool get hasRevenueCatEntitlement {
     if (kIsWeb || !RevenueCatConfig.isConfigured || _customerInfo == null) {
       return false;
     }
-    return _customerInfo!.entitlements.active.containsKey(RevenueCatConfig.premiumEntitlement);
+    return _hasRevenueCatPremium();
   }
 
   /// Get current product ID from RevenueCat entitlement.
+  /// Uses fuzzy matching for Unicode variations in entitlement name.
   String? get currentProductId {
-    if (!hasRevenueCatEntitlement) return null;
-    return _customerInfo!.entitlements.active[RevenueCatConfig.premiumEntitlement]
-        ?.productIdentifier;
+    final entitlement = _getPremiumEntitlement();
+    return entitlement?.productIdentifier;
   }
 
   /// Get current expiration date from RevenueCat entitlement.
+  /// Uses fuzzy matching for Unicode variations in entitlement name.
   DateTime? get currentExpiresAt {
-    if (!hasRevenueCatEntitlement) return null;
     return _getExpirationDate();
   }
 
@@ -738,10 +790,9 @@ class SubscriptionService with ChangeNotifier {
   }
 
   /// Get expiration date from RevenueCat customer info.
+  /// Uses fuzzy matching for Unicode variations in entitlement name.
   DateTime? _getExpirationDate() {
-    if (_customerInfo == null) return null;
-
-    final entitlement = _customerInfo!.entitlements.active[RevenueCatConfig.premiumEntitlement];
+    final entitlement = _getPremiumEntitlement();
     if (entitlement?.expirationDate == null) return null;
 
     return DateTime.parse(entitlement!.expirationDate!);
@@ -755,6 +806,21 @@ class SubscriptionService with ChangeNotifier {
       box.put(_coupleStatusCacheTimeKey, DateTime.now().toIso8601String());
     } catch (e) {
       Logger.debug('Failed to cache couple status: $e', service: 'subscription');
+    }
+  }
+
+  /// Clear both in-memory and cached couple status.
+  /// Used after a successful purchase/restore to allow isPremium
+  /// to check RevenueCat directly without being blocked by stale server status.
+  void _clearCoupleStatus() {
+    _coupleSubscriptionStatus = null;
+    try {
+      final box = Hive.box('app_metadata');
+      box.delete(_coupleStatusCacheKey);
+      box.delete(_coupleStatusCacheTimeKey);
+      Logger.debug('Cleared couple status cache', service: 'subscription');
+    } catch (e) {
+      Logger.debug('Failed to clear couple status cache: $e', service: 'subscription');
     }
   }
 

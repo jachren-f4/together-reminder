@@ -1,0 +1,12 @@
+Hi again,
+
+I wanted to follow up regarding Guideline 2.3.2 (Accurate Metadata), which I didn't address in my previous message.
+
+We have updated the App Store description to clearly indicate that Us 2.0 requires a subscription after the free trial. The changes include:
+
+- Added "Start with a 7-day free trial, then continue with Us 2.0 Premium to unlock unlimited activities and rewards" near the top
+- Added a dedicated SUBSCRIPTION INFO section explaining auto-renewal and how to manage the subscription
+
+Please let me know if any further changes are needed.
+
+Thank you!

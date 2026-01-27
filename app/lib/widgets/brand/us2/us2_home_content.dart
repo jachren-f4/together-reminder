@@ -129,14 +129,14 @@ class Us2HomeContent extends StatelessWidget {
             children: [
               // Hero section with overlapping elements
               _buildHeroSection(),
-              // Daily Quests section
-              const Us2SectionHeader(title: 'Daily Quests'),
+              // Quizzes section
+              const Us2SectionHeader(title: 'Quizzes'),
               Us2QuestCarousel(
                 key: dailyQuestsSectionKey,
                 quests: _mapQuestsToData(dailyQuests, getDailyQuestGuidance),
               ),
-              // Side Quests section
-              const Us2SectionHeader(title: 'Side Quests'),
+              // Games section
+              const Us2SectionHeader(title: 'Games'),
               Us2QuestCarousel(
                 quests: _mapQuestsToData(sideQuests, getSideQuestGuidance),
                 isSmall: !kSideQuestsSameAsDailyQuests,
@@ -217,7 +217,7 @@ class Us2HomeContent extends StatelessWidget {
       case QuestType.wordSearch:
         return 'Word Search';
       case QuestType.steps:
-        return 'Steps Together';
+        return 'Steps';
     }
   }
 
@@ -246,7 +246,7 @@ class Us2HomeContent extends StatelessWidget {
       case QuestType.wordSearch:
         return 'Find hidden words';
       case QuestType.steps:
-        return 'Walk together, earn points';
+        return 'Walk more, earn more';
     }
   }
 

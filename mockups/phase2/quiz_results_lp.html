@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phase 2.2 - Quiz Results LP Clarity</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Nunito:wght@400;600;700&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Nunito', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #FAFAFA;
+            color: #3A3A3A;
+            display: flex;
+            gap: 40px;
+            padding: 40px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .mockup-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .mockup-label {
+            font-size: 14px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #6E6E6E;
+            padding: 8px 16px;
+            background: #F0F0F0;
+            border-radius: 8px;
+        }
+
+        .mockup-label.before { background: #FFE5E5; color: #C62828; }
+        .mockup-label.after { background: #E5FFE5; color: #2E7D32; }
+
+        .phone {
+            width: 390px;
+            height: 844px;
+            background: linear-gradient(180deg, #FFD1C1 0%, #FFF5F0 100%);
+            border-radius: 50px;
+            overflow: hidden;
+            position: relative;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+        }
+
+        .screen-content {
+            padding: 60px 24px 120px;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Score section */
+        .score-section {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .score-icon {
+            width: 64px;
+            height: 64px;
+            background: linear-gradient(135deg, #FF6B6B, #FF9F43);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 12px;
+            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4);
+        }
+
+        .score-icon svg {
+            width: 32px;
+            height: 32px;
+            fill: white;
+        }
+
+        .score-number {
+            font-family: 'Playfair Display', serif;
+            font-size: 48px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #FF6B6B, #FF9F43);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .score-label {
+            font-size: 16px;
+            color: #5A5A5A;
+        }
+
+        /* LP Badge - BEFORE (confusing) */
+        .lp-badge-before {
+            position: absolute;
+            top: 120px;
+            right: 40px;
+            background: linear-gradient(135deg, #FFD700, #FFA500);
+            color: #5D4E37;
+            padding: 8px 14px;
+            border-radius: 16px;
+            font-size: 16px;
+            font-weight: 700;
+            animation: bounce 1s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+
+        /* AFTER: Clear LP section */
+        .lp-section {
+            background: white;
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+        }
+
+        .lp-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .lp-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .lp-amount {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: linear-gradient(135deg, #FFD700, #FFA500);
+            color: #5D4E37;
+            padding: 6px 14px;
+            border-radius: 16px;
+            font-size: 16px;
+            font-weight: 700;
+        }
+
+        .lp-explanation {
+            font-size: 14px;
+            color: #5A5A5A;
+            line-height: 1.5;
+            padding: 12px;
+            background: #FFF8F0;
+            border-radius: 12px;
+        }
+
+        .lp-explanation strong {
+            color: #FF5E62;
+        }
+
+        /* Results section */
+        .results-section {
+            background: white;
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+            flex: 1;
+        }
+
+        .results-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+
+        .result-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid #F0F0F0;
+        }
+
+        .result-row:last-child {
+            border-bottom: none;
+        }
+
+        .result-question {
+            font-size: 14px;
+            color: #3A3A3A;
+            flex: 1;
+        }
+
+        .match-badge {
+            background: linear-gradient(135deg, #FF6B6B, #FF9F43);
+            color: white;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        .mismatch-badge {
+            background: #F0F0F0;
+            color: #5A5A5A;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        /* Button */
+        .btn-container {
+            position: absolute;
+            bottom: 40px;
+            left: 24px;
+            right: 24px;
+        }
+
+        .btn-primary {
+            width: 100%;
+            background: linear-gradient(180deg, white, #FFF8F0);
+            color: #FF5E62;
+            padding: 18px;
+            border-radius: 16px;
+            font-size: 17px;
+            font-weight: 700;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+        }
+
+        /* Notes section */
+        .notes {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 30px;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .notes h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: #3A3A3A;
+        }
+
+        .notes h3 {
+            font-size: 16px;
+            font-weight: 700;
+            margin: 20px 0 10px;
+            color: #FF5E62;
+        }
+
+        .notes ul {
+            margin-left: 20px;
+            line-height: 1.8;
+        }
+
+        .notes li {
+            margin-bottom: 8px;
+        }
+
+        .decision-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 16px 0;
+        }
+
+        .decision-table th,
+        .decision-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #F0F0F0;
+        }
+
+        .decision-table th {
+            background: #F8F8F8;
+            font-weight: 700;
+        }
+    </style>
+</head>
+<body>
+    <!-- BEFORE -->
+    <div class="mockup-container">
+        <div class="mockup-label before">Before (Confusing LP)</div>
+        <div class="phone">
+            <div class="screen-content">
+                <div class="lp-badge-before">+30 LP</div>
+
+                <div class="score-section">
+                    <div class="score-icon">
+                        <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg>
+                    </div>
+                    <div class="score-number">60%</div>
+                    <div class="score-label">Match Score</div>
+                </div>
+
+                <div class="results-section">
+                    <div class="results-title">Your Answers</div>
+                    <div class="result-row">
+                        <span class="result-question">Weekend preferences</span>
+                        <span class="match-badge">Match</span>
+                    </div>
+                    <div class="result-row">
+                        <span class="result-question">Communication style</span>
+                        <span class="mismatch-badge">Different</span>
+                    </div>
+                    <div class="result-row">
+                        <span class="result-question">Love language</span>
+                        <span class="match-badge">Match</span>
+                    </div>
+                    <div class="result-row">
+                        <span class="result-question">Conflict resolution</span>
+                        <span class="mismatch-badge">Different</span>
+                    </div>
+                    <div class="result-row">
+                        <span class="result-question">Future goals</span>
+                        <span class="match-badge">Match</span>
+                    </div>
+                </div>
+            </div>
+            <div class="btn-container">
+                <div class="btn-primary">Continue</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- AFTER: Option A (Participation only) - CHOSEN -->
+    <div class="mockup-container">
+        <div class="mockup-label after">After (Chosen): Participation LP</div>
+        <div class="phone">
+            <div class="screen-content">
+                <div class="score-section">
+                    <div class="score-icon">
+                        <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg>
+                    </div>
+                    <div class="score-number">60%</div>
+                    <div class="score-label">Match Score</div>
+                </div>
+
+                <div class="lp-section">
+                    <div class="lp-header">
+                        <span class="lp-title">Love Points Earned</span>
+                        <span class="lp-amount">+30 LP</span>
+                    </div>
+                    <div class="lp-explanation">
+                        You earned LP from <strong>participation</strong>! Match score shows how aligned you are, but you earn LP just for playing.
+                    </div>
+                </div>
+
+                <div class="results-section">
+                    <div class="results-title">Your Answers</div>
+                    <div class="result-row">
+                        <span class="result-question">Weekend preferences</span>
+                        <span class="match-badge">Match</span>
+                    </div>
+                    <div class="result-row">
+                        <span class="result-question">Communication style</span>
+                        <span class="mismatch-badge">Different</span>
+                    </div>
+                    <div class="result-row">
+                        <span class="result-question">Love language</span>
+                        <span class="match-badge">Match</span>
+                    </div>
+                    <div class="result-row">
+                        <span class="result-question">Conflict resolution</span>
+                        <span class="mismatch-badge">Different</span>
+                    </div>
+                </div>
+            </div>
+            <div class="btn-container">
+                <div class="btn-primary">Continue</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Design Notes -->
+    <div class="notes">
+        <h2>Phase 2.2: LP Reward Clarity</h2>
+
+        <h3>Issue Identified</h3>
+        <ul>
+            <li>Users confused why they get LP even when answers don't match</li>
+            <li>Expectation: "LP = alignment score"</li>
+            <li>Reality: "LP = participation reward"</li>
+            <li>No explanation of what triggers LP</li>
+        </ul>
+
+        <h3>Solution: Participation-Based LP</h3>
+        <ul>
+            <li><strong>LP Formula:</strong> Fixed 30 LP per quiz completion</li>
+            <li><strong>Psychology:</strong> Low pressure - playing together is what matters</li>
+            <li><strong>Message:</strong> Differences in answers are OK in relationships</li>
+        </ul>
+
+        <h3>Changes</h3>
+        <ul>
+            <li><strong>Dedicated LP section:</strong> Separate from match score with clear explanation</li>
+            <li><strong>Explanation text:</strong> "You earned LP from participation!"</li>
+            <li><strong>Visual separation:</strong> LP in its own card, score above</li>
+            <li><strong>Remove floating badge:</strong> No more bouncing "+30 LP" that confuses the message</li>
+            <li><strong>First classic quiz only:</strong> LP explanation card only shown on first classic quiz results, then never again</li>
+        </ul>
+
+        <h3>LP Card Behavior</h3>
+        <ul>
+            <li>Appears on <strong>first classic quiz results only</strong> - not on Welcome Quiz, not on subsequent quizzes</li>
+            <li>Stored in Hive: <code>hasSeenLpExplanationCard: true</code></li>
+            <li>After first quiz, just show the "+30 LP" badge inline (no explanation card)</li>
+            <li>Can reuse same flag check as instruction banner, or use separate flag</li>
+        </ul>
+
+        <h3>Implementation Notes</h3>
+        <ul>
+            <li>File: <code>app/lib/screens/quiz_match_results_screen.dart</code></li>
+            <li>Add Hive field: <code>hasSeenLpExplanationCard</code> to user preferences</li>
+            <li>Check flag: <code>if (!prefs.hasSeenLpExplanationCard && isClassicQuiz)</code></li>
+            <li>Set flag after viewing results screen</li>
+            <li>Subsequent quizzes: Show simple "+30 LP" without explanation card</li>
+            <li>No backend changes needed (LP already participation-based)</li>
+        </ul>
+
+        <h2 style="margin-top: 40px; padding-top: 20px; border-top: 3px solid #FF5E62;">📋 Implementation Task List</h2>
+        <p style="color: #666; margin-bottom: 20px;">Coding agent: Complete each task below. Check off when done. Follow the "After" mockup exactly.</p>
+
+        <h3>Add Hive Field for LP Card State</h3>
+        <ul style="list-style: none; margin-left: 0;">
+            <li>☐ Add <code>hasSeenLpExplanationCard</code> boolean to user preferences Hive model</li>
+            <li>☐ Default value: <code>false</code></li>
+            <li>☐ Regenerate Hive adapters if needed</li>
+        </ul>
+
+        <h3>Create LP Explanation Card Widget</h3>
+        <ul style="list-style: none; margin-left: 0;">
+            <li>☐ Create white card with border-radius: 20px, padding: 20px</li>
+            <li>☐ Add header row with "Love Points Earned" title (Playfair Display, 18px, bold)</li>
+            <li>☐ Add "+30 LP" badge in header: gold gradient background <code>#FFD700 → #FFA500</code></li>
+            <li>☐ Badge text color: <code>#5D4E37</code>, font-weight: 700</li>
+            <li>☐ Add explanation text area with cream background: <code>#FFF8F0</code></li>
+            <li>☐ Text: "You earned LP from <strong>participation</strong>! Match score shows how aligned you are, but you earn LP just for playing."</li>
+            <li>☐ "participation" word in coral color: <code>#FF5E62</code></li>
+        </ul>
+
+        <h3>Integrate into Results Screen (<code>quiz_match_results_screen.dart</code>)</h3>
+        <ul style="list-style: none; margin-left: 0;">
+            <li>☐ Remove floating bouncing "+30 LP" badge</li>
+            <li>☐ Show LP explanation card only on first classic quiz results</li>
+            <li>☐ Check: <code>if (!prefs.hasSeenLpExplanationCard && isClassicQuiz)</code></li>
+            <li>☐ Place LP card between score section and results section</li>
+            <li>☐ Set <code>hasSeenLpExplanationCard = true</code> when results screen loads</li>
+            <li>☐ Subsequent quizzes: Show simple inline "+30 LP" badge (no card)</li>
+        </ul>
+
+        <h3>Testing Checklist</h3>
+        <ul style="list-style: none; margin-left: 0;">
+            <li>☐ First classic quiz results shows full LP explanation card</li>
+            <li>☐ Second classic quiz results shows simple "+30 LP" badge only</li>
+            <li>☐ Welcome Quiz does NOT show LP explanation card</li>
+            <li>☐ No floating/bouncing LP badge anywhere</li>
+            <li>☐ LP card styling matches mockup exactly</li>
+            <li>☐ "participation" word is highlighted in coral</li>
+        </ul>
+    </div>
+</body>
+</html>

@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:togetherremind/screens/home_screen.dart';
 import 'package:togetherremind/screens/journal_screen.dart';
@@ -41,6 +42,7 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> with SingleTickerProviderStateMixin {
   int _currentIndex = 0;
+  int _previousIndex = 0; // Track previous index for slide direction
 
   // Track whether LP intro has been shown this session
   // This prevents showing it again when switching tabs
@@ -138,10 +140,7 @@ class _MainScreenState extends State<MainScreen> with SingleTickerProviderStateM
   Future<void> _checkSubscriptionStatus() async {
     try {
       // First check cached status (fast)
-      final isPremium = _subscriptionService.isPremium;
-
-      if (isPremium) {
-        // User has premium, show app content
+      if (_subscriptionService.isPremium) {
         if (mounted) {
           setState(() {
             _isCheckingSubscription = false;
@@ -151,19 +150,41 @@ class _MainScreenState extends State<MainScreen> with SingleTickerProviderStateM
         return;
       }
 
-      // Not premium according to cache, do a fresh check from RevenueCat
-      await _subscriptionService.refreshPremiumStatus();
-      final freshIsPremium = _subscriptionService.isPremium;
+      // Not premium according to cache - check couple subscription from API first
+      // This is critical: we must verify with server before showing paywall
+      final coupleStatus = await _subscriptionService.checkCoupleSubscription();
+      if (coupleStatus?.isActive == true) {
+        Logger.debug('Couple subscription active from API', service: 'main');
+        if (mounted) {
+          setState(() {
+            _isCheckingSubscription = false;
+            _showPaywall = false;
+          });
+        }
+        return;
+      }
 
+      // Also refresh from RevenueCat (for non-web platforms)
+      if (!kIsWeb) {
+        await _subscriptionService.refreshPremiumStatus();
+        if (_subscriptionService.isPremium) {
+          if (mounted) {
+            setState(() {
+              _isCheckingSubscription = false;
+              _showPaywall = false;
+            });
+          }
+          return;
+        }
+      }
+
+      // No active subscription found - show paywall
       if (mounted) {
         setState(() {
           _isCheckingSubscription = false;
-          _showPaywall = !freshIsPremium;
+          _showPaywall = true;
         });
-
-        if (_showPaywall) {
-          Logger.debug('Showing paywall - user subscription lapsed or not active', service: 'main');
-        }
+        Logger.debug('Showing paywall - no active subscription found', service: 'main');
       }
     } catch (e) {
       Logger.error('Failed to check subscription status', error: e, service: 'main');
@@ -210,6 +231,19 @@ class _MainScreenState extends State<MainScreen> with SingleTickerProviderStateM
     }
   }
 
+  /// Navigate to a tab with slide animation direction tracking
+  void _navigateToTab(int index) {
+    if (index == _currentIndex) return; // No change
+    // Dismiss LP celebration when switching away from home tab
+    if (_currentIndex == 0 && index != 0) {
+      LpCelebrationService.dismiss();
+    }
+    setState(() {
+      _previousIndex = _currentIndex;
+      _currentIndex = index;
+    });
+  }
+
   @override
   void dispose() {
     NavStyleService.instance.removeListener(_onNavStyleChanged);
@@ -242,7 +276,14 @@ class _MainScreenState extends State<MainScreen> with SingleTickerProviderStateM
     final skipAnimation = AnimationConstants.shouldReduceMotion(context);
 
     return Scaffold(
-      body: _screens[_currentIndex],
+      body: ClipRect(
+        child: _TabSwitcher(
+          currentIndex: _currentIndex,
+          previousIndex: _previousIndex,
+          skipAnimation: skipAnimation,
+          child: _screens[_currentIndex],
+        ),
+      ),
       // Hide bottom nav when LP intro overlay is visible
       bottomNavigationBar: _lpIntroVisible ? null : _buildBottomNav(skipAnimation),
     );
@@ -254,11 +295,15 @@ class _MainScreenState extends State<MainScreen> with SingleTickerProviderStateM
     final us2Nav = BrandWidgetFactory.us2BottomNav(
       currentIndex: _currentIndex,
       onTap: (index) {
+        if (index == _currentIndex) return; // No change
         // Dismiss LP celebration when switching away from home tab
         if (_currentIndex == 0 && index != 0) {
           LpCelebrationService.dismiss();
         }
-        setState(() => _currentIndex = index);
+        setState(() {
+          _previousIndex = _currentIndex;
+          _currentIndex = index;
+        });
       },
     );
 
@@ -299,32 +344,32 @@ class _MainScreenState extends State<MainScreen> with SingleTickerProviderStateM
                   iconFilled: BrandAssets.homeIconFilled,
                   label: 'Home',
                   isActive: _currentIndex == 0,
-                  onTap: () => setState(() => _currentIndex = 0),
+                  onTap: () => _navigateToTab(0),
                 ),
                 _NavItem(
                   iconOutline: BrandAssets.journalIcon,
                   iconFilled: BrandAssets.journalIconFilled,
                   label: 'Journal',
                   isActive: _currentIndex == 1,
-                  onTap: () => setState(() => _currentIndex = 1),
+                  onTap: () => _navigateToTab(1),
                 ),
                 _PokeNavItem(
                   isActive: _currentIndex == 2,
-                  onTap: () => setState(() => _currentIndex = 2),
+                  onTap: () => _navigateToTab(2),
                 ),
                 _NavItem(
                   iconOutline: BrandAssets.profileIcon,
                   iconFilled: BrandAssets.profileIconFilled,
                   label: 'Profile',
                   isActive: _currentIndex == 3,
-                  onTap: () => setState(() => _currentIndex = 3),
+                  onTap: () => _navigateToTab(3),
                 ),
                 _NavItem(
                   iconOutline: BrandAssets.settingsIcon,
                   iconFilled: BrandAssets.settingsIconFilled,
                   label: 'Settings',
                   isActive: _currentIndex == 4,
-                  onTap: () => setState(() => _currentIndex = 4),
+                  onTap: () => _navigateToTab(4),
                 ),
               ],
             ),
@@ -428,6 +473,119 @@ class _PokeNavItem extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+}
+
+/// Custom tab switcher with smooth bidirectional slide animation
+class _TabSwitcher extends StatefulWidget {
+  final int currentIndex;
+  final int previousIndex;
+  final bool skipAnimation;
+  final Widget child;
+
+  const _TabSwitcher({
+    required this.currentIndex,
+    required this.previousIndex,
+    required this.skipAnimation,
+    required this.child,
+  });
+
+  @override
+  State<_TabSwitcher> createState() => _TabSwitcherState();
+}
+
+class _TabSwitcherState extends State<_TabSwitcher>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<Offset> _incomingAnimation;
+  late Animation<Offset> _outgoingAnimation;
+
+  Widget? _oldChild;
+  bool _isAnimating = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      duration: const Duration(milliseconds: 300),
+      vsync: this,
+    );
+    _setupAnimations(widget.currentIndex > widget.previousIndex);
+  }
+
+  void _setupAnimations(bool movingRight) {
+    final curve = CurvedAnimation(
+      parent: _controller,
+      curve: Curves.easeOutCubic,
+    );
+
+    // Incoming: slides from right to center (or left to center)
+    _incomingAnimation = Tween<Offset>(
+      begin: movingRight ? const Offset(1.0, 0.0) : const Offset(-1.0, 0.0),
+      end: Offset.zero,
+    ).animate(curve);
+
+    // Outgoing: slides from center to left (or center to right)
+    _outgoingAnimation = Tween<Offset>(
+      begin: Offset.zero,
+      end: movingRight ? const Offset(-1.0, 0.0) : const Offset(1.0, 0.0),
+    ).animate(curve);
+  }
+
+  @override
+  void didUpdateWidget(_TabSwitcher oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    if (widget.currentIndex != oldWidget.currentIndex) {
+      // Tab changed - start animation
+      _oldChild = oldWidget.child;
+
+      final movingRight = widget.currentIndex > oldWidget.currentIndex;
+      _setupAnimations(movingRight);
+
+      if (!widget.skipAnimation) {
+        _isAnimating = true;
+        _controller.forward(from: 0.0).then((_) {
+          if (mounted) {
+            setState(() {
+              _isAnimating = false;
+              _oldChild = null;
+            });
+          }
+        });
+      }
+    }
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (widget.skipAnimation || !_isAnimating || _oldChild == null) {
+      // No animation needed
+      return widget.child;
+    }
+
+    // During animation, show both widgets sliding
+    return Stack(
+      fit: StackFit.expand,
+      children: [
+        // Old screen sliding out
+        SlideTransition(
+          position: _outgoingAnimation,
+          child: _oldChild!,
+        ),
+        // New screen sliding in
+        SlideTransition(
+          position: _incomingAnimation,
+          child: widget.child,
+        ),
+      ],
     );
   }
 }

@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New Onboarding Flow - Us 2.0</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&family=Pacifico&family=Playfair+Display:ital,wght@0,600;0,700;1,400;1,600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            background: linear-gradient(180deg, #FFD1C1 0%, #FFF5F0 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            font-family: 'Pacifico', cursive;
+            font-size: 48px;
+            color: #FF5E62;
+            text-align: center;
+            margin-bottom: 8px;
+            text-shadow: 0 4px 20px rgba(255, 107, 107, 0.4);
+        }
+
+        .subtitle {
+            font-family: 'Playfair Display', serif;
+            font-size: 18px;
+            font-style: italic;
+            color: #5A5A5A;
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .flow-section {
+            background: white;
+            border-radius: 24px;
+            padding: 32px;
+            margin-bottom: 24px;
+            box-shadow: 0 4px 20px rgba(255, 94, 98, 0.1);
+        }
+
+        .section-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 22px;
+            font-weight: 600;
+            color: #3A3A3A;
+            margin-bottom: 8px;
+        }
+
+        .section-badge {
+            display: inline-block;
+            background: linear-gradient(90deg, #FF6B6B, #FF9F43);
+            color: white;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            padding: 4px 12px;
+            border-radius: 20px;
+            margin-bottom: 16px;
+        }
+
+        .section-badge.existing {
+            background: linear-gradient(90deg, #6B8AFF, #43C6FF);
+        }
+
+        .section-description {
+            color: #5A5A5A;
+            font-size: 14px;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .screens-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 16px;
+        }
+
+        .screen-link {
+            display: block;
+            background: linear-gradient(180deg, #FFF8F0 0%, #FFFFFF 100%);
+            border: 2px solid #FFE4D9;
+            border-radius: 16px;
+            padding: 20px;
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+
+        .screen-link:hover {
+            border-color: #FF6B6B;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(255, 107, 107, 0.2);
+        }
+
+        .screen-number {
+            font-family: 'Playfair Display', serif;
+            font-size: 36px;
+            font-weight: 700;
+            background: linear-gradient(90deg, #FF6B6B, #FF9F43);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 8px;
+        }
+
+        .screen-name {
+            font-weight: 700;
+            color: #3A3A3A;
+            font-size: 15px;
+            margin-bottom: 4px;
+        }
+
+        .screen-desc {
+            font-size: 12px;
+            color: #707070;
+        }
+
+        .flow-arrow {
+            text-align: center;
+            color: #FF9F43;
+            font-size: 24px;
+            margin: 8px 0;
+        }
+
+        .legend {
+            display: flex;
+            gap: 24px;
+            justify-content: center;
+            margin-bottom: 32px;
+            flex-wrap: wrap;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            color: #5A5A5A;
+        }
+
+        .legend-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .legend-dot.new {
+            background: linear-gradient(90deg, #FF6B6B, #FF9F43);
+        }
+
+        .legend-dot.existing {
+            background: linear-gradient(90deg, #6B8AFF, #43C6FF);
+        }
+
+        .legend-dot.enhanced {
+            background: linear-gradient(90deg, #6BCB77, #43FF9F);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Us 2.0</h1>
+        <p class="subtitle">New Onboarding Flow Mockups</p>
+
+        <div class="legend">
+            <div class="legend-item">
+                <div class="legend-dot new"></div>
+                <span>New Screen</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-dot existing"></div>
+                <span>Existing (Keep)</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-dot enhanced"></div>
+                <span>Enhanced</span>
+            </div>
+        </div>
+
+        <!-- Phase 1: Value Proposition -->
+        <div class="flow-section">
+            <span class="section-badge">NEW</span>
+            <h2 class="section-title">Phase 1: Value Proposition Carousel</h2>
+            <p class="section-description">
+                Swipeable carousel with video background showcasing three key benefits. Users can swipe through
+                or tap dots to navigate. "Get Started" button visible on all slides for eager users.
+            </p>
+            <div class="screens-grid">
+                <a href="01-carousel.html" class="screen-link">
+                    <div class="screen-number">01</div>
+                    <div class="screen-name">Value Carousel</div>
+                    <div class="screen-desc">Video + swipeable slides</div>
+                </a>
+            </div>
+        </div>
+
+        <div class="flow-arrow">&#8595;</div>
+
+        <!-- Phase 2: Personal Info -->
+        <div class="flow-section">
+            <span class="section-badge" style="background: linear-gradient(90deg, #6BCB77, #43FF9F);">ENHANCED</span>
+            <h2 class="section-title">Phase 2: Personal Information</h2>
+            <p class="section-description">
+                Enhanced name entry screen that also collects birthday for personalization and birthday reminders.
+            </p>
+            <div class="screens-grid">
+                <a href="04-name-birthday.html" class="screen-link">
+                    <div class="screen-number">04</div>
+                    <div class="screen-name">Name + Birthday</div>
+                    <div class="screen-desc">Enhanced personal info</div>
+                </a>
+            </div>
+        </div>
+
+        <div class="flow-arrow">&#8595;</div>
+
+        <!-- Phase 3: Auth (Existing) -->
+        <div class="flow-section">
+            <span class="section-badge existing">EXISTING</span>
+            <h2 class="section-title">Phase 3: Authentication</h2>
+            <p class="section-description">
+                Existing email/OTP authentication flow - no changes needed.
+            </p>
+            <div class="screens-grid">
+                <div class="screen-link" style="opacity: 0.6; cursor: default;">
+                    <div class="screen-number" style="background: linear-gradient(90deg, #6B8AFF, #43C6FF); -webkit-background-clip: text;">05</div>
+                    <div class="screen-name">Email Entry</div>
+                    <div class="screen-desc">Existing AuthScreen</div>
+                </div>
+                <div class="screen-link" style="opacity: 0.6; cursor: default;">
+                    <div class="screen-number" style="background: linear-gradient(90deg, #6B8AFF, #43C6FF); -webkit-background-clip: text;">06</div>
+                    <div class="screen-name">OTP Verification</div>
+                    <div class="screen-desc">Existing OTP flow</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="flow-arrow">&#8595;</div>
+
+        <!-- Phase 4: Relationship Context -->
+        <div class="flow-section">
+            <span class="section-badge">NEW</span>
+            <h2 class="section-title">Phase 4: Relationship Context</h2>
+            <p class="section-description">
+                Optional anniversary date collection with contextual encouragement based on relationship length.
+            </p>
+            <div class="screens-grid">
+                <a href="07-anniversary.html" class="screen-link">
+                    <div class="screen-number">07</div>
+                    <div class="screen-name">Anniversary Date</div>
+                    <div class="screen-desc">With encouragement</div>
+                </a>
+            </div>
+        </div>
+
+        <div class="flow-arrow">&#8595;</div>
+
+        <!-- Phase 5: Pairing -->
+        <div class="flow-section">
+            <span class="section-badge existing">EXISTING</span>
+            <h2 class="section-title">Phase 5: Partner Pairing</h2>
+            <p class="section-description">
+                Existing pairing screen - works well, no changes needed.
+            </p>
+            <div class="screens-grid">
+                <div class="screen-link" style="opacity: 0.6; cursor: default;">
+                    <div class="screen-number" style="background: linear-gradient(90deg, #6B8AFF, #43C6FF); -webkit-background-clip: text;">08</div>
+                    <div class="screen-name">Pairing Screen</div>
+                    <div class="screen-desc">Existing screen</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="flow-arrow">&#8595;</div>
+
+        <!-- Phase 6: Permissions -->
+        <div class="flow-section">
+            <span class="section-badge">NEW</span>
+            <h2 class="section-title">Phase 6: Permissions</h2>
+            <p class="section-description">
+                Push notification permission screen with example notification mockup for better opt-in rates.
+            </p>
+            <div class="screens-grid">
+                <a href="09-notifications.html" class="screen-link">
+                    <div class="screen-number">09</div>
+                    <div class="screen-name">Push Permission</div>
+                    <div class="screen-desc">With example notification</div>
+                </a>
+            </div>
+        </div>
+
+        <div class="flow-arrow">&#8595;</div>
+
+        <!-- Phase 7: Welcome Quiz (Existing) -->
+        <div class="flow-section">
+            <span class="section-badge existing">EXISTING</span>
+            <h2 class="section-title">Phase 7: Welcome Quiz</h2>
+            <p class="section-description">
+                <strong>Our key differentiator!</strong> Keep the existing 4-screen Welcome Quiz flow exactly as-is.
+                This interactive activity is unique to Us 2.0 and builds connection before the paywall.
+            </p>
+            <div class="screens-grid">
+                <div class="screen-link" style="opacity: 0.6; cursor: default;">
+                    <div class="screen-number" style="background: linear-gradient(90deg, #6B8AFF, #43C6FF); -webkit-background-clip: text;">10</div>
+                    <div class="screen-name">Quiz Intro</div>
+                    <div class="screen-desc">Existing screen</div>
+                </div>
+                <div class="screen-link" style="opacity: 0.6; cursor: default;">
+                    <div class="screen-number" style="background: linear-gradient(90deg, #6B8AFF, #43C6FF); -webkit-background-clip: text;">11</div>
+                    <div class="screen-name">Quiz Game</div>
+                    <div class="screen-desc">Existing screen</div>
+                </div>
+                <div class="screen-link" style="opacity: 0.6; cursor: default;">
+                    <div class="screen-number" style="background: linear-gradient(90deg, #6B8AFF, #43C6FF); -webkit-background-clip: text;">12</div>
+                    <div class="screen-name">Waiting</div>
+                    <div class="screen-desc">Existing screen</div>
+                </div>
+                <div class="screen-link" style="opacity: 0.6; cursor: default;">
+                    <div class="screen-number" style="background: linear-gradient(90deg, #6B8AFF, #43C6FF); -webkit-background-clip: text;">13</div>
+                    <div class="screen-name">Results + LP</div>
+                    <div class="screen-desc">Existing screen</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="flow-arrow">&#8595;</div>
+
+        <!-- Phase 8: Value & Paywall -->
+        <div class="flow-section">
+            <span class="section-badge">NEW</span>
+            <h2 class="section-title">Phase 8: Value Reinforcement</h2>
+            <p class="section-description">
+                Social proof screen with rotating testimonials. Shown after Welcome Quiz + LP intro, right before the paywall.
+            </p>
+            <div class="screens-grid">
+                <a href="14-comparison.html" class="screen-link">
+                    <div class="screen-number">14</div>
+                    <div class="screen-name">Social Proof</div>
+                    <div class="screen-desc">Rotating testimonials</div>
+                </a>
+            </div>
+        </div>
+
+        <div class="flow-arrow">&#8595;</div>
+
+        <!-- Phase 9: Paywall (Existing) -->
+        <div class="flow-section">
+            <span class="section-badge existing">EXISTING</span>
+            <h2 class="section-title">Phase 9: Paywall & Home</h2>
+            <p class="section-description">
+                Existing paywall and main screen - no changes needed.
+            </p>
+            <div class="screens-grid">
+                <div class="screen-link" style="opacity: 0.6; cursor: default;">
+                    <div class="screen-number" style="background: linear-gradient(90deg, #6B8AFF, #43C6FF); -webkit-background-clip: text;">15</div>
+                    <div class="screen-name">Paywall</div>
+                    <div class="screen-desc">Existing screen</div>
+                </div>
+                <div class="screen-link" style="opacity: 0.6; cursor: default;">
+                    <div class="screen-number" style="background: linear-gradient(90deg, #6B8AFF, #43C6FF); -webkit-background-clip: text;">16</div>
+                    <div class="screen-name">Main Screen</div>
+                    <div class="screen-desc">Existing home</div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</body>
+</html>

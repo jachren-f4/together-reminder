@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=390, height=844, initial-scale=1.0">
+    <title>Unlock Popup - Variant 2: Side Image Card</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            background: linear-gradient(180deg, #FFF5F5 0%, #FFF0F0 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .phone-frame {
+            width: 390px;
+            height: 844px;
+            background: rgba(0, 0, 0, 0.55);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .popup {
+            width: 340px;
+            background: white;
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: 0 25px 80px rgba(0, 0, 0, 0.3);
+            padding: 24px;
+        }
+
+        .unlock-badge {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .unlock-badge span {
+            display: inline-block;
+            background: linear-gradient(135deg, #FFE5E0 0%, #FFD5CC 100%);
+            color: #FF6B6B;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            padding: 8px 16px;
+            border-radius: 20px;
+        }
+
+        .feature-card {
+            display: flex;
+            background: linear-gradient(135deg, #FFF8F6 0%, #FFF0ED 100%);
+            border-radius: 20px;
+            padding: 16px;
+            gap: 16px;
+            align-items: center;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255, 107, 107, 0.15);
+        }
+
+        .feature-image {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, #FFE0DB 0%, #FFD0C8 100%);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            box-shadow: 0 4px 16px rgba(255, 107, 107, 0.2);
+        }
+
+        .feature-image img {
+            width: 80px;
+            height: 80px;
+            object-fit: contain;
+        }
+
+        .feature-info {
+            flex: 1;
+        }
+
+        .feature-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 22px;
+            font-weight: 700;
+            color: #2D2D2D;
+            margin-bottom: 6px;
+        }
+
+        .feature-subtitle {
+            font-size: 13px;
+            color: #888;
+            line-height: 1.5;
+        }
+
+        .description {
+            text-align: center;
+            font-size: 15px;
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 24px;
+            padding: 0 8px;
+        }
+
+        .continue-btn {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #FF6B6B 0%, #FF9F43 100%);
+            border: none;
+            border-radius: 16px;
+            color: white;
+            font-family: 'Nunito', sans-serif;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 8px 24px rgba(255, 107, 107, 0.35);
+        }
+
+        .lp-reward {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 16px;
+            padding: 10px;
+            background: linear-gradient(135deg, #FFF8E1 0%, #FFECB3 100%);
+            border-radius: 12px;
+        }
+
+        .lp-reward span {
+            font-size: 14px;
+            font-weight: 700;
+            color: #E6A800;
+        }
+    </style>
+</head>
+<body>
+    <div class="phone-frame">
+        <div class="popup">
+            <div class="unlock-badge">
+                <span>NEW FEATURE UNLOCKED</span>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-image">
+                    <img src="word-search.png" alt="Word Search">
+                </div>
+                <div class="feature-info">
+                    <h1 class="feature-title">Word Search</h1>
+                    <p class="feature-subtitle">Puzzle Game</p>
+                </div>
+            </div>
+
+            <p class="description">Find hidden words together in a fun puzzle! Work as a team to discover all the words.</p>
+
+            <button class="continue-btn">Start Playing</button>
+
+            <div class="lp-reward">
+                <span>+30 LP per day</span>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

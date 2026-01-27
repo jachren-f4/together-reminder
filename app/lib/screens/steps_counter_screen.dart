@@ -293,7 +293,7 @@ class _StepsCounterScreenState extends State<StepsCounterScreen>
               onPressed: () => Navigator.pop(context),
             ),
       title: Text(
-        'Steps Together',
+        _isUs2 ? 'Steps' : 'Steps Together',
         style: _isUs2
             ? const TextStyle(
                 fontFamily: Us2Theme.fontHeading,
@@ -758,13 +758,13 @@ class _StepsCounterScreenState extends State<StepsCounterScreen>
   Widget _buildTeamMessage(int progressPercent) {
     String message;
     if (progressPercent >= 100) {
-      message = 'Goal crushed! Amazing teamwork!';
+      message = _isUs2 ? 'Goal crushed! Amazing work!' : 'Goal crushed! Amazing teamwork!';
     } else if (progressPercent >= 75) {
       message = 'Almost there! Push for the goal!';
     } else if (progressPercent >= 50) {
-      message = 'Great teamwork! You\'re halfway there!';
+      message = _isUs2 ? 'Great progress! You\'re halfway there!' : 'Great teamwork! You\'re halfway there!';
     } else {
-      message = 'Keep walking together!';
+      message = _isUs2 ? 'Keep walking! Every step counts.' : 'Keep walking together!';
     }
 
     return Container(
@@ -1097,9 +1097,9 @@ class _StepsCounterScreenState extends State<StepsCounterScreen>
         children: [
           const Text('', style: TextStyle(fontSize: 40)),
           const SizedBox(height: 12),
-          const Text(
-            'Keep walking together!',
-            style: TextStyle(
+          Text(
+            _isUs2 ? 'Keep walking!' : 'Keep walking together!',
+            style: const TextStyle(
               fontFamily: Us2Theme.fontHeading,
               fontSize: 18,
               fontWeight: FontWeight.w600,
@@ -1194,9 +1194,10 @@ class _StepsCounterScreenState extends State<StepsCounterScreen>
                   ],
                 ),
                 const SizedBox(height: 8),
-                _buildTipRow('Take a walk together after dinner'),
+                _buildTipRow(_isUs2 ? 'Take a walk after dinner' : 'Take a walk together after dinner'),
                 _buildTipRow('Park further away when shopping'),
                 _buildTipRow('Take the stairs instead of elevator'),
+                if (_isUs2) _buildTipRow('Go for a morning walk'),
               ],
             ),
           ),
@@ -1294,7 +1295,7 @@ class _StepsCounterScreenState extends State<StepsCounterScreen>
                     const Text('', style: TextStyle(fontSize: 14)),
                     const SizedBox(width: 4),
                     Text(
-                      '$streak day streak of 10K+ together',
+                      _isUs2 ? '$streak day streak' : '$streak day streak of 10K+ together',
                       style: const TextStyle(
                         fontFamily: Us2Theme.fontBody,
                         fontSize: 12,

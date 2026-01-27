@@ -146,7 +146,7 @@ class _WordSearchIntroScreenState extends State<WordSearchIntroScreen>
                                 color: EditorialStyles.ink,
                               ),
                               child: Text(
-                                'SIDE QUEST',
+                                'GAME',
                                 style: EditorialStyles.labelUppercase.copyWith(
                                   color: EditorialStyles.paper,
                                   letterSpacing: 3,

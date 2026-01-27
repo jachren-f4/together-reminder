@@ -1,4 +1,6 @@
 import 'package:hive/hive.dart';
+import '../config/brand/brand_loader.dart';
+import '../config/brand/brand_config.dart';
 
 part 'journal_entry.g.dart';
 
@@ -227,7 +229,7 @@ class JournalEntry extends HiveObject {
       case JournalEntryType.wordSearch:
         return 'Word Search';
       case JournalEntryType.stepsTogether:
-        return 'Steps Together';
+        return BrandLoader().config.brand == Brand.us2 ? 'Steps' : 'Steps Together';
     }
   }
 

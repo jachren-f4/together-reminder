@@ -45,7 +45,8 @@ class UserProfileService {
   /// Parameters:
   /// - [pushToken]: Optional FCM token to sync
   /// - [name]: Optional name to set (if user entered name before auth)
-  Future<SignupResult> completeSignup({String? pushToken, String? name}) async {
+  /// - [birthday]: Optional birthday as ISO8601 string (if user entered during onboarding)
+  Future<SignupResult> completeSignup({String? pushToken, String? name, String? birthday}) async {
     try {
       // Get platform for push token
       String? platform;
@@ -65,6 +66,7 @@ class UserProfileService {
           if (pushToken != null) 'pushToken': pushToken,
           if (platform != null) 'platform': platform,
           if (name != null) 'name': name,
+          if (birthday != null) 'birthday': birthday,
         },
       );
 

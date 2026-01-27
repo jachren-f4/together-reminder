@@ -12,7 +12,7 @@ import '../services/app_bootstrap_service.dart';
 import '../utils/logger.dart';
 import '../widgets/newspaper/newspaper_widgets.dart';
 import 'otp_verification_screen.dart';
-import 'pairing_screen.dart';
+import 'onboarding/anniversary_screen.dart';
 import 'main_screen.dart';
 
 /// Authentication screen for sign up / sign in with newspaper styling
@@ -128,8 +128,9 @@ class _AuthScreenState extends State<AuthScreen> {
     if (!mounted) return;
 
     if (widget.isNewUser) {
-      // New user - complete signup with stored name
+      // New user - complete signup with stored name and birthday
       final pendingName = await _secureStorage.read(key: 'pending_user_name');
+      final pendingBirthday = await _secureStorage.read(key: 'pending_user_birthday');
       if (pendingName != null && pendingName.isNotEmpty) {
         try {
           final pushToken = await NotificationService.getToken();
@@ -137,8 +138,12 @@ class _AuthScreenState extends State<AuthScreen> {
           await userProfileService.completeSignup(
             pushToken: pushToken,
             name: pendingName,
+            birthday: pendingBirthday,  // May be null if user skipped
           );
           await _secureStorage.delete(key: 'pending_user_name');
+          if (pendingBirthday != null) {
+            await _secureStorage.delete(key: 'pending_user_birthday');
+          }
           Logger.success('Signup completed on server', service: 'auth');
         } catch (e) {
           Logger.error('Failed to complete signup on server', error: e, service: 'auth');
@@ -151,9 +156,9 @@ class _AuthScreenState extends State<AuthScreen> {
 
       if (!mounted) return;
 
-      // New user - go to pairing screen
+      // New user - go to anniversary screen (then pairing)
       Navigator.of(context).pushAndRemoveUntil(
-        MaterialPageRoute(builder: (context) => const PairingScreen()),
+        MaterialPageRoute(builder: (context) => const AnniversaryScreen()),
         (route) => false,
       );
     } else {

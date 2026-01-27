@@ -12,7 +12,7 @@ import '../services/app_bootstrap_service.dart';
 import '../utils/logger.dart';
 import '../widgets/newspaper/newspaper_widgets.dart';
 import 'onboarding_screen.dart';
-import 'pairing_screen.dart';
+import 'onboarding/anniversary_screen.dart';
 import 'main_screen.dart';
 
 /// OTP Verification screen with newspaper styling
@@ -132,9 +132,10 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
       }
 
       if (widget.isNewUser) {
-        // New user - complete signup with stored name
+        // New user - complete signup with stored name and birthday
         const secureStorage = FlutterSecureStorage();
         final pendingName = await secureStorage.read(key: 'pending_user_name');
+        final pendingBirthday = await secureStorage.read(key: 'pending_user_birthday');
 
         if (pendingName == null || pendingName.isEmpty) {
           setState(() {
@@ -150,11 +151,15 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
           await userProfileService.completeSignup(
             pushToken: pushToken,
             name: pendingName,
+            birthday: pendingBirthday,  // May be null if user skipped
           );
           Logger.success('Signup completed on server', service: 'auth');
 
-          // Clear the pending name after successful signup
+          // Clear the pending data after successful signup
           await secureStorage.delete(key: 'pending_user_name');
+          if (pendingBirthday != null) {
+            await secureStorage.delete(key: 'pending_user_birthday');
+          }
 
           // Mark onboarding as completed
           await secureStorage.write(key: 'has_completed_onboarding', value: 'true');
@@ -168,9 +173,9 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
 
         if (!mounted) return;
 
-        // New user - go to pairing screen
+        // New user - go to anniversary screen (then pairing)
         Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(builder: (context) => const PairingScreen()),
+          MaterialPageRoute(builder: (context) => const AnniversaryScreen()),
           (route) => false,
         );
       } else {
@@ -431,15 +436,11 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
   // ============================================
 
   Widget _buildUs2Screen() {
-    // Wrap in PopScope to handle system back button
+    // Wrap in PopScope to prevent back navigation (no back button on this screen)
     return PopScope(
       canPop: false,
-      onPopInvokedWithResult: (didPop, result) {
-        if (!didPop) {
-          _handleStartOver();
-        }
-      },
       child: Scaffold(
+        resizeToAvoidBottomInset: true,
         body: Container(
         decoration: const BoxDecoration(
           gradient: Us2Theme.backgroundGradient,
@@ -447,17 +448,14 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
         child: SafeArea(
           child: Column(
             children: [
-              // Header
-              _buildUs2Header(),
-
               // Content
               Expanded(
                 child: SingleChildScrollView(
                   padding: const EdgeInsets.all(24),
                   child: Column(
-                    crossAxisAlignment: widget.isNewUser ? CrossAxisAlignment.center : CrossAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // Large step number (only for returning users / sign-in flow)
+                      // Large step number (matching other screens)
                       if (!widget.isNewUser) ...[
                         ShaderMask(
                           shaderCallback: (bounds) => const LinearGradient(
@@ -505,7 +503,6 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                           color: Us2Theme.textMedium,
                           height: 1.5,
                         ),
-                        textAlign: TextAlign.center,
                       ),
 
                       const SizedBox(height: 4),
@@ -517,7 +514,6 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                           fontWeight: FontWeight.w700,
                           color: Us2Theme.textDark,
                         ),
-                        textAlign: TextAlign.center,
                       ),
 
                       const SizedBox(height: 32),
@@ -583,7 +579,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
 
                       // Resend link
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.start,
                         children: [
                           Text(
                             "Didn't receive it? ",
@@ -664,6 +660,89 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
     );
   }
 
+  /// Compact header with back button and horizontal step indicator
+  /// Layout: [Back Button] -------- [2 OF 2 STEPS centered] --------
+  Widget _buildUs2CompactHeader() {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(20, 0, 20, 12),
+      child: SizedBox(
+        width: double.infinity,
+        child: Stack(
+          alignment: Alignment.center,
+          children: [
+            // Step indicator centered: "2 OF 2 STEPS" horizontal
+            if (!widget.isNewUser)
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.baseline,
+                textBaseline: TextBaseline.alphabetic,
+                children: [
+                  // Large gradient "2"
+                  ShaderMask(
+                    shaderCallback: (bounds) => const LinearGradient(
+                      colors: [Us2Theme.gradientAccentStart, Us2Theme.gradientAccentEnd],
+                    ).createShader(bounds),
+                    child: Text(
+                      '2',
+                      style: GoogleFonts.playfairDisplay(
+                        fontSize: 100,
+                        fontWeight: FontWeight.w700,
+                        color: Colors.white,
+                        height: 1,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  // "OF 2 STEPS" label
+                  Text(
+                    'OF 2 STEPS',
+                    style: GoogleFonts.nunito(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w700,
+                      letterSpacing: 1.5,
+                      color: Us2Theme.textMedium,
+                    ),
+                  ),
+                ],
+              ),
+
+            // Back button positioned left
+            Positioned(
+              left: 0,
+              top: 0,
+              bottom: 0,
+              child: Center(
+                child: GestureDetector(
+                  onTap: _handleStartOver,
+                  child: Container(
+                    width: 40,
+                    height: 40,
+                    decoration: BoxDecoration(
+                      color: Colors.white.withValues(alpha: 0.9),
+                      shape: BoxShape.circle,
+                      boxShadow: [
+                        BoxShadow(
+                          color: Us2Theme.primaryBrandPink.withValues(alpha: 0.15),
+                          blurRadius: 8,
+                          offset: const Offset(0, 2),
+                        ),
+                      ],
+                    ),
+                    child: const Icon(
+                      Icons.arrow_back,
+                      color: Us2Theme.textDark,
+                      size: 20,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   Widget _buildUs2OtpBoxes() {
     final digits = _otpController.text.split('');
 
@@ -726,6 +805,69 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
     );
   }
 
+  /// Compact OTP boxes (46px height instead of 52px)
+  Widget _buildUs2OtpBoxesCompact() {
+    final digits = _otpController.text.split('');
+
+    return GestureDetector(
+      onTap: () => _focusNode.requestFocus(),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: List.generate(8, (index) {
+          final digit = index < digits.length ? digits[index] : null;
+          final isActive = index == digits.length && _focusNode.hasFocus;
+
+          return Expanded(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 3),
+              child: Container(
+                height: 46,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(10),
+                  border: Border.all(
+                    color: isActive
+                        ? Us2Theme.primaryBrandPink
+                        : Colors.transparent,
+                    width: 2,
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: isActive
+                          ? Us2Theme.glowPink.withValues(alpha: 0.2)
+                          : Colors.black.withValues(alpha: 0.05),
+                      blurRadius: isActive ? 12 : 4,
+                      offset: const Offset(0, 2),
+                    ),
+                  ],
+                ),
+                child: Center(
+                  child: digit != null
+                      ? Text(
+                          digit,
+                          style: GoogleFonts.nunito(
+                            fontSize: 20,
+                            fontWeight: FontWeight.w700,
+                            color: Us2Theme.textDark,
+                          ),
+                        )
+                      : Container(
+                          width: 6,
+                          height: 6,
+                          decoration: BoxDecoration(
+                            color: Us2Theme.textLight.withValues(alpha: 0.3),
+                            shape: BoxShape.circle,
+                          ),
+                        ),
+                ),
+              ),
+            ),
+          );
+        }),
+      ),
+    );
+  }
+
   Widget _buildUs2Button(String label, VoidCallback? onPressed, {bool isLoading = false}) {
     final isDisabled = onPressed == null || isLoading;
     return GestureDetector(
@@ -769,6 +911,59 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                 textAlign: TextAlign.center,
                 style: GoogleFonts.nunito(
                   fontSize: 16,
+                  fontWeight: FontWeight.w700,
+                  color: Colors.white,
+                  letterSpacing: 0.5,
+                ),
+              ),
+      ),
+    );
+  }
+
+  /// Compact button (16px padding, 14px border radius, 15px font)
+  Widget _buildUs2ButtonCompact(String label, VoidCallback? onPressed, {bool isLoading = false}) {
+    final isDisabled = onPressed == null || isLoading;
+    return GestureDetector(
+      onTap: onPressed,
+      child: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.symmetric(vertical: 16),
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: isDisabled
+                ? [
+                    Us2Theme.gradientAccentStart.withValues(alpha: 0.4),
+                    Us2Theme.gradientAccentEnd.withValues(alpha: 0.4),
+                  ]
+                : [Us2Theme.gradientAccentStart, Us2Theme.gradientAccentEnd],
+          ),
+          borderRadius: BorderRadius.circular(14),
+          boxShadow: isDisabled
+              ? null
+              : [
+                  BoxShadow(
+                    color: Us2Theme.glowPink.withValues(alpha: 0.5),
+                    blurRadius: 25,
+                    offset: const Offset(0, 8),
+                  ),
+                ],
+        ),
+        child: isLoading
+            ? const Center(
+                child: SizedBox(
+                  width: 22,
+                  height: 22,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2.5,
+                    color: Colors.white,
+                  ),
+                ),
+              )
+            : Text(
+                label,
+                textAlign: TextAlign.center,
+                style: GoogleFonts.nunito(
+                  fontSize: 15,
                   fontWeight: FontWeight.w700,
                   color: Colors.white,
                   letterSpacing: 0.5,

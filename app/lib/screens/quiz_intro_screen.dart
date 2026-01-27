@@ -444,7 +444,6 @@ class _QuizIntroScreenState extends State<QuizIntroScreen>
                             EditorialStatsCard(
                               rows: [
                                 ('Questions', '5'),
-                                ('Time', '~3 minutes'),
                                 ('Reward', _lpStatus?.alreadyGrantedToday == true
                                     ? 'Earned today'
                                     : '+30 LP'),
@@ -500,20 +499,11 @@ class _QuizIntroScreenState extends State<QuizIntroScreen>
     // Build stats with highlight for reward
     final stats = <(String, String, bool)>[
       ('Questions', '5', false),
-      ('Time', '~3 minutes', false),
       ('Reward', alreadyEarned ? 'Earned today' : '+30 LP', !alreadyEarned),
     ];
 
-    // Build additional content (remaining plays indicator)
+    // Additional content (remaining plays indicator removed)
     final additionalContent = <Widget>[];
-    if (remainingPlays < 2 && !(_cooldownStatus?.isOnCooldown ?? false)) {
-      additionalContent.add(
-        Padding(
-          padding: const EdgeInsets.only(top: 16),
-          child: RemainingPlaysIndicator(remaining: remainingPlays),
-        ),
-      );
-    }
 
     return Us2IntroScreen.withQuizCard(
       buttonLabel: 'Begin Quiz',
@@ -618,7 +608,7 @@ class _QuizIntroScreenState extends State<QuizIntroScreen>
           ),
           const SizedBox(width: 16),
           Text(
-            'DAILY QUEST',
+            'QUIZ',
             style: EditorialStyles.labelUppercase,
           ),
         ],

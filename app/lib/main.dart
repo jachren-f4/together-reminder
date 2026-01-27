@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:togetherremind/screens/onboarding_screen.dart';
+import 'package:togetherremind/screens/onboarding/value_carousel_screen.dart';
 import 'package:togetherremind/screens/main_screen.dart';
 import 'package:togetherremind/services/storage_service.dart';
 import 'package:togetherremind/services/nav_style_service.dart';
@@ -286,7 +286,7 @@ class _TogetherRemindAppState extends State<TogetherRemindApp> with WidgetsBindi
                       return const AuthWrapper();
                     } else {
                       // Legacy behavior for development without auth
-                      return hasPartner ? const MainScreen() : const OnboardingScreen();
+                      return hasPartner ? const MainScreen() : const ValueCarouselScreen();
                     }
                   },
                 ),

@@ -119,7 +119,7 @@ class StepsTierBreakdownScreen extends StatelessWidget {
           ),
           const SizedBox(height: 12),
           const Text(
-            'Walk Together, Earn Together',
+            'Walk More, Earn More',
             style: TextStyle(
               fontFamily: Us2Theme.fontHeading,
               fontSize: 18,
@@ -129,7 +129,7 @@ class StepsTierBreakdownScreen extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           Text(
-            'The more steps you take as a couple, the more Love Points you earn. Hit higher tiers for bigger rewards!',
+            'The more steps you take, the more Love Points you earn. Hit higher tiers for bigger rewards!',
             textAlign: TextAlign.center,
             style: TextStyle(
               fontFamily: Us2Theme.fontBody,

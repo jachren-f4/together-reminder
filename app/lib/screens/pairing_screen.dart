@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
@@ -16,11 +17,12 @@ import 'package:togetherremind/screens/main_screen.dart';
 import 'package:togetherremind/services/storage_service.dart';
 import 'package:togetherremind/services/notification_service.dart';
 import 'package:togetherremind/services/couple_pairing_service.dart';
+import 'package:togetherremind/services/couple_stats_service.dart';
 import 'package:togetherremind/services/auth_service.dart';
 import 'package:togetherremind/services/app_bootstrap_service.dart';
 import 'package:togetherremind/services/unlock_service.dart';
 import 'package:togetherremind/services/subscription_service.dart';
-import 'welcome_quiz_intro_screen.dart';
+import 'onboarding/notification_permission_screen.dart';
 import 'package:togetherremind/test/test_keys.dart';
 import 'package:togetherremind/theme/app_theme.dart';
 import 'package:togetherremind/widgets/newspaper/newspaper_widgets.dart';
@@ -149,6 +151,22 @@ class _PairingScreenState extends State<PairingScreen> {
       }
     }
 
+    // Sync pending anniversary date if set during onboarding
+    const secureStorage = FlutterSecureStorage();
+    try {
+      final pendingAnniversary = await secureStorage.read(key: 'pending_anniversary_date');
+      if (pendingAnniversary != null) {
+        final anniversaryDate = DateTime.parse(pendingAnniversary);
+        await CoupleStatsService().setAnniversaryDate(anniversaryDate);
+        Logger.info('Synced anniversary date: $anniversaryDate', service: 'pairing');
+        // Clear the pending key after successful sync
+        await secureStorage.delete(key: 'pending_anniversary_date');
+      }
+    } catch (e) {
+      Logger.error('Failed to sync anniversary date', error: e, service: 'pairing');
+      // Continue anyway - user can set it later in settings
+    }
+
     // Navigate to Welcome Quiz (or MainScreen if already completed)
     // Paywall is shown after Welcome Quiz and LP intro
     await _navigateToNextScreen();
@@ -171,11 +189,11 @@ class _PairingScreenState extends State<PairingScreen> {
           ),
         );
       } else {
-        // Welcome Quiz not completed - go to Welcome Quiz intro
-        Logger.debug('Navigating to Welcome Quiz intro', service: 'pairing');
+        // Welcome Quiz not completed - go to Notification Permission screen first
+        Logger.debug('Navigating to Notification Permission screen', service: 'pairing');
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(
-            builder: (context) => const WelcomeQuizIntroScreen(),
+            builder: (context) => const NotificationPermissionScreen(),
           ),
         );
       }

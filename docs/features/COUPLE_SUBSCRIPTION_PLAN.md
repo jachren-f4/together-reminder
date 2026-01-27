@@ -1325,3 +1325,103 @@ void _handleDevTap() {
 | `lib/screens/paywall_screen.dart` | Triple-tap handler and bypass activation |
 | `lib/services/subscription_service.dart` | `activateForCouple()` method |
 | `api/app/api/subscription/activate/route.ts` | API endpoint that sets database |
+
+---
+
+## Manual Subscription Grant (Database)
+
+For testing or support purposes, you can manually grant a subscription to a user directly in the database.
+
+### Script
+
+Run from the `api/` directory:
+
+```bash
+export DATABASE_URL="postgresql://postgres.jcibbrasffhwvjfojviv:MfEwb3MbeB7DnX3A@aws-1-eu-west-1.pooler.supabase.com:5432/postgres"
+
+npx tsx -e "
+import { getPool } from './lib/db/pool';
+
+async function grantSubscription(email: string) {
+  const pool = getPool();
+
+  // Find the user in auth.users
+  const userResult = await pool.query(
+    'SELECT id FROM auth.users WHERE email = \$1',
+    [email]
+  );
+
+  if (userResult.rows.length === 0) {
+    console.log('User not found');
+    process.exit(1);
+  }
+
+  const userId = userResult.rows[0].id;
+  console.log('Found user:', userId);
+
+  // Find their couple
+  const coupleResult = await pool.query(
+    'SELECT id FROM couples WHERE user1_id = \$1 OR user2_id = \$1',
+    [userId]
+  );
+
+  if (coupleResult.rows.length === 0) {
+    console.log('Couple not found');
+    process.exit(1);
+  }
+
+  const coupleId = coupleResult.rows[0].id;
+  console.log('Found couple:', coupleId);
+
+  // Grant active subscription (expires in 1 year)
+  const updateResult = await pool.query(
+    \`UPDATE couples
+     SET subscription_status = 'active',
+         subscription_product_id = 'us2_premium_yearly',
+         subscription_started_at = NOW(),
+         subscription_expires_at = NOW() + INTERVAL '1 year'
+     WHERE id = \$1
+     RETURNING id, subscription_status, subscription_expires_at\`,
+    [coupleId]
+  );
+
+  console.log('Subscription granted:', updateResult.rows[0]);
+  process.exit(0);
+}
+
+grantSubscription('USER_EMAIL_HERE');
+"
+```
+
+### Quick One-Liner
+
+Replace `USER_EMAIL` with the target email:
+
+```bash
+cd /Users/joakimachren/Desktop/togetherremind/api && \
+export DATABASE_URL="postgresql://postgres.jcibbrasffhwvjfojviv:MfEwb3MbeB7DnX3A@aws-1-eu-west-1.pooler.supabase.com:5432/postgres" && \
+npx tsx -e "
+const { getPool } = require('./lib/db/pool');
+(async () => {
+  const pool = getPool();
+  const email = 'USER_EMAIL';
+  const user = await pool.query('SELECT id FROM auth.users WHERE email = \$1', [email]);
+  if (!user.rows[0]) { console.log('User not found'); process.exit(1); }
+  const couple = await pool.query('SELECT id FROM couples WHERE user1_id = \$1 OR user2_id = \$1', [user.rows[0].id]);
+  if (!couple.rows[0]) { console.log('Couple not found'); process.exit(1); }
+  const result = await pool.query(
+    \"UPDATE couples SET subscription_status = 'active', subscription_product_id = 'us2_premium_yearly', subscription_started_at = NOW(), subscription_expires_at = NOW() + INTERVAL '1 year' WHERE id = \$1 RETURNING *\",
+    [couple.rows[0].id]
+  );
+  console.log('Done:', result.rows[0].subscription_status, 'expires:', result.rows[0].subscription_expires_at);
+  process.exit(0);
+})();
+"
+```
+
+### Notes
+
+- The `auth.users` table contains user emails (Supabase auth)
+- The `couples` table stores subscription status at the couple level
+- Both partners in a couple share the same subscription
+- Subscription status values: `'none'`, `'trial'`, `'active'`, `'cancelled'`, `'expired'`, `'refunded'`

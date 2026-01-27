@@ -840,4 +840,64 @@ class StorageService {
     final box = Hive.box(_appMetadataBox);
     await box.delete(_lastCelebratedMagnetKey);
   }
+
+  // Quiz Instruction Banner tracking
+  static const String _hasSeenQuizInstructionBannerKey = 'hasSeenQuizInstructionBanner';
+
+  /// Check if user has seen the quiz instruction banner
+  bool hasSeenQuizInstructionBanner() {
+    final box = Hive.box(_appMetadataBox);
+    return box.get(_hasSeenQuizInstructionBannerKey, defaultValue: false) as bool;
+  }
+
+  /// Mark quiz instruction banner as seen
+  Future<void> markQuizInstructionBannerSeen() async {
+    final box = Hive.box(_appMetadataBox);
+    await box.put(_hasSeenQuizInstructionBannerKey, true);
+  }
+
+  // LP Explanation Card tracking
+  static const String _hasSeenLpExplanationCardKey = 'hasSeenLpExplanationCard';
+
+  /// Check if user has seen the LP explanation card on quiz results
+  bool hasSeenLpExplanationCard() {
+    final box = Hive.box(_appMetadataBox);
+    return box.get(_hasSeenLpExplanationCardKey, defaultValue: false) as bool;
+  }
+
+  /// Mark LP explanation card as seen
+  Future<void> markLpExplanationCardSeen() async {
+    final box = Hive.box(_appMetadataBox);
+    await box.put(_hasSeenLpExplanationCardKey, true);
+  }
+
+  // Linked Tutorial tracking
+  static const String _hasSeenLinkedTutorialKey = 'hasSeenLinkedTutorial';
+
+  /// Check if user has seen the Linked game tutorial
+  bool hasSeenLinkedTutorial() {
+    final box = Hive.box(_appMetadataBox);
+    return box.get(_hasSeenLinkedTutorialKey, defaultValue: false) as bool;
+  }
+
+  /// Mark Linked tutorial as seen
+  Future<void> markLinkedTutorialSeen() async {
+    final box = Hive.box(_appMetadataBox);
+    await box.put(_hasSeenLinkedTutorialKey, true);
+  }
+
+  // Linked Clue Hint tracking
+  static const String _hasSeenLinkedClueHintKey = 'hasSeenLinkedClueHint';
+
+  /// Check if user has seen the Linked clue hint banner
+  bool hasSeenLinkedClueHint() {
+    final box = Hive.box(_appMetadataBox);
+    return box.get(_hasSeenLinkedClueHintKey, defaultValue: false) as bool;
+  }
+
+  /// Mark Linked clue hint as seen
+  Future<void> markLinkedClueHintSeen() async {
+    final box = Hive.box(_appMetadataBox);
+    await box.put(_hasSeenLinkedClueHintKey, true);
+  }
 }

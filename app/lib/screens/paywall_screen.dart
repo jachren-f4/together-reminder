@@ -86,6 +86,12 @@ class _PaywallScreenState extends State<PaywallScreen> {
   /// Debug overlay state
   bool _showDebugOverlay = false;
 
+  /// Release debug overlay (works in release builds, for TestFlight debugging)
+  bool _showReleaseDebugOverlay = false;
+  int _releaseDebugTapCount = 0;
+  DateTime? _releaseDebugLastTap;
+  String _lastRestoreDebugInfo = '';
+
   @override
   void initState() {
     super.initState();
@@ -153,6 +159,211 @@ class _PaywallScreenState extends State<PaywallScreen> {
       _devTapCount = 0;
       _activateDevBypass();
     }
+  }
+
+  /// Handle triple-tap on subtitle for release debug overlay
+  void _handleReleaseDebugTap() {
+    final now = DateTime.now();
+
+    // Reset if more than 500ms since last tap
+    if (_releaseDebugLastTap != null && now.difference(_releaseDebugLastTap!).inMilliseconds > 500) {
+      _releaseDebugTapCount = 0;
+    }
+
+    _releaseDebugLastTap = now;
+    _releaseDebugTapCount++;
+
+    if (_releaseDebugTapCount >= 3) {
+      _releaseDebugTapCount = 0;
+      HapticFeedback.mediumImpact();
+      setState(() => _showReleaseDebugOverlay = true);
+    }
+  }
+
+  /// Generate debug info for release builds
+  String _generateReleaseDebugInfo() {
+    final debugInfo = _subscriptionService.getDebugInfo();
+    final customerInfo = _subscriptionService.customerInfo;
+    final coupleStatus = _subscriptionService.coupleStatus;
+
+    final buffer = StringBuffer();
+    buffer.writeln('=== PAYWALL DEBUG (Release) ===');
+    buffer.writeln('Timestamp: ${DateTime.now().toIso8601String()}');
+    buffer.writeln('Build: 71 (Unicode fuzzy match fix)');
+    buffer.writeln('');
+    buffer.writeln('--- SDK STATUS ---');
+    buffer.writeln('Platform: ${debugInfo['platform']}');
+    buffer.writeln('isConfigured: ${debugInfo['isConfigured']}');
+    buffer.writeln('SDK Initialized: ${debugInfo['isInitialized']}');
+    buffer.writeln('Init Success: ${debugInfo['isInitializedSuccessfully']}');
+    buffer.writeln('Init Error: ${debugInfo['initializationError'] ?? 'none'}');
+    buffer.writeln('');
+    buffer.writeln('--- COUPLE STATUS ---');
+    buffer.writeln('Status: ${coupleStatus?.status ?? 'null'}');
+    buffer.writeln('isActive: ${coupleStatus?.isActive ?? 'null'}');
+    buffer.writeln('subscribedByMe: ${coupleStatus?.subscribedByMe ?? 'null'}');
+    buffer.writeln('subscriberName: ${coupleStatus?.subscriberName ?? 'null'}');
+    buffer.writeln('expiresAt: ${coupleStatus?.expiresAt?.toIso8601String() ?? 'null'}');
+    buffer.writeln('');
+    buffer.writeln('--- REVENUECAT CUSTOMER ---');
+    buffer.writeln('hasCustomerInfo: ${customerInfo != null}');
+    if (customerInfo != null) {
+      buffer.writeln('originalAppUserId: ${customerInfo.originalAppUserId}');
+      buffer.writeln('activeEntitlements: ${customerInfo.entitlements.active.keys.toList()}');
+      buffer.writeln('allEntitlements: ${customerInfo.entitlements.all.keys.toList()}');
+
+      // Check for exact match first
+      final exactMatch = customerInfo.entitlements.active['Us 2.0 Pro'];
+      if (exactMatch != null) {
+        buffer.writeln('');
+        buffer.writeln('--- Us 2.0 Pro ENTITLEMENT (EXACT MATCH) ---');
+        buffer.writeln('isActive: ${exactMatch.isActive}');
+        buffer.writeln('productId: ${exactMatch.productIdentifier}');
+        buffer.writeln('expirationDate: ${exactMatch.expirationDate}');
+        buffer.writeln('willRenew: ${exactMatch.willRenew}');
+      } else {
+        // Try fuzzy matching
+        buffer.writeln('EXACT MATCH for "Us 2.0 Pro": NOT FOUND');
+        buffer.writeln('Trying FUZZY MATCH...');
+
+        String? fuzzyKey;
+        for (final key in customerInfo.entitlements.active.keys) {
+          if (RevenueCatConfig.isPremiumEntitlement(key)) {
+            fuzzyKey = key;
+            break;
+          }
+        }
+
+        if (fuzzyKey != null) {
+          final fuzzyMatch = customerInfo.entitlements.active[fuzzyKey]!;
+          buffer.writeln('');
+          buffer.writeln('--- ENTITLEMENT (FUZZY MATCH) ---');
+          buffer.writeln('MATCHED KEY: "$fuzzyKey"');
+          buffer.writeln('KEY BYTES: ${fuzzyKey.codeUnits}');
+          buffer.writeln('isActive: ${fuzzyMatch.isActive}');
+          buffer.writeln('productId: ${fuzzyMatch.productIdentifier}');
+          buffer.writeln('expirationDate: ${fuzzyMatch.expirationDate}');
+          buffer.writeln('willRenew: ${fuzzyMatch.willRenew}');
+        } else {
+          buffer.writeln('FUZZY MATCH: NOT FOUND');
+          // Show key bytes to help debug Unicode issues
+          for (final key in customerInfo.entitlements.active.keys) {
+            buffer.writeln('Key "$key" bytes: ${key.codeUnits}');
+          }
+        }
+      }
+    }
+    buffer.writeln('');
+    buffer.writeln('--- isPremium CHECK ---');
+    buffer.writeln('isPremium: ${debugInfo['isPremium']}');
+    buffer.writeln('devBypassActive: ${debugInfo['isDevBypassActive']}');
+    buffer.writeln('');
+    buffer.writeln('--- LAST RESTORE ATTEMPT ---');
+    buffer.writeln(_lastRestoreDebugInfo.isEmpty ? 'No restore attempted yet' : _lastRestoreDebugInfo);
+    buffer.writeln('');
+    buffer.writeln('==============================');
+
+    return buffer.toString();
+  }
+
+  /// Build the release debug overlay (works in TestFlight)
+  Widget _buildReleaseDebugOverlay() {
+    if (!_showReleaseDebugOverlay) return const SizedBox.shrink();
+
+    final debugText = _generateReleaseDebugInfo();
+
+    return Container(
+      margin: const EdgeInsets.only(bottom: 16),
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: Colors.black.withValues(alpha: 0.9),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: Colors.amber, width: 2),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Header with close and copy buttons
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Text(
+                '🔧 DEBUG (TestFlight)',
+                style: TextStyle(
+                  color: Colors.amber,
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              Row(
+                children: [
+                  // Copy button
+                  GestureDetector(
+                    onTap: () {
+                      Clipboard.setData(ClipboardData(text: debugText));
+                      HapticFeedback.mediumImpact();
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('Debug info copied!'),
+                          duration: Duration(seconds: 2),
+                          backgroundColor: Colors.green,
+                        ),
+                      );
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                      decoration: BoxDecoration(
+                        color: Colors.blue,
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: const Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(Icons.copy, color: Colors.white, size: 14),
+                          SizedBox(width: 4),
+                          Text('Copy', style: TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.w600)),
+                        ],
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  // Close button
+                  GestureDetector(
+                    onTap: () => setState(() => _showReleaseDebugOverlay = false),
+                    child: Container(
+                      padding: const EdgeInsets.all(6),
+                      decoration: BoxDecoration(
+                        color: Colors.red,
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: const Icon(Icons.close, color: Colors.white, size: 16),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+          const SizedBox(height: 8),
+          const Divider(color: Colors.white24, height: 1),
+          const SizedBox(height: 8),
+          // Debug text (scrollable)
+          ConstrainedBox(
+            constraints: const BoxConstraints(maxHeight: 300),
+            child: SingleChildScrollView(
+              child: Text(
+                debugText,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 10,
+                  fontFamily: 'monospace',
+                  height: 1.4,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   /// Activate dev bypass - grants real subscription to the couple via API
@@ -248,7 +459,7 @@ class _PaywallScreenState extends State<PaywallScreen> {
         if (status != null && status.isActive && mounted) {
           _pollTimer?.cancel();
           // Partner subscribed! Navigate to AlreadySubscribedScreen
-          Navigator.pushReplacement(
+          Navigator.push(
             context,
             MaterialPageRoute(
               builder: (_) => AlreadySubscribedScreen(
@@ -331,7 +542,7 @@ class _PaywallScreenState extends State<PaywallScreen> {
       final status = await _subscriptionService.checkCoupleSubscription();
       if (status != null && status.isActive && mounted) {
         _pollTimer?.cancel();
-        Navigator.pushReplacement(
+        Navigator.push(
           context,
           MaterialPageRoute(
             builder: (_) => AlreadySubscribedScreen(
@@ -349,7 +560,7 @@ class _PaywallScreenState extends State<PaywallScreen> {
       if (result.isAlreadySubscribed) {
         // Partner subscribed during our purchase attempt
         _pollTimer?.cancel();
-        Navigator.pushReplacement(
+        Navigator.push(
           context,
           MaterialPageRoute(
             builder: (_) => AlreadySubscribedScreen(
@@ -376,14 +587,46 @@ class _PaywallScreenState extends State<PaywallScreen> {
   Future<void> _restorePurchases() async {
     setState(() => _isRestoring = true);
 
+    // Capture state BEFORE restore for debugging
+    final beforeInfo = StringBuffer();
+    beforeInfo.writeln('BEFORE restore:');
+    beforeInfo.writeln('  coupleStatus: ${_subscriptionService.coupleStatus?.status}');
+    beforeInfo.writeln('  customerInfo: ${_subscriptionService.customerInfo != null}');
+    if (_subscriptionService.customerInfo != null) {
+      beforeInfo.writeln('  originalAppUserId: ${_subscriptionService.customerInfo!.originalAppUserId}');
+      beforeInfo.writeln('  activeEntitlements: ${_subscriptionService.customerInfo!.entitlements.active.keys.toList()}');
+    }
+
     try {
       final result = await _subscriptionService.restorePurchases();
+
+      // Capture state AFTER restore for debugging
+      final afterInfo = StringBuffer();
+      afterInfo.writeln('AFTER restore:');
+      afterInfo.writeln('  result.isCoupleActive: ${result.isCoupleActive}');
+      afterInfo.writeln('  result.isRevenueCatRestored: ${result.isRevenueCatRestored}');
+      afterInfo.writeln('  coupleStatus: ${_subscriptionService.coupleStatus?.status}');
+      afterInfo.writeln('  customerInfo: ${_subscriptionService.customerInfo != null}');
+      if (_subscriptionService.customerInfo != null) {
+        afterInfo.writeln('  originalAppUserId: ${_subscriptionService.customerInfo!.originalAppUserId}');
+        afterInfo.writeln('  activeEntitlements: ${_subscriptionService.customerInfo!.entitlements.active.keys.toList()}');
+        final premium = _subscriptionService.customerInfo!.entitlements.active['Us 2.0 Pro'];
+        afterInfo.writeln('  Us 2.0 Pro found: ${premium != null}');
+        if (premium != null) {
+          afterInfo.writeln('  Us 2.0 Pro isActive: ${premium.isActive}');
+        }
+      }
+      afterInfo.writeln('  isPremium: ${_subscriptionService.isPremium}');
+
+      // Store for debug overlay
+      _lastRestoreDebugInfo = '$beforeInfo\n$afterInfo';
+
       if (!mounted) return;
 
       if (result.isCoupleActive) {
         // Partner subscribed - show success screen
         _pollTimer?.cancel();
-        Navigator.pushReplacement(
+        Navigator.push(
           context,
           MaterialPageRoute(
             builder: (_) => AlreadySubscribedScreen(
@@ -401,6 +644,7 @@ class _PaywallScreenState extends State<PaywallScreen> {
         );
       }
     } catch (e) {
+      _lastRestoreDebugInfo = '$beforeInfo\nEXCEPTION: $e';
       Logger.error('Restore failed', error: e, service: 'paywall');
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -441,6 +685,9 @@ class _PaywallScreenState extends State<PaywallScreen> {
         children: [
           // DEBUG: Collapsible debug overlay (only in debug builds)
           if (kDebugMode) _buildDebugOverlay(),
+
+          // RELEASE DEBUG: Hidden overlay triggered by triple-tap on subtitle
+          _buildReleaseDebugOverlay(),
 
           // Hero Section
           _buildHero(),
@@ -516,22 +763,25 @@ class _PaywallScreenState extends State<PaywallScreen> {
   Widget _buildHero() {
     return Column(
       children: [
-        // Logo
-        Text(
-          'Us',
-          style: GoogleFonts.pacifico(
-            fontSize: 42,
-            color: Colors.white,
-            shadows: [
-              Shadow(
-                blurRadius: 20,
-                color: Us2Theme.glowPink.withValues(alpha: 0.8),
-              ),
-              Shadow(
-                blurRadius: 40,
-                color: Us2Theme.glowOrange.withValues(alpha: 0.5),
-              ),
-            ],
+        // Logo - triple-tap for release debug overlay
+        GestureDetector(
+          onTap: _handleReleaseDebugTap,
+          child: Text(
+            'Us',
+            style: GoogleFonts.pacifico(
+              fontSize: 42,
+              color: Colors.white,
+              shadows: [
+                Shadow(
+                  blurRadius: 20,
+                  color: Us2Theme.glowPink.withValues(alpha: 0.8),
+                ),
+                Shadow(
+                  blurRadius: 40,
+                  color: Us2Theme.glowOrange.withValues(alpha: 0.5),
+                ),
+              ],
+            ),
           ),
         ),
         Text(
@@ -782,11 +1032,11 @@ class _PaywallScreenState extends State<PaywallScreen> {
         padding: const EdgeInsets.symmetric(vertical: 18),
         decoration: BoxDecoration(
           gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
             colors: isDisabled
                 ? [Colors.grey.shade300, Colors.grey.shade400]
-                : [Colors.white, Us2Theme.cream],
+                : [const Color(0xFFFF6B6B), const Color(0xFFFF9F43)], // Coral gradient
           ),
           borderRadius: BorderRadius.circular(50),
           boxShadow: isDisabled
@@ -811,7 +1061,7 @@ class _PaywallScreenState extends State<PaywallScreen> {
                   height: 20,
                   child: CircularProgressIndicator(
                     strokeWidth: 2,
-                    color: Us2Theme.primaryBrandPink,
+                    color: Colors.white, // White on gradient
                   ),
                 )
               : Text(
@@ -819,7 +1069,7 @@ class _PaywallScreenState extends State<PaywallScreen> {
                   style: GoogleFonts.nunito(
                     fontSize: 16,
                     fontWeight: FontWeight.w700,
-                    color: Us2Theme.primaryBrandPink,
+                    color: Colors.white, // White text for better contrast on gradient
                   ),
                 ),
         ),

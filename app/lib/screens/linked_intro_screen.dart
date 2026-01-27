@@ -143,7 +143,7 @@ class _LinkedIntroScreenState extends State<LinkedIntroScreen>
                                 color: EditorialStyles.ink,
                               ),
                               child: Text(
-                                'SIDE QUEST',
+                                'GAME',
                                 style: EditorialStyles.labelUppercase.copyWith(
                                   color: EditorialStyles.paper,
                                   letterSpacing: 3,

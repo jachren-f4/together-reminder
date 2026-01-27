@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phase 1.1 - Onboarding Screen Fix</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Nunito:wght@400;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Nunito', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #FAFAFA;
+            color: #3A3A3A;
+            display: flex;
+            gap: 40px;
+            padding: 40px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .mockup-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .mockup-label {
+            font-size: 14px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #6E6E6E;
+            padding: 8px 16px;
+            background: #F0F0F0;
+            border-radius: 8px;
+        }
+
+        .mockup-label.before { background: #FFE5E5; color: #C62828; }
+        .mockup-label.after { background: #E5FFE5; color: #2E7D32; }
+
+        .phone {
+            width: 390px;
+            height: 844px;
+            background: linear-gradient(180deg, #FFD1C1 0%, #FFF5F0 100%);
+            border-radius: 50px;
+            overflow: hidden;
+            position: relative;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Video overlay simulation */
+        .video-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background:
+                linear-gradient(180deg, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.5) 50%, rgba(0,0,0,0.7) 100%),
+                url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect fill="%23FFD1C1"/><circle cx="30" cy="40" r="25" fill="%23FF9F8F" opacity="0.3"/><circle cx="70" cy="60" r="30" fill="%23FFBFAF" opacity="0.2"/></svg>');
+            background-size: cover;
+        }
+
+        .content {
+            position: relative;
+            z-index: 2;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 60px 30px;
+            text-align: center;
+        }
+
+        /* BEFORE: Emoji heart */
+        .logo-before {
+            font-family: 'Pacifico', cursive;
+            font-size: 64px;
+            color: white;
+            text-shadow:
+                0 0 20px rgba(255, 107, 107, 0.8),
+                0 0 40px rgba(255, 159, 67, 0.5);
+            margin-bottom: 8px;
+        }
+
+        .emoji-heart {
+            font-size: 48px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        /* AFTER: Illustrated heart icon */
+        .logo-after {
+            font-family: 'Pacifico', cursive;
+            font-size: 64px;
+            color: white;
+            text-shadow:
+                0 0 20px rgba(255, 107, 107, 0.8),
+                0 0 40px rgba(255, 159, 67, 0.5);
+            margin-bottom: 8px;
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            line-height: 1;
+        }
+
+        .illustrated-heart {
+            width: 44px;
+            height: 44px;
+            animation: heartbeat 2s infinite;
+            filter: drop-shadow(0 0 12px rgba(255, 107, 107, 0.7));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .illustrated-heart svg {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+
+        @keyframes heartbeat {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.08); }
+        }
+
+        /* Tagline - BEFORE: Hard to read */
+        .tagline-before {
+            font-family: 'Nunito', sans-serif;
+            font-size: 18px;
+            color: rgba(255, 255, 255, 0.7);
+            margin-top: 16px;
+            text-shadow:
+                0 1px 2px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Tagline - AFTER: Better contrast with backdrop */
+        .tagline-after {
+            font-family: 'Nunito', sans-serif;
+            font-size: 18px;
+            color: white;
+            margin-top: 16px;
+            padding: 12px 24px;
+            background: rgba(0, 0, 0, 0.35);
+            border-radius: 30px;
+            backdrop-filter: blur(10px);
+        }
+
+        .buttons {
+            position: absolute;
+            bottom: 80px;
+            left: 30px;
+            right: 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(180deg, white, #FFF8F0);
+            color: #FF5E62;
+            padding: 18px;
+            border-radius: 16px;
+            font-size: 17px;
+            font-weight: 700;
+            text-align: center;
+            box-shadow:
+                0 4px 15px rgba(255, 107, 107, 0.4),
+                0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: white;
+            padding: 18px;
+            border-radius: 16px;
+            font-size: 17px;
+            font-weight: 600;
+            text-align: center;
+            border: 2px solid rgba(255, 255, 255, 0.4);
+        }
+
+        /* Notes section */
+        .notes {
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 30px;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .notes h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: #3A3A3A;
+        }
+
+        .notes h3 {
+            font-size: 16px;
+            font-weight: 700;
+            margin: 20px 0 10px;
+            color: #FF5E62;
+        }
+
+        .notes ul {
+            margin-left: 20px;
+            line-height: 1.8;
+        }
+
+        .notes li {
+            margin-bottom: 8px;
+        }
+
+        .color-swatch {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border-radius: 4px;
+            vertical-align: middle;
+            margin-right: 6px;
+            border: 1px solid rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body>
+    <!-- BEFORE -->
+    <div class="mockup-container">
+        <div class="mockup-label before">Before (Current)</div>
+        <div class="phone">
+            <div class="video-bg"></div>
+            <div class="content">
+                <div class="logo-before">
+                    Us 2.0 <span class="emoji-heart">❤️</span>
+                </div>
+                <div class="tagline-before">Grow closer, one moment at a time</div>
+            </div>
+            <div class="buttons">
+                <div class="btn-primary">Get Started</div>
+                <div class="btn-secondary">I have an account</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- AFTER -->
+    <div class="mockup-container">
+        <div class="mockup-label after">After (Recommended)</div>
+        <div class="phone">
+            <div class="video-bg"></div>
+            <div class="content">
+                <div class="logo-after">
+                    Us 2.0
+                    <div class="illustrated-heart">
+                        <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <defs>
+                                <linearGradient id="heartGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" style="stop-color:#FF6B6B"/>
+                                    <stop offset="100%" style="stop-color:#FF9F43"/>
+                                </linearGradient>
+                            </defs>
+                            <path d="M16 28C16 28 3 18.5 3 10.5C3 6.36 6.36 3 10.5 3C13.08 3 15.36 4.33 16 6.5C16.64 4.33 18.92 3 21.5 3C25.64 3 29 6.36 29 10.5C29 18.5 16 28 16 28Z" fill="url(#heartGradient)"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="tagline-after">Grow closer, one moment at a time</div>
+            </div>
+            <div class="buttons">
+                <div class="btn-primary">Get Started</div>
+                <div class="btn-secondary">I have an account</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Design Notes -->
+    <div class="notes">
+        <h2>Phase 1.1: Onboarding Screen Improvements</h2>
+
+        <h3>Issues Addressed</h3>
+        <ul>
+            <li><strong>Text readability:</strong> Tagline was hard to read over video background</li>
+            <li><strong>Emoji heart:</strong> Generic emoji felt "cheap" and out of place</li>
+        </ul>
+
+        <h3>Changes Made</h3>
+        <ul>
+            <li><strong>Illustrated heart:</strong> Proper SVG heart with brand gradient (#FF6B6B → #FF9F43) and glow effect</li>
+            <li><strong>Tagline backdrop:</strong> Semi-transparent pill with backdrop blur for guaranteed readability</li>
+            <li><strong>Animation:</strong> Kept subtle heartbeat animation but on illustrated element</li>
+        </ul>
+
+        <h3>Color Reference</h3>
+        <ul>
+            <li><span class="color-swatch" style="background: #FF6B6B;"></span><code>#FF6B6B</code> - Gradient accent start</li>
+            <li><span class="color-swatch" style="background: #FF9F43;"></span><code>#FF9F43</code> - Gradient accent end</li>
+            <li><span class="color-swatch" style="background: rgba(0,0,0,0.35);"></span><code>rgba(0,0,0,0.35)</code> - Tagline backdrop</li>
+        </ul>
+
+        <h3>Implementation Notes</h3>
+        <ul>
+            <li>Heart icon is SVG with gradient fill - save as <code>assets/brands/us2/images/heart_icon.svg</code></li>
+            <li>Use <code>SvgPicture.asset()</code> from flutter_svg package</li>
+            <li>Backdrop blur requires <code>BackdropFilter</code> in Flutter (iOS-native support)</li>
+            <li>App name is "Us 2.0" (with space and period)</li>
+        </ul>
+
+        <h2 style="margin-top: 40px; padding-top: 20px; border-top: 3px solid #FF5E62;">📋 Implementation Task List</h2>
+        <p style="color: #666; margin-bottom: 20px;">Coding agent: Complete each task below. Check off when done. Follow the "After" mockup exactly.</p>
+
+        <h3>Create Heart SVG Asset</h3>
+        <ul style="list-style: none; margin-left: 0;">
+            <li>☐ Create <code>assets/brands/us2/images/heart_icon.svg</code></li>
+            <li>☐ Use SVG path: <code>M16 28C16 28 3 18.5 3 10.5C3 6.36 6.36 3 10.5 3C13.08 3 15.36 4.33 16 6.5C16.64 4.33 18.92 3 21.5 3C25.64 3 29 6.36 29 10.5C29 18.5 16 28 16 28Z</code></li>
+            <li>☐ Apply linear gradient fill: #FF6B6B → #FF9F43</li>
+        </ul>
+
+        <h3>Update Us2Logo Widget (<code>us2_logo.dart</code>)</h3>
+        <ul style="list-style: none; margin-left: 0;">
+            <li>☐ Replace ❤️ emoji with <code>SvgPicture.asset('assets/brands/us2/images/heart_icon.svg')</code></li>
+            <li>☐ Keep heartbeat animation (scale pulse)</li>
+            <li>☐ Add glow effect with drop shadow</li>
+            <li>☐ Position heart top-right of "Us 2.0" text</li>
+        </ul>
+
+        <h3>Update Onboarding Screen (<code>onboarding_screen.dart</code>)</h3>
+        <ul style="list-style: none; margin-left: 0;">
+            <li>☐ Add semi-transparent backdrop behind tagline</li>
+            <li>☐ Backdrop color: rgba(0,0,0,0.35)</li>
+            <li>☐ Add <code>BackdropFilter</code> with blur effect</li>
+            <li>☐ Pill-shaped container with border-radius</li>
+        </ul>
+
+        <h3>Testing Checklist</h3>
+        <ul style="list-style: none; margin-left: 0;">
+            <li>☐ Heart displays as illustrated SVG, not emoji</li>
+            <li>☐ Heart has gradient fill (coral → orange)</li>
+            <li>☐ Heart pulses with animation</li>
+            <li>☐ Tagline is readable over video background</li>
+            <li>☐ Backdrop blur works on iOS</li>
+            <li>☐ Both onboarding and home screen show new heart (shared widget)</li>
+        </ul>
+    </div>
+</body>
+</html>

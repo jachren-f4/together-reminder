@@ -9,13 +9,10 @@ import '../services/storage_service.dart';
 import '../services/haptic_service.dart';
 import '../services/sound_service.dart';
 import '../services/app_bootstrap_service.dart';
-import '../services/subscription_service.dart';
 import '../widgets/animations/animations.dart';
 import '../widgets/editorial/editorial.dart';
 import '../widgets/lp_intro_overlay.dart';
-import 'main_screen.dart';
-import 'paywall_screen.dart';
-import 'already_subscribed_screen.dart';
+import 'onboarding/value_proposition_screen.dart';
 
 /// Results screen for Welcome Quiz.
 /// Shows match score and answer breakdown.
@@ -80,51 +77,11 @@ class _WelcomeQuizResultsScreenState extends State<WelcomeQuizResultsScreen>
   void _onLpIntroDismissed() async {
     if (!mounted) return;
 
-    // Check subscription status and show paywall if needed
-    final subscriptionService = SubscriptionService();
-
-    // Check couple-level subscription status from server (partner may have already subscribed)
-    Logger.debug('Checking couple subscription status after LP intro...', service: 'welcome_quiz');
-    final coupleStatus = await subscriptionService.checkCoupleSubscription();
-    final isPremium = subscriptionService.isPremium;
-
-    if (!mounted) return;
-
-    if (coupleStatus?.isActive == true && coupleStatus?.subscribedByMe == false) {
-      // Partner already subscribed - show AlreadySubscribedScreen
-      Logger.debug('Partner already subscribed - showing AlreadySubscribedScreen', service: 'welcome_quiz');
-      Navigator.of(context).pushAndRemoveUntil(
-        MaterialPageRoute(
-          builder: (context) => AlreadySubscribedScreen(
-            subscriberName: coupleStatus?.subscriberName ?? 'Your partner',
-            onContinue: _navigateToMainScreen,
-          ),
-        ),
-        (route) => false,
-      );
-    } else if (!isPremium) {
-      // Show paywall for non-premium users
-      Logger.debug('Showing paywall - user is not premium', service: 'welcome_quiz');
-      Navigator.of(context).pushAndRemoveUntil(
-        MaterialPageRoute(
-          builder: (context) => PaywallScreen(
-            onContinue: _navigateToMainScreen,
-            allowSkip: false, // Hard paywall - must start trial
-          ),
-        ),
-        (route) => false,
-      );
-    } else {
-      // User already has premium, skip paywall
-      Logger.debug('Skipping paywall - user already has premium', service: 'welcome_quiz');
-      _navigateToMainScreen(context);
-    }
-  }
-
-  static void _navigateToMainScreen(BuildContext context) {
+    // Navigate to Value Proposition screen (which handles subscription check and paywall)
+    Logger.debug('Navigating to Value Proposition screen after LP intro', service: 'welcome_quiz');
     Navigator.of(context).pushAndRemoveUntil(
       MaterialPageRoute(
-        builder: (context) => const MainScreen(showLpIntro: false),
+        builder: (context) => const ValuePropositionScreen(),
       ),
       (route) => false,
     );
@@ -443,23 +400,13 @@ class _WelcomeQuizResultsScreenState extends State<WelcomeQuizResultsScreen>
                     // Score section
                     _buildUs2ScoreSection(),
 
-                    // Question breakdown
+                    // Question breakdown (label removed for compactness)
                     Expanded(
                       child: SingleChildScrollView(
                         padding: const EdgeInsets.symmetric(horizontal: 24),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
-                            Text(
-                              'QUESTION BREAKDOWN',
-                              style: GoogleFonts.nunito(
-                                fontSize: 11,
-                                fontWeight: FontWeight.w700,
-                                letterSpacing: 2,
-                                color: Us2Theme.textLight,
-                              ),
-                            ),
-                            const SizedBox(height: 16),
                             ...widget.results.questions.asMap().entries.map((entry) {
                               final result = entry.value;
                               return _buildUs2QuestionResult(result, userName, partnerName);
@@ -489,45 +436,32 @@ class _WelcomeQuizResultsScreenState extends State<WelcomeQuizResultsScreen>
 
   Widget _buildUs2Header() {
     return Container(
-      padding: const EdgeInsets.fromLTRB(24, 20, 24, 20),
-      child: Column(
-        children: [
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-            decoration: BoxDecoration(
-              gradient: Us2Theme.accentGradient,
-              borderRadius: BorderRadius.circular(20),
-            ),
-            child: Text(
-              'QUIZ COMPLETE!',
-              style: GoogleFonts.nunito(
-                fontSize: 11,
-                fontWeight: FontWeight.w700,
-                letterSpacing: 2,
-                color: Colors.white,
-              ),
-            ),
+      padding: const EdgeInsets.fromLTRB(24, 20, 24, 8),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+        decoration: BoxDecoration(
+          gradient: Us2Theme.accentGradient,
+          borderRadius: BorderRadius.circular(20),
+        ),
+        child: Text(
+          'QUIZ COMPLETE!',
+          style: GoogleFonts.nunito(
+            fontSize: 11,
+            fontWeight: FontWeight.w700,
+            letterSpacing: 2,
+            color: Colors.white,
           ),
-          const SizedBox(height: 12),
-          Text(
-            "Here's how you two answered",
-            style: GoogleFonts.nunito(
-              fontSize: 15,
-              color: Us2Theme.textMedium,
-            ),
-          ),
-        ],
+        ),
       ),
     );
   }
 
   Widget _buildUs2ScoreSection() {
     return Container(
-      padding: const EdgeInsets.all(24),
+      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
       child: Column(
         children: [
-          const Text('🎯', style: TextStyle(fontSize: 48)),
-          const SizedBox(height: 16),
+          // Emoji removed - the large score number is enough visual anchor
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.baseline,
@@ -566,6 +500,7 @@ class _WelcomeQuizResultsScreenState extends State<WelcomeQuizResultsScreen>
               color: Us2Theme.textLight,
             ),
           ),
+          const SizedBox(height: 3), // Margin below "matched!" to separate from first card
         ],
       ),
     );
@@ -577,8 +512,8 @@ class _WelcomeQuizResultsScreenState extends State<WelcomeQuizResultsScreen>
     String partnerName,
   ) {
     return Container(
-      margin: const EdgeInsets.only(bottom: 12),
-      padding: const EdgeInsets.all(16),
+      margin: const EdgeInsets.only(bottom: 10),
+      padding: const EdgeInsets.all(14), // Reduced from 16px
       decoration: BoxDecoration(
         color: result.isMatch
             ? Us2Theme.primaryBrandPink.withOpacity(0.1)
@@ -608,10 +543,10 @@ class _WelcomeQuizResultsScreenState extends State<WelcomeQuizResultsScreen>
                 child: Text(
                   result.question,
                   style: GoogleFonts.playfairDisplay(
-                    fontSize: 16,
+                    fontSize: 15, // Slightly reduced
                     fontWeight: FontWeight.w600,
                     color: Us2Theme.textDark,
-                    height: 1.4,
+                    height: 1.3,
                   ),
                 ),
               ),
@@ -643,10 +578,10 @@ class _WelcomeQuizResultsScreenState extends State<WelcomeQuizResultsScreen>
               ],
             ],
           ),
-          const SizedBox(height: 12),
+          const SizedBox(height: 10), // Reduced from 12px
           // Answers
           _buildUs2AnswerRow(userName, result.user1Answer ?? '—'),
-          const SizedBox(height: 8),
+          const SizedBox(height: 6), // Reduced from 8px
           _buildUs2AnswerRow(partnerName, result.user2Answer ?? '—'),
         ],
       ),
@@ -671,7 +606,7 @@ class _WelcomeQuizResultsScreenState extends State<WelcomeQuizResultsScreen>
         const SizedBox(width: 8),
         Expanded(
           child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6), // Reduced from 8px
             decoration: BoxDecoration(
               color: Us2Theme.cream,
               borderRadius: BorderRadius.circular(8),

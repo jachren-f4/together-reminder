@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phase 1.3 - Welcome Quiz Results Fix</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Nunito:wght@400;600;700&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Nunito', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #FAFAFA;
+            color: #3A3A3A;
+            display: flex;
+            gap: 40px;
+            padding: 40px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .mockup-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .mockup-label {
+            font-size: 14px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #6E6E6E;
+            padding: 8px 16px;
+            background: #F0F0F0;
+            border-radius: 8px;
+        }
+
+        .mockup-label.before { background: #FFE5E5; color: #C62828; }
+        .mockup-label.after { background: #E5FFE5; color: #2E7D32; }
+
+        .phone {
+            width: 390px;
+            height: 844px;
+            background: linear-gradient(180deg, #FFD1C1 0%, #FFF5F0 100%);
+            border-radius: 50px;
+            overflow: hidden;
+            position: relative;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+        }
+
+        .screen-content {
+            padding: 60px 24px 120px;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 8px;
+        }
+
+        .header.compact {
+            margin-bottom: 0;
+        }
+
+        .badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #FF6B6B, #FF9F43);
+            color: white;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            margin-bottom: 12px;
+        }
+
+        .badge.compact {
+            margin-bottom: 4px;
+        }
+
+        .subtitle {
+            font-size: 15px;
+            color: #5A5A5A;
+        }
+
+        /* Score section */
+        .score-section {
+            text-align: center;
+            padding: 20px 0;
+        }
+
+        .score-section.compact {
+            padding: 8px 0;
+        }
+
+        .score-emoji {
+            font-size: 48px;
+            margin-bottom: 16px;
+        }
+
+        .score-text {
+            display: flex;
+            align-items: baseline;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .score-number {
+            font-family: 'Playfair Display', serif;
+            font-size: 72px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #FF6B6B, #FF9F43);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1;
+        }
+
+        .score-of {
+            font-family: 'Playfair Display', serif;
+            font-size: 28px;
+            color: #888;
+        }
+
+        .score-label {
+            font-size: 18px;
+            color: #888;
+        }
+
+        /* Inline "matched!" with score */
+        .score-label.inline {
+            display: inline;
+            margin-left: 6px;
+        }
+
+        /* Section label */
+        .section-label {
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            color: #888;
+            margin-bottom: 16px;
+        }
+
+        /* Results breakdown */
+        .results-breakdown {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .result-card {
+            background: white;
+            border-radius: 16px;
+            padding: 16px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .result-card.match {
+            background: rgba(255, 107, 107, 0.08);
+            border: 2px solid #FF6B6B;
+        }
+
+        .result-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 12px;
+        }
+
+        .result-question {
+            font-family: 'Playfair Display', serif;
+            font-size: 16px;
+            font-weight: 600;
+            color: #3A3A3A;
+            line-height: 1.4;
+            flex: 1;
+        }
+
+        .match-badge {
+            background: linear-gradient(135deg, #FF6B6B, #FF9F43);
+            color: white;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            margin-left: 8px;
+            flex-shrink: 0;
+        }
+
+        .answer-row {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .answer-row:last-child {
+            margin-bottom: 0;
+        }
+
+        .answer-name {
+            width: 60px;
+            font-size: 13px;
+            font-weight: 700;
+            color: #3A3A3A;
+        }
+
+        .answer-value {
+            flex: 1;
+            background: #FFF8F0;
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 14px;
+            color: #3A3A3A;
+        }
+
+        /* Compact answer cards */
+        .result-card.compact {
+            padding: 14px;
+        }
+
+        .result-card.compact .answer-row {
+            margin-bottom: 6px;
+        }
+
+        .result-card.compact .answer-value {
+            padding: 6px 12px;
+        }
+
+        /* Section label as subtitle style */
+        .section-label.subtitle-style {
+            font-size: 15px;
+            font-weight: 400;
+            letter-spacing: 0;
+            color: #5A5A5A;
+            text-transform: none;
+        }
+
+        /* Button */
+        .btn-container {
+            position: absolute;
+            bottom: 40px;
+            left: 24px;
+            right: 24px;
+        }
+
+        .btn-primary {
+            width: 100%;
+            background: linear-gradient(135deg, #FF6B6B, #FF9F43);
+            color: white;
+            padding: 18px;
+            border-radius: 30px;
+            font-size: 17px;
+            font-weight: 700;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(255, 107, 107, 0.4);
+        }
+
+        /* Notes section */
+        .notes {
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 30px;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .notes h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: #3A3A3A;
+        }
+
+        .notes h3 {
+            font-size: 16px;
+            font-weight: 700;
+            margin: 20px 0 10px;
+            color: #FF5E62;
+        }
+
+        .notes ul {
+            margin-left: 20px;
+            line-height: 1.8;
+        }
+
+        .notes li {
+            margin-bottom: 8px;
+        }
+
+        .strikethrough {
+            text-decoration: line-through;
+            color: #999;
+        }
+    </style>
+</head>
+<body>
+    <!-- BEFORE -->
+    <div class="mockup-container">
+        <div class="mockup-label before">Before (With Emoji)</div>
+        <div class="phone">
+            <div class="screen-content">
+                <div class="header">
+                    <div class="badge">QUIZ COMPLETE!</div>
+                    <div class="subtitle">Here's how you two answered</div>
+                </div>
+
+                <div class="score-section">
+                    <div class="score-emoji">🎯</div>
+                    <div class="score-text">
+                        <span class="score-number">2</span>
+                        <span class="score-of">out of 3</span>
+                    </div>
+                    <div class="score-label">matched!</div>
+                </div>
+
+                <div class="section-label">QUESTION BREAKDOWN</div>
+
+                <div class="results-breakdown">
+                    <div class="result-card match">
+                        <div class="result-header">
+                            <div class="result-question">How do you prefer to spend weekends?</div>
+                            <div class="match-badge">✓ Match!</div>
+                        </div>
+                        <div class="answer-row">
+                            <span class="answer-name">Joakim</span>
+                            <span class="answer-value">Relaxing at home</span>
+                        </div>
+                        <div class="answer-row">
+                            <span class="answer-name">Emma</span>
+                            <span class="answer-value">Relaxing at home</span>
+                        </div>
+                    </div>
+                    <div class="result-card">
+                        <div class="result-header">
+                            <div class="result-question">What's most important in a relationship?</div>
+                        </div>
+                        <div class="answer-row">
+                            <span class="answer-name">Joakim</span>
+                            <span class="answer-value">Trust</span>
+                        </div>
+                        <div class="answer-row">
+                            <span class="answer-name">Emma</span>
+                            <span class="answer-value">Communication</span>
+                        </div>
+                    </div>
+                    <div class="result-card match">
+                        <div class="result-header">
+                            <div class="result-question">How do you handle disagreements?</div>
+                            <div class="match-badge">✓ Match!</div>
+                        </div>
+                        <div class="answer-row">
+                            <span class="answer-name">Joakim</span>
+                            <span class="answer-value">Talk it out calmly</span>
+                        </div>
+                        <div class="answer-row">
+                            <span class="answer-name">Emma</span>
+                            <span class="answer-value">Talk it out calmly</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="btn-container">
+                <div class="btn-primary">Continue</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- AFTER -->
+    <div class="mockup-container">
+        <div class="mockup-label after">After (Compact)</div>
+        <div class="phone">
+            <div class="screen-content">
+                <div class="header compact">
+                    <div class="badge compact">QUIZ COMPLETE!</div>
+                </div>
+
+                <div class="score-section compact">
+                    <!-- Emoji removed + reduced padding -->
+                    <div class="score-text">
+                        <span class="score-number">2</span>
+                        <span class="score-of">out of 3</span>
+                    </div>
+                    <div class="score-label" style="margin-bottom: 3px;">matched!</div>
+                </div>
+
+                <div class="results-breakdown">
+                    <div class="result-card match compact">
+                        <div class="result-header">
+                            <div class="result-question">How do you prefer to spend weekends?</div>
+                            <div class="match-badge">✓ Match!</div>
+                        </div>
+                        <div class="answer-row">
+                            <span class="answer-name">Joakim</span>
+                            <span class="answer-value">Relaxing at home</span>
+                        </div>
+                        <div class="answer-row">
+                            <span class="answer-name">Emma</span>
+                            <span class="answer-value">Relaxing at home</span>
+                        </div>
+                    </div>
+                    <div class="result-card compact">
+                        <div class="result-header">
+                            <div class="result-question">What's most important in a relationship?</div>
+                        </div>
+                        <div class="answer-row">
+                            <span class="answer-name">Joakim</span>
+                            <span class="answer-value">Trust</span>
+                        </div>
+                        <div class="answer-row">
+                            <span class="answer-name">Emma</span>
+                            <span class="answer-value">Communication</span>
+                        </div>
+                    </div>
+                    <div class="result-card match compact">
+                        <div class="result-header">
+                            <div class="result-question">How do you handle disagreements?</div>
+                            <div class="match-badge">✓ Match!</div>
+                        </div>
+                        <div class="answer-row">
+                            <span class="answer-name">Joakim</span>
+                            <span class="answer-value">Talk it out calmly</span>
+                        </div>
+                        <div class="answer-row">
+                            <span class="answer-name">Emma</span>
+                            <span class="answer-value">Talk it out calmly</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="btn-container">
+                <div class="btn-primary">Continue</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Design Notes -->
+    <div class="notes">
+        <h2>Phase 1.3: Welcome Quiz Results Improvements</h2>
+
+        <h3>Issues Addressed</h3>
+        <ul>
+            <li><strong>Emoji icon:</strong> 🎯 target emoji (48px) felt random and added unnecessary visual noise</li>
+            <li><strong>Scrolling required:</strong> Content required scrolling to see all 3 questions</li>
+            <li><strong>Redundant text:</strong> "Here's how you two answered" and "QUESTION BREAKDOWN" both introduced the same section</li>
+        </ul>
+
+        <h3>Changes Made</h3>
+        <ul>
+            <li><strong>Remove emoji:</strong> <span class="strikethrough">🎯</span> - The large "X out of Y" number is enough visual anchor</li>
+            <li><strong>Remove redundant text:</strong> <span class="strikethrough">"Here's how you two answered"</span> and <span class="strikethrough">"QUESTION BREAKDOWN"</span></li>
+            <li><strong>Reduce score padding:</strong> Score section padding from 20px to 8px</li>
+            <li><strong>Add spacing below "matched!":</strong> 3px margin to separate from first card</li>
+            <li><strong>Compact answer cards:</strong> Reduce padding/margins by 2px total (16px → 14px, 8px → 6px)</li>
+        </ul>
+
+        <h3>What Stays the Same</h3>
+        <ul>
+            <li>"QUIZ COMPLETE!" badge</li>
+            <li>"X out of Y matched!" score display (just reformatted)</li>
+            <li>Question cards with actual questions and answers</li>
+            <li>Match badges on matching answers</li>
+        </ul>
+
+        <h3>Implementation</h3>
+        <ul>
+            <li>In <code>welcome_quiz_results_screen.dart</code>:</li>
+            <li>1. Remove the 🎯 emoji from <code>_buildUs2ScoreSection()</code> (line ~529)</li>
+            <li>2. Remove subtitle "Here's how you two answered" from header</li>
+            <li>3. Remove "QUESTION BREAKDOWN" section label</li>
+            <li>4. Reduce score section vertical padding (20px → 8px)</li>
+            <li>5. Add 3px margin below "matched!" label</li>
+            <li>6. Reduce result card padding (16px → 14px) and answer row margins (8px → 6px)</li>
+        </ul>
+
+        <h2 style="margin-top: 40px; padding-top: 20px; border-top: 3px solid #FF5E62;">📋 Implementation Task List</h2>
+        <p style="color: #666; margin-bottom: 20px;">Coding agent: Complete each task below. Check off when done. Follow the "After" mockup exactly.</p>
+
+        <h3>Update Welcome Quiz Results Screen (<code>welcome_quiz_results_screen.dart</code>)</h3>
+        <ul style="list-style: none; margin-left: 0;">
+            <li>☐ Remove 🎯 emoji from <code>_buildUs2ScoreSection()</code> (~line 529)</li>
+            <li>☐ Remove subtitle "Here's how you two answered" from header</li>
+            <li>☐ Remove "QUESTION BREAKDOWN" section label</li>
+        </ul>
+
+        <h3>Reduce Padding to Eliminate Scrolling</h3>
+        <ul style="list-style: none; margin-left: 0;">
+            <li>☐ Reduce score section vertical padding: 20px → 8px</li>
+            <li>☐ Add 3px margin below "matched!" label</li>
+            <li>☐ Reduce result card padding: 16px → 14px</li>
+            <li>☐ Reduce answer row margins: 8px → 6px</li>
+            <li>☐ Reduce answer row padding: 8px 12px → 6px 12px</li>
+        </ul>
+
+        <h3>Keep These Elements</h3>
+        <ul style="list-style: none; margin-left: 0;">
+            <li>☐ "QUIZ COMPLETE!" badge at top</li>
+            <li>☐ Score display: "X out of Y matched!"</li>
+            <li>☐ Question cards with answers</li>
+            <li>☐ "✓ Match!" badges on matching answers</li>
+            <li>☐ "Continue" button at bottom</li>
+        </ul>
+
+        <h3>Testing Checklist</h3>
+        <ul style="list-style: none; margin-left: 0;">
+            <li>☐ Screen matches "After" mockup</li>
+            <li>☐ No 🎯 emoji visible</li>
+            <li>☐ No "Here's how you two answered" text</li>
+            <li>☐ No "QUESTION BREAKDOWN" label</li>
+            <li>☐ All 3 question cards fit without scrolling (on standard phone)</li>
+            <li>☐ Score and cards have tighter spacing</li>
+        </ul>
+    </div>
+</body>
+</html>

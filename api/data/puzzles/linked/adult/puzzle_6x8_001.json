@@ -1,0 +1,61 @@
+{
+  "author": "Crossword Maker GPT",
+  "title": "AI-Built Puzzle",
+  "theme": "general",
+  "size": {
+    "rows": 8,
+    "cols": 6
+  },
+  "clues": {
+    "1": { "type": "text", "content": "Chilly", "arrow": "down", "target_index": 7 },
+    "2": { "type": "text", "content": "Job dept", "arrow": "down", "target_index": 8 },
+    "3": { "type": "text", "content": "Over", "arrow": "down", "target_index": 9 },
+    "4": { "type": "text", "content": "TA_L", "arrow": "down", "target_index": 10 },
+    "5": { "type": "emoji", "content": "🍞 grain", "arrow": "down", "target_index": 11 },
+    "6": { "type": "text", "content": "Seat", "arrow": "across", "target_index": 7 },
+    "7": { "type": "text", "content": "Sphere", "arrow": "across", "target_index": 13 },
+    "8": {
+      "across": { "type": "text", "content": "WH_", "target_index": 17 },
+      "down": { "type": "text", "content": "Not ever", "target_index": 22 }
+    },
+    "9": { "type": "emoji", "content": "🛢️ OI_", "arrow": "across", "target_index": 19 },
+    "10": {
+      "across": { "type": "text", "content": "Top spot", "target_index": 21 },
+      "down": { "type": "text", "content": "Flower", "target_index": 26 }
+    },
+    "11": { "type": "text", "content": "Plunge", "arrow": "across", "target_index": 25 },
+    "12": { "type": "text", "content": "Cunning", "arrow": "down", "target_index": 35 },
+    "13": {
+      "across": { "type": "emoji", "content": "🚗 roar", "target_index": 32 },
+      "down": { "type": "text", "content": "Greek M", "target_index": 37 }
+    },
+    "14": { "type": "text", "content": "RE, __", "arrow": "across", "target_index": 37 },
+    "15": {
+      "across": { "type": "text", "content": "__EVEN", "target_index": 40 },
+      "down": { "type": "text", "content": "ABO_T", "target_index": 45 }
+    },
+    "16": { "type": "text", "content": "Loan sin", "arrow": "across", "target_index": 43 }
+  },
+  "date": "2026-01-21",
+  "grid": [
+    ".", ".", ".", ".", ".", ".",
+    ".", "C", "H", "A", "I", "R",
+    ".", "O", "R", "B", ".", "Y",
+    ".", "L", ".", "O", "N", "E",
+    ".", "D", "I", "V", "E", ".",
+    ".", ".", "R", "E", "V", "S",
+    ".", "M", "I", ".", "E", "L",
+    ".", "U", "S", "U", "R", "Y"
+  ],
+  "gridnums": [
+    0, 1, 2, 3, 4, 5,
+    6, 0, 0, 0, 0, 0,
+    7, 0, 0, 0, 8, 0,
+    9, 0, 10, 0, 0, 0,
+    11, 0, 0, 0, 0, 12,
+    0, 13, 0, 0, 0, 0,
+    14, 0, 0, 15, 0, 0,
+    16, 0, 0, 0, 0, 0
+  ],
+  "puzzleId": "puzzle_6x8_001"
+}

@@ -1,0 +1,61 @@
+{
+  "author": "Crossword Maker GPT",
+  "title": "AI-Built Puzzle",
+  "theme": "general",
+  "size": {
+    "rows": 8,
+    "cols": 6
+  },
+  "clues": {
+    "1": { "type": "text", "content": "Stair", "arrow": "down", "target_index": 7 },
+    "2": { "type": "text", "content": "__ go", "arrow": "down", "target_index": 8 },
+    "3": { "type": "text", "content": "Rub out", "arrow": "down", "target_index": 9 },
+    "4": { "type": "text", "content": "Fire __", "arrow": "down", "target_index": 10 },
+    "5": { "type": "text", "content": "WOR_", "arrow": "down", "target_index": 11 },
+    "6": { "type": "emoji", "content": "🚂💨", "arrow": "across", "target_index": 7 },
+    "7": { "type": "text", "content": "Ripped", "arrow": "across", "target_index": 13 },
+    "8": { "type": "text", "content": "Flair", "arrow": "down", "target_index": 23 },
+    "9": { "type": "text", "content": "SAL_", "arrow": "across", "target_index": 19 },
+    "10": {
+      "across": { "type": "text", "content": "Consumed", "target_index": 21 },
+      "down": { "type": "emoji", "content": "👤", "target_index": 26 }
+    },
+    "11": { "type": "text", "content": "Ooze", "arrow": "across", "target_index": 25 },
+    "12": {
+      "across": { "type": "text", "content": "MUSI_", "target_index": 29 },
+      "down": { "type": "text", "content": "Eureka!", "target_index": 34 }
+    },
+    "13": {
+      "across": { "type": "emoji", "content": "🦭", "target_index": 32 },
+      "down": { "type": "text", "content": "SK__", "target_index": 37 }
+    },
+    "14": { "type": "text", "content": "That __", "arrow": "across", "target_index": 37 },
+    "15": {
+      "across": { "type": "text", "content": "Laugh", "target_index": 40 },
+      "down": { "type": "text", "content": "GAT_", "target_index": 45 }
+    },
+    "16": { "type": "text", "content": "Reward", "arrow": "across", "target_index": 43 }
+  },
+  "date": "2026-01-22",
+  "grid": [
+    ".", ".", ".", ".", ".", ".",
+    ".", "S", "T", "E", "A", "M",
+    ".", "T", "O", "R", "N", ".",
+    ".", "E", ".", "A", "T", "E",
+    ".", "P", "U", "S", ".", "C",
+    ".", ".", "S", "E", "A", "L",
+    ".", "I", "E", ".", "H", "A",
+    ".", "T", "R", "E", "A", "T"
+  ],
+  "gridnums": [
+    0, 1, 2, 3, 4, 5,
+    6, 0, 0, 0, 0, 0,
+    7, 0, 0, 0, 0, 8,
+    9, 0, 10, 0, 0, 0,
+    11, 0, 0, 0, 12, 0,
+    0, 13, 0, 0, 0, 0,
+    14, 0, 0, 15, 0, 0,
+    16, 0, 0, 0, 0, 0
+  ],
+  "puzzleId": "puzzle_6x8_004"
+}

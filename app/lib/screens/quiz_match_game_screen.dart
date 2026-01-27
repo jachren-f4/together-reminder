@@ -62,6 +62,9 @@ class _QuizMatchGameScreenState extends State<QuizMatchGameScreen>
   int? _tempSelectedAnswer;
   bool _isSubmitting = false;
 
+  /// Whether to show the instruction banner (only on first classic quiz, first question)
+  bool _showInstructionBanner = false;
+
   @override
   void initState() {
     super.initState();
@@ -194,10 +197,16 @@ class _QuizMatchGameScreenState extends State<QuizMatchGameScreen>
         return;
       }
 
+      // Check if we should show instruction banner
+      // Only show on first classic quiz AND first question AND if not already seen
+      final shouldShowBanner = widget.quizType == 'classic' &&
+          !StorageService().hasSeenQuizInstructionBanner();
+
       setState(() {
         _gameState = gameState;
         _currentMatchId = gameState.match.id;
         _isLoading = false;
+        _showInstructionBanner = shouldShowBanner;
       });
 
       // Start entrance animation
@@ -227,9 +236,15 @@ class _QuizMatchGameScreenState extends State<QuizMatchGameScreen>
 
     HapticService().trigger(HapticType.light);
 
+    // Mark instruction banner as seen after first question is answered
+    if (_showInstructionBanner && _currentQuestionIndex == 0) {
+      StorageService().markQuizInstructionBannerSeen();
+    }
+
     setState(() {
       _selectedAnswers.add(_tempSelectedAnswer!);
       _tempSelectedAnswer = null;
+      _showInstructionBanner = false; // Hide banner after first answer
 
       final questions = _gameState?.quiz?.questions ?? [];
       if (_currentQuestionIndex < questions.length - 1) {
@@ -769,7 +784,10 @@ class _QuizMatchGameScreenState extends State<QuizMatchGameScreen>
                                   child: Column(
                                     crossAxisAlignment: CrossAxisAlignment.stretch,
                                     children: [
-                                      const SizedBox(height: 8),
+                                      // Instruction banner (first classic quiz, first question only)
+                                      if (_showInstructionBanner && _currentQuestionIndex == 0)
+                                        _buildUs2InstructionBanner(),
+
                                       // Question text
                                       Text(
                                         currentQuestion.text,
@@ -1258,6 +1276,92 @@ class _QuizMatchGameScreenState extends State<QuizMatchGameScreen>
                 onTap: _isSubmitting ? null : () => _selectAnswer(index),
               );
             }),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// Instruction banner shown on first classic quiz, first question only
+  Widget _buildUs2InstructionBanner() {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 16),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      decoration: BoxDecoration(
+        gradient: const LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [Color(0xFFFFF0EE), Color(0xFFFFE4D6)],
+        ),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(
+          color: Us2Theme.primaryBrandPink.withOpacity(0.2),
+          width: 1,
+        ),
+      ),
+      child: Row(
+        children: [
+          // Gradient circle with "i" icon
+          Container(
+            width: 24,
+            height: 24,
+            decoration: const BoxDecoration(
+              gradient: Us2Theme.accentGradient,
+              shape: BoxShape.circle,
+            ),
+            child: const Center(
+              child: Text(
+                'i',
+                style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w700,
+                  color: Colors.white,
+                  fontStyle: FontStyle.italic,
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Text(
+              'Answer how YOU personally feel',
+              style: GoogleFonts.nunito(
+                fontSize: 14,
+                fontWeight: FontWeight.w600,
+                color: const Color(0xFFD84315),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// "About You" badge shown on all quiz questions
+  Widget _buildUs2AboutYouBadge() {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 12),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+      decoration: BoxDecoration(
+        gradient: Us2Theme.accentGradient,
+        borderRadius: BorderRadius.circular(16),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          const Text(
+            '👤',
+            style: TextStyle(fontSize: 11),
+          ),
+          const SizedBox(width: 6),
+          Text(
+            'ABOUT YOU',
+            style: GoogleFonts.nunito(
+              fontSize: 11,
+              fontWeight: FontWeight.w700,
+              letterSpacing: 0.5,
+              color: Colors.white,
+            ),
           ),
         ],
       ),

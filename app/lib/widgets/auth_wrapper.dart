@@ -9,7 +9,8 @@ import '../config/brand/us2_theme.dart';
 import '../services/auth_service.dart';
 import '../services/storage_service.dart';
 import '../services/app_bootstrap_service.dart';
-import '../screens/onboarding_screen.dart';
+import '../screens/onboarding/value_carousel_screen.dart';
+import '../screens/onboarding/anniversary_screen.dart';
 import '../screens/name_entry_screen.dart';
 import '../screens/pairing_screen.dart';
 import '../screens/main_screen.dart';
@@ -132,7 +133,7 @@ class _AuthWrapperState extends State<AuthWrapper> {
       if (_storageService.hasPartner()) {
         return _buildWithBootstrap();
       } else {
-        return const OnboardingScreen();
+        return const ValueCarouselScreen();
       }
     }
 
@@ -147,8 +148,8 @@ class _AuthWrapperState extends State<AuthWrapper> {
         return _buildLoadingScreen('Loading...');
 
       case AuthState.unauthenticated:
-        // Not authenticated - show onboarding
-        return const OnboardingScreen();
+        // Not authenticated - show new onboarding carousel
+        return const ValueCarouselScreen();
     }
 
     // User is authenticated - check if they have a name
@@ -182,8 +183,8 @@ class _AuthWrapperState extends State<AuthWrapper> {
         return const MainScreen();
       }
 
-      // Still no partner after bootstrap - show pairing screen
-      return const PairingScreen();
+      // Still no partner after bootstrap - show anniversary screen (which leads to pairing)
+      return const AnniversaryScreen();
     }
   }
 

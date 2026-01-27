@@ -27,6 +27,7 @@ import '../../../services/nav_style_service.dart';
 import '../../brand/brand_widget_factory.dart';
 import '../../brand/us2/us2_avatar_section.dart';
 import '../components/debug_section_card.dart';
+import '../../../screens/debug/fade_gradient_test_screen.dart';
 
 /// Actions tab for testing tools and data management
 class ActionsTab extends StatefulWidget {
@@ -614,6 +615,89 @@ class _ActionsTabState extends State<ActionsTab> {
     }
   }
 
+  Future<void> _resetLinkedProgress() async {
+    // Show confirmation dialog
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Reset Linked Progress?'),
+        content: const Text(
+          'This will delete your active crossword match and reset your puzzle index to 0. '
+          'The next puzzle you get will be a 5×7 beginner puzzle.\n\n'
+          'This affects both you and your partner.',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context, true),
+            style: TextButton.styleFrom(foregroundColor: Colors.red),
+            child: const Text('Reset'),
+          ),
+        ],
+      ),
+    );
+
+    if (confirmed != true) return;
+
+    setState(() => _isProcessing = true);
+
+    try {
+      final authService = AuthService();
+      final uri = Uri.parse('${SupabaseConfig.apiUrl}/api/sync/linked/reset');
+      final headers = await authService.getAuthHeaders();
+
+      final response = await http.post(
+        uri,
+        headers: {
+          ...headers,
+          'Content-Type': 'application/json',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        final deletedMatches = data['deletedMatches'] ?? 0;
+
+        // Clear local Hive data for Linked
+        await _storage.linkedMatchesBox.clear();
+
+        Logger.success('Linked progress reset: deleted $deletedMatches matches', service: 'debug');
+
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Linked progress reset! Deleted $deletedMatches matches.'),
+              duration: const Duration(seconds: 3),
+              backgroundColor: Colors.green,
+            ),
+          );
+        }
+      } else {
+        Logger.warn('Linked reset failed: ${response.statusCode} ${response.body}', service: 'debug');
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Failed: ${response.body}'),
+              backgroundColor: Colors.red,
+            ),
+          );
+        }
+      }
+    } catch (e) {
+      Logger.error('Error resetting Linked progress', error: e, service: 'debug');
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error: $e'), backgroundColor: Colors.red),
+        );
+      }
+    } finally {
+      setState(() => _isProcessing = false);
+    }
+  }
+
   Future<void> _resetUserData() async {
     // Show confirmation dialog
     final confirmed = await showDialog<bool>(
@@ -851,6 +935,43 @@ class _ActionsTabState extends State<ActionsTab> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
+          // Reset Linked (Crossword) Progress
+          DebugSectionCard(
+            title: '🧩 RESET CROSSWORD',
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: Colors.red.shade50,
+                    borderRadius: BorderRadius.circular(6),
+                  ),
+                  child: Text(
+                    'Reset Linked progress to test variable grid sizes.\n'
+                    'Deletes active match and resets puzzle index to 0.\n'
+                    'Next puzzle will be 5×7 (beginner).',
+                    style: TextStyle(
+                      fontSize: 10,
+                      color: Colors.red.shade800,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 12),
+                ElevatedButton.icon(
+                  onPressed: _isProcessing ? null : _resetLinkedProgress,
+                  icon: const Icon(Icons.restart_alt, size: 18),
+                  label: const Text('Reset Crossword Progress'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.red,
+                    foregroundColor: Colors.white,
+                    minimumSize: const Size(double.infinity, 44),
+                  ),
+                ),
+              ],
+            ),
+          ),
+
           // Test LP Animation (Us 2.0)
           DebugSectionCard(
             title: '✨ TEST LP ANIMATION',
@@ -1361,6 +1482,33 @@ class _ActionsTabState extends State<ActionsTab> {
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.black,
                     foregroundColor: Colors.white,
+                    minimumSize: const Size(double.infinity, 44),
+                  ),
+                ),
+              ],
+            ),
+          ),
+
+          // UI Tests
+          DebugSectionCard(
+            title: '🧪 UI TESTS',
+            child: Column(
+              children: [
+                ElevatedButton.icon(
+                  onPressed: () {
+                    Navigator.pop(context); // Close debug menu
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const FadeGradientTestScreen(),
+                      ),
+                    );
+                  },
+                  icon: const Icon(Icons.gradient, size: 16),
+                  label: const Text('Fade Gradient Test (5 approaches)'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.purple.shade100,
+                    foregroundColor: Colors.purple.shade900,
                     minimumSize: const Size(double.infinity, 44),
                   ),
                 ),

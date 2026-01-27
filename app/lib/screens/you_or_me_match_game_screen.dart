@@ -943,59 +943,70 @@ class _YouOrMeMatchGameScreenState extends State<YouOrMeMatchGameScreen>
                       progress: progress,
                     ),
 
-                    // Question card
+                    // Content: Question card + Answer buttons centered together
                     Expanded(
                       child: Padding(
-                        padding: const EdgeInsets.all(20),
-                        child: SlideTransition(
-                          position: _slideAnimation,
-                          child: Transform.rotate(
-                            angle: _rotateAnimation.value,
-                            child: FadeTransition(
-                              opacity: _fadeAnimation,
-                              child: Container(
-                                width: double.infinity,
-                                padding: const EdgeInsets.all(28),
-                                decoration: BoxDecoration(
-                                  color: Us2Theme.cream,
-                                  borderRadius: BorderRadius.circular(24),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.black.withOpacity(0.08),
-                                      blurRadius: 20,
-                                      offset: const Offset(0, 8),
-                                    ),
-                                  ],
-                                ),
-                                child: Stack(
-                                  children: [
-                                    // Question text
-                                    Center(
-                                      child: Text(
-                                        question.content,
-                                        style: GoogleFonts.playfairDisplay(
-                                          fontSize: 24,
-                                          fontWeight: FontWeight.w600,
-                                          color: Us2Theme.textDark,
-                                          height: 1.4,
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        child: Column(
+                          children: [
+                            // Question card (compact)
+                            SlideTransition(
+                              position: _slideAnimation,
+                              child: Transform.rotate(
+                                angle: _rotateAnimation.value,
+                                child: FadeTransition(
+                                  opacity: _fadeAnimation,
+                                  child: Container(
+                                    width: double.infinity,
+                                    padding: const EdgeInsets.all(28),
+                                    decoration: BoxDecoration(
+                                      color: Us2Theme.cream,
+                                      borderRadius: BorderRadius.circular(24),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.black.withOpacity(0.08),
+                                          blurRadius: 20,
+                                          offset: const Offset(0, 8),
                                         ),
-                                        textAlign: TextAlign.center,
-                                      ),
+                                      ],
                                     ),
-                                    // Decision stamp overlay
-                                    if (_tempSelectedAnswer != null)
-                                      _buildUs2DecisionStamp(_tempSelectedAnswer == 'me'),
-                                  ],
+                                    child: Stack(
+                                      children: [
+                                        // Question text
+                                        Center(
+                                          child: Text(
+                                            question.content,
+                                            style: GoogleFonts.playfairDisplay(
+                                              fontSize: 24,
+                                              fontWeight: FontWeight.w600,
+                                              color: Us2Theme.textDark,
+                                              height: 1.4,
+                                            ),
+                                            textAlign: TextAlign.center,
+                                          ),
+                                        ),
+                                        // Decision stamp overlay
+                                        if (_tempSelectedAnswer != null)
+                                          _buildUs2DecisionStamp(_tempSelectedAnswer == 'me'),
+                                      ],
+                                    ),
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
+
+                            // Spacer to push buttons toward center
+                            const Spacer(),
+
+                            // Answer buttons (thumb-friendly center position)
+                            _buildUs2AnswerButtons(userName, partnerName),
+
+                            // Bottom spacer (equal to top spacer for centering)
+                            const Spacer(),
+                          ],
                         ),
                       ),
                     ),
-
-                    // Answer buttons
-                    _buildUs2AnswerButtons(userName, partnerName),
                   ],
                 ),
               ),
@@ -1114,77 +1125,121 @@ class _YouOrMeMatchGameScreenState extends State<YouOrMeMatchGameScreen>
     );
   }
 
-  /// Build Us 2.0 styled answer buttons
+  /// Build Us 2.0 styled answer buttons (thumb-friendly, centered)
   Widget _buildUs2AnswerButtons(String userName, String partnerName) {
-    return Container(
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.5),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          _buildUs2AnswerButton(
-            label: userName,
-            emoji: '🙋',
-            onTap: () => _handleAnswer('me'),
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        // "Me" button - filled coral gradient
+        _buildUs2AnswerButtonFilled(
+          label: userName,
+          onTap: () => _handleAnswer('me'),
+        ),
+        const SizedBox(width: 16),
+        // "Partner" button - outlined style
+        _buildUs2AnswerButtonOutlined(
+          label: partnerName,
+          onTap: () => _handleAnswer('you'),
+        ),
+      ],
+    );
+  }
+
+  /// Build Us 2.0 "Me" button - filled coral gradient with white text
+  Widget _buildUs2AnswerButtonFilled({
+    required String label,
+    required VoidCallback onTap,
+  }) {
+    return GestureDetector(
+      onTap: _isSubmitting ? null : onTap,
+      child: AnimatedScale(
+        scale: _isSubmitting ? 1.0 : 1.0,
+        duration: const Duration(milliseconds: 100),
+        child: Container(
+          width: 140,
+          height: 70,
+          decoration: BoxDecoration(
+            gradient: const LinearGradient(
+              colors: [Color(0xFFFF6B6B), Color(0xFFFF9F43)],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+            borderRadius: BorderRadius.circular(35),
+            boxShadow: [
+              BoxShadow(
+                color: const Color(0xFFFF6B6B).withOpacity(0.4),
+                blurRadius: 15,
+                offset: const Offset(0, 4),
+              ),
+            ],
           ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: Text(
-              'or',
-              style: GoogleFonts.nunito(
-                fontSize: 14,
-                color: Us2Theme.textLight,
+          child: Material(
+            color: Colors.transparent,
+            child: InkWell(
+              onTap: _isSubmitting ? null : onTap,
+              borderRadius: BorderRadius.circular(35),
+              splashColor: Colors.white.withOpacity(0.2),
+              child: Center(
+                child: Text(
+                  label.length > 10 ? '${label.substring(0, 10)}...' : label,
+                  style: GoogleFonts.nunito(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w700,
+                    color: Colors.white,
+                  ),
+                  overflow: TextOverflow.ellipsis,
+                ),
               ),
             ),
           ),
-          _buildUs2AnswerButton(
-            label: partnerName,
-            emoji: '🙋‍♀️',
-            onTap: () => _handleAnswer('you'),
-          ),
-        ],
+        ),
       ),
     );
   }
 
-  /// Build Us 2.0 styled answer button
-  Widget _buildUs2AnswerButton({
+  /// Build Us 2.0 "Partner" button - outlined style with coral accent
+  Widget _buildUs2AnswerButtonOutlined({
     required String label,
-    required String emoji,
     required VoidCallback onTap,
   }) {
     return GestureDetector(
       onTap: _isSubmitting ? null : onTap,
       child: Container(
-        width: 110,
-        padding: const EdgeInsets.symmetric(vertical: 18),
+        width: 140,
+        height: 70,
         decoration: BoxDecoration(
-          gradient: Us2Theme.cardGradient,
-          borderRadius: BorderRadius.circular(20),
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(35),
+          border: Border.all(
+            color: const Color(0xFFFF6B6B),
+            width: 3,
+          ),
           boxShadow: [
             BoxShadow(
-              color: Us2Theme.glowPink.withOpacity(0.3),
+              color: const Color(0xFFFF6B6B).withOpacity(0.2),
               blurRadius: 15,
-              offset: const Offset(0, 6),
+              offset: const Offset(0, 4),
             ),
           ],
         ),
-        child: Column(
-          children: [
-            Text(emoji, style: const TextStyle(fontSize: 32)),
-            const SizedBox(height: 8),
-            Text(
-              label.length > 8 ? '${label.substring(0, 8)}...' : label,
-              style: GoogleFonts.nunito(
-                fontSize: 14,
-                fontWeight: FontWeight.w700,
-                color: Colors.white,
+        child: Material(
+          color: Colors.transparent,
+          child: InkWell(
+            onTap: _isSubmitting ? null : onTap,
+            borderRadius: BorderRadius.circular(35),
+            splashColor: const Color(0xFFFF6B6B).withOpacity(0.1),
+            child: Center(
+              child: Text(
+                label.length > 10 ? '${label.substring(0, 10)}...' : label,
+                style: GoogleFonts.nunito(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w700,
+                  color: const Color(0xFFFF6B6B),
+                ),
+                overflow: TextOverflow.ellipsis,
               ),
-              overflow: TextOverflow.ellipsis,
             ),
-          ],
+          ),
         ),
       ),
     );

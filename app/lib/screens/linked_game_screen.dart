@@ -73,6 +73,9 @@ class _LinkedGameScreenState extends State<LinkedGameScreen>
   // Word completion animation state (show one at a time)
   int _currentWordIndex = -1; // -1 means no word showing
 
+  // Dynamic cell size (calculated in grid builder, used for rack sizing)
+  double _calculatedCellSize = 50.0; // Default for 7x9 grid
+
   // GamePollingMixin overrides
   @override
   bool get shouldPoll => !_isLoading && !_isSubmitting && _gameState != null && !_gameState!.isMyTurn;
@@ -415,13 +418,24 @@ class _LinkedGameScreenState extends State<LinkedGameScreen>
     // Dialogs moved to build() Stack to cover full screen including status bar
     return Container(
       color: BrandLoader().colors.surface,
-      child: Column(
+      child: Stack(
         children: [
-          _buildHeader(),
-          Expanded(child: _buildGridWithOverlay()),
-          // Clue hint banner (first time only)
-          if (_showClueHintBanner && _isUs2) _buildClueHintBanner(),
-          _buildBottomSection(),
+          // Main content
+          Column(
+            children: [
+              _buildHeader(),
+              Expanded(child: _buildGridWithOverlay()),
+              _buildBottomSection(),
+            ],
+          ),
+          // Clue hint banner overlay (first time only)
+          if (_showClueHintBanner && _isUs2)
+            Positioned(
+              left: 0,
+              right: 0,
+              bottom: 160, // Position above the bottom section
+              child: _buildClueHintBanner(),
+            ),
         ],
       ),
     );
@@ -710,6 +724,7 @@ class _LinkedGameScreenState extends State<LinkedGameScreen>
   }
 
   /// Grid container with dark background (or gold frame for Us2)
+  /// Uses full-width layout so smaller grids (5x7, 6x8) have larger cells
   Widget _buildGrid() {
     final puzzle = _gameState!.puzzle!;
     final cols = puzzle.cols;
@@ -720,93 +735,189 @@ class _LinkedGameScreenState extends State<LinkedGameScreen>
       return _buildUs2Grid(puzzle, cols, rows, boardState);
     }
 
-    return Container(
-      key: _gridKey,
-      color: BrandLoader().colors.background,
-      padding: const EdgeInsets.all(12),
-      child: Center(
-        child: AspectRatio(
-          aspectRatio: cols / rows,
-          child: Container(
-            decoration: BoxDecoration(
-              color: BrandLoader().colors.textPrimary,
-            ),
-            padding: const EdgeInsets.all(2),
-            child: GridView.builder(
-              physics: const NeverScrollableScrollPhysics(),
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: cols,
-                mainAxisSpacing: 2,
-                crossAxisSpacing: 2,
-              ),
-              itemCount: cols * rows,
-              itemBuilder: (context, index) {
-                return _buildCell(index, puzzle, boardState);
-              },
-            ),
-          ),
-        ),
-      ),
-    );
-  }
+    // Spacing constants
+    const double horizontalPadding = 24.0; // Total left + right padding
+    const double cellSpacing = 2.0;
+    const double framePadding = 4.0; // Container padding
 
-  /// Us2 styled grid with gold beveled frame - compact
-  Widget _buildUs2Grid(LinkedPuzzle puzzle, int cols, int rows, Map<String, String> boardState) {
-    return Container(
-      key: _gridKey,
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-      child: Center(
-        child: AspectRatio(
-          aspectRatio: cols / rows,
-          child: Container(
-            decoration: BoxDecoration(
-              gradient: Us2Theme.gridFrameGradient,
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: Us2Theme.goldBorder, width: 1.5),
-              boxShadow: [
-                ...Us2Theme.gridFrameShadow,
-                // Inset highlight for bevel effect
-                const BoxShadow(
-                  color: Color(0x66FFFFFF),
-                  blurRadius: 0,
-                  spreadRadius: 0,
-                  offset: Offset(0, 1),
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        // Calculate cell size based on BOTH width and height constraints
+        // Use the smaller value to ensure grid fits in both dimensions
+
+        // Width-based cell size
+        final availableWidth = constraints.maxWidth - horizontalPadding - framePadding;
+        final horizontalSpacing = cellSpacing * (cols - 1);
+        final cellSizeFromWidth = (availableWidth - horizontalSpacing) / cols;
+
+        // Height-based cell size (use maxHeight if available, otherwise use width-based)
+        final verticalSpacing = cellSpacing * (rows - 1);
+        final availableHeight = constraints.maxHeight.isFinite
+            ? constraints.maxHeight - framePadding - 16 // 16 for vertical padding
+            : double.infinity;
+        final cellSizeFromHeight = availableHeight.isFinite
+            ? (availableHeight - verticalSpacing) / rows
+            : cellSizeFromWidth;
+
+        // Use the smaller cell size to fit both dimensions
+        final cellSize = cellSizeFromWidth < cellSizeFromHeight
+            ? cellSizeFromWidth
+            : cellSizeFromHeight;
+
+        // Store for rack sizing (safe to update directly, won't cause rebuild loop)
+        if (_calculatedCellSize != cellSize) {
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            if (mounted && _calculatedCellSize != cellSize) {
+              setState(() => _calculatedCellSize = cellSize);
+            }
+          });
+        }
+
+        // Calculate grid dimensions based on final cell size
+        final gridWidth = (cellSize * cols) + horizontalSpacing;
+        final gridHeight = (cellSize * rows) + verticalSpacing;
+
+        return Container(
+          key: _gridKey,
+          color: BrandLoader().colors.background,
+          padding: EdgeInsets.symmetric(horizontal: horizontalPadding / 2, vertical: 8),
+          child: Center(
+            child: SizedBox(
+              width: gridWidth + framePadding,
+              height: gridHeight + framePadding,
+              child: Container(
+                decoration: BoxDecoration(
+                  color: BrandLoader().colors.textPrimary,
                 ),
-              ],
-            ),
-            padding: const EdgeInsets.all(6),
-            child: Container(
-              decoration: BoxDecoration(
-                color: Us2Theme.goldMid,
-                borderRadius: BorderRadius.circular(8),
-                boxShadow: const [
-                  BoxShadow(
-                    color: Color(0x1A000000),
-                    blurRadius: 3,
-                    offset: Offset(0, 1),
-                  ),
-                ],
-              ),
-              padding: const EdgeInsets.all(4),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(4),
+                padding: EdgeInsets.all(framePadding / 2),
                 child: GridView.builder(
                   physics: const NeverScrollableScrollPhysics(),
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: cols,
-                    mainAxisSpacing: 2,
-                    crossAxisSpacing: 2,
+                    mainAxisSpacing: cellSpacing,
+                    crossAxisSpacing: cellSpacing,
                   ),
                   itemCount: cols * rows,
                   itemBuilder: (context, index) {
-                    return _buildCell(index, puzzle, boardState);
+                    return _buildCell(index, puzzle, boardState, cellSize);
                   },
                 ),
               ),
             ),
           ),
-        ),
-      ),
+        );
+      },
+    );
+  }
+
+  /// Us2 styled grid with gold beveled frame - compact
+  /// Uses full-width layout so smaller grids (5x7, 6x8) have larger cells
+  Widget _buildUs2Grid(LinkedPuzzle puzzle, int cols, int rows, Map<String, String> boardState) {
+    // Spacing constants
+    const double horizontalPadding = 16.0; // Total left + right padding
+    const double outerFramePadding = 6.0; // Gold frame outer padding
+    const double innerFramePadding = 4.0; // Gold mid inner padding
+    const double totalFramePadding = (outerFramePadding + innerFramePadding) * 2;
+    const double cellSpacing = 2.0;
+
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        // Calculate cell size based on BOTH width and height constraints
+        // Use the smaller value to ensure grid fits in both dimensions
+
+        // Width-based cell size
+        final availableWidth = constraints.maxWidth - horizontalPadding - totalFramePadding;
+        final horizontalSpacing = cellSpacing * (cols - 1);
+        final cellSizeFromWidth = (availableWidth - horizontalSpacing) / cols;
+
+        // Height-based cell size (use maxHeight if available, otherwise use width-based)
+        final verticalSpacing = cellSpacing * (rows - 1);
+        final availableHeight = constraints.maxHeight.isFinite
+            ? constraints.maxHeight - totalFramePadding - 8 // 8 for vertical padding
+            : double.infinity;
+        final cellSizeFromHeight = availableHeight.isFinite
+            ? (availableHeight - verticalSpacing) / rows
+            : cellSizeFromWidth;
+
+        // Use the smaller cell size to fit both dimensions
+        final cellSize = cellSizeFromWidth < cellSizeFromHeight
+            ? cellSizeFromWidth
+            : cellSizeFromHeight;
+
+        // Store for rack sizing (safe to update directly, won't cause rebuild loop)
+        if (_calculatedCellSize != cellSize) {
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            if (mounted && _calculatedCellSize != cellSize) {
+              setState(() => _calculatedCellSize = cellSize);
+            }
+          });
+        }
+
+        // Calculate grid dimensions based on final cell size
+        final gridWidth = (cellSize * cols) + horizontalSpacing;
+        final gridHeight = (cellSize * rows) + verticalSpacing;
+
+        // Total height including frame
+        final totalHeight = gridHeight + totalFramePadding;
+
+        return Container(
+          key: _gridKey,
+          padding: EdgeInsets.symmetric(horizontal: horizontalPadding / 2, vertical: 4),
+          child: Center(
+            child: SizedBox(
+              width: gridWidth + totalFramePadding,
+              height: totalHeight,
+              child: Container(
+                decoration: BoxDecoration(
+                  gradient: Us2Theme.gridFrameGradient,
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(color: Us2Theme.goldBorder, width: 1.5),
+                  boxShadow: [
+                    ...Us2Theme.gridFrameShadow,
+                    // Inset highlight for bevel effect
+                    const BoxShadow(
+                      color: Color(0x66FFFFFF),
+                      blurRadius: 0,
+                      spreadRadius: 0,
+                      offset: Offset(0, 1),
+                    ),
+                  ],
+                ),
+                padding: const EdgeInsets.all(outerFramePadding),
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Us2Theme.goldMid,
+                    borderRadius: BorderRadius.circular(8),
+                    boxShadow: const [
+                      BoxShadow(
+                        color: Color(0x1A000000),
+                        blurRadius: 3,
+                        offset: Offset(0, 1),
+                      ),
+                    ],
+                  ),
+                  padding: const EdgeInsets.all(innerFramePadding),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(4),
+                    child: GridView.builder(
+                      physics: const NeverScrollableScrollPhysics(),
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: cols,
+                        mainAxisSpacing: cellSpacing,
+                        crossAxisSpacing: cellSpacing,
+                      ),
+                      itemCount: cols * rows,
+                      itemBuilder: (context, index) {
+                        return _buildCell(index, puzzle, boardState, cellSize);
+                      },
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
 
@@ -901,7 +1012,7 @@ class _LinkedGameScreenState extends State<LinkedGameScreen>
     );
   }
 
-  Widget _buildCell(int index, LinkedPuzzle puzzle, Map<String, String> boardState) {
+  Widget _buildCell(int index, LinkedPuzzle puzzle, Map<String, String> boardState, double cellSize) {
     // Use cellTypes from API to determine cell type
     if (puzzle.isVoidCell(index)) {
       if (_isUs2) {
@@ -926,7 +1037,7 @@ class _LinkedGameScreenState extends State<LinkedGameScreen>
       // Check if this is a split clue cell (two clues pointing to same cell)
       final splitClues = puzzle.getSplitClues(index);
       if (splitClues != null) {
-        return _buildSplitClueCell(splitClues[0], splitClues[1]);
+        return _buildSplitClueCell(splitClues[0], splitClues[1], cellSize);
       }
 
       // Regular single clue cell - use target_index based lookup
@@ -935,7 +1046,7 @@ class _LinkedGameScreenState extends State<LinkedGameScreen>
         // Assign clue key to first clue cell in top rows (for tutorial highlight)
         final useClueKey = !_clueKeyAssigned && index < 12;
         if (useClueKey) _clueKeyAssigned = true;
-        return _buildClueCell(clue, useKey: useClueKey);
+        return _buildClueCell(clue, cellSize, useKey: useClueKey);
       }
       // Fallback if clue not found
       return Container(color: BrandLoader().colors.selected);
@@ -952,6 +1063,7 @@ class _LinkedGameScreenState extends State<LinkedGameScreen>
         lockedLetter,
         animState?.justLocked == true ? AnswerCellState.locked : AnswerCellState.locked,
         showGlow: animState?.justLocked == true,
+        cellSize: cellSize,
       );
     }
 
@@ -960,22 +1072,25 @@ class _LinkedGameScreenState extends State<LinkedGameScreen>
     if (draftLetter != null) {
       // During submission animation, show result state
       if (animState != null && !animState.isCorrect) {
-        return _buildAnswerCell(index, draftLetter, AnswerCellState.incorrect);
+        return _buildAnswerCell(index, draftLetter, AnswerCellState.incorrect, cellSize: cellSize);
       }
-      return _buildAnswerCell(index, draftLetter, AnswerCellState.draft);
+      return _buildAnswerCell(index, draftLetter, AnswerCellState.draft, cellSize: cellSize);
     }
 
     // Empty answer cell
-    return _buildAnswerCell(index, null, AnswerCellState.empty);
+    return _buildAnswerCell(index, null, AnswerCellState.empty, cellSize: cellSize);
   }
 
-  Widget _buildClueCell(LinkedClue clue, {bool useKey = false}) {
+  Widget _buildClueCell(LinkedClue clue, double cellSize, {bool useKey = false}) {
     final isDown = clue.arrow == 'down';
     final displayText = clue.content.toUpperCase();
 
-    // Calculate font size based on text length
+    // Calculate font size based on text length AND cell size
+    // Base sizes are for ~50px cells (standard 7x9 grid)
+    // Scale proportionally for larger/smaller cells
     final textLength = displayText.length;
     final hasSpace = displayText.contains(' ');
+    final scaleFactor = cellSize / 50.0; // 50px is our reference cell size
 
     // Detect if content is actually an emoji (single character or emoji sequence)
     // This handles cases where type is "emoji" but content is regular text
@@ -985,23 +1100,25 @@ class _LinkedGameScreenState extends State<LinkedGameScreen>
 
     // Check if this is an emoji with a text hint (e.g., 🍑 with "_SS")
     if (clue.hasTextHint && isActuallyEmoji) {
-      return _buildEmojiTextClueCell(clue, isDown);
+      return _buildEmojiTextClueCell(clue, isDown, cellSize);
     }
 
-    double fontSize;
+    // Base font sizes (for 50px cells), then scale
+    double baseFontSize;
     if (isActuallyEmoji) {
-      fontSize = 28; // Large emoji
+      baseFontSize = 28; // Large emoji
     } else if (textLength <= 3) {
-      fontSize = 16;
+      baseFontSize = 18;
     } else if (textLength <= 5) {
-      fontSize = 11;
+      baseFontSize = 14;
     } else if (textLength <= 8) {
-      fontSize = 9;
+      baseFontSize = 11;
     } else if (textLength <= 12 || hasSpace) {
-      fontSize = 7;
+      baseFontSize = 9;
     } else {
-      fontSize = 6;
+      baseFontSize = 7;
     }
+    final fontSize = baseFontSize * scaleFactor;
 
     return GestureDetector(
       onTap: () => _showClueDialog(clue),
@@ -1053,7 +1170,7 @@ class _LinkedGameScreenState extends State<LinkedGameScreen>
               child: Text(
                 isDown ? '▼' : '▶',
                 style: TextStyle(
-                  fontSize: 6,
+                  fontSize: 6 * scaleFactor,
                   color: _isUs2 ? Us2Theme.textLight : BrandLoader().colors.textSecondary,
                 ),
               ),
@@ -1066,7 +1183,8 @@ class _LinkedGameScreenState extends State<LinkedGameScreen>
 
   /// Build a clue cell with emoji on top (left-aligned) and text hint on bottom (right-aligned)
   /// Used for emoji clues that point to single letters (e.g., 🍑 _SS for "A")
-  Widget _buildEmojiTextClueCell(LinkedClue clue, bool isDown) {
+  Widget _buildEmojiTextClueCell(LinkedClue clue, bool isDown, double cellSize) {
+    final scaleFactor = cellSize / 50.0;
     return GestureDetector(
       onTap: () => _showClueDialog(clue),
       child: Container(
@@ -1104,8 +1222,8 @@ class _LinkedGameScreenState extends State<LinkedGameScreen>
                     alignment: Alignment.centerLeft,
                     child: Text(
                       clue.content,
-                      style: const TextStyle(
-                        fontSize: 22,
+                      style: TextStyle(
+                        fontSize: 22 * scaleFactor,
                         height: 1,
                       ),
                     ),
@@ -1119,7 +1237,7 @@ class _LinkedGameScreenState extends State<LinkedGameScreen>
                       clue.text!.toUpperCase(),
                       style: TextStyle(
                         fontFamily: 'Arial',
-                        fontSize: 14,
+                        fontSize: 14 * scaleFactor,
                         fontWeight: FontWeight.w800,
                         letterSpacing: -0.5,
                         color: _isUs2 ? Us2Theme.letterPink : BrandLoader().colors.textPrimary,
@@ -1138,7 +1256,7 @@ class _LinkedGameScreenState extends State<LinkedGameScreen>
               child: Text(
                 isDown ? '▼' : '▶',
                 style: TextStyle(
-                  fontSize: 6,
+                  fontSize: 6 * scaleFactor,
                   color: _isUs2 ? Us2Theme.textLight : BrandLoader().colors.textSecondary,
                 ),
               ),
@@ -1268,7 +1386,7 @@ class _LinkedGameScreenState extends State<LinkedGameScreen>
   }
 
   /// Build a split clue cell containing two clues (across on top, down on bottom)
-  Widget _buildSplitClueCell(LinkedClue acrossClue, LinkedClue downClue) {
+  Widget _buildSplitClueCell(LinkedClue acrossClue, LinkedClue downClue, double cellSize) {
     return GestureDetector(
       onTap: () => _showSplitClueDialog(acrossClue, downClue),
       child: Container(
@@ -1277,7 +1395,7 @@ class _LinkedGameScreenState extends State<LinkedGameScreen>
           children: [
             // Top half: across clue
             Expanded(
-              child: _buildSplitClueHalf(acrossClue, isTop: true),
+              child: _buildSplitClueHalf(acrossClue, cellSize, isTop: true),
             ),
             // Divider line
             Container(
@@ -1286,7 +1404,7 @@ class _LinkedGameScreenState extends State<LinkedGameScreen>
             ),
             // Bottom half: down clue
             Expanded(
-              child: _buildSplitClueHalf(downClue, isTop: false),
+              child: _buildSplitClueHalf(downClue, cellSize, isTop: false),
             ),
           ],
         ),
@@ -1294,112 +1412,96 @@ class _LinkedGameScreenState extends State<LinkedGameScreen>
     );
   }
 
-  /// Build one half of a split clue cell
-  Widget _buildSplitClueHalf(LinkedClue clue, {required bool isTop}) {
+  /// Build one half of a split clue cell using FittedBox for auto-scaling
+  Widget _buildSplitClueHalf(LinkedClue clue, double cellSize, {required bool isTop}) {
     final isDown = clue.arrow == 'down';
     final displayText = clue.content.toUpperCase();
+    final scaleFactor = cellSize / 50.0;
 
-    // Check if this is an emoji with text hint - use inline layout for split cells
+    // Arrow indicator widget
+    final arrow = Positioned(
+      bottom: isDown ? 0 : null,
+      top: isDown ? null : 0,
+      right: isDown ? null : 0,
+      left: isDown ? 0 : null,
+      child: Padding(
+        padding: const EdgeInsets.all(1),
+        child: Text(
+          isDown ? '▼' : '▶',
+          style: TextStyle(
+            fontSize: 6 * scaleFactor,
+            color: BrandLoader().colors.textSecondary,
+          ),
+        ),
+      ),
+    );
+
+    // Handle emoji with text hint (e.g., "🇳🇴 CITY")
     if (clue.hasTextHint && clue.type == 'emoji') {
       return Stack(
         children: [
-          // Inline emoji + text (compact for split cell)
           Center(
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  clue.content,
-                  style: const TextStyle(fontSize: 14, height: 1),
-                ),
-                const SizedBox(width: 2),
-                Text(
-                  clue.text!.toUpperCase(),
-                  style: TextStyle(
-                    fontFamily: 'Arial',
-                    fontSize: 9,
-                    fontWeight: FontWeight.w800,
-                    letterSpacing: -0.3,
-                    color: BrandLoader().colors.textPrimary,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          // Arrow indicator
-          Positioned(
-            bottom: isDown ? 0 : null,
-            top: isDown ? null : 0,
-            right: isDown ? null : 0,
-            left: isDown ? 0 : null,
             child: Padding(
-              padding: const EdgeInsets.all(1),
-              child: Text(
-                isDown ? '▼' : '▶',
-                style: TextStyle(
-                  fontSize: 5,
-                  color: BrandLoader().colors.textSecondary,
+              padding: const EdgeInsets.symmetric(horizontal: 4),
+              child: FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      clue.content,
+                      style: TextStyle(fontSize: 20 * scaleFactor, height: 1),
+                    ),
+                    const SizedBox(width: 3),
+                    Text(
+                      clue.text!.toUpperCase(),
+                      style: TextStyle(
+                        fontFamily: 'Arial',
+                        fontSize: 13 * scaleFactor,
+                        fontWeight: FontWeight.w800,
+                        letterSpacing: -0.3,
+                        color: BrandLoader().colors.textPrimary,
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ),
           ),
+          arrow,
         ],
       );
     }
 
-    // Smaller font sizes for split cells (half the height)
-    final textLength = displayText.length;
-    double fontSize;
-    if (clue.type == 'emoji') {
-      fontSize = 14; // Smaller emoji for split cell
-    } else if (textLength <= 4) {
-      fontSize = 10;
-    } else if (textLength <= 8) {
-      fontSize = 8;
-    } else {
-      fontSize = 6;
-    }
+    // Text or emoji content - use FittedBox for auto-scaling
+    final textContent = clue.type == 'emoji' ? clue.content : displayText;
+    final isEmoji = clue.type == 'emoji';
+    final maxFontSize = isEmoji ? 22.0 : 16.0;
 
     return Stack(
       children: [
-        // Centered content
         Center(
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 2),
-            child: Text(
-              clue.type == 'emoji' ? clue.content : displayText,
-              textAlign: TextAlign.center,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: TextStyle(
-                fontFamily: clue.type == 'emoji' ? null : 'Arial',
-                fontSize: fontSize,
-                fontWeight: FontWeight.w800,
-                letterSpacing: 0,
-                height: 1.05,
-                color: BrandLoader().colors.textPrimary,
+            padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+            child: FittedBox(
+              fit: BoxFit.scaleDown,
+              child: Text(
+                textContent,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontFamily: isEmoji ? null : 'Arial',
+                  fontSize: maxFontSize * scaleFactor,
+                  fontWeight: FontWeight.w800,
+                  letterSpacing: 0,
+                  height: 1.1,
+                  color: BrandLoader().colors.textPrimary,
+                ),
               ),
             ),
           ),
         ),
-        // Arrow indicator
-        Positioned(
-          bottom: isDown ? 0 : null,
-          top: isDown ? null : 0,
-          right: isDown ? null : 0,
-          left: isDown ? 0 : null,
-          child: Padding(
-            padding: const EdgeInsets.all(1),
-            child: Text(
-              isDown ? '▼' : '▶',
-              style: TextStyle(
-                fontSize: 5,
-                color: BrandLoader().colors.textSecondary,
-              ),
-            ),
-          ),
-        ),
+        arrow,
       ],
     );
   }
@@ -1439,7 +1541,12 @@ class _LinkedGameScreenState extends State<LinkedGameScreen>
     );
   }
 
-  Widget _buildAnswerCell(int index, String? letter, AnswerCellState state, {bool showGlow = false}) {
+  Widget _buildAnswerCell(int index, String? letter, AnswerCellState state, {bool showGlow = false, double? cellSize}) {
+    // Scale font size based on cell size
+    // Match rack tile formula: rack uses tileSize * 0.5 where tileSize = cellSize * 0.85
+    // So effective fontSize = cellSize * 0.85 * 0.5 = cellSize * 0.425
+    final effectiveCellSize = cellSize ?? 50.0;
+    final fontSize = effectiveCellSize * 0.425; // Match rack tile visual size
     final isHighlighted = _highlightedCells.contains(index);
     final isInteractive = _gameState!.isMyTurn && state != AnswerCellState.locked && !_isSubmitting;
     final animState = _cellAnimations[index];
@@ -1615,7 +1722,7 @@ class _LinkedGameScreenState extends State<LinkedGameScreen>
                 ? Text(
                     letter,
                     style: TextStyle(
-                      fontSize: isGoldenTile ? 18 : 22,
+                      fontSize: fontSize,
                       fontWeight: FontWeight.w700,
                       fontFamily: isGoldenTile ? Us2Theme.fontBody : 'Georgia',
                       color: textColor,
@@ -1662,8 +1769,8 @@ class _LinkedGameScreenState extends State<LinkedGameScreen>
               elevation: 8,
               color: Colors.transparent,
               child: Container(
-                width: 42,
-                height: 42,
+                width: effectiveCellSize,
+                height: effectiveCellSize,
                 decoration: BoxDecoration(
                   color: BrandLoader().colors.warning.withOpacity(0.3),
                   border: Border.all(color: BrandLoader().colors.textPrimary, width: 2),
@@ -1679,7 +1786,7 @@ class _LinkedGameScreenState extends State<LinkedGameScreen>
                   child: Text(
                     letter,
                     style: TextStyle(
-                      fontSize: 20,
+                      fontSize: fontSize,
                       fontWeight: FontWeight.w700,
                       fontFamily: 'Georgia',
                       color: BrandLoader().colors.textPrimary,
@@ -1833,11 +1940,14 @@ class _LinkedGameScreenState extends State<LinkedGameScreen>
 
   /// Empty rack slot - used when waiting for partner or when letter has been placed
   Widget _buildEmptyRackSlot() {
+    final tileSize = _calculatedCellSize * 0.85; // Match rack tile size
+    final tileMargin = _isUs2 ? 3.0 : 4.0;
+
     if (_isUs2) {
       return Container(
-        margin: const EdgeInsets.symmetric(horizontal: 3),
-        width: 40,
-        height: 40,
+        margin: EdgeInsets.symmetric(horizontal: tileMargin),
+        width: tileSize,
+        height: tileSize,
         decoration: BoxDecoration(
           color: Us2Theme.goldLight.withOpacity(0.3),
           borderRadius: BorderRadius.circular(8),
@@ -1846,9 +1956,9 @@ class _LinkedGameScreenState extends State<LinkedGameScreen>
       );
     }
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 4),
-      width: 42,
-      height: 42,
+      margin: EdgeInsets.symmetric(horizontal: tileMargin),
+      width: tileSize,
+      height: tileSize,
       decoration: BoxDecoration(
         color: BrandLoader().colors.background,
         border: Border.all(
@@ -1865,8 +1975,11 @@ class _LinkedGameScreenState extends State<LinkedGameScreen>
       return _buildEmptyRackSlot();
     }
 
-    final tileSize = _isUs2 ? 40.0 : 42.0;
+    // Use cell size for rack tiles (with slight reduction for visual balance)
+    // Rack letters should be similar size to grid cells
+    final tileSize = _calculatedCellSize * 0.85; // Slightly smaller than cells
     final tileMargin = _isUs2 ? 3.0 : 4.0;
+    final fontSize = tileSize * 0.5; // Font is ~50% of tile size
 
     final tile = Container(
       margin: EdgeInsets.symmetric(horizontal: tileMargin),
@@ -1883,7 +1996,7 @@ class _LinkedGameScreenState extends State<LinkedGameScreen>
         child: Text(
           letter,
           style: TextStyle(
-            fontSize: _isUs2 ? 20 : 20,
+            fontSize: fontSize,
             fontWeight: FontWeight.w800,
             fontFamily: _isUs2 ? Us2Theme.fontBody : 'Georgia',
             color: _isUs2 ? Us2Theme.tileText : BrandLoader().colors.textPrimary,
@@ -1932,7 +2045,7 @@ class _LinkedGameScreenState extends State<LinkedGameScreen>
             child: Text(
               letter,
               style: TextStyle(
-                fontSize: _isUs2 ? 20 : 20,
+                fontSize: fontSize,
                 fontWeight: FontWeight.w800,
                 fontFamily: _isUs2 ? Us2Theme.fontBody : 'Georgia',
                 color: _isUs2 ? Us2Theme.tileText : BrandLoader().colors.textPrimary,

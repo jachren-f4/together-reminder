@@ -8,6 +8,7 @@ import '../widgets/brand/brand_widget_factory.dart';
 import '../config/animation_constants.dart';
 import '../utils/logger.dart';
 import '../utils/number_formatter.dart';
+import '../utils/navigation_guard.dart';
 import '../services/storage_service.dart';
 import '../services/arena_service.dart';
 import '../models/arena.dart';
@@ -514,14 +515,14 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin, 
               partnerName: partner?.name ?? 'Partner',
               dayNumber: daysTogether,
               magnetCollection: _magnetCollection,
-              onCollectionTap: () {
+              onCollectionTap: () => NavigationGuard.navigate(context, () {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
                     builder: (context) => const MagnetCollectionScreen(),
                   ),
                 );
-              },
+              }),
               dailyQuests: dailyQuests,
               sideQuests: sideQuests,
               onQuestTap: _navigateToQuest,
@@ -563,6 +564,9 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin, 
 
   /// Navigate to the appropriate screen for a quest
   void _navigateToQuest(DailyQuest quest) async {
+    // Prevent double-tap navigation
+    if (!NavigationGuard.navigate(context, () {})) return;
+
     final storage = StorageService();
     final user = storage.getUser();
     final userId = user?.id;
@@ -754,6 +758,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin, 
   }
 
   Future<void> _navigateToLinked() async {
+    // Note: Guard is at entry point (_navigateToQuest), not here
     // Check if there's an active match and if it's our turn
     try {
       final state = await _linkedService.getOrCreateMatch();
@@ -791,6 +796,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin, 
   }
 
   Future<void> _navigateToWordSearch() async {
+    // Note: Guard is at entry point (_navigateToQuest), not here
     // Check if there's an active match and if it's our turn
     try {
       final state = await _wordSearchService.getOrCreateMatch();
@@ -828,6 +834,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin, 
   }
 
   void _navigateToSteps() {
+    // Note: Guard is at entry point (_navigateToQuest), not here
     _handleStepsQuestTap();
   }
 
@@ -1254,7 +1261,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin, 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        // Daily Quests - index 2 in stagger sequence (after header sections)
+        // Quizzes - index 2 in stagger sequence (after header sections)
         HomeStaggeredEntrance(
           index: 2,
           trackingKey: 'home_daily_quests',
@@ -1263,7 +1270,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin, 
 
         const SizedBox(height: 10),
 
-        // Side Quests section header with action buttons - index 3
+        // Games section header with action buttons - index 3
         HomeStaggeredEntrance(
           index: 3,
           trackingKey: 'home_side_quests_header',
@@ -1273,7 +1280,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin, 
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  'SIDE QUESTS',
+                  'GAMES',
                   style: AppTheme.headlineFont.copyWith(
                     fontSize: 16,
                     fontWeight: FontWeight.w400,
@@ -1349,10 +1356,12 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin, 
         subtitle: activeQuiz != null ? 'Quiz in progress' : 'Start new session',
         rewards: ['+30 LP'],
         isActive: activeQuiz != null,
-        onTap: () => Navigator.push(
-          context,
-          MaterialPageRoute(builder: (_) => const QuizMatchGameScreen(quizType: 'classic')),
-        ),
+        onTap: () => NavigationGuard.navigate(context, () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (_) => const QuizMatchGameScreen(quizType: 'classic')),
+          );
+        }),
       ),
     ];
 
@@ -1471,7 +1480,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin, 
                   Icon(Icons.error_outline, size: 48, color: BrandLoader().colors.textTertiary),
                   const SizedBox(height: 8),
                   Text(
-                    'Error loading side quests',
+                    'Error loading games',
                     style: TextStyle(color: BrandLoader().colors.textSecondary),
                   ),
                   const SizedBox(height: 8),
@@ -1493,7 +1502,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin, 
             height: 380,
             child: Center(
               child: Text(
-                'No side quests available',
+                'No games available',
                 style: TextStyle(color: BrandLoader().colors.textSecondary),
               ),
             ),
@@ -1696,6 +1705,9 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin, 
   }
 
   void _navigateToDailyPulse() {
+    // Prevent double-tap navigation
+    if (!NavigationGuard.navigate(context, () {})) return;
+
     final pulse = _pulseService.getTodaysPulse();
     final question = _pulseService.getTodaysQuestion();
     final isSubject = _pulseService.isUserSubjectToday();
@@ -1729,6 +1741,9 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin, 
 
   /// Handle side quest tap - navigate to appropriate screen or show "Coming Soon"
   Future<void> _handleSideQuestTap(DailyQuest quest) async {
+    // Prevent double-tap navigation
+    if (!NavigationGuard.navigate(context, () {})) return;
+
     // Check if this is a placeholder card
     if (quest.contentId.startsWith('placeholder_')) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -2042,7 +2057,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin, 
           isSideQuest: true,
           imagePath: null,
           description: stepsDesc,
-          quizName: 'Steps Together',
+          quizName: BrandLoader().config.brand == Brand.us2 ? 'Steps' : 'Steps Together',
         );
 
         quests.add(stepsQuest);

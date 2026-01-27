@@ -1,0 +1,53 @@
+{
+  "author": "Crossword Maker GPT",
+  "title": "AI-Built Puzzle",
+  "theme": "general",
+  "size": {
+    "rows": 7,
+    "cols": 5
+  },
+  "clues": {
+    "1": { "type": "text", "content": "1♠️", "arrow": "down", "target_index": 6 },
+    "2": { "type": "text", "content": "Cry", "arrow": "down", "target_index": 7 },
+    "3": { "type": "text", "content": "Zer_", "arrow": "down", "target_index": 8 },
+    "4": { "type": "emoji", "content": "👔👔", "arrow": "down", "target_index": 9 },
+    "5": { "type": "emoji", "content": "⚛️", "arrow": "across", "target_index": 6 },
+    "6": { "type": "text", "content": "🧊 I__", "arrow": "across", "target_index": 11 },
+    "7": {
+      "across": { "type": "text", "content": "MAD_", "target_index": 14 },
+      "down": { "type": "text", "content": "Storage", "target_index": 18 }
+    },
+    "8": { "type": "text", "content": "Make $", "arrow": "across", "target_index": 16 },
+    "9": {
+      "across": { "type": "text", "content": "Reply", "target_index": 22 },
+      "down": { "type": "text", "content": "Such __", "target_index": 26 }
+    },
+    "10": { "type": "text", "content": "Location", "arrow": "down", "target_index": 29 },
+    "11": { "type": "text", "content": "_GE", "arrow": "across", "target_index": 26 },
+    "12": {
+      "across": { "type": "text", "content": "Father", "target_index": 28 },
+      "down": { "type": "text", "content": "AI_", "target_index": 32 }
+    },
+    "13": { "type": "emoji", "content": "🎰", "arrow": "across", "target_index": 31 }
+  },
+  "date": "2026-01-21",
+  "grid": [
+    ".", ".", ".", ".", ".",
+    ".", "A", "T", "O", "M",
+    ".", "C", "E", ".", "E",
+    ".", "E", "A", "R", "N",
+    ".", ".", "R", "E", ".",
+    ".", "A", ".", "P", "A",
+    ".", "S", "L", "O", "T"
+  ],
+  "gridnums": [
+    0, 1, 2, 3, 4,
+    5, 0, 0, 0, 0,
+    6, 0, 0, 7, 0,
+    8, 0, 0, 0, 0,
+    0, 9, 0, 0, 10,
+    11, 0, 12, 0, 0,
+    13, 0, 0, 0, 0
+  ],
+  "puzzleId": "puzzle_5x7_003"
+}

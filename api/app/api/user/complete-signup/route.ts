@@ -45,12 +45,14 @@ export const POST = withRateLimit(
       let pushToken: string | null = null;
       let platform: string | null = null;
       let name: string | null = null;
+      let birthday: string | null = null;
 
       try {
         const body = await req.json();
         pushToken = body.pushToken || null;
         platform = body.platform || null;
         name = body.name || null;
+        birthday = body.birthday || null;
       } catch {
         // Body is optional, ignore parse errors
       }
@@ -73,15 +75,29 @@ export const POST = withRateLimit(
       const userRow = userResult.rows[0];
       const metadata = userRow.raw_user_meta_data as Record<string, any> | null;
       const userName = metadata?.full_name || metadata?.name || null;
+      const userBirthday = metadata?.birthday || null;
 
-      // If name provided in request and different from stored, update it
+      // Build metadata updates object
+      const metadataUpdates: Record<string, any> = {};
+
+      // If name provided in request and different from stored, add to updates
       if (name && name !== userName) {
+        metadataUpdates.full_name = name;
+      }
+
+      // If birthday provided in request and different from stored, add to updates
+      if (birthday && birthday !== userBirthday) {
+        metadataUpdates.birthday = birthday;
+      }
+
+      // Apply metadata updates if any
+      if (Object.keys(metadataUpdates).length > 0) {
         await query(
           `UPDATE auth.users
-           SET raw_user_meta_data = raw_user_meta_data || $1::jsonb,
+           SET raw_user_meta_data = COALESCE(raw_user_meta_data, '{}'::jsonb) || $1::jsonb,
                updated_at = NOW()
            WHERE id = $2`,
-          [JSON.stringify({ full_name: name }), userId]
+          [JSON.stringify(metadataUpdates), userId]
         );
       }
 

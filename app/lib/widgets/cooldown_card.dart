@@ -256,26 +256,7 @@ class RemainingPlaysIndicator extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (remaining >= 2) return const SizedBox.shrink();
-
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-      decoration: BoxDecoration(
-        color: Us2Theme.cream,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: Us2Theme.gradientAccentEnd.withValues(alpha: 0.3),
-          width: 1,
-        ),
-      ),
-      child: Text(
-        remaining == 1 ? '1 play left today' : 'Last play!',
-        style: GoogleFonts.nunito(
-          fontSize: 12,
-          fontWeight: FontWeight.w600,
-          color: Us2Theme.gradientAccentEnd,
-        ),
-      ),
-    );
+    // Disabled - no longer showing "plays left" indicator
+    return const SizedBox.shrink();
   }
 }

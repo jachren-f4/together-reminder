@@ -517,11 +517,13 @@ class UnlockCelebrations {
   }
 
   static Future<void> showStepsUnlocked(BuildContext context, int lpEarned) {
+    final isUs2 = BrandLoader().config.brand == Brand.us2;
     return UnlockCelebrationOverlay.show(
       context,
-      featureName: 'Steps Together',
-      featureDescription:
-          'Track your daily steps and earn points for staying active together!',
+      featureName: isUs2 ? 'Steps' : 'Steps Together',
+      featureDescription: isUs2
+          ? 'Track your daily steps and earn points for staying active!'
+          : 'Track your daily steps and earn points for staying active together!',
       lpEarned: lpEarned,
     );
   }

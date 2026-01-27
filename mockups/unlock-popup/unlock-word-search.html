@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=390, height=844, initial-scale=1.0">
+    <title>Unlock Popup - Word Search</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            background: linear-gradient(180deg, #FFF5F5 0%, #FFF0F0 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .phone-frame {
+            width: 390px;
+            height: 844px;
+            background: rgba(0, 0, 0, 0.6);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .popup {
+            width: 340px;
+            background: white;
+            border-radius: 28px;
+            overflow: hidden;
+            box-shadow: 0 25px 80px rgba(0, 0, 0, 0.3);
+        }
+
+        .image-section {
+            width: 100%;
+            height: 240px;
+            background: linear-gradient(180deg, #FFE8E4 0%, #FFDDD6 50%, #FFD0C5 100%);
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .image-section::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 80px;
+            background: linear-gradient(180deg, transparent 0%, white 100%);
+        }
+
+        .feature-img {
+            width: 180px;
+            height: 180px;
+            object-fit: cover;
+            filter: drop-shadow(0 15px 40px rgba(255, 107, 107, 0.35));
+            position: relative;
+            z-index: 1;
+            border-radius: 24px;
+            background: white;
+        }
+
+        .glow-ring {
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255, 159, 67, 0.3) 0%, transparent 70%);
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.8; }
+            50% { transform: scale(1.1); opacity: 0.4; }
+        }
+
+        .content {
+            padding: 20px 24px 28px;
+            text-align: center;
+            position: relative;
+            margin-top: -20px;
+        }
+
+        .badge-row {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+
+        .badge {
+            display: inline-block;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            padding: 6px 12px;
+            border-radius: 20px;
+        }
+
+        .badge.unlock {
+            background: linear-gradient(135deg, #FF6B6B 0%, #FF9F43 100%);
+            color: white;
+        }
+
+        .badge.category {
+            background: #F5F5F5;
+            color: #888;
+        }
+
+        .title {
+            font-family: 'Playfair Display', serif;
+            font-size: 32px;
+            font-weight: 700;
+            color: #2D2D2D;
+            margin-bottom: 12px;
+        }
+
+        .description {
+            font-size: 15px;
+            color: #777;
+            line-height: 1.6;
+            margin-bottom: 24px;
+        }
+
+        .stats-row {
+            display: flex;
+            justify-content: center;
+            gap: 24px;
+            margin-bottom: 24px;
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-family: 'Playfair Display', serif;
+            font-size: 20px;
+            font-weight: 700;
+            color: #FF6B6B;
+        }
+
+        .stat-label {
+            font-size: 11px;
+            color: #999;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .continue-btn {
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(135deg, #FF6B6B 0%, #FF9F43 100%);
+            border: none;
+            border-radius: 16px;
+            color: white;
+            font-family: 'Nunito', sans-serif;
+            font-size: 17px;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 10px 30px rgba(255, 107, 107, 0.4);
+        }
+    </style>
+</head>
+<body>
+    <div class="phone-frame">
+        <div class="popup">
+            <div class="image-section">
+                <div class="glow-ring"></div>
+                <img class="feature-img" src="word-search.png" alt="Word Search">
+            </div>
+            <div class="content">
+                <div class="badge-row">
+                    <span class="badge unlock">UNLOCKED</span>
+                    <span class="badge category">PUZZLE</span>
+                </div>
+                <h1 class="title">Word Search</h1>
+                <p class="description">Find hidden words together in a fun puzzle! Take turns discovering words as a team.</p>
+                <div class="stats-row">
+                    <div class="stat">
+                        <div class="stat-value">+30</div>
+                        <div class="stat-label">LP Per Game</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value">Puzzle</div>
+                        <div class="stat-label">Mode</div>
+                    </div>
+                </div>
+                <button class="continue-btn">Great!</button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+
+<!--
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                        FLUTTER IMPLEMENTATION CHECKLIST                       ║
+║                           ✅ IMPLEMENTED 2025-01-20                          ║
+╠══════════════════════════════════════════════════════════════════════════════╣
+║ Flutter file: lib/widgets/unlock_popup.dart                                  ║
+║ Debug testing: Debug Menu → "Unlock" tab                                     ║
+╠══════════════════════════════════════════════════════════════════════════════╣
+║                                                                              ║
+║ LAYOUT & DIMENSIONS                                                          ║
+║ [x] Popup width: 340px                                                       ║
+║ [x] Popup border radius: 28px                                                ║
+║ [x] Image section height: 240px                                              ║
+║ [x] Feature image: 180x180px with 24px border radius                         ║
+║ [x] Content padding: 20px top, 24px horizontal, 28px bottom                  ║
+║ [x] Content overlaps image section by 20px (negative margin)                 ║
+║                                                                              ║
+║ COLORS                                                                       ║
+║ [x] Overlay: rgba(0,0,0,0.6) - 60% black                                     ║
+║ [x] Image section gradient: #FFE8E4 → #FFDDD6 → #FFD0C5                      ║
+║ [x] Gradient fade to white: 80px height at bottom of image section           ║
+║ [x] UNLOCKED badge: gradient #FF6B6B → #FF9F43, white text                   ║
+║ [x] Category badge: #F5F5F5 background, #888888 text                         ║
+║ [x] Title color: #2D2D2D                                                     ║
+║ [x] Description color: #777777                                               ║
+║ [x] Stat value color: #FF6B6B                                                ║
+║ [x] Stat label color: #999999                                                ║
+║ [x] Button: gradient #FF6B6B → #FF9F43, white text                           ║
+║                                                                              ║
+║ TYPOGRAPHY                                                                   ║
+║ [x] Title: Playfair Display, 32px, weight 700                                ║
+║ [x] Description: Nunito, 15px, weight 400, line-height 1.6                   ║
+║ [x] Badge text: Nunito, 10px, weight 700, letter-spacing 1px                 ║
+║ [x] Stat value: Playfair Display, 20px, weight 700                           ║
+║ [x] Stat label: Nunito, 11px, uppercase, letter-spacing 0.5px                ║
+║ [x] Button text: Nunito, 17px, weight 700                                    ║
+║                                                                              ║
+║ SPACING                                                                      ║
+║ [x] Badge row gap: 8px, margin-bottom: 16px                                  ║
+║ [x] Badge padding: 6px 12px, border-radius: 20px                             ║
+║ [x] Title margin-bottom: 12px                                                ║
+║ [x] Description margin-bottom: 24px                                          ║
+║ [x] Stats row gap: 24px, margin-bottom: 24px                                 ║
+║ [x] Button padding: 18px, border-radius: 16px                                ║
+║                                                                              ║
+║ SHADOWS                                                                      ║
+║ [x] Popup shadow: 0 25px 80px rgba(0,0,0,0.3)                                ║
+║ [x] Image drop shadow: 0 15px 40px rgba(255,107,107,0.35)                    ║
+║ [x] Button shadow: 0 10px 30px rgba(255,107,107,0.4)                         ║
+║                                                                              ║
+║ ANIMATION                                                                    ║
+║ [x] Glow ring: 200x200px, pulse animation                                    ║
+║ [x] Pulse: scale 1→1.1→1, opacity 0.8→0.4→0.8, 2s duration, infinite         ║
+║ [x] Glow color: radial gradient rgba(255,159,67,0.3) to transparent          ║
+║                                                                              ║
+║ CONTENT (Word Search specific)                                               ║
+║ [x] Image: word-search.png (or equivalent asset path)                        ║
+║ [x] Badges: "UNLOCKED" + "PUZZLE"                                            ║
+║ [x] Title: "Word Search"                                                     ║
+║ [x] Description: "Find hidden words together in a fun puzzle! Take turns     ║
+║     discovering words as a team."                                            ║
+║ [x] Stats: "+30" / "LP Per Game" and "Puzzle" / "Mode"                       ║
+║ [x] Button text: "Great!"                                                    ║
+║                                                                              ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+-->
